@@ -16,7 +16,7 @@ define(
     var make = function (spec) {
       // Put inside in case Body.body isn't ready
       var schema = ValueSchema.objOf([
-        FieldSchema.strict('sink'),
+        FieldSchema.strict('lazySink'),
         FieldSchema.defaulted('anchor', {
           anchor: 'selection',
           root: Body.body()
@@ -31,7 +31,7 @@ define(
 
       var config = InlineConfig({
         anchorage: anchorage,
-        sink: detail.sink()
+        lazySink: detail.lazySink()
       });
 
       return {

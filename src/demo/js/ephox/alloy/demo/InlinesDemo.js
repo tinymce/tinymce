@@ -9,6 +9,8 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
@@ -17,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Sandboxing, InlineApis, EventHandler, HtmlDisplay, Future, Class, DomEvent, Element, Insert, Value, document) {
+  function (Gui, GuiFactory, Sandboxing, InlineApis, EventHandler, HtmlDisplay, Future, Fun, Result, Class, DomEvent, Element, Insert, Value, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -39,7 +41,7 @@ define(
       var inlineComp = GuiFactory.build({
         uiType: 'inline',
         uid: 'inline-comp',
-        sink: sink
+        lazySink: Fun.constant(Result.value(sink))
       });
 
       gui.add(sink);      

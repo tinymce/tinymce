@@ -65,11 +65,13 @@ define(
 
     var getSink = function (hotspot, detail) {
       return hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').orThunk(function () {
-        return detail.sink().fold(function () {
+        return detail.lazySink().fold(function () {
           return Result.error(new Error(
             'No internal sink is specified, nor an external sink'
           ));
-        }, Result.value);
+        }, function (lazySink) {
+          return lazySink();
+        });
       }).getOrDie();
     };
       

@@ -20,11 +20,15 @@ define(
       FieldSchema.strict('anchorage'),
       FieldSchema.defaulted('onClose', Fun.noop),
       FieldSchema.defaulted('onOpen', Fun.noop),
-      FieldSchema.strict('sink')
+      FieldSchema.strict('lazySink')
     ]);
 
     return function (rawUiSpec) {
       var uiSpec = ValueSchema.asStructOrDie('InlineConfig', schema, rawUiSpec);
+
+      var getSink = function () {
+        return uiSpec.lazySink()().getOrDie();
+      };
 
       var populate = function (sandbox, buildSpec) {
 
@@ -53,7 +57,7 @@ define(
 
       var show = function (sandbox, component) {
         var anchor = uiSpec.anchorage().get(sandbox, component);
-        Positioning.position(uiSpec.sink(), anchor, component);
+        Positioning.position(getSink(), anchor, component);
         uiSpec.onOpen()(sandbox, component);
       };
 
@@ -85,7 +89,7 @@ define(
             preview: preview,
             enter: enter
           }),
-          sink: uiSpec.sink(),
+          lazySink: uiSpec.lazySink(),
           onClose: uiSpec.onClose()
         },
         receiving: receiving,

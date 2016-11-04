@@ -26,7 +26,7 @@ define(
         }),
         FieldSchema.defaulted('onOpen', Fun.noop),
         FieldSchema.defaulted('onClose', Fun.noop),
-        FieldSchema.strict('sink'),
+        FieldSchema.strict('lazySink'),
         FieldSchema.strict('manager')
       ])
     );
@@ -34,8 +34,12 @@ define(
     var clear = function (sandbox, sInfo) {
       if (sInfo.state().get().isSome()) {
         Manager.clear(sandbox, sInfo);
-        sInfo.sink().getSystem().removeFromWorld(sandbox);
+        getSink(sInfo).getSystem().removeFromWorld(sandbox);
       }
+    };
+
+    var getSink = function (sInfo) {
+      return sInfo.lazySink()().getOrDie();
     };
 
     // NOTE: A sandbox should not start as part of the world. It is expected to be
@@ -43,8 +47,10 @@ define(
     var rebuildSandbox = function (sandbox, sInfo, data) {
       clear(sandbox, sInfo);
       Remove.empty(sandbox.element());
-      Positioning.addContainer(sInfo.sink(), sandbox);
-      sInfo.sink().getSystem().addToWorld(sandbox);
+      var sink = getSink(sInfo);
+
+      Positioning.addContainer(sink, sandbox);
+      sink.getSystem().addToWorld(sandbox);
       var output = Manager.populate(sandbox, sInfo, data);
       sInfo.state().set(
         Option.some(output)
@@ -87,7 +93,7 @@ define(
         Manager.clear(sandbox, sInfo);
         Remove.empty(sandbox.element());
         sandbox.getSystem().removeFromWorld(sandbox);
-        Positioning.removeContainer(sInfo.sink(), sandbox);
+        Positioning.removeContainer(getSink(sInfo), sandbox);
         sInfo.onClose()(sandbox, state);
         sInfo.state().set(Option.none());
       });
