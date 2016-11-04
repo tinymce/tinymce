@@ -62,7 +62,7 @@ define(
                   button.getSystem().getByUid(detail.uid()).each(function (group) {
                     Highlighting.highlight(group, button);
                   });
-                  detail.action(bSpec.value);
+                  detail.action()(bSpec.value);
                 }
               }
             );
