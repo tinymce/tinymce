@@ -3,89 +3,88 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.perhaps.Option'
   ],
 
-  function (Highlighting, EventHandler, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun) {
-    var schema = ValueSchema.objOf([
+  function (Highlighting, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+    var schema = [
+      FieldSchema.strict('dom'),
       FieldSchema.strict('action'),
-      FieldSchema.strict('buttonTypes'),
-      FieldSchema.strict('buttonClass'),
-      FieldSchema.strict('selectedClass'),
+
       FieldSchema.field(
-        'buttons',
-        'buttons',
+        'markers',
+        'markers',
         FieldPresence.strict(),
-        ValueSchema.arrOf(
-          ValueSchema.objOf([
-            FieldSchema.strict('value'),
-            FieldSchema.strict('spec'),
-            FieldSchema.option('extra')
-          ])
-        )
+        ValueSchema.objOf([
+          FieldSchema.strict('selectedClass'),
+          FieldSchema.strict('buttonClass')  
+        ])
       ),
-      FieldSchema.option('uid')
-    ]);
+
+      FieldSchema.strict('buttons'),
+      FieldSchema.field(
+        'members',
+        'members',
+        FieldPresence.strict(),
+        ValueSchema.objOf([
+          FieldSchema.strict('button')
+        ])
+      ),
+
+      FieldSchema.strict('uid')
+    ];
 
 
     var make = function (spec) {
       // Not sure about where these getOrDie statements are
-      var detail = ValueSchema.asStructOrDie('gropubutton.spec', schema, spec);
+      var detail = SpecSchema.asStructOrDie('alloy.group-button', schema, spec, [ ]);
 
+      var placeholders = {
+        '<alloy.group-buttons>': UiSubstitutes.multiple(
+          Arr.map(detail.buttons(), function (bSpec) {
+            // TODO: A nice way of verifying that bSpec has a value property.
+            return Merger.deepMerge(
+              detail.members().button().munge(bSpec),
+              {
+                uiType: 'button',
+                toggling: {
+                  toggleClass: detail.markers().selectedClass(),
+                  toggleOnExecute: false
+                },
+                action: function (button) {
+                  button.getSystem().getByUid(detail.uid()).each(function (group) {
+                    Highlighting.highlight(group, button);
+                  });
+                  detail.action(bSpec.value);
+                }
+              }
+            );
+          })
+        )
+      };
 
-      var actionEvent = 'alloy.groupbutton.value';
+      var components = UiSubstitutes.substitutePlaces(
+        Option.some('groupbutton'),
+        detail,
+        detail.components(),
+        placeholders,
+        { }
+      );
 
       return Merger.deepMerge(spec, {
         type: 'custom',
-        dom: {
-          tag: 'div',
-          styles: {
-            display: 'flex'
-          },
-          classes: [ 'ephox-alloy-toolbar-item' ]
-        },
-        components: Arr.map(detail.buttons(), function (buttonSpec) {
-          return Merger.deepMerge(
-            {
-              uiType: 'button',
-              buttonType: buttonSpec.spec(),
-              dom: {
-                classes: [ detail.buttonClass() ]
-              }
-              // toggling: {
-              //   toggleClass: detail.toggleClass()
-              // }
-            }, {
-              buttonType: {
-                mode: detail.buttonTypes()
-              }
-            }, buttonSpec.extra().getOr({ }), {
-              action: function (button) {
-                button.getSystem().triggerEvent(actionEvent, button.element(), {
-                  value: buttonSpec.value,
-                  button: Fun.constant(button)
-                });
-              }
-            }
-          );
-        }),
+        dom: detail.dom(),
+        components: components,
         highlighting: {
-          highlightClass: detail.selectedClass(),
-          itemClass: detail.buttonClass()
-        },
-        events: {
-          'alloy.groupbutton.value': EventHandler.nu({
-            run: function (component, event) {
-              Highlighting.highlight(component, event.event().button());
-              detail.action()(event.event().value());
-            }
-          })
+          highlightClass: detail.markers().selectedClass(),
+          itemClass: detail.markers().buttonClass()
         }
       });
     };

@@ -8,6 +8,7 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.ValueSchema',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -17,7 +18,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, CustomBehaviour, HtmlDisplay, DomModification, ValueSchema, Fun, Class, Css, Element, Html, Insert, document) {
+  function (Gui, GuiFactory, CustomBehaviour, HtmlDisplay, DomModification, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -119,24 +120,50 @@ define(
         }
       );
 
-      // var group1 = HtmlDisplay.section(
-      //   gui,
-      //   'This button can only have one value selected. It can not be turned off',
-      //   {
-      //     uiType: 'groupbutton',
-      //     buttonTypes: 'text',
-      //     buttonClass: 'group-button',
-      //     selectedClass: 'demo-selected',
-      //     buttons: [
-      //       { value: 'alpha', spec: { text: 'Alpha' } },
-      //       { value: 'beta', spec: { text: 'Beta' } },
-      //       { value: 'gamma', spec: { text: 'Gamma' } }
-      //     ],
-      //     action: function (value) {
-      //       console.log('fired value', value);
-      //     }
-      //   }
-      // );
+      var group1 = HtmlDisplay.section(
+        gui,
+        'This button can only have one value selected. It can not be turned off',
+        {
+          uiType: 'groupbutton',
+
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.group-buttons>', owner: 'groupbutton' }
+          ],
+
+          members: {
+            button: {
+              munge: function (bSpec) {
+                return Merger.deepMerge(
+                  bSpec,
+                  {
+                    dom: {
+                      tag: 'button',
+                      innerHtml: bSpec.text
+                    }
+                  }
+                );
+              }
+            }
+          },
+          
+          markers: {
+            buttonClass: 'group-button',
+            selectedClass: 'demo-selected'
+          },
+          
+          buttons: [
+            { value: 'alpha', text: 'Alpha' },
+            { value: 'beta', text: 'Beta' },
+            { value: 'gamma', text: 'Gamma' }
+          ],
+          action: function (value) {
+            console.log('fired value', value);
+          }
+        }
+      );
     };
   }
 );
