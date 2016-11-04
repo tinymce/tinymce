@@ -2,6 +2,7 @@ define(
   'ephox.alloy.toolbar.MoreOverflow',
 
   [
+    'ephox.alloy.api.ui.ToolbarApis',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.toolbar.OverflowState',
@@ -23,7 +24,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, DomModification, OverflowState, Overflows, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Cell, Css, Insert, InsertAll, Remove, Traverse, Width) {
+  function (ToolbarApis, Behaviour, DomModification, OverflowState, Overflows, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Cell, Css, Insert, InsertAll, Remove, Traverse, Width) {
     var behaviourName = 'more-overflowing';
 
     var schema = FieldSchema.field(
@@ -105,10 +106,11 @@ define(
       var drawer = getDrawer(component, oInfo);
       var overflow = getButton(component, oInfo);
 
-      drawer.apis().setGroups([ ]);
+      ToolbarApis.setGroups(drawer, [ ]);
       // NOTE: We need to add the overflow button because it has no width otherwise
       // Note, adding it doesn't affect the width of the toolbar, so it should be fine.
-      primary.apis().setGroups(
+      ToolbarApis.setGroups(
+        primary,
         Arr.map(groups.concat(overflow), prebuild)
       );
 
@@ -124,14 +126,14 @@ define(
         // Not ideal. Breaking abstraction somewhat, though remove is better than insert
         // Can just reset the toolbar groups also ... but may be a bit slower.
         Remove.remove(overflow.element());
-        drawer.apis().setGroups([ ]);
+        ToolbarApis.setGroups([ ]);
         // Remove.remove(drawer.element());
       } else {
         var inPrimary = Arr.map(overflows.within(), prebuild);
         var inDrawer = Arr.map(overflows.extra(), prebuild);
 
-        primary.apis().setGroups(inPrimary);
-        drawer.apis().setGroups(inDrawer);
+        ToolbarApis.setGroups(primary, inPrimary);
+        ToolbarApis.setGroups(drawer, inDrawer);
 
         //Insert.append(component.element(), drawer.element());
       }
