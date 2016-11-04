@@ -8,10 +8,11 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.sugar.api.Value'
   ],
 
-  function (FormLabelSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Merger) {
+  function (FormLabelSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
@@ -72,14 +73,14 @@ define(
               dom: {
                 tag: 'select'
               },
-              // representing: { 
-              //   query: function (input) {
-              //     return Value.get(input.element());
-              //   },
-              //   set: function (input, value) {
-              //     Value.set(input.element(), value);
-              //   }
-              // },
+              representing: { 
+                query: function (input) {
+                  return Value.get(input.element());
+                },
+                set: function (input, value) {
+                  Value.set(input.element(), value);
+                }
+              },
               components: options
             }
           ),
