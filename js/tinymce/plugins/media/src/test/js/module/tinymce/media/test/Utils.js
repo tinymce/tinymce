@@ -92,7 +92,7 @@ define('tinymce.media.test.Utils', [
 			Chain.asStep({}, [
 				apis.cGetContent,
 				Assertions.cAssertHtml('Assert body content', expected)
-			]), 50, 3000
+			]), 10, 3000
 		);
 	};
 

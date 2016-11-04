@@ -22,7 +22,7 @@ asynctest('browser.core.SubmitTest', [
 			Utils.sOpenDialog(ui),
 			Utils.sSetFormItemNoEvent(ui, url),
 			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
-			Utils.sAssertEditorContent(apis, expected)
+			Utils.sAssertEditorContent(apis, editor, expected)
 		]);
 	};
 
@@ -31,8 +31,8 @@ asynctest('browser.core.SubmitTest', [
 		var apis = TinyApis(editor);
 
 		Pipeline.async({}, [
-			sTestEmbedContentSubmit(ui, editor, apis, 'http://youtube.com',
-			'<p><iframe src="http://youtube.com" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'),
+			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com',
+			'<p><iframe src="https://www.youtube.com" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'),
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
