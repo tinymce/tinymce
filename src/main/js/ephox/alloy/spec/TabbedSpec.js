@@ -74,12 +74,14 @@ define(
         { }
       );
 
-      return {
-        uid: detail.uid(),
-        uiType: 'custom',
-        dom: detail.dom(),
-        components: components
-      };
+      return Merger.deepMerge(
+        spec, {
+          uid: detail.uid(),
+          uiType: 'custom',
+          dom: detail.dom(),
+          components: components
+        }
+      );
     };
 
     return {
