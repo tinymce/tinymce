@@ -13,7 +13,9 @@ define(
         'disable',
         'isDisabled'
       ],
-      { }
+      {
+        
+      }
     );
   }
 );
