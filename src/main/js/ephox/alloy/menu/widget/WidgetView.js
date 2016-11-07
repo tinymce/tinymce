@@ -20,6 +20,8 @@ define(
         ])
       ),
 
+      FieldSchema.strict('scaffold'),
+
       FieldSchema.defaulted('preprocess', Fun.identity),
 
       FieldSchema.state('sandbox', function () {
@@ -29,7 +31,9 @@ define(
             uid: detail.uid() + '-sandbox',
             lazyHotspot: Fun.constant(button),
             lazySink: interactions.lazySink,
+            scaffold: detail.view().scaffold(),
             onOpen: interactions.onOpen,
+
             onClose: interactions.onClose,
             onExecute: interactions.onExecute,
             members: {

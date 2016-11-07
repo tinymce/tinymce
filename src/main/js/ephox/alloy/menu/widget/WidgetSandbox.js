@@ -26,6 +26,8 @@ define(
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.strict('lazySink'),
 
+      FieldSchema.strict('scaffold'),
+
       FieldSchema.field(
         'members',
         'members',

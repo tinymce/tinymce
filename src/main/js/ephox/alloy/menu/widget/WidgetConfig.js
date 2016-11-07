@@ -25,6 +25,8 @@ define(
       FieldSchema.strict('onExecute'),
 
       FieldSchema.strict('lazySink'),
+
+      FieldSchema.strict('scaffold'),
       
       FieldSchema.field(
         'members',
@@ -46,7 +48,7 @@ define(
       };
 
       var build = function (sandbox, data) {
-        var container = Merger.deepMerge(
+        var containerSpec = Merger.deepMerge(
           uiSpec.members().container().munge(rawUiSpec),
           {
             // Always flatgrid.
@@ -55,51 +57,57 @@ define(
           }
         );
 
-        return sandbox.getSystem().build(container);
+        var container = sandbox.getSystem().build(containerSpec);
+        var scaffoldSpec = uiSpec.scaffold()({ built: container });
+        var scaffold = scaffoldSpec !== container ? sandbox.getSystem().build(scaffoldSpec) : container;
+        return {
+          scaffold: scaffold,
+          container: container
+        };
       };
 
       var populate = function (sandbox, data) {
-        var container = build(sandbox, data);
-        sandbox.getSystem().addToWorld(container);
-        if (! Body.inBody(container.element())) Insert.append(sandbox.element(), container.element());
-        state.set(Option.some(container));
+        var tuple = build(sandbox, data);
+        sandbox.getSystem().addToWorld(tuple.scaffold);
+        if (! Body.inBody(tuple.scaffold.element())) Insert.append(sandbox.element(), tuple.scaffold.element());
+        state.set(Option.some(tuple));
         return state;
       };
 
-      var show = function (sandbox, container) {
+      var show = function (sandbox, tuple) {
         var sink = getSink();
         Positioning.position(sink, {
           anchor: 'hotspot',
           hotspot: uiSpec.lazyHotspot()(),
           bubble: Option.none()
-        }, container);
+        }, tuple.scaffold);
 
-        uiSpec.onOpen()(sandbox, container);
+        uiSpec.onOpen()(sandbox, tuple.container);
       };
 
       var enter = function (sandbox, state) {
-        state.get().each(function (container) {
-          show(sandbox, container);
-          Keying.focusIn(container);
+        state.get().each(function (tuple) {
+          show(sandbox, tuple);
+          Keying.focusIn(tuple.container);
         });
       };
 
       var preview = function (sandbox, state) {
-        state.get().each(function (container) {
-          show(sandbox, container);
+        state.get().each(function (tuple) {
+          show(sandbox, tuple);
         });
       };
 
       var clear = function (sandbox, state) {
-        state.get().each(function (container) {
-          sandbox.getSystem().removeFromWorld(container);
+        state.get().each(function (tuple) {
+          sandbox.getSystem().removeFromWorld(tuple.scaffold);
         });
         state.set(Option.none());
       };
 
       var isPartOf = function (sandbox, state, queryElem) {
-        return state.get().exists(function (container) {
-          return ComponentStructure.isPartOf(container, queryElem);
+        return state.get().exists(function (tuple) {
+          return ComponentStructure.isPartOf(tuple.scaffold, queryElem);
         });
       };
 

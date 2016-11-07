@@ -32,6 +32,7 @@ define(
         style: 'widget',
         members: spec.members,
         markers: spec.markers,
+        scaffold: spec.scaffold,
         preprocess: Fun.identity
       };
     };
@@ -41,6 +42,7 @@ define(
         style: 'grid',
         members: spec.members,
         markers: spec.markers,
+        // scaffold: spec.scaffold,
         preprocess: Fun.identity,
         initSize: spec.initSize
       };
