@@ -29,7 +29,14 @@ define(
       // this though. Putting all the behaviours in a single object will probably do it.
       return Merger.deepMerge(info.base(), {
         uiType: 'custom',
-        dom: info.dom(),
+        dom: Merger.deepMerge(
+          info.dom(),
+          {
+            attributes: {
+              role: 'menuitem'
+            }
+          }
+        ),
         focusing: {
           ignore: info.ignoreFocus(),
           onFocus: function (component) {
