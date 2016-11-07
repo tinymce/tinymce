@@ -20,6 +20,9 @@ define(
       FieldSchema.strict('lazyHotspot'),
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
+
+      FieldSchema.strict('scaffold'),
+
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('fakeFocus', false),
       FieldSchema.strict('lazySink'),

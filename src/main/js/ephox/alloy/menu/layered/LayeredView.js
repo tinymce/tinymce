@@ -29,6 +29,8 @@ define(
         MenuMarkers.schema()
       ),
 
+      FieldSchema.strict('scaffold'),
+
       FieldSchema.defaulted('preprocess', Fun.identity),
       FieldSchema.defaulted('fakeFocus', false),
       FieldSchema.defaulted('onHighlight', Fun.noop),
@@ -47,6 +49,7 @@ define(
             onHighlight: detail.view().onHighlight(),
 
             fakeFocus: detail.view().fakeFocus(),
+            scaffold: detail.view().scaffold(),
 
             members: {
               item: detail.view().members().item(),

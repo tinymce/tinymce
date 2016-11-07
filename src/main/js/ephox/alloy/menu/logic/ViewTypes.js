@@ -51,7 +51,8 @@ define(
         style: 'layered',
         members: spec.members,
         markers: spec.markers,
-        preprocess: Fun.identity
+        preprocess: Fun.identity,
+        scaffold: spec.scaffold
       };
     };
 
@@ -60,6 +61,7 @@ define(
         style: 'layered',
         members: spec.members,
         markers: spec.markers,
+        scaffold: spec.scaffold,
         preprocess: function (items) {
           var primary = 'blah';
           var expansions = {};

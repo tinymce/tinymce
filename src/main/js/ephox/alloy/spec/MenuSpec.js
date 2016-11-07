@@ -83,7 +83,14 @@ define(
 
       return {
         uiType: 'custom',
-        dom: detail.dom(),
+        dom: Merger.deepMerge(
+          detail.dom(),
+          {
+            attributes: {
+              role: 'menu'
+            }
+          }
+        ),
         uid: detail.uid(),
         highlighting: {
           // Highlighting for a menu is selecting items inside the menu
