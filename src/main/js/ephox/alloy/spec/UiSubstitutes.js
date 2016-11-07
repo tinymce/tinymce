@@ -115,8 +115,6 @@ define(
         return oneReplace(name, ph);
       });
 
-      console.log('factories', _factories);
-
       var outcome = substituteAll(owner, detail, components, _factories !== undefined ? _factories : { }, ps);
 
       Obj.each(ps, function (p) {

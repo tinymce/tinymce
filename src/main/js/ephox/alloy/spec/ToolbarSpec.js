@@ -84,7 +84,6 @@ define(
 
       var setGroupSpecs = function (component, gs) {
         var containerUid = detail.partUids().groups;
-        console.log('gs1', gs);
         component.getSystem().getByUid(containerUid).each(function (container) {
           var newGroups = buildGroups(gs);
           Replacing.replace(container, newGroups);
@@ -93,14 +92,11 @@ define(
 
       var setGroups = function (component, gs) {
         var containerUid = detail.partUids().groups;
-        console.log('gs2', gs);
         component.getSystem().getByUid(containerUid).each(function (container) {
           Replacing.replace(container, gs);
         });
       };
 
-     console.log('components', components);
-   
       // Maybe default some arguments here
       return Merger.deepMerge(spec, {
         dom: detail.dom(),
