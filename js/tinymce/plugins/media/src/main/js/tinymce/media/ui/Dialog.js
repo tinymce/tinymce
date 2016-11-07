@@ -6,20 +6,31 @@ define('tinymce.media.ui.Dialog', [
 ], function (tinymce, Delay, Data, Promise) {
 	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
 
+	var promises = {};
+
 	var checkEmbedHandler = function (editor, data) {
-		return new Promise(function (resolve, reject) {
-			var defaultResolve = function () {
-				return resolve({html: Data.dataToHtml(editor, data), url: data.source1});
-			};
-			var wrappedResolve = function (response) {
-				return response.html ? resolve({url: data.source1, html: response.html}) : defaultResolve();
-			};
-			if ('media_embed_handler' in editor.settings) {
-				editor.settings.media_embed_handler({url: data.source1}, wrappedResolve, reject);
-			} else {
-				defaultResolve();
-			}
-		});
+		promises = promises ? promises : {};
+		console.log(promises, data.source1);
+		return promises[data.source1] ?
+			promises[data.source1] :
+			(
+				promises[data.source1] = new Promise(function (resolve, reject) {
+					console.log('promise created with url: ' + data.source1);
+					var defaultResolve = function () {
+						return resolve({html: Data.dataToHtml(editor, data), url: data.source1});
+					};
+					var wrappedResolve = function (response) {
+						return response.html ? resolve({url: data.source1, html: response.html}) : defaultResolve();
+					};
+					var embedHandler = editor.settings.media_embed_handler;
+
+					if (data.source1 === '') {
+						resolve({html: '', url: ''});
+					}
+
+					embedHandler ? embedHandler({url: data.source1}, wrappedResolve, reject) : defaultResolve();
+				})
+			);
 	};
 
 	var addEmbedHtml = function (ctx, editor) {
@@ -57,6 +68,7 @@ define('tinymce.media.ui.Dialog', [
 					var beforeObjects = editor.dom.select('img[data-mce-object]');
 					editor.insertContent(response.html);
 					selectPlaceholder(editor, beforeObjects);
+					// promises && delete promises[response.url];
 					editor.nodeChanged();
 				});
 		};
@@ -95,6 +107,12 @@ define('tinymce.media.ui.Dialog', [
 					tinymce.each(e.meta, function (value, key) {
 						win.find('#' + key).value(value);
 					});
+				},
+				onremove: function (e) {
+					if (e.control.type === 'filepicker') {
+						console.log('cleared promises');
+						promises = null;
+					}
 				}
 			}
 		];

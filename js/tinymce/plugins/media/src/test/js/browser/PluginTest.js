@@ -22,9 +22,6 @@ asynctest('browser.core.PluginTest', [
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 
-	var cFindFilepickerInput = Utils.cFindInDialog(function (value) {
-		return document.getElementById(value.dom().htmlFor).querySelector('input');
-	});
 	var cFindWidthInput = Utils.cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Width"]');
 	});
@@ -132,35 +129,8 @@ asynctest('browser.core.PluginTest', [
 		]);
 	};
 
-
-	var sSetFormItemNoEvent = function (ui, value) {
-		return Chain.asStep({}, [
-			Utils.cSetFormItem(ui, value)
-		]);
-	};
-
-	var sAssertEditorContent = function (apis, expected) {
-		return Waiter.sTryUntil('Wait for editor value',
-			Chain.asStep({}, [
-				apis.cGetContent,
-				Assertions.cAssertHtml('Assert body content', expected)
-			]), 1, 3000
-		);
-	};
-
-	var sTestEmbedContentSubmit = function (ui, editor, apis, url, expected) {
-		return GeneralSteps.sequence([
-			Utils.sOpenDialog(ui),
-			sSetFormItemNoEvent(ui, url),
-			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
-			sAssertEditorContent(apis, expected)
-
-		]);
-	};
-
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
 		var ui = TinyUi(editor);
-		var apis = TinyApis(editor);
 
 		Pipeline.async({}, [
 			Utils.sTestEmbedContentFromUrl(ui,
