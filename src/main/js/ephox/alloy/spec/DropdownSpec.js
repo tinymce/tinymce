@@ -91,7 +91,7 @@ define(
         ViewTypes.useList(spec),
         Merger.deepMerge(
           {
-            matchWidth: true
+            matchWidth: false
           },
           spec
         )
