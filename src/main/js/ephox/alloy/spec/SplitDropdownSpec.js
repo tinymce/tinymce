@@ -49,7 +49,9 @@ define(
             },
             detail.parts()['button'](),
             {
-              uid: detail.partUids()['button']
+              uid: detail.partUids()['button'],
+              uiType: 'button',
+              action: detail.onExecute()
             }
           )
         ),
