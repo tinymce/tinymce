@@ -1471,7 +1471,9 @@ define("tinymce/dom/DOMUtils", [
 
 					if (type === 1) {
 						// Ignore bogus elements
-						if (node.getAttribute('data-mce-bogus')) {
+						var bogusVal = node.getAttribute('data-mce-bogus');
+						if (bogusVal) {
+							node = walker.next(bogusVal === 'all');
 							continue;
 						}
 
@@ -1481,6 +1483,7 @@ define("tinymce/dom/DOMUtils", [
 							// Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>
 							if (name === 'br') {
 								brCount++;
+								node = walker.next();
 								continue;
 							}
 
@@ -1507,7 +1510,9 @@ define("tinymce/dom/DOMUtils", [
 					if ((type === 3 && !whiteSpaceRegExp.test(node.nodeValue))) {
 						return false;
 					}
-				} while ((node = walker.next()));
+
+					node = walker.next();
+				} while (node);
 			}
 
 			return brCount <= 1;

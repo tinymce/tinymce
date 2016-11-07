@@ -652,6 +652,8 @@ define("tinymce/dom/Selection", [
 						}
 					}
 				}
+
+				self.editor.fire('AfterSetSelectionRange', {range: rng});
 			} else {
 				// Is W3C Range fake range on IE
 				if (rng.cloneRange) {

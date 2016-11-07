@@ -69,6 +69,10 @@ define("tinymce/SelectionOverrides", [
 			realSelectionId = 'sel-' + editor.dom.uniqueId(),
 			selectedContentEditableNode, $ = editor.$;
 
+		function isFakeSelectionElement(elm) {
+			return editor.dom.hasClass(elm, 'mce-offscreen-selection');
+		}
+
 		function getRealSelectionElement() {
 			var container = editor.dom.get(realSelectionId);
 			return container ? container.getElementsByTagName('*')[0] : container;
@@ -113,8 +117,6 @@ define("tinymce/SelectionOverrides", [
 
 		function selectNode(node) {
 			var e;
-
-			fakeCaret.hide();
 
 			e = editor.fire('BeforeObjectSelected', {target: node});
 			if (e.isDefaultPrevented()) {
@@ -332,7 +334,6 @@ define("tinymce/SelectionOverrides", [
 			blockCaretContainer = $(blockCaretContainer);
 
 			if (blockCaretContainer.attr('data-mce-caret')) {
-				fakeCaret.hide();
 				blockCaretContainer.removeAttr('data-mce-caret');
 				blockCaretContainer.removeAttr('data-mce-bogus');
 				blockCaretContainer.removeAttr('style');
@@ -362,8 +363,6 @@ define("tinymce/SelectionOverrides", [
 			if (isContentEditableFalse(ceRoot)) {
 				return showCaret(1, ceRoot, false);
 			}
-
-			fakeCaret.hide();
 
 			return null;
 		}
@@ -406,7 +405,6 @@ define("tinymce/SelectionOverrides", [
 			CaretContainer.remove(node.previousSibling);
 			CaretContainer.remove(node.nextSibling);
 			editor.dom.remove(node);
-			clearContentEditableSelection();
 
 			if (editor.dom.isEmpty(editor.getBody())) {
 				editor.setContent('');
@@ -604,8 +602,6 @@ define("tinymce/SelectionOverrides", [
 							e.preventDefault();
 							setContentEditableSelection(selectNode(contentEditableRoot));
 						}
-					} else {
-						clearContentEditableSelection();
 					}
 				});
 			}
@@ -650,15 +646,14 @@ define("tinymce/SelectionOverrides", [
 						e.preventDefault();
 						setContentEditableSelection(selectNode(contentEditableRoot));
 					} else {
-						clearContentEditableSelection();
-
 						if (!isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
 							editor.selection.placeCaretAt(e.clientX, e.clientY);
 						}
 					}
 				} else {
-					clearContentEditableSelection();
-					fakeCaret.hide();
+					// Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
+					// and there for not fire the AfterSetSelectionRange event.
+					removeContentEditableSelection();
 
 					var caretInfo = LineUtils.closestCaret(rootNode, e.clientX, e.clientY);
 					if (caretInfo) {
@@ -796,6 +791,18 @@ define("tinymce/SelectionOverrides", [
 				}
 			});
 
+			editor.on('AfterSetSelectionRange', function(e) {
+				var rng = e.range;
+
+				if (!isRangeInCaretContainer(rng)) {
+					hideFakeCaret();
+				}
+
+				if (!isFakeSelectionElement(rng.startContainer.parentNode)) {
+					removeContentEditableSelection();
+				}
+			});
+
 			editor.on('focus', function() {
 				// Make sure we have a proper fake caret on focus
 				Delay.setEditorTimeout(editor, function() {
@@ -849,13 +856,10 @@ define("tinymce/SelectionOverrides", [
 				startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
 
 			if (!range) {
-				clearContentEditableSelection();
 				return null;
 			}
 
 			if (range.collapsed) {
-				clearContentEditableSelection();
-
 				if (!isRangeInCaretContainer(range)) {
 					caretPosition = getNormalizedRangeEndPoint(1, range);
 
@@ -883,7 +887,6 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			if (startContainer.nodeType != 1) {
-				clearContentEditableSelection();
 				return null;
 			}
 
@@ -892,14 +895,12 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			if (!isContentEditableFalse(node)) {
-				clearContentEditableSelection();
 				return null;
 			}
 
 			targetClone = origTargetClone = node.cloneNode(true);
 			e = editor.fire('ObjectSelected', {target: node, targetClone: targetClone});
 			if (e.isDefaultPrevented()) {
-				clearContentEditableSelection();
 				return null;
 			}
 
@@ -942,7 +943,7 @@ define("tinymce/SelectionOverrides", [
 			return range;
 		}
 
-		function clearContentEditableSelection() {
+		function removeContentEditableSelection() {
 			if (selectedContentEditableNode) {
 				selectedContentEditableNode.removeAttribute('data-mce-selected');
 				editor.$('#' + realSelectionId).remove();
