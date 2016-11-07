@@ -213,15 +213,15 @@ define(
       };
 
       var updateMenuPath = function (component, state, path) {
-        return Option.from(path[0]).bind(state.lookupMenu).map(function (newMenuComp) {
+        return Option.from(path[0]).bind(state.lookupMenu).map(function (newMenuCompTuple) {
           var rest = getMenus(state, path.slice(1));
           Arr.each(rest, function (r) {
             Class.add(r.menu.element(), uiSpec.backgroundClass());
           });
-          if (! Body.inBody(newMenuComp.container.element())) {
-            Insert.append(component.element(), newMenuComp.container.element());
+          if (! Body.inBody(newMenuCompTuple.container.element())) {
+            Insert.append(component.element(), newMenuCompTuple.container.element());
           }
-          setActiveMenu(component, newMenuComp);
+          setActiveMenu(component, newMenuCompTuple);
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
@@ -238,13 +238,13 @@ define(
         return Sandboxing.getState(sandbox).bind(function (state) {
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
-            Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuComp) {
-              Highlighting.highlightFirst(newMenuComp);
+            Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuCompTuple) {
+              Highlighting.highlightFirst(newMenuCompTuple.menu);
 
               // DUPE with above. Fix later.
-              if (! Body.inBody(newMenuComp.element())) {
-                Insert.append(sandbox.element(), newMenuComp.container.element());
-                showSubmenu(sandbox, item, newMenuComp);
+              if (! Body.inBody(newMenuCompTuple.container.element())) {
+                Insert.append(sandbox.element(), newMenuCompTuple.container.element());
+                showSubmenu(sandbox, item, newMenuCompTuple);
               }
             });
 
