@@ -24,6 +24,7 @@ define(
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
       FieldSchema.strict('dom'),
+      FieldSchema.defaulted('displayer', Fun.identity),
       FieldSchema.option('lazySink'),
       FieldSchema.defaulted('matchWidth', false),
       ViewTypes.schema()
@@ -35,11 +36,27 @@ define(
       }), Gamma.parts());
 
       var factories = Merger.deepMerge(
-        Gamma.sink(),
-        Gamma.display()
+        Gamma.sink()
+        // Gamma.display()
       );
 
-      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), { }, factories);
+      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), {
+        '<alloy.dropdown-display>': UiSubstitutes.single(
+          Merger.deepMerge(
+            {
+              uiType: 'custom'
+            },
+            detail.parts().display(),
+            {
+              uid: detail.partUids().display,
+              representing: {
+                query: Fun.noop,
+                set: detail.displayer()
+              }
+            }
+          )
+        )
+      }, factories);
     
       return Merger.deepMerge(
         ButtonSpec.make({
