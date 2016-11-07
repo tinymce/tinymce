@@ -57,7 +57,7 @@
             QUnit.start();
             ok((new RegExp(id + '\.(png|jpg|jpeg|gif)$')).test(editor.$('img').attr('src')));
         }
-        
+
         loadTiny({
             automatic_uploads: true,
             images_upload_timeout: 1,
@@ -70,11 +70,11 @@
                 invokeWhen(function() {
                     return editor.$('img').attr('src') != src;
                 }, finalize, blobInfo.id());
-                
+
                 success(blobInfo.filename());
             }
         }, function() {
-            Utils.setSelection('img', 0);
+            editor.selection.select(editor.dom.select('img')[0]);
             editor.execCommand('mceImageFlipHorizontal');
         });
 	});
@@ -85,7 +85,7 @@
             QUnit.start();
             ok(/dogleft\.png\?\d+$/.test(editor.$('img').attr('src')));
         }
-        
+
         loadTiny({
             automatic_uploads: true,
             images_reuse_filename: true,
@@ -95,17 +95,17 @@
                 var src = editor.$('img').attr('src');
 
                 equal(blobInfo.filename(), 'dogleft.png');
-                
+
                 invokeWhen(function() {
                     return editor.$('img').attr('src') != src;
                 }, finalize, blobInfo.id());
-                
+
                 success('dogleft.png');
             }
         }, function() {
-            Utils.setSelection('img', 0);
+            editor.selection.select(editor.dom.select('img')[0]);
             editor.execCommand('mceImageFlipHorizontal');
         });
 	});
 
-}());
+})();

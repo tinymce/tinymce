@@ -37,13 +37,12 @@
         }
 
         $el.removeAttr(attr);
-        $el.find('['+attr+']').removeAttr(attr);
+        $el.find('[' + attr + ']').removeAttr(attr);
     }
 
 	function trimBr(html) {
 		return html.replace(/<br data-mce-bogus="1" \/>/g, '');
 	}
-
 
     test("mceInsertToc", function() {
         editor.getBody().innerHTML =
@@ -88,7 +87,6 @@
         );
     });
 
-
     test("mceInsertToc - flat structure", function() {
         editor.getBody().innerHTML =
             '<h1 id="h1">H1</h1>' +
@@ -128,11 +126,7 @@
         );
     });
 
-
-
     test("mceUpdateToc", function() {
-        var $toc;
-
         editor.getBody().innerHTML =
             '<h1 id="h1">H1</h1>' +
             '<p>This is some text.</p><br />' +
@@ -148,7 +142,7 @@
         editor.execCommand('mceInsertToc');
 
         // add one more heading
-        editor.getBody().innerHTML += '<h1 id="h5">H1</h1><p>This is some text.</p>';
+        editor.$().append('<h1 id="h5">H1</h1><p>This is some text.</p>');
 
         Utils.setSelection('li', 0);
         editor.execCommand('mceUpdateToc');
@@ -156,7 +150,6 @@
         equal(editor.$('.tst-toc > ul a[href="#h5"]').length, 1,
             "ToC has been successfully updated");
     });
-
 
     test("Misc.", function() {
         var contents, $toc;
@@ -199,4 +192,4 @@
         );
     });
 
-}());
+})();
