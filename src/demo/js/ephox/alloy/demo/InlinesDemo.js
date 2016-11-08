@@ -4,22 +4,26 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.InlineApis',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Value',
-    'global!document'
+    'global!document',
+    'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, Sandboxing, InlineApis, EventHandler, HtmlDisplay, Future, Fun, Result, Class, DomEvent, Element, Insert, Value, document) {
+  function (Gui, GuiFactory, GuiTemplate, Sandboxing, InlineApis, EventHandler, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -29,12 +33,23 @@ define(
       var sink = GuiFactory.build({
         uiType: 'custom',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          styles: {
+            'background': 'green',
+            margin: '10px',
+            border: '1px solid blue',
+            'min-height': '10px'
+          }
         },
         positioning: {
           useFixed: true
         }
       });
+
+
+      var lazySink = function () {
+        return Result.value(sink);
+      };
 
       // Note, this should not in the GUI. It will be connected
       // when it opens.
@@ -44,6 +59,63 @@ define(
         lazySink: Fun.constant(Result.value(sink))
       });
 
+      var inlineMenu = GuiFactory.build({
+        uiType: 'inline-view',
+        dom: {
+          tag: 'div'
+        },
+
+        fetch: function () {
+          return Future.pure({
+            uiType: 'container'
+          });
+        },
+
+        onExecute: function () {
+          console.log('here', arguments);
+        },
+
+        lazySink: lazySink,
+
+        view: {
+          style: 'layered',
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'alloy-menu',
+            selectedMenu: 'alloy-selected-menu'
+          },
+        
+          members: {
+            menu: {
+              munge: function (spec) {
+                return GuiTemplate.use(
+                  Option.none(),
+                  TemplateMenu,
+                  { },
+                  {
+                    fields: {
+                      'aria-label': spec.textkey
+                    }
+                  }
+                );
+              }
+            },
+            item: {
+              munge: function (spec) {
+                return DemoTemplates.item(spec);
+              }
+            }
+            // menu: GuiTempalte.use(TemplateMenu)
+            // dom: {
+            //   tag: 'div'  
+            // },
+            // itemDefn: { }            
+          },
+          scaffold: Fun.identity
+        }
+      });
+
       gui.add(sink);      
 
       var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
@@ -51,6 +123,64 @@ define(
           target: evt.target()
         });
       });
+
+      HtmlDisplay.section(
+        gui,
+        'This inline menu component is a layered menu',
+        {
+           uiType: 'custom',
+          dom: {
+            tag: 'div'
+          },
+          keying: {
+            mode: 'cyclic',
+            selector: 'input'
+          },
+          components: [
+            {
+              uiType: 'input',
+              dom: {
+                styles: { display: 'block', 'margin-bottom': '50px' }
+              }
+            },
+            {
+              uiType: 'input',
+              dom: {
+                styles: { display: 'block' }
+              },
+              events: {
+                // Want DOM focus. Focusing behaviour uses alloy focus.
+                focusin: EventHandler.nu({
+                  run: function (input) {
+                    Sandboxing.showSandbox(
+                      inlineMenu, 
+                      Future.pure({
+                        expansions: { },
+                        menus: {
+                          dog: {
+                            items: [
+                              { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'alpha' },
+                              { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'beta' },
+                              { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'gamma' },
+                              { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'delta' }
+
+                            ],
+                            textkey: 'Dog'
+                          }
+                        },
+                        primary: 'dog'
+                      })
+                    ).get(Fun.identity);
+                  }
+                })
+              }
+            }
+
+          ] 
+
+        }
+      );
+      
 
       HtmlDisplay.section(
         gui,

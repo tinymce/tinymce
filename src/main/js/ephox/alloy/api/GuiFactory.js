@@ -56,7 +56,7 @@ define(
       select: HtmlSelectSpec.make,
 
       inline: InlineSpec.make,
-      'inline-menu': InlineViewSpec.make,
+      'inline-view': InlineViewSpec.make,
       
       groupbutton: GroupButtonSpec.make,
 
