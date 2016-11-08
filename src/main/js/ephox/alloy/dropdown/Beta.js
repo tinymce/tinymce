@@ -5,13 +5,14 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (Coupling, Sandboxing, Gamma, Option, Remove, Width, Error) {
+  function (Coupling, Sandboxing, Gamma, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -71,7 +72,8 @@ define(
         lazySink: lazySink
       };
 
-      return detail.view().sandbox().spawn(anchor, detail, interactions);
+      var lazyAnchor = Fun.constant(anchor);
+      return detail.view().sandbox().spawn(lazyAnchor, detail, interactions);
     };
 
     
