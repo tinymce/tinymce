@@ -1,7 +1,10 @@
 define('tinymce.media.core.Data', [
-	'global!tinymce',
-	'tinymce.media.core.Mime'
-], function (tinymce, Mime) {
+	'tinymce.media.core.Mime',
+	'global!tinymce.util.Tools',
+	'global!tinymce.html.Writer',
+	'global!tinymce.html.SaxParser',
+	'global!tinymce.html.Schema'
+], function (Mime, Tools, Writer, SaxParser, Schema) {
 	var getSource = function (editor) {
 		var elm = editor.selection.getNode();
 
@@ -62,10 +65,10 @@ define('tinymce.media.core.Data', [
 			return html;
 		}
 
-		var writer = new tinymce.html.Writer();
+		var writer = new Writer();
 		var blocked;
 
-		new tinymce.html.SaxParser({
+		new SaxParser({
 			validate: false,
 			allow_conditional_comments: false,
 			special: 'script,noscript',
@@ -110,18 +113,18 @@ define('tinymce.media.core.Data', [
 
 				writer.end(name);
 			}
-		}, new tinymce.html.Schema({})).parse(html);
+		}, new Schema({})).parse(html);
 
 		return writer.getContent();
 	};
 
 	var updateHtml = function (html, data, updateAll) {
-		var writer = new tinymce.html.Writer();
+		var writer = new Writer();
 		var sourceCount = 0;
 		var hasImage;
 
 
-		new tinymce.html.SaxParser({
+		new SaxParser({
 			validate: false,
 			allow_conditional_comments: true,
 			special: 'script,noscript',
@@ -235,7 +238,7 @@ define('tinymce.media.core.Data', [
 
 				writer.end(name);
 			}
-		}, new tinymce.html.Schema({})).parse(html);
+		}, new Schema({})).parse(html);
 
 		return writer.getContent();
 	};
@@ -243,7 +246,7 @@ define('tinymce.media.core.Data', [
 	var htmlToData = function (editor, html) {
 		var data = {};
 
-		new tinymce.html.SaxParser({
+		new SaxParser({
 			validate: false,
 			allow_conditional_comments: true,
 			special: 'script,noscript',
@@ -257,7 +260,7 @@ define('tinymce.media.core.Data', [
 						data.type = name;
 					}
 
-					data = tinymce.extend(attrs.map, data);
+					data = Tools.extend(attrs.map, data);
 				}
 
 				if (name === "script") {
@@ -297,10 +300,10 @@ define('tinymce.media.core.Data', [
 
 	var dataToHtml = function (editor, dataIn) {
 		var html = '';
-		var data = tinymce.extend({}, dataIn);
+		var data = Tools.extend({}, dataIn);
 
 		if (!data.source1) {
-			tinymce.extend(data, htmlToData(editor, data.embed));
+			Tools.extend(data, htmlToData(editor, data.embed));
 			if (!data.source1) {
 				return '';
 			}
@@ -320,7 +323,7 @@ define('tinymce.media.core.Data', [
 		data.source2mime = Mime.guess(data.source2);
 		data.poster = editor.convertURL(data.poster, "poster");
 
-		tinymce.each(urlPatterns, function (pattern) {
+		Tools.each(urlPatterns, function (pattern) {
 			var i;
 			var url;
 
@@ -358,7 +361,7 @@ define('tinymce.media.core.Data', [
 			data.width = data.width || 300;
 			data.height = data.height || 150;
 
-			tinymce.each(data, function (value, key) {
+			Tools.each(data, function (value, key) {
 				data[key] = editor.dom.encode(value);
 			});
 

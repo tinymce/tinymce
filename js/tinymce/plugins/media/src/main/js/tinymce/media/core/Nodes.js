@@ -1,12 +1,13 @@
 define('tinymce.media.core.Nodes', [
-	'global!tinymce',
-	'tinymce.media.core.Data'
-], function (tinymce, Data) {
+	'tinymce.media.core.Data',
+	'global!tinymce.html.Node',
+	'global!tinymce.Env'
+], function (Data, Node, Env) {
 	var createPlaceholderNode = function (editor, node) {
 		var placeHolder;
 		var name = node.name;
 
-		placeHolder = new tinymce.html.Node('img', 1);
+		placeHolder = new Node('img', 1);
 		placeHolder.shortEnded = true;
 
 		retainAttributesAndInnerHtml(editor, node, placeHolder);
@@ -15,7 +16,7 @@ define('tinymce.media.core.Nodes', [
 			width: node.attr('width') || "300",
 			height: node.attr('height') || (name === "audio" ? "30" : "150"),
 			style: node.attr('style'),
-			src: tinymce.Env.transparentSrc,
+			src: Env.transparentSrc,
 			"data-mce-object": name,
 			"class": "mce-object mce-object-" + name
 		});
@@ -29,7 +30,7 @@ define('tinymce.media.core.Nodes', [
 		var shimNode;
 		var name = node.name;
 
-		previewWrapper = new tinymce.html.Node('span', 1);
+		previewWrapper = new Node('span', 1);
 		previewWrapper.attr({
 			contentEditable: 'false',
 			style: node.attr('style'),
@@ -39,7 +40,7 @@ define('tinymce.media.core.Nodes', [
 
 		retainAttributesAndInnerHtml(editor, node, previewWrapper);
 
-		previewNode = new tinymce.html.Node(name, 1);
+		previewNode = new Node(name, 1);
 		previewNode.attr({
 			src: node.attr('src'),
 			allowfullscreen: node.attr('allowfullscreen'),
@@ -48,7 +49,7 @@ define('tinymce.media.core.Nodes', [
 			frameborder: '0'
 		});
 
-		shimNode = new tinymce.html.Node('span', 1);
+		shimNode = new Node('span', 1);
 		shimNode.attr('class', 'mce-shim');
 
 		previewWrapper.append(previewNode);
@@ -124,7 +125,7 @@ define('tinymce.media.core.Nodes', [
 					}
 				}
 
-				if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && tinymce.Env.ceFalse) {
+				if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && Env.ceFalse) {
 					placeHolder = createPreviewNode(editor, node);
 				} else {
 					placeHolder = createPlaceholderNode(editor, node);
