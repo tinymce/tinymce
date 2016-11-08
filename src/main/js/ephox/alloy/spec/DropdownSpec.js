@@ -83,7 +83,10 @@ define(
           coupling: {
             others: {
               sandbox: function (hotspot) {
-                return Beta.makeSandbox(detail, hotspot, {
+                return Beta.makeSandbox(detail, {
+                  anchor: 'hotspot',
+                  hotspot: hotspot
+                }, hotspot, {
                   onOpen: function () { Toggling.select(hotspot); },
                   onClose: function () { Toggling.deselect(hotspot); }
                 });

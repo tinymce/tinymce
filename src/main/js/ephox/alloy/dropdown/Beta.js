@@ -47,10 +47,11 @@ define(
       Width.set(container.element(), buttonWidth);
     };
 
-    var makeSandbox = function (detail, hotspot, extras) {
+    var makeSandbox = function (detail, anchor, anyInSystem, extras) {
       var onOpen = function (component, menu) {
-        if (detail.matchWidth()) matchWidth(hotspot, menu);
-        detail.onOpen()(hotspot, component, menu);
+        // TODO: Reinstate matchWidth
+        // if (detail.matchWidth()) matchWidth(hotspot, menu);
+        detail.onOpen()(anchor, component, menu);
         if (extras !== undefined && extras.onOpen !== undefined) extras.onOpen(component, menu);
       };
 
@@ -61,7 +62,7 @@ define(
         if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };
 
-      var lazySink = Gamma.getSink(hotspot, detail);
+      var lazySink = Gamma.getSink(anyInSystem, detail);
 
       var interactions = {
         onOpen: onOpen,
@@ -70,7 +71,7 @@ define(
         lazySink: lazySink
       };
 
-      return detail.view().sandbox().spawn(hotspot, detail, interactions);
+      return detail.view().sandbox().spawn(anchor, detail, interactions);
     };
 
     

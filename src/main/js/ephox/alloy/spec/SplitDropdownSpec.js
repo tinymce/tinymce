@@ -108,7 +108,10 @@ define(
                   }
                 };
 
-                return Beta.makeSandbox(detail, hotspot, extras);
+                return Beta.makeSandbox(detail, {
+                  anchor: 'hotspot',
+                  hotspot: hotspot
+                }, hotspot, extras);
               }
             }
           },

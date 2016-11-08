@@ -18,7 +18,7 @@ define(
 
   function (ComponentStructure, Keying, Positioning, Manager, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
-      FieldSchema.strict('lazyHotspot'),
+      FieldSchema.strict('lazyAnchor'),
 
       FieldSchema.strict('onOpen'),
       FieldSchema.strict('onClose'),
@@ -76,11 +76,7 @@ define(
 
       var show = function (sandbox, tuple) {
         var sink = getSink();
-        Positioning.position(sink, {
-          anchor: 'hotspot',
-          hotspot: uiSpec.lazyHotspot()(),
-          bubble: Option.none()
-        }, tuple.scaffold);
+        Positioning.position(sink, uiSpec.lazyAnchor()(), tuple.scaffold);
 
         uiSpec.onOpen()(sandbox, tuple.container);
       };

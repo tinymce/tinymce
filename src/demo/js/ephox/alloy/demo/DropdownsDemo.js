@@ -107,6 +107,7 @@ define(
             },
             view: {
               style: 'widget',
+              scaffold: Fun.identity,
               members: {
                 container: {
                   munge: function (spec) {
@@ -137,6 +138,8 @@ define(
           {
             uiType: 'dropdown-widget',
             lazySink: lazySink,
+
+            scaffold: Fun.identity,
             members: {
               container: {
                 munge: function (spec) {
@@ -151,6 +154,10 @@ define(
             },
             parts: {
               display: {
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'here'
+                },
                 representing: {
                   query: function (comp) {
 
@@ -194,9 +201,12 @@ define(
           uiType: 'dropdown-grid',
           text: 'Dropdown',
           dom: {
-            tag: 'button',
-            innerHtml: 'Click me to expand'
+            tag: 'div'
           },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-grid' }
+          ],
+          scaffold: Fun.identity,
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',
@@ -254,6 +264,10 @@ define(
           lazySink: lazySink,
           parts: {
             display: {
+              dom: {
+                tag: 'button',
+                innerHtml: 'Dropdown Grid'
+              },
               representing: {
                 query: function (comp) {
 
@@ -279,6 +293,10 @@ define(
             tag: 'button',
             innerHtml: 'Click me to expand'
           },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-list' }
+          ],
+          scaffold: Fun.identity,
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',
@@ -308,6 +326,9 @@ define(
           },
           parts: {
             display: {
+              dom: {
+                tag: 'div'
+              },
               representing: {
                 query: function (comp) {
 
@@ -345,9 +366,11 @@ define(
         {
           uiType: 'dropdown-menu',
           dom: {
-            tag: 'button',
-            innerHtml: '+'
+            tag: 'div'
           },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-menu' }
+          ],
           lazySink: lazySink,
           markers: {
             item: 'alloy-item',
@@ -357,6 +380,10 @@ define(
           },
           parts: {
             display: {
+              dom: {
+                tag: 'button',
+                innerHtml: '+'
+              },
               representing: {
                 query: function (comp) {
 
@@ -393,6 +420,9 @@ define(
             // },
             // itemDefn: { }            
           },
+
+          scaffold: Fun.identity,
+
           onExecute: function (sandbox, item, itemValue) {
             console.trace();
             console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item) + ' ***');

@@ -17,7 +17,7 @@ define(
   function (ComponentStructure, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
-      FieldSchema.strict('lazyHotspot'),
+      FieldSchema.strict('lazyAnchor'),
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
 
@@ -55,7 +55,8 @@ define(
       var config = LayeredConfig(detail);
 
       var isExtraPart = function (sandbox, target) {
-        return ComponentStructure.isPartOf(detail.lazyHotspot(), target);
+        return detail.lazyAnchor() === 'anchor' &&
+          ComponentStructure.isPartOf(detail.lazyAnchor().hotspot(), target);
       };
 
       return {

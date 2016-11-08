@@ -37,7 +37,7 @@ define(
 
   function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, Representing, Sandboxing, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
-      FieldSchema.strict('lazyHotspot'),
+      FieldSchema.strict('lazyAnchor'),
 
       FieldSchema.strict('onOpen'),
       FieldSchema.strict('onClose'),
@@ -132,11 +132,7 @@ define(
 
       var showMenu = function (sandbox, tuple) {
         var sink = getSink();
-        Positioning.position(sink, {
-          anchor: 'hotspot',
-          hotspot: uiSpec.lazyHotspot()(),
-          bubble: Option.none()
-        }, tuple.container);
+        Positioning.position(sink, uiSpec.lazyAnchor(), tuple.container);
 
         uiSpec.onOpen()(sandbox, tuple.menu);
       };
@@ -288,7 +284,7 @@ define(
         return sandbox.getSystem().getByDom(target).bind(function (item) {
           return collapseLeft(sandbox, item).orThunk(function () {
           // This should only fire when the user presses ESC ... not any other close.
-            return HotspotViews.onEscape(uiSpec.lazyHotspot()(), sandbox);
+            return HotspotViews.onEscape(uiSpec.lazyAnchor(), sandbox);
           });
         });
       };

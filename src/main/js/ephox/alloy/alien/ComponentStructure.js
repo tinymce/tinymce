@@ -14,8 +14,13 @@ define(
       }, Fun.constant(false));  
     };
 
+    var isPartOfAnchor = function (anchor, queryElem) {
+      return anchor.anchor === 'hotspot' && isPartOf(anchor.hotspot, queryElem);
+    };
+
     return {
-      isPartOf: isPartOf
+      isPartOf: isPartOf,
+      isPartOfAnchor: isPartOfAnchor
     };
   }
 );

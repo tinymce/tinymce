@@ -26,10 +26,11 @@ define(
 
       FieldSchema.state('sandbox', function () {
 
-        var spawn = function (button, detail, interactions) {
+        var spawn = function (anchor, detail, interactions) {
+          debugger;
           return WidgetSandbox.make({
             uid: detail.uid() + '-sandbox',
-            lazyHotspot: Fun.constant(button),
+            lazyAnchor: Fun.constant(anchor),
             lazySink: interactions.lazySink,
             scaffold: detail.view().scaffold(),
             onOpen: interactions.onOpen,

@@ -63,8 +63,8 @@ define(
       }
     };
 
-    var getSink = function (hotspot, detail) {
-      return hotspot.getSystem().getByUid(detail.uid() + '-internal-sink').map(function (internalSink) {
+    var getSink = function (anyInSystem, detail) {
+      return anyInSystem.getSystem().getByUid(detail.uid() + '-internal-sink').map(function (internalSink) {
         return Fun.constant(
           Result.value(internalSink)
         );

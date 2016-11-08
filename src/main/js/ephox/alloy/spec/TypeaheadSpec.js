@@ -158,7 +158,13 @@ define(
           coupling: {
             others: {
               sandbox: function (hotspot) {
-                return Beta.makeSandbox(detail, hotspot);
+                return Beta.makeSandbox(detail, {
+                  anchor: hotspot,
+                  hotspot: hotspot
+                }, hotspot, {
+                  onOpen: Fun.identity,
+                  onClose: Fun.identity
+                });
               }
             }
           }

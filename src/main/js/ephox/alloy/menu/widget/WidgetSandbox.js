@@ -20,7 +20,7 @@ define(
   function (ComponentStructure, SystemEvents, Sandboxing, EventHandler, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
-      FieldSchema.strict('lazyHotspot'),
+      FieldSchema.strict('lazyAnchor'),
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
@@ -45,7 +45,7 @@ define(
       var config = WidgetConfig(detail);
 
       var isExtraPart = function (sandbox, target) {
-        return ComponentStructure.isPartOf(detail.lazyHotspot(), target);
+        return ComponentStructure.isPartOfAnchor(detail.lazyAnchor(), target);
       };
 
       return {
@@ -69,7 +69,7 @@ define(
           mode: 'special',
           onTab: function () { return Option.some(true); },
           onEscape: function (sandbox) {
-            return HotspotViews.onEscape(detail.lazyHotspot(), sandbox);
+            return HotspotViews.onEscape(detail.lazyAnchor(), sandbox);
           }
         }
       };
