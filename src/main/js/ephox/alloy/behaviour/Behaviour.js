@@ -7,13 +7,14 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
+    'ephox.epithet.Id',
     'ephox.peanut.Fun',
     'ephox.scullion.Contracts',
     'global!Array',
     'global!console'
   ],
 
-  function (DomModification, AlloyLogger, FieldSchema, Objects, Obj, Fun, Contracts, Array, console) {
+  function (DomModification, AlloyLogger, FieldSchema, Objects, Obj, Id, Fun, Contracts, Array, console) {
     var contract = Contracts.exactly([ 'name', 'exhibit', 'handlers', 'apis', 'schema' ]);
 
     var truncate = function (element) {
@@ -39,7 +40,8 @@ define(
       };
     };
 
-    var exhibition = function (name, modification) {
+    var exhibition = function (optName, modification) {
+      var name = optName.getOr(Id.generate());
       return contract({
         name: Fun.constant(name),
         exhibit: function () {
@@ -49,7 +51,7 @@ define(
         handlers: Fun.constant({ }),
         // Make this better.
         schema: Fun.constant(
-          FieldSchema.state('state', function () { })
+          FieldSchema.state(name, function () { })
         )
       });
     };
