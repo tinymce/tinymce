@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.ToolbarGroupSpec',
 
   [
+    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -12,7 +13,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (Behaviour, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('items'),
@@ -46,16 +47,7 @@ define(
         {
           '<alloy.toolbar.group.items>': UiSubstitutes.multiple(
             Arr.map(detail.items(), function (item) {
-              return Merger.deepMerge(
-                detail.members().item().munge(item),
-                {
-                  dom: {
-                    attributes: {
-                      role: 'toolbar'
-                    }
-                  }
-                }
-              );
+              return detail.members().item().munge(item);
             })
           )
         }, 
@@ -74,7 +66,15 @@ define(
           selector: detail.markers().itemClass()
         },
         tabstopping: true,
-        focusing: undefined
+        focusing: undefined,
+
+        behaviours: [
+          Behaviour.exhibition(Option.none(), {
+            attributes: {
+              role: 'toolbar'
+            }
+          })
+        ]
       };
     };
 
