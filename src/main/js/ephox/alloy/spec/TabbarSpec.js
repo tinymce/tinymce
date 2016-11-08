@@ -13,16 +13,21 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Compare'
   ],
 
-  function (SystemEvents, Highlighting, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Compare) {
+  function (SystemEvents, Highlighting, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Compare) {
     var schema = [
       FieldSchema.strict('tabs'),
 
       FieldSchema.strict('onExecute'),
+      FieldSchema.defaulted('onDismiss', Fun.noop),
+      FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.strict('dom'),
+
+      FieldSchema.defaulted('selectFirst', true),
 
       FieldSchema.field(
         'members',
@@ -32,6 +37,8 @@ define(
           FieldSchema.strict('tab')
         ])
       ),
+
+      FieldSchema.defaulted('clickToDismiss', true),
 
       FieldSchema.field(
         'markers',
@@ -65,8 +72,18 @@ define(
                 },
                 action: function (button) {
                   var bar = button.getSystem().getByUid(detail.uid()).getOrDie();
-                  Highlighting.highlight(bar, button);
-                  detail.onExecute()(bar, button);
+                  var alreadyViewing = Highlighting.getHighlighted(bar).exists(function (highlighted) {
+                    return Compare.eq(button.element(), highlighted.element());
+                  });
+
+                  if (alreadyViewing && detail.clickToDismiss()) {
+                    Highlighting.dehighlightAll(bar);
+                    detail.onDismiss()(bar, button);
+                  } else if (! alreadyViewing) {
+                    Highlighting.highlight(bar, button);
+                    detail.onExecute()(bar, button);
+                    detail.onChange()(bar, button);
+                  }
                 },
                 role: 'tab'
               }
@@ -109,7 +126,7 @@ define(
             run: function (tabbar, simulatedEvent) {
               if (Compare.eq(simulatedEvent.event().target(), tabbar.element())) {
                 Highlighting.getFirst(tabbar).each(function (first) {
-                  first.getSystem().triggerEvent(SystemEvents.execute(), first.element(), { });
+                  if (detail.selectFirst()) first.getSystem().triggerEvent(SystemEvents.execute(), first.element(), { });
                 });
               }
             }

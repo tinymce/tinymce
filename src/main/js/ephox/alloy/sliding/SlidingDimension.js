@@ -86,7 +86,7 @@ define(
           // We also can't cache the dimension as the parents may have resized since it was last shown.
           var startGrow = function (component, oInfo) {
             var fullSize = measureTargetSize(component, oInfo);
-
+            
             // Start the growing animation styles
             Class.add(component.element(), oInfo.growingStyle());
 
