@@ -97,6 +97,13 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
+	var sSubmitAndReopen = function (ui) {
+		return GeneralSteps.sequence([
+			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
+			sOpenDialog(ui)
+		]);
+	};
+
 	var sSetSetting = function (editorSetting, key, value) {
 		return Step.sync(function () {
 			editorSetting[key] = value;
@@ -112,6 +119,7 @@ define('tinymce.media.test.Utils', [
 		sTestEmbedContentFromUrl: sTestEmbedContentFromUrl,
 		sSetFormItemNoEvent: sSetFormItemNoEvent,
 		sAssertEditorContent: sAssertEditorContent,
-		sSetSetting: sSetSetting
+		sSetSetting: sSetSetting,
+		sSubmitAndReopen: sSubmitAndReopen
 	};
 });

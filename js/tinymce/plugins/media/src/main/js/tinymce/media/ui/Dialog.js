@@ -8,20 +8,25 @@ define('tinymce.media.ui.Dialog', [
 
 	var promises = {};
 
+	var resetPromises = function () {
+		promises = null;
+	};
+
 	var checkEmbedHandler = function (editor, data) {
 		promises = promises ? promises : {};
-		console.log(promises, data.source1);
+
 		return promises[data.source1] ?
 			promises[data.source1] :
 			(
 				promises[data.source1] = new Promise(function (resolve, reject) {
-					console.log('promise created with url: ' + data.source1);
 					var defaultResolve = function () {
 						return resolve({html: Data.dataToHtml(editor, data), url: data.source1});
 					};
+
 					var wrappedResolve = function (response) {
 						return response.html ? resolve({url: data.source1, html: response.html}) : defaultResolve();
 					};
+
 					var embedHandler = editor.settings.media_embed_handler;
 
 					if (data.source1 === '') {
@@ -68,7 +73,6 @@ define('tinymce.media.ui.Dialog', [
 					var beforeObjects = editor.dom.select('img[data-mce-object]');
 					editor.insertContent(response.html);
 					selectPlaceholder(editor, beforeObjects);
-					// promises && delete promises[response.url];
 					editor.nodeChanged();
 				});
 		};
@@ -110,14 +114,14 @@ define('tinymce.media.ui.Dialog', [
 				},
 				onremove: function (e) {
 					if (e.control.type === 'filepicker') {
-						console.log('cleared promises');
-						promises = null;
+						resetPromises();
 					}
 				}
 			}
 		];
 
 		var recalcSize = function (e) {
+			resetPromises();
 			var widthCtrl = win.find('#width')[0];
 			var heightCtrl = win.find('#height')[0];
 			var width = widthCtrl.state.get('oldVal');
@@ -190,6 +194,7 @@ define('tinymce.media.ui.Dialog', [
 		};
 
 		var updateValueOnChange = function () {
+			resetPromises();
 			data = tinymce.extend({}, Data.htmlToData(editor, this.value()));
 			this.parent().parent().fromJSON(data);
 		};
@@ -227,6 +232,8 @@ define('tinymce.media.ui.Dialog', [
 			],
 			onSubmit: submitForm(editor)
 		});
+
+		updateSize(win);
 	};
 
 	return {

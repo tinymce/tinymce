@@ -112,6 +112,27 @@ asynctest('browser.core.PluginTest', [
 		]);
 	};
 
+	var sAssertSizeRecalcConstrainedReopen = function (ui) {
+		return GeneralSteps.sequence([
+			Utils.sOpenDialog(ui),
+			sSetFormItemPaste(ui, 'http://test.se'),
+			sAssertWidthValue(ui, "300"),
+			sAssertHeightValue(ui, "150"),
+			sChangeWidthValue(ui, "350"),
+			sAssertWidthValue(ui, "350"),
+			sAssertHeightValue(ui, "175"),
+			sChangeHeightValue(ui, "100"),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "200"),
+			Utils.sSubmitAndReopen(ui),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "200"),
+			sChangeWidthValue(ui, "350"),
+			sAssertWidthValue(ui, "350"),
+			sAssertHeightValue(ui, "175")
+		]);
+	};
+
 	var sAssertSizeRecalcUnconstrained = function (ui) {
 		return GeneralSteps.sequence([
 			Utils.sOpenDialog(ui),
@@ -143,7 +164,8 @@ asynctest('browser.core.PluginTest', [
 			),
 			// sTestEmbedContentSubmit(ui, editor, apis, 'test.se', 'test.se'),
 			sAssertSizeRecalcConstrained(ui),
-			sAssertSizeRecalcUnconstrained(ui)
+			sAssertSizeRecalcUnconstrained(ui),
+			sAssertSizeRecalcConstrainedReopen(ui)
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
