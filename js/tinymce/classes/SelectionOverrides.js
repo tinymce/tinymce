@@ -37,11 +37,10 @@ define("tinymce/SelectionOverrides", [
 	"tinymce/util/Fun",
 	"tinymce/util/Arr",
 	"tinymce/util/Delay",
-	"tinymce/DragDropOverrides",
-	"tinymce/text/Zwsp"
+	"tinymce/DragDropOverrides"
 ], function(
 	Env, CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
-	LineUtils, NodeType, RangeUtils, ClientRect, VK, Fun, Arr, Delay, DragDropOverrides, Zwsp
+	LineUtils, NodeType, RangeUtils, ClientRect, VK, Fun, Arr, Delay, DragDropOverrides
 ) {
 	var curry = Fun.curry,
 		isContentEditableTrue = NodeType.isContentEditableTrue,
@@ -652,7 +651,7 @@ define("tinymce/SelectionOverrides", [
 					}
 				} else {
 					// Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
-					// and there for not fire the AfterSetSelectionRange event.
+					// and therefore not fire the AfterSetSelectionRange event.
 					removeContentEditableSelection();
 
 					var caretInfo = LineUtils.closestCaret(rootNode, e.clientX, e.clientY);
