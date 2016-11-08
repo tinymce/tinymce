@@ -119,6 +119,12 @@ define(
         if (stopped) event.kill();
       });
 
+      var onContextmenu = DomEvent.bind(container, 'contextmenu', function (event) {
+        var stopped = settings.triggerEvent('contextmenu', event);
+        if (stopped) event.kill();
+      });
+
+
       var onChange = DomEvent.bind(container, 'change', function (event) {
         var stopped = settings.triggerEvent('change', event);
         if (stopped) event.kill();
@@ -142,6 +148,7 @@ define(
         onFocusOut.unbind();
         onInput.unbind();
         onChange.unbind();
+        onContextmenu.unbind();
         onTransitionEnd.unbind();
       };
 

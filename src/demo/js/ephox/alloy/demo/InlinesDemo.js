@@ -126,63 +126,47 @@ define(
 
       HtmlDisplay.section(
         gui,
-        'This inline menu component is a layered menu',
+        'This inline menu component is a context menu. Right click inside the yellow area',
         {
-           uiType: 'custom',
+          uiType: 'custom',
           dom: {
-            tag: 'div'
-          },
-          keying: {
-            mode: 'cyclic',
-            selector: 'input'
-          },
-          components: [
-            {
-              uiType: 'input',
-              dom: {
-                styles: { display: 'block', 'margin-bottom': '50px' }
-              }
-            },
-            {
-              uiType: 'input',
-              dom: {
-                styles: { display: 'block' }
-              },
-              events: {
-                // Want DOM focus. Focusing behaviour uses alloy focus.
-                focusin: EventHandler.nu({
-                  run: function (input) {
-                    InlineApis.setAnchor(inlineMenu, {
-                      anchor: 'makeshift',
-                      x: 100,
-                      y: 400
-                    });
-                    Sandboxing.showSandbox(
-                      inlineMenu, 
-                      Future.pure({
-                        expansions: { },
-                        menus: {
-                          dog: {
-                            items: [
-                              { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'alpha' },
-                              { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'beta' },
-                              { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'gamma' },
-                              { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'delta' }
-
-                            ],
-                            textkey: 'Dog'
-                          }
-                        },
-                        primary: 'dog'
-                      })
-                    ).get(Fun.identity);
-                  }
-                })
-              }
+            tag: 'div',
+            styles: {
+              background: '#ffff33',
+              height: '100px'
             }
+          },
+          events: {
+            contextmenu: EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                simulatedEvent.event().kill();
+                InlineApis.setAnchor(inlineMenu, {
+                  anchor: 'makeshift',
+                  x: simulatedEvent.event().x(),
+                  y: simulatedEvent.event().y()
+                });
+                Sandboxing.showSandbox(
+                  inlineMenu, 
+                  Future.pure({
+                    expansions: { },
+                    menus: {
+                      dog: {
+                        items: [
+                          { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'alpha' },
+                          { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'beta' },
+                          { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'gamma' },
+                          { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'delta' }
 
-          ] 
-
+                        ],
+                        textkey: 'Dog'
+                      }
+                    },
+                    primary: 'dog'
+                  })
+                ).get(Fun.identity);
+              }
+            })
+          }
         }
       );
       
