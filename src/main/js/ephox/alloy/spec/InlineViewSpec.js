@@ -49,7 +49,12 @@ define(
       return Merger.deepMerge(
         detail.view().sandbox().spawn(lazyAnchor, detail, interactions),
         {
-          uid: detail.uid()
+          uid: detail.uid(),
+          apis: {
+            setAnchor: function (component, newAnchor) {
+              anchorage.set(newAnchor);
+            }
+          }
         }
       );
 

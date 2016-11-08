@@ -152,6 +152,11 @@ define(
                 // Want DOM focus. Focusing behaviour uses alloy focus.
                 focusin: EventHandler.nu({
                   run: function (input) {
+                    InlineApis.setAnchor(inlineMenu, {
+                      anchor: 'makeshift',
+                      x: 100,
+                      y: 400
+                    });
                     Sandboxing.showSandbox(
                       inlineMenu, 
                       Future.pure({
