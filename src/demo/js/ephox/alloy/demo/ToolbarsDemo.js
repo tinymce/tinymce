@@ -157,26 +157,26 @@ define(
         );
       };
 
-      // var subject = HtmlDisplay.section(
-      //   gui,
-      //   'This demo plays around with skinning for TinyMCE Ui',
-      //   {
-      //     uiType: 'custom',
-      //     dom: {
-      //       tag: 'div', 
-      //       classes: [ 'mce-container' ]
-      //     },
-      //     components: [
-      //       toolbarSpec({
-      //         groups: groups,
-      //         overflowing: {
-      //           mode: 'scroll',
-      //           initWidth: '200px'
-      //         }
-      //       })
-      //     ]
-      //   }
-      // );
+      var subject = HtmlDisplay.section(
+        gui,
+        'This demo plays around with skinning for TinyMCE Ui',
+        {
+          uiType: 'custom',
+          dom: {
+            tag: 'div', 
+            classes: [ 'mce-container' ]
+          },
+          components: [
+            toolbarSpec({
+              initGroups: groups,
+              overflowing: {
+                mode: 'scroll',
+                initWidth: '200px'
+              }
+            })
+          ]
+        }
+      );
 
       var toolbar2 = HtmlDisplay.section(
         gui,
