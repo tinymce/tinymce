@@ -123,11 +123,11 @@ define("tinymce/ui/FilePicker", [
 			return [];
 		}
 
-		return join([
+		return fileType === 'file' ? join([
 			filterByQuery(term, fromHistoryMenuItems(history)),
 			filterByQuery(term, fromMenuItems('header')),
 			filterByQuery(term, anchorMenuItems())
-		]);
+		]) : filterByQuery(term, fromHistoryMenuItems(history));
 	};
 
 	var addToHistory = function (url, fileType) {

@@ -19,13 +19,15 @@ define('tinymce/content/LinkTargets', [
 	'tinymce/util/Fun',
 	'tinymce/util/Arr',
 	'tinymce/util/Uuid',
-	'tinymce/util/Tools'
+	'tinymce/util/Tools',
+	'tinymce/dom/NodeType'
 ], function(
 	DOMUtils,
 	Fun,
 	Arr,
 	Uuid,
-	Tools
+	Tools,
+	NodeType
 ) {
 	var trim = Tools.trim;
 
@@ -37,6 +39,17 @@ define('tinymce/content/LinkTargets', [
 			level: level,
 			attach: attach
 		};
+	};
+
+	var isChildOfContentEditableTrue = function (node) {
+		while ((node = node.parentNode)) {
+			var value = node.contentEditable;
+			if (value && value !== 'inherit') {
+				return NodeType.isContentEditableTrue(node);
+			}
+		}
+
+		return false;
 	};
 
 	var select = function (selector, root) {
@@ -55,8 +68,20 @@ define('tinymce/content/LinkTargets', [
 		return elm && elm.nodeName === 'A' && (elm.id || elm.name);
 	};
 
+	var isValidAnchor = function (elm) {
+		return isAnchor(elm) && isEditable(elm);
+	};
+
 	var isHeader = function (elm) {
 		return elm && /^(H[1-6])$/.test(elm.nodeName);
+	};
+
+	var isEditable = function (elm) {
+		return isChildOfContentEditableTrue(elm) && !NodeType.isContentEditableFalse(elm);
+	};
+
+	var isValidHeader = function (elm) {
+		return isHeader(elm) && isEditable(elm);
 	};
 
 	var getLevel = function (elm) {
@@ -81,11 +106,11 @@ define('tinymce/content/LinkTargets', [
 	};
 
 	var getHeaderTargets = function (elms) {
-		return Arr.map(Arr.filter(elms, isHeader), headerTarget);
+		return Arr.map(Arr.filter(elms, isValidHeader), headerTarget);
 	};
 
 	var getAnchorTargets = function (elms) {
-		return Arr.map(Arr.filter(elms, isAnchor), anchorTarget);
+		return Arr.map(Arr.filter(elms, isValidAnchor), anchorTarget);
 	};
 
 	var getTargetElements = function (elm) {
