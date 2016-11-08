@@ -46,7 +46,16 @@ define(
         {
           '<alloy.toolbar.group.items>': UiSubstitutes.multiple(
             Arr.map(detail.items(), function (item) {
-              return detail.members().item().munge(item);
+              return Merger.deepMerge(
+                detail.members().item().munge(item),
+                {
+                  dom: {
+                    attributes: {
+                      role: 'toolbar'
+                    }
+                  }
+                }
+              );
             })
           )
         }, 
