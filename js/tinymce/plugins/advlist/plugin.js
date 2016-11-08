@@ -13,6 +13,14 @@
 tinymce.PluginManager.add('advlist', function(editor) {
 	var olMenuItems, ulMenuItems, lastStyles = {};
 
+	function isChildOfBody(elm) {
+		return editor.$.contains(editor.getBody(), elm);
+	}
+
+	function isListNode(node) {
+		return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(node);
+	}
+
 	function buildMenuItems(listName, styleValues) {
 		var items = [];
 
@@ -55,10 +63,12 @@ tinymce.PluginManager.add('advlist', function(editor) {
 			styleValue = styleValue === false ? lastStyles[listName] : styleValue;
 			lastStyles[listName] = styleValue;
 
-			list = dom.getParent(sel.getNode(), 'ol,ul');
+			list = dom.getParent(sel.getNode(), listName);
 			if (list) {
-				dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
-				list.removeAttribute('data-mce-style');
+				tinymce.util.Tools.each(dom.select(listName, list).concat([list]), function (list) {
+					dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
+					list.removeAttribute('data-mce-style');
+				});
 			}
 
 			editor.focus();
@@ -73,29 +83,44 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		});
 	}
 
-	editor.addButton('numlist', {
-		type: 'splitbutton',
-		tooltip: 'Numbered list',
-		menu: olMenuItems,
-		onshow: updateSelection,
-		onselect: function(e) {
-			applyListFormat('OL', e.control.settings.data);
-		},
-		onclick: function() {
-			applyListFormat('OL', false);
-		}
-	});
+	var listState = function (listName) {
+		return function () {
+			var self = this;
 
-	editor.addButton('bullist', {
-		type: 'splitbutton',
-		tooltip: 'Bullet list',
-		menu: ulMenuItems,
-		onshow: updateSelection,
-		onselect: function(e) {
-			applyListFormat('UL', e.control.settings.data);
-		},
-		onclick: function() {
-			applyListFormat('UL', false);
-		}
-	});
+			editor.on('NodeChange', function (e) {
+				var lists = tinymce.util.Tools.grep(e.parents, isListNode);
+				self.active(lists.length > 0 && lists[0].nodeName === listName);
+			});
+		};
+	};
+
+	if (tinymce.PluginManager.get("lists")) {
+		editor.addButton('numlist', {
+			type: 'splitbutton',
+			tooltip: 'Numbered list',
+			menu: olMenuItems,
+			onPostRender: listState('OL'),
+			onshow: updateSelection,
+			onselect: function(e) {
+				applyListFormat('OL', e.control.settings.data);
+			},
+			onclick: function() {
+				applyListFormat('OL', false);
+			}
+		});
+
+		editor.addButton('bullist', {
+			type: 'splitbutton',
+			tooltip: 'Bullet list',
+			onPostRender: listState('UL'),
+			menu: ulMenuItems,
+			onshow: updateSelection,
+			onselect: function(e) {
+				applyListFormat('UL', e.control.settings.data);
+			},
+			onclick: function() {
+				applyListFormat('UL', false);
+			}
+		});
+	}
 });
