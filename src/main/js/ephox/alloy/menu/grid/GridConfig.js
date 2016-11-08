@@ -23,7 +23,7 @@ define(
 
   function (ComponentStructure, SystemEvents, Keying, Positioning, EventHandler, HotspotViews, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
-      FieldSchema.strict('lazyHotspot'),
+      FieldSchema.strict('lazyAnchor'),
 
       FieldSchema.strict('onOpen'),
       FieldSchema.strict('onClose'),
@@ -104,11 +104,7 @@ define(
 
       var show = function (sandbox, container) {
         var sink = getSink();
-        Positioning.position(sink, {
-          anchor: 'hotspot',
-          hotspot: uiSpec.lazyHotspot()(),
-          bubble: Option.none()
-        }, container);
+        Positioning.position(sink, uiSpec.lazyAnchor()(), container);
 
         Keying.setGridSize(sandbox, 2, 2);
 
@@ -172,7 +168,7 @@ define(
         keying: {
           mode: 'flatgrid',
           onEscape: function (sandbox, simulatedEvent) {
-            return HotspotViews.onEscape(uiSpec.lazyHotspot()(), sandbox);
+            return HotspotViews.onEscape(uiSpec.lazyAnchor()(), sandbox);
           },
           selector:  '.' + uiSpec.markers().item(),
           captureTab: true,

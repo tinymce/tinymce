@@ -9,9 +9,11 @@ define(
   ],
 
   function (Focusing, Sandboxing, Fun, Option) {
-    var onEscape = function (hotspot, sandbox) {
+    var onEscape = function (anchor, sandbox) {
+
       Sandboxing.closeSandbox(sandbox);
-      Focusing.focus(hotspot);
+      // TODO: Move.
+      if (anchor.anchor === 'hotspot') Focusing.focus(anchor.hotspot);
       return Option.some(true);
     };
 

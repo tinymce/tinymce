@@ -37,10 +37,10 @@ define(
 
       FieldSchema.state('sandbox', function () {
 
-        var spawn = function (lazyAnchor, detail, interactions) {
+        var spawn = function (anchor, detail, interactions) {
           return LayeredSandbox.make({
             uid: detail.uid() + '-sandbox',
-            lazyAnchor: lazyAnchor,
+            lazyAnchor: Fun.constant(anchor),
             
             lazySink: interactions.lazySink,
             onOpen: interactions.onOpen,

@@ -55,8 +55,7 @@ define(
       var config = LayeredConfig(detail);
 
       var isExtraPart = function (sandbox, target) {
-        return detail.lazyAnchor() === 'anchor' &&
-          ComponentStructure.isPartOf(detail.lazyAnchor().hotspot(), target);
+        return  ComponentStructure.isPartOfAnchor(detail.lazyAnchor(), target);
       };
 
       return {

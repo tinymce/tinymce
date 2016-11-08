@@ -69,7 +69,7 @@ define(
           mode: 'special',
           onTab: function () { return Option.some(true); },
           onEscape: function (sandbox) {
-            return HotspotViews.onEscape(detail.lazyAnchor(), sandbox);
+            return HotspotViews.onEscape(detail.lazyAnchor()(), sandbox);
           }
         }
       };

@@ -44,10 +44,10 @@ define(
       FieldSchema.defaulted('flat', false),
       FieldSchema.state('sandbox', function () {
 
-        var spawn = function (button, detail, interactions) {
+        var spawn = function (anchor, detail, interactions) {
           return GridSandbox.make({
             uid: detail.uid() + '-sandbox',
-            lazyHotspot: Fun.constant(button),
+            lazyAnchor: Fun.constant(anchor),
             lazySink: interactions.lazySink,
             onOpen: interactions.onOpen,
             onClose: interactions.onClose,

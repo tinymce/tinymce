@@ -132,7 +132,7 @@ define(
 
       var showMenu = function (sandbox, tuple) {
         var sink = getSink();
-        Positioning.position(sink, uiSpec.lazyAnchor(), tuple.container);
+        Positioning.position(sink, uiSpec.lazyAnchor()(), tuple.container);
 
         uiSpec.onOpen()(sandbox, tuple.menu);
       };
@@ -284,7 +284,7 @@ define(
         return sandbox.getSystem().getByDom(target).bind(function (item) {
           return collapseLeft(sandbox, item).orThunk(function () {
           // This should only fire when the user presses ESC ... not any other close.
-            return HotspotViews.onEscape(uiSpec.lazyAnchor(), sandbox);
+            return HotspotViews.onEscape(uiSpec.lazyAnchor()(), sandbox);
           });
         });
       };
