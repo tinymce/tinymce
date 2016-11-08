@@ -582,6 +582,11 @@ define("tinymce/SelectionOverrides", [
 				}
 			});
 
+			editor.on('blur', function () {
+				removeContentEditableSelection();
+				hideFakeCaret();
+			});
+
 			function handleTouchSelect(editor) {
 				var moved = false;
 
@@ -653,6 +658,7 @@ define("tinymce/SelectionOverrides", [
 					// Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
 					// and therefore not fire the AfterSetSelectionRange event.
 					removeContentEditableSelection();
+					hideFakeCaret();
 
 					var caretInfo = LineUtils.closestCaret(rootNode, e.clientX, e.clientY);
 					if (caretInfo) {
