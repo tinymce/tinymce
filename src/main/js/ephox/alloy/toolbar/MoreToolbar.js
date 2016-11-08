@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
@@ -15,7 +16,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Sliding, SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
+  function (Sliding, Behaviour, SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
@@ -74,6 +75,13 @@ define(
                 uid: detail.partUids().primary,
                 initGroups: detail.initGroups(),
                 replacing: { }
+              },
+              {
+                dom: {
+                  attributes: {
+                    role: 'group'
+                  }
+                }
               }
             )
           ),
@@ -94,6 +102,13 @@ define(
                   growingStyle: detail.moreGrowingClass()
                 },
                 replacing: { }
+              },
+              {
+                dom: {
+                  attributes: {
+                    role: 'group'
+                  }
+                }
               }
             )
           )
@@ -130,7 +145,12 @@ define(
         },
         components: components,
         behaviours: [
-          MoreOverflow
+          MoreOverflow,
+          Behaviour.exhibition(Option.none(), {
+            attributes: {
+              'role': 'toolbar'
+            }
+          })
         ],
         'more-overflowing': {
           initGroups: buildGroups(detail.initGroups()),
