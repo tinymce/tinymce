@@ -15,7 +15,11 @@ define('tinymce.media.core.Service', [
 					html: response.html ? response.html : dataToHtml(data)
 				});
 			};
-			return cache[data.source1] ? wrappedResolve(cache[data.source1]) : handler({url: data.source1}, wrappedResolve, rej);
+			if (cache[data.source1]) {
+				wrappedResolve(cache[data.source1]);
+			} else {
+				handler({url: data.source1}, wrappedResolve, rej);
+			}
 		});
 	};
 
@@ -25,11 +29,16 @@ define('tinymce.media.core.Service', [
 		});
 	};
 
+	var loadedData = function (editor) {
+		return function (data) {
+			return Data.dataToHtml(editor, data);
+		};
+	};
+
 	var getEmbedHtml = function (editor, data) {
 		var embedHandler = editor.settings.media_embed_handler;
-		var loadedData = Data.dataToHtml.bind(null, editor);
 
-		return embedHandler ? embedPromise(data, loadedData, embedHandler) : defaultPromise(data, loadedData);
+		return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 	};
 
 	return {
