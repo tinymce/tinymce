@@ -78,6 +78,16 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
+	var sAssertSourceValue = function (ui, value) {
+		return Waiter.sTryUntil('Wait for source value',
+			Chain.asStep({}, [
+				cFindFilepickerInput(ui, 'Source'),
+				UiControls.cGetValue,
+				Assertions.cAssertEq('Assert source value', value)
+			]), 1, 3000
+		);
+	};
+
 	var sSetFormItemPaste = function (ui, value) {
 		return Chain.asStep({}, [
 			cFindFilepickerInput(ui, 'Source'),
@@ -250,6 +260,8 @@ define('tinymce.media.test.Utils', [
 		sSetFormItemPaste: sSetFormItemPaste,
 		sAssertSizeRecalcConstrained: sAssertSizeRecalcConstrained,
 		sAssertSizeRecalcConstrainedReopen: sAssertSizeRecalcConstrainedReopen,
-		sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained
+		sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained,
+		sAssertEmbedContent: sAssertEmbedContent,
+		sAssertSourceValue: sAssertSourceValue
 	};
 });
