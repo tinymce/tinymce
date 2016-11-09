@@ -21,7 +21,7 @@ define(
       return Option.some(
         Anchoring({
           anchorBox: Fun.constant(anchorBox),
-          bubble: Fun.constant(Bubble(0, 0)),
+          bubble: anchorInfo.bubble,
           // maxHeightFunction: Fun.constant(MaxHeight.available()),
           overrides: Fun.constant({ }),
           layouts: Fun.constant(layouts),
@@ -35,6 +35,7 @@ define(
       FieldSchema.strict('y'),
       FieldSchema.defaulted('height', 0),
       FieldSchema.defaulted('width', 0),
+      FieldSchema.defaulted('bubble', Bubble(0, 0)),
       FieldSchema.state('placement', function () {
         return placement;
       })
