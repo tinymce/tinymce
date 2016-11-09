@@ -61,24 +61,20 @@ define(
         detail,
         detail.components(),
         {
-          
-        }, 
-        {
-          '<alloy.toolbar.groups.container>': function (dSpec, detail) {
-            return Merger.deepMerge(
+          '<alloy.toolbar.groups.container>': UiSubstitutes.single(
+            Merger.deepMerge(
               detail.parts().groups(),              
-              dSpec,
               {
-                uiType: 'custom'
-              },
-              dSpec.extra,
-              {
+                uiType: 'custom',
                 uid: detail.partUids().groups,
                 replacing: { },
                 components: buildGroups(detail.initGroups())
               }
-            );
-          }
+            )
+          )
+        }, 
+        {
+          
         }
       );
 
