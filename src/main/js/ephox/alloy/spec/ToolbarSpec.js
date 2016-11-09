@@ -13,13 +13,16 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Result'
   ],
 
-  function (Replacing, SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
+  function (Replacing, SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Result) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
+
+      FieldSchema.defaulted('shell', true),
 
       FieldSchema.field(
         'members',
@@ -56,7 +59,7 @@ define(
         });
       };
 
-      var components = UiSubstitutes.substitutePlaces(
+      var components = detail.shell() ? buildGroups(detail.initGroups()) : UiSubstitutes.substitutePlaces(
         Option.some('toolbar'),
         detail,
         detail.components(),
@@ -78,17 +81,23 @@ define(
         }
       );
 
+      var replacing = detail.shell() ? { } : undefined;
+
+      var getGroupContainer = function (component) {
+        return detail.shell() ? Result.value(component) : component.getSystem().getByUid(
+          detail.partUids().groups
+        );
+      };
+
       var setGroupSpecs = function (component, gs) {
-        var containerUid = detail.partUids().groups;
-        component.getSystem().getByUid(containerUid).each(function (container) {
+        getGroupContainer(component).each(function (container) {
           var newGroups = buildGroups(gs);
           Replacing.replace(container, newGroups);
         });
       };
 
       var setGroups = function (component, gs) {
-        var containerUid = detail.partUids().groups;
-        component.getSystem().getByUid(containerUid).each(function (container) {
+        getGroupContainer(component).each(function (container) {
           Replacing.replace(container, gs);
         });
       };
@@ -109,7 +118,8 @@ define(
         apis: {
           setGroups: setGroups,
           setGroupSpecs: setGroupSpecs
-        }
+        },
+        replacing: replacing
       });
     };
 
