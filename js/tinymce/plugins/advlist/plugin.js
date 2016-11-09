@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('advlist', function(editor) {
-	var olMenuItems, ulMenuItems, lastStyles = {};
+	var olMenuItems, ulMenuItems;
 
 	function isChildOfBody(elm) {
 		return editor.$.contains(editor.getBody(), elm);
@@ -59,13 +59,13 @@ tinymce.PluginManager.add('advlist', function(editor) {
 				editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
 			}
 
-			// Set style
-			styleValue = styleValue === false ? lastStyles[listName] : styleValue;
-			lastStyles[listName] = styleValue;
-
-			list = dom.getParent(sel.getNode(), listName);
+			list = dom.getParent(sel.getNode(), 'ol,ul');
 			if (list) {
-				tinymce.util.Tools.each(dom.select(listName, list).concat([list]), function (list) {
+				tinymce.util.Tools.each(dom.select('ol,ul', list).concat([list]), function (list) {
+					if (list.nodeName !== listName && styleValue !== false) {
+						list = dom.rename(list, listName);
+					}
+
 					dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
 					list.removeAttribute('data-mce-style');
 				});
@@ -95,6 +95,14 @@ tinymce.PluginManager.add('advlist', function(editor) {
 	};
 
 	if (tinymce.PluginManager.get("lists")) {
+		editor.addCommand('ApplyUnorderedListStyle', function (ui, value) {
+			applyListFormat('UL', value['list-style-type']);
+		});
+
+		editor.addCommand('ApplyOrderedListStyle', function (ui, value) {
+			applyListFormat('OL', value['list-style-type']);
+		});
+
 		editor.addButton('numlist', {
 			type: 'splitbutton',
 			tooltip: 'Numbered list',
