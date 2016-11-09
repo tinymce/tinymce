@@ -13,16 +13,6 @@ define('tinymce.media.test.Utils', [
 		return ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit video"] > button');
 	};
 
-	var sCloseDialog = function (ui) {
-		return ui.sClickOnUi('Click cancel button', '.mce-i-remove');
-	};
-
-	var cFakeEvent = function (name) {
-		return Chain.op(function (elm) {
-			tinymce.DOM.fire(elm.dom(), name);
-		});
-	};
-
 	var cFindInDialog = function (mapper) {
 		return function (ui, text) {
 			return Chain.fromChains([
@@ -34,6 +24,146 @@ define('tinymce.media.test.Utils', [
 			]);
 		};
 	};
+
+	var cFindWidthInput = cFindInDialog(function (value) {
+		return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Width"]');
+	});
+	var cFindHeightInput = cFindInDialog(function (value) {
+		return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Height"]');
+	});
+
+	var cGetWidthValue = function (ui) {
+		return Chain.fromChains([
+			cFindWidthInput(ui, 'Dimensions'),
+			UiControls.cGetValue
+		]);
+	};
+
+	var cSetWidthValue = function (ui, value) {
+		return Chain.fromChains([
+			cFindWidthInput(ui, 'Dimensions'),
+			UiControls.cSetValue(value)
+		]);
+	};
+
+	var cGetHeightValue = function (ui) {
+		return Chain.fromChains([
+			cFindHeightInput(ui, 'Dimensions'),
+			UiControls.cGetValue
+		]);
+	};
+
+	var cSetHeightValue = function (ui, value) {
+		return Chain.fromChains([
+			cFindHeightInput(ui, 'Dimensions'),
+			UiControls.cSetValue(value)
+		]);
+	};
+
+	var sAssertWidthValue = function (ui, value) {
+		return Waiter.sTryUntil('Wait for new width value',
+			Chain.asStep({}, [
+				cGetWidthValue(ui),
+				Assertions.cAssertEq('Assert size value', value)
+			]), 1, 3000
+		);
+	};
+
+	var sAssertHeightValue = function (ui, value) {
+		return Waiter.sTryUntil('Wait for new height value',
+			Chain.asStep({}, [
+				cGetHeightValue(ui),
+				Assertions.cAssertEq('Assert size value', value)
+			]), 1, 3000
+		);
+	};
+
+	var sSetFormItemPaste = function (ui, value) {
+		return Chain.asStep({}, [
+			cFindFilepickerInput(ui, 'Source'),
+			cFakeEvent('paste'),
+			UiControls.cSetValue(value)
+		]);
+	};
+
+	var sChangeWidthValue = function (ui, value) {
+		return Chain.asStep({}, [
+			cSetWidthValue(ui, value),
+			cFakeEvent('change')
+		]);
+	};
+
+	var sChangeHeightValue = function (ui, value) {
+		return Chain.asStep({}, [
+			cSetHeightValue(ui, value),
+			cFakeEvent('change')
+		]);
+	};
+
+	var sAssertSizeRecalcConstrained = function (ui) {
+		return GeneralSteps.sequence([
+			sOpenDialog(ui),
+			sSetFormItemPaste(ui, 'http://test.se'),
+			sAssertWidthValue(ui, "300"),
+			sAssertHeightValue(ui, "150"),
+			sChangeWidthValue(ui, "350"),
+			sAssertWidthValue(ui, "350"),
+			sAssertHeightValue(ui, "175"),
+			sChangeHeightValue(ui, "100"),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "200"),
+			sCloseDialog(ui)
+		]);
+	};
+
+	var sAssertSizeRecalcConstrainedReopen = function (ui) {
+		return GeneralSteps.sequence([
+			sOpenDialog(ui),
+			sSetFormItemPaste(ui, 'http://test.se'),
+			sAssertWidthValue(ui, "300"),
+			sAssertHeightValue(ui, "150"),
+			sChangeWidthValue(ui, "350"),
+			sAssertWidthValue(ui, "350"),
+			sAssertHeightValue(ui, "175"),
+			sChangeHeightValue(ui, "100"),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "200"),
+			sSubmitAndReopen(ui),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "200"),
+			sChangeWidthValue(ui, "350"),
+			sAssertWidthValue(ui, "350"),
+			sAssertHeightValue(ui, "175")
+		]);
+	};
+
+	var sAssertSizeRecalcUnconstrained = function (ui) {
+		return GeneralSteps.sequence([
+			sOpenDialog(ui),
+			sSetFormItemPaste(ui, 'http://test.se'),
+			ui.sClickOnUi('click checkbox', '.mce-checkbox'),
+			sAssertWidthValue(ui, "300"),
+			sAssertHeightValue(ui, "150"),
+			sChangeWidthValue(ui, "350"),
+			sAssertWidthValue(ui, "350"),
+			sAssertHeightValue(ui, "150"),
+			sChangeHeightValue(ui, "100"),
+			sAssertHeightValue(ui, "100"),
+			sAssertWidthValue(ui, "350"),
+			sCloseDialog(ui)
+		]);
+	};
+
+	var sCloseDialog = function (ui) {
+		return ui.sClickOnUi('Click cancel button', '.mce-i-remove');
+	};
+
+	var cFakeEvent = function (name) {
+		return Chain.op(function (elm) {
+			tinymce.DOM.fire(elm.dom(), name);
+		});
+	};
+
 
 	var cFindFilepickerInput = cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor).querySelector('input');
@@ -66,12 +196,6 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
-	var sSetFormItemPaste = function (ui, value) {
-		return Chain.asStep({}, [
-			cSetFormItem(ui, value),
-			cFakeEvent('paste')
-		]);
-	};
 
 	var sTestEmbedContentFromUrl = function (ui, url, content) {
 		return GeneralSteps.sequence([
@@ -97,6 +221,13 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
+	var sSubmitAndReopen = function (ui) {
+		return GeneralSteps.sequence([
+			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
+			sOpenDialog(ui)
+		]);
+	};
+
 	var sSetSetting = function (editorSetting, key, value) {
 		return Step.sync(function () {
 			editorSetting[key] = value;
@@ -112,6 +243,13 @@ define('tinymce.media.test.Utils', [
 		sTestEmbedContentFromUrl: sTestEmbedContentFromUrl,
 		sSetFormItemNoEvent: sSetFormItemNoEvent,
 		sAssertEditorContent: sAssertEditorContent,
-		sSetSetting: sSetSetting
+		sSetSetting: sSetSetting,
+		sSubmitAndReopen: sSubmitAndReopen,
+		sAssertWidthValue: sAssertWidthValue,
+		sAssertHeightValue: sAssertHeightValue,
+		sSetFormItemPaste: sSetFormItemPaste,
+		sAssertSizeRecalcConstrained: sAssertSizeRecalcConstrained,
+		sAssertSizeRecalcConstrainedReopen: sAssertSizeRecalcConstrainedReopen,
+		sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained
 	};
 });

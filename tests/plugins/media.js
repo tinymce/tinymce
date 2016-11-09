@@ -35,33 +35,6 @@ function fillAndSubmitWindowForm(data) {
 	win.close();
 }
 
-test('Default media dialog on empty editor', function() {
-	editor.settings.media_live_embeds = false;
-
-	editor.setContent('');
-	editor.plugins.media.showDialog();
-
-	deepEqual(Utils.getFrontmostWindow().toJSON(), {
-		constrain: true,
-		embed: "",
-		height: "",
-		poster: "",
-		source1: "",
-		source2: "",
-		width: ""
-	});
-
-	fillAndSubmitWindowForm({
-		"source1": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-	});
-
-	equal(
-		editor.getContent(),
-		'' // Will be empty because the media plugin is async
-		// '<p><iframe src=\"//www.youtube.com/embed/dQw4w9WgXcQ\" width=\"560\" height=\"314\" allowfullscreen=\"allowfullscreen\"></iframe></p>'
-	);
-});
-
 test("Object retain as is", function() {
 	editor.setContent(
 		'<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">' +

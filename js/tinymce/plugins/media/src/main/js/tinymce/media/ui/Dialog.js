@@ -1,31 +1,16 @@
 define('tinymce.media.ui.Dialog', [
-	'global!tinymce',
 	'global!tinymce.util.Delay',
 	'tinymce.media.core.Data',
-	'global!tinymce.util.Promise'
-], function (tinymce, Delay, Data, Promise) {
-	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
-
-	var checkEmbedHandler = function (editor, data) {
-		return new Promise(function (resolve, reject) {
-			var defaultResolve = function () {
-				return resolve({html: Data.dataToHtml(editor, data), url: data.source1});
-			};
-			var wrappedResolve = function (response) {
-				return response.html ? resolve({url: data.source1, html: response.html}) : defaultResolve();
-			};
-			if ('media_embed_handler' in editor.settings) {
-				editor.settings.media_embed_handler({url: data.source1}, wrappedResolve, reject);
-			} else {
-				defaultResolve();
-			}
-		});
-	};
+	'tinymce.media.core.Service',
+	'global!tinymce.util.Tools',
+	'global!tinymce.Env'
+], function (Delay, Data, Service, Tools, Env) {
+	var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
 	var addEmbedHtml = function (ctx, editor) {
 		return function (response) {
 			ctx.find('#embed').value(response.html);
-			var data = tinymce.extend({}, Data.htmlToData(editor, response.html), {source1: response.url});
+			var data = Tools.extend(Data.htmlToData(editor, response.html), {source1: response.url});
 			ctx.fromJSON(data);
 			updateSize(ctx);
 		};
@@ -36,7 +21,7 @@ define('tinymce.media.ui.Dialog', [
 		var y;
 		var afterObjects = editor.dom.select('img[data-mce-object]');
 
-			// Find new image placeholder so we can select it
+		// Find new image placeholder so we can select it
 		for (i = 0; i < beforeObjects.length; i++) {
 			for (y = afterObjects.length - 1; y >= 0; y--) {
 				if (beforeObjects[i] === afterObjects[y]) {
@@ -52,10 +37,13 @@ define('tinymce.media.ui.Dialog', [
 		return function () {
 			var data = this.toJSON();
 
-			checkEmbedHandler(editor, data)
+			Service.getEmbedHtml(editor, data)
 				.then(function (response) {
 					var beforeObjects = editor.dom.select('img[data-mce-object]');
-					editor.insertContent(response.html);
+					var html = data.embed ? data.embed : response.html;
+
+					editor.insertContent(html);
+
 					selectPlaceholder(editor, beforeObjects);
 					editor.nodeChanged();
 				});
@@ -69,6 +57,12 @@ define('tinymce.media.ui.Dialog', [
 			widthCtrl.state.set('oldVal', widthCtrl.value());
 			heightCtrl.state.set('oldVal', heightCtrl.value());
 		}
+	};
+
+	var populateMeta = function (win, meta) {
+		Tools.each(meta, function (value, key) {
+			win.find('#' + key).value(value);
+		});
 	};
 
 	var showDialog = function (editor) {
@@ -85,16 +79,15 @@ define('tinymce.media.ui.Dialog', [
 				label: 'Source',
 				onpaste: function () {
 					setTimeout(function () {
-						checkEmbedHandler(editor, win.toJSON())
+						Service.getEmbedHtml(editor, win.toJSON())
 							.then(addEmbedHtml(win, editor));
-					}, 50);
+					}, 1);
 				},
 				onchange: function (e) {
-					checkEmbedHandler(editor, win.toJSON())
-							.then(addEmbedHtml(win, editor));
-					tinymce.each(e.meta, function (value, key) {
-						win.find('#' + key).value(value);
-					});
+					Service.getEmbedHtml(editor, win.toJSON())
+						.then(addEmbedHtml(win, editor));
+
+					populateMeta(win, e.meta);
 				}
 			}
 		];
@@ -124,7 +117,6 @@ define('tinymce.media.ui.Dialog', [
 				}
 			}
 			data = win.toJSON();
-			data = tinymce.extend({}, data, {width: newWidth, height: newHeight});
 			win.find('#embed').value(Data.updateHtml(data.embed, data));
 			updateSize(win);
 		};
@@ -172,7 +164,7 @@ define('tinymce.media.ui.Dialog', [
 		};
 
 		var updateValueOnChange = function () {
-			data = tinymce.extend({}, Data.htmlToData(editor, this.value()));
+			data = Tools.extend({}, Data.htmlToData(editor, this.value()));
 			this.parent().parent().fromJSON(data);
 		};
 
@@ -209,6 +201,8 @@ define('tinymce.media.ui.Dialog', [
 			],
 			onSubmit: submitForm(editor)
 		});
+
+		updateSize(win);
 	};
 
 	return {
