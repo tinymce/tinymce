@@ -29,6 +29,12 @@ tinymce.PluginManager.add('link', function(editor) {
 		return getLink(editor.selection.getStart());
 	}
 
+	function getHref(elm) {
+		// Returns the real href value not the resolved a.href value
+		var href = elm.getAttribute('data-mce-href');
+		return href ? href : elm.getAttribute('href');
+	}
+
 	function isContextMenuVisible() {
 		var contextmenu = editor.plugins.contextmenu;
 		return contextmenu ? contextmenu.isContextMenuVisible() : false;
@@ -78,30 +84,43 @@ tinymce.PluginManager.add('link', function(editor) {
 		}
 	}
 
-	function gotoHref() {
-		var targetEl, a = getSelectedLink();
-		if (!a) {
-			return;
-		}
-		if (/^#/.test(a.href)) {
-			targetEl = editor.$(a.href);
-			if (targetEl.length) {
-				editor.selection.scrollIntoView(targetEl[0], true);
+	function gotoLink(a) {
+		if (a) {
+			var href = getHref(a);
+			if (/^#/.test(href)) {
+				var targetEl = editor.$(href);
+				if (targetEl.length) {
+					editor.selection.scrollIntoView(targetEl[0], true);
+				}
+			} else {
+				openDetachedWindow(a.href);
 			}
-		} else {
-			openDetachedWindow(a.href);
 		}
+	}
+
+	function gotoSelectedLink() {
+		gotoLink(getSelectedLink());
 	}
 
 	function toggleViewLinkState() {
         var self = this;
 
-        editor.on('nodechange', function(e) {
+		var toggleVisibility = function (e) {
 			if (hasLinks(e.parents)) {
 				self.show();
 			} else {
 				self.hide();
 			}
+		};
+
+		if (!hasLinks(editor.dom.getParents(editor.selection.getStart()))) {
+			self.hide();
+		}
+
+        editor.on('nodechange', toggleVisibility);
+
+		self.on('remove', function () {
+			editor.off('nodechange', toggleVisibility);
 		});
 	}
 
@@ -533,7 +552,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		editor.addButton('openlink', {
 			icon: 'newtab',
 			tooltip: 'Open link',
-			onclick: gotoHref
+			onclick: gotoSelectedLink
 		});
 
 		editor.addContextToolbar(
@@ -550,7 +569,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		var link = getLink(e.target);
 		if (link && tinymce.util.VK.metaKeyPressed(e)) {
 			e.preventDefault();
-			openDetachedWindow(link.href);
+			gotoLink(link);
 		}
 	});
 
@@ -558,7 +577,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		var link = getSelectedLink();
 		if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
 			e.preventDefault();
-			openDetachedWindow(link.href);
+			gotoLink(link);
 		}
 	});
 
@@ -567,7 +586,7 @@ tinymce.PluginManager.add('link', function(editor) {
 	editor.addMenuItem('openlink', {
 		text: 'Open link',
 		icon: 'newtab',
-		onclick: gotoHref,
+		onclick: gotoSelectedLink,
 		onPostRender: toggleViewLinkState,
 		prependToContext: true
 	});

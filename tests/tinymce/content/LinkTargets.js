@@ -6,6 +6,7 @@ ModuleLoader.require([
 
 	var createFromHtml = function (html) {
 		var elm = document.createElement('div');
+		elm.contentEditable = true;
 		elm.innerHTML = html;
 		return elm;
 	};
@@ -36,6 +37,8 @@ ModuleLoader.require([
 	test('Anchor targets', function() {
 		equalTargets(targetsIn('<a id="a"></a>'), [{level: 0, title: '#a', type: 'anchor', url: '#a'}], 'Anchor with id');
 		equalTargets(targetsIn('<a name="a"></a>'), [{level: 0, title: '#a', type: 'anchor', url: '#a'}], 'Anchor with name');
+		equalTargets(targetsIn('<a name="a" contentEditable="false"></a>'), [], 'cE=false anchor');
+		equalTargets(targetsIn('<div contentEditable="false"><a name="a"></a></div>'), [], 'Anchor in cE=false');
 		equalTargets(targetsIn('<a name=""></a>'), [], 'Empty anchor name should not produce a target');
 		equalTargets(targetsIn('<a id=""></a>'), [], 'Empty anchor id should not produce a target');
 	});
@@ -48,6 +51,8 @@ ModuleLoader.require([
 		equalTargets(targetsIn('<h5 id="a">a</h5>'), [{level: 5, title: 'a', type: 'header', url: '#a'}], 'Header 5 with id');
 		equalTargets(targetsIn('<h6 id="a">a</h6>'), [{level: 6, title: 'a', type: 'header', url: '#a'}], 'Header 6 with id');
 		equalTargets(targetsIn('<h1 id="a"></h1>'), [], 'Empty header should not produce a target');
+		equalTargets(targetsIn('<div contentEditable="false"><h1 id="a">a</h1></div>'), [], 'Header in cE=false');
+		equalTargets(targetsIn('<h1 id="a" contentEditable="false">a</h1>'), [], 'cE=false header');
 	});
 
 	test('Mixed targets', function() {
