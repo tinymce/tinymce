@@ -14,6 +14,9 @@ define(
       Sandboxing.closeSandbox(sandbox);
       // TODO: Move.
       if (anchor.anchor === 'hotspot') Focusing.focus(anchor.hotspot);
+      else if (anchor.anchor === 'makeshift') {
+        anchor.onEscape(sandbox);
+      }
       return Option.some(true);
     };
 
