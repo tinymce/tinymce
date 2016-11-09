@@ -148,7 +148,9 @@ define(
                 Sandboxing.showSandbox(
                   inlineMenu, 
                   Future.pure({
-                    expansions: { },
+                    expansions: {
+                      'gamma': 'gamma-menu'
+                    },
                     menus: {
                       dog: {
                         items: [
@@ -159,6 +161,13 @@ define(
 
                         ],
                         textkey: 'Dog'
+                      },
+                      'gamma-menu': {
+                        items: [
+                          { type: 'item', value: 'gamma-1', text: 'Gamma-1', 'item-class': 'gamma-1' },
+                          { type: 'item', value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' },
+                        ],
+                        textkey: 'gamma-menu'
                       }
                     },
                     primary: 'dog'
