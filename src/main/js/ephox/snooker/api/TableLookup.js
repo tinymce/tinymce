@@ -27,7 +27,7 @@ define(
     };
 
     var cells = function (ancestor) {
-      return SelectorFilter.descendants(ancestor, 'th,td');
+      return SelectorFilter.firstDescendants(ancestor, 'th,td');
     };
 
     var neighbours = function (selector, element) {
@@ -52,7 +52,7 @@ define(
     };
 
     var rows = function (ancestor) {
-      return SelectorFilter.descendants(ancestor, 'tr');
+      return SelectorFilter.firstDescendants(ancestor, 'tr');
     };
 
     var attr = function (element, property) {
