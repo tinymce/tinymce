@@ -6,7 +6,11 @@ ModuleLoader.require([
 
 			tinymce.init({
 				selector: "textarea",
-				toolbar: 'bold italic underline',
+				add_unload_trigger: false,
+				disable_nodechange: true,
+				skin: false,
+				entities: 'raw',
+				indent: false,
 				theme: function (editor, targetnode) {
 					var editorContainer = document.createElement('div');
 					editorContainer.id = 'editorContainer';
@@ -15,7 +19,7 @@ ModuleLoader.require([
 					iframeContainer.id = 'iframeContainer';
 
 					editorContainer.appendChild(iframeContainer);
-					targetnode.appendChild(editorContainer);
+					targetnode.parentNode.insertBefore(editorContainer, targetnode);
 
 					return {
 						iframeContainer: iframeContainer,
