@@ -106,6 +106,21 @@ define(
       );
     };
 
+    var absorb = function (partialCoord, originalCoord, scroll, origin) {
+      var absorbOne = function (stencil, nu) {
+        return function (optX, optY) {
+          var original = stencil(originalCoord, scroll, origin);
+          return nu(optX.getOr(original.left()), optY.getOr(original.top()));
+        };
+      };
+
+      return partialCoord.fold(
+        absorbOne(asOffset, adt.offset),
+        absorbOne(asAbsolute, adt.absolute),
+        absorbOne(asFixed, adt.fixed)
+      );
+    };
+
     return {
       offset: adt.offset,
       absolute: adt.absolute,
@@ -116,7 +131,9 @@ define(
       asOffset: asOffset,
       withinRange: withinRange,
       toStyles: toStyles,
-      translate: translate
+      translate: translate,
+
+      absorb: absorb
     };
   }
 );

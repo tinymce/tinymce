@@ -98,7 +98,6 @@ define(
                 });
 
                 var styles = DragCoord.toStyles(newCoord, scroll, origin);
-                console.log('styles', styles);
                 Css.setAll(target, styles);
               }
             };
@@ -187,8 +186,6 @@ define(
           FieldSchema.strict('getDocks'),
           FieldSchema.strict('leftAttr'),
           FieldSchema.strict('topAttr'),
-          FieldSchema.strict('xSensitivity'),
-          FieldSchema.strict('ySensitivity'),
           FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
         ])
       ),

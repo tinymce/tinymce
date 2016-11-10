@@ -6,6 +6,7 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dragging.DragCoord',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
@@ -13,7 +14,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, DragCoord, Fun, Class, Css, Element, Insert, document) {
+  function (Gui, HtmlDisplay, DragCoord, Fun, Option, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -67,14 +68,14 @@ define(
                         sensor: Fun.constant(
                           DragCoord.fixed(300, 10)
                         ),
+                        xRange: Fun.constant(1000),
+                        yRange: Fun.constant(10),
                         output: Fun.constant(
-                          DragCoord.fixed(300, 10)
+                          DragCoord.fixed(Option.none(), Option.some(10))
                         )
                       }
                     ];
                   },
-                  xSensitivity: 10,
-                  ySensitivity: 20,
                   leftAttr: 'data-drag-left',
                   topAttr: 'data-drag-top'
                 }
