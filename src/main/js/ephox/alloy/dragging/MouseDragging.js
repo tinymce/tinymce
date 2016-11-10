@@ -88,7 +88,7 @@ define(
                 var scroll = Scroll.get(doc);
                 var origin = getOrigin(component, scroll);
 
-                // var attemptSnap = function (component, dockInfo, absLeft, absTop, deltaX, deltaY, scroll, origin)
+                // var attemptSnap = function (component, snapInfo, absLeft, absTop, deltaX, deltaY, scroll, origin)
 
                 var target = dragInfo.getTarget()(component.element());
                 
@@ -107,13 +107,13 @@ define(
                   return DragCoord.absolute(location.left(), location.top());
                 });
 
-                var newCoord = dragInfo.docks().fold(function () {
+                var newCoord = dragInfo.snaps().fold(function () {
                   // When not docking, use fixed coordinates.
                   var translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
                   var fixedCoord = DragCoord.asFixed(translated, scroll, origin);
                   return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
-                }, function (dockInfo) {
-                  return Snappables.moveOrDock(component, dockInfo, currentCoord, delta, scroll, origin);
+                }, function (snapInfo) {
+                  return Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
                 });
 
                 var styles = DragCoord.toStyles(newCoord, scroll, origin);
@@ -177,8 +177,8 @@ define(
 
       var stop = function () {
         component.getSystem().removeFromGui(blocker);
-        dragInfo.docks().each(function (dockInfo) {
-          Snappables.stopDrag(component, dockInfo);
+        dragInfo.snaps().each(function (snapInfo) {
+          Snappables.stopDrag(component, snapInfo);
         });
       };
 
@@ -201,11 +201,11 @@ define(
       FieldSchema.state('movement', Movement),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.field(
-        'docks',
-        'docks',
+        'snaps',
+        'snaps',
         FieldPresence.asOption(),
         ValueSchema.objOf([
-          FieldSchema.strict('getDocks'),
+          FieldSchema.strict('getSnapPoints'),
           FieldSchema.strict('leftAttr'),
           FieldSchema.strict('topAttr'),
           FieldSchema.defaulted('lazyViewport', defaultLazyViewport)

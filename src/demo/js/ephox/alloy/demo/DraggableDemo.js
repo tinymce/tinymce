@@ -74,8 +74,8 @@ define(
               },
               dragging: {
                 mode: 'mouse',
-                docks: {
-                  getDocks: function () {
+                snaps: {
+                  getSnapPoints: function () {
                     return [
                       {
                         sensor: Fun.constant(
