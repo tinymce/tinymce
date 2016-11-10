@@ -74,7 +74,7 @@ define(
               },
               dragging: {
                 mode: 'mouse',
-                docks: {
+                dockdd: {
                   getDocks: function () {
                     return [
                       // {
@@ -88,16 +88,16 @@ define(
                       //   )
                       // },
 
-                      {
-                        sensor: Fun.constant(
-                          DragCoord.offset(300, 500)
-                        ),
-                        xRange: Fun.constant(40),
-                        yRange: Fun.constant(40),
-                        output: Fun.constant(
-                          DragCoord.absolute(Option.some(300), Option.some(500))
-                        )
-                      }
+                      // {
+                      //   sensor: Fun.constant(
+                      //     DragCoord.offset(300, 500)
+                      //   ),
+                      //   xRange: Fun.constant(40),
+                      //   yRange: Fun.constant(40),
+                      //   output: Fun.constant(
+                      //     DragCoord.absolute(Option.some(300), Option.some(500))
+                      //   )
+                      // }
                     ];
                   },
                   leftAttr: 'data-drag-left',

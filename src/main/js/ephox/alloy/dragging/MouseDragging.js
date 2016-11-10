@@ -106,7 +106,10 @@ define(
                 });
 
                 var newCoord = dragInfo.docks().fold(function () {
-                  return DragCoord.translate(currentCoord, delta.left(), delta.top());
+                  // When not docking, use fixed coordinates.
+                  var translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
+                  var fixedCoord = DragCoord.asFixed(translated, scroll, origin);
+                  return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
                 }, function (dockInfo) {
                   return Dockables.moveOrDock(component, dockInfo, currentCoord, delta, scroll, origin);
                 });
