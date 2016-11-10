@@ -41,10 +41,18 @@ define(
         }
       });
 
+      // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
+      var mousedownHandler = EventHandler.nu({
+        run: function (component, simulatedEvent) {
+          simulatedEvent.cut();
+        }
+      });
+
       var events = Objects.wrapAll(
         Arr.flatten([
           detail.action.isSome() ? [ { key: SystemEvents.execute(), value: executeHandler } ] : [ ],
-          [ { key: 'click', value: clickHandler } ]
+          [ { key: 'click', value: clickHandler } ],
+          [ { key: 'mousedown', value: mousedownHandler } ]
         ])
       );
 
