@@ -32,7 +32,10 @@ define(
       sandboxClose: Fun.constant('alloy.sandbox.close'),
 
       // Fired when adding to a world
-      systemInit: Fun.constant('alloy.system.init')
+      systemInit: Fun.constant('alloy.system.init'),
+
+      // Fired when the window scrolls
+      windowScroll: Fun.constant('alloy.system.scroll')
     };
   }
 );

@@ -13,10 +13,11 @@ define(
     'ephox.perhaps.Result',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Node',
+    'ephox.sugar.api.Traverse',
     'global!setTimeout'
   ],
 
-  function (Keys, SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Result, DomEvent, Node, setTimeout) {
+  function (Keys, SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Result, DomEvent, Node, Traverse, setTimeout) {
     var isFunction = function (v) {
       return Type.isFunction(v) ? Result.value(v) : Result.error('Not a function');
     };
@@ -135,6 +136,12 @@ define(
         if (stopped) event.kill();
       });
 
+      var defaultView = Traverse.defaultView(container);
+      var onWindowScroll = DomEvent.bind(defaultView, 'scroll', function (event) {
+        var stopped = settings.triggerEvent(SystemEvents.windowScroll(), event);
+        if (stopped) event.kill();
+      });
+
       var unbind = function () {
         onClick.unbind();
         onSelectStart.unbind();
@@ -150,6 +157,7 @@ define(
         onChange.unbind();
         onContextmenu.unbind();
         onTransitionEnd.unbind();
+        onWindowScroll.unbind();
       };
 
       return {

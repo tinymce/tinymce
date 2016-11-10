@@ -42,9 +42,10 @@ define(
                 var location = Location.absolute(target);
                 var leftPx = Css.getRaw(target, 'left').getOr(location.left());
                 var topPx = Css.getRaw(target, 'top').getOr(location.top());
+
                 Css.setAll(target, {
-                  left: (parseInt(leftPx, 10) + coords.left()) + 'px',
-                  top: (parseInt(topPx, 10) + coords.top()) + 'px',
+                  left: (parseInt(leftPx, 10) + 0/*coords.left()*/) + 'px',
+                  top: (parseInt(topPx, 10) + 0/*coords.top()*/) + 'px',
                   position: 'absolute'
                 });
               }
