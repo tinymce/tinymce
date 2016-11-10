@@ -14,10 +14,32 @@ define(
     'ephox.sugar.alien.Position',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Location',
-    'global!parseInt'
+    'ephox.sugar.api.Scroll',
+    'global!parseInt',
+    'global!window'
   ],
 
-  function (EventHandler, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Location, parseInt) {
+  function (EventHandler, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Location, Scroll, parseInt, window) {
+    var defaultLazyViewport = function () {
+      var scroll = Scroll.get();
+
+      return {
+        x: scroll.left,
+        y: scroll.top,
+        w: Fun.constant(window.innerWidth),
+        h: Fun.constant(window.innerHeight),
+        fx: Fun.constant(0),
+        fy: Fun.constant(0)
+      };
+    };
+
+    var defaultLazyOrigin = function () {
+      return {
+        left: Fun.constant(0),
+        top: Fun.constant(0)
+      };
+    };
+
     var extractCoords = function (event) {
       return Option.some(Position(event.x(), event.y()));
     };
@@ -138,7 +160,9 @@ define(
           FieldSchema.strict('getAbsoluteDocks'),
           FieldSchema.defaulted('leftAttr'),
           FieldSchema.defaulted('topAttr'),
-          FieldSchema.defaulted('posAttr')
+          FieldSchema.defaulted('posAttr'),
+          FieldSchema.defaulted('lazyViewport', defaultLazyViewport),
+          FieldSchema.defaulted('lazyOrigin', defaultLazyOrigin)
         ])
       ),
       FieldSchema.state('dragger', instance)
