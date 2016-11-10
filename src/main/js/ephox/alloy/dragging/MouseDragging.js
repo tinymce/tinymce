@@ -5,6 +5,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.Dockables',
     'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.dragging.Presnaps',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -25,7 +26,7 @@ define(
     'global!window'
   ],
 
-  function (EventHandler, Dockables, DragCoord, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
+  function (EventHandler, Dockables, DragCoord, Presnaps, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
 
@@ -171,6 +172,9 @@ define(
 
       var stop = function () {
         component.getSystem().removeFromGui(blocker);
+        dragInfo.docks().each(function (dockInfo) {
+          Dockables.stopDrag(component, dockInfo);
+        });
       };
 
       return DragApis.sink({

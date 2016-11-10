@@ -73,8 +73,8 @@ define(
       });
     };
 
-    var stopDrag = function (component) {
-      Presnaps.clear(component.element());
+    var stopDrag = function (component, dockInfo) {
+      Presnaps.clear(component, dockInfo);
     };
 
     // x: the absolute position.left of the draggable element
