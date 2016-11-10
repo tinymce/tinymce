@@ -45,25 +45,42 @@ asynctest('browser.core.DataToHtmlTest', [
 			});
 		});
 
+		var iframeStruct = ApproxStructure.build(function (s, str, arr) {
+			return s.element('iframe', {
+				attrs: {
+					height: str.is('150'),
+					width: str.is('300')
+				}
+			});
+		});
+
 		Pipeline.async({}, [
 			sTestDataToHtml(editor,
 				{
-					src: 'b.mp4',
 					type: 'video',
 					source1: 'a',
 					source2: '',
 					poster: '',
 					"data-ephox-embed": 'a'
 				},
-				videoStruct)
+				videoStruct),
+			sTestDataToHtml(editor,
+				{
+					type: 'iframe',
+					source1: 'a',
+					source2: '',
+					poster: '',
+					"data-ephox-embed": 'a'
+				},
+				iframeStruct)
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
 		toolbar: "media",
-		media_embed_handler: function (data, resolve) {
-			resolve({
-				html: '<video width="300" height="150" ' +
-					'controls="controls">\n<source src="' + data.url + '" />\n</video>'});
-		}
+		// media_embed_handler: function (data, resolve) {
+		// 	resolve({
+		// 		html: '<video width="300" height="150" ' +
+		// 			'controls="controls">\n<source src="' + data.url + '" />\n</video>'});
+		// }
 	}, success, failure);
 });
