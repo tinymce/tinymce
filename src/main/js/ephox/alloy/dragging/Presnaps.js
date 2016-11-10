@@ -12,7 +12,7 @@ define(
   function (Option, Position, Attr, isNaN, parseInt) {
     // DUPE with ego with some parameterisation
     var get = function (component, dockInfo) {
-      var element = component.elemnent();
+      var element = component.element();
       var x = parseInt(Attr.get(element, dockInfo.leftAttr()), 10);
       var y = parseInt(Attr.get(element, dockInfo.topAttr()), 10);
       return isNaN(x) || isNaN(y) ? Option.none() : Option.some(

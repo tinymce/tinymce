@@ -184,10 +184,9 @@ define(
         'docks',
         FieldPresence.asOption(),
         ValueSchema.objOf([
-          FieldSchema.strict('getFixedDocks'),
-          FieldSchema.strict('getAbsoluteDocks'),
-          FieldSchema.defaulted('leftAttr'),
-          FieldSchema.defaulted('topAttr'),
+          FieldSchema.strict('getDocks'),
+          FieldSchema.strict('leftAttr'),
+          FieldSchema.strict('topAttr'),
           FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
         ])
       ),

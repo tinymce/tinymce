@@ -57,7 +57,14 @@ define(
                 }
               },
               dragging: {
-                mode: 'mouse'
+                mode: 'mouse',
+                docks: {
+                  getDocks: function () {
+                    return [ ];
+                  },
+                  leftAttr: 'data-drag-left',
+                  topAttr: 'data-drag-top'
+                }
                 // initial position?
               },
               eventOrder: {

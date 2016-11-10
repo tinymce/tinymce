@@ -75,6 +75,17 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'ego',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'ego.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   // Test dependencies
   {
     name: 'agar',
