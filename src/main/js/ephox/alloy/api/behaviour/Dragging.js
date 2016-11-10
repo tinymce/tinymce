@@ -17,7 +17,7 @@ define(
         { }
       ),
       {
-        dock: Struct.immutable('sensor', 'output')
+        snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ ])
       }
     );
   }

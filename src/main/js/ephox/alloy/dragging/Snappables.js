@@ -88,7 +88,7 @@ define(
       // HERE
       return Options.findMap(snaps, function (snap) {
         var sensor = snap.sensor();
-        var inRange = DragCoord.withinRange(newCoord, sensor, snap.xRange(), snap.yRange(), scroll, origin);
+        var inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
         return inRange ? Option.some(
           DragCoord.absorb(snap.output(), newCoord, scroll, origin)
         ) : Option.none();

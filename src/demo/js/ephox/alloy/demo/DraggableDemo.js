@@ -3,10 +3,12 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dragging.DragCoord',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.sugar.alien.Position',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
@@ -14,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, DragCoord, Fun, Option, Class, Css, Element, Insert, document) {
+  function (Gui, Dragging, HtmlDisplay, DragCoord, Fun, Option, Position, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -77,27 +79,17 @@ define(
                 snaps: {
                   getSnapPoints: function () {
                     return [
-                      {
-                        sensor: Fun.constant(
-                          DragCoord.fixed(300, 10)
-                        ),
-                        xRange: Fun.constant(1000),
-                        yRange: Fun.constant(30),
-                        output: Fun.constant(
-                          DragCoord.fixed(Option.none(), Option.some(10))
-                        )
-                      },
+                      Dragging.snap({
+                        sensor: DragCoord.fixed(300, 10),
+                        range: Position(1000, 30),
+                        output: DragCoord.fixed(Option.none(), Option.some(10))
+                      }),
 
-                      {
-                        sensor: Fun.constant(
-                          DragCoord.offset(300, 500)
-                        ),
-                        xRange: Fun.constant(40),
-                        yRange: Fun.constant(40),
-                        output: Fun.constant(
-                          DragCoord.absolute(Option.some(300), Option.some(500))
-                        )
-                      }
+                      Dragging.snap({
+                        sensor: DragCoord.offset(300, 500),
+                        range: Position(40, 40),
+                        output: DragCoord.absolute(Option.some(300), Option.some(500))
+                      })
                     ];
                   },
                   leftAttr: 'data-drag-left',
