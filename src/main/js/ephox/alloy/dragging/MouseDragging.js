@@ -3,9 +3,8 @@ define(
 
   [
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.dragging.Dockables',
     'ephox.alloy.dragging.DragCoord',
-    'ephox.alloy.dragging.Presnaps',
+    'ephox.alloy.dragging.Snappables',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -26,7 +25,7 @@ define(
     'global!window'
   ],
 
-  function (EventHandler, Dockables, DragCoord, Presnaps, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
+  function (EventHandler, DragCoord, Snappables, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
 
@@ -114,7 +113,7 @@ define(
                   var fixedCoord = DragCoord.asFixed(translated, scroll, origin);
                   return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
                 }, function (dockInfo) {
-                  return Dockables.moveOrDock(component, dockInfo, currentCoord, delta, scroll, origin);
+                  return Snappables.moveOrDock(component, dockInfo, currentCoord, delta, scroll, origin);
                 });
 
                 var styles = DragCoord.toStyles(newCoord, scroll, origin);
@@ -179,7 +178,7 @@ define(
       var stop = function () {
         component.getSystem().removeFromGui(blocker);
         dragInfo.docks().each(function (dockInfo) {
-          Dockables.stopDrag(component, dockInfo);
+          Snappables.stopDrag(component, dockInfo);
         });
       };
 

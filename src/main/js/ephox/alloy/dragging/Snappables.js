@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.dragging.Dockables',
+  'ephox.alloy.dragging.Snappables',
 
   [
     'ephox.alloy.dragging.DragCoord',
