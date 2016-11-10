@@ -88,8 +88,7 @@ define(
       // HERE
       return Options.findMap(docks, function (dock) {
         var sensor = dock.sensor();
-        var inRange = DragCoord.withinRange(newCoord, sensor, dock.xRange(), dock.yRange(), origin, scroll);
-        console.log('inRange', inRange);
+        var inRange = DragCoord.withinRange(newCoord, sensor, dock.xRange(), dock.yRange(), scroll, origin);
         return inRange ? Option.some(
           DragCoord.absorb(dock.output(), newCoord, scroll, origin)
         ) : Option.none();

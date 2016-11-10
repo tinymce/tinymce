@@ -48,6 +48,19 @@ define(
               }
             },
             {
+              uiType: 'container',
+              dom: {
+                styles: {
+                  position: 'absolute',
+                  width: '10px',
+                  height: '10px',
+                  left: '300px',
+                  top: '500px',
+                  background: 'red'
+                }
+              }
+            },
+            {
               uiType: 'button',
               dom: {
                 tag: 'span',
@@ -64,14 +77,25 @@ define(
                 docks: {
                   getDocks: function () {
                     return [
+                      // {
+                      //   sensor: Fun.constant(
+                      //     DragCoord.fixed(300, 10)
+                      //   ),
+                      //   xRange: Fun.constant(1000),
+                      //   yRange: Fun.constant(10),
+                      //   output: Fun.constant(
+                      //     DragCoord.fixed(Option.none(), Option.some(10))
+                      //   )
+                      // },
+
                       {
                         sensor: Fun.constant(
-                          DragCoord.fixed(300, 10)
+                          DragCoord.offset(300, 500)
                         ),
-                        xRange: Fun.constant(1000),
-                        yRange: Fun.constant(10),
+                        xRange: Fun.constant(40),
+                        yRange: Fun.constant(40),
                         output: Fun.constant(
-                          DragCoord.fixed(Option.none(), Option.some(10))
+                          DragCoord.absolute(Option.some(300), Option.some(500))
                         )
                       }
                     ];
