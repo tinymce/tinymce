@@ -2,10 +2,16 @@ define(
   'ephox.alloy.api.behaviour.Docking',
 
   [
-
+    'ephox.alloy.api.behaviour.BehaviourExport'
   ],
 
-  function () {
-    return null;
+  function (BehaviourExport) {
+    return BehaviourExport.build(
+      'coupling',
+      [
+        'getCoupled'
+      ],
+      { }
+    );
   }
 );
