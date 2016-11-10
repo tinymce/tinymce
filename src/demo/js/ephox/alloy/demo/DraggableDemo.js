@@ -32,6 +32,10 @@ define(
             mode: 'mouse'
             // initial position?
           },
+          eventOrder: {
+            // Because this is a button, allow dragging. It will stop clicking.
+            mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+          },
           unselecting: true
         }
       );
