@@ -74,30 +74,30 @@ define(
               },
               dragging: {
                 mode: 'mouse',
-                dockx: {
+                docks: {
                   getDocks: function () {
                     return [
-                      // {
-                      //   sensor: Fun.constant(
-                      //     DragCoord.fixed(300, 10)
-                      //   ),
-                      //   xRange: Fun.constant(1000),
-                      //   yRange: Fun.constant(10),
-                      //   output: Fun.constant(
-                      //     DragCoord.fixed(Option.none(), Option.some(10))
-                      //   )
-                      // },
+                      {
+                        sensor: Fun.constant(
+                          DragCoord.fixed(300, 10)
+                        ),
+                        xRange: Fun.constant(1000),
+                        yRange: Fun.constant(30),
+                        output: Fun.constant(
+                          DragCoord.fixed(Option.none(), Option.some(10))
+                        )
+                      },
 
-                      // {
-                      //   sensor: Fun.constant(
-                      //     DragCoord.offset(300, 500)
-                      //   ),
-                      //   xRange: Fun.constant(40),
-                      //   yRange: Fun.constant(40),
-                      //   output: Fun.constant(
-                      //     DragCoord.absolute(Option.some(300), Option.some(500))
-                      //   )
-                      // }
+                      {
+                        sensor: Fun.constant(
+                          DragCoord.offset(300, 500)
+                        ),
+                        xRange: Fun.constant(40),
+                        yRange: Fun.constant(40),
+                        output: Fun.constant(
+                          DragCoord.absolute(Option.some(300), Option.some(500))
+                        )
+                      }
                     ];
                   },
                   leftAttr: 'data-drag-left',
