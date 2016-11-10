@@ -18,25 +18,36 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Traverse',
     'global!Error'
   ],
 
-  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Focus, Insert, Node, Remove, Error) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Focus, Insert, Node, Remove, Traverse, Error) {
     var create = function ( ) {
-      var container = Element.fromTag('div');
-      return takeover(container);
+      var root = GuiFactory.build({
+        uiType: 'container'
+      });
+      return takeover(root);
     };
 
-    var takeover = function (container) {
-      var isRoot = Fun.curry(Compare.eq, container);
+    var takeover = function (root) {
+      var isAboveRoot = function (el) {
+        return Traverse.parent(root.element()).fold(
+          function () {
+            return true;
+          }, function (parent) {
+            return Compare.eq(el, parent);
+          }
+        );
+      };
 
       var registry = Registry();
 
       var lookup = function (eventName, target) {
-        return registry.find(isRoot, eventName, target);
+        return registry.find(isAboveRoot, eventName, target);
       };
 
-      var domEvents = GuiEvents.setup(container, {
+      var domEvents = GuiEvents.setup(root.element(), {
         triggerEvent: function (eventName, event) {
           return Triggers.triggerUntilStopped(lookup, eventName, event);
         }
@@ -100,7 +111,7 @@ define(
 
       var add = function (component) {
         addToWorld(component);
-        Insert.append(container, component.element());
+        Insert.append(root.element(), component.element());
       };
 
       var remove = function (component) {
@@ -144,8 +155,10 @@ define(
         }, Result.value);
       };
 
+      addToWorld(root);
+
       return {
-        element: Fun.constant(container),
+        element: root.element,
         destroy: destroy,
         add: add,
         remove: remove,

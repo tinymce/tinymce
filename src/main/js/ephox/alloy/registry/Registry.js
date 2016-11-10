@@ -53,8 +53,8 @@ define(
         return events.filterByType(type);
       };
 
-      var find = function (isRoot, type, target) {
-        return events.find(isRoot, type, target);
+      var find = function (isAboveRoot, type, target) {
+        return events.find(isAboveRoot, type, target);
       };
 
       var getById = function (id) {
