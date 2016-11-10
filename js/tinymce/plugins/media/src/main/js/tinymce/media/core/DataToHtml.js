@@ -59,7 +59,7 @@ define('tinymce.media.core.DataToHtml', [
 		if (data.embed) {
 			html = UpdateHtml.updateHtml(data.embed, data, true);
 		} else {
-			var videoScript = Etc.getVideoScriptMatch(editor, data.source1);
+			var videoScript = Etc.getVideoScriptMatch(editor.settings.media_scripts, data.source1);
 			if (videoScript) {
 				data.type = 'script';
 				data.width = videoScript.width;

@@ -110,7 +110,7 @@ define('tinymce.media.core.Nodes', [
 				}
 
 				if (node.name === 'script') {
-					videoScript = Etc.getVideoScriptMatch(editor, node.attr('src'));
+					videoScript = Etc.getVideoScriptMatch(editor.settings.media_scripts, node.attr('src'));
 					if (!videoScript) {
 						continue;
 					}
