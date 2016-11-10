@@ -3,7 +3,9 @@ define(
 
   [
     'ephox.alloy.construct.EventHandler',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.dragster.api.DragApis',
     'ephox.dragster.core.Dragging',
     'ephox.dragster.detect.Movement',
@@ -15,7 +17,7 @@ define(
     'global!parseInt'
   ],
 
-  function (EventHandler, FieldSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Location, parseInt) {
+  function (EventHandler, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Location, parseInt) {
     var extractCoords = function (event) {
       return Option.some(Position(event.x(), event.y()));
     };
@@ -44,8 +46,8 @@ define(
                 var topPx = Css.getRaw(target, 'top').getOr(location.top());
 
                 Css.setAll(target, {
-                  left: (parseInt(leftPx, 10) + 0/*coords.left()*/) + 'px',
-                  top: (parseInt(topPx, 10) + 0/*coords.top()*/) + 'px',
+                  left: (parseInt(leftPx, 10) + coords.left()) + 'px',
+                  top: (parseInt(topPx, 10) + coords.top()) + 'px',
                   position: 'absolute'
                 });
               }
@@ -118,8 +120,6 @@ define(
     };
     
     var instance = function () {
-      var mutation = { };
-      
       return {
         handlers: handlers
       };
@@ -129,6 +129,18 @@ define(
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.state('movement', Movement),
       FieldSchema.defaulted('getTarget', Fun.identity),
+      FieldSchema.field(
+        'docks',
+        'docks',
+        FieldPresence.asOption(),
+        ValueSchema.objOf([
+          FieldSchema.strict('getFixedDocks'),
+          FieldSchema.strict('getAbsoluteDocks'),
+          FieldSchema.defaulted('leftAttr'),
+          FieldSchema.defaulted('topAttr'),
+          FieldSchema.defaulted('posAttr')
+        ])
+      ),
       FieldSchema.state('dragger', instance)
     ];
 

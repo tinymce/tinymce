@@ -26,7 +26,13 @@ define(
           uiType: 'button',
           dom: {
             tag: 'span',
-            innerHtml: 'Drag me!'
+            innerHtml: 'Drag me!',
+            styles: {
+              padding: '10px',
+              display: 'inline-block',
+              background: '#333',
+              color: '#fff'
+            }
           },
           dragging: {
             mode: 'mouse'
