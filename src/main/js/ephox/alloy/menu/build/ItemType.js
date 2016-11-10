@@ -55,6 +55,17 @@ define(
               }
             })
           },
+
+          {
+            key: 'mousedown',
+            value: EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                // Like button, stop mousedown propagating up the DOM tree.
+                simulatedEvent.cut();
+              }
+            })
+          },
+
           {
             key: 'mouseover',
             value: ItemEvents.hoverHandler

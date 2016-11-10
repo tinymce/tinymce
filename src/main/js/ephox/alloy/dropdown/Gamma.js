@@ -48,7 +48,7 @@ define(
             }),
             'mousedown': EventHandler.nu({
               run: function (component, simulatedEvent) {
-                // Sinks should not let keydown or click propagate
+                // Sinks should not let keydown or click propagate or mousedown
                 simulatedEvent.cut();
               }
             }),
