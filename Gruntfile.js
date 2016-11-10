@@ -702,36 +702,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		connect: {
-			server: {
-				options: {
-					port: 9999
-				}
-			}
-		},
-
-		"saucelabs-qunit": {
-			all: {
-				options: {
-					urls: ["127.0.0.1:9999/tests/index.html?min=true"],
-					testname: "TinyMCE QUnit Tests",
-					browsers: [
-						{browserName: "firefox", platform: "XP"},
-						{browserName: "googlechrome", platform: "XP"},
-						{browserName: "firefox", platform: "Linux"},
-						{browserName: "googlechrome", platform: "Linux"},
-						{browserName: "internet explorer", platform: "XP", version: "8"},
-						{browserName: "internet explorer", platform: "Windows 7", version: "9"},
-						{browserName: "internet explorer", platform: "Windows 7", version: "10"},
-						{browserName: "internet explorer", platform: "Windows 7", version: "11"},
-						{browserName: "microsoftedge", platform: "Windows 10", version: "20.10240"},
-						{browserName: "safari", platform: "OS X 10.9", version: "7"},
-						{browserName: "safari", platform: "OS X 10.8", version: "6"}
-					]
-				}
-			}
-		},
-
 		nugetpack: {
 			main: {
 				options: {
@@ -876,11 +846,6 @@ module.exports = function(grunt) {
 			npm: [
 				"node_modules",
 				"npm-debug.log"
-			],
-
-			saucelabs: [
-				"?sc.log",
-				"sc_*.log"
 			]
 		},
 
@@ -935,6 +900,5 @@ module.exports = function(grunt) {
 	grunt.registerTask("lint", ["eslint"]);
 	grunt.registerTask("minify", ["amdlc", "bolt-build", "uglify", "copy", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
-	grunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);
 	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };

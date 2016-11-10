@@ -39,9 +39,6 @@ Runs all qunit tests on PhantomJS.
 `grunt lint`
 Runs all source files through various JS linters.
 
-`grunt sc-test`
-Runs all qunit tests on Saucelabs.
-
 `grunt watch`
 Watches for source code changes and triggers rebuilds and linting.
 
