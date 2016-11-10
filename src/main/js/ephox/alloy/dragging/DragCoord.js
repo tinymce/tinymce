@@ -85,15 +85,8 @@ define(
     var withinRange = function (coord1, coord2, xRange, yRange, scroll, origin) {
       var a1 = asAbsolute(coord1, scroll, origin);
       var a2 = asAbsolute(coord2, scroll, origin);
-      var inRange = Math.abs(a1.left() - a2.left()) <= xRange &&
+      return Math.abs(a1.left() - a2.left()) <= xRange &&
         Math.abs(a1.top() - a2.top()) <= yRange;
-
-      console.log('new-coord', toString(coord1), a1.left(), a1.top());
-      console.log('sensor', toString(coord2), a2.left(), a2.top());
-      console.log('scroll', scroll.left(), scroll.top());
-      console.log('origin', origin.left(), origin.top());
-      console.log('-- end in range: --', inRange);
-      return inRange;
     };
 
     var toStyles = function (coord, scroll, origin) {
