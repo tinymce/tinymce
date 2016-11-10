@@ -154,7 +154,8 @@ define(
       toStyles: toStyles,
       translate: translate,
 
-      absorb: absorb
+      absorb: absorb,
+      toString: toString
     };
   }
 );

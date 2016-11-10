@@ -17,51 +17,44 @@ test(
         Jsc.eq(expected.top(), actual.top()) ? true : comparing;
     };
 
-    var roundtrip = function (label, asOther, nuOther, asInitial, nuInitial, pt, scroll, origin) {
-      return (function () {
-        var initial = nuInitial(pt.left(), pt.top());
-        var changed = asOther(initial, scroll, origin);
-        var c = nuOther(changed.left(), changed.top());
-        return assertPt(
-          label,
-          pt,
-          asInitial(c, scroll, origin)
-        );
-      })();
-    };
+    var arbConversions = Jsc.elements([
+      { asPoint: DragCoord.asFixed, nu: DragCoord.fixed, mode: 'fixed' },
+      { asPoint: DragCoord.asAbsolute, nu: DragCoord.absolute, mode: 'absolute' },
+      { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
+    ]);
 
-    var tryTrips = function (asInitial, nuInitial, pt, scroll, origin, trips) {
-      return Arr.foldl(trips, function (b, trip) {
-        return b !== true || roundtrip(
-          trip.label,
-          trip.asOther, trip.nuOther,
-          asInitial, nuInitial,
-          pt,
-          scroll, origin
-        );
-      }, true);
+    var arbPosition = function (name) {
+      return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap(function (arr) {
+        return Position(arr[0], arr[1]);
+      }, function (pos) {
+        return [ pos.left(), pos.top() ];
+      }, function (pos) {
+        return name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}';
+      });
     };
 
     Jsc.property(
-      'round-tripping fixed coordinate',
-      Jsc.integer, Jsc.integer, Jsc.integer, Jsc.integer, Jsc.integer, Jsc.integer,
-      function (fixX, fixY, scrollX, scrollY, originX, originY) {
-        var scroll = Position(scrollX, scrollY);
-        var origin = Position(originX, originY);
+      'round-tripping coordinates',
+      arbConversions,
+      Jsc.array(arbConversions),
+      arbPosition('point'),
+      arbPosition('scroll'),
+      arbPosition('origin'),
+      function (original, transformations, coord, scroll, origin) {
+        var o = original.nu(coord.left(), coord.top());
 
-        var trips = [
-          {
-            label: 'fixed -> fixed -> fixed',
-            asOther: DragCoord.asFixed,
-            nuOther: DragCoord.fixed
-          }
-        ];
+        var label = [ original.mode ].concat(Arr.map(transformations, function (t) { return t.mode; }));
+        
+        var result = Arr.foldl(transformations, function (b, transformation) {
+          var pt = transformation.asPoint(b, scroll, origin);
+          return transformation.nu(pt.left(), pt.top());
+        }, o);
 
-        return tryTrips(
-          DragCoord.asFixed, DragCoord.fixed,
-          Position(fixX, fixY),
-          scroll, origin,
-          trips
+        var output = original.asPoint(result, scroll, origin);
+        return assertPt(
+          '\n' + label,
+          coord,
+          output
         );
       }
     );
