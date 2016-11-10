@@ -74,7 +74,7 @@ define(
               },
               dragging: {
                 mode: 'mouse',
-                dockdd: {
+                dockx: {
                   getDocks: function () {
                     return [
                       // {

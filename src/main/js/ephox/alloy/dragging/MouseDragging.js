@@ -94,11 +94,14 @@ define(
                 var target = dragInfo.getTarget()(component.element());
                 
                 var currentCoord = Css.getRaw(target, 'left').bind(function (left) {
-                  return Css.getRaw(target, 'top').map(function (top) {
-                    return DragCoord.offset(
-                      parseInt(left, 10), 
-                      parseInt(top, 10)
-                    );
+                  return Css.getRaw(target, 'top').bind(function (top) {
+                    return Css.getRaw(target, 'position').map(function (position) {
+                      var nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
+                      return nu(
+                        parseInt(left, 10), 
+                        parseInt(top, 10)
+                      );
+                    });
                   });
                 }).getOrThunk(function () {
                   var location = Location.absolute(target);
