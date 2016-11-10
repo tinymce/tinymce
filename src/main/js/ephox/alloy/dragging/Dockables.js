@@ -57,7 +57,7 @@ define(
 
     var moveOrDock = function (component, dockInfo, coord, delta, scroll, origin) {
       var newCoord = getCoords(component, dockInfo, coord, delta);
-      var dock = findDock(component, dockInfo, newCoord);
+      var dock = findDock(component, dockInfo, newCoord, scroll, origin);
 
       var fixedCoord = DragCoord.asFixed(newCoord, scroll, origin);
       Presnaps.set(component, dockInfo, fixedCoord);

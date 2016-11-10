@@ -187,6 +187,8 @@ define(
           FieldSchema.strict('getDocks'),
           FieldSchema.strict('leftAttr'),
           FieldSchema.strict('topAttr'),
+          FieldSchema.strict('xSensitivity'),
+          FieldSchema.strict('ySensitivity'),
           FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
         ])
       ),
