@@ -929,6 +929,31 @@ tinymce.PluginManager.add('lists', function(editor) {
 		});
 	});
 
+	var listState = function (listName) {
+		return function () {
+			var self = this;
+
+			editor.on('NodeChange', function (e) {
+				var lists = tinymce.util.Tools.grep(e.parents, isListNode);
+				self.active(lists.length > 0 && lists[0].nodeName === listName);
+			});
+		};
+	};
+
+	if (!tinymce.PluginManager.get("advlist")) {
+		editor.addButton('numlist', {
+			title: 'Numbered list',
+			cmd: 'InsertOrderedList',
+			onPostRender: listState('OL')
+		});
+
+		editor.addButton('bullist', {
+			title: 'Bullet list',
+			cmd: 'InsertUnorderedList',
+			onPostRender: listState('UL')
+		});
+	}
+
 	editor.addButton('indent', {
 		icon: 'indent',
 		title: 'Increase indent',

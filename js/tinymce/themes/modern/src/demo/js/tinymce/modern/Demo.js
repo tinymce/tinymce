@@ -22,7 +22,7 @@ define('tinymce.modern.Demo', [
 			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
 		],
 		add_unload_trigger: false,
-		toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify |" +
+		toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
 			"bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
 
 		setup: function(ed) {

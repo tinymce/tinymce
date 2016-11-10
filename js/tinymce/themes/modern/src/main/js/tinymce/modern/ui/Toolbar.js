@@ -25,31 +25,8 @@ define('tinymce.modern.ui.Toolbar', [
 		Tools.each(items.split(/[ ,]/), function(item) {
 			var itemName;
 
-			var setActiveItem = function (name) {
-				return function(state, args) {
-					var nodeName, i = args.parents.length;
-
-					while (i--) {
-						nodeName = args.parents[i].nodeName;
-						if (nodeName == "OL" || nodeName == "UL") {
-							break;
-						}
-					}
-
-					item.active(state && nodeName == name);
-				};
-			};
-
 			var bindSelectorChanged = function () {
 				var selection = editor.selection;
-
-				if (itemName == "bullist") {
-					selection.selectorChanged('ul > li', setActiveItem("UL"));
-				}
-
-				if (itemName == "numlist") {
-					selection.selectorChanged('ol > li', setActiveItem("OL"));
-				}
 
 				if (item.settings.stateSelector) {
 					selection.selectorChanged(item.settings.stateSelector, function(state) {
