@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.scullion.ADT',
-    'ephox.sugar.alien.Position'
+    'ephox.sugar.alien.Position',
+    'global!Math'
   ],
 
-  function (Arr, Adt, Position) {
+  function (Arr, Adt, Position, Math) {
     var adt = Adt.generate([
       { offset: [ 'x', 'y' ] },
       { absolute: [ 'x', 'y' ] },
@@ -67,6 +68,44 @@ define(
       );
     };
 
+    var withinRange = function (coord1, coord2, xRange, yRange, scroll, origin) {
+      var a1 = asAbsolute(coord1, scroll, origin);
+      var a2 = asAbsolute(coord2, scroll, origin);
+      return Math.abs(a1.left() - a2.left() <= xRange) &&
+        Math.abs(a1.top() - a2.top() <= yRange);
+    };
+
+    var toStyles = function (coord, scroll, origin) {
+      return coord.fold(
+        function (x, y) {
+          // offset
+          return { position: 'absolute', left: x + 'px', top: y + 'px'};
+        },
+        function (x, y) {
+          return { position: 'absolute', left: (x - origin.left()) + 'px', top: (y - origin.top()) + 'px' };
+          // absolute
+        },
+        function (x, y) {
+          // fixed
+          return { position: 'fixed', left: x + 'px', top: y + 'px' };
+        }
+      );
+    };
+
+    var translate = function (coord, deltaX, deltaY) {
+      return coord.fold(
+        function (x, y) {
+          return adt.offset(x + deltaX, y + deltaY);
+        },
+        function (x, y) {
+          return adt.absolute(x + deltaX, y + deltaY);
+        },
+        function (x, y) {
+          return adt.fixed(x + deltaX, y + deltaY);
+        }
+      );
+    };
+
     return {
       offset: adt.offset,
       absolute: adt.absolute,
@@ -74,7 +113,10 @@ define(
 
       asFixed: asFixed,
       asAbsolute: asAbsolute,
-      asOffset: asOffset
+      asOffset: asOffset,
+      withinRange: withinRange,
+      toStyles: toStyles,
+      translate: translate
     };
   }
 );

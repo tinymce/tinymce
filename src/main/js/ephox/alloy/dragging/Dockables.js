@@ -2,18 +2,14 @@ define(
   'ephox.alloy.dragging.Dockables',
 
   [
-    'ephox.alloy.dragging.CoordResolver',
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.dragging.Presnaps',
-    'ephox.compass.Arr',
-    'ephox.ego.util.Graph',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Scroll',
-    'ephox.sugar.api.Traverse',
+    'ephox.perhaps.Options',
     'global!Math'
   ],
 
-  function (CoordResolver, DragCoord, Presnaps, Arr, Graph, Option, Scroll, Traverse, Math) {
+  function (DragCoord, Presnaps, Option, Options, Math) {
     // Types of coordinates
     // Location: This is the position on the screen including scroll.
     // Absolute: This is the css setting that would be applied. Therefore, it subtracts
@@ -50,46 +46,30 @@ define(
     // that we put on it before we snapped it into place (before dropping). Once it's dropped, the presnap
     // position will go away. It is used to avoid the situation where you can't escape the dock unless you
     // move the mouse really quickly :)
-    var getCoords = function (component, dockInfo, coord, deltaX, deltaY) {
+    var getCoords = function (component, dockInfo, coord, delta) {
       return Presnaps.get(component, dockInfo).fold(function () {
         return coord;
       }, function (fixed) {
         // We have a pre-snap position, so we have to apply the delta ourselves
-        return DragCoord.fixed(fixed.left() + deltaX, fixed.top() + deltaY);
+        return DragCoord.fixed(fixed.left() + delta.left(), fixed.top() + delta.top());
       });
     };
 
-    var snap = function (component, dockInfo, resolver, absLeft, absTop, deltaX, deltaY) {
-      var coord = DragCoord.absolute(absLeft, absTop);
-      var newCoord = getCoords(component, dockInfo, coord, deltaX, deltaY);
+    var moveOrDock = function (component, dockInfo, coord, delta, scroll, origin) {
+      var newCoord = getCoords(component, dockInfo, coord, delta);
+      var dock = findDock(component, dockInfo, newCoord);
 
-
-    };
-
-    var attemptSnap = function (component, dockInfo, absLeft, absTop, deltaX, deltaY) {
-      var doc = Traverse.owner(component.element());
-
-      var scroll = Scroll.get(doc);
-      var origin = dockInfo.lazyOrigin()();
-      
-      return snap(component, dockInfo, resolver, absLeft, absTop, deltaX, deltaY);
-      // absLeft and absTop are ignored if the values are retrieved from pre-snaps;
-      var coords = getCoords(component, dockInfo, absLeft, absTop, deltaX, deltaY);
-      
-      var dock = findDock(component, dockInfo, newAbs.left(), newAbs.top());
+      var fixedCoord = DragCoord.asFixed(newCoord, scroll, origin);
+      Presnaps.set(component, dockInfo, fixedCoord);
+     
       return dock.fold(function () {
+        return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
         // No dock.
         // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
         // presnaps.set(element, 'fixed', newfixed.left(), newfixed.top());
         // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
-      }, function (activeDock) {
-        // A position to snap to nearby, so render it on that snap position, but record where it actually should be.
-        // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
-        // presnaps.set(element, 'fixed', newfixed.left() + 'px', newfixed.top() + 'px');
-
-        // var isAbsolute = pin.position() === 'absolute';
-        // var xy = isAbsolute ? graph.locationToAbsolute(element, pin.x(), pin.y()) : Position(pin.x(), pin.y());
-        // return { position: pin.position(), left: xy.left() + 'px', top: xy.top() + 'px' };
+      }, function (docked) {
+        return docked;
       });
     };
 
@@ -101,25 +81,16 @@ define(
     // y: the absolute position.top of the draggable element
     // deltaX: the amount the mouse has moved horizontally
     // deltaY: the amount the mouse has moved vertically
-    var findDock = function (component, dockInfo, newCoord) {
-      var doc = Traverse.owner(component.element());
-      var origin = dockInfo.lazyOrigin()();
-      var scroll = Scroll.get(doc);
-
-      var asAbsolute = DragCoord.asAbsolute(newCoord, scroll, origin);
-      var asFixed = DragCoord.asFixed(newCoord, scroll, origin);
-
+    var findDock = function (component, dockInfo, newCoord, scroll, origin) {
       // You need to pass in the absX and absY so that they can be used for things which only care about docking one axis and keeping the other one.
-      var docks = dockInfo.getDocks()(component, asAbsolute, asFixed);
+      var docks = dockInfo.getDocks()(component);
 
       // HERE
-      var winner = Arr.find(docks, function (dock) {
+      return Options.findMap(docks, function (dock) {
         var sensor = dock.sensor();
-        return Math.abs(newAbsLeft - sensor.x() < dockInfo.xSensitivity() && 
-          Math.abs(newAbsTop - sensor.y()) < dockInfo.ySensitivity());
+        var inRange = DragCoord.withinRange(newCoord, sensor, dockInfo.xSensitivity(), dockInfo.ySensitivity(), origin, scroll);
+        return inRange ? Option.some(dock.output()) : Option.none();
       });
-
-      return Option.from(winner).map(function (dock) { return dock.output(); });
     };
 
     /*
@@ -136,7 +107,7 @@ define(
     */
 
     return {
-      attemptSnap: attemptSnap,
+      moveOrDock: moveOrDock,
       stopDrag: stopDrag
     };
   }
