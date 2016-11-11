@@ -143,3 +143,7 @@ input.invalid-input {
    */
   /*transition-delay: 0s;*/
 }
+
+.demo-alloy-dock-transition.demo-alloy-dock-fade-in {
+  transition-delay: 0s;
+}
