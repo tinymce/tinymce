@@ -32,8 +32,9 @@ define(
           dom: {
             styles: {
               background: 'red',
+              'margin-top': '1400px',
               width: '500px',
-              height: '600px',
+              height: '3600px',
               'z-index': '50'
             }
           },
@@ -47,8 +48,8 @@ define(
                   width: '400px',
                   height: '50px',
                   border: '2px solid black',
-                  position: 'position',
-                  top: '2300px',
+                  position: 'absolute',
+                  top: '2500px',
                   left: '150px',
                   'z-index': '100'
                 }

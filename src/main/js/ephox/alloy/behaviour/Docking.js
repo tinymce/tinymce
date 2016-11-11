@@ -113,47 +113,46 @@ define(
       Attr.remove(elem, dockInfo.topAttr());
     };
 
+    var morphToAbsolute = function (component, dockInfo, viewport) {
+      return getPrior(component, dockInfo).bind(function (box) {
+        if (isCompletelyVisible(box, viewport)) {
+          // Revert it back to absolute
+          clearPrior(component, dockInfo);
+          return Option.some(
+            DragCoord.absolute(box.x(), box.y())
+          );
+        } else {
+          return Option.none();
+        }
+      });
+    };
+
+    var morphToFixed = function (component, dockInfo, viewport, scroll, origin) {
+      var loc = Location.absolute(component.element());
+      var box = Bounds(loc.left(), loc.top(), Width.get(component.element()), Height.get(component.element()));
+      if (! isCompletelyVisible(box, viewport)) {
+        // Convert it to fixed (keeping the x coordinate and throwing away the y coordinate)
+        setPrior(component, dockInfo, loc.left(), loc.top());
+        // FIX: Move to generic area?
+        var coord = DragCoord.absolute(loc.left(), loc.top());
+        var asFixed = DragCoord.asFixed(coord, scroll, origin);
+
+        // Check whether we are docking the bottom of the viewport, or the top
+        var viewportPt = DragCoord.absolute(viewport.x(), viewport.y());
+        var fixedViewport = DragCoord.asFixed(viewportPt, scroll, origin);
+        var fixedY = box.y() <= viewport.y() ? fixedViewport.top() : fixedViewport.top() + viewport.height() - box.height();
+        return Option.some(DragCoord.fixed(asFixed.left(), fixedY));
+      } else {
+        return Option.none();
+      }
+    };
+
     var getMorph = function (component, dockInfo, viewport, scroll, origin) {
       
       
 
       var isDocked = Css.getRaw(component.element(), 'position').is('fixed');
-      if (isDocked) {
-        return getPrior(component, dockInfo).bind(function (box) {
-          console.log('prior', box.y(), box.bottom(), 'viewport', viewport.y(), viewport.bottom());
-          // We are fixed, but we previously were absolutely positioned.
-          if (isCompletelyVisible(box, viewport)) {
-            // Revert it back to absolute
-            clearPrior(component, dockInfo);
-            return Option.some(
-              DragCoord.absolute(box.x(), box.y())
-            );
-
-          } else {
-            return Option.none();
-          }
-        });
-      } else {
-        // We have an element, so we want to get its absolute coordinates to compare with the absolute
-        // coordinates of the viewport. 
-        var loc = Location.absolute(component.element());
-        var box = Bounds(loc.left(), loc.top(), Width.get(component.element()), Height.get(component.element()));
-        if (! isCompletelyVisible(box, viewport)) {
-          // Convert it to fixed (keeping the x coordinate and throwing away the y coordinate)
-          setPrior(component, dockInfo, loc.left(), loc.top());
-          // FIX: Move to generic area?
-          var coord = DragCoord.absolute(loc.left(), loc.top());
-          var asFixed = DragCoord.asFixed(coord, scroll, origin);
-
-          // Check whether we are docking the bottom of the viewport, or the top
-          var viewportPt = DragCoord.absolute(viewport.x(), viewport.y());
-          var fixedViewport = DragCoord.asFixed(viewportPt, scroll, origin);
-          var fixedY = box.y() <= viewport.y() ? fixedViewport.top() : fixedViewport.top() + viewport.height() - box.height();
-          return Option.some(DragCoord.fixed(asFixed.left(), fixedY));
-        } else {
-          return Option.none();
-        }
-      }
+      return isDocked ? morphToAbsolute(component, dockInfo, viewport) : morphToFixed(component, dockInfo, viewport, scroll, origin);
     };
 
     var handlers = function (info) {
