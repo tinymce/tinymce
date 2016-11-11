@@ -2,13 +2,14 @@ define(
   'ephox.alloy.events.Triggers',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.scullion.ADT',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Fun, Adt, Cell, Traverse) {
+  function (Arr, Fun, Adt, Cell, Traverse) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },
@@ -56,6 +57,28 @@ define(
       });
     };
 
+    var broadcast = function (listeners, rawEvent) {
+      /* TODO: Remove dupe */
+      var stopper = Cell(false);
+
+      var stop = function () {
+        stopper.set(true);
+      };
+
+
+      var simulatedEvent = {
+        stop: stop,
+        cut: Fun.noop, // cutting has no meaning for a broadcasted event
+        event: Fun.constant(rawEvent)
+      };
+
+      Arr.each(listeners, function (listener) {
+        listener.handler(simulatedEvent);
+      });
+
+      return stopper.get() === true;
+    };
+
     var triggerUntilStopped = function (lookup, eventType, rawEvent) {
       var rawTarget = rawEvent.target();
       return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget);
@@ -77,7 +100,8 @@ define(
     return {
       triggerHandler: triggerHandler,
       triggerUntilStopped: triggerUntilStopped,
-      triggerOnUntilStopped: triggerOnUntilStopped
+      triggerOnUntilStopped: triggerOnUntilStopped,
+      broadcast: broadcast
     };
   }
 );

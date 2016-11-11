@@ -122,3 +122,14 @@ input.invalid-input {
 .demo-sliding-width-shrinking {
   transition: opacity 0.3s ease, width 0.3s, visibility 0s linear 0.3s;
 }
+
+
+
+.demo-alloy-dock-fade {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.demo-alloy-dock-transition {
+  transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+}

@@ -4,14 +4,20 @@ define(
   [
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
-    'global!Array'
+    'global!Array',
+    'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Array) {
+  function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Json, Fun, Array, Error) {
     var nu = function (parts) {
+      if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) throw new Error(
+        'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
+      );
       return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOf([
         FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
         FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue()),

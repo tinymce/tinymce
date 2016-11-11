@@ -32,6 +32,7 @@ define(
     var settingsSchema = ValueSchema.objOf([
       // triggerEvent(eventName, event)
       FieldSchema.field('triggerEvent', 'triggerEvent', FieldPresence.strict(), ValueSchema.valueOf(isFunction)),
+      FieldSchema.field('broadcastEvent', 'broadcastEvent', FieldPresence.strict(), ValueSchema.valueOf(isFunction)),
       FieldSchema.defaulted('stopBackspace', true)
     ]);
 
@@ -138,7 +139,7 @@ define(
 
       var defaultView = Traverse.defaultView(container);
       var onWindowScroll = DomEvent.bind(defaultView, 'scroll', function (event) {
-        var stopped = settings.triggerEvent(SystemEvents.windowScroll(), event);
+        var stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
         if (stopped) event.kill();
       });
 

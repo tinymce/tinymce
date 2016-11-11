@@ -50,6 +50,14 @@ define(
       var domEvents = GuiEvents.setup(root.element(), {
         triggerEvent: function (eventName, event) {
           return Triggers.triggerUntilStopped(lookup, eventName, event);
+        },
+
+        // This doesn't follow usual DOM bubbling. It will just dispatch on all
+        // targets that have the event. It is the general case of the more specialised
+        // "message". "messages" may actually just go away.
+        broadcastEvent: function (eventName, event) {
+          var listeners = registry.filter(eventName);
+          return Triggers.broadcast(listeners, event);
         }
       });
 

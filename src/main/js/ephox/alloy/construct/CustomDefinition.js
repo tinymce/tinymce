@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.behaviour.Coupling',
     'ephox.alloy.behaviour.Disabling',
+    'ephox.alloy.behaviour.Docking',
     'ephox.alloy.behaviour.Dragging',
     'ephox.alloy.behaviour.Focusing',
     'ephox.alloy.behaviour.Highlighting',
@@ -37,7 +38,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
+  function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),
@@ -147,6 +148,7 @@ define(
       Sliding,
       Transitioning,
       Dragging,
+      Docking,
       Unselecting
     ];
 
