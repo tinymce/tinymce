@@ -132,6 +132,7 @@ define(
       var destroy = function () {
         // INVESTIGATE: something with registry?
         domEvents.unbind();
+        Remove.remove(root.element());
       };
 
       var broadcastData = function (data) {

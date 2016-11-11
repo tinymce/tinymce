@@ -25,8 +25,10 @@ define(
         events: Objects.wrapAll([
           {
             key: SystemEvents.focusItem(),
-            value: EventHandler.nu(function (component, simulatedEvent) {
-              simulatedEvent.stop();
+            value: EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                simulatedEvent.stop();
+              }
             })
           }
 
