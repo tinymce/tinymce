@@ -20,6 +20,7 @@ define(
       // Css.set(gui.element(), 'direction', 'rtl');
 
       Insert.append(body, gui.element());
+      Css.set(body, 'margin-top', '2000px');
       Css.set(body, 'margin-bottom', '2000px');
 
       var dockable = HtmlDisplay.section(
@@ -46,7 +47,7 @@ define(
                   width: '400px',
                   height: '50px',
                   border: '2px solid black',
-                  position: 'absolute',
+                  position: 'fixed',
                   top: '300px',
                   left: '10px',
                   'z-index': '100'

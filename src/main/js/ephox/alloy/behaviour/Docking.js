@@ -10,14 +10,22 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
+    'ephox.ego.util.Bounds',
+    'ephox.ego.util.Boxes',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.Scroll',
+    'global!window'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Class, Compare, Css) {
+  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Bounds, Boxes, Fun, Class, Compare, Scroll, window) {
     var behaviourName = 'docking';
+
+    var defaultLazyViewport = function (_component) {
+      var scroll = Scroll.get();
+      return Bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
+    };
 
     var schema = FieldSchema.field(
       behaviourName,
@@ -34,7 +42,8 @@ define(
             FieldSchema.strict('transitionClass'),
             FieldSchema.strict('lazyContext')
           ])
-        )
+        ),
+        FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
       ])
     );
 
@@ -78,8 +87,15 @@ define(
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
                 dockInfo.contextual().each(function (contextInfo) {
-                  if (window.scrollY > 100) appear(component, contextInfo);
-                  else disappear(component, contextInfo);
+                  // Absolute coordinates (considers scroll)
+                  var viewport = dockInfo.lazyViewport()(component);
+                  // Absolute coordinates
+                  contextInfo.lazyContext()(component).each(function (context) {
+                    var box = Boxes.box(context.element());
+                    var isVisible = box.y() < viewport.bottom() && box.bottom() > viewport.y();
+                    var method = isVisible ? appear : disappear;
+                    method(component, contextInfo);
+                  });
                 });
               }
             })
