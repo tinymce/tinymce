@@ -11,7 +11,21 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('anchor', function(editor) {
-	function showDialog() {
+	var isAnchorNode = function (node) {
+		return !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
+	};
+
+	var setContentEditable = function (state) {
+		return function (nodes) {
+			for (var i = 0; i < nodes.length; i++) {
+				if (isAnchorNode(nodes[i])) {
+					nodes[i].attr('contenteditable', state);
+				}
+			}
+		};
+	};
+
+	var showDialog = function () {
 		var selectedNode = editor.selection.getNode(), name = '';
 		var isAnchor = selectedNode.tagName == 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
 
@@ -34,6 +48,13 @@ tinymce.PluginManager.add('anchor', function(editor) {
 					}));
 				}
 			}
+		});
+	};
+
+	if (tinymce.Env.ceFalse) {
+		editor.on('PreInit', function () {
+			editor.parser.addNodeFilter('a', setContentEditable('false'));
+			editor.serializer.addNodeFilter('a', setContentEditable(null));
 		});
 	}
 

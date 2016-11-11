@@ -184,10 +184,17 @@ define("tinymce/DragDropOverrides", [
 		};
 	};
 
+	// Returns the raw element instead of the fake cE=false element
+	var getRawTarget = function (selection) {
+		var rng = selection.getSel().getRangeAt(0);
+		var startContainer = rng.startContainer;
+		return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
+	};
+
 	var drop = function (state, editor) {
 		return function (e) {
 			if (state.dragging) {
-				if (isValidDropTarget(editor, editor.selection.getNode(), state.element)) {
+				if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
 					var targetClone = cloneElement(state.element);
 
 					var args = editor.fire('drop', {
