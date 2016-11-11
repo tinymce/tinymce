@@ -15,9 +15,10 @@
 define('tinymce.media.Plugin', [
 	'global!tinymce.PluginManager',
 	'tinymce.media.ui.Dialog',
-	'tinymce.media.core.Data',
+	'tinymce.media.core.Sanitize',
+	'tinymce.media.core.UpdateHtml',
 	'tinymce.media.core.Nodes'
-], function (PluginManager, Dialog, Data, Nodes) {
+], function (PluginManager, Dialog, Sanitize, UpdateHtml, Nodes) {
 	var Plugin = function (editor) {
 		editor.on('ResolveName', function (e) {
 			var name;
@@ -108,7 +109,7 @@ define('tinymce.media.Plugin', [
 					if (innerHtml) {
 						innerNode = new tinymce.html.Node('#text', 3);
 						innerNode.raw = true;
-						innerNode.value = Data.sanitize(editor, unescape(innerHtml));
+						innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
 						realElm.append(innerNode);
 					}
 
@@ -144,7 +145,7 @@ define('tinymce.media.Plugin', [
 				if (html) {
 					html = unescape(html);
 					target.setAttribute('data-mce-html', escape(
-						Data.updateHtml(html, {
+						UpdateHtml.updateHtml(html, {
 							width: e.width,
 							height: e.height
 						})

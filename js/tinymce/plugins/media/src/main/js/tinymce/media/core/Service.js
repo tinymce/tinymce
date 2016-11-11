@@ -1,7 +1,7 @@
 define('tinymce.media.core.Service', [
-	'tinymce.media.core.Data',
+	'tinymce.media.core.DataToHtml',
 	'global!tinymce.util.Promise'
-], function (Data, Promise) {
+], function (DataToHtml, Promise) {
 
 	var embedPromise = function (data, dataToHtml, handler) {
 		var cache = {};
@@ -31,7 +31,7 @@ define('tinymce.media.core.Service', [
 
 	var loadedData = function (editor) {
 		return function (data) {
-			return Data.dataToHtml(editor, data);
+			return DataToHtml.dataToHtml(editor, data);
 		};
 	};
 

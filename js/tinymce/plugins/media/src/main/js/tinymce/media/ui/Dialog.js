@@ -1,16 +1,32 @@
 define('tinymce.media.ui.Dialog', [
 	'global!tinymce.util.Delay',
-	'tinymce.media.core.Data',
+	'tinymce.media.core.HtmlToData',
+	'tinymce.media.core.UpdateHtml',
 	'tinymce.media.core.Service',
 	'global!tinymce.util.Tools',
 	'global!tinymce.Env'
-], function (Delay, Data, Service, Tools, Env) {
+], function (Delay, HtmlToData, UpdateHtml, Service, Tools, Env) {
 	var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
+
+	var getData = function (editor) {
+		var element = editor.selection.getNode();
+		return element.getAttribute('data-mce-object') ?
+			HtmlToData.htmlToData(editor.settings.media_scripts, editor.serializer.serialize(element, {selection: true})) :
+			{};
+	};
+	var getSource = function (editor) {
+		var elm = editor.selection.getNode();
+
+		if (elm.getAttribute('data-mce-object')) {
+			return editor.selection.getContent();
+		}
+	};
 
 	var addEmbedHtml = function (ctx, editor) {
 		return function (response) {
-			ctx.find('#embed').value(response.html);
-			var data = Tools.extend(Data.htmlToData(editor, response.html), {source1: response.url});
+			var html = response.html;
+			ctx.find('#embed').value(html);
+			var data = Tools.extend(HtmlToData.htmlToData(editor.settings.media_scripts, html), {source1: response.url});
 			ctx.fromJSON(data);
 			updateSize(ctx);
 		};
@@ -117,7 +133,7 @@ define('tinymce.media.ui.Dialog', [
 				}
 			}
 			data = win.toJSON();
-			win.find('#embed').value(Data.updateHtml(data.embed, data));
+			win.find('#embed').value(UpdateHtml.updateHtml(data.embed, data));
 			updateSize(win);
 		};
 
@@ -151,20 +167,20 @@ define('tinymce.media.ui.Dialog', [
 			});
 		}
 
-		data = Data.getData(editor);
+		data = getData(editor);
 
 		var embedTextBox = {
 			id: 'mcemediasource',
 			type: 'textbox',
 			flex: 1,
 			name: 'embed',
-			value: Data.getSource(editor),
+			value: getSource(editor),
 			multiline: true,
 			label: 'Source'
 		};
 
 		var updateValueOnChange = function () {
-			data = Tools.extend({}, Data.htmlToData(editor, this.value()));
+			data = Tools.extend({}, HtmlToData.htmlToData(editor.settings.media_scripts, this.value()));
 			this.parent().parent().fromJSON(data);
 		};
 

@@ -24,9 +24,22 @@ asynctest('browser.core.SubmitTest', [
 			Utils.sSetFormItemNoEvent(ui, url),
 			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
 			Utils.sAssertEditorContent(apis, editor, expected),
-			Waiter.sTryUntil('blabla',
+			Waiter.sTryUntil('Wait for structure check',
 				apis.sAssertContentStructure(struct),
 			10, 500),
+			apis.sSetContent('')
+		]);
+	};
+
+	var sTestScriptPlaceholder = function (ui, editor, apis, expected, struct) {
+		return GeneralSteps.sequence([
+			apis.sSetContent(
+				'<script src="http://media1.tinymce.com/123456"></script>' +
+				'<script src="http://media2.tinymce.com/123456"></script>'),
+			Waiter.sTryUntil('Wait for structure check',
+				apis.sAssertContentStructure(struct),
+			10, 500),
+			Utils.sAssertEditorContent(apis, editor, expected),
 			apis.sSetContent('')
 		]);
 	};
@@ -69,8 +82,38 @@ asynctest('browser.core.SubmitTest', [
 			});
 		});
 
+		var scriptStruct = ApproxStructure.build(function (s, str, arr) {
+			return s.element('body', {
+				children: [
+					s.element('img', {
+						classes: [
+							arr.has('mce-object', 'mce-object-script')
+						],
+						attrs: {
+							height: str.is('150'),
+							width: str.is('300')
+						}
+					}),
+					s.element('img', {
+						classes: [
+							arr.has('mce-object', 'mce-object-script')
+						],
+						attrs: {
+							height: str.is('200'),
+							width: str.is('100')
+						}
+					})
+				]
+			});
+		});
+
 		Pipeline.async({}, [
 			Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
+			sTestScriptPlaceholder(ui, editor, apis,
+			'<p>\n' +
+				'<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
+				'<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
+			'</p>', scriptStruct),
 			sTestPlaceholder(ui, editor, apis,
 				'https://www.youtube.com/watch?v=P_205ZY52pY',
 				'<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
@@ -81,18 +124,16 @@ asynctest('browser.core.SubmitTest', [
 				'https://www.youtube.com/watch?v=P_205ZY52pY',
 				'<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
 				'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-				iframeStructure),
+				iframeStructure)
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
 		toolbar: "media",
-		// media_embed_handler: function (data, resolve) {
-		// 	setTimeout(function () {
-		// 		resolve({
-		// 			html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'
-		// 		});
-		// 	}, 500);
-		// }
+		extended_valid_elements: 'script[src|type]',
+		media_scripts: [
+			{filter: 'http://media1.tinymce.com'},
+			{filter: 'http://media2.tinymce.com', width: 100, height: 200}
+		]
 	}, success, failure);
 
 });

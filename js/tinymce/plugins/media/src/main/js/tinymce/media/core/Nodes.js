@@ -1,8 +1,9 @@
 define('tinymce.media.core.Nodes', [
-	'tinymce.media.core.Data',
+	'tinymce.media.core.Sanitize',
+	'tinymce.media.core.VideoScript',
 	'global!tinymce.html.Node',
 	'global!tinymce.Env'
-], function (Data, Node, Env) {
+], function (Sanitize, VideoScript, Node, Env) {
 	var createPlaceholderNode = function (editor, node) {
 		var placeHolder;
 		var name = node.name;
@@ -86,7 +87,7 @@ define('tinymce.media.core.Nodes', [
 		// This enables us to copy/paste the fake object
 		innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
 		if (innerHtml) {
-			targetNode.attr("data-mce-html", escape(Data.sanitize(editor, innerHtml)));
+			targetNode.attr("data-mce-html", escape(Sanitize.sanitize(editor, innerHtml)));
 			targetNode.firstChild = null;
 		}
 	};
@@ -109,7 +110,7 @@ define('tinymce.media.core.Nodes', [
 				}
 
 				if (node.name === 'script') {
-					videoScript = Data.getVideoScriptMatch(editor, node.attr('src'));
+					videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, node.attr('src'));
 					if (!videoScript) {
 						continue;
 					}
