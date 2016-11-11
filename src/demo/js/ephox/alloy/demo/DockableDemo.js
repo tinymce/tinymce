@@ -54,6 +54,9 @@ define(
                   'z-index': '100'
                 }
               },
+              dragging: {
+                mode: 'mouse'
+              },
               docking: {
                 contextual: {
                   transitionClass: 'demo-alloy-dock-transition',

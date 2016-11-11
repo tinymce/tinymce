@@ -52,7 +52,7 @@ define(
       return {
         'mousedown': EventHandler.nu({
           run: function (component, simulatedEvent) {
-            console.log('mouse down');
+            if (simulatedEvent.event().raw().button !== 0) return;
 
 
             var mode = {
