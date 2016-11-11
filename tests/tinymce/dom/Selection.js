@@ -1,7 +1,8 @@
 ModuleLoader.require([
 	"tinymce/caret/CaretContainer",
+	"tinymce/text/Zwsp",
 	"tinymce/Env"
-], function(CaretContainer, Env) {
+], function(CaretContainer, Zwsp, Env) {
 	module("tinymce.dom.Selection", {
 		setupModule: function() {
 			QUnit.stop();
@@ -844,6 +845,21 @@ ModuleLoader.require([
 			rng = editor.selection.getRng(true);
 			equal(rng.startContainer.nodeName, 'B');
 			equal(rng.startOffset, 0);
+		});
+
+		test('normalize lean left from br into formatter caret container', function() {
+			var rng;
+
+			editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
+			rng = editor.dom.createRng();
+			rng.setStartBefore(editor.getBody().firstChild.lastChild);
+			rng.setEndBefore(editor.getBody().firstChild.lastChild);
+			editor.selection.setRng(rng);
+			editor.selection.normalize();
+
+			rng = editor.selection.getRng(true);
+			equal(rng.startContainer.nodeType, 3);
+			equal(rng.startOffset, 1);
 		});
 
 		test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function() {

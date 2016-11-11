@@ -38,6 +38,26 @@ define("tinymce/dom/RangeUtils", [
 		return childNodes[index] || container;
 	}
 
+	function hasParent(node, predicate) {
+		while (node) {
+			if (predicate(node)) {
+				return true;
+			}
+
+			node = node.parentNode;
+		}
+
+		return false;
+	}
+
+	function isFormatterCaret(node) {
+		return node.id === '_mce_caret';
+	}
+
+	function isCeFalseCaretContainer(node) {
+		return isCaretContainer(node) && hasParent(node, isFormatterCaret) === false;
+	}
+
 	function RangeUtils(dom) {
 		/**
 		 * Walks the specified range like object and executes the callback for each sibling collection it finds.
@@ -326,7 +346,7 @@ define("tinymce/dom/RangeUtils", [
 					walker = new TreeWalker(startNode, parentBlockContainer);
 					while ((node = walker[left ? 'prev' : 'next']())) {
 						// Break if we hit a non content editable node
-						if (dom.getContentEditableParent(node) === "false" || isCaretContainer(node)) {
+						if (dom.getContentEditableParent(node) === "false" || isCeFalseCaretContainer(node)) {
 							return;
 						}
 
