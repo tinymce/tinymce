@@ -125,11 +125,21 @@ input.invalid-input {
 
 
 
-.demo-alloy-dock-fade {
+.demo-alloy-dock-fade-out {
   visibility: hidden;
   opacity: 0;
 }
 
+.demo-alloy-dock-fade-in {
+  visibility: visible;
+  opacity: 1;
+}
+
 .demo-alloy-dock-transition {
   transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+  /*
+   * Set all transition delays to 0s, overriding visibility to apply immediately
+   * and thus allowing the opacity to fade in
+   */
+  /*transition-delay: 0s;*/
 }

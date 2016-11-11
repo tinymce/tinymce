@@ -54,7 +54,8 @@ define(
 
         // This doesn't follow usual DOM bubbling. It will just dispatch on all
         // targets that have the event. It is the general case of the more specialised
-        // "message". "messages" may actually just go away.
+        // "message". "messages" may actually just go away. This is used for things 
+        // like window scroll.
         broadcastEvent: function (eventName, event) {
           var listeners = registry.filter(eventName);
           return Triggers.broadcast(listeners, event);

@@ -53,7 +53,8 @@ define(
               },
               docking: {
                 transitionClass: 'demo-alloy-dock-transition',
-                fadeClass: 'demo-alloy-dock-fade'
+                fadeOutClass: 'demo-alloy-dock-fade-out',
+                fadeInClass: 'demo-alloy-dock-fade-in'
               }
             }
           ]

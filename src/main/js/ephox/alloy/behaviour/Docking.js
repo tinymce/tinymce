@@ -12,10 +12,11 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
-    'ephox.sugar.api.Compare'
+    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Css'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Class, Compare) {
+  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Class, Compare, Css) {
     var behaviourName = 'docking';
 
     var schema = FieldSchema.field(
@@ -23,7 +24,8 @@ define(
       behaviourName,
       FieldPresence.asOption(),
       ValueSchema.objOf([
-        FieldSchema.strict('fadeClass'),
+        FieldSchema.strict('fadeInClass'),
+        FieldSchema.strict('fadeOutClass'),
         FieldSchema.strict('transitionClass')
       ])
     );
@@ -34,12 +36,14 @@ define(
 
     var appear = function (component, dockInfo) {
       Class.add(component.element(), dockInfo.transitionClass());
-      Class.remove(component.element(), dockInfo.fadeClass());
+      Class.remove(component.element(), dockInfo.fadeOutClass());
+      Class.add(component.element(), dockInfo.fadeInClass());
     };
 
     var disappear = function (component, dockInfo) {
       Class.add(component.element(), dockInfo.transitionClass());
-      Class.add(component.element(), dockInfo.fadeClass());
+      Class.remove(component.element(), dockInfo.fadeInClass());
+      Class.add(component.element(), dockInfo.fadeOutClass());
     };
 
     var handlers = function (info) {
@@ -63,7 +67,8 @@ define(
             key: SystemEvents.windowScroll(),
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
-                console.log('here');
+                if (window.scrollY > 100) appear(component, dockInfo);
+                else disappear(component, dockInfo);
               }
             })
           }
