@@ -84,7 +84,9 @@ define(
     };
 
     var getAttr = function (elem, attr) {
-      return Attr.has(elem, attr) ? Option.some(Attr.get(elem, attr)) : Option.none();
+      return Attr.has(elem, attr) ? Option.some(
+        parseInt(Attr.get(elem, attr), 10)
+      ) : Option.none();
     };
 
     var getPrior = function (component, dockInfo) {
@@ -111,14 +113,14 @@ define(
       Attr.remove(elem, dockInfo.topAttr());
     };
 
-    var getMorph = function (component, dockInfo, viewport) {
-      var doc = Traverse.owner(component.element());
-      var scroll = Scroll.get(doc);
-      var origin = OffsetOrigin.getOrigin(component, scroll);
+    var getMorph = function (component, dockInfo, viewport, scroll, origin) {
+      
+      
 
       var isDocked = Css.getRaw(component.element(), 'position').is('fixed');
       if (isDocked) {
         return getPrior(component, dockInfo).bind(function (box) {
+          console.log('prior', box.y(), box.bottom(), 'viewport', viewport.y(), viewport.bottom());
           // We are fixed, but we previously were absolutely positioned.
           if (isCompletelyVisible(box, viewport)) {
             // Revert it back to absolute
@@ -189,8 +191,13 @@ define(
                     method(component, contextInfo);
                   });
 
-                  getMorph(component, dockInfo, viewport).each(function (morph) {
-                    var styles = DragCoord.toStyles(morph);
+                  var doc = Traverse.owner(component.element());
+                  var scroll = Scroll.get(doc);
+                  var origin = OffsetOrigin.getOrigin(component, scroll);
+
+                  getMorph(component, dockInfo, viewport, scroll, origin).each(function (morph) {
+                    console.log('morph', DragCoord.toString(morph));
+                    var styles = DragCoord.toStyles(morph, scroll, origin);
                     Css.setAll(component.element(), styles);
                   });
                 });
