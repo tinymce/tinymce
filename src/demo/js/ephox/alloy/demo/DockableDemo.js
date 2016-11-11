@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
@@ -11,7 +12,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, Class, Css, Element, Insert, document) {
+  function (Gui, HtmlDisplay, Option, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -52,9 +53,14 @@ define(
                 }
               },
               docking: {
-                transitionClass: 'demo-alloy-dock-transition',
-                fadeOutClass: 'demo-alloy-dock-fade-out',
-                fadeInClass: 'demo-alloy-dock-fade-in'
+                contextual: {
+                  transitionClass: 'demo-alloy-dock-transition',
+                  fadeOutClass: 'demo-alloy-dock-fade-out',
+                  fadeInClass: 'demo-alloy-dock-fade-in',
+                  lazyContext: function (component) {
+                    return component.getSystem().getByUid('panel-container').fold(Option.none, Option.some);
+                  }
+                }
               }
             }
           ]

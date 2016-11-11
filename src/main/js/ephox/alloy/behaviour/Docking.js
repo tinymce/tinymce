@@ -24,9 +24,17 @@ define(
       behaviourName,
       FieldPresence.asOption(),
       ValueSchema.objOf([
-        FieldSchema.strict('fadeInClass'),
-        FieldSchema.strict('fadeOutClass'),
-        FieldSchema.strict('transitionClass')
+        FieldSchema.field(
+          'contextual',
+          'contextual',
+          FieldPresence.asOption(),
+          ValueSchema.objOf([
+            FieldSchema.strict('fadeInClass'),
+            FieldSchema.strict('fadeOutClass'),
+            FieldSchema.strict('transitionClass'),
+            FieldSchema.strict('lazyContext')
+          ])
+        )
       ])
     );
 
@@ -34,16 +42,16 @@ define(
       return DomModification.nu({ });
     };
 
-    var appear = function (component, dockInfo) {
-      Class.add(component.element(), dockInfo.transitionClass());
-      Class.remove(component.element(), dockInfo.fadeOutClass());
-      Class.add(component.element(), dockInfo.fadeInClass());
+    var appear = function (component, contextualInfo) {
+      Class.add(component.element(), contextualInfo.transitionClass());
+      Class.remove(component.element(), contextualInfo.fadeOutClass());
+      Class.add(component.element(), contextualInfo.fadeInClass());
     };
 
-    var disappear = function (component, dockInfo) {
-      Class.add(component.element(), dockInfo.transitionClass());
-      Class.remove(component.element(), dockInfo.fadeInClass());
-      Class.add(component.element(), dockInfo.fadeOutClass());
+    var disappear = function (component, contextualInfo) {
+      Class.add(component.element(), contextualInfo.transitionClass());
+      Class.remove(component.element(), contextualInfo.fadeInClass());
+      Class.add(component.element(), contextualInfo.fadeOutClass());
     };
 
     var handlers = function (info) {
@@ -56,10 +64,12 @@ define(
             key: 'transitionend',
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
-                if (Compare.eq(component.element(), simulatedEvent.event().target())) {
-                  Class.remove(component.element(), dockInfo.transitionClass());
-                  simulatedEvent.stop();
-                }
+                dockInfo.contextual().each(function (contextInfo) {
+                  if (Compare.eq(component.element(), simulatedEvent.event().target())) {
+                    Class.remove(component.element(), contextInfo.transitionClass());
+                    simulatedEvent.stop();
+                  }
+                });
               }
             }) 
           },
@@ -67,8 +77,10 @@ define(
             key: SystemEvents.windowScroll(),
             value: EventHandler.nu({
               run: function (component, simulatedEvent) {
-                if (window.scrollY > 100) appear(component, dockInfo);
-                else disappear(component, dockInfo);
+                dockInfo.contextual().each(function (contextInfo) {
+                  if (window.scrollY > 100) appear(component, contextInfo);
+                  else disappear(component, contextInfo);
+                });
               }
             })
           }
