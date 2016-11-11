@@ -47,9 +47,9 @@ define(
                   width: '400px',
                   height: '50px',
                   border: '2px solid black',
-                  position: 'fixed',
-                  top: '300px',
-                  left: '10px',
+                  position: 'position',
+                  top: '2050px',
+                  left: '150px',
                   'z-index': '100'
                 }
               },
@@ -61,7 +61,9 @@ define(
                   lazyContext: function (component) {
                     return component.getSystem().getByUid('panel-container').fold(Option.none, Option.some);
                   }
-                }
+                },
+                leftAttr: 'data-dock-left',
+                topAttr: 'data-dock-top'
               }
             }
           ]
