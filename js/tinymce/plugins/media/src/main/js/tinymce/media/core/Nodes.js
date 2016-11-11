@@ -1,9 +1,9 @@
 define('tinymce.media.core.Nodes', [
 	'tinymce.media.core.Sanitize',
-	'tinymce.media.core.Etc',
+	'tinymce.media.core.VideoScript',
 	'global!tinymce.html.Node',
 	'global!tinymce.Env'
-], function (Sanitize, Etc, Node, Env) {
+], function (Sanitize, VideoScript, Node, Env) {
 	var createPlaceholderNode = function (editor, node) {
 		var placeHolder;
 		var name = node.name;
@@ -110,7 +110,7 @@ define('tinymce.media.core.Nodes', [
 				}
 
 				if (node.name === 'script') {
-					videoScript = Etc.getVideoScriptMatch(editor.settings.media_scripts, node.attr('src'));
+					videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, node.attr('src'));
 					if (!videoScript) {
 						continue;
 					}

@@ -2,10 +2,10 @@ define('tinymce.media.core.DataToHtml', [
 	'tinymce.media.core.Mime',
 	'tinymce.media.core.HtmlToData',
 	'tinymce.media.core.UrlPatterns',
-	'tinymce.media.core.Etc',
+	'tinymce.media.core.VideoScript',
 	'tinymce.media.core.UpdateHtml',
 	'global!tinymce.util.Tools',
-], function (Mime, HtmlToData, UrlPatterns, Etc, UpdateHtml, Tools) {
+], function (Mime, HtmlToData, UrlPatterns, VideoScript, UpdateHtml, Tools) {
 	var dataToHtml = function (editor, dataIn) {
 		var html = '';
 		var data = Tools.extend({}, dataIn);
@@ -59,7 +59,7 @@ define('tinymce.media.core.DataToHtml', [
 		if (data.embed) {
 			html = UpdateHtml.updateHtml(data.embed, data, true);
 		} else {
-			var videoScript = Etc.getVideoScriptMatch(editor.settings.media_scripts, data.source1);
+			var videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, data.source1);
 			if (videoScript) {
 				data.type = 'script';
 				data.width = videoScript.width;

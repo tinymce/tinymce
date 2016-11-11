@@ -76,11 +76,6 @@ asynctest('browser.core.DataToHtmlTest', [
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
-		toolbar: "media",
-		// media_embed_handler: function (data, resolve) {
-		// 	resolve({
-		// 		html: '<video width="300" height="150" ' +
-		// 			'controls="controls">\n<source src="' + data.url + '" />\n</video>'});
-		// }
+		toolbar: "media"
 	}, success, failure);
 });

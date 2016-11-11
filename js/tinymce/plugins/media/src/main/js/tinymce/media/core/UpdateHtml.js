@@ -1,9 +1,42 @@
 define('tinymce.media.core.UpdateHtml', [
 	'global!tinymce.html.Writer',
 	'global!tinymce.html.SaxParser',
-	'global!tinymce.html.Schema',
-	'tinymce.media.core.Etc'
-], function (Writer, SaxParser, Schema, Etc) {
+	'global!tinymce.html.Schema'
+], function (Writer, SaxParser, Schema) {
+	var setAttributes = function (attrs, updatedAttrs) {
+		var name;
+		var i;
+		var value;
+		var attr;
+
+		for (name in updatedAttrs) {
+			value = "" + updatedAttrs[name];
+
+			if (attrs.map[name]) {
+				i = attrs.length;
+				while (i--) {
+					attr = attrs[i];
+
+					if (attr.name === name) {
+						if (value) {
+							attrs.map[name] = value;
+							attr.value = value;
+						} else {
+							delete attrs.map[name];
+							attrs.splice(i, 1);
+						}
+					}
+				}
+			} else if (value) {
+				attrs.push({
+					name: name,
+					value: value
+				});
+
+				attrs.map[name] = value;
+			}
+		}
+	};
 	var updateHtml = function (html, data, updateAll) {
 		var writer = new Writer();
 		var sourceCount = 0;
@@ -34,7 +67,7 @@ define('tinymce.media.core.UpdateHtml', [
 				case "embed":
 				case "img":
 				case "iframe":
-					Etc.setAttributes(attrs, {
+					setAttributes(attrs, {
 						width: data.width,
 						height: data.height
 					});
@@ -44,20 +77,20 @@ define('tinymce.media.core.UpdateHtml', [
 				if (updateAll) {
 					switch (name) {
 					case "video":
-						Etc.setAttributes(attrs, {
+						setAttributes(attrs, {
 							poster: data.poster,
 							src: ""
 						});
 
 						if (data.source2) {
-							Etc.setAttributes(attrs, {
+							setAttributes(attrs, {
 								src: ""
 							});
 						}
 						break;
 
 					case "iframe":
-						Etc.setAttributes(attrs, {
+						setAttributes(attrs, {
 							src: data.source1
 						});
 						break;
@@ -66,7 +99,7 @@ define('tinymce.media.core.UpdateHtml', [
 						sourceCount++;
 
 						if (sourceCount <= 2) {
-							Etc.setAttributes(attrs, {
+							setAttributes(attrs, {
 								src: data["source" + sourceCount],
 								type: data["source" + sourceCount + "mime"]
 							});
@@ -98,7 +131,7 @@ define('tinymce.media.core.UpdateHtml', [
 							attrs.map = {};
 
 							if (sourceCount < index) {
-								Etc.setAttributes(attrs, {
+								setAttributes(attrs, {
 									src: data["source" + index],
 									type: data["source" + index + "mime"]
 								});
@@ -113,7 +146,7 @@ define('tinymce.media.core.UpdateHtml', [
 					var imgAttrs = [];
 					imgAttrs.map = {};
 
-					Etc.setAttributes(imgAttrs, {
+					setAttributes(imgAttrs, {
 						src: data.poster,
 						width: data.width,
 						height: data.height

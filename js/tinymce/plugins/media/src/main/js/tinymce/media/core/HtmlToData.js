@@ -2,8 +2,8 @@ define('tinymce.media.core.HtmlToData', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.html.SaxParser',
 	'global!tinymce.html.Schema',
-	'tinymce.media.core.Etc'
-], function (Tools, SaxParser, Schema, Etc) {
+	'tinymce.media.core.VideoScript'
+], function (Tools, SaxParser, Schema, VideoScript) {
 	var htmlToData = function (prefixes, html) {
 		var data = {};
 
@@ -32,7 +32,7 @@ define('tinymce.media.core.HtmlToData', [
 				}
 
 				if (name === "script") {
-					var videoScript = Etc.getVideoScriptMatch(prefixes, attrs.map.src);
+					var videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
 					if (!videoScript) {
 						return;
 					}

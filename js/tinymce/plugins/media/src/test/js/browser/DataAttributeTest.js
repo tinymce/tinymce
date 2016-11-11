@@ -33,11 +33,6 @@ asynctest('browser.core.DataAttributeTest', [
 				'<video data-ephox-embed="https://www.youtube.com/watch?v=b3XFjWInBog" width="300" height="150" controls="controls">\n' +
 				'<source src="weirdEmbedUrl" />\n</video>'
 			),
-		// 	Utils.sSetSetting('media_embed_handler', function (data, resolve) {
-		// 	resolve({
-		// 		html: '<iframe data-ephox-embed="' + data.source1 + '" width="300" height="150" ' +
-		// 			'controls="controls">\n<source src="weirdEmbedUrl" />\n</iframe>'});
-		// })
 			Utils.sTestEmbedContentFromUrl(ui,
 				'https://www.google.com',
 				'<video data-ephox-embed="https://www.google.com" width="300" height="150" controls="controls">\n' +
