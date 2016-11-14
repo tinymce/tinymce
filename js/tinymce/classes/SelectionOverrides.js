@@ -336,6 +336,7 @@ define("tinymce/SelectionOverrides", [
 				blockCaretContainer.removeAttr('data-mce-caret');
 				blockCaretContainer.removeAttr('data-mce-bogus');
 				blockCaretContainer.removeAttr('style');
+				blockCaretContainer.removeAttr('_moz_abspos');
 
 				// Removes control rect on IE
 				setRange(getRange());
