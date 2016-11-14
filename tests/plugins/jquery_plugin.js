@@ -11,7 +11,7 @@ module("tinymce.plugins.jQuery", {
 		$(function() {
 			$('#elm1,#elm2').tinymce({
 				plugins: [
-					"pagebreak,layer,table,save,emoticons,insertdatetime,preview,media,searchreplace",
+					"pagebreak,table,save,emoticons,insertdatetime,preview,media,searchreplace",
 					"print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template"
 				],
 
