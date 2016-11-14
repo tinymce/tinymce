@@ -17,6 +17,8 @@ define(
       FieldSchema.strict('value'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
+
+      // TODO: There is probably a better way to do this.
       FieldSchema.defaulted('base', { }),
       FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.state('builder', function () {
