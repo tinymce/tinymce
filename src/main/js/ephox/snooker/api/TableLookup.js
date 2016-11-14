@@ -6,6 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
+    'ephox.snooker.util.LayerSelector',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
@@ -14,7 +15,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Arr, Fun, Option, Structs, Attr, Node, SelectorFilter, SelectorFind, Traverse, parseInt) {
+  function (Arr, Fun, Option, Structs, LayerSelector, Attr, Node, SelectorFilter, SelectorFind, Traverse, parseInt) {
     var lookup = function (tags, element) {
       return Arr.contains(tags, Node.name(element)) ? Option.some(element) : SelectorFind.ancestor(element, tags.join(','));
     };
@@ -27,7 +28,7 @@ define(
     };
 
     var cells = function (ancestor) {
-      return SelectorFilter.firstDescendants(ancestor, 'th,td');
+      return LayerSelector.firstLayer(ancestor, 'th,td');
     };
 
     var neighbours = function (selector, element) {
@@ -52,7 +53,7 @@ define(
     };
 
     var rows = function (ancestor) {
-      return SelectorFilter.firstDescendants(ancestor, 'tr');
+      return LayerSelector.firstLayer(ancestor, 'tr');
     };
 
     var attr = function (element, property) {
