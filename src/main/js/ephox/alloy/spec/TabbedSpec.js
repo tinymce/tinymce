@@ -2,21 +2,27 @@ define(
   'ephox.alloy.spec.TabbedSpec',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Transitioning',
+    'ephox.alloy.api.ui.TabbarApis',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (Representing, Transitioning, SpecSchema, UiSubstitutes, FieldSchema, Arr, Merger, Option) {
+  function (SystemEvents, Representing, Transitioning, TabbarApis, EventHandler, SpecSchema, UiSubstitutes, FieldSchema, Objects, Arr, Merger, Option, Compare) {
     var schema = [
       FieldSchema.strict('tabs'),
       FieldSchema.strict('defaultView'),
-      FieldSchema.strict('dom')
+      FieldSchema.strict('dom'),
+      FieldSchema.defaulted('selectFirst', false)
     ];
 
     var make = function (spec) {
@@ -46,6 +52,7 @@ define(
                   Transitioning.transition(viewer, tabValue);
                 });
               },
+              selectFirst: detail.selectFirst(),
               tabs: detail.tabs()
             }
           )
@@ -79,7 +86,25 @@ define(
           uid: detail.uid(),
           uiType: 'custom',
           dom: detail.dom(),
-          components: components
+          components: components,
+
+
+          events: Objects.wrapAll([
+            {
+              key: SystemEvents.systemInit(),
+              value: EventHandler.nu({
+                run: function (tabbing, simulatedEvent) {
+                  if (detail.selectFirst() && Compare.eq(tabbing.element(), simulatedEvent.event().target())) {
+                    tabbing.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
+                      TabbarApis.selectFirst(tabbar);
+                    });
+                  }
+                }
+              })
+            }
+
+
+          ])
         }
       );
     };

@@ -27,8 +27,6 @@ define(
       FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.strict('dom'),
 
-      FieldSchema.defaulted('selectFirst', true),
-
       FieldSchema.field(
         'members',
         'members',
@@ -120,18 +118,16 @@ define(
           selector: '.' + detail.markers().tabClass(),
           executeOnMove: true
         },
-        events: Objects.wrap(
-          SystemEvents.systemInit(),
-          EventHandler.nu({
-            run: function (tabbar, simulatedEvent) {
-              if (Compare.eq(simulatedEvent.event().target(), tabbar.element())) {
-                Highlighting.getFirst(tabbar).each(function (first) {
-                  if (detail.selectFirst()) first.getSystem().triggerEvent(SystemEvents.execute(), first.element(), { });
-                });
-              }
-            }
-          })
-        ),
+        
+        apis: {
+          selectFirst: function (tabbar) {
+            Highlighting.getFirst(tabbar).each(function (button) {
+              tabbar.getSystem().triggerEvent(SystemEvents.execute(), button.element(), { });
+            });
+          }
+        },
+
+
         tabstopping: true
       };
     };
