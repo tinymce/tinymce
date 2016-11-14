@@ -326,6 +326,16 @@ define(
               });
             }
           })
+        },
+        {
+          key: 'alloy.menus.done',
+          value: EventHandler.nu({
+            run: function (sandbox, simulatedEvent) {
+              if (Sandboxing.isShowing(sandbox)) {
+                Sandboxing.closeSandbox(sandbox);
+              }
+            }
+          })
         }
       ]);
 
