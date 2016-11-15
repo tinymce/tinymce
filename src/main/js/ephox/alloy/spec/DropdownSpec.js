@@ -51,7 +51,10 @@ define(
               uid: detail.partUids().display,
               representing: {
                 query: Fun.noop,
-                set: detail.displayer()
+                set: function (comp, value) {
+                  var dropdown = comp.getSystem().getByUid(detail.uid()).getOrDie();
+                  detail.displayer()(dropdown, comp, value);
+                }
               }
             }
           )
