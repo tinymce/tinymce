@@ -548,8 +548,7 @@ module.exports = function(grunt) {
 								"js/tinymce/plugins/*/plugin.min.js",
 								"!js/tinymce/plugins/compat3x/plugin.min.js",
 								"!js/tinymce/plugins/example/plugin.min.js",
-								"!js/tinymce/plugins/example_dependency/plugin.min.js",
-								"!js/tinymce/plugins/layer/plugin.min.js"
+								"!js/tinymce/plugins/example_dependency/plugin.min.js"
 							],
 
 							dest: [

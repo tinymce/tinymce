@@ -23,7 +23,7 @@ test("applyPatch is only called once", function() {
 	expect(1);
 
 	var options = {plugins: [
-				"pagebreak,layer,table,save,emoticons,insertdatetime,preview,media,searchreplace",
+				"pagebreak,table,save,emoticons,insertdatetime,preview,media,searchreplace",
 				"print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template"
 			]},
 		oldValFn;
