@@ -59,6 +59,7 @@ define(
       }, factories);
     
       return Merger.deepMerge(
+        spec,
         ButtonSpec.make({
           uid: detail.uid(),
           action: function (component) {
