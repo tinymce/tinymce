@@ -35,7 +35,7 @@ define(
           info.dom(),
           {
             attributes: {
-              role: 'menuitem'
+              role: Objects.hasKey(info.base(), 'toggling') ? 'menuitemcheckbox' : 'menuitem'
             }
           }
         ),

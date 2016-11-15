@@ -65,11 +65,11 @@ define(
         markers: spec.markers,
         scaffold: spec.scaffold,
         preprocess: function (items) {
-          var primary = 'blah';
+          var primary = spec.name;
           var expansions = {};
           var menus = Objects.wrap(primary, {
             name: primary,
-            textkey: 'DOGS',
+            textkey: spec.text,
             items: items
           });
 

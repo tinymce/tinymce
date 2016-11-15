@@ -2,6 +2,7 @@ define(
   'ephox.alloy.behaviour.Toggling',
 
   [
+    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
@@ -10,20 +11,15 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class'
   ],
 
-  function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Attr, Class) {
+  function (EventRoot, SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Attr, Class) {
     var doesExhibit = function (base, toggleInfo) {
-      return DomModification.nu({
-        classes: toggleInfo.selected() ? [ toggleInfo.toggleClass() ] : [ ],
-        attributes: Objects.wrapAll([
-          // INVESTIGATE: If is possible to start with expanded-attribute as well?
-          { key: toggleInfo.aria().pressedAttr(), value: toggleInfo.selected() }
-        ])
-      });
+      return DomModification.nu({ });
     };
 
     var exhibit = function (info, base) {
@@ -34,9 +30,18 @@ define(
       });
     };
 
+    var pressedAttributes = {
+      'menuitemcheckbox': 'aria-checked'
+    };
+
     var updateAriaState = function (component, toggleInfo) {
       var pressed = Class.has(component.element(), toggleInfo.toggleClass());
-      Attr.set(component.element(), toggleInfo.aria().pressedAttr(), pressed);
+
+      var role = Attr.get(component.element(), 'role');
+      var attr = Objects.readOptFrom(pressedAttributes, role).getOrThunk(toggleInfo.aria().pressedAttr);
+
+
+      Attr.set(component.element(), attr, pressed);
       toggleInfo.aria().expandedAttr().each(function (attr) {
         Attr.set(component.element(), attr, pressed);
       });
@@ -65,14 +70,36 @@ define(
       return info.toggling().fold(function () {
         return { };
       }, function (toggleInfo) {
-        return toggleInfo.toggleOnExecute() ? Objects.wrap(
-          SystemEvents.execute(),
-          EventHandler.nu({
+
+      //   var role = Attr.get(component.element(), 'role');
+      // var attr = Objects.readOptFrom(pressedAttributes, role).getOrThunk(toggleInfo.aria().pressedAttr);
+        var execute = {
+          key: SystemEvents.execute(),
+          value: EventHandler.nu({
             run: function (component) {
               doToggle(component, toggleInfo);
             }
           })
-        ) : { };
+        };
+
+        var load = {
+          key: SystemEvents.systemInit(),
+          value: EventHandler.nu({
+            run: function (component, simulatedEvent) {
+              if (EventRoot.isSource(component, simulatedEvent)) {
+                var api = toggleInfo.selected() ? doSelect : doDeselect;
+                api(component, toggleInfo);
+              }
+            }
+          })
+        };
+
+        return Objects.wrapAll(
+          Arr.flatten([
+            toggleInfo.toggleOnExecute() ? [ execute ] : [ ],
+            [ load ]
+          ])
+        );
       });
     };
 
