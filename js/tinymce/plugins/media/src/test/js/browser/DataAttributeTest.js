@@ -23,20 +23,41 @@ asynctest('browser.core.DataAttributeTest', [
 			Utils.sCloseDialog(ui)
 		]);
 	};
+	var sTestEmbedContentFromUrl2 = function (ui, url, url2, content, content2) {
+		return GeneralSteps.sequence([
+			Utils.sOpenDialog(ui),
+			Utils.sSetFormItemPaste(ui, url),
+			Utils.sAssertEmbedContent(ui, content),
+			Utils.sSubmitAndReopen(ui),
+			Utils.sAssertSourceValue(ui, url),
+			Utils.sSetFormItemPaste(ui, url2),
+			Utils.sAssertEmbedContent(ui, content2),
+			Utils.sCloseDialog(ui)
+		]);
+	};
 
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
 		var ui = TinyUi(editor);
 
 		Pipeline.async({}, [
 			sTestEmbedContentFromUrlWithAttribute(ui,
-				'https://www.youtube.com/watch?v=b3XFjWInBog',
-				'<video data-ephox-embed="https://www.youtube.com/watch?v=b3XFjWInBog" width="300" height="150" controls="controls">\n' +
-				'<source src="weirdEmbedUrl" />\n</video>'
+				'a',
+				'<video data-ephox-embed-iri="a"' +
+				' width="300" height="150" controls="controls">\n' +
+				'<source src="embed-a" />\n</video>'
+			),
+			sTestEmbedContentFromUrl2(ui, 'a', 'b',
+				'<video data-ephox-embed-iri="a"' +
+				' width="300" height="150" controls="controls">\n' +
+				'<source src="embed-a" />\n</video>',
+				'<video data-ephox-embed-iri="b"' +
+				' width="300" height="150" controls="controls">\n' +
+				'<source src="embed-b" />\n</video>'
 			),
 			Utils.sTestEmbedContentFromUrl(ui,
-				'https://www.google.com',
-				'<video data-ephox-embed="https://www.google.com" width="300" height="150" controls="controls">\n' +
-				'<source src="weirdEmbedUrl" />\n</video>'
+				'a',
+				'<video data-ephox-embed-iri="a" width="300" height="150" controls="controls">\n' +
+				'<source src="embed-a" />\n</video>'
 			),
 			Utils.sAssertSizeRecalcConstrained(ui),
 			Utils.sAssertSizeRecalcUnconstrained(ui),
@@ -45,10 +66,10 @@ asynctest('browser.core.DataAttributeTest', [
 	}, {
 		plugins: ["media"],
 		toolbar: "media",
-		media_embed_handler: function (data, resolve) {
+		mediaembed_handler: function (data, resolve) {
 			resolve({
-				html: '<video data-ephox-embed="' + data.url + '" width="300" height="150" ' +
-					'controls="controls">\n<source src="weirdEmbedUrl" />\n</video>'});
+				html: '<video data-ephox-embed-iri="' + data.url + '" width="300" height="150" ' +
+					'controls="controls">\n<source src="' + 'embed-' + data.url + '" />\n</video>'});
 		}
 	}, success, failure);
 });

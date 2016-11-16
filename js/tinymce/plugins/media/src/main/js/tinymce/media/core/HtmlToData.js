@@ -16,10 +16,10 @@ define('tinymce.media.core.HtmlToData', [
 					data.source1 = attrs.map.movie;
 				}
 
-				var embed = attrs.map['data-ephox-embed'];
+				var embed = attrs.map['data-ephox-embed-iri'];
 
 				if (embed) {
-					data.type = 'ephox-embed';
+					data.type = 'ephox-embed-iri';
 					data.source1 = embed;
 				}
 
@@ -63,7 +63,7 @@ define('tinymce.media.core.HtmlToData', [
 		data.source2 = data.source2 || '';
 		data.poster = data.poster || '';
 
-		if (data.type === 'ephox-embed') {
+		if (data.type === 'ephox-embed-iri') {
 			return Tools.extend({}, {
 				type: data.type,
 				source1: data.source1,

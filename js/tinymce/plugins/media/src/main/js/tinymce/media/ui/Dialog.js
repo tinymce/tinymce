@@ -10,6 +10,11 @@ define('tinymce.media.ui.Dialog', [
 
 	var getData = function (editor) {
 		var element = editor.selection.getNode();
+		var dataEmbed = element.getAttribute('data-ephox-embed-iri');
+
+		if (dataEmbed) {
+			return {source1: dataEmbed, 'data-ephox-embed-iri': dataEmbed};
+		}
 		return element.getAttribute('data-mce-object') ?
 			HtmlToData.htmlToData(editor.settings.media_scripts, editor.serializer.serialize(element, {selection: true})) :
 			{};
