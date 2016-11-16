@@ -7,6 +7,7 @@ define(
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Class'
   ],
 
-  function (EventRoot, SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Attr, Class) {
+  function (EventRoot, SystemEvents, Behaviour, EventHandler, DomModification, AlloyLogger, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Attr, Class) {
     var doesExhibit = function (base, toggleInfo) {
       return DomModification.nu({ });
     };
@@ -34,12 +35,15 @@ define(
       'menuitemcheckbox': 'aria-checked'
     };
 
+    var getAriaAttribute = function (component, toggleInfo) {
+      var role = Attr.get(component.element(), 'role');
+      return Objects.readOptFrom(pressedAttributes, role).getOrThunk(toggleInfo.aria().pressedAttr);
+    };
+
     var updateAriaState = function (component, toggleInfo) {
       var pressed = Class.has(component.element(), toggleInfo.toggleClass());
 
-      var role = Attr.get(component.element(), 'role');
-      var attr = Objects.readOptFrom(pressedAttributes, role).getOrThunk(toggleInfo.aria().pressedAttr);
-
+      var attr = getAriaAttribute(component, toggleInfo);
 
       Attr.set(component.element(), attr, pressed);
       toggleInfo.aria().expandedAttr().each(function (attr) {
@@ -87,8 +91,14 @@ define(
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
               if (EventRoot.isSource(component, simulatedEvent)) {
-                var api = toggleInfo.selected() ? doSelect : doDeselect;
-                api(component, toggleInfo);
+                var attr = getAriaAttribute(component, toggleInfo);
+
+                // Only overwrite if it doesn't have a current value.
+                if (! Attr.has(component.element(), attr)) {
+                  console.log('System.INIT ************', AlloyLogger.element(component.element()));
+                  var api = toggleInfo.selected() ? doSelect : doDeselect;
+                  api(component, toggleInfo);
+                }
               }
             }
           })
