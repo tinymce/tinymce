@@ -328,12 +328,10 @@ define(
           })
         },
         {
-          key: 'alloy.menus.done',
+          key: SystemEvents.sandboxClose(),
           value: EventHandler.nu({
             run: function (sandbox, simulatedEvent) {
-              if (Sandboxing.isShowing(sandbox)) {
-                Sandboxing.closeSandbox(sandbox);
-              }
+              if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox);
             }
           })
         }
