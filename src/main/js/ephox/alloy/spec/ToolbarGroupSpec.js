@@ -27,6 +27,8 @@ define(
         ])
       ),
 
+      FieldSchema.defaulted('hasTabstop', true),
+
       FieldSchema.field(
         'markers',
         'markers',
@@ -65,7 +67,7 @@ define(
           mode: 'flow',
           selector: detail.markers().itemClass()
         },
-        tabstopping: true,
+        tabstopping: detail.hasTabstop() ? true : undefined,
         focusing: undefined,
 
         behaviours: [
