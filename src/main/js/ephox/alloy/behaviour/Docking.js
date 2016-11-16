@@ -183,8 +183,8 @@ define(
                   var viewport = dockInfo.lazyViewport()(component);
                   
                   // Make the dockable component disappear if the context is outside the viewport
-                  contextInfo.lazyContext()(component).each(function (context) {
-                    var box = Boxes.box(context.element());
+                  contextInfo.lazyContext()(component).each(function (elem) {
+                    var box = Boxes.box(elem);
                     var isVisible = isPartiallyVisible(box, viewport);
                     var method = isVisible ? appear : disappear;
                     method(component, contextInfo);

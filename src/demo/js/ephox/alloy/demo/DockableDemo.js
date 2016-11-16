@@ -63,7 +63,9 @@ define(
                   fadeOutClass: 'demo-alloy-dock-fade-out',
                   fadeInClass: 'demo-alloy-dock-fade-in',
                   lazyContext: function (component) {
-                    return component.getSystem().getByUid('panel-container').fold(Option.none, Option.some);
+                    return component.getSystem().getByUid('panel-container').fold(Option.none, function (comp) {
+                      return Option.some(comp.element());
+                    });
                   }
                 },
                 leftAttr: 'data-dock-left',
