@@ -9,17 +9,9 @@ define(
 
   function (Arr, Selectors, Traverse) {
     var firstLayer = function (scope, selector) {
-      var result = [];
-
-      Arr.each(Traverse.children(scope), function (x) {
-        if (Selectors.is(x, selector)) {
-          result = result.concat([ x ]);
-        } else {
-          result = result.concat(firstLayer(x, selector));
-        }
+      return Arr.bind(Traverse.children(scope), function (x) {
+        return Selectors.is(x, selector) ? [ x ] : firstLayer(x, selector);
       });
-
-      return result;
     };
 
     return {
