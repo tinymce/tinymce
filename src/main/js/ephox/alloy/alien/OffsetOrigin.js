@@ -11,10 +11,10 @@ define(
   ],
 
   function (Position, Element, Insert, Location, Remove, Traverse) {
-    var getOrigin = function (component, scroll) {
-      return Traverse.offsetParent(component.element()).orThunk(function () {
+    var getOrigin = function (element, scroll) {
+      return Traverse.offsetParent(element).orThunk(function () {
         var marker = Element.fromTag('span');
-        Insert.before(component.element(), marker);
+        Insert.before(element, marker);
         var offsetParent = Traverse.offsetParent(marker);
         Remove.remove(marker);
         return offsetParent;

@@ -66,11 +66,9 @@ define(
               mutate: function (mutation, delta) {
                 var doc = Traverse.owner(component.element());
                 var scroll = Scroll.get(doc);
-                var origin = OffsetOrigin.getOrigin(component, scroll);
-
-                // var attemptSnap = function (component, snapInfo, absLeft, absTop, deltaX, deltaY, scroll, origin)
-
+                
                 var target = dragInfo.getTarget()(component.element());
+                var origin = OffsetOrigin.getOrigin(target, scroll);
                 
                 var currentCoord = Css.getRaw(target, 'left').bind(function (left) {
                   return Css.getRaw(target, 'top').bind(function (top) {

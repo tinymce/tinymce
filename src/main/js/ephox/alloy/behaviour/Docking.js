@@ -192,7 +192,7 @@ define(
 
                   var doc = Traverse.owner(component.element());
                   var scroll = Scroll.get(doc);
-                  var origin = OffsetOrigin.getOrigin(component, scroll);
+                  var origin = OffsetOrigin.getOrigin(component.element(), scroll);
 
                   getMorph(component, dockInfo, viewport, scroll, origin).each(function (morph) {
                     console.log('morph', DragCoord.toString(morph));
