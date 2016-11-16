@@ -5,18 +5,19 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.scullion.Struct',
+    'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
+    'ephox.snooker.util.LayerSelector',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.Selectors'
   ],
 
-  function (Arr, Obj, Struct, DetailsList, Warehouse, Attr, Css, Element, Insert, Remove, SelectorFilter, Selectors) {
+  function (Arr, Obj, Struct, TableLookup, DetailsList, Warehouse, LayerSelector, Attr, Css, Element, Insert, Remove, Selectors) {
     var stats = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');
 
     var findSelectedStats = function (house, isSelected) {
@@ -73,7 +74,7 @@ define(
 
     var clean = function (table, stats) {
       // can't use :empty selector as that will not include TRs made up of whitespace
-      var emptyRows = Arr.filter(SelectorFilter.descendants(table, 'tr'), function (row) {
+      var emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), function (row) {
         // there is no sugar method for this, and Traverse.children() does too much processing
         return row.dom().childElementCount === 0;
       });
@@ -81,7 +82,7 @@ define(
 
       // If there is only one column, or only one row, delete all the colspan/rowspan
       if (stats.minCol() === stats.maxCol() || stats.minRow() === stats.maxRow()) {
-        Arr.each(SelectorFilter.descendants(table, 'th,td'), function (cell) {
+        Arr.each(LayerSelector.firstLayer(table, 'th,td'), function (cell) {
           Attr.remove(cell, 'rowspan');
           Attr.remove(cell, 'colspan');
         });
@@ -106,7 +107,10 @@ define(
 
       // remove unselected cells
       var selector = 'th:not(' + selected + ')' + ',td:not(' + selected + ')';
-      var unselectedCells = SelectorFilter.descendants(table, selector);
+      var cells = TableLookup.cells(table);
+      var unselectedCells = Arr.filter(cells, function (cell) {
+        return Selectors.is(table, selector);
+      });
       Arr.each(unselectedCells, Remove.remove);
 
       fillInGaps(list, house, stats, isSelected);
