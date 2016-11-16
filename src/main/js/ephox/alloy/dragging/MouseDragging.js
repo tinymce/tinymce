@@ -170,6 +170,9 @@ define(
         dragInfo.snaps().each(function (snapInfo) {
           Snappables.stopDrag(component, snapInfo);
         });
+
+        var target = dragInfo.getTarget()(component.element());
+        dragInfo.onDrop()(component, target);
       };
 
       return DragApis.sink({
@@ -190,6 +193,7 @@ define(
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.state('movement', Movement),
       FieldSchema.defaulted('getTarget', Fun.identity),
+      FieldSchema.defaulted('onDrop', Fun.noop),
       FieldSchema.field(
         'snaps',
         'snaps',
