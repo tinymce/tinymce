@@ -15,6 +15,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.alien.Position',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -26,7 +27,7 @@ define(
     'global!window'
   ],
 
-  function (OffsetOrigin, EventHandler, DragCoord, Snappables, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
+  function (OffsetOrigin, EventHandler, DragCoord, Snappables, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Attr, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
 
@@ -147,13 +148,24 @@ define(
         }
       });
 
-      
-
       var start = function () {
         component.getSystem().addToGui(blocker);
+        Traverse.parent(blocker.element()).each(function (parent) {
+          Css.getRaw(parent, 'z-index').each(function (zindex) {
+            Attr.set(parent, 'data-zindex', zindex);
+          });
+          Css.set(parent, 'z-index', '100000000000');
+        });
+
       };
 
       var stop = function () {
+        Traverse.parent(blocker.element()).each(function (parent) {
+          if (Attr.has(parent, 'data-zindex')) Css.set(parent, 'z-index', Attr.get(parent, 'data-zindex'));
+          else Css.remove(parent, 'z-index');
+
+          Attr.remove(parent, 'data-zindex');
+        });
         component.getSystem().removeFromGui(blocker);
         dragInfo.snaps().each(function (snapInfo) {
           Snappables.stopDrag(component, snapInfo);
