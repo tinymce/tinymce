@@ -54,6 +54,7 @@ define(
         'mousedown': EventHandler.nu({
           run: function (component, simulatedEvent) {
             if (simulatedEvent.event().raw().button !== 0) return;
+            simulatedEvent.stop();
 
 
             var mode = {
