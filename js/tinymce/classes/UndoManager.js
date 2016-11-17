@@ -17,9 +17,8 @@ define("tinymce/UndoManager", [
 	"tinymce/util/VK",
 	"tinymce/util/Tools",
 	"tinymce/undo/Levels",
-	"tinymce/undo/Fragments",
 	"tinymce/Env"
-], function(VK, Tools, Levels, Fragments, Env) {
+], function(VK, Tools, Levels, Env) {
 	return function(editor) {
 		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
