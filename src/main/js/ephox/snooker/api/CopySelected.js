@@ -107,8 +107,7 @@ define(
 
       // remove unselected cells
       var selector = 'th:not(' + selected + ')' + ',td:not(' + selected + ')';
-      var cells = TableLookup.cells(table);
-      var unselectedCells = Arr.filter(cells, function (cell) {
+      var unselectedCells = LayerSelector.filterFirstLayer(table, 'th,td', function (cell) {
         return Selectors.is(cell, selector);
       });
       Arr.each(unselectedCells, Remove.remove);
