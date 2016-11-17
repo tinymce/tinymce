@@ -34,7 +34,6 @@ asynctest('browser.core.PluginTest', [
 				'https://www.google.com',
 				'<video width="300" height="150" controls="controls">\n<source src="https://www.google.com" />\n</video>'
 			),
-			// sTestEmbedContentSubmit(ui, editor, apis, 'test.se', 'test.se'),
 			Utils.sAssertSizeRecalcConstrained(ui),
 			Utils.sAssertSizeRecalcUnconstrained(ui),
 			Utils.sAssertSizeRecalcConstrainedReopen(ui)
