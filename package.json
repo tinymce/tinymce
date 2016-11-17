@@ -1,9 +1,9 @@
 {
-  "name": "katamari",
+  "name": "@ephox/katamari",
   "version": "1.0.0",
   "description": "Basic data type library",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
   },
   "author": "ephox",
   "license": "Apache-2.0",
