@@ -24,6 +24,10 @@ define(
       return Structure.isFormatting(universe, element);
     };
 
+    var isHeading = function (element) {
+      return Structure.isHeading(universe, element);
+    };
+
     var isContainer = function (element) {
       return Structure.isContainer(universe, element);
     };
@@ -44,6 +48,7 @@ define(
       isBlock: isBlock,
       isList: isList,
       isFormatting: isFormatting,
+      isHeading: isHeading,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag,
       isFrame: isFrame,
