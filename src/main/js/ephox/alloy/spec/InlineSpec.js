@@ -6,11 +6,12 @@ define(
     'ephox.alloy.inline.spi.InlineConfig',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'ephox.highway.Merger',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Body'
   ],
 
-  function (Sandboxing, InlineConfig, FieldSchema, ValueSchema, Cell, Body) {
+  function (Sandboxing, InlineConfig, FieldSchema, ValueSchema, Merger, Cell, Body) {
 
 
     var make = function (spec) {
@@ -34,23 +35,26 @@ define(
         lazySink: detail.lazySink()
       });
 
-      return {
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        behaviours: [
-          Sandboxing
-        ],
-        sandboxing: config.sandboxing,
-        keying: {
-          mode: 'cyclic'
-        },
-        receiving: config.receiving,
-        // Only pass through uid if provided.
-        uid: detail.uid().getOr(undefined),
-        apis: config.apis
-      };
+      return Merger.deepMerge(
+        spec, 
+        {
+          uiType: 'custom',
+          dom: {
+            tag: 'div'
+          },
+          behaviours: [
+            Sandboxing
+          ],
+          sandboxing: config.sandboxing,
+          keying: {
+            mode: 'cyclic'
+          },
+          receiving: config.receiving,
+          // Only pass through uid if provided.
+          uid: detail.uid().getOr(undefined),
+          apis: config.apis
+        }
+      );
     };
 
     return {
