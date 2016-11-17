@@ -5,7 +5,6 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.scullion.Struct',
-    'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.util.LayerSelector',
@@ -17,7 +16,7 @@ define(
     'ephox.sugar.api.Selectors'
   ],
 
-  function (Arr, Obj, Struct, TableLookup, DetailsList, Warehouse, LayerSelector, Attr, Css, Element, Insert, Remove, Selectors) {
+  function (Arr, Obj, Struct, DetailsList, Warehouse, LayerSelector, Attr, Css, Element, Insert, Remove, Selectors) {
     var stats = Struct.immutable('minRow', 'minCol', 'maxRow', 'maxCol');
 
     var findSelectedStats = function (house, isSelected) {
