@@ -15,11 +15,9 @@ define(
 
     var filterFirstLayer = function (scope, selector, predicate) {
       return Arr.bind(Traverse.children(scope), function (x) {
-        if (Selectors.is(x, selector)) {
-          return predicate(x) ? [ x ] : [ ];
-        } else {
-          return filterFirstLayer(x, selector, predicate);
-        }
+        return Selectors.is(x, selector) ?
+          predicate(x) ? [ x ] : [ ]
+          : filterFirstLayer(x, selector, predicate);
       });
     };
 
