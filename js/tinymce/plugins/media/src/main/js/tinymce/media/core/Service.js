@@ -36,7 +36,7 @@ define('tinymce.media.core.Service', [
 	};
 
 	var getEmbedHtml = function (editor, data) {
-		var embedHandler = editor.settings.media_embed_handler;
+		var embedHandler = editor.settings.mediaembed_handler;
 
 		return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 	};

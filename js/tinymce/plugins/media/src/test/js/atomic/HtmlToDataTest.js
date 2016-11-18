@@ -7,8 +7,8 @@ test('atomic.core.HtmlToDataTest', [
 		var actual = HtmlToData.htmlToData([], html);
 		RawAssertions.assertEq('Assert equal', expected, actual);
 	};
-	testHtmlToData('<video data-ephox-embed="a" src="b.mp4"></video>', {
-		type: 'ephox-embed',
+	testHtmlToData('<video data-ephox-embed-iri="a" src="b.mp4"></video>', {
+		type: 'ephox-embed-iri',
 		source1: 'a',
 		source2: '',
 		poster: ''
@@ -25,17 +25,17 @@ test('atomic.core.HtmlToDataTest', [
 		poster: ""
 	});
 
-	testHtmlToData('<div data-ephox-embed="a"><img src="b" alt="c"></div>', {
+	testHtmlToData('<div data-ephox-embed-iri="a"><img src="b" alt="c"></div>', {
 		source1: 'a',
-		type: 'ephox-embed',
+		type: 'ephox-embed-iri',
 		poster: '',
 		source2: ''
 	});
 
-	testHtmlToData('<span data-ephox-embed="a"><img src="b" alt="c"></span>', {
+	testHtmlToData('<span data-ephox-embed-iri="a"><img src="b" alt="c"></span>', {
 		source1: 'a',
 		poster: '',
 		source2: '',
-		type: 'ephox-embed',
+		type: 'ephox-embed-iri',
 	});
 });

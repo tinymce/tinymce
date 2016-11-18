@@ -33,7 +33,7 @@ asynctest('browser.core.MediaEmbedTest', [
 	}, {
 		plugins: ["media"],
 		toolbar: "media",
-		media_embed_handler: function (data, resolve) {
+		mediaembed_handler: function (data, resolve) {
 			resolve({
 				html: '<video width="300" height="150" ' +
 					'controls="controls">\n<source src="' + data.url + '" />\n</video>'});

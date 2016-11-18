@@ -19,8 +19,8 @@ define("tinymce.media.Demo", [
 		tinymce.init({
 			selector: "textarea.tinymce",
 			theme: "modern",
-			plugins: ["media"],
-			toolbar: "media",
+			plugins: "media preview",
+			toolbar: "media preview",
 			height: 600,
 			// media_live_embeds: false,
 			// media_embed_handler: function (data, resolve) {

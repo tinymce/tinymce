@@ -34,7 +34,7 @@ asynctest('browser.core.SubmitTest', [
 			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
 			'<p><span id="fake">https://www.youtube.com/watch?v=IcgmSRJHu_8</span></p>'),
 			apis.sSetContent(''),
-			Utils.sSetSetting(editor.settings, 'media_embed_handler', function (data, resolve) {
+			Utils.sSetSetting(editor.settings, 'mediaembed_handler', function (data, resolve) {
 				resolve({html: ''});
 			}),
 			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
@@ -44,7 +44,7 @@ asynctest('browser.core.SubmitTest', [
 	}, {
 		plugins: ["media"],
 		toolbar: "media",
-		media_embed_handler: function (data, resolve) {
+		mediaembed_handler: function (data, resolve) {
 			setTimeout(function () {
 				resolve({
 					html: '<span id="fake">' + data.url + '</span>'
