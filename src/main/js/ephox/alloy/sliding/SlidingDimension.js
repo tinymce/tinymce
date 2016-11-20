@@ -21,6 +21,10 @@ define(
         FieldSchema.strict('openStyle'),
         FieldSchema.strict('shrinkingStyle'),
         FieldSchema.strict('growingStyle'),
+
+        // Element which shrinking and growing animations
+        FieldSchema.option('getAnimationRoot'),
+
         FieldSchema.defaulted('onShrunk', function () { }),
         FieldSchema.defaulted('onStartShrink', function () { }),
         FieldSchema.defaulted('onGrown', function () { }),
@@ -31,6 +35,14 @@ define(
         }),
         FieldSchema.state('handler', function () {
           var schema = [ ];
+
+          var getAnimationRoot = function (component, oInfo) {
+            return oInfo.getAnimationRoot().fold(function () {
+              return component.element();
+            }, function (get) {
+              return get(component);
+            });
+          };
 
           var doExhibit = function (oInfo, base) {
             var expanded = oInfo.expanded();
@@ -44,7 +56,8 @@ define(
           };
 
           var disableTransitions = function (component, oInfo) {
-            Classes.remove(component.element(), [ oInfo.shrinkingStyle(), oInfo.growingStyle() ]);
+            var root = getAnimationRoot(component, oInfo);
+            Classes.remove(root, [ oInfo.shrinkingStyle(), oInfo.growingStyle() ]);
           };
 
           var setShrunk = function (component, oInfo) {
@@ -70,6 +83,20 @@ define(
             // Reflow?
           };
 
+          var immediateShrink = function (component, oInfo) {
+             oInfo.state().set(false);
+
+            // Force current dimension to begin transition
+            Css.set(component.element(), dimensionProperty, getDimension(component.element()));
+            Css.reflow(component.element());
+
+            disableTransitions(component, oInfo);
+
+            setShrunk(component, oInfo);
+            oInfo.onStartShrink()(component);
+            oInfo.onShrunk()(component);
+          };
+
           var startShrink = function (component, oInfo) {
             oInfo.state().set(false);
 
@@ -77,7 +104,8 @@ define(
             Css.set(component.element(), dimensionProperty, getDimension(component.element()));
             Css.reflow(component.element());
 
-            Class.add(component.element(), oInfo.shrinkingStyle()); // enable transitions
+            var root = getAnimationRoot(component, oInfo);
+            Class.add(root, oInfo.shrinkingStyle()); // enable transitions
             setShrunk(component, oInfo);
             oInfo.onStartShrink()(component);
           };
@@ -88,7 +116,8 @@ define(
             var fullSize = measureTargetSize(component, oInfo);
             
             // Start the growing animation styles
-            Class.add(component.element(), oInfo.growingStyle());
+            var root = getAnimationRoot(component, oInfo);
+            Class.add(root, oInfo.growingStyle());
 
             setGrown(component, oInfo);
             Css.set(component.element(), dimensionProperty, fullSize);
@@ -121,6 +150,9 @@ define(
               },
               shrink: function (comp) {
                 if (oInfo.state().get() !== false) startShrink(comp, oInfo);
+              },
+              immediateShrink: function (comp) {
+                if (oInfo.state().get() !== false) immediateShrink(comp, oInfo);
               },
               hasGrown: function (comp) {
                 return oInfo.state().get() === true;

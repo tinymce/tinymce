@@ -12,11 +12,12 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Class'
   ],
 
-  function (Sliding, FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Option, Class) {
+  function (Sliding, FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Fun, Option, Class) {
     var schema = [
       FieldSchema.field(
         'markers',
@@ -32,7 +33,9 @@ define(
           FieldSchema.option('expandedClass'),
           FieldSchema.option('collapsedClass')
         ])
-      )
+      ),
+      FieldSchema.defaulted('onShrunk', Fun.identity),
+      FieldSchema.defaulted('onGrown', Fun.identity)
     ];
 
     var make = function (spec) {
@@ -52,6 +55,11 @@ define(
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
         extraOpt.each(Sliding.shrink);
       };
+
+      var collapseFormImmediately = function (anyComp) {
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
+        extraOpt.each(Sliding.immediateShrink);
+      }
 
       var expandForm = function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra-form']);
@@ -93,11 +101,16 @@ define(
                     detail.markers().collapsedClass().each(function (cs) { Class.remove(form.element(), cs); });
                   });
                 },
-                onShrunk: function () {
+                onShrunk: function (extra) {
+                  detail.onShrunk()(extra);
                   console.log('height.slider.shrunk');
                 },
-                onGrown: function () {
+                onGrown: function (extra) {
+                  detail.onGrown()(extra);
                   console.log('height.slider.grown');
+                },
+                getAnimationRoot: function (extra) {
+                  return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
                 }
               }
             }
@@ -156,6 +169,7 @@ define(
             apis: {
               toggleForm: toggleForm,
               collapseForm: collapseForm,
+              collapseFormImmediately: collapseFormImmediately,
               expandForm: expandForm
             }
           }

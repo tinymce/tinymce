@@ -12,7 +12,8 @@ define(
         'grow',
         'shrink',
         'hasGrown',
-        'toggleGrow'
+        'toggleGrow',
+        'immediateShrink'
       ],
       { 
 

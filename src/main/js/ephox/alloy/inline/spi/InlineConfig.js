@@ -57,7 +57,7 @@ define(
 
       var show = function (sandbox, component) {
         var anchor = uiSpec.anchorage().get(sandbox, component);
-        Positioning.position(getSink(), anchor, component);
+        Positioning.position(getSink(), anchor, sandbox);
         uiSpec.onOpen()(sandbox, component);
       };
 

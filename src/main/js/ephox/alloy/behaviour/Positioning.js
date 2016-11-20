@@ -76,6 +76,8 @@ define(
       // We set it to be fixed, so that it doesn't interfere with the layout of anything
       // when calculating anchors
       Css.set(placee.element(), 'position', 'fixed');
+
+      var oldVisibility = Css.getRaw(placee.element(), 'visibility');
       // INVESTIGATE: Will hiding the popup cause issues for focus?
       Css.set(placee.element(), 'visibility', 'hidden');
 
@@ -84,7 +86,12 @@ define(
         var doPlace = anchoring.placer().getOr(place);
         doPlace(component, origin, anchoring, posInfo, placee);
       });
-      Css.remove(placee.element(), 'visibility');
+
+      oldVisibility.fold(function () {
+        Css.remove(placee.element(), 'visibility');
+      }, function (vis) {
+        Css.set(placee.element(), 'visibility', vis);
+      });
 
       // We need to remove position: fixed put on by above code if it is not needed.
       if (
