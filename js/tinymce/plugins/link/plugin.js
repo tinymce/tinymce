@@ -394,6 +394,7 @@ tinymce.PluginManager.add('link', function(editor) {
 					size: 40,
 					autofocus: true,
 					label: 'Url',
+					meta: data,
 					onchange: urlChange,
 					onkeyup: updateText
 				},

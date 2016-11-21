@@ -264,7 +264,7 @@ define("tinymce/ui/FilePicker", [
 				fileBrowserCallback = editorSettings.file_picker_callback;
 				if (fileBrowserCallback && (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[fileType])) {
 					actionCallback = function() {
-						var meta = self.fire('beforecall').meta;
+						var meta = self.fire('beforecall').meta || settings.meta;
 
 						meta = Tools.extend({filetype: fileType}, meta);
 

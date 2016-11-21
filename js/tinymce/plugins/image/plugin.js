@@ -371,6 +371,7 @@ tinymce.PluginManager.add('image', function(editor) {
 				filetype: 'image',
 				label: 'Source',
 				autofocus: true,
+				meta: data,
 				onchange: srcChange
 			},
 			imageListCtrl
