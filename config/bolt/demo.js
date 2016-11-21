@@ -1,6 +1,5 @@
 configure({
   configs: [
-    '../../lib/config/exhibition.js',
     './prod.js'
   ],
   sources: [
