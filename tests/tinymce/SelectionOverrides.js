@@ -47,7 +47,7 @@ ModuleLoader.require([
 
 	function assertCaretInCaretBlockContainer() {
 		var beforeRng = editor.selection.getRng();
-		equal(CaretContainer.isCaretContainerBlock(beforeRng.startContainer.parentNode), true, 'Not in caret block container.');
+		equal(CaretContainer.isCaretContainerBlock(beforeRng.startContainer), true, 'Not in caret block container.');
 	}
 
 	var leftArrow = pressKey(VK.LEFT);
@@ -224,7 +224,7 @@ ModuleLoader.require([
 
 		equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 		assertCaretInCaretBlockContainer();
-		equal(rng.startContainer.parentNode.previousSibling, editor.dom.select('p')[0]);
+		equal(rng.startContainer.previousSibling, editor.dom.select('p')[0]);
 	});
 
 	test('delete from after cE=false block to text', function() {
@@ -263,7 +263,7 @@ ModuleLoader.require([
 
 		equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 		assertCaretInCaretBlockContainer();
-		equal(rng.startContainer.parentNode.nextSibling, editor.dom.select('p')[2]);
+		equal(rng.startContainer.nextSibling, editor.dom.select('p')[2]);
 	});
 
 	test('delete from block to before cE=false inline', function() {

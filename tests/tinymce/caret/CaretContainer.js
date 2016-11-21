@@ -118,4 +118,20 @@ ModuleLoader.require([
 		setViewHtml('abc' + Zwsp.ZWSP);
 		equal(CaretContainer.endsWithCaretContainer(getRoot().firstChild), true);
 	});
+
+	test('hasContent', function() {
+		setViewHtml('<span contentEditable="false">1</span>');
+		var caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
+		equal(CaretContainer.hasContent(caretContainerBlock), false);
+		caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
+		equal(CaretContainer.hasContent(caretContainerBlock), true);
+	});
+
+	test('showCaretContainerBlock', function() {
+		setViewHtml('<span contentEditable="false">1</span>');
+		var caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
+		caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
+		CaretContainer.showCaretContainerBlock(caretContainerBlock);
+		equal(caretContainerBlock.outerHTML, '<p>a</p>');
+	});
 });

@@ -34,7 +34,7 @@ ModuleLoader.require([
 
 		equal($fakeCaretElm[0].nodeName, 'P');
 		equal($fakeCaretElm.attr('data-mce-caret'), 'before');
-		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[0].firstChild, 0, $fakeCaretElm[0].firstChild, 1));
+		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[0], 0, $fakeCaretElm[0], 0));
 
 		fakeCaret.hide();
 		equal($('#view *[data-mce-caret]').length, 0);
@@ -50,7 +50,7 @@ ModuleLoader.require([
 
 		equal($fakeCaretElm[1].nodeName, 'P');
 		equal($fakeCaretElm.eq(1).attr('data-mce-caret'), 'after');
-		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[1].firstChild, 0, $fakeCaretElm[1].firstChild, 1));
+		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[1], 0, $fakeCaretElm[1], 0));
 
 		fakeCaret.hide();
 		equal($('#view *[data-mce-caret]').length, 0);
