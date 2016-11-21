@@ -55,6 +55,11 @@ define(
       return Arr.contains([ 'address', 'pre', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
     };
 
+    var isHeading = function (universe, item) {
+      var tagName = universe.property().name(item);
+      return Arr.contains([ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
+    };
+
     var isContainer = function (universe, item) {
       return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body', 'caption' ], universe.property().name(item));
     };
@@ -75,6 +80,7 @@ define(
       isBlock: isBlock,
       isList: isList,
       isFormatting: isFormatting,
+      isHeading: isHeading,
       isContainer: isContainer,
       isEmptyTag: isEmptyTag,
       isFrame: isFrame,
