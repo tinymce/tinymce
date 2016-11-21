@@ -17,6 +17,7 @@ define(
       FieldSchema.option('value'),
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('type', 'input'),
+      FieldSchema.defaulted('tag', 'input'),
       FieldSchema.defaulted('tabstop', true)
     ]);
 
@@ -36,7 +37,7 @@ define(
           Arr.flatten([
             toProp(detail.value(), 'value'),
             [
-              { key: 'tag', value: 'input' },              
+              { key: 'tag', value: detail.tag() },              
               {
                 key: 'attributes',
                 value: Objects.wrapAll(

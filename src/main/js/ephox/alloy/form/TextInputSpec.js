@@ -23,6 +23,8 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('inline', true),
       FieldSchema.state('originalSpec', Fun.identity),
+
+      FieldSchema.defaulted('tag', 'input'),
       // FieldSchema.strict('label'),
       FieldSchema.state('builder', function () {
         return builder;
@@ -58,6 +60,7 @@ define(
               info.placeholder().map(function (p) { return { dom: { attributes: { placeholder: p } } }; }).getOr({ }),
               {
                 uiType: 'input',
+                tag: info.tag(),
                 representing: { 
                   query: function (input) {
                     return Value.get(input.element());
