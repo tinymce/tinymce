@@ -1,4 +1,7 @@
-ModuleLoader.require(['tinymce/undo/Levels'], function(Levels) {
+ModuleLoader.require([
+	'tinymce/undo/Levels',
+	'tinymce/Env'
+], function(Levels, Env) {
 	module('tinymce.undo.Levels', {
 		setupModule: function() {
 			QUnit.stop();
@@ -46,7 +49,7 @@ ModuleLoader.require(['tinymce/undo/Levels'], function(Levels) {
 		deepEqual(Levels.createFromEditor(editor), {
 			'beforeBookmark': null,
 			'bookmark': null,
-			'content': '<p><br data-mce-bogus="1"></p>',
+			'content': Env.ie && Env.ie < 11 ? '<p></p>' : '<p><br data-mce-bogus="1"></p>',
 			'fragments': null,
 			'type': 'complete'
 		});
