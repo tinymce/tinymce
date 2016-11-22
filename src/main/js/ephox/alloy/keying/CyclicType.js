@@ -26,6 +26,7 @@ define(
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
       FieldSchema.option('onEnter'),
+      FieldSchema.defaulted('firstTabstop', 0),
       // Maybe later we should just expose isVisible
       FieldSchema.option('visibilitySelector')
     ];
@@ -33,13 +34,14 @@ define(
     // Fire an alloy focus on the first visible element that matches the selector
     var focusIn = function (component, cyclicInfo) {
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
-      var visible = Arr.find(tabstops, function (elem) {
+      var visibles = Arr.filter(tabstops, function (elem) {
         return isVisible(cyclicInfo, elem);
       });
 
-      console.log('visible tabstops', visible);
-      // TODO: Update when Arr.find changes signature
-      var visibleOpt = visible !== null && visible !== undefined ? Option.some(visible) : Option.none();
+      console.log('first', cyclicInfo.firstTabstop());
+
+      var visibleOpt = Option.from(visibles[cyclicInfo.firstTabstop()]);
+
       visibleOpt.each(function (target) {
         var originator = component.element();
         component.getSystem().triggerFocus(target, originator);
