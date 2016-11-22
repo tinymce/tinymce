@@ -108,7 +108,7 @@ define("tinymce/Shortcuts", [
 		}
 
 		function isFunctionKey(e) {
-			return e.keyCode >= 112 && e.keyCode <= 123;
+			return e.type === "keydown" && e.keyCode >= 112 && e.keyCode <= 123;
 		}
 
 		function matchShortcut(e, shortcut) {

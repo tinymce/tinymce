@@ -96,7 +96,7 @@ test('Typing state', function() {
 	editor.dom.fire(editor.getBody(), 'keydown', {keyCode: 65});
 	ok(editor.undoManager.typing);
 
-	editor.dom.fire(editor.getBody(), 'keyup', {keyCode: 13});
+	editor.dom.fire(editor.getBody(), 'keydown', {keyCode: 13});
 	ok(!editor.undoManager.typing);
 
 	selectAllFlags = {keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false};
