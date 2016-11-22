@@ -365,11 +365,13 @@ ModuleLoader.require([
 	test('Apply OL to UL and merge with adjacent lists', function() {
 		editor.getBody().innerHTML = trimBrs(
 			'<ol>' +
-				'<li>a</li>' +
+				'<li>1a</li>' +
+				'<li>1b</li>' +
 			'</ol>' +
-			'<ul><li>b</li></ul>' +
+			'<ul><li>2a</li><li>2b</li></ul>' +
 			'<ol>' +
-				'<li>c</li>' +
+				'<li>3a</li>' +
+				'<li>3b</li>' +
 			'</ol>'
 		);
 
@@ -379,9 +381,12 @@ ModuleLoader.require([
 
 		equal(editor.getContent(),
 			'<ol>' +
-				'<li>a</li>' +
-				'<li>b</li>' +
-				'<li>c</li>' +
+				'<li>1a</li>' +
+				'<li>1b</li>' +
+				'<li>2a</li>' +
+				'<li>2b</li>' +
+				'<li>3a</li>' +
+				'<li>3b</li>' +
 			'</ol>'
 		);
 		equal(editor.selection.getStart().nodeName, 'LI');

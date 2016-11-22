@@ -321,7 +321,7 @@ tinymce.PluginManager.add('lists', function(editor) {
 
 			sibling = listBlock.previousSibling;
 			if (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(listBlock, sibling)) {
-				while ((node = sibling.firstChild)) {
+				while ((node = sibling.lastChild)) {
 					listBlock.insertBefore(node, listBlock.firstChild);
 				}
 
