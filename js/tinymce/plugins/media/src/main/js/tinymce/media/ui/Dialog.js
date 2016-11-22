@@ -8,6 +8,15 @@ define('tinymce.media.ui.Dialog', [
 ], function (Delay, HtmlToData, UpdateHtml, Service, Tools, Env) {
 	var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
+	var handleError = function (editor) {
+		return function (error) {
+			var errorMessage = error && error.msg ?
+				'Media embed handler error: ' + error.msg :
+				'Media embed handler threw unknown error.';
+			editor.notificationManager.open({type: 'error', text: errorMessage});
+		};
+	};
+
 	var getData = function (editor) {
 		var element = editor.selection.getNode();
 		var dataEmbed = element.getAttribute('data-ephox-embed-iri');
@@ -67,7 +76,8 @@ define('tinymce.media.ui.Dialog', [
 
 					selectPlaceholder(editor, beforeObjects);
 					editor.nodeChanged();
-				});
+				})
+				.catch(handleError(editor)); // eslint-disable-line
 		};
 	};
 
@@ -101,12 +111,14 @@ define('tinymce.media.ui.Dialog', [
 				onpaste: function () {
 					setTimeout(function () {
 						Service.getEmbedHtml(editor, win.toJSON())
-							.then(addEmbedHtml(win, editor));
+							.then(addEmbedHtml(win, editor))
+							.catch(handleError(editor)); // eslint-disable-line
 					}, 1);
 				},
 				onchange: function (e) {
 					Service.getEmbedHtml(editor, win.toJSON())
-						.then(addEmbedHtml(win, editor));
+						.then(addEmbedHtml(win, editor))
+						.catch(handleError(editor)); // eslint-disable-line
 
 					populateMeta(win, e.meta);
 				}
