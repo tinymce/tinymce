@@ -159,7 +159,7 @@ define(
             others: {
               sandbox: function (hotspot) {
                 return Beta.makeSandbox(detail, {
-                  anchor: hotspot,
+                  anchor: 'hotspot',
                   hotspot: hotspot
                 }, hotspot, {
                   onOpen: Fun.identity,

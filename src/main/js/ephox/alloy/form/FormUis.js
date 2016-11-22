@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.form.CoupledTextInputSpec',
+    'ephox.alloy.form.CustomFieldSpec',
     'ephox.alloy.form.CustomRadioGroupSpec',
     'ephox.alloy.form.RadioGroupSpec',
     'ephox.alloy.form.SelectInputSpec',
@@ -11,7 +12,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (CoupledTextInputSpec, CustomRadioGroupSpec, RadioGroupSpec, SelectInputSpec, TextInputSpec, ValueSchema, Fun) {
+  function (CoupledTextInputSpec, CustomFieldSpec, CustomRadioGroupSpec, RadioGroupSpec, SelectInputSpec, TextInputSpec, ValueSchema, Fun) {
     var schema = ValueSchema.choose(
       'type',
       {
@@ -19,7 +20,8 @@ define(
         'text-input': TextInputSpec.schema(),
         'radio-group': RadioGroupSpec,
         'custom-radio-group': CustomRadioGroupSpec,
-        'select-input': SelectInputSpec
+        'select-input': SelectInputSpec,
+        'custom-field': CustomFieldSpec
       }
     );
 
