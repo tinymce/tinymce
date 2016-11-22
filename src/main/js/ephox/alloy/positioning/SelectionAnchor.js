@@ -109,11 +109,15 @@ define(
         });
 
         var layoutsLtr = function () {
-          return [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ];
+          return anchorInfo.showAbove() ? 
+            [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
+            [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
         };
 
         var layoutsRtl = function () {
-          return [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ];
+          return anchorInfo.showAbove() ? 
+            [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
+            [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
         };
 
         var getLayouts = Direction.onDirection(layoutsLtr(), layoutsRtl());
@@ -122,7 +126,7 @@ define(
         return Anchoring({
           anchorBox: Fun.constant(anchorBox),
           bubble: Fun.constant(anchorInfo.bubble().getOr(Bubble(0, 0))),
-          overrides: Fun.constant({ }),
+          overrides: anchorInfo.overrides,
           layouts: Fun.constant(layouts),
           placer: Option.none
         });
@@ -133,6 +137,9 @@ define(
       FieldSchema.option('getSelection'),
       FieldSchema.strict('root'),
       FieldSchema.option('bubble'),
+      // chiefly MaxHeight.expandable()
+      FieldSchema.defaulted('overrides', { }),
+      FieldSchema.defaulted('showAbove', false),
       FieldSchema.state('placement', function () {
         return placement;
       })
