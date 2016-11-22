@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -14,7 +12,6 @@ define(
     'ephox.alloy.navigation.MatrixNavigation',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
@@ -24,7 +21,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, SystemEvents, EventHandler, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Option, Focus, SelectorFilter, SelectorFind) {
+  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Focus, SelectorFilter, SelectorFind) {
     var schema = [
       FieldSchema.field(
         'selectors',
@@ -35,11 +32,14 @@ define(
           FieldSchema.strict('cell')
         ])
       ),
+
+      // Used to determine whether pressing right/down at the end cycles back to the start/top
+      FieldSchema.defaulted('cycles', true),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
     ];
 
     var focusIn = function (component, matrixInfo) {
-      var selectors = matrixInfo.selector();
+      var selectors = matrixInfo.selectors();
       SelectorFind.descendant(component.element(), selectors.cell()).each(function (cell) {
         component.getSystem().triggerFocus(cell, component.element());  
       });
@@ -57,8 +57,9 @@ define(
       });
     };
   
-    var doMove = function (cycle) {
+    var doMove = function (ifCycle, ifMove) {
       return function (element, focused, matrixInfo) {
+        var move = matrixInfo.cycles() ? ifCycle : ifMove;
         return SelectorFind.closest(focused, matrixInfo.selectors().row()).bind(function (inRow) {
           var cellsInRow = SelectorFilter.descendants(inRow, matrixInfo.selectors().cell());
         
@@ -67,7 +68,7 @@ define(
             return DomPinpoint.findIndex(allRows, inRow).bind(function (rowIndex) {
               // Now, make the matrix.
               var matrix = toMatrix(allRows, matrixInfo);
-              return cycle(matrix, rowIndex, colIndex).map(function (next) {
+              return move(matrix, rowIndex, colIndex).map(function (next) {
                 return next.cell();
               });
             });
@@ -76,11 +77,11 @@ define(
       };
     };
 
-    var moveLeft = doMove(MatrixNavigation.cycleLeft);
-    var moveRight = doMove(MatrixNavigation.cycleRight);
+    var moveLeft = doMove(MatrixNavigation.cycleLeft, MatrixNavigation.moveLeft);
+    var moveRight = doMove(MatrixNavigation.cycleRight, MatrixNavigation.moveRight);
     
-    var moveNorth = doMove(MatrixNavigation.cycleUp);
-    var moveSouth = doMove(MatrixNavigation.cycleDown);
+    var moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
+    var moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
     var getRules = Fun.constant([
       KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
