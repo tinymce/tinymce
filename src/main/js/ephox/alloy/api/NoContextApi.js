@@ -22,6 +22,7 @@ define(
         debugInfo: Fun.constant('fake'),
         triggerEvent: fail('triggerEvent'),
         triggerFocus: fail('triggerFocus'),
+        triggerEscape: fail('triggerEscape'),
         build: fail('build'),
         addToWorld: fail('addToWorld'),
         removeFromWorld: fail('removeFromWorld'),

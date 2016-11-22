@@ -95,7 +95,6 @@ define(
 
                 // Only overwrite if it doesn't have a current value.
                 if (! Attr.has(component.element(), attr)) {
-                  console.log('System.INIT ************', AlloyLogger.element(component.element()));
                   var api = toggleInfo.selected() ? doSelect : doDeselect;
                   api(component, toggleInfo);
                 }

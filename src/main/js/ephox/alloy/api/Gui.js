@@ -13,7 +13,6 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Element',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Node',
@@ -22,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Element, Focus, Insert, Node, Remove, Traverse, Error) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error) {
     var create = function ( ) {
       var root = GuiFactory.build({
         uiType: 'container'
@@ -82,6 +81,11 @@ define(
             }, target);
           });
         },
+
+        triggerEscape: function (comp, simulatedEvent) {
+          systemApi.triggerEvent('keydown', comp.element(), simulatedEvent.event());
+        },
+
         getByUid: function (uid) {
           return getByUid(uid);
         },

@@ -69,7 +69,8 @@ define(
     var fire = function (onHandler) {
       return function (component, simulatedEvent, menuInfo) {
         return menuInfo[onHandler]().bind(function (h) {
-          return h(component, simulatedEvent.event().target());
+          // TODO: Use getSource everywhere.
+          return h(component, simulatedEvent.getSource());
         });
       };
     };

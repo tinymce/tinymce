@@ -2,21 +2,25 @@ define(
   'ephox.alloy.events.Triggers',
 
   [
+    'ephox.alloy.events.EventSource',
+    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.scullion.ADT',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.Traverse',
+    'global!Error'
   ],
 
-  function (Arr, Fun, Adt, Cell, Traverse) {
+  function (EventSource, Objects, Arr, Fun, Option, Adt, Cell, Traverse, Error) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },
       { complete: [ ] }
     ]);
 
-    var triggerHandler = function (lookup, eventType, rawEvent, target) {
+    var doTriggerHandler = function (lookup, eventType, rawEvent, target, source) {
       var handler = lookup(eventType, target);
 
       var stopper = Cell(false);
@@ -26,7 +30,8 @@ define(
       var stop = function () {
         stopper.set(true);
       };
-
+    
+      
       var cut = function () {
         cutter.set(true);
       };
@@ -34,7 +39,9 @@ define(
       var simulatedEvent = {
         stop: stop,
         cut: cut,
-        event: Fun.constant(rawEvent)
+        event: Fun.constant(rawEvent),
+        setSource: source.set,
+        getSource: source.get
       };
 
       return handler.fold(function () {
@@ -57,6 +64,24 @@ define(
       });
     };
 
+    var doTriggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, source) {
+      return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source).fold(function () {
+        // stopped.
+        return true;
+      }, function (parent) {
+        // Go again.
+        return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source);
+      }, function () {
+        // completed
+        return false;
+      });
+    };
+
+    var triggerHandler = function (lookup, eventType, rawEvent, target) {
+      var source = EventSource.derive(rawEvent, target);
+      return doTriggerHandler(lookup, eventType, rawEvent, target, source);
+    };
+
     var broadcast = function (listeners, rawEvent) {
       /* TODO: Remove dupe */
       var stopper = Cell(false);
@@ -65,11 +90,17 @@ define(
         stopper.set(true);
       };
 
-
       var simulatedEvent = {
         stop: stop,
         cut: Fun.noop, // cutting has no meaning for a broadcasted event
-        event: Fun.constant(rawEvent)
+        event: Fun.constant(rawEvent),
+        // Nor do targets really
+        setTarget: Fun.die(
+          new Error('Cannot set target of a broadcasted event')
+        ),
+        getTarget: Fun.die(
+          new Error('Cannot get target of a broadcasted event')
+        )
       };
 
       Arr.each(listeners, function (listener) {
@@ -85,16 +116,8 @@ define(
     };
 
     var triggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget) {
-      return triggerHandler(lookup, eventType, rawEvent, rawTarget).fold(function () {
-        // stopped.
-        return true;
-      }, function (parent) {
-        // Go again.
-        return triggerOnUntilStopped(lookup, eventType, rawEvent, parent);
-      }, function () {
-        // completed
-        return false;
-      });
+      var source = EventSource.derive(rawEvent, rawTarget);
+      return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source);
     };
 
     return {
