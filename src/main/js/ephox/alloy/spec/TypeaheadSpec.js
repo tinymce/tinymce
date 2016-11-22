@@ -116,6 +116,15 @@ define(
                   Beta.togglePopup(detail, comp);
                 }
               })
+            },
+            {
+              key: SystemEvents.postBlur(),
+              value: EventHandler.nu({
+                run: function (typeahead) {
+                  var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+                  Sandboxing.closeSandbox(sandbox);
+                }
+              })
             }
           ]),
 
