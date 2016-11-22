@@ -27,7 +27,7 @@ asynctest('browser.core.DataToHtmlTest', [
 
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
 
-		var videoStruct = ApproxStructure.build(function (s, str, arr) {
+		var videoStruct = ApproxStructure.build(function (s, str/*, arr*/) {
 			return s.element('video', {
 				children: [
 					s.text(str.is('\n')),
@@ -45,7 +45,7 @@ asynctest('browser.core.DataToHtmlTest', [
 			});
 		});
 
-		var iframeStruct = ApproxStructure.build(function (s, str, arr) {
+		var iframeStruct = ApproxStructure.build(function (s, str/*, arr*/) {
 			return s.element('iframe', {
 				attrs: {
 					height: str.is('150'),

@@ -133,7 +133,7 @@ asynctest('tinymce.modern.test.browser.SidebarTest', [
 			sClickAndAssertEvents('My sidebar 3', ['mysidebar2:hide', 'mysidebar3:render', 'mysidebar3:show'], [1, 2, 2]),
 			sAssertPanelVisibility([false, false, true]),
 			sClickAndAssertEvents('My sidebar 3', ['mysidebar3:hide'], [2]),
-			sAssertPanelVisibility([false, false, false]),
+			sAssertPanelVisibility([false, false, false])
 		], onSuccess, onFailure);
 	}, {
 		theme: 'modern',

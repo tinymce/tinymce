@@ -154,7 +154,9 @@ define('tinymce.media.Plugin', [
 			}
 		});
 
-		this.showDialog = Dialog.showDialog.bind(null, editor);
+		this.showDialog = function () {
+			Dialog.showDialog(editor);
+		};
 
 		editor.addButton('media', {
 			tooltip: 'Insert/edit video',

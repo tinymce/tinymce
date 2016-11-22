@@ -21,6 +21,7 @@ module.exports = function(grunt) {
 			plugins: [
 				"js/tinymce/plugins/*/plugin.js",
 				"js/tinymce/plugins/*/classes/**/*.js",
+				"js/tinymce/plugins/*/src/**/*.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
 				"!js/tinymce/plugins/spellchecker/plugin.js",

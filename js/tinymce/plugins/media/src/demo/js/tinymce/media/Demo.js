@@ -21,12 +21,12 @@ define("tinymce.media.Demo", [
 			theme: "modern",
 			plugins: "media preview",
 			toolbar: "media preview",
-			height: 600,
 			// media_live_embeds: false,
 			// media_embed_handler: function (data, resolve) {
 			// 	resolve({
 			// 		html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
-			// }
+			// },
+			height: 600
 		});
 	};
 });

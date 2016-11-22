@@ -36,6 +36,6 @@ test('atomic.core.HtmlToDataTest', [
 		source1: 'a',
 		poster: '',
 		source2: '',
-		type: 'ephox-embed-iri',
+		type: 'ephox-embed-iri'
 	});
 });

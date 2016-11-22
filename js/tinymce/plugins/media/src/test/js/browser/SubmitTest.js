@@ -38,7 +38,8 @@ asynctest('browser.core.SubmitTest', [
 				resolve({html: ''});
 			}),
 			sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
-			'<p><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'),
+			'<p><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" ' +
+				'allowfullscreen="allowfullscreen"></iframe></p>'),
 			apis.sSetContent('')
 		], onSuccess, onFailure);
 	}, {

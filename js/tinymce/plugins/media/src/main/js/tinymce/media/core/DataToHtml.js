@@ -4,7 +4,7 @@ define('tinymce.media.core.DataToHtml', [
 	'tinymce.media.core.UrlPatterns',
 	'tinymce.media.core.VideoScript',
 	'tinymce.media.core.UpdateHtml',
-	'global!tinymce.util.Tools',
+	'global!tinymce.util.Tools'
 ], function (Mime, HtmlToData, UrlPatterns, VideoScript, UpdateHtml, Tools) {
 	var dataToHtml = function (editor, dataIn) {
 		var html = '';

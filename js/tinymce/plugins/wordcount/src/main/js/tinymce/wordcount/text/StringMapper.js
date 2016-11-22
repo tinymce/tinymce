@@ -9,7 +9,7 @@
  */
 define('tinymce.wordcount.text.StringMapper', [
 	'tinymce.wordcount.text.UnicodeData',
-	'tinymce.wordcount.alien.Arr',
+	'tinymce.wordcount.alien.Arr'
 ], function(UnicodeData, Arr) {
 	var SETS = UnicodeData.SETS;
 	var OTHER = UnicodeData.characterIndices.OTHER;
