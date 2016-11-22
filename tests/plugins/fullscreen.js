@@ -40,4 +40,6 @@ test('Fullscreen class on html and body tag', function() {
 
 	equal(tinymce.DOM.hasClass(bodyTag, "mce-fullscreen"), true, 'Body tag should still have "mce-fullscreen" class after window is closed');
 	equal(tinymce.DOM.hasClass(htmlTag, "mce-fullscreen"), true, 'Html tag should still have "mce-fullscreen" class after window is closed');
+
+	editor.execCommand('mceFullScreen');
 });
