@@ -99,7 +99,9 @@ define(
               var focusInInput = Focusing.isFocused(component);
               // You don't want it to change when something else has triggered the change.
               if (focusInInput) {
-                if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox);
+                /* REM:  if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox); 
+                  This line makes it flicker. I wonder what it was for.
+                */
                 if (Value.get(component.element()).length >= detail.minChars()) {
                   detail.previewing().set(true);
                   Beta.enterPopup(detail, component);
