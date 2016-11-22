@@ -35,12 +35,17 @@ define(
 
       // Used to determine whether pressing right/down at the end cycles back to the start/top
       FieldSchema.defaulted('cycles', true),
+      FieldSchema.defaulted('previousSelector', Option.none),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
     ];
 
     var focusIn = function (component, matrixInfo) {
-      var selectors = matrixInfo.selectors();
-      SelectorFind.descendant(component.element(), selectors.cell()).each(function (cell) {
+      var focused = matrixInfo.previousSelector()(component).orThunk(function () {
+        var selectors = matrixInfo.selectors();
+        return SelectorFind.descendant(component.element(), selectors.cell());
+      });
+
+      focused.each(function (cell) {
         component.getSystem().triggerFocus(cell, component.element());  
       });
     };
