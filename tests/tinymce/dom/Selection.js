@@ -504,8 +504,8 @@ ModuleLoader.require([
 		editor.setContent('<p contentEditable="false">1</p>');
 		CaretContainer.insertBlock('p', editor.$('p')[0], true);
 		rng = editor.dom.createRng();
-		rng.setStart(editor.$('p')[0].firstChild, 0);
-		rng.setEnd(editor.$('p')[0].firstChild, 1);
+		rng.setStart(editor.$('p')[0], 0);
+		rng.setEnd(editor.$('p')[0], 0);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(2);
 		editor.setContent('<p contentEditable="false">1</p>');

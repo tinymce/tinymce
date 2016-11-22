@@ -17,8 +17,9 @@
 define("tinymce/EnterKey", [
 	"tinymce/dom/TreeWalker",
 	"tinymce/dom/RangeUtils",
+	"tinymce/caret/CaretContainer",
 	"tinymce/Env"
-], function(TreeWalker, RangeUtils, Env) {
+], function(TreeWalker, RangeUtils, CaretContainer, Env) {
 	var isIE = Env.ie && Env.ie < 11;
 
 	return function(editor) {
@@ -629,7 +630,9 @@ define("tinymce/EnterKey", [
 			newBlockName = newBlockName || 'P';
 
 			// Insert new block before/after the parent block depending on caret location
-			if (isCaretAtStartOrEndOfBlock()) {
+			if (CaretContainer.isCaretContainerBlock(parentBlock)) {
+				newBlock = CaretContainer.showCaretContainerBlock(parentBlock);
+			} else if (isCaretAtStartOrEndOfBlock()) {
 				insertNewBlockAfter();
 			} else if (isCaretAtStartOrEndOfBlock(true)) {
 				// Insert new block before

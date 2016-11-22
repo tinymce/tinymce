@@ -105,6 +105,12 @@ define("tinymce/caret/CaretContainer", [
 		return textNode;
 	}
 
+	function createBogusBr() {
+		var br = document.createElement('br');
+		br.setAttribute('data-mce-bogus', '1');
+		return br;
+	}
+
 	function insertBlock(blockName, node, before) {
 		var doc, blockNode, parentNode;
 
@@ -112,7 +118,7 @@ define("tinymce/caret/CaretContainer", [
 		blockNode = doc.createElement(blockName);
 		blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
 		blockNode.setAttribute('data-mce-bogus', 'all');
-		blockNode.appendChild(doc.createTextNode('\u00a0'));
+		blockNode.appendChild(createBogusBr());
 		parentNode = node.parentNode;
 
 		if (!before) {
@@ -128,9 +134,13 @@ define("tinymce/caret/CaretContainer", [
 		return blockNode;
 	}
 
+	function hasContent(node) {
+		return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
+	}
+
 	function remove(caretContainerNode) {
 		if (isElement(caretContainerNode) && isCaretContainer(caretContainerNode)) {
-			if (caretContainerNode.innerHTML != '&nbsp;') {
+			if (hasContent(caretContainerNode)) {
 				caretContainerNode.removeAttribute('data-mce-caret');
 			} else {
 				removeNode(caretContainerNode);
@@ -151,12 +161,35 @@ define("tinymce/caret/CaretContainer", [
 		return isText(node) && node.data[node.data.length - 1] == Zwsp.ZWSP;
 	}
 
+	function trimBogusBr(elm) {
+		var brs = elm.getElementsByTagName('br');
+		var lastBr = brs[brs.length - 1];
+		if (NodeType.isBogus(lastBr)) {
+			lastBr.parentNode.removeChild(lastBr);
+		}
+	}
+
+	function showCaretContainerBlock(caretContainer) {
+		if (caretContainer && caretContainer.hasAttribute('data-mce-caret')) {
+			trimBogusBr(caretContainer);
+			caretContainer.removeAttribute('data-mce-caret');
+			caretContainer.removeAttribute('data-mce-bogus');
+			caretContainer.removeAttribute('style');
+			caretContainer.removeAttribute('_moz_abspos');
+			return caretContainer;
+		}
+
+		return null;
+	}
+
 	return {
 		isCaretContainer: isCaretContainer,
 		isCaretContainerBlock: isCaretContainerBlock,
 		isCaretContainerInline: isCaretContainerInline,
+		showCaretContainerBlock: showCaretContainerBlock,
 		insertInline: insertInline,
 		insertBlock: insertBlock,
+		hasContent: hasContent,
 		remove: remove,
 		startsWithCaretContainer: startsWithCaretContainer,
 		endsWithCaretContainer: endsWithCaretContainer
