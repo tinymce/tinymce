@@ -43,6 +43,7 @@ Version 4.5.0 (2016-11-23)
 	Fixed bug where tables would get padding instead of margin when you used the indent button.
 	Fixed bug where the charmap plugin wouldn't properly insert non breaking spaces.
 	Fixed bug where the color previews in color input boxes wasn't properly updated.
+	Fixed bug where the list items of previous lists wasn't merged in the right order.
 	Fixed so the font size of the editor defaults to 14px instead of 11px this can be overridden by custom css.
 	Fixed so wordcount is debounced to reduce cpu hogging on larger texts.
 	Fixed so tinymce global gets properly exported as a module when used with some module bundlers.
