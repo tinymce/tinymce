@@ -97,8 +97,12 @@ define(
 
     var escapePopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      close(detail, hotspot, sandbox);
-      return Option.some(true);
+      if (Sandboxing.isShowing(sandbox)) {
+        close(detail, hotspot, sandbox);
+        return Option.some(true);
+      } else {
+        return Option.none();
+      }
     };
 
     return {
