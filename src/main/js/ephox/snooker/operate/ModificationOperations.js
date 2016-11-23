@@ -46,6 +46,24 @@ define(
       });
     };
 
+    // substitution :: (item, comparator) -> item
+    // Returns:
+    // - a new grid with the cell at coords [exampleRow, exampleCol] split into two cells (the
+    //   new cell below, and is empty), and
+    // - the other cells in that row set to span the split cell.
+    var splitCellIntoRows = function (grid, exampleRow, exampleCol, comparator, substitution) {
+      var index = exampleRow + 1; // insert after
+      var before = grid.slice(0, index);
+      var after = grid.slice(index);
+
+      var between = Arr.map(grid[exampleRow] || [], function (ex, i) {
+        var isTargetCell = (i === exampleCol);
+        return isTargetCell ? substitution(ex, comparator) : ex;
+      });
+
+      return before.concat([ between ]).concat(after);
+    };
+
     var deleteColumnAt = function (grid, index) {
       return Arr.map(grid, function (row) {
         return row.slice(0, index).concat(row.slice(index + 1));
@@ -60,6 +78,7 @@ define(
       insertRowAt: insertRowAt,
       insertColumnAt: insertColumnAt,
       splitCellIntoColumns: splitCellIntoColumns,
+      splitCellIntoRows: splitCellIntoRows,
       deleteRowAt: deleteRowAt,
       deleteColumnAt: deleteColumnAt
     };
