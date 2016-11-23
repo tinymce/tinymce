@@ -22,7 +22,7 @@ define("tinymce.media.Demo", [
 			plugins: "media preview",
 			toolbar: "media preview",
 			// media_live_embeds: false,
-			// media_embed_handler: function (data, resolve) {
+			// media_url_resolver: function (data, resolve) {
 			// 	resolve({
 			// 		html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
 			// },

@@ -66,7 +66,7 @@ asynctest('browser.core.DataAttributeTest', [
 	}, {
 		plugins: ["media"],
 		toolbar: "media",
-		media_embed_handler: function (data, resolve) {
+		media_url_resolver: function (data, resolve) {
 			resolve({
 				html: '<video data-ephox-embed-iri="' + data.url + '" width="300" height="150" ' +
 					'controls="controls">\n<source src="' + 'embed-' + data.url + '" />\n</video>'});
