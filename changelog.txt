@@ -7,7 +7,8 @@ Version 4.5.0 (2016-11-23)
 	Added new media_embed_handler option to allow the media plugin to be populated with custom embeds.
 	Added new support for editing transparent images using the image tools dialog.
 	Added new images_reuse_filename option to allow filenames of images to be retained for upload.
-	Added new allow_unsafe_link_target option to force links with target blank to have rel="noopener noreferrer".
+	Added new security feature where links with target="_blank" will by default get rel="noopener noreferrer".
+	Added new allow_unsafe_link_target to allow you to opt-out of the target="_blank" security feature.
 	Added new style_formats_autohide option to automatically hide styles based on context.
 	Added new codesample_content_css option to specify where the code sample prism css is loaded from.
 	Added new support for Japanese/Chinese word count following the unicode standards on this.
