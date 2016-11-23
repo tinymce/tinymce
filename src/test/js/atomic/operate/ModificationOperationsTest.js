@@ -143,7 +143,8 @@ test(
         var actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
         assert.eq(expected, actual);
       };
-
+      
+      // splitting simple tables without existing colspans 
       check([], [], 0, 0); // ?? table without rows - possible?
       check([[ '?_0' ]], [[ ]], 0, 0); // table without cols - possible?
       check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 0);
@@ -219,7 +220,78 @@ test(
           [ 'g', 'h', 'i']
         ], 2, 0
       );
-    })();
+      // Splitting a cell where other cells have colspans
+        check(
+        [
+          [ 'a', 'b', '?_0' ],
+          [ 'c', 'c', 'c'   ]
+        ], 
+        [
+          [ 'a', 'b' ],
+          [ 'c', 'c' ]
+        ], 0, 1
+      );
+      check(
+        [
+          [ 'a', '?_0', 'b', 'c'],
+          [ 'd', 'd',   'd', 'f'],
+          [ 'g', 'g',   'h', 'h']
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'd', 'f'],
+          [ 'g', 'h', 'h']
+        ], 0, 0
+      );
+      check(
+        [
+          [ 'a', 'a', 'a',   'a'],
+          [ 'd', 'e', '?_0', 'f'],
+          [ 'g', 'h', 'h',   'h']
+        ], 
+        [
+          [ 'a', 'a', 'a'],
+          [ 'd', 'e', 'f'],
+          [ 'g', 'h', 'h']
+        ], 1, 1
+      );
+      check(
+        [
+          [ 'a', 'a', 'c', 'c'  ],
+          [ 'd', 'd', 'd', 'd'  ],
+          [ 'g', 'h', 'i', '?_0']
+        ], 
+        [
+          [ 'a', 'a', 'c'],
+          [ 'd', 'd', 'd'],
+          [ 'g', 'h', 'i']
+        ], 2, 2
+      );
+      check(
+        [
+          [ 'a', 'b', 'c', '?_0'],
+          [ 'd', 'e', 'e', 'e'  ],
+          [ 'g', 'g', 'i', 'i'  ]
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'e', 'e'],
+          [ 'g', 'g', 'i']
+        ], 0, 2
+      );
+      check(
+        [
+          [ 'a', 'a',   'a', 'c'],
+          [ 'a', 'a',   'a', 'a'],
+          [ 'g', '?_0', 'h', 'i']
+        ], 
+        [
+          [ 'a', 'a', 'c'],
+          [ 'a', 'a', 'a'],
+          [ 'g', 'h', 'i']
+        ], 2, 0
+      );
+  })();
 
   }
 );
