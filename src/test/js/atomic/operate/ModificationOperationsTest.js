@@ -137,5 +137,89 @@ test(
         ], 1);
     })();
 
+    (function () {
+      var check = function (expected, grid, exRow, exCol) {
+        // debugger;
+        var actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+        assert.eq(expected, actual);
+      };
+
+      check([], [], 0, 0); // ?? table without rows - possible?
+      check([[ '?_0' ]], [[ ]], 0, 0); // table without cols - possible?
+      check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 0);
+      check([[ 'a', '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
+      check([[ 'a', 'b', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
+      check(
+        [
+          [ 'a', 'b', '?_0' ],
+          [ 'c', 'd', 'd'   ]
+        ], 
+        [
+          [ 'a', 'b' ],
+          [ 'c', 'd' ]
+        ], 0, 1
+      );
+      check(
+        [
+          [ 'a', '?_0', 'b', 'c'],
+          [ 'd', 'd',   'e', 'f'],
+          [ 'g', 'g',   'h', 'i']
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'e', 'f'],
+          [ 'g', 'h', 'i']
+        ], 0, 0
+      );
+      check(
+        [
+          [ 'a', 'b', 'b',   'c'],
+          [ 'd', 'e', '?_0', 'f'],
+          [ 'g', 'h', 'h',   'i']
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'e', 'f'],
+          [ 'g', 'h', 'i']
+        ], 1, 1
+      );
+      check(
+        [
+          [ 'a', 'b', 'c', 'c'  ],
+          [ 'd', 'e', 'f', 'f'  ],
+          [ 'g', 'h', 'i', '?_0']
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'e', 'f'],
+          [ 'g', 'h', 'i']
+        ], 2, 2
+      );
+      check(
+        [
+          [ 'a', 'b', 'c', '?_0'],
+          [ 'd', 'e', 'f', 'f'  ],
+          [ 'g', 'h', 'i', 'i'  ]
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'e', 'f'],
+          [ 'g', 'h', 'i']
+        ], 0, 2
+      );
+      check(
+        [
+          [ 'a', 'a',   'b', 'c'],
+          [ 'd', 'd',   'e', 'f'],
+          [ 'g', '?_0', 'h', 'i']
+        ], 
+        [
+          [ 'a', 'b', 'c'],
+          [ 'd', 'e', 'f'],
+          [ 'g', 'h', 'i']
+        ], 2, 0
+      );
+    })();
+
   }
 );

@@ -7,6 +7,8 @@ define(
 
   function (Arr) {
     // substitution :: (item, comparator) -> item
+    // example is the location of the cursor (the row index)
+    // index is the insert position (at - or after - example) (the row index)
     var insertRowAt = function (grid, index, example, comparator, substitution) {
       var before = grid.slice(0, index);
       var after = grid.slice(index);
@@ -20,10 +22,26 @@ define(
     };
 
     // substitution :: (item, comparator) -> item
+    // example is the location of the cursor (the column index)
+    // index is the insert position (at - or after - example) (the column index)
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
         var withinSpan = index > 0 && index < row.length && comparator(row[index - 1], row[index]);
         var sub = withinSpan ? row[index] : substitution(row[example], comparator);
+        return row.slice(0, index).concat([ sub ]).concat(row.slice(index));
+      });
+    };
+
+    // substitution :: (item, comparator) -> item
+    // Returns:
+    // - a new grid with the cell at coords [exampleRow, exampleCol] split into two cells (the
+    //   new cell follows, and is empty), and
+    // - the other cells in that column set to span the split cell.
+    var splitCellIntoColumns = function (grid, exampleRow, exampleCol, comparator, substitution) {
+      var index = exampleCol + 1; // insert after
+      return Arr.map(grid, function (row, i) {
+        var isTargetCell = (i === exampleRow);
+        var sub = isTargetCell ? substitution(row[exampleCol], comparator) : row[exampleCol];
         return row.slice(0, index).concat([ sub ]).concat(row.slice(index));
       });
     };
@@ -41,6 +59,7 @@ define(
     return {
       insertRowAt: insertRowAt,
       insertColumnAt: insertColumnAt,
+      splitCellIntoColumns: splitCellIntoColumns,
       deleteRowAt: deleteRowAt,
       deleteColumnAt: deleteColumnAt
     };
