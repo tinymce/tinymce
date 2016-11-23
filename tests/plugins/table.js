@@ -1305,6 +1305,70 @@
 						'</tbody>' +
 					'</table>'
 				)
+			},
+
+			{
+				message: 'Should merge b1+c1 and reduce a2',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr>' +
+								'<td>a1</td>' +
+								'<td data-mce-selected="1">b1</td>' +
+								'<td data-mce-selected="1">c1</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td colspan="3">a2</td>' +
+							'</tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr>' +
+								'<td>a1</td>' +
+								'<td>b1c1</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td colspan="2">a2</td>' +
+							'</tr>' +
+						'</tbody>' +
+					'</table>'
+				)
+			},
+
+			{
+				message: 'Should merge a2+a3 and reduce b1',
+				before: (
+					'<table>' +
+						'<tbody>' +
+							'<tr>' +
+								'<td>a1</td>' +
+								'<td rowspan="3">b1</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td data-mce-selected="1">a2</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td data-mce-selected="1">a3</td>' +
+							'</tr>' +
+						'</tbody>' +
+					'</table>'
+				),
+				after: (
+					'<table>' +
+						'<tbody>' +
+							'<tr>' +
+								'<td>a1</td>' +
+								'<td rowspan="2">b1</td>' +
+							'</tr>' +
+							'<tr>' +
+								'<td>a2a3</td>' +
+							'</tr>' +
+						'</tbody>' +
+					'</table>'
+				)
 			}
 		]);
 	});
