@@ -95,6 +95,11 @@ define(
       return bundle(newGrid, detail.row(), detail.column());
     };
 
+    var splitCellIntoColumns = function (grid, detail, comparator, genWrappers) {
+      var newGrid = ModificationOperations.splitCellIntoColumns(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
+      return bundle(newGrid, detail.row(), detail.column());
+    };
+
     var eraseColumn = function (grid, detail, comparator, _genWrappers) {
       var newGrid = ModificationOperations.deleteColumnAt(grid, detail.column());
       var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
@@ -146,6 +151,7 @@ define(
       insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
+      splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, Generators.modification),
       eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, Generators.modification),
       makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th')),
