@@ -2,6 +2,10 @@ define(
   'ephox.alloy.spec.InputSpec',
 
   [
+    'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -12,7 +16,7 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Cell, Value) {
+  function (EventRoot, SystemEvents, Representing, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Cell, Value) {
     // This is not fleshed out yet.
     var schema = ValueSchema.objOf([
       FieldSchema.defaulted('classes', [ ]),
@@ -30,7 +34,8 @@ define(
 
       var toProp = function (opt, name) {
         return opt.map(function (v) {
-          return [ { key: name, value: v } ];
+          // FIX: ItemData.value
+          return [ { key: name, value: v.text } ];
         }).getOr([ ]);
       };
 
@@ -78,7 +83,23 @@ define(
             var value = Value.get(input);
             input.dom().setSelectionRange(0, value.length);
           }
-        }
+        },
+
+        events: Objects.wrapAll([
+          {
+            key: SystemEvents.systemInit(),
+            value: EventHandler.nu({
+              run: function (typeahead, simulatedEvent) {
+                if (EventRoot.isSource(typeahead, simulatedEvent)) {
+                  detail.value().each(function (value) {
+                    Representing.setValue(typeahead, value);
+                  });
+                }
+              }
+            }) 
+          }
+
+        ])
       }, spec);
     };
 
