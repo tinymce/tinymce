@@ -372,7 +372,7 @@ define("tinymce/tableplugin/TableGrid", [
 				return 0;
 			}
 
-			for (var y = startY; y <= endY; y++) {
+			for (var y = startY + 1; y <= endY; y++) {
 				var allCells = findItemsOutsideOfRange(getRow(grid, y), startX, endX);
 				var fakeCells = getFakeCells(allCells);
 
@@ -395,7 +395,7 @@ define("tinymce/tableplugin/TableGrid", [
 				return 0;
 			}
 
-			for (var x = startX; x <= endX; x++) {
+			for (var x = startX + 1; x <= endX; x++) {
 				var allCells = findItemsOutsideOfRange(getColumn(grid, x), startY, endY);
 				var fakeCells = getFakeCells(allCells);
 
