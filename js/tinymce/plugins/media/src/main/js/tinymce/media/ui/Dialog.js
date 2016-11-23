@@ -104,6 +104,9 @@ define('tinymce.media.ui.Dialog', [
 						.then(addEmbedHtml(win, editor));
 
 					populateMeta(win, e.meta);
+				},
+				onbeforecall: function (e) {
+					e.meta = win.toJSON();
 				}
 			}
 		];
