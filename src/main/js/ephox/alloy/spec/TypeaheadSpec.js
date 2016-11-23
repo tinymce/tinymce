@@ -78,10 +78,11 @@ define(
             Sandboxing.closeSandbox(sandbox);
             var currentValue = Representing.getValue(item);
             return item.getSystem().getByUid(detail.uid()).bind(function (input) {
-              input.element().dom().setSelectionRange(currentValue.length, currentValue.length);
+              // FIX: itemData.text
+              input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
               // Should probably streamline this one.
-              var other = spec.onExecute !== undefined ? spec.onExecute : Fun.noop;
-              other(sandbox, input);
+              var other = spec.onExecute !== undefined ? spec.onExecute : Option.none;
+              return other(sandbox, input);
               return Option.some(true);
             });
           }
@@ -159,8 +160,7 @@ define(
             },
             onEnter: function (comp, simulatedEvent) {
               var sandbox = Coupling.getCoupled(comp, 'sandbox');
-              detail.onExecute()(sandbox, comp);
-              return Option.some(true);
+              return detail.onExecute()(sandbox, comp);
             }
           },
           dom: {
