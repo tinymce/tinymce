@@ -1,3 +1,62 @@
+Version 4.5.0 (2016-11-23)
+	Added new toc plugin allows you to insert table of contents based on editor headings.
+	Added new auto complete menu to all url fields. Adds history, link to anchors etc.
+	Added new sidebar api that allows you to add custom sidebar panels and buttons to toggle these.
+	Added new insert menu button that allows you to have multiple insert functions under the same menu button.
+	Added new open link feature to ctrl+click, alt+enter and context menu.
+	Added new media_embed_handler option to allow the media plugin to be populated with custom embeds.
+	Added new support for editing transparent images using the image tools dialog.
+	Added new images_reuse_filename option to allow filenames of images to be retained for upload.
+	Added new security feature where links with target="_blank" will by default get rel="noopener noreferrer".
+	Added new allow_unsafe_link_target to allow you to opt-out of the target="_blank" security feature.
+	Added new style_formats_autohide option to automatically hide styles based on context.
+	Added new codesample_content_css option to specify where the code sample prism css is loaded from.
+	Added new support for Japanese/Chinese word count following the unicode standards on this.
+	Added new fragmented undo levels this dramatically reduces flicker on contents with iframes.
+	Added new live previews for complex elements like table or lists.
+	Fixed bug where it wasn't possible to properly tab between controls in a dialog with a disabled form item control.
+	Fixed bug where firefox would generate a rectangle on elements produced after/before a cE=false elements.
+	Fixed bug with advlist plugin not switching list element format properly in some edge cases.
+	Fixed bug where col/rowspans wasn't correctly computed by the table plugin in some cases.
+	Fixed bug where the table plugin would thrown an error if object_resizing was disabled.
+	Fixed bug where some invalid markup would cause issues when running in XHTML mode. Patch contributed by Charles Bourasseau.
+	Fixed bug where the fullscreen class wouldn't be removed properly when closing dialogs.
+	Fixed bug where the PastePlainTextToggle event wasn't fired by the paste plugin when the state changed.
+	Fixed bug where table the row type wasn't properly updated in table row dialog. Patch contributed by Matthias Balmer.
+	Fixed bug where select all and cut wouldn't place caret focus back to the editor in WebKit. Patch contributed by Daniel Jalkut.
+	Fixed bug where applying cell/row properties to multiple cells/rows would reset other unchanged properties.
+	Fixed bug where some elements in the schema would have redundant/incorrect children.
+	Fixed bug where selector and target options would cause issues if used together.
+	Fixed bug where drag/drop of images from desktop on chrome would thrown an error.
+	Fixed bug where cut on WebKit/Blink wouldn't add an undo level.
+	Fixed bug where IE 11 would scroll to the cE=false elements when they where selected.
+	Fixed bug where keys like F5 wouldn't work when a cE=false element was selected.
+	Fixed bug where the undo manager wouldn't stop the typing state when commands where executed.
+	Fixed bug where unlink on wrapped links wouldn't work properly.
+	Fixed bug with drag/drop of images on WebKit where the image would be deleted form the source editor.
+	Fixed bug where the visual characters mode would be disabled when contents was extracted from the editor.
+	Fixed bug where some browsers would toggle of formats applied to the caret when clicking in the editor toolbar.
+	Fixed bug where the custom theme function wasn't working correctly.
+	Fixed bug where image option for custom buttons required you to have icon specified as well.
+	Fixed bug where the context menu and contextual toolbars would be visible at the same time and sometimes overlapping.
+	Fixed bug where the noneditable plugin would double wrap elements when using the noneditable_regexp option.
+	Fixed bug where tables would get padding instead of margin when you used the indent button.
+	Fixed bug where the charmap plugin wouldn't properly insert non breaking spaces.
+	Fixed bug where the color previews in color input boxes wasn't properly updated.
+	Fixed so the font size of the editor defaults to 14px instead of 11px this can be overridden by custom css.
+	Fixed so wordcount is debounced to reduce cpu hogging on larger texts.
+	Fixed so tinymce global gets properly exported as a module when used with some module bundlers.
+	Fixed so it's possible to specify what css properties you want to preview on specific formats.
+	Fixed so anchors are contentEditable=false while within the editor.
+	Fixed so selected contents gets wrapped in a inline code element by the codesample plugin.
+	Fixed so conditional comments gets properly stripped independent of case. Patch contributed by Georgii Dolzhykov.
+	Fixed so some escaped css sequences gets properly handled. Patch contributed by Georgii Dolzhykov.
+	Fixed so notifications with the same message doesn't get displayed at the same time.
+	Fixed so F10 can be used as an alternative key to focus to the toolbar.
+	Fixed various api documentation issues and typos.
+	Removed layer plugin since it wasn't really ported from 3.x and there doesn't seem to be much use for it.
+	Removed moxieplayer.swf from the media plugin since it wasn't used by the media plugin.
+	Removed format state from the advlist plugin to be more consistent with common word processors.  
 Version 4.4.3 (2016-09-01)
 	Fixed bug where copy would produce an exception on Chrome.
 	Fixed bug where deleting lists on IE 11 would merge in correct text nodes.
