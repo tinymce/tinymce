@@ -125,6 +125,17 @@ if (tinymce.isWebKit) {
 		equal(editor.selection.getStart().nodeName, 'H1');
 	});
 
+	test('Delete from after image to paragraph', function() {
+		editor.getBody().innerHTML = '<p>a</p><p><img src="about:blank"></p>';
+		var rng = editor.dom.createRng();
+		rng.setStartAfter(editor.dom.select('img')[0]);
+		rng.setEndAfter(editor.dom.select('img')[0]);
+		editor.selection.setRng(rng);
+		editor.execCommand('Delete');
+		equal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p>');
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
 	test('ForwardDelete from end of H1 to P with style span', function() {
 		editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
 		Utils.setSelection('h1', 1);
