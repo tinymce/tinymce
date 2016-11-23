@@ -14,7 +14,7 @@ define(
 
   function (SystemEvents, Focusing, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
     var schema = [
-      FieldSchema.strict('value'),
+      FieldSchema.strict('data'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
 
@@ -84,7 +84,7 @@ define(
         },
         representing: {
           query: function () {
-            return info.value();
+            return info.data();
           },
           set: function () { }
         },

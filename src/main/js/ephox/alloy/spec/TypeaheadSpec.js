@@ -51,14 +51,16 @@ define(
             onHighlight: function (menu, item) {
               if (! detail.previewing().get()) {
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
+                  console.log('item', item.element().dom());
                   Representing.setValueFrom(input, item);
                 });
               } else {
                 // Highlight the rest of the text so that the user types over it.
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
-                  var currentValue = Representing.getValue(input);
+                  // FIX: itemData.value
+                  var currentValue = Representing.getValue(input).text;
                   var nextValue = Representing.getValue(item);
-                  if (Strings.startsWith(nextValue, currentValue)) {
+                  if (Strings.startsWith(nextValue.text, currentValue)) {
                     Representing.setValue(input, nextValue);
                     input.element().dom().setSelectionRange(currentValue.length, nextValue.length);
                   }
@@ -124,7 +126,7 @@ define(
               value: EventHandler.nu({
                 run: function (typeahead) {
                   var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-                  Sandboxing.closeSandbox(sandbox);
+                  // Sandboxing.closeSandbox(sandbox);
                 }
               })
             }

@@ -109,13 +109,16 @@ define(
         return uiSpec.lazySink()().getOrDie();
       };
 
+      var getItemValue = function (item) {
+        // FIX: itemData.value
+        return Representing.getValue(item).value;
+      };
+
       var toMenuValues = function (sandbox, sMenus) {
         return Obj.map(sMenus, function (menuTuple) {
           var menuItems = SelectorFilter.descendants(menuTuple.menu.element(), '.' + uiSpec.markers().item());
           return Arr.bind(menuItems, function (mi) {
-            return sandbox.getSystem().getByDom(mi).map(function (item) {
-              return Representing.getValue(item);
-            }).fold(Fun.constant([ ]), Arr.pure);
+            return sandbox.getSystem().getByDom(mi).map(getItemValue).fold(Fun.constant([ ]), Arr.pure);
           });
         });
       };
@@ -230,7 +233,7 @@ define(
       };
 
       var expandRight = function (sandbox, item) {
-        var value = Representing.getValue(item);
+        var value = getItemValue(item);
         return Sandboxing.getState(sandbox).bind(function (state) {
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
@@ -250,7 +253,7 @@ define(
       };
 
       var collapseLeft = function (sandbox, item) {
-        var value = Representing.getValue(item);
+        var value = getItemValue(item);
         return Sandboxing.getState(sandbox).bind(function (state) {
           return state.collapse(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);
@@ -259,7 +262,7 @@ define(
       };
 
       var updateView = function (sandbox, item) {
-        var value = Representing.getValue(item);
+        var value = getItemValue(item);
         return Sandboxing.getState(sandbox).bind(function (state) {
           return state.refresh(value).bind(function (path) {
             return updateMenuPath(sandbox, state, path);

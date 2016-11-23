@@ -21,7 +21,7 @@ define(
   function (EditableFields, SystemEvents, Focusing, Keying, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
     var schema = [
       FieldSchema.strict('uid'),
-      FieldSchema.strict('value'),
+      FieldSchema.strict('data'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('widget'),
@@ -45,7 +45,7 @@ define(
           {
             representing: {
               query: function (component) {
-                return info.value();
+                return info.data();
               },
               set: function () { }
             }
@@ -71,7 +71,7 @@ define(
         dom: info.dom(),
         representing: {
           query: function () {
-            return info.value();
+            return info.data();
           },
           // Not sure what to do about this.
           set: function () { }

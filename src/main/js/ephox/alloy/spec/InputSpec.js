@@ -7,10 +7,12 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
+    'ephox.perhaps.Option',
+    'ephox.scullion.Cell',
     'ephox.sugar.api.Value'
   ],
 
-  function (FieldSchema, Objects, ValueSchema, Arr, Merger, Value) {
+  function (FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Cell, Value) {
     // This is not fleshed out yet.
     var schema = ValueSchema.objOf([
       FieldSchema.defaulted('classes', [ ]),
@@ -18,7 +20,9 @@ define(
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
-      FieldSchema.defaulted('tabstop', true)
+      FieldSchema.defaulted('tabstop', true),
+
+      FieldSchema.state('holdingValue', function () { return Cell(Option.none()); })
     ]);
 
     var make = function (spec) {
@@ -53,10 +57,17 @@ define(
 
         representing: {
           query: function (comp) {
-            return Value.get(comp.element());
+            var text = Value.get(comp.element());
+
+            return detail.holdingValue().get().fold(function () {
+              return { value: text, text: text };
+            }, function (data) {
+              return data.text === text ? data : { value: text, text: text };
+            });
           },
           set: function (comp, value) {
-            Value.set(comp.element(), value);
+            detail.holdingValue().set(Option.some(value));
+            Value.set(comp.element(), value.text);
           }
         },
 
