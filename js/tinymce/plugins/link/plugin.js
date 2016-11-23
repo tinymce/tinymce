@@ -274,6 +274,10 @@ tinymce.PluginManager.add('link', function(editor) {
 			return true;
 		}
 
+		function onBeforeCall(e) {
+			e.meta = win.toJSON();
+		}
+
 		selectedElm = selection.getNode();
 		anchorElm = dom.getParent(selectedElm, 'a[href]');
 		onlyText = isOnlyTextSelected();
@@ -395,7 +399,8 @@ tinymce.PluginManager.add('link', function(editor) {
 					autofocus: true,
 					label: 'Url',
 					onchange: urlChange,
-					onkeyup: updateText
+					onkeyup: updateText,
+					onbeforecall: onBeforeCall
 				},
 				textListCtrl,
 				linkTitleCtrl,

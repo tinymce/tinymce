@@ -121,6 +121,9 @@ define('tinymce.media.ui.Dialog', [
 						.catch(handleError(editor)); // eslint-disable-line
 
 					populateMeta(win, e.meta);
+				},
+				onbeforecall: function (e) {
+					e.meta = win.toJSON();
 				}
 			}
 		];
