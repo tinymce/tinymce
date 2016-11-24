@@ -308,7 +308,6 @@ test(
 
     (function () {
       var check = function (expected, grid, exRow, exCol) {
-        // debugger;
         var actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
         assert.eq(expected, actual);
       };
