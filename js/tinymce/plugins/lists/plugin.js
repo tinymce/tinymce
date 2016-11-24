@@ -940,7 +940,12 @@ tinymce.PluginManager.add('lists', function(editor) {
 		};
 	};
 
-	if (!tinymce.PluginManager.get("advlist")) {
+	var hasPlugin = function (editor, plugin) {
+		var plugins = editor.settings.plugins ? editor.settings.plugins : '';
+		return tinymce.util.Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
+	};
+
+	if (!hasPlugin(editor, 'advlist')) {
 		editor.addButton('numlist', {
 			title: 'Numbered list',
 			cmd: 'InsertOrderedList',
