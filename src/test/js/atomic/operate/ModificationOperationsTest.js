@@ -291,6 +291,19 @@ test(
           [ 'g', 'h', 'i']
         ], 2, 0
       );
+      // splitting a cell which is already merged
+      check(
+        [
+          [ 'a', 'a',   'a', 'a'],
+          [ 'a', 'a',   '?_0', 'a'],
+          [ 'a', 'a',   'a', 'a']
+        ], 
+        [
+          [ 'a', 'a', 'a'],
+          [ 'a', 'a', 'a'],
+          [ 'a', 'a', 'a']
+        ], 1, 1
+      );
     })();
 
 
@@ -298,7 +311,6 @@ test(
       var check = function (expected, grid, exRow, exCol) {
         // debugger;
         var actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        console.log(expected, actual);
         assert.eq(expected, actual);
       };
       
@@ -462,7 +474,20 @@ test(
           [ 'c', 'a', 'i']
         ], 2, 0
       );
-  })();
-
+      // splitting a cell which is already merged
+      check(
+        [
+          [ 'a', 'a',   'a'],
+          [ 'a', 'a',   'a'],
+          [ 'a', '?_0', 'a'],
+          [ 'a', 'a',   'a']
+        ], 
+        [
+          [ 'a', 'a', 'a'],
+          [ 'a', 'a', 'a'],
+          [ 'a', 'a', 'a']
+        ], 1, 1
+      );
+    })();
   }
 );
