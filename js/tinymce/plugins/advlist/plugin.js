@@ -13,6 +13,11 @@
 tinymce.PluginManager.add('advlist', function(editor) {
 	var olMenuItems, ulMenuItems;
 
+	var hasPlugin = function (editor, plugin) {
+		var plugins = editor.settings.plugins ? editor.settings.plugins : '';
+		return tinymce.util.Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
+	};
+
 	function isChildOfBody(elm) {
 		return editor.$.contains(editor.getBody(), elm);
 	}
@@ -94,7 +99,7 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		};
 	};
 
-	if (tinymce.PluginManager.get("lists")) {
+	if (hasPlugin(editor, "lists")) {
 		editor.addCommand('ApplyUnorderedListStyle', function (ui, value) {
 			applyListFormat('UL', value['list-style-type']);
 		});
