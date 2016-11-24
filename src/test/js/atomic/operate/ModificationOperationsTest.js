@@ -139,14 +139,13 @@ test(
 
     (function () {
       var check = function (expected, grid, exRow, exCol) {
-        // debugger;
         var actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
         assert.eq(expected, actual);
       };
       
       // splitting simple tables without existing colspans 
-      check([], [], 0, 0); // ?? table without rows - possible?
-      check([[ '?_0' ]], [[ ]], 0, 0); // table without cols - possible?
+      check([], [], 0, 0); // ?? table without rows
+      check([[ '?_0' ]], [[ ]], 0, 0);
       check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 0);
       check([[ 'a', '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
       check([[ 'a', 'b', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
@@ -315,9 +314,9 @@ test(
       };
       
       // splitting simple tables without existing rowspans 
-      // check([], [], 0, 0); // ?? table without rows - possible?
-      check([[]], [], 0, 0); // ?? table without rows - possible?
-      check([[], []], [[ ]], 0, 0); // table without cols - possible?
+      // check([], [], 0, 0); // ?? table without rows will fail - a problem?
+      check([[]], [], 0, 0);
+      check([[], []], [[ ]], 0, 0); 
       check([[ 'a'], ['?_0' ]], [[ 'a' ]], 0, 0);
       check([[ 'a', 'b' ], [ '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
       check([[ 'a', 'b' ], [ 'a', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
