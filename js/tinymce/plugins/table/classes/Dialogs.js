@@ -221,7 +221,9 @@ define("tinymce/tableplugin/Dialogs", [
 
 					if (editor.settings.table_style_by_css) {
 						stylesToMerge = [];
-						stylesToMerge.push({name: 'border', value: data.border});
+						stylesToMerge.push({name: 'border-width', value: data.border + 'px'});
+						if (data.border > 0)
+							stylesToMerge.push({name: 'border-style', value: 'solid'});
 						stylesToMerge.push({name: 'border-spacing', value: addSizeSuffix(data.cellspacing)});
 						mergeStyles(dom, tableElm, stylesToMerge);
 						dom.setAttribs(tableElm, {
@@ -231,7 +233,9 @@ define("tinymce/tableplugin/Dialogs", [
 						});
 						if (tableElm.children) {
 							for (var i = 0; i < tableElm.children.length; i++) {
-								styleTDTH(tableElm.children[i], 'border', data.border);
+								styleTDTH(tableElm.children[i], 'border-width', data.border + 'px');
+								if (data.border > 0)
+									styleTDTH(tableElm.children[i], 'border-style', 'solid');
 								styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
 							}
 						}
@@ -309,7 +313,7 @@ define("tinymce/tableplugin/Dialogs", [
 						cellpadding: dom.getAttrib(tableElm, 'data-mce-cell-padding') || dom.getAttrib(tableElm, 'cellpadding') ||
 							getTDTHOverallStyle(tableElm, 'padding'),
 						border: dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') ||
-							getTDTHOverallStyle(tableElm, 'border'),
+							getTDTHOverallStyle(tableElm, 'border-width'),
 						borderColor: dom.getAttrib(tableElm, 'data-mce-border-color'),
 						caption: !!dom.select('caption', tableElm)[0],
 						'class': dom.getAttrib(tableElm, 'class')
