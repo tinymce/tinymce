@@ -64,6 +64,7 @@ define(
           query: function (comp) {
             var text = Value.get(comp.element());
 
+            // Default the first ones.
             return detail.holdingValue().get().fold(function () {
               return { value: text, text: text };
             }, function (data) {
@@ -89,10 +90,10 @@ define(
           {
             key: SystemEvents.systemInit(),
             value: EventHandler.nu({
-              run: function (typeahead, simulatedEvent) {
-                if (EventRoot.isSource(typeahead, simulatedEvent)) {
+              run: function (simulated, simulatedEvent) {
+                if (EventRoot.isSource(simulated, simulatedEvent)) {
                   detail.value().each(function (value) {
-                    Representing.setValue(typeahead, value);
+                    Representing.setValue(simulated, value);
                   });
                 }
               }
