@@ -28,10 +28,19 @@ Instructions to update TinyMCE to the lastest:
 8. Build custom version for Teamup
    > grunt bundle -themes=modern -plugins=autolink,contextmenu,lists,image,nonbreaking,tabfocus,visualchars,paste,charmap,emoticons,link,code,teamuplinknewtab
 
+9. Commit all changes.
+
+10. In repo TeamupCom/teamup: 
+    - File package.json: Update dependeny on tinymce to the latest commit.  
+   
 9. Update dependency of Teamup Calendar on tinymce
    > npm update tinymce
    > npm shrinkwrap
+   Then commit changes.
    
 10. Build Teamup Calendar with latest TinyMCE instance
     > composer publish   
+   
+11. Inform other users to update to dependency on tinymce:
+    > npm install tinymce   
    
