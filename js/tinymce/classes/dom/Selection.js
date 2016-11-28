@@ -546,7 +546,9 @@ define("tinymce/dom/Selection", [
 			if (isIE && rng && rng.setStart && doc.selection) {
 				try {
 					// IE will sometimes throw an exception here
-					ieRng = doc.selection.createRange();
+				    // IE 11 is no longer supporting selection object, so we use getSelection object instead
+				    // for more information please visit : http://msdn.microsoft.com/en-us/library/ie/ms535869(v=vs.85).aspx
+				    isIE === 11 ? ieRng = doc.getSelection() : ieRng = doc.selection.createRange();
 				} catch (ex) {
 					// Ignore
 				}
