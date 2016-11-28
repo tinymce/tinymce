@@ -169,7 +169,7 @@
 				}
 
 				// BR is needed in empty blocks on non IE browsers
-				if (!tinymce.isIE || tinymce.isIE11) {
+				if (!tinymce.isIE || !tinymce.isIE11) {
 					caretNode.innerHTML = '<br data-mce-bogus="1">';
 				}
 
