@@ -16,6 +16,8 @@
  * @borrow-members tinymce.EditorManager
  * @borrow-members tinymce.util.Tools
  */
+
+/*global exports:false */
 define("tinymce/Compat", [
 	"tinymce/dom/DOMUtils",
 	"tinymce/dom/EventUtils",
@@ -24,7 +26,7 @@ define("tinymce/Compat", [
 	"tinymce/util/Tools",
 	"tinymce/Env"
 ], function(DOMUtils, EventUtils, ScriptLoader, AddOnManager, Tools, Env) {
-	var tinymce = window.tinymce;
+	var tinymce = exports.tinymce || window.tinymce;
 
 	/**
 	 * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.
