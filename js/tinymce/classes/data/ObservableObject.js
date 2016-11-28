@@ -65,7 +65,11 @@ define("tinymce/data/ObservableObject", [
 		// Compare objects
 		checked = {};
 		for (k in b) {
-			if (!isEqual(a[k], b[k])) {
+		
+			if (
+				b.hasOwnProperty(k) &&
+				!isEqual(a[k], b[k])
+			) {
 				return false;
 			}
 
@@ -73,7 +77,11 @@ define("tinymce/data/ObservableObject", [
 		}
 
 		for (k in a) {
-			if (!checked[k] && !isEqual(a[k], b[k])) {
+			if (
+				!checked[k] && 
+				a.hasOwnProperty(k) &&
+				!isEqual(a[k], b[k])
+			) {
 				return false;
 			}
 		}
