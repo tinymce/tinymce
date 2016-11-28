@@ -175,6 +175,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			/*eslint dot-notation: 0*/
 			data = {
 				src: data.src,
+				title: data.title,
 				alt: data.alt,
 				title: data.title,
 				width: data.width,
@@ -312,6 +313,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 			data = {
 				src: dom.getAttrib(imgElm, 'src'),
+				title: dom.getAttrib(imgElm, 'title'),
 				alt: dom.getAttrib(imgElm, 'alt'),
 				title: dom.getAttrib(imgElm, 'title'),
 				"class": dom.getAttrib(imgElm, 'class'),
@@ -381,8 +383,11 @@ tinymce.PluginManager.add('image', function(editor) {
 			imageListCtrl
 		];
 
-		if (editor.settings.image_description !== false) {
-			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Image description'});
+		if (editor.settings.image_title !== false) {
+			generalFormItems.push({name: 'title', type: 'textbox', label: 'Title'});
+		}
+		if (editor.settings.image_alt !== false) {
+			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Alternative text'});
 		}
 
 		if (editor.settings.image_title) {
