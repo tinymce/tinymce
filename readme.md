@@ -14,7 +14,7 @@ In the root directory of TinyMCE where the build.xml file is you can run ant aga
 
 `ant`
 
-Will combine, preprocess and minify the TinyMCE classes into tiny_mce.js and tiny_mce_src.js and it's jQuery variant.
+Will combine, preprocess and minify the TinyMCE classes into tiny_mce.js and tiny_mce_src.js and its jQuery variant.
 
 `ant moxiedoc`
 
