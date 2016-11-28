@@ -42,6 +42,8 @@ tinymce.PluginManager.add('code', function(editor) {
 		// contents so we need to set it when all reflows are done
 		win.find('#code').value(editor.getContent({source_view: true}));
 	}
+	
+	this.showSourceEditor = showSourceEditor;
 
 	editor.addCommand("mceCodeEditor", showDialog);
 
