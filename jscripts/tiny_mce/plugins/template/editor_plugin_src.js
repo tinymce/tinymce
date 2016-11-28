@@ -93,8 +93,11 @@
 					n.innerHTML = t._getDateTime(new Date(), ed.getParam("template_mdate_format", ed.getLang("template.mdate_format")));
 
 				// Replace selection
-				if (hasClass(n, ed.getParam('template_selected_content_classes', 'selcontent').replace(/\s+/g, '|')))
-					n.innerHTML = sel;
+				var replClass = ed.getParam('template_selected_content_classes', 'selcontent');
+				if ('' != replClass.replace(/\s+/g, '')) {
+					if (hasClass(n, replClass.replace(/\s+/g, '|')))
+						n.innerHTML = sel;
+				}
 			});
 
 			t._replaceVals(el);
