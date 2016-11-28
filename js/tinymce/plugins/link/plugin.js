@@ -502,7 +502,9 @@ tinymce.PluginManager.add('link', function(editor) {
 				// Is email and not //user@domain.com
 				if (href.indexOf('@') > 0 && href.indexOf('//') == -1 && href.indexOf('mailto:') == -1) {
 					delayedConfirm(
-						'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
+						tinymce.i18n.translate(
+							'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?'
+						),
 						function(state) {
 							if (state) {
 								href = 'mailto:' + href;
@@ -519,7 +521,9 @@ tinymce.PluginManager.add('link', function(editor) {
 				if ((editor.settings.link_assume_external_targets && !/^\w+:/i.test(href)) ||
 					(!editor.settings.link_assume_external_targets && /^\s*www[\.|\d\.]/i.test(href))) {
 					delayedConfirm(
-						'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
+						tinymce.i18n.translate(
+							'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?'
+						),
 						function(state) {
 							if (state) {
 								href = 'http://' + href;
