@@ -15,7 +15,8 @@ tinymce.PluginManager.add('textpattern', function(editor) {
 
 	patterns = editor.settings.textpattern_patterns || [
 		{start: '*', end: '*', format: 'italic'},
-		{start: '**', end: '**', format: 'bold'},
+		{start: '**', end: '**', format: 'bold'}, , //output word
+		{start: '**', end: '**', format: 'bold', transclude: false}, //output **word**
 		{start: '#', format: 'h1'},
 		{start: '##', format: 'h2'},
 		{start: '###', format: 'h3'},
@@ -87,8 +88,15 @@ tinymce.PluginManager.add('textpattern', function(editor) {
 			// Split text node and remove start/end from text node
 			container = container.splitText(startOffset);
 			container.splitText(offset - startOffset - delta);
-			container.deleteData(0, pattern.start.length);
-			container.deleteData(container.data.length - pattern.end.length, pattern.end.length);
+
+            if(pattern.transclude !== false){
+                container.deleteData(0, pattern.start.length);
+                container.deleteData(container.data.length - pattern.end.length, pattern.end.length);
+            }
+            else {
+                container.deleteData(container.data.length, pattern.end.length);
+            }
+            container.data = container.data;
 		}
 
 		selection = editor.selection;
