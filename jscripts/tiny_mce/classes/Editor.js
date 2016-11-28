@@ -496,7 +496,7 @@
 					// Use specified iframe height or the targets offsetHeight
 					h = o.iframeHeight || e.offsetHeight;
 
-					// Store away the selection when it's changed to it can be restored later with a editor.focus() call
+					// Store away the selection when it's changed so it can be restored later with an editor.focus() call
 					if (isIE) {
 						t.onInit.add(function(ed) {
 							ed.dom.bind(ed.getBody(), 'beforedeactivate keydown keyup', function() {
