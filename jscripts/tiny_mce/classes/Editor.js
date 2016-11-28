@@ -430,7 +430,7 @@
 			}
 
 			/**
-			 * Control manager instance for the editor. Will enables you to create new UI elements and change their states etc.
+			 * Control manager instance for the editor. Will enable you to create new UI elements and change their states etc.
 			 *
 			 * @property controlManager
 			 * @type tinymce.ControlManager
