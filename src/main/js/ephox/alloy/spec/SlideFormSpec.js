@@ -111,6 +111,7 @@ define(
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,
+          selectFirst: true,
           defaultView: Fun.constant([ { uiType: 'container' } ]),
           tabs: Arr.map(detail.fieldOrder(), function (f) {
             return Objects.readOptFrom(detail.fields(), f).fold(function () {
