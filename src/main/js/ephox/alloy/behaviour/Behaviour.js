@@ -2,6 +2,9 @@ define(
   'ephox.alloy.behaviour.Behaviour',
 
   [
+    'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.FieldSchema',
@@ -15,8 +18,8 @@ define(
     'global!console'
   ],
 
-  function (DomModification, AlloyLogger, FieldSchema, Objects, ValueSchema, Obj, Id, Fun, Contracts, Array, console) {
-    var contract = Contracts.ensure([ 'name', 'exhibit', 'handlers', 'schema' ]);
+  function (EventRoot, SystemEvents, EventHandler, DomModification, AlloyLogger, FieldSchema, Objects, ValueSchema, Obj, Id, Fun, Contracts, Array, console) {
+    var contract = Contracts.exactly([ 'name', 'exhibit', 'apis', 'handlers', 'schema' ]);
 
     var truncate = function (element) {
       return AlloyLogger.element(element);
@@ -78,13 +81,40 @@ define(
      return  FieldSchema.optionOf(name, ValueSchema.choose(branchKey, branches));
     };
 
+    var executeEvent = function (toggleInfo, executor) {
+      return {
+        key: SystemEvents.execute(),
+        value: EventHandler.nu({
+          run: function (component) {
+            executor(component, toggleInfo);
+          }
+        })
+      };
+    };
+
+    var loadEvent = function (toggleInfo, f) {
+      return {
+        key: SystemEvents.systemInit(),
+        value: EventHandler.nu({
+          run: function (component, simulatedEvent) {
+            if (EventRoot.isSource(component, simulatedEvent)) {
+              f(component, toggleInfo);
+            }
+          }
+        })
+      };
+    };
+
     return {
       tryActionOpt: tryActionOpt,
       exhibition: exhibition,
       contract: contract,
       activeApis: activeApis,
       schema: schema,
-      modeSchema: modeSchema
+      modeSchema: modeSchema,
+
+      executeEvent: executeEvent,
+      loadEvent: loadEvent
     };
   }
 );
