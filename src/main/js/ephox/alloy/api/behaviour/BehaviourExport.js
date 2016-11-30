@@ -4,10 +4,11 @@ define(
   [
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'global!Array'
   ],
 
-  function (Objects, Arr, Array) {
+  function (Objects, Arr, Obj, Array) {
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -42,8 +43,28 @@ define(
       );
     };
 
+
+    var santa = function (behaviour) {
+      var apis = behaviour.apis();
+
+      return Obj.map(apis, function (apiF, apiName) {
+        return function (component) {
+          return component.config(behaviour).fold(
+            function () {  
+              throw 'dog';
+            },
+            function (info) {
+              var rest = Array.prototype.slice.call(arguments, 1);
+              return apiF.apply(undefined, [ component, info ].concat(rest));
+            }
+          );
+        };
+      });
+    };
+
     return {
-      build: build
+      build: build,
+      santa: santa
     };
   }
 );

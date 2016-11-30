@@ -41,19 +41,19 @@ define(
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
 
-      var baseApis = {
-        'alloy.base.apis': CustomDefinition.toApis(info)
-      };
+      // var baseApis = {
+      //   'alloy.base.apis': CustomDefinition.toApis(info)
+      // };
 
       var events = ComponentEvents.combine(info, behaviours, baseEvents).getOrDie();
 
-      // Curry a lazy argument into the API. Invoke it before calling.
-      var apis = ComponentApis.combine(info, behaviours, baseApis, [
-        // Use the delegate if there is one.
-        ExtraArgs.lazy(function () {
-          return self;
-        })
-      ]).getOrDie();
+      // // Curry a lazy argument into the API. Invoke it before calling.
+      // var apis = ComponentApis.combine(info, behaviours, baseApis, [
+      //   // Use the delegate if there is one.
+      //   ExtraArgs.lazy(function () {
+      //     return self;
+      //   })
+      // ]).getOrDie();
    
 
       var subcomponents = Cell(info.components());
@@ -84,11 +84,16 @@ define(
         subcomponents.set(subs);
       };
 
-
+      var config = function (behaviour) {
+        return info[behaviour.name()]();
+      };
 
       var self = {
         getSystem: systemApi.get,
         debugSystem: debugSystem,
+
+        config: config,
+
         delegate: info.delegate,
         connect: connect,
         disconnect: disconnect,
@@ -98,7 +103,7 @@ define(
         components: subcomponents.get,
         item: Fun.constant(item),
         events: Fun.constant(events),
-        apis: Fun.constant(apis),
+        // apis: Fun.constant(apis),
 
         logSpec: function () {
           console.log('debugging :: component spec', spec);

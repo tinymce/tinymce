@@ -16,7 +16,7 @@ define(
   ],
 
   function (DomModification, AlloyLogger, FieldSchema, Objects, ValueSchema, Obj, Id, Fun, Contracts, Array, console) {
-    var contract = Contracts.exactly([ 'name', 'exhibit', 'handlers', 'apis', 'schema' ]);
+    var contract = Contracts.ensure([ 'name', 'exhibit', 'handlers', 'schema' ]);
 
     var truncate = function (element) {
       return AlloyLogger.element(element);
@@ -48,7 +48,6 @@ define(
         exhibit: function () {
           return DomModification.nu(modification);
         },
-        apis: Fun.constant({ }),
         handlers: Fun.constant({ }),
         // Make this better.
         schema: Fun.constant(

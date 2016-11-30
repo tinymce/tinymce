@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.behaviour.CustomBehaviour',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
@@ -18,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, CustomBehaviour, HtmlDisplay, DomModification, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
+  function (Gui, GuiFactory, Toggling, CustomBehaviour, HtmlDisplay, DomModification, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -97,6 +98,8 @@ define(
           }
         }
       );
+
+      Toggling.select(button2);
 
       var customButton = HtmlDisplay.section(
         gui,

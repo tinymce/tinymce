@@ -2,10 +2,17 @@ define(
   'ephox.alloy.api.behaviour.Toggling',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport'
+    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.behaviour.Toggling'
   ],
 
-  function (BehaviourExport) {
+  function (BehaviourExport, Toggling) {
+    return BehaviourExport.santa(
+      Toggling,
+      {
+
+      }
+    );
     return BehaviourExport.build(
       'toggling',
       [
