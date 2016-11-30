@@ -12,9 +12,11 @@ define(
   function (ActiveToggle, ToggleApis, ToggleSchema, BehaviourExport, Toggling) {
     return BehaviourExport.santa(
       ToggleSchema,
-      ToggleApis,
-      ActiveToggle
+      'toggling',
+      ActiveToggle,
+      ToggleApis
     );
+
     return BehaviourExport.build(
       'toggling',
       [

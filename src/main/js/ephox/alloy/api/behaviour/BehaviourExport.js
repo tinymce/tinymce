@@ -60,7 +60,7 @@ define(
     // };
 
 
-    var santa = function (schema, name, activeApis, apis) {
+    var santa = function (schema, name, active, apis) {
       return Merger.deepMerge(
         Obj.map(apis, function (apiF, apiName) {
           return function (component) {

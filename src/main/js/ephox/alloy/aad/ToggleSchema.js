@@ -2,12 +2,11 @@ define(
   'ephox.alloy.aad.ToggleSchema',
 
   [
-    'ephox.alloy.behaviour.Behaviour',
     'ephox.boulder.api.FieldSchema'
   ],
 
-  function (Behaviour, FieldSchema) {
-    return Behaviour.schema('toggling', [
+  function (FieldSchema) {
+    return [
       FieldSchema.defaulted('selected', false),
       FieldSchema.defaulted('toggleClass', 'selected'),
       FieldSchema.defaulted('toggleOnExecute', true),
@@ -17,6 +16,6 @@ define(
         // TODO: Do this based on presence of aria-haspopup ?
         FieldSchema.option('aria-expanded-attr')
       ])
-    ]);
+    ];
   }
 );
