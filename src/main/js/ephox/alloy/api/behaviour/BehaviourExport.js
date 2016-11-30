@@ -5,10 +5,12 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'global!Array'
   ],
 
-  function (Objects, Arr, Obj, Array) {
+  function (Objects, Arr, Obj, Merger, Fun, Array) {
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -44,22 +46,32 @@ define(
     };
 
 
-    var santa = function (behaviour) {
-      var apis = behaviour.apis();
-
-      return Obj.map(apis, function (apiF, apiName) {
-        return function (component) {
-          return component.config(behaviour).fold(
-            function () {  
-              throw 'dog';
-            },
-            function (info) {
-              var rest = Array.prototype.slice.call(arguments, 1);
-              return apiF.apply(undefined, [ component, info ].concat(rest));
-            }
-          );
-        };
-      });
+    var santa = function (schema, name, activeApis, apis) {
+      return Merger.deepMerge(
+        Obj.map(apis, function (apiF, apiName) {
+          return function (component) {
+            return component.config({
+              name: Fun.constant(name)
+            }).fold(
+              function () {  
+                throw 'dog';
+              },
+              function (info) {
+                var rest = Array.prototype.slice.call(arguments, 1);
+                return apiF.apply(undefined, [ component, info ].concat(rest));
+              }
+            );
+          };
+        }),
+        {
+          config: function (spec) {
+            return {
+              key: behaviour.name(),
+              value: spec
+            };
+          }
+        }
+      );
     };
 
     return {

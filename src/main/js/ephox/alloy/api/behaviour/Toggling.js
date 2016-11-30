@@ -2,16 +2,18 @@ define(
   'ephox.alloy.api.behaviour.Toggling',
 
   [
+    'ephox.alloy.aad.ActiveToggle',
+    'ephox.alloy.aad.ToggleApis',
+    'ephox.alloy.aad.ToggleSchema',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.behaviour.Toggling'
   ],
 
-  function (BehaviourExport, Toggling) {
+  function (ActiveToggle, ToggleApis, ToggleSchema, BehaviourExport, Toggling) {
     return BehaviourExport.santa(
-      Toggling,
-      {
-
-      }
+      ToggleSchema,
+      ToggleApis,
+      ActiveToggle
     );
     return BehaviourExport.build(
       'toggling',

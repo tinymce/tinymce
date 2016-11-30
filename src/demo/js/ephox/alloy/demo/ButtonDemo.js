@@ -8,6 +8,7 @@ define(
     'ephox.alloy.behaviour.CustomBehaviour',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Toggling, CustomBehaviour, HtmlDisplay, DomModification, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
+  function (Gui, GuiFactory, Toggling, CustomBehaviour, HtmlDisplay, DomModification, Objects, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -57,6 +58,22 @@ define(
         }
       });
 
+      var magic = function (obj) {
+        return {
+          info: function () {
+            return {
+              dog: Fun.constant('dog')
+            };
+          },
+          raw: obj,
+          name: 'magic'
+        };
+      };
+
+      var deriveCapabilities = function (caps) {
+        return Objects.wrapAll(caps);
+      };
+
       var button1 = HtmlDisplay.section(
         gui,
         'This button is a <code>button</code> tag with an image',
@@ -93,11 +110,18 @@ define(
           action: function () {
             console.log('*** Font ButtonDemo click ***');
           },
+          capabilities: deriveCapabilities([
+            Toggling.config({
+              toggleClass: 'demo-selected'
+            })
+          ]),
           toggling: {
             toggleClass: 'demo-selected'
           }
         }
       );
+
+      button2.logSpec();
 
       Toggling.select(button2);
 
