@@ -47,7 +47,7 @@ define(
         });
       };
 
-      var schema = FieldSchema.field(name, name, FieldPresence.asOption(), customApi.schema());
+      var schema = FieldSchema.optionOf(name, customApi.schema());
 
       return Behaviour.contract({
         exhibit: exhibit,

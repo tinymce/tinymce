@@ -25,12 +25,7 @@ define(
             }
           };
         },
-        schema: Fun.constant(FieldSchema.field(
-          'dropdown.api',
-          'dropdown.api',
-          FieldPresence.asOption(),
-          ValueSchema.anyValue()
-        ))
+        schema: Fun.constant(FieldSchema.option('dropdown.api'))
       });
     };
   }

@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.sandbox.Manager',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (ComponentStructure, Keying, Positioning, Manager, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Cell, Body, Insert) {
+  function (ComponentStructure, Keying, Positioning, Fields, Manager, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyAnchor'),
 
@@ -28,14 +29,7 @@ define(
 
       FieldSchema.strict('scaffold'),
       
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('container')
-        ])
-      )
+      Fields.members([ 'container' ]),
     ]);
 
     return function (rawUiSpec) {

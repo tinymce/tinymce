@@ -2,6 +2,7 @@ define(
   'ephox.alloy.menu.grid.GridView',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.grid.GridSandbox',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
@@ -10,17 +11,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (GridSandbox, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Fields, GridSandbox, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var schema = [
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('grid'),
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'grid', 'item' ]),
 
       FieldSchema.field(
         'markers',
@@ -29,15 +22,7 @@ define(
         MenuMarkers.itemSchema()
       ),
 
-      FieldSchema.field(
-        'initSize',
-        'initSize',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('numColumns'),
-          FieldSchema.strict('numRows')
-        ])
-      ),
+      Fields.initSize(),
 
       FieldSchema.defaulted('preprocess', Fun.identity),
 

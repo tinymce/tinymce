@@ -25,8 +25,9 @@ define(
       FieldSchema.defaulted('toggleOnExecute', true),
 
       FieldSchema.defaultedObjOf('aria', { }, [
-        FieldSchema.field('aria-presssed-attr', 'pressedAttr', FieldPresence.defaulted('aria-pressed'), ValueSchema.anyValue()),
-        FieldSchema.field('aria-expanded-attr', 'expandedAttr', FieldPresence.asOption(), ValueSchema.anyValue())
+        FieldSchema.defaulted('aria-presssed-attr', 'aria-pressed'),
+        // TODO: Do this based on presence of aria-haspopup ?
+        FieldSchema.option('aria-expanded-attr')
       ])
     ]);
 

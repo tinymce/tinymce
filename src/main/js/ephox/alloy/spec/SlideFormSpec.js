@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.form.FormUis',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.TabbedSpec',
@@ -23,21 +24,14 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, Highlighting, Representing, FormUis, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
+  function (SystemEvents, Highlighting, Representing, Fields, FormUis, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
       FieldSchema.strict('fieldOrder'),
       FieldSchema.strict('fields'),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('ui')
-        ])
-      )
+      Fields.members([ 'ui' ])
     ];
 
     var make = function (spec) {

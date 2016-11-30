@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.util.ItemEvents',
@@ -35,7 +36,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, Representing, Sandboxing, EventHandler, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, SystemEvents, Highlighting, Keying, Positioning, Representing, Sandboxing, EventHandler, Fields, LayeredState, HotspotViews, ItemEvents, MenuEvents, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyAnchor'),
 
@@ -60,15 +61,7 @@ define(
 
       FieldSchema.strict('backgroundClass'),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('menu'),
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'menu', 'item' ]),
 
       FieldSchema.strict('onHighlight')
     ]);

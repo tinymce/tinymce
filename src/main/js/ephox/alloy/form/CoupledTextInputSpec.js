@@ -24,14 +24,9 @@ define(
 
       FieldSchema.strict('onLockedChange'),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('lockClass')
-        ])
-      ),
+      FieldSchema.strictObjOf('markers', [
+        FieldSchema.strict('lockClass')
+      ]),
 
       FieldSchema.state('builder', function () {
         return builder;

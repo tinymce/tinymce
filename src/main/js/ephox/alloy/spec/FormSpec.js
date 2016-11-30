@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.form.FormUis',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -14,18 +15,11 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Representing, FormUis, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
+  function (Representing, Fields, FormUis, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Obj, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('ui')
-        ])
-      )
+      Fields.members([ 'ui' ])
     ];
 
     var make = function (spec) {

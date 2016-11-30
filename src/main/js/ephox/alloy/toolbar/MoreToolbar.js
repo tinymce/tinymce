@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.MoreOverflow',
@@ -16,7 +17,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Sliding, Behaviour, SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
+  function (Sliding, Behaviour, Fields, SpecSchema, UiSubstitutes, MoreOverflow, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
@@ -28,14 +29,7 @@ define(
 
       FieldSchema.defaulted('onEscape', Option.none),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('overflow')
-        ])
-      )
+      Fields.members([ 'overflow' ])
     ];
 
     var make = function (spec) {

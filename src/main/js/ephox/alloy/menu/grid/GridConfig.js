@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Manager',
@@ -21,7 +22,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (ComponentStructure, SystemEvents, Keying, Positioning, EventHandler, HotspotViews, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Option, Cell, Body, Insert) {
+  function (ComponentStructure, SystemEvents, Keying, Positioning, EventHandler, Fields, HotspotViews, MenuMarkers, Manager, FieldPresence, FieldSchema, Objects, ValueSchema, Merger, Option, Cell, Body, Insert) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('lazyAnchor'),
 
@@ -32,32 +33,11 @@ define(
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('flat'),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.itemSchema()
-      ),
+      FieldSchema.strictOf('markers', MenuMarkers.itemSchema()),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('grid'),
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'grid', 'item' ]),
 
-      FieldSchema.field(
-        'initSize',
-        'initSize',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('numColumns'),
-          FieldSchema.strict('numRows')
-        ])
-      )
+      Fields.initSize()
     ]);
 
     return function (rawUiSpec) {

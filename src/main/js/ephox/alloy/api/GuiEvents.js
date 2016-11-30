@@ -18,10 +18,6 @@ define(
   ],
 
   function (Keys, SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Result, DomEvent, Node, Traverse, setTimeout) {
-    var isFunction = function (v) {
-      return Type.isFunction(v) ? Result.value(v) : Result.error('Not a function');
-    };
-
     var isDangerous = function (event) {
       // Will trigger the Back button in the browser
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
@@ -31,8 +27,8 @@ define(
 
     var settingsSchema = ValueSchema.objOf([
       // triggerEvent(eventName, event)
-      FieldSchema.field('triggerEvent', 'triggerEvent', FieldPresence.strict(), ValueSchema.valueOf(isFunction)),
-      FieldSchema.field('broadcastEvent', 'broadcastEvent', FieldPresence.strict(), ValueSchema.valueOf(isFunction)),
+      FieldSchema.strictFunction('triggerEvent'),
+      FieldSchema.strictFunction('broadcastEvent'),
       FieldSchema.defaulted('stopBackspace', true)
     ]);
 

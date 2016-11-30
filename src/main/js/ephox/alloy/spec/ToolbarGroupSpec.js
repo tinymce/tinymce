@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -13,19 +14,12 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Behaviour, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (Behaviour, Fields, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('items'),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'item' ]),
 
       FieldSchema.defaulted('hasTabstop', true),
 

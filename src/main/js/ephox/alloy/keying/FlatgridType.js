@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -20,21 +21,14 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Focus, SelectorFind) {
+  function (Keys, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('onEscape', Option.none),
       FieldSchema.defaulted('captureTab', false),
-      FieldSchema.field(
-        'initSize',
-        'initSize',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('numColumns'),
-          FieldSchema.strict('numRows')
-        ])
-      ),
+
+      Fields.initSize(),
       FieldSchema.state('dimensions', function () {
         return Cell(Option.none());
       })

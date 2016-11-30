@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.grid.GridConfig',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Dismissal',
@@ -13,7 +14,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, GridConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
+  function (ComponentStructure, Fields, GridConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyAnchor'),
@@ -31,25 +32,9 @@ define(
         MenuMarkers.itemSchema()
       ),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('grid'),
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'grid', 'item' ]),
 
-      FieldSchema.field(
-        'initSize',
-        'initSize',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('numColumns'),
-          FieldSchema.strict('numRows')
-        ])
-      )
+      Fields.initSize()
     ];
 
     var make = function (spec) {

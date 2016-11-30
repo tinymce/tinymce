@@ -19,9 +19,9 @@ define(
         'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
       );
       return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOf([
-        FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
-        FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue()),
-        FieldSchema.field('run', 'run', FieldPresence.defaulted(Fun.noop), ValueSchema.anyValue())
+        FieldSchema.defaulted('can', Fun.constant(true)),
+        FieldSchema.defaulted('abort', Fun.constant(false)),
+        FieldSchema.defaulted('run', Fun.noop)
       ]), parts);
     };
 

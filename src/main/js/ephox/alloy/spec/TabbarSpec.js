@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.Compare'
   ],
 
-  function (SystemEvents, Highlighting, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Compare) {
+  function (SystemEvents, Highlighting, EventHandler, Fields, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Compare) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -27,14 +28,7 @@ define(
       FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.strict('dom'),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('tab')
-        ])
-      ),
+      Fields.members([ 'tab' ]),
 
       FieldSchema.defaulted('clickToDismiss', true),
 

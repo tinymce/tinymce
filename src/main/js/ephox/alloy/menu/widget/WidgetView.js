@@ -2,6 +2,7 @@ define(
   'ephox.alloy.menu.widget.WidgetView',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.widget.WidgetSandbox',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -9,16 +10,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (WidgetSandbox, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Fields, WidgetSandbox, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var schema = [
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('container')
-        ])
-      ),
+      Fields.members([ 'container' ]),
 
       FieldSchema.strict('scaffold'),
 

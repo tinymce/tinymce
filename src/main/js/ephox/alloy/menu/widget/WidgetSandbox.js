@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.widget.WidgetConfig',
     'ephox.alloy.sandbox.Dismissal',
@@ -17,7 +18,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, SystemEvents, Sandboxing, EventHandler, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Option) {
+  function (ComponentStructure, SystemEvents, Sandboxing, EventHandler, Fields, HotspotViews, WidgetConfig, Dismissal, SpecSchema, FieldPresence, FieldSchema, Objects, ValueSchema, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyAnchor'),
@@ -28,14 +29,7 @@ define(
 
       FieldSchema.strict('scaffold'),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('container')
-        ])
-      )
+      Fields.members([ 'container' ])
     ];
 
     var make = function (spec) {

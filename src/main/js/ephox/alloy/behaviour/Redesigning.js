@@ -28,7 +28,7 @@ define(
     var behaviourName = 'redesigning';
 
     var schema = Behaviour.schema(behaviourName, [
-      FieldSchema.field('index', 'index', FieldPresence.strict(), ValueSchema.anyValue())
+      FieldSchema.strict('index')
     ]);
 
     var insertInPosition = function (parent, placee, components) {

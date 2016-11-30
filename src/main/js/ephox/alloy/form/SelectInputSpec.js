@@ -2,6 +2,7 @@ define(
   'ephox.alloy.form.SelectInputSpec',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldPresence',
@@ -12,7 +13,7 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (FormLabelSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Value) {
+  function (Fields, FormLabelSpec, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Value) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('label'),
@@ -21,14 +22,7 @@ define(
 
       FieldSchema.strict('options'),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('option')
-        ])
-      ),
+      Fields.members([ 'option' ]),
 
       FieldSchema.state('builder', function () {
         return builder;

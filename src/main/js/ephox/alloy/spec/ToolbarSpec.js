@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.toolbar.Overflowing',
@@ -17,21 +18,14 @@ define(
     'ephox.perhaps.Result'
   ],
 
-  function (Replacing, SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Result) {
+  function (Replacing, Fields, SpecSchema, UiSubstitutes, Overflowing, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Result) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('initGroups'),
 
       FieldSchema.defaulted('shell', true),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('group')
-        ])
-      )
+      Fields.members([ 'group' ])
     ];
 
     var make = function (spec) {

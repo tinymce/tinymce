@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredConfig',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Dismissal',
@@ -14,7 +15,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (ComponentStructure, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option) {
+  function (ComponentStructure, Fields, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyAnchor'),
@@ -35,15 +36,7 @@ define(
         MenuMarkers.schema()
       ),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('menu'),
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'menu', 'item' ]),
 
       FieldSchema.strict('onHighlight')
     ];

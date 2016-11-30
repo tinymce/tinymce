@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, Highlighting, Representing, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, SelectorFind) {
+  function (SystemEvents, Highlighting, Representing, EventHandler, Fields, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, SelectorFind) {
     /*
      <fieldset>
        <legend>Border</legend>
@@ -38,24 +39,12 @@ define(
       FieldSchema.strict('candidates'),
       FieldSchema.option('selectedValue'),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('itemClass'),
-          FieldSchema.strict('selectedClass')
-        ])
-      ),
+      FieldSchema.strictObjOf('markers', [
+        FieldSchema.strict('itemClass'),
+        FieldSchema.strict('selectedClass')
+      ]),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('radio')
-        ])
-      ),
+      Fields.members([ 'radio' ]),
   
       FieldSchema.state('builder', function () {
         return builder;

@@ -40,17 +40,6 @@ define(
   ],
 
   function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Remembering, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
-    var domSchema = ValueSchema.objOf([
-      FieldSchema.strict('tag'),
-      FieldSchema.defaulted('styles', {}),
-      FieldSchema.defaulted('classes', []),
-      FieldSchema.defaulted('attributes', {}),
-      FieldSchema.field('value', 'value', FieldPresence.asOption(), ValueSchema.anyValue()),
-      FieldSchema.field('innerHtml', 'innerHtml', FieldPresence.asOption(), ValueSchema.anyValue())
-      // Note, no children.
-    ]);
-
-
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('behaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
@@ -60,7 +49,15 @@ define(
       // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
-        FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
+        FieldSchema.strictObjOf('dom', 'dom', FieldPresence.strict(), [
+          // Note, no children.
+          FieldSchema.strict('tag'),
+          FieldSchema.defaulted('styles', {}),
+          FieldSchema.defaulted('classes', []),
+          FieldSchema.defaulted('attributes', {}),
+          FieldSchema.option('value'),
+          FieldSchema.option('innerHtml')
+        ]),
         FieldSchema.strict('components'),
         FieldSchema.strict('uid'),
         FieldSchema.defaulted('behaviours', [ ]),
@@ -89,14 +86,9 @@ define(
         FieldSchema.defaulted('postprocess', Fun.noop),
 
         // Could wrap this up in a behaviour ...but won't for the time being
-        FieldSchema.field(
-          'delegate',
-          'delegate',
-          FieldPresence.asOption(),
-          ValueSchema.objOf([
-            FieldSchema.strict('get')
-          ])
-        ),
+        FieldSchema.optionObjOf('delegate', [
+          FieldSchema.strict('get')
+        ]),
         FieldSchema.state('originalSpec', Fun.identity)
       ].concat(behaviourSchema)), spec);
     };

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
@@ -13,7 +14,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Highlighting, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (Highlighting, Fields, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('action'),
@@ -28,15 +29,7 @@ define(
         ])
       ),
 
-      FieldSchema.strict('buttons'),
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('button')
-        ])
-      ),
+      Fields.members([ 'button' ]),
 
       FieldSchema.strict('uid')
     ];

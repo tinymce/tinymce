@@ -2,6 +2,7 @@ define(
   'ephox.alloy.menu.layered.LayeredView',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredSandbox',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
@@ -10,17 +11,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (LayeredSandbox, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Fun) {
+  function (Fields, LayeredSandbox, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var schema = [
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('menu'),
-          FieldSchema.strict('item')
-        ])
-      ),
+      Fields.members([ 'menu', 'item' ]),
 
       FieldSchema.field(
         'markers',

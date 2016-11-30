@@ -193,17 +193,12 @@ define(
       FieldSchema.state('movement', Movement),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.defaulted('onDrop', Fun.noop),
-      FieldSchema.field(
-        'snaps',
-        'snaps',
-        FieldPresence.asOption(),
-        ValueSchema.objOf([
-          FieldSchema.strict('getSnapPoints'),
-          FieldSchema.strict('leftAttr'),
-          FieldSchema.strict('topAttr'),
-          FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
-        ])
-      ),
+      FieldSchema.optionObjOf('snaps', [
+        FieldSchema.strict('getSnapPoints'),
+        FieldSchema.strict('leftAttr'),
+        FieldSchema.strict('topAttr'),
+        FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
+      ]),
       FieldSchema.state('dragger', instance)
     ];
 

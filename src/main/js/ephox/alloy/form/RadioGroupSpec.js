@@ -40,23 +40,11 @@ define(
       FieldSchema.defaulted('useLabel', true),
       FieldSchema.defaulted('useName', true),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('radioSelector')
-        ])
-      ),
+      FieldSchema.strictObjOf('markers', [
+        FieldSchema.strict('radioSelector')
+      ]),
 
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('radio')
-        ])
-      ),
+      FieldSchema.members([ 'radio' ]),
   
       FieldSchema.strict('name'),
       FieldSchema.state('builder', function () {

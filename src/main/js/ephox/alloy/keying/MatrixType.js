@@ -23,15 +23,10 @@ define(
 
   function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Focus, SelectorFilter, SelectorFind) {
     var schema = [
-      FieldSchema.field(
-        'selectors',
-        'selectors',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('row'),
-          FieldSchema.strict('cell')
-        ])
-      ),
+      FieldSchema.strictObjOf('selectors', [
+        FieldSchema.strict('row'),
+        FieldSchema.strict('cell')
+      ]),
 
       // Used to determine whether pressing right/down at the end cycles back to the start/top
       FieldSchema.defaulted('cycles', true),

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.build.ItemType',
     'ephox.alloy.menu.build.SeparatorType',
     'ephox.alloy.menu.build.WidgetType',
@@ -24,7 +25,7 @@ define(
     'global!Error'
   ],
 
-  function (Highlighting, EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (Highlighting, EventHandler, Fields, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -44,24 +45,10 @@ define(
         FieldPresence.strict(),
         MenuMarkers.itemSchema()
       ),
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('item')
-        ])
-      ),
 
-      FieldSchema.field(
-        'initSize',
-        'initSize',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('numColumns'),
-          FieldSchema.strict('numRows')
-        ])
-      )
+      Fields.members([ 'item' ]),
+      
+      Fields.initSize()
     ];
 
     var make = function (spec) {

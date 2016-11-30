@@ -28,7 +28,7 @@ define(
         Result.value,
         ValueSchema.objOf([
           FieldSchema.strict('onReceive'),
-          FieldSchema.field('schema', 'schema', FieldPresence.defaulted(ValueSchema.anyValue()), ValueSchema.anyValue())
+          FieldSchema.defaulted('schema', ValueSchema.anyValue())
         ])
       ))
     ]);

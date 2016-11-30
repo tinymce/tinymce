@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.build.ItemType',
     'ephox.alloy.menu.build.SeparatorType',
     'ephox.alloy.menu.build.WidgetType',
@@ -24,7 +25,7 @@ define(
     'global!Error'
   ],
 
-  function (Highlighting, EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (Highlighting, EventHandler, Fields, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -45,14 +46,8 @@ define(
         FieldPresence.strict(),
         MenuMarkers.schema()
       ),
-      FieldSchema.field(
-        'members',
-        'members',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('item')
-        ])
-      ),
+
+      Fields.members([ 'item' ]),
 
       FieldSchema.defaulted('fakeFocus', false),
       FieldSchema.defaulted('onHighlight', Fun.noop)
