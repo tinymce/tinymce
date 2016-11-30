@@ -15,12 +15,8 @@ define(
   function (Behaviour, EventHandler, DomDefinition, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'unselecting';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.defaulted(false),
-      ValueSchema.anyValue()
-    );
+    // May need to fix.
+    var schema = Behaviour.schema('unselecting', [ ]);
 
     var doesExhibit = function (base) {
       // Don't care about base for this one.

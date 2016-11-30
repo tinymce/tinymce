@@ -18,18 +18,13 @@ define(
   ],
 
   function (Cycles, Behaviour, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Option, Class, SelectorFilter, SelectorFind) {
-    var schema = FieldSchema.field(
-      'highlighting',
-      'highlighting',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('highlightClass'),
-        FieldSchema.strict('itemClass'),
+    var schema = Behaviour.schema('highlighting', [
+      FieldSchema.strict('highlightClass'),
+      FieldSchema.strict('itemClass'),
 
-        FieldSchema.defaulted('onHighlight', Fun.noop),
-        FieldSchema.defaulted('onDehighlight', Fun.noop)
-      ])
-    );
+      FieldSchema.defaulted('onHighlight', Fun.noop),
+      FieldSchema.defaulted('onDehighlight', Fun.noop)
+    ]);
 
     var exhibit = function (info, base) {
       return DomModification.nu({ });

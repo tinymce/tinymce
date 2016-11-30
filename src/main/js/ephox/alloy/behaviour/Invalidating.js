@@ -20,38 +20,24 @@ define(
   function (Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, AriaVoice, Fun, Option, Body, Class, Html) {
     var behaviourName = 'invalidating';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('invalidClass'),
-        FieldSchema.field(
-          'notify',
-          'notify',
-          FieldPresence.asOption(),
-          ValueSchema.objOf([
-            FieldSchema.defaulted('aria', 'alert'),
-            // Maybe we should use something else.
-            FieldSchema.defaulted('getContainer', Option.none),
-            FieldSchema.defaulted('validHtml', ''),
-            FieldSchema.defaulted('onValid', Fun.noop),
-            FieldSchema.defaulted('onInvalid', Fun.noop),
-            FieldSchema.defaulted('onValidate', Fun.noop)
-          ])
-        ),
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.strict('invalidClass'),
+      
+      FieldSchema.optionObjOf('notify', [
+        FieldSchema.defaulted('aria', 'alert'),
+        // Maybe we should use something else.
+        FieldSchema.defaulted('getContainer', Option.none),
+        FieldSchema.defaulted('validHtml', ''),
+        FieldSchema.defaulted('onValid', Fun.noop),
+        FieldSchema.defaulted('onInvalid', Fun.noop),
+        FieldSchema.defaulted('onValidate', Fun.noop)
+      ]),
 
-        FieldSchema.field(
-          'validator',
-          'validator',
-          FieldPresence.asOption(),
-          ValueSchema.objOf([
-            FieldSchema.strict('validate'),
-            FieldSchema.defaulted('onEvent', 'input')
-          ])
-        )
+      FieldSchema.optionObjOf('validator', [
+        FieldSchema.strict('validate'),
+        FieldSchema.defaulted('onEvent', 'input')
       ])
-    );
+    ]);
 
     var doMarkValid = function (component, invalidInfo) {
       Class.remove(component.element(), invalidInfo.invalidClass());

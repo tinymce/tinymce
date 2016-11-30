@@ -19,6 +19,17 @@ define(
   ],
 
   function (EventRoot, SystemEvents, Behaviour, EventHandler, DomModification, AlloyLogger, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Attr, Class) {
+     var schema = Behaviour.schema('toggling', [
+      FieldSchema.defaulted('selected', false),
+      FieldSchema.defaulted('toggleClass', 'selected'),
+      FieldSchema.defaulted('toggleOnExecute', true),
+
+      FieldSchema.defaultedObjOf('aria', { }, [
+        FieldSchema.field('aria-presssed-attr', 'pressedAttr', FieldPresence.defaulted('aria-pressed'), ValueSchema.anyValue()),
+        FieldSchema.field('aria-expanded-attr', 'expandedAttr', FieldPresence.asOption(), ValueSchema.anyValue())
+      ])
+    ]);
+
     var doesExhibit = function (base, toggleInfo) {
       return DomModification.nu({ });
     };
@@ -124,26 +135,6 @@ define(
         }
       );
     };
-
-    var schema = FieldSchema.field(
-      'toggling',
-      'toggling',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.defaulted('selected', false),
-        FieldSchema.defaulted('toggleClass', 'selected'),
-        FieldSchema.defaulted('toggleOnExecute', true),
-        FieldSchema.field(
-          'aria',
-          'aria',
-          FieldPresence.defaulted({ 'aria-pressed-attr': 'aria-pressed' }),
-          ValueSchema.objOf([
-            FieldSchema.field('aria-presssed-attr', 'pressedAttr', FieldPresence.defaulted('aria-pressed'), ValueSchema.anyValue()),
-            FieldSchema.field('aria-expanded-attr', 'expandedAttr', FieldPresence.asOption(), ValueSchema.anyValue())
-          ])
-        )
-      ])
-    );
 
     return Behaviour.contract({
       name: Fun.constant('toggling'),

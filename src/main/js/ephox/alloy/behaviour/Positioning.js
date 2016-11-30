@@ -22,15 +22,10 @@ define(
   ],
 
   function (Behaviour, DomModification, AnchorSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Anchor, Boxes, Origins, SimpleLayout, Css, Insert, Location, Remove, window) {
-    var schema = FieldSchema.field(
-      'positioning',
-      'positioning',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.defaulted('useFixed', false),
-        FieldSchema.option('bounds')
-      ])
-    );
+    var schema = Behaviour.schema('positioning', [
+      FieldSchema.defaulted('useFixed', false),
+      FieldSchema.option('bounds')
+    ]);
 
     var getFixedOrigin = function () {
       return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);

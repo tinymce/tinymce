@@ -14,17 +14,9 @@ define(
   function (Behaviour, DomModification, MouseDragging, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'dragging';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.choose(
-        'mode',
-        {
-          'mouse': MouseDragging
-        }
-      )
-    );
+    var schema = Behaviour.modeSchema(behaviourName, 'mode', {
+      'mouse': MouseDragging
+    });   
 
     var exhibit = function (info, base) {
       return info[behaviourName]().fold(function () {

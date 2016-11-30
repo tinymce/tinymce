@@ -16,20 +16,15 @@ define(
   ],
 
   function (Positioning, Behaviour, DomModification, Manager, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Remove) {
-    var schema = FieldSchema.field(
-      'sandboxing',
-      'sandboxing',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.state('state', function () {
-          return Cell(Option.none());
-        }),
-        FieldSchema.defaulted('onOpen', Fun.noop),
-        FieldSchema.defaulted('onClose', Fun.noop),
-        FieldSchema.strict('lazySink'),
-        FieldSchema.strict('manager')
-      ])
-    );
+    var schema = Behaviour.schema('sandboxing', [
+      FieldSchema.state('state', function () {
+        return Cell(Option.none());
+      }),
+      FieldSchema.defaulted('onOpen', Fun.noop),
+      FieldSchema.defaulted('onClose', Fun.noop),
+      FieldSchema.strict('lazySink'),
+      FieldSchema.strict('manager')
+    ]);
 
     var clear = function (sandbox, sInfo) {
       if (sInfo.state().get().isSome()) {

@@ -15,18 +15,11 @@ define(
   ],
 
   function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Focus) {
-    var schema = FieldSchema.field(
-      'focusing',
-      'focusing',
-      FieldPresence.asDefaultedOption({
-        onFocus: Fun.noop
-      }),
-      ValueSchema.objOf([
+    var schema = Behaviour.schema('focusing', [
         // TODO: Work out when we want to  call this. Only when it is has changed?
         FieldSchema.defaulted('onFocus', Fun.noop),
         FieldSchema.defaulted('ignore', false)
-      ])
-    );
+    ]);
 
     var doFocus = function (component, focusInfo) {
       if (! focusInfo.ignore()) {

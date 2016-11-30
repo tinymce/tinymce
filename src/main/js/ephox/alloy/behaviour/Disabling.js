@@ -27,16 +27,11 @@ define(
       'textarea'
     ];
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        // TODO: Work out when we want to  call this. Only when it is has changed?
-        FieldSchema.defaulted('disabled', false),
-        FieldSchema.option('disableClass')
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      // TODO: Work out when we want to  call this. Only when it is has changed?
+      FieldSchema.defaulted('disabled', false),
+      FieldSchema.option('disableClass')
+    ]);
 
     var hasNative = function (component) {
       return Arr.contains(nativeDisabled, Node.name(component.element()));

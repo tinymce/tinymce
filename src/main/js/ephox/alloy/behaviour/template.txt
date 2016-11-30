@@ -18,15 +18,9 @@ define(
   function (SystemEvents, Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Attr, Class) {
     var behaviourName = 'disabling';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        /* */
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
 
+    ]);
 
 
     var doCommand1 = function (component, bInfo) {

@@ -27,14 +27,9 @@ define(
 
     var behaviourName = 'redesigning';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.field('index', 'index', FieldPresence.strict(), ValueSchema.anyValue())
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.field('index', 'index', FieldPresence.strict(), ValueSchema.anyValue())
+    ]);
 
     var insertInPosition = function (parent, placee, components) {
       var eq = Fun.curry(Fun.tripleEquals, placee);

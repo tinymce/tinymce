@@ -13,15 +13,10 @@ define(
   function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'representing';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('query'),
-        FieldSchema.strict('set')
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.strict('query'),
+      FieldSchema.strict('set')
+    ]);
 
     var doGetValue = function (component, repInfo) {
       return repInfo.query()(component);

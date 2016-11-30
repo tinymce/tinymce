@@ -19,15 +19,10 @@ define(
   function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Arr, AriaFocus, Fun, Option, Cell, Insert, Remove) {
     var behaviourName = 'replacing';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
+    var schema = Behaviour.schema(behaviourName, [
       // I can probably get rid of this state, now that there is a sync components method.
-      ValueSchema.objOf([
-        FieldSchema.state('state', function () { return Cell(Option.none()); })
-      ])
-    );
+      FieldSchema.state('state', function () { return Cell(Option.none()); })
+    ]);
 
     var clearOld = function (component, replaceInfo) {
       var old = doContents(component, replaceInfo);

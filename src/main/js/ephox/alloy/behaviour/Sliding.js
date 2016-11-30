@@ -16,29 +16,21 @@ define(
   function (Behaviour, DomModification, SlidingDimension, FieldPresence, FieldSchema, ValueSchema, Fun, Height, Width) {
     var behaviourName = 'sliding';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.choose(
-        'mode',
-        {
-          // Note, these are only fields.
-          height: SlidingDimension(
-            'height',
-            function (elem) {
-              return Height.get(elem) + 'px';
-            }
-          ),
-          width: SlidingDimension(
-            'width',
-            function (elem) {
-              return Width.get(elem) + 'px';
-            }
-          )
+    var schema = Behaviour.modeSchema(behaviourName, 'mode', {
+      // Note, these are only fields.
+      height: SlidingDimension(
+        'height',
+        function (elem) {
+          return Height.get(elem) + 'px';
+        }
+      ),
+      width: SlidingDimension(
+        'width',
+        function (elem) {
+          return Width.get(elem) + 'px';
         }
       )
-    );
+    });
 
     var exhibit = function (info, base) {
       return info[behaviourName]().fold(function () {

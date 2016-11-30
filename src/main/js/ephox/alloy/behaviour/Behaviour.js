@@ -6,6 +6,7 @@ define(
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Obj',
     'ephox.epithet.Id',
     'ephox.peanut.Fun',
@@ -14,7 +15,7 @@ define(
     'global!console'
   ],
 
-  function (DomModification, AlloyLogger, FieldSchema, Objects, Obj, Id, Fun, Contracts, Array, console) {
+  function (DomModification, AlloyLogger, FieldSchema, Objects, ValueSchema, Obj, Id, Fun, Contracts, Array, console) {
     var contract = Contracts.exactly([ 'name', 'exhibit', 'handlers', 'apis', 'schema' ]);
 
     var truncate = function (element) {
@@ -70,11 +71,21 @@ define(
       // );
     };
 
+    var schema = function (name, fields) {
+      return FieldSchema.optionObjOf(name, fields);
+    };
+
+    var modeSchema = function (name, branchKey, branches) {
+     return  FieldSchema.optionOf(name, ValueSchema.choose(branchKey, branches));
+    };
+
     return {
       tryActionOpt: tryActionOpt,
       exhibition: exhibition,
       contract: contract,
-      activeApis: activeApis
+      activeApis: activeApis,
+      schema: schema,
+      modeSchema: modeSchema
     };
   }
 );

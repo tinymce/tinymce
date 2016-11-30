@@ -14,39 +14,34 @@ define(
   ],
 
   function (Behaviour, EventHandler, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun, Throttler) {
-     var schema = FieldSchema.field(
-      'streaming',
-      'streaming',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.field('stream', 'stream', FieldPresence.strict(), ValueSchema.choose(
-          'mode',
-          {
-            'throttle': [
-              FieldSchema.strict('delay'),
-              FieldSchema.defaulted('stopEvent', true),
-              FieldSchema.state('streams', function () {
-                var setup = function (streamInfo) {
-                  var sInfo = streamInfo.stream();
-                  var throttler = Throttler(streamInfo.onStream(), sInfo.delay());
+    var schema = Behaviour.schema('streaming', [
+      FieldSchema.field('stream', 'stream', FieldPresence.strict(), ValueSchema.choose(
+        'mode',
+        {
+          'throttle': [
+            FieldSchema.strict('delay'),
+            FieldSchema.defaulted('stopEvent', true),
+            FieldSchema.state('streams', function () {
+              var setup = function (streamInfo) {
+                var sInfo = streamInfo.stream();
+                var throttler = Throttler(streamInfo.onStream(), sInfo.delay());
 
-                  return function (component, simulatedEvent) {
-                    throttler.throttle(component, simulatedEvent);
-                    if (sInfo.stopEvent()) simulatedEvent.stop();
-                  };
+                return function (component, simulatedEvent) {
+                  throttler.throttle(component, simulatedEvent);
+                  if (sInfo.stopEvent()) simulatedEvent.stop();
                 };
+              };
 
-                return {
-                  setup: setup
-                };
-              })
-            ]
-          }
-        )),
-        FieldSchema.defaulted('event', 'input'),
-        FieldSchema.strict('onStream')
-      ])
-    );
+              return {
+                setup: setup
+              };
+            })
+          ]
+        }
+      )),
+      FieldSchema.defaulted('event', 'input'),
+      FieldSchema.strict('onStream')
+    ]);
 
     var exhibit = function (info, base) {
       return DomModification.nu({});

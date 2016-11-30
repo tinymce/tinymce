@@ -23,16 +23,11 @@ define(
   function (SystemEvents, Behaviour, EventHandler, DomModification, AlloyLogger, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, AriaFocus, Fun, Insert, Remove, Error) {
     var behaviourName = 'transitioning';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('views'),
-        FieldSchema.strict('base'),
-        FieldSchema.defaulted('onChange', Fun.identity)
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.strict('views'),
+      FieldSchema.strict('base'),
+      FieldSchema.defaulted('onChange', Fun.identity)
+    ]);
 
     var clearOld = function (component, transitionInfo) {
       var old = component.components();

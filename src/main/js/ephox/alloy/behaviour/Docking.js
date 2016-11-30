@@ -37,27 +37,17 @@ define(
       return Bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
     };
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.field(
-          'contextual',
-          'contextual',
-          FieldPresence.asOption(),
-          ValueSchema.objOf([
-            FieldSchema.strict('fadeInClass'),
-            FieldSchema.strict('fadeOutClass'),
-            FieldSchema.strict('transitionClass'),
-            FieldSchema.strict('lazyContext')
-          ])
-        ),
-        FieldSchema.defaulted('lazyViewport', defaultLazyViewport),
-        FieldSchema.strict('leftAttr'),
-        FieldSchema.strict('topAttr')
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.optionObjOf('contextual', [
+        FieldSchema.strict('fadeInClass'),
+        FieldSchema.strict('fadeOutClass'),
+        FieldSchema.strict('transitionClass'),
+        FieldSchema.strict('lazyContext')
+      ]),
+      FieldSchema.defaulted('lazyViewport', defaultLazyViewport),
+      FieldSchema.strict('leftAttr'),
+      FieldSchema.strict('topAttr')
+    ]);
 
     var exhibit = function (info, base) {
       return DomModification.nu({ });

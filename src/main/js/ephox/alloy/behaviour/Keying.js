@@ -53,25 +53,17 @@ define(
       );
     };
 
-    var schema = FieldSchema.field(
-      'keying',
-      'keying',
-      FieldPresence.asOption(),
-      ValueSchema.choose(
-        'mode',
-        {
-          // Note, these are only fields.
-          cyclic: CyclicType.schema(),
-          flow: FlowType.schema(),
-          flatgrid: FlatgridType.schema(),
-          matrix: MatrixType.schema(),
-          execution: ExecutionType.schema(),
-          menu: MenuType.schema(),
-          escaping: EscapingType.schema(),
-          special: SpecialType.schema()
-        }
-      )
-    );
+    var schema = Behaviour.modeSchema('keying', 'mode', {
+      // Note, these are only fields.
+      cyclic: CyclicType.schema(),
+      flow: FlowType.schema(),
+      flatgrid: FlatgridType.schema(),
+      matrix: MatrixType.schema(),
+      execution: ExecutionType.schema(),
+      menu: MenuType.schema(),
+      escaping: EscapingType.schema(),
+      special: SpecialType.schema()
+    });
 
     var handlers = function (info) {
       return info.keying().fold(function () {

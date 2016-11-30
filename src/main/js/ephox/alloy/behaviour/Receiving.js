@@ -22,21 +22,16 @@ define(
       return DomModification.nu({ });
     };
 
-    var schema = FieldSchema.field(
-      'receiving',
-      'receiving',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.field('channels', 'channels', FieldPresence.strict(), ValueSchema.setOf(
-          // Allow any keys.
-          Result.value,
-          ValueSchema.objOf([
-            FieldSchema.strict('onReceive'),
-            FieldSchema.field('schema', 'schema', FieldPresence.defaulted(ValueSchema.anyValue()), ValueSchema.anyValue())
-          ])
-        ))
-      ])
-    );
+    var schema = Behaviour.schema('receiving', [
+      FieldSchema.strictOf('channels', ValueSchema.setOf(
+        // Allow any keys.
+        Result.value,
+        ValueSchema.objOf([
+          FieldSchema.strict('onReceive'),
+          FieldSchema.field('schema', 'schema', FieldPresence.defaulted(ValueSchema.anyValue()), ValueSchema.anyValue())
+        ])
+      ))
+    ]);
 
     var chooseChannels = function (channels, message) {
       return message.universal() ? channels : Arr.filter(channels, function (ch) {

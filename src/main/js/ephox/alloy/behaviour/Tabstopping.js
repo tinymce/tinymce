@@ -12,16 +12,9 @@ define(
   ],
 
   function (Behaviour, DomModification, FieldPresence, FieldSchema, Objects, ValueSchema, Fun) {
-    var schema = FieldSchema.field(
-      'tabstopping',
-      'tabstopping',
-      FieldPresence.asDefaultedOption({
-        'tabAttr': 'data-alloy-tabstop'
-      }),
-      ValueSchema.objOf([
-        FieldSchema.defaulted('tabAttr', 'data-alloy-tabstop')
-      ])
-    );
+    var schema = Behaviour.schema('tabstopping', [
+      FieldSchema.defaulted('tabAttr', 'data-alloy-tabstop')
+    ]);
 
     var exhibit = function (info, base) {
       return info.tabstopping().fold(function () {

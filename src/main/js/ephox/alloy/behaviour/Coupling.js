@@ -37,15 +37,11 @@ define(
         getOrCreate: getOrCreate
       };
     };
-    var schema = FieldSchema.field(
-      'coupling',
-      'coupling',
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.field('others', 'others', FieldPresence.strict(), ValueSchema.setOf(Result.value, ValueSchema.anyValue())),
-        FieldSchema.state('state', coupleState)
-      ])
-    );
+
+    var schema = Behaviour.schema('coupling', [
+      FieldSchema.strictOf('others', ValueSchema.setOf(Result.value, ValueSchema.anyValue())),
+      FieldSchema.state('state', coupleState)
+    ]);
 
     var getCoupled = function (component, coupledInfo, name) {
       return coupledInfo.state().getOrCreate(component, coupledInfo, name);

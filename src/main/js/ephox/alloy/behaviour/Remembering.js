@@ -13,20 +13,13 @@ define(
   function (Behaviour, DomModification, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'remembering';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('data')
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.strict('data')
+    ]);
 
     var doGetData = function (component, rememberInfo) {
       return rememberInfo.data();
     };
-
-   
 
     var exhibit = function (info, base) {
       return DomModification.nu({ });
