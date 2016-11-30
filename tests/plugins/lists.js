@@ -2610,4 +2610,79 @@ ModuleLoader.require([
 			equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
 		});
 	}
+
+	test('Handle one empty list items without error', function() {
+		editor.settings.forced_root_block = false;
+
+		editor.getBody().innerHTML = (
+			'a<br>' +
+			'b<br>' +
+			'<p><br data-mce-bogus="1"></p>'
+		);
+
+		editor.focus();
+		editor.execCommand('SelectAll');
+		execCommand('InsertUnorderedList');
+
+		equal(editor.getContent(),
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+			'</ul>'
+		);
+
+		execCommand('InsertUnorderedList');
+
+		equal(editor.getBody().innerHTML,
+			'a<br>' +
+			'b<br>' +
+			'<br data-mce-bogus="1"><br>'
+		);
+	});
+
+	test('Handle several empty list items without error', function() {
+		editor.settings.forced_root_block = false;
+
+		editor.getBody().innerHTML = (
+			'a<br>' +
+			'b<br>' +
+			'<p><br data-mce-bogus="1"></p>' +
+			'c<br>' +
+			'<p><br data-mce-bogus="1"></p>' +
+			'd<br>' +
+			'<p><br data-mce-bogus="1"></p>' +
+			'e<br>'
+		);
+
+		editor.focus();
+		editor.execCommand('SelectAll');
+		execCommand('InsertUnorderedList');
+
+		equal(editor.getContent(),
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+				'<li>c</li>' +
+				'<li></li>' +
+				'<li>d</li>' +
+				'<li></li>' +
+				'<li>e</li>' +
+			'</ul>'
+		);
+
+		execCommand('InsertUnorderedList');
+
+		equal(editor.getBody().innerHTML,
+			'a<br>' +
+			'b<br>' +
+			'<br data-mce-bogus="1"><br>' +
+			'c<br>' +
+			'<br data-mce-bogus="1"><br>' +
+			'd<br>' +
+			'<br data-mce-bogus="1"><br>' +
+			'e<br>'
+		);
+	});
 });
