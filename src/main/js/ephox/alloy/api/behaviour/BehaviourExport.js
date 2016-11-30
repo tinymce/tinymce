@@ -2,7 +2,9 @@ define(
   'ephox.alloy.api.behaviour.BehaviourExport',
 
   [
+    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -10,7 +12,7 @@ define(
     'global!Array'
   ],
 
-  function (Objects, Arr, Obj, Merger, Fun, Array) {
+  function (FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Array) {
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -45,6 +47,18 @@ define(
       );
     };
 
+    // var scorps = {
+    //   config: function (s) {
+    //     return {
+    //       key: 'scorps',
+    //       value: {
+    //         raw: s,
+    //         info: schema(s)
+    //       }
+    //     };
+    //   }
+    // };
+
 
     var santa = function (schema, name, activeApis, apis) {
       return Merger.deepMerge(
@@ -66,8 +80,17 @@ define(
         {
           config: function (spec) {
             return {
-              key: behaviour.name(),
-              value: spec
+              key: name,
+              value: {
+                _raw: spec,
+                info: Fun.constant(
+                  ValueSchema.asStructOrDie(
+                    'santa' + name,
+                    ValueSchema.objOf(schema),
+                    spec
+                  )
+                )
+              }
             };
           }
         }
