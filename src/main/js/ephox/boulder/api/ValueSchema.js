@@ -68,6 +68,7 @@ define(
     };
 
     var formatError = function (errInfo) {
+      return 'ValueSchema.formatError information truncated due to size';
       return 'Errors: \n' + Arr.map(errInfo.errors, SchemaError.toString).join('\n\n') + 
         '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
     };
