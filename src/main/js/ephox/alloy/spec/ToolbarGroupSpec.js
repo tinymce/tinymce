@@ -6,27 +6,18 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],
 
-  function (Behaviour, Fields, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Option) {
+  function (Behaviour, Fields, SpecSchema, UiSubstitutes, FieldSchema, Arr, Option) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('items'),
-
-      Fields.members([ 'item' ]),
-
       FieldSchema.defaulted('hasTabstop', true),
-
-
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('itemClass')
-      ])
+      Fields.members([ 'item' ]),
+      Fields.markers([ 'itemClass' ])
     ];
 
     var make = function (spec) {

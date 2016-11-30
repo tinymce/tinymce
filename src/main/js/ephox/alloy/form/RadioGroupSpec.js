@@ -39,9 +39,7 @@ define(
       FieldSchema.defaulted('useLabel', true),
       FieldSchema.defaulted('useName', true),
 
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('radioSelector')
-      ]),
+      Fields.markers([ 'radioSelector' ]),
 
       Fields.members([ 'radio' ]),
   

@@ -32,10 +32,7 @@ define(
 
       FieldSchema.defaulted('clickToDismiss', true),
 
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('tabClass'),
-        FieldSchema.strict('selectedClass')
-      ])
+      Fields.markers([ 'tabClass', 'selectedClass' ])
     ];
 
     var make = function (spec) {

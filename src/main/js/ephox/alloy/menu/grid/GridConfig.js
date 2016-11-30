@@ -33,7 +33,7 @@ define(
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('flat'),
 
-      FieldSchema.strictOf('markers', MenuMarkers.itemSchema()),
+      Fields.itemMarkers(),
 
       Fields.members([ 'grid', 'item' ]),
 

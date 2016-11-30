@@ -4,19 +4,16 @@ define(
   [
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.form.TextInputSpec',
-    'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Value'
+    'ephox.perhaps.Option'
   ],
 
-  function (Toggling, EventHandler, TextInputSpec, FormLabelSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Option, Value) {
+  function (Toggling, EventHandler, Fields, TextInputSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Option) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('components'),
@@ -24,9 +21,7 @@ define(
 
       FieldSchema.strict('onLockedChange'),
 
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('lockClass')
-      ]),
+      Fields.markers([ 'lockClass' ]),
 
       FieldSchema.state('builder', function () {
         return builder;

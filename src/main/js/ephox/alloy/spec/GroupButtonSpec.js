@@ -19,11 +19,7 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.strict('action'),
 
-
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('selectedClass'),
-        FieldSchema.strict('buttonClass')  
-      ]),
+      Fields.markers([ 'selectedClass', 'buttonClass' ]),
 
       Fields.members([ 'button' ]),
       FieldSchema.strict('buttons'),

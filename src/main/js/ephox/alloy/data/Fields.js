@@ -27,11 +27,16 @@ define(
       return FieldSchema.strictOf('markers', MenuMarkers.schema());
     };
 
+    var markers = function (required) {
+      return FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
+    };
+
     return {
       initSize: Fun.constant(initSize),
       members: members,
       itemMarkers: itemMarkers,
-      menuMarkers: menuMarkers
+      menuMarkers: menuMarkers,
+      markers: markers
     };
   }
 );

@@ -39,10 +39,7 @@ define(
       FieldSchema.strict('candidates'),
       FieldSchema.option('selectedValue'),
 
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('itemClass'),
-        FieldSchema.strict('selectedClass')
-      ]),
+      Fields.markers([ 'itemClass', 'selectedClass' ]),
 
       Fields.members([ 'radio' ]),
   

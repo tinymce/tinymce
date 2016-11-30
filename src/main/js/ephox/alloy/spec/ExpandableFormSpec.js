@@ -3,12 +3,11 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.FormSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -17,17 +16,17 @@ define(
     'ephox.sugar.api.Class'
   ],
 
-  function (Sliding, FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Fun, Option, Class) {
+  function (Sliding, Fields, FormSpec, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option, Class) {
     var schema = [
-      FieldSchema.strictObjOf('markers', [
-        FieldSchema.strict('closedStyle'),
-        FieldSchema.strict('openStyle'),
-        FieldSchema.strict('shrinkingStyle'),
-        FieldSchema.strict('growingStyle'),
+      Fields.markers([
+        'closedStyle',
+        'openStyle',
+        'shrinkingStyle',
+        'growingStyle',
 
         // TODO: Sync with initial value
-        FieldSchema.option('expandedClass'),
-        FieldSchema.option('collapsedClass')
+        'expandedClass',
+        'collapsedClass'
       ]),
       FieldSchema.defaulted('onShrunk', Fun.identity),
       FieldSchema.defaulted('onGrown', Fun.identity)
