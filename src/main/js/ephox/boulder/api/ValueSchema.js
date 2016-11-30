@@ -5,14 +5,16 @@ define(
     'ephox.boulder.core.ChoiceProcessor',
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
+    'ephox.boulder.format.PrettyPrinter',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
-    'ephox.numerosity.api.JSON',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'global!Error'
   ],
 
-  function (ChoiceProcessor, SchemaError, ValueProcessor, Arr, Json, Fun, Result, Error) {
+  function (ChoiceProcessor, SchemaError, ValueProcessor, PrettyPrinter, Type, Arr, Obj, Fun, Result, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -68,9 +70,8 @@ define(
     };
 
     var formatError = function (errInfo) {
-      return 'ValueSchema.formatError information truncated due to size';
-      return 'Errors: \n' + Arr.map(errInfo.errors, SchemaError.toString).join('\n\n') + 
-        '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
+      return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) + 
+        '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
     };
 
     var choose = function (key, branches) {

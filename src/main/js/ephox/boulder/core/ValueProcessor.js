@@ -11,14 +11,13 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.lumber.api.Timers',
-    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, SchemaError, Arr, Obj, Merger, Timers, Json, Fun, Option, Result, Adt) {
+  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, SchemaError, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }

@@ -2,11 +2,11 @@ define(
   'ephox.boulder.core.SchemaError',
 
   [
-    'ephox.numerosity.api.JSON',
+    'ephox.boulder.format.PrettyPrinter',
     'ephox.perhaps.Result'
   ],
 
-  function (Json, Result) {
+  function (PrettyPrinter, Result) {
     var nu = function (path, getErrorInfo) {
       return Result.error([{
         path: path,
@@ -17,19 +17,19 @@ define(
 
     var missingStrict = function (path, key, obj) {
       return nu(path, function () {
-        return 'Could not find valid *strict* value for "' + key + '" in ' + Json.stringify(obj, null, 2);
+        return 'Could not find valid *strict* value for "' + key + '" in ' + PrettyPrinter.formatObj(obj);
       });
     };
 
     var missingKey = function (path, key) {
       return nu(path, function () {
-        return 'Choice schema did not contain choice key: "' + key + '"'
+        return 'Choice schema did not contain choice key: "' + key + '"';
       });
     };
 
     var missingBranch = function (path, branches, branch) {
       return nu(path, function () {
-        return 'The chosen schema: "' + branch + '" did not exist in branches: ' + Json.stringify(branches, null, 2)
+        return 'The chosen schema: "' + branch + '" did not exist in branches: ' + PrettyPrinter.formatObj(branches);
       });
     };
 

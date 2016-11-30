@@ -6,11 +6,10 @@ define(
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
     'ephox.compass.Obj',
-    'ephox.numerosity.api.JSON',
     'ephox.perhaps.Result'
   ],
 
-  function (Objects, SchemaError, ValueProcessor, Obj, Json, Result) {
+  function (Objects, SchemaError, ValueProcessor, Obj, Result) {
     var chooseFrom = function (path, strength, input, branches, ch) {
       var fields = Objects.readOptFrom(branches, ch);
       return fields.fold(function () {
