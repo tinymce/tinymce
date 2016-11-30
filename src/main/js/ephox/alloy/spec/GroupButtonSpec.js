@@ -30,11 +30,12 @@ define(
       ),
 
       Fields.members([ 'button' ]),
+      FieldSchema.strict('buttons'),
 
       FieldSchema.strict('uid')
     ];
 
-
+    // FIX: Update ARIA pressed value. May need to be part of highlight
     var make = function (spec) {
       // Not sure about where these getOrDie statements are
       var detail = SpecSchema.asStructOrDie('alloy.group-button', schema, spec, [ ]);

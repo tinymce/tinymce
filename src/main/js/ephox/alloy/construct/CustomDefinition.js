@@ -49,7 +49,7 @@ define(
       // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
-        FieldSchema.strictObjOf('dom', 'dom', FieldPresence.strict(), [
+        FieldSchema.strictObjOf('dom', [
           // Note, no children.
           FieldSchema.strict('tag'),
           FieldSchema.defaulted('styles', {}),

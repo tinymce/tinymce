@@ -5,12 +5,11 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.perhaps.Option',
@@ -19,7 +18,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (SystemEvents, Representing, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Option, Attr, Checked, SelectorFind) {
+  function (SystemEvents, Representing, EventHandler, Fields, SpecSchema, UiSubstitutes, FieldSchema, Objects, Arr, Merger, Option, Attr, Checked, SelectorFind) {
     /*
      <fieldset>
        <legend>Border</legend>
@@ -44,7 +43,7 @@ define(
         FieldSchema.strict('radioSelector')
       ]),
 
-      FieldSchema.members([ 'radio' ]),
+      Fields.members([ 'radio' ]),
   
       FieldSchema.strict('name'),
       FieldSchema.state('builder', function () {

@@ -25,7 +25,7 @@ define(
       FieldSchema.defaulted('toggleOnExecute', true),
 
       FieldSchema.defaultedObjOf('aria', { }, [
-        FieldSchema.defaulted('aria-presssed-attr', 'aria-pressed'),
+        FieldSchema.defaulted('aria-pressed-attr', 'aria-pressed'),
         // TODO: Do this based on presence of aria-haspopup ?
         FieldSchema.option('aria-expanded-attr')
       ])
@@ -49,7 +49,7 @@ define(
 
     var getAriaAttribute = function (component, toggleInfo) {
       var role = Attr.get(component.element(), 'role');
-      return Objects.readOptFrom(pressedAttributes, role).getOrThunk(toggleInfo.aria().pressedAttr);
+      return Objects.readOptFrom(pressedAttributes, role).getOrThunk(toggleInfo.aria()['aria-pressed-attr']);
     };
 
     var updateAriaState = function (component, toggleInfo) {
@@ -58,7 +58,7 @@ define(
       var attr = getAriaAttribute(component, toggleInfo);
 
       Attr.set(component.element(), attr, pressed);
-      toggleInfo.aria().expandedAttr().each(function (attr) {
+      toggleInfo.aria()['aria-expanded-attr']().each(function (attr) {
         Attr.set(component.element(), attr, pressed);
       });
     };
