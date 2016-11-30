@@ -27,19 +27,14 @@ define(
   function (ToolbarApis, Behaviour, DomModification, OverflowState, Overflows, ToolbarSpecs, FieldPresence, FieldSchema, ValueSchema, Arr, Merger, Fun, Option, Cell, Css, Insert, InsertAll, Remove, Traverse, Width) {
     var behaviourName = 'more-overflowing';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.objOf([
-        FieldSchema.strict('initGroups'),
-        FieldSchema.strict('drawerUid'),
-        FieldSchema.strict('primaryUid'),
-        FieldSchema.strict('overflowGroup'),
-        FieldSchema.strict('buildGroups'),
-        FieldSchema.state('state', OverflowState)
-      ])
-    );
+    var schema = Behaviour.schema(behaviourName, [
+      FieldSchema.strict('initGroups'),
+      FieldSchema.strict('drawerUid'),
+      FieldSchema.strict('primaryUid'),
+      FieldSchema.strict('overflowGroup'),
+      FieldSchema.strict('buildGroups'),
+      FieldSchema.state('state', OverflowState)
+    ]);
 
     var exhibit = function () {
       return DomModification.nu({ });

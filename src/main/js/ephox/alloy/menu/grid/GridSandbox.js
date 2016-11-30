@@ -25,12 +25,8 @@ define(
       FieldSchema.defaulted('itemValue', 'data-item-value'),
       FieldSchema.defaulted('backgroundClass', 'background-menu'),
       FieldSchema.strict('flat'),
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.itemSchema()
-      ),
+
+      Fields.itemMarkers(),
 
       Fields.members([ 'grid', 'item' ]),
 

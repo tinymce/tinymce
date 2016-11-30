@@ -41,24 +41,12 @@ define(
     // TODO: Standardise all of these.
     var groupSchema = ValueSchema.objOf([
       FieldSchema.option('label'),
-      FieldSchema.field(
-        'components',
-        'components',
-        FieldPresence.strict(),
-        ValueSchema.arrOf(ValueSchema.anyValue())
-      )
+      FieldSchema.strictOf('components', ValueSchema.arrOf(ValueSchema.anyValue()))
     ]);
 
     var toolbarSchema = [
       FieldSchema.option('label'),
-      FieldSchema.field(
-        'groups',
-        'groups',
-        FieldPresence.strict(),
-        ValueSchema.arrOf(
-          groupSchema
-        )
-      )
+      FieldSchema.strictOf('groups', ValueSchema.arrOf(groupSchema))
     ];
 
     var buildItem = function (compInfo) {

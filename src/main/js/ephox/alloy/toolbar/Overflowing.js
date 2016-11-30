@@ -14,16 +14,9 @@ define(
   function (Behaviour, DomModification, ScrollOverflow, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var behaviourName = 'overflowing';
 
-    var schema = FieldSchema.field(
-      behaviourName,
-      behaviourName,
-      FieldPresence.asOption(),
-      ValueSchema.choose(
-        'mode',
-        {
-          scroll: ScrollOverflow
-        }
-      )
+    var schema = Behaviour.modeSchema(behaviourName, 'mode', {
+        scroll: ScrollOverflow
+      }
     );
 
     var exhibit = function (info, base) {     

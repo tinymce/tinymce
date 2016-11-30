@@ -15,12 +15,7 @@ define(
     var schema = [
       Fields.members([ 'menu', 'item' ]),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.schema()
-      ),
+      Fields.menuMarkers(),
 
       FieldSchema.strict('scaffold'),
 

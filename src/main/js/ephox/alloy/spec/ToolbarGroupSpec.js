@@ -23,14 +23,10 @@ define(
 
       FieldSchema.defaulted('hasTabstop', true),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('itemClass')
-        ])
-      )
+
+      FieldSchema.strictObjOf('markers', [
+        FieldSchema.strict('itemClass')
+      ])
     ];
 
     var make = function (spec) {

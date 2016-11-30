@@ -52,12 +52,7 @@ define(
 
       FieldSchema.strict('lazySink'),
 
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.schema()
-      ),
+      Fields.menuMarkers(),
 
       FieldSchema.strict('backgroundClass'),
 

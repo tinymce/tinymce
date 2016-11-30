@@ -19,21 +19,16 @@ define(
 
   function (Sliding, FormSpec, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Arr, Obj, Merger, Fun, Option, Class) {
     var schema = [
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('closedStyle'),
-          FieldSchema.strict('openStyle'),
-          FieldSchema.strict('shrinkingStyle'),
-          FieldSchema.strict('growingStyle'),
+      FieldSchema.strictObjOf('markers', [
+        FieldSchema.strict('closedStyle'),
+        FieldSchema.strict('openStyle'),
+        FieldSchema.strict('shrinkingStyle'),
+        FieldSchema.strict('growingStyle'),
 
-          // TODO: Sync with initial value
-          FieldSchema.option('expandedClass'),
-          FieldSchema.option('collapsedClass')
-        ])
-      ),
+        // TODO: Sync with initial value
+        FieldSchema.option('expandedClass'),
+        FieldSchema.option('collapsedClass')
+      ]),
       FieldSchema.defaulted('onShrunk', Fun.identity),
       FieldSchema.defaulted('onGrown', Fun.identity)
     ];

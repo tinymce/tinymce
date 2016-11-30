@@ -43,15 +43,10 @@ define(
 
     return [
       FieldSchema.strict('item'),
-      FieldSchema.field(
-        'layouts',
-        'layouts',
-        FieldPresence.asOption(),
-        ValueSchema.objOf([
-          FieldSchema.strict('onLtr'),
-          FieldSchema.strict('onRtl')
-        ])
-      ),
+      FieldSchema.optionObjOf('layouts', [
+        FieldSchema.strict('onLtr'),
+        FieldSchema.strict('onRtl')
+      ]),
       FieldSchema.state('placement', function () {
         return placement;
       })

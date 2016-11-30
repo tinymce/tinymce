@@ -2,12 +2,13 @@ define(
   'ephox.alloy.data.Fields',
 
   [
+    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.peanut.Fun'
   ],
 
-  function (FieldSchema, Arr, Fun) {
+  function (MenuMarkers, FieldSchema, Arr, Fun) {
 
     var initSize = FieldSchema.strictObjOf('initSize', [
       FieldSchema.strict('numColumns'),
@@ -18,9 +19,19 @@ define(
       return FieldSchema.strictObjOf('members', Arr.map(required, FieldSchema.strict));
     };
 
+    var itemMarkers = function () {
+      FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
+    };
+
+    var menuMarkers = function () {
+      return FieldSchema.strictOf('markers', MenuMarkers.schema());
+    };
+
     return {
       initSize: Fun.constant(initSize),
-      members: members
+      members: members,
+      itemMarkers: itemMarkers,
+      menuMarkers: menuMarkers
     };
   }
 );

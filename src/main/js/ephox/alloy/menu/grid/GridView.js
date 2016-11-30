@@ -14,14 +14,7 @@ define(
   function (Fields, GridSandbox, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Fun) {
     var schema = [
       Fields.members([ 'grid', 'item' ]),
-
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.itemSchema()
-      ),
-
+      Fields.itemMarkers(),
       Fields.initSize(),
 
       FieldSchema.defaulted('preprocess', Fun.identity),

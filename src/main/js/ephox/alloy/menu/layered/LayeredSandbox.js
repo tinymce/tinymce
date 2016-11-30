@@ -29,13 +29,8 @@ define(
       FieldSchema.strict('lazySink'),
       FieldSchema.defaulted('itemValue', 'data-item-value'),
       FieldSchema.defaulted('backgroundClass', 'background-menu'),
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.schema()
-      ),
 
+      Fields.menuMarkers(),
       Fields.members([ 'menu', 'item' ]),
 
       FieldSchema.strict('onHighlight')

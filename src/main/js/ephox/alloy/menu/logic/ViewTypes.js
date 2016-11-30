@@ -13,19 +13,14 @@ define(
   ],
 
   function (GridView, LayeredView, WidgetView, FieldPresence, FieldSchema, Objects, ValueSchema, Fun) {
-    var schema = FieldSchema.field(
-      'view',
-      'view',
-      FieldPresence.strict(),
-      ValueSchema.choose(
-        'style',
-        {
-          layered: LayeredView,
-          grid: GridView,
-          widget: WidgetView
-        }
-      )
-    );
+    var schema = FieldSchema.strictOf('view', ValueSchema.choose(
+      'style',
+      {
+        layered: LayeredView,
+        grid: GridView,
+        widget: WidgetView
+      }
+    ));
 
     var useWidget = function (spec) {
       return {

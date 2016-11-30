@@ -19,14 +19,9 @@ define(
 
   function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Id, Merger, Option, Cell, Attr) {
     var schema = [
-      FieldSchema.field(
-        'label',
-        'label',
-        FieldPresence.strict(),
-        ValueSchema.objOf([
-          FieldSchema.strict('text')
-        ])
-      ),
+      FieldSchema.strictObjOf('label', [
+        FieldSchema.strict('text')
+      ]),
       FieldSchema.strict('prefix'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),

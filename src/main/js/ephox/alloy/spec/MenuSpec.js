@@ -40,12 +40,8 @@ define(
       FieldSchema.strict('items'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
-      FieldSchema.field(
-        'markers',
-        'markers',
-        FieldPresence.strict(),
-        MenuMarkers.schema()
-      ),
+
+      Fields.menuMarkers(),
 
       Fields.members([ 'item' ]),
 

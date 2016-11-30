@@ -161,7 +161,9 @@ define(
                   }
                 };
               },
-              schema: Fun.constant(FieldSchema.field('_', '_', FieldPresence.asOption(), ValueSchema.anyValue()))
+              schema: Fun.constant(
+                FieldSchema.option('_')
+              )
             })
 
           ]

@@ -17,12 +17,7 @@ define(
     ]);
 
     var schema = ValueSchema.objOf([
-      FieldSchema.field(
-        'choices',
-        'choices',
-        FieldPresence.strict(),
-        ValueSchema.arrOf(choiceSchema)
-      )
+      FieldSchema.strictOf('choices', ValueSchema.arrOf(choiceSchema))
     ]);
 
     var make = function (spec) {

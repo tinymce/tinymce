@@ -18,14 +18,7 @@ define(
       if (partNames.length === 0) return [ ];
 
       // temporary hacking
-      var partsSchema = FieldSchema.field(
-        'parts',
-        'parts',
-        FieldPresence.strict(),
-        ValueSchema.objOf(
-          Arr.map(partNames, FieldSchema.strict)
-        )
-      );
+      var partsSchema = FieldSchema.strictObjOf('parts', Arr.map(partNames, FieldSchema.strict));
 
       var partUidsSchema = FieldSchema.state(
         'partUids',
@@ -51,14 +44,7 @@ define(
 
       return partsSchema.concat([
         FieldSchema.strict('uid'),
-        FieldSchema.field(
-          'components',
-          'components',
-          FieldPresence.defaulted([ ]),
-          ValueSchema.arrOf(
-            ValueSchema.anyValue()
-          )
-        )
+        FieldSchema.defaulted('components', [ ])
       ]);
     };
 
