@@ -2610,4 +2610,104 @@ ModuleLoader.require([
 			equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
 		});
 	}
+
+	test('Handle one empty unordered list items without error', function() {
+		editor.getBody().innerHTML = (
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+			'</ul>'
+		);
+
+		editor.execCommand('SelectAll');
+		Utils.setSelection('li:first', 0, 'li:last', 0);
+		execCommand('InsertUnorderedList');
+
+		equal(editor.getBody().innerHTML,
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus="1"></p>'
+		);
+	});
+
+	test('Handle several empty unordered list items without error', function() {
+		editor.getBody().innerHTML = (
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+				'<li>c</li>' +
+				'<li></li>' +
+				'<li>d</li>' +
+				'<li></li>' +
+				'<li>e</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('li:first', 0, 'li:last', 0);
+		execCommand('InsertUnorderedList');
+
+		equal(editor.getBody().innerHTML,
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>c</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>d</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>e</p>'
+		);
+	});
+
+	test('Handle one empty ordered list items without error', function() {
+		editor.getBody().innerHTML = (
+			'<ol>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+			'</ol>'
+		);
+
+		editor.execCommand('SelectAll');
+		Utils.setSelection('li:first', 0, 'li:last', 0);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getBody().innerHTML,
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus="1"></p>'
+		);
+	});
+
+	test('Handle several empty ordered list items without error', function() {
+		editor.getBody().innerHTML = (
+			'<ol>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+				'<li>c</li>' +
+				'<li></li>' +
+				'<li>d</li>' +
+				'<li></li>' +
+				'<li>e</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('li:first', 0, 'li:last', 0);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getBody().innerHTML,
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>c</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>d</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>e</p>'
+		);
+	});
 });
