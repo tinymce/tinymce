@@ -2611,20 +2611,8 @@ ModuleLoader.require([
 		});
 	}
 
-	test('Handle one empty list items without error', function() {
-		editor.settings.forced_root_block = false;
-
+	test('Handle one empty unordered list items without error', function() {
 		editor.getBody().innerHTML = (
-			'a<br>' +
-			'b<br>' +
-			'<p><br data-mce-bogus="1"></p>'
-		);
-
-		editor.focus();
-		editor.execCommand('SelectAll');
-		execCommand('InsertUnorderedList');
-
-		equal(editor.getContent(),
 			'<ul>' +
 				'<li>a</li>' +
 				'<li>b</li>' +
@@ -2632,34 +2620,19 @@ ModuleLoader.require([
 			'</ul>'
 		);
 
+		editor.execCommand('SelectAll');
+		Utils.setSelection('li:first', 0, 'li:last', 0);
 		execCommand('InsertUnorderedList');
 
 		equal(editor.getBody().innerHTML,
-			'a<br>' +
-			'b<br>' +
-			'<br data-mce-bogus="1"><br>'
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus="1"></p>'
 		);
 	});
 
-	test('Handle several empty list items without error', function() {
-		editor.settings.forced_root_block = false;
-
+	test('Handle several empty unordered list items without error', function() {
 		editor.getBody().innerHTML = (
-			'a<br>' +
-			'b<br>' +
-			'<p><br data-mce-bogus="1"></p>' +
-			'c<br>' +
-			'<p><br data-mce-bogus="1"></p>' +
-			'd<br>' +
-			'<p><br data-mce-bogus="1"></p>' +
-			'e<br>'
-		);
-
-		editor.focus();
-		editor.execCommand('SelectAll');
-		execCommand('InsertUnorderedList');
-
-		equal(editor.getContent(),
 			'<ul>' +
 				'<li>a</li>' +
 				'<li>b</li>' +
@@ -2672,17 +2645,69 @@ ModuleLoader.require([
 			'</ul>'
 		);
 
+		editor.focus();
+		Utils.setSelection('li:first', 0, 'li:last', 0);
 		execCommand('InsertUnorderedList');
 
 		equal(editor.getBody().innerHTML,
-			'a<br>' +
-			'b<br>' +
-			'<br data-mce-bogus="1"><br>' +
-			'c<br>' +
-			'<br data-mce-bogus="1"><br>' +
-			'd<br>' +
-			'<br data-mce-bogus="1"><br>' +
-			'e<br>'
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>c</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>d</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>e</p>'
+		);
+	});
+
+	test('Handle one empty ordered list items without error', function() {
+		editor.getBody().innerHTML = (
+			'<ol>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+			'</ol>'
+		);
+
+		editor.execCommand('SelectAll');
+		Utils.setSelection('li:first', 0, 'li:last', 0);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getBody().innerHTML,
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus="1"></p>'
+		);
+	});
+
+	test('Handle several empty ordered list items without error', function() {
+		editor.getBody().innerHTML = (
+			'<ol>' +
+				'<li>a</li>' +
+				'<li>b</li>' +
+				'<li></li>' +
+				'<li>c</li>' +
+				'<li></li>' +
+				'<li>d</li>' +
+				'<li></li>' +
+				'<li>e</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('li:first', 0, 'li:last', 0);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getBody().innerHTML,
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>c</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>d</p>' +
+			'<p><br data-mce-bogus=\"1\"></p>' +
+			'<p>e</p>'
 		);
 	});
 });
