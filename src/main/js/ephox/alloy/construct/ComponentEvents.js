@@ -41,9 +41,10 @@ define(
 
     var nameToHandlers = function (behaviours, info) {
       var r = {};
-      Arr.each(behaviours, function (behaviour) {
+      Obj.each(behaviours, function (behaviour) {
         r[behaviour.name()] = behaviour.handlers(info);        
       });
+      console.log('r', r);
       return r;
     };
 

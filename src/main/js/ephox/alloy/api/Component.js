@@ -28,6 +28,7 @@ define(
       var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
 
       var behaviours = CustomDefinition.behaviours(info);
+      console.log('behaviours', behaviours);
 
       var definition = CustomDefinition.toDefinition(info);
       
@@ -46,6 +47,7 @@ define(
       // };
 
       var events = ComponentEvents.combine(info, behaviours, baseEvents).getOrDie();
+
 
       // // Curry a lazy argument into the API. Invoke it before calling.
       // var apis = ComponentApis.combine(info, behaviours, baseApis, [
@@ -85,7 +87,9 @@ define(
       };
 
       var config = function (behaviour) {
-        return info[behaviour.name()]();
+        return info.behaviours().bind(function (b) {
+          return b[behaviour.name()]();
+        });
       };
 
       var self = {

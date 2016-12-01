@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.behaviour.BehaviourExport',
 
   [
+    'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -12,7 +13,7 @@ define(
     'global!Array'
   ],
 
-  function (FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Array) {
+  function (DomModification, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Array) {
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -61,6 +62,12 @@ define(
 
 
     var santa = function (schema, name, active, apis) {
+      var getConfig = function (info) {
+        return info.behaviours().bind(function (bs) {
+          return bs[name]();
+        });
+      };
+
       return Merger.deepMerge(
         Obj.map(apis, function (apiF, apiName) {
           return function (component) {
@@ -81,17 +88,30 @@ define(
           config: function (spec) {
             return {
               key: name,
-              value: {
-                _raw: spec,
-                info: Fun.constant(
-                  ValueSchema.asStructOrDie(
-                    'santa' + name,
-                    ValueSchema.objOf(schema),
-                    spec
-                  )
-                )
-              }
+              value: spec
             };
+          },
+
+          schema: function () {
+            return FieldSchema.optionObjOf(name, schema);
+          },
+
+          exhibit: function (info, base) {
+            return getConfig(info).fold(function () {
+              return DomModification.nu({ });
+            }, function (behaviourInfo) {
+              return active.exhibit(base, behaviourInfo);
+            });
+          },
+
+          name: function () {
+            return name;
+          },
+
+          handlers: function (info) {
+            return getConfig(info).map(function (behaviourInfo) {
+              return active.events(behaviourInfo);
+            }).getOr({ });
           }
         }
       );

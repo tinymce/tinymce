@@ -100,11 +100,12 @@ define(
     var combine = function (info, behaviours, base) {
       // Get the Behaviour DOM modifications
       var behaviourDoms = { };
-      Arr.each(behaviours, function (behaviour) {
+      Obj.each(behaviours, function (behaviour) {
         behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
       });
 
       var byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
+      // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
 
       var usedAspect = Obj.map(byAspect, function (values, aspect) {
         return Arr.bind(values, function (value) {

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.construct.CustomDefinition',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.behaviour.Coupling',
     'ephox.alloy.behaviour.Disabling',
     'ephox.alloy.behaviour.Docking',
@@ -39,13 +40,17 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Remembering, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
+  function (ApiToggling, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Remembering, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
     var toInfo = function (spec) {
-      var behaviours = Objects.readOr('behaviours', [])(spec);
+      var behaviours = [ ]; // Objects.readOr('behaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
       var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
         return b.schema();
       });
+
+      console.log('behaviourSchema', behaviourSchema);
+
+      console.log('spec', spec);
       // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
@@ -60,7 +65,13 @@ define(
         ]),
         FieldSchema.strict('components'),
         FieldSchema.strict('uid'),
-        FieldSchema.defaulted('behaviours', [ ]),
+
+        FieldSchema.optionObjOf('behaviours', behaviourSchema),
+
+        // FieldSchema.state('behaviours', function (s) {
+        //   return Objects.hasKey(s, 'behaviours') ? s.behaviours : { };
+        // }),
+        // FieldSchema.defaulted('behaviours', [ ]),
 
         // TODO: Add behaviours here.
         //
@@ -90,7 +101,7 @@ define(
           FieldSchema.strict('get')
         ]),
         FieldSchema.state('originalSpec', Fun.identity)
-      ].concat(behaviourSchema)), spec);
+      ]), spec);
     };
 
     var getUid = function (info) {
@@ -117,8 +128,11 @@ define(
     };
 
     var getDefaultBehaviours = function (spec) {
+      return [
+        ApiToggling
+      ];
       return Arr.filter(alloyBehaviours, function (b) {
-        return Objects.hasKey(spec, b.name());
+        return Objects.hasKey(spec, 'behaviours') && Objects.hasKey(spec.behaviours, b.name());
       });
     };
 
@@ -148,7 +162,10 @@ define(
 
     var behaviours = function (info) {
       // TODO: Check if behaviours are duplicated? Lab used to ...
-      var bs = info.behaviours();
+      var bs = info.behaviours().getOr({});
+      return getDefaultBehaviours({ });
+      return bs;
+
       var filtered = getDefaultBehaviours(info.originalSpec());
       return filtered.concat(bs);
     };

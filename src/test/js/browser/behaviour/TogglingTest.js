@@ -29,9 +29,11 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        toggling: {
-          selected: true,
-          toggleClass: 'test-selected'
+        behaviours: {
+          toggling: {
+            selected: true,
+            toggleClass: 'test-selected'
+          }
         }
       });
 

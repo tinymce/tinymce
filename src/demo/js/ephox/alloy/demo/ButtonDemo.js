@@ -110,16 +110,15 @@ define(
           action: function () {
             console.log('*** Font ButtonDemo click ***');
           },
-          capabilities: deriveCapabilities([
+          behaviours: deriveCapabilities([
             Toggling.config({
               toggleClass: 'demo-selected'
             })
-          ]),
-          toggling: {
-            toggleClass: 'demo-selected'
-          }
+          ])
         }
       );
+
+      return;
 
       button2.logSpec();
 

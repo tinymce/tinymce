@@ -62,12 +62,14 @@ define(
         },
 
         {
-          // tabstopping: true,
-          focusing: true,
-          keying: {
-            mode: 'execution',
-            useSpace: true,
-            useEnter: true
+          behaviours: {
+            // tabstopping: true,
+            focusing: true,
+            keying: {
+              mode: 'execution',
+              useSpace: true,
+              useEnter: true
+            }
           }
         },
 

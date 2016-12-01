@@ -5,11 +5,10 @@ define(
     'ephox.alloy.aad.ActiveToggle',
     'ephox.alloy.aad.ToggleApis',
     'ephox.alloy.aad.ToggleSchema',
-    'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.alloy.behaviour.Toggling'
+    'ephox.alloy.api.behaviour.BehaviourExport'
   ],
 
-  function (ActiveToggle, ToggleApis, ToggleSchema, BehaviourExport, Toggling) {
+  function (ActiveToggle, ToggleApis, ToggleSchema, BehaviourExport) {
     return BehaviourExport.santa(
       ToggleSchema,
       'toggling',
