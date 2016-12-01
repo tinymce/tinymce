@@ -2,27 +2,9 @@ define(
   'ephox.alloy.construct.CustomDefinition',
 
   [
-    'ephox.alloy.behaviour.Coupling',
-    'ephox.alloy.behaviour.Disabling',
-    'ephox.alloy.behaviour.Docking',
-    'ephox.alloy.behaviour.Dragging',
-    'ephox.alloy.behaviour.Focusing',
-    'ephox.alloy.behaviour.Highlighting',
-    'ephox.alloy.behaviour.Invalidating',
-    'ephox.alloy.behaviour.Keying',
-    'ephox.alloy.behaviour.Positioning',
-    'ephox.alloy.behaviour.Receiving',
-    'ephox.alloy.behaviour.Redesigning',
-    'ephox.alloy.behaviour.Remembering',
-    'ephox.alloy.behaviour.Replacing',
-    'ephox.alloy.behaviour.Representing',
-    'ephox.alloy.behaviour.Sandboxing',
-    'ephox.alloy.behaviour.Sliding',
-    'ephox.alloy.behaviour.Streaming',
-    'ephox.alloy.behaviour.Tabstopping',
-    'ephox.alloy.behaviour.Toggling',
-    'ephox.alloy.behaviour.Transitioning',
-    'ephox.alloy.behaviour.Unselecting',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Disabling',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.ephemera.AlloyTags',
     'ephox.boulder.api.FieldPresence',
@@ -32,14 +14,10 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.Classes',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Traverse',
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Remembering, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
+  function (Coupling, Disabling, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
@@ -138,7 +116,8 @@ define(
 
     var alloyBehaviours = [
       Toggling,
-      Coupling
+      Coupling,
+      Disabling
       // Toggling,
       // Keying,
       // Tabstopping,

@@ -3,28 +3,17 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.highway.Merger',
-    'ephox.sugar.api.Attr'
+    'ephox.alloy.behaviour.disabling.ActiveDisable',
+    'ephox.alloy.behaviour.disabling.DisableApis',
+    'ephox.alloy.behaviour.disabling.DisableSchema'
   ],
 
-  function (BehaviourExport, Merger, Attr) {
-    return Merger.deepMerge(
-      BehaviourExport.build(
-        'disabling',
-        [
-          'enable',
-          'disable',
-          'isDisabled'
-        ],
-        {
-        }
-      ),
-      {
-        // FIX: Is there a better way of sharing this code? Probably should be in sugar.
-        isDisabledElem: function (elem) {
-          return Attr.has(elem, 'disabled') || Attr.get(elem, 'aria-disabled') === 'true';
-        }
-      }
+  function (BehaviourExport, ActiveDisable, DisableApis, DisableSchema) {
+    return BehaviourExport.santa(
+      DisableSchema,
+      'disabling',
+      ActiveDisable,
+      DisableApis
     );
   }
 );
