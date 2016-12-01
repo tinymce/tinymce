@@ -60,8 +60,25 @@ define(
     //   }
     // };
 
+    var santa = function (fields, name, active, apis) {
+      return doSanta(
+        FieldSchema.optionObjOf(name, fields),
+        name,
+        active,
+        apis
+      );
+    };
 
-    var santa = function (schema, name, active, apis) {
+    var modeSanta = function (branchKey, branches, name, active, apis) {
+      return doSanta(
+        FieldSchema.optionOf(name, ValueSchema.choose(branchKey, branches)),
+        name,
+        active,
+        apis
+      );
+    };
+
+    var doSanta = function (schema, name, active, apis) {
       var getConfig = function (info) {
         return info.behaviours().bind(function (bs) {
           return bs[name]();
@@ -94,7 +111,8 @@ define(
           },
 
           schema: function () {
-            return FieldSchema.optionObjOf(name, schema);
+            return schema;
+            // return FieldSchema.optionObjOf(name, schema);
           },
 
           exhibit: function (info, base) {
@@ -122,6 +140,7 @@ define(
 
     return {
       build: build,
+      modeSanta: modeSanta,
       santa: santa
     };
   }

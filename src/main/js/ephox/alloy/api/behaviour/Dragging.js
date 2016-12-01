@@ -3,21 +3,25 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.highway.Merger',
+    'ephox.alloy.behaviour.dragging.DraggingBranches',
     'ephox.scullion.Struct'
   ],
 
-  function (BehaviourExport, Merger, Struct) {
-    return Merger.deepMerge(
-      BehaviourExport.build(
-        'dragging',
-        [
-
-        ],
-        { }
-      ),
+  function (BehaviourExport, DraggingBranches, Struct) {
+    return BehaviourExport.modeSanta(
+      'mode',
+      DraggingBranches,
+      'dragging',
       {
+        events: function (dragInfo) {
+          var dragger = dragInfo.dragger();
+          return dragger.handlers(dragInfo);
+        }
+      },
+      {
+        // Extra. Does not need component as input.
         snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ ])
+
       }
     );
   }
