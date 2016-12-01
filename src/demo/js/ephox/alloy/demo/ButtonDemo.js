@@ -4,7 +4,9 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.behaviour.CustomBehaviour',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
@@ -20,16 +22,34 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Toggling, CustomBehaviour, HtmlDisplay, DomModification, Objects, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
+  function (Gui, GuiFactory, BehaviourExport, Toggling, Behaviour, CustomBehaviour, HtmlDisplay, DomModification, Objects, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var catBehaviour = CustomBehaviour('blah', {
-        schema: Fun.constant(ValueSchema.anyValue()),
-        exhibit: function (info, base) {
+   
+
+      var redBehaviour = BehaviourExport.santa([ ], 'red.behaviour', {
+        exhibit: function (base, info) {
+          return DomModification.nu({
+            classes: [ 'cat' ],
+            attributes: {
+              
+            },
+            styles: {
+              color: 'red'
+            }
+          });
+        }
+      }, {
+
+      });
+
+
+      var catBehaviour = BehaviourExport.santa([ ], 'cat.behaviour', {
+        exhibit: function (base, info) {
           return DomModification.nu({
             classes: [ 'cat' ],
             attributes: {
@@ -41,34 +61,11 @@ define(
             value: 10
           });
         }
+      }, {
+
+
       });
 
-      var redBehaviour = CustomBehaviour('blah2', {
-        schema: Fun.constant(ValueSchema.anyValue()),
-        exhibit: function (info, base) {
-          return DomModification.nu({
-            classes: [ 'cat' ],
-            attributes: {
-              
-            },
-            styles: {
-              color: 'red'
-            }
-          });
-        }
-      });
-
-      var magic = function (obj) {
-        return {
-          info: function () {
-            return {
-              dog: Fun.constant('dog')
-            };
-          },
-          raw: obj,
-          name: 'magic'
-        };
-      };
 
       var deriveCapabilities = function (caps) {
         return Objects.wrapAll(caps);
@@ -118,11 +115,11 @@ define(
         }
       );
 
-      return;
-
       button2.logSpec();
 
       Toggling.select(button2);
+
+
 
       var customButton = HtmlDisplay.section(
         gui,
@@ -137,14 +134,21 @@ define(
           action: function () {
             console.log('*** ButtonDemo click ***');
           },
-          behaviours: [
+
+          behaviours: {
+            'red.behaviour': { },
+            'cat.behaviour': { }
+          },
+          customBehaviours: [
             catBehaviour,
             redBehaviour            
-          ],
-          blah: true,
-          'blah2': true
+          ]
         }
       );
+
+
+      return;
+
 
       var group1 = HtmlDisplay.section(
         gui,

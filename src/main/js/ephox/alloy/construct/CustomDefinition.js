@@ -42,15 +42,19 @@ define(
 
   function (ApiToggling, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Redesigning, Remembering, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Classes, Element, Node, Traverse, Error) {
     var toInfo = function (spec) {
-      var behaviours = [ ]; // Objects.readOr('behaviours', [])(spec);
+      var behaviours = Objects.readOr('customBehaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
       var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
         return b.schema();
       });
 
       console.log('behaviourSchema', behaviourSchema);
+      if (behaviourSchema.length > 2) {
+        console.log('spec', spec);
+        debugger;
+      }
 
-      console.log('spec', spec);
+      
       // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
@@ -128,46 +132,41 @@ define(
     };
 
     var getDefaultBehaviours = function (spec) {
-      return [
-        ApiToggling
-      ];
       return Arr.filter(alloyBehaviours, function (b) {
         return Objects.hasKey(spec, 'behaviours') && Objects.hasKey(spec.behaviours, b.name());
       });
     };
 
     var alloyBehaviours = [
-      Toggling,
-      Keying,
-      Tabstopping,
-      Focusing,
-      Receiving,
-      Coupling,
-      Streaming,
-      Positioning,
-      Highlighting,
-      Sandboxing,
-      Redesigning,
-      Disabling,
-      Invalidating,
-      Replacing,
-      Representing,
-      Sliding,
-      Transitioning,
-      Dragging,
-      Docking,
-      Unselecting,
-      Remembering
+      ApiToggling
+      // Toggling,
+      // Keying,
+      // Tabstopping,
+      // Focusing,
+      // Receiving,
+      // Coupling,
+      // Streaming,
+      // Positioning,
+      // Highlighting,
+      // Sandboxing,
+      // Redesigning,
+      // Disabling,
+      // Invalidating,
+      // Replacing,
+      // Representing,
+      // Sliding,
+      // Transitioning,
+      // Dragging,
+      // Docking,
+      // Unselecting,
+      // Remembering
     ];
 
     var behaviours = function (info) {
-      // TODO: Check if behaviours are duplicated? Lab used to ...
-      var bs = info.behaviours().getOr({});
-      return getDefaultBehaviours({ });
-      return bs;
-
-      var filtered = getDefaultBehaviours(info.originalSpec());
-      return filtered.concat(bs);
+      var spec = info.originalSpec();
+      var custom = Objects.readOptFrom(spec, 'customBehaviours').getOr([ ]);
+      var alloy = getDefaultBehaviours(spec);
+      return custom.concat(alloy);
     };
 
     // Probably want to pass info to these at some point.

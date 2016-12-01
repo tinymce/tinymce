@@ -27,8 +27,11 @@ define(
 
       var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
 
+      // The behaviour configuration is put into info.behaviours(). For everything else,
+      // we just need the list of static behaviours that this component cares about. The behaviour info
+      // to pass through will come from the info.behaviours() obj.
       var behaviours = CustomDefinition.behaviours(info);
-      console.log('behaviours', behaviours);
+      console.log('behaviours', behaviours, info.behaviours().getOr({ }));
 
       var definition = CustomDefinition.toDefinition(info);
       
@@ -88,6 +91,7 @@ define(
 
       var config = function (behaviour) {
         return info.behaviours().bind(function (b) {
+          console.log('behaviour.name', behaviour.name());
           return b[behaviour.name()]();
         });
       };

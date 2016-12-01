@@ -97,11 +97,11 @@ define(
           },
 
           exhibit: function (info, base) {
-            return getConfig(info).fold(function () {
-              return DomModification.nu({ });
-            }, function (behaviourInfo) {
-              return active.exhibit(base, behaviourInfo);
-            });
+            return getConfig(info).bind(function (behaviourInfo) {
+              return Objects.readOptFrom(active, 'exhibit').map(function (exhibitor) {
+                return exhibitor(base, behaviourInfo);
+              });
+            }).getOr(DomModification.nu({ }));
           },
 
           name: function () {
@@ -109,8 +109,10 @@ define(
           },
 
           handlers: function (info) {
-            return getConfig(info).map(function (behaviourInfo) {
-              return active.events(behaviourInfo);
+            return getConfig(info).bind(function (behaviourInfo) {
+              return Objects.readOptFrom(active, 'events').map(function (events) {
+                return events(behaviourInfo);
+              });
             }).getOr({ });
           }
         }
