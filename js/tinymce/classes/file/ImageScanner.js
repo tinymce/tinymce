@@ -40,6 +40,21 @@ define("tinymce/file/ImageScanner", [
 							image: img,
 							blobInfo: blobInfo
 						});
+					} else {
+						Conversions.uriToBlob(img.src).then(function (blob) {
+							Conversions.blobToDataUri(blob).then(function (dataUri) {
+                                base64 = Conversions.parseDataUri(dataUri).data;
+                                var blobInfoId = 'blobid' + (count++),
+                                    blobInfo = blobCache.create(blobInfoId, blob, base64);
+
+                                blobCache.add(blobInfo);
+
+                                resolve({
+                                    image: img,
+                                    blobInfo: blobInfo
+                                });
+                            });
+                        });
 					}
 
 					return;
