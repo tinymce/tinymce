@@ -71,6 +71,7 @@ define(
       return Merger.deepMerge(
         Obj.map(apis, function (apiF, apiName) {
           return function (component) {
+            var args = arguments;
             return component.config({
               name: Fun.constant(name)
             }).fold(
@@ -78,7 +79,7 @@ define(
                 throw 'dog';
               },
               function (info) {
-                var rest = Array.prototype.slice.call(arguments, 1);
+                var rest = Array.prototype.slice.call(args, 1);
                 return apiF.apply(undefined, [ component, info ].concat(rest));
               }
             );
