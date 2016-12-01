@@ -1,16 +1,15 @@
 define(
-  'ephox.alloy.aad.ActiveToggle',
+  'ephox.alloy.behaviour.toggling.ActiveToggle',
 
   [
-    'ephox.alloy.aad.ToggleApis',
+    'ephox.alloy.behaviour.toggling.ToggleApis',
     'ephox.alloy.behaviour.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.sugar.api.Attr'
+    'ephox.compass.Arr'
   ],
 
-  function (ToggleApis, Behaviour, DomModification, Objects, Arr, Attr) {
+  function (ToggleApis, Behaviour, DomModification, Objects, Arr) {
     var exhibit = function (base, toggleInfo) {
       return DomModification.nu({ });
     };

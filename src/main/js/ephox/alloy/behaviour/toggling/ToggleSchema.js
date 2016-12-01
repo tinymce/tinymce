@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.aad.ToggleSchema',
+  'ephox.alloy.behaviour.toggling.ToggleSchema',
 
   [
     'ephox.boulder.api.FieldSchema'

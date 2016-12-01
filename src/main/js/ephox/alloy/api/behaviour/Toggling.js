@@ -2,9 +2,9 @@ define(
   'ephox.alloy.api.behaviour.Toggling',
 
   [
-    'ephox.alloy.aad.ActiveToggle',
-    'ephox.alloy.aad.ToggleApis',
-    'ephox.alloy.aad.ToggleSchema',
+    'ephox.alloy.behaviour.toggling.ActiveToggle',
+    'ephox.alloy.behaviour.toggling.ToggleApis',
+    'ephox.alloy.behaviour.toggling.ToggleSchema',
     'ephox.alloy.api.behaviour.BehaviourExport'
   ],
 
@@ -14,17 +14,6 @@ define(
       'toggling',
       ActiveToggle,
       ToggleApis
-    );
-
-    return BehaviourExport.build(
-      'toggling',
-      [
-        // Make a branching behaviour, because selecting only makes sense for buttons. (and aria stuff)
-        'toggle',
-        'select',
-        'deselect',
-        'isSelected'
-      ]
     );
   }
 );

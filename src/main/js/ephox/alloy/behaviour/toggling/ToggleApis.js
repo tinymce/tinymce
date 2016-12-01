@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.aad.ToggleApis',
+  'ephox.alloy.behaviour.toggling.ToggleApis',
 
   [
     'ephox.boulder.api.Objects',

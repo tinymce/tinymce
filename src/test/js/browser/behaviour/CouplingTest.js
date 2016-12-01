@@ -26,14 +26,16 @@ asynctest(
           tag: 'div'
         },
         uid: 'primary',
-        coupling: {
-          others: {
-            'secondary-1': function (primary) { 
-              return {
-                uiType: 'button',
-                action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute())),
-                text: 'Click me'
-              };
+        behaviours: {
+          coupling: {
+            others: {
+              'secondary-1': function (primary) { 
+                return {
+                  uiType: 'button',
+                  action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute())),
+                  text: 'Click me'
+                };
+              }
             }
           }
         }
