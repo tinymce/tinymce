@@ -18,7 +18,7 @@
 		},
 
 		teardown: function() {
-			delete editor.default_link_target;
+			delete editor.settings.default_link_target;
 		}
 	});
 
