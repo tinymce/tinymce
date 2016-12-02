@@ -144,6 +144,13 @@ asynctest(
             NamedChain.write('_', cEnsurePositionChanged),
 
             NamedChain.direct('blocker', cMouseup, '_'),
+            NamedChain.direct('container', Chain.control(
+              UiFinder.cFindIn('.test-blocker'),
+              Guard.tryUntilNot('There should no longer be a blocker', 100, 100)
+            ), 'blocker'),
+
+            // When testing pinning, we need every browser to behave identically, so we reset positions
+            // so we know what we are dealing with            
             NamedChain.direct('box', Chain.op(function (elem) {
               Css.setAll(elem, {
                 'left': '50px',
