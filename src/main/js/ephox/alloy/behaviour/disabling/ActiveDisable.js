@@ -32,7 +32,7 @@ define(
         })
       };
 
-      return Objects.wrapAll([ canExecute, load ])
+      return Objects.wrapAll([ canExecute, load ]);
     };
 
     return {

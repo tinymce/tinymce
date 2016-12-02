@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.ephemera.AlloyTags',
@@ -20,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Docking, Dragging, Focusing, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
@@ -123,7 +124,8 @@ define(
       Disabling,
       Docking,
       Dragging,
-      Focusing
+      Focusing,
+      Highlighting
       // Toggling,
       // Keying,
       // Tabstopping,

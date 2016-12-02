@@ -3,26 +3,18 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.behaviour.highlighting.HighlightApis',
+    'ephox.alloy.behaviour.highlighting.HighlightSchema',
     'global!Array'
   ],
 
-  function (BehaviourExport, Array) {
+  function (BehaviourExport, HighlightApis, HighlightSchema, Array) {
     // If readability becomes a problem, stop dynamically generating these.
-    return BehaviourExport.build(
+    return BehaviourExport.santa(
+      HighlightSchema,
       'highlighting',
-      [
-        'highlight',
-        'dehighlight',
-        'dehighlightAll',
-        'highlightFirst',
-        'highlightLast',
-        'isHighlighted',
-        'getHighlighted',
-        'getFirst',
-        'getLast',
-        'getPrevious',
-        'getNext'
-      ],
+      { },
+      HighlightApis,
       { }
     );
   }

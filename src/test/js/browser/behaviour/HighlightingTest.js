@@ -47,9 +47,11 @@ asynctest(
         dom: {
           tag: 'div'
         },
-        highlighting: {
-          highlightClass: 'test-selected',
-          itemClass: 'test-item'
+        behaviours: {
+          highlighting: {
+            highlightClass: 'test-selected',
+            itemClass: 'test-item'
+          }
         },
         components: Arr.map([
           'alpha',
