@@ -119,7 +119,8 @@ define(
             opacity: '0.5',
             background: 'rgb(100, 100, 0)',
             'z-index': '1000000000000000'
-          }
+          },
+          classes: [ dragInfo.blockerClass() ]
         },
         events: {
           mousedown: EventHandler.nu({
@@ -190,6 +191,7 @@ define(
 
     var schema = [
       FieldSchema.defaulted('useFixed', false),
+      FieldSchema.strict('blockerClass'),
       FieldSchema.state('movement', Movement),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.defaulted('onDrop', Fun.noop),
