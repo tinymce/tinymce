@@ -70,7 +70,9 @@ asynctest(
       // FIX: Add mousedown to agar API.
       var cMousedown = Chain.op(Clicks.mousedown);
 
-      var cMousemove = function (x, y) {
+      var cMouseup = Chain.op(Clicks.mouseup);
+
+      var cMousemoveTo = function (x, y) {
         return Chain.op(function (elem) {
           Clicks.mousemove(elem, x, y);
         });
@@ -88,12 +90,28 @@ asynctest(
         }),
         Guard.addLogging('Ensuring that the position information read from the different stages was different')
       );
+      var cEnsurePinned = Chain.control(
+        Chain.binder(function (all) {
+          var pinned = all.box_position4.top !== all.box_position5_pinned.top &&
+            all.box_position5_pinned.top === all.box_position6_pinned.top && 
+            all.box_position5_pinned.top === '10px';
+          return pinned ? Result.value({ }) : Result.error(
+            'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + Json.stringify({
+              1: all.box_position4,
+              2: all.box_position5_pinned,
+              3: all.box_position6_pinned
+            }, null, 2)
+          );
+        }),
+        Guard.addLogging('Checking pinning behaviour to top of screen')
+      );
 
       var cRecordPosition = Chain.fromChains([
         Chain.control(
           Chain.binder(function (box) {
             return Css.getRaw(box, 'left').bind(function (left) {
               return Css.getRaw(box, 'top').map(function (top) {
+                console.log('recording', left, top);
                 return Result.value({
                   left: left,
                   top: top
@@ -115,33 +133,44 @@ asynctest(
             NamedChain.writeValue('container', gui.element()),
             NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-            NamedChain.direct('blocker', cMousemove(100, 200), '_'),
-
-            Chain.wait(10),
-
-            NamedChain.direct('blocker', cMousemove(120, 200), '_'),
-
+            NamedChain.direct('blocker', cMousemoveTo(100, 200), '_'),
+            NamedChain.direct('blocker', cMousemoveTo(120, 200), '_'),
             NamedChain.direct('box', cRecordPosition, 'box_position1'),
 
-            Chain.wait(10),
-
-            NamedChain.direct('blocker', cMousemove(140, 200), '_'),
-
+            NamedChain.direct('blocker', cMousemoveTo(140, 200), '_'),
             NamedChain.direct('box', cRecordPosition, 'box_position2'),
-
-            NamedChain.direct('blocker', cMousemove(160, 200), '_'),
-
+            NamedChain.direct('blocker', cMousemoveTo(160, 200), '_'),
             NamedChain.direct('box', cRecordPosition, 'box_position3'),
-
             NamedChain.write('_', cEnsurePositionChanged),
+
+            NamedChain.direct('blocker', cMouseup, '_'),
+            NamedChain.direct('box', Chain.op(function (elem) {
+              Css.setAll(elem, {
+                'left': '50px',
+                top: '100px'
+              });
+            }), '_'),
+
+            NamedChain.direct('box', cMousedown, '_'),
+            NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+
+            // Test pinning.
+            NamedChain.direct('blocker', cMousemoveTo(50, 100), '_'),
+            NamedChain.direct('blocker', cMousemoveTo(50, 100), '_'),
+            NamedChain.direct('blocker', cMousemoveTo(50, 60), '_'),
+            NamedChain.direct('box', cRecordPosition, 'box_position4'),
+            NamedChain.direct('blocker', cMousemoveTo(50, 30), '_'),
+            NamedChain.direct('box', cRecordPosition, 'box_position5_pinned'),
+            NamedChain.direct('blocker', cMousemoveTo(160, 20), '_'),
+            NamedChain.direct('box', cRecordPosition, 'box_position6_pinned'),
+            NamedChain.write('_', cEnsurePinned),
 
             Chain.wait(10),
             NamedChain.bundle(function (output) {
               return Result.value(output);
             })
           ])
-        ]),
-        Step.fail(10)
+        ])
       ];
     }, function () { success(); }, failure);
 
