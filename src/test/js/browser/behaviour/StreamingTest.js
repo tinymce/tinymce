@@ -5,12 +5,11 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
-    'ephox.agar.api.UiControls',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (GeneralSteps, Mouse, Step, UiControls, GuiFactory, GuiSetup) {
+  function (GeneralSteps, Mouse, Step, GuiFactory, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -20,13 +19,15 @@ asynctest(
         dom: {
           tag: 'input'
         },
-        streaming: {
-          stream: {
-            mode: 'throttle',
-            delay: 500
-          },
-          event: 'click',
-          onStream: store.adder('onStream')
+        behaviours: {
+          streaming: {
+            stream: {
+              mode: 'throttle',
+              delay: 500
+            },
+            event: 'click',
+            onStream: store.adder('onStream')
+          }
         }
       });
 

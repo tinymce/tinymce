@@ -26,6 +26,7 @@ asynctest(
 
     }, function (doc, body, gui, component, store) {
       return [
+        // TODO: Add behaviour testing. Probably webdriver tests.
         Assertions.sAssertStructure(
           'Check initial unselecting values',
           ApproxStructure.build(function (s, str, arr) {

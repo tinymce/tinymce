@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.dom.DomDefinition',
@@ -25,7 +26,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Receiving, Replacing, Toggling, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Receiving, Replacing, Streaming, Toggling, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
@@ -133,6 +134,7 @@ define(
       Invalidating,
       Receiving,
       Replacing,
+      Streaming,
       Unselecting
       // Toggling,
       // Keying,
