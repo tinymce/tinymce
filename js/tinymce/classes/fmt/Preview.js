@@ -130,34 +130,36 @@ define("tinymce/fmt/Preview", [
 
 		item = obj.selector = Tools.trim(item);
 
-		// matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
-		tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function($0, $1, $2, $3, $4) {
-			switch ($1) {
-				case '#':
-					obj.attrs.id = $2;
-					break;
+		if (item !== '*') {
+			// matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
+			tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function($0, $1, $2, $3, $4) {
+				switch ($1) {
+					case '#':
+						obj.attrs.id = $2;
+						break;
 
-				case '.':
-					obj.classes.push($2);
-					break;
+					case '.':
+						obj.classes.push($2);
+						break;
 
-				case ':':
-					if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
-						obj.attrs[$2] = $2;
-					}
-					break;
-			}
-
-			// atribute matched
-			if ($3 == '[') {
-				var m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
-				if (m) {
-					obj.attrs[m[1]] = m[2];
+					case ':':
+						if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
+							obj.attrs[$2] = $2;
+						}
+						break;
 				}
-			}
 
-			return '';
-		});
+				// atribute matched
+				if ($3 == '[') {
+					var m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
+					if (m) {
+						obj.attrs[m[1]] = m[2];
+					}
+				}
+
+				return '';
+			});
+		}
 
 		obj.name = tagName || 'div';
 		return obj;
@@ -165,7 +167,7 @@ define("tinymce/fmt/Preview", [
 
 
 	function parseSelector(selector) {
-		if (!selector || typeof selector !== 'string' || selector === '*') {
+		if (!selector || typeof selector !== 'string') {
 			return [];
 		}
 
