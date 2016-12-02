@@ -28,7 +28,11 @@ tinymce.PluginManager.add('anchor', function(editor) {
 	var showDialog = function () {
 		var selectedNode = editor.selection.getNode();
 		var isAnchor = selectedNode.tagName == 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
-		var value = isAnchor && selectedNode.id ? selectedNode.id : '';
+		var value = '';
+
+		if (isAnchor) {
+			value = selectedNode.id || selectedNode.name || '';
+		}
 
 		editor.windowManager.open({
 			title: 'Anchor',
@@ -37,9 +41,7 @@ tinymce.PluginManager.add('anchor', function(editor) {
 				var id = e.data.id;
 
 				if (isAnchor) {
-					if (selectedNode.name) {
-						selectedNode.removeAttribute('name');
-					}
+					selectedNode.removeAttribute('name');
 					selectedNode.id = id;
 				} else {
 					editor.selection.collapse(true);
