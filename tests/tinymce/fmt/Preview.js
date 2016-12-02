@@ -143,49 +143,44 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
 
 				deepEqual(Preview.parseSelector('.class > *'), [
             {
-							name: "div",
-							selector: "*",
-							attrs: {},
-							classes: []
+								name: "div",
+								selector: "*",
+								attrs: {},
+								classes: []
 						},
 						{
-							name: "div",
-							selector: ".class",
-							classes: [
-								"class"
-							],
-							attrs: {}
+								name: "div",
+								selector: ".class",
+								classes: ["class"],
+								attrs: {}
 						}
-
         ], '.class > * ok');
 
 				deepEqual(Preview.parseSelector('p + *'), [
             {
-							name: "div",
-							selector: "*",
-							attrs: {},
-							classes: [],
-							siblings: [
-								{
-									name: "p",
-									selector: "p",
-									attrs: {},
-									classes: []
-								}
-							]
+								name: "div",
+								selector: "*",
+								attrs: {},
+								classes: [],
+								siblings: [
+									{
+											name: "p",
+											selector: "p",
+											attrs: {},
+											classes: []
+									}
+								]
 						}
-
         ], 'p + * ok');
 
 				deepEqual(Preview.parseSelector('*.test'), [
             {
-							name: "div",
-							selector: "*",
-							attrs: {},
-							classes: []
+								name: "*",
+								selector: "*.test",
+								attrs: {},
+								classes: ['test']
 						}
-
-        ], '* ok');
+        ], '*.test ok');
 
     });
 
