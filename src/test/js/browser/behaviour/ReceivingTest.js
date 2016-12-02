@@ -30,14 +30,16 @@ asynctest(
         components: [
           
         ],
-        receiving: {
-          channels: {
-            'test.channel.1': {
-              schema: ValueSchema.objOf([
-                FieldSchema.strict('dummy')
-              ]),
-              onReceive: function (component, data) {
-                store.adder('received: ' + data.dummy())();
+        behaviours: {
+          receiving: {
+            channels: {
+              'test.channel.1': {
+                schema: ValueSchema.objOf([
+                  FieldSchema.strict('dummy')
+                ]),
+                onReceive: function (component, data) {
+                  store.adder('received: ' + data.dummy())();
+                }
               }
             }
           }
