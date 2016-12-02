@@ -3,22 +3,23 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.sugar.api.Focus'
+    'ephox.alloy.behaviour.focusing.ActiveFocus',
+    'ephox.alloy.behaviour.focusing.FocusApis',
+    'ephox.alloy.behaviour.focusing.FocusSchema'
   ],
 
-  function (BehaviourExport, Focus) {
-    return BehaviourExport.build(
+  function (BehaviourExport, ActiveFocus, FocusApis, FocusSchema) {
+    return BehaviourExport.santa(
+      FocusSchema,
       'focusing',
-      [
-        'focus',
-        'blur',
-        'isFocused'
-      ],
+      ActiveFocus,
+      FocusApis,
       {
-        isFocused: function (component) {
-          // Dupe wth Focusing.
-          return Focus.hasFocus(component.element());
-        }
+        // May need this.
+        // isFocused: function (component) {
+        //   // Dupe wth Focusing.
+        //   return Focus.hasFocus(component.element());
+        // }
       }
     );
   }
