@@ -165,7 +165,7 @@ define("tinymce/fmt/Preview", [
 
 
 	function parseSelector(selector) {
-		if (!selector || typeof selector !== 'string') {
+		if (!selector || typeof selector !== 'string' || selector === '*') {
 			return [];
 		}
 
