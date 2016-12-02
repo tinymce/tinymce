@@ -10,13 +10,17 @@ asynctest(
     'ephox.agar.mouse.Clicks',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
+    'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.test.GuiSetup',
     'ephox.numerosity.api.JSON',
+    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
+    'ephox.sugar.alien.Position',
     'ephox.sugar.api.Css'
   ],
  
-  function (Chain, Guard, NamedChain, Step, UiFinder, Clicks, GuiFactory, Memento, GuiSetup, Json, Result, Css) {
+  function (Chain, Guard, NamedChain, Step, UiFinder, Clicks, GuiFactory, Memento, Dragging, DragCoord, GuiSetup, Json, Option, Result, Position, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -32,7 +36,20 @@ asynctest(
       behaviours: {
         dragging: {
           mode: 'mouse',
-          blockerClass: 'test-blocker'
+          blockerClass: 'test-blocker',
+          snaps: {
+            getSnapPoints: function () {
+              return [
+                Dragging.snap({
+                  sensor: DragCoord.fixed(300, 10),
+                  range: Position(1000, 30),
+                  output: DragCoord.fixed(Option.none(), Option.some(10))
+                })
+              ];
+            },
+            leftAttr: 'data-snap-left',
+            topAttr: 'data-snap-top'
+          }
         }
       }
     });

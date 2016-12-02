@@ -60,25 +60,27 @@ define(
     //   }
     // };
 
-    var santa = function (fields, name, active, apis) {
+    var santa = function (fields, name, active, apis, extra) {
       return doSanta(
         FieldSchema.optionObjOf(name, fields),
         name,
         active,
-        apis
+        apis,
+        extra
       );
     };
 
-    var modeSanta = function (branchKey, branches, name, active, apis) {
+    var modeSanta = function (branchKey, branches, name, active, apis, extra) {
       return doSanta(
         FieldSchema.optionOf(name, ValueSchema.choose(branchKey, branches)),
         name,
         active,
-        apis
+        apis,
+        extra
       );
     };
 
-    var doSanta = function (schema, name, active, apis) {
+    var doSanta = function (schema, name, active, apis, extra) {
       var getConfig = function (info) {
         return info.behaviours().bind(function (bs) {
           return bs[name]();
@@ -86,6 +88,7 @@ define(
       };
 
       return Merger.deepMerge(
+        extra !== undefined ? extra : { },
         Obj.map(apis, function (apiF, apiName) {
           return function (component) {
             var args = arguments;

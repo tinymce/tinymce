@@ -18,6 +18,7 @@ define(
           return dragger.handlers(dragInfo);
         }
       },
+      { },
       {
         // Extra. Does not need component as input.
         snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ ])
