@@ -15,6 +15,10 @@
 					QUnit.start();
 				}
 			});
+		},
+
+		teardown: function() {
+			delete editor.settings.default_link_target;
 		}
 	});
 
@@ -76,5 +80,10 @@
 		equal(typeNewlineURL('ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a></p><p>&nbsp;</p>');
 		equal(typeNewlineURL('www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a></p><p>&nbsp;</p>');
 		equal(typeNewlineURL('www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.</p><p>&nbsp;</p>');
+	});
+
+	test("default_link_target='_self'", function() {
+		editor.settings.default_link_target = '_self';
+		equal(typeUrl('http://www.domain.com'), '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a></p>');
 	});
 })();
