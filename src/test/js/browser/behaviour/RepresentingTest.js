@@ -27,7 +27,7 @@ asynctest(
           representing: {
             initialValue: 'dog',
             onSet: function (input, value) {
-              Value.set(input, value);
+              Value.set(input.element(), value);
             },
             // on Change.
           }

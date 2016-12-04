@@ -12,7 +12,7 @@ define(
 
     var setValue = function (component, repInfo, value) {
       repInfo.state().set(value);
-      repInfo.onSet(component, value);
+      repInfo.onSet()(component, value);
     };
 
     var getValue = function (component, repInfo) {

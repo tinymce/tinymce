@@ -3,21 +3,18 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.highway.Merger'
+    'ephox.alloy.behaviour.representing.ActiveRepresenting',
+    'ephox.alloy.behaviour.representing.RepresentApis',
+    'ephox.alloy.behaviour.representing.RepresentSchema'
   ],
 
-  function (BehaviourExport, Merger) {
+  function (BehaviourExport, ActiveRepresenting, RepresentApis, RepresentSchema) {
     // This is clumsy.
-    var self = Merger.deepMerge(
-      BehaviourExport.build(
-        'representing',
-        [
-          'getValue',
-          'setValue',
-          'setValueFrom'
-        ],
-        { }
-      ),
+    var self = BehaviourExport.santa(
+      RepresentSchema,
+      'representing',
+      ActiveRepresenting,
+      RepresentApis,
       {
         setValueFrom: function (component, source) {
           var value = self.getValue(source);
