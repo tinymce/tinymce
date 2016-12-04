@@ -25,9 +25,12 @@ asynctest(
         },
         behaviours: {
           representing: {
-            initialValue: 'dog',
+            initialValue: {
+              value: 'dog',
+              text: 'Dog'
+            },
             onSet: function (input, value) {
-              Value.set(input.element(), value);
+              Value.set(input.element(), value.text);
             },
             // on Change.
           }
@@ -40,7 +43,7 @@ asynctest(
           'Initial value should be "dog"',
           ApproxStructure.build(function (s, str, arr) {
             return s.element('input', {
-              value: str.is('dog')
+              value: str.is('Dog')
             });
           }),
           component.element()
