@@ -18,6 +18,7 @@ define(
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onClose', Fun.noop),
 
+      // TODO: async === false is untested
       FieldSchema.defaulted('async', true),
 
       FieldSchema.strict('clear'),
