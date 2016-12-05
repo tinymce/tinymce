@@ -18,6 +18,8 @@ define(
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onClose', Fun.noop),
 
+      FieldSchema.defaulted('async', true),
+
       FieldSchema.strict('clear'),
       FieldSchema.strict('populate'),
       FieldSchema.strict('preview'),

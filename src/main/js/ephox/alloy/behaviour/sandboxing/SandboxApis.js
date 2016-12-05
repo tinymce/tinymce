@@ -2,11 +2,12 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
+    'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Option, Remove) {
+  function (Future, Option, Remove) {
     var clear = function (sandbox, sInfo) {
       sInfo.state().get().each(function (state) {
         sInfo.clear()(sandbox, state);
@@ -36,9 +37,18 @@ define(
       }
     };
 
+    var processData = function (sandbox, sInfo, data, f) {
+      if (sInfo.async()) {
+        return data.map(f);
+      } else {
+        var processed = f(data);
+        return Future.pure(processed);
+      }
+    };
+
     // Open sandbox transfers focus to the opened menu
-    var open = function (sandbox, sInfo, futureData) {
-      return futureData.map(function (data) {
+    var open = function (sandbox, sInfo, rawData) {
+      return processData(sandbox, sInfo, rawData, function (data) {
         var state = rebuild(sandbox, sInfo, data);
         // Focus the sandbox.
         focusIn(sandbox, sInfo);
@@ -48,8 +58,8 @@ define(
     };
 
     // Show sandbox does not transfer focus to the opened menu
-    var show = function (sandbox, sInfo, futureData) {
-      return futureData.map(function (data) {
+    var show = function (sandbox, sInfo, rawData) {
+      return processData(sandbox, sInfo, rawData, function (data) {
         var state = rebuild(sandbox, sInfo, data);
         // Preview the sandbox without focusing it
         sInfo.preview()(sandbox, state);

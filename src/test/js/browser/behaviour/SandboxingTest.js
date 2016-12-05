@@ -7,13 +7,10 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.sandbox.Manager',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
     'ephox.knoch.future.CachedFuture',
-    'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Attr',
@@ -23,7 +20,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, GuiFactory, Sandboxing, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Result, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Sandboxing, GuiSetup, Sinks, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -46,6 +43,9 @@ asynctest(
               }
             },
 
+            onOpen: store.adder('onOpen'),
+            onClose: store.adder('onClose'),
+
 
             clear: function (sandbox) {
               Remove.empty(sandbox.element());
@@ -62,19 +62,7 @@ asynctest(
           }
         }
       });
-      /*
-        Testing apis:
-       
-        openSandbox: Behaviour.tryActionOpt('sandboxing', info, 'openSandbox', openSandbox),
-        closeSandbox: Behaviour.tryActionOpt('sandboxing', info, 'closeSandbox', closeSandbox),
-        isShowing: Behaviour.tryActionOpt('sandboxing', info, 'isShowing', isShowing),
-        isPartOf: Behaviour.tryActionOpt('sandboxing', info, 'isPartOf', isPartOf),
-        showSandbox: Behaviour.tryActionOpt('sandboxing', info, 'showSandbox', showSandbox),
-        gotoSandbox: Behaviour.tryActionOpt('sandboxing', info, 'gotoSandbox', gotoSandbox),
-        getState: Behaviour.tryActionOpt('sandboxing', info, 'getState', getState)
-
-      */
-
+      
       var sShowWith = function (data) {
         return Step.async(function (next, die) {
           Sandboxing.show(
@@ -148,32 +136,32 @@ asynctest(
 
         // showing sandbox
         Logger.t('Show the sandbox with data: first-showing', sShowWith('first-showing')),
-        sCheckOpenState('After showing', { data: 'first-showing', store: [ 'preview' ] }),
+        sCheckOpenState('After showing', { data: 'first-showing', store: [ 'preview', 'onOpen' ] }),
 
         // // closing sandbox
         Logger.t('Closing sandbox', sClose),
-        sCheckClosedState('After closing', { store: [ ] }),
+        sCheckClosedState('After closing', { store: [ 'onClose' ] }),
 
         // // opening sandbox
         Logger.t('Opening sandbox', sOpenWith('first-opening')),
-        sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'enter' ] }),
-
+        sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'enter', 'onOpen' ] }),
+     
         // // opening sandbox again
         Logger.t('Opening sandbox while it is already open', sOpenWith('second-opening')),
         sCheckOpenState('Opening sandbox while it is already open', {
           data: 'second-opening',
-          store: [ 'enter' ]
+          store: [ 'enter', 'onOpen' ]
         }),
 
         // closing sandbox again
         Logger.t('Closing sandbox 2', sClose),
-        sCheckClosedState('After closing 2', { store: [ ] }),
+        sCheckClosedState('After closing 2', { store: [ 'onClose' ] }),
 
         // showing sandbox again
         Logger.t('Showing sandbox 2', sShowWith('second-showing')),
         sCheckOpenState('After showing 2', {
           data: 'second-showing',
-          store: [ 'preview' ]
+          store: [ 'preview', 'onOpen' ]
         }),
 
         // goto showing sandbox
@@ -182,12 +170,12 @@ asynctest(
         })),
         sCheckOpenState('After goto sandbox', {
           data: 'second-showing',
-          store: [ 'enter' ]
+          store: [ 'enter'  ]
         }),
 
         // Close sandbox
         Logger.t('Closing sandbox 3', sClose),
-        sCheckClosedState('After closing 3', { store: [ ] }),
+        sCheckClosedState('After closing 3', { store: [ 'onClose' ] }),
 
         Logger.t('Goto closed sandbox', Step.sync(function () {
           Sandboxing.focusIn(sandbox);
