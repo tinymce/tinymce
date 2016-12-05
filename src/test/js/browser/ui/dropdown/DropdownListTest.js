@@ -1,7 +1,8 @@
 asynctest(
-  'ExecutingKeyingTest',
+  'Dropdown List',
  
   [
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
@@ -12,7 +13,7 @@ asynctest(
     'ephox.sugar.api.TextContent'
   ],
  
-  function (Step, GuiFactory, Memento, GuiSetup, Future, Fun, Result, TextContent) {
+  function (Mouse, Step, GuiFactory, Memento, GuiSetup, Future, Fun, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -60,16 +61,34 @@ asynctest(
         
         fetch: function () { 
           return Future.pure([
-            { value: 'alpha', text: 'Alpha' }
+            { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+            { type: 'item', data: { value: 'beta', text: 'Beta' } }
           ]);
         },
         scaffold: Fun.identity,
         members: {
           menu: {
-            munge: Fun.identity
+            munge: function (menuSpec) {
+              return {
+                dom: {
+                  tag: 'container'
+                },
+                components: [
+                  { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+                ]
+              };
+            }
           },
           item: {
-            munge: Fun.identity
+            munge: function (itemSpec) {
+              return {
+                dom: {
+                  tag: 'li',
+                  innerHtml: itemSpec.data.text
+                },
+                components: [ ]
+              };
+            }
           }
         },
         markers: {
@@ -91,6 +110,7 @@ asynctest(
       );
 
       return [
+        Mouse.sClickOn(gui.element(), 'button'),
         Step.fail('Abrupt finish')
       ];
     }, function () { success(); }, failure);

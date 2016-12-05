@@ -83,11 +83,17 @@ define(
           }
         ),
         uid: detail.uid(),
-        highlighting: {
-          // Highlighting for a menu is selecting items inside the menu
-          highlightClass: detail.markers().selectedItem(),
-          itemClass: detail.markers().item(),
-          onHighlight: detail.onHighlight()
+
+        behaviours: {
+          highlighting: {
+            // Highlighting for a menu is selecting items inside the menu
+            highlightClass: detail.markers().selectedItem(),
+            itemClass: detail.markers().item(),
+            onHighlight: detail.onHighlight()
+          },
+          representing: {
+            initialValue: detail.value()
+          }
         },
         events: Objects.wrapAll([
           { 
@@ -125,12 +131,6 @@ define(
             })
           }
         ]),
-        representing: {
-          query: function () {
-            return detail.value();
-          },
-          set: function () { }
-        },
         components: components
       };
     };

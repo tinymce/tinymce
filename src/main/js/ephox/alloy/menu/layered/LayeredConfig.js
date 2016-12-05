@@ -67,6 +67,15 @@ define(
       var buildMenus = function (sandbox, menus) {
         return Obj.map(menus, function (spec, name) {
           // NOTE: We use rawUiSpec here so the nesting isn't a struct
+
+          // return Munge(
+          //   uiSpec.members().menu(),
+          //   uiSpec,
+          //   {
+          //     value: name,
+          //     items: spec.items
+          //   }
+
           var data = Merger.deepMerge(
             uiSpec.members().menu().munge(spec),
             {

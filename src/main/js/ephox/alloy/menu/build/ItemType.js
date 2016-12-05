@@ -39,10 +39,18 @@ define(
             }
           }
         ),
-        focusing: {
-          ignore: info.ignoreFocus(),
-          onFocus: function (component) {
-            ItemEvents.onFocus(component);
+        behaviours: {
+          focusing: {
+            ignore: info.ignoreFocus(),
+            onFocus: function (component) {
+              ItemEvents.onFocus(component);
+            }
+          },
+          keying: {
+            mode: 'execution'
+          },
+          representing: {
+            initialValue: info.data()
           }
         },
         events: Objects.wrapAll([
@@ -79,15 +87,6 @@ define(
             })
           }
         ]),
-        keying: {
-          mode: 'execution'
-        },
-        representing: {
-          query: function () {
-            return info.data();
-          },
-          set: function () { }
-        },
         components: info.components()
       });
     };

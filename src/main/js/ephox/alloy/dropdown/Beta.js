@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
     'ephox.peanut.Fun',
@@ -12,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Sandboxing, Gamma, Fun, Option, Remove, Width, Error) {
+  function (Coupling, Keying, Sandboxing, Gamma, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -25,13 +26,8 @@ define(
       Sandboxing.open(sandbox, futureData).get(function () { });
     };
 
-    var preview = function (detail, component, sandbox) {
-      var futureData = fetch(detail, component);
-      Sandboxing.show(sandbox, futureData).get(function () { });
-    };
-
     var close = function (detail, component, sandbox) {
-      Sandboxing.closeSandbox(sandbox);
+      Sandboxing.close(sandbox);
       // INVESTIGATE: Not sure if this is needed. 
       Remove.remove(sandbox.element());
     };
@@ -79,16 +75,15 @@ define(
     
     var previewPopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (Sandboxing.isShowing(sandbox)) close(detail, hotspot, sandbox);
-      preview(detail, hotspot, sandbox);
+      if (Sandboxing.isOpen(sandbox)) close(detail, hotspot, sandbox);
+      open(detail, hotspot, sandbox);
       return Option.some(true);
     };
 
     var enterPopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (Sandboxing.isShowing(sandbox)) {
-        console.log('going to sandbox');
-        Sandboxing.gotoSandbox(sandbox);
+      if (Sandboxing.isOpen(sandbox)) {
+        Keying.focusIn(sandbox);
       } else {
         open(detail, hotspot, sandbox);
       }
@@ -97,7 +92,7 @@ define(
 
     var escapePopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (Sandboxing.isShowing(sandbox)) {
+      if (Sandboxing.isOpen(sandbox)) {
         close(detail, hotspot, sandbox);
         return Option.some(true);
       } else {
