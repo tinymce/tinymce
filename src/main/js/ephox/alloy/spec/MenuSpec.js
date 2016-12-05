@@ -72,67 +72,70 @@ define(
       
       var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
 
-      return {
-        uiType: 'custom',
-        dom: Merger.deepMerge(
-          detail.dom(),
-          {
-            attributes: {
-              role: 'menu'
+      return Merger.deepMerge(
+        spec,
+        {
+          uiType: 'custom',
+          dom: Merger.deepMerge(
+            detail.dom(),
+            {
+              attributes: {
+                role: 'menu'
+              }
             }
-          }
-        ),
-        uid: detail.uid(),
+          ),
+          uid: detail.uid(),
 
-        behaviours: {
-          highlighting: {
-            // Highlighting for a menu is selecting items inside the menu
-            highlightClass: detail.markers().selectedItem(),
-            itemClass: detail.markers().item(),
-            onHighlight: detail.onHighlight()
+          behaviours: {
+            highlighting: {
+              // Highlighting for a menu is selecting items inside the menu
+              highlightClass: detail.markers().selectedItem(),
+              itemClass: detail.markers().item(),
+              onHighlight: detail.onHighlight()
+            },
+            representing: {
+              initialValue: detail.value()
+            }
           },
-          representing: {
-            initialValue: detail.value()
-          }
-        },
-        events: Objects.wrapAll([
-          { 
-            key: ItemEvents.focus(),
-            value: EventHandler.nu({
-              run: function (menu, simulatedEvent) {
-                // Highlight the item
-                var event = simulatedEvent.event();
-                menu.getSystem().getByDom(event.target()).each(function (item) {
-                  Highlighting.highlight(menu, item);
+          events: Objects.wrapAll([
+            { 
+              key: ItemEvents.focus(),
+              value: EventHandler.nu({
+                run: function (menu, simulatedEvent) {
+                  // Highlight the item
+                  var event = simulatedEvent.event();
+                  menu.getSystem().getByDom(event.target()).each(function (item) {
+                    Highlighting.highlight(menu, item);
 
-                  simulatedEvent.stop();
+                    simulatedEvent.stop();
 
-                  // Trigger the focus event on the menu.
-                  var focusTarget = menu.element();
-                  menu.getSystem().triggerEvent(MenuEvents.focus(), focusTarget, {
-                    target: Fun.constant(focusTarget),
-                    menu: Fun.constant(menu),
-                    item: item
+                    // Trigger the focus event on the menu.
+                    var focusTarget = menu.element();
+                    menu.getSystem().triggerEvent(MenuEvents.focus(), focusTarget, {
+                      target: Fun.constant(focusTarget),
+                      menu: Fun.constant(menu),
+                      item: item
+                    });
                   });
-                });
-              }
-            })
-          },
+                }
+              })
+            },
 
-          {
-            key: ItemEvents.hover(),
-            value: EventHandler.nu({
-              // Hide any irrelevant submenus and expand any submenus based 
-              // on hovered item
-              run: function (menu, simulatedEvent) {
-                var item = simulatedEvent.event().item();
-                Highlighting.highlight(menu, item);
-              }
-            })
-          }
-        ]),
-        components: components
-      };
+            {
+              key: ItemEvents.hover(),
+              value: EventHandler.nu({
+                // Hide any irrelevant submenus and expand any submenus based 
+                // on hovered item
+                run: function (menu, simulatedEvent) {
+                  var item = simulatedEvent.event().item();
+                  Highlighting.highlight(menu, item);
+                }
+              })
+            }
+          ]),
+          components: components
+        }
+      );
     };
 
     return {
