@@ -122,6 +122,10 @@ asynctest(
               4000
             ),
 
+            Step.sync(function () {
+              Assertions.assertEq('Checking hasGrown = true', true, Sliding.hasGrown(component));
+            }),
+
             store.sAssertEq('After finished growing', [ 'onStartGrow', 'onGrown' ]),
             store.sClear
           ])
@@ -157,6 +161,10 @@ asynctest(
               100,
               4000
             ),
+
+            Step.sync(function () {
+              Assertions.assertEq('Checking hasGrown = false', false, Sliding.hasGrown(component));
+            }),
 
             store.sAssertEq('After finished shrinking', [ 'onStartShrink', 'onShrunk' ]),
             store.sClear
@@ -197,14 +205,49 @@ asynctest(
           Sliding.toggleGrow(component);
         }),
 
-        sGrowingSteps('Sliding.toggleGrow'),
+        sGrowingSteps('Sliding.toggleGrow (from shrunk)'),
 
-        Step.fail('Checking styles'),
+        Step.sync(function () {
+          Sliding.toggleGrow(component);
+        }),
 
+        sShrinkingSteps('Sliding.toggleGrow (from grown)'),
+
+        Step.sync(function () {
+          Sliding.toggleGrow(component);
+        }),
+
+        sGrowingSteps('Sliding.toggleGrow (from shrunk)'),
+
+        Step.sync(function () {
+          Sliding.immediateShrink(component);
+        }),
+
+        // Steps are different because there should be no animation
+        store.sAssertEq('On start shrinking', [ 'onStartShrink', 'onShrunk' ]),
+        Assertions.sAssertStructure(
+          'Checking structure of immediate shrink',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              classes: [
+                arr.not('test-sliding-width-shrinking'),
+                arr.not('test-sliding-width-growing'),
+                arr.not('test-sliding-open'),
+
+                arr.has('test-sliding-closed')
+              ],
+              styles: {
+                width: str.is('0px')
+              }
+            });
+          }),
+          component.element()
+        ),        
+        Step.sync(function () {
+          Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
+        }),
 
         mRemoveStyles
-
-        // mRemoveStyles
       ];
     }, function () { success(); }, failure);
 
