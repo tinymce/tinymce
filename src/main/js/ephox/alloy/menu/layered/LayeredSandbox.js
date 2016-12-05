@@ -51,16 +51,18 @@ define(
         dom: {
           tag: 'div'
         },
-        sandboxing: config.sandboxing,
-        keying: config.keying,
-        receiving: Dismissal.receiving({
-          isExtraPart: isExtraPart
-        }),
-        events: config.events,
-        highlighting: {
-          highlightClass: detail.markers.selectedMenu,
-          itemClass: detail.markers.menu
-        }
+        behaviours: {
+          sandboxing: config.sandboxing,
+          keying: config.keying,
+          receiving: Dismissal.receiving({
+            isExtraPart: isExtraPart
+          }),
+          highlighting: {
+            highlightClass: detail.markers.selectedMenu,
+            itemClass: detail.markers.menu
+          }
+        },
+        events: config.events
       };
     };
 

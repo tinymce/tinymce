@@ -347,13 +347,13 @@ define(
 
       return {
         sandboxing: {
-          manager: Manager.contract({
-            clear: clear,
-            isPartOf: isPartOf,
-            populate: populate,
-            preview: preview,
-            enter: enter
-          }),
+          bucket: {
+            mode: 'sink',
+            lazySink: uiSpec.lazySink()
+          },
+          clear: clear,
+          isPartOf: isPartOf,
+          populate: populate,
           onClose: uiSpec.onClose(),
           lazySink: uiSpec.lazySink()
         },

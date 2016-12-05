@@ -10,10 +10,11 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'global!Array'
+    'global!Array',
+    'global!Error'
   ],
 
-  function (DomModification, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Array) {
+  function (DomModification, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Array, Error) {
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -95,9 +96,9 @@ define(
             return component.config({
               name: Fun.constant(name)
             }).fold(
-              function () {  
-                debugger;
-                throw 'dog';
+              function () {
+                component.logSpec();
+                throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
               },
               function (info) {
                 var rest = Array.prototype.slice.call(args, 1);

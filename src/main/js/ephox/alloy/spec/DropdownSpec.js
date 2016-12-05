@@ -55,35 +55,37 @@ define(
           uiType: 'custom',
           dom: detail.dom(),
           components: components,
-          toggling: {
-            toggleClass: detail.toggleClass(),
-            aria: {
-              'aria-expanded-attr': 'aria-expanded'
-            }
+          behaviours: {
+            toggling: {
+              toggleClass: detail.toggleClass(),
+              aria: {
+                'aria-expanded-attr': 'aria-expanded'
+              }
+            },
+            coupling: {
+              others: {
+                sandbox: function (hotspot) {
+                  return Beta.makeSandbox(detail, {
+                    anchor: 'hotspot',
+                    hotspot: hotspot
+                  }, hotspot, {
+                    onOpen: function () { Toggling.select(hotspot); },
+                    onClose: function () { Toggling.deselect(hotspot); }
+                  });
+                }
+              }
+            },
+            keying: {
+              mode: 'execution',
+              useSpace: true
+            },
+            focusing: true
           },
+
           eventOrder: {
             // Order, the button state is toggled first, so assumed !selected means close.
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-          },
-          coupling: {
-            others: {
-              sandbox: function (hotspot) {
-                return Beta.makeSandbox(detail, {
-                  anchor: 'hotspot',
-                  hotspot: hotspot
-                }, hotspot, {
-                  onOpen: function () { Toggling.select(hotspot); },
-                  onClose: function () { Toggling.deselect(hotspot); }
-                });
-              }
-            }
-          },
-
-          keying: {
-            mode: 'execution',
-            useSpace: true
-          },
-          focusing: true
+          }
         }
       );
     };

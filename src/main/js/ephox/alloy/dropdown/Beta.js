@@ -22,12 +22,12 @@ define(
     var open = function (detail, component, sandbox) {
       var futureData = fetch(detail, component);
       // Resolve the future to open the dropdown
-      Sandboxing.openSandbox(sandbox, futureData).get(function () { });
+      Sandboxing.open(sandbox, futureData).get(function () { });
     };
 
     var preview = function (detail, component, sandbox) {
       var futureData = fetch(detail, component);
-      Sandboxing.showSandbox(sandbox, futureData).get(function () { });
+      Sandboxing.show(sandbox, futureData).get(function () { });
     };
 
     var close = function (detail, component, sandbox) {
@@ -38,7 +38,7 @@ define(
 
     var togglePopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      var showing = Sandboxing.isShowing(sandbox);
+      var showing = Sandboxing.isOpen(sandbox);
       var action = showing ? close : open;
       action(detail, hotspot, sandbox);
     };
