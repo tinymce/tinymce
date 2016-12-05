@@ -2,6 +2,7 @@ asynctest(
   'Dropdown List',
  
   [
+    'ephox.agar.api.FocusTools',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
@@ -13,7 +14,7 @@ asynctest(
     'ephox.sugar.api.TextContent'
   ],
  
-  function (Mouse, Step, GuiFactory, Memento, GuiSetup, Future, Fun, Result, TextContent) {
+  function (FocusTools, Mouse, Step, GuiFactory, Memento, GuiSetup, Future, Fun, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -71,7 +72,8 @@ asynctest(
             munge: function (menuSpec) {
               return {
                 dom: {
-                  tag: 'container'
+                  tag: 'container',
+                  classes: [ 'menu' ]
                 },
                 components: [
                   { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
@@ -84,6 +86,7 @@ asynctest(
               return {
                 dom: {
                   tag: 'li',
+                  classes: [ 'item' ],
                   innerHtml: itemSpec.data.text
                 },
                 components: [ ]
@@ -111,6 +114,8 @@ asynctest(
 
       return [
         Mouse.sClickOn(gui.element(), 'button'),
+
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
         Step.fail('Abrupt finish')
       ];
     }, function () { success(); }, failure);

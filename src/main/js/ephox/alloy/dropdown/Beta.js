@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Keying, Sandboxing, Gamma, Fun, Option, Remove, Width, Error) {
+  function (Coupling, Highlighting, Keying, Sandboxing, Gamma, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -24,6 +25,7 @@ define(
       var futureData = fetch(detail, component);
       // Resolve the future to open the dropdown
       Sandboxing.open(sandbox, futureData).get(function () {
+        Highlighting.highlightFirst(sandbox);
         Keying.focusIn(sandbox);
       });
     };
