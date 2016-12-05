@@ -21,17 +21,19 @@ asynctest(
           tag: 'div',
           classes: 'special-keying'
         },
-        focusing: true,
-        keying: {
-          mode: 'special',
-          onSpace: store.adderH('space'),
-          onEnter: store.adderH('enter'),
-          onShiftEnter: store.adderH('shift+enter'),
-          onLeft: store.adderH('left'),
-          onUp: store.adderH('up'),
-          onDown: store.adderH('down'),
-          onRight: store.adderH('right'),
-          onEscape: store.adderH('escape')
+        behaviours: {
+          focusing: true,
+          keying: {
+            mode: 'special',
+            onSpace: store.adderH('space'),
+            onEnter: store.adderH('enter'),
+            onShiftEnter: store.adderH('shift+enter'),
+            onLeft: store.adderH('left'),
+            onUp: store.adderH('up'),
+            onDown: store.adderH('down'),
+            onRight: store.adderH('right'),
+            onEscape: store.adderH('escape')
+          }
         }
       });
 
