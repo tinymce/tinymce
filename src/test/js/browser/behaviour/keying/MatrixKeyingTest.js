@@ -46,7 +46,9 @@ asynctest(
               run: store.adder('item.execute: ' + classes.join(','))
             })
           },
-          focusing: true
+          behaviours: {
+            focusing: true
+          }
         };
       };
 
@@ -62,11 +64,13 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        keying: {
-          mode: 'matrix',
-          selectors: {
-            row: '.row',
-            cell: '.cell'
+        behaviours: {
+          keying: {
+            mode: 'matrix',
+            selectors: {
+              row: '.row',
+              cell: '.cell'
+            }
           }
         },
         // 4 x 6 grid size
