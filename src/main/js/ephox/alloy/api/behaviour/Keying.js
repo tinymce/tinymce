@@ -3,10 +3,12 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.alloy.behaviour.keyboard.KeyboardBranches'
+    'ephox.alloy.behaviour.keyboard.KeyboardBranches',
+    'ephox.boulder.api.Objects',
+    'global!console'
   ],
 
-  function (BehaviourExport, KeyboardBranches) {
+  function (BehaviourExport, KeyboardBranches, Objects, console) {
     // These APIs are going to be interesting because they are not
     // available for all keying modes
     return BehaviourExport.modeSanta(
@@ -22,9 +24,15 @@ define(
       {
         focusIn: function (component, keyInfo) {
           component.getSystem().triggerFocus(component.element(), component.element());
-        }
-        // Missing APIs        
+        },
 
+        setGridSize: function (component, keyInfo, numRows, numColumns) {
+          if (! Objects.hasKey(keyInfo, 'setGridSize')) {
+            console.error('Layout does not support setGridSize');
+          } else {
+            keyInfo.setGridSize()(keyInfo, numRows, numColumns);
+          }
+        }
       },
       { }
     );

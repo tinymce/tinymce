@@ -46,7 +46,9 @@ asynctest(
               run: store.adder('item.execute: ' + classes.join(','))
             })
           },
-          focusing: true
+          behaviours: {
+            focusing: true
+          }
         };
       };
 
@@ -62,9 +64,15 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        keying: {
-          mode: 'flatgrid',
-          selector: '.square'
+        behaviours: {
+          keying: {
+            mode: 'flatgrid',
+            selector: '.square',
+            initSize: {
+              numColumns: 1,
+              numRows: 1
+            }
+          }
         },
         // 4 x 6 grid size
         components: Arr.map(squares, function (num) {

@@ -11,9 +11,7 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.WrapArrNavigation',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell',
@@ -21,7 +19,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Cell, Focus, SelectorFind) {
+  function (Keys, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
@@ -31,6 +29,17 @@ define(
       Fields.initSize(),
       FieldSchema.state('dimensions', function () {
         return Cell(Option.none());
+      }),
+
+      FieldSchema.state('setGridSize', function () {
+        return function (gridInfo, numRows, numColumns) {
+          gridInfo.dimensions().set(
+            Option.some({
+              numRows: Fun.constant(numRows),
+              numColumns: Fun.constant(numColumns)
+            })
+          );
+        };
       })
     ];
 
@@ -87,22 +96,7 @@ define(
 
     var getEvents = Fun.constant({ });
 
-    var setGridSize = function (gridInfo, numRows, numColumns) {
-      gridInfo.dimensions().set(
-        Option.some({
-          numRows: numRows,
-          numColumns: numColumns
-        })
-      );
-    };
-
-    var getApis = function (gridInfo) {
-      return {
-        setGridSize: function (component, keyingInfo, numRows, numCols) {
-          setGridSize(gridInfo, numRows, numCols);
-        }
-      };
-    };
+    var getApis = {};
 
     return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }
