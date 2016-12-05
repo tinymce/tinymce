@@ -5,17 +5,14 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Representing, EventHandler, GuiSetup, Value) {
+  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Representing, GuiSetup, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -79,7 +76,23 @@ asynctest(
 
         sAssertValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),
 
-        Step.fail('Debugging')
+        Step.sync(function () {
+          Representing.setValue(component, {
+            value: 'elephant',
+            text: 'Elephant'
+          });
+        }),
+
+        sAssertValue('Checking represented value after setValue', { value: 'elephant', text: 'Elephant' }),
+        Assertions.sAssertStructure(
+          'Value should be "Elephant"',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('input', {
+              value: str.is('Elephant')
+            });
+          }),
+          component.element()
+        )
       ];
     }, function () { success(); }, failure);
 
