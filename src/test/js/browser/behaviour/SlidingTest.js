@@ -18,6 +18,12 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    var slidingStyles = [
+      '.test-sliding-closed { visibility: hidden; opacity: 0; }',
+      '.test-sliding-open {  visibility: visible, opacity: 1; }',
+      '.test-sliding-height-growing { height 0.3s ease, opacity 0.2s linear 0.1s }',
+      '.test-sliding-height-shrinking { opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s }'
+    ];
 
     var mAddStyles = function (doc, styles) {
       return Step.stateful(function (value, next, die) {
@@ -39,14 +45,17 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
-        uiType: 'container'
+        uiType: 'container',
+        behaviours: {
+          sliding: {
+            
+          }
+        }
       });
 
     }, function (doc, body, gui, component, store) {
       return [
-        mAddStyles(doc, [
-          'body { background: blue; }'
-        ]),
+        mAddStyles(doc, slidingStyles),
 
 
         Step.wait(1000),
