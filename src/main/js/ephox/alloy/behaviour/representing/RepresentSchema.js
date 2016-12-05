@@ -11,6 +11,10 @@ define(
     return [
       FieldSchema.defaulted('onSet', Fun.identity),
       FieldSchema.strict('initialValue'),
+      FieldSchema.optionObjOf('interactive', [
+        FieldSchema.strict('event'),
+        FieldSchema.strict('process')
+      ]),
       FieldSchema.state('state', function () { return Cell(); })
     ];
   }
