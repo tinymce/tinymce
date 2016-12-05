@@ -33,33 +33,14 @@ define(
     var make = function (label, useView, spec) {
       var detail = SpecSchema.asStructOrDie(label, schema, Merger.deepMerge(spec, {
         view: useView
-      }), Gamma.parts());
+      }), [ ]);
 
       var factories = Merger.deepMerge(
         Gamma.sink()
         // Gamma.display()
       );
 
-      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), {
-        '<alloy.dropdown-display>': UiSubstitutes.single(
-          Merger.deepMerge(
-            {
-              uiType: 'custom'
-            },
-            detail.parts().display(),
-            {
-              uid: detail.partUids().display,
-              representing: {
-                query: Fun.noop,
-                set: function (comp, value) {
-                  var dropdown = comp.getSystem().getByUid(detail.uid()).getOrDie();
-                  detail.displayer()(dropdown, comp, value);
-                }
-              }
-            }
-          )
-        )
-      }, factories);
+      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), {}, factories);
     
       return Merger.deepMerge(
         spec,
@@ -97,9 +78,7 @@ define(
               }
             }
           },
-          behaviours: [
-            DropdownBehaviour(detail.partUids().display)
-          ],
+
           keying: {
             mode: 'execution',
             useSpace: true

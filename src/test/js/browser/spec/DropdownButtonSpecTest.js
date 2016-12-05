@@ -42,7 +42,7 @@ asynctest(
         components: [
           { built: sink },
           {
-            uiType: 'dropdown',
+            uiType: 'dropdown-menu',
             text: 'Dropdown',
             uid: 'test-dropdown',
             fetchItems: function () {
