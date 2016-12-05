@@ -5,11 +5,12 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.scullion.Cell',
     'ephox.sugar.api.Height',
     'ephox.sugar.api.Width'
   ],
 
-  function (FieldSchema, ValueSchema, Fun, Height, Width) {
+  function (FieldSchema, ValueSchema, Fun, Cell, Height, Width) {
     return [
       FieldSchema.strict('closedStyle'),
       FieldSchema.strict('openStyle'),
@@ -24,6 +25,8 @@ define(
       FieldSchema.defaulted('onGrown', function () { }),
       FieldSchema.defaulted('onStartGrow', function () { }),
       FieldSchema.defaulted('expanded', false),
+
+      FieldSchema.state('state', function (spec) { return Cell(spec.expanded); }),
 
       FieldSchema.strictOf('dimension', ValueSchema.choose(
         'property', {
