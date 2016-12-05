@@ -20,6 +20,9 @@ define(
         }
       },
       {
+        focusIn: function (component, keyInfo) {
+          component.getSystem().triggerFocus(component.element(), component.element());
+        }
         // Missing APIs        
 
       },

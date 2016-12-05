@@ -25,7 +25,9 @@ asynctest(
             classes: [ 'test-item', name ],
             innerHtml: name
           },
-          focusing: true
+          behaviours: {
+            focusing: true
+          }
         };
       };
 
@@ -39,13 +41,15 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        keying: {
-          mode: 'menu',
-          selector: '.test-item',
-          onEscape: store.adderH('detected.escape'),
-          onRight: store.adderH('detected.right'),
-          onLeft:  store.adderH('detected.left'),
-          moveOnTab: true
+        behaviours: {
+          keying: {
+            mode: 'menu',
+            selector: '.test-item',
+            onEscape: store.adderH('detected.escape'),
+            onRight: store.adderH('detected.right'),
+            onLeft:  store.adderH('detected.left'),
+            moveOnTab: true
+          }
         },
         components: [
           makeItem('alpha'),
