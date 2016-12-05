@@ -36,7 +36,9 @@ asynctest(
               run: store.adder('item.execute: ' + name)
             })
           },
-          focusing: true
+          behaviours: {
+            focusing: true
+          }
         };
       };
 
@@ -52,9 +54,11 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        keying: {
-          mode: 'flow',
-          selector: '.stay'
+        behaviours: {
+          keying: {
+            mode: 'flow',
+            selector: '.stay'
+          }
         },
         components: [
           item([ 'stay', 'one' ], 'one'),
