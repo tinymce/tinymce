@@ -44,6 +44,7 @@ define(
       Fields.itemMarkers(),
 
       Fields.members([ 'item' ]),
+      FieldSchema.defaulted('shell', false),
 
       FieldSchema.defaulted('moveOnTab', true),
 
@@ -72,7 +73,7 @@ define(
         '<alloy.menu.items>': UiSubstitutes.multiple(builtItems)
       };
       
-      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
+      var components = detail.shell() ? builtItems : UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
 
       return Merger.deepMerge(
         spec,

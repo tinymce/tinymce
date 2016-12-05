@@ -27,6 +27,12 @@ define(
       return FieldSchema.strictOf('markers', MenuMarkers.schema());
     };
 
+    var tieredMenuMarkers = function () {
+      return FieldSchema.strictObjOf('markers', [
+        FieldSchema.strict('backgroundMenu')
+      ].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
+    };
+
     var markers = function (required) {
       return FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
     };
@@ -36,6 +42,7 @@ define(
       members: members,
       itemMarkers: itemMarkers,
       menuMarkers: menuMarkers,
+      tieredMenuMarkers: tieredMenuMarkers,
       markers: markers
     };
   }

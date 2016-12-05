@@ -25,6 +25,8 @@ define(
     var itemSchema = ValueSchema.objOf(itemFields);
 
     return {
+      menuFields: Fun.constant(menuFields),
+      itemFields: Fun.constant(itemFields),
       schema: Fun.constant(schema),
       itemSchema: Fun.constant(itemSchema)
     };
