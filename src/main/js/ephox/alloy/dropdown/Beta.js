@@ -23,6 +23,13 @@ define(
     var open = function (detail, component, sandbox) {
       var futureData = fetch(detail, component);
       // Resolve the future to open the dropdown
+      Sandboxing.open(sandbox, futureData).get(function () {
+        Keying.focusIn(sandbox);
+      });
+    };
+
+    var preview = function (detail, component, sandbox) {
+      var futureData = fetch(detail, component);
       Sandboxing.open(sandbox, futureData).get(function () { });
     };
 
@@ -76,7 +83,7 @@ define(
     var previewPopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       if (Sandboxing.isOpen(sandbox)) close(detail, hotspot, sandbox);
-      open(detail, hotspot, sandbox);
+      preview(detail, hotspot, sandbox);
       return Option.some(true);
     };
 
