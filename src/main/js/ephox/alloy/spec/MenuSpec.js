@@ -106,6 +106,7 @@ define(
           },
           events: Objects.wrapAll([
             { 
+              // This is dispatched from a menu to tell an item to be highlighted.
               key: ItemEvents.focus(),
               value: EventHandler.nu({
                 run: function (menu, simulatedEvent) {
@@ -131,8 +132,8 @@ define(
             {
               key: ItemEvents.hover(),
               value: EventHandler.nu({
-                // Hide any irrelevant submenus and expand any submenus based 
-                // on hovered item
+                // Highlight the item that the cursor is over. The onHighlight
+                // code needs to handle updating focus if required
                 run: function (menu, simulatedEvent) {
                   var item = simulatedEvent.event().item();
                   Highlighting.highlight(menu, item);

@@ -87,7 +87,10 @@ define(
                 item: uiSpec.members().item()
               },
               fakeFocus: uiSpec.fakeFocus(),
-              onHighlight: uiSpec.onHighlight()
+              onHighlight: uiSpec.onHighlight(),
+
+
+              // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
             }
           );
           var menu = sandbox.getSystem().build(data);
@@ -367,12 +370,10 @@ define(
           lazySink: uiSpec.lazySink()
         },
         keying: {
-          mode: 'menu',
-          selector: [ '.' + uiSpec.markers().selectedMenu(), '.' + uiSpec.markers().item() ].join(' '),
+          mode: 'special',
           onRight: onRight,
           onLeft: onLeft,
           onEscape: onEscape,
-          moveOnTab: true,
           focusManager: uiSpec.fakeFocus() ? focusManager : undefined
         },
         // Highlighting is used for highlighting the active menu
