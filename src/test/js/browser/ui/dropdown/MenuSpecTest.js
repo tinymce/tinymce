@@ -2,6 +2,8 @@ asynctest(
   'ExecutingKeyingTest',
  
   [
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
@@ -17,7 +19,7 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (Chain, Keyboard, Keys, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, EventHandler, ItemEvents, MenuEvents, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, EventHandler, ItemEvents, MenuEvents, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -70,6 +72,27 @@ asynctest(
       });
 
     }, function (doc, body, gui, component, store) {
+
+      var cAssertStructure = function (label, expected) {
+        return Chain.op(function (element) {
+          Assertions.assertStructure(label, expected, element);
+        });
+      };
+
+      var cTriggerFocusItem = Chain.op(function (target) {
+        component.getSystem().triggerEvent(SystemEvents.focusItem(), target, { });
+      });
+
+      var cAssertStore = function (label, expected) {
+        return Chain.op(function () {
+          store.assertEq(label, expected);
+        });
+      };
+
+      var cClearStore = Chain.op(function () {
+        store.clear();
+      });
+
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
@@ -77,17 +100,39 @@ asynctest(
             NamedChain.direct('menu', UiFinder.cFindIn('div[data-value="alpha"]'), 'alpha'),
             NamedChain.direct('menu', UiFinder.cFindIn('div[data-value="beta"]'), 'beta'),
 
-            Chain.op(function () {
-              store.assertEq('Before focusItem event', [ ]);
-            }),
+            cAssertStore('Before focusItem event', [ ]),
 
-            NamedChain.direct('alpha', Chain.op(function (alpha) {
-              component.getSystem().triggerEvent(SystemEvents.focusItem(), alpha, { });
-            }), '_'),
+            NamedChain.direct('alpha', cTriggerFocusItem, '_'),
 
-            Chain.op(function () {
-              store.assertEq('After focusItem event', [ 'menu.events.focus' ]);
-            })
+            NamedChain.direct('menu', cAssertStructure('After focusing item on alpha', ApproxStructure.build(function (s, str, arr) {
+              return s.element('div', {
+                classes: [
+                  arr.has('test-menu')
+                ],
+                children: [
+                  s.element('div', { classes: [ arr.has('test-selected-item') ] }),
+                  s.element('div', { classes: [ arr.not('test-selected-item') ] })
+                ]
+              });
+            })), '_'),
+
+            cAssertStore('After focusItem event (alpha)', [ 'menu.events.focus' ]),
+            cClearStore,
+            NamedChain.direct('beta', cTriggerFocusItem, '_'),
+            NamedChain.direct('menu', cAssertStructure('After focusing item on beta', ApproxStructure.build(function (s, str, arr) {
+              return s.element('div', {
+                classes: [
+                  arr.has('test-menu')
+                ],
+                children: [
+                  s.element('div', { classes: [ arr.not('test-selected-item') ] }),
+                  s.element('div', { classes: [ arr.has('test-selected-item') ] })
+                ]
+              });
+            })), '_'),
+            cAssertStore('After focusItem event (beta)', [ 'menu.events.focus' ]),
+            cClearStore
+            
           ])
         ]),
         Step.fail('Menu spec fail')
