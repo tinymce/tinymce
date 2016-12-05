@@ -11,7 +11,7 @@ define(
   function (BehaviourExport, ActiveSliding, SlidingApis, SlidingSchema) {
     return BehaviourExport.santa(
       SlidingSchema,
-      'mode',
+      'sliding',
       ActiveSliding,
       SlidingApis,
       { }

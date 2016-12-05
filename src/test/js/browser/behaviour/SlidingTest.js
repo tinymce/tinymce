@@ -2,6 +2,8 @@ asynctest(
   'SlidingTest',
  
   [
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
@@ -14,7 +16,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup, Element, Html, Insert, Remove) {
+  function (ApproxStructure, Assertions, Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup, Element, Html, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -46,20 +48,56 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
         uiType: 'container',
+        dom: {
+          styles: {
+            'overflow-x': 'hidden'
+          }
+        },
         behaviours: {
           sliding: {
             closedStyle: 'test-sliding-closed',
             openStyle: 'test-sliding-open',
             'shrinkingStyle': 'test-sliding-height-shrinking',
-            'growingStyle': 'test-sliding-height-growing'
+            'growingStyle': 'test-sliding-height-growing',
+
+            dimension: {
+              property: 'width'
+            }
           }
-        }
+        },
+        components: [
+          {
+            uiType: 'container',
+            dom: {
+              styles: {
+                width: '100px',
+                height: '100px',
+                background: 'green'
+              }
+            }
+          }
+        ]
       });
 
     }, function (doc, body, gui, component, store) {
       return [
         mAddStyles(doc, slidingStyles),
 
+        Assertions.sAssertStructure(
+          'Checking initial structure',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              classes: [
+                arr.has('test-sliding-closed')
+              ],
+              styles: {
+                'overflow-x': str.is('hidden')
+              },
+              components: [ s.anything() ]
+            });
+          }),
+          component.element()
+        ),
 
         Step.wait(1000),
 

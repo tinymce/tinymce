@@ -28,22 +28,18 @@ define(
       FieldSchema.strictOf('dimension', ValueSchema.choose(
         'property', {
           width: [
-            FieldSchema.state('dimension', function () {
-              return {
-                property: Fun.constant('width'),
-                getDimension: function (elem) {
-                  return Width.get(elem) + 'px';
-                }
+            FieldSchema.state('property', function () { return 'width'; } ),
+            FieldSchema.state('getDimension', function () {
+              return function (elem) {
+                return Width.get(elem) + 'px';
               };
             })
           ],
           height: [
-            FieldSchema.state('dimension', function () {
-              return {
-                property: Fun.constant('height'),
-                getDimension: function (elem) {
-                  return Height.get(elem) + 'px';
-                }
+            FieldSchema.state('property', function () { return 'height'; } ),
+            FieldSchema.state('getDimension', function () {
+              return function (elem) {
+                return Height.get(elem) + 'px';
               };
             })
           ]
