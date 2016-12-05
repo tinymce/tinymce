@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.ArrNavigation',
@@ -17,16 +16,16 @@ define(
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.Height',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Visibility'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, Disabling, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, Height, SelectorFilter, SelectorFind, Visibility) {
+  function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, Height, SelectorFilter, SelectorFind) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
       FieldSchema.option('onEnter'),
       FieldSchema.defaulted('firstTabstop', 0),
+      FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
       // Maybe later we should just expose isVisible
       FieldSchema.option('visibilitySelector')
     ];
@@ -89,7 +88,7 @@ define(
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
         return index < 0 ? Option.none() : cycle(tabstops, index, function (elem) {
           // Not sure if I want this disabled check to be elsewhere.
-          return isVisible(cyclicInfo, elem) && !Disabling.isDisabledElem(elem);
+          return isVisible(cyclicInfo, elem) && cyclicInfo.useTabstopAt(elem);
         }).fold(function () {
           // Even if there is only one, still capture the event.
           // logFailed(index, tabstops);

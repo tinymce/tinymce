@@ -2,21 +2,29 @@ asynctest(
   'Cyclic Keying Test',
  
   [
-    'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
-    'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup',
-    'ephox.sugar.api.DomEvent'
+    'ephox.alloy.test.GuiSetup'
   ],
  
-  function (Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, GuiSetup, DomEvent) {
+  function (FocusTools, Keyboard, Keys, GuiFactory, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
+      var makeButton = function (v, t) {
+        return {
+          uiType: 'button',
+          dom: { tag: 'button', innerHtml: t },
+          action: store.adder(v + '.clicked'),
+          behaviours: {
+            tabstopping: true
+          }
+        };
+      };
+
       return GuiFactory.build({
         uiType: 'custom',
         dom: {
@@ -29,12 +37,14 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        keying: {
-          mode: 'cyclic'
+        behaviours: {
+          keying: {
+            mode: 'cyclic'
+          }
         },
         components: [
-          { uiType: 'button', action: store.adder('button1.clicked'), text: 'Button1' },
-          { uiType: 'button', action: store.adder('button2.clicked'), text: 'Button2' },
+          makeButton('button1', 'Button1'),
+          makeButton('button2', 'Button2'),
           {
             uiType: 'custom',
             dom: {
@@ -48,8 +58,10 @@ asynctest(
                 height: '20px'
               }
             },
-            tabstopping: true,
-            focusing: true
+            behaviours: {
+              tabstopping: true,
+              focusing: true
+            }
           }
         ]
       });

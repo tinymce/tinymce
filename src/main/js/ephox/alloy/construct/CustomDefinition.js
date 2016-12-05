@@ -39,14 +39,7 @@ define(
       var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
         return b.schema();
       });
-
-      console.log('behaviourSchema', behaviourSchema);
-      if (behaviourSchema.length > 2) {
-        console.log('spec', spec);
-        debugger;
-      }
-
-      
+ 
       // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
