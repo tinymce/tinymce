@@ -4,28 +4,32 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
+    'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
  
-  function (ApproxStructure, Assertions, Keyboard, Keys, Step, GuiFactory, Sliding, EventHandler, GuiSetup, Element, Html, Insert, Remove) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Sliding, EventHandler, GuiSetup, Class, Element, Html, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var slidingStyles = [
       '.test-sliding-closed { visibility: hidden; opacity: 0; }',
       '.test-sliding-open {  visibility: visible; opacity: 1; }',
-      '.test-sliding-width-growing { transition: width 0.3s ease, opacity 0.2s linear 0.1s }',
-      '.test-sliding-width-shrinking { transition: opacity 0.3s ease, width 0.2s linear 0.1s, visibility 0s linear 0.3s }'
+      '.test-sliding-width-growing { transition: width 0.9s ease, opacity 0.6s linear 0.3s }',
+      '.test-sliding-width-shrinking { transition: opacity 0.9s ease, width 0.6s linear 0.3s, visibility 0s linear 0.9s }'
     ];
 
     var mAddStyles = function (doc, styles) {
@@ -53,7 +57,8 @@ asynctest(
           styles: {
             'overflow-x': 'hidden',
             background: 'blue',
-            'max-width': '300px'
+            'max-width': '300px',
+            height: '20px'
           }
         },
         behaviours: {
@@ -65,24 +70,100 @@ asynctest(
 
             dimension: {
               property: 'width'
-            }
+            },
+
+            onShrunk: store.adder('onShrunk'),
+            onStartShrink: store.adder('onStartShrink'),
+            onGrown: store.adder('onGrown'),
+            onStartGrow: store.adder('onStartGrow')
           }
-        },
-        components: [
-          {
-            uiType: 'container',
-            dom: {
-              styles: {
-                width: '100px',
-                height: '100px',
-                background: 'green'
-              }
-            }
-          }
-        ]
+        }
       });
 
     }, function (doc, body, gui, component, store) {
+
+      var sIsGrowing = Step.sync(function () {
+        Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
+      });
+
+      var sIsShrinking = Step.sync(function () {
+        Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
+      });
+
+
+
+      var sGrowingSteps = function (label) {
+        return Logger.t(
+          label,
+          GeneralSteps.sequence([
+            store.sAssertEq('On start growing', [ 'onStartGrow' ]),
+            Assertions.sAssertStructure(
+              'Checking structure',
+              ApproxStructure.build(function (s, str, arr) {
+                return s.element('div', {
+                  classes: [
+                    arr.not('test-sliding-width-shrinking'),
+                    arr.has('test-sliding-width-growing'),
+                    arr.not('test-sliding-closed'),
+                    arr.has('test-sliding-open')
+                  ],
+                  styles: {
+                    width: str.is('300px')
+                  }
+                });
+              }),
+              component.element()
+            ),
+
+            Waiter.sTryUntil(
+              'Waiting for animation to stop (growing)',
+              sIsGrowing,
+              100,
+              4000
+            ),
+
+            store.sAssertEq('After finished growing', [ 'onStartGrow', 'onGrown' ]),
+            store.sClear
+          ])
+        );
+      };
+
+      var sShrinkingSteps = function (label) {
+        return Logger.t(
+          label,
+          GeneralSteps.sequence([
+            store.sAssertEq('On start shrinking', [ 'onStartShrink' ]),
+            Assertions.sAssertStructure(
+              'Checking structure',
+              ApproxStructure.build(function (s, str, arr) {
+                return s.element('div', {
+                  classes: [
+                    arr.has('test-sliding-width-shrinking'),
+                    arr.not('test-sliding-width-growing'),
+                    arr.has('test-sliding-closed'),
+                    arr.not('test-sliding-open')
+                  ],
+                  styles: {
+                    width: str.is('0px')
+                  }
+                });
+              }),
+              component.element()
+            ),
+
+            Waiter.sTryUntil(
+              label + '\nWaiting for animation to stop (shrinking)',
+              sIsShrinking,
+              100,
+              4000
+            ),
+
+            store.sAssertEq('After finished shrinking', [ 'onStartShrink', 'onShrunk' ]),
+            store.sClear
+          ])
+        );
+      };
+
       return [
         mAddStyles(doc, slidingStyles),
 
@@ -92,33 +173,31 @@ asynctest(
             return s.element('div', {
               classes: [
                 arr.has('test-sliding-closed')
-              ],
-              styles: {
-                'overflow-x': str.is('hidden')
-              },
-              components: [ s.anything() ]
+              ]
             });
           }),
           component.element()
         ),
 
 
+        store.sClear,
         Step.sync(function () {
           Sliding.grow(component);
         }),
 
-        Step.wait(2000),
+        sGrowingSteps('Sliding.grow'),
+
         Step.sync(function () {
           Sliding.shrink(component);
         }),
 
-        Step.wait(2000),
+        sShrinkingSteps('Sliding.shrink'),
+
         Step.sync(function () {
-          Sliding.grow(component);
+          Sliding.toggleGrow(component);
         }),
 
-        Step.wait(1000),
-
+        sGrowingSteps('Sliding.toggleGrow'),
 
         Step.fail('Checking styles'),
 
