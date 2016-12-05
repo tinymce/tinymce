@@ -3,36 +3,18 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.alloy.behaviour.sliding.SlidingBranches'
+    'ephox.alloy.behaviour.sliding.ActiveSliding',
+    'ephox.alloy.behaviour.sliding.SlidingApis',
+    'ephox.alloy.behaviour.sliding.SlidingSchema'
   ],
 
-  function (BehaviourExport, SlidingBranches) {
-    return BehaviourExport.modeSanta(
+  function (BehaviourExport, ActiveSliding, SlidingApis, SlidingSchema) {
+    return BehaviourExport.santa(
+      SlidingSchema,
       'mode',
-      SlidingBranches,
-      'sliding',
-      {
-        events: function (slideInfo) {
-          var handler = slideInfo.handler();
-          return handler.toEvents(slideInfo);
-        }
-      },
-      { },
+      ActiveSliding,
+      SlidingApis,
       { }
-    );
-
-    return BehaviourExport.build(
-      'sliding',
-      [
-        'grow',
-        'shrink',
-        'hasGrown',
-        'toggleGrow',
-        'immediateShrink'
-      ],
-      { 
-
-      }
     );
   }
 );

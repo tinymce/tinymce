@@ -48,7 +48,10 @@ asynctest(
         uiType: 'container',
         behaviours: {
           sliding: {
-            
+            closedStyle: 'test-sliding-closed',
+            openStyle: 'test-sliding-open',
+            'shrinkingStyle': 'test-sliding-height-shrinking',
+            'growingStyle': 'test-sliding-height-growing'
           }
         }
       });
