@@ -42,9 +42,7 @@ asynctest(
 
         markers: {
           item: 'test-item',
-          selectedItem: 'test-selected-item',
-          menu: 'test-menu',
-          selectedMenu: 'test-selected-menu'
+          selectedItem: 'test-selected-item'
         },
         members: { 
           item: {
@@ -55,6 +53,7 @@ asynctest(
                   attributes: {
                     'data-value': itemSpec.data.value
                   },
+                  classes: [ 'test-item' ],
                   innerHtml: itemSpec.data.text
                 },
                 components: [ ]
@@ -117,6 +116,7 @@ asynctest(
             })), '_'),
 
             cAssertStore('After focusItem event (alpha)', [ 'menu.events.focus' ]),
+
             cClearStore,
             NamedChain.direct('beta', cTriggerFocusItem, '_'),
             NamedChain.direct('menu', cAssertStructure('After focusing item on beta', ApproxStructure.build(function (s, str, arr) {

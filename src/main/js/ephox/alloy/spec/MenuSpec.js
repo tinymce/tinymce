@@ -41,9 +41,11 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
 
-      Fields.menuMarkers(),
+      Fields.itemMarkers(),
 
       Fields.members([ 'item' ]),
+
+      FieldSchema.defaulted('moveOnTab', true),
 
       FieldSchema.defaulted('fakeFocus', false),
       FieldSchema.defaulted('onHighlight', Fun.noop)
@@ -95,6 +97,11 @@ define(
             },
             representing: {
               initialValue: detail.value()
+            },
+            keying: {
+              mode: 'menu',
+              selector: '.' + detail.markers().item(),
+              moveOnTab: detail.moveOnTab()
             }
           },
           events: Objects.wrapAll([

@@ -2,7 +2,6 @@ define(
   'ephox.alloy.keying.MenuType',
 
   [
-    'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.Keys',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
@@ -17,14 +16,11 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
+  function (Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     // FIX: Dupe with Flowtype
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
-      FieldSchema.option('onRight'),
-      FieldSchema.option('onLeft'),
-      FieldSchema.option('onEscape'),
       FieldSchema.defaulted('moveOnTab', false)
     ];
 
@@ -66,15 +62,6 @@ define(
       return DomNavigation.horizontal(element, info.selector(), focused, +1);
     };
 
-    var fire = function (onHandler) {
-      return function (component, simulatedEvent, menuInfo) {
-        return menuInfo[onHandler]().bind(function (h) {
-          // TODO: Use getSource everywhere.
-          return h(component, simulatedEvent.getSource());
-        });
-      };
-    };
-
     var fireShiftTab = function (component, simulatedEvent, menuInfo) {
       return menuInfo.moveOnTab() ? DomMovement.move(moveUp)(component, simulatedEvent, menuInfo) : Option.none();
     };
@@ -86,9 +73,6 @@ define(
     var getRules = Fun.constant([
       KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.move(moveUp)),
       KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.move(moveDown)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), fire('onRight')),
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), fire('onLeft')),
-      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE() ), fire('onEscape')),
       KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
       KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), fireTab),
       KeyRules.rule( KeyMatch.inSet( Keys.ENTER() ), execute),

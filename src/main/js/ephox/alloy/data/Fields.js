@@ -20,7 +20,7 @@ define(
     };
 
     var itemMarkers = function () {
-      FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
+      return FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
     };
 
     var menuMarkers = function () {
