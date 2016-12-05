@@ -20,14 +20,15 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       var hotspot = GuiFactory.build({
         uiType: 'button',
-        text: 'Hotspot',
         action: function () { },
         dom: {
           styles: {
             position: 'absolute',
             left: '100px',
             top: '120px'
-          }
+          },
+          innerHtml: 'Hotspot',
+          tag: 'button'
         },
         uid: 'hotspot'
       });
