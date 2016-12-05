@@ -23,8 +23,8 @@ define(
 
       FieldSchema.strict('clear'),
       FieldSchema.strict('populate'),
-      FieldSchema.strict('preview'),
-      FieldSchema.strict('enter'),
+
+      // Maybe this should be optional
       FieldSchema.strict('isPartOf'),
 
       FieldSchema.strictOf('bucket', ValueSchema.choose('mode', {
