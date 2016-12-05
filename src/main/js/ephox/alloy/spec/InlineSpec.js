@@ -2,7 +2,6 @@ define(
   'ephox.alloy.spec.InlineSpec',
 
   [
-    'ephox.alloy.behaviour.Sandboxing',
     'ephox.alloy.inline.spi.InlineConfig',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
@@ -11,7 +10,7 @@ define(
     'ephox.sugar.api.Body'
   ],
 
-  function (Sandboxing, InlineConfig, FieldSchema, ValueSchema, Merger, Cell, Body) {
+  function (InlineConfig, FieldSchema, ValueSchema, Merger, Cell, Body) {
 
 
     var make = function (spec) {
