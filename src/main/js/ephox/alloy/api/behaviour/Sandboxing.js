@@ -2,21 +2,17 @@ define(
   'ephox.alloy.api.behaviour.Sandboxing',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport'
+    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.behaviour.sandboxing.SandboxApis',
+    'ephox.alloy.behaviour.sandboxing.SandboxSchema'
   ],
 
-  function (BehaviourExport) {
-    return BehaviourExport.build(
+  function (BehaviourExport, SandboxApis, SandboxSchema) {
+    return BehaviourExport.santa(
+      SandboxSchema,
       'sandboxing',
-      [
-        'openSandbox', // change to open
-        'closeSandbox', // change to close
-        'isShowing', // change to isOpen
-        'isPartOf',
-        'showSandbox', // change to preview
-        'gotoSandbox', // change to enter
-        'getState'
-      ],
+      { },
+      SandboxApis,
       { }
     );
   }

@@ -18,8 +18,10 @@ define(
           }
         },
         uid: 'fixed-sink',
-        positioning: {
-          useFixed: true
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
       });
     };
@@ -34,8 +36,10 @@ define(
           }
         },
         uid: 'relative-sink',
-        positioning: {
-          useFixed: false
+        behaviours: {
+          positioning: {
+            useFixed: false
+          }
         }
       });
     };

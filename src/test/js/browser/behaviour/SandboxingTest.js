@@ -15,6 +15,7 @@ asynctest(
     'ephox.knoch.future.CachedFuture',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -22,7 +23,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, GuiFactory, Sandboxing, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, GuiFactory, Sandboxing, Manager, GuiSetup, Sinks, CachedFuture, Future, Fun, Result, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,9 +37,16 @@ asynctest(
           classes: [ 'test-sandbox' ]
         },
         uid: 'no-duplicates',
-        sandboxing: {
-          sink: sink,
-          manager: Manager.contract({
+        behaviours: {
+          sandboxing: {
+            bucket: {
+              mode: 'sink',
+              lazySink: function () {
+                return Result.value(sink);
+              }
+            },
+
+
             clear: function (sandbox) {
               Remove.empty(sandbox.element());
             },
@@ -51,8 +59,7 @@ asynctest(
               return input;
             },
             isPartOf: Fun.constant(false)
-
-          })
+          }
         }
       });
       /*
@@ -70,7 +77,7 @@ asynctest(
 
       var sShowWith = function (data) {
         return Step.async(function (next, die) {
-          Sandboxing.showSandbox(
+          Sandboxing.show(
             sandbox,
             CachedFuture.pure(data)
           ).get(function () {
@@ -81,14 +88,14 @@ asynctest(
 
       var sOpenWith = function (data) {
         return Step.async(function (next, die) {
-          Sandboxing.openSandbox(sandbox, CachedFuture.pure(data)).get(function () {
+          Sandboxing.open(sandbox, CachedFuture.pure(data)).get(function () {
             next();
           });
         });
       };
 
       var sClose = Step.sync(function () {
-        Sandboxing.closeSandbox(sandbox);
+        Sandboxing.close(sandbox);
       });
 
       var sCheckShowing = function (label, expected) {
@@ -143,15 +150,15 @@ asynctest(
         Logger.t('Show the sandbox with data: first-showing', sShowWith('first-showing')),
         sCheckOpenState('After showing', { data: 'first-showing', store: [ 'preview' ] }),
 
-        // closing sandbox
+        // // closing sandbox
         Logger.t('Closing sandbox', sClose),
         sCheckClosedState('After closing', { store: [ ] }),
 
-        // opening sandbox
+        // // opening sandbox
         Logger.t('Opening sandbox', sOpenWith('first-opening')),
         sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'enter' ] }),
 
-        // opening sandbox again
+        // // opening sandbox again
         Logger.t('Opening sandbox while it is already open', sOpenWith('second-opening')),
         sCheckOpenState('Opening sandbox while it is already open', {
           data: 'second-opening',
@@ -171,7 +178,7 @@ asynctest(
 
         // goto showing sandbox
         Logger.t('Goto sandbox', Step.sync(function () {
-          Sandboxing.gotoSandbox(sandbox);
+          Sandboxing.focusIn(sandbox);
         })),
         sCheckOpenState('After goto sandbox', {
           data: 'second-showing',
@@ -183,11 +190,13 @@ asynctest(
         sCheckClosedState('After closing 3', { store: [ ] }),
 
         Logger.t('Goto closed sandbox', Step.sync(function () {
-          Sandboxing.gotoSandbox(sandbox);
+          Sandboxing.focusIn(sandbox);
         })),
         sCheckClosedState('After goto closed sandbox', {
           store: [ ]
-        })
+        }),
+
+        Step.fail('dog')
       ];
     }, function () { success(); }, failure);
 
