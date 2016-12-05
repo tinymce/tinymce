@@ -91,7 +91,7 @@ define(
 
       var config = function (behaviour) {
         return info.behaviours().bind(function (b) {
-          console.log('behaviour.name', behaviour.name());
+          console.log('behaviour.name', behaviour.name(), b);
           return b[behaviour.name()]();
         });
       };

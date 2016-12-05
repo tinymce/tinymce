@@ -2,19 +2,27 @@ define(
   'ephox.alloy.api.behaviour.Keying',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport'
+    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.behaviour.keyboard.KeyboardBranches'
   ],
 
-  function (BehaviourExport) {
+  function (BehaviourExport, KeyboardBranches) {
     // These APIs are going to be interesting because they are not
     // available for all keying modes
-    return BehaviourExport.build(
+    return BehaviourExport.modeSanta(
+      'mode',
+      KeyboardBranches,
       'keying',
-      [
-        'focusIn',
+      {
+        events: function (keyInfo) {
+          var handler = keyInfo.handler();
+          return handler.toEvents(keyInfo);
+        }
+      },
+      {
+        // Missing APIs        
 
-        'setGridSize' // Only for "FlatgridType"
-      ],
+      },
       { }
     );
   }

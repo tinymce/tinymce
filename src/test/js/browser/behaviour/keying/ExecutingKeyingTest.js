@@ -26,13 +26,16 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        keying: {
-          mode: 'execution'
-        },
+
         components: [
           
         ],
-        focusing: true,
+        behaviours: {
+          focusing: true,
+          keying: {
+            mode: 'execution'
+          }
+        },
         events: {
           'alloy.execute': EventHandler.nu({
             run: store.adder('event.execute')

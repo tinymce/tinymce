@@ -96,6 +96,7 @@ define(
               name: Fun.constant(name)
             }).fold(
               function () {  
+                debugger;
                 throw 'dog';
               },
               function (info) {
