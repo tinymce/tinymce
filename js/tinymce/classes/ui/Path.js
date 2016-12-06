@@ -19,7 +19,7 @@ define("tinymce/ui/Path", [
 	"tinymce/ui/Widget",
 	"tinymce/util/Arr"
 
-], function (Widget, Arr) {
+], function(Widget,Arr) {
 	"use strict";
 
 	return Widget.extend({
@@ -30,7 +30,7 @@ define("tinymce/ui/Path", [
 		 * @param {Object} settings Name/value object with settings.
 		 * @setting {String} delimiter Delimiter to display between row in path.
 		 */
-		init: function (settings) {
+		init: function(settings) {
 			var self = this;
 
 			if (!settings.delimiter) {
@@ -41,7 +41,7 @@ define("tinymce/ui/Path", [
 			self.classes.add('path');
 			self.canFocus = true;
 
-			self.on('click', function (e) {
+			self.on('click', function(e) {
 				var index, target = e.target;
 
 				if ((index = target.getAttribute('data-index'))) {
@@ -58,7 +58,7 @@ define("tinymce/ui/Path", [
 		 * @method focus
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
-		focus: function () {
+		focus: function() {
 			var self = this;
 
 			self.getEl().firstChild.focus();
@@ -72,7 +72,7 @@ define("tinymce/ui/Path", [
 		 * @method row
 		 * @param {Array} row Array with row name is rendered to path.
 		 */
-		row: function (row) {
+		row: function(row) {
 			if (!arguments.length) {
 				return this.state.get('row');
 			}
@@ -88,7 +88,7 @@ define("tinymce/ui/Path", [
 		 * @method renderHtml
 		 * @return {String} HTML representing the control.
 		 */
-		renderHtml: function () {
+		renderHtml: function() {
 			var self = this;
 
 			return (
@@ -98,17 +98,17 @@ define("tinymce/ui/Path", [
 			);
 		},
 
-		bindStates: function () {
+		bindStates: function() {
 			var self = this;
 
-			self.state.on('change:row', function (e) {
+			self.state.on('change:row', function(e) {
 				self.innerHtml(self._getDataPathHtml(e.value));
 			});
 
 			return self._super();
 		},
 
-		_getDataPathHtml: function (data) {
+		_getDataPathHtml: function(data) {
 			var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
 
 			for (i = 0, l = parts.length; i < l; i++) {
