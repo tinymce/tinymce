@@ -36,7 +36,7 @@ define(
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('onEscape'),
 
-      // FieldSchema.strict('onOpenMenu'),
+      FieldSchema.strict('onOpenMenu'),
       FieldSchema.strict('onOpenSubmenu'),
 
       FieldSchema.strictObjOf('data', [
@@ -291,6 +291,7 @@ define(
                 setup(container).each(function (primary) {
                   console.log('primary', primary);
                   Replacing.append(container, { built: primary });
+                  uiSpec.onOpenMenu()(container, primary);
                 });
               }
             }

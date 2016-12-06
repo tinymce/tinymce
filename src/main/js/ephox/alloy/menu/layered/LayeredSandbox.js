@@ -3,13 +3,15 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, Dismissal, SpecSchema, FieldSchema, Fun) {
+  function (ComponentStructure, Sandboxing, Dismissal, SpecSchema, FieldSchema, Arr, Fun) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyAnchor'),
@@ -35,7 +37,9 @@ define(
           sandboxing: {
             onOpen: detail.onOpen(),
             onClose: detail.onClose(),
-            isPartOf: Fun.constant(false),
+            isPartOf: function (container, data, queryElem) {
+              return ComponentStructure.isPartOf(data, queryElem);
+            },
             bucket: {
               mode: 'sink',
               lazySink: detail.lazySink()

@@ -17,7 +17,7 @@ define(
 
       Fields.tieredMenuMarkers(),
 
-      FieldSchema.strict('scaffold'),
+      // FieldSchema.strict('scaffold'),
 
       FieldSchema.defaulted('preprocess', Fun.identity),
       FieldSchema.defaulted('fakeFocus', false),
@@ -37,7 +37,7 @@ define(
             onHighlight: detail.view().onHighlight(),
 
             fakeFocus: detail.view().fakeFocus(),
-            scaffold: detail.view().scaffold(),
+            // scaffold: detail.view().scaffold(),
 
             members: {
               item: detail.view().members().item(),

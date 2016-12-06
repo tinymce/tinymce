@@ -250,7 +250,7 @@ define(
       //     fetch: function () {
 
       //       var data = [
-      //         { type: 'item', value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
+      //         { type: 'item', data: { value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
       //         { type: 'item', value: 'beta', text: '+Beta', 'item-class': 'class-beta' },
       //         { type: 'item', value: 'gamma', text: '+Gamma', 'item-class': 'class-gamma' },
       //         { type: 'item', value: 'delta', text: '+Delta', 'item-class': 'class-delta' }
@@ -336,7 +336,7 @@ define(
                   components: [
 
                   ]
-                }
+                };
               }
             }
           },
@@ -376,70 +376,69 @@ define(
         }
       );
 
-      return;
-
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
         {
           uiType: 'dropdown-menu',
           dom: {
-            tag: 'div'
+            tag: 'div',
+            innerHtml: '+'
           },
           components: [
-            { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-menu' }
+            
           ],
           lazySink: lazySink,
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',
             menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu'
+            selectedMenu: 'alloy-selected-menu',
+            backgroundMenu: 'background-menu'
           },
-          parts: {
-            display: {
-              dom: {
-                tag: 'button',
-                innerHtml: '+'
-              },
-              representing: {
-                query: function (comp) {
-
-                },
-                set: function (comp, v) {
-                  Html.set(comp.element(), v);
-                }
-              }
-            }
-          },
+          
           members: {
             menu: {
               munge: function (spec) {
-                return GuiTemplate.use(
-                  Option.none(),
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
+                return {
+                  dom: {
+                    tag: 'ol',
+                    attributes: {
                       'aria-label': spec.textkey
-                    }
-                  }
-                );
+                    },
+                    classes: [ 'alloy-menu' ]
+                  },
+                  shell: true,
+                  components: [ ]
+                };
               }
             },
             item: {
               munge: function (spec) {
-                return DemoTemplates.item(spec);
+
+                return spec.type === 'widget' ? {
+                  uiType: 'container',
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'alloy-item' ]
+                  },
+
+                  components: [
+                   { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                  ]
+                } : {
+                  dom: {
+                    tag: 'li',
+                    classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
+                    innerHtml: spec.data.text
+                  },
+                  components: [
+
+                  ]
+                };
               }
             }
-            // menu: GuiTempalte.use(TemplateMenu)
-            // dom: {
-            //   tag: 'div'  
-            // },
-            // itemDefn: { }            
           },
-
-          scaffold: Fun.identity,
 
           onExecute: function (sandbox, item, itemValue) {
             console.trace();
@@ -452,12 +451,14 @@ define(
                 'tools-menu': {
                   textkey: 'tools-menu',
                   items: [
-                    { type: 'item', value: 'packages', text: 'Packages', 'item-class': '' },
-                    { type: 'item', value: 'about', text: 'About', 'item-class': '' },
+                    { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
+                    { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
                     { 
                       type: 'widget',
-                      value: 'widget',
-                      text: 'Widget',
+                      data: {
+                        value: 'widget',
+                        text: 'Widget'
+                      },
                       widget: {
                         uiType: 'custom',
                         dom: {
@@ -471,6 +472,9 @@ define(
                                 display: 'inline-block',
                                 width: '50px'
                               }
+                            },
+                            behaviours: {
+                              tabstopping: true
                             }
                           },
                           {
@@ -486,8 +490,10 @@ define(
                                   tag: 'button',
                                   innerHtml: '-'
                                 },
-                                // FIX: This is required to override a previous tabstopping.
-                                tabstopping: undefined
+                                behaviours: {
+                                  // FIX: This is required to override a previous tabstopping.
+                                  tabstopping: undefined
+                                }
                               },
                               {
                                 uiType: 'button',
@@ -496,18 +502,24 @@ define(
                                   tag: 'button',
                                   innerHtml: '+'
                                 },
-                                tabstopping: undefined
+                                behaviours: {
+                                  tabstopping: undefined
+                                }
                               }
                             ],
-                            keying: {
-                              mode: 'flow',
-                              selector: 'button'
-                            },
-                            tabstopping: true
+                            behaviours: {
+                              tabstopping: true,
+                              keying: {
+                                mode: 'flow',
+                                selector: 'button'
+                              }
+                            }
                           }
                         ],
-                        keying: {
-                          mode: 'cyclic'
+                        behaviours: {
+                          keying: {
+                            mode: 'cyclic'
+                          }
                         }
                       }
                     }
@@ -516,27 +528,27 @@ define(
                 'packages-menu': {
                   textkey: 'packages',
                   items: [
-                    { type: 'item', value: 'sortby', text: 'SortBy', 'item-class': '' }
+                    { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
                   ]
                 },
                 'sortby-menu': {
                   textkey: 'sortby',
                   items: [
-                    { type: 'item', value: 'strings', text: 'Strings', 'item-class': '' },
-                    { type: 'item', value: 'numbers', text: 'Numbers', 'item-class': '' }
+                    { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
+                    { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
                   ]
                 },
                 'strings-menu': {
                   textkey: 'strings',
                   items: [
-                    { type: 'item', value: 'version', text: 'Versions', html: '<b>V</b>ersions', 'item-class': '' },
-                    { type: 'item', value: 'alphabetic', text: 'Alphabetic', 'item-class': '' }
+                    { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
+                    { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
                   ]
                 },
                 'numbers-menu': {
                   textkey: 'numbers',
                   items: [
-                    { type: 'item', value: 'doubled', text: 'Double digits', 'item-class': '' }
+                    { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
                   ]
                 }
               }, 

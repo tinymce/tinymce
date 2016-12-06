@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
@@ -17,15 +18,17 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Highlighting, Keying, Sandboxing, Gamma, Tagger, TieredMenuSpec, Obj, Fun, Option, Remove, Width, Error) {
+  function (Coupling, Highlighting, Keying, Positioning, Sandboxing, Gamma, Tagger, TieredMenuSpec, Obj, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
       return fetcher(component).map(detail.view().preprocess());
     };
 
-    var open = function (detail, component, sandbox) {
+    var open = function (detail, anchor, component, sandbox) {
       var futureData = fetch(detail, component);
+
+      var lazySink = Gamma.getSink(component, detail);
 
       var processed = futureData.map(function (data) {
         return TieredMenuSpec({
@@ -35,7 +38,25 @@ define(
           markers: Obj.map(detail.view().markers(), Fun.apply),
           members: Obj.map(detail.view().members(), Fun.apply),
 
-          onOpenSubmenu: function () {
+// var showMenu = function (sandbox, tuple) {
+        
+//       };
+
+//       var showSubmenu = function (sandbox, triggerItem, submenu) {
+//         var sink = getSink();
+//         Positioning.position(sink, {
+//           anchor: 'submenu',
+//           item: triggerItem,
+//           bubble: Option.none()
+//         }, submenu.container);
+//       };
+          onOpenMenu: function (sandbox, menu) {
+            var sink = lazySink().getOrDie();
+            Positioning.position(sink, anchor, menu);
+          },
+
+          onOpenSubmenu: function (sandbox, item, submenu) {
+
 
           },
 
@@ -59,17 +80,17 @@ define(
       Sandboxing.open(sandbox, futureData).get(function () { });
     };
 
-    var close = function (detail, component, sandbox) {
+    var close = function (detail, anchor, component, sandbox) {
       Sandboxing.close(sandbox);
       // INVESTIGATE: Not sure if this is needed. 
       Remove.remove(sandbox.element());
     };
 
-    var togglePopup = function (detail, hotspot) {
+    var togglePopup = function (detail, anchor, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       var showing = Sandboxing.isOpen(sandbox);
       var action = showing ? close : open;
-      action(detail, hotspot, sandbox);
+      action(detail, anchor, hotspot, sandbox);
     };
 
     var matchWidth = function (hotspot, container) {

@@ -47,7 +47,10 @@ define(
         ButtonSpec.make({
           uid: detail.uid(),
           action: function (component) {
-            Beta.togglePopup(detail, component);
+            Beta.togglePopup(detail, {
+              anchor: 'hotspot',
+              hotspot: component
+            }, component);
           }
         }),
         {

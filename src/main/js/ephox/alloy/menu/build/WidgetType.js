@@ -69,13 +69,6 @@ define(
       return Merger.deepMerge(info.base(), {
         uiType: 'custom',
         dom: info.dom(),
-        representing: {
-          query: function () {
-            return info.data();
-          },
-          // Not sure what to do about this.
-          set: function () { }
-        },
         components: components,
         events: Objects.wrapAll([
           {
@@ -102,29 +95,34 @@ define(
             })
           }
         ]),
-        focusing: {
-          onFocus: function (component) {
-            ItemEvents.onFocus(component);
-          }
-        },
-        keying: {
-          mode: 'special',
-          onLeft: onHorizontalArrow,
-          onRight: onHorizontalArrow,
-          onEscape: function (component, simulatedEvent) {
+        behaviours: {
+          representing: {
+            initialValue: info.data()
+          },
+          focusing: {
+            onFocus: function (component) {
+              ItemEvents.onFocus(component);
+            }
+          },
+          keying: {
+            mode: 'special',
+            onLeft: onHorizontalArrow,
+            onRight: onHorizontalArrow,
+            onEscape: function (component, simulatedEvent) {
 
-            // If the outer list item didn't have focus, 
-            // then focus it (i.e. escape the inner widget). Only do if not autofocusing
-            // Autofocusing should treat the widget like it is the only item, so it should
-            // let its outer menu handle escape
-            if (! Focusing.isFocused(component) && !info.autofocus()) {
-              Focusing.focus(component);
-              return Option.some(true);
-            } else if (info.autofocus()) {
-              simulatedEvent.setSource(component.element());
-              return Option.none();
-            } else {
-              return Option.none();
+              // If the outer list item didn't have focus, 
+              // then focus it (i.e. escape the inner widget). Only do if not autofocusing
+              // Autofocusing should treat the widget like it is the only item, so it should
+              // let its outer menu handle escape
+              if (! Focusing.isFocused(component) && !info.autofocus()) {
+                Focusing.focus(component);
+                return Option.some(true);
+              } else if (info.autofocus()) {
+                simulatedEvent.setSource(component.element());
+                return Option.none();
+              } else {
+                return Option.none();
+              }
             }
           }
         }

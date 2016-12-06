@@ -60,29 +60,34 @@ define(
           ])
         ),
 
-        representing: {
-          query: function (comp) {
-            var text = Value.get(comp.element());
+        behaviours: {
+          representing: {
+            initialValue: detail.value().getOr({ value: '', text: '' }),
 
-            // Default the first ones.
-            return detail.holdingValue().get().fold(function () {
-              return { value: text, text: text };
-            }, function (data) {
-              return data.text === text ? data : { value: text, text: text };
-            });
+            // FIX: Update this later.
+            query: function (comp) {
+              var text = Value.get(comp.element());
+
+              // Default the first ones.
+              return detail.holdingValue().get().fold(function () {
+                return { value: text, text: text };
+              }, function (data) {
+                return data.text === text ? data : { value: text, text: text };
+              });
+            },
+            set: function (comp, value) {
+              detail.holdingValue().set(Option.some(value));
+              Value.set(comp.element(), value.text);
+            }
           },
-          set: function (comp, value) {
-            detail.holdingValue().set(Option.some(value));
-            Value.set(comp.element(), value.text);
-          }
-        },
 
-        tabstopping: detail.tabstop(),
-        focusing: {
-          onFocus: function (component) {
-            var input = component.element();
-            var value = Value.get(input);
-            input.dom().setSelectionRange(0, value.length);
+          tabstopping: detail.tabstop(),
+          focusing: {
+            onFocus: function (component) {
+              var input = component.element();
+              var value = Value.get(input);
+              input.dom().setSelectionRange(0, value.length);
+            }
           }
         },
 

@@ -76,7 +76,7 @@ define(
           FieldPresence.mergeWith({
             'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
             'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ],
-            'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling' ]
+            'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ]
           }),
           ValueSchema.anyValue()
         ),
