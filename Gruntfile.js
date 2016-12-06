@@ -886,6 +886,20 @@ module.exports = function(grunt) {
 					spawn: false
 				}
 			}
+		},
+
+		bedrock: {
+			all: {
+				options: {
+					config: 'tools/bolt/config/browser.js',
+					testdirs: [
+						'js/tinymce/plugins/media/src/test',
+						'js/tinymce/plugins/wordcount/src/test',
+						'js/tinymce/themes/inlite/src/test',
+						'js/tinymce/themes/modern/src/test'
+					]
+				}
+			}
 		}
 	});
 
