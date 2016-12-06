@@ -186,8 +186,8 @@ define("tinymce/ui/FilePicker", [
 			ctrl.focus();
 		});
 
-		ctrl.on('click', function () {
-			if (ctrl.value().length === 0) {
+		ctrl.on('click', function (e) {
+			if (ctrl.value().length === 0 && e.target.nodeName === 'INPUT') {
 				autocomplete('');
 			}
 		});
