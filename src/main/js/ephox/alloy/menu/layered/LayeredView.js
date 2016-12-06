@@ -15,7 +15,7 @@ define(
     var schema = [
       Fields.members([ 'menu', 'item' ]),
 
-      Fields.menuMarkers(),
+      Fields.tieredMenuMarkers(),
 
       FieldSchema.strict('scaffold'),
 
@@ -47,7 +47,8 @@ define(
               item: detail.view().markers().item(),
               selectedItem: detail.view().markers().selectedItem(),
               menu: detail.view().markers().menu(),
-              selectedMenu: detail.view().markers().selectedMenu()
+              selectedMenu: detail.view().markers().selectedMenu(),
+              backgroundMenu: detail.view().markers().backgroundMenu()
             }
           });
         };

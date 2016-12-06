@@ -2,15 +2,17 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
+    'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
+    'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Future, Option, Remove) {
+  function (Arr, Future, Option, Insert, Remove) {
     var clear = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (state) {
-        sInfo.clear()(sandbox, state);
+      sInfo.state().get().each(function (data) {
+        Arr.each(data, sandbox.getSystem().removeFromWorld);
         sInfo.bucket().glue().remove(sandbox, sInfo.bucket());
       });
     };
@@ -22,25 +24,31 @@ define(
       Remove.empty(sandbox.element());
 
       sInfo.bucket().glue().add(sandbox, sInfo.bucket());
-      var output = sInfo.populate()(sandbox, data);
+      var built = sandbox.getSystem().build(data);
+      sandbox.getSystem().addToWorld(built);
+      Insert.append(sandbox.element(), built.element());
+      sandbox.syncComponents();
+
       sInfo.state().set(
-        Option.some(output)
+        Option.some(built)
       );
-      return output;
+      return built;
     };
 
+    // Handling async. Will probably get rid of. Just means that the
+    // rebuilding and showing can happen more quickly for sync.
     var processData = function (sandbox, sInfo, data, f) {
       if (sInfo.async()) {
         return data.map(f);
       } else {
-        var processed = f(data);
-        return Future.pure(processed);
+        var r = f(data);
+        return Future.pure(r);
       }
     };
 
     // Open sandbox transfers focus to the opened menu
-    var open = function (sandbox, sInfo, rawData) {
-      return processData(sandbox, sInfo, rawData, function (data) {
+    var open = function (sandbox, sInfo, data) {
+      return processData(sandbox, sInfo, data, function (data) {
         var state = rebuild(sandbox, sInfo, data);
         sInfo.onOpen()(sandbox, state);
         return state;
@@ -48,12 +56,12 @@ define(
     };
 
     var close = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (state) {
-        sInfo.clear()(sandbox, state);
+      sInfo.state().get().each(function (data) {
+        Arr.each(data, sandbox.getSystem().removeFromWorld);
         Remove.empty(sandbox.element());
 
         sInfo.bucket().glue().remove(sandbox, sInfo.bucket());
-        sInfo.onClose()(sandbox, state);
+        sInfo.onClose()(sandbox, data);
         sInfo.state().set(Option.none());
       });
     };
@@ -63,8 +71,8 @@ define(
     };
 
     var isPartOf = function (sandbox, sInfo, queryElem) {
-      return isOpen(sandbox, sInfo) && sInfo.state().get().exists(function (state) {
-        return sInfo.isPartOf()(sandbox, state, queryElem);
+      return isOpen(sandbox, sInfo) && sInfo.state().get().exists(function (data) {
+        return sInfo.isPartOf()(sandbox, data, queryElem);
       });
     };
 

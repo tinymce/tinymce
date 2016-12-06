@@ -3,44 +3,24 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.menu.layered.LayeredConfig',
-    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, Fields, LayeredConfig, MenuMarkers, Dismissal, SpecSchema, FieldPresence, FieldSchema, ValueSchema, Fun, Option) {
+  function (ComponentStructure, Dismissal, SpecSchema, FieldSchema, Fun) {
     var schema = [
       // This hotspot is going to have to be a little more advanced when we get away from menus and dropdowns
       FieldSchema.strict('lazyAnchor'),
       FieldSchema.strict('onClose'),
       FieldSchema.strict('onOpen'),
 
-      FieldSchema.strict('scaffold'),
-
-      FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.strict('lazySink'),
-      FieldSchema.defaulted('itemValue', 'data-item-value'),
-      FieldSchema.defaulted('backgroundClass', 'background-menu'),
-
-      Fields.menuMarkers(),
-      Fields.members([ 'menu', 'item' ]),
-
-      FieldSchema.strict('onHighlight')
+      FieldSchema.strict('lazySink')
     ];
 
     var make = function (spec) {
-      // Not ideal that it's raw.
-      var detail = SpecSchema.asRawOrDie('layered.sandbox', schema, spec, [ ]);
-
-      var config = LayeredConfig(detail);
+      var detail = SpecSchema.asStructOrDie('layered.sandbox', schema, spec, [ ]);
 
       var isExtraPart = function (sandbox, target) {
         return  ComponentStructure.isPartOfAnchor(detail.lazyAnchor(), target);
@@ -52,17 +32,20 @@ define(
           tag: 'div'
         },
         behaviours: {
-          sandboxing: config.sandboxing,
-          keying: config.keying,
+          sandboxing: {
+            onOpen: detail.onOpen(),
+            onClose: detail.onClose(),
+            isPartOf: Fun.constant(false),
+            bucket: {
+              mode: 'sink',
+              lazySink: detail.lazySink()
+            }
+          },
           receiving: Dismissal.receiving({
             isExtraPart: isExtraPart
-          }),
-          highlighting: {
-            highlightClass: detail.markers.selectedMenu,
-            itemClass: detail.markers.menu
-          }
+          })
         },
-        events: config.events
+        events: { }
       };
     };
 

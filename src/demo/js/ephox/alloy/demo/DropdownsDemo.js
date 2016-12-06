@@ -260,7 +260,7 @@ define(
       //     },
       //     // sink: sink,
       //     desc: 'demo-dropdown',
-      //     onExecute: function (sandbox, item, itemValue) {
+      //       onExecute: function (sandbox, item, itemValue) {
       //       console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
       //     },
       //     lazySink: lazySink,
@@ -298,12 +298,16 @@ define(
           components: [
             
           ],
+
+
+          name: 'dropdown-list-demo',
           scaffold: Fun.identity,
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',
             menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu'
+            selectedMenu: 'alloy-selected-menu',
+            backgroundMenu: 'alloy-background-menu'
           },
           members: {
             menu: {

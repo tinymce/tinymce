@@ -21,9 +21,6 @@ define(
       // TODO: async === false is untested
       FieldSchema.defaulted('async', true),
 
-      FieldSchema.strict('clear'),
-      FieldSchema.strict('populate'),
-
       // Maybe this should be optional
       FieldSchema.strict('isPartOf'),
 

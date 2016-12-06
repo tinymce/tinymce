@@ -7,6 +7,9 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
+    'ephox.alloy.registry.Tagger',
+    'ephox.alloy.ui.TieredMenuSpec',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
@@ -14,7 +17,7 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Highlighting, Keying, Sandboxing, Gamma, Fun, Option, Remove, Width, Error) {
+  function (Coupling, Highlighting, Keying, Sandboxing, Gamma, Tagger, TieredMenuSpec, Obj, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -23,10 +26,31 @@ define(
 
     var open = function (detail, component, sandbox) {
       var futureData = fetch(detail, component);
-      // Resolve the future to open the dropdown
-      Sandboxing.open(sandbox, futureData).get(function () {
-        Highlighting.highlightFirst(sandbox);
-        Keying.focusIn(sandbox);
+
+      var processed = futureData.map(function (data) {
+        return TieredMenuSpec({
+          uid: Tagger.generate(''),
+          data: data,
+
+          markers: Obj.map(detail.view().markers(), Fun.apply),
+          members: Obj.map(detail.view().members(), Fun.apply),
+
+          onOpenSubmenu: function () {
+
+          },
+
+          onExecute: function () {
+
+          },
+          onEscape: function () {
+
+          }
+        });
+      });
+
+      Sandboxing.open(sandbox, processed).get(function (tiers) {
+        Highlighting.highlightFirst(tiers);
+        Keying.focusIn(tiers);
       });
     };
 
