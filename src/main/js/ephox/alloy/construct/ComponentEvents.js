@@ -44,7 +44,6 @@ define(
       Obj.each(behaviours, function (behaviour) {
         r[behaviour.name()] = behaviour.handlers(info);        
       });
-      console.log('r', r);
       return r;
     };
 

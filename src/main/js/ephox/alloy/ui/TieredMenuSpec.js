@@ -39,6 +39,8 @@ define(
       FieldSchema.strict('onOpenMenu'),
       FieldSchema.strict('onOpenSubmenu'),
 
+      FieldSchema.defaulted('openImmediately', true),
+
       FieldSchema.strictObjOf('data', [
         FieldSchema.strict('primary'),
         FieldSchema.strict('menus'),
@@ -291,7 +293,11 @@ define(
                 setup(container).each(function (primary) {
                   console.log('primary', primary);
                   Replacing.append(container, { built: primary });
-                  uiSpec.onOpenMenu()(container, primary);
+
+                  if (uiSpec.openImmediately()) {
+                    setActiveMenu(container, primary);
+                    uiSpec.onOpenMenu()(container, primary);
+                  }
                 });
               }
             }
@@ -331,10 +337,10 @@ define(
             onEscape: keyOnItem(onEscape),
             focusIn: function (container, keyInfo) {
               state.getPrimary().each(function (primary) {
-                Keying.focusIn(primary);
+                // Keying.focusIn(primary);
 
                 // Explore what this one is for.
-                // container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
+                container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
               });
             }
             // focusManager: uiSpec.fakeFocus() ? focusManager : undefined

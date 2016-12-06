@@ -38,6 +38,7 @@ define(
               value: EventHandler.nu({
                 run: function (component, simulatedEvent) {
                   focusIn(component, keyInfo, simulatedEvent);
+                  simulatedEvent.stop();
                 }
               })
             };

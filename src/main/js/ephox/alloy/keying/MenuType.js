@@ -41,6 +41,7 @@ define(
     var focusIn = function (component, menuInfo, simulatedEvent) {
       menuInfo.focusManager().fold(function () {
         SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
+          debugger;
           component.getSystem().triggerFocus(first, component.element());
         });  
       }, function (manager) {

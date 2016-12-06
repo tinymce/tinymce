@@ -131,62 +131,82 @@ define(
       // );
 
    
-      // var x = HtmlDisplay.section(
-      //   gui,
-      //   'This dropdown button shows a widget',
-      //   GuiTemplate.use(
-      //     Option.some('dropdown-widget'),
-      //     TemplateToolbarDropdown,
-      //     {
-      //       uiType: 'dropdown-widget',
-      //       lazySink: lazySink,
+      var x = HtmlDisplay.section(
+        gui,
+        'This dropdown button shows a widget',
+        {
+          uiType: 'dropdown-list',
+          lazySink: lazySink,
 
-      //       scaffold: Fun.identity,
-      //       members: {
-      //         container: {
-      //           munge: function (spec) {
-      //             return GuiTemplate.use(
-      //               Option.some('widget-container'),
-      //               TemplateWidgetContainer,
-      //               { },
-      //               { }
-      //             );
-      //           }
-      //         }
-      //       },
-      //       parts: {
-      //         display: {
-      //           dom: {
-      //             tag: 'button',
-      //             innerHtml: 'here'
-      //           },
-      //           representing: {
-      //             query: function (comp) {
+          dom: {
+            tag: 'div',
+            innerHtml: 'Dropdown widget'
+          },
 
-      //             },
-      //             set: function (comp, v) {
-      //               Html.set(comp.element(), v);
-      //             }
-      //           }
-      //         }
-      //       },
-      //       fetch: function () {
-      //         return Future.pure({
-      //           uiType: 'container',
-      //           dom: {
-      //             classes: [ 'my-widget' ]
-      //           },
-      //           keying: { mode: 'cyclic' },
-      //           components: [
-      //             { uiType: 'input' }
-      //           ]
-      //         });
-      //       }
-      //     }, { 
-
-      //     }
-      //   )
-      // );
+          name: 'primary-widget',
+          members: {
+            menu: {
+              munge: function (spec) {
+                return {
+                  dom: {
+                    tag: 'div'
+                  },
+                  components: [
+                    { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'dropdown-list' }
+                  ]
+                };
+              }
+            },
+            item: {
+              munge: function (spec) {
+                return {
+                  uiType: 'container',
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'alloy-item' ]
+                  },
+                  components: [
+                    { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                  ]
+                };
+              }
+            }
+          },
+          markers: {
+            selectedItem: 'no-selection',
+            item: 'alloy-item',
+            menu: 'no-selection',
+            selectedMenu: 'alloy-menu',
+            backgroundMenu: 'no-selection'
+          },
+          
+          fetch: function () {
+            return Future.pure([
+            {
+              type: 'widget',
+              autofocus: true,
+              data: {
+                value: 'widget1',
+                text: 'Widget1'
+              },
+              widget: {
+                uiType: 'container',
+                dom: {
+                  classes: [ 'my-widget' ]
+                },
+                behaviours: {
+                  keying: { mode: 'cyclic' }
+                },
+                components: [
+                  { uiType: 'input' },
+                  { uiType: 'input' }
+                ]
+              }
+            }
+            ]);
+          }
+        }
+      );
 
 
 

@@ -25,8 +25,9 @@ define(
 
       sInfo.bucket().glue().add(sandbox, sInfo.bucket());
       var built = sandbox.getSystem().build(data);
-      sandbox.getSystem().addToWorld(built);
+
       Insert.append(sandbox.element(), built.element());
+      sandbox.getSystem().addToWorld(built);
       sandbox.syncComponents();
 
       sInfo.state().set(

@@ -31,7 +31,6 @@ define(
       // we just need the list of static behaviours that this component cares about. The behaviour info
       // to pass through will come from the info.behaviours() obj.
       var behaviours = CustomDefinition.behaviours(info);
-      console.log('behaviours', behaviours, info.behaviours().getOr({ }));
 
       var definition = CustomDefinition.toDefinition(info);
       

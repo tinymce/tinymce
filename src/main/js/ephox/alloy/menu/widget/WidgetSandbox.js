@@ -55,7 +55,7 @@ define(
           {
             key: SystemEvents.sandboxClose(),
             value: EventHandler.nu({
-              run: Sandboxing.closeSandbox
+              run: Sandboxing.close
             })
           }
         ]),

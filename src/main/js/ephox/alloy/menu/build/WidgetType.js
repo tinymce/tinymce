@@ -106,10 +106,13 @@ define(
           },
           keying: {
             mode: 'special',
+            // FIX: usage of undefined.
+            // focusIn: info.autofocus() ? function (component) {
+            //   focusWidget(component);
+            // } : undefined,
             onLeft: onHorizontalArrow,
             onRight: onHorizontalArrow,
             onEscape: function (component, simulatedEvent) {
-
               // If the outer list item didn't have focus, 
               // then focus it (i.e. escape the inner widget). Only do if not autofocusing
               // Autofocusing should treat the widget like it is the only item, so it should
