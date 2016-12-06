@@ -707,7 +707,7 @@ define("tinymce/Editor", [
 				self.fire("load");
 			};
 
-			DOM.setAttrib(ifr, "src", url || 'javascript:""');
+			DOM.setAttrib(ifr, "src", url);
 
 			self.contentAreaContainer = o.iframeContainer;
 			self.iframeElement = ifr;
