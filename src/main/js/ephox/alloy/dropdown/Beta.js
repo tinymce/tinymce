@@ -64,7 +64,8 @@ define(
 
           },
           onEscape: function () {
-
+            Sandboxing.close(sandbox);
+            return Option.some(true);
           }
         });
       });
