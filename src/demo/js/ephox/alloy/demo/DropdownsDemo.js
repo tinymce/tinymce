@@ -196,92 +196,91 @@ define(
 
       // // return;
 
-      // HtmlDisplay.section(
-      //   gui,
-      //   'This grid dropdown button is a grid of 2 x 2',
-      //   {
-      //     uiType: 'dropdown-grid',
-      //     text: 'Dropdown',
-      //     dom: {
-      //       tag: 'div'
-      //     },
-      //     components: [
-      //       { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-grid' }
-      //     ],
-      //     scaffold: Fun.identity,
-      //     markers: {
-      //       item: 'alloy-item',
-      //       selectedItem: 'alloy-selected-item',
-      //       menu: 'demo-alloy-menu',
-      //       selectedMenu: 'alloy-selected-menu'
-      //     },
-      //     initSize: {
-      //       numColumns: 2,
-      //       numRows: 2
-      //     },
-      //     members: {
-      //       item: {
-      //         munge: function (spec) {
-      //           return GuiTemplate.use(
-      //             Option.none(),
-      //             TemplateGridItem,
-      //             { },
-      //             {
-      //               fields: spec
-      //             }
-      //           );
-      //         }
-      //       },
-      //       grid: {
-      //         munge: function (spec) {
-      //           return GuiTemplate.use(
-      //             Option.some('flatgrid'),
-      //             TemplateMenu,
-      //             { },
-      //             {
-      //               fields: {
-      //                 'aria-label': spec.textkey || 'TEMPORARY_HACK'
-      //               }
-      //             }
-      //           );
-      //         }
-      //       }
-      //     },
-      //     fetch: function () {
+      HtmlDisplay.section(
+        gui,
+        'This grid dropdown button is a grid of 2 x 2',
+        {
+          uiType: 'dropdown-list',
+          text: 'Dropdown',
+          dom: {
+            tag: 'div',
+            innerHtml: 'here'
+          },
+          components: [
+            
+          ],
 
-      //       var data = [
-      //         { type: 'item', data: { value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
-      //         { type: 'item', value: 'beta', text: '+Beta', 'item-class': 'class-beta' },
-      //         { type: 'item', value: 'gamma', text: '+Gamma', 'item-class': 'class-gamma' },
-      //         { type: 'item', value: 'delta', text: '+Delta', 'item-class': 'class-delta' }
-      //       ];
+          name: 'grid-demo',
 
-      //       return Future.pure(data);
-      //     },
-      //     // sink: sink,
-      //     desc: 'demo-dropdown',
-      //       onExecute: function (sandbox, item, itemValue) {
-      //       console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
-      //     },
-      //     lazySink: lazySink,
-      //     parts: {
-      //       display: {
-      //         dom: {
-      //           tag: 'button',
-      //           innerHtml: 'Dropdown Grid'
-      //         },
-      //         representing: {
-      //           query: function (comp) {
+          scaffold: Fun.identity,
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'demo-alloy-menu',
+            selectedMenu: 'alloy-selected-menu',
+            backgroundMenu: 'alloy-background-menu'
+          },
+          initSize: {
+            numColumns: 2,
+            numRows: 2
+          },
+          members: {
+            item: {
+              munge: function (spec) {
+                return {
+                  uiType: 'custom',
+                  dom: {
+                    tag: 'span',
+                    classes: [ 'alloy-item' ],
+                    innerHtml: spec.data.text,
+                    styles: {
+                      'display': 'inline-block',
+                      width: '50px'
+                    }
+                  },
+                  components: [ ]
+                };
+              }
+            },
 
-      //           },
-      //           set: function (comp, v) {
-      //             Html.set(comp.element(), v);
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // );
+            menu: {
+              munge: function (spec) {
+                return {
+                  uiType: 'container',
+                  movement: {
+                    mode: 'grid',
+                    initSize: {
+                      numColumns: 2,
+                      numRows: 2
+                    }
+                  },
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'demo-alloy-menu' ],
+                    styles: {
+                      width: '100px'
+                    }
+                  },
+                  shell: true,
+                  components: [ ]
+                };
+              }
+            }
+          },
+          fetch: function () {
+
+            var data = [
+              { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
+              { type: 'item', data: { value: 'beta', text: '+Beta' } },
+              { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
+              { type: 'item', data: { value: 'delta', text: '+Delta' } }
+            ];
+            return Future.pure(data);
+          },
+         
+          lazySink: lazySink
+        }
+      );
 
 
 

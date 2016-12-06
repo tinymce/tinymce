@@ -41,12 +41,47 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
 
+
+      FieldSchema.defaultedOf('movement', {
+        mode: 'menu',
+        moveOnTab: true
+      }, ValueSchema.choose(
+        'mode',
+        {
+          grid: [
+            Fields.initSize(),
+            FieldSchema.state('config', function () {
+              return function (detail, movementInfo) {
+                return {
+                  mode: 'flatgrid',
+                  selector: '.' + detail.markers().item(),
+                  initSize: {
+                    numColumns: movementInfo.initSize().numColumns(),
+                    numRows: movementInfo.initSize().numRows()
+                  }
+                };
+              };
+            })
+          ],
+          menu: [
+            FieldSchema.defaulted('moveOnTab', true),
+            FieldSchema.state('config', function () {
+              return function (detail, movementInfo) {
+                return {
+                  mode: 'menu',
+                  selector: '.' + detail.markers().item(),
+                  moveOnTab: movementInfo.moveOnTab()
+                };
+              };
+            })
+          ]
+        }
+      )),
+
       Fields.itemMarkers(),
 
       Fields.members([ 'item' ]),
       FieldSchema.defaulted('shell', false),
-
-      FieldSchema.defaulted('moveOnTab', true),
 
       FieldSchema.defaulted('fakeFocus', false),
       FieldSchema.defaulted('onHighlight', Fun.noop)
@@ -99,11 +134,8 @@ define(
             representing: {
               initialValue: detail.value()
             },
-            keying: {
-              mode: 'menu',
-              selector: '.' + detail.markers().item(),
-              moveOnTab: detail.moveOnTab()
-            }
+
+            keying: detail.movement().config()(detail, detail.movement())
           },
           events: Objects.wrapAll([
             { 

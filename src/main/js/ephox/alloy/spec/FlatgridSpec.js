@@ -109,7 +109,7 @@ define(
         components: components,
         keying: {
           mode: 'flatgrid',
-          selector: '[tabindex="-1"]',
+          selector: '.' + detail.markers().item(),
           initSize: {
             numColumns: detail.initSize().numColumns(),
             numRows: detail.initSize().numRows()
