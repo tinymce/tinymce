@@ -49,13 +49,13 @@ asynctest(
         ),
 
         Step.sync(function () {
-          Replacing.replace(component, [
+          Replacing.set(component, [
 
           ]);
         }),
 
         Assertions.sAssertStructure(
-          'After replace([]), is empty',
+          'After set([]), is empty',
           ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
               children: [ ]
@@ -68,7 +68,7 @@ asynctest(
         }),
 
         Step.sync(function () {
-          Replacing.replace(component, [
+          Replacing.set(component, [
             {
               uiType: 'container',
               uid: 'first'
@@ -99,7 +99,7 @@ asynctest(
         Logger.t(
           'Repeating adding the same uids to check clearing is working',          
           Step.sync(function () {
-            Replacing.replace(component, [
+            Replacing.set(component, [
               {
                 uiType: 'container',
                 uid: 'first'
@@ -112,7 +112,7 @@ asynctest(
           })
         ),
         Assertions.sAssertStructure(
-          'After second time of replace([ first, second ])',
+          'After second time of set([ first, second ])',
           ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
               children: [
@@ -125,6 +125,35 @@ asynctest(
         ),
         Step.sync(function () {
           RawAssertions.assertEq('Should have 2 children still', 2, Replacing.contents(component).length);
+        }),
+
+
+        Logger.t(
+          'Replacing.add to put a new thing at the end.',          
+          Step.sync(function () {
+            Replacing.append(component, {
+              uiType: 'custom',
+              dom: {
+                tag: 'span'
+              }
+            });
+          })
+        ),
+        Assertions.sAssertStructure(
+          'After add(span)',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('div', { }),
+                s.element('div', { }),
+                s.element('span', { })
+              ]
+            });
+          }),
+          component.element()
+        ),
+        Step.sync(function () {
+          RawAssertions.assertEq('Should have 3 children now', 3, Replacing.contents(component).length);
         })
       ];
     }, function () { success(); }, failure);

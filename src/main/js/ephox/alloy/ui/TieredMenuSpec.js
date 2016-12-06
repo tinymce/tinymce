@@ -40,7 +40,7 @@ define(
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('onEscape'),
 
-      FieldSchema.strict('onOpenMenu'),
+      // FieldSchema.strict('onOpenMenu'),
       FieldSchema.strict('onOpenSubmenu'),
 
       FieldSchema.strictObjOf('data', [
@@ -89,21 +89,17 @@ define(
               // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
             }
           );
-          var menu = container.getSystem().build(data);
-          
-          return {
-            menu: menu,
-            container: menu
-          };
+          return container.getSystem().build(data);
         });
       };
 
+      var state = LayeredState();
 
       var setup = function (container) {
         var componentMap = buildMenus(container, uiSpec.data().menus());
         addToWorld(container, componentMap);
 
-        var state = LayeredState();
+        
         
         state.setContents(uiSpec.data().primary(), componentMap, uiSpec.data().expansions(), function (sMenus) {
           return toMenuValues(container, sMenus);
@@ -119,62 +115,48 @@ define(
         return Representing.getValue(item).value;
       };
 
-      var toMenuValues = function (sandbox, sMenus) {
+      var toMenuValues = function (container, sMenus) {
         return Obj.map(sMenus, function (menuTuple) {
           var menuItems = SelectorFilter.descendants(menuTuple.menu.element(), '.' + uiSpec.markers().item());
           return Arr.bind(menuItems, function (mi) {
-            return sandbox.getSystem().getByDom(mi).map(getItemValue).fold(Fun.constant([ ]), Arr.pure);
+            return container.getSystem().getByDom(mi).map(getItemValue).fold(Fun.constant([ ]), Arr.pure);
           });
         });
       };
 
-      var addToWorld = function (component, componentMap) {
+      var addToWorld = function (container, componentMap) {
         var menuCs = Arr.map(
           Obj.values(componentMap),
           function (tuple) {
-            return tuple.container;
+            return tuple;
           }
         );
-        Arr.each(menuCs, component.getSystem().addToWorld);
+        Arr.each(menuCs, container.getSystem().addToWorld);
       };
 
-      var setActiveMenu = function (sandbox, tuple) {
+      var setActiveMenu = function (container, tuple) {
         var menu = tuple.menu;
-        Highlighting.highlight(sandbox, menu);
+        Highlighting.highlight(container, menu);
         Highlighting.getHighlighted(menu).orThunk(function () {
           return Highlighting.getFirst(menu);
         }).each(function (item) {
-          sandbox.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
+          container.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
         });
       };
 
-
-      var enter = function (sandbox, state) {
-        state.getPrimary().each(function (primaryTuple) {
-          setActiveMenu(sandbox, primaryTuple);
-          showMenu(sandbox, primaryTuple);
-          Keying.focusIn(sandbox);
-        });
-      };
-
-      var preview = function (sandbox, state) {
-        state.getPrimary().each(function (primary) {
-          showMenu(sandbox, primary);
-        });
-      };
-
-      var clear = function (sandbox, state) {
+      // Not sure what to do about this one.
+      var clear = function (container, state) {
         var tuples = state.getMenus();
         Obj.each(tuples, function (tuple, menuName) {
-          sandbox.getSystem().removeFromWorld(tuple.container);
+          container.getSystem().removeFromWorld(tuple.container);
         });
         state.clear();
       };
 
-      var isPartOf = function (sandbox, state, queryElem) {
-        var tuples = Obj.values(state.getMenus());
-        return Arr.exists(tuples, function (tuple) {
-          return ComponentStructure.isPartOf(tuple.container, queryElem);
+      var isPartOf = function (container, state, queryElem) {
+        var menus = Obj.values(state.getMenus());
+        return Arr.exists(menus, function (menu) {
+          return ComponentStructure.isPartOf(menu, queryElem);
         });
       };
 
@@ -184,16 +166,16 @@ define(
         );
       };
 
-      var updateMenuPath = function (component, state, path) {
-        return Option.from(path[0]).bind(state.lookupMenu).map(function (newMenuCompTuple) {
+      var updateMenuPath = function (container, state, path) {
+        return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu) {
           var rest = getMenus(state, path.slice(1));
           Arr.each(rest, function (r) {
             Class.add(r.menu.element(), uiSpec.markers().backgroundMenu());
           });
-          if (! Body.inBody(newMenuCompTuple.container.element())) {
-            Insert.append(component.element(), newMenuCompTuple.container.element());
+          if (! Body.inBody(activeMenu.container.element())) {
+            Insert.append(container.element(), newMenuCompTuple.container.element());
           }
-          setActiveMenu(component, newMenuCompTuple);
+          setActiveMenu(container, newMenuCompTuple);
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.

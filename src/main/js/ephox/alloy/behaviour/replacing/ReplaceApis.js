@@ -14,7 +14,7 @@ define(
       Arr.each(old, component.getSystem().removeFromWorld);
     };
 
-    var replace = function (component, replaceInfo, data) {
+    var set = function (component, replaceInfo, data) {
       clearOld(component, replaceInfo);
 
       // NOTE: we may want to create a behaviour which allows you to switch
@@ -32,13 +32,21 @@ define(
       component.syncComponents();
     };
 
+    var append = function (component, replaceInfo, appendee) {
+      var child = component.getSystem().build(appendee);
+      component.getSystem().addToWorld(child);
+      Insert.append(component.element(), child.element());
+      component.syncComponents();
+    };
+
     // TODO: Rename
     var contents = function (component, replaceInfo) {
       return component.components();
     };
 
     return {
-      replace: replace,
+      append: append,
+      set: set,
       contents: contents
     };
   }
