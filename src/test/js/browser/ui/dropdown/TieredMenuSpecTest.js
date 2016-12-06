@@ -112,10 +112,10 @@ asynctest(
             })
           ),
 
-          onExecute: function ()  { },
-          onEscape: function () { },
-          onOpenMenu: function () { },
-          onOpenSubmenu: function () { }
+          onExecute: store.adderH('onExecute'),
+          onEscape: store.adderH('onEscape'),
+          onOpenMenu: store.adderH('onOpenMenu'),
+          onOpenSubmenu: store.adderH('onOpenSubmenu')
         })
       );
 
