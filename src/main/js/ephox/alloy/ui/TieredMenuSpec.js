@@ -32,10 +32,11 @@ define(
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.sugar.api.SelectorFilter',
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (ComponentStructure, EditableFields, EventRoot, SystemEvents, Highlighting, Keying, Replacing, Representing, Sandboxing, EventHandler, Fields, LayeredState, HotspotViews, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter) {
+  function (ComponentStructure, EditableFields, EventRoot, SystemEvents, Highlighting, Keying, Replacing, Representing, Sandboxing, EventHandler, Fields, LayeredState, HotspotViews, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter, SelectorFind) {
     var schema = [
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('onEscape'),
@@ -180,65 +181,63 @@ define(
         });
       };
 
-      var expandRight = function (sandbox, item) {
+      var expandRight = function (container, item) {
         var value = getItemValue(item);
-        return Sandboxing.getState(sandbox).bind(function (state) {
-          return state.expand(value).bind(function (path) {
-            // When expanding, always select the first.
-            Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu) {
-              Highlighting.highlightFirst(activeMenu);
+        return state.expand(value).bind(function (path) {
+          // When expanding, always select the first.
+          Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu) {
+            Highlighting.highlightFirst(activeMenu);
 
-              // DUPE with above. Fix later.
-              if (! Body.inBody(activeMenu.element())) {
-                Insert.append(sandbox.element(), activeMenu.element());
-                uiSpec.onOpenSubmenu()(sandbox, item, activeMenu);
-              }
+            // DUPE with above. Fix later.
+            if (! Body.inBody(activeMenu.element())) {
+              Insert.append(container.element(), activeMenu.element());
+              uiSpec.onOpenSubmenu()(container, item, activeMenu);
+            }
+          });
+
+          return updateMenuPath(container, state, path);
+        });
+      };
+
+      var collapseLeft = function (container, item) {
+        var value = getItemValue(item);
+        return state.collapse(value).bind(function (path) {
+          return updateMenuPath(container, state, path);
+        });
+      };
+
+      var updateView = function (container, item) {
+        var value = getItemValue(item);
+        return state.refresh(value).bind(function (path) {
+          return updateMenuPath(container, state, path);
+        });
+      };
+
+      var onRight = function (container, item) {
+        return EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item);
+      };
+
+      var onLeft = function (container, item) {
+        // Exclude inputs, textareas etc.
+        return EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item);
+      };
+
+      var onEscape = function (container, item) {
+        return collapseLeft(container, item).orThunk(function () {
+          return uiSpec.onEscape()(container, item);
+        // This should only fire when the user presses ESC ... not any other close.
+          // return HotspotViews.onEscape(uiSpec.lazyAnchor()(), container);
+        });
+      };
+
+      var keyOnItem = function (f) {
+        return function (container, simulatedEvent) {
+          return SelectorFind.closest(simulatedEvent.getSource(), '.' + uiSpec.markers().item()).bind(function (target) {
+            return container.getSystem().getByDom(target).bind(function (item) {
+              return f(container, item);
             });
-
-            return updateMenuPath(sandbox, state, path);
           });
-        });
-      };
-
-      var collapseLeft = function (sandbox, item) {
-        var value = getItemValue(item);
-        return Sandboxing.getState(sandbox).bind(function (state) {
-          return state.collapse(value).bind(function (path) {
-            return updateMenuPath(sandbox, state, path);
-          });
-        });
-      };
-
-      var updateView = function (sandbox, item) {
-        var value = getItemValue(item);
-        return Sandboxing.getState(sandbox).bind(function (state) {
-          return state.refresh(value).bind(function (path) {
-            return updateMenuPath(sandbox, state, path);
-          });
-        });
-      };
-
-      var onRight = function (sandbox, triggerItem) {
-        return sandbox.getSystem().getByDom(triggerItem).bind(function (item) {
-          return EditableFields.inside(triggerItem) ? Option.none() : expandRight(sandbox, item);
-        });
-      };
-
-      var onLeft = function (sandbox, target) {
-        return sandbox.getSystem().getByDom(target).bind(function (item) {
-          // Exclude inputs, textareas etc.
-          return EditableFields.inside(target) ? Option.none() : collapseLeft(sandbox, item);
-        });
-      };
-
-      var onEscape = function (sandbox, target) {
-        return sandbox.getSystem().getByDom(target).bind(function (item) {
-          return collapseLeft(sandbox, item).orThunk(function () {
-            return uiSpec.onEscape()(sandbox, item);
-          // This should only fire when the user presses ESC ... not any other close.
-            // return HotspotViews.onEscape(uiSpec.lazyAnchor()(), sandbox);
-          });
-        });
+        };
       };
 
       var events = Objects.wrapAll([
@@ -329,9 +328,9 @@ define(
         behaviours: {
           keying: {
             mode: 'special',
-            onRight: onRight,
-            onLeft: onLeft,
-            onEscape: onEscape
+            onRight: keyOnItem(onRight),
+            onLeft: keyOnItem(onLeft),
+            onEscape: keyOnItem(onEscape)
             // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
           },
           // Highlighting is used for highlighting the active menu

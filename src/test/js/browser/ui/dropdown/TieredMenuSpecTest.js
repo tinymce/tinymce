@@ -82,7 +82,11 @@ asynctest(
             primary: 'menu-a',
             menus: {
               'menu-a': {
-                items: [ { type: 'item', data: { value: 'alpha', text: 'Alpha' }} ]
+                items: [
+                  { type: 'item', data: { value: 'a-alpha', text: 'a-Alpha' }},
+                  { type: 'item', data: { value: 'a-beta', text: 'a-Beta' }},
+                  { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }}
+                ]
               }
             },
             expansions: { }
