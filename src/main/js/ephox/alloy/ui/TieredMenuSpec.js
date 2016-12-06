@@ -106,7 +106,7 @@ define(
         });
 
         return state.getPrimary().map(function (primary) {
-          return primary.container;
+          return primary;
         });
       };
 
@@ -116,8 +116,8 @@ define(
       };
 
       var toMenuValues = function (container, sMenus) {
-        return Obj.map(sMenus, function (menuTuple) {
-          var menuItems = SelectorFilter.descendants(menuTuple.menu.element(), '.' + uiSpec.markers().item());
+        return Obj.map(sMenus, function (menu) {
+          var menuItems = SelectorFilter.descendants(menu.element(), '.' + uiSpec.markers().item());
           return Arr.bind(menuItems, function (mi) {
             return container.getSystem().getByDom(mi).map(getItemValue).fold(Fun.constant([ ]), Arr.pure);
           });
@@ -125,17 +125,10 @@ define(
       };
 
       var addToWorld = function (container, componentMap) {
-        var menuCs = Arr.map(
-          Obj.values(componentMap),
-          function (tuple) {
-            return tuple;
-          }
-        );
-        Arr.each(menuCs, container.getSystem().addToWorld);
+        Arr.each(componentMap, container.getSystem().addToWorld);
       };
 
-      var setActiveMenu = function (container, tuple) {
-        var menu = tuple.menu;
+      var setActiveMenu = function (container, menu) {
         Highlighting.highlight(container, menu);
         Highlighting.getHighlighted(menu).orThunk(function () {
           return Highlighting.getFirst(menu);
@@ -146,9 +139,9 @@ define(
 
       // Not sure what to do about this one.
       var clear = function (container, state) {
-        var tuples = state.getMenus();
-        Obj.each(tuples, function (tuple, menuName) {
-          container.getSystem().removeFromWorld(tuple.container);
+        var menus = state.getMenus();
+        Obj.each(menus, function (menu, menuName) {
+          container.getSystem().removeFromWorld(menu);
         });
         state.clear();
       };
@@ -172,10 +165,10 @@ define(
           Arr.each(rest, function (r) {
             Class.add(r.menu.element(), uiSpec.markers().backgroundMenu());
           });
-          if (! Body.inBody(activeMenu.container.element())) {
-            Insert.append(container.element(), newMenuCompTuple.container.element());
+          if (! Body.inBody(activeMenu.element())) {
+            Insert.append(container.element(), activeMenu.element());
           }
-          setActiveMenu(container, newMenuCompTuple);
+          setActiveMenu(container, activeMenu);
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
@@ -192,13 +185,13 @@ define(
         return Sandboxing.getState(sandbox).bind(function (state) {
           return state.expand(value).bind(function (path) {
             // When expanding, always select the first.
-            Option.from(path[0]).bind(state.lookupMenu).each(function (newMenuCompTuple) {
-              Highlighting.highlightFirst(newMenuCompTuple.menu);
+            Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu) {
+              Highlighting.highlightFirst(activeMenu);
 
               // DUPE with above. Fix later.
-              if (! Body.inBody(newMenuCompTuple.container.element())) {
-                Insert.append(sandbox.element(), newMenuCompTuple.container.element());
-                uiSpec.onOpenSubmenu()(sandbox, item, newMenuCompTuple);
+              if (! Body.inBody(activeMenu.element())) {
+                Insert.append(sandbox.element(), activeMenu.element());
+                uiSpec.onOpenSubmenu()(sandbox, item, activeMenu);
               }
             });
 
@@ -300,7 +293,8 @@ define(
             run: function (container, simulatedEvent) {
               if (EventRoot.isSource(container, simulatedEvent)) {
                 setup(container).each(function (primary) {
-                  Replacing.replace(container, [ { built: primary } ]);
+                  console.log('primary', primary);
+                  Replacing.append(container, { built: primary });
                 });
               }
             }
