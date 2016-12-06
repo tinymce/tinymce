@@ -16,8 +16,9 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Path", [
-    "tinymce/ui/Widget"
-], function (Widget) {
+    "tinymce/ui/Widget",
+    "tinymce/util/Arr"
+], function (Widget, Arr) {
     "use strict";
 
     return Widget.extend({
@@ -110,8 +111,8 @@ define("tinymce/ui/Path", [
             var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
 
             for (i = 0, l = parts.length; i < l; i++) {
-                var tooltipTitle = tinyMCE.toArray(parts[i].element.classList).filter(function (item) {
-                    return item.indexOf('mce-') === 0 ? null : item
+                var tooltipTitle = Arr.toArray(parts[i].element.classList).filter(function (item) {
+                    return item.indexOf('mce-') === 0 ? null : item;
                 });
                 html += (
                     (i > 0 ? '<div class="' + prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
