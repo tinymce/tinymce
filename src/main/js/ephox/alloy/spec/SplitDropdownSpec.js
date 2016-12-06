@@ -4,22 +4,19 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
-    'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'global!Error'
   ],
 
-  function (SystemEvents, Toggling, EventHandler, Beta, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
+  function (SystemEvents, Toggling, Beta, Gamma, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -29,9 +26,7 @@ define(
       FieldSchema.defaulted('onOpen', Fun.noop),
       // FieldSchema.defaulted('onClose', Fun.noop),
 
-      FieldSchema.defaulted('matchWidth', false),
-    
-      ViewTypes.schema()
+      FieldSchema.defaulted('matchWidth', false)
     ];
 
     var make = function (spec) {

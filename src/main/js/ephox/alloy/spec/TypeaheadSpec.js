@@ -10,7 +10,6 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
-    'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.InputSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
@@ -24,14 +23,13 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, Focusing, Representing, Sandboxing, EventHandler, Beta, Gamma, ViewTypes, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
+  function (SystemEvents, Coupling, Focusing, Representing, Sandboxing, EventHandler, Beta, Gamma, InputSpec, SpecSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Value, Strings, document) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('dom'),
       FieldSchema.option('lazySink'),
       FieldSchema.defaulted('minChars', 5),
-      ViewTypes.schema(),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('matchWidth', true),
@@ -44,7 +42,6 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('typeahead.spec', schema, Merger.deepMerge(
         spec,
-        { view: ViewTypes.useList(spec) },
         {
           view: {
             fakeFocus: true,

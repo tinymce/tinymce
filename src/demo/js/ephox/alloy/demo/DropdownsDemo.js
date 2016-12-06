@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.DropdownApis',
+    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
@@ -29,7 +30,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -143,46 +144,48 @@ define(
             innerHtml: 'Dropdown widget'
           },
 
-          name: 'primary-widget',
-          members: {
+          parts: {
             menu: {
-              munge: function (spec) {
-                return {
-                  dom: {
-                    tag: 'div'
-                  },
-                  components: [
-                    { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'dropdown-list' }
-                  ]
-                };
-              }
-            },
-            item: {
-              munge: function (spec) {
-                return {
-                  uiType: 'container',
-                  dom: {
-                    tag: 'div',
-                    classes: [ 'alloy-item' ]
-                  },
-                  components: [
-                    { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
-                  ]
-                };
+              members: {
+                menu: {
+                  munge: function (spec) {
+                    return {
+                      dom: {
+                        tag: 'div'
+                      },
+                      components: [
+                        { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'dropdown-list' }
+                      ]
+                    };
+                  }
+                },
+                item: {
+                  munge: function (spec) {
+                    return {
+                      uiType: 'container',
+                      dom: {
+                        tag: 'div',
+                        classes: [ 'alloy-item' ]
+                      },
+                      components: [
+                        { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                      ]
+                    };
+                  }
+                }
+              },
+              markers: {
+                selectedItem: 'no-selection',
+                item: 'alloy-item',
+                menu: 'no-selection',
+                selectedMenu: 'alloy-menu',
+                backgroundMenu: 'no-selection'
               }
             }
           },
-          markers: {
-            selectedItem: 'no-selection',
-            item: 'alloy-item',
-            menu: 'no-selection',
-            selectedMenu: 'alloy-menu',
-            backgroundMenu: 'no-selection'
-          },
           
           fetch: function () {
-            return Future.pure([
-            {
+            var future = Future.pure({
               type: 'widget',
               autofocus: true,
               data: {
@@ -202,8 +205,11 @@ define(
                   { uiType: 'input' }
                 ]
               }
-            }
-            ]);
+            });
+
+            return future.map(function (data) {
+              return MenuData.single('primary-menu', 'Widget', data);
+            });
           }
         }
       );
@@ -244,46 +250,50 @@ define(
             numColumns: 2,
             numRows: 2
           },
-          members: {
-            item: {
-              munge: function (spec) {
-                return {
-                  uiType: 'custom',
-                  dom: {
-                    tag: 'span',
-                    classes: [ 'alloy-item' ],
-                    innerHtml: spec.data.text,
-                    styles: {
-                      'display': 'inline-block',
-                      width: '50px'
-                    }
-                  },
-                  components: [ ]
-                };
-              }
-            },
-
+          parts: {
             menu: {
-              munge: function (spec) {
-                return {
-                  uiType: 'container',
-                  movement: {
-                    mode: 'grid',
-                    initSize: {
-                      numColumns: 2,
-                      numRows: 2
-                    }
-                  },
-                  dom: {
-                    tag: 'div',
-                    classes: [ 'demo-alloy-menu' ],
-                    styles: {
-                      width: '100px'
-                    }
-                  },
-                  shell: true,
-                  components: [ ]
-                };
+              members: {
+                item: {
+                  munge: function (spec) {
+                    return {
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'span',
+                        classes: [ 'alloy-item' ],
+                        innerHtml: spec.data.text,
+                        styles: {
+                          'display': 'inline-block',
+                          width: '50px'
+                        }
+                      },
+                      components: [ ]
+                    };
+                  }
+                },
+
+                menu: {
+                  munge: function (spec) {
+                    return {
+                      uiType: 'container',
+                      movement: {
+                        mode: 'grid',
+                        initSize: {
+                          numColumns: 2,
+                          numRows: 2
+                        }
+                      },
+                      dom: {
+                        tag: 'div',
+                        classes: [ 'demo-alloy-menu' ],
+                        styles: {
+                          width: '100px'
+                        }
+                      },
+                      shell: true,
+                      components: [ ]
+                    };
+                  }
+                }
               }
             }
           },
@@ -295,7 +305,8 @@ define(
               { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
               { type: 'item', data: { value: 'delta', text: '+Delta' } }
             ];
-            return Future.pure(data);
+            var future = Future.pure(data);
+            return MenuData.simple('basic-list', 'Basic List', future);
           },
          
           lazySink: lazySink
@@ -320,56 +331,45 @@ define(
 
 
           name: 'dropdown-list-demo',
-          scaffold: Fun.identity,
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'demo-alloy-menu',
-            selectedMenu: 'alloy-selected-menu',
-            backgroundMenu: 'alloy-background-menu'
-          },
-          members: {
-            menu: {
-              munge: function (spec) {
-                return {
-                  dom: {
-                    tag: 'ol',
-                    attributes: {
-                      'aria-label': spec.textkey
-                    },
-                    classes: [ 'demo-alloy-menu' ]
-                  },
-                  shell: true,
-                  components: [ ]
-                };
-              }
-            },
-            item: {
-              munge: function (spec) {
-                return {
-                  dom: {
-                    tag: 'li',
-                    classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                    innerHtml: spec.data.text
-                  },
-                  components: [
 
-                  ]
-                };
-              }
-            }
-          },
           parts: {
-            display: {
-              dom: {
-                tag: 'div'
+            menu: {
+              markers: {
+                item: 'alloy-item',
+                selectedItem: 'alloy-selected-item',
+                menu: 'demo-alloy-menu',
+                selectedMenu: 'alloy-selected-menu',
+                backgroundMenu: 'alloy-background-menu'
               },
-              representing: {
-                query: function (comp) {
-
+              members: {
+                menu: {
+                  munge: function (spec) {
+                    return {
+                      dom: {
+                        tag: 'ol',
+                        attributes: {
+                          'aria-label': spec.textkey
+                        },
+                        classes: [ 'demo-alloy-menu' ]
+                      },
+                      shell: true,
+                      components: [ ]
+                    };
+                  }
                 },
-                set: function (comp, v) {
-                  Html.set(comp.element(), v);
+                item: {
+                  munge: function (spec) {
+                    return {
+                      dom: {
+                        tag: 'li',
+                        classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
+                        innerHtml: spec.data.text
+                      },
+                      components: [
+
+                      ]
+                    };
+                  }
                 }
               }
             }
@@ -408,53 +408,57 @@ define(
             
           ],
           lazySink: lazySink,
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'demo-alloy-menu',
-            selectedMenu: 'alloy-selected-menu',
-            backgroundMenu: 'background-menu'
-          },
-          
-          members: {
+          parts: {
             menu: {
-              munge: function (spec) {
-                return {
-                  dom: {
-                    tag: 'ol',
-                    attributes: {
-                      'aria-label': spec.textkey
-                    },
-                    classes: [ 'demo-alloy-menu' ]
-                  },
-                  shell: true,
-                  components: [ ]
-                };
-              }
-            },
-            item: {
-              munge: function (spec) {
+              markers: {
+                item: 'alloy-item',
+                selectedItem: 'alloy-selected-item',
+                menu: 'demo-alloy-menu',
+                selectedMenu: 'alloy-selected-menu',
+                backgroundMenu: 'background-menu'
+              },
+              
+              members: {
+                menu: {
+                  munge: function (spec) {
+                    return {
+                      dom: {
+                        tag: 'ol',
+                        attributes: {
+                          'aria-label': spec.textkey
+                        },
+                        classes: [ 'demo-alloy-menu' ]
+                      },
+                      shell: true,
+                      components: [ ]
+                    };
+                  }
+                },
+                item: {
+                  munge: function (spec) {
 
-                return spec.type === 'widget' ? {
-                  uiType: 'container',
-                  dom: {
-                    tag: 'div',
-                    classes: [ 'alloy-item' ]
-                  },
+                    return spec.type === 'widget' ? {
+                      uiType: 'container',
+                      dom: {
+                        tag: 'div',
+                        classes: [ 'alloy-item' ]
+                      },
 
-                  components: [
-                   { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
-                  ]
-                } : {
-                  dom: {
-                    tag: 'li',
-                    classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                    innerHtml: spec.data.text
-                  },
-                  components: [
+                      components: [
+                       { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                      ]
+                    } : {
+                      dom: {
+                        tag: 'li',
+                        classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
+                        innerHtml: spec.data.text
+                      },
+                      components: [
 
-                  ]
-                };
+                      ]
+                    };
+                  }
+                }
               }
             }
           },

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.dropdown.Beta',
 
   [
+    'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
@@ -9,8 +10,10 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
+    'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.ui.TieredMenuSpec',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
@@ -18,11 +21,11 @@ define(
     'global!Error'
   ],
 
-  function (Coupling, Highlighting, Keying, Positioning, Sandboxing, Gamma, Tagger, TieredMenuSpec, Obj, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Coupling, Highlighting, Keying, Positioning, Sandboxing, Gamma, Tagger, Dismissal, TieredMenuSpec, Obj, Merger, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
-      return fetcher(component).map(detail.view().preprocess());
+      return fetcher(component);
     };
 
     var open = function (detail, anchor, component, sandbox) {
@@ -31,48 +34,38 @@ define(
       var lazySink = Gamma.getSink(component, detail);
 
       var processed = futureData.map(function (data) {
-        return TieredMenuSpec({
-          uid: Tagger.generate(''),
-          data: data,
+        return TieredMenuSpec(
+          Merger.deepMerge(
+            detail.parts().menu(),
+            {
+              uid: Tagger.generate(''),
+              data: data,
 
-          markers: Obj.map(detail.view().markers(), Fun.apply),
-          members: Obj.map(detail.view().members(), Fun.apply),
+              onOpenMenu: function (sandbox, menu) {
+                var sink = lazySink().getOrDie();
+                Positioning.position(sink, anchor, menu);
+              },
 
-// var showMenu = function (sandbox, tuple) {
-        
-//       };
+              onOpenSubmenu: function (sandbox, item, submenu) {
+                var sink = lazySink().getOrDie();
+                Positioning.position(sink, {
+                  anchor: 'submenu',
+                  item: item,
+                  bubble: Option.none()
+                }, submenu);
 
-//       var showSubmenu = function (sandbox, triggerItem, submenu) {
-//         var sink = getSink();
-//         Positioning.position(sink, {
-//           anchor: 'submenu',
-//           item: triggerItem,
-//           bubble: Option.none()
-//         }, submenu.container);
-//       };
-          onOpenMenu: function (sandbox, menu) {
-            var sink = lazySink().getOrDie();
-            Positioning.position(sink, anchor, menu);
-          },
+              },
 
-          onOpenSubmenu: function (sandbox, item, submenu) {
-            var sink = lazySink().getOrDie();
-            Positioning.position(sink, {
-              anchor: 'submenu',
-              item: item,
-              bubble: Option.none()
-            }, submenu);
+              onExecute: function () {
 
-          },
-
-          onExecute: function () {
-
-          },
-          onEscape: function () {
-            Sandboxing.close(sandbox);
-            return Option.some(true);
-          }
-        });
+              },
+              onEscape: function () {
+                Sandboxing.close(sandbox);
+                return Option.some(true);
+              }
+            }
+          )
+        );
       });
 
       Sandboxing.open(sandbox, processed).get(function (tiers) {
@@ -129,9 +122,31 @@ define(
       };
 
       var lazyAnchor = Fun.constant(anchor);
-      return detail.view().sandbox().spawn(lazyAnchor, detail, interactions);
+    
+      return {
+        uiType: 'custom',
+        dom: {
+          tag: 'div'
+        },
+        behaviours: {
+          sandboxing: {
+            onOpen: onOpen,
+            onClose: onClose,
+            isPartOf: function (container, data, queryElem) {
+              return ComponentStructure.isPartOf(data, queryElem);
+            },
+            bucket: {
+              mode: 'sink',
+              lazySink: lazySink
+            }
+          },
+          receiving: Dismissal.receiving({
+            isExtraPart: Fun.constant(false)
+          })
+        },
+        events: { }
+      };
     };
-
     
     var previewPopup = function (detail, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');

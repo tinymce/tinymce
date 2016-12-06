@@ -4,20 +4,17 @@ define(
   [
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.dropdown.DropdownBehaviour',
     'ephox.alloy.dropdown.Gamma',
-    'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Toggling, Beta, DropdownBehaviour, Gamma, ViewTypes, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option) {
+  function (Toggling, Beta, Gamma, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
@@ -26,14 +23,13 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('displayer', Fun.identity),
       FieldSchema.option('lazySink'),
-      FieldSchema.defaulted('matchWidth', false),
-      ViewTypes.schema()
+      FieldSchema.defaulted('matchWidth', false)
     ];
 
-    var make = function (label, useView, spec) {
-      var detail = SpecSchema.asStructOrDie(label, schema, Merger.deepMerge(spec, {
-        view: useView
-      }), [ ]);
+    var make = function (label, spec) {
+      var detail = SpecSchema.asStructOrDie(label, schema, spec, [
+        'menu'
+      ]);
 
       var factories = Merger.deepMerge(
         Gamma.sink()
@@ -96,7 +92,6 @@ define(
     var list = function (spec) {
       return make(
         'dropdown.list',
-        ViewTypes.useList(spec),
         Merger.deepMerge(
           {
             matchWidth: false
@@ -109,7 +104,6 @@ define(
     var widget = function (spec) {
       return make(
         'dropdown.widget',
-        ViewTypes.useWidget(spec),
         spec
       );
     };
@@ -117,7 +111,6 @@ define(
     var menu = function (spec) {
       return make(
         'dropdown.menu',
-        ViewTypes.useLayered(spec),
         spec
       );
     };
@@ -125,7 +118,6 @@ define(
     var grid = function (spec) {
       return make(
         'dropdown.grid',
-        ViewTypes.useGrid(spec),
         spec
       );
     };

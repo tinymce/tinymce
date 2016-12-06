@@ -2,11 +2,8 @@ define(
   'ephox.alloy.spec.InlineViewSpec',
 
   [
-    'ephox.alloy.dropdown.Gamma',
-    'ephox.alloy.menu.logic.ViewTypes',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -14,7 +11,7 @@ define(
     'ephox.sugar.api.Body'
   ],
 
-  function (Gamma, ViewTypes, SpecSchema, FieldSchema, ValueSchema, Merger, Fun, Option, Cell, Body) {
+  function (SpecSchema, FieldSchema, Merger, Fun, Option, Cell, Body) {
     var schema = [
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
@@ -24,8 +21,7 @@ define(
       FieldSchema.defaulted('initAnchor', {
         anchor: 'selection',
         root: Body.body()
-      }),
-      ViewTypes.schema()
+      })
     ];
 
     var make = function (spec) {
