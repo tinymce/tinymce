@@ -115,7 +115,7 @@ define("tinymce/ui/Path", [
                 html += (
                     (i > 0 ? '<div class="' + prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
                     '<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
-                    i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + i + '"title="' + tooltipTitle + '">' + parts[i].name + '</div>'
+                    i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + (i + 1) + '"title="' + tooltipTitle + '">' + parts[i].name + '</div>'
                 );
             }
 
