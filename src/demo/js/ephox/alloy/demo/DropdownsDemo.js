@@ -238,18 +238,6 @@ define(
 
           name: 'grid-demo',
 
-          scaffold: Fun.identity,
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'demo-alloy-menu',
-            selectedMenu: 'alloy-selected-menu',
-            backgroundMenu: 'alloy-background-menu'
-          },
-          initSize: {
-            numColumns: 2,
-            numRows: 2
-          },
           parts: {
             menu: {
               members: {
@@ -294,6 +282,14 @@ define(
                     };
                   }
                 }
+              },
+
+              markers: {
+                item: 'alloy-item',
+                selectedItem: 'alloy-selected-item',
+                menu: 'demo-alloy-menu',
+                selectedMenu: 'alloy-selected-menu',
+                backgroundMenu: 'alloy-background-menu'
               }
             }
           },
