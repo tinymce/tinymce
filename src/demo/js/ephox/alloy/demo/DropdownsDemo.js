@@ -212,7 +212,7 @@ define(
       //     markers: {
       //       item: 'alloy-item',
       //       selectedItem: 'alloy-selected-item',
-      //       menu: 'alloy-menu',
+      //       menu: 'demo-alloy-menu',
       //       selectedMenu: 'alloy-selected-menu'
       //     },
       //     initSize: {
@@ -305,7 +305,7 @@ define(
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
+            menu: 'demo-alloy-menu',
             selectedMenu: 'alloy-selected-menu',
             backgroundMenu: 'alloy-background-menu'
           },
@@ -318,7 +318,7 @@ define(
                     attributes: {
                       'aria-label': spec.textkey
                     },
-                    classes: [ 'alloy-menu' ]
+                    classes: [ 'demo-alloy-menu' ]
                   },
                   shell: true,
                   components: [ ]
@@ -392,7 +392,7 @@ define(
           markers: {
             item: 'alloy-item',
             selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
+            menu: 'demo-alloy-menu',
             selectedMenu: 'alloy-selected-menu',
             backgroundMenu: 'background-menu'
           },
@@ -406,7 +406,7 @@ define(
                     attributes: {
                       'aria-label': spec.textkey
                     },
-                    classes: [ 'alloy-menu' ]
+                    classes: [ 'demo-alloy-menu' ]
                   },
                   shell: true,
                   components: [ ]

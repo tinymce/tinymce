@@ -56,7 +56,12 @@ define(
           },
 
           onOpenSubmenu: function (sandbox, item, submenu) {
-
+            var sink = lazySink().getOrDie();
+            Positioning.position(sink, {
+              anchor: 'submenu',
+              item: item,
+              bubble: Option.none()
+            }, submenu);
 
           },
 
