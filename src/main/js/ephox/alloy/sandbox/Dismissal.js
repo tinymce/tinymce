@@ -22,9 +22,9 @@ define(
               FieldSchema.strict('target')
             ]),
             onReceive: function (sandbox, data) {
-              if (Sandboxing.isShowing(sandbox)) {
+              if (Sandboxing.isOpen(sandbox)) {
                 var isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
-                if (! isPart) Sandboxing.closeSandbox(sandbox);
+                if (! isPart) Sandboxing.close(sandbox);
               }
             }
           }

@@ -374,7 +374,14 @@ define(
           onRight: onRight,
           onLeft: onLeft,
           onEscape: onEscape,
-          focusManager: uiSpec.fakeFocus() ? focusManager : undefined
+          focusManager: uiSpec.fakeFocus() ? focusManager : undefined,
+          focusIn: function (sandbox) {
+            Sandboxing.getState(sandbox).bind(function (state) {
+              state.getPrimary().each(function (primary) {
+                Keying.focusIn(primary.menu);
+              });
+            });
+          }
         },
         // Highlighting is used for highlighting the active menu
         highlighting: {

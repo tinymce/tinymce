@@ -43,8 +43,10 @@ define(
         dom: {
           tag: 'div'
         },
-        positioning: {
-          useFixed: true
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
       });
 
@@ -62,224 +64,224 @@ define(
         return Result.value(sink);
       };
 
-      HtmlDisplay.section(
-        gui,
-        'Thi is a split-button dropdown',
-        GuiTemplate.use(
-          Option.some('split-dropdown'),
-          TemplateToolbarSplitButton,
-          { 
-            uiType: 'split-dropdown',
-            toggleClass: 'demo-selected',
-            fetch: function () {
-              return Future.pure({
-                uiType: 'container',
-                components: [
-                  { uiType: 'input'}
-                ]
+      // HtmlDisplay.section(
+      //   gui,
+      //   'Thi is a split-button dropdown',
+      //   GuiTemplate.use(
+      //     Option.some('split-dropdown'),
+      //     TemplateToolbarSplitButton,
+      //     { 
+      //       uiType: 'split-dropdown',
+      //       toggleClass: 'demo-selected',
+      //       fetch: function () {
+      //         return Future.pure({
+      //           uiType: 'container',
+      //           components: [
+      //             { uiType: 'input'}
+      //           ]
 
-              });
-            },
-            lazySink: lazySink,
-            onExecute: function () {
+      //         });
+      //       },
+      //       lazySink: lazySink,
+      //       onExecute: function () {
 
-            },
+      //       },
 
-            parts: {
-              button: {
-                uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'Run'
-                },
-                action: function () {
-                  console.log('*** Clicked on Action ***');
-                },
-                uid: 'supplied'
-              },
-              arrow: {
-                uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'v'
-                }
-              }
-            },
-            view: {
-              style: 'widget',
-              scaffold: Fun.identity,
-              members: {
-                container: {
-                  munge: function (spec) {
-                    return GuiTemplate.use(
-                      Option.some('widget-container'),
-                      TemplateWidgetContainer,
-                      { },
-                      { }
-                    );
-                  }
-                }
-              }
-            }
-          },
-          {
+      //       parts: {
+      //         button: {
+      //           uiType: 'button',
+      //           dom: {
+      //             tag: 'button',
+      //             innerHtml: 'Run'
+      //           },
+      //           action: function () {
+      //             console.log('*** Clicked on Action ***');
+      //           },
+      //           uid: 'supplied'
+      //         },
+      //         arrow: {
+      //           uiType: 'button',
+      //           dom: {
+      //             tag: 'button',
+      //             innerHtml: 'v'
+      //           }
+      //         }
+      //       },
+      //       view: {
+      //         style: 'widget',
+      //         scaffold: Fun.identity,
+      //         members: {
+      //           container: {
+      //             munge: function (spec) {
+      //               return GuiTemplate.use(
+      //                 Option.some('widget-container'),
+      //                 TemplateWidgetContainer,
+      //                 { },
+      //                 { }
+      //               );
+      //             }
+      //           }
+      //         }
+      //       }
+      //     },
+      //     {
 
-          }
-        )
-      );
+      //     }
+      //   )
+      // );
 
    
-      var x = HtmlDisplay.section(
-        gui,
-        'This dropdown button shows a widget',
-        GuiTemplate.use(
-          Option.some('dropdown-widget'),
-          TemplateToolbarDropdown,
-          {
-            uiType: 'dropdown-widget',
-            lazySink: lazySink,
+      // var x = HtmlDisplay.section(
+      //   gui,
+      //   'This dropdown button shows a widget',
+      //   GuiTemplate.use(
+      //     Option.some('dropdown-widget'),
+      //     TemplateToolbarDropdown,
+      //     {
+      //       uiType: 'dropdown-widget',
+      //       lazySink: lazySink,
 
-            scaffold: Fun.identity,
-            members: {
-              container: {
-                munge: function (spec) {
-                  return GuiTemplate.use(
-                    Option.some('widget-container'),
-                    TemplateWidgetContainer,
-                    { },
-                    { }
-                  );
-                }
-              }
-            },
-            parts: {
-              display: {
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'here'
-                },
-                representing: {
-                  query: function (comp) {
+      //       scaffold: Fun.identity,
+      //       members: {
+      //         container: {
+      //           munge: function (spec) {
+      //             return GuiTemplate.use(
+      //               Option.some('widget-container'),
+      //               TemplateWidgetContainer,
+      //               { },
+      //               { }
+      //             );
+      //           }
+      //         }
+      //       },
+      //       parts: {
+      //         display: {
+      //           dom: {
+      //             tag: 'button',
+      //             innerHtml: 'here'
+      //           },
+      //           representing: {
+      //             query: function (comp) {
 
-                  },
-                  set: function (comp, v) {
-                    Html.set(comp.element(), v);
-                  }
-                }
-              }
-            },
-            fetch: function () {
-              return Future.pure({
-                uiType: 'container',
-                dom: {
-                  classes: [ 'my-widget' ]
-                },
-                keying: { mode: 'cyclic' },
-                components: [
-                  { uiType: 'input' }
-                ]
-              });
-            }
-          }, { 
+      //             },
+      //             set: function (comp, v) {
+      //               Html.set(comp.element(), v);
+      //             }
+      //           }
+      //         }
+      //       },
+      //       fetch: function () {
+      //         return Future.pure({
+      //           uiType: 'container',
+      //           dom: {
+      //             classes: [ 'my-widget' ]
+      //           },
+      //           keying: { mode: 'cyclic' },
+      //           components: [
+      //             { uiType: 'input' }
+      //           ]
+      //         });
+      //       }
+      //     }, { 
 
-          }
-        )
-      );
+      //     }
+      //   )
+      // );
 
 
 
-      DropdownApis.showValue(x, 'dog');
+      // DropdownApis.showValue(x, 'dog');
 
-      console.log('x', x.element().dom());
+      // console.log('x', x.element().dom());
 
-      // return;
+      // // return;
 
-      HtmlDisplay.section(
-        gui,
-        'This grid dropdown button is a grid of 2 x 2',
-        {
-          uiType: 'dropdown-grid',
-          text: 'Dropdown',
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-grid' }
-          ],
-          scaffold: Fun.identity,
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu'
-          },
-          initSize: {
-            numColumns: 2,
-            numRows: 2
-          },
-          members: {
-            item: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  Option.none(),
-                  TemplateGridItem,
-                  { },
-                  {
-                    fields: spec
-                  }
-                );
-              }
-            },
-            grid: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  Option.some('flatgrid'),
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
-                      'aria-label': spec.textkey || 'TEMPORARY_HACK'
-                    }
-                  }
-                );
-              }
-            }
-          },
-          fetch: function () {
+      // HtmlDisplay.section(
+      //   gui,
+      //   'This grid dropdown button is a grid of 2 x 2',
+      //   {
+      //     uiType: 'dropdown-grid',
+      //     text: 'Dropdown',
+      //     dom: {
+      //       tag: 'div'
+      //     },
+      //     components: [
+      //       { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-grid' }
+      //     ],
+      //     scaffold: Fun.identity,
+      //     markers: {
+      //       item: 'alloy-item',
+      //       selectedItem: 'alloy-selected-item',
+      //       menu: 'alloy-menu',
+      //       selectedMenu: 'alloy-selected-menu'
+      //     },
+      //     initSize: {
+      //       numColumns: 2,
+      //       numRows: 2
+      //     },
+      //     members: {
+      //       item: {
+      //         munge: function (spec) {
+      //           return GuiTemplate.use(
+      //             Option.none(),
+      //             TemplateGridItem,
+      //             { },
+      //             {
+      //               fields: spec
+      //             }
+      //           );
+      //         }
+      //       },
+      //       grid: {
+      //         munge: function (spec) {
+      //           return GuiTemplate.use(
+      //             Option.some('flatgrid'),
+      //             TemplateMenu,
+      //             { },
+      //             {
+      //               fields: {
+      //                 'aria-label': spec.textkey || 'TEMPORARY_HACK'
+      //               }
+      //             }
+      //           );
+      //         }
+      //       }
+      //     },
+      //     fetch: function () {
 
-            var data = [
-              { type: 'item', value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
-              { type: 'item', value: 'beta', text: '+Beta', 'item-class': 'class-beta' },
-              { type: 'item', value: 'gamma', text: '+Gamma', 'item-class': 'class-gamma' },
-              { type: 'item', value: 'delta', text: '+Delta', 'item-class': 'class-delta' }
-            ];
+      //       var data = [
+      //         { type: 'item', value: 'alpha', text: '+Alpha', 'item-class': 'class-alpha' },
+      //         { type: 'item', value: 'beta', text: '+Beta', 'item-class': 'class-beta' },
+      //         { type: 'item', value: 'gamma', text: '+Gamma', 'item-class': 'class-gamma' },
+      //         { type: 'item', value: 'delta', text: '+Delta', 'item-class': 'class-delta' }
+      //       ];
 
-            return Future.pure(data);
-          },
-          // sink: sink,
-          desc: 'demo-dropdown',
-          onExecute: function (sandbox, item, itemValue) {
-            console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
-          },
-          lazySink: lazySink,
-          parts: {
-            display: {
-              dom: {
-                tag: 'button',
-                innerHtml: 'Dropdown Grid'
-              },
-              representing: {
-                query: function (comp) {
+      //       return Future.pure(data);
+      //     },
+      //     // sink: sink,
+      //     desc: 'demo-dropdown',
+      //     onExecute: function (sandbox, item, itemValue) {
+      //       console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
+      //     },
+      //     lazySink: lazySink,
+      //     parts: {
+      //       display: {
+      //         dom: {
+      //           tag: 'button',
+      //           innerHtml: 'Dropdown Grid'
+      //         },
+      //         representing: {
+      //           query: function (comp) {
 
-                },
-                set: function (comp, v) {
-                  Html.set(comp.element(), v);
-                }
-              }
-            }
-          }
-        }
-      );
+      //           },
+      //           set: function (comp, v) {
+      //             Html.set(comp.element(), v);
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // );
 
 
 
@@ -294,7 +296,7 @@ define(
             innerHtml: 'Click me to expand'
           },
           components: [
-            { uiType: 'placeholder', name: '<alloy.dropdown-display>', owner: 'dropdown-list' }
+            
           ],
           scaffold: Fun.identity,
           markers: {
@@ -306,21 +308,31 @@ define(
           members: {
             menu: {
               munge: function (spec) {
-                return GuiTemplate.use(
-                  Option.some('dropdown-list'),
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
+                return {
+                  dom: {
+                    tag: 'ol',
+                    attributes: {
                       'aria-label': spec.textkey
-                    }
-                  }
-                );
+                    },
+                    classes: [ 'alloy-menu' ]
+                  },
+                  shell: true,
+                  components: [ ]
+                };
               }
             },
             item: {
               munge: function (spec) {
-                return DemoTemplates.item(spec);
+                return {
+                  dom: {
+                    tag: 'li',
+                    classes: [ 'alloy-item' ],
+                    innerHtml: spec.data.text
+                  },
+                  components: [
+
+                  ]
+                }
               }
             }
           },
@@ -343,11 +355,11 @@ define(
           fetch: function () {
 
             var data = [
-              { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'class-alpha' },
-              { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
-              { type: 'separator', value: 'text' },
-              { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
-              { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
+              { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
+              // { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
+              // { type: 'separator', value: 'text' },
+              // { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
+              // { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
             ];
 
             return Future.pure(data);
@@ -359,6 +371,8 @@ define(
           }
         }
       );
+
+      return;
 
       HtmlDisplay.section(
         gui,
