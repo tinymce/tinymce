@@ -129,7 +129,7 @@ asynctest(
 
 
         Logger.t(
-          'Replacing.add to put a new thing at the end.',          
+          'Replacing.append to put a new thing at the end.',          
           Step.sync(function () {
             Replacing.append(component, {
               uiType: 'custom',
@@ -140,7 +140,7 @@ asynctest(
           })
         ),
         Assertions.sAssertStructure(
-          'After add(span)',
+          'After append(span)',
           ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
               children: [
@@ -154,6 +154,36 @@ asynctest(
         ),
         Step.sync(function () {
           RawAssertions.assertEq('Should have 3 children now', 3, Replacing.contents(component).length);
+        }),
+
+        Logger.t(
+          'Replacing.prepend to put a new thing at the start',
+          Step.sync(function () {
+            Replacing.prepend(component, {
+              uiType: 'custom',
+              dom: {
+                tag: 'label'
+              }
+            });
+          })
+        ),
+
+        Assertions.sAssertStructure(
+          'After prepend(label)',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('label', {}),
+                s.element('div', { }),
+                s.element('div', { }),
+                s.element('span', { })
+              ]
+            });
+          }),
+          component.element()
+        ),
+        Step.sync(function () {
+          RawAssertions.assertEq('Should have 4 children now', 4, Replacing.contents(component).length);
         })
       ];
     }, function () { success(); }, failure);

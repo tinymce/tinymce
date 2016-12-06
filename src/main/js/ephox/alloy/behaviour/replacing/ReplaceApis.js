@@ -32,11 +32,19 @@ define(
       component.syncComponents();
     };
 
-    var append = function (component, replaceInfo, appendee) {
-      var child = component.getSystem().build(appendee);
+    var insert = function (component, replaceInfo, insertion, childSpec) {
+      var child = component.getSystem().build(childSpec);
       component.getSystem().addToWorld(child);
-      Insert.append(component.element(), child.element());
+      insertion(component.element(), child.element());
       component.syncComponents();
+    };
+
+    var append = function (component, replaceInfo, appendee) {
+      insert(component, replaceInfo, Insert.append, appendee);
+    };
+
+    var prepend = function (component, replaceInfo, prependee) {
+      insert(component, replaceInfo, Insert.prepend, prependee);
     };
 
     // TODO: Rename
@@ -46,6 +54,7 @@ define(
 
     return {
       append: append,
+      prepend: prepend,
       set: set,
       contents: contents
     };
