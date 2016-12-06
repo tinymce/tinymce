@@ -184,6 +184,31 @@ asynctest(
         ),
         Step.sync(function () {
           RawAssertions.assertEq('Should have 4 children now', 4, Replacing.contents(component).length);
+        }),
+
+        Logger.t(
+          'Replacing.remove to remove the second div',
+          Step.sync(function () {
+            var second = component.getSystem().getByUid('second').getOrDie();
+            Replacing.remove(component, second);
+          })
+        ),
+
+        Assertions.sAssertStructure(
+          'After remove(second)',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('label', {}),
+                s.element('div', { }),
+                s.element('span', { })
+              ]
+            });
+          }),
+          component.element()
+        ),
+        Step.sync(function () {
+          RawAssertions.assertEq('Should have 3 children again', 3, Replacing.contents(component).length);
         })
       ];
     }, function () { success(); }, failure);

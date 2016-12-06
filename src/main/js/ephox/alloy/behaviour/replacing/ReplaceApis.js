@@ -4,11 +4,12 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.echo.api.AriaFocus',
+    'ephox.sugar.api.Compare',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, AriaFocus, Insert, Remove) {
+  function (Arr, AriaFocus, Compare, Insert, Remove) {
     var clearOld = function (component, replaceInfo) {
       var old = contents(component, replaceInfo);
       Arr.each(old, component.getSystem().removeFromWorld);
@@ -47,6 +48,20 @@ define(
       insert(component, replaceInfo, Insert.prepend, prependee);
     };
 
+    // NOTE: Removee is going to be a component, not a spec.
+    var remove = function (component, replaceInfo, removee) {
+      var children = contents(component, replaceInfo);
+      // TODO: Update for katamari
+      var found = Arr.find(children, function (child) {
+        return Compare.eq(removee.element(), child.element());
+      });
+
+      if (found !== undefined && found !== null) {
+        Remove.remove(found.element());
+        component.syncComponents();
+      }
+    };
+
     // TODO: Rename
     var contents = function (component, replaceInfo) {
       return component.components();
@@ -55,6 +70,7 @@ define(
     return {
       append: append,
       prepend: prepend,
+      remove: remove,
       set: set,
       contents: contents
     };
