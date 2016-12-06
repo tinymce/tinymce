@@ -110,10 +110,13 @@ define("tinymce/ui/Path", [
 			var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
 
 			for (i = 0, l = parts.length; i < l; i++) {
-				html += (
+                var tooltipTitle =  tinyMCE.toArray(parts[i].element.classList).filter(function (item) {
+                    return item.indexOf('mce-')===0?null:item
+                });
+                html += (
 					(i > 0 ? '<div class="' + prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
 					'<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
-					i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + (i + 1) + '">' + parts[i].name + '</div>'
+					i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + i + '"title="' + tooltip + '">' + parts[i].name + '</div>'
 				);
 			}
 
