@@ -111,9 +111,9 @@ define("tinymce/ui/Path", [
             var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
 
             for (i = 0, l = parts.length; i < l; i++) {
-                var tooltipTitle = Arr.toArray(parts[i].element.classList).filter(function (item) {
+                var tooltipTitle = Arr.filter(Arr.toArray(parts[i].element.classList,function (item) {
                     return item.indexOf('mce-') === 0 ? null : item;
-                });
+                }));
                 html += (
                     (i > 0 ? '<div class="' + prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
                     '<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
