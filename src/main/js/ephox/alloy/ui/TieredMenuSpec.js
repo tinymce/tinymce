@@ -14,13 +14,11 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredState',
-    'ephox.alloy.menu.logic.HotspotViews',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -30,13 +28,10 @@ define(
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Classes',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (ComponentStructure, EditableFields, EventRoot, SystemEvents, Highlighting, Keying, Replacing, Representing, Sandboxing, EventHandler, Fields, LayeredState, HotspotViews, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, Insert, Remove, SelectorFilter, SelectorFind) {
+  function (ComponentStructure, EditableFields, EventRoot, SystemEvents, Highlighting, Keying, Replacing, Representing, Sandboxing, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
     var schema = [
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('onEscape'),
@@ -98,7 +93,7 @@ define(
 
       var setup = function (container) {
         var componentMap = buildMenus(container, uiSpec.data().menus());
-        addToWorld(container, componentMap);
+         addToWorld(container, componentMap);
 
         
         
@@ -117,10 +112,9 @@ define(
       };
 
       var toMenuValues = function (container, sMenus) {
-        return Obj.map(sMenus, function (menu) {
-          var menuItems = SelectorFilter.descendants(menu.element(), '.' + uiSpec.markers().item());
-          return Arr.bind(menuItems, function (mi) {
-            return container.getSystem().getByDom(mi).map(getItemValue).fold(Fun.constant([ ]), Arr.pure);
+        return Obj.map(uiSpec.data().menus(), function (data, menuName) {
+          return Arr.map(data.items, function (item) {
+            return item.data.value;
           });
         });
       };
@@ -164,17 +158,18 @@ define(
         return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu) {
           var rest = getMenus(state, path.slice(1));
           Arr.each(rest, function (r) {
-            Class.add(r.menu.element(), uiSpec.markers().backgroundMenu());
+            Class.add(r.element(), uiSpec.markers().backgroundMenu());
           });
+
           if (! Body.inBody(activeMenu.element())) {
-            Insert.append(container.element(), activeMenu.element());
+            Replacing.append(container, { built: activeMenu });
           }
           setActiveMenu(container, activeMenu);
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
-            Classes.remove(o.menu.element(), [ uiSpec.backgroundClass() ]);
-            Remove.remove(o.container.element());
+            Classes.remove(o.element(), [ uiSpec.markers().backgroundMenu() ]);
+            Replacing.remove(container, o);
           });
 
           return true;
@@ -186,13 +181,15 @@ define(
         return state.expand(value).bind(function (path) {
           // When expanding, always select the first.
           Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu) {
-            Highlighting.highlightFirst(activeMenu);
-
             // DUPE with above. Fix later.
             if (! Body.inBody(activeMenu.element())) {
-              Insert.append(container.element(), activeMenu.element());
+              Replacing.append(container, { built: activeMenu });
               uiSpec.onOpenSubmenu()(container, item, activeMenu);
             }
+
+            Highlighting.highlightFirst(activeMenu);
+
+
           });
 
           return updateMenuPath(container, state, path);
@@ -330,7 +327,15 @@ define(
             mode: 'special',
             onRight: keyOnItem(onRight),
             onLeft: keyOnItem(onLeft),
-            onEscape: keyOnItem(onEscape)
+            onEscape: keyOnItem(onEscape),
+            focusIn: function (container, keyInfo) {
+              state.getPrimary().each(function (primary) {
+                Keying.focusIn(primary);
+
+                // Explore what this one is for.
+                // container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
+              });
+            }
             // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
           },
           // Highlighting is used for highlighting the active menu

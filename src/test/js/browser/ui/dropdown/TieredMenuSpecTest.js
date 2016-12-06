@@ -12,6 +12,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
@@ -20,7 +21,7 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, EventHandler, ItemEvents, MenuEvents, GuiSetup, TieredMenuSpec, Objects) {
+  function (ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, Keying, EventHandler, ItemEvents, MenuEvents, GuiSetup, TieredMenuSpec, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -69,7 +70,10 @@ asynctest(
               munge: function (menuSpec) {
                 return {
                   dom: {
-                    tag: 'div'
+                    tag: 'div',
+                    attributes: {
+                      'data-value': menuSpec.value
+                    }
                   },
                   components: [ ],
                   shell: true
@@ -82,14 +86,23 @@ asynctest(
             primary: 'menu-a',
             menus: {
               'menu-a': {
+                value: 'menu-a',
                 items: [
                   { type: 'item', data: { value: 'a-alpha', text: 'a-Alpha' }},
                   { type: 'item', data: { value: 'a-beta', text: 'a-Beta' }},
                   { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }}
                 ]
+              },
+              'menu-b': {
+                value: 'menu-b',
+                items: [
+                  { type: 'item', data: { value: 'b-alpha', text: 'b-Alpha' } }
+                ]
               }
             },
-            expansions: { }
+            expansions: {
+              'a-beta': 'menu-b'
+            }
           },
 
           events: Objects.wrap(
@@ -129,7 +142,11 @@ asynctest(
       });
 
       return [
-        
+        Step.sync(function () {
+          Keying.focusIn(component);
+        }),
+        Keyboard.sKeydown(doc, Keys.down(), { }),
+        Keyboard.sKeydown(doc, Keys.right(), { }),
         Step.fail('Tiered Menu spec fail')
       ];
     }, function () { success(); }, failure);
