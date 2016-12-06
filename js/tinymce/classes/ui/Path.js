@@ -98,7 +98,6 @@ define("tinymce/ui/Path", [
 
 		bindStates: function() {
 			var self = this;
-
 			self.state.on('change:row', function(e) {
 				self.innerHtml(self._getDataPathHtml(e.value));
 			});
