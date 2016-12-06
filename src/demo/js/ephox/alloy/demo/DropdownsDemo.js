@@ -330,7 +330,7 @@ define(
                 return {
                   dom: {
                     tag: 'li',
-                    classes: [ 'alloy-item' ],
+                    classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
                     innerHtml: spec.data.text
                   },
                   components: [
@@ -360,10 +360,10 @@ define(
 
             var data = [
               { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
-              // { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'class-beta' },
-              // { type: 'separator', value: 'text' },
-              // { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'class-gamma' },
-              // { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'class-delta' }
+              { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
+              { type: 'separator', data: { value: 'text' } },
+              { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
+              { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
             ];
 
             return Future.pure(data);
