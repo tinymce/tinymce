@@ -111,7 +111,7 @@ define(
         menu: Fun.constant({
           placeholder: Fun.die('The part menu should not appear in components'),
           build: function (spec) {
-            return UiSubstitutes.single(false, Fun.constant(spec));
+            return spec;
           }
         }),
 

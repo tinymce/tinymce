@@ -2,6 +2,7 @@ define(
   'ephox.alloy.spec.SpecSchema',
 
   [
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Error) {
+  function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Error) {
     var getPartsSchema = function (partNames, _optPartNames) {
       if (partNames.length === 0) return [ ];
       var optPartNames = _optPartNames !== undefined ? _optPartNames : [ ];
@@ -24,9 +25,9 @@ define(
         Arr.flatten([
           Arr.map(partNames, FieldSchema.strict),
           Arr.map(optPartNames, function (optPart) {
-            return FieldSchema.field(optPart, optPart, FieldPresence.defaultedThunk(function (spec) {
+            return FieldSchema.defaulted(optPart, UiSubstitutes.single(false, function () {
               throw new Error('The optional part: ' + optPart + ' was not specified in the config, but it was used in components');
-            }), ValueSchema.anyValue());
+            }));
           })
         ])
       );

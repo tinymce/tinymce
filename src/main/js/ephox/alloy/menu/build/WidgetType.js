@@ -39,18 +39,20 @@ define(
       ).getOr(info.uid() + '-widget');
 
       var placeholders = {
-        '<alloy.item.widget>': UiSubstitutes.single(true,  Merger.deepMerge(
-          { uid: widgetUid },
-          info.widget(),
-          {
-            representing: {
-              query: function (component) {
-                return info.data();
-              },
-              set: function () { }
+        '<alloy.item.widget>': UiSubstitutes.single(true, function () {
+          return Merger.deepMerge(
+            { uid: widgetUid },
+            info.widget(),
+            {
+              representing: {
+                query: function (component) {
+                  return info.data();
+                },
+                set: function () { }
+              }
             }
-          }
-        ))
+          );
+        })
       };
 
       var components = UiSubstitutes.substitutePlaces(Option.some('item-widget'), info, info.components(), placeholders);

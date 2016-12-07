@@ -41,7 +41,7 @@ define(
 
     var scan = function (owner, detail, compSpec, placeholders) {
       if (compSpec.uiType === placeholder) return subPlaceholder(owner, detail, compSpec, placeholders);
-      else return adt.single(false, compSpec);
+      else return adt.single(false, Fun.constant(compSpec));
     };
 
     var substitute = function (owner, detail, compSpec, placeholders) {
