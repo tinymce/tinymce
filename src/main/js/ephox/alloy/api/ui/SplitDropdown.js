@@ -32,7 +32,6 @@ define(
 
     var build = function (f) {
 
-
       var parts = {
         arrow: Fun.constant({
           placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.split-dropdown.arrow>' }),

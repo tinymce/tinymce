@@ -68,10 +68,10 @@ define(
       'widget-container': WidgetContainerSpec.make,
       menu: MenuSpec.make,
       
-      'dropdown-menu': DropdownSpec.menu,
-      'dropdown-widget': DropdownSpec.widget,
-      'dropdown-list': DropdownSpec.list,
-      'dropdown-grid': DropdownSpec.grid,
+      'dropdown-menu': DropdownSpec.make,
+      'dropdown-widget': DropdownSpec.make,
+      'dropdown-list': DropdownSpec.make,
+      'dropdown-grid': DropdownSpec.make,
       'split-dropdown': SplitDropdownSpec.make,
 
       'tabbing': TabbedSpec.make,

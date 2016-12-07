@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.DropdownApis',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.menus.MenuData',
@@ -31,7 +32,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, SplitDropdown, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, Dropdown, DropdownApis, SplitDropdown, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -275,47 +276,48 @@ define(
       var x = HtmlDisplay.section(
         gui,
         'This dropdown button shows a widget',
-        {
-          uiType: 'dropdown-list',
-          lazySink: lazySink,
+        Dropdown.build(function (parts) {
+          return {
+            lazySink: lazySink,
 
-          dom: {
-            tag: 'div',
-            innerHtml: 'Dropdown widget'
-          },
+            dom: {
+              tag: 'div',
+              innerHtml: 'Dropdown widget'
+            },
 
-          parts: {
-            menu: widgetMenu
-          },
-          
-          fetch: function () {
-            var future = Future.pure({
-              type: 'widget',
-              autofocus: true,
-              data: {
-                value: 'widget1',
-                text: 'Widget1'
-              },
-              widget: {
-                uiType: 'container',
-                dom: {
-                  classes: [ 'my-widget' ]
+            parts: {
+              menu: widgetMenu
+            },
+            
+            fetch: function () {
+              var future = Future.pure({
+                type: 'widget',
+                autofocus: true,
+                data: {
+                  value: 'widget1',
+                  text: 'Widget1'
                 },
-                behaviours: {
-                  keying: { mode: 'cyclic' }
-                },
-                components: [
-                  { uiType: 'input' },
-                  { uiType: 'input' }
-                ]
-              }
-            });
+                widget: {
+                  uiType: 'container',
+                  dom: {
+                    classes: [ 'my-widget' ]
+                  },
+                  behaviours: {
+                    keying: { mode: 'cyclic' }
+                  },
+                  components: [
+                    { uiType: 'input' },
+                    { uiType: 'input' }
+                  ]
+                }
+              });
 
-            return future.map(function (data) {
-              return MenuData.single('primary-menu', 'Widget', data);
-            });
-          }
-        }
+              return future.map(function (data) {
+                return MenuData.single('primary-menu', 'Widget', data);
+              });
+            }
+          };
+        })
       );
 
 
@@ -329,38 +331,39 @@ define(
       HtmlDisplay.section(
         gui,
         'This grid dropdown button is a grid of 2 x 2',
-        {
-          uiType: 'dropdown-list',
-          text: 'Dropdown',
-          dom: {
-            tag: 'div',
-            innerHtml: 'here'
-          },
-          components: [
-            
-          ],
+        Dropdown.build(function (parts) {
+          return {
+            text: 'Dropdown',
+            dom: {
+              tag: 'div',
+              innerHtml: 'here'
+            },
+            components: [
+              
+            ],
 
-          name: 'grid-demo',
+            name: 'grid-demo',
 
-          parts: {
-            menu: gridMenu
-          },
-          fetch: function () {
+            parts: {
+              menu: parts.menu().build(gridMenu)
+            },
+            fetch: function () {
 
-            var data = [
-              { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
-              { type: 'item', data: { value: 'beta', text: '+Beta' } },
-              { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
-              { type: 'item', data: { value: 'delta', text: '+Delta' } }
-            ];
-            var future = Future.pure(data);
-            return future.map(function (items) {
-              return MenuData.simple('grid-list', 'Grid List', items);  
-            });
-          },
-         
-          lazySink: lazySink
-        }
+              var data = [
+                { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
+                { type: 'item', data: { value: 'beta', text: '+Beta' } },
+                { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
+                { type: 'item', data: { value: 'delta', text: '+Delta' } }
+              ];
+              var future = Future.pure(data);
+              return future.map(function (items) {
+                return MenuData.simple('grid-list', 'Grid List', items);  
+              });
+            },
+           
+            lazySink: lazySink
+          };
+        })
       );
 
 
@@ -368,189 +371,189 @@ define(
       HtmlDisplay.section(
         gui,
         'This dropdown button has four possible values: alpha, beta, gamma, and delta',
-        {
-          uiType: 'dropdown-list',
-          text: 'Dropdown',
-          dom: {
-            tag: 'button',
-            innerHtml: 'Click me to expand'
-          },
-          components: [
-            
-          ],
+        Dropdown.build(function (parts) {
+          return {
+            dom: {
+              tag: 'button',
+              innerHtml: 'Click me to expand'
+            },
+            components: [ parts.sink().placeholder() ],
 
 
-          name: 'dropdown-list-demo',
+            name: 'dropdown-list-demo',
 
-          parts: {
-            menu: listMenu
-          },
-          lazySink: lazySink,
-          fetch: function () {
+            parts: {
+              menu: parts.menu().build(listMenu),
+              sink: parts.sink().build({ })
+            },
+            lazySink: lazySink,
+            fetch: function () {
 
-            var data = [
-              { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
-              { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
-              { type: 'separator', data: { value: 'text' } },
-              { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
-              { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
-            ];
+              var data = [
+                { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
+                { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
+                { type: 'separator', data: { value: 'text' } },
+                { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
+                { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
+              ];
 
-            var future = Future.pure(data);
-            return future.map(function (items) {
-              return MenuData.simple('basic-list', 'Basic List', items);
-            });
-          },
-          // sink: sink,
-          desc: 'demo-dropdown',
-          onExecute: function (sandbox, item, itemValue) {
-            console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
-          }
-        }
+              var future = Future.pure(data);
+              return future.map(function (items) {
+                return MenuData.simple('basic-list', 'Basic List', items);
+              });
+            },
+            // sink: sink,
+            desc: 'demo-dropdown',
+            onExecute: function (sandbox, item, itemValue) {
+              console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
+            }
+          };
+        })
       );
 
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
-        {
-          uiType: 'dropdown-menu',
-          dom: {
-            tag: 'div',
-            innerHtml: '+'
-          },
-          components: [
-            
-          ],
-          lazySink: lazySink,
-          parts: {
-            menu: listMenu
-          },
+        Dropdown.build(function (parts) {
+          return {
+            dom: {
+              tag: 'div',
+              innerHtml: '+'
+            },
+            components: [
+              
+            ],
+            lazySink: lazySink,
+            parts: {
+              menu: listMenu
+            },
 
-          onExecute: function (sandbox, item, itemValue) {
-            console.trace();
-            console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item) + ' ***');
-          },
-          fetch: function () {
-            var future = Future.pure({
-              primary: 'tools-menu',
-              menus: {
-                'tools-menu': {
-                  text: 'tools-menu',
-                  items: [
-                    { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
-                    { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
-                    { 
-                      type: 'widget',
-                      data: {
-                        value: 'widget',
-                        text: 'Widget'
-                      },
-                      widget: {
-                        uiType: 'custom',
-                        dom: {
-                          tag: 'div'
+            onExecute: function (sandbox, item, itemValue) {
+              console.trace();
+              console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item) + ' ***');
+            },
+            fetch: function () {
+              var future = Future.pure({
+                primary: 'tools-menu',
+                menus: {
+                  'tools-menu': {
+                    text: 'tools-menu',
+                    items: [
+                      { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
+                      { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
+                      { 
+                        type: 'widget',
+                        data: {
+                          value: 'widget',
+                          text: 'Widget'
                         },
-                        components: [
-                          {
-                            uiType: 'input',
-                            dom: {
-                              styles: {
-                                display: 'inline-block',
-                                width: '50px'
-                              }
-                            },
-                            behaviours: {
-                              tabstopping: true
-                            }
+                        widget: {
+                          uiType: 'custom',
+                          dom: {
+                            tag: 'div'
                           },
-                          {
-                            uiType: 'custom',
-                            dom: {
-                              tag: 'div'
-                            },
-                            components: [
-                              {
-                                uiType: 'button',
-                                action: function () { console.log('clicked on a button', arguments); },
-                                dom: {
-                                  tag: 'button',
-                                  innerHtml: '-'
-                                },
-                                behaviours: {
-                                  // FIX: This is required to override a previous tabstopping.
-                                  tabstopping: undefined
+                          components: [
+                            {
+                              uiType: 'input',
+                              dom: {
+                                styles: {
+                                  display: 'inline-block',
+                                  width: '50px'
                                 }
                               },
-                              {
-                                uiType: 'button',
-                                action: function () { console.log('clicked on a button', arguments); },
-                                dom: {
-                                  tag: 'button',
-                                  innerHtml: '+'
+                              behaviours: {
+                                tabstopping: true
+                              }
+                            },
+                            {
+                              uiType: 'custom',
+                              dom: {
+                                tag: 'div'
+                              },
+                              components: [
+                                {
+                                  uiType: 'button',
+                                  action: function () { console.log('clicked on a button', arguments); },
+                                  dom: {
+                                    tag: 'button',
+                                    innerHtml: '-'
+                                  },
+                                  behaviours: {
+                                    // FIX: This is required to override a previous tabstopping.
+                                    tabstopping: undefined
+                                  }
                                 },
-                                behaviours: {
-                                  tabstopping: undefined
+                                {
+                                  uiType: 'button',
+                                  action: function () { console.log('clicked on a button', arguments); },
+                                  dom: {
+                                    tag: 'button',
+                                    innerHtml: '+'
+                                  },
+                                  behaviours: {
+                                    tabstopping: undefined
+                                  }
+                                }
+                              ],
+                              behaviours: {
+                                tabstopping: true,
+                                keying: {
+                                  mode: 'flow',
+                                  selector: 'button'
                                 }
                               }
-                            ],
-                            behaviours: {
-                              tabstopping: true,
-                              keying: {
-                                mode: 'flow',
-                                selector: 'button'
-                              }
                             }
-                          }
-                        ],
-                        behaviours: {
-                          keying: {
-                            mode: 'cyclic'
+                          ],
+                          behaviours: {
+                            keying: {
+                              mode: 'cyclic'
+                            }
                           }
                         }
                       }
-                    }
-                  ]
-                },
-                'packages-menu': {
-                  text: 'packages',
-                  items: [
-                    { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
-                  ]
-                },
-                'sortby-menu': {
-                  text: 'sortby',
-                  items: [
-                    { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
-                    { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
-                  ]
-                },
-                'strings-menu': {
-                  text: 'strings',
-                  items: [
-                    { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
-                    { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
-                  ]
-                },
-                'numbers-menu': {
-                  text: 'numbers',
-                  items: [
-                    { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
-                  ]
+                    ]
+                  },
+                  'packages-menu': {
+                    text: 'packages',
+                    items: [
+                      { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
+                    ]
+                  },
+                  'sortby-menu': {
+                    text: 'sortby',
+                    items: [
+                      { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
+                      { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
+                    ]
+                  },
+                  'strings-menu': {
+                    text: 'strings',
+                    items: [
+                      { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
+                      { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
+                    ]
+                  },
+                  'numbers-menu': {
+                    text: 'numbers',
+                    items: [
+                      { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
+                    ]
+                  }
+                }, 
+                expansions: {
+                  'packages': 'packages-menu',
+                  'sortby': 'sortby-menu',
+                  'strings': 'strings-menu',
+                  'numbers': 'numbers-menu' 
                 }
-              }, 
-              expansions: {
-                'packages': 'packages-menu',
-                'sortby': 'sortby-menu',
-                'strings': 'strings-menu',
-                'numbers': 'numbers-menu' 
-              }
-            });
+              });
 
-            return future.map(function (f) {
-              return MenuData.tiered(f.primary, f.menus, f.expansions);
-            });
-          }
-        }
+              return future.map(function (f) {
+                return MenuData.tiered(f.primary, f.menus, f.expansions);
+              });
+            }
+          };
+        })
       );
     };
   }

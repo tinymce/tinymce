@@ -4,42 +4,14 @@ define(
   [
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.spec.ButtonSpec',
-    'ephox.alloy.spec.SpecSchema',
-    'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.highway.Merger'
   ],
 
-  function (Toggling, Beta, Gamma, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option) {
-    var schema = [
-      FieldSchema.strict('fetch'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
-      FieldSchema.strict('dom'),
-      FieldSchema.defaulted('displayer', Fun.identity),
-      FieldSchema.option('lazySink'),
-      FieldSchema.defaulted('matchWidth', false)
-    ];
-
-    var make = function (label, spec) {
-      var detail = SpecSchema.asStructOrDie(label, schema, spec, [
-        'menu'
-      ]);
-
-      var factories = Merger.deepMerge(
-        Gamma.sink()
-        // Gamma.display()
-      );
-
-      var components = UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), {}, factories);
-    
+  function (Toggling, Beta, ButtonSpec, Merger) {
+    var make = function (detail, components) {
       return Merger.deepMerge(
-        spec,
+        detail.originalSpec(),
         ButtonSpec.make({
           uid: detail.uid(),
           action: function (component) {
@@ -89,44 +61,8 @@ define(
       );
     };
 
-    var list = function (spec) {
-      return make(
-        'dropdown.list',
-        Merger.deepMerge(
-          {
-            matchWidth: false
-          },
-          spec
-        )
-      );
-    };
-
-    var widget = function (spec) {
-      return make(
-        'dropdown.widget',
-        spec
-      );
-    };
-
-    var menu = function (spec) {
-      return make(
-        'dropdown.menu',
-        spec
-      );
-    };
-
-    var grid = function (spec) {
-      return make(
-        'dropdown.grid',
-        spec
-      );
-    };
-
     return {
-      list: list,
-      widget: widget,
-      menu: menu,
-      grid: grid
+      make: make
     };
   }
 );

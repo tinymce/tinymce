@@ -11,10 +11,11 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Error) {
+  function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
     var getPartsSchema = function (partNames, _optPartNames) {
       if (partNames.length === 0) return [ ];
       var optPartNames = _optPartNames !== undefined ? _optPartNames : [ ];
@@ -56,7 +57,8 @@ define(
 
       return partsSchema.concat([
         FieldSchema.strict('uid'),
-        FieldSchema.defaulted('components', [ ])
+        FieldSchema.defaulted('components', [ ]),
+        FieldSchema.state('originalSpec', Fun.identity)
       ]);
     };
 
