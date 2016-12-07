@@ -11478,6 +11478,10 @@ define("tinymce/html/Node", [], function() {
 				node.remove();
 			}
 
+			if (!ref_node) {
+				ref_node = this;
+			}
+
 			parent = ref_node.parent || this;
 
 			if (before) {
@@ -13319,7 +13323,9 @@ define("tinymce/html/DomParser", [
 							continue;
 						}
 
-						node.wrap(self.filterNode(new Node('ul', 1)));
+						if (!settings.prevent_list_wrap) {
+							node.wrap(self.filterNode(new Node('ul', 1)));
+						}
 						continue;
 					}
 
@@ -14769,6 +14775,18 @@ define("tinymce/dom/Serializer", [
 			 * @param {function} callback Callback function to execute once it has collected nodes.
 			 */
 			addAttributeFilter: htmlParser.addAttributeFilter,
+
+			serialize_without_validation: function(node, args) {
+				var htmlSerializer = new Serializer(settings, schema); // HTML serializer, NOT this one!
+				var body = node.cloneNode(true);
+
+				var parsedHTML = htmlParser.parse(body.innerHTML, args); // domSerializer parser
+				args.content = htmlSerializer.serialize(parsedHTML);
+
+				body = null;
+
+				return args.content;
+			},
 
 			/**
 			 * Serializes the specified browser DOM node into a HTML string.
@@ -39990,7 +40008,7 @@ define("tinymce/Editor", [
 				self.fire('SetContent', args);
 			} else {
 				// Parse and serialize the html
-				if (args.format !== 'raw') {
+				if (args.format !== 'raw' && args.format !== 'unvalidated_html') {
 					content = new Serializer({
 						validate: self.validate
 					}, self.schema).serialize(
@@ -40053,6 +40071,8 @@ define("tinymce/Editor", [
 				content = Tools.trim(self.serializer.getTrimmedContent());
 			} else if (args.format == 'text') {
 				content = body.innerText || body.textContent;
+			} else if (args.format == 'unvalidated_html') {
+				content = self.serializer.serialize_without_validation(body, args);
 			} else {
 				content = self.serializer.serialize(body, args);
 			}
