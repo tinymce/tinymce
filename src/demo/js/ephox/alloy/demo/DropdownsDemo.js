@@ -130,6 +130,139 @@ define(
       //     }
       //   )
       // );
+      var menuMarkers = {
+        selectedItem: 'no-selection',
+        item: 'alloy-item',
+        menu: 'no-selection',
+        selectedMenu: 'alloy-menu',
+        backgroundMenu: 'no-selection'
+      };
+
+      var widgetMenu = {
+        members: {
+          menu: {
+            munge: function (spec) {
+              return {
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'dropdown-list' }
+                ]
+              };
+            }
+          },
+          item: {
+            munge: function (spec) {
+              return {
+                uiType: 'container',
+                dom: {
+                  tag: 'div',
+                  classes: [ 'alloy-item' ]
+                },
+                components: [
+                  { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                ]
+              };
+            }
+          }
+        },
+        markers: menuMarkers
+      };
+
+      var gridMenu = {
+        members: {
+          item: {
+            munge: function (spec) {
+              return {
+                uiType: 'custom',
+                dom: {
+                  tag: 'span',
+                  classes: [ 'alloy-item' ],
+                  innerHtml: spec.data.text,
+                  styles: {
+                    'display': 'inline-block',
+                    width: '50px'
+                  }
+                },
+                components: [ ]
+              };
+            }
+          },
+
+          menu: {
+            munge: function (spec) {
+              return {
+                uiType: 'container',
+                movement: {
+                  mode: 'grid',
+                  initSize: {
+                    numColumns: 2,
+                    numRows: 2
+                  }
+                },
+                dom: {
+                  tag: 'div',
+                  classes: [ 'demo-alloy-menu' ],
+                  styles: {
+                    width: '100px'
+                  }
+                },
+                shell: true,
+                components: [ ]
+              };
+            }
+          }
+        },
+
+        markers: menuMarkers
+      };
+
+      var listMenu = {
+        members: {
+          menu: {
+            munge: function (spec) {
+              return {
+                dom: {
+                  tag: 'ol',
+                  attributes: {
+                    'aria-label': spec.text
+                  },
+                  classes: [ 'demo-alloy-menu' ]
+                },
+                shell: true,
+                components: [ ]
+              };
+            }
+          },
+          item: {
+            munge: function (spec) {
+
+              return spec.type === 'widget' ? {
+                uiType: 'container',
+                dom: {
+                  tag: 'div',
+                  classes: [ 'alloy-item' ]
+                },
+
+                components: [
+                 { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                ]
+              } : {
+                dom: {
+                  tag: 'li',
+                  classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
+                  innerHtml: spec.data.text
+                },
+                components: [
+
+                ]
+              };
+            }
+          }
+        },
+        markers: menuMarkers
+      };
 
    
       var x = HtmlDisplay.section(
@@ -145,43 +278,7 @@ define(
           },
 
           parts: {
-            menu: {
-              members: {
-                menu: {
-                  munge: function (spec) {
-                    return {
-                      dom: {
-                        tag: 'div'
-                      },
-                      components: [
-                        { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'dropdown-list' }
-                      ]
-                    };
-                  }
-                },
-                item: {
-                  munge: function (spec) {
-                    return {
-                      uiType: 'container',
-                      dom: {
-                        tag: 'div',
-                        classes: [ 'alloy-item' ]
-                      },
-                      components: [
-                        { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
-                      ]
-                    };
-                  }
-                }
-              },
-              markers: {
-                selectedItem: 'no-selection',
-                item: 'alloy-item',
-                menu: 'no-selection',
-                selectedMenu: 'alloy-menu',
-                backgroundMenu: 'no-selection'
-              }
-            }
+            menu: widgetMenu
           },
           
           fetch: function () {
@@ -239,59 +336,7 @@ define(
           name: 'grid-demo',
 
           parts: {
-            menu: {
-              members: {
-                item: {
-                  munge: function (spec) {
-                    return {
-                      uiType: 'custom',
-                      dom: {
-                        tag: 'span',
-                        classes: [ 'alloy-item' ],
-                        innerHtml: spec.data.text,
-                        styles: {
-                          'display': 'inline-block',
-                          width: '50px'
-                        }
-                      },
-                      components: [ ]
-                    };
-                  }
-                },
-
-                menu: {
-                  munge: function (spec) {
-                    return {
-                      uiType: 'container',
-                      movement: {
-                        mode: 'grid',
-                        initSize: {
-                          numColumns: 2,
-                          numRows: 2
-                        }
-                      },
-                      dom: {
-                        tag: 'div',
-                        classes: [ 'demo-alloy-menu' ],
-                        styles: {
-                          width: '100px'
-                        }
-                      },
-                      shell: true,
-                      components: [ ]
-                    };
-                  }
-                }
-              },
-
-              markers: {
-                item: 'alloy-item',
-                selectedItem: 'alloy-selected-item',
-                menu: 'demo-alloy-menu',
-                selectedMenu: 'alloy-selected-menu',
-                backgroundMenu: 'alloy-background-menu'
-              }
-            }
+            menu: gridMenu
           },
           fetch: function () {
 
@@ -302,7 +347,9 @@ define(
               { type: 'item', data: { value: 'delta', text: '+Delta' } }
             ];
             var future = Future.pure(data);
-            return MenuData.simple('basic-list', 'Basic List', future);
+            return future.map(function (items) {
+              return MenuData.simple('grid-list', 'Grid List', items);  
+            });
           },
          
           lazySink: lazySink
@@ -329,46 +376,7 @@ define(
           name: 'dropdown-list-demo',
 
           parts: {
-            menu: {
-              markers: {
-                item: 'alloy-item',
-                selectedItem: 'alloy-selected-item',
-                menu: 'demo-alloy-menu',
-                selectedMenu: 'alloy-selected-menu',
-                backgroundMenu: 'alloy-background-menu'
-              },
-              members: {
-                menu: {
-                  munge: function (spec) {
-                    return {
-                      dom: {
-                        tag: 'ol',
-                        attributes: {
-                          'aria-label': spec.textkey
-                        },
-                        classes: [ 'demo-alloy-menu' ]
-                      },
-                      shell: true,
-                      components: [ ]
-                    };
-                  }
-                },
-                item: {
-                  munge: function (spec) {
-                    return {
-                      dom: {
-                        tag: 'li',
-                        classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                        innerHtml: spec.data.text
-                      },
-                      components: [
-
-                      ]
-                    };
-                  }
-                }
-              }
-            }
+            menu: listMenu
           },
           lazySink: lazySink,
           fetch: function () {
@@ -381,7 +389,10 @@ define(
               { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
             ];
 
-            return Future.pure(data);
+            var future = Future.pure(data);
+            return future.map(function (items) {
+              return MenuData.simple('basic-list', 'Basic List', items);
+            });
           },
           // sink: sink,
           desc: 'demo-dropdown',
@@ -405,58 +416,7 @@ define(
           ],
           lazySink: lazySink,
           parts: {
-            menu: {
-              markers: {
-                item: 'alloy-item',
-                selectedItem: 'alloy-selected-item',
-                menu: 'demo-alloy-menu',
-                selectedMenu: 'alloy-selected-menu',
-                backgroundMenu: 'background-menu'
-              },
-              
-              members: {
-                menu: {
-                  munge: function (spec) {
-                    return {
-                      dom: {
-                        tag: 'ol',
-                        attributes: {
-                          'aria-label': spec.textkey
-                        },
-                        classes: [ 'demo-alloy-menu' ]
-                      },
-                      shell: true,
-                      components: [ ]
-                    };
-                  }
-                },
-                item: {
-                  munge: function (spec) {
-
-                    return spec.type === 'widget' ? {
-                      uiType: 'container',
-                      dom: {
-                        tag: 'div',
-                        classes: [ 'alloy-item' ]
-                      },
-
-                      components: [
-                       { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
-                      ]
-                    } : {
-                      dom: {
-                        tag: 'li',
-                        classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                        innerHtml: spec.data.text
-                      },
-                      components: [
-
-                      ]
-                    };
-                  }
-                }
-              }
-            }
+            menu: listMenu
           },
 
           onExecute: function (sandbox, item, itemValue) {
@@ -464,11 +424,11 @@ define(
             console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item) + ' ***');
           },
           fetch: function () {
-            return Future.pure({
+            var future = Future.pure({
               primary: 'tools-menu',
               menus: {
                 'tools-menu': {
-                  textkey: 'tools-menu',
+                  text: 'tools-menu',
                   items: [
                     { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
                     { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
@@ -545,27 +505,27 @@ define(
                   ]
                 },
                 'packages-menu': {
-                  textkey: 'packages',
+                  text: 'packages',
                   items: [
                     { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
                   ]
                 },
                 'sortby-menu': {
-                  textkey: 'sortby',
+                  text: 'sortby',
                   items: [
                     { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
                     { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
                   ]
                 },
                 'strings-menu': {
-                  textkey: 'strings',
+                  text: 'strings',
                   items: [
                     { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
                     { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
                   ]
                 },
                 'numbers-menu': {
-                  textkey: 'numbers',
+                  text: 'numbers',
                   items: [
                     { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
                   ]
@@ -577,6 +537,10 @@ define(
                 'strings': 'strings-menu',
                 'numbers': 'numbers-menu' 
               }
+            });
+
+            return future.map(function (f) {
+              return MenuData.tiered(f.primary, f.menus, f.expansions);
             });
           }
         }

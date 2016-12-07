@@ -6,21 +6,19 @@ define(
   ],
 
   function (Objects) {
-    var simple = function (name, label, future) {
-      return future.map(function (items) {
-        return {
-          primary: name,
-          menus: Objects.wrap(
-            name,
-            {
-              value: name,
-              text: label,
-              items: items
-            }
-          ),
-          expansions: { }
-        };
-      });
+    var simple = function (name, label, items) {
+      return {
+        primary: name,
+        menus: Objects.wrap(
+          name,
+          {
+            value: name,
+            text: label,
+            items: items
+          }
+        ),
+        expansions: { }
+      };
     };
 
     var tiered = function (primary, menus, expansions) {
