@@ -39,6 +39,12 @@ define('tinymce.modern.modes.Inline', [
 					deltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);
 				}
 
+				// Body sometimes gets a 0 height in Chrome and Safari, add BR if so.
+				if (DOM.getRect(body).h === 0) {
+					var br = document.createElement('br');
+					DOM.replace(br, body.firstChild);
+				}
+
 				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl', 'tr-br']).moveBy(deltaX, deltaY);
 			}
 		};
