@@ -900,6 +900,19 @@ module.exports = function(grunt) {
 					]
 				}
 			}
+		},
+
+		dent: {
+			all: {
+				options: {
+					dirs: [
+						'js/tinymce/plugins/media',
+						'js/tinymce/plugins/wordcount',
+						'js/tinymce/themes/inlite',
+						'js/tinymce/themes/modern'
+					]
+				}
+			}
 		}
 	});
 
