@@ -98,10 +98,14 @@ asyncTest('Init/remove on same id', function() {
 });
 
 asyncTest('Init editor async with proper editors state', function() {
-	var unloadTheme = function(name) {
-		var url = tinymce.baseURI.toAbsolute('themes/' + name + '/theme.js');
+	var unloadUrl = function (url) {
 		tinymce.dom.ScriptLoader.ScriptLoader.remove(url);
 		tinymce.ThemeManager.remove(name);
+	};
+
+	var unloadTheme = function(name) {
+		unloadUrl(tinymce.baseURI.toAbsolute('themes/' + name + '/theme.min.js'));
+		unloadUrl(tinymce.baseURI.toAbsolute('themes/' + name + '/theme.js'));
 	};
 
 	tinymce.remove();
