@@ -28,12 +28,12 @@ define(
       return fetcher(component);
     };
 
-    var open = function (detail, anchor, component, sandbox, externals) {
+    var openF = function (detail, anchor, component, sandbox, externals) {
       var futureData = fetch(detail, component);
 
       var lazySink = Gamma.getSink(component, detail);
 
-      var processed = futureData.map(function (data) {
+      return futureData.map(function (data) {
         return TieredMenuSpec(
           Merger.deepMerge(
             externals.menu(),
@@ -68,10 +68,15 @@ define(
         );
       });
 
-      Sandboxing.open(sandbox, processed).get(function (tiers) {
-        Highlighting.highlightFirst(tiers);
-        Keying.focusIn(tiers);
-      });
+    };
+
+    var open = function (detail, anchor, component, sandbox, externals) {
+      var processed = openF(detail, anchor, component, sandbox, externals);
+      return Sandboxing.open(sandbox, processed);
+      // Sandboxing.open(sandbox, processed).get(function (tiers) {
+      //   Highlighting.highlightFirst(tiers);
+      //   Keying.focusIn(tiers);
+      // });
     };
 
     var preview = function (detail, component, sandbox) {

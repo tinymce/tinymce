@@ -52,7 +52,7 @@ define(
                 Beta.open(detail, {
                   anchor: 'hotspot',
                   hotspot: component
-                }, component, sandbox, externals);
+                }, component, sandbox, externals).get(Fun.identity);
               }
             }
           }
@@ -71,7 +71,11 @@ define(
                 });
               });
             } else {
-              Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals);
+              Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
+                getMenu(sandbox).each(function (menu) {
+                  Highlighting.highlightFirst(menu);
+                });
+              });
               // Beta.enterPopup(detail, comp);
             } 
 
