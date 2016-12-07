@@ -19,7 +19,7 @@ define("tinymce/ui/Path", [
 	"tinymce/ui/Widget",
 	"tinymce/util/Arr"
 
-], function(Widget,Arr) {
+], function(Widget, Arr) {
 	"use strict";
 
 	return Widget.extend({

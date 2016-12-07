@@ -34,7 +34,7 @@
 		"quotes": 0,
 		"no-trailing-spaces": 2,
 		"comma-spacing": [2, {"before": false, "after": true}],
-		"comma-dangle": [1, "never"],
+		"comma-dangle": [2, "never"],
 		"space-in-parens": [2, "never"],
 		"space-infix-ops": [2, {"int32Hint": false}],
 		"keyword-spacing": 2,
