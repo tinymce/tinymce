@@ -11,6 +11,7 @@ define(
     };
 
     var setValue = function (component, repInfo, value) {
+      console.log('setting', value);
       repInfo.state().set(value);
       repInfo.onSet()(component, value);
     };

@@ -73,6 +73,10 @@ define(
                   text: v
                 };
               }
+            },
+
+            onSet: function (input, value) {
+              Value.set(input.element(), value.text);
             }
           },
 

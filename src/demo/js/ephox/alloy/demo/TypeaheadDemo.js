@@ -109,7 +109,7 @@ define(
                 dom: {
                   tag: 'li',
                   classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                  innerHtml: spec.data.text
+                  innerHtml: spec.data.html
                 },
                 components: [
 
@@ -148,7 +148,7 @@ define(
                 if (index > -1) {
                   var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
                     d.substring(index + text.length);
-                  return [ { type: 'item', data: { value: d, text: html }, 'item-class': 'class-' + d } ];
+                  return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
                 } else {
                   return [ ];
                 }

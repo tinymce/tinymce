@@ -69,7 +69,9 @@ define(
                 Beta.open(detail, {
                   anchor: 'hotspot',
                   hotspot: component
-                }, component, sandbox, externals).get(Fun.identity);
+                }, component, sandbox, externals).get(function () {
+                  getMenu(sandbox).each(Highlighting.highlightFirst);
+                });
               }
             }
           }
