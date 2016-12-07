@@ -27,6 +27,23 @@ define(
           return Highlighting.getHighlighted(tiers);
         });
       };
+
+      var navigateList = function (comp, simulatedEvent, highlighter) {
+        var sandbox = Coupling.getCoupled(comp, 'sandbox');
+        if (Sandboxing.isOpen(sandbox)) {
+          getMenu(sandbox).each(function (menu) {
+            Highlighting.getHighlighted(menu).fold(function () {
+              highlighter(menu);
+            }, function () {
+              sandbox.getSystem().triggerEvent('keydown', menu.element(), simulatedEvent.event());  
+            });
+          });
+        } else {
+          Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
+            getMenu(sandbox).each(highlighter);
+          });
+        } 
+      };
       
       var behaviours = {
         streaming: {
@@ -61,32 +78,14 @@ define(
         keying: {
           mode: 'special',
           onDown: function (comp, simulatedEvent) {
-            var sandbox = Coupling.getCoupled(comp, 'sandbox');
-            if (Sandboxing.isOpen(sandbox)) {
-              getMenu(sandbox).each(function (menu) {
-                Highlighting.getHighlighted(menu).fold(function () {
-                  Highlighting.highlightFirst(menu);
-                }, function () {
-                  sandbox.getSystem().triggerEvent('keydown', menu.element(), simulatedEvent.event());  
-                });
-              });
-            } else {
-              Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
-                getMenu(sandbox).each(function (menu) {
-                  Highlighting.highlightFirst(menu);
-                });
-              });
-              // Beta.enterPopup(detail, comp);
-            } 
-
-            return Option.some(true);             
+            navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
+            return Option.some(true);
           },
           onEscape: function (comp) {
             return Beta.escapePopup(detail, comp);
           },
           onUp: function (comp, simulatedEvent) {
-            var sandbox = Coupling.getCoupled(comp, 'sandbox');
-            sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
+            navigateList(comp, simulatedEvent, Highlighting.highlightLast);
             return Option.some(true);
           },
           onEnter: function (comp, simulatedEvent) {
