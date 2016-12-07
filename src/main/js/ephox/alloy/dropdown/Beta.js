@@ -133,7 +133,7 @@ define(
             onOpen: onOpen,
             onClose: onClose,
             isPartOf: function (container, data, queryElem) {
-              return ComponentStructure.isPartOf(data, queryElem);
+              return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
             },
             bucket: {
               mode: 'sink',
