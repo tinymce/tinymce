@@ -14,45 +14,45 @@ define(
   ],
 
   function (SystemEvents, Toggling, Beta, Gamma, ButtonSpec, UiSubstitutes, Merger, Option, Error) {
-    var make = function (detail) {
+    var make = function (detail, components) {
           // Need to make the substitutions for "button" and "arrow"
-      var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
-        '<alloy.split-dropdown.button>': UiSubstitutes.single(
-          Merger.deepMerge(
-            {
-              behaviours: {
-                focusing: undefined
-              }
-            },
-            detail.parts()['button'](),
-            {
-              uid: detail.partUids()['button'],
-              uiType: 'button',
-              action: detail.onExecute()
-            }
-          )
-        ),
+      // var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
+      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(
+      //     Merger.deepMerge(
+      //       {
+      //         behaviours: {
+      //           focusing: undefined
+      //         }
+      //       },
+      //       detail.parts()['button'](),
+      //       {
+      //         uid: detail.partUids()['button'],
+      //         uiType: 'button',
+      //         action: detail.onExecute()
+      //       }
+      //     )
+      //   ),
 
-        '<alloy.split-dropdown.arrow>': UiSubstitutes.single(
-          Merger.deepMerge({
-            uiType: 'button',
-            tabstopping: undefined,
-            focusing: undefined
-          }, detail.parts().arrow(), {
-            uid: detail.partUids().arrow,
-            action: function (arrow) {
-              var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-              hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
-            },
+      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(
+      //     Merger.deepMerge({
+      //       uiType: 'button',
+      //       tabstopping: undefined,
+      //       focusing: undefined
+      //     }, detail.parts().arrow(), {
+      //       uid: detail.partUids().arrow,
+      //       action: function (arrow) {
+      //         var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
+      //         hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
+      //       },
 
-            behaviours: {
-              toggling: {
-                toggleOnExecute: false
-              }
-            }
-          })
-        )
-      }, Gamma.sink());
+      //       behaviours: {
+      //         toggling: {
+      //           toggleOnExecute: false
+      //         }
+      //       }
+      //     })
+      //   )
+      // }, Gamma.sink());
 
       return Merger.deepMerge(
         ButtonSpec.make({
