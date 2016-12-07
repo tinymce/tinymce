@@ -1,3 +1,13 @@
+Version 4.5.1 (2016-12-07)
+	Fixed bug where the lists plugin wouldn't initialize without the advlist plugins if served from cdn.
+	Fixed bug where selectors with "*" would cause the style format preview to throw an error.
+	Fixed bug with toggling lists off on lists with empty list items would throw an error.
+	Fixed bug where editing images would produce non existing blob uris.
+	Fixed bug where the offscreen toc selection would be treated as the real toc element.
+	Fixed bug where the aria level attribute for element path would have an incorrect start index.
+	Fixed bug where the offscreen selection of cE=false that where very wide would be shown onscreen. Patch contributed by Steven Bufton.
+	Fixed so the default_link_target gets applied to links created by the autolink plugin.
+	Fixed so that the name attribute gets removed by the anchor plugin if editing anchors.
 Version 4.5.0 (2016-11-23)
 	Added new toc plugin allows you to insert table of contents based on editor headings.
 	Added new auto complete menu to all url fields. Adds history, link to anchors etc.
