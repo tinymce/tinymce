@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.parts.InternalSink',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.SplitDropdownSpec',
@@ -16,7 +17,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, Tagger, SpecSchema, SplitDropdownSpec, UiSubstitutes, FieldSchema, Obj, Merger, Fun, Option, Error) {
+  function (SystemEvents, EventHandler, InternalSink, Tagger, SpecSchema, SplitDropdownSpec, UiSubstitutes, FieldSchema, Obj, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -30,29 +31,6 @@ define(
     ];
 
     var build = function (f) {
-
-      // FIX: Get sink working.
-
-      
-      // UiSubstitutes.single(true,  
-      //     Merger.deepMerge({
-      //       uiType: 'button',
-      //       tabstopping: undefined,
-      //       focusing: undefined
-      //     }, detail.parts().arrow(), {
-      //       uid: detail.partUids().arrow,
-      //       action: function (arrow) {
-      //         var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-      //         hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
-      //       },
-
-      //       behaviours: {
-      //         toggling: {
-      //           toggleOnExecute: false
-      //         }
-      //       }
-      //     })
-
 
 
       var parts = {
@@ -115,50 +93,7 @@ define(
           }
         }),
 
-        sink: Fun.constant({
-          placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.sink>' }),
-          build: function (spec) {
-            return UiSubstitutes.single(false,  function () {
-              return Merger.deepMerge(
-                spec,
-                {
-                  uid: detail.uid() + '-internal-sink',
-                  dom: {
-                    tag: 'div'
-                  },
-                  uiType: 'custom',
-                  behaviours: {
-                    positioning: {
-                      // FIX: configurable
-                      useFixed: true
-                    }
-                  },
-                  events: {
-                    // Probably a behaviour: cut mania
-                    'keydown': EventHandler.nu({
-                      run: function (component, simulatedEvent) {
-                        // Sinks should not let keydown or click propagate
-                        simulatedEvent.cut();
-                      }
-                    }),
-                    'mousedown': EventHandler.nu({
-                      run: function (component, simulatedEvent) {
-                        // Sinks should not let keydown or click propagate or mousedown
-                        simulatedEvent.cut();
-                      }
-                    }),
-                    'click': EventHandler.nu({
-                      run: function (component, simulatedEvent) {
-                        // Sinks should not let keydown or click propagate
-                        simulatedEvent.cut();
-                      }
-                    })
-                  }
-                }
-              );
-            });
-          }
-        })
+        sink: Fun.constant(InternalSink)
       };
 
 
