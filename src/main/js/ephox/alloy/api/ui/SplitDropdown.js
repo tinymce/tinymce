@@ -12,10 +12,11 @@ define(
     'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'global!Error'
   ],
 
-  function (SystemEvents, EventHandler, Tagger, SpecSchema, SplitDropdownSpec, UiSubstitutes, FieldSchema, Obj, Merger, Fun, Option) {
+  function (SystemEvents, EventHandler, Tagger, SpecSchema, SplitDropdownSpec, UiSubstitutes, FieldSchema, Obj, Merger, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -58,8 +59,8 @@ define(
         arrow: Fun.constant({
           placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.split-dropdown.arrow>' }),
           build: function (spec) {
-            return function () {
-              return UiSubstitutes.single(true,  Merger.deepMerge(
+            return UiSubstitutes.single(true,  function () {
+              return Merger.deepMerge(
                 {
                   // FIX: new style.
                   uiType: 'button',
@@ -82,15 +83,15 @@ define(
                     }
                   }
                 }
-              ));
-            };
+              );
+            });
           }
         }),
         button: Fun.constant({
           placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.split-dropdown.button>' }),
           build: function (spec) {
-            return function () {
-              return UiSubstitutes.single(true,  Merger.deepMerge(
+            return UiSubstitutes.single(true,  function () {
+              return Merger.deepMerge(
                 {
                   behaviours: {
                     // FIX: Undefined false
@@ -103,22 +104,22 @@ define(
                   uiType: 'button',
                   action: detail.onExecute()
                 }
-              ));
-            };
+              );
+            });
           }
         }),
         menu: Fun.constant({
           placeholder: Fun.die('The part menu should not appear in components'),
           build: function (spec) {
-            return spec;
+            return UiSubstitutes.single(false, Fun.constant(spec));
           }
         }),
 
         sink: Fun.constant({
           placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.sink>' }),
           build: function (spec) {
-            return function () {
-              return UiSubstitutes.single(false,  Merger.deepMerge(
+            return UiSubstitutes.single(false,  function () {
+              return Merger.deepMerge(
                 spec,
                 {
                   uid: detail.uid() + '-internal-sink',
@@ -154,49 +155,12 @@ define(
                     })
                   }
                 }
-              ));
-            };
+              );
+            });
           }
         })
       };
 
-      // var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
-      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(true,  
-      //     Merger.deepMerge(
-      //       {
-      //         behaviours: {
-      //           focusing: undefined
-      //         }
-      //       },
-      //       detail.parts()['button'](),
-      //       {
-      //         uid: detail.partUids()['button'],
-      //         uiType: 'button',
-      //         action: detail.onExecute()
-      //       }
-      //     )
-      //   ),
-
-      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(true,  
-      //     Merger.deepMerge({
-      //       uiType: 'button',
-      //       tabstopping: undefined,
-      //       focusing: undefined
-      //     }, detail.parts().arrow(), {
-      //       uid: detail.partUids().arrow,
-      //       action: function (arrow) {
-      //         var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-      //         hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
-      //       },
-
-      //       behaviours: {
-      //         toggling: {
-      //           toggleOnExecute: false
-      //         }
-      //       }
-      //     })
-      //   )
-      // }, Gamma.sink());
 
       var spec = f(parts);
       var userSpec = Merger.deepMerge({
@@ -204,12 +168,12 @@ define(
       }, spec);
 
 
-      var detail = SpecSchema.asStructOrDie('split-dropdown.build', schema, userSpec, [ 'button', 'arrow', 'menu', 'sink' ]);
+      var detail = SpecSchema.asStructOrDie('split-dropdown.build', schema, userSpec, [ 'button', 'arrow', 'menu' ], [ 'sink' ]);
 
       var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
-        '<alloy.split-dropdown.button>': detail.parts().button()(),
-        '<alloy.split-dropdown.arrow>': detail.parts().arrow()(),
-        '<alloy.sink>': detail.parts().sink()()
+        '<alloy.split-dropdown.button>': detail.parts().button(),
+        '<alloy.split-dropdown.arrow>': detail.parts().arrow(),
+        '<alloy.sink>': detail.parts().sink()
       });
 
       return SplitDropdownSpec.make(detail, components);

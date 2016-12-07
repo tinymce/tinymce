@@ -14,11 +14,22 @@ define(
   ],
 
   function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Error) {
-    var getPartsSchema = function (partNames) {
+    var getPartsSchema = function (partNames, _optPartNames) {
       if (partNames.length === 0) return [ ];
+      var optPartNames = _optPartNames !== undefined ? _optPartNames : [ ];
 
       // temporary hacking
-      var partsSchema = FieldSchema.strictObjOf('parts', Arr.map(partNames, FieldSchema.strict));
+      var partsSchema = FieldSchema.strictObjOf(
+        'parts',
+        Arr.flatten([
+          Arr.map(partNames, FieldSchema.strict),
+          Arr.map(optPartNames, function (optPart) {
+            return FieldSchema.field(optPart, optPart, FieldPresence.defaultedThunk(function (spec) {
+              throw new Error('The optional part: ' + optPart + ' was not specified in the config, but it was used in components');
+            }), ValueSchema.anyValue());
+          })
+        ])
+      );
 
       var partUidsSchema = FieldSchema.state(
         'partUids',
@@ -39,8 +50,8 @@ define(
       return [ partsSchema, partUidsSchema ];
     };
 
-    var base = function (label, partNames, spec) {
-      var partsSchema = getPartsSchema(partNames);
+    var base = function (label, partNames, optPartNames, spec) {
+      var partsSchema = getPartsSchema(partNames, optPartNames !== undefined ? optPartNames : [ ]);
 
       return partsSchema.concat([
         FieldSchema.strict('uid'),
@@ -49,14 +60,14 @@ define(
     };
 
 
-    var asRawOrDie = function (label, schema, spec, partNames) {
+    var asRawOrDie = function (label, schema, spec, partNames, optPartNames) {
 
-      var baseS = base(label, partNames, spec);
+      var baseS = base(label, partNames, optPartNames, spec);
       return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 
-    var asStructOrDie = function (label, schema, spec, partNames) {
-      var baseS = base(label, partNames, spec);
+    var asStructOrDie = function (label, schema, spec, partNames, optPartNames) {
+      var baseS = base(label, partNames, optPartNames, spec);
       return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 

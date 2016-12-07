@@ -48,7 +48,8 @@ define(
       var base = scan(owner, detail, compSpec, placeholders);
       
       return base.fold(
-        function (req, value) {
+        function (req, valueThunk) {
+          var value = valueThunk();
           var childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
           var substituted = Arr.bind(childSpecs, function (c) {
             return substitute(owner, detail, c, placeholders);
@@ -59,7 +60,8 @@ define(
             })
           ];
         },
-        function (req, values) {
+        function (req, valuesThunk) {
+          var values = valuesThunk();
           return values;
         }
       );
