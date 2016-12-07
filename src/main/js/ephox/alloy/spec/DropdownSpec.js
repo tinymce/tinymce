@@ -11,7 +11,6 @@ define(
   function (Toggling, Beta, ButtonSpec, Merger) {
     var make = function (detail, components) {
       return Merger.deepMerge(
-        detail.originalSpec(),
         ButtonSpec.make({
           uid: detail.uid(),
           action: function (component) {

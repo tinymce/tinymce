@@ -110,7 +110,10 @@ define(
         '<alloy.sink>': detail.parts().sink()
       });
 
-      return SplitDropdownSpec.make(detail, components);
+      return Merger.deepMerge(
+        spec,
+        SplitDropdownSpec.make(detail, components)
+      );
     };
 
     return {
