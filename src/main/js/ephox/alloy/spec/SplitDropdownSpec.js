@@ -7,36 +7,15 @@ define(
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.spec.ButtonSpec',
-    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'global!Error'
   ],
 
-  function (SystemEvents, Toggling, Beta, Gamma, ButtonSpec, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, Error) {
-    var schema = [
-      FieldSchema.strict('toggleClass'),
-      FieldSchema.strict('fetch'),
-      FieldSchema.strict('onExecute'),
-      FieldSchema.option('lazySink'),
-      FieldSchema.strict('dom'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      // FieldSchema.defaulted('onClose', Fun.noop),
-
-      FieldSchema.defaulted('matchWidth', false)
-    ];
-
-    var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('split-dropdown.spec', schema, spec, [
-        'button',
-        'arrow',
-        'menu'
-      ]);
-
-      // Need to make the substitutions for "button" and "arrow"
+  function (SystemEvents, Toggling, Beta, Gamma, ButtonSpec, UiSubstitutes, Merger, Option, Error) {
+    var make = function (detail) {
+          // Need to make the substitutions for "button" and "arrow"
       var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
         '<alloy.split-dropdown.button>': UiSubstitutes.single(
           Merger.deepMerge(
@@ -89,12 +68,6 @@ define(
           uiType: 'button',
           dom: detail.dom(),
           components: components,
-          // toggling: {
-          //   toggleClass: detail.toggleClass(),
-          //   aria: {
-          //     'aria-expanded-attr': 'aria-expanded'
-          //   }
-          // },
           eventOrder: {
             // Order, the button state is toggled first, so assumed !selected means close.
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]

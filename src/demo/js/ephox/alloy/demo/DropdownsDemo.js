@@ -204,13 +204,13 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        SplitDropdown.build(function (ps) {
+        SplitDropdown.build(function (parts) {
           return { 
             toggleClass: 'demo-selected',
             dom: {
               tag: 'div'
             },
-            components: [ ps.button(), ps.arrow() ],
+            components: [ parts.button().placeholder(), parts.arrow().placeholder() ],
             fetch: function () {
               var future = Future.pure({             
                 type: 'widget',
@@ -245,7 +245,7 @@ define(
             },
 
             parts: {
-              button: {
+              button: parts.button().build({
                 uiType: 'button',
                 dom: {
                   tag: 'button',
@@ -255,15 +255,15 @@ define(
                   console.log('*** Clicked on Action ***');
                 },
                 uid: 'supplied'
-              },
-              arrow: {
+              }),
+              arrow: parts.arrow().build({
                 uiType: 'button',
                 dom: {
                   tag: 'button',
                   innerHtml: 'v'
                 }
-              },
-              menu: widgetMenu
+              }),
+              menu: parts.menu().build(widgetMenu)
             }
           };
         })
