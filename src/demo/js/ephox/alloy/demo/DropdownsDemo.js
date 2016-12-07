@@ -204,73 +204,69 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        { 
-          uiType: 'split-dropdown',
-          toggleClass: 'demo-selected',
-          dom: {
-            tag: 'div'
-          },
-          components: SplitDropdown.components(function (ps) {
-            return [
-              ps.button(),
-              ps.arrow()
-            ];
-          }),
-          fetch: function () {
-            var future = Future.pure({             
-              type: 'widget',
-              autofocus: true,
-              data: {
-                value: 'widget1',
-                text: 'Widget1'
-              },
-              widget: {
-                uiType: 'container',
+        SplitDropdown.build(function (ps) {
+          return { 
+            toggleClass: 'demo-selected',
+            dom: {
+              tag: 'div'
+            },
+            components: [ ps.button(), ps.arrow() ],
+            fetch: function () {
+              var future = Future.pure({             
+                type: 'widget',
+                autofocus: true,
+                data: {
+                  value: 'widget1',
+                  text: 'Widget1'
+                },
+                widget: {
+                  uiType: 'container',
+                  dom: {
+                    classes: [ 'my-widget' ]
+                  },
+                  behaviours: {
+                    keying: { mode: 'cyclic' }
+                  },
+                  components: [
+                    { uiType: 'input' },
+                    { uiType: 'input' }
+                  ]
+                }
+
+              });
+
+              return future.map(function (f) {
+                return MenuData.single('name', 'label', f);
+              });
+            },
+            lazySink: lazySink,
+            onExecute: function () {
+
+            },
+
+            parts: {
+              button: {
+                uiType: 'button',
                 dom: {
-                  classes: [ 'my-widget' ]
+                  tag: 'button',
+                  innerHtml: 'Run'
                 },
-                behaviours: {
-                  keying: { mode: 'cyclic' }
+                action: function () {
+                  console.log('*** Clicked on Action ***');
                 },
-                components: [
-                  { uiType: 'input' },
-                  { uiType: 'input' }
-                ]
-              }
-
-            });
-
-            return future.map(function (f) {
-              return MenuData.single('name', 'label', f);
-            });
-          },
-          lazySink: lazySink,
-          onExecute: function () {
-
-          },
-
-          parts: {
-            button: {
-              uiType: 'button',
-              dom: {
-                tag: 'button',
-                innerHtml: 'Run'
+                uid: 'supplied'
               },
-              action: function () {
-                console.log('*** Clicked on Action ***');
+              arrow: {
+                uiType: 'button',
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'v'
+                }
               },
-              uid: 'supplied'
-            },
-            arrow: {
-              uiType: 'button',
-              dom: {
-                tag: 'button',
-                innerHtml: 'v'
-              }
-            },
-            menu: widgetMenu
-          }
-        }
+              menu: widgetMenu
+            }
+          };
+        })
       );
 
 
