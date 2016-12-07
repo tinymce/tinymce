@@ -65,71 +65,7 @@ define(
         return Result.value(sink);
       };
 
-      // HtmlDisplay.section(
-      //   gui,
-      //   'Thi is a split-button dropdown',
-      //   GuiTemplate.use(
-      //     Option.some('split-dropdown'),
-      //     TemplateToolbarSplitButton,
-      //     { 
-      //       uiType: 'split-dropdown',
-      //       toggleClass: 'demo-selected',
-      //       fetch: function () {
-      //         return Future.pure({
-      //           uiType: 'container',
-      //           components: [
-      //             { uiType: 'input'}
-      //           ]
 
-      //         });
-      //       },
-      //       lazySink: lazySink,
-      //       onExecute: function () {
-
-      //       },
-
-      //       parts: {
-      //         button: {
-      //           uiType: 'button',
-      //           dom: {
-      //             tag: 'button',
-      //             innerHtml: 'Run'
-      //           },
-      //           action: function () {
-      //             console.log('*** Clicked on Action ***');
-      //           },
-      //           uid: 'supplied'
-      //         },
-      //         arrow: {
-      //           uiType: 'button',
-      //           dom: {
-      //             tag: 'button',
-      //             innerHtml: 'v'
-      //           }
-      //         }
-      //       },
-      //       view: {
-      //         style: 'widget',
-      //         scaffold: Fun.identity,
-      //         members: {
-      //           container: {
-      //             munge: function (spec) {
-      //               return GuiTemplate.use(
-      //                 Option.some('widget-container'),
-      //                 TemplateWidgetContainer,
-      //                 { },
-      //                 { }
-      //               );
-      //             }
-      //           }
-      //         }
-      //       }
-      //     },
-      //     {
-
-      //     }
-      //   )
-      // );
       var menuMarkers = {
         selectedItem: 'no-selection',
         item: 'alloy-item',
@@ -263,6 +199,77 @@ define(
         },
         markers: menuMarkers
       };
+
+      HtmlDisplay.section(
+        gui,
+        'Thi is a split-button dropdown',
+        { 
+          uiType: 'split-dropdown',
+          toggleClass: 'demo-selected',
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.split-dropdown.button>', owner: 'split-dropdown' },
+            { uiType: 'placeholder', name: '<alloy.split-dropdown.arrow>', owner: 'split-dropdown' }
+          ],
+          fetch: function () {
+            var future = Future.pure({             
+              type: 'widget',
+              autofocus: true,
+              data: {
+                value: 'widget1',
+                text: 'Widget1'
+              },
+              widget: {
+                uiType: 'container',
+                dom: {
+                  classes: [ 'my-widget' ]
+                },
+                behaviours: {
+                  keying: { mode: 'cyclic' }
+                },
+                components: [
+                  { uiType: 'input' },
+                  { uiType: 'input' }
+                ]
+              }
+
+            });
+
+            return future.map(function (f) {
+              return MenuData.single('name', 'label', f);
+            });
+          },
+          lazySink: lazySink,
+          onExecute: function () {
+
+          },
+
+          parts: {
+            button: {
+              uiType: 'button',
+              dom: {
+                tag: 'button',
+                innerHtml: 'Run'
+              },
+              action: function () {
+                console.log('*** Clicked on Action ***');
+              },
+              uid: 'supplied'
+            },
+            arrow: {
+              uiType: 'button',
+              dom: {
+                tag: 'button',
+                innerHtml: 'v'
+              }
+            },
+            menu: widgetMenu
+          }
+        }
+      );
+
 
    
       var x = HtmlDisplay.section(

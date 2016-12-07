@@ -32,7 +32,8 @@ define(
     var make = function (spec) {
       var detail = SpecSchema.asStructOrDie('split-dropdown.spec', schema, spec, [
         'button',
-        'arrow'
+        'arrow',
+        'menu'
       ]);
 
       // Need to make the substitutions for "button" and "arrow"
@@ -40,7 +41,9 @@ define(
         '<alloy.split-dropdown.button>': UiSubstitutes.single(
           Merger.deepMerge(
             {
-              focusing: undefined
+              behaviours: {
+                focusing: undefined
+              }
             },
             detail.parts()['button'](),
             {
@@ -62,8 +65,11 @@ define(
               var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
               hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
             },
-            toggling: {
-              toggleOnExecute: false
+
+            behaviours: {
+              toggling: {
+                toggleOnExecute: false
+              }
             }
           })
         )
@@ -73,7 +79,10 @@ define(
         ButtonSpec.make({
           uid: detail.uid(),
           action: function (component) {
-            Beta.togglePopup(detail, component);
+            Beta.togglePopup(detail, {
+              anchor: 'hotspot',
+              hotspot: component
+            }, component);
           }
         }), {
           uid: detail.uid(),
@@ -90,31 +99,34 @@ define(
             // Order, the button state is toggled first, so assumed !selected means close.
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
           },
-          coupling: {
-            others: {
-              sandbox: function (hotspot) {
-                var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
-                var extras = {
-                  onOpen: function () {
-                    Toggling.select(arrow);
-                  },
-                  onClose: function () {
-                    Toggling.deselect(arrow);
-                  }
-                };
 
-                return Beta.makeSandbox(detail, {
-                  anchor: 'hotspot',
-                  hotspot: hotspot
-                }, hotspot, extras);
+          behaviours: {
+            coupling: {
+              others: {
+                sandbox: function (hotspot) {
+                  var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
+                  var extras = {
+                    onOpen: function () {
+                      Toggling.select(arrow);
+                    },
+                    onClose: function () {
+                      Toggling.deselect(arrow);
+                    }
+                  };
+
+                  return Beta.makeSandbox(detail, {
+                    anchor: 'hotspot',
+                    hotspot: hotspot
+                  }, hotspot, extras);
+                }
               }
-            }
-          },
-          keying: {
-            mode: 'execution',
-            useSpace: true
-          },
-          focusing: true          
+            },
+            keying: {
+              mode: 'execution',
+              useSpace: true
+            },
+            focusing: true
+          }         
         }
       );
     };
