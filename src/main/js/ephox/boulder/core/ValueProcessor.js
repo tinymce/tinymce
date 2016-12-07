@@ -39,8 +39,11 @@ define(
       }, Result.value);
     };
 
-    var fallbackAccess = function (obj, key, fallback) {
-      return Result.value(ObjReader.readOr(key, fallback)(obj));
+    var fallbackAccess = function (obj, key, fallbackThunk) {
+      var v = ObjReader.readOptFrom(obj, key).fold(function () {
+        return fallbackThunk();
+      }, Fun.identity);
+      return Result.value(v);
     };
 
     var optionAccess = function (obj, key) {
@@ -78,17 +81,15 @@ define(
             return presence.fold(function () {
               return strictAccess(path, obj, key).bind(bundle);
             }, function (fallbackThunk) {
-              var fallback = fallbackThunk();
-              return fallbackAccess(obj, key, fallback).bind(bundle);
+              return fallbackAccess(obj, key, fallbackThunk).bind(bundle);
             }, function () {
               return optionAccess(obj, key).bind(bundleAsOption);
             }, function (fallbackThunk) {
               // Defaulted option access
-              var fallback = fallbackThunk();
-              return optionDefaultedAccess(obj, key, fallback).bind(bundleAsOption);
+              return optionDefaultedAccess(obj, key, fallbackThunk).bind(bundleAsOption);
             }, function (baseThunk) {
               var base = baseThunk();
-              return fallbackAccess(obj, key, {}).map(function (v) {
+              return fallbackAccess(obj, key, Fun.constant({})).map(function (v) {
                 return Merger.deepMerge(base, v);
               }).bind(bundle);
             });
