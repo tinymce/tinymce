@@ -2,58 +2,15 @@ define(
   'ephox.alloy.spec.SplitDropdownSpec',
 
   [
-    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.spec.ButtonSpec',
-    'ephox.alloy.spec.UiSubstitutes',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option',
     'global!Error'
   ],
 
-  function (SystemEvents, Toggling, Beta, Gamma, ButtonSpec, UiSubstitutes, Merger, Option, Error) {
+  function (Toggling, Beta, ButtonSpec, Merger, Error) {
     var make = function (detail, components) {
-          // Need to make the substitutions for "button" and "arrow"
-      // var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
-      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(true,  
-      //     Merger.deepMerge(
-      //       {
-      //         behaviours: {
-      //           focusing: undefined
-      //         }
-      //       },
-      //       detail.parts()['button'](),
-      //       {
-      //         uid: detail.partUids()['button'],
-      //         uiType: 'button',
-      //         action: detail.onExecute()
-      //       }
-      //     )
-      //   ),
-
-      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(true,  
-      //     Merger.deepMerge({
-      //       uiType: 'button',
-      //       tabstopping: undefined,
-      //       focusing: undefined
-      //     }, detail.parts().arrow(), {
-      //       uid: detail.partUids().arrow,
-      //       action: function (arrow) {
-      //         var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-      //         hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
-      //       },
-
-      //       behaviours: {
-      //         toggling: {
-      //           toggleOnExecute: false
-      //         }
-      //       }
-      //     })
-      //   )
-      // }, Gamma.sink());
-
       return Merger.deepMerge(
         ButtonSpec.make({
           uid: detail.uid(),
