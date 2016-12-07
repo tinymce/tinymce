@@ -5,15 +5,17 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (PartType, Tagger, SpecSchema, Merger) {
-    var build = function (owner, schema,  partTypes, factory, f) {
+  function (PartType, Tagger, SpecSchema, Merger, Fun) {
+    var build = function (owner, schema,  partTypes, factory, f, preprocess) {
+      var p = preprocess !== undefined ? preprocess : Fun.identity;
       var parts = PartType.generate(owner, partTypes);
      
 
-      var spec = f(parts);
+      var spec = p(f(parts));
       var userSpec = Merger.deepMerge({
         uid: Tagger.generate('uid')
       }, spec);
@@ -26,7 +28,7 @@ define(
 
       return Merger.deepMerge(
         spec,
-        factory(detail, components)
+        factory(detail, components, userSpec)
       );
     };
 

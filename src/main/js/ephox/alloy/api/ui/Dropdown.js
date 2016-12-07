@@ -25,7 +25,7 @@ define(
     ];
 
     var partTypes = [
-      PartType.external('menu'),
+      PartType.external('menu', Fun.constant({ }), Fun.constant({ })),
       InternalSink
     ];
 

@@ -155,12 +155,14 @@ define(
       return Option.some(true);
     };
 
-    var enterPopup = function (detail, hotspot) {
+    var enterPopup = function (detail, anchor, hotspot) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       if (Sandboxing.isOpen(sandbox)) {
-        Keying.focusIn(sandbox);
+        Sandboxing.getState(sandbox).each(function (tiers) {
+          Keying.focusIn(tiers);
+        });        
       } else {
-        open(detail, hotspot, sandbox);
+        open(detail, anchor, hotspot, sandbox);
       }
       return Option.some(true);
     };

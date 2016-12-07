@@ -76,7 +76,7 @@ define(
     var partTypes = [
       arrowPart,
       buttonPart,
-      PartType.external('menu'),
+      PartType.external('menu', Fun.constant({ }), Fun.constant({ })),
       InternalSink
     ];
 

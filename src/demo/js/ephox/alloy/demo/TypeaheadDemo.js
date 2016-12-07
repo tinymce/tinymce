@@ -6,6 +6,8 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Typeahead',
+    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.compass.Arr',
@@ -19,7 +21,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DemoTemplates, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, Typeahead, MenuData, DemoTemplates, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -31,8 +33,10 @@ define(
         dom: {
           tag: 'div'
         },
-        positioning: {
-          useFixed: true
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
       });
 
@@ -71,71 +75,99 @@ define(
         return Result.value(sink);
       };
 
-      HtmlDisplay.section(gui,
-        'An example of a typeahead component',
-        {
-          uiType: 'typeahead',
-          minChars: 1,
-          lazySink: lazySink,
-          dom: {
-            tag: 'input'
-          },
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu'
-          },
-          members: {
-            menu: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  Option.none(),
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
-                      'aria-label': spec.textkey
-                    }
-                  }
-                );
-              }
-            },
-            item: {
-              munge: function (spec) {
-                return DemoTemplates.item(spec);
-              }
+      var listMenu = {
+        members: {
+          menu: {
+            munge: function (spec) {
+              return {
+                dom: {
+                  tag: 'ol',
+                  attributes: {
+                    'aria-label': spec.text
+                  },
+                  classes: [ 'demo-alloy-menu' ]
+                },
+                shell: true,
+                components: [ ]
+              };
             }
           },
-          fetch: function (input) {
-            var text = Value.get(input.element());
-            var matching = Arr.bind(dataset, function (d) {
-              var index = d.indexOf(text.toLowerCase());
-              if (index > -1) {
-                var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
-                  d.substring(index + text.length);
-                return [ { type: 'item', value: d, text: html, 'item-class': 'class-' + d } ];
-              } else {
-                return [ ];
-              }
-            });
+          item: {
+            munge: function (spec) {
 
-            var matches = matching.length > 0 ? matching : [
-              { type: 'separator', text: 'No items' }
-            ];
-   
-            return Future.pure(matches);
-          },
-          onExecute: function (sandbox, item, itemValue) {
-            var value = Representing.getValue(item);
-            console.log('*** typeahead menu demo execute on: ' + value + ' ***');
-          },
-          parts: {
-            display: {
+              return spec.type === 'separator' ? {
+                uiType: 'container',
+                dom: {
+                  tag: 'div',
+                  classes: [ 'alloy-item' ],
+                  innerHtml: spec.text
+                },
+                components: [
 
+                ]
+              } : {
+                dom: {
+                  tag: 'li',
+                  classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
+                  innerHtml: spec.data.text
+                },
+                components: [
+
+                ]
+              };
             }
           }
+        },
+        markers: {
+          item: 'alloy-item',
+          selectedItem: 'alloy-selected-item',
+          menu: 'alloy-menu',
+          selectedMenu: 'alloy-selected-menu',
+          'backgroundMenu': 'alloy-background-menu'
         }
+      };
+
+      HtmlDisplay.section(gui,
+        'An example of a typeahead component',
+        Typeahead.build(function (parts) {
+          return {
+            minChars: 1,
+            lazySink: lazySink,
+            dom: {
+              tag: 'input'
+            },
+
+            parts: {
+              menu: listMenu
+            },
+            fetch: function (input) {
+              var text = Value.get(input.element());
+              var matching = Arr.bind(dataset, function (d) {
+                var index = d.indexOf(text.toLowerCase());
+                if (index > -1) {
+                  var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
+                    d.substring(index + text.length);
+                  return [ { type: 'item', data: { value: d, text: html }, 'item-class': 'class-' + d } ];
+                } else {
+                  return [ ];
+                }
+              });
+
+              var matches = matching.length > 0 ? matching : [
+                { type: 'separator', text: 'No items' }
+              ];
+     
+              var future = Future.pure(matches);
+              return future.map(function (items) {
+                return MenuData.simple('blah', 'Blah', items);
+              });
+            },
+            onExecute: function (sandbox, item, itemValue) {
+              var value = Representing.getValue(item);
+              console.log('*** typeahead menu demo execute on: ' + value + ' ***');
+            }
+          };
+        })
       );
     };
   }

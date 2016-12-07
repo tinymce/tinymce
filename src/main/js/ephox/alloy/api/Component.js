@@ -11,13 +11,16 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.dom.DomRender',
     'ephox.boulder.api.ValueSchema',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.Traverse',
+    'global!Error'
   ],
 
-  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Arr, Fun, Cell, Traverse) {
+  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
     var build = function (spec) { 
        var getSelf = function () {
         return self;
@@ -90,7 +93,10 @@ define(
 
       var config = function (behaviour) {
         return info.behaviours().bind(function (b) {
-          return b[behaviour.name()]();
+          var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
+            throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
+          };
+          return f();
         });
       };
 

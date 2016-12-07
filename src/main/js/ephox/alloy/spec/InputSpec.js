@@ -64,20 +64,15 @@ define(
           representing: {
             initialValue: detail.value().getOr({ value: '', text: '' }),
 
-            // FIX: Update this later.
-            query: function (comp) {
-              var text = Value.get(comp.element());
-
-              // Default the first ones.
-              return detail.holdingValue().get().fold(function () {
-                return { value: text, text: text };
-              }, function (data) {
-                return data.text === text ? data : { value: text, text: text };
-              });
-            },
-            set: function (comp, value) {
-              detail.holdingValue().set(Option.some(value));
-              Value.set(comp.element(), value.text);
+            interactive: {
+              event: 'input',
+              process: function (input) {
+                var v = Value.get(input.element());
+                return {
+                  value: v.toLowerCase(),
+                  text: v
+                };
+              }
             }
           },
 

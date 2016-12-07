@@ -14,7 +14,7 @@ define(
   function (UiSubstitutes, Arr, Obj, Merger, Fun, Option, Adt) {
     var adt = Adt.generate([
       { internal: [ 'name', 'pname', 'defaults', 'overrides' ] },
-      { external: [ 'name' ] },
+      { external: [ 'name', 'defaults', 'overrides' ] },
       { optional: [ 'name', 'pname', 'defaults', 'overrides' ] }
     ]);
 

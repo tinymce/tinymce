@@ -115,8 +115,8 @@ define(
 
       var toMenuValues = function (container, sMenus) {
         return Obj.map(uiSpec.data().menus(), function (data, menuName) {
-          return Arr.map(data.items, function (item) {
-            return item.data.value;
+          return Arr.bind(data.items, function (item) {
+            return item.type === 'separator' ? [ ] : [ item.data.value ];
           });
         });
       };
