@@ -58,7 +58,9 @@ define(
                   initSize: {
                     numColumns: movementInfo.initSize().numColumns(),
                     numRows: movementInfo.initSize().numRows()
-                  }
+                  },
+                  // FIX: Undefined
+                  focusManager: detail.focusManager().getOr(undefined)
                 };
               };
             })
@@ -70,7 +72,9 @@ define(
                 return {
                   mode: 'menu',
                   selector: '.' + detail.markers().item(),
-                  moveOnTab: movementInfo.moveOnTab()
+                  moveOnTab: movementInfo.moveOnTab(),
+                  // FIX: Undefined
+                  focusManager: detail.focusManager().getOr(undefined)
                 };
               };
             })
@@ -84,6 +88,7 @@ define(
       FieldSchema.defaulted('shell', false),
 
       FieldSchema.defaulted('fakeFocus', false),
+      FieldSchema.option('focusManager'),
       FieldSchema.defaulted('onHighlight', Fun.noop)
     ];
 

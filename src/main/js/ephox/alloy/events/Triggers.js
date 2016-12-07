@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.events.EventSource',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (EventSource, Objects, Arr, Fun, Option, Adt, Cell, Traverse, Error) {
+  function (EventSource, AlloyLogger, Objects, Arr, Fun, Option, Adt, Cell, Traverse, Error) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },
@@ -48,6 +49,7 @@ define(
         // No handler, so complete.
         return adt.complete();
       }, function (handlerInfo) {
+        if (eventType === 'keydown') console.log('eventType', eventType, 'caught by', AlloyLogger.element(handlerInfo.element()));
         handlerInfo.handler(simulatedEvent);
 
         // Now, check if the event was stopped.

@@ -2,13 +2,14 @@ define(
   'ephox.alloy.navigation.DomMovement',
 
   [
+    'ephox.alloy.log.AlloyLogger',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Direction',
     'ephox.sugar.api.Focus',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Class, Direction, Focus, SelectorFind) {
+  function (AlloyLogger, Class, Direction, Focus, SelectorFind) {
     // Looks up direction (considering LTR and RTL), finds the focused element,
     // and tries to move. If it succeeds, triggers focus and kills the event.
     var useH = function (movement) {
@@ -35,10 +36,15 @@ define(
     };
 
     var getFocused = function (component, info) {
+      console.log('getFocused', component.logSpec());
       return info.focusManager().fold(function () {
+        console.log('no focus manager');
         return Focus.search(component.element());
       }, function (manager) {
-        return manager.get(component);
+        console.log('focus manager');
+        var r = manager.get(component);
+        console.log('r', r.getOr('none'));
+        return r;
       });
     };
 

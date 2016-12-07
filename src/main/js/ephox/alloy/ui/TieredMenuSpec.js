@@ -307,18 +307,14 @@ define(
       ]);
 
       var focusManager = {
-        set: function (sandbox, element) {
-          sandbox.getSystem().getByDom(element).fold(Fun.noop, function (item) {
-            Highlighting.getHighlighted(sandbox).each(function (menu) {
-              Highlighting.highlight(menu, item);
-            });
+        set: function (menu, element) {
+          menu.getSystem().getByDom(element).fold(Fun.noop, function (item) {
+            Highlighting.highlight(menu, item);
           });          
         },
-        get: function (sandbox) {
-          return Highlighting.getHighlighted(sandbox).bind(function (menu) {
-            return Highlighting.getHighlighted(menu).map(function (item) {
-              return item.element();
-            });
+        get: function (menu) {
+          return Highlighting.getHighlighted(menu).map(function (item) {
+            return item.element();
           });
         }
       };
@@ -343,8 +339,8 @@ define(
                 // Explore what this one is for.
                 container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
               });
-            }
-            // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
+            },
+            focusManager: uiSpec.fakeFocus() ? focusManager : undefined
           },
           // Highlighting is used for highlighting the active menu
           highlighting: {

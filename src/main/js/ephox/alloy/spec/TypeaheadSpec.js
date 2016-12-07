@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
@@ -18,8 +19,14 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, Focusing, Keying, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, Coupling, Focusing, Highlighting, Keying, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
+
+      var getMenu = function (sandbox) {
+        return Sandboxing.getState(sandbox).bind(function (tiers) {
+          return Highlighting.getHighlighted(tiers);
+        });
+      };
       
       var behaviours = {
         streaming: {
@@ -56,11 +63,19 @@ define(
           onDown: function (comp, simulatedEvent) {
             var sandbox = Coupling.getCoupled(comp, 'sandbox');
             if (Sandboxing.isOpen(sandbox)) {
-              sandbox.getSystem().triggerEvent('keydown', sandbox.element(), simulatedEvent.event());
-              return Option.some(true);
+              getMenu(sandbox).each(function (menu) {
+                Highlighting.getHighlighted(menu).fold(function () {
+                  Highlighting.highlightFirst(menu);
+                }, function () {
+                  sandbox.getSystem().triggerEvent('keydown', menu.element(), simulatedEvent.event());  
+                });
+              });
             } else {
-              return Beta.enterPopup(detail, comp);
-            }              
+              Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals);
+              // Beta.enterPopup(detail, comp);
+            } 
+
+            return Option.some(true);             
           },
           onEscape: function (comp) {
             return Beta.escapePopup(detail, comp);
