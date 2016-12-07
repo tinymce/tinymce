@@ -61,7 +61,7 @@ define(
       };
 
       var placeholders = {
-        '<alloy.expandable-form.minimal-form>': UiSubstitutes.single(
+        '<alloy.expandable-form.minimal-form>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts()['minimal-form'](),
             detail.parts()['minimal-form'].base,
@@ -70,7 +70,7 @@ define(
             }
           )
         ),
-        '<alloy.expandable-form.extra-form>': UiSubstitutes.single(
+        '<alloy.expandable-form.extra-form>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts()['extra-form'](),
             detail.parts()['extra-form'].base,
@@ -110,7 +110,7 @@ define(
             }
           )
         ),
-        '<alloy.expandable-form.expander>': UiSubstitutes.single(
+        '<alloy.expandable-form.expander>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts()['expander'](),
             detail.parts()['expander'].base,
@@ -121,7 +121,7 @@ define(
             }
           )
         ),
-        '<alloy.expandable-form.controls>': UiSubstitutes.single(
+        '<alloy.expandable-form.controls>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts()['controls'](),
             detail.parts()['controls'].base,

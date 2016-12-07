@@ -41,7 +41,7 @@ define(
       ]);
 
       var placeholders = {
-        '<alloy.tabs>': UiSubstitutes.multiple(
+        '<alloy.tabs>': UiSubstitutes.multiple(true, 
           Arr.map(detail.tabs(), function (tab) {
             var munged = detail.members().tab().munge(tab);
             return Merger.deepMerge(

@@ -39,7 +39,7 @@ define(
       });
 
       var placeholders = {
-        '<alloy.tabbar>': UiSubstitutes.single(
+        '<alloy.tabbar>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts().tabbar(),
             detail.parts().tabbar().base,
@@ -57,7 +57,7 @@ define(
             }
           )
         ),
-        '<alloy.tabview>': UiSubstitutes.single(
+        '<alloy.tabview>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts().tabview(),
             detail.parts().tabview().base,

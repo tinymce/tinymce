@@ -39,7 +39,7 @@ define(
       ).getOr(info.uid() + '-widget');
 
       var placeholders = {
-        '<alloy.item.widget>': UiSubstitutes.single(Merger.deepMerge(
+        '<alloy.item.widget>': UiSubstitutes.single(true,  Merger.deepMerge(
           { uid: widgetUid },
           info.widget(),
           {

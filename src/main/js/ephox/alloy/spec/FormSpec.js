@@ -40,7 +40,7 @@ define(
         var output = itemInfo.builder()(itemInfo, detail.members().ui().munge);
         return {
           k: '<alloy.field.' + partName + '>',
-          v: UiSubstitutes.single(
+          v: UiSubstitutes.single(true,  
             output
           )
         };

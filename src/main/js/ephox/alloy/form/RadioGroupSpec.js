@@ -54,15 +54,15 @@ define(
     );
 
 
-    // '<alloy.form.field-input>': UiSubstitutes.single(
+    // '<alloy.form.field-input>': UiSubstitutes.single(true, 
     //       info.parts().field()
     //     ),
-    //     '<alloy.form.field-label>': UiSubstitutes.single(
+    //     '<alloy.form.field-label>': UiSubstitutes.single(true, 
     //       Merger.deepMerge(
 
     var builder = function (info) {
       var placeholders = {
-        '<alloy.form.radio-fields>': UiSubstitutes.multiple(
+        '<alloy.form.radio-fields>': UiSubstitutes.multiple(true, 
           Arr.bind(info.candidates(), function (candidate, i) {
             return [
               Merger.deepMerge(
@@ -102,7 +102,7 @@ define(
             ] : [ ]);
           })
         ),
-        '<alloy.form.field-legend>': UiSubstitutes.single(
+        '<alloy.form.field-legend>': UiSubstitutes.single(true, 
           {
             uiType: 'custom',
             dom: {

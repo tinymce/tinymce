@@ -17,7 +17,7 @@ define(
     var make = function (detail, components) {
           // Need to make the substitutions for "button" and "arrow"
       // var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
-      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(
+      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(true,  
       //     Merger.deepMerge(
       //       {
       //         behaviours: {
@@ -33,7 +33,7 @@ define(
       //     )
       //   ),
 
-      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(
+      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(true,  
       //     Merger.deepMerge({
       //       uiType: 'button',
       //       tabstopping: undefined,

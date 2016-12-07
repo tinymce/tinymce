@@ -61,7 +61,7 @@ define(
         detail,
         detail.components(),
         {
-          '<alloy.toolbar.primary>': UiSubstitutes.single(
+          '<alloy.toolbar.primary>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().primary(),
               {
@@ -80,7 +80,7 @@ define(
             )
           ),
 
-          '<alloy.toolbar.more>': UiSubstitutes.single(
+          '<alloy.toolbar.more>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().more(),
               {

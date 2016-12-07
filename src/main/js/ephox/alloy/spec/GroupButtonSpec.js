@@ -33,7 +33,7 @@ define(
       var detail = SpecSchema.asStructOrDie('alloy.group-button', schema, spec, [ ]);
 
       var placeholders = {
-        '<alloy.group-buttons>': UiSubstitutes.multiple(
+        '<alloy.group-buttons>': UiSubstitutes.multiple(true, 
           Arr.map(detail.buttons(), function (bSpec) {
             // TODO: A nice way of verifying that bSpec has a value property.
             return Merger.deepMerge(

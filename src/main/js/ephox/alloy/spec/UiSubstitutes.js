@@ -13,35 +13,20 @@ define(
   ],
 
   function (Objects, Arr, Obj, Merger, Json, Fun, Adt, Error) {
-    var dependent = 'dependent';
     var placeholder = 'placeholder';
 
     var adt = Adt.generate([
-      { single: [ 'value' ] },
-      { multiple: [ 'values' ] }
+      { single: [ 'required', 'value' ] },
+      { multiple: [ 'required', 'values' ] }
     ]);
 
     var isSubstitute = function (uiType) {
       return Arr.contains([
-        dependent,
         placeholder
       ], uiType);
     };
 
-    var subDependent = function (owner, detail, compSpec, factories, placeholders) {
-      console.log('dependent', owner.getOr('none'), compSpec.owner, compSpec);
-      if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(compSpec);
-      return Objects.readOptFrom(factories, compSpec.name).fold(function () {
-        throw new Error('Unknown dependent component: ' + compSpec.name + '\nKnown: [' +
-          Obj.keys(factories) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
-        );
-      }, function (builder) {
-        var output = builder(compSpec, detail);
-        return adt.single(output);
-      });
-    };
-
-    var subPlaceholder = function (owner, detail, compSpec, factories, placeholders) {
+    var subPlaceholder = function (owner, detail, compSpec, placeholders) {
       if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(compSpec);
       // Ignore having to find something for the time being.
       return Objects.readOptFrom(placeholders, compSpec.name).fold(function () {
@@ -54,20 +39,19 @@ define(
       });
     };
 
-    var scan = function (owner, detail, compSpec, factories, placeholders) {
-      if (compSpec.uiType === dependent) return subDependent(owner, detail, compSpec, factories, placeholders);
-      else if (compSpec.uiType === placeholder) return subPlaceholder(owner, detail, compSpec, factories, placeholders);
-      else return adt.single(compSpec);
+    var scan = function (owner, detail, compSpec, placeholders) {
+      if (compSpec.uiType === placeholder) return subPlaceholder(owner, detail, compSpec, placeholders);
+      else return adt.single(false, compSpec);
     };
 
-    var substitute = function (owner, detail, compSpec, factories, placeholders) {
-      var base = scan(owner, detail, compSpec, factories, placeholders);
+    var substitute = function (owner, detail, compSpec, placeholders) {
+      var base = scan(owner, detail, compSpec, placeholders);
       
       return base.fold(
-        function (value) {
+        function (req, value) {
           var childSpecs = Objects.readOptFrom(value, 'components').getOr([ ]);
           var substituted = Arr.bind(childSpecs, function (c) {
-            return substitute(owner, detail, c, factories, placeholders);
+            return substitute(owner, detail, c, placeholders);
           });
           return [
             Merger.deepMerge(value, {
@@ -75,15 +59,15 @@ define(
             })
           ];
         },
-        function (values) {
+        function (req, values) {
           return values;
         }
       );
     };
 
-    var substituteAll = function (owner, detail, components, factories, placeholders) {
+    var substituteAll = function (owner, detail, components, placeholders) {
       return Arr.bind(components, function (c) {
-        return substitute(owner, detail, c, factories, placeholders);
+        return substitute(owner, detail, c, placeholders);
       });
     };
 
@@ -102,20 +86,28 @@ define(
         return replacements;
       };
 
+      var required = function () {
+        return replacements.fold(function (req, _) {
+          return req;
+        }, function (req, _) {
+          return req;
+        });
+      };
+
       return {
         name: Fun.constant(label),
-        required: Fun.constant(true),
+        required: required,
         used: used,
         replace: replace
       };
     };
 
-    var substitutePlaces = function (owner, detail, components, placeholders, _factories) {
+    var substitutePlaces = function (owner, detail, components, placeholders) {
       var ps = Obj.map(placeholders, function (ph, name) {
         return oneReplace(name, ph);
       });
 
-      var outcome = substituteAll(owner, detail, components, _factories !== undefined ? _factories : { }, ps);
+      var outcome = substituteAll(owner, detail, components, ps);
 
       Obj.each(ps, function (p) {
         if (p.used() === false && p.required()) throw new Error(
@@ -131,7 +123,6 @@ define(
       single: adt.single,
       multiple: adt.multiple,
       isSubstitute: isSubstitute,
-      dependent: Fun.constant(dependent),
       placeholder: Fun.constant(placeholder),
       substituteAll: substituteAll,
       substitutePlaces: substitutePlaces

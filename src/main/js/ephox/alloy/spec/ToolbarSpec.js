@@ -58,7 +58,7 @@ define(
         detail,
         detail.components(),
         {
-          '<alloy.toolbar.groups.container>': UiSubstitutes.single(
+          '<alloy.toolbar.groups.container>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().groups(),              
               {

@@ -62,7 +62,7 @@ define(
       });
 
       var placeholders = {
-        '<alloy.menu.items>': UiSubstitutes.multiple(builtItems)
+        '<alloy.menu.items>': UiSubstitutes.multiple(true, builtItems)
       };
       
       var components = UiSubstitutes.substitutePlaces(Option.some('flatgrid'), detail, detail.components(), placeholders, { });

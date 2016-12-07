@@ -34,10 +34,10 @@ define(
       ])
     );
 
-    // '<alloy.form.field-input>': UiSubstitutes.single(
+    // '<alloy.form.field-input>': UiSubstitutes.single(true,  
     //       detail.parts().field()
     //     ),
-    //     '<alloy.form.field-label>': UiSubstitutes.single(
+    //     '<alloy.form.field-label>': UiSubstitutes.single(true,  
     //       Merger.deepMerge(
 
     // Would perfer a much better way of doing this, but things like aspect ratios
@@ -57,7 +57,7 @@ define(
       };
 
       var placeholders = {
-        '<alloy.form.field-1>': UiSubstitutes.single(
+        '<alloy.form.field-1>': UiSubstitutes.single(true,  
           TextInputSpec.make(
             Merger.deepMerge(
               info.parts()['field-1'](),
@@ -85,7 +85,7 @@ define(
             munge
           )
         ),
-        '<alloy.form.field-2>': UiSubstitutes.single(
+        '<alloy.form.field-2>': UiSubstitutes.single(true,  
           TextInputSpec.make(
             Merger.deepMerge(
               info.parts()['field-2'](),
@@ -113,7 +113,7 @@ define(
             munge
           )
         ),
-        '<alloy.form.lock>': UiSubstitutes.single(
+        '<alloy.form.lock>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             info.parts().lock(),
             {

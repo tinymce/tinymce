@@ -65,7 +65,7 @@ define(
       };
 
       var placeholders = {
-        '<alloy.slide-form.left>': UiSubstitutes.single(
+        '<alloy.slide-form.left>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts().left(),
             detail.parts().left().base,
@@ -77,7 +77,7 @@ define(
             }
           )
         ),
-        '<alloy.slide-form.right>': UiSubstitutes.single(
+        '<alloy.slide-form.right>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts().right(),
             detail.parts().right().base,

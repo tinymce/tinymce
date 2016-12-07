@@ -28,7 +28,7 @@ define(
         detail,
         detail.components(),
         {
-          '<alloy.toolbar.group.items>': UiSubstitutes.multiple(
+          '<alloy.toolbar.group.items>': UiSubstitutes.multiple(true, 
             Arr.map(detail.items(), function (item) {
               return detail.members().item().munge(item);
             })

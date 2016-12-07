@@ -35,10 +35,10 @@ define(
       ])
     );
 
-    // '<alloy.form.field-input>': UiSubstitutes.single(
+    // '<alloy.form.field-input>': UiSubstitutes.single(true, 
     //       detail.parts().field()
     //     ),
-    //     '<alloy.form.field-label>': UiSubstitutes.single(
+    //     '<alloy.form.field-label>': UiSubstitutes.single(true, 
     //       Merger.deepMerge(
 
     var builder = function (info, _munge) {

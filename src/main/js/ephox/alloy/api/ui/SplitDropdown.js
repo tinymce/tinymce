@@ -32,7 +32,7 @@ define(
       // FIX: Get sink working.
 
       
-      // UiSubstitutes.single(
+      // UiSubstitutes.single(true,  
       //     Merger.deepMerge({
       //       uiType: 'button',
       //       tabstopping: undefined,
@@ -58,7 +58,7 @@ define(
           placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.split-dropdown.arrow>' }),
           build: function (spec) {
             return function () {
-              return UiSubstitutes.single(Merger.deepMerge(
+              return UiSubstitutes.single(true,  Merger.deepMerge(
                 {
                   // FIX: new style.
                   uiType: 'button',
@@ -89,7 +89,7 @@ define(
           placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.split-dropdown.button>' }),
           build: function (spec) {
             return function () {
-              return UiSubstitutes.single(Merger.deepMerge(
+              return UiSubstitutes.single(true,  Merger.deepMerge(
                 {
                   behaviours: {
                     // FIX: Undefined false
@@ -115,7 +115,7 @@ define(
       };
 
       // var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
-      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(
+      //   '<alloy.split-dropdown.button>': UiSubstitutes.single(true,  
       //     Merger.deepMerge(
       //       {
       //         behaviours: {
@@ -131,7 +131,7 @@ define(
       //     )
       //   ),
 
-      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(
+      //   '<alloy.split-dropdown.arrow>': UiSubstitutes.single(true,  
       //     Merger.deepMerge({
       //       uiType: 'button',
       //       tabstopping: undefined,
@@ -164,8 +164,6 @@ define(
         '<alloy.split-dropdown.button>': detail.parts().button()(),
         '<alloy.split-dropdown.arrow>': detail.parts().arrow()()
       });
-
-      debugger;
 
       return SplitDropdownSpec.make(detail, components);
     };

@@ -36,7 +36,7 @@ define(
       ]);
 
       var extra = detail.draggable() ? {
-        '<alloy.dialog.draghandle>': UiSubstitutes.single(
+        '<alloy.dialog.draghandle>': UiSubstitutes.single(true,  
           Merger.deepMerge(
             detail.parts().draghandle(),
             detail.parts().draghandle().base,
@@ -55,7 +55,7 @@ define(
 
       var placeholders = Merger.deepMerge(
         {
-          '<alloy.dialog.title>': UiSubstitutes.single(
+          '<alloy.dialog.title>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().title(),
               detail.parts().title().base,
@@ -64,7 +64,7 @@ define(
               }
             )
           ),
-          '<alloy.dialog.close>': UiSubstitutes.single(
+          '<alloy.dialog.close>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().close(),
               detail.parts().close().base,
@@ -73,7 +73,7 @@ define(
               }
             )
           ),
-          '<alloy.dialog.body>': UiSubstitutes.single(
+          '<alloy.dialog.body>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().body(),
               detail.parts().body().base,
@@ -82,7 +82,7 @@ define(
               }
             )
           ),
-          '<alloy.dialog.footer>': UiSubstitutes.single(
+          '<alloy.dialog.footer>': UiSubstitutes.single(true,  
             Merger.deepMerge(
               detail.parts().footer(),
               detail.parts().footer().base,

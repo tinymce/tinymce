@@ -20,7 +20,7 @@ define(
       var detail = SpecSchema.asStructOrDie('widget-container.spec', schema, spec, [ ]);
       
       var placeholders = {
-        '<alloy.widget>': UiSubstitutes.single(detail.widget())
+        '<alloy.widget>': UiSubstitutes.single(true,  detail.widget())
       };
 
       var components = UiSubstitutes.substitutePlaces(Option.some('widget-container'), detail, detail.components(), placeholders);

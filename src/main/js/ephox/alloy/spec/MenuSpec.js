@@ -105,7 +105,7 @@ define(
       });
 
       var placeholders = {
-        '<alloy.menu.items>': UiSubstitutes.multiple(builtItems)
+        '<alloy.menu.items>': UiSubstitutes.multiple(true, builtItems)
       };
       
       var components = detail.shell() ? builtItems : UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
