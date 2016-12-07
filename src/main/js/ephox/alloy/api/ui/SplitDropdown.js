@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.SplitDropdownSpec',
@@ -14,7 +15,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (SystemEvents, Tagger, SpecSchema, SplitDropdownSpec, UiSubstitutes, FieldSchema, Obj, Merger, Fun, Option) {
+  function (SystemEvents, EventHandler, Tagger, SpecSchema, SplitDropdownSpec, UiSubstitutes, FieldSchema, Obj, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -111,6 +112,51 @@ define(
           build: function (spec) {
             return spec;
           }
+        }),
+
+        sink: Fun.constant({
+          placeholder: Fun.constant({ uiType: 'placeholder', owner: 'split-dropdown', name: '<alloy.sink>' }),
+          build: function (spec) {
+            return function () {
+              return UiSubstitutes.single(false,  Merger.deepMerge(
+                spec,
+                {
+                  uid: detail.uid() + '-internal-sink',
+                  dom: {
+                    tag: 'div'
+                  },
+                  uiType: 'custom',
+                  behaviours: {
+                    positioning: {
+                      // FIX: configurable
+                      useFixed: true
+                    }
+                  },
+                  events: {
+                    // Probably a behaviour: cut mania
+                    'keydown': EventHandler.nu({
+                      run: function (component, simulatedEvent) {
+                        // Sinks should not let keydown or click propagate
+                        simulatedEvent.cut();
+                      }
+                    }),
+                    'mousedown': EventHandler.nu({
+                      run: function (component, simulatedEvent) {
+                        // Sinks should not let keydown or click propagate or mousedown
+                        simulatedEvent.cut();
+                      }
+                    }),
+                    'click': EventHandler.nu({
+                      run: function (component, simulatedEvent) {
+                        // Sinks should not let keydown or click propagate
+                        simulatedEvent.cut();
+                      }
+                    })
+                  }
+                }
+              ));
+            };
+          }
         })
       };
 
@@ -158,11 +204,12 @@ define(
       }, spec);
 
 
-      var detail = SpecSchema.asStructOrDie('split-dropdown.build', schema, userSpec, Obj.keys(parts));
+      var detail = SpecSchema.asStructOrDie('split-dropdown.build', schema, userSpec, [ 'button', 'arrow', 'menu', 'sink' ]);
 
       var components = UiSubstitutes.substitutePlaces(Option.some('split-dropdown'), detail, detail.components(), {
         '<alloy.split-dropdown.button>': detail.parts().button()(),
-        '<alloy.split-dropdown.arrow>': detail.parts().arrow()()
+        '<alloy.split-dropdown.arrow>': detail.parts().arrow()(),
+        '<alloy.sink>': detail.parts().sink()()
       });
 
       return SplitDropdownSpec.make(detail, components);

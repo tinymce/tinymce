@@ -210,7 +210,7 @@ define(
             dom: {
               tag: 'div'
             },
-            components: [ parts.button().placeholder(), parts.arrow().placeholder() ],
+            components: [ parts.button().placeholder(), parts.arrow().placeholder(), parts.sink().placeholder() ],
             fetch: function () {
               var future = Future.pure({             
                 type: 'widget',
@@ -263,7 +263,8 @@ define(
                   innerHtml: 'v'
                 }
               }),
-              menu: parts.menu().build(widgetMenu)
+              menu: parts.menu().build(widgetMenu),
+              sink: parts.sink().build({ })
             }
           };
         })
