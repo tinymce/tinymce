@@ -23,12 +23,14 @@ define(
       var schemas = PartType.schemas(partTypes);
 
       var detail = SpecSchema.asStructOrDie(owner, schema, userSpec, schemas.required(), schemas.optional());
-
+      
       var components = PartType.components(owner, detail, partTypes);
+
+      var externals = PartType.externals(owner, detail, partTypes);
 
       return Merger.deepMerge(
         spec,
-        factory(detail, components, userSpec)
+        factory(detail, components, userSpec, externals)
       );
     };
 

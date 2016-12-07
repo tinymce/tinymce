@@ -28,7 +28,7 @@ define(
       return fetcher(component);
     };
 
-    var open = function (detail, anchor, component, sandbox) {
+    var open = function (detail, anchor, component, sandbox, externals) {
       var futureData = fetch(detail, component);
 
       var lazySink = Gamma.getSink(component, detail);
@@ -36,7 +36,7 @@ define(
       var processed = futureData.map(function (data) {
         return TieredMenuSpec(
           Merger.deepMerge(
-            detail.parts().menu(),
+            externals.menu(),
             {
               uid: Tagger.generate(''),
               data: data,
@@ -183,7 +183,9 @@ define(
 
       escapePopup: escapePopup,
       previewPopup: previewPopup,
-      enterPopup: enterPopup
+      enterPopup: enterPopup,
+
+      open: open
     };
   }
 );

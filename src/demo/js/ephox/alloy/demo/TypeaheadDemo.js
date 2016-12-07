@@ -142,6 +142,7 @@ define(
             },
             fetch: function (input) {
               var text = Value.get(input.element());
+              console.log('text', text);
               var matching = Arr.bind(dataset, function (d) {
                 var index = d.indexOf(text.toLowerCase());
                 if (index > -1) {

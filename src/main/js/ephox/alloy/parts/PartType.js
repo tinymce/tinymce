@@ -44,6 +44,15 @@ define(
       };
     };
 
+    var combine = function (name, detail, defaults, spec, overrides) {
+      return Merger.deepMerge(
+        defaults(detail),
+        spec,
+        { uid: detail.partUids()[name] },
+        overrides(detail)
+      );
+    };
+
     var generate = function (owner, parts) {
       var r = { };
 
@@ -54,22 +63,17 @@ define(
               placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
               build: function (spec) {
                 return UiSubstitutes.single(true, function (detail) {
-                  return Merger.deepMerge(
-                    defaults(detail),
-                    spec,
-                    {
-                      uid: detail.partUids()[name]
-                    },
-                    overrides(detail)
-                  );
+                  return combine(name, detail, defaults, spec, overrides);
                 });
               }
             };
           },
-          function (name) {
+          function (name, defaults, overrides) {
             r[name] = {
               placeholder: Fun.die('The part: ' + name + ' should not appear in components for: ' + owner),
-              build: Fun.identity
+              build: function (spec) {
+                return spec;
+              }
             };
             // Do nothing ... has no placeholder.
           },
@@ -95,6 +99,28 @@ define(
 
       return Obj.map(r, Fun.constant);
 
+    };
+
+    var externals = function (owner, detail, parts) {
+      var ex = { };
+      Arr.each(parts, function (part) {
+        part.fold(
+          function (name, pname, defaults, overrides) {
+            //
+          },
+          function (name, defaults, overrides) {
+            ex[name] = Fun.constant(
+              combine(name, detail, defaults, detail.parts()[name](), overrides)
+            );
+            // do nothing ... should not be in components
+          },
+          function (name, pname, defaults, overrides) {
+            // ps[pname] = detail.parts()[name]();
+          }
+        );
+      });
+
+      return ex;
     };
 
     var components = function (owner, detail, parts) {
@@ -123,7 +149,8 @@ define(
 
       schemas: schemas,
       generate: generate,
-      components: components
+      components: components,
+      externals: externals
     };
   }
 );

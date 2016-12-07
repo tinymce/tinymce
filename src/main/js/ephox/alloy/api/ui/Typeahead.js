@@ -81,6 +81,7 @@ define(
       return CompositeBuilder.build('dropdown', schema, partTypes, TypeaheadSpec.make, f, function (spec) {
         return Merger.deepMerge(spec, {
           fetch: function (input) {
+            input.logSpec();
             var val = Representing.getValue(input);
             return spec.fetch(input, val.text);
           }

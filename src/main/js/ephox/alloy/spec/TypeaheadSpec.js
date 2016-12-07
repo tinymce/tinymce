@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
@@ -17,9 +18,9 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, Focusing, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
-    var make = function (detail, components, spec) {
-
+  function (SystemEvents, Coupling, Focusing, Keying, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
+    var make = function (detail, components, spec, externals) {
+      
       var behaviours = {
         streaming: {
           stream: {
@@ -27,19 +28,24 @@ define(
             delay: 1000
           },
           onStream: function (component, simulatedEvent) {
+            console.log('onStream');
             var sandbox = Coupling.getCoupled(component, 'sandbox');
             var focusInInput = Focusing.isFocused(component);
             // You don't want it to change when something else has triggered the change.
             if (focusInInput) {
+              console.log('focusInInput');
               /* REM:  if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox); 
                 This line makes it flicker. I wonder what it was for.
               */
               if (Value.get(component.element()).length >= detail.minChars()) {
+                console.log('enough chars');
                 detail.previewing().set(true);
-                Beta.enterPopup(detail, {
+
+                
+                Beta.open(detail, {
                   anchor: 'hotspot',
                   hotspot: component
-                }, component);
+                }, component, sandbox, externals);
               }
             }
           }

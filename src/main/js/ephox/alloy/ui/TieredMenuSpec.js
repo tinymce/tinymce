@@ -49,6 +49,7 @@ define(
 
     
       FieldSchema.defaulted('fakeFocus', false),
+      FieldSchema.defaulted('onHighlight', Fun.noop),
       Fields.tieredMenuMarkers(),
       Fields.members([ 'menu', 'item' ])
     ];
@@ -80,11 +81,11 @@ define(
               },
 
               // Fake focus.
-              // fakeFocus: uiSpec.fakeFocus(),
-              // onHighlight: uiSpec.onHighlight(),
+              fakeFocus: uiSpec.fakeFocus(),
+              onHighlight: uiSpec.onHighlight(),
 
 
-              // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
+              focusManager: uiSpec.fakeFocus() ? focusManager : undefined
             }
           );
           return container.getSystem().build(data);
