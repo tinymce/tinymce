@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.DropdownApis',
+    'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
@@ -30,7 +31,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, DropdownApis, SplitDropdown, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -209,10 +210,12 @@ define(
           dom: {
             tag: 'div'
           },
-          components: [
-            { uiType: 'placeholder', name: '<alloy.split-dropdown.button>', owner: 'split-dropdown' },
-            { uiType: 'placeholder', name: '<alloy.split-dropdown.arrow>', owner: 'split-dropdown' }
-          ],
+          components: SplitDropdown.components(function (ps) {
+            return [
+              ps.button(),
+              ps.arrow()
+            ];
+          }),
           fetch: function () {
             var future = Future.pure({             
               type: 'widget',
