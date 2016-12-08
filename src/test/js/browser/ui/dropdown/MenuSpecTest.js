@@ -1,25 +1,22 @@
 asynctest(
-  'ExecutingKeyingTest',
+  'Menu',
  
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, EventHandler, ItemEvents, MenuEvents, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Chain, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, EventHandler, MenuEvents, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -134,8 +131,7 @@ asynctest(
             cClearStore
             
           ])
-        ]),
-        Step.fail('Menu spec fail')
+        ])
       ];
     }, function () { success(); }, failure);
 

@@ -1,5 +1,5 @@
 asynctest(
-  'ExecutingKeyingTest',
+  'Tiered Menu',
  
   [
     'ephox.agar.api.ApproxStructure',
@@ -146,8 +146,9 @@ asynctest(
           Keying.focusIn(component);
         }),
         Keyboard.sKeydown(doc, Keys.down(), { }),
-        Keyboard.sKeydown(doc, Keys.right(), { }),
-        Step.fail('Tiered Menu spec fail')
+        Keyboard.sKeydown(doc, Keys.right(), { })
+
+        // TODO: Beef up tests
       ];
     }, function () { success(); }, failure);
 

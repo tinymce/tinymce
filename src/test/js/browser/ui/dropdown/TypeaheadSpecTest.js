@@ -1,5 +1,5 @@
 asynctest(
-  'TypeaheadSpecTest',
+  'Typeahead',
  
   [
     'ephox.agar.api.Assertions',
