@@ -33,18 +33,6 @@ define(
               tabbar: Fun.constant(tabbar),
               button: Fun.constant(button)
             });
-            var tabValue = Representing.getValue(button);
-            button.getSystem().getByUid(detail.partUids().tabview).each(function (tabview) {
-              var tabData = Arr.find(detail.tabs(), function (t) {
-                return t.value === tabValue;
-              });
-
-              var panel = tabData.view();
-
-              // Update the tabview to refer to the current tab.
-              Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
-              Replacing.set(tabview, panel);
-            });
           },
           tabs: detail.tabs()
         };
