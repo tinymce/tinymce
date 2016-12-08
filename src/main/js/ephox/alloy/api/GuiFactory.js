@@ -11,7 +11,6 @@ define(
     'ephox.alloy.spec.ExpandableFormSpec',
     'ephox.alloy.spec.FormLabelSpec',
     'ephox.alloy.spec.FormSpec',
-    'ephox.alloy.spec.GroupButtonSpec',
     'ephox.alloy.spec.HtmlSelectSpec',
     'ephox.alloy.spec.InlineSpec',
     'ephox.alloy.spec.InlineViewSpec',
@@ -35,7 +34,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, ExpandableFormSpec, FormLabelSpec, FormSpec, GroupButtonSpec, HtmlSelectSpec, InlineSpec, InlineViewSpec, InputSpec, ModalDialogSpec, SlideFormSpec, TabbarSpec, TabbedSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, ExpandableFormSpec, FormLabelSpec, FormSpec, HtmlSelectSpec, InlineSpec, InlineViewSpec, InputSpec, ModalDialogSpec, SlideFormSpec, TabbarSpec, TabbedSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,

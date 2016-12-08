@@ -74,6 +74,9 @@ define(
     };
 
     var oneReplace = function (label, replacements) {
+      if (! Objects.hasKey(replacements, 'fold')) {
+        debugger;
+      }
       var called = false;
 
       var used = function () {
