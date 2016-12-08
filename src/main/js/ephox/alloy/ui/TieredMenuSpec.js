@@ -339,8 +339,8 @@ define(
                 // Explore what this one is for.
                 container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
               });
-            },
-            focusManager: uiSpec.fakeFocus() ? focusManager : undefined
+            }
+            // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
           },
           // Highlighting is used for highlighting the active menu
           highlighting: {
