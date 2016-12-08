@@ -5,27 +5,36 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.classify.Type',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (PartType, Tagger, SpecSchema, Merger, Fun) {
-    var build = function (owner, schema,  partTypes, factory, f, preprocess) {
+  function (PartType, Tagger, SpecSchema, Type, Obj, Merger, Fun) {
+    var build = function (owner, schema,  partTypes, factory, spec, preprocess) {
+      if (! Type.isObject(spec)) {
+        debugger;
+      }
       var p = preprocess !== undefined ? preprocess : Fun.identity;
-      var parts = PartType.generate(owner, partTypes);
-     
-
-      var spec = p(f(parts));
+      
+      var spec = p(spec);
       var userSpec = Merger.deepMerge({
         uid: Tagger.generate('uid')
       }, spec);
 
+      console.log('userSpec', userSpec);
+
+      console.log('partTypes', partTypes);
       var schemas = PartType.schemas(partTypes);
 
       var detail = SpecSchema.asStructOrDie(owner, schema, userSpec, schemas.required(), schemas.optional());
+
+      console.log('detail', owner, Obj.map(detail.parts(), Fun.apply));
       
       // This is the point where internal parts are created (internal and optional)
       var components = PartType.components(owner, detail, partTypes);
+
 
       var externals = PartType.externals(owner, detail, partTypes);
 

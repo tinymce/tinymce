@@ -16,8 +16,8 @@ define(
     var placeholder = 'placeholder';
 
     var adt = Adt.generate([
-      { single: [ 'required', 'value' ] },
-      { multiple: [ 'required', 'values' ] }
+      { single: [ 'required', 'valueThunk' ] },
+      { multiple: [ 'required', 'valueThunks' ] }
     ]);
 
     var isSubstitute = function (uiType) {

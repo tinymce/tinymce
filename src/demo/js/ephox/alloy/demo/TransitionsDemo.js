@@ -3,10 +3,8 @@ define(
 
   [
     'ephox.alloy.api.Gui',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -15,7 +13,7 @@ define(
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, GuiTemplate, TabSection, HtmlDisplay, Option, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, TabSection, HtmlDisplay, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -83,19 +81,57 @@ define(
 
       // Transitioning.revertToBase(subject);
 
+      var subject1 = HtmlDisplay.section(
+        gui,
+        'A basic tab view (refactoring)',
+        TabSection.build({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            TabSection.parts().tabbar(),
+            TabSection.parts().tabview()
+          ],
+          tabs: [ ],
+          defaultView: function () {
+            return {
+              uiType: 'container'
+            };
+          },
+          parts: {
+            tabbar: {
+              dom: {
+                tag: 'div'
+              },
+              parts: {
+                tabs: { }
+              }
+            },
+            'tabview': {
+              dom: {
+                tag: 'div'
+              }
+            } 
+          }
+        })
+      );
+
+      return;
+
+      /*
+
       var subject2 = HtmlDisplay.section(
         gui,
         'A basic tab view',
-        TabSection.build(function (parts) {
-          return {
-            uiType: 'tabbing',
-            dom: {
-              tag: 'div'
-            },
-            components: [
-              parts.tabbar().placeholder(),
-              parts.tabview().placeholder()
-            ],
+        TabSection.build({
+          
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            TabSection.parts().tabbar(),
+            TabSection.parts().tabview()
+          ],
             tabs: [
               {
                 value: 'alpha',
@@ -129,13 +165,16 @@ define(
               };
             },
             parts: {
-              'tabbar': parts.tabbar().build(
-                {
+              'tabbar': parts.tabbar().build(function (tabbarParts) {
+                debugger;
+                return {
                   dom: {
                     tag: 'div'
                   },
                   parts: {
-                    tabs: { }
+                    tabs: Tabbar.parts(function (parts) {
+                      return { };
+                    })
                   },
                   markers: {
                     tabClass: 'tab-button',
@@ -159,8 +198,8 @@ define(
                       }
                     }
                   }
-                }
-              ),
+                };
+              }),
               'tabview': parts.tabview().build({
                 dom: {
                   tag: 'div'
@@ -170,6 +209,8 @@ define(
           };
         })
       );
+
+      */
     };
   }
 );

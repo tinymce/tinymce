@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.TabSection',
 
   [
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
@@ -11,16 +12,28 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Fun) {
+  function (Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Fun) {
     var schema = [
-      FieldSchema.defaulted('selectFirst', true)
+      FieldSchema.defaulted('selectFirst', true),
+      FieldSchema.defaulted('tabs', [ ])
     ];
 
     var barPart = PartType.internal(
       Tabbar,
       'tabbar',
       '<alloy.tab-section.tabbar>',
-      Fun.constant({ }),
+      function (detail) {
+        return {
+          onExecute: function (tabbar, button) {
+            var tabValue = Representing.getValue(button);
+            button.getSystem().getByUid(detail.partUids().tabview).each(function (viewer) {
+              // Transitioning.transition(viewer, tabValue);
+            });
+          },
+          selectFirst: detail.selectFirst(),
+          tabs: detail.tabs()
+        };
+      },
       Fun.constant({ })
     );
 
@@ -42,8 +55,11 @@ define(
       return CompositeBuilder.build('tab-section', schema, partTypes, TabSectionSpec.make, f);
     };
 
+    var parts = PartType.generate('tab-section', partTypes);
+
     return {
-      build: build
+      build: build,
+      parts: Fun.constant(parts)
     };
   }
 );

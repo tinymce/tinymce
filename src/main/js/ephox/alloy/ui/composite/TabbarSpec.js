@@ -10,7 +10,7 @@ define(
       return {
         uiType: 'custom',
         dom: {
-          tag: 'span',
+          tag: 'div',
           classes: [ 'tabbar' ]
         }
       };

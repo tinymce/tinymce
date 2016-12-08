@@ -15,7 +15,8 @@ define(
     var adt = Adt.generate([
       { internal: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
       { external: [ 'factory', 'name', 'defaults', 'overrides' ] },
-      { optional: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] }
+      { optional: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
+      { group: [ 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
     ]);
 
     // TODO: Make more functional if performance isn't an issue.
@@ -34,6 +35,10 @@ define(
           },
           function (factory, name, pname, defaults, overrides) {
             optional.push(name);
+          },
+          function (name, unit, pname, defaults, overrides) {
+            // TODO: Shell support
+            required.push(name);
           }
         );
       });
@@ -62,42 +67,74 @@ define(
       Arr.each(parts, function (part) {
         part.fold(
           function (factory, name, pname, defaults, overrides) {
-            r[name] = {
-              placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
-              build: function (spec) {
-                return UiSubstitutes.single(true, function (detail) {
-                  return factory.build(function () {
-                    return combine(factory, name, detail, defaults, spec, overrides);
-                  });
-                });
-              }
-            };
+            r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname });
+            // r[name] = {
+            //   placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
+            //   build: function (spec) {
+            //     return UiSubstitutes.single(true, function (detail) {
+            //       return factory.build(function () {
+            //         return combine(factory, name, detail, defaults, spec, overrides);
+            //       });
+            //     });
+            //   }
+            // };
           },
           function (factory, name, defaults, overrides) {
-            r[name] = {
-              placeholder: Fun.die('The part: ' + name + ' should not appear in components for: ' + owner),
-              build: function (spec) {
-                return spec;
-              }
-            };
+            // r[name] = {
+            //   placeholder: Fun.die('The part: ' + name + ' should not appear in components for: ' + owner),
+            //   build: function (spec) {
+            //     return spec;
+            //   }
+            // };
             // Do nothing ... has no placeholder.
           },
           function (factory, name, pname, defaults, overrides) {
+            r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname })
+            // r[name] = {
+            //   placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
+            //   build: function (spec) {
+            //     return UiSubstitutes.single(false, function (detail) {
+            //       return factory.build(function () {
+            //         return combine(factory, name, detail, defaults, spec, overrides);
+            //       });
+            //     });
+            //   }
+            // };
+          },
+
+          // Group
+          function (name, unit, pname, defualts, overrides) {
+            r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname });
+            return;
+            debugger;
             r[name] = {
               placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
               build: function (spec) {
-                return UiSubstitutes.single(false, function (detail) {
-                  return factory.build(function () {
-                    return combine(factory, name, detail, defaults, spec, overrides);
-                  });
+                debugger;
+                return UiSubstitutes.multiple(true, function (detail) {
+                  return [ ];
                 });
+                /*
+                UiSubstitutes.multiple(true, 
+          Arr.map(detail.tabs(), function (tab) {
+            var munged = detail.members().tab().munge(tab);
+            return Merger.deepMerge(
+              munged,
+              {
+                uiType: 'button',
+                representing: {
+                  query: function () {
+                    return tab.value;
+                  },
+                  set: function () { }
+                },*/
               }
             };
           }
         );
       });
 
-      return Obj.map(r, Fun.constant);
+      return r;
 
     };
 
@@ -116,6 +153,10 @@ define(
           },
           function (factory, name, pname, defaults, overrides) {
             // ps[pname] = detail.parts()[name]();
+          },
+
+          function (name, unit, pname, defaults, overrides) {
+            // not an external
           }
         );
       });
@@ -128,13 +169,25 @@ define(
       Arr.each(parts, function (part) {
         part.fold(
           function (factory, name, pname, defaults, overrides) {
-            ps[pname] = detail.parts()[name]();
+            ps[pname] = UiSubstitutes.single(true, function (detail) {
+              return factory.build(
+                combine(factory, name, detail, defaults, detail.parts()[name](), overrides)
+              );
+            });
           },
-          function (name) {
-            // do nothing ... should not be in components
-          },
+
+          Fun.die('External parts do not have placeholders'),
+
           function (factory, name, pname, defaults, overrides) {
-            ps[pname] = detail.parts()[name]();
+            ps[pname] = UiSubstitutes.single(false, function (detail) {
+              return factory.build(
+                combine(factory, name, detail, defaults, detail.parts()[name](), overrides)
+              );
+            });
+          },
+
+          function (name, unit, pname, defaults, overrides) {
+            // TODO 
           }
         );
       });
@@ -146,6 +199,7 @@ define(
       internal: adt.internal,
       external: adt.external,
       optional: adt.optional,
+      group: adt.group,
 
       schemas: schemas,
       generate: generate,
