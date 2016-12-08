@@ -272,40 +272,28 @@ asynctest(
 
         // check dismissing popups
         Keyboard.sKeydown(doc, Keys.down(), { }),
-        FocusTools.sTryOnSelector(
-          'Wait for typeahead list to show',
-          doc,
-          '[data-alloy-item-value="new-value21"]'
-        ),
+        sWaitForMenu('Pressing down to check for dismissing popups'),
+        sAssertFocusOnTypeahead('Pressing down to check for dismissing popups'),
         TestBroadcasts.sDismissOn(
           'typeahead input: should not close',
           gui,
-          '.typeahead'
+          'input'
         ),
-        Logger.t(
-          'Broadcasting dismiss on input should not close popup',
-          UiFinder.sExists(gui.element(), '[data-alloy-item-value]')
-        ),
+        sWaitForMenu('Broadcasting on input should not dismiss popup'),
 
         TestBroadcasts.sDismissOn(
           'typeahead list option: should not close',
           gui,
-          '[data-alloy-item-value="new-value22"]'
+          '.test-typeahead-item[data-value="new-value122"]'
         ),
-        Logger.t(
-          'Broadcasting dismiss on list option should not close popup',
-          UiFinder.sExists(gui.element(), '[data-alloy-item-value]')
-        ),
+        sWaitForMenu('Broadcasting on item should not dismiss popup'),
 
          TestBroadcasts.sDismiss(
           'outer gui element: should close',
           gui,
           gui.element()
         ),
-        Logger.t(
-          'Broadcasting dismiss on outer gui context should close popup',
-          UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]')
-        ),
+        sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
 
         GuiSetup.mRemoveStyles
 
