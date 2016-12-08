@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.data.Fields',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.alloy.ui.TieredMenuSpec',
+    'ephox.alloy.ui.single.TieredMenuSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],

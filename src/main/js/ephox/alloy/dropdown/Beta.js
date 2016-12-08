@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.api.behaviour.Coupling',
-    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
@@ -12,8 +11,6 @@ define(
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
-    'ephox.alloy.ui.TieredMenuSpec',
-    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
@@ -23,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Coupling, Highlighting, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, TieredMenuSpec, Obj, Merger, Future, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Coupling, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();

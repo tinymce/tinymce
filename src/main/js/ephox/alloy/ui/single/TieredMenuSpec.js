@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.ui.TieredMenuSpec',
+  'ephox.alloy.ui.single.TieredMenuSpec',
 
   [
     'ephox.alloy.alien.EditableFields',
