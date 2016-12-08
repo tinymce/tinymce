@@ -33,6 +33,7 @@ define(
 
       var lazySink = Gamma.getSink(component, detail);
 
+      // TODO: Make this potentially a single menu also
       return futureData.map(function (data) {
         return TieredMenu.build(function () {
           return Merger.deepMerge(
