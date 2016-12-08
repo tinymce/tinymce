@@ -4,13 +4,14 @@ define(
   [
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Tabbar',
+    'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.composite.TabSectionSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, Tabbar, PartType, TabSectionSpec, FieldSchema, Fun) {
+  function (CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true)
     ];
@@ -24,7 +25,7 @@ define(
     );
 
     var viewPart = PartType.internal(
-      Tabbar,
+      Tabview,
       'tabview',
       '<alloy.tab-section.tabview>',
       Fun.constant({ }),
