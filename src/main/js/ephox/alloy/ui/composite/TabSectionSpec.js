@@ -46,6 +46,7 @@ define(
                 if (detail.selectFirst() && EventRoot.isSource(section, simulatedEvent)) {
                   section.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
                     Highlighting.getFirst(tabbar).each(function (button) {
+                      Highlighting.highlight(tabbar, button);
                       changeTab(button);
                     });
                   });
