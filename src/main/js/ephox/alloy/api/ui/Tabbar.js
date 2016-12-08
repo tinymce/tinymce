@@ -2,10 +2,12 @@ define(
   'ephox.alloy.api.ui.Tabbar',
 
   [
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.TabButton',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.spec.CustomSpec',
     'ephox.alloy.ui.composite.TabbarSpec',
@@ -13,7 +15,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (Highlighting, CompositeBuilder, TabButton, Fields, PartType, CustomSpec, TabbarSpec, FieldSchema, Fun) {
+  function (BehaviourExport, Highlighting, CompositeBuilder, TabButton, Fields, DomModification, PartType, CustomSpec, TabbarSpec, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -53,7 +55,8 @@ define(
           behaviours: {
             representing: {
               initialValue: tabSpec.value
-            }
+            },
+            'tabbar.tabbuttons': { }
           },
           action: function (button) {
             var tabbar = button.getSystem().getByUid(detail.uid()).getOrDie();
@@ -66,7 +69,21 @@ define(
             })();
 
             response(tabbar, button);
-          }
+          },
+
+          customBehaviours: [
+            // TODO: Add highlighting tab class.
+            BehaviourExport.santa([ ], 'tabbar.tabbuttons', {
+              exhibit: function (base, info) {
+                return DomModification.nu({
+                  classes: [ 'dog' ]
+                });
+              }
+            }, {
+
+
+            }, { })
+          ]
         };
       }
     );
