@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.Tabbar',
 
   [
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.TabButton',
     'ephox.alloy.data.Fields',
@@ -12,7 +13,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, TabButton, Fields, PartType, CustomSpec, TabbarSpec, FieldSchema, Fun) {
+  function (Highlighting, CompositeBuilder, TabButton, Fields, PartType, CustomSpec, TabbarSpec, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -36,7 +37,38 @@ define(
       'tab',
       '<alloy.tabs>',
       Fun.constant({ }),
-      Fun.constant({ })
+      function (detail, tabSpec) {
+        var dismissTab = function (tabbar, button) {
+          Highlighting.dehighlightAll(tabbar);
+          detail.onDismiss()(tabbar, button);
+        };
+
+        var changeTab = function (tabbar, button) {
+          Highlighting.highlight(tabbar, button);
+          detail.onExecute()(tabbar, button);
+          detail.onChange()(tabbar, button);
+        };
+
+        return {
+          behaviours: {
+            representing: {
+              initialValue: tabSpec.value
+            }
+          },
+          action: function (button) {
+            var tabbar = button.getSystem().getByUid(detail.uid()).getOrDie();
+            var activeButton = Highlighting.isHighlighted(tabbar, button);
+
+            var response = (function () {
+              if (activeButton && detail.clickToDismiss()) return dismissTab;
+              else if (! activeButton) return changeTab;
+              else return Fun.noop;
+            })();
+
+            response(tabbar, button);
+          }
+        };
+      }
     );
     /*
             '<alloy.tabs>': UiSubstitutes.multiple(true, 

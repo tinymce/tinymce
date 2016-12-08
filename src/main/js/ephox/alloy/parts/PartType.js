@@ -170,9 +170,9 @@ define(
                 // Group multiples do not take the uid because there is more than one.
                 return factory.build(
                   Merger.deepMerge(
-                    defaults(detail),
+                    defaults(detail, u),
                     munged,
-                    overrides(detail)
+                    overrides(detail, u)
                   )
                 );
               });

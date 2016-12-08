@@ -13,7 +13,14 @@ define(
           tag: 'div',
           classes: [ 'tabbar' ]
         },
-        components: components
+        components: components,
+
+        behaviours: {
+          highlighting: {
+            highlightClass: 'demo-selected-tab',
+            itemClass: 'demo-tab'
+          }
+        }
       };
     };
 
