@@ -142,7 +142,7 @@ define(
               value: EventHandler.nu({
                 run: function (typeahead) {
                   var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-                  // Sandboxing.closeSandbox(sandbox);
+                  Sandboxing.close(sandbox);
                 }
               })
             }
