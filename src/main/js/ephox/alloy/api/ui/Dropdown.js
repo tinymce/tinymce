@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.spec.DropdownSpec',
+    'ephox.alloy.ui.composite.DropdownSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
