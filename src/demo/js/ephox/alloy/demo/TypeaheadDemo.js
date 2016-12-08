@@ -99,7 +99,7 @@ define(
                 uiType: 'container',
                 dom: {
                   tag: 'div',
-                  classes: [ 'alloy-item' ],
+                  classes: [  ],
                   innerHtml: spec.text
                 },
                 components: [

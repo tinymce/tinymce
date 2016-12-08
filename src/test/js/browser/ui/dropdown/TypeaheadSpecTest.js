@@ -59,7 +59,7 @@ asynctest(
               uiType: 'container',
               dom: {
                 tag: 'div',
-                innerHtml: spec.data.text
+                innerHtml: spec.text
               },
               components: [
 
@@ -120,7 +120,10 @@ asynctest(
                 ]);
 
                 return future.map(function (f) {
-                  return MenuData.simple('blah', 'Blah', f);
+                  var items = text === 'no-data' ? [
+                    { type: 'separator', text: 'No data' }
+                  ] : f;
+                  return MenuData.simple('blah', 'Blah', items);
                 });
               },
               desc: 'test-typeahead',
