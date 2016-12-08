@@ -48,8 +48,6 @@ define(
 
       inline: InlineSpec.make,
       'inline-view': InlineViewSpec.make,
-      
-      groupbutton: GroupButtonSpec.make,
 
       toolbar: ToolbarSpec.make,
       'toolbar-group': ToolbarGroupSpec.make,
