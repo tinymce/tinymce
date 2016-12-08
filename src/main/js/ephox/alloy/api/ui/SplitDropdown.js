@@ -7,7 +7,7 @@ define(
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.spec.SplitDropdownSpec',
+    'ephox.alloy.ui.composite.SplitDropdownSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
     'global!Error'

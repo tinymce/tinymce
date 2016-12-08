@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.SplitDropdownSpec',
+  'ephox.alloy.ui.composite.SplitDropdownSpec',
 
   [
     'ephox.alloy.api.behaviour.Toggling',
