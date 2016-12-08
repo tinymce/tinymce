@@ -22,6 +22,8 @@ asynctest(
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.TestBroadcasts',
+    'ephox.alloy.test.typeahead.TestTypeaheadList',
+    'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Css',
@@ -31,68 +33,12 @@ asynctest(
     'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, Future, Result, Css, Focus, Value, Width, Math) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Css, Focus, Value, Width, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var listMenu = {
-      members: {
-        menu: {
-          munge: function (spec) {
-            return {
-              dom: {
-                tag: 'ol',
-                attributes: {
-                  'aria-label': spec.text
-                },
-                classes: [ 'test-typeahead-menu' ]
-              },
-              shell: true,
-              components: [ ]
-            };
-          }
-        },
-        item: {
-          munge: function (spec) {
-
-            return spec.type === 'separator' ? {
-              uiType: 'container',
-              dom: {
-                tag: 'div',
-                innerHtml: spec.text
-              },
-              components: [
-
-              ]
-            } : {
-              dom: {
-                tag: 'li',
-                classes: spec.type === 'item' ? [ 'test-typeahead-item' ] : [ ],
-                attributes: {
-                  'data-value': spec.data.value
-                },
-                innerHtml: spec.data.text
-              },
-              components: [
-
-              ]
-            };
-          }
-        }
-      },
-      markers: {
-        item: 'test-typeahead-item',
-        selectedItem: 'test-typeahead-selected-item',
-        menu: 'test-typeahead-menu',
-        selectedMenu: 'test-typeahead-selected-menu',
-        'backgroundMenu': 'test-typeahead-background-menu'
-      }
-    };
-
     GuiSetup.setup(function (store, doc, body) {
       var sink = Sinks.relativeSink();
-
-
 
       return GuiFactory.build({
         uiType: 'custom',
@@ -132,7 +78,7 @@ asynctest(
               lazySink: function () { return Result.value(sink); },
 
               parts: {
-                menu: listMenu
+                menu: TestTypeaheadList
               }
             };
           })
@@ -148,69 +94,26 @@ asynctest(
         };
       };
 
-      var sWaitForMenu = function (label) {
-        return Logger.t(
-          label, 
-          Waiter.sTryUntil(
-            'Waiting for menu to appear',
-            UiFinder.sExists(gui.element(), '.test-typeahead-selected-menu'),
-            100,
-            1000
-          )
-        );
-      };
-
-      var sWaitForNoMenu = function (label) {
-        return Logger.t(
-          label,
-          Waiter.sTryUntil(
-            'Waiting for menu to go away',
-            UiFinder.sNotExists(gui.element(),  '.test-typeahead-selected-menu'),
-            100,
-            1000
-          )
-        );
-      };
-
-      var sAssertFocusOnTypeahead = function (label) {
-        return Logger.t(
-          label,
-          FocusTools.sTryOnSelector(
-            'Focus should be on typeahead',
-            doc,
-            'input'
-          )
-        );
-      };
-
-      var sAssertValue = function (label, expected) {
-        return Logger.t(
-          label,
-          Chain.asStep(typeahead.element(), [
-            Chain.op(function (t) {
-              Focus.focus(t);
-            }),
-            UiControls.cGetValue,
-            Assertions.cAssertEq('Checking value of typeahead', expected)
-          ])
-        );
-      };
-
       var typeahead = gui.getByUid('test-type').getOrDie();
+
+      var steps = TestTypeaheadSteps(doc, gui, typeahead);
+
       return [
+        FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+
         GuiSetup.mAddStyles(doc, [
           '.test-typeahead-selected-item { background-color: #cadbee; }'
         ]),
 
-        sAssertValue('Initial value of typeahead', 'initial-value'),
+        steps.sAssertValue('Initial value of typeahead', 'initial-value'),
         UiControls.sSetValue(typeahead.element(), 'peo'),
 
         // check that the typeahead is not open.
-        sWaitForNoMenu('Should be no menu initially'),
+        steps.sWaitForNoMenu('Should be no menu initially'),
         
         Keyboard.sKeydown(doc, Keys.down(), { }),
-        sAssertFocusOnTypeahead('Focus stays on typeahead after pressing Down'),
-        sWaitForMenu('Down to activate menu'),
+        steps.sAssertFocusOnTypeahead('Focus stays on typeahead after pressing Down'),
+        steps.sWaitForMenu('Down to activate menu'),
 
         // On typeaheads, there should be a width property that is approximately
         // the same size as the input field
@@ -241,29 +144,29 @@ asynctest(
         ]),
 
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        sAssertValue('Value after <enter>', 'peo2'),
-        sAssertFocusOnTypeahead('Focus after <enter>'),
+        steps.sAssertValue('Value after <enter>', 'peo2'),
+        steps.sAssertFocusOnTypeahead('Focus after <enter>'),
 
-        sWaitForNoMenu('No menu after <enter>'),
+        steps.sWaitForNoMenu('No menu after <enter>'),
 
         UiControls.sSetValue(typeahead.element(), 'new-value'),
         Keyboard.sKeydown(doc, Keys.down(), {}),
 
-        sAssertFocusOnTypeahead('After pressing Down after Enter'),
-        sWaitForMenu('After pressing Down after Enter'),
+        steps.sAssertFocusOnTypeahead('After pressing Down after Enter'),
+        steps.sWaitForMenu('After pressing Down after Enter'),
         NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
           item('new-value2'),
           item('new-value1')
         ]),
 
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        sAssertValue('After pressing ESC', 'new-value1'),
-        sAssertFocusOnTypeahead('After pressing ESC'),
-        sWaitForNoMenu('After pressing ESC'),
+        steps.sAssertValue('After pressing ESC', 'new-value1'),
+        steps.sAssertFocusOnTypeahead('After pressing ESC'),
+        steps.sWaitForNoMenu('After pressing ESC'),
         
         Keyboard.sKeydown(doc, Keys.down(), {}),
-        sAssertFocusOnTypeahead('ESC > Down'),
-        sWaitForMenu('ESC > Down'),
+        steps.sAssertFocusOnTypeahead('ESC > Down'),
+        steps.sWaitForMenu('ESC > Down'),
 
         NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
           item('new-value12'),
@@ -271,33 +174,33 @@ asynctest(
         ]),
 
         Mouse.sClickOn(gui.element(), '.test-typeahead-item[data-value="new-value12"]'),
-        sWaitForNoMenu('After clicking on item'),
-        sAssertValue('After clicking on item', 'new-value12'),
+        steps.sWaitForNoMenu('After clicking on item'),
+        steps.sAssertValue('After clicking on item', 'new-value12'),
 
         // check dismissing popups
         Keyboard.sKeydown(doc, Keys.down(), { }),
-        sWaitForMenu('Pressing down to check for dismissing popups'),
-        sAssertFocusOnTypeahead('Pressing down to check for dismissing popups'),
+        steps.sWaitForMenu('Pressing down to check for dismissing popups'),
+        steps.sAssertFocusOnTypeahead('Pressing down to check for dismissing popups'),
         TestBroadcasts.sDismissOn(
           'typeahead input: should not close',
           gui,
           'input'
         ),
-        sWaitForMenu('Broadcasting on input should not dismiss popup'),
+        steps.sWaitForMenu('Broadcasting on input should not dismiss popup'),
 
         TestBroadcasts.sDismissOn(
           'typeahead list option: should not close',
           gui,
           '.test-typeahead-item[data-value="new-value122"]'
         ),
-        sWaitForMenu('Broadcasting on item should not dismiss popup'),
+        steps.sWaitForMenu('Broadcasting on item should not dismiss popup'),
 
          TestBroadcasts.sDismiss(
           'outer gui element: should close',
           gui,
           gui.element()
         ),
-        sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
+        steps.sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
 
         GuiSetup.mRemoveStyles
 
