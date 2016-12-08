@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.build.ItemType',
@@ -25,7 +26,7 @@ define(
     'global!Error'
   ],
 
-  function (Highlighting, EventHandler, Fields, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (Highlighting, FocusManagers, EventHandler, Fields, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -59,8 +60,7 @@ define(
                     numColumns: movementInfo.initSize().numColumns(),
                     numRows: movementInfo.initSize().numRows()
                   },
-                  // FIX: Undefined
-                  focusManager: detail.focusManager().getOr(undefined)
+                  focusManager: detail.focusManager()
                 };
               };
             })
@@ -73,8 +73,7 @@ define(
                   mode: 'menu',
                   selector: '.' + detail.markers().item(),
                   moveOnTab: movementInfo.moveOnTab(),
-                  // FIX: Undefined
-                  focusManager: detail.focusManager().getOr(undefined)
+                  focusManager: detail.focusManager()
                 };
               };
             })
@@ -88,7 +87,7 @@ define(
       FieldSchema.defaulted('shell', false),
 
       FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.option('focusManager'),
+      FieldSchema.defaulted('focusManager', FocusManagers.dom()),
       FieldSchema.defaulted('onHighlight', Fun.noop)
     ];
 

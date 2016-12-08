@@ -2,14 +2,10 @@ define(
   'ephox.alloy.navigation.DomMovement',
 
   [
-    'ephox.alloy.log.AlloyLogger',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Direction',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.Direction'
   ],
 
-  function (AlloyLogger, Class, Direction, Focus, SelectorFind) {
+  function (Direction) {
     // Looks up direction (considering LTR and RTL), finds the focused element,
     // and tries to move. If it succeeds, triggers focus and kills the event.
     var useH = function (movement) {
@@ -35,30 +31,13 @@ define(
       };
     };
 
-    var getFocused = function (component, info) {
-      console.log('getFocused', component.logSpec());
-      return info.focusManager().fold(function () {
-        console.log('no focus manager');
-        return Focus.search(component.element());
-      }, function (manager) {
-        console.log('focus manager');
-        var r = manager.get(component);
-        console.log('r', r.getOr('none'));
-        return r;
-      });
-    };
-
     var use = function (move, component, simulatedEvent, info) {
-      var outcome = getFocused(component, info).bind(function (focused) {
+      var outcome = info.focusManager().get(component).bind(function (focused) {
         return move(component.element(), focused, info);
       });
 
       return outcome.map(function (newFocus) {
-        info.focusManager().fold(function () {
-          component.getSystem().triggerFocus(newFocus, component.element());  
-        }, function (manager) {
-          manager.set(component, newFocus);
-        });
+        info.focusManager().set(component, newFocus);
         return true;
       });
     };

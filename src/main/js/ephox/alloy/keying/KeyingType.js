@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
@@ -10,11 +11,11 @@ define(
     'ephox.highway.Merger'
   ],
 
-  function (SystemEvents, EventHandler, KeyRules, FieldSchema, Objects, Merger) {
+  function (SystemEvents, FocusManagers, EventHandler, KeyRules, FieldSchema, Objects, Merger) {
     var typical = function (infoSchema, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
-          FieldSchema.option('focusManager'),
+          FieldSchema.defaulted('focusManager', FocusManagers.dom()),
           FieldSchema.state('handler', function () {
             return self;
           })

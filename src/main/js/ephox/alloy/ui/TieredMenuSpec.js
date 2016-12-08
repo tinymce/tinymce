@@ -2,15 +2,14 @@ define(
   'ephox.alloy.ui.TieredMenuSpec',
 
   [
-    'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredState',
@@ -31,7 +30,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (ComponentStructure, EditableFields, EventRoot, SystemEvents, Highlighting, Keying, Replacing, Representing, Sandboxing, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
+  function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
     var schema = [
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('onEscape'),
@@ -85,7 +84,7 @@ define(
               onHighlight: uiSpec.onHighlight(),
 
 
-              focusManager: uiSpec.fakeFocus() ? focusManager : undefined
+              focusManager: uiSpec.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
             }
           );
           return container.getSystem().build(data);
@@ -132,22 +131,6 @@ define(
           return Highlighting.getFirst(menu);
         }).each(function (item) {
           container.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
-        });
-      };
-
-      // Not sure what to do about this one.
-      var clear = function (container, state) {
-        var menus = state.getMenus();
-        Obj.each(menus, function (menu, menuName) {
-          container.getSystem().removeFromWorld(menu);
-        });
-        state.clear();
-      };
-
-      var isPartOf = function (container, state, queryElem) {
-        var menus = Obj.values(state.getMenus());
-        return Arr.exists(menus, function (menu) {
-          return ComponentStructure.isPartOf(menu, queryElem);
         });
       };
 
@@ -306,19 +289,6 @@ define(
         }
       ]);
 
-      var focusManager = {
-        set: function (menu, element) {
-          menu.getSystem().getByDom(element).fold(Fun.noop, function (item) {
-            Highlighting.highlight(menu, item);
-          });          
-        },
-        get: function (menu) {
-          return Highlighting.getHighlighted(menu).map(function (item) {
-            return item.element();
-          });
-        }
-      };
-
       return {
         uiType: 'custom',
         uid: uiSpec.uid(),
@@ -334,13 +304,9 @@ define(
             onEscape: keyOnItem(onEscape),
             focusIn: function (container, keyInfo) {
               state.getPrimary().each(function (primary) {
-                // Keying.focusIn(primary);
-
-                // Explore what this one is for.
                 container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
               });
             }
-            // focusManager: uiSpec.fakeFocus() ? focusManager : undefined
           },
           // Highlighting is used for highlighting the active menu
           highlighting: {

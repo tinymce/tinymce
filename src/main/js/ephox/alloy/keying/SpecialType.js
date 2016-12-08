@@ -42,23 +42,7 @@ define(
       ];
     };
 
-    var focusIn = function (component, executeInfo) {
-      // menuInfo.focusManager().fold(function () {
-      //   SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
-      //     debugger;
-      //     component.getSystem().triggerFocus(first, component.element());
-      //   });  
-      // }, function (manager) {
-      //   SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
-      //     // This is bypassing highlight which is accidentally good. Will need to get all of this
-      //     // behaviour consistent. The reason it is accidentally good is because when implementing
-      //     // the typeahead, I don't want the first preview one to update the input field ... although
-      //     // I sort of do.\
-      //     manager.set(component, first);
-      //   });  
-      // });
-
-      
+    var focusIn = function (component, executeInfo) {     
       return executeInfo.focusIn().bind(function (f) {
         return f(component, executeInfo);
       });
