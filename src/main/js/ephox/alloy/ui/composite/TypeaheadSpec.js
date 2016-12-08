@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.TypeaheadSpec',
+  'ephox.alloy.ui.composite.TypeaheadSpec',
 
   [
     'ephox.alloy.api.SystemEvents',
@@ -7,7 +7,6 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
@@ -20,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Keying, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');

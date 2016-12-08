@@ -8,7 +8,7 @@ define(
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.spec.TypeaheadSpec',
+    'ephox.alloy.ui.composite.TypeaheadSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
