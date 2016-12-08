@@ -95,8 +95,24 @@ define(
             TabSection.parts().tabview()
           ],
           tabs: [
-            { value: 'alpha', text: 'Alpha' },
-            { value: 'beta', text: 'Beta' }
+            {
+              value: 'alpha',
+              text: 'Alpha',
+              view: function () {
+                return [
+                  { text: 'Alpha panel' }
+                ];
+              }
+            },
+            {
+              value: 'beta',
+              text: 'Beta',
+              view: function () {
+                return [
+                  { text: 'Beta panel' }
+                ];
+              }
+            }
           ],
           defaultView: function () {
             return {

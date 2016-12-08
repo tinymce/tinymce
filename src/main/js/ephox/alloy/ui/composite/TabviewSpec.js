@@ -14,6 +14,10 @@ define(
           attributes: {
             role: 'tabpanel'
           }
+        },
+
+        behaviours: {
+          replacing: { }
         }
       };
     };

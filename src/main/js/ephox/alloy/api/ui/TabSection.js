@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.TabSection',
 
   [
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Tabbar',
@@ -9,10 +10,11 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.composite.TabSectionSpec',
     'ephox.boulder.api.FieldSchema',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun'
   ],
 
-  function (Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Fun) {
+  function (Replacing, Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Arr, Fun) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       FieldSchema.defaulted('tabs', [ ])
@@ -26,7 +28,16 @@ define(
         return {
           onExecute: function (tabbar, button) {
             var tabValue = Representing.getValue(button);
-            button.getSystem().getByUid(detail.partUids().tabview).each(function (viewer) {
+            button.getSystem().getByUid(detail.partUids().tabview).each(function (tabview) {
+              console.log('tabValue', tabValue, 'tabview', tabview);
+
+              var tabData = Arr.find(detail.tabs(), function (t) {
+                return t.value === tabValue;
+              });
+
+              console.log('tabData', tabData);
+              var panel = tabData.view();
+              Replacing.set(tabview, panel);
               // Transitioning.transition(viewer, tabValue);
             });
           },
