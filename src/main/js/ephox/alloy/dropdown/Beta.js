@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
@@ -22,7 +23,7 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Coupling, Highlighting, Keying, Positioning, Sandboxing, Gamma, Tagger, Dismissal, TieredMenuSpec, Obj, Merger, Future, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Coupling, Highlighting, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, TieredMenuSpec, Obj, Merger, Future, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -35,8 +36,8 @@ define(
       var lazySink = Gamma.getSink(component, detail);
 
       return futureData.map(function (data) {
-        return TieredMenuSpec(
-          Merger.deepMerge(
+        return TieredMenu.build(function () {
+          return Merger.deepMerge(
             externals.menu(),
             {
               uid: Tagger.generate(''),
@@ -61,8 +62,8 @@ define(
                 return Option.some(true);
               }
             }
-          )
-        );
+          );
+        });
       });
 
     };

@@ -11,20 +11,24 @@ define(
   function (Toggling, Beta, ButtonSpec, Merger) {
     var make = function (detail, components, spec, externals) {
       return Merger.deepMerge(
+        // FIX: Ugly
         ButtonSpec.make({
           uid: detail.uid(),
+          // FIX: Re-used.
+          dom: detail.dom(),
           action: function (component) {
             Beta.togglePopup(detail, {
               anchor: 'hotspot',
               hotspot: component
             }, component, externals).get(function (sandbox) {
-              
+
             });
           }
         }),
         {
           uid: detail.uid(),
           uiType: 'custom',
+          // FIX: Re-used.
           dom: detail.dom(),
           components: components,
           behaviours: {

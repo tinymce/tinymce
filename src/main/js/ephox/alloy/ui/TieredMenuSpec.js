@@ -31,31 +31,7 @@ define(
   ],
 
   function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
-    var schema = [
-      FieldSchema.strict('onExecute'),
-      FieldSchema.strict('onEscape'),
-
-      FieldSchema.strict('onOpenMenu'),
-      FieldSchema.strict('onOpenSubmenu'),
-
-      FieldSchema.defaulted('openImmediately', true),
-
-      FieldSchema.strictObjOf('data', [
-        FieldSchema.strict('primary'),
-        FieldSchema.strict('menus'),
-        FieldSchema.strict('expansions')
-      ]),
-
-    
-      FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.defaulted('onHighlight', Fun.noop),
-      Fields.tieredMenuMarkers(),
-      Fields.members([ 'menu', 'item' ])
-    ];
-    
-    return function (rawUiSpec) {
-      var uiSpec = SpecSchema.asStructOrDie('TieredMenu', schema, rawUiSpec, [ ]);
-
+    var make = function (uiSpec, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
           // NOTE: We use rawUiSpec here so the nesting isn't a struct
@@ -317,6 +293,10 @@ define(
         },
         events: events
       };
+    };
+
+    return {
+      make: make
     };
   }
 );
