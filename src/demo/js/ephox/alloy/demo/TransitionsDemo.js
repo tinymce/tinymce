@@ -95,8 +95,8 @@ define(
             TabSection.parts().tabview()
           ],
           tabs: [
-            { value: 'tab-alpha', text: 'Alpha' },
-            { value: 'tab-beta', text: 'Beta' }
+            { value: 'alpha', text: 'Alpha' },
+            { value: 'beta', text: 'Beta' }
           ],
           defaultView: function () {
             return {
@@ -120,7 +120,9 @@ define(
                     return {
                       dom: {
                         tag: 'button',
-                        classes: [ 'tab-' + tabSpec.value ]
+                        attributes: {
+                          'data-value': tabSpec.value
+                        }
                       },
                       components: [
                         { text: tabSpec.text }

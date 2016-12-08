@@ -11,6 +11,11 @@
   background: black;
 }
 
+.demo-selected-tab {
+  color: white;
+  background: black;
+}
+
 .demo-alloy-menu {
   margin: 0px;
   padding: 2px;
