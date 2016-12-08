@@ -144,37 +144,69 @@ asynctest(
         };
       };
 
+      var sWaitForMenu = function (label) {
+        return Logger.t(
+          label, 
+          Waiter.sTryUntil(
+            'Waiting for menu to appear',
+            UiFinder.sExists(gui.element(), '.test-typeahead-selected-menu'),
+            100,
+            1000
+          )
+        );
+      };
+
+      var sWaitForNoMenu = function (label) {
+        return Logger.t(
+          label,
+          Waiter.sTryUntil(
+            'Waiting for menu to go away',
+            UiFinder.sNotExists(gui.element(),  '.test-typeahead-selected-menu'),
+            100,
+            1000
+          )
+        );
+      };
+
+      var sAssertFocusOnTypeahead = function (label) {
+        return Logger.t(
+          label,
+          FocusTools.sTryOnSelector(
+            'Focus should be on typeahead',
+            doc,
+            'input'
+          )
+        );
+      };
+
+      var sAssertValue = function (label, expected) {
+        return Logger.t(
+          label,
+          Chain.asStep(typeahead.element(), [
+            Chain.op(function (t) {
+              Focus.focus(t);
+            }),
+            UiControls.cGetValue,
+            Assertions.cAssertEq('Checking value of typeahead', expected)
+          ])
+        );
+      };
+
       var typeahead = gui.getByUid('test-type').getOrDie();
       return [
         GuiSetup.mAddStyles(doc, [
           '.test-typeahead-selected-item { background-color: #cadbee; }'
         ]),
 
-        Chain.asStep(typeahead.element(), [
-          Chain.op(function (t) {
-            Focus.focus(t);
-          }),
-          UiControls.cGetValue,
-          Assertions.cAssertEq('Checking initial value of typeahead', 'initial-value')
-        ]),
+        sAssertValue('Initial value of typeahead', 'initial-value'),
         UiControls.sSetValue(typeahead.element(), 'peo'),
 
         // check that the typeahead is not open.
-        UiFinder.sNotExists(gui.element(), '.test-typeahead-menu'),
+        sWaitForNoMenu('Should be no menu initially'),
         
         Keyboard.sKeydown(doc, Keys.down(), { }),
-        FocusTools.sTryOnSelector(
-          'Focus should be stay on typeahead',
-          doc,
-          'input'
-        ),
-
-        Waiter.sTryUntil(
-          'Waiting for menu to appear',
-          UiFinder.sExists(gui.element(), '.test-typeahead-selected-menu'),
-          100,
-          1000
-        ),
+        sAssertFocusOnTypeahead('Focus stays on typeahead after pressing Down'),
+        sWaitForMenu('Down to activate menu'),
 
         // On typeaheads, there should be a width property that is approximately
         // the same size as the input field
@@ -205,69 +237,38 @@ asynctest(
         ]),
 
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        Chain.asStep(typeahead.element(), [
-          UiControls.cGetValue,
-          Assertions.cAssertEq('Checking typeahead value matches selection', 'peo2')
-        ]),
+        sAssertValue('Value after <enter>', 'peo2'),
+        sAssertFocusOnTypeahead('Focus after <enter>'),
 
-        FocusTools.sIsOnSelector(
-          'Focus should stay on typeahead after pressing enter',
-          doc,
-          'input'
-        ),
-        UiFinder.sNotExists(gui.element(), '.test-typeahead-selected-menu'),
+        sWaitForNoMenu('No menu after <enter>'),
 
         UiControls.sSetValue(typeahead.element(), 'new-value'),
         Keyboard.sKeydown(doc, Keys.down(), {}),
 
-        FocusTools.sIsOnSelector(
-          'Focus should stay on typeahead after pressing down',
-          doc,
-          'input'
-        ),
-
-        Waiter.sTryUntil(
-          'Waiting for menu to appear after pressing down',
-          UiFinder.sExists(gui.element(), '.test-typeahead-selected-menu'),
-          100,
-          1000
-        ),
-
+        sAssertFocusOnTypeahead('After pressing Down after Enter'),
+        sWaitForMenu('After pressing Down after Enter'),
         NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
           item('new-value2'),
           item('new-value1')
         ]),
 
-
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        FocusTools.sTryOnSelector(
-          'Focus should stay on the typeahead after ESC',
-          doc,
-          'input'
-        ),
-        UiFinder.sNotExists(gui.element(), '.test-typeahead-selected-menu'),
-
-
-        Chain.asStep(typeahead.element(), [
-          UiControls.cGetValue,
-          Assertions.cAssertEq('Checking typeahead value has preserved old value before esc', 'new-value')
-        ]),
-
-        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
-
+        sAssertValue('After pressing ESC', 'new-value1'),
+        sAssertFocusOnTypeahead('After pressing ESC'),
+        sWaitForNoMenu('After pressing ESC'),
+        
         Keyboard.sKeydown(doc, Keys.down(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should be on list of options, not typeahead',
-          doc,
-          '[data-alloy-item-value="new-value1"]'
-        ),
+        sAssertFocusOnTypeahead('ESC > Down'),
+        sWaitForMenu('ESC > Down'),
 
-        Mouse.sClickOn(gui.element(), '[data-alloy-item-value="new-value2"]'),
-        UiFinder.sNotExists(gui.element(), '[data-alloy-item-value]'),
-        Chain.asStep(typeahead.element(), [
-          UiControls.cGetValue,
-          Assertions.cAssertEq('Checking typeahead value matches clicked on value', 'new-value2')
+        NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
+          item('new-value12'),
+          item('new-value11')
         ]),
+
+        Mouse.sClickOn(gui.element(), '.test-typeahead-item[data-value="new-value12"]'),
+        sWaitForNoMenu('After clicking on item'),
+        sAssertValue('After clicking on item', 'new-value12'),
 
         // check dismissing popups
         Keyboard.sKeydown(doc, Keys.down(), { }),

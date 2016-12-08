@@ -84,7 +84,9 @@ define(
             return Option.some(true);
           },
           onEscape: function (comp) {
-            return Beta.escapePopup(detail, comp);
+            var sandbox = Coupling.getCoupled(comp, 'sandbox');
+            if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
+            return Option.some(true);
           },
           onUp: function (comp, simulatedEvent) {
             navigateList(comp, simulatedEvent, Highlighting.highlightLast);
