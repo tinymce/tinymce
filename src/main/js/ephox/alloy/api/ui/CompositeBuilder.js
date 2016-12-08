@@ -30,8 +30,7 @@ define(
 
       var detail = SpecSchema.asStructOrDie(owner, schema, userSpec, schemas.required(), schemas.optional());
 
-      console.log('detail', owner, Obj.map(detail.parts(), Fun.apply));
-      
+       
       // This is the point where internal parts are created (internal and optional)
       var components = PartType.components(owner, detail, partTypes);
 

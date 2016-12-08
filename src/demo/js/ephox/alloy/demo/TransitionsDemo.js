@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -13,7 +14,7 @@ define(
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, TabSection, HtmlDisplay, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, TabSection, HtmlDisplay, Fun, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -105,6 +106,15 @@ define(
               },
               parts: {
                 tabs: { }
+              },
+              members: {
+                tab: {
+                  munge: Fun.identity
+                }
+              },
+              markers: {
+                tabClass: 'demo-tab',
+                selectedClass: 'demo-selected-tab'
               }
             },
             'tabview': {
