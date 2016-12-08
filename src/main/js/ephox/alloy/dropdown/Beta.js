@@ -55,10 +55,6 @@ define(
                 }, submenu);
 
               },
-
-              onExecute: function () {
-
-              },
               onEscape: function () {
                 Sandboxing.close(sandbox);
                 return Option.some(true);

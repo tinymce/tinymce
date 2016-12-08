@@ -49,7 +49,7 @@ define(
         // No handler, so complete.
         return adt.complete();
       }, function (handlerInfo) {
-        if (eventType === 'keydown') console.log('eventType', eventType, 'caught by', AlloyLogger.element(handlerInfo.element()));
+        if (eventType === 'click') console.log('eventType', eventType, 'caught by', AlloyLogger.element(handlerInfo.element()));
         handlerInfo.handler(simulatedEvent);
 
         // Now, check if the event was stopped.

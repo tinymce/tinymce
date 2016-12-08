@@ -2,7 +2,9 @@ define(
   'ephox.alloy.api.ui.Typeahead',
 
   [
+    'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -15,7 +17,7 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Representing, CompositeBuilder, InternalSink, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, CompositeBuilder, InternalSink, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('fetch'),
@@ -42,10 +44,6 @@ define(
           return {
             fakeFocus: true,
             onHighlight: function (menu, item) {
-
-
-
-
               if (! detail.previewing().get()) {
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
                   Representing.setValueFrom(input, item);
@@ -65,17 +63,20 @@ define(
               }
               detail.previewing().set(false);
             },
-            onExecute: function (sandbox, item) {
-              // Sandboxing.closeSandbox(sandbox);
-              // var currentValue = Representing.getValue(item);
-              // return item.getSystem().getByUid(detail.uid()).bind(function (input) {
-              //   // FIX: itemData.text
-              //   input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
-              //   // Should probably streamline this one.
-              //   var other = spec.onExecute !== undefined ? spec.onExecute : Option.none;
-              //   return other(sandbox, input);
-              //   return Option.some(true);
-              // });
+            onExecute: function (menu, item) {
+              return menu.getSystem().getByUid(detail.uid()).bind(function (typeahead) {
+                var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+                Sandboxing.close(sandbox);
+                return item.getSystem().getByUid(detail.uid()).bind(function (input) {
+                  // FIX: itemData.text
+                  Representing.setValueFrom(input, item);
+                  var currentValue = Representing.getValue(input);
+                  input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
+                  // Should probably streamline this one.
+                  detail.onExecute()(sandbox, input);
+                  return Option.some(true);
+                });
+              });
             }
           };
         }
