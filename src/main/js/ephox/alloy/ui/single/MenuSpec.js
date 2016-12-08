@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.MenuSpec',
+  'ephox.alloy.ui.single.MenuSpec',
 
   [
     'ephox.alloy.api.behaviour.Highlighting',

@@ -5,15 +5,15 @@ define(
     'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.data.Fields',
     'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.MenuSpec',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.ui.single.MenuSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (FocusManagers, Fields, Tagger, MenuSpec, SpecSchema, FieldSchema, ValueSchema, Merger, Fun) {
+  function (FocusManagers, Fields, Tagger, SpecSchema, MenuSpec, FieldSchema, ValueSchema, Merger, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
