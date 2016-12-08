@@ -8,7 +8,6 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.form.FormUis',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.alloy.spec.TabbedSpec',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -24,7 +23,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, Highlighting, Representing, Fields, FormUis, SpecSchema, TabbedSpec, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
+  function (SystemEvents, Highlighting, Representing, Fields, FormUis, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Thunk, Option, Cell, Error) {
     var schema = [
       FieldSchema.strict('dom'),
 
@@ -101,6 +100,7 @@ define(
 
       return Merger.deepMerge(
         spec,
+        // FIX: Reinstate.
         TabbedSpec.make({
           uid: detail.uid(),
           dom: detail.dom(),
