@@ -490,7 +490,6 @@ define("tinymce/dom/RangeUtils", [
 						if (!isAtNewLineBeginning(container)) {
 							findTextNodeRelative(true);
 						}
-						findTextNodeRelative(true);
 					}
 
 					// Lean left into empty inline elements when the caret is before a BR
