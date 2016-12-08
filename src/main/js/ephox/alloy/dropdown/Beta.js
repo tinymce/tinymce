@@ -14,6 +14,7 @@ define(
     'ephox.alloy.ui.TieredMenuSpec',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Remove',
@@ -21,7 +22,7 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Coupling, Highlighting, Keying, Positioning, Sandboxing, Gamma, Tagger, Dismissal, TieredMenuSpec, Obj, Merger, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Coupling, Highlighting, Keying, Positioning, Sandboxing, Gamma, Tagger, Dismissal, TieredMenuSpec, Obj, Merger, Future, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -68,7 +69,9 @@ define(
 
     var open = function (detail, anchor, component, sandbox, externals) {
       var processed = openF(detail, anchor, component, sandbox, externals);
-      return Sandboxing.open(sandbox, processed);
+      return Sandboxing.open(sandbox, processed).map(function () {
+        return sandbox;
+      });
       // Sandboxing.open(sandbox, processed).get(function (tiers) {
       //   Highlighting.highlightFirst(tiers);
       //   Keying.focusIn(tiers);
@@ -84,13 +87,15 @@ define(
       Sandboxing.close(sandbox);
       // INVESTIGATE: Not sure if this is needed. 
       Remove.remove(sandbox.element());
+      return Future.pure(sandbox);
     };
 
-    var togglePopup = function (detail, anchor, hotspot) {
+    var togglePopup = function (detail, anchor, hotspot, externals) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       var showing = Sandboxing.isOpen(sandbox);
+
       var action = showing ? close : open;
-      action(detail, anchor, hotspot, sandbox);
+      return action(detail, anchor, hotspot, sandbox, externals);
     };
 
     var matchWidth = function (hotspot, container) {

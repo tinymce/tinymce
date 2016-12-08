@@ -120,6 +120,7 @@ asynctest(
                 ]);
 
                 return future.map(function (f) {
+                  // TODO: Test this.
                   var items = text === 'no-data' ? [
                     { type: 'separator', text: 'No data' }
                   ] : f;

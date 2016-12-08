@@ -9,7 +9,7 @@ define(
   ],
 
   function (Toggling, Beta, ButtonSpec, Merger) {
-    var make = function (detail, components) {
+    var make = function (detail, components, spec, externals) {
       return Merger.deepMerge(
         ButtonSpec.make({
           uid: detail.uid(),
@@ -17,7 +17,9 @@ define(
             Beta.togglePopup(detail, {
               anchor: 'hotspot',
               hotspot: component
-            }, component);
+            }, component, externals).get(function (sandbox) {
+              
+            });
           }
         }),
         {

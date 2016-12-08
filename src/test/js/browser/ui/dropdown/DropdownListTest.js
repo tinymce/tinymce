@@ -7,6 +7,8 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
+    'ephox.alloy.api.ui.Dropdown',
+    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
@@ -14,7 +16,7 @@ asynctest(
     'ephox.sugar.api.TextContent'
   ],
  
-  function (FocusTools, Mouse, Step, GuiFactory, Memento, GuiSetup, Future, Fun, Result, TextContent) {
+  function (FocusTools, Mouse, Step, GuiFactory, Memento, Dropdown, MenuData, GuiSetup, Future, Fun, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -45,65 +47,76 @@ asynctest(
         }
       });
 
-      var c = GuiFactory.build({
-        dom: {
-          tag: 'button'
-        },
+      var c = GuiFactory.build(
+        Dropdown.build(function (parts) {
+          return {
+            dom: {
+              tag: 'button'
+            },
 
-        components: [
-          displayer.asSpec()
-        ],
+            components: [
+              displayer.asSpec()
+            ],
 
-        lazySink: function () {
-          return Result.value(sink.get(c));
-        },
+            lazySink: function () {
+              return Result.value(sink.get(c));
+            },
 
-        uiType: 'dropdown-list',
+            uiType: 'dropdown-list',
+
+            parts: {
+              menu: parts.menu().build({
+                members: {
+                  menu: {
+                    munge: function (menuSpec) {
+                      return {
+                        dom: {
+                          tag: 'container',
+                          classes: [ 'menu' ]
+                        },
+                        components: [
+                          { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+                        ]
+                      };
+                    }
+                  },
+                  item: {
+                    munge: function (itemSpec) {
+                      return {
+                        dom: {
+                          tag: 'li',
+                          classes: [ 'item' ],
+                          innerHtml: itemSpec.data.text
+                        },
+                        components: [ ]
+                      };
+                    }
+                  }
+                },
+                markers: {
+                  item: 'item',
+                  selectedItem: 'selected-item',
+                  menu: 'menu',
+                  selectedMenu: 'selected-menu',
+                  'backgroundMenu': 'background-menu'
+                },
+                onExecute: function () { }
+              })
+            },
         
-        fetch: function () { 
-          return Future.pure([
-            { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-            { type: 'item', data: { value: 'beta', text: 'Beta' } }
-          ]);
-        },
-        scaffold: Fun.identity,
-        members: {
-          menu: {
-            munge: function (menuSpec) {
-              return {
-                dom: {
-                  tag: 'container',
-                  classes: [ 'menu' ]
-                },
-                components: [
-                  { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
-                ]
-              };
+            fetch: function () { 
+              var future = Future.pure([
+                { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+                { type: 'item', data: { value: 'beta', text: 'Beta' } }
+              ]);
+
+              return future.map(function (f) {
+                return MenuData.simple('test', 'Test', f);
+              });
             }
-          },
-          item: {
-            munge: function (itemSpec) {
-              return {
-                dom: {
-                  tag: 'li',
-                  classes: [ 'item' ],
-                  innerHtml: itemSpec.data.text
-                },
-                components: [ ]
-              };
-            }
-          }
-        },
-        markers: {
-          item: 'item',
-          selectedItem: 'selected-item',
-          menu: 'menu',
-          selectedMenu: 'selected-menu'
-        },
-        view: {
-          style: 'layered'
-        }
-      });
+          };
+        })
+      );
 
       return c;
 
