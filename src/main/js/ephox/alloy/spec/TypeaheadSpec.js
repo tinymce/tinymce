@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
@@ -19,19 +20,12 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Coupling, Focusing, Highlighting, Keying, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Keying, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
-
-      var getMenu = function (sandbox) {
-        return Sandboxing.getState(sandbox).bind(function (tiers) {
-          return Highlighting.getHighlighted(tiers);
-        });
-      };
-
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) {
-          getMenu(sandbox).each(function (menu) {
+          Composing.getCurrent(sandbox).each(function (menu) {
             Highlighting.getHighlighted(menu).fold(function () {
               highlighter(menu);
             }, function () {
@@ -40,7 +34,7 @@ define(
           });
         } else {
           Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
-            getMenu(sandbox).each(highlighter);
+            Composing.getCurrent(sandbox).each(highlighter);
           });
         } 
       };
@@ -70,7 +64,7 @@ define(
                   anchor: 'hotspot',
                   hotspot: component
                 }, component, sandbox, externals).get(function () {
-                  getMenu(sandbox).each(Highlighting.highlightFirst);
+                  Composing.getCurrent(sandbox).each(Highlighting.highlightFirst);
                 });
               }
             }

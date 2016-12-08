@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
@@ -20,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Coupling, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Composing, Coupling, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -142,6 +143,13 @@ define(
             bucket: {
               mode: 'sink',
               lazySink: lazySink
+            }
+          },
+          composing: {
+            find: function (sandbox) {
+              return Sandboxing.getState(sandbox).bind(function (menu) {
+                return Composing.getCurrent(menu);
+              });
             }
           },
           receiving: Dismissal.receiving({

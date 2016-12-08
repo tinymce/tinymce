@@ -30,13 +30,15 @@ define(
       'arrow',
       '<alloy.split-dropdown.arrow>',
       function (detail) {
-        return {
-          behaviours: {
-            // FIX undefined
-            tabstopping: undefined,
-            focusing: undefined
-          }
-        };
+        return Button.partial(function () {
+          return {
+            behaviours: {
+              // FIX undefined
+              tabstopping: undefined,
+              focusing: undefined
+            }
+          };
+        });
       },
       function (detail) {
         return {

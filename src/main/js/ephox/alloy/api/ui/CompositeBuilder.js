@@ -34,8 +34,22 @@ define(
       );
     };
 
+    var partial = function (owner, schema,  partTypes, factory, f, preprocess) {
+      var p = preprocess !== undefined ? preprocess : Fun.identity;
+      var parts = PartType.generate(owner, partTypes);
+     
+
+      var spec = p(f(parts));
+      var userSpec = Merger.deepMerge({
+        uid: Tagger.generate('uid')
+      }, spec);
+
+      return userSpec;
+    };
+
     return {
-      build: build
+      build: build,
+      partial: partial
     };
   }
 );

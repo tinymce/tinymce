@@ -289,6 +289,11 @@ define(
             highlightClass: uiSpec.markers().selectedMenu(),
             itemClass: uiSpec.markers().menu()
           },
+          composing: {
+            find: function (container) {
+              return Highlighting.getHighlighted(container);
+            }
+          },
           replacing: { }
         },
         events: events

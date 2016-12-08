@@ -6,10 +6,11 @@ define(
     'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger'
+    'ephox.highway.Merger',
+    'ephox.peanut.Fun'
   ],
 
-  function (Tagger, ButtonSpec, SpecSchema, FieldSchema, Merger) {
+  function (Tagger, ButtonSpec, SpecSchema, FieldSchema, Merger, Fun) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.option('action'),
@@ -24,7 +25,8 @@ define(
     };
 
     return {
-      build: build
+      build: build,
+      partial: Fun.identity
     };
   }
 );

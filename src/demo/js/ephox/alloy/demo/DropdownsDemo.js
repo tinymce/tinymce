@@ -272,7 +272,7 @@ define(
         })
       );
 
-
+return;
    
       var x = HtmlDisplay.section(
         gui,
