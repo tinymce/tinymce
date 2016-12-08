@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.ButtonSpec',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.ui.single.ButtonSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (Tagger, ButtonSpec, SpecSchema, FieldSchema, Merger, Fun) {
+  function (Tagger, SpecSchema, ButtonSpec, FieldSchema, Merger, Fun) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.option('action'),

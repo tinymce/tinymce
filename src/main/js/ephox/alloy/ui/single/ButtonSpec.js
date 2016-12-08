@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.ButtonSpec',
+  'ephox.alloy.ui.single.ButtonSpec',
 
   [
     'ephox.alloy.spec.ButtonBase',
