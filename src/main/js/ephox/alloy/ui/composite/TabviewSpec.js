@@ -11,10 +11,14 @@ define(
         uiType: 'custom',
         dom: {
           tag: 'div',
-          classes: [ 'tabview' ]
+          attributes: {
+            role: 'tabpanel'
+          }
         }
       };
     };
+
+    // FIX: Generate an ID for a view that matches the tab.
 
     return {
       make: make

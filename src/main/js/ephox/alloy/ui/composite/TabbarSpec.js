@@ -11,7 +11,9 @@ define(
         uiType: 'custom',
         dom: {
           tag: 'div',
-          classes: [ 'tabbar' ]
+          attributes: {
+            role: 'tablist'
+          }
         },
         components: components,
 
