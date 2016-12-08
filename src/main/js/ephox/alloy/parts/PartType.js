@@ -16,7 +16,7 @@ define(
       { internal: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
       { external: [ 'factory', 'name', 'defaults', 'overrides' ] },
       { optional: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
-      { group: [ 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
+      { group: [ 'factory', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
     ]);
 
     // TODO: Make more functional if performance isn't an issue.
@@ -36,7 +36,7 @@ define(
           function (factory, name, pname, defaults, overrides) {
             optional.push(name);
           },
-          function (name, unit, pname, defaults, overrides) {
+          function (factory, name, unit, pname, defaults, overrides) {
             // TODO: Shell support
             required.push(name);
           }
@@ -49,7 +49,7 @@ define(
       };
     };
 
-    var combine = function (factory, name, detail, defaults, spec, overrides) {
+    var combine = function (name, detail, defaults, spec, overrides) {
       return Merger.deepMerge(
         defaults(detail),
         spec,
@@ -73,7 +73,7 @@ define(
             //   build: function (spec) {
             //     return UiSubstitutes.single(true, function (detail) {
             //       return factory.build(function () {
-            //         return combine(factory, name, detail, defaults, spec, overrides);
+            //         return combine(name, detail, defaults, spec, overrides);
             //       });
             //     });
             //   }
@@ -95,7 +95,7 @@ define(
             //   build: function (spec) {
             //     return UiSubstitutes.single(false, function (detail) {
             //       return factory.build(function () {
-            //         return combine(factory, name, detail, defaults, spec, overrides);
+            //         return combine(name, detail, defaults, spec, overrides);
             //       });
             //     });
             //   }
@@ -103,33 +103,8 @@ define(
           },
 
           // Group
-          function (name, unit, pname, defualts, overrides) {
+          function (factory, name, unit, pname, defualts, overrides) {
             r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname });
-            return;
-            debugger;
-            r[name] = {
-              placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
-              build: function (spec) {
-                debugger;
-                return UiSubstitutes.multiple(true, function (detail) {
-                  return [ ];
-                });
-                /*
-                UiSubstitutes.multiple(true, 
-          Arr.map(detail.tabs(), function (tab) {
-            var munged = detail.members().tab().munge(tab);
-            return Merger.deepMerge(
-              munged,
-              {
-                uiType: 'button',
-                representing: {
-                  query: function () {
-                    return tab.value;
-                  },
-                  set: function () { }
-                },*/
-              }
-            };
           }
         );
       });
@@ -147,7 +122,7 @@ define(
           },
           function (factory, name, defaults, overrides) {
             ex[name] = Fun.constant(
-              combine(factory, name, detail, defaults, detail.parts()[name](), overrides)
+              combine(name, detail, defaults, detail.parts()[name](), overrides)
             );
             // do nothing ... should not be in components
           },
@@ -155,7 +130,7 @@ define(
             // ps[pname] = detail.parts()[name]();
           },
 
-          function (name, unit, pname, defaults, overrides) {
+          function (factory, name, unit, pname, defaults, overrides) {
             // not an external
           }
         );
@@ -171,7 +146,7 @@ define(
           function (factory, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(true, function (detail) {
               return factory.build(
-                combine(factory, name, detail, defaults, detail.parts()[name](), overrides)
+                combine(name, detail, defaults, detail.parts()[name](), overrides)
               );
             });
           },
@@ -181,18 +156,36 @@ define(
           function (factory, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(false, function (detail) {
               return factory.build(
-                combine(factory, name, detail, defaults, detail.parts()[name](), overrides)
+                combine(name, detail, defaults, detail.parts()[name](), overrides)
               );
             });
           },
 
-          function (name, unit, pname, defaults, overrides) {
-            // TODO 
+          function (factory, name, unit, pname, defaults, overrides) {
+            ps[pname] = UiSubstitutes.multiple(true, function (detail) {
+              var units = detail[name]();
+              return Arr.map(units, function (u) {
+                var munged = detail.members()[unit]().munge(u);
+
+                // Group multiples do not take the uid because there is more than one.
+                return factory.build(
+                  Merger.deepMerge(
+                    defaults(detail),
+                    munged,
+                    overrides(detail)
+                  )
+                );
+              });
+            });
           }
         );
       });
 
-      return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
+      console.log('ps', ps, 'owner', owner);
+
+      var comps = UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
+      console.log('comps', comps, detail.components());
+      return comps;
     };
 
     return {

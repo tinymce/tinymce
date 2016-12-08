@@ -27,7 +27,7 @@ define(
     };
 
     var subPlaceholder = function (owner, detail, compSpec, placeholders) {
-      if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(compSpec);
+      if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(true, Fun.constant(compSpec));
       // Ignore having to find something for the time being.
       return Objects.readOptFrom(placeholders, compSpec.name).fold(function () {
         throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' + 

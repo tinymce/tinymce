@@ -3,14 +3,16 @@ define(
 
   [
     'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.TabButton',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.spec.CustomSpec',
     'ephox.alloy.ui.composite.TabbarSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, Fields, PartType, TabbarSpec, FieldSchema, Fun) {
+  function (CompositeBuilder, TabButton, Fields, PartType, CustomSpec, TabbarSpec, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -23,12 +25,13 @@ define(
 
       FieldSchema.defaulted('clickToDismiss', true),
 
-      Fields.markers([ 'tabClass', 'selectedClass' ])
-      // FieldSchema.defaulted('selectFirst', true)
+      Fields.markers([ 'tabClass', 'selectedClass' ]),
+      FieldSchema.defaulted('selectFirst', true)
     ];
 
 
     var tabsPart = PartType.group(
+      TabButton,
       'tabs',
       'tab',
       '<alloy.tabs>',
@@ -96,9 +99,7 @@ define(
     };
 
     // TODO: Remove likely dupe
-    var parts = function (f) {
-      return PartType.generate('tab-bar', partTypes);
-    };
+    var parts = PartType.generate('tab-bar', partTypes);
 
     return {
       build: build,

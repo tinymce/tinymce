@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.ui.TabSection',
+    'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
@@ -14,7 +15,7 @@ define(
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, TabSection, HtmlDisplay, Fun, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, TabSection, Tabbar, HtmlDisplay, Fun, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -93,7 +94,10 @@ define(
             TabSection.parts().tabbar(),
             TabSection.parts().tabview()
           ],
-          tabs: [ ],
+          tabs: [
+            { value: 'tab-alpha', text: 'Alpha' },
+            { value: 'tab-beta', text: 'Beta' }
+          ],
           defaultView: function () {
             return {
               uiType: 'container'
@@ -104,12 +108,25 @@ define(
               dom: {
                 tag: 'div'
               },
+              components: [
+                Tabbar.parts().tabs()
+              ],
               parts: {
                 tabs: { }
               },
               members: {
                 tab: {
-                  munge: Fun.identity
+                  munge: function (tabSpec) {
+                    return {
+                      dom: {
+                        tag: 'button',
+                        classes: [ 'tab-' + tabSpec.value ]
+                      },
+                      components: [
+                        { text: tabSpec.text }
+                      ]
+                    };
+                  }
                 }
               },
               markers: {

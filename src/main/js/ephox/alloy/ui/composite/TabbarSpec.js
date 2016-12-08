@@ -12,7 +12,8 @@ define(
         dom: {
           tag: 'div',
           classes: [ 'tabbar' ]
-        }
+        },
+        components: components
       };
     };
 
