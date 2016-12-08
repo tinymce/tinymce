@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.DropdownApis',
     'ephox.alloy.api.ui.SplitDropdown',
@@ -32,7 +33,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Dropdown, DropdownApis, SplitDropdown, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, Button, Dropdown, DropdownApis, SplitDropdown, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -229,8 +230,8 @@ define(
                     keying: { mode: 'cyclic' }
                   },
                   components: [
-                    { uiType: 'input' },
-                    { uiType: 'input' }
+                    { uiType: 'input', dom: { tag: 'input' } },
+                    { uiType: 'input', dom: { tag: 'input' } }
                   ]
                 }
 
@@ -247,7 +248,7 @@ define(
 
             parts: {
               button: parts.button().build({
-                uiType: 'button',
+                // uiType: 'button',
                 dom: {
                   tag: 'button',
                   innerHtml: 'Run'
@@ -258,7 +259,7 @@ define(
                 uid: 'supplied'
               }),
               arrow: parts.arrow().build({
-                uiType: 'button',
+                // uiType: 'button',
                 dom: {
                   tag: 'button',
                   innerHtml: 'v'
@@ -306,8 +307,8 @@ define(
                     keying: { mode: 'cyclic' }
                   },
                   components: [
-                    { uiType: 'input' },
-                    { uiType: 'input' }
+                    { uiType: 'input', dom: { tag: 'input' } },
+                    { uiType: 'input', dom: { tag: 'input' } }
                   ]
                 }
               });
@@ -456,6 +457,7 @@ define(
                             {
                               uiType: 'input',
                               dom: {
+                                tag: 'input',
                                 styles: {
                                   display: 'inline-block',
                                   width: '50px'
@@ -471,29 +473,34 @@ define(
                                 tag: 'div'
                               },
                               components: [
-                                {
-                                  uiType: 'button',
-                                  action: function () { console.log('clicked on a button', arguments); },
-                                  dom: {
-                                    tag: 'button',
-                                    innerHtml: '-'
-                                  },
-                                  behaviours: {
-                                    // FIX: This is required to override a previous tabstopping.
-                                    tabstopping: undefined
-                                  }
-                                },
-                                {
-                                  uiType: 'button',
-                                  action: function () { console.log('clicked on a button', arguments); },
-                                  dom: {
-                                    tag: 'button',
-                                    innerHtml: '+'
-                                  },
-                                  behaviours: {
-                                    tabstopping: undefined
-                                  }
-                                }
+                                Button.build(function () {
+                                  return {
+                                    uiType: 'button',
+                                    action: function () { console.log('clicked on a button', arguments); },
+                                    dom: {
+                                      tag: 'button',
+                                      innerHtml: '-'
+                                    },
+                                    behaviours: {
+                                      // FIX: This is required to override a previous tabstopping.
+                                      tabstopping: undefined
+                                    }
+                                  };
+                                }),
+                                Button.build(function () {
+                                  return {
+                                    uiType: 'button',
+                                    action: function () { console.log('clicked on a button', arguments); },
+                                    dom: {
+                                      tag: 'button',
+                                      innerHtml: '+'
+                                    },
+                                    behaviours: {
+                                      // FIX: This is required to override a previous tabstopping.
+                                      tabstopping: undefined
+                                    }
+                                  };
+                                })
                               ],
                               behaviours: {
                                 tabstopping: true,

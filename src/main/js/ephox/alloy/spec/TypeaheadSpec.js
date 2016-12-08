@@ -133,7 +133,10 @@ define(
               key: SystemEvents.execute(),
               value: EventHandler.nu({
                 run: function (comp) {
-                  Beta.togglePopup(detail, comp);
+                  Beta.togglePopup(detail, {
+                    anchor: 'hotspot',
+                    hotspot: comp
+                  }, comp, externals);
                 }
               })
             },

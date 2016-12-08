@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -12,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, CompositeBuilder, InternalSink, PartType, SplitDropdownSpec, FieldSchema, Fun, Error) {
+  function (SystemEvents, Button, CompositeBuilder, InternalSink, PartType, SplitDropdownSpec, FieldSchema, Fun, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -30,8 +31,6 @@ define(
       '<alloy.split-dropdown.arrow>',
       function (detail) {
         return {
-          // FIX: new style.
-          uiType: 'button',
           behaviours: {
             // FIX undefined
             tabstopping: undefined,
@@ -67,7 +66,7 @@ define(
       },
       function (detail) {
         return {
-          uiType: 'button',
+          // uiType: 'button',
           action: detail.onExecute()
         };
       }

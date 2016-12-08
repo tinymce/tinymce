@@ -49,7 +49,10 @@ define(
         defaults(detail),
         spec,
         { uid: detail.partUids()[name] },
-        overrides(detail)
+        overrides(detail),
+        {
+          uiType: 'custom'
+        }
       );
     };
 
