@@ -22,14 +22,20 @@ define(
     };
 
     var dehighlight = function (component, hInfo, target) {
+      var wasHighlighted = isHighlighted(component, hInfo, target);
       Class.remove(target.element(), hInfo.highlightClass());
-      hInfo.onDehighlight()(component, target);
+
+      // Only fire the event if it was highlighted.
+      if (wasHighlighted) hInfo.onDehighlight()(component, target);
     };
 
     var highlight = function (component, hInfo, target) {
+      var wasHighlighted = isHighlighted(component, hInfo, target);
       dehighlightAll(component, hInfo);
       Class.add(target.element(), hInfo.highlightClass());
-      hInfo.onHighlight()(component, target);
+      
+      // TODO: Check whether this should always fire
+      if (! wasHighlighted) hInfo.onHighlight()(component, target);
     };
 
     var highlightFirst = function (component, hInfo) {

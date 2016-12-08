@@ -38,7 +38,8 @@ define(
       windowScroll: Fun.constant('alloy.system.scroll'),
 
 
-      changeTab: Fun.constant('alloy.change.tab')
+      changeTab: Fun.constant('alloy.change.tab'),
+      dismissTab: Fun.constant('alloy.dismiss.tab')
     };
   }
 );

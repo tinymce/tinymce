@@ -66,38 +66,3 @@ define(
     };
   }
 );
-
-/*
-'<alloy.tabbar>': UiSubstitutes.single(true,  
-          Merger.deepMerge(
-            detail.parts().tabbar(),
-            detail.parts().tabbar().base,
-            {
-              uid: detail.partUids().tabbar,
-              uiType: 'tabbar',
-              onExecute: function (tabbar, button) {
-                var tabValue = Representing.getValue(button);
-                button.getSystem().getByUid(detail.partUids().tabview).each(function (viewer) {
-                  Transitioning.transition(viewer, tabValue);
-                });
-              },
-              selectFirst: detail.selectFirst(),
-              tabs: detail.tabs()
-            }
-          )
-        ),
-        '<alloy.tabview>': UiSubstitutes.single(true,  
-          Merger.deepMerge(
-            detail.parts().tabview(),
-            detail.parts().tabview().base,
-            {
-              uid: detail.partUids().tabview,
-              uiType: 'container',
-              transitioning: {
-                views: views,
-                base: detail.defaultView()
-              }
-            }
-          )
-        )
-        */

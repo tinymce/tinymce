@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.Tabbar',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.CompositeBuilder',
@@ -14,7 +15,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (BehaviourExport, Highlighting, CompositeBuilder, TabButton, Fields, DomModification, PartType, TabbarSpec, FieldSchema, Fun) {
+  function (SystemEvents, BehaviourExport, Highlighting, CompositeBuilder, TabButton, Fields, DomModification, PartType, TabbarSpec, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -36,15 +37,21 @@ define(
       'tab',
       '<alloy.tabs>',
       Fun.constant({ }),
-      function (detail, tabSpec) {
+      function (barDetail, tabSpec) {
         var dismissTab = function (tabbar, button) {
-          Highlighting.dehighlightAll(tabbar);
-          detail.onDismiss()(tabbar, button);
+          Highlighting.dehighlight(tabbar);
+          tabbar.getSystem().triggerEvent(SystemEvents.dismissTab(), tabbar.element(), {
+            tabbar: Fun.constant(tabbar),
+            button: Fun.constant(button)
+          });
         };
 
         var changeTab = function (tabbar, button) {
           Highlighting.highlight(tabbar, button);
-          detail.onChange()(tabbar, button);
+          tabbar.getSystem().triggerEvent(SystemEvents.changeTab(), tabbar.element(), {
+            tabbar: Fun.constant(tabbar),
+            button: Fun.constant(button)
+          });
         };
 
         return {
@@ -55,11 +62,11 @@ define(
             'tabbar.tabbuttons': { }
           },
           action: function (button) {
-            var tabbar = button.getSystem().getByUid(detail.uid()).getOrDie();
+            var tabbar = button.getSystem().getByUid(barDetail.uid()).getOrDie();
             var activeButton = Highlighting.isHighlighted(tabbar, button);
 
             var response = (function () {
-              if (activeButton && detail.clickToDismiss()) return dismissTab;
+              if (activeButton && barDetail.clickToDismiss()) return dismissTab;
               else if (! activeButton) return changeTab;
               else return Fun.noop;
             })();
@@ -72,7 +79,7 @@ define(
             BehaviourExport.santa([ ], 'tabbar.tabbuttons', {
               exhibit: function (base, info) {
                 return DomModification.nu({
-                  classes: [ detail.markers().tabClass() ]
+                  classes: [ barDetail.markers().tabClass() ]
                 });
               }
             }, {
