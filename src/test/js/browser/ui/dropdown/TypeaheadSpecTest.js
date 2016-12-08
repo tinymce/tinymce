@@ -115,6 +115,7 @@ asynctest(
         steps.sAssertFocusOnTypeahead('Focus stays on typeahead after pressing Down'),
         steps.sWaitForMenu('Down to activate menu'),
 
+        // FIX: reinstate
         // On typeaheads, there should be a width property that is approximately
         // the same size as the input field
         // NOTE: Dupe with Dropdown test.

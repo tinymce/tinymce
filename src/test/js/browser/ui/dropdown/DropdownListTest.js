@@ -4,19 +4,18 @@ asynctest(
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Mouse',
-    'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.knoch.future.Future',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'ephox.sugar.api.TextContent'
   ],
  
-  function (FocusTools, Mouse, Step, GuiFactory, Memento, Dropdown, MenuData, GuiSetup, Future, Fun, Result, TextContent) {
+  function (FocusTools, Mouse, GuiFactory, Memento, Dropdown, MenuData, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -65,43 +64,9 @@ asynctest(
             uiType: 'dropdown-list',
 
             parts: {
-              menu: parts.menu().build({
-                members: {
-                  menu: {
-                    munge: function (menuSpec) {
-                      return {
-                        dom: {
-                          tag: 'container',
-                          classes: [ 'menu' ]
-                        },
-                        components: [
-                          { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
-                        ]
-                      };
-                    }
-                  },
-                  item: {
-                    munge: function (itemSpec) {
-                      return {
-                        dom: {
-                          tag: 'li',
-                          classes: [ 'item' ],
-                          innerHtml: itemSpec.data.text
-                        },
-                        components: [ ]
-                      };
-                    }
-                  }
-                },
-                markers: {
-                  item: 'item',
-                  selectedItem: 'selected-item',
-                  menu: 'menu',
-                  selectedMenu: 'selected-menu',
-                  'backgroundMenu': 'background-menu'
-                },
-                onExecute: function () { }
-              })
+              menu: parts.menu().build(
+                TestDropdownMenu
+              )
             },
         
             fetch: function () { 
@@ -128,8 +93,9 @@ asynctest(
       return [
         Mouse.sClickOn(gui.element(), 'button'),
 
-        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
-        Step.fail('Abrupt finish')
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")')
+
+        // TODO: Beef up tests.
       ];
     }, function () { success(); }, failure);
 
