@@ -13,9 +13,9 @@ define(
 
   function (UiSubstitutes, Arr, Obj, Merger, Fun, Option, Adt) {
     var adt = Adt.generate([
-      { internal: [ 'name', 'pname', 'defaults', 'overrides' ] },
-      { external: [ 'name', 'defaults', 'overrides' ] },
-      { optional: [ 'name', 'pname', 'defaults', 'overrides' ] }
+      { internal: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
+      { external: [ 'factory', 'name', 'defaults', 'overrides' ] },
+      { optional: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] }
     ]);
 
     // TODO: Make more functional if performance isn't an issue.
@@ -26,13 +26,13 @@ define(
 
       Arr.each(parts, function (part) {
         part.fold(
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             required.push(name);
           },
           function (name) {
             required.push(name);
           },
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             optional.push(name);
           }
         );
@@ -44,7 +44,7 @@ define(
       };
     };
 
-    var combine = function (name, detail, defaults, spec, overrides) {
+    var combine = function (factory, name, detail, defaults, spec, overrides) {
       return Merger.deepMerge(
         defaults(detail),
         spec,
@@ -61,17 +61,19 @@ define(
 
       Arr.each(parts, function (part) {
         part.fold(
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             r[name] = {
               placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
               build: function (spec) {
                 return UiSubstitutes.single(true, function (detail) {
-                  return combine(name, detail, defaults, spec, overrides);
+                  return factory.build(function () {
+                    return combine(factory, name, detail, defaults, spec, overrides);
+                  });
                 });
               }
             };
           },
-          function (name, defaults, overrides) {
+          function (factory, name, defaults, overrides) {
             r[name] = {
               placeholder: Fun.die('The part: ' + name + ' should not appear in components for: ' + owner),
               build: function (spec) {
@@ -80,19 +82,14 @@ define(
             };
             // Do nothing ... has no placeholder.
           },
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             r[name] = {
               placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
               build: function (spec) {
                 return UiSubstitutes.single(false, function (detail) {
-                  return Merger.deepMerge(
-                    defaults(detail),
-                    spec,
-                    {
-                      uid: detail.partUids()[name]
-                    },
-                    overrides(detail)
-                  );
+                  return factory.build(function () {
+                    return combine(factory, name, detail, defaults, spec, overrides);
+                  });
                 });
               }
             };
@@ -108,16 +105,16 @@ define(
       var ex = { };
       Arr.each(parts, function (part) {
         part.fold(
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             //
           },
-          function (name, defaults, overrides) {
+          function (factory, name, defaults, overrides) {
             ex[name] = Fun.constant(
-              combine(name, detail, defaults, detail.parts()[name](), overrides)
+              combine(factory, name, detail, defaults, detail.parts()[name](), overrides)
             );
             // do nothing ... should not be in components
           },
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             // ps[pname] = detail.parts()[name]();
           }
         );
@@ -130,13 +127,13 @@ define(
       var ps = { };
       Arr.each(parts, function (part) {
         part.fold(
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             ps[pname] = detail.parts()[name]();
           },
           function (name) {
             // do nothing ... should not be in components
           },
-          function (name, pname, defaults, overrides) {
+          function (factory, name, pname, defaults, overrides) {
             ps[pname] = detail.parts()[name]();
           }
         );

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
@@ -14,7 +15,7 @@ define(
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, GuiTemplate, HtmlDisplay, Option, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, GuiTemplate, TabSection, HtmlDisplay, Option, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -85,46 +86,54 @@ define(
       var subject2 = HtmlDisplay.section(
         gui,
         'A basic tab view',
-        GuiTemplate.use(
-          Option.some('tabbing'),
-          TemplateTabs,
-          {
+        TabSection.build(function (parts) {
+          return {
             uiType: 'tabbing',
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              parts.tabbar().placeholder(),
+              parts.tabview().placeholder()
+            ],
             tabs: [
-              { value: 'alpha', text: 'alpha', view: function () { 
-                return [{
-                  uiType: 'input'
-                }];
-              } },
-              { value: 'beta', text: 'beta', view: function () {
-                return [{
-                  uiType: 'button',
-                  action: function () { console.log('button'); },
-                  dom: {
-                    tag: 'button'
-                  }
-                }];
-              } },
-              { value: 'gamma', text: 'gamma', view: function () {
-                return [{
-                  uiType: 'input'
-                }];
-              } }
+              {
+                value: 'alpha',
+                text: 'Alpha',
+                view: function () {
+                  return {
+                    uiType: 'input',
+                    dom: {
+                      tag: 'input'
+                    }
+                  };
+                }
+              }
             ],
             defaultView: function () {
-              return [{
-                uiType: 'container',
-                dom: {
-                  innerHtml: 'Loading'
+              return {
+                value: 'default',
+                text: 'Default',
+                view: function () {
+                  return {
+                    uiType: 'input',
+                    data: {
+                      value: 'a',
+                      text: 'A'
+                    },
+                    dom: {
+                      tag: 'input'
+                    }
+                  };
                 }
-              }];
+              };
             },
             parts: {
-              'tabbar': GuiTemplate.use(
-                Option.some('tabbar'),
-                TemplateTabbar,
+              'tabbar': parts.tabbar().build(
                 {
-                  uiType: 'container',
+                  dom: {
+                    tag: 'div'
+                  },
                   parts: {
                     tabs: { }
                   },
@@ -150,15 +159,16 @@ define(
                       }
                     }
                   }
-                },
-                { }
+                }
               ),
-              'tabview': { }
+              'tabview': parts.tabview().build({
+                dom: {
+                  tag: 'div'
+                }
+              })
             } 
-          }, {
-
-          }
-        )
+          };
+        })
       );
     };
   }

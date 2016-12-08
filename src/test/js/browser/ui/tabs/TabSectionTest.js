@@ -52,6 +52,8 @@ asynctest(
             ]
           });
         }), component.element()),
+
+        
         Step.fail('done')
       ];
     }, function () { success(); }, failure);

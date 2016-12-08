@@ -24,6 +24,7 @@ define(
 
       var detail = SpecSchema.asStructOrDie(owner, schema, userSpec, schemas.required(), schemas.optional());
       
+      // This is the point where internal parts are created (internal and optional)
       var components = PartType.components(owner, detail, partTypes);
 
       var externals = PartType.externals(owner, detail, partTypes);
