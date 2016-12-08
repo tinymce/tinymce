@@ -6,18 +6,15 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.perhaps.Option',
-    'ephox.scullion.Cell',
     'ephox.sugar.api.Attr'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Id, Merger, Option, Cell, Attr) {
+  function (SystemEvents, EventHandler, SpecSchema, UiSubstitutes, FieldSchema, Objects, Id, Merger, Option, Attr) {
     var schema = [
       FieldSchema.strictObjOf('label', [
         FieldSchema.strict('text')
