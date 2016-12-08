@@ -4,31 +4,29 @@ define(
   [
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.spec.ButtonSpec',
-    'ephox.highway.Merger'
+    'ephox.alloy.spec.ButtonBase',
+    'ephox.highway.Merger',
+    'ephox.perhaps.Option'
   ],
 
-  function (Toggling, Beta, ButtonSpec, Merger) {
+  function (Toggling, Beta, ButtonBase, Merger, Option) {
     var make = function (detail, components, spec, externals) {
       return Merger.deepMerge(
-        // FIX: Ugly
-        ButtonSpec.make({
-          uid: detail.uid(),
-          // FIX: Re-used.
-          dom: detail.dom(),
-          action: function (component) {
-            Beta.togglePopup(detail, {
-              anchor: 'hotspot',
-              hotspot: component
-            }, component, externals).get(function (sandbox) {
+        {
+          events: ButtonBase.events(
+            Option.some(function (component) {
+              Beta.togglePopup(detail, {
+                anchor: 'hotspot',
+                hotspot: component
+              }, component, externals).get(function (sandbox) {
 
-            });
-          }
-        }),
+              });
+            })
+          )
+        },
         {
           uid: detail.uid(),
           uiType: 'custom',
-          // FIX: Re-used.
           dom: detail.dom(),
           components: components,
           behaviours: {
