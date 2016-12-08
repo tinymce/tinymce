@@ -23,10 +23,12 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
         uiType: 'button',
-        buttonType: 'text',
-        text: 'ButtonSpecTest.button',
+        dom: {
+          tag: 'button',
+          innerHtml: 'ButtonSpecTest.button',
+          classes: [ 'test-button' ]
+        },
         action: store.adder('button.action'),
-        classes: [ 'test-button' ],
         uid: 'test-button-id'
       });
 
@@ -41,7 +43,8 @@ asynctest(
               ],
               attrs: {
                 type: str.is('button'),
-                'data-alloy-id': str.is('test-button-id')
+                'data-alloy-id': str.is('test-button-id'),
+                role: str.is('button')
               },
               html: str.is('ButtonSpecTest.button')
             });
