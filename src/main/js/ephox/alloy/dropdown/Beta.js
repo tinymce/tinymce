@@ -97,6 +97,7 @@ define(
       return action(detail, anchor, hotspot, sandbox, externals);
     };
 
+    // FIX: Reinstate
     var matchWidth = function (hotspot, container) {
       var buttonWidth = Width.get(hotspot.element());
       Width.set(container.element(), buttonWidth);
@@ -119,15 +120,6 @@ define(
 
       var lazySink = Gamma.getSink(anyInSystem, detail);
 
-      var interactions = {
-        onOpen: onOpen,
-        onClose: onClose,
-        onExecute: detail.onExecute(),
-        lazySink: lazySink
-      };
-
-      var lazyAnchor = Fun.constant(anchor);
-    
       return {
         uiType: 'custom',
         dom: {

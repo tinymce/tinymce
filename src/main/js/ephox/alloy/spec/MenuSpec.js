@@ -141,6 +141,10 @@ define(
               initialValue: detail.value()
             },
 
+            composing: {
+              find: Fun.identity
+            },
+
             keying: detail.movement().config()(detail, detail.movement())
           },
           events: Objects.wrapAll([
