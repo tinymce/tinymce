@@ -40,17 +40,17 @@ define(
       function (barDetail, tabSpec) {
         var dismissTab = function (tabbar, button) {
           Highlighting.dehighlight(tabbar);
-          tabbar.getSystem().triggerEvent(SystemEvents.dismissTab(), tabbar.element(), {
-            tabbar: Fun.constant(tabbar),
-            button: Fun.constant(button)
+          SystemEvents.trigger(tabbar, SystemEvents.dismissTab(), {
+            tabbar: tabbar,
+            button: button
           });
         };
 
         var changeTab = function (tabbar, button) {
           Highlighting.highlight(tabbar, button);
-          tabbar.getSystem().triggerEvent(SystemEvents.changeTab(), tabbar.element(), {
-            tabbar: Fun.constant(tabbar),
-            button: Fun.constant(button)
+          SystemEvents.trigger(tabbar, SystemEvents.changeTab(), {
+            tabbar: tabbar,
+            button: button
           });
         };
 

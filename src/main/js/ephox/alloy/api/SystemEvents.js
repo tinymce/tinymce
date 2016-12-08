@@ -2,11 +2,15 @@ define(
   'ephox.alloy.api.SystemEvents',
 
   [
+    'ephox.compass.Obj',
     'ephox.peanut.Fun'
   ],
 
-  function (Fun) {
+  function (Obj, Fun) {
     return {
+      trigger: function (component, event, properties) {
+        component.getSystem().triggerEvent(event, component.element(), Obj.map(properties, Fun.constant));
+      },
       // This is used to pass focus to a component. A component might interpret
       // this event and pass the DOM focus to one of its children, depending on its
       // focus model.
