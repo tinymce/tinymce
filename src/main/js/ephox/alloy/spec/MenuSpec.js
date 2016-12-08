@@ -3,20 +3,14 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.build.ItemType',
     'ephox.alloy.menu.build.SeparatorType',
     'ephox.alloy.menu.build.WidgetType',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
-    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
@@ -26,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (Highlighting, FocusManagers, EventHandler, Fields, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, MenuMarkers, Tagger, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (Highlighting, EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, Tagger, UiSubstitutes, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -36,64 +30,7 @@ define(
       }
     );
 
-    var menuSchema = [
-      FieldSchema.strict('value'),
-      FieldSchema.strict('items'),
-      FieldSchema.strict('dom'),
-      FieldSchema.strict('components'),
-
-
-      FieldSchema.defaultedOf('movement', {
-        mode: 'menu',
-        moveOnTab: true
-      }, ValueSchema.choose(
-        'mode',
-        {
-          grid: [
-            Fields.initSize(),
-            FieldSchema.state('config', function () {
-              return function (detail, movementInfo) {
-                return {
-                  mode: 'flatgrid',
-                  selector: '.' + detail.markers().item(),
-                  initSize: {
-                    numColumns: movementInfo.initSize().numColumns(),
-                    numRows: movementInfo.initSize().numRows()
-                  },
-                  focusManager: detail.focusManager()
-                };
-              };
-            })
-          ],
-          menu: [
-            FieldSchema.defaulted('moveOnTab', true),
-            FieldSchema.state('config', function () {
-              return function (detail, movementInfo) {
-                return {
-                  mode: 'menu',
-                  selector: '.' + detail.markers().item(),
-                  moveOnTab: movementInfo.moveOnTab(),
-                  focusManager: detail.focusManager()
-                };
-              };
-            })
-          ]
-        }
-      )),
-
-      Fields.itemMarkers(),
-
-      Fields.members([ 'item' ]),
-      FieldSchema.defaulted('shell', false),
-
-      FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.defaulted('focusManager', FocusManagers.dom()),
-      FieldSchema.defaulted('onHighlight', Fun.noop)
-    ];
-
-    var make = function (spec) {
-      var detail = SpecSchema.asStructOrDie('menu.spec', menuSchema, spec, [ ]);
-
+    var make = function (detail, spec) {
       var builtItems = Arr.map(detail.items(), function (i) {
         var munged = detail.members().item().munge(i);
         var fallbackUid = Tagger.generate('');
@@ -190,7 +127,6 @@ define(
     };
 
     return {
-      schema: Fun.constant(menuSchema),
       make: make
     };
   }

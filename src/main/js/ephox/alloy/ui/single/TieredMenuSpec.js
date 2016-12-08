@@ -10,6 +10,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.focus.FocusManagers',
+    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredState',
@@ -30,7 +31,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
+  function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
     var make = function (uiSpec, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
@@ -44,25 +45,28 @@ define(
           //     items: spec.items
           //   }
 
-          var data = Merger.deepMerge(
-            uiSpec.members().menu().munge(spec),
-            {
-              uiType: 'menu',
-              value: name,
-              items: spec.items,
-              markers: rawUiSpec.markers,
-              members: {
-                item: uiSpec.members().item()
-              },
+          var data = Menu.build(function () {
+            return Merger.deepMerge(
+              uiSpec.members().menu().munge(spec),
+              {
+                uiType: 'menu',
+                value: name,
+                items: spec.items,
+                markers: rawUiSpec.markers,
+                members: {
+                  item: uiSpec.members().item()
+                },
 
-              // Fake focus.
-              fakeFocus: uiSpec.fakeFocus(),
-              onHighlight: uiSpec.onHighlight(),
+                // Fake focus.
+                fakeFocus: uiSpec.fakeFocus(),
+                onHighlight: uiSpec.onHighlight(),
 
 
-              focusManager: uiSpec.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
-            }
-          );
+                focusManager: uiSpec.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
+              }
+            );
+          });
+
           return container.getSystem().build(data);
         });
       };

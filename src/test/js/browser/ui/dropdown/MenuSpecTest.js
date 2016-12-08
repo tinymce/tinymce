@@ -6,67 +6,68 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Chain, NamedChain, Step, UiFinder, GuiFactory, SystemEvents, EventHandler, MenuEvents, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Chain, NamedChain, UiFinder, GuiFactory, SystemEvents, Menu, EventHandler, MenuEvents, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'menu',
+      return GuiFactory.build(
+        Menu.build(function () {
+          return {
+            value: 'test-menu-1',
+            items: [
+              { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+              { type: 'item', data: { value: 'beta', text: 'Beta' } }
+            ],
+            dom: {
+              tag: 'div',
+              classes: [ 'test-menu' ]
+            },
+            components: [
+              { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+            ],
 
-        value: 'test-menu-1',
-        items: [
-          { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-          { type: 'item', data: { value: 'beta', text: 'Beta' } }
-        ],
-        dom: {
-          tag: 'div',
-          classes: [ 'test-menu' ]
-        },
-        components: [
-          { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
-        ],
+            markers: {
+              item: 'test-item',
+              selectedItem: 'test-selected-item'
+            },
+            members: { 
+              item: {
+                munge: function (itemSpec) {
+                  return {
+                    dom: {
+                      tag: 'div',
+                      attributes: {
+                        'data-value': itemSpec.data.value
+                      },
+                      classes: [ 'test-item' ],
+                      innerHtml: itemSpec.data.text
+                    },
+                    components: [ ]
+                  };              
+                }
+              }
+            },
 
-        markers: {
-          item: 'test-item',
-          selectedItem: 'test-selected-item'
-        },
-        members: { 
-          item: {
-            munge: function (itemSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  attributes: {
-                    'data-value': itemSpec.data.value
-                  },
-                  classes: [ 'test-item' ],
-                  innerHtml: itemSpec.data.text
-                },
-                components: [ ]
-              };              
-            }
-          }
-        },
-
-        events: Objects.wrap(
-          MenuEvents.focus(),
-          EventHandler.nu({
-            run: store.adder('menu.events.focus')
-          })
-        )
-      });
-
+            events: Objects.wrap(
+              MenuEvents.focus(),
+              EventHandler.nu({
+                run: store.adder('menu.events.focus')
+              })
+            )
+          };
+        })
+      );
     }, function (doc, body, gui, component, store) {
       // FIX: Flesh out test.
       var cAssertStructure = function (label, expected) {
