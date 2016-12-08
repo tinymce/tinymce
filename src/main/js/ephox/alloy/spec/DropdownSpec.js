@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.spec.ButtonBase',
+    'ephox.alloy.ui.common.ButtonBase',
     'ephox.highway.Merger',
     'ephox.perhaps.Option'
   ],

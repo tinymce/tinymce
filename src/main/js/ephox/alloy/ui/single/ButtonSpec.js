@@ -2,7 +2,7 @@ define(
   'ephox.alloy.ui.single.ButtonSpec',
 
   [
-    'ephox.alloy.spec.ButtonBase',
+    'ephox.alloy.ui.common.ButtonBase',
     'ephox.highway.Merger'
   ],
 

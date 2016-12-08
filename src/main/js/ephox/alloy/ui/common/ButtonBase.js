@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.spec.ButtonBase',
+  'ephox.alloy.ui.common.ButtonBase',
 
   [
     'ephox.alloy.api.SystemEvents',
