@@ -26,6 +26,7 @@ define(
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('matchWidth', true),
       FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
+
       FieldSchema.state('previewing', function () {
         return Cell(true);
       })
@@ -41,6 +42,10 @@ define(
           return {
             fakeFocus: true,
             onHighlight: function (menu, item) {
+
+
+
+
               if (! detail.previewing().get()) {
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
                   Representing.setValueFrom(input, item);

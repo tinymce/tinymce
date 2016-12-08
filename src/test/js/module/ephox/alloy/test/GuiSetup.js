@@ -7,14 +7,16 @@ define(
     'ephox.agar.api.Step',
     'ephox.alloy.api.Gui',
     'ephox.alloy.test.TestStore',
+    'ephox.highway.Merger',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
     'global!document'
   ],
 
-  function (Assertions, Pipeline, Step, Gui, TestStore, DomEvent, Element, Insert, Remove, document) {
+  function (Assertions, Pipeline, Step, Gui, TestStore, Merger, DomEvent, Element, Html, Insert, Remove, document) {
     var setup = function (createComponent, f, success, failure) {
       var store = TestStore();
 
@@ -57,10 +59,31 @@ define(
       });
     };
 
+    var mAddStyles = function (doc, styles) {
+      return Step.stateful(function (value, next, die) {
+        var style = Element.fromTag('style');
+        var head = Element.fromDom(doc.dom().head);
+        Insert.append(head, style);
+        Html.set(style, styles.join('\n'));
+
+        next(Merger.deepMerge(value, {
+          style: style
+        }));
+      });
+    };
+
+    var mRemoveStyles = function (value, next, die) {
+      Remove.remove(value.style);
+      next(value);
+    };
+
     return {
       setup: setup,
       mSetupKeyLogger: mSetupKeyLogger,
-      mTeardownKeyLogger: mTeardownKeyLogger
+      mTeardownKeyLogger: mTeardownKeyLogger,
+
+      mAddStyles: mAddStyles,
+      mRemoveStyles: mRemoveStyles
     };
   }
 );

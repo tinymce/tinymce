@@ -92,7 +92,9 @@ define(
           },
           onEnter: function (comp, simulatedEvent) {
             var sandbox = Coupling.getCoupled(comp, 'sandbox');
-            return detail.onExecute()(sandbox, comp);
+            if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
+            detail.onExecute()(sandbox, comp);
+            return Option.some(true);
           }
         },
 

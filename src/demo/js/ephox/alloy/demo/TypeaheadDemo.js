@@ -165,6 +165,7 @@ define(
             },
             onExecute: function (sandbox, item, itemValue) {
               var value = Representing.getValue(item);
+              return Option.some(true);
               console.log('*** typeahead menu demo execute on: ' + value + ' ***');
             }
           };

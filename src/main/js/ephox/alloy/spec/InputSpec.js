@@ -20,7 +20,7 @@ define(
     // This is not fleshed out yet.
     var schema = ValueSchema.objOf([
       FieldSchema.defaulted('classes', [ ]),
-      FieldSchema.option('value'),
+      FieldSchema.option('data'),
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
@@ -43,26 +43,21 @@ define(
         uiType: 'custom',
         // Simplify this
         dom: Objects.wrapAll(
-          Arr.flatten([
-            toProp(detail.value(), 'value'),
-            [
-              { key: 'tag', value: detail.tag() },              
-              {
-                key: 'attributes',
-                value: Objects.wrapAll(
-                  Arr.flatten([
-                    toProp(detail.placeholder(), 'placeholder'),
-                    [ { key: 'type', value: detail.type() }]
-                  ])
-                )
-              }
-            ]
-          ])
+          { key: 'tag', value: detail.tag() },              
+          {
+            key: 'attributes',
+            value: Objects.wrapAll(
+              Arr.flatten([
+                toProp(detail.placeholder(), 'placeholder'),
+                [ { key: 'type', value: detail.type() }]
+              ])
+            )
+          }
         ),
 
         behaviours: {
           representing: {
-            initialValue: detail.value().getOr({ value: '', text: '' }),
+            initialValue: detail.data().getOr({ value: '', text: '' }),
 
             interactive: {
               event: 'input',
@@ -75,8 +70,8 @@ define(
               }
             },
 
-            onSet: function (input, value) {
-              Value.set(input.element(), value.text);
+            onSet: function (input, data) {
+              Value.set(input.element(), data.text);
             }
           },
 
@@ -96,8 +91,8 @@ define(
             value: EventHandler.nu({
               run: function (simulated, simulatedEvent) {
                 if (EventRoot.isSource(simulated, simulatedEvent)) {
-                  detail.value().each(function (value) {
-                    Representing.setValue(simulated, value);
+                  detail.data().each(function (data) {
+                    Representing.setValue(simulated, data);
                   });
                 }
               }
