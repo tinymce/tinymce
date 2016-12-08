@@ -4,27 +4,17 @@ define(
   [
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.spec.SpecSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Arr, Merger, Fun) {
-    var schema = [
-      FieldSchema.strict('dom'),
-      FieldSchema.option('action'),
-      FieldSchema.option('role')
-    ];
-
-    var make = function (spec) {
-      var detail = SpecSchema.asRawOrDie('button', schema, spec, [ ]);
-
+  function (SystemEvents, EventHandler, Objects, Arr, Merger, Fun) {
+    var make = function (detail, spec) {
       var executeHandler = EventHandler.nu({
         run: function (component, simulatedEvent) {
-          detail.action.each(function (action) {
+          detail.action().each(function (action) {
             action(component);
             simulatedEvent.stop();
           });
@@ -50,7 +40,7 @@ define(
 
       var events = Objects.wrapAll(
         Arr.flatten([
-          detail.action.isSome() ? [ { key: SystemEvents.execute(), value: executeHandler } ] : [ ],
+          detail.action().isSome() ? [ { key: SystemEvents.execute(), value: executeHandler } ] : [ ],
           [ { key: 'click', value: clickHandler } ],
           [ { key: 'mousedown', value: mousedownHandler } ]
         ])
@@ -76,7 +66,7 @@ define(
           dom: {
             attributes: {
               type: 'button',
-              role: detail.role.getOr('button')
+              role: detail.role().getOr('button')
             }
           }
         },

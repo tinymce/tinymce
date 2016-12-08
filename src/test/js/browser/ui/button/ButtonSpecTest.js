@@ -16,25 +16,29 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, GuiSetup) {
+  function (ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, Button, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'button',
-        dom: {
-          tag: 'button',
-          innerHtml: 'ButtonSpecTest.button',
-          classes: [ 'test-button' ]
-        },
-        action: store.adder('button.action'),
-        uid: 'test-button-id'
-      });
-
+      return GuiFactory.build(
+        Button.build(function () {
+          return {
+            uiType: 'button',
+            dom: {
+              tag: 'button',
+              innerHtml: 'ButtonSpecTest.button',
+              classes: [ 'test-button' ]
+            },
+            action: store.adder('button.action'),
+            uid: 'test-button-id'
+          };
+        })
+      );
     }, function (doc, body, gui, component, store) {
       var testStructure = Step.sync(function () {
         Assertions.assertStructure(
