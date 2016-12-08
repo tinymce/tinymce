@@ -2,11 +2,15 @@ define(
   'ephox.alloy.ui.single.TabButtonSpec',
 
   [
+    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.dom.DomModification',
+    'ephox.alloy.registry.Tagger',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.epithet.Id',
     'ephox.highway.Merger'
   ],
 
-  function (ButtonBase, Merger) {
+  function (BehaviourExport, DomModification, Tagger, ButtonBase, Id, Merger) {
     var make = function (detail, spec) {
       
       var events = ButtonBase.events(detail.action());
@@ -31,6 +35,7 @@ define(
           dom: {
             attributes: {
               type: 'button',
+              id: Id.generate('aria'),
               role: detail.role().getOr('tab')
             }
           }

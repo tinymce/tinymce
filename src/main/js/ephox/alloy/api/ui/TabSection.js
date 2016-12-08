@@ -11,10 +11,11 @@ define(
     'ephox.alloy.ui.composite.TabSectionSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.sugar.api.Attr'
   ],
 
-  function (Replacing, Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Arr, Fun) {
+  function (Replacing, Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Arr, Fun, Attr) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       FieldSchema.defaulted('tabs', [ ])
@@ -26,22 +27,24 @@ define(
       '<alloy.tab-section.tabbar>',
       function (detail) {
         return {
-          onExecute: function (tabbar, button) {
+          onChange: function (tabbar, button) {
+            tabbar.getSystem().triggerEvent('alloy.change.tab', tabbar.element(), {
+              tabbar: Fun.constant(tabbar),
+              button: Fun.constant(button)
+            });
             var tabValue = Representing.getValue(button);
             button.getSystem().getByUid(detail.partUids().tabview).each(function (tabview) {
-              console.log('tabValue', tabValue, 'tabview', tabview);
-
               var tabData = Arr.find(detail.tabs(), function (t) {
                 return t.value === tabValue;
               });
 
-              console.log('tabData', tabData);
               var panel = tabData.view();
+
+              // Update the tabview to refer to the current tab.
+              Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
               Replacing.set(tabview, panel);
-              // Transitioning.transition(viewer, tabValue);
             });
           },
-          selectFirst: detail.selectFirst(),
           tabs: detail.tabs()
         };
       },

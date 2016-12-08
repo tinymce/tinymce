@@ -18,7 +18,6 @@ define(
     var schema = [
       FieldSchema.strict('tabs'),
 
-      FieldSchema.strict('onExecute'),
       FieldSchema.defaulted('onDismiss', Fun.noop),
       FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.strict('dom'),
@@ -27,8 +26,7 @@ define(
 
       FieldSchema.defaulted('clickToDismiss', false),
 
-      Fields.markers([ 'tabClass', 'selectedClass' ]),
-      FieldSchema.defaulted('selectFirst', true)
+      Fields.markers([ 'tabClass', 'selectedClass' ])
     ];
 
 
@@ -46,7 +44,6 @@ define(
 
         var changeTab = function (tabbar, button) {
           Highlighting.highlight(tabbar, button);
-          detail.onExecute()(tabbar, button);
           detail.onChange()(tabbar, button);
         };
 
@@ -101,6 +98,8 @@ define(
     return {
       build: build,
       parts: Fun.constant(parts)
+
+
     };
   }
 );
