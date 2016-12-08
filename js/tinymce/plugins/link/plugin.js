@@ -58,7 +58,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		return false;
 	}
 
-	function appendClickRemove (link, evt) {
+	function appendClickRemove(link, evt) {
 		document.body.appendChild(link);
 		link.dispatchEvent(evt);
 		document.body.removeChild(link);
@@ -78,7 +78,7 @@ tinymce.PluginManager.add('link', function(editor) {
 			var evt = document.createEvent('MouseEvents');
 			evt.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 
-			tinymce.Env.ie > 10 ? appendClickRemove(link, evt) : link.dispatchEvent(evt);
+			appendClickRemove(link, evt);
 		} else {
 			var win = window.open('', '_blank');
 			if (win) {
