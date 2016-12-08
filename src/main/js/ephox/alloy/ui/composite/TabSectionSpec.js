@@ -10,7 +10,6 @@ define(
 
   function (EventRoot, SystemEvents, EventHandler, Objects) {
     var make = function (detail, components, spec, externals) {
-      debugger;
       return {
         uid: detail.uid(),
         uiType: 'custom',

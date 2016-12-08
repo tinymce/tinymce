@@ -57,6 +57,7 @@ define(
 
       return partsSchema.concat([
         FieldSchema.strict('uid'),
+        FieldSchema.strict('dom'), // Maybe get rid of.
         FieldSchema.defaulted('components', [ ]),
         FieldSchema.state('originalSpec', Fun.identity)
       ]);

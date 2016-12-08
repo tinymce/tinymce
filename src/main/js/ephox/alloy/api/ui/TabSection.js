@@ -5,13 +5,13 @@ define(
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.composite.TabSectionSpec',
+    'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, PartType, TabSectionSpec, Fun) {
+  function (CompositeBuilder, PartType, TabSectionSpec, FieldSchema, Fun) {
     var schema = [
-
-
+      FieldSchema.defaulted('selectFirst', true)
     ];
 
     var barPart = PartType.internal(

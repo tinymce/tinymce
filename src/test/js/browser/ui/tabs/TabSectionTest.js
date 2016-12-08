@@ -24,8 +24,16 @@ asynctest(
               parts.tabview().placeholder()
             ],
             parts: {
-              tabbar: parts.tabbar().build({ }),
-              tabview: parts.tabview().build({ })
+              tabbar: parts.tabbar().build({
+                dom: {
+                  tag: 'div'
+                }
+              }),
+              tabview: parts.tabview().build({
+                dom: {
+                  tag: 'div'
+                }
+              })
             }
           };
         })
