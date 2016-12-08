@@ -35,7 +35,10 @@ define(
       systemInit: Fun.constant('alloy.system.init'),
 
       // Fired when the window scrolls
-      windowScroll: Fun.constant('alloy.system.scroll')
+      windowScroll: Fun.constant('alloy.system.scroll'),
+
+
+      changeTab: Fun.constant('alloy.change.tab')
     };
   }
 );

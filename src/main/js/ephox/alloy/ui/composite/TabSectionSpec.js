@@ -38,7 +38,7 @@ define(
 
           {
             // FIX: Name.
-            key: 'alloy.change.tab',
+            key: SystemEvents.changeTab(),
             value: EventHandler.nu({
               run: function (section, simulatedEvent) {
                 var button = simulatedEvent.event().button();

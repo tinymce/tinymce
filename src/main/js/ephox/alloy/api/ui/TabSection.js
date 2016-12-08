@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.TabSection',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.CompositeBuilder',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (Replacing, Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Arr, Fun, Attr) {
+  function (SystemEvents, Replacing, Representing, CompositeBuilder, Tabbar, Tabview, PartType, TabSectionSpec, FieldSchema, Arr, Fun, Attr) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       FieldSchema.defaulted('tabs', [ ])
@@ -28,7 +29,7 @@ define(
       function (detail) {
         return {
           onChange: function (tabbar, button) {
-            tabbar.getSystem().triggerEvent('alloy.change.tab', tabbar.element(), {
+            tabbar.getSystem().triggerEvent(SystemEvents.changeTab(), tabbar.element(), {
               tabbar: Fun.constant(tabbar),
               button: Fun.constant(button)
             });
