@@ -14,10 +14,10 @@ define(
 
   function (SystemEvents, EventHandler, SpecSchema, FieldSchema, Objects, Arr, Merger, Fun) {
     var schema = [
+      FieldSchema.strict('dom'),
       FieldSchema.option('action'),
       FieldSchema.option('role')
     ];
-
 
     var make = function (spec) {
       var detail = SpecSchema.asRawOrDie('button', schema, spec, [ ]);
@@ -63,7 +63,6 @@ define(
 
         {
           behaviours: {
-            // tabstopping: true,
             focusing: true,
             keying: {
               mode: 'execution',

@@ -6,7 +6,10 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
+    'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
@@ -16,7 +19,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, GuiSetup) {
+  function (ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -65,7 +68,8 @@ asynctest(
             Cursors.cFollow([ 0 ]),
             Mouse.cClick
           ]),
-          store.sAssertEq('step 3: post click on button text', [ 'button.action' ])
+          store.sAssertEq('step 3: post click on button text', [ 'button.action' ]),
+          store.sClear
         ])
       );
 
@@ -78,7 +82,26 @@ asynctest(
             var system = component.getSystem();
             system.triggerEvent(SystemEvents.execute(), component.element(), {});
             store.assertEq('post execute', [ 'button.action' ]);
+            store.clear();
           })
+        ])
+      );
+
+      var testFocusing = Logger.t(
+        'test focusing',
+        GeneralSteps.sequence([
+          FocusTools.sSetFocus('Setting focus on button', gui.element(), '.test-button'),
+          FocusTools.sTryOnSelector('Checking focus on button', doc, '.test-button')
+        ])
+      );
+
+      var testKeyboard = Logger.t(
+        'test keyboard',
+        GeneralSteps.sequence([
+          store.sAssertEq('pre-enter', [ ]),
+          Keyboard.sKeydown(doc, Keys.enter(), { }),
+          store.sAssertEq('post-enter', [ 'button.action' ]),
+          store.sClear
         ])
       );
 
@@ -87,6 +110,12 @@ asynctest(
         testStructure,
         // Test clicking
         testButtonClick,
+
+        // Test focusing
+        testFocusing,
+
+        // Test keyboard
+        testKeyboard,
 
         // Test executing
         testExecuting
