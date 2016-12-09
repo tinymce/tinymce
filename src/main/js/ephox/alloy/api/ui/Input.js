@@ -2,20 +2,15 @@ define(
   'ephox.alloy.api.ui.Input',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Value'
   ],
 
-  function (EventRoot, SystemEvents, Representing, EventHandler, Tagger, SpecSchema, FieldSchema, Objects, Merger, Fun, Value) {
+  function (Tagger, SpecSchema, FieldSchema, Merger, Fun, Value) {
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('type', 'input'),
@@ -71,23 +66,7 @@ define(
               input.dom().setSelectionRange(0, value.length);
             }
           }
-        },
-
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.systemInit(),
-            value: EventHandler.nu({
-              run: function (simulated, simulatedEvent) {
-                if (EventRoot.isSource(simulated, simulatedEvent)) {
-                  detail.data().each(function (data) {
-                    Representing.setValue(simulated, data);
-                  });
-                }
-              }
-            }) 
-          }
-
-        ])
+        }
       };
     };
 

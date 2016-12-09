@@ -28,7 +28,9 @@ define(
             };
 
             var onLoad = function (component, repInfo) {
-              setValue(component, repInfo, repInfo.store().initialValue());
+              var value = repInfo.store().initialValue();
+              setValue(component, repInfo, value);
+              repInfo.onSet()(component, value);
             };
 
             return {
