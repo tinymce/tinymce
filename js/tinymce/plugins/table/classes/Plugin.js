@@ -295,6 +295,7 @@ define("tinymce/tableplugin/Plugin", [
 			menu: [
 				{text: 'Insert row before', onclick: cmd('mceTableInsertRowBefore'), onPostRender: postRenderCell},
 				{text: 'Insert row after', onclick: cmd('mceTableInsertRowAfter'), onPostRender: postRenderCell},
+				{text: 'Start new table', onclick: cmd('mceTableSplitTableBeforeRow'), onPostRender: postRenderCell},
 				{text: 'Delete row', onclick: cmd('mceTableDeleteRow'), onPostRender: postRenderCell},
 				{text: 'Row properties', onclick: cmd('mceTableRowProps'), onPostRender: postRenderCell},
 				{text: '-'},
@@ -391,6 +392,10 @@ define("tinymce/tableplugin/Plugin", [
 
 			mceTableInsertRowAfter: function(grid) {
 				grid.insertRow();
+			},
+
+			mceTableSplitTableBeforeRow: function(grid) {
+				grid.splitTableBeforeRow();
 			},
 
 			mceTableInsertColBefore: function(grid) {
