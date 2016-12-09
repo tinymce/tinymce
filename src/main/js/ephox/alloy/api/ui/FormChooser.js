@@ -2,23 +2,24 @@ define(
   'ephox.alloy.api.ui.FormChooser',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
+    'ephox.alloy.events.EventSource',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
+    'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Attr'
   ],
 
-  function (BehaviourExport, Highlighting, CompositeBuilder, Fields, DomModification, PartType, Tagger, SpecSchema, ButtonBase, FieldSchema, Arr, Merger, Fun, Option) {
+  function (SystemEvents, BehaviourExport, Highlighting, CompositeBuilder, EventHandler, Fields, DomModification, EventSource, PartType, ButtonBase, FieldSchema, Objects, Fun, Option, Attr) {
     var schema = [
       Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),
@@ -103,9 +104,41 @@ define(
               return Highlighting.getHighlighted(chooser).map(function (choice) {
                 return choice.element();
               });
+            },
+            execute: function (chooser, simulatedEvent, focused) {
+              return chooser.getSystem().getByDom(focused).map(function (choice) {
+                Highlighting.highlight(chooser, choice);
+                return true;
+              });
+            }
+          },
+
+          highlighting: {
+            itemClass: detail.markers().choiceClass(),
+            highlightClass: detail.markers().selectedClass(),
+            onHighlight: function (chooser, choice) {
+              Attr.set(choice.element(), 'aria-checked', 'true');
+            },
+            onDehighlight: function (chooser, choice) {
+              Attr.set(choice.element(), 'aria-checked', 'false');
             }
           }
-        }
+        },
+
+        events: Objects.wrapAll([
+          {
+            key: SystemEvents.execute(),
+            value: EventHandler.nu({
+              run: function (chooser, simulatedEvent) {
+                // TODO :Check this will always be present (button property)
+                chooser.getSystem().getByDom(simulatedEvent.event().target()).each(function (choice) {
+                  Highlighting.highlight(chooser, choice);
+                });
+              }
+            })
+          }
+
+        ])
       };
     };
 

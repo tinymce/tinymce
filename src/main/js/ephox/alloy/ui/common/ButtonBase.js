@@ -26,7 +26,8 @@ define(
           var system = component.getSystem();
           simulatedEvent.stop();
           system.triggerEvent(SystemEvents.execute(), component.element(), {
-            button: Fun.constant(component)
+            button: Fun.constant(component),
+            target: Fun.constant(component.element())
           });
         }
       });
