@@ -7,6 +7,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.FormChooser',
+    'ephox.alloy.api.ui.FormCoupledInputs',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
@@ -14,7 +15,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormChooser, FormField, HtmlSelect, Input, GuiSetup, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -114,13 +115,50 @@ asynctest(
         }
       });
 
+      var coupledD1 = {
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          FormField.parts(Input).label(),
+          FormField.parts(Input).field()
+        ],
+        parts: {
+          field: { },
+          label: labelSpec
+        }
+      };
+
+      var coupledD = FormCoupledInputs.build({
+        dom: {
+          tag: 'div',
+          classes: [ 'coupled-group' ]
+        },
+        components: [
+          FormCoupledInputs.parts().field1()
+        ],
+
+        onLockedChange: function () {
+          debugger;
+        },
+        markers: {
+          lockClass: 'coupled-lock'
+        },
+        parts: {
+          field1: coupledD1,
+          field2: { },
+          lock: { }
+        }
+      });
+
       return GuiFactory.build(
         {
           uiType: 'container',
           components: [
             inputA,
             selectB,
-            chooserC
+            chooserC,
+            coupledD
           ]
         }
       );
