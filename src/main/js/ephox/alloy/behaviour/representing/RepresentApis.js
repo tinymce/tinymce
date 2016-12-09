@@ -7,17 +7,16 @@ define(
 
   function () {
     var onLoad = function (component, repInfo) {
-      setValue(component, repInfo, repInfo.initialValue());
+      repInfo.store().manager().onLoad(component, repInfo);
     };
 
     var setValue = function (component, repInfo, value) {
-      console.log('setting', value);
-      repInfo.state().set(value);
+      repInfo.store().manager().setValue(component, repInfo, value);
       repInfo.onSet()(component, value);
     };
 
     var getValue = function (component, repInfo) {
-      return repInfo.state().get();
+      return repInfo.store().manager().getValue(component, repInfo);
     };
 
     return {

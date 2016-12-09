@@ -59,6 +59,10 @@ define(
           representing: {
             initialValue: detail.data().getOr({ value: '', text: '' }),
 
+            store: {
+              mode: 'menory'
+            },
+
             interactive: {
               event: 'input',
               process: function (input) {

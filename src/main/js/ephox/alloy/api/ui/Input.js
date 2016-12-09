@@ -31,6 +31,7 @@ define(
 
     var make = function (detail, spec) {
       return {
+        uid: detail.uid(),
         uiType: 'custom',
         dom: {
           tag: detail.tag(),
@@ -42,7 +43,10 @@ define(
         components: [ ],
         behaviours: {
           representing: {
-            initialValue: detail.data().getOr({ value: '', text: '' }),
+            store: {
+              mode: 'memory',
+              initialValue: detail.data().getOr({ value: '', text: '' })
+            },
 
             interactive: {
               event: 'input',
