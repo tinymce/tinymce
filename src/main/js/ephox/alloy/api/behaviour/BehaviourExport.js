@@ -143,9 +143,16 @@ define(
       );
     };
 
+    var exhibitor = function (name, exhibition) {
+      return santa([ ], name, {
+        exhibit: exhibition
+      }, { }, { });
+    };
+
     return {
       build: build,
       modeSanta: modeSanta,
+      exhibitor: exhibitor,
       santa: santa
     };
   }

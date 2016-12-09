@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.FormChooser',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
@@ -13,7 +14,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormField, HtmlSelect, Input, GuiSetup, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, FormChooser, FormField, HtmlSelect, Input, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -72,12 +73,53 @@ asynctest(
         }
       });
 
+      var chooserC = FormChooser.build({
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          FormChooser.parts().legend(),
+          FormChooser.parts().choices()
+        ],
+        members: {
+          choice: {
+            munge: function (choiceSpec) {
+              return {
+                uiType: 'custom',
+                dom: {
+                  tag: 'span',
+                  innerHtml: choiceSpec.text,
+                  attributes: {
+                    'data-value': choiceSpec.value
+                  }
+                },
+                components: [ ]
+              };
+            }
+          }
+        },
+        markers: {
+          choiceClass: 'test-choice',
+          selectedClass: 'test-selected-choice'
+        },
+        choices: [
+          { value: 'choice1', text: 'Choice1' },
+          { value: 'choice2', text: 'Choice2' },
+          { value: 'choice3', text: 'Choice3' }
+        ],
+        parts: {
+          legend: { },
+          choices: { }
+        }
+      });
+
       return GuiFactory.build(
         {
           uiType: 'container',
           components: [
             inputA,
-            selectB
+            selectB,
+            chooserC
           ]
         }
       );
