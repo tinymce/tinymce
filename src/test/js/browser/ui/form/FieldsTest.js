@@ -1,5 +1,5 @@
 asynctest(
-  'Basic Form',
+  'Fields Ui',
  
   [
     'ephox.agar.api.Keyboard',
@@ -7,33 +7,34 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.FormInput',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.peanut.Fun'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, Form, EventHandler, GuiSetup, Fun) {
+  function (Keyboard, Keys, Step, GuiFactory, Form, FormInput, EventHandler, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Form.build({
-          dom: {
-            tag: 'div'
-          },
-          parts: {
-            'form.ant': {
-              type: 'text-input',
-              parts: { }
-            }
-          },
-          members: {
-            ui: {
-              munge: Fun.identity
-            }
-          }
-        })
+        {
+          uiType: 'container',
+          components: [
+            FormInput.build({
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                FormInput.parts().field()
+              ],
+              parts: {
+                field: { }
+              }
+            })
+          ]
+        }
       );
 
     }, function (doc, body, gui, component, store) {
