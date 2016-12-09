@@ -18,29 +18,32 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
+
+      var inputA = FormInput.build({
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          FormInput.parts().field(),
+          FormInput.parts().label()
+        ],
+        parts: {
+          field: { },
+          label: {
+            dom: {
+              tag: 'label',
+              innerHtml: 'Label'
+            },
+            components: [ ]
+          }
+        }
+      });
+
       return GuiFactory.build(
         {
           uiType: 'container',
           components: [
-            FormInput.build({
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                FormInput.parts().field(),
-                FormInput.parts().label()
-              ],
-              parts: {
-                field: { },
-                label: {
-                  dom: {
-                    tag: 'label',
-                    innerHtml: 'Label'
-                  },
-                  components: [ ]
-                }
-              }
-            })
+            inputA
           ]
         }
       );
