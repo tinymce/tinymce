@@ -2256,7 +2256,7 @@ define("tinymce/Formatter", [
 				}
 
 				// Expand to word if caret is in the middle of a text node and the char before/after is a alpha numeric character
-				var wordcharRegex = /^[A-Za-z0-9\u00C0-\u017F]+$/;
+				var wordcharRegex = /[^\s\u00a0\u00ad\u200b\ufeff]/;
 				if (text && offset > 0 && offset < text.length &&
 					wordcharRegex.test(text.charAt(offset)) && wordcharRegex.test(text.charAt(offset - 1))) {
 					// Get bookmark of caret position
