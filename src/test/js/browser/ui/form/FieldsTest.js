@@ -7,14 +7,13 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.FormField',
-    'ephox.alloy.api.ui.FormInput',
-    'ephox.alloy.api.ui.FormSelect',
+    'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormField, FormInput, FormSelect, Input, GuiSetup, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, FormField, HtmlSelect, Input, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -48,14 +47,15 @@ asynctest(
         }
       });
 
-      var selectB = FormSelect.build({
+      var selectB = FormField.build(HtmlSelect, {
         uid: 'select-b',
         dom: {
           tag: 'div'
         },
         components: [
-          FormSelect.parts().label(),
-          FormSelect.parts().field()
+          // TODO: Do not recalculate
+          FormField.parts(HtmlSelect).label(),
+          FormField.parts(HtmlSelect).field()
         ],
         parts: {
           field: {

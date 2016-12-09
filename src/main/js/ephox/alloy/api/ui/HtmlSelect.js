@@ -8,11 +8,12 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.TextContent',
     'ephox.sugar.api.Value'
   ],
 
-  function (Fields, Tagger, SpecSchema, FieldSchema, Arr, Merger, TextContent, Value) {
+  function (Fields, Tagger, SpecSchema, FieldSchema, Arr, Merger, Fun, TextContent, Value) {
     var schema = [
       FieldSchema.strict('options'),
       Fields.members([ 'option' ]),
@@ -73,74 +74,11 @@ define(
           }
         }
       );
-     
-      // });
-
-
-      // return {
-      //   uid: detail.uid(),
-      //   uiType: 'custom',
-      //   dom: {
-      //     tag: detail.tag(),
-      //     attributes: {
-      //       type: detail.type()
-      //     }
-      //   },
-      //   // No children.
-      //   components: [ ],
-      //   behaviours: {
-      //     representing: {
-      //       store: {
-      //         mode: 'memory',
-      //         initialValue: detail.data().getOr({ value: '', text: '' })
-      //       },
-
-      //       interactive: {
-      //         event: 'input',
-      //         process: function (input) {
-      //           var v = Value.get(input.element());
-      //           return {
-      //             value: v.toLowerCase(),
-      //             text: v
-      //           };
-      //         }
-      //       },
-
-      //       onSet: function (input, data) {
-      //         Value.set(input.element(), data.value);
-      //       }
-      //     }
-      //   }
-      // };
     };
 
     return {
-      build: build
+      build: build,
+      name: Fun.constant('html-select')
     };
-
-
-    // parts: {
-    //       field: Merger.deepMerge(
-    //         info.parts().field(),
-    //         {
-    //           uiType: 'custom',
-    //           dom: {
-    //             tag: 'select'
-    //           },
-    //           representing: { 
-    //             query: function (input) {
-    //               return Value.get(input.element());
-    //             },
-    //             set: function (input, value) {
-    //               Value.set(input.element(), value);
-    //             }
-    //           },
-    //           components: options
-    //         }
-    //       ),
-    //       label: { }
-    //     },
-    //     dom: info.dom(),
-    // return null;
   }
 );
