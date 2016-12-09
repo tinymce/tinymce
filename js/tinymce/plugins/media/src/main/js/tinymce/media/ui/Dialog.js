@@ -28,6 +28,7 @@ define('tinymce.media.ui.Dialog', [
 			HtmlToData.htmlToData(editor.settings.media_scripts, editor.serializer.serialize(element, {selection: true})) :
 			{};
 	};
+
 	var getSource = function (editor) {
 		var elm = editor.selection.getNode();
 
@@ -198,13 +199,6 @@ define('tinymce.media.ui.Dialog', [
 			multiline: true,
 			label: 'Source'
 		};
-
-		var updateValueOnChange = function () {
-			data = Tools.extend({}, HtmlToData.htmlToData(editor.settings.media_scripts, this.value()));
-			this.parent().parent().fromJSON(data);
-		};
-
-		embedTextBox[embedChange] = updateValueOnChange;
 
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
