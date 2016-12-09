@@ -18,8 +18,8 @@ define(
     ];
 
     // Dupe with Tiered Menu
-    var build = function (f) {
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, f());
+    var build = function (rawSpec) {
+      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
       var detail = SpecSchema.asStructOrDie('TieredMenu', schema, spec, [ ]);
       return ButtonSpec.make(detail, spec);
     };

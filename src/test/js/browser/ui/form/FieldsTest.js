@@ -136,11 +136,12 @@ asynctest(
         },
         components: [
           FormCoupledInputs.parts().field1(),
-          FormCoupledInputs.parts().field2()
+          FormCoupledInputs.parts().field2(),
+          FormCoupledInputs.parts().lock()
         ],
 
-        onLockedChange: function () {
-          debugger;
+        onLockedChange: function (primary, current, other) {
+          Representing.setValueFrom(other, current);
         },
         markers: {
           lockClass: 'coupled-lock'
@@ -148,7 +149,12 @@ asynctest(
         parts: {
           field1: coupledDText,
           field2: coupledDText,
-          lock: { }
+          lock: {
+            dom: {
+              tag: 'button',
+              innerHtml: '+'
+            }
+          }
         }
       });
 
@@ -172,7 +178,7 @@ asynctest(
 
       return [
         GuiSetup.mAddStyles(doc, [
-          '.test-selected-choice { background: #cadbee }'
+          '.test-selected-choice, .coupled-lock { background: #cadbee }'
         ]),
         Step.sync(function () {
           var val = Representing.getValue(inputA);

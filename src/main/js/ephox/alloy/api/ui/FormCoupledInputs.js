@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.Input',
@@ -15,7 +16,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Toggling, CompositeBuilder, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
+  function (Composing, Toggling, Button, CompositeBuilder, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
     var schema = [
       FieldSchema.strict('onLockedChange'),
       Fields.markers([ 'lockClass' ])
@@ -28,12 +29,12 @@ define(
     };
 
     var getPart = function (comp, detail, partName) {
-      return comp.getSystem().getByUid(detail.partUids()[partName]);
+      return comp.getSystem().getByUid(detail.partUids()[partName]).fold(Option.none, Option.some);
     };
 
     var getField = function (comp, detail, partName) {
-      return getPart(comp, detail, partName).map(Composing.getCurrent).fold(Option.none, Option.some);
-    }
+      return getPart(comp, detail, partName).bind(Composing.getCurrent);
+    };
 
     var partTypes = [
       PartType.internal(
@@ -47,8 +48,8 @@ define(
               'input': EventHandler.nu({
                 run: function (field1) {
                   getField(field1, detail, 'field2').each(function (field2) {
-                    getField(field1, detail, 'lock').each(function (lock) {
-                      detail.onLockedChange()(field1, field1, field2, lock);
+                    getPart(field1, detail, 'lock').each(function (lock) {
+                      if (Toggling.isSelected(lock)) detail.onLockedChange()(field1, field1, field2, lock);
                     });
                   });
                 }
@@ -70,12 +71,28 @@ define(
               'input': EventHandler.nu({
                 run: function (field2) {
                   getField(field2, detail, 'field1').each(function (field1) {
-                    getField(field2, detail, 'lock').each(function (lock) {
-                      detail.onLockedChange()(field1, field2, field1, lock);
+                    getPart(field2, detail, 'lock').each(function (lock) {
+                      if (Toggling.isSelected(lock)) detail.onLockedChange()(field1, field2, field1, lock);
                     });
                   });
                 }
               })
+            }
+          };
+        }
+      ),
+
+      PartType.internal(
+        Button,
+        'lock',
+        '<alloy.coupled-inputs.lock>',
+        Fun.constant({ }),
+        function (detail) {
+          return {
+            behaviours: {
+              toggling: {
+                toggleClass: detail.markers().lockClass()
+              }
             }
           };
         }
