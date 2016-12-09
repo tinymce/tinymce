@@ -88,6 +88,7 @@ define("tinymce/codesampleplugin/Plugin", [
 
 						elm.contentEditable = false;
 						elm.innerHTML = editor.dom.encode(elm.textContent);
+						console.log(elm);
 						Prism.highlightElement(elm);
 						elm.className = $.trim(elm.className);
 					});
@@ -96,7 +97,8 @@ define("tinymce/codesampleplugin/Plugin", [
 		});
 
 		editor.addCommand('codesample', function() {
-			if (editor.selection.isCollapsed()) {
+			var node = editor.selection.getNode();
+			if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
 				Dialog.open(editor);
 			} else {
 				editor.formatter.toggle('code');
