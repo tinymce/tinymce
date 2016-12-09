@@ -8,10 +8,11 @@ asynctest(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.FormInput',
     'ephox.alloy.api.ui.FormSelect',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormInput, FormSelect, GuiSetup) {
+  function (Assertions, Step, GuiFactory, Representing, FormInput, FormSelect, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -55,7 +56,16 @@ asynctest(
           FormSelect.parts().field()
         ],
         parts: {
-          field: { },
+          field: {
+            options: [
+              { value: 'select-b-init', text: 'Select-b-init' }
+            ],
+            members: {
+              option: {
+                munge: Fun.identity
+              }
+            }
+          },
           label: labelSpec
         }
       });
@@ -73,12 +83,21 @@ asynctest(
     }, function (doc, body, gui, component, store) {
 
       var inputA = component.getSystem().getByUid('input-a').getOrDie();
+      var selectB = component.getSystem().getByUid('select-b').getOrDie();
 
       return [
         Step.sync(function () {
           var val = Representing.getValue(inputA);
-          Assertions.assertEq('Checking input-a value', 'Init', val.text);
+          Assertions.assertEq('Checking input-a value', 'init', val.value);
+          Assertions.assertEq('Checking input-a text', 'Init', val.text);
         }),
+
+        Step.sync(function () {
+          var val = Representing.getValue(selectB);
+          Assertions.assertEq('Checking select-b value', 'select-b-init', val.value);
+          Assertions.assertEq('Checking select-b text', 'Select-b-init', val.text);
+        }),
+
 
         Step.fail('done')
       ];
