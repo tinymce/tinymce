@@ -2,18 +2,24 @@ define(
   'ephox.alloy.api.ui.FormInput',
 
   [
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
+    'ephox.epithet.Id',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Attr'
   ],
 
-  function (Composing, Representing, CompositeBuilder, Input, PartType, FieldSchema, Fun, Option) {
+  function (SystemEvents, Composing, Representing, CompositeBuilder, Input, EventHandler, PartType, FieldSchema, Objects, Id, Fun, Option, Attr) {
     var schema = [
+      FieldSchema.defaulted('prefix', 'form-input')
       // FieldSchema.strict('components'),
       // FieldSchema.option('placeholder')
       // If the current value is empty, on focus, take the value of the placeholder
@@ -72,7 +78,25 @@ define(
               }
             }
           }
-        }
+        },
+
+        events: Objects.wrap(
+          SystemEvents.systemInit(),
+          EventHandler.nu({
+            run: function (component) {
+              var system = component.getSystem();
+              system.getByUid(detail.partUids().label).each(function (label) {
+                system.getByUid(detail.partUids().field).each(function (field) {
+                  var id = Id.generate(detail.prefix());
+                              
+                  // TODO: Find a nicer way of doing this.
+                  Attr.set(label.element(), 'for', id);
+                  Attr.set(field.element(), 'id', id);    
+                });
+              });          
+            }
+          })
+        )
       };
     };
 
