@@ -26,7 +26,7 @@ define(
       return {
         uiType: 'custom',
         dom: {
-          tag: 'span'
+          tag: 'div'
         },
         components: components,
         behaviours: FieldUtils.behaviours(detail),
