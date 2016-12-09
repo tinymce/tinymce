@@ -53,3 +53,11 @@ Below is a list of commonly used parts of `katamari`
 `Obj`: collection of functions that operate on JavaScript objects
 `Merger`: collection of functions to merge JavaScript objects
 
+# Tests
+
+`katamari` uses `bolt` to run atomic tests. The tests are chiefly written using [jsverify](https://github.com/jsverify/jsverify)
+
+## Running Tests
+
+`$ npm test`
+
