@@ -2,18 +2,13 @@ asynctest(
   'Fields Ui',
  
   [
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormInput',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.test.GuiSetup',
-    'ephox.peanut.Fun'
+    'ephox.alloy.test.GuiSetup'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, Form, FormInput, EventHandler, GuiSetup, Fun) {
+  function (Step, GuiFactory, FormInput, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -18,7 +18,6 @@ define(
   function (EventRoot, SystemEvents, Representing, EventHandler, Tagger, SpecSchema, FieldSchema, Objects, Merger, Fun, Value) {
     var schema = [
       FieldSchema.option('data'),
-      FieldSchema.option('placeholder'),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input')
     ];
@@ -34,7 +33,10 @@ define(
       return {
         uiType: 'custom',
         dom: {
-          tag: detail.tag()
+          tag: detail.tag(),
+          attributes: {
+            type: detail.type()
+          }
         },
         // No children.
         components: [ ],
