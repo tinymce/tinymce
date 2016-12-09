@@ -7,12 +7,21 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.FormInput',
+    'ephox.alloy.api.ui.FormSelect',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormInput, GuiSetup) {
+  function (Assertions, Step, GuiFactory, Representing, FormInput, FormSelect, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var labelSpec = {
+      dom: {
+        tag: 'label',
+        innerHtml: 'Label'
+      },
+      components: [ ]
+    };
 
     GuiSetup.setup(function (store, doc, body) {
 
@@ -32,13 +41,22 @@ asynctest(
               text: 'Init'
             }
           },
-          label: {
-            dom: {
-              tag: 'label',
-              innerHtml: 'Label'
-            },
-            components: [ ]
-          }
+          label: labelSpec
+        }
+      });
+
+      var selectB = FormSelect.build({
+        uid: 'select-b',
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          FormSelect.parts().label(),
+          FormSelect.parts().field()
+        ],
+        parts: {
+          field: { },
+          label: labelSpec
         }
       });
 
@@ -46,7 +64,8 @@ asynctest(
         {
           uiType: 'container',
           components: [
-            inputA
+            inputA,
+            selectB
           ]
         }
       );

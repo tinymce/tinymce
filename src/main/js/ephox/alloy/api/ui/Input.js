@@ -71,8 +71,7 @@ define(
     };
 
     return {
-      build: build,
-      partial: Fun.identity
+      build: build
     };
   }
 );

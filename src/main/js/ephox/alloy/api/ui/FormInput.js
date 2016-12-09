@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.common.FieldParts',
     'ephox.alloy.api.ui.common.FieldUtils',
     'ephox.alloy.parts.PartType',
@@ -10,13 +11,15 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, FieldParts, FieldUtils, PartType, FieldSchema, Fun) {
+  function (CompositeBuilder, Input, FieldParts, FieldUtils, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('prefix', 'form-input')
     ];
 
+    var partTypes = FieldParts(Input);
+
     var build = function (spec) {
-      return CompositeBuilder.build('form-input', schema, FieldParts, make, spec);
+      return CompositeBuilder.build('form-input', schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, externals) {
@@ -31,7 +34,7 @@ define(
       };
     };
 
-    var parts = PartType.generate('form-input', FieldParts);
+    var parts = PartType.generate('form-input', partTypes);
 
     return {
       build: build,
