@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.common.FieldParts',
+    'ephox.alloy.api.ui.common.FieldUtils',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (SystemEvents, Composing, Representing, CompositeBuilder, Input, FieldParts, EventHandler, PartType, FieldSchema, Objects, Id, Fun, Option, Attr) {
+  function (SystemEvents, Composing, Representing, CompositeBuilder, Input, FieldParts, FieldUtils, EventHandler, PartType, FieldSchema, Objects, Id, Fun, Option, Attr) {
     var schema = [
       FieldSchema.defaulted('prefix', 'form-input')
       // FieldSchema.strict('components'),
@@ -64,23 +65,7 @@ define(
           }
         },
 
-        events: Objects.wrap(
-          SystemEvents.systemInit(),
-          EventHandler.nu({
-            run: function (component) {
-              var system = component.getSystem();
-              system.getByUid(detail.partUids().label).each(function (label) {
-                system.getByUid(detail.partUids().field).each(function (field) {
-                  var id = Id.generate(detail.prefix());
-                              
-                  // TODO: Find a nicer way of doing this.
-                  Attr.set(label.element(), 'for', id);
-                  Attr.set(field.element(), 'id', id);    
-                });
-              });          
-            }
-          })
-        )
+        events: FieldUtils.events(detail)
       };
     };
 
