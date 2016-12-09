@@ -1291,6 +1291,16 @@ test('Caret format inside single block word', function() {
 	equal(editor.getContent(), '<p><b>abc</b></p>');
 });
 
+test('Caret format inside non-ascii single block word', function() {
+	editor.setContent('<p>noël</p>');
+	editor.formatter.register('format', {
+		inline: 'b'
+	});
+	Utils.setSelection('p', 2, 'p', 2);
+	editor.formatter.apply('format');
+	equal(editor.getContent(), '<p><b>noël</b></p>');
+});
+
 test('Caret format inside first block word', function() {
 	editor.setContent('<p>abc 123</p>');
 	editor.formatter.register('format', {
