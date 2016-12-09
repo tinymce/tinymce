@@ -1680,8 +1680,12 @@ define("tinymce/util/Quirks", [
 				var rng = editor.selection.getRng();
 				var startCaretPos = CaretPosition.fromRangeStart(rng);
 				var endCaretPos = CaretPosition.fromRangeEnd(rng);
+				var prev = caretWalker.prev(startCaretPos);
+				var next = caretWalker.next(endCaretPos);
 
-				return !editor.selection.isCollapsed() && !caretWalker.prev(startCaretPos) && !caretWalker.next(endCaretPos);
+				return !editor.selection.isCollapsed() &&
+					(!prev || prev.isAtStart()) &&
+					(!next || (next.isAtEnd() && startCaretPos.getNode() !== next.getNode()));
 			}
 
 			// Type over case delete and insert this won't cover typeover with a IME but at least it covers the common case
