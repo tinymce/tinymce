@@ -27,10 +27,18 @@ asynctest(
                 tag: 'div'
               },
               components: [
-                FormInput.parts().field()
+                FormInput.parts().field(),
+                FormInput.parts().label()
               ],
               parts: {
-                field: { }
+                field: { },
+                label: {
+                  dom: {
+                    tag: 'label',
+                    innerHtml: 'Label'
+                  },
+                  components: [ ]
+                }
               }
             })
           ]

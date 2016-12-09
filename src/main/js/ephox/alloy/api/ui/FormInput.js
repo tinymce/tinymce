@@ -18,6 +18,13 @@ define(
     ];
 
     var partTypes = [
+      PartType.optional(
+        { build: Fun.identity },
+        'label',
+        '<alloy.input.label>',
+        Fun.constant({ }),
+        Fun.constant({ })
+      ),
       PartType.internal(
         Input,
         'field',
