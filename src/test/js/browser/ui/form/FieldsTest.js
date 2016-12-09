@@ -74,6 +74,7 @@ asynctest(
       });
 
       var chooserC = FormChooser.build({
+        uid: 'chooser-c',
         dom: {
           tag: 'div'
         },
@@ -128,8 +129,12 @@ asynctest(
 
       var inputA = component.getSystem().getByUid('input-a').getOrDie();
       var selectB = component.getSystem().getByUid('select-b').getOrDie();
+      var chooserC = component.getSystem().getByUid('chooser-c').getOrDie();
 
       return [
+        GuiSetup.mAddStyles(doc, [
+          '.test-selected-choice { background: #cadbee }'
+        ]),
         Step.sync(function () {
           var val = Representing.getValue(inputA);
           Assertions.assertEq('Checking input-a value', 'init', val.value);
@@ -142,8 +147,17 @@ asynctest(
           Assertions.assertEq('Checking select-b text', 'Select-b-init', val.text);
         }),
 
+        Step.sync(function () {
+          var val = Representing.getValue(chooserC).getOrDie();
+          Assertions.assertEq('Checking chooser-c value', 'choice1', val);
 
-        Step.fail('done')
+          Representing.setValue(chooserC, 'choice3');
+          var val2 = Representing.getValue(chooserC).getOrDie();
+          Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
+        }),
+
+        Step.fail('done'),
+        GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
 

@@ -2,9 +2,11 @@ define(
   'ephox.alloy.api.ui.FormChooser',
 
   [
+    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
@@ -14,12 +16,14 @@ define(
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr'
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (SystemEvents, BehaviourExport, Highlighting, CompositeBuilder, EventHandler, Fields, DomModification, EventSource, PartType, ButtonBase, FieldSchema, Objects, Fun, Option, Attr) {
+  function (EventRoot, SystemEvents, BehaviourExport, Highlighting, Representing, CompositeBuilder, EventHandler, Fields, DomModification, EventSource, PartType, ButtonBase, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
     var schema = [
       Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),
@@ -63,7 +67,7 @@ define(
               representing: {
                 store: {
                   mode: 'memory',
-                  initialValue: choiceSpec
+                  initialValue: choiceSpec.value
                 }
               },
               focusing: { },
@@ -89,6 +93,19 @@ define(
     };
 
     var make = function (detail, components, spec, externals) {
+      var findByValue = function (chooser, value) {
+        var choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers().choiceClass());
+        var choiceComps = Arr.map(choices, function (c) {
+          return chooser.getSystem().getByDom(c).getOrDie();
+        });
+
+        var chosen = Arr.find(choiceComps, function (c) {
+          return Representing.getValue(c) === value;
+        });
+
+        return Option.from(chosen);
+      };
+
       return {
         uiType: 'custom',
         uid: detail.uid(),
@@ -122,6 +139,20 @@ define(
             onDehighlight: function (chooser, choice) {
               Attr.set(choice.element(), 'aria-checked', 'false');
             }
+          },
+
+          representing: {
+            store: {
+              mode: 'manual',
+              setValue: function (chooser, value) {
+                findByValue(chooser, value).each(function (choiceWithValue) {
+                  Highlighting.highlight(chooser, choiceWithValue);
+                });
+              },
+              getValue: function (chooser) {
+                return Highlighting.getHighlighted(chooser).map(Representing.getValue);
+              }
+            }
           }
         },
 
@@ -134,6 +165,19 @@ define(
                 chooser.getSystem().getByDom(simulatedEvent.event().target()).each(function (choice) {
                   Highlighting.highlight(chooser, choice);
                 });
+              }
+            })
+          },
+
+          {
+            key: SystemEvents.systemInit(),
+            value: EventHandler.nu({
+              run: function (chooser, simulatedEvent) {
+                if (EventRoot.isSource(chooser, simulatedEvent)) {
+                  Highlighting.getFirst(chooser).each(function (choice) {
+                    Highlighting.highlight(chooser, choice);
+                  });
+                }
               }
             })
           }
