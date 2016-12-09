@@ -18,7 +18,7 @@ define(
 
   function (Fields, FormUis, Tagger, SpecSchema, UiSubstitutes, FormSpec, FieldSchema, ValueSchema, Obj, Merger, Fun, Option) {
     var schema = [
-      Fields.members([ 'ui' ])
+      
     ];
 
     // Dupe with Tiered Menu
@@ -32,23 +32,17 @@ define(
       var detail = SpecSchema.asStructOrDie('form', schema, spec, Obj.keys(rawSpec.parts));
 
       var placeholders = Obj.tupleMap(spec.parts !== undefined ? spec.parts : {}, function (partSpec, partName) {
-        var partUid = detail.partUids()[partName];
-        var fullSpec = detail.members().ui().munge(
-          Merger.deepMerge(
-            partSpec,
-            {
-              uid: partUid
-            }
-          )
-        );
-
-        var itemInfo = ValueSchema.asStructOrDie('ui.spec item', FormUis.schema(), fullSpec);
-        var output = itemInfo.builder()(itemInfo, detail.members().ui().munge);
         return {
           k: '<alloy.field.' + partName + '>',
-          v: UiSubstitutes.single(true,  
-            output
-          )
+          v: UiSubstitutes.single(true, function () {
+            var partUid = detail.partUids()[partName];
+            return Merger.deepMerge(
+              partSpec,
+              {
+                uid: partUid
+              }
+            );
+          })
         };
       });
 
@@ -67,10 +61,18 @@ define(
       return x;
     };
 
+    var parts = function (partName) {
+      // FIX: Breaking abstraction
+      return {
+        uiType: 'placeholder',
+        owner: 'form',
+        name: '<alloy.field.' + partName + '>'
+      };
+    };
+
     return {
       build: build,
-      // Used?
-      partial: Fun.identity
+      parts: parts
     };
   }
 );
