@@ -2,35 +2,20 @@ define(
   'ephox.alloy.api.ui.FormInput',
 
   [
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.api.behaviour.Composing',
-    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.CompositeBuilder',
-    'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.common.FieldParts',
     'ephox.alloy.api.ui.common.FieldUtils',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.epithet.Id',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr'
+    'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, Composing, Representing, CompositeBuilder, Input, FieldParts, FieldUtils, EventHandler, PartType, FieldSchema, Objects, Id, Fun, Option, Attr) {
+  function (CompositeBuilder, FieldParts, FieldUtils, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('prefix', 'form-input')
-      // FieldSchema.strict('components'),
-      // FieldSchema.option('placeholder')
-      // If the current value is empty, on focus, take the value of the placeholder
-      // FieldSchema.defaulted('stickyPlaceholder', false),
-      // FieldSchema.defaulted('inline', true)
     ];
 
     var build = function (spec) {
-      console.log('spec', spec);
       return CompositeBuilder.build('form-input', schema, FieldParts, make, spec);
     };
 
@@ -41,30 +26,7 @@ define(
           tag: 'span'
         },
         components: components,
-        behaviours: {
-          composing: {
-            find: function (container) {
-              return container.getSystem().getByUid(detail.partUids().field).fold(Option.none, Option.some);
-            }
-          },
-          representing:  {
-            initialValue: { value: '', text: '' },
-            store: {
-              mode: 'manual',
-              getValue: function (container) {
-                return Composing.getCurrent(container).bind(function (current) {
-                  return Representing.getValue(current);
-                });
-              },
-              setValue: function (container, newValue) {
-                Composing.getCurrent(container).each(function (current) {
-                  Representing.setValue(current, newValue);
-                });
-              }
-            }
-          }
-        },
-
+        behaviours: FieldUtils.behaviours(detail),
         events: FieldUtils.events(detail)
       };
     };
