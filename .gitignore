@@ -11,6 +11,5 @@
 /config/bolt/bootstrap*.js
 /inconsistent.dependencies
 node_modules
-npm_output
 /config/repl
 /*.log
