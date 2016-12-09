@@ -11,10 +11,11 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.perhaps.Option'
   ],
 
-  function (Composing, Toggling, CompositeBuilder, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun) {
+  function (Composing, Toggling, CompositeBuilder, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
     var schema = [
       FieldSchema.strict('onLockedChange'),
       Fields.markers([ 'lockClass' ])
@@ -30,6 +31,10 @@ define(
       return comp.getSystem().getByUid(detail.partUids()[partName]);
     };
 
+    var getField = function (comp, detail, partName) {
+      return getPart(comp, detail, partName).map(Composing.getCurrent).fold(Option.none, Option.some);
+    }
+
     var partTypes = [
       PartType.internal(
         formInput,
@@ -41,13 +46,32 @@ define(
             events: {
               'input': EventHandler.nu({
                 run: function (field1) {
-                  getPart(field1, detail, 'field-2').each(function (field2) {
-                    getPart(field2, detail, 'lock').each(function (lock) {
-                      if (Toggling.isSelected(lock)) {
-                        var f1 = Composing.getCurrent(field1);
-                        var f2 = Composing.getCurrent(field2);
-                        detail.onLockedChange()(field1, f1, f2, lock);
-                      }
+                  getField(field1, detail, 'field2').each(function (field2) {
+                    getField(field1, detail, 'lock').each(function (lock) {
+                      detail.onLockedChange()(field1, field1, field2, lock);
+                    });
+                  });
+                }
+              })
+            }
+          };
+        }
+      ),
+
+      // FIX: Dupe
+      PartType.internal(
+        formInput,
+        'field2',
+        '<alloy.coupled-inputs.field2>',
+        Fun.constant({ }),
+        function (detail) {
+          return {
+            events: {
+              'input': EventHandler.nu({
+                run: function (field2) {
+                  getField(field2, detail, 'field1').each(function (field1) {
+                    getField(field2, detail, 'lock').each(function (lock) {
+                      detail.onLockedChange()(field1, field2, field1, lock);
                     });
                   });
                 }

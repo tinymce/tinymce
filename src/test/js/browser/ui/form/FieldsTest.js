@@ -115,7 +115,7 @@ asynctest(
         }
       });
 
-      var coupledD1 = {
+      var coupledDText = {
         dom: {
           tag: 'div'
         },
@@ -135,7 +135,8 @@ asynctest(
           classes: [ 'coupled-group' ]
         },
         components: [
-          FormCoupledInputs.parts().field1()
+          FormCoupledInputs.parts().field1(),
+          FormCoupledInputs.parts().field2()
         ],
 
         onLockedChange: function () {
@@ -145,8 +146,8 @@ asynctest(
           lockClass: 'coupled-lock'
         },
         parts: {
-          field1: coupledD1,
-          field2: { },
+          field1: coupledDText,
+          field2: coupledDText,
           lock: { }
         }
       });
