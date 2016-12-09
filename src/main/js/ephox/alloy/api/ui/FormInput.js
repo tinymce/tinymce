@@ -11,10 +11,11 @@ define(
 
   function (CompositeBuilder, Input, PartType, FieldSchema, Fun) {
     var schema = [
-      FieldSchema.strict('components'),
-      FieldSchema.option('placeholder'),
-      FieldSchema.defaulted('stickyPlaceholder', false),
-      FieldSchema.defaulted('inline', true)
+      // FieldSchema.strict('components'),
+      // FieldSchema.option('placeholder')
+      // If the current value is empty, on focus, take the value of the placeholder
+      // FieldSchema.defaulted('stickyPlaceholder', false),
+      // FieldSchema.defaulted('inline', true)
     ];
 
     var partTypes = [
