@@ -6,13 +6,15 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.FormInput',
     'ephox.alloy.api.ui.FormSelect',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormInput, FormSelect, GuiSetup, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, FormField, FormInput, FormSelect, Input, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -26,14 +28,14 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
 
-      var inputA = FormInput.build({
+      var inputA = FormField.build(Input, {
         uid: 'input-a',
         dom: {
           tag: 'div'
         },
         components: [
-          FormInput.parts().field(),
-          FormInput.parts().label()
+          FormField.parts(Input).field(),
+          FormField.parts(Input).label()
         ],
         parts: {
           field: {

@@ -71,7 +71,8 @@ define(
     };
 
     return {
-      build: build
+      build: build,
+      name: Fun.constant('input')
     };
   }
 );
