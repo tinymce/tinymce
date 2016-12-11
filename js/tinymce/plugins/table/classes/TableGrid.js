@@ -166,6 +166,23 @@ define("tinymce/tableplugin/TableGrid", [
 			return rows;
 		}
 
+		function countSelectedCols() {
+			var cols = 0;
+
+			each(table.rows, function(row) {
+				each(row.cells, function(cell) {
+					if (dom.getAttrib(cell, 'data-mce-selected') || (selectedCell && cell == selectedCell.elm)) {
+						cols++;
+					}
+				});
+				if (cols) {
+					return false;
+				}
+			});
+
+			return cols;
+		}
+
 		function deleteTable() {
 			var rng = dom.createRng();
 
@@ -592,6 +609,13 @@ define("tinymce/tableplugin/TableGrid", [
 			}
 		}
 
+		function insertRows(before, num) {
+			num = num || getSelectedRows().length || 1;
+			for (var i = 0; i < num; i++) {
+				insertRow(before);
+			}
+		}
+
 		function insertCol(before) {
 			var posX, lastCell;
 
@@ -639,6 +663,13 @@ define("tinymce/tableplugin/TableGrid", [
 					lastCell = cell;
 				}
 			});
+		}
+
+		function insertCols(before, num) {
+			num = num || countSelectedCols() || 1;
+			for (var i = 0; i < num; i++) {
+				insertCol(before);
+			}
 		}
 
 		function getSelectedCells(grid) {
@@ -1019,7 +1050,9 @@ define("tinymce/tableplugin/TableGrid", [
 			split: split,
 			merge: merge,
 			insertRow: insertRow,
+			insertRows: insertRows,
 			insertCol: insertCol,
+			insertCols: insertCols,
 			splitCols: splitCols,
 			deleteCols: deleteCols,
 			deleteRows: deleteRows,
