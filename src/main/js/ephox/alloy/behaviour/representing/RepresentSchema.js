@@ -2,13 +2,15 @@ define(
   'ephox.alloy.behaviour.representing.RepresentSchema',
 
   [
+    'ephox.alloy.behaviour.representing.RepresentApis',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.scullion.Cell'
   ],
 
-  function (FieldSchema, ValueSchema, Fun, Cell) {
+  function (RepresentApis, FieldSchema, ValueSchema, Fun, Result, Cell) {
     return [
       FieldSchema.defaulted('onSet', Fun.identity),
       
@@ -17,19 +19,11 @@ define(
         memory: [
           FieldSchema.state('state', function () { return Cell(); }),
           FieldSchema.defaulted('initialValue', { }),
-          FieldSchema.option('isValidValue'),
+          
           FieldSchema.state('manager', function () {
 
             var setValue = function (component, repInfo, data) {
-              if (isValidValue(component, repInfo, data)) {
-                repInfo.store().state().set(data);
-              }
-            };
-
-            var isValidValue = function (component, repInfo, data) {
-              return repInfo.store().isValidValue().fold(Fun.constant(true), function (f) {
-                return f(component, data);
-              });
+              repInfo.store().state().set(data);
             };
 
             var getValue = function (component, repInfo) {
@@ -38,10 +32,10 @@ define(
 
             var onLoad = function (component, repInfo) {
               var data = repInfo.store().initialValue();
-              if (isValidValue(component, repInfo, data)) {
-                setValue(component, repInfo, data);
-                repInfo.onSet()(component, data);
-              }
+              RepresentApis.extractValue(component, repInfo, data).each(function (newData) {
+                repInfo.store().state().set(newData);
+                repInfo.onSet()(component, newData);
+              });
             };
 
             return {
@@ -57,8 +51,8 @@ define(
           FieldSchema.defaulted('setValue', Fun.noop),
           FieldSchema.state('manager', function () {
             return {
-              setValue: function (component, repInfo, value) {
-                repInfo.store().setValue()(component, value);
+              setValue: function (component, repInfo, data) {
+                repInfo.store().setValue()(component, data);
               },
               getValue: function (component, repInfo) {
                 return repInfo.store().getValue()(component);  
@@ -71,7 +65,8 @@ define(
       FieldSchema.optionObjOf('interactive', [
         FieldSchema.strict('event'),
         FieldSchema.strict('process')
-      ])
+      ]),
+      FieldSchema.option('extractValue')
     ];
   }
 );

@@ -4,6 +4,7 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
@@ -20,7 +21,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Keyboard, Keys, Logger, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, Obj, Fun) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -84,54 +85,28 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
-      return [
-        Step.sync(function () {
+      var sAssertRep = function (expected) {
+        return Step.sync(function () {
           var val = Representing.getValue(component);
           Assertions.assertEq(
             'Checking form value',
-            {
-              'form.ant': { value: 'init', text: 'Init' },
-              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
-            },
+            expected,
 
             Obj.map(val, function (v, k) {
               return v.getOrDie(k + ' field is "None"'); 
             })
           );
-        }),
+        });
+      };
 
-        Step.sync(function () {
-          Representing.setValue(component, {
-            'form.ant': { value: 'ant-value', text: 'Ant-value' }
-          });
-        }),
+      var sSetRep = function (newValues) {
+        return Step.sync(function () {
+          Representing.setValue(component, newValues);
+        });
+      };
 
-        Step.sync(function () {
-          var val = Representing.getValue(component);
-          Assertions.assertEq(
-            'Checking form value after setting (form.ant)',
-            {
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
-            },
-
-            Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' field is "None"'); 
-            })
-          );
-        }),
-
-        Logger.t(
-          'Setting multiple values where select value is not a valid value',
-          Step.sync(function () {
-            Representing.setValue(component, {
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-not-there', text: 'Select-b-not-there' }
-            });
-          })
-        ),
-
-        Step.sync(function () {
+      var sAssertDisplay = function (inputText, selectValue) {
+        return Step.sync(function () {
           Assertions.assertStructure(
             'Checking that HTML select and text input have right contents',
             ApproxStructure.build(function (s, str, arr) {
@@ -139,13 +114,13 @@ asynctest(
                 children: [
                   s.element('div', {
                     children: [
-                      s.element('input', { value: str.is('Ant-value') }),
+                      s.element('input', { value: str.is(inputText) }),
                       s.element('label', {})
                     ]
                   }),
                   s.element('div', {
                     children: [
-                      s.element('select', { value: str.is('select-b-init') }),
+                      s.element('select', { value: str.is(selectValue) }),
                       s.element('label', { })
                     ]
                   })
@@ -154,25 +129,70 @@ asynctest(
             }),
             component.element()
           );
-        }),
+        });
+      };
 
+      return [
+        Logger.t(
+          'Initial values',
+          GeneralSteps.sequence([
+            sAssertRep({
+              'form.ant': { value: 'init', text: 'Init' },
+              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+            }),
+            sAssertDisplay('Init', 'select-b-init')
+          ])
+        ),
 
-        Step.sync(function () {
-          var val = Representing.getValue(component);
-          Assertions.assertEq(
-            'Checking form value after setting (form.ant and form.bull)',
-            {
+        Logger.t(
+          'Setting "form.ant" to (ant-value, Ant-value)',
+          GeneralSteps.sequence([
+            sSetRep({
+              'form.ant': { value: 'ant-value', text: 'Ant-value' }
+            }),
+
+            sAssertRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' },
               'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
-            },
+            }),
 
-            Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' field is "None"'); 
-            })
-          );
-        }),
+            sAssertDisplay('Ant-value', 'select-b-init')
+          ])
+        ),
 
-        Step.fail('Basic form demo')
+        Logger.t(
+          'Setting multiple values but the select value is invalid',
+          GeneralSteps.sequence([
+            sSetRep({
+              'form.ant': { value: 'ant-value', text: 'Ant-value' },
+              'form.bull': { value: 'select-b-not-there', text: 'Select-b-not-there' }
+            }),
+
+            sAssertRep({
+              'form.ant': { value: 'ant-value', text: 'Ant-value' },
+              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+            }),
+
+            sAssertDisplay('Ant-value', 'select-b-init')
+          ])
+        ),
+
+        Logger.t(
+          'Setting "form.ant" and "form.bull" to valid values',
+          GeneralSteps.sequence([
+            sSetRep({
+              'form.ant': { value: 'ant-value', text: 'Ant-value' },
+              'form.bull': { value: 'select-b-other', text: 'missing..' }
+            }),
+
+            sAssertRep({
+              'form.ant': { value: 'ant-value', text: 'Ant-value' },
+              'form.bull': { value: 'select-b-other', text: 'Select-b-other' }
+            }),
+
+            sAssertDisplay('Ant-value', 'select-b-other')
+          ])
+        )
       ];
     }, function () { success(); }, failure);
 

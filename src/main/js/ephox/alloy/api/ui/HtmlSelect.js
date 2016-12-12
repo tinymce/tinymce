@@ -9,11 +9,12 @@ define(
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.TextContent',
     'ephox.sugar.api.Value'
   ],
 
-  function (Fields, Tagger, SpecSchema, FieldSchema, Arr, Merger, Fun, TextContent, Value) {
+  function (Fields, Tagger, SpecSchema, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
     var schema = [
       FieldSchema.strict('options'),
       Fields.members([ 'option' ]),
@@ -52,33 +53,38 @@ define(
           components: options,
           behaviours: {
             representing: {
+              extractValue: function (comp, data) {
+                // See if there is something that matches value
+                var matching = Arr.find(detail.options(), function (opt) {
+                  return opt.value === data.value;
+                });
+
+                console.log('matching', matching);
+
+                // FIX: Update with katamari
+                return matching !== undefined && matching !== null ? Result.value(matching) : Result.error('Not found');
+              },
+
+              interactive: {
+                event: 'input',
+                process: function (comp) {
+                  return {
+                    value: Value.get(comp.element()),
+                    text: TextContent.get(comp.element())
+                  };
+                }
+              },
+
+              onSet: function (comp, data) {
+                console.log('data', data.value);
+                Value.set(comp.element(), data.value);
+              },
+
               store: {
                 mode: 'memory',
                 // TODO: Check this
                 initialValue: detail.data().getOr(detail.options()[0]),
-                interactive: {
-                  event: 'input',
-                  process: function (comp) {
-                    return {
-                      value: Value.get(comp.element()),
-                      text: TextContent.get(comp.element())
-                    };
-                  }
-                },
-
-                isValidValue: function (comp, data) {
-                  // See if there is something that matches value
-                  var matching = Arr.find(detail.options(), function (opt) {
-                    return opt.value === data.value;
-                  });
-
-                  // FIX: Update with katamari
-                  return matching !== undefined && matching !== null;
-                },
-
-                onSet: function (comp, data) {
-                  Value.set(comp.element(), data.value);
-                }
+                
               }
             }
           }
