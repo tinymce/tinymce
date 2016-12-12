@@ -4,19 +4,21 @@ define(
   [
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.PartType',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (CompositeBuilder, PartType, Fun, SelectorFind) {
+  function (CompositeBuilder, PartType, FieldSchema, Merger, Fun, SelectorFind) {
     var schema = [
-      
+      FieldSchema.strict('blockerClass')
     ];
 
     var basic = { build: Fun.identity };
 
     var partTypes = [
-      PartType.optional(basic, 'handle', '<alloy.dialog.draghandle>', Fun.constant({}), 
+      PartType.optional(basic, 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
         function (detail) {
           return {
             behaviours: {
@@ -24,7 +26,8 @@ define(
                 mode: 'mouse',
                 getTarget: function (handle) {
                   return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
-                }
+                },
+                blockerClass: detail.blockerClass()
               }
             }
           };
@@ -43,11 +46,20 @@ define(
     var parts = PartType.generate('modal-dialog', partTypes);
 
     var make = function (detail, components, spec, externals) {
-      return {
-        uiType: 'container',
-        dom: detail.dom(),
-        components: components
-      };
+      return Merger.deepMerge(
+        {
+          dom: {
+            attributes: {
+              role: 'dialog'
+            }
+          }
+        },
+        {
+          uiType: 'container',
+          dom: detail.dom(),
+          components: components
+        }
+      );
     };
 
     return {

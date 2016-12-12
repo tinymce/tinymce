@@ -19,22 +19,37 @@ asynctest(
             tag: 'div'
           },
           components: [
+            ModalDialog.parts().draghandle(),
             ModalDialog.parts().title(),
             ModalDialog.parts().close(),
             ModalDialog.parts().body(),
             ModalDialog.parts().footer()
           ],
 
+          blockerClass: 'dialog-blocker',
+
           parts: {
+            draghandle: {
+              dom: {
+                tag: 'div',
+                styles: {
+                  width: '100px',
+                  height: '40px',
+                  background: 'black'
+                }
+              }
+            },
             title: {
               dom: {
-                tag: 'div'
+                tag: 'div',
+                innerHtml: 'Title'
               },
               components: [ ]
             },
             close: {
               dom: {
-                tag: 'div'
+                tag: 'div',
+                innerHtml: 'X'
               },
               components: [ ]
             },
@@ -42,7 +57,9 @@ asynctest(
               dom: {
                 tag: 'div'
               },
-              components: [ ]
+              components: [
+                { uiType: 'container', dom: { innerHtml: '<p>This is something else</p>' } }
+              ]
             },
             footer: {
               dom: {
