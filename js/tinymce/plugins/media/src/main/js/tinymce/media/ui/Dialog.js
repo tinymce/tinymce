@@ -64,21 +64,27 @@ define('tinymce.media.ui.Dialog', [
 		editor.selection.select(afterObjects[0]);
 	};
 
+	var handleInsert = function (editor, html) {
+		var beforeObjects = editor.dom.select('img[data-mce-object]');
+
+		editor.insertContent(html);
+		selectPlaceholder(editor, beforeObjects);
+		editor.nodeChanged();
+	};
+
 	var submitForm = function (editor) {
 		return function () {
 			var data = this.toJSON();
 
-			Service.getEmbedHtml(editor, data)
-				.then(function (response) {
-					var beforeObjects = editor.dom.select('img[data-mce-object]');
-					var html = data.embed ? data.embed : response.html;
-
-					editor.insertContent(html);
-
-					selectPlaceholder(editor, beforeObjects);
-					editor.nodeChanged();
-				})
-				.catch(handleError(editor)); // eslint-disable-line
+			if (data.embed) {
+				handleInsert(editor, data.embed);
+			} else {
+				Service.getEmbedHtml(editor, data)
+					.then(function (response) {
+						handleInsert(editor, response.html);
+					})
+					.catch(handleError(editor)); // eslint-disable-line
+			}
 		};
 	};
 
@@ -199,6 +205,13 @@ define('tinymce.media.ui.Dialog', [
 			multiline: true,
 			label: 'Source'
 		};
+
+		var updateValueOnChange = function () {
+			data = Tools.extend({}, HtmlToData.htmlToData(editor.settings.media_scripts, this.value()));
+			this.parent().parent().fromJSON(data);
+		};
+
+		embedTextBox[embedChange] = updateValueOnChange;
 
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
