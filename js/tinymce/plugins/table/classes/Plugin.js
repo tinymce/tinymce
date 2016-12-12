@@ -386,19 +386,19 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableInsertRowBefore: function(grid) {
-				grid.insertRow(true);
+				grid.insertRows(true);
 			},
 
 			mceTableInsertRowAfter: function(grid) {
-				grid.insertRow();
+				grid.insertRows();
 			},
 
 			mceTableInsertColBefore: function(grid) {
-				grid.insertCol(true);
+				grid.insertCols(true);
 			},
 
 			mceTableInsertColAfter: function(grid) {
-				grid.insertCol();
+				grid.insertCols();
 			},
 
 			mceTableDeleteCol: function(grid) {
