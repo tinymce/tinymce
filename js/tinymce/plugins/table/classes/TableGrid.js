@@ -553,7 +553,7 @@ define("tinymce/tableplugin/TableGrid", [
 				});
 
 				if (before) {
-					return !posY;
+					return posY === undefined;
 				}
 			});
 
@@ -632,7 +632,7 @@ define("tinymce/tableplugin/TableGrid", [
 				});
 
 				if (before) {
-					return !posX;
+					return posX === undefined;
 				}
 			});
 
