@@ -8,7 +8,7 @@
 
 ## Install from npm
 
-`npm install @ephox/bedrock`.
+`npm install @ephox/katamari`.
 
 ## Install from source (start in source directory)
 
