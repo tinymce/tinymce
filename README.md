@@ -4,15 +4,11 @@
 
 # Installation
 
-`katamari` is available as an `npm` package. You can install it via the npm package `@ephox/katamari` or from source
+`katamari` is available as an `npm` package. You can install it via the npm package `@ephox/katamari`
 
 ## Install from npm
 
 `npm install @ephox/katamari`.
-
-## Install from source (start in source directory)
-
-`$ npm install .`
 
 
 # Usage
