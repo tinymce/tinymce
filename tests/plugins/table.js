@@ -627,7 +627,7 @@
 		equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>');
 	});
 
-	test("mceTableInsertRowAfter command with two selected columns", function() {
+	test("mceTableInsertRowAfter command with two selected rows", function() {
 		editor.getBody().innerHTML = ('<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>');
 		Utils.setSelection('tr', 0);
 		editor.execCommand('mceTableInsertRowAfter');
@@ -1117,7 +1117,7 @@
 	});
 
 
-	test("mceTableInsertRowBefore command with two selected columns", function() {
+	test("mceTableInsertRowBefore command with two selected rows", function() {
 		editor.getBody().innerHTML = ('<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>');
 		Utils.setSelection('tr', 0);
 		editor.execCommand('mceTableInsertRowBefore');
