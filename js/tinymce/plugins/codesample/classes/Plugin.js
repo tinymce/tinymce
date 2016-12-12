@@ -96,7 +96,8 @@ define("tinymce/codesampleplugin/Plugin", [
 		});
 
 		editor.addCommand('codesample', function() {
-			if (editor.selection.isCollapsed()) {
+			var node = editor.selection.getNode();
+			if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
 				Dialog.open(editor);
 			} else {
 				editor.formatter.toggle('code');
