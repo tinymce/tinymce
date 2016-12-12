@@ -25,14 +25,14 @@ Below is a list of commonly used parts of `katamari`
 
 ## Optional Data Types
 
-`Option': A representation of None or Some(x)
+`Option`: A representation of None or Some(x)
 `Result`: A representation of Error(str) or Value(v)
 
 ## Asynchronous Data Types
 
 `Future`: An abstraction over an asynchronous value
-`FutureResult': A composition of a `Result` and a `Future`
-`LazyValue': An asynchronous value that is only calculated once
+`FutureResult`: A composition of a `Result` and a `Future`
+`LazyValue`: An asynchronous value that is only calculated once
 
 ## Mutable Data Types 
 
@@ -45,7 +45,7 @@ Below is a list of commonly used parts of `katamari`
 
 ## Algebraic Data Types
 
-`Adt`: An approximate representation of an [Algebraic Data Type](https://en.wikipedia.org/wiki/Algebraic_data_type) in JavaScript
+`Adt`: An approximate representation of an [Algebraic Data Type](https://en.wikipedia.org/wiki/Algebraic_data_type) in JavaScript. It is based on the [Church Encoding](https://en.wikipedia.org/wiki/Church_encoding) method.
 
 # Higher-order Functions
 
