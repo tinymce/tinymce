@@ -10,6 +10,7 @@ asynctest(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormField',
+    'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
@@ -17,7 +18,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Keyboard, Keys, Step, GuiFactory, Representing, Form, FormField, Input, EventHandler, GuiSetup, Obj, Fun) {
+  function (Assertions, Keyboard, Keys, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,7 +30,7 @@ asynctest(
           },
           parts: {
             'form.ant': FormField.build(Input, {
-              uid: 'input-a',
+              uid: 'input-ant',
               dom: {
                 tag: 'div'
               },
@@ -46,10 +47,35 @@ asynctest(
                 },
                 label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
               }
+            }),
+
+            'form.bull': FormField.build(HtmlSelect, {
+              uid: 'select-bull',
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                FormField.parts(HtmlSelect).field(),
+                FormField.parts(HtmlSelect).label()
+              ],
+              parts: {
+                field: {
+                  options: [
+                    { value: 'select-b-init', text: 'Select-b-init' }
+                  ],
+                  members: {
+                    option: {
+                      munge: Fun.identity
+                    }
+                  }
+                },
+                label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
+              }
             })
           },
           components: [
-            Form.parts('form.ant')
+            Form.parts('form.ant'),
+            Form.parts('form.bull')
           ]
         })
       );
@@ -60,7 +86,11 @@ asynctest(
           var val = Representing.getValue(component);
           Assertions.assertEq(
             'Checking form value',
-            { 'form.ant': { value: 'init', text: 'Init' } },
+            {
+              'form.ant': { value: 'init', text: 'Init' },
+              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+            },
+
             Obj.map(val, function (v, k) {
               return v.getOrDie(k + ' missing'); 
             })
