@@ -1,6 +1,6 @@
 # Description
 
-`katamari` is a collection of various data structures andreusable higher-order functions. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`katamari` is a collection of various data structures and reusable higher-order functions. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
 
 # Installation
 
