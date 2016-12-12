@@ -8,13 +8,15 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Array',
     'global!Error'
   ],
 
-  function (DomModification, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Fun, Array, Error) {
+  function (DomModification, FieldSchema, Objects, ValueSchema, Arr, Obj, Id, Merger, Fun, Array, Error) {
+    var all = Id.generate('base-behaviour');
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -150,6 +152,7 @@ define(
     };
 
     return {
+      all: Fun.constant(all),
       build: build,
       modeSanta: modeSanta,
       exhibitor: exhibitor,

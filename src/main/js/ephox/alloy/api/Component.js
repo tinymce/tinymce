@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.ExtraArgs',
     'ephox.alloy.api.NoContextApi',
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.construct.ComponentApis',
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',
@@ -20,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (ExtraArgs, NoContextApi, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
+  function (ExtraArgs, NoContextApi, BehaviourExport, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
     var build = function (spec) { 
        var getSelf = function () {
         return self;
@@ -93,6 +94,7 @@ define(
       };
 
       var config = function (behaviour) {
+        if (behaviour === BehaviourExport.all()) return info;
         return info.behaviours().bind(function (b) {
           var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
             throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));

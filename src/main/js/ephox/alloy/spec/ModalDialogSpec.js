@@ -8,9 +8,7 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -18,7 +16,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Keying, Positioning, Behaviour, DomModification, SpecSchema, UiSubstitutes, FieldPresence, FieldSchema, ValueSchema, Merger, Fun, Option, SelectorFind, Traverse) {
+  function (Keying, Positioning, Behaviour, DomModification, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Option, SelectorFind, Traverse) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('onEscape'),
