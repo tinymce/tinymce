@@ -96,6 +96,28 @@ asynctest(
             })
           );
         }),
+
+        Step.sync(function () {
+          Representing.setValue(component, {
+            'form.ant': { value: 'ant-value', text: 'Ant-value' }
+          });
+        }),
+
+        Step.sync(function () {
+          var val = Representing.getValue(component);
+          Assertions.assertEq(
+            'Checking form value after setting (form.ant)',
+            {
+              'form.ant': { value: 'ant-value', text: 'Ant-value' },
+              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+            },
+
+            Obj.map(val, function (v, k) {
+              return v.getOrDie(k + ' missing'); 
+            })
+          );
+        }),
+
         Step.fail('Basic form demo')
       ];
     }, function () { success(); }, failure);
