@@ -2,11 +2,13 @@ define(
   'ephox.alloy.ui.crazy.FormSpec',
 
   [
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.compass.Obj'
+    'ephox.compass.Obj',
+    'ephox.perhaps.Option'
   ],
 
-  function (Representing, Obj) {
+  function (Composing, Representing, Obj, Option) {
     // FIX: Move
     var make = function (detail, components, spec) {
       return {
@@ -21,14 +23,8 @@ define(
               getValue: function (form) {
                 var partUids = detail.partUids();
                 return Obj.map(partUids, function (pUid, pName) {
-                  // Here
-                  var field = form.getSystem().getByUid(pUid).getOrDie();
-                })
-                var partComps = Arr.map(parts, function (p) {
-                  return 
-                })
-                // TODO: part components here.
-                return Obj.map(parts, Representing.getValue);
+                  return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
+                });
               },
               setValue: function (form, values) {
                 var parts = detail.parts();

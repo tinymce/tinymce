@@ -13,10 +13,11 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Keyboard, Keys, Step, GuiFactory, Representing, Form, FormField, Input, EventHandler, GuiSetup, Fun) {
+  function (Assertions, Keyboard, Keys, Step, GuiFactory, Representing, Form, FormField, Input, EventHandler, GuiSetup, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -57,7 +58,13 @@ asynctest(
       return [
         Step.sync(function () {
           var val = Representing.getValue(component);
-          Assertions.assertEq('Checking form value', 'init', val);
+          Assertions.assertEq(
+            'Checking form value',
+            { 'form.ant': { value: 'init', text: 'Init' } },
+            Obj.map(val, function (v, k) {
+              return v.getOrDie(k + ' missing'); 
+            })
+          );
         }),
         Step.fail('Basic form demo')
       ];
