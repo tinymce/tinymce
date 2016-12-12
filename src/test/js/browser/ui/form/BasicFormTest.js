@@ -92,7 +92,7 @@ asynctest(
             },
 
             Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' missing'); 
+              return v.getOrDie(k + ' field is "None"'); 
             })
           );
         }),
@@ -113,7 +113,7 @@ asynctest(
             },
 
             Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' missing'); 
+              return v.getOrDie(k + ' field is "None"'); 
             })
           );
         }),

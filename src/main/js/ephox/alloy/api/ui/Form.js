@@ -2,21 +2,17 @@ define(
   'ephox.alloy.api.ui.Form',
 
   [
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.form.FormUis',
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.alloy.ui.crazy.FormSpec',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Fields, FormUis, Tagger, SpecSchema, UiSubstitutes, FormSpec, FieldSchema, ValueSchema, Obj, Merger, Fun, Option) {
+  function (Composing, Representing, Tagger, SpecSchema, UiSubstitutes, Obj, Merger, Option) {
     var schema = [
       
     ];
@@ -55,11 +51,44 @@ define(
 
       console.log('components');
 
-      var x = FormSpec.make(detail, components, spec);
+      var x = make(detail, components, spec);
 
       console.log('x', x);
       return x;
     };
+
+    var make = function (detail, components, spec) {
+      return {
+        uiType: 'custom',
+        dom: detail.dom(),
+        components: components,
+
+        behaviours: {
+          representing: {
+            store: {
+              mode: 'manual',
+              getValue: function (form) {
+                var partUids = detail.partUids();
+                return Obj.map(partUids, function (pUid, pName) {
+                  return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
+                });
+              },
+              setValue: function (form, values) {
+                Obj.each(values, function (newValue, key) {
+                  // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
+                  var part = form.getSystem().getByUid(detail.partUids()[key]).getOrDie();
+                  Composing.getCurrent(part).each(function (current) {
+                    Representing.setValue(current, newValue);
+                  });
+                });
+              }
+            }
+          }
+        }
+      };
+
+    };
+
 
     var parts = function (partName) {
       // FIX: Breaking abstraction
