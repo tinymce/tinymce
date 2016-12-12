@@ -36,31 +36,31 @@ define(
       return getValue(cell, 'height');
     };
 
-    var convert = function (cell, number, setter) {
-      var newWidth = TableLookup.table(cell).map(function (table) {
-        var total = Width.get(table);
+    var convert = function (cell, number, getter, setter) {
+      var newSize = TableLookup.table(cell).map(function (table) {
+        var total = getter(table);
         return Math.floor((number / 100.0) * total);
       }).getOr(number);
-      setter(cell, newWidth);
-      return newWidth;
+      setter(cell, newSize);
+      return newSize;
     };
 
-    var normalizeSize = function (value, cell, setter) {
+    var normalizeSize = function (value, cell, getter, setter) {
       var number = parseInt(value, 10);
-      return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number, setter) : number;
+      return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number, getter, setter) : number;
     };
 
     var getTotalWidth = function (cell) {
       var value = getWidthValue(cell);
       // Note, Firefox doesn't calculate the width for you with Css.get
       if (!value) return Width.get(cell);
-      return normalizeSize(value, cell, setWidth);
+      return normalizeSize(value, cell, Width.get, setWidth);
     };
 
     var getTotalHeight = function (cell) {
       var value = getHeightValue(cell);
       if (!value) return Height.get(cell);
-      return normalizeSize(value, cell, setHeight);
+      return normalizeSize(value, cell, Height.get, setHeight);
     };
 
     var get = function (cell, type, f) {
