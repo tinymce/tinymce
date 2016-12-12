@@ -58,16 +58,26 @@ define(
                 initialValue: detail.data().getOr(detail.options()[0]),
                 interactive: {
                   event: 'input',
-                  process: function (input) {
+                  process: function (comp) {
                     return {
-                      value: Value.get(input.element()),
-                      text: TextContent.get(input.element())
+                      value: Value.get(comp.element()),
+                      text: TextContent.get(comp.element())
                     };
                   }
                 },
 
-                onSet: function (input, data) {
-                  Value.set(input.element(), data.value);
+                isValidValue: function (comp, data) {
+                  // See if there is something that matches value
+                  var matching = Arr.find(detail.options(), function (opt) {
+                    return opt.value === data.value;
+                  });
+
+                  // FIX: Update with katamari
+                  return matching !== undefined && matching !== null;
+                },
+
+                onSet: function (comp, data) {
+                  Value.set(comp.element(), data.value);
                 }
               }
             }

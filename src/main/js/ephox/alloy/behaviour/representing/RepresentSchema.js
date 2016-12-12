@@ -17,10 +17,19 @@ define(
         memory: [
           FieldSchema.state('state', function () { return Cell(); }),
           FieldSchema.defaulted('initialValue', { }),
+          FieldSchema.option('isValidValue'),
           FieldSchema.state('manager', function () {
 
-            var setValue = function (component, repInfo, value) {
-              repInfo.store().state().set(value);
+            var setValue = function (component, repInfo, data) {
+              if (isValidValue(component, repInfo, data)) {
+                repInfo.store().state().set(data);
+              }
+            };
+
+            var isValidValue = function (component, repInfo, data) {
+              return repInfo.store().isValidValue().fold(Fun.constant(true), function (f) {
+                return f(component, data);
+              });
             };
 
             var getValue = function (component, repInfo) {
@@ -28,9 +37,11 @@ define(
             };
 
             var onLoad = function (component, repInfo) {
-              var value = repInfo.store().initialValue();
-              setValue(component, repInfo, value);
-              repInfo.onSet()(component, value);
+              var data = repInfo.store().initialValue();
+              if (isValidValue(component, repInfo, data)) {
+                setValue(component, repInfo, data);
+                repInfo.onSet()(component, data);
+              }
             };
 
             return {
