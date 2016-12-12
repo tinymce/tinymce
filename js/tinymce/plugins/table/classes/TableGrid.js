@@ -169,9 +169,9 @@ define("tinymce/tableplugin/TableGrid", [
 		function countSelectedCols() {
 			var cols = 0;
 
-			each(table.rows, function(row) {
-				each(row.cells, function(cell) {
-					if (dom.getAttrib(cell, 'data-mce-selected') || (selectedCell && cell == selectedCell.elm)) {
+			each(grid, function(row) {
+				each(row, function(cell) {
+					if (isCellSelected(cell)) {
 						cols++;
 					}
 				});
