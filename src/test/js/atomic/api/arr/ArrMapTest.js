@@ -6,7 +6,7 @@ test(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Unique',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Arr, Fun, Obj, Unique, Jsc) {

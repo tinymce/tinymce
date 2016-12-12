@@ -2,7 +2,7 @@ test('contains',
 
   [
     'ephox.katamari.api.Strings',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function(Strings, Jsc) {

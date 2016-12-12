@@ -3,7 +3,7 @@ test('Intersperse',
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Jam',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function(Arr, Jam, Jsc) {

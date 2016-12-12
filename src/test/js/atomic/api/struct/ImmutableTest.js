@@ -5,7 +5,7 @@ test(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Struct',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Arr, Obj, Struct, Jsc) {

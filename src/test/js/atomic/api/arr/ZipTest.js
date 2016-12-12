@@ -5,7 +5,7 @@ test('Zip',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Unique',
     'ephox.katamari.api.Zip',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!parseInt'
   ],
 

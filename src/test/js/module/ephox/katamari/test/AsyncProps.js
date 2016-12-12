@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!Promise',
     'global!console'
   ],

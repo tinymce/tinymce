@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.katamari.api.StringMatch',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (StringMatch, Jsc) {

@@ -3,7 +3,7 @@ test('Unique',
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Unique',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function(Arr, Unique, Jsc) {
