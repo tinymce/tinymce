@@ -2,7 +2,6 @@ define(
   'ephox.alloy.api.ui.ExpandableForm',
 
   [
-    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
@@ -11,13 +10,12 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.sugar.api.Class'
   ],
 
-  function (Composing, Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Obj, Fun, Option, Class) {
+  function (Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Merger, Fun, Class) {
     var schema = [
       Fields.markers([
         'closedStyle',
@@ -33,8 +31,11 @@ define(
       FieldSchema.defaulted('onGrown', Fun.identity)
     ];
 
-    var doToggleForm = function (anyComp, detail) {
-      
+    var runOnExtra = function (detail, operation) {
+      return function (anyComp) {
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
+        extraOpt.each(operation);
+      };
     };
 
     var partTypes = [
@@ -80,10 +81,7 @@ define(
       }),
       PartType.internal(Button, 'expander', '<alloy.expandable-form.expander>', Fun.constant({}), function (detail) {
         return {
-          action: function (anyComp) {
-            var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
-            extraOpt.each(Sliding.toggleGrow);
-          }
+          action: runOnExtra(detail, Sliding.toggleGrow)
         };
       }),
       PartType.internal({ build: Fun.identity }, 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
@@ -107,22 +105,33 @@ define(
             store: {
               mode: 'manual',
               getValue: function (form) {
-                var partUids = detail.partUids();
-                return Obj.map(partUids, function (pUid, pName) {
-                  return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
-                });
+                var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
+                var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
+
+                var minimalValues = Representing.getValue(minimal);
+                var extraValues = Representing.getValue(extra);
+                return Merger.deepMerge(
+                  minimalValues,
+                  extraValues
+                );
               },
               setValue: function (form, values) {
-                Obj.each(values, function (newValue, key) {
-                  // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
-                  var part = form.getSystem().getByUid(detail.partUids()[key]).getOrDie();
-                  Composing.getCurrent(part).each(function (current) {
-                    Representing.setValue(current, newValue);
-                  });
-                });
+                var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
+                var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
+
+                // ASSUMPTION: Form ignore values that it does not have.
+                Representing.setValue(minimal, values);
+                Representing.setValue(extra, values);
               }
             }
           }
+        },
+
+        apis: {
+          toggleForm: runOnExtra(detail, Sliding.toggleGrow),
+          collapseForm: runOnExtra(detail, Sliding.shrink),
+          collapseFormImmediately: runOnExtra(detail, Sliding.immediateShrink),
+          expandForm: runOnExtra(detail, Sliding.grow)
         }
       };
 

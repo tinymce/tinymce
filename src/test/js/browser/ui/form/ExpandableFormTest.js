@@ -2,18 +2,21 @@ asynctest(
   'ExpandableFormTest',
  
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun'
   ],
  
-  function (Step, GuiFactory, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -144,7 +147,38 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
+      // FIX: Dupe with BasicFormTest
+      var sAssertRep = function (expected) {
+        return Step.sync(function () {
+          var val = Representing.getValue(component);
+          Assertions.assertEq(
+            'Checking form value',
+            expected,
+
+            Obj.map(val, function (v, k) {
+              return v.getOrDie(k + ' field is "None"'); 
+            })
+          );
+        });
+      };
+
+      var sSetRep = function (newValues) {
+        return Step.sync(function () {
+          Representing.setValue(component, newValues);
+        });
+      };
+
       return [
+        sAssertRep({
+          'form.ant': {
+            value: 'init',
+            text: 'Init'
+          },
+          'form.bull': {
+            value: 'select-b-init',
+            text: 'Select-b-init'
+          }
+        }),
         Step.fail('done')
       ];
     }, function () { success(); }, failure);

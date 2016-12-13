@@ -79,8 +79,9 @@ define(
                 setValue: function (form, values) {
                   Obj.each(values, function (newValue, key) {
                     // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
-                    var part = form.getSystem().getByUid(detail.partUids()[key]).getOrDie();
-                    Composing.getCurrent(part).each(function (current) {
+                    // This should ignore things that it cannot find which helps with dynamic forms but may be undesirable
+                    var part = form.getSystem().getByUid(detail.partUids()[key]).fold(Option.none, Option.some).bind(Composing.getCurrent);
+                    part.each(function (current) {
                       Representing.setValue(current, newValue);
                     });
                   });
