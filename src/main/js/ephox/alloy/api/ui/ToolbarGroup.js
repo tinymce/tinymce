@@ -4,13 +4,18 @@ define(
   [
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.PartType',
+    'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, PartType, Fun) {
-    var schema = [ ];
+  function (CompositeBuilder, PartType, FieldSchema, Fun) {
+    var schema = [
+      FieldSchema.strict('items')
+    ];
 
-    var partTypes = [ ];
+    var partTypes = [
+      PartType.group({ build: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), Fun.constant({ }))
+    ];
 
     var make = function (detail, components, spec, externals) {
       return {

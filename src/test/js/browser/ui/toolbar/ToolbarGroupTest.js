@@ -17,6 +17,17 @@ asynctest(
         ToolbarGroup.build({
           dom: {
             tag: 'div'
+          },
+          components: [
+            ToolbarGroup.parts().items()
+          ],
+
+          items: [ ],
+
+          parts: {
+            items: {
+
+            }
           }
         })
       );
