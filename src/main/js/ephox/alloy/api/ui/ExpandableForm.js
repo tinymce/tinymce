@@ -4,29 +4,72 @@ define(
   [
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.behaviour.Sliding',
-    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Form',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
-    'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldSchema',
     'ephox.compass.Obj',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Class'
   ],
 
-  function (Composing, Representing, Sliding, Button, CompositeBuilder, Form, PartType, Tagger, SpecSchema, UiSubstitutes, Obj, Merger, Fun, Option) {
-    // FIX: Some dupe with Form
-
+  function (Composing, Representing, CompositeBuilder, Form, Fields, PartType, FieldSchema, Obj, Fun, Option, Class) {
     var schema = [
-      
+      Fields.markers([
+        'closedStyle',
+        'openStyle',
+        'shrinkingStyle',
+        'growingStyle',
+
+        // TODO: Sync with initial value
+        'expandedClass',
+        'collapsedClass'
+      ]),
+      FieldSchema.defaulted('onShrunk', Fun.identity),
+      FieldSchema.defaulted('onGrown', Fun.identity)
     ];
 
     var partTypes = [
-      PartType.internal(Form, 'minimal', '<alloy.expandable-form.expander>', Fun.constant({ }), Fun.constant({ }))
+      PartType.internal(Form, 'minimal', '<alloy.expandable-form.minimal>', Fun.constant({ }), Fun.constant({ })),
+      PartType.internal(Form, 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
+        return {
+          behaviours: {
+            sliding: {
+              mode: 'height',
+              closedStyle: detail.markers().closedStyle(),
+              openStyle: detail.markers().openStyle(),
+              shrinkingStyle: detail.markers().shrinkingStyle(),
+              growingStyle: detail.markers().growingStyle(),
+              expanded: true,
+              onStartShrink: function (extra) {
+                extra.getSystem().getByUid(detail.uid()).each(function (form) {
+                  detail.markers().expandedClass().each(function (ec) { Class.remove(form.element(), ec); });
+                  detail.markers().collapsedClass().each(function (cs) { Class.add(form.element(), cs); });
+                });
+              },
+              onStartGrow: function (extra) {
+                extra.getSystem().getByUid(detail.uid()).each(function (form) {
+                  detail.markers().expandedClass().each(function (ec) { Class.add(form.element(), ec); });
+                  detail.markers().collapsedClass().each(function (cs) { Class.remove(form.element(), cs); });
+                });
+              },
+              onShrunk: function (extra) {
+                detail.onShrunk()(extra);
+                console.log('height.slider.shrunk');
+              },
+              onGrown: function (extra) {
+                detail.onGrown()(extra);
+                console.log('height.slider.grown');
+              },
+              getAnimationRoot: function (extra) {
+                return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
+              }
+            }
+          }
+        };
+      })
     ];
 
     // Dupe with Tiered Menu

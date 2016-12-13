@@ -76,6 +76,17 @@ asynctest(
         }
       };
 
+      var extra = {
+        dom: {
+          tag: 'div',
+          classes: [ 'extra-form' ]
+        },
+        components: [
+          { uiType: 'container', dom: { tag: 'div', styles: { 'height': '100px', 'width': '100px', 'background': 'green' } }}
+        ],
+        parts: { }
+      };
+
       return GuiFactory.build(
         ExpandableForm.build({
           dom: {
@@ -83,11 +94,23 @@ asynctest(
           },
 
           parts: {
-            minimal: minimal
+            minimal: minimal,
+            extra: extra
           },
           components: [
-            ExpandableForm.parts().minimal()
-          ]
+            ExpandableForm.parts().minimal(),
+            ExpandableForm.parts().extra()
+          ],
+
+          markers: {
+            closedStyle: 'expandable-closed',
+            openStyle: 'expandable-open',
+            shrinkingStyle: 'expandable-shrinking',
+            growingStyle: 'expandable-growing',
+
+            expandedClass: 'expandable-expanded',
+            collapsedClass: 'expandable-collapsed'
+          }
         })
       );
 
