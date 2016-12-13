@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.katamari.api.Obj',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Obj, Jsc) {

@@ -3,7 +3,7 @@ test('Type',
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Type',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!String'
   ],
 

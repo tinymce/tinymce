@@ -6,7 +6,7 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.FutureResult',
     'ephox.katamari.api.Result',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
 

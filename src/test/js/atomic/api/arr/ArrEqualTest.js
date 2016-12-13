@@ -5,7 +5,7 @@ test(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.test.arb.ArbDataTypes',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Arr, Fun, ArbDataTypes, Jsc) {

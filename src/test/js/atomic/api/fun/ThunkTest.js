@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.katamari.api.Thunk',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!Array'
   ],
 

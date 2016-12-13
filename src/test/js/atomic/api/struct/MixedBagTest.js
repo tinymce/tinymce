@@ -7,7 +7,7 @@ test(
     'ephox.katamari.api.Type',
     'ephox.katamari.api.Unique',
     'ephox.katamari.data.MixedBag',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Arr, Obj, Type, Unique, MixedBag, Jsc) {

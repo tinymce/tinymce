@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.katamari.api.Id',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Id, Jsc) {

@@ -4,7 +4,7 @@ test('Merger',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function(Arr, Merger, Obj, Jsc) {

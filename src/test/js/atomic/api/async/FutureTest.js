@@ -8,7 +8,7 @@ asynctest(
     'ephox.katamari.api.Futures',
     'ephox.katamari.api.Result',
     'ephox.katamari.test.AsyncProps',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!Promise',
     'global!setTimeout'
   ],
