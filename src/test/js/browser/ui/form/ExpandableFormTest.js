@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormField',
@@ -16,7 +17,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, Button, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -96,7 +97,7 @@ asynctest(
         }
       };
 
-      return GuiFactory.build(
+      var self = GuiFactory.build(
         ExpandableForm.build({
           dom: {
             tag: 'div'
@@ -110,7 +111,10 @@ asynctest(
                 tag: 'button',
                 innerHtml: '+'
               },
-              components: [ ]
+              components: [ ],
+              behaviours: {
+                tabstopping: true
+              }
             },
             controls: {
               dom: {
@@ -124,6 +128,20 @@ asynctest(
             ExpandableForm.parts().minimal(),
             ExpandableForm.parts().expander(),
             ExpandableForm.parts().extra(),
+
+            Button.build({
+              dom: {
+                tag: 'button',
+                innerHtml: 'Shrink!'
+              },
+              action: function (button) {
+                ExpandableForm.collapseFormImmediately(self);
+              },
+              behaviours: {
+                tabstopping: true
+              }
+            }),
+
             ExpandableForm.parts().controls()
           ],
 
@@ -145,6 +163,8 @@ asynctest(
           }
         })
       );
+
+      return self;
 
     }, function (doc, body, gui, component, store) {
       // FIX: Dupe with BasicFormTest

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.ExpandableForm',
 
   [
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Class'
   ],
 
-  function (Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Merger, Fun, Class) {
+  function (BehaviourExport, Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Merger, Fun, Class) {
     var schema = [
       Fields.markers([
         'closedStyle',
@@ -141,7 +142,27 @@ define(
 
     return {
       build: build,
-      parts: Fun.constant(parts)
+      parts: Fun.constant(parts),
+
+      toggleForm: function (comp) {
+        var spi = comp.config(BehaviourExport.spi());
+        spi.toggleForm(comp);
+      },
+
+      collapseForm: function (comp) {
+        var spi = comp.config(BehaviourExport.spi());
+        spi.collapseForm(comp);
+      },
+
+      collapseFormImmediately: function (comp) {
+        var spi = comp.config(BehaviourExport.spi());
+        spi.collapseFormImmediately(comp);
+      },
+
+      expandForm: function (comp) {
+        var spi = comp.config(BehaviourExport.spi());
+        spi.expandForm(comp);
+      }
     };
   }
 );
