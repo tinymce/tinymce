@@ -66,8 +66,11 @@ asynctest(
                   attrs: {
                     'data-alloy-id': str.is('nested-toolbar')
                   },
+                  classes: [ arr.not('group-items') ],
                   children: [
-                    s.anything()
+                    s.element('div', {
+                      classes: [ arr.has('group-items') ]
+                    })
                   ]
                 }),
                 s.element('div', {
