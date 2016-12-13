@@ -77,7 +77,8 @@ asynctest(
             },
             body: {
               dom: {
-                tag: 'div'
+                tag: 'div',
+                classes: [ 'test-dialog-body' ]
               },
               components: [
                 { uiType: 'container', dom: { innerHtml: '<p>This is something else</p>' } }
@@ -139,6 +140,7 @@ asynctest(
               s.element('div', { html: str.is('Title'), classes: [ arr.has('test-dialog-title') ] }),
               s.element('div', { html: str.is('X') }),
               s.element('div', { 
+                classes: [ arr.has('test-dialog-body') ],
                 children: [
                   s.element('div', {
                     children: [
@@ -162,6 +164,15 @@ asynctest(
         store.sClear,
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         store.sAssertEq('After pressing <esc>', [ 'dialog.escape' ]),
+
+        Step.sync(function () {
+          var body = ModalDialog.getBody(dialog);
+          Assertions.assertStructure('Checking body of dialog', ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+               classes: [ arr.has('test-dialog-body') ]
+            });
+          }), body.element());
+        }),
 
         Step.sync(function () {
           ModalDialog.hide(dialog);

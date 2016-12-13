@@ -99,6 +99,10 @@ define(
         });
       };
 
+      var getDialogBody = function (dialog) {
+        return dialog.getSystem().getByUid(detail.partUids().body).getOrDie();
+      };
+
       return Merger.deepMerge(
         {
           dom: {
@@ -113,7 +117,8 @@ define(
           components: components,
           apis: {
             show: showDialog,
-            hide: hideDialog
+            hide: hideDialog,
+            getBody: getDialogBody
           },
 
           behaviours: {
@@ -137,12 +142,18 @@ define(
       spi.hide(dialog);
     };
 
+    var getBody = function (dialog) {
+      var spi = dialog.config(BehaviourExport.spi());
+      return spi.getBody(dialog);
+    };
+
     return {
       build: build,
       parts: Fun.constant(parts),
 
       show: show,
-      hide: hide
+      hide: hide,
+      getBody: getBody
     };
   }
 );
