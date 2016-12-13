@@ -4,13 +4,17 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.FocusTools',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, ToolbarGroup, GuiSetup) {
+  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, ToolbarGroup, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -34,10 +38,18 @@ asynctest(
                   dom: {
                     tag: 'button',
                     innerHtml: itemSpec.data.text
+                  },
+
+                  behaviours: {
+                    focusing: true
                   }
                 };
               }
             }
+          },
+
+          markers: {
+            itemClass: 'toolbar-item'
           },
 
           parts: {
@@ -69,6 +81,16 @@ asynctest(
           }),
           component.element()
         ),
+
+        Step.sync(function () {
+          Keying.focusIn(component);
+        }),
+
+        FocusTools.sTryOnSelector('Focus should start on A', doc, 'button:contains("A")'),
+        Keyboard.sKeydown(doc, Keys.right(), { }),
+        FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")'),
+
+
         Step.fail('toolbar.test')
       ];
     }, function () { success(); }, failure);

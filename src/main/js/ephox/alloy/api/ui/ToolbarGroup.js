@@ -2,8 +2,10 @@ define(
   'ephox.alloy.api.ui.ToolbarGroup',
 
   [
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
@@ -11,14 +13,34 @@ define(
     'global!Error'
   ],
 
-  function (CompositeBuilder, Fields, PartType, FieldSchema, Merger, Fun, Error) {
+  function (BehaviourExport, CompositeBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
     var schema = [
       FieldSchema.strict('items'),
-      Fields.members([ 'item' ])
+      Fields.members([ 'item' ]),
+      Fields.markers([ 'itemClass' ])
     ];
 
     var partTypes = [
-      PartType.group({ build: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), Fun.constant({ }))
+      PartType.group({ build: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
+        return {
+          behaviours: {
+            'custom.toolbar-group': { }
+          },
+          customBehaviours: [
+            // FIX: Find a better way of doing this.
+            BehaviourExport.santa([ ], 'custom.toolbar-group', {
+              exhibit: function (base, info) {
+                return DomModification.nu({
+                  classes: [ detail.markers().itemClass() ]
+                });
+              }
+            }, {
+
+
+            }, { })
+          ]
+        };
+      })
     ];
 
     var make = function (detail, components, spec, _externals) {
@@ -34,10 +56,32 @@ define(
           uiType: 'custom',
           uid: detail.uid(),
           dom: detail.dom(),
-          components: components
+          components: components,
+
+          behaviours: {
+            keying: {
+              mode: 'flow',
+              selector: '.' + detail.markers().itemClass()
+            }
+          }
         }
       );
     };
+
+    /*
+    customBehaviours: [
+            // TODO: Add highlighting tab class.
+            BehaviourExport.santa([ ], 'tabbar.tabbuttons', {
+              exhibit: function (base, info) {
+                return DomModification.nu({
+                  classes: [ barDetail.markers().tabClass() ]
+                });
+              }
+            }, {
+
+
+            }, { })
+            */
 
     var build = function (spec) {
       return CompositeBuilder.build('toolbar-group', schema, partTypes, make, spec);
