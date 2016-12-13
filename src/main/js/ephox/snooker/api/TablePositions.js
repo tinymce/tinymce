@@ -6,10 +6,11 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellFinder',
-    'ephox.snooker.selection.CellGroup'
+    'ephox.snooker.selection.CellGroup',
+    'ephox.sugar.api.Compare'
   ],
 
-  function (TableLookup, DetailsList, Warehouse, CellFinder, CellGroup) {
+  function (TableLookup, DetailsList, Warehouse, CellFinder, CellGroup, Compare) {
     var moveBy = function (cell, deltaRow, deltaColumn) {
       return TableLookup.table(cell).bind(function (table) {
         var warehouse = getWarehouse(table);
@@ -20,6 +21,13 @@ define(
     var intercepts = function (table, first, last) {
       var warehouse = getWarehouse(table);
       return CellFinder.intercepts(warehouse, first, last);
+    };
+
+    var nestedIntercepts = function (table, first, firstTable, last, lastTable) {
+      var warehouse = getWarehouse(table);
+      var startCell = Compare.eq(table, firstTable) ? first : CellFinder.parentCell(warehouse, first);
+      var lastCell = Compare.eq(table, lastTable) ? last : CellFinder.parentCell(warehouse, last);
+      return CellFinder.intercepts(warehouse, startCell, lastCell);
     };
 
     var getBox = function (table, first, last) {
@@ -36,6 +44,7 @@ define(
     return {
       moveBy: moveBy,
       intercepts: intercepts,
+      nestedIntercepts: nestedIntercepts,
       getBox: getBox
     };
   }

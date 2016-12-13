@@ -29,9 +29,19 @@ define(
       });
     };
 
+    var parentCell = function (warehouse, innerCell) {
+      var isContainedBy = function (c1, c2) {
+        return c2.dom().contains(c1.dom());
+      };
+      return Warehouse.findItem(warehouse, innerCell, isContainedBy).bind(function (detail) {
+        return detail.element();
+      });
+    };
+
     return {
       moveBy: moveBy,
-      intercepts: intercepts
+      intercepts: intercepts,
+      parentCell: parentCell
     };
   }
 );
