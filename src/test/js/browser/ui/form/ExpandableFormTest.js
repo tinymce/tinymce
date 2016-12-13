@@ -228,7 +228,12 @@ asynctest(
         FocusTools.sTryOnSelector('Focus should move to select', doc, 'select'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
         FocusTools.sTryOnSelector('Focus should move to shrink', doc, 'button:contains("Shrink!")'),
+
         Keyboard.sKeydown(doc, Keys.enter(), {}),
+        Logger.t(
+          'Shrinking immediately should not cause any animation',
+          UiFinder.sNotExists(gui.element(), '.expandable-shrinking')
+        ),
         // Check immediately
         Keyboard.sKeydown(doc, Keys.tab(), {}),
         FocusTools.sTryOnSelector('Focus should start on input field', doc, 'input'),
@@ -285,10 +290,27 @@ asynctest(
           ])
         ),
 
+        Step.sync(function () {
+          ExpandableForm.expandForm(component);
+        }),
+        UiFinder.sExists(gui.element(), '.expandable-growing'),
+        Waiter.sTryUntil(
+          'Waiting until it has stopped growing',
+          UiFinder.sNotExists(gui.element(), '.expandable-growing'),
+          100,
+          10000
+        ),
 
-        // Check that clicking on the expander button when the focus is in an extra field shifts focus to 
-
-        Step.fail('done'),
+        Step.sync(function () {
+          ExpandableForm.collapseForm(component);
+        }),
+        UiFinder.sExists(gui.element(), '.expandable-shrinking'),
+        Waiter.sTryUntil(
+          'Waiting until it has stopped shrinking',
+          UiFinder.sNotExists(gui.element(), '.expandable-shrinking'),
+          100,
+          10000
+        ),
 
         GuiSetup.mRemoveStyles
       ];
