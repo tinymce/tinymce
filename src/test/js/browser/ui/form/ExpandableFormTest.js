@@ -169,6 +169,12 @@ asynctest(
       };
 
       return [
+        GuiSetup.mAddStyles(doc, [
+          '.expandable-collapsed .extra-form { visibility: hidden; opacity: 0; }',
+          '.expandable-expanded .extra-form { visibility: visible, opacity: 1; }',
+          '.expandable-growing .extra-form { transition: height 0.3s ease, opacity 0.2s linear 0.1s; }',
+          '.expandable-shrinking .extra-form { transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s; }'
+        ]),
         sAssertRep({
           'form.ant': {
             value: 'init',
@@ -179,7 +185,9 @@ asynctest(
             text: 'Select-b-init'
           }
         }),
-        Step.fail('done')
+        Step.fail('done'),
+
+        GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
 
