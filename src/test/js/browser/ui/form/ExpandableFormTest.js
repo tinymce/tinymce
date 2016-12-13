@@ -25,8 +25,7 @@ asynctest(
           classes: [ 'minimal-form' ]
         },
         components: [
-          Form.parts('form.ant'),
-          Form.parts('form.bull')
+          Form.parts('form.ant')
         ],
         parts: {
           'form.ant': FormField.build(Input, {
@@ -49,6 +48,20 @@ asynctest(
             }
           }),
 
+          
+        }
+      };
+
+      var extra = {
+        dom: {
+          tag: 'div',
+          classes: [ 'extra-form' ]
+        },
+        components: [
+          { uiType: 'container', dom: { tag: 'div', styles: { 'height': '100px', 'width': '100px', 'background': 'green' } }},
+          Form.parts('form.bull')
+        ],
+        parts: {
           'form.bull': FormField.build(HtmlSelect, {
             uid: 'select-bull',
             dom: {
@@ -76,17 +89,6 @@ asynctest(
         }
       };
 
-      var extra = {
-        dom: {
-          tag: 'div',
-          classes: [ 'extra-form' ]
-        },
-        components: [
-          { uiType: 'container', dom: { tag: 'div', styles: { 'height': '100px', 'width': '100px', 'background': 'green' } }}
-        ],
-        parts: { }
-      };
-
       return GuiFactory.build(
         ExpandableForm.build({
           dom: {
@@ -95,10 +97,18 @@ asynctest(
 
           parts: {
             minimal: minimal,
-            extra: extra
+            extra: extra,
+            expander: {
+              dom: {
+                tag: 'button',
+                innerHtml: '+'
+              },
+              components: [ ]
+            }
           },
           components: [
             ExpandableForm.parts().minimal(),
+            ExpandableForm.parts().expander(),
             ExpandableForm.parts().extra()
           ],
 

@@ -58,34 +58,38 @@ define(
     };
 
     var make = function (detail, components, spec) {
-      return {
-        uiType: 'custom',
-        dom: detail.dom(),
-        components: components,
+      return Merger.deepMerge(
+        spec,
+        {
+          uid: detail.uid(),
+          uiType: 'custom',
+          dom: detail.dom(),
+          components: components,
 
-        behaviours: {
-          representing: {
-            store: {
-              mode: 'manual',
-              getValue: function (form) {
-                var partUids = detail.partUids();
-                return Obj.map(partUids, function (pUid, pName) {
-                  return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
-                });
-              },
-              setValue: function (form, values) {
-                Obj.each(values, function (newValue, key) {
-                  // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
-                  var part = form.getSystem().getByUid(detail.partUids()[key]).getOrDie();
-                  Composing.getCurrent(part).each(function (current) {
-                    Representing.setValue(current, newValue);
+          behaviours: {
+            representing: {
+              store: {
+                mode: 'manual',
+                getValue: function (form) {
+                  var partUids = detail.partUids();
+                  return Obj.map(partUids, function (pUid, pName) {
+                    return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
                   });
-                });
+                },
+                setValue: function (form, values) {
+                  Obj.each(values, function (newValue, key) {
+                    // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
+                    var part = form.getSystem().getByUid(detail.partUids()[key]).getOrDie();
+                    Composing.getCurrent(part).each(function (current) {
+                      Representing.setValue(current, newValue);
+                    });
+                  });
+                }
               }
             }
           }
         }
-      };
+      );
 
     };
 

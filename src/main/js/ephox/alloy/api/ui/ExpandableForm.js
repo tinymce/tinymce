@@ -4,6 +4,8 @@ define(
   [
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.data.Fields',
@@ -15,7 +17,7 @@ define(
     'ephox.sugar.api.Class'
   ],
 
-  function (Composing, Representing, CompositeBuilder, Form, Fields, PartType, FieldSchema, Obj, Fun, Option, Class) {
+  function (Composing, Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Obj, Fun, Option, Class) {
     var schema = [
       Fields.markers([
         'closedStyle',
@@ -31,13 +33,19 @@ define(
       FieldSchema.defaulted('onGrown', Fun.identity)
     ];
 
+    var doToggleForm = function (anyComp, detail) {
+      
+    };
+
     var partTypes = [
       PartType.internal(Form, 'minimal', '<alloy.expandable-form.minimal>', Fun.constant({ }), Fun.constant({ })),
       PartType.internal(Form, 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
         return {
           behaviours: {
             sliding: {
-              mode: 'height',
+              dimension: {
+                property: 'height'
+              },
               closedStyle: detail.markers().closedStyle(),
               openStyle: detail.markers().openStyle(),
               shrinkingStyle: detail.markers().shrinkingStyle(),
@@ -45,14 +53,14 @@ define(
               expanded: true,
               onStartShrink: function (extra) {
                 extra.getSystem().getByUid(detail.uid()).each(function (form) {
-                  detail.markers().expandedClass().each(function (ec) { Class.remove(form.element(), ec); });
-                  detail.markers().collapsedClass().each(function (cs) { Class.add(form.element(), cs); });
+                  Class.remove(form.element(), detail.markers().expandedClass());
+                  Class.add(form.element(), detail.markers().collapsedClass());
                 });
               },
               onStartGrow: function (extra) {
                 extra.getSystem().getByUid(detail.uid()).each(function (form) {
-                  detail.markers().expandedClass().each(function (ec) { Class.add(form.element(), ec); });
-                  detail.markers().collapsedClass().each(function (cs) { Class.remove(form.element(), cs); });
+                  Class.add(form.element(), detail.markers().expandedClass());
+                  Class.remove(form.element(), detail.markers().collapsedClass());
                 });
               },
               onShrunk: function (extra) {
@@ -69,6 +77,14 @@ define(
             }
           }
         };
+      }),
+      PartType.internal(Button, 'expander', '<alloy.expandable-form.expander>', Fun.constant({}), function (detail) {
+        return {
+          action: function (anyComp) {
+            var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
+            extraOpt.each(Sliding.toggleGrow);
+          }
+        };
       })
     ];
 
@@ -79,6 +95,7 @@ define(
 
     var make = function (detail, components, spec, _externals) {
       return {
+        uid: detail.uid(),
         uiType: 'custom',
         dom: detail.dom(),
         components: components,
