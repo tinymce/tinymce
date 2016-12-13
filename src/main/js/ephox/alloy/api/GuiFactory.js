@@ -40,8 +40,6 @@ define(
 
     
       // 'slide-form': SlideFormSpec.make,
-      // 'expandable-form': ExpandableFormSpec.make
-
       // Add other specs here.
     };
 
