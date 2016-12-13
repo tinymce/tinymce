@@ -4,62 +4,37 @@ define(
   [
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.Form',
+    'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Representing, Tagger, SpecSchema, UiSubstitutes, Obj, Merger, Option) {
+  function (Composing, Representing, Sliding, Button, CompositeBuilder, Form, PartType, Tagger, SpecSchema, UiSubstitutes, Obj, Merger, Fun, Option) {
     // FIX: Some dupe with Form
 
     var schema = [
       
     ];
 
+    var partTypes = [
+      PartType.internal(Form, 'minimal', '<alloy.expandable-form.expander>', Fun.constant({ }), Fun.constant({ }))
+    ];
+
     // Dupe with Tiered Menu
-    var build = function (rawSpec) {
-
-
-
-
-
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
-      var detail = SpecSchema.asStructOrDie('form', schema, spec, Obj.keys(rawSpec.parts));
-
-      var placeholders = Obj.tupleMap(spec.parts !== undefined ? spec.parts : {}, function (partSpec, partName) {
-        return {
-          k: '<alloy.field.' + partName + '>',
-          v: UiSubstitutes.single(true, function () {
-            var partUid = detail.partUids()[partName];
-            return Merger.deepMerge(
-              partSpec,
-              {
-                uid: partUid
-              }
-            );
-          })
-        };
-      });
-
-      var components = UiSubstitutes.substitutePlaces(
-        Option.some('form'),
-        detail,
-        detail.components(),
-        placeholders
-      );
-
-      console.log('components');
-
-      var x = make(detail, components, spec);
-
-      console.log('x', x);
-      return x;
+    var build = function (spec) {
+      return CompositeBuilder.build('expandable-form', schema, partTypes, make, spec);
     };
 
-    var make = function (detail, components, spec) {
+    var make = function (detail, components, spec, _externals) {
       return {
         uiType: 'custom',
         dom: detail.dom(),
@@ -92,19 +67,11 @@ define(
 
     };
 
-
-    var parts = function (partName) {
-      // FIX: Breaking abstraction
-      return {
-        uiType: 'placeholder',
-        owner: 'form',
-        name: '<alloy.field.' + partName + '>'
-      };
-    };
+    var parts = PartType.generate('expandable-form', partTypes);
 
     return {
       build: build,
-      parts: parts
+      parts: Fun.constant(parts)
     };
   }
 );
