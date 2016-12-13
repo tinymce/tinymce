@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
@@ -13,10 +14,11 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.Class'
+    'ephox.sugar.api.Class',
+    'ephox.sugar.api.Focus'
   ],
 
-  function (BehaviourExport, Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Merger, Fun, Class) {
+  function (BehaviourExport, Keying, Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Merger, Fun, Class, Focus) {
     var schema = [
       Fields.markers([
         'closedStyle',
@@ -54,6 +56,12 @@ define(
               growingStyle: detail.markers().growingStyle(),
               expanded: true,
               onStartShrink: function (extra) {
+                // If the focus is inside the extra part, move the focus to the expander button
+                Focus.search(extra.element()).each(function (_) {
+                  var comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
+                  Keying.focusIn(comp);
+                });
+
                 extra.getSystem().getByUid(detail.uid()).each(function (form) {
                   Class.remove(form.element(), detail.markers().expandedClass());
                   Class.add(form.element(), detail.markers().collapsedClass());
