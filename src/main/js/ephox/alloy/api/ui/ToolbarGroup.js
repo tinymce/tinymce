@@ -5,44 +5,55 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'global!Error'
   ],
 
-  function (PartType, Tagger, SpecSchema, UiSubstitutes, FieldSchema, Objects, Merger, Fun, Option, Error) {
+  function (PartType, Tagger, SpecSchema, FieldSchema, Merger, Fun, Error) {
     var schema = [
       FieldSchema.defaulted('shell', false)
     ];
 
+    var makeItems = function (detail) {
+      return {
+        behaviours: {
+          replacing: { }
+        }
+      };
+    };
+
     var partTypes = [
-      PartType.optional({ build: Fun.identity }, 'items', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
-        return {
-          behaviours: {
-            replacing: { }
-          }
-        };
-      })
+      PartType.optional({ build: Fun.identity }, 'items', '<alloy.toolbar-group.items>', Fun.constant({ }), makeItems)
     ];
 
     var make = function (detail, spec) {
-      var components = detail.shell() ? [ ] : (function () {
-        return PartType.components('toolbar-group', detail, partTypes);
+      var structure = detail.shell() ? (function () {
+        return {
+          components: [ ],
+          base: Merger.deepMerge(
+            detail.parts().items(),
+            makeItems(detail)
+          )
+        };
+      })() : (function () {
+        var comps = PartType.components('toolbar-group', detail, partTypes);
+        return {
+          components: comps,
+          base: { }
+        };
       })();
       // TODO: make shell work.
       // return detail.shell() ? Merger.deepMerge(
 
       // );
-      return {
+      return Merger.deepMerge(structure.base, {
         uiType: 'custom',
         uid: detail.uid(),
         dom: detail.dom(),
-        components: components
-      };
+        components: structure.components
+      });
     };
 
     var build = function (spec) {
