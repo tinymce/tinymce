@@ -157,6 +157,12 @@ define(
 
           function (factory, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(false, function (detail) {
+              if (! detail.parts) {
+                debugger;
+              }
+              if (! detail.parts()[name]) {
+                debugger;
+              }
               return factory.build(
                 combine(name, detail, defaults, detail.parts()[name](), overrides)
               );
