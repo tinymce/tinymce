@@ -8,8 +8,6 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
-    'ephox.alloy.spec.InlineSpec',
-    'ephox.alloy.spec.InlineViewSpec',
     'ephox.alloy.spec.ToolbarGroupSpec',
     'ephox.alloy.spec.ToolbarSpec',
     'ephox.alloy.toolbar.MoreToolbar',
@@ -25,18 +23,14 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, InlineSpec, InlineViewSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
       
-      
-      inline: InlineSpec.make,
-      'inline-view': InlineViewSpec.make,
-
       toolbar: ToolbarSpec.make,
       'toolbar-group': ToolbarGroupSpec.make,
-      'more.toolbar': MoreToolbar.make,
+      'more.toolbar': MoreToolbar.make
 
     
       // 'slide-form': SlideFormSpec.make,

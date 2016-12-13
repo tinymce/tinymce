@@ -12,17 +12,13 @@ define(
     'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
-    'ephox.alloy.spec.SpecSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'ephox.sugar.api.Body',
@@ -31,20 +27,10 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, Fields, LayeredState, ItemEvents, MenuEvents, SpecSchema, FieldSchema, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
+  function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Option, Options, Body, Class, Classes, SelectorFind) {
     var make = function (uiSpec, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
-          // NOTE: We use rawUiSpec here so the nesting isn't a struct
-
-          // return Munge(
-          //   uiSpec.members().menu(),
-          //   uiSpec,
-          //   {
-          //     value: name,
-          //     items: spec.items
-          //   }
-
           var data = Menu.build(function () {
             return Merger.deepMerge(
               uiSpec.members().menu().munge(spec),
