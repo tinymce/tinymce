@@ -10,7 +10,6 @@ define(
     'ephox.alloy.spec.CustomSpec',
     'ephox.alloy.spec.InlineSpec',
     'ephox.alloy.spec.InlineViewSpec',
-    'ephox.alloy.spec.ModalDialogSpec',
     'ephox.alloy.spec.ToolbarGroupSpec',
     'ephox.alloy.spec.ToolbarSpec',
     'ephox.alloy.toolbar.MoreToolbar',
@@ -26,7 +25,7 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, InlineSpec, InlineViewSpec, ModalDialogSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, InlineSpec, InlineViewSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
@@ -39,9 +38,7 @@ define(
       'toolbar-group': ToolbarGroupSpec.make,
       'more.toolbar': MoreToolbar.make,
 
-      
-      'modal-dialog': ModalDialogSpec.make,
-
+    
       // 'slide-form': SlideFormSpec.make,
       // 'expandable-form': ExpandableFormSpec.make
 

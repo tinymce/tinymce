@@ -45,6 +45,9 @@ asynctest(
             return Result.value(sink);
           },
 
+          onEscape: store.adderH('dialog.escape'),
+          onExecute: store.adderH('dialog.execute'),
+
           parts: {
             draghandle: {
               dom: {
@@ -152,6 +155,13 @@ asynctest(
         FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should be on footer now', doc, '.test-dialog-footer'),
+
+        store.sAssertEq('Should be clear before <esc> and <enter>', [ ]),
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        store.sAssertEq('After pressing <enter>', [ 'dialog.execute' ]),
+        store.sClear,
+        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        store.sAssertEq('After pressing <esc>', [ 'dialog.escape' ]),
 
         Step.sync(function () {
           ModalDialog.hide(dialog);

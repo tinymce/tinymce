@@ -10,14 +10,18 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (BehaviourExport, Keying, Positioning, CompositeBuilder, PartType, FieldSchema, Merger, Fun, SelectorFind, Traverse) {
+  function (BehaviourExport, Keying, Positioning, CompositeBuilder, PartType, FieldSchema, Merger, Fun, Option, SelectorFind, Traverse) {
     var schema = [
       FieldSchema.strict('lazySink'),
-      FieldSchema.strict('dragBlockClass')
+      FieldSchema.strict('dragBlockClass'),
+
+      FieldSchema.defaulted('onExecute', Option.none),
+      FieldSchema.strict('onEscape')
     ];
 
     var basic = { build: Fun.identity };
@@ -114,7 +118,9 @@ define(
 
           behaviours: {
             keying: {
-              mode: 'cyclic'
+              mode: 'cyclic',
+              onEnter: detail.onExecute(),
+              onEscape: detail.onEscape()
             }
           }
         }
