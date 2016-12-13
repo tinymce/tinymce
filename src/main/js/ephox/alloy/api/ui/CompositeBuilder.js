@@ -27,6 +27,7 @@ define(
 
       console.log('partTypes', partTypes);
       var schemas = PartType.schemas(partTypes);
+      console.log('schemas', schemas);
 
       var detail = SpecSchema.asStructOrDie(owner, schema, userSpec, schemas.required(), schemas.optional());
 

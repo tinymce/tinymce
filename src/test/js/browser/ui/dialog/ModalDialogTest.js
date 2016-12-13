@@ -31,7 +31,7 @@ asynctest(
             ModalDialog.parts().footer()
           ],
 
-          blockerClass: 'dialog-blocker',
+          dragBlockClass: 'drag-blocker',
           lazySink: function () {
             return Result.value(sink);
           },
@@ -74,6 +74,15 @@ asynctest(
                 tag: 'div'
               },
               components: [ ]
+            },
+            blocker: {
+              dom: {
+                styles: {
+                  'z-index': '1000000000',
+                  background: 'blue',
+                  opacity: '0.5'
+                }
+              }
             }
           }
         })
@@ -83,7 +92,7 @@ asynctest(
         Step.sync(function () {
           ModalDialog.show(dialog);
         }),
-        Step.wait(1000),
+        Step.wait(100000000),
         Step.sync(function () {
           ModalDialog.hide(dialog);
         }),

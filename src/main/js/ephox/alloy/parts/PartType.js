@@ -30,7 +30,7 @@ define(
           function (factory, name, pname, defaults, overrides) {
             required.push(name);
           },
-          function (name) {
+          function (factory, name, _defaults, _overrides) {
             required.push(name);
           },
           function (factory, name, pname, defaults, overrides) {
@@ -151,7 +151,9 @@ define(
             });
           },
 
-          Fun.die('External parts do not have placeholders'),
+          function (factory, name, defaults, overrides) {
+            // no placeholders
+          },
 
           function (factory, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(false, function (detail) {

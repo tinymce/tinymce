@@ -16,8 +16,8 @@ define(
 
   function (BehaviourExport, Keying, Positioning, CompositeBuilder, PartType, FieldSchema, Merger, Fun, SelectorFind, Traverse) {
     var schema = [
-      FieldSchema.strict('blockerClass'),
-      FieldSchema.strict('lazySink')
+      FieldSchema.strict('lazySink'),
+      FieldSchema.strict('dragBlockClass')
     ];
 
     var basic = { build: Fun.identity };
@@ -32,7 +32,7 @@ define(
                 getTarget: function (handle) {
                   return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
                 },
-                blockerClass: detail.blockerClass()
+                blockerClass: detail.dragBlockClass()
               }
             }
           };
@@ -41,7 +41,20 @@ define(
       PartType.internal(basic, 'title', '<alloy.dialog.title>', Fun.constant({}), Fun.constant({})),
       PartType.internal(basic, 'close', '<alloy.dialog.close>', Fun.constant({}), Fun.constant({})),
       PartType.internal(basic, 'body', '<alloy.dialog.body>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({}))
+      PartType.internal(basic, 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({})),
+
+      PartType.external(basic, 'blocker', Fun.constant({
+        dom: {
+          tag: 'div',
+          styles: {
+            position: 'fixed',
+            left: '0px',
+            top: '0px',
+            right: '0px',
+            bottom: '0px'
+          }
+        }
+      }), Fun.constant({ }))
     ];
 
     var build = function (spec) {
@@ -55,26 +68,17 @@ define(
     var make = function (detail, components, spec, externals) {
       var showDialog = function (dialog) {
         var sink = detail.lazySink()().getOrDie();
-        var blocker = sink.getSystem().build({
-          uiType: 'custom',
-          dom: {
-            tag: 'div',
-            styles: {
-              'position': 'fixed',
-              'left': '0px',
-              'top': '0px',
-              'right': '0px',
-              'bottom': '0px',
-              'background-color': 'rgba(20,20,20,0.5)',
-              'z-index': '100000000'
-            },
-            // FIX: Remove hard-coding
-            classes: [ 'ephox-gel-centered-dialog', 'ephox-gel-modal' ]
-          },
-          components: [
-            { built: dialog }
-          ]
-        });
+        var blocker = sink.getSystem().build(
+          Merger.deepMerge(
+            externals.blocker(),
+            {
+              uiType: 'custom',          
+              components: [
+                { built: dialog }
+              ]
+            }
+          )
+        );
 
         sink.getSystem().addToWorld(blocker);
         Positioning.addContainer(sink, blocker);
