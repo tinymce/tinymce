@@ -52,6 +52,7 @@ define(
           },
           components: options,
           behaviours: {
+            focusing: true,
             representing: {
               extractValue: function (comp, data) {
                 // See if there is something that matches value

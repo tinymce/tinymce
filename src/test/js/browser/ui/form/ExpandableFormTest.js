@@ -22,7 +22,7 @@ asynctest(
       var minimal = {
         dom: {
           tag: 'div',
-          classes: [ 'minimal-form' ]
+          classes: [ 'minimal-form', 'form-section' ]
         },
         components: [
           Form.parts('form.ant')
@@ -42,20 +42,21 @@ asynctest(
                 data: {
                   value: 'init',
                   text: 'Init'
+                },
+                behaviours: {
+                  tabstopping: true
                 }
               },
               label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
             }
-          }),
-
-          
+          })
         }
       };
 
       var extra = {
         dom: {
           tag: 'div',
-          classes: [ 'extra-form' ]
+          classes: [ 'extra-form', 'form-section' ]
         },
         components: [
           { uiType: 'container', dom: { tag: 'div', styles: { 'height': '100px', 'width': '100px', 'background': 'green' } }},
@@ -73,6 +74,9 @@ asynctest(
             ],
             parts: {
               field: {
+                behaviours: {
+                  tabstopping: true
+                },                
                 options: [
                   { value: 'select-b-init', text: 'Select-b-init' },
                   { value: 'select-b-other', text: 'Select-b-other' }
@@ -104,13 +108,28 @@ asynctest(
                 innerHtml: '+'
               },
               components: [ ]
+            },
+            controls: {
+              dom: {
+                tag: 'div',
+                classes: [ 'form-controls' ]
+              },
+              components: [ ]
             }
           },
           components: [
             ExpandableForm.parts().minimal(),
             ExpandableForm.parts().expander(),
-            ExpandableForm.parts().extra()
+            ExpandableForm.parts().extra(),
+            ExpandableForm.parts().controls()
           ],
+
+          behaviours: {
+            keying: {
+              mode: 'cyclic',
+              visibilitySelector: '.form-section'
+            }
+          },
 
           markers: {
             closedStyle: 'expandable-closed',

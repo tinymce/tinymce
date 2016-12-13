@@ -25,7 +25,7 @@ define(
     };
 
     var make = function (detail, spec) {
-      return {
+      return Merger.deepMerge(spec, {
         uid: detail.uid(),
         uiType: 'custom',
         dom: {
@@ -67,7 +67,7 @@ define(
             }
           }
         }
-      };
+      });
     };
 
     return {

@@ -85,7 +85,8 @@ define(
             extraOpt.each(Sliding.toggleGrow);
           }
         };
-      })
+      }),
+      PartType.internal({ build: Fun.identity }, 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
     ];
 
     // Dupe with Tiered Menu
