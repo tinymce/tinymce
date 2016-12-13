@@ -17,7 +17,8 @@ define(
     var schema = [
       FieldSchema.strict('items'),
       Fields.members([ 'item' ]),
-      Fields.markers([ 'itemClass' ])
+      Fields.markers([ 'itemClass' ]),
+      FieldSchema.defaulted('hasTabstop', true)
     ];
 
     var partTypes = [
@@ -62,7 +63,9 @@ define(
             keying: {
               mode: 'flow',
               selector: '.' + detail.markers().itemClass()
-            }
+            },
+            // fIX: Undefined
+            tabstopping: detail.hasTabstop() ? { } : undefined
           }
         }
       );

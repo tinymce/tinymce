@@ -71,7 +71,8 @@ asynctest(
             return s.element('div', {
               classes: [ arr.not('group-items') ],
               attrs: {
-                role: str.is('toolbar')
+                role: str.is('toolbar'),
+                'data-alloy-tabstop': str.is('true')
               },
               children: [
                 s.element('button', { html: str.is('A') }),
