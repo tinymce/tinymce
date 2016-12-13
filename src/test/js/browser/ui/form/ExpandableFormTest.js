@@ -3,8 +3,12 @@ asynctest(
  
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.FocusTools',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.ExpandableForm',
@@ -17,7 +21,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, Button, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun) {
+  function (Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, Representing, Button, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -205,6 +209,30 @@ asynctest(
             text: 'Select-b-init'
           }
         }),
+
+        Step.sync(function () {
+          Keying.focusIn(component);
+        }),
+
+        FocusTools.sTryOnSelector('Focus should start on input field', doc, 'input'),
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector('Focus should move to expand/collapse button', doc, 'button:contains("+")'),
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector('Focus should move to select', doc, 'select'),
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector('Focus should move to shrink', doc, 'button:contains("Shrink!")'),
+        Keyboard.sKeydown(doc, Keys.enter(), {}),
+        // Check immediately
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector('Focus should start on input field', doc, 'input'),
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector('Focus should move to expand/collapse button', doc, 'button:contains("+")'),
+        Keyboard.sKeydown(doc, Keys.tab(), {}),
+        FocusTools.sTryOnSelector('Focus should skip the collapsed select and jump to shrink', doc, 'button:contains("Shrink!")'),
+
+
+        // Check that clicking on the expander button when the focus is in an extra field shifts focus to 
+
         Step.fail('done'),
 
         GuiSetup.mRemoveStyles
