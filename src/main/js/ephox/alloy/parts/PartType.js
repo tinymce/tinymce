@@ -139,7 +139,7 @@ define(
       return ex;
     };
 
-    var components = function (owner, detail, parts) {
+    var placeholders = function (owner, detail, parts) {
       var ps = { };
       Arr.each(parts, function (part) {
         part.fold(
@@ -171,6 +171,9 @@ define(
 
           function (factory, name, unit, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.multiple(true, function (detail) {
+              if (! detail[name]) {
+                debugger;
+              }
               var units = detail[name]();
               return Arr.map(units, function (u) {
                 var munged = detail.members()[unit]().munge(u);
@@ -189,6 +192,11 @@ define(
         );
       });
 
+      return ps;
+    };
+
+    var components = function (owner, detail, parts) {
+      var ps = placeholders(owner, detail, parts);
       console.log('ps', ps, 'owner', owner);
 
       var comps = UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
@@ -205,7 +213,8 @@ define(
       schemas: schemas,
       generate: generate,
       components: components,
-      externals: externals
+      externals: externals,
+      placeholders: placeholders
     };
   }
 );

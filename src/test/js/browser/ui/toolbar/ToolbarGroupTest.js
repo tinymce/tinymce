@@ -7,10 +7,11 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, ToolbarGroup, GuiSetup) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, ToolbarGroup, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -28,7 +29,21 @@ asynctest(
                 ToolbarGroup.parts().items()
               ],
 
-              items: [ ],
+              items: [ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ],
+
+              members: {
+                item: {
+                  munge: function (itemSpec) {
+                    return {
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'button',
+                        innerHtml: itemSpec.data.text
+                      }
+                    };
+                  }
+                }
+              },
 
               parts: {
                 items: {
@@ -45,7 +60,21 @@ asynctest(
               dom: { tag: 'div' },
               shell: true,
               components: [ ],
-              items: [ ],
+              items: [ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ],
+              members: {
+                item: {
+                  munge: function (itemSpec) {
+                    return {
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'button',
+                        innerHtml: itemSpec.data.text
+                      }
+                    };
+                  }
+                }
+              },
+
               parts: { items: { dom: { tag: 'div', classes: [ 'group-items' ] } } }
             })
           ]
@@ -69,7 +98,10 @@ asynctest(
                   classes: [ arr.not('group-items') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('group-items') ]
+                      children: [
+                        s.element('button', { html: str.is('A') }),
+                        s.element('button', { html: str.is('B') })
+                      ]
                     })
                   ]
                 }),
@@ -78,7 +110,10 @@ asynctest(
                     'data-alloy-id': str.is('shell-toolbar')
                   },
                   classes: [ arr.has('group-items') ],
-                  children: [ ]
+                  children: [
+                    s.element('button', { html: str.is('A') }),
+                    s.element('button', { html: str.is('B') })
+                  ]
                 })
               ]
             });

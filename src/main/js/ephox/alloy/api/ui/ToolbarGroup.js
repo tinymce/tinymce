@@ -2,18 +2,22 @@ define(
   'ephox.alloy.api.ui.ToolbarGroup',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (PartType, Tagger, SpecSchema, FieldSchema, Merger, Fun, Error) {
+  function (Fields, PartType, Tagger, SpecSchema, UiSubstitutes, FieldSchema, Merger, Fun, Error) {
     var schema = [
-      FieldSchema.defaulted('shell', false)
+      FieldSchema.strict('items'),
+      FieldSchema.defaulted('shell', false),
+      Fields.members([ 'item' ])
     ];
 
     var makeItems = function (detail) {
@@ -25,13 +29,18 @@ define(
     };
 
     var partTypes = [
-      PartType.optional({ build: Fun.identity }, 'items', '<alloy.toolbar-group.items>', Fun.constant({ }), makeItems)
+      PartType.group({ build: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), makeItems)
     ];
 
     var make = function (detail, spec) {
       var structure = detail.shell() ? (function () {
+        // First level is the container.
+        // Therefore merege all "items" part information into the base
+        // Generate the components
+        var ps = PartType.placeholders('toolbar-group', detail, partTypes);
+        console.log('ps', ps);
         return {
-          components: [ ],
+          components: UiSubstitutes.singleReplace(detail, ps['<alloy.toolbar-group.items>']),
           base: Merger.deepMerge(
             detail.parts().items(),
             makeItems(detail)

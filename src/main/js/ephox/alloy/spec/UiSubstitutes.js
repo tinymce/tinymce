@@ -127,13 +127,24 @@ define(
       return outcome;
     };
 
+    var singleReplace = function (detail, p) {
+      var replacement = p;
+      return replacement.fold(function (req, valueThunk) {
+        return [ valueThunk(detail) ];
+      }, function (req, valuesThunk) {
+        return valuesThunk(detail);
+      });
+    };
+
     return {
       single: adt.single,
       multiple: adt.multiple,
       isSubstitute: isSubstitute,
       placeholder: Fun.constant(placeholder),
       substituteAll: substituteAll,
-      substitutePlaces: substitutePlaces
+      substitutePlaces: substitutePlaces,
+
+      singleReplace: singleReplace
     };
   }
 );
