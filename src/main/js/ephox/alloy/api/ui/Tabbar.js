@@ -10,12 +10,11 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.ui.composite.TabbarSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, BehaviourExport, Highlighting, CompositeBuilder, TabButton, Fields, DomModification, PartType, TabbarSpec, FieldSchema, Fun) {
+  function (SystemEvents, BehaviourExport, Highlighting, CompositeBuilder, TabButton, Fields, DomModification, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -95,8 +94,41 @@ define(
       tabsPart
     ];
 
+    var make = function (detail, components, spec, externals) {
+      return {
+        uiType: 'custom',
+        dom: {
+          tag: 'div',
+          attributes: {
+            role: 'tablist'
+          }
+        },
+        components: components,
+
+        behaviours: {
+          highlighting: {
+            highlightClass: detail.markers().selectedClass(),
+            itemClass: detail.markers().tabClass()
+          },
+
+          keying: {
+            mode: 'flow',
+            getInitial: function (tabbar) {
+              // Restore focus to the previously highlighted tab.
+              return Highlighting.getHighlighted(tabbar).map(function (tab) {
+                return tab.element();
+              });
+            },
+            selector: '.' + detail.markers().tabClass(),
+            executeOnMove: true
+          }
+        }
+      };
+    };
+
+
     var build = function (spec) {
-      return CompositeBuilder.build('tab-bar', schema, partTypes, TabbarSpec.make, spec);
+      return CompositeBuilder.build('tab-bar', schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

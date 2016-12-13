@@ -2,16 +2,19 @@ define(
   'ephox.alloy.api.ui.Dropdown',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.dropdown.Beta',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.ui.composite.DropdownSpec',
+    'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (CompositeBuilder, InternalSink, PartType, DropdownSpec, FieldSchema, Fun, Option) {
+  function (Toggling, CompositeBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
@@ -36,8 +39,62 @@ define(
       InternalSink
     ];
 
+    var make = function (detail, components, spec, externals) {
+      return Merger.deepMerge(
+        {
+          events: ButtonBase.events(
+            Option.some(function (component) {
+              Beta.togglePopup(detail, {
+                anchor: 'hotspot',
+                hotspot: component
+              }, component, externals).get(function (sandbox) {
+
+              });
+            })
+          )
+        },
+        {
+          uid: detail.uid(),
+          uiType: 'custom',
+          dom: detail.dom(),
+          components: components,
+          behaviours: {
+            toggling: {
+              toggleClass: detail.toggleClass(),
+              aria: {
+                'aria-expanded-attr': 'aria-expanded'
+              }
+            },
+            coupling: {
+              others: {
+                sandbox: function (hotspot) {
+                  return Beta.makeSandbox(detail, {
+                    anchor: 'hotspot',
+                    hotspot: hotspot
+                  }, hotspot, {
+                    onOpen: function () { Toggling.select(hotspot); },
+                    onClose: function () { Toggling.deselect(hotspot); }
+                  });
+                }
+              }
+            },
+            keying: {
+              mode: 'execution',
+              useSpace: true
+            },
+            focusing: true
+          },
+
+          eventOrder: {
+            // Order, the button state is toggled first, so assumed !selected means close.
+            'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+          }
+        }
+      );
+    };
+
     var build = function (f) {
-      return CompositeBuilder.build('dropdown', schema, partTypes, DropdownSpec.make, f);
+      return CompositeBuilder.build('dropdown', schema, partTypes, make, f);
     };
 
     return {

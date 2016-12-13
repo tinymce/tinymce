@@ -2,37 +2,31 @@ define(
   'ephox.alloy.api.ui.Tabview',
 
   [
-    'ephox.alloy.api.ui.CompositeBuilder',
-    'ephox.alloy.ui.composite.TabviewSpec'
+    'ephox.alloy.api.ui.CompositeBuilder'
   ],
 
-  function (CompositeBuilder, TabviewSpec) {
-    var schema = [
-      // FieldSchema.defaulted('selectFirst', true)
-    ];
+  function (CompositeBuilder) {
+    var schema = [ ];
+    var partTypes = [ ];
 
-    // var barPart = PartType.internal(
-    //   'tabbar',
-    //   '<alloy.tab-section.tabbar>',
-    //   Fun.constant({ }),
-    //   Fun.constant({ })
-    // );
+    var make = function (detail, components, spec, externals) {
+      return {
+        uiType: 'custom',
+        dom: {
+          tag: 'div',
+          attributes: {
+            role: 'tabpanel'
+          }
+        },
 
-    // var viewPart = PartType.internal(
-    //   'tabview',
-    //   '<alloy.tab-section.tabview>',
-    //   Fun.constant({ }),
-    //   Fun.constant({ })
-    // );
-
-
-    var partTypes = [
-      // barPart,
-      // viewPart
-    ];
+        behaviours: {
+          replacing: { }
+        }
+      };
+    };
 
     var build = function (f) {
-      return CompositeBuilder.build('tab-view', schema, partTypes, TabviewSpec.make, f);
+      return CompositeBuilder.build('tab-view', schema, partTypes, make, f);
     };
 
     return {
