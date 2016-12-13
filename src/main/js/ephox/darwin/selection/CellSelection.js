@@ -35,9 +35,23 @@ define(
 
     var identify = function (start, finish) {
       // Optimisation: If the cells are equal, it's a single cell array
-      return Compare.eq(start, finish) ? Option.some([ start ]) : DomParent.sharedOne(lookupTable, [ start, finish ]).bind(function (tbl) {
-        return TablePositions.intercepts(tbl, start, finish);
-      });
+      if (Compare.eq(start, finish)) {
+        return Option.some([ start ]);
+      } else {
+        return lookupTable(start).bind(function (startTable) {
+          return lookupTable(finish).bind(function (finishTable) {
+            if (Compare.eq(startTable, finishTable)) {
+              return TablePositions.intercepts(startTable, start, finish);
+            } else {
+              return DomParent.ancestors(start, finish).shared().bind(function (lca) {
+                return SelectorFind.closest(lca, 'table').bind(function (lcaTable) {
+                  return TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable);
+                });
+              });
+            }
+          });
+        });
+      }
     };
 
     var retrieve = function (container) {
