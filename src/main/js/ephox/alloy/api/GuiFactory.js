@@ -8,7 +8,6 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
-    'ephox.alloy.spec.ToolbarGroupSpec',
     'ephox.alloy.spec.ToolbarSpec',
     'ephox.alloy.toolbar.MoreToolbar',
     'ephox.boulder.api.Objects',
@@ -23,13 +22,12 @@ define(
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, ToolbarGroupSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
+  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, ToolbarSpec, MoreToolbar, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
     var knownSpecs = {
       container: ContainerSpec.make,
       custom: CustomSpec.make,
       
       toolbar: ToolbarSpec.make,
-      'toolbar-group': ToolbarGroupSpec.make,
       'more.toolbar': MoreToolbar.make
 
     

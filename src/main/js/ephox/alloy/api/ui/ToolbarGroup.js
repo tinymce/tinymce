@@ -71,21 +71,6 @@ define(
       );
     };
 
-    /*
-    customBehaviours: [
-            // TODO: Add highlighting tab class.
-            BehaviourExport.santa([ ], 'tabbar.tabbuttons', {
-              exhibit: function (base, info) {
-                return DomModification.nu({
-                  classes: [ barDetail.markers().tabClass() ]
-                });
-              }
-            }, {
-
-
-            }, { })
-            */
-
     var build = function (spec) {
       return CompositeBuilder.build('toolbar-group', schema, partTypes, make, spec);
     };
