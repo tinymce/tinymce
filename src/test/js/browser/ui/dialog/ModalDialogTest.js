@@ -5,15 +5,20 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.ModalDialog',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.Sinks',
+    'ephox.perhaps.Result'
   ],
  
-  function (Step, GuiFactory, ModalDialog, GuiSetup) {
+  function (Step, GuiFactory, ModalDialog, GuiSetup, Sinks, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build(
+      return Sinks.relativeSink();
+
+    }, function (doc, body, gui, sink, store) {
+      var dialog = GuiFactory.build(
         ModalDialog.build({
           dom: {
             tag: 'div'
@@ -27,6 +32,9 @@ asynctest(
           ],
 
           blockerClass: 'dialog-blocker',
+          lazySink: function () {
+            return Result.value(sink);
+          },
 
           parts: {
             draghandle: {
@@ -71,8 +79,14 @@ asynctest(
         })
       );
 
-    }, function (doc, body, gui, component, store) {
       return [
+        Step.sync(function () {
+          ModalDialog.show(dialog);
+        }),
+        Step.wait(1000),
+        Step.sync(function () {
+          ModalDialog.hide(dialog);
+        }),
         Step.fail('fake')
       ];
     }, function () { success(); }, failure);

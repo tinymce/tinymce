@@ -94,7 +94,8 @@ define(
       };
 
       var config = function (behaviour) {
-        if (behaviour === BehaviourExport.all()) return info;
+        // Rename.
+        if (behaviour === BehaviourExport.spi()) return info.apis();
         return info.behaviours().bind(function (b) {
           var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
             throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));

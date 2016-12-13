@@ -16,7 +16,7 @@ define(
   ],
 
   function (DomModification, FieldSchema, Objects, ValueSchema, Arr, Obj, Id, Merger, Fun, Array, Error) {
-    var all = Id.generate('base-behaviour');
+    var spi = Id.generate('spi');
     // Add some off behaviour also (alternatives).
     var build = function (behaviourName, apiNames, alternatives) {
       // If readability becomes a problem, stop dynamically generating these.
@@ -152,7 +152,7 @@ define(
     };
 
     return {
-      all: Fun.constant(all),
+      spi: Fun.constant(spi),
       build: build,
       modeSanta: modeSanta,
       exhibitor: exhibitor,

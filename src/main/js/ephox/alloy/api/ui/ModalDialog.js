@@ -2,17 +2,22 @@ define(
   'ephox.alloy.api.ui.ModalDialog',
 
   [
+    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'ephox.sugar.api.Traverse'
   ],
 
-  function (CompositeBuilder, PartType, FieldSchema, Merger, Fun, SelectorFind) {
+  function (BehaviourExport, Keying, Positioning, CompositeBuilder, PartType, FieldSchema, Merger, Fun, SelectorFind, Traverse) {
     var schema = [
-      FieldSchema.strict('blockerClass')
+      FieldSchema.strict('blockerClass'),
+      FieldSchema.strict('lazySink')
     ];
 
     var basic = { build: Fun.identity };
@@ -45,7 +50,47 @@ define(
 
     var parts = PartType.generate('modal-dialog', partTypes);
 
+    
+
     var make = function (detail, components, spec, externals) {
+      var showDialog = function (dialog) {
+        var sink = detail.lazySink()().getOrDie();
+        var blocker = sink.getSystem().build({
+          uiType: 'custom',
+          dom: {
+            tag: 'div',
+            styles: {
+              'position': 'fixed',
+              'left': '0px',
+              'top': '0px',
+              'right': '0px',
+              'bottom': '0px',
+              'background-color': 'rgba(20,20,20,0.5)',
+              'z-index': '100000000'
+            },
+            // FIX: Remove hard-coding
+            classes: [ 'ephox-gel-centered-dialog', 'ephox-gel-modal' ]
+          },
+          components: [
+            { built: dialog }
+          ]
+        });
+
+        sink.getSystem().addToWorld(blocker);
+        Positioning.addContainer(sink, blocker);
+        Keying.focusIn(dialog);
+      };
+
+      var hideDialog = function (dialog) {
+        var sink = detail.lazySink()().getOrDie();
+        Traverse.parent(dialog.element()).each(function (blockerDom) {
+          dialog.getSystem().getByDom(blockerDom).each(function (blocker) {
+            Positioning.removeContainer(sink, blocker);
+            sink.getSystem().removeFromWorld(blocker);
+          });
+        });
+      };
+
       return Merger.deepMerge(
         {
           dom: {
@@ -57,14 +102,37 @@ define(
         {
           uiType: 'container',
           dom: detail.dom(),
-          components: components
+          components: components,
+          apis: {
+            show: showDialog,
+            hide: hideDialog
+          },
+
+          behaviours: {
+            keying: {
+              mode: 'cyclic'
+            }
+          }
         }
       );
     };
 
+    var show = function (dialog) {
+      var spi = dialog.config(BehaviourExport.spi());
+      spi.show(dialog);
+    };
+
+    var hide = function (dialog) {
+      var spi = dialog.config(BehaviourExport.spi());
+      spi.hide(dialog);
+    };
+
     return {
       build: build,
-      parts: Fun.constant(parts)
+      parts: Fun.constant(parts),
+
+      show: show,
+      hide: hide
     };
   }
 );
