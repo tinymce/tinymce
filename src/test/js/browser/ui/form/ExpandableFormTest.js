@@ -4,9 +4,14 @@ asynctest(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
@@ -18,10 +23,11 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.compass.Obj',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.sugar.api.Focus'
   ],
  
-  function (Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, Representing, Button, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Representing, Button, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -113,7 +119,8 @@ asynctest(
             expander: {
               dom: {
                 tag: 'button',
-                innerHtml: '+'
+                innerHtml: '+',
+                classes: [ 'test-expander-button' ]
               },
               components: [ ],
               behaviours: {
@@ -229,6 +236,54 @@ asynctest(
         FocusTools.sTryOnSelector('Focus should move to expand/collapse button', doc, 'button:contains("+")'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
         FocusTools.sTryOnSelector('Focus should skip the collapsed select and jump to shrink', doc, 'button:contains("Shrink!")'),
+
+        Logger.t(
+          'Checking the representing value is still the same when collapsed',
+          sAssertRep({
+            'form.ant': {
+              value: 'init',
+              text: 'Init'
+            },
+            'form.bull': {
+              value: 'select-b-init',
+              text: 'Select-b-init'
+            }
+          })
+        ),
+
+        // Expand the form, focus the part in the extra, and click on expand again and check focus is still in dialog
+        Logger.t(
+          'Expanding form, focusing part in extra, clicking on expand, and checking focus still in dialog',
+          GeneralSteps.sequence([
+            Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+            FocusTools.sTryOnSelector('Focus should move back to expand/collapse button', doc, 'button:contains("+")'),
+            Keyboard.sKeydown(doc, Keys.enter(), {}),
+
+            Waiter.sTryUntil(
+              'Waiting until it has stopped growing',
+              UiFinder.sNotExists(gui.element(), '.expandable-growing'),
+              100,
+              10000
+            ),
+
+            Keyboard.sKeydown(doc, Keys.tab(), {}),
+            FocusTools.sTryOnSelector('Focus should move onto select', doc, 'select'),
+            Mouse.sClickOn(gui.element(), '.test-expander-button'),
+
+            Waiter.sTryUntil(
+              'Waiting until it has stopped shrinking',
+              UiFinder.sNotExists(gui.element(), '.expandable-shrinking'),
+              100,
+              10000
+            ),
+
+            Step.async(function (next, die) {
+              Focus.search(component.element()).fold(function () {
+                die('The focus has not stayed in the form');
+              }, next);
+            })
+          ])
+        ),
 
 
         // Check that clicking on the expander button when the focus is in an extra field shifts focus to 
