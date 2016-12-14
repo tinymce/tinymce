@@ -16,11 +16,44 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Toolbar.build({
+        {
+          uiType: 'custom',
           dom: {
             tag: 'div'
-          }
-        })
+          },
+          components: [
+            Toolbar.build({
+              uid: 'shell-toolbar',
+              shell: true,
+              dom: {
+                tag: 'div'
+              },
+
+              parts: {
+                groups: { }
+              }
+            }),
+
+            Toolbar.build({
+              uid: 'not-shell-toolbar',
+              shell: false,
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                Toolbar.parts().groups()
+              ],
+
+              parts: {
+                groups: {
+                  dom: {
+                    tag: 'div'
+                  }
+                }
+              }
+            })
+          ]
+        }        
       );
 
     }, function (doc, body, gui, component, store) {
@@ -28,10 +61,21 @@ asynctest(
         Assertions.sAssertStructure(
           'Checking initial structure of toolbar',
           ApproxStructure.build(function (s, str, arr) {
-            return s.element('div', { });
+            return s.element('div', {
+              children: [
+                s.element('div', { }),
+                s.element('div', {
+                  children: [
+                    s.element('div', { })
+                  ]
+                })
+              ]
+            });
           }),
           component.element()
-        )
+        ),
+
+        Step.fail('in progress')
       ];
     }, function () { success(); }, failure);
 

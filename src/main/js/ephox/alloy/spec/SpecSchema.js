@@ -17,8 +17,8 @@ define(
 
   function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
     var getPartsSchema = function (partNames, _optPartNames) {
-      if (partNames.length === 0) return [ ];
       var optPartNames = _optPartNames !== undefined ? _optPartNames : [ ];
+      if (partNames.length === 0 && optPartNames.length === 0) return [ ];
 
       // temporary hacking
       var partsSchema = FieldSchema.strictObjOf(
