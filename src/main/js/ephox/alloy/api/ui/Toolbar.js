@@ -4,28 +4,23 @@ define(
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.data.Fields',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.registry.Tagger',
+    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (BehaviourExport, Replacing, CompositeBuilder, ToolbarGroup, Fields, PartType, FieldSchema, Arr, Merger, Fun, Result) {
+  function (BehaviourExport, Replacing, ToolbarGroup, Fields, Tagger, SpecSchema, FieldSchema, Arr, Merger, Result) {
     var schema = [
       FieldSchema.defaulted('shell', true),
       Fields.members([ 'group' ])
     ];
 
-    var partTypes = [
-      PartType.optional({ build: Fun.identity }, 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), Fun.constant({ }))
-    ];
-
-    var make = function (detail, components, spec, _externals) {
+    var make = function (detail, spec) {
 
       var setGroups = function (toolbar, groups) {
         getGroupContainer(toolbar).each(function (container) {
@@ -49,32 +44,31 @@ define(
         });
       };
 
-      var comps = detail.shell() ? [ ] : components;
-      return {
-        uiType: 'custom',
-        uid: detail.uid(),
-        dom: detail.dom(),
-        components: comps,
+      return Merger.deepMerge(
+        {
+          uiType: 'custom',
+          uid: detail.uid(),
+          dom: detail.dom(),
+          components: [ ],
 
-        apis: {
-          createGroups: createGroups,
-          setGroups: setGroups
+          apis: {
+            createGroups: createGroups,
+            setGroups: setGroups
+          }
         }
-      };
+      );
     };
 
 
-    var build = function (spec) {
-      return CompositeBuilder.build('toolbar', schema, partTypes, make, spec);
+    var build = function (rawSpec) {
+      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
+      var detail = SpecSchema.asStructOrDie('Toolbar', schema, spec, [ ]);
+      return make(detail, spec);
     };
-
-    // TODO: Remove likely dupe
-    var parts = PartType.generate('toolbar', partTypes);
 
     return {
       build: build,
-      parts: Fun.constant(parts),
-
+      
       createGroups: function (toolbar, gspecs) {
         var spi = toolbar.config(BehaviourExport.spi());
         return spi.createGroups(toolbar, gspecs);
