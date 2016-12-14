@@ -42,6 +42,10 @@ define(
           return lookupTable(finish).bind(function (finishTable) {
             if (Compare.eq(startTable, finishTable)) {
               return TablePositions.intercepts(startTable, start, finish);
+            } else if (Compare.contains(startTable, finishTable)) {
+              return TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable);
+            } else if (Compare.contains(finishTable, startTable)) {
+              return TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable);
             } else {
               return DomParent.ancestors(start, finish).shared().bind(function (lca) {
                 return SelectorFind.closest(lca, 'table').bind(function (lcaTable) {
