@@ -7,10 +7,11 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Toolbar',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Toolbar, GuiSetup) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Toolbar, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,6 +30,12 @@ asynctest(
                 tag: 'div'
               },
 
+              members: {
+                group: {
+                  munge: Fun.identity
+                }
+              },
+
               parts: {
                 groups: { }
               }
@@ -44,6 +51,12 @@ asynctest(
                 Toolbar.parts().groups()
               ],
 
+              members: {
+                group: {
+                  munge: Fun.identity
+                }
+              },
+
               parts: {
                 groups: {
                   dom: {
@@ -57,6 +70,8 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
+      var t1 = component.getSystem().getByUid('shell-toolbar').getOrDie();
+      var t2 = component.getSystem().getByUid('not-shell-toolbar').getOrDie();
       return [
         Assertions.sAssertStructure(
           'Checking initial structure of toolbar',
@@ -76,6 +91,10 @@ asynctest(
           }),
           component.element()
         ),
+
+        Step.sync(function () {
+          // Toolbar.buildGroups()
+        }),
 
         Step.fail('in progress')
       ];
