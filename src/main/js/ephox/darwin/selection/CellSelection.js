@@ -40,13 +40,13 @@ define(
       } else {
         return lookupTable(start).bind(function (startTable) {
           return lookupTable(finish).bind(function (finishTable) {
-            if (Compare.eq(startTable, finishTable)) {
+            if (Compare.eq(startTable, finishTable)) { // Selecting from within the same table.
               return TablePositions.intercepts(startTable, start, finish);
-            } else if (Compare.contains(startTable, finishTable)) {
+            } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
               return TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable);
-            } else if (Compare.contains(finishTable, startTable)) {
+            } else if (Compare.contains(finishTable, startTable)) { // Selecting from the nested table to the parent table.
               return TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable);
-            } else {
+            } else { // Selecting from a nested table to a different nested table.
               return DomParent.ancestors(start, finish).shared().bind(function (lca) {
                 return SelectorFind.closest(lca, 'table').bind(function (lcaTable) {
                   return TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable);
