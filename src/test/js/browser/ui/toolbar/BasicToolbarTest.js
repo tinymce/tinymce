@@ -63,7 +63,9 @@ asynctest(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
               children: [
-                s.element('div', { }),
+                s.element('div', {
+                  children: [ ]
+                }),
                 s.element('div', {
                   children: [
                     s.element('div', { })
