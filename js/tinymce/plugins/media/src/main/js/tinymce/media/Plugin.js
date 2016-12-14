@@ -48,6 +48,9 @@ define('tinymce.media.Plugin', [
 			editor.parser.addNodeFilter('iframe,video,audio,object,embed,script',
 				Nodes.placeHolderConverter(editor));
 
+			editor.parser.addAttributeFilter('data-ephox-embed-iri', Nodes.ephoxDataEmbedConverter);
+			editor.serializer.addAttributeFilter('data-ephox-embed-iri', Nodes.removeContentEditableFalse);
+
 			// Replaces placeholder images with real elements for video, object, iframe etc
 			editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
 				var i = nodes.length;
@@ -122,6 +125,16 @@ define('tinymce.media.Plugin', [
 			var selectedNode = editor.selection.getNode();
 
 			if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
+				if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
+					selectedNode.setAttribute('data-mce-selected', '2');
+				}
+			}
+		});
+
+		editor.on('click keyup', function () {
+			var selectedNode = editor.selection.getNode();
+
+			if (selectedNode && editor.dom.getAttrib(selectedNode, 'data-ephox-embed-iri')) {
 				if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
 					selectedNode.setAttribute('data-mce-selected', '2');
 				}

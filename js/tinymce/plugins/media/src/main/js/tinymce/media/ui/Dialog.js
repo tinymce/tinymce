@@ -32,7 +32,7 @@ define('tinymce.media.ui.Dialog', [
 	var getSource = function (editor) {
 		var elm = editor.selection.getNode();
 
-		if (elm.getAttribute('data-mce-object')) {
+		if (elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri')) {
 			return editor.selection.getContent();
 		}
 	};

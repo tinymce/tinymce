@@ -2,8 +2,9 @@ define('tinymce.media.core.Nodes', [
 	'tinymce.media.core.Sanitize',
 	'tinymce.media.core.VideoScript',
 	'global!tinymce.html.Node',
-	'global!tinymce.Env'
-], function (Sanitize, VideoScript, Node, Env) {
+	'global!tinymce.Env',
+	'global!tinymce.util.Tools'
+], function (Sanitize, VideoScript, Node, Env, Tools) {
 	var createPlaceholderNode = function (editor, node) {
 		var placeHolder;
 		var name = node.name;
@@ -25,7 +26,7 @@ define('tinymce.media.core.Nodes', [
 		return placeHolder;
 	};
 
-	var createPreviewNode = function (editor, node) {
+	var createPreviewIframeNode = function (editor, node) {
 		var previewWrapper;
 		var previewNode;
 		var shimNode;
@@ -92,11 +93,20 @@ define('tinymce.media.core.Nodes', [
 		}
 	};
 
+	var isWithinEphoxEmbed = function (node) {
+		while ((node = node.parent)) {
+			if (node.attr('data-ephox-embed-iri')) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	var placeHolderConverter = function (editor) {
 		return function (nodes) {
 			var i = nodes.length;
 			var node;
-			var placeHolder;
 			var videoScript;
 
 			while (i--) {
@@ -127,18 +137,40 @@ define('tinymce.media.core.Nodes', [
 				}
 
 				if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && Env.ceFalse) {
-					placeHolder = createPreviewNode(editor, node);
+					if (!isWithinEphoxEmbed(node)) {
+						node.replace(createPreviewIframeNode(editor, node));
+					}
 				} else {
-					placeHolder = createPlaceholderNode(editor, node);
+					node.replace(createPlaceholderNode(editor, node));
 				}
-
-				node.replace(placeHolder);
 			}
 		};
 	};
+
+	var ephoxDataEmbedConverter = function (nodes) {
+		Tools.each(nodes, function (node) {
+			var shimNode;
+
+			shimNode = new Node('span', 1);
+			shimNode.attr('class', 'mce-shim');
+			shimNode.attr('data-mce-bogus', '1');
+
+			node.append(shimNode);
+			node.attr('contenteditable', 'false');
+		});
+	};
+
+	var removeContentEditableFalse = function (nodes) {
+		Tools.each(nodes, function (node) {
+			node.attr('contenteditable', null);
+		});
+	};
+
 	return {
-		createPreviewNode: createPreviewNode,
+		createPreviewIframeNode: createPreviewIframeNode,
 		createPlaceholderNode: createPlaceholderNode,
-		placeHolderConverter: placeHolderConverter
+		placeHolderConverter: placeHolderConverter,
+		ephoxDataEmbedConverter: ephoxDataEmbedConverter,
+		removeContentEditableFalse: removeContentEditableFalse
 	};
 });

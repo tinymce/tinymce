@@ -37,11 +37,11 @@ define('tinymce.media.core.UpdateHtml', [
 			}
 		}
 	};
+
 	var updateHtml = function (html, data, updateAll) {
 		var writer = new Writer();
 		var sourceCount = 0;
 		var hasImage;
-
 
 		new SaxParser({
 			validate: false,
