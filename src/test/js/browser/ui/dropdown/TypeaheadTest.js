@@ -37,7 +37,6 @@ asynctest(
 
           Typeahead.build({
             minChars: 2,
-            sink: sink,
             uid: 'test-type',
             dom: {
               tag: 'input'

@@ -45,10 +45,15 @@ define(
             delay: 1000
           },
           onStream: function (component, simulatedEvent) {
+
             console.log('onStream');
             var sandbox = Coupling.getCoupled(component, 'sandbox');
+
             var focusInInput = Focusing.isFocused(component);
             // You don't want it to change when something else has triggered the change.
+
+
+
             if (focusInInput) {
               console.log('focusInInput');
               /* REM:  if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox); 

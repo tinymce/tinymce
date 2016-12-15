@@ -18,10 +18,9 @@ define(
 
   function (Coupling, Representing, Sandboxing, UiBuilder, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
     var schema = [
-      FieldSchema.strict('lazySink'),
+      FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('dom'),
-      FieldSchema.option('lazySink'),
       FieldSchema.defaulted('minChars', 5),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),

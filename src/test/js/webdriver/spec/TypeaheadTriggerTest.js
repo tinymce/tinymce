@@ -37,41 +37,38 @@ asynctest(
         dom: { tag: 'div' },
         components: [
           { built: sink },
-          Typeahead.build(function (parts) {
-            return {
-              minChars: 2,
-              sink: sink,
-              uid: 'test-type',
-              dom: {
-                tag: 'input'
-              },
-              data: {
-                value: 'initial-value',
-                text: 'initial-value'
-              },
+          Typeahead.build({
+            uid: 'test-type',
+            minChars: 2,
+            dom: {
+              tag: 'input'
+            },
+            data: {
+              value: 'initial-value',
+              text: 'initial-value'
+            },
 
-              fetch: function (input) {
-                var text = Value.get(input.element());
-                var future = Future.pure([
-                  { type: 'item', data: { value: text + '1', text: text + '1' } },
-                  { type: 'item', data: { value: text + '2', text: text + '2' } }
-                ]);
+            fetch: function (input) {
+              var text = Value.get(input.element());
+              var future = Future.pure([
+                { type: 'item', data: { value: text + '1', text: text + '1' } },
+                { type: 'item', data: { value: text + '2', text: text + '2' } }
+              ]);
 
-                return future.map(function (f) {
-                  // TODO: Test this.
-                  var items = text === 'no-data' ? [
-                    { type: 'separator', text: 'No data' }
-                  ] : f;
-                  return MenuData.simple('blah', 'Blah', items);
-                });
-              },
-              
-              lazySink: function () { return Result.value(sink); },
+              return future.map(function (f) {
+                // TODO: Test this.
+                var items = text === 'no-data' ? [
+                  { type: 'separator', text: 'No data' }
+                ] : f;
+                return MenuData.simple('blah', 'Blah', items);
+              });
+            },
+            
+            lazySink: function () { return Result.value(sink); },
 
-              parts: {
-                menu: TestTypeaheadList
-              }
-            };
+            parts: {
+              menu: TestTypeaheadList
+            }
           })
         ]
       });
