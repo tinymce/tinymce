@@ -264,52 +264,48 @@ define(
         })
       );
 
-return;
-   
       var x = HtmlDisplay.section(
         gui,
         'This dropdown button shows a widget',
-        Dropdown.build(function (parts) {
-          return {
-            lazySink: lazySink,
+        Dropdown.build({
+          lazySink: lazySink,
 
-            dom: {
-              tag: 'div',
-              innerHtml: 'Dropdown widget'
-            },
+          dom: {
+            tag: 'div',
+            innerHtml: 'Dropdown widget'
+          },
 
-            parts: {
-              menu: widgetMenu
-            },
-            
-            fetch: function () {
-              var future = Future.pure({
-                type: 'widget',
-                autofocus: true,
-                data: {
-                  value: 'widget1',
-                  text: 'Widget1'
+          parts: {
+            menu: widgetMenu
+          },
+          
+          fetch: function () {
+            var future = Future.pure({
+              type: 'widget',
+              autofocus: true,
+              data: {
+                value: 'widget1',
+                text: 'Widget1'
+              },
+              widget: {
+                uiType: 'container',
+                dom: {
+                  classes: [ 'my-widget' ]
                 },
-                widget: {
-                  uiType: 'container',
-                  dom: {
-                    classes: [ 'my-widget' ]
-                  },
-                  behaviours: {
-                    keying: { mode: 'cyclic' }
-                  },
-                  components: [
-                    { uiType: 'input', dom: { tag: 'input' } },
-                    { uiType: 'input', dom: { tag: 'input' } }
-                  ]
-                }
-              });
+                behaviours: {
+                  keying: { mode: 'cyclic' }
+                },
+                components: [
+                  Input.build({ }),
+                  Input.build({ })
+                ]
+              }
+            });
 
-              return future.map(function (data) {
-                return MenuData.single('primary-menu', 'Widget', data);
-              });
-            }
-          };
+            return future.map(function (data) {
+              return MenuData.single('primary-menu', 'Widget', data);
+            });
+          }
         })
       );
 
