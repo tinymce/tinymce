@@ -15,12 +15,13 @@ asynctest(
     'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Guard, Keyboard, Keys, Logger, Step, UiControls, GuiFactory, Invalidating, EventHandler, GuiSetup, Future, Result, Value) {
+  function (ApproxStructure, Assertions, GeneralSteps, Guard, Keyboard, Keys, Logger, Step, UiControls, GuiFactory, Invalidating, EventHandler, GuiSetup, Objects, Future, Result, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -30,8 +31,8 @@ asynctest(
         dom: {
           tag: 'input'
         },
-        behaviours: {
-          invalidating: {
+        behaviours: Objects.wrapAll([
+          Invalidating.config({
             invalidClass: 'test-invalid',
             validator: {
               validate: function (input) {
@@ -41,8 +42,8 @@ asynctest(
               },
               onEvent: 'custom.test.validate'
             }
-          }
-        }
+          })
+        ])
       });
     }, function (doc, body, gui, component, store) {
 
