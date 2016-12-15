@@ -47,39 +47,35 @@ asynctest(
       });
 
       var c = GuiFactory.build(
-        Dropdown.build(function (parts) {
-          return {
-            dom: {
-              tag: 'button'
-            },
+        Dropdown.build({
+          dom: {
+            tag: 'button'
+          },
 
-            components: [
-              displayer.asSpec()
-            ],
+          components: [
+            displayer.asSpec()
+          ],
 
-            lazySink: function () {
-              return Result.value(sink.get(c));
-            },
+          lazySink: function () {
+            return Result.value(sink.get(c));
+          },
 
-            uiType: 'dropdown-list',
+          uiType: 'dropdown-list',
 
-            parts: {
-              menu: parts.menu().build(
-                TestDropdownMenu
-              )
-            },
-        
-            fetch: function () { 
-              var future = Future.pure([
-                { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-                { type: 'item', data: { value: 'beta', text: 'Beta' } }
-              ]);
+          parts: {
+            menu: TestDropdownMenu
+          },
+      
+          fetch: function () { 
+            var future = Future.pure([
+              { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+              { type: 'item', data: { value: 'beta', text: 'Beta' } }
+            ]);
 
-              return future.map(function (f) {
-                return MenuData.simple('test', 'Test', f);
-              });
-            }
-          };
+            return future.map(function (f) {
+              return MenuData.simple('test', 'Test', f);
+            });
+          }
         })
       );
 
