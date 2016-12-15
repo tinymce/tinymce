@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -14,7 +14,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Toggling, CompositeBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
+  function (Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
@@ -95,8 +95,8 @@ define(
       );
     };
 
-    var build = function (f) {
-      return CompositeBuilder.build('dropdown', schema, partTypes, make, f);
+    var build = function (spec) {
+      return UiBuilder.composite('dropdown', schema, partTypes, make, spec);
     };
 
     return {
