@@ -23,7 +23,9 @@ test(
         function () {
           return CustomDefinition.toInfo(spec).fold(
             function (errInfo) {
-              return Result.error(ValueSchema.formatError(errInfo));
+              var formatted = ValueSchema.formatError(errInfo);
+              console.log('formatted', formatted);
+              return Result.error(formatted);
             }, Result.value
           );
         }
@@ -41,7 +43,11 @@ test(
           return ComponentDom.combine(inf, behaviours, definition).map(function (mod) {
             return DomModification.merge(definition, mod);
           });
-        });
+        }).fold(function (errInfo) {
+          var formatted = ValueSchema.formatError(errInfo);
+          console.log('formatted', formatted);
+          return Result.error(formatted);
+        }, Result.value);
       }, function (value) {
         RawAssertions.assertEq(label, expected, DomDefinition.defToRaw(value));
       });
