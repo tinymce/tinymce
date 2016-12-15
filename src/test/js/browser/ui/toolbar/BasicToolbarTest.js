@@ -82,6 +82,11 @@ asynctest(
       var t1 = component.getSystem().getByUid('shell-toolbar').getOrDie();
       var t2 = component.getSystem().getByUid('not-shell-toolbar').getOrDie();
       return [
+        GuiSetup.mAddStyles(doc, [
+          '[data-alloy-id="not-shell-toolbar"] { padding-top: 10px; padding-bottom: 10px; background: blue }',
+          '[data-alloy-id="not-shell-toolbar"] div { background: black; }'
+        ]),
+
         Assertions.sAssertStructure(
           'Checking initial structure of toolbar',
           ApproxStructure.build(function (s, str, arr) {
@@ -134,8 +139,8 @@ asynctest(
                         role: str.is('toolbar')
                       },
                       children: [
-                        s.element('button', { }),
-                        s.element('button', { })
+                        s.element('button', { html: str.is('a1') }),
+                        s.element('button', { html: str.is('a2') })
                       ]
                     })
                   ]
@@ -145,7 +150,8 @@ asynctest(
                     s.element('div', {
                       attrs: {
                         'data-group-container': str.is('true')
-                      }
+                      },
+                      children: [ ]
                     })
                   ]
                 })
@@ -155,7 +161,67 @@ asynctest(
           component.element()
         ),
 
-        Step.fail('in progress')
+        Step.sync(function () {
+          var groups = Toolbar.createGroups(t2, [
+            {
+              value: 'b',
+              text: 'b',
+              items: [ { text: 'b1' }, { text: 'b2' } ]
+            }
+          ]);
+          Toolbar.setGroups(t2, groups);
+        }),
+
+        Assertions.sAssertStructure(
+          'Checking structure of toolbar after adding groups to not-shell-toolbar',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('div', {
+                  attrs: {
+                    'data-group-container': str.is('true')
+                  },
+                  children: [
+                    s.element('div', {
+                      attrs: {
+                        role: str.is('toolbar')
+                      },
+                      children: [
+                        s.element('button', { html: str.is('a1') }),
+                        s.element('button', { html: str.is('a2') })
+                      ]
+                    })
+                  ]
+                }),
+                s.element('div', {
+                  children: [
+                    s.element('div', {
+                      attrs: {
+                        'data-group-container': str.is('true')
+                      },
+                      children: [
+                        s.element('div', {
+                          attrs: {
+                            role: str.is('toolbar')
+                          },
+                          children: [
+                            s.element('button', { html: str.is('b1') }),
+                            s.element('button', { html: str.is('b2') })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                })
+              ]
+            });
+          }),
+          component.element()
+        ),
+
+        Step.fail('in progress'),
+
+        GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
 
