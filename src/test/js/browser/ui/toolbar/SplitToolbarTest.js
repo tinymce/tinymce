@@ -11,10 +11,11 @@ asynctest(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'ephox.sugar.api.Css'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, Button, SplitToolbar, EventHandler, GuiSetup, TestPartialToolbarGroup, Arr) {
+  function (Keyboard, Keys, Step, GuiFactory, Button, SplitToolbar, EventHandler, GuiSetup, TestPartialToolbarGroup, Arr, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -24,7 +25,7 @@ asynctest(
           dom: {
             tag: 'div',
             styles: {
-              width: '200px',
+              width: '400px',
               outline: '2px solid blue'
             }
           },
@@ -93,6 +94,13 @@ asynctest(
         });
       };
 
+      var sResetWidth = function (px) {
+        return Step.sync(function () {
+          Css.set(component.element(), 'width', px);
+          SplitToolbar.refresh(component);
+        });
+      };
+
       return [
         GuiSetup.mAddStyles(doc, [
           '.test-sliding-closed { visibility: hidden; opacity: 0; }',
@@ -101,7 +109,9 @@ asynctest(
           '.test-sliding-height-shrinking { transition: opacity 0.3s ease, height 0.2s, linear 0.1s, visibility 0s linear 0.3s }',
 
           '.test-toolbar-group { display: flex; }',
-          '.test-toolbar-primary { display: flex; }'
+          '.test-toolbar-primary { display: flex; }',
+
+          '.test-toolbar-primary button { width: 100px; }'
         ]),
 
         Step.sync(function () {
@@ -112,6 +122,21 @@ asynctest(
           ]);
           SplitToolbar.setGroups(component, groups);
         }),
+
+        Step.wait(1000),
+
+        sResetWidth('300px'),
+
+        Step.wait(1000),
+
+        sResetWidth('400px'),
+        Step.wait(1000),
+        sResetWidth('550px'),
+        Step.wait(1000),
+
+        sResetWidth('1000px'),
+        Step.wait(1000),
+
         Step.fail('split.toolbar')
       ];
     }, function () { success(); }, failure);

@@ -90,10 +90,7 @@ define(
 
       setStoredGroups(primary, groups.concat([ overflowGroup ]));
 
-      debugger;
-      
-
-
+   
       var total = Width.get(primary.element());
       console.log('total', total);
 
@@ -151,7 +148,9 @@ define(
           apis: {
             setGroups: setGroups,
             createGroups: createGroups,
-            refresh: refresh
+            refresh: function (toolbar) {
+              refresh(toolbar, detail);
+            }
           }
         }
       );
@@ -168,14 +167,19 @@ define(
       build: build,
       parts: Fun.constant(parts),
 
-      createGroups: function (split, gspecs) {
-        var spi = split.config(BehaviourExport.spi());
-        return spi.createGroups(split, gspecs);
+      createGroups: function (toolbar, gspecs) {
+        var spi = toolbar.config(BehaviourExport.spi());
+        return spi.createGroups(toolbar, gspecs);
       },
 
-      setGroups: function (split, groups) {
-        var spi = split.config(BehaviourExport.spi());
-        spi.setGroups(split, groups);
+      setGroups: function (toolbar, groups) {
+        var spi = toolbar.config(BehaviourExport.spi());
+        spi.setGroups(toolbar, groups);
+      },
+
+      refresh: function (toolbar) {
+        var spi = toolbar.config(BehaviourExport.spi());
+        spi.refresh(toolbar);
       }
     };
   }
