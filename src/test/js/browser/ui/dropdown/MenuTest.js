@@ -1,5 +1,5 @@
 asynctest(
-  'Menu',
+  'MenuTest',
  
   [
     'ephox.agar.api.ApproxStructure',
@@ -22,50 +22,48 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Menu.build(function () {
-          return {
-            value: 'test-menu-1',
-            items: [
-              { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-              { type: 'item', data: { value: 'beta', text: 'Beta' } }
-            ],
-            dom: {
-              tag: 'div',
-              classes: [ 'test-menu' ]
-            },
-            components: [
-              { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
-            ],
+        Menu.build({
+          value: 'test-menu-1',
+          items: [
+            { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+            { type: 'item', data: { value: 'beta', text: 'Beta' } }
+          ],
+          dom: {
+            tag: 'div',
+            classes: [ 'test-menu' ]
+          },
+          components: [
+            { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+          ],
 
-            markers: {
-              item: 'test-item',
-              selectedItem: 'test-selected-item'
-            },
-            members: { 
-              item: {
-                munge: function (itemSpec) {
-                  return {
-                    dom: {
-                      tag: 'div',
-                      attributes: {
-                        'data-value': itemSpec.data.value
-                      },
-                      classes: [ 'test-item' ],
-                      innerHtml: itemSpec.data.text
+          markers: {
+            item: 'test-item',
+            selectedItem: 'test-selected-item'
+          },
+          members: { 
+            item: {
+              munge: function (itemSpec) {
+                return {
+                  dom: {
+                    tag: 'div',
+                    attributes: {
+                      'data-value': itemSpec.data.value
                     },
-                    components: [ ]
-                  };              
-                }
+                    classes: [ 'test-item' ],
+                    innerHtml: itemSpec.data.text
+                  },
+                  components: [ ]
+                };              
               }
-            },
+            }
+          },
 
-            events: Objects.wrap(
-              MenuEvents.focus(),
-              EventHandler.nu({
-                run: store.adder('menu.events.focus')
-              })
-            )
-          };
+          events: Objects.wrap(
+            MenuEvents.focus(),
+            EventHandler.nu({
+              run: store.adder('menu.events.focus')
+            })
+          )
         })
       );
     }, function (doc, body, gui, component, store) {

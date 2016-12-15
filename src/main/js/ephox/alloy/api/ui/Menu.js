@@ -3,17 +3,15 @@ define(
 
   [
     'ephox.alloy.api.focus.FocusManagers',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.ui.single.MenuSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (FocusManagers, Fields, Tagger, SpecSchema, MenuSpec, FieldSchema, ValueSchema, Merger, Fun) {
+  function (FocusManagers, UiBuilder, Fields, MenuSpec, FieldSchema, ValueSchema, Fun) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
@@ -69,11 +67,8 @@ define(
       FieldSchema.defaulted('onHighlight', Fun.noop)
     ];
 
-    // FIX: Dupe
-    var build = function (f) {
-      var rawUiSpec = Merger.deepMerge({ uid: Tagger.generate('') }, f());
-      var uiSpec = SpecSchema.asStructOrDie('Menu', schema, rawUiSpec, [ ]);
-      return MenuSpec.make(uiSpec, rawUiSpec);
+    var build = function (spec) {
+      return UiBuilder.single('menu', schema, MenuSpec.make, spec);
     };
 
     return {
