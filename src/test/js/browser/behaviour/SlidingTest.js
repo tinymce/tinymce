@@ -14,6 +14,7 @@ asynctest(
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
@@ -21,7 +22,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Sliding, EventHandler, GuiSetup, Class, Element, Html, Insert, Remove) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Sliding, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -61,8 +62,8 @@ asynctest(
             height: '20px'
           }
         },
-        behaviours: {
-          sliding: {
+        behaviours: Objects.wrapAll([ 
+          Sliding.config({
             closedStyle: 'test-sliding-closed',
             openStyle: 'test-sliding-open',
             'shrinkingStyle': 'test-sliding-width-shrinking',
@@ -76,8 +77,9 @@ asynctest(
             onStartShrink: store.adder('onStartShrink'),
             onGrown: store.adder('onGrown'),
             onStartGrow: store.adder('onStartGrow')
-          }
-        }
+          })
+
+        ])
       });
 
     }, function (doc, body, gui, component, store) {
