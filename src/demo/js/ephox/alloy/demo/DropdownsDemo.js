@@ -241,17 +241,13 @@ define(
           },
           lazySink: lazySink,
           onExecute: function () {
-
+            console.log('split-dropdown button clicked');
           },
-
           parts: {
             button: {
               dom: {
                 tag: 'button',
                 innerHtml: 'Run'
-              },
-              action: function () {
-                console.log('*** Clicked on Action ***');
               },
               uid: 'supplied'
             },
