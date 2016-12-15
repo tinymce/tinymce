@@ -11,12 +11,13 @@ asynctest(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.StepUtils',
+    'ephox.boulder.api.Objects',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'global!Error'
   ],
  
-  function (Assertions, Logger, Step, GuiFactory, Coupling, Button, Tagger, GuiSetup, StepUtils, Attr, Node, Error) {
+  function (Assertions, Logger, Step, GuiFactory, Coupling, Button, Tagger, GuiSetup, StepUtils, Objects, Attr, Node, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -27,8 +28,8 @@ asynctest(
           tag: 'div'
         },
         uid: 'primary',
-        behaviours: {
-          coupling: {
+        behaviours: Objects.wrapAll([
+          Coupling.config({
             others: {
               'secondary-1': function (primary) { 
                 return Button.build({
@@ -40,8 +41,8 @@ asynctest(
                 });
               }
             }
-          }
-        }
+          })
+        ])
       });
 
     }, function (doc, body, gui, component, store) {
