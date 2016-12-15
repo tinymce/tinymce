@@ -2,10 +2,10 @@ define(
   'ephox.alloy.test.dropdown.TestDropdownMenu',
 
   [
-
+    'ephox.alloy.api.behaviour.Representing'
   ],
 
-  function () {
+  function (Representing) {
     return function (store) {
       return {
         members: {
@@ -42,7 +42,10 @@ define(
           selectedMenu: 'selected-menu',
           'backgroundMenu': 'background-menu'
         },
-        onExecute: store.adderH('dropdown.menu.execute')
+        onExecute: function (dropdown, item) {
+          var v = Representing.getValue(item);
+          return store.adderH('dropdown.menu.execute: ' + v.value)();
+        }
       };
     };
   }

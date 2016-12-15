@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.Dropdown',
 
   [
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.dropdown.Beta',
@@ -14,7 +15,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
+  function (Focusing, Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),

@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.ComponentStructure',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
@@ -21,7 +22,7 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Composing, Coupling, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Composing, Coupling, Focusing, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -57,6 +58,7 @@ define(
 
               },
               onEscape: function () {
+                sandbox.getSystem().getByUid(detail.uid()).each(Focusing.focus);
                 Sandboxing.close(sandbox);
                 return Option.some(true);
               }
