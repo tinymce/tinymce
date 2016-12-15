@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
@@ -15,7 +16,7 @@ define(
     'text!dom-templates/tinymce.dialog.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Positioning, HtmlDisplay, Option, Result, Class, Element, Insert, TemplateTinyDialog) {
+  function (Gui, GuiFactory, GuiTemplate, Positioning, ModalDialog, HtmlDisplay, Option, Result, Class, Element, Insert, TemplateTinyDialog) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -40,63 +41,182 @@ define(
 
       var dialog = HtmlDisplay.section(
         gui,
-        'This dialog is customised',
-        GuiTemplate.use(
-          Option.some('modal-dialog'),
-          TemplateTinyDialog,
-          {
-            uiType: 'modal-dialog',
-            draggable: true,
-
-            lazySink: lazySink,
-
-            onEscape: function () {
-              console.log('Escaped');
-            },
-
-            parts: {
-              title: {
-                uiType: 'container',
-                dom: {
-                  classes: [ 'mce-title' ],
-                  innerHtml: 'Insert link'
-                }
-
-              },
-              //<div id="mceu_85-dragh" class="mce-dragh"></div>
-              draghandle: {
-                uiType: 'container',
-                dom: {
-                  classes: [ 'mce-dragh' ]
-                }
-              },
-              body: {
-                uiType: 'container'
-              },
-              footer: {
-                uiType: 'container'
-              },
-              //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
-              close: {
-                uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  attributes: {
-                    type: 'button',
-                    'aria-hidden': 'true'
-                  },
-                  classes: [ 'mce-close' ]
-                },
-                components: [
-                  { uiType: 'custom', dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } }
-                ]
-              }
+        'This dialog is customised (uses TinyMCE styles)',
+        ModalDialog.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'mce-container', 'mce-panel', 'mce-floatpanel', 'mce-window', 'mce-in' ],
+            styles: {
+              outline: '1px solid green'
             }
           },
-          {
-            fields: { }
+          components: [
+            {
+              uiType: 'custom',
+              dom: {
+                tag: 'div',
+                classes: [ 'mce-reset' ],
+                attributes: { role: 'application' }
+              },
+              components: [
+                {
+                  uiType: 'custom',
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'mce-window-head' ]
+                  },
+                  components: [
+                    ModalDialog.parts().title(),
+                    ModalDialog.parts().draghandle(),
+                    ModalDialog.parts().close()
+                  ]
+                },
+                {
+                  uiType: 'custom',
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'mce-container-body', 'mce-window-body', 'mce-abs-layout' ]
+                  },
+                  components: [
+                    ModalDialog.parts().body()
+                  ]
+                },
+                {
+                  uiType: 'custom',
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'mce-container', 'mce-panel', 'mce-foot' ]
+                  },
+                  components: [
+                    ModalDialog.parts().footer()
+                  ]
+                }
+              ]
+            }
+          ],
+
+          lazySink: lazySink,
+          onEscape: function () {
+            console.log('escaping');
+            return Option.some(true);
+          },
+
+          // FIX: Make this not necessary
+          dragBlockClass: [ 'blocker-class' ],
+
+          parts: {
+            title: {
+              dom: {
+                tag: 'div',
+                classes: [ 'mce-title' ],
+                innerHtml: 'Insert link'
+              }
+
+            },
+            //<div id="mceu_85-dragh" class="mce-dragh"></div>
+            draghandle: {
+              dom: {
+                tag: 'div',
+                classes: [ 'mce-dragh' ]
+              }              
+            },
+
+            blocker: { },
+            body: {
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                {
+                  uiType: 'custom',
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      width: '400px',
+                      height: '200px'
+                    }
+                  }
+                }
+
+              ]
+            },
+            footer: {
+              dom: {
+                tag: 'div'
+              }
+            },
+            //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
+            close: {
+              dom: {
+                tag: 'button',
+                attributes: {
+                  type: 'button',
+                  'aria-hidden': 'true'
+                },
+                classes: [ 'mce-close' ]
+              },
+              components: [
+                { uiType: 'custom', dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } }
+              ]
+            }
           }
-        )
+        })
+        // GuiTemplate.use(
+        //   Option.some('modal-dialog'),
+        //   TemplateTinyDialog,
+        //   {
+        //     uiType: 'modal-dialog',
+        //     draggable: true,
+
+        //     lazySink: lazySink,
+
+        //     onEscape: function () {
+        //       console.log('Escaped');
+        //     },
+
+        //     parts: {
+        //       title: {
+        //         uiType: 'container',
+        //         dom: {
+        //           classes: [ 'mce-title' ],
+        //           innerHtml: 'Insert link'
+        //         }
+
+        //       },
+        //       //<div id="mceu_85-dragh" class="mce-dragh"></div>
+        //       draghandle: {
+        //         uiType: 'container',
+        //         dom: {
+        //           classes: [ 'mce-dragh' ]
+        //         }
+        //       },
+        //       body: {
+        //         uiType: 'container'
+        //       },
+        //       footer: {
+        //         uiType: 'container'
+        //       },
+        //       //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
+        //       close: {
+        //         uiType: 'button',
+        //         dom: {
+        //           tag: 'button',
+        //           attributes: {
+        //             type: 'button',
+        //             'aria-hidden': 'true'
+        //           },
+        //           classes: [ 'mce-close' ]
+        //         },
+        //         components: [
+        //           { uiType: 'custom', dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } }
+        //         ]
+        //       }
+        //     }
+        //   },
+        //   {
+        //     fields: { }
+        //   }
+        // )
       );
     };
   }
