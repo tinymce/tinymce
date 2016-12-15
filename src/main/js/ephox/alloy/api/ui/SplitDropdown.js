@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -16,7 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, Toggling, Button, CompositeBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Fun, Option, Error) {
+  function (SystemEvents, Toggling, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -147,7 +147,7 @@ define(
     };
 
     var build = function (f) {
-      return CompositeBuilder.build('split-dropdown', schema, partTypes, make, f);
+      return UiBuilder.composite('split-dropdown', schema, partTypes, make, f);
     };
 
     // TODO: Remove likely dupe
