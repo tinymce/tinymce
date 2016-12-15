@@ -117,9 +117,43 @@ asynctest(
             }
           ]);
           Toolbar.setGroups(t1, groups);
-          console.log('groups', groups);
-          // Toolbar.buildGroups()
         }),
+
+        Assertions.sAssertStructure(
+          'Checking structure of toolbar after adding groups to shell-toolbar',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('div', {
+                  attrs: {
+                    'data-group-container': str.is('true')
+                  },
+                  children: [
+                    s.element('div', {
+                      attrs: {
+                        role: str.is('toolbar')
+                      },
+                      children: [
+                        s.element('button', { }),
+                        s.element('button', { })
+                      ]
+                    })
+                  ]
+                }),
+                s.element('div', {
+                  children: [
+                    s.element('div', {
+                      attrs: {
+                        'data-group-container': str.is('true')
+                      }
+                    })
+                  ]
+                })
+              ]
+            });
+          }),
+          component.element()
+        ),
 
         Step.fail('in progress')
       ];
