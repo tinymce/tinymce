@@ -89,10 +89,7 @@ asynctest(
 
         FocusTools.sTryOnSelector('Focus should start on A', doc, 'button:contains("A")'),
         Keyboard.sKeydown(doc, Keys.right(), { }),
-        FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")'),
-
-
-        Step.fail('toolbar.test')
+        FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")')
       ];
     }, function () { success(); }, failure);
 

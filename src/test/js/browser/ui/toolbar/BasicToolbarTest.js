@@ -6,12 +6,14 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.test.GuiSetup',
-    'ephox.alloy.test.toolbar.TestPartialToolbarGroup'
+    'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
+    'ephox.compass.Arr'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Toolbar, GuiSetup, TestPartialToolbarGroup) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Button, Toolbar, GuiSetup, TestPartialToolbarGroup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -79,6 +81,15 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
+      var makeButton = function (itemSpec) {
+        return Button.build({
+          dom: {
+            tag: 'button',
+            innerHtml: itemSpec.text
+          }
+        });
+      };
+
       var t1 = component.getSystem().getByUid('shell-toolbar').getOrDie();
       var t2 = component.getSystem().getByUid('not-shell-toolbar').getOrDie();
       return [
@@ -118,7 +129,7 @@ asynctest(
             {
               value: 'a',
               text: 'A',
-              items: [ { text: 'a1' }, { text: 'a2' } ]
+              items: Arr.map([ { text: 'a1' }, { text: 'a2' } ], makeButton)
             }
           ]);
           Toolbar.setGroups(t1, groups);
@@ -166,7 +177,7 @@ asynctest(
             {
               value: 'b',
               text: 'b',
-              items: [ { text: 'b1' }, { text: 'b2' } ]
+              items: Arr.map([ { text: 'b1' }, { text: 'b2' } ], makeButton)
             }
           ]);
           Toolbar.setGroups(t2, groups);
@@ -218,8 +229,6 @@ asynctest(
           }),
           component.element()
         ),
-
-        Step.fail('in progress'),
 
         GuiSetup.mRemoveStyles
       ];
