@@ -145,7 +145,6 @@ define(
                 tag: 'div'
               }
             },
-            //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
             close: {
               dom: {
                 tag: 'button',
@@ -161,62 +160,6 @@ define(
             }
           }
         })
-        // GuiTemplate.use(
-        //   Option.some('modal-dialog'),
-        //   TemplateTinyDialog,
-        //   {
-        //     uiType: 'modal-dialog',
-        //     draggable: true,
-
-        //     lazySink: lazySink,
-
-        //     onEscape: function () {
-        //       console.log('Escaped');
-        //     },
-
-        //     parts: {
-        //       title: {
-        //         uiType: 'container',
-        //         dom: {
-        //           classes: [ 'mce-title' ],
-        //           innerHtml: 'Insert link'
-        //         }
-
-        //       },
-        //       //<div id="mceu_85-dragh" class="mce-dragh"></div>
-        //       draghandle: {
-        //         uiType: 'container',
-        //         dom: {
-        //           classes: [ 'mce-dragh' ]
-        //         }
-        //       },
-        //       body: {
-        //         uiType: 'container'
-        //       },
-        //       footer: {
-        //         uiType: 'container'
-        //       },
-        //       //<button type="button" class="mce-close" aria-hidden="true"><i class="mce-ico mce-i-remove"></i></button>
-        //       close: {
-        //         uiType: 'button',
-        //         dom: {
-        //           tag: 'button',
-        //           attributes: {
-        //             type: 'button',
-        //             'aria-hidden': 'true'
-        //           },
-        //           classes: [ 'mce-close' ]
-        //         },
-        //         components: [
-        //           { uiType: 'custom', dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } }
-        //         ]
-        //       }
-        //     }
-        //   },
-        //   {
-        //     fields: { }
-        //   }
-        // )
       );
     };
   }
