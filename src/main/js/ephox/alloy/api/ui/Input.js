@@ -10,11 +10,7 @@ define(
   ],
 
   function (UiBuilder, InputBase, FieldSchema, Merger, Fun) {
-    var schema = [
-      FieldSchema.option('data'),
-      FieldSchema.defaulted('type', 'input'),
-      FieldSchema.defaulted('tag', 'input')
-    ];
+    var schema = InputBase.schema();
 
     var build = function (spec) {
       return UiBuilder.single('Input', schema, make, spec);

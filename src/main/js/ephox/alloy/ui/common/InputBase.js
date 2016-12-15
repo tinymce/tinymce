@@ -2,10 +2,18 @@ define(
   'ephox.alloy.ui.common.InputBase',
 
   [
+    'ephox.boulder.api.FieldSchema',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Value'
   ],
 
-  function (Value) {
+  function (FieldSchema, Fun, Value) {
+    var schema = [
+      FieldSchema.option('data'),
+      FieldSchema.defaulted('type', 'input'),
+      FieldSchema.defaulted('tag', 'input')
+    ];
+
     var behaviours = function (detail) {
       return {
         representing: {
@@ -50,6 +58,7 @@ define(
     };
 
     return {
+      schema: Fun.constant(schema),
       behaviours: behaviours,
       dom: dom
     };

@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.ui.common.InputBase',
     'ephox.alloy.ui.composite.TypeaheadSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
@@ -17,14 +18,11 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Coupling, Representing, Sandboxing, UiBuilder, Fields, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, UiBuilder, Fields, PartType, InputBase, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('dom'),
-      FieldSchema.option('data'),
-      FieldSchema.defaulted('tag', 'input'),
-      FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('minChars', 5),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
@@ -34,7 +32,9 @@ define(
       FieldSchema.state('previewing', function () {
         return Cell(true);
       })
-    ];
+    ].concat(
+      InputBase.schema()
+    );
 
     var partTypes = [
       PartType.external(
