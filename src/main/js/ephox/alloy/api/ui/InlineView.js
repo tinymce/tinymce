@@ -7,13 +7,14 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.sandbox.Dismissal',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, BehaviourExport, Positioning, Sandboxing, UiBuilder, FieldSchema, Merger, Future, Fun) {
+  function (ComponentStructure, BehaviourExport, Positioning, Sandboxing, UiBuilder, Dismissal, FieldSchema, Merger, Future, Fun) {
     var schema = [
       FieldSchema.strict('lazySink')
     ];
@@ -35,7 +36,10 @@ define(
                 lazySink: detail.lazySink()
               }
 
-            }
+            },
+            receiving: Dismissal.receiving({
+              isExtraPart: Fun.constant(false)
+            })
           },
 
           apis: {

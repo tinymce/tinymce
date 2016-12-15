@@ -2,7 +2,9 @@ asynctest(
   'InlineViewTest',
  
   [
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
@@ -13,12 +15,13 @@ asynctest(
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
+    'ephox.alloy.test.TestBroadcasts',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result'
   ],
  
-  function (Logger, Step, UiFinder, Waiter, GuiFactory, Button, Dropdown, InlineView, MenuData, GuiSetup, Sinks, TestDropdownMenu, Future, Result) {
+  function (GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Dropdown, InlineView, MenuData, GuiSetup, Sinks, TestBroadcasts, TestDropdownMenu, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -40,6 +43,31 @@ asynctest(
           // onEscape: store.adderH('inline.escape')
         })
       );
+
+      var sCheckOpen = function (label) {
+        return Logger.t(
+          label, 
+          Waiter.sTryUntil(
+            'Test inline should not be DOM',
+            UiFinder.sExists(gui.element(), '.test-inline'),
+            100,
+            1000
+          )
+        );
+      };
+
+      var sCheckClosed = function (label) {
+        return Logger.t(
+          label, 
+          Waiter.sTryUntil(
+            'Test inline should not be in DOM',
+            UiFinder.sNotExists(gui.element(), '.test-inline'),
+            100,
+            1000
+          )
+        );
+      };
+
       return [
         UiFinder.sNotExists(gui.element(), '.test-inline'),
         Step.sync(function () {
@@ -53,23 +81,13 @@ asynctest(
             }
           });
         }),
-        Waiter.sTryUntil(
-          'Test inline should appear',
-          UiFinder.sExists(gui.element(), '.test-inline'),
-          100,
-          1000
-        ),
+        sCheckOpen('After show'),
 
         Step.sync(function () {
           InlineView.hide(inline);
         }),
 
-        Waiter.sTryUntil(
-          'Test inline should disappear',
-          UiFinder.sNotExists(gui.element(), '.test-inline'),
-          100,
-          1000
-        ),
+        sCheckClosed('After hide'),
 
         Logger.t(
           'Show inline view again, this time with buttons',
@@ -112,7 +130,50 @@ asynctest(
           })
         ),
 
-        Step.fail('in progress')
+        sCheckOpen('Should still be open with buttons and a dropdown'),
+
+        TestBroadcasts.sDismissOn(
+          'toolbar: should not close',
+          gui,
+          '[data-alloy-id="bold-button"]'
+        ),
+
+        sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
+
+        store.sAssertEq('Check that the store is empty initially', [ ]),
+        Mouse.sClickOn(gui.element(), 'button:contains("B")'),
+        store.sAssertEq('Check that bold activated', [ 'bold' ]),
+
+
+        // TODO: Make it not close if the inline toolbar had a dropdown, and the dropdown
+        // item was selected. Requires composition of "isPartOf"
+        // Logger.t(
+        //   'Check that clicking on a dropdown item in the inline toolbar does not dismiss popup',
+        //   GeneralSteps.sequence([
+        //     // Click on the dropdown
+        //     Mouse.sClickOn(gui.element(), 'button:contains(+)'),
+        //     // Wait until dropdown loads.
+        //     Waiter.sTryUntil(
+        //       'Waiting for dropdown list to appear',
+        //       UiFinder.sExists(gui.element(), 'li:contains("Option-1")'),
+        //       100, 1000
+        //     ),
+        //     TestBroadcasts.sDismissOn(
+        //       'dropdown item: should not close',
+        //       gui,
+        //       'li:contains("Option-2")'
+        //     ),
+        //     sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
+        //   ])
+        // ),
+        
+        TestBroadcasts.sDismiss(
+          'outer gui element: should close',
+          gui,
+          gui.element()
+        ),
+
+        sCheckClosed('Broadcasting dismiss on a external element should close inline toolbar')
 
       ];
     }, function () { success(); }, failure);
