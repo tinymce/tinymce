@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.data.Fields',
@@ -14,10 +15,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width'
   ],
 
-  function (BehaviourExport, CompositeBuilder, Toolbar, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
+  function (BehaviourExport, Replacing, CompositeBuilder, Toolbar, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Remove, Width) {
     var schema = [
       Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
       FieldSchema.state('builtGroups', function () {
@@ -45,6 +47,11 @@ define(
       PartType.external({ built: Fun.identity }, 'overflow-button', Fun.constant({ }), Fun.constant({ }))
     ];
 
+    var setStoredGroups = function (bar, storedGroups) {
+      var bGroups = Arr.map(storedGroups, function (g) { return { built: g }; });
+      Toolbar.setGroups(bar, bGroups);
+    };
+
     var refresh = function (toolbar, detail) {
       var primary = toolbar.getSystem().getByUid(detail.partUids().primary).getOrDie();
       var overflow = toolbar.getSystem().getByUid(detail.partUids().overflow).getOrDie();
@@ -58,15 +65,14 @@ define(
       // Put all the groups inside the primary toolbar
       var groups = detail.builtGroups().get();
 
-      var bGroups = Arr.map(groups, function (g) { return { built: g }; });
-
-      // Use the { built } version to add to toolbar.
-      Toolbar.setGroups(primary, bGroups);
-
-      debugger;
       var overflowGroupSpec = Toolbar.createGroups(primary, [ { items: [ { text: 'More' } ] } ])[0];
       console.log('overflowGroupSpec', overflowGroupSpec);
       var overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
+
+      setStoredGroups(primary, groups.concat([ overflowGroup ]));
+
+      debugger;
+      
 
 
       var total = Width.get(primary.element());
@@ -75,6 +81,18 @@ define(
       var overflows = Overflows.partition(total, groups, function (comp) {
         return Width.get(comp.element());
       }, overflowGroup);
+
+      if (overflows.extra().length === 0) {
+        // Not ideal. Breaking abstraction somewhat, though remove is better than insert
+        // Can just reset the toolbar groups also ... but may be a bit slower.
+        Replacing.remove(primary, overflowGroup);
+        Toolbar.setGroups(overflow, [ ]);
+        // Maybe remove the overflow drawer.
+      } else {
+        setStoredGroups(primary, overflows.within());
+        setStoredGroups(overflow, overflows.extra());
+        // Maybe add the overflow drawer.
+      }
 
       Css.remove(primary.element(), 'visibility');
       Css.reflow(primary.element());
