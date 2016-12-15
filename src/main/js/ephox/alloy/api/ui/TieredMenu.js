@@ -2,14 +2,14 @@ define(
   'ephox.alloy.api.ui.TieredMenu',
 
   [
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
-    'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.ui.single.TieredMenuSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (Fields, SpecSchema, TieredMenuSpec, FieldSchema, Fun) {
+  function (UiBuilder, Fields, TieredMenuSpec, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('onExecute'),
       FieldSchema.strict('onEscape'),
@@ -32,10 +32,8 @@ define(
       Fields.members([ 'menu', 'item' ])
     ];
 
-    var build = function (f) {
-      var rawUiSpec = f();
-      var uiSpec = SpecSchema.asStructOrDie('TieredMenu', schema, rawUiSpec, [ ]);
-      return TieredMenuSpec.make(uiSpec, rawUiSpec);
+    var build = function (spec) {
+      return UiBuilder.single('TieredMenu', schema, TieredMenuSpec.make, spec);
     };
 
     return {

@@ -28,30 +28,29 @@ define(
   ],
 
   function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Option, Options, Body, Class, Classes, SelectorFind) {
-    var make = function (uiSpec, rawUiSpec) {
+    var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
-          var data = Menu.build(function () {
-            return Merger.deepMerge(
-              uiSpec.members().menu().munge(spec),
+          var data = Menu.build(
+            Merger.deepMerge(
+              detail.members().menu().munge(spec),
               {
-                uiType: 'menu',
                 value: name,
                 items: spec.items,
                 markers: rawUiSpec.markers,
                 members: {
-                  item: uiSpec.members().item()
+                  item: detail.members().item()
                 },
 
                 // Fake focus.
-                fakeFocus: uiSpec.fakeFocus(),
-                onHighlight: uiSpec.onHighlight(),
+                fakeFocus: detail.fakeFocus(),
+                onHighlight: detail.onHighlight(),
 
 
-                focusManager: uiSpec.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
+                focusManager: detail.fakeFocus() ? FocusManagers.highlights() : FocusManagers.dom()
               }
-            );
-          });
+            )
+          );
 
           return container.getSystem().build(data);
         });
@@ -60,12 +59,12 @@ define(
       var state = LayeredState();
 
       var setup = function (container) {
-        var componentMap = buildMenus(container, uiSpec.data().menus());
+        var componentMap = buildMenus(container, detail.data().menus());
          addToWorld(container, componentMap);
 
         
         
-        state.setContents(uiSpec.data().primary(), componentMap, uiSpec.data().expansions(), function (sMenus) {
+        state.setContents(detail.data().primary(), componentMap, detail.data().expansions(), function (sMenus) {
           return toMenuValues(container, sMenus);
         });
 
@@ -80,7 +79,7 @@ define(
       };
 
       var toMenuValues = function (container, sMenus) {
-        return Obj.map(uiSpec.data().menus(), function (data, menuName) {
+        return Obj.map(detail.data().menus(), function (data, menuName) {
           return Arr.bind(data.items, function (item) {
             return item.type === 'separator' ? [ ] : [ item.data.value ];
           });
@@ -110,7 +109,7 @@ define(
         return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu) {
           var rest = getMenus(state, path.slice(1));
           Arr.each(rest, function (r) {
-            Class.add(r.element(), uiSpec.markers().backgroundMenu());
+            Class.add(r.element(), detail.markers().backgroundMenu());
           });
 
           if (! Body.inBody(activeMenu.element())) {
@@ -120,7 +119,7 @@ define(
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
-            Classes.remove(o.element(), [ uiSpec.markers().backgroundMenu() ]);
+            Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
             Replacing.remove(container, o);
           });
 
@@ -136,7 +135,7 @@ define(
             // DUPE with above. Fix later.
             if (! Body.inBody(activeMenu.element())) {
               Replacing.append(container, { built: activeMenu });
-              uiSpec.onOpenSubmenu()(container, item, activeMenu);
+              detail.onOpenSubmenu()(container, item, activeMenu);
             }
 
             Highlighting.highlightFirst(activeMenu);
@@ -173,15 +172,15 @@ define(
 
       var onEscape = function (container, item) {
         return collapseLeft(container, item).orThunk(function () {
-          return uiSpec.onEscape()(container, item);
+          return detail.onEscape()(container, item);
         // This should only fire when the user presses ESC ... not any other close.
-          // return HotspotViews.onEscape(uiSpec.lazyAnchor()(), container);
+          // return HotspotViews.onEscape(detail.lazyAnchor()(), container);
         });
       };
 
       var keyOnItem = function (f) {
         return function (container, simulatedEvent) {
-          return SelectorFind.closest(simulatedEvent.getSource(), '.' + uiSpec.markers().item()).bind(function (target) {
+          return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers().item()).bind(function (target) {
             return container.getSystem().getByDom(target).bind(function (item) {
               return f(container, item);
             });
@@ -221,7 +220,7 @@ define(
               var target = simulatedEvent.event().target();
               return sandbox.getSystem().getByDom(target).bind(function (item) {
                 return expandRight(sandbox, item).orThunk(function () {
-                  return uiSpec.onExecute()(sandbox, item);
+                  return detail.onExecute()(sandbox, item);
                 });
               });
             }
@@ -244,9 +243,9 @@ define(
                   console.log('primary', primary);
                   Replacing.append(container, { built: primary });
 
-                  if (uiSpec.openImmediately()) {
+                  if (detail.openImmediately()) {
                     setActiveMenu(container, primary);
-                    uiSpec.onOpenMenu()(container, primary);
+                    detail.onOpenMenu()(container, primary);
                   }
                 });
               }
@@ -257,7 +256,7 @@ define(
 
       return {
         uiType: 'custom',
-        uid: uiSpec.uid(),
+        uid: detail.uid(),
         dom: {
           tag: 'div',
           classes: [ 'main-menu' ]
@@ -276,8 +275,8 @@ define(
           },
           // Highlighting is used for highlighting the active menu
           highlighting: {
-            highlightClass: uiSpec.markers().selectedMenu(),
-            itemClass: uiSpec.markers().menu()
+            highlightClass: detail.markers().selectedMenu(),
+            itemClass: detail.markers().menu()
           },
           composing: {
             find: function (container) {
