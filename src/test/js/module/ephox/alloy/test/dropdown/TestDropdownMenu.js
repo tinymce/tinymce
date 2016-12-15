@@ -13,8 +13,11 @@ define(
             munge: function (menuSpec) {
               return {
                 dom: {
-                  tag: 'container',
-                  classes: [ 'menu' ]
+                  tag: 'div',
+                  classes: [ 'menu' ],
+                  attributes: menuSpec.text !== undefined ? {
+                    'aria-label': menuSpec.text
+                  } : { }
                 },
                 components: [
                   // FIX: Expose through API
@@ -28,7 +31,7 @@ define(
               return itemSpec.type === 'widget' ? {
                 dom: { 
                   tag: 'li',
-                  classes: [ 'item' ]
+                  classes: [ 'item', 'item-widget' ]
                 },
                 components: [
                   // FIX: Expose through API

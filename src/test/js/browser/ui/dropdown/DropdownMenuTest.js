@@ -86,20 +86,36 @@ asynctest(
               { type: 'widget', widget: widget, data: { value: 'widget' } }
             ]
           },
-          // 'packages-menu': [
-          //   { type: 'item', value: 'sortby', text: 'SortBy' }
-          // ],
-          // 'sortby-menu': [
-          //   { type: 'item', value: 'strings', text: 'Strings' },
-          //   { type: 'item', value: 'numbers', text: 'Numbers' }
-          // ],
-          // 'strings-menu': [
-          //   { type: 'item', value: 'versions', text: 'Versions', html: '<b>V</b>ersions' },
-          //   { type: 'item', value: 'alphabetic', text: 'Alphabetic' }
-          // ],
-          // 'numbers-menu': [
-          //   { type: 'item', value: 'doubled', text: 'Doubled digits' }
-          // ]
+          'packages-menu': {
+            value: 'packages-menu-value',
+            text: 'Packages Menu',
+            items: [
+              { type: 'item', data: { value: 'sortby', text: 'SortBy' } }
+            ]
+          },
+          'sortby-menu': {
+            value: 'sortby-menu-value',
+            text: 'Sortby Menu',
+            items: [
+              { type: 'item', data: { value: 'strings', text: 'Strings' } },
+              { type: 'item', data: { value: 'numbers', text: 'Numbers' } }
+            ]
+          },
+          'strings-menu': {
+            value: 'strings-menu-value',
+            text: 'Strings Menu',
+            items: [
+              { type: 'item', data: { value: 'versions', text: 'Versions', html: '<b>V</b>ersions' } },
+              { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' } }
+            ]
+          },
+          'numbers-menu': {
+            value: 'numbers-menu-value',
+            text: 'Numbers Menu',
+            items: [
+              { type: 'item', data: { value: 'doubled', text: 'Doubled digits' } }
+            ]
+          }
         },
         expansions: {
           'packages': 'packages-menu',
@@ -115,8 +131,14 @@ asynctest(
           uid: 'test-dropdown',
           dom: {
             tag: 'div',
-            innerHtml: '+'
+            innerHtml: '+',
+            classes: 'dropdown-button'
           }, 
+
+          behaviours: Objects.wrapAll([
+            Focusing.config({ })
+          ]),
+
           components: [ ],
 
           lazySink: function () {
@@ -143,23 +165,26 @@ asynctest(
       );
       
       var focusables = {
-        toolsMenu: { label: 'tools-menu', selector: 'li:contains("Tools")' },
-        packagesMenu: { label: 'packages-menu', selector: '[data-alloy-menu-value="packages-menu"]' },
-        sortbyMenu: { label: 'sortby-menu', selector: '[data-alloy-menu-value="sortby-menu"]' },
-        stringsMenu: { label: 'strings-menu', selector: '[data-alloy-menu-value="strings-menu"]' },
-        numbersMenu: { label: 'numbers-menu', selector: '[data-alloy-menu-value="numbers-menu"]' },
-        button: { label: 'dropdown-button', 'selector': 'button' },
-        packages: { label: 'packages-item', selector: '[data-alloy-item-value="packages"]' },
-        about: { label: 'about-item', selector: '[data-alloy-item-value="about"]' },
-        sortby: { label: 'sortby-item', selector: '[data-alloy-item-value="sortby"]' },
-        strings: { label: 'strings-item', selector: '[data-alloy-item-value="strings"]' },
-        numbers: { label: 'numbers-item', selector: '[data-alloy-item-value="numbers"]' },
-        doubled: { label: 'doubled-item', selector: '[data-alloy-item-value="doubled"]' },
-        versions: { label: 'versions-item', selector: '[data-alloy-item-value="versions"]' },
-        widget: { label: 'widget-item', selector: '[data-alloy-item-value="widget"]' },
-        widgetOne: { label: 'widget-item:1', selector: '[data-alloy-item-value="widget"] .one' },
-        widgetTwo: { label: 'widget-item:2', selector: '[data-alloy-item-value="widget"] .two' },
-        widgetThree: { label: 'widget-item:3', selector: '[data-alloy-item-value="widget"] .three' }
+        toolsMenu: { label: 'tools-menu', selector: '.menu[aria-label="Tools Menu"]' },
+        packagesMenu: { label: 'packages-menu', selector: '.menu[aria-label="Packages Menu"]' },
+        sortbyMenu: { label: 'sortby-menu', selector: '.menu[aria-label="Sortby Menu"]' },
+        stringsMenu: { label: 'strings-menu', selector: '.menu[aria-label="Strings Menu"]' },
+        numbersMenu: { label: 'numbers-menu', selector: '.menu[aria-label="Numbers Menu"]' },
+
+        button: { label: 'dropdown-button', 'selector': '.dropdown-button' },
+
+        packages: { label: 'packages-item', selector: 'li:contains("Packages")' },
+        about: { label: 'about-item', selector: 'li:contains("About")' },
+        sortby: { label: 'sortby-item', selector: 'li:contains("SortBy")' },
+        strings: { label: 'strings-item', selector: 'li:contains("Strings")' },
+        numbers: { label: 'numbers-item', selector: 'li:contains("Numbers")' },
+        doubled: { label: 'doubled-item', selector: 'li:contains("Doubled")' },
+        versions: { label: 'versions-item', selector: 'li:contains("Versions")' },
+
+        widget: { label: 'widget-item', selector: '.item-widget' },
+        widgetOne: { label: 'widget-item:1', selector: '.item-widget .one' },
+        widgetTwo: { label: 'widget-item:2', selector: '.item-widget .two' },
+        widgetThree: { label: 'widget-item:3', selector: '.item-widget .three' }
       };
 
       var sTestMenus = function (label, stored, focused, active, background, others) {
@@ -167,14 +192,14 @@ asynctest(
           Arr.bind(background, function (bg) {
             return [
               UiFinder.sExists(gui.element(), bg.selector),
-              UiFinder.sNotExists(gui.element(), bg.selector + '.alloy-selected-menu')
+              UiFinder.sNotExists(gui.element(), bg.selector + '.selected-menu')
             ];
           })
         );
 
         var sCheckActive = GeneralSteps.sequence(
           Arr.map(active, function (o) {
-            return UiFinder.sExists(gui.element(), o.selector + '.alloy-selected-menu');
+            return UiFinder.sExists(gui.element(), o.selector + '.selected-menu');
           })
         );
 
@@ -222,7 +247,7 @@ asynctest(
 
         Waiter.sTryUntil(
           'Wait until dropdown content loads',
-          UiFinder.sExists(gui.element(), '[data-alloy-item-value]'),
+          UiFinder.sExists(gui.element(), '.menu'),
           100,
           1000
         ),
@@ -344,7 +369,7 @@ asynctest(
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         sTestMenus(
           'After pressing enter on last level',
-          [ 'doubled' ],
+          [ 'dropdown.menu.execute: doubled' ],
           focusables.doubled,
           [ focusables.numbersMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [ 
             focusables.stringsMenu
@@ -366,7 +391,7 @@ asynctest(
         Mouse.sClickOn(gui.element(), focusables.about.selector),
         // Menus are somewhat irrelevant here, because the hover would have changed them,
         // not the click
-        store.sAssertEq('Checking about fired', [ 'about' ]),
+        store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
         store.sClear,
 
         // Hover on "about"
