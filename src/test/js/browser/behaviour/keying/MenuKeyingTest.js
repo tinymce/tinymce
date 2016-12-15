@@ -8,11 +8,13 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, Keying, GuiSetup) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, Focusing, Keying, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -25,9 +27,9 @@ asynctest(
             classes: [ 'test-item', name ],
             innerHtml: name
           },
-          behaviours: {
-            focusing: true
-          }
+          behaviours: Objects.wrapAll([
+            Focusing.config({ })
+          ])
         };
       };
 
@@ -41,16 +43,15 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        behaviours: {
-          keying: {
+        behaviours: Objects.wrapAll([
+          Keying.config({
             mode: 'menu',
             selector: '.test-item',
-            onEscape: store.adderH('detected.escape'),
             onRight: store.adderH('detected.right'),
             onLeft:  store.adderH('detected.left'),
             moveOnTab: true
-          }
-        },
+          })
+        ]),
         components: [
           makeItem('alpha'),
           makeItem('beta'),
@@ -76,19 +77,6 @@ asynctest(
         FocusTools.sTryOnSelector('Focus should start on alpha', doc, '.alpha'),
 
         store.sAssertEq('Initially empty', [ ]),
-        checkStore('pressing Escape', [
-          Keyboard.sKeydown(doc, Keys.escape(), { })
-        ], [ 'detected.escape' ]),
-
-        checkStore('pressing left', [
-          Keyboard.sKeydown(doc, Keys.left(), { })
-        ], [ 'detected.left' ]),
-
-        FocusTools.sTryOnSelector('Focus should still be on alpha', doc, '.alpha'),
-
-        checkStore('pressing right', [
-          Keyboard.sKeydown(doc, Keys.right(), { })
-        ], [ 'detected.right' ]),
 
         FocusTools.sTryOnSelector('Focus should still be on alpha', doc, '.alpha'),
 
