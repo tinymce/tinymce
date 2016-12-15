@@ -9,10 +9,11 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects',
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Representing, GuiSetup, Value) {
+  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Representing, GuiSetup, Objects, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -22,11 +23,14 @@ asynctest(
         dom: {
           tag: 'input'
         },
-        behaviours: {
-          representing: {
-            initialValue: {
-              value: 'dog',
-              text: 'Dog'
+        behaviours: Objects.wrapAll([
+          Representing.config({
+            store: {
+              mode: 'memory',
+              initialValue: {
+                value: 'dog',
+                text: 'Dog'
+              }
             },
             onSet: function (input, value) {
               Value.set(input.element(), value.text);
@@ -41,10 +45,9 @@ asynctest(
                 };
               }
             }
-          }
-        }
+          })
+        ])
       });
-
     }, function (doc, body, gui, component, store) {
       var sAssertValue = function (label, expected) {
         return Step.sync(function () {
