@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
@@ -15,7 +16,7 @@ asynctest(
     'ephox.compass.Arr'
   ],
  
-  function (FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
+  function (FocusTools, Keyboard, Keys, Step, GuiFactory, Focusing, Keying, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -46,9 +47,9 @@ asynctest(
               run: store.adder('item.execute: ' + classes.join(','))
             })
           },
-          behaviours: {
-            focusing: true
-          }
+          behaviours: Objects.wrapAll([
+            Focusing.config({ })
+          ])
         };
       };
 
@@ -64,16 +65,16 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        behaviours: {
-          keying: {
+        behaviours: Objects.wrapAll([
+          Keying.config({
             mode: 'flatgrid',
             selector: '.square',
             initSize: {
               numColumns: 1,
               numRows: 1
             }
-          }
-        },
+          })
+        ]),
         // 4 x 6 grid size
         components: Arr.map(squares, function (num) {
           return item([ num ]);
