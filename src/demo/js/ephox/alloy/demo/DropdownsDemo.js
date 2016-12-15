@@ -388,151 +388,140 @@ define(
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
-        Dropdown.build(function (parts) {
-          return {
-            dom: {
-              tag: 'div',
-              innerHtml: '+'
-            },
-            components: [
-              
-            ],
-            lazySink: lazySink,
-            parts: {
-              menu: listMenu
-            },
+        Dropdown.build({
+          dom: {
+            tag: 'div',
+            innerHtml: '+'
+          },
+          components: [
+            
+          ],
+          lazySink: lazySink,
+          parts: {
+            menu: listMenu
+          },
 
-            onExecute: function (sandbox, item, itemValue) {
-              console.trace();
-              console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item) + ' ***');
-            },
-            fetch: function () {
-              var future = Future.pure({
-                primary: 'tools-menu',
-                menus: {
-                  'tools-menu': {
-                    text: 'tools-menu',
-                    items: [
-                      { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
-                      { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
-                      { 
-                        type: 'widget',
-                        data: {
-                          value: 'widget',
-                          text: 'Widget'
+          onExecute: function (sandbox, item, itemValue) {
+            console.trace();
+            console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item).value + ' ***');
+          },
+          fetch: function () {
+            var future = Future.pure({
+              primary: 'tools-menu',
+              menus: {
+                'tools-menu': {
+                  text: 'tools-menu',
+                  items: [
+                    { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
+                    { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
+                    { 
+                      type: 'widget',
+                      data: {
+                        value: 'widget',
+                        text: 'Widget'
+                      },
+                      widget: {
+                        uiType: 'custom',
+                        dom: {
+                          tag: 'div'
                         },
-                        widget: {
-                          uiType: 'custom',
-                          dom: {
-                            tag: 'div'
-                          },
-                          components: [
-                            {
-                              uiType: 'input',
-                              dom: {
-                                tag: 'input',
-                                styles: {
-                                  display: 'inline-block',
-                                  width: '50px'
-                                }
-                              },
-                              behaviours: {
-                                tabstopping: true
+                        components: [
+                          Input.build({
+                            dom: {
+                              tag: 'input',
+                              styles: {
+                                display: 'inline-block',
+                                width: '50px'
                               }
                             },
-                            {
-                              uiType: 'custom',
-                              dom: {
-                                tag: 'div'
-                              },
-                              components: [
-                                Button.build(function () {
-                                  return {
-                                    uiType: 'button',
-                                    action: function () { console.log('clicked on a button', arguments); },
-                                    dom: {
-                                      tag: 'button',
-                                      innerHtml: '-'
-                                    },
-                                    behaviours: {
-                                      // FIX: This is required to override a previous tabstopping.
-                                      tabstopping: undefined
-                                    }
-                                  };
-                                }),
-                                Button.build(function () {
-                                  return {
-                                    uiType: 'button',
-                                    action: function () { console.log('clicked on a button', arguments); },
-                                    dom: {
-                                      tag: 'button',
-                                      innerHtml: '+'
-                                    },
-                                    behaviours: {
-                                      // FIX: This is required to override a previous tabstopping.
-                                      tabstopping: undefined
-                                    }
-                                  };
-                                })
-                              ],
-                              behaviours: {
-                                tabstopping: true,
-                                keying: {
-                                  mode: 'flow',
-                                  selector: 'button'
+                            useTabstop: true
+                          }),
+                          {
+                            uiType: 'custom',
+                            dom: {
+                              tag: 'div'
+                            },
+                            components: [
+                              Button.build({
+                                action: function () { console.log('clicked on a button', arguments); },
+                                dom: {
+                                  tag: 'button',
+                                  innerHtml: '-'
+                                },
+                                behaviours: {
+                                  // FIX: This is required to override a previous tabstopping.
+                                  tabstopping: undefined
                                 }
+                              }),
+                              Button.build({
+                                action: function () { console.log('clicked on a button', arguments); },
+                                dom: {
+                                  tag: 'button',
+                                  innerHtml: '+'
+                                },
+                                behaviours: {
+                                  // FIX: This is required to override a previous tabstopping.
+                                  tabstopping: undefined
+                                }
+                              })
+                            ],
+                            behaviours: {
+                              tabstopping: true,
+                              keying: {
+                                mode: 'flow',
+                                selector: 'button'
                               }
                             }
-                          ],
-                          behaviours: {
-                            keying: {
-                              mode: 'cyclic'
-                            }
+                          }
+                        ],
+                        behaviours: {
+                          keying: {
+                            mode: 'cyclic'
                           }
                         }
                       }
-                    ]
-                  },
-                  'packages-menu': {
-                    text: 'packages',
-                    items: [
-                      { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
-                    ]
-                  },
-                  'sortby-menu': {
-                    text: 'sortby',
-                    items: [
-                      { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
-                      { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
-                    ]
-                  },
-                  'strings-menu': {
-                    text: 'strings',
-                    items: [
-                      { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
-                      { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
-                    ]
-                  },
-                  'numbers-menu': {
-                    text: 'numbers',
-                    items: [
-                      { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
-                    ]
-                  }
-                }, 
-                expansions: {
-                  'packages': 'packages-menu',
-                  'sortby': 'sortby-menu',
-                  'strings': 'strings-menu',
-                  'numbers': 'numbers-menu' 
+                    }
+                  ]
+                },
+                'packages-menu': {
+                  text: 'packages',
+                  items: [
+                    { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
+                  ]
+                },
+                'sortby-menu': {
+                  text: 'sortby',
+                  items: [
+                    { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
+                    { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
+                  ]
+                },
+                'strings-menu': {
+                  text: 'strings',
+                  items: [
+                    { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
+                    { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
+                  ]
+                },
+                'numbers-menu': {
+                  text: 'numbers',
+                  items: [
+                    { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
+                  ]
                 }
-              });
+              }, 
+              expansions: {
+                'packages': 'packages-menu',
+                'sortby': 'sortby-menu',
+                'strings': 'strings-menu',
+                'numbers': 'numbers-menu' 
+              }
+            });
 
-              return future.map(function (f) {
-                return MenuData.tiered(f.primary, f.menus, f.expansions);
-              });
-            }
-          };
+            return future.map(function (f) {
+              return MenuData.tiered(f.primary, f.menus, f.expansions);
+            });
+          }
         })
       );
     };
