@@ -12,7 +12,7 @@ define(
 
   function (PartType, Tagger, SpecSchema, Type, Merger, Fun) {
     var single = function (owner, schema, factory, spec) {
-      var specWithUid = Merger.deepMerge({ uid: Tagger.generate('') }, spec);
+      var specWithUid = supplyUid(spec);
       var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ]);
       return factory(detail, specWithUid);
     };
@@ -22,9 +22,7 @@ define(
         debugger;
       }
       
-      var specWithUid = Merger.deepMerge({
-        uid: Tagger.generate('uid')
-      }, spec);
+      var specWithUid = supplyUid(spec);
 
       var schemas = PartType.schemas(partTypes);
       
@@ -40,7 +38,14 @@ define(
       );
     };
 
+    var supplyUid = function (spec) {
+      return Merger.deepMerge({
+        uid: Tagger.generate('uid')
+      }, spec);
+    };
+
     return {
+      supplyUid: supplyUid,
       single: single,
       composite: composite
     };

@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.registry.Tagger',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.compass.Obj',
@@ -12,19 +12,13 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Representing, Tagger, SpecSchema, UiSubstitutes, Obj, Merger, Option) {
+  function (Composing, Representing, UiBuilder, SpecSchema, UiSubstitutes, Obj, Merger, Option) {
     var schema = [
       
     ];
 
-    // Dupe with Tiered Menu
     var build = function (rawSpec) {
-
-
-
-
-
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
+      var spec = UiBuilder.supplyUid(rawSpec);
       var detail = SpecSchema.asStructOrDie('form', schema, spec, Obj.keys(rawSpec.parts));
 
       var placeholders = Obj.tupleMap(spec.parts !== undefined ? spec.parts : {}, function (partSpec, partName) {
@@ -49,12 +43,8 @@ define(
         placeholders
       );
 
-      console.log('components');
-
-      var x = make(detail, components, spec);
-
-      console.log('x', x);
-      return x;
+    
+      return make(detail, components, spec);
     };
 
     var make = function (detail, components, spec) {
