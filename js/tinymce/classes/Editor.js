@@ -417,7 +417,7 @@ define("tinymce/Editor", [
 					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
 				}
 
-				if (settings.language_url) {
+				if (settings.language_url && !self.editorManager.i18n.data[settings.language]) {
 					scriptLoader.add(settings.language_url);
 				}
 
