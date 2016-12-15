@@ -5,19 +5,21 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, GuiFactory, GuiSetup) {
+  function (ApproxStructure, Assertions, GuiFactory, Tabstopping, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
         uiType: 'container',
-        behaviours: {
-          tabstopping: { }
-        }
+        behaviours: Objects.wrapAll([
+          Tabstopping.config({ })
+        ])
       });
 
     }, function (doc, body, gui, component, store) {
