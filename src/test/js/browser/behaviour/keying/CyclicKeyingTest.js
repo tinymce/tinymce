@@ -6,23 +6,27 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, Keyboard, Keys, GuiFactory, GuiSetup) {
+  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, Tabstopping, Button, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       var makeButton = function (v, t) {
-        return {
-          uiType: 'button',
+        return Button.build({
           dom: { tag: 'button', innerHtml: t },
           action: store.adder(v + '.clicked'),
           behaviours: {
             tabstopping: true
           }
-        };
+        });
       };
 
       return GuiFactory.build({
@@ -37,11 +41,11 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        behaviours: {
-          keying: {
+        behaviours: Objects.wrapAll([
+          Keying.config({
             mode: 'cyclic'
-          }
-        },
+          })
+        ]),
         components: [
           makeButton('button1', 'Button1'),
           makeButton('button2', 'Button2'),
@@ -58,10 +62,10 @@ asynctest(
                 height: '20px'
               }
             },
-            behaviours: {
-              tabstopping: true,
-              focusing: true
-            }
+            behaviours: Objects.wrapAll([
+              Tabstopping.config({ }),
+              Focusing.config({ })
+            ])
           }
         ]
       });
