@@ -2,17 +2,24 @@ define(
   'ephox.alloy.api.ui.SplitToolbar',
 
   [
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
+    'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.scullion.Cell',
+    'ephox.sugar.api.Css'
   ],
 
-  function (CompositeBuilder, Toolbar, Fields, PartType, Merger, Fun) {
+  function (BehaviourExport, CompositeBuilder, Toolbar, Fields, PartType, FieldSchema, Merger, Fun, Cell, Css) {
     var schema = [
-      Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ])
+      Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
+      FieldSchema.state('storedGroups', function () {
+        return Cell([ ]);
+      })
     ];
 
     var partTypes = [
@@ -35,7 +42,31 @@ define(
 
     ];
 
+    var refresh = function (toolbar, detail) {
+      var primary = toolbar.getSystem().getByUid(detail.partUids().primary).getOrDie();
+      var overflow = toolbar.getSystem().getByUid(detail.partUids().overflow).getOrDie();
+
+      // Set the primary toolbar to have visibilty hidden;
+      Toolbar.setGroups(primary, detail.storedGroups().get());
+    };
+
+
     var make = function (detail, components, spec, externals) {
+      var doSetGroups = function (toolbar, groups) {
+        detail.storedGroups().set(groups);
+      };
+
+      var setGroups = function (toolbar, groups) {
+        doSetGroups(toolbar, groups);
+        refresh(toolbar, detail);
+      };
+
+      var createGroups = function (toolbar, gspecs) {
+        var primary = toolbar.getSystem().getByUid(detail.partUids().primary).getOrDie();
+        return Toolbar.createGroups(primary, gspecs);
+      };
+
+    
       return Merger.deepMerge(
         {
           dom: {
@@ -48,7 +79,12 @@ define(
           uiType: 'custom',
           uid: detail.uid(),
           dom: detail.dom(),
-          components: components
+          components: components,
+          apis: {
+            setGroups: setGroups,
+            createGroups: createGroups,
+            refresh: refresh
+          }
         }
       );
     };
@@ -62,9 +98,17 @@ define(
 
     return {
       build: build,
-      parts: Fun.constant(parts)
+      parts: Fun.constant(parts),
 
+      createGroups: function (split, gspecs) {
+        var spi = split.config(BehaviourExport.spi());
+        return spi.createGroups(split, gspecs);
+      },
 
+      setGroups: function (split, groups) {
+        var spi = split.config(BehaviourExport.spi());
+        spi.setGroups(split, groups);
+      }
     };
   }
 );

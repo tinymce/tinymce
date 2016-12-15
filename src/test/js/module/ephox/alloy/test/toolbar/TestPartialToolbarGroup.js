@@ -32,7 +32,8 @@ define(
     var munge = function (spec) {
       return {
         dom: {
-          tag: 'div'
+          tag: 'div',
+          classes: [ 'test-toolbar-group' ]
         },
         components: [
           ToolbarGroup.parts().items()

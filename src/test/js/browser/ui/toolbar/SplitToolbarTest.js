@@ -20,7 +20,11 @@ asynctest(
       return GuiFactory.build(
         SplitToolbar.build({
           dom: {
-            tag: 'div'
+            tag: 'div',
+            styles: {
+              width: '200px',
+              outline: '2px solid blue'
+            }
           },
           components: [
             SplitToolbar.parts().primary(),
@@ -37,7 +41,8 @@ asynctest(
           parts: {
             primary: {
               dom: {
-                tag: 'div'
+                tag: 'div',
+                classes: [ 'test-toolbar-primary' ]
               },
               shell: true,
               parts: {
@@ -51,7 +56,8 @@ asynctest(
             },
             overflow: {
               dom: {
-                tag: 'div'
+                tag: 'div',
+                classes: [ 'test-toolbar-overflow' ]
               },
               shell: true,
               parts: {
@@ -73,8 +79,20 @@ asynctest(
           '.test-sliding-closed { visibility: hidden; opacity: 0; }',
           '.test-sliding-open { visibility: visible; opacity: 1 }',
           '.test-sliding-height-growing { transition: height 0.3s ease, opacity: 0.2s linear 0.1s; }',
-          '.test-sliding-height-shrinking { transition: opacity 0.3s ease, height 0.2s, linear 0.1s, visibility 0s linear 0.3s }'
+          '.test-sliding-height-shrinking { transition: opacity 0.3s ease, height 0.2s, linear 0.1s, visibility 0s linear 0.3s }',
+
+          '.test-toolbar-group { display: flex; }',
+          '.test-toolbar-primary { display: flex; }'
         ]),
+
+        Step.sync(function () {
+          var groups = SplitToolbar.createGroups(component, [
+            { items: [ { text: 'alpha' }, { text: 'beta' } ] },
+            { items: [ { text: 'gamma' }, { text: 'delta' } ] },
+            { items: [ { text: 'epsilon' }, { text: 'rho' }, { text: 'theta' } ] }
+          ]);
+          SplitToolbar.setGroups(component, groups);
+        }),
         Step.fail('split.toolbar')
       ];
     }, function () { success(); }, failure);
