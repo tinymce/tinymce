@@ -1,5 +1,5 @@
 asynctest(
-  'Fields Ui',
+  'FieldsTest',
  
   [
     'ephox.agar.api.Assertions',
@@ -201,7 +201,6 @@ asynctest(
           Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
         }),
 
-        Step.fail('done'),
         GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
