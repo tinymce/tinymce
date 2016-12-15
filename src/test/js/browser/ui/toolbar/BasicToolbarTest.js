@@ -8,10 +8,10 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.test.GuiSetup',
-    'ephox.peanut.Fun'
+    'ephox.alloy.test.toolbar.TestPartialToolbarGroup'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Toolbar, GuiSetup, Fun) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Toolbar, GuiSetup, TestPartialToolbarGroup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -32,10 +32,9 @@ asynctest(
 
               members: {
                 group: {
-                  munge: Fun.identity
+                  munge: TestPartialToolbarGroup.munge
                 }
               },
-
               parts: {
                 groups: { }
               }
@@ -53,7 +52,7 @@ asynctest(
 
               members: {
                 group: {
-                  munge: Fun.identity
+                  munge: TestPartialToolbarGroup.munge
                 }
               },
 
@@ -93,6 +92,14 @@ asynctest(
         ),
 
         Step.sync(function () {
+          var groups = Toolbar.createGroups(t1, [
+            {
+              value: 'a',
+              text: 'A',
+              items: [ 'a1', 'a2' ]
+            }
+          ]);
+          console.log('groups', groups);
           // Toolbar.buildGroups()
         }),
 

@@ -38,7 +38,7 @@ define(
           },
           function (factory, name, unit, pname, defaults, overrides) {
             // TODO: Shell support
-            required.push(name);
+            // required.push(name);
           }
         );
       });
