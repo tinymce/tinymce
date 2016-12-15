@@ -25,7 +25,7 @@ define(
       });
 
       var within = Arr.filter(parray, function (unit) {
-        return unit.finish() < total;
+        return unit.finish() <= total;
       });
 
       var withinWidth = Arr.foldr(within, function (acc, el) {
