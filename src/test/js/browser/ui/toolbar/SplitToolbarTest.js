@@ -8,10 +8,11 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.toolbar.TestPartialToolbarGroup'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, SplitToolbar, EventHandler, GuiSetup) {
+  function (Keyboard, Keys, Step, GuiFactory, SplitToolbar, EventHandler, GuiSetup, TestPartialToolbarGroup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -20,6 +21,41 @@ asynctest(
         SplitToolbar.build({
           dom: {
             tag: 'div'
+          },
+          components: [
+            SplitToolbar.parts().primary(),
+            SplitToolbar.parts().overflow()
+          ],
+
+          parts: {
+            primary: {
+              dom: {
+                tag: 'div'
+              },
+              shell: true,
+              parts: {
+                groups: { }
+              },
+              members: {
+                group: {
+                  munge: TestPartialToolbarGroup.munge
+                }
+              }
+            },
+            overflow: {
+              dom: {
+                tag: 'div'
+              },
+              shell: true,
+              parts: {
+                groups: { }
+              },
+              members: {
+                group: {
+                  munge: TestPartialToolbarGroup.munge
+                }
+              }
+            }
           }
         })
       );
