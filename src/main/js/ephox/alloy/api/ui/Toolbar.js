@@ -49,13 +49,27 @@ define(
         });
       };
 
-      var comps = detail.shell() ? [ ] : components;
+      var extra = (function () {
+        if (detail.shell()) {
+          return {
+            base: detail.parts().groups(),
+            comps: [ ]
+          };
+        } else {
+          return {
+            base: { },
+            comps: components
+          };
+        }
+      })();
+
       return Merger.deepMerge(
+        extra.base,
         {
           uiType: 'custom',
           uid: detail.uid(),
           dom: detail.dom(),
-          components: comps,
+          components: extra.comps,
 
           apis: {
             createGroups: createGroups,

@@ -38,6 +38,7 @@ asynctest(
               parts: {
                 groups: {
                   dom: {
+                    // tag: 'div',
                     attributes: {
                       'data-group-container': 'true'
                     }
@@ -65,6 +66,7 @@ asynctest(
               parts: {
                 groups: {
                   dom: {
+                    tag: 'div',
                     attributes: {
                       'data-group-container': 'true'
                     }
@@ -86,11 +88,18 @@ asynctest(
             return s.element('div', {
               children: [
                 s.element('div', {
+                  attrs: {
+                    'data-group-container': str.is('true')
+                  },
                   children: [ ]
                 }),
                 s.element('div', {
                   children: [
-                    s.element('div', { })
+                    s.element('div', {
+                      attrs: {
+                        'data-group-container': str.is('true')
+                      }
+                    })
                   ]
                 })
               ]
