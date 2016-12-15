@@ -3,7 +3,10 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Docking',
+    'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.boulder.api.Objects',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
@@ -12,7 +15,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, Option, Class, Css, Element, Insert, document) {
+  function (Gui, Docking, Dragging, HtmlDisplay, Objects, Option, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -54,23 +57,27 @@ define(
                   'z-index': '100'
                 }
               },
-              dragging: {
-                mode: 'mouse'
-              },
-              docking: {
-                contextual: {
-                  transitionClass: 'demo-alloy-dock-transition',
-                  fadeOutClass: 'demo-alloy-dock-fade-out',
-                  fadeInClass: 'demo-alloy-dock-fade-in',
-                  lazyContext: function (component) {
-                    return component.getSystem().getByUid('panel-container').fold(Option.none, function (comp) {
-                      return Option.some(comp.element());
-                    });
-                  }
-                },
-                leftAttr: 'data-dock-left',
-                topAttr: 'data-dock-top'
-              }
+              behaviours: Objects.wrapAll([
+                Dragging.config({
+                  mode: 'mouse',
+                  blockerClass: [ 'blocker' ]
+                }),
+
+                Docking.config({
+                  contextual: {
+                    transitionClass: 'demo-alloy-dock-transition',
+                    fadeOutClass: 'demo-alloy-dock-fade-out',
+                    fadeInClass: 'demo-alloy-dock-fade-in',
+                    lazyContext: function (component) {
+                      return component.getSystem().getByUid('panel-container').fold(Option.none, function (comp) {
+                        return Option.some(comp.element());
+                      });
+                    }
+                  },
+                  leftAttr: 'data-dock-left',
+                  topAttr: 'data-dock-top'
+                })
+              ])
             }
           ]
         }
