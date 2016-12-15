@@ -17,6 +17,7 @@ define(
                   classes: [ 'menu' ]
                 },
                 components: [
+                  // FIX: Expose through API
                   { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
                 ]
               };
@@ -24,7 +25,16 @@ define(
           },
           item: {
             munge: function (itemSpec) {
-              return {
+              return itemSpec.type === 'widget' ? {
+                dom: { 
+                  tag: 'li',
+                  classes: [ 'item' ]
+                },
+                components: [
+                  // FIX: Expose through API
+                  { uiType: 'placeholder', owner: 'item-widget', name: '<alloy.item.widget>' }
+                ]
+              } : {
                 dom: {
                   tag: 'li',
                   classes: [ 'item' ],

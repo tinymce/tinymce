@@ -71,8 +71,6 @@ asynctest(
             return Result.value(sink.get(c));
           },
 
-          uiType: 'dropdown-list',
-
           parts: {
             menu: TestDropdownMenu(store)
           },

@@ -13,21 +13,35 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.Memento',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Dropdown',
+    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
+    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
-    'ephox.knoch.future.Future'
+    'ephox.knoch.future.Future',
+    'ephox.perhaps.Result'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Focusing, GuiSetup, NavigationUtils, Sinks, Arr, Future) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Focusing, Keying, Dropdown, MenuData, GuiSetup, NavigationUtils, Sinks, TestDropdownMenu, Objects, Arr, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    GuiSetup.setup(function (store, doc, body) {
-      var sink = Sinks.relativeSink();
+    var sink = Memento.record({
+      uiType: 'container',
+      behaviours: {
+        positioning: {
+          useFixed: true
+        }
+      }
+    });
 
+    GuiSetup.setup(function (store, doc, body) {
       var makeFlow = function (v) {
         return {
           uiType: 'custom',
@@ -36,7 +50,9 @@ asynctest(
             innerHtml: ' ' + v + ' ',
             classes: [ v ]
           },
-          focusing: true
+          behaviours: Objects.wrapAll([
+            Focusing.config({ })
+          ])
         };
       };
 
@@ -45,10 +61,12 @@ asynctest(
         dom: {
           tag: 'div'
         },
-        keying: {
-          mode: 'flow',
-          selector: 'span'
-        },
+        behaviours: Objects.wrapAll([
+          Keying.config({
+            mode: 'flow',
+            selector: 'span'  
+          })
+        ]),
         components: Arr.map([
           'one',
           'two',
@@ -59,25 +77,29 @@ asynctest(
       var testData = {
         primary: 'tools-menu',
         menus: {
-          'tools-menu': [
-            { type: 'item', value: 'packages', text: 'Packages' },
-            { type: 'item', value: 'about', text: 'About' },
-            { type: 'widget', spec: widget, value: 'widget' }
-          ],
-          'packages-menu': [
-            { type: 'item', value: 'sortby', text: 'SortBy' }
-          ],
-          'sortby-menu': [
-            { type: 'item', value: 'strings', text: 'Strings' },
-            { type: 'item', value: 'numbers', text: 'Numbers' }
-          ],
-          'strings-menu': [
-            { type: 'item', value: 'versions', text: 'Versions', html: '<b>V</b>ersions' },
-            { type: 'item', value: 'alphabetic', text: 'Alphabetic' }
-          ],
-          'numbers-menu': [
-            { type: 'item', value: 'doubled', text: 'Doubled digits' }
-          ]
+          'tools-menu': {
+            value: 'tools-menu-value',
+            text: 'Tools Menu',
+            items: [
+              { type: 'item', data: { value: 'packages', text: 'Packages' } },
+              { type: 'item', data: { value: 'about', text: 'About' } },
+              { type: 'widget', widget: widget, data: { value: 'widget' } }
+            ]
+          },
+          // 'packages-menu': [
+          //   { type: 'item', value: 'sortby', text: 'SortBy' }
+          // ],
+          // 'sortby-menu': [
+          //   { type: 'item', value: 'strings', text: 'Strings' },
+          //   { type: 'item', value: 'numbers', text: 'Numbers' }
+          // ],
+          // 'strings-menu': [
+          //   { type: 'item', value: 'versions', text: 'Versions', html: '<b>V</b>ersions' },
+          //   { type: 'item', value: 'alphabetic', text: 'Alphabetic' }
+          // ],
+          // 'numbers-menu': [
+          //   { type: 'item', value: 'doubled', text: 'Doubled digits' }
+          // ]
         },
         expansions: {
           'packages': 'packages-menu',
@@ -88,34 +110,40 @@ asynctest(
       };
 
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        }, 
-        components: [
-          { built: sink },
-          {
-            uiType: 'dropdownmenu',
-            text: '+',
-            uid: 'test-dropdown',
-            fetch: function () {
-              return Future.pure(testData);
-            },
-            onExecute: function (dropdown, item, itemValue) {
-              return store.adder(itemValue)();
-            },
-            sink: sink,
-            desc: 'demo-dropdownmenu'
+      var c = GuiFactory.build(
+        Dropdown.build({
+          uid: 'test-dropdown',
+          dom: {
+            tag: 'div',
+            innerHtml: '+'
+          }, 
+          components: [ ],
+
+          lazySink: function () {
+            return Result.value(sink.get(c));
+          },
+
+          parts: {
+            menu: TestDropdownMenu(store)
+          },
+
+          fetch: function () {
+            return Future.pure(testData).map(function (d) {
+              return MenuData.tiered(d.primary, d.menus, d.expansions);
+            });
           }
-        ]
-      });
+        })
+      );
 
-    }, function (doc, body, gui, component, store) {
-      var dropdown = component.getSystem().getByUid('test-dropdown').getOrDie();
+      return c;
 
+    }, function (doc, body, gui, dropdown, store) {
+      gui.add(
+        GuiFactory.build(sink.asSpec())
+      );
+      
       var focusables = {
-        toolsMenu: { label: 'tools-menu', selector: '[data-alloy-menu-value="tools-menu"]' },
+        toolsMenu: { label: 'tools-menu', selector: 'li:contains("Tools")' },
         packagesMenu: { label: 'packages-menu', selector: '[data-alloy-menu-value="packages-menu"]' },
         sortbyMenu: { label: 'sortby-menu', selector: '[data-alloy-menu-value="sortby-menu"]' },
         stringsMenu: { label: 'strings-menu', selector: '[data-alloy-menu-value="strings-menu"]' },
