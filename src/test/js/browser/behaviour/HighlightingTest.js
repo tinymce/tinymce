@@ -11,6 +11,7 @@ asynctest(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Attr',
@@ -18,7 +19,7 @@ asynctest(
     'global!Error'
   ],
  
-  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Highlighting, ChainUtils, GuiSetup, Arr, Result, Attr, Class, Error) {
+  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Highlighting, ChainUtils, GuiSetup, Objects, Arr, Result, Attr, Class, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -47,12 +48,12 @@ asynctest(
         dom: {
           tag: 'div'
         },
-        behaviours: {
-          highlighting: {
+        behaviours: Objects.wrapAll([
+          Highlighting.config({
             highlightClass: 'test-selected',
             itemClass: 'test-item'
-          }
-        },
+          })
+        ]),
         components: Arr.map([
           'alpha',
           'beta',
