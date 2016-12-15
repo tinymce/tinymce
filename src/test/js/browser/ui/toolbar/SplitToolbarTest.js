@@ -6,13 +6,15 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
-    'ephox.alloy.test.toolbar.TestPartialToolbarGroup'
+    'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
+    'ephox.compass.Arr'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, SplitToolbar, EventHandler, GuiSetup, TestPartialToolbarGroup) {
+  function (Keyboard, Keys, Step, GuiFactory, Button, SplitToolbar, EventHandler, GuiSetup, TestPartialToolbarGroup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -76,6 +78,16 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
+
+      var makeButton = function (itemSpec) {
+        return Button.build({
+          dom: {
+            tag: 'button',
+            innerHtml: itemSpec.text
+          }
+        });
+      };
+
       return [
         GuiSetup.mAddStyles(doc, [
           '.test-sliding-closed { visibility: hidden; opacity: 0; }',
@@ -89,9 +101,9 @@ asynctest(
 
         Step.sync(function () {
           var groups = SplitToolbar.createGroups(component, [
-            { items: [ { text: 'alpha' }, { text: 'beta' } ] },
-            { items: [ { text: 'gamma' }, { text: 'delta' } ] },
-            { items: [ { text: 'epsilon' }, { text: 'rho' }, { text: 'theta' } ] }
+            { items: Arr.map([ { text: 'alpha' }, { text: 'beta' } ], makeButton) },
+            { items: Arr.map([ { text: 'gamma' }, { text: 'delta' } ], makeButton) },
+            { items: Arr.map([ { text: 'epsilon' }, { text: 'rho' }, { text: 'theta' } ], makeButton) }
           ]);
           SplitToolbar.setGroups(component, groups);
         }),

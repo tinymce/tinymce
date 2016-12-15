@@ -3,24 +3,22 @@ define(
 
   [
     'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (ToolbarGroup, Fun) {
+  function (ToolbarGroup, Merger, Fun) {
     var members = {
       item: {
         munge: function (itemSpec) {
-          return {
-            uiType: 'custom',
-            dom: {
-              tag: 'button',
-              innerHtml: itemSpec.text
-            },
-
-            behaviours: {
-              focusing: true
+          return Merger.deepMerge(
+            itemSpec,
+            {
+              behaviours: {
+                focusing: true
+              }
             }
-          };
+          );
         }
       }
     };
