@@ -6,14 +6,11 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Guard',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Invalidating',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'ephox.knoch.future.Future',
@@ -21,7 +18,7 @@ asynctest(
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Guard, Keyboard, Keys, Logger, Step, UiControls, GuiFactory, Invalidating, EventHandler, GuiSetup, Objects, Future, Result, Value) {
+  function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Invalidating, GuiSetup, Objects, Future, Result, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
