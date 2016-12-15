@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
@@ -13,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (BehaviourExport, CompositeBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
+  function (BehaviourExport, UiBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
     var schema = [
       FieldSchema.strict('items'),
       Fields.members([ 'item' ]),
@@ -72,7 +72,7 @@ define(
     };
 
     var build = function (spec) {
-      return CompositeBuilder.build('toolbar-group', schema, partTypes, make, spec);
+      return UiBuilder.composite('toolbar-group', schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

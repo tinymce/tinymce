@@ -215,8 +215,7 @@ asynctest(
         sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
 
         // TODO: Add testing for sliding?
-
-        Step.fail('split.toolbar')
+        GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
 

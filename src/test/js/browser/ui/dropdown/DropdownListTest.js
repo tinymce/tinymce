@@ -63,7 +63,7 @@ asynctest(
           uiType: 'dropdown-list',
 
           parts: {
-            menu: TestDropdownMenu
+            menu: TestDropdownMenu(store)
           },
       
           fetch: function () { 

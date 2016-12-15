@@ -87,7 +87,6 @@ asynctest(
           });
         }), component.element()),
 
-        Step.fail('done'),
         GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
