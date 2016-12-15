@@ -4,8 +4,10 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dragging.DragCoord',
+    'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.alien.Position',
@@ -16,7 +18,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Dragging, HtmlDisplay, DragCoord, Fun, Option, Position, Class, Css, Element, Insert, document) {
+  function (Gui, Dragging, Button, HtmlDisplay, DragCoord, Objects, Fun, Option, Position, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -62,8 +64,7 @@ define(
                 }
               }
             },
-            {
-              uiType: 'button',
+            Button.build({
               dom: {
                 tag: 'span',
                 innerHtml: 'Drag me!',
@@ -74,35 +75,38 @@ define(
                   color: '#fff'
                 }
               },
-              dragging: {
-                mode: 'mouse',
-                snaps: {
-                  getSnapPoints: function () {
-                    return [
-                      Dragging.snap({
-                        sensor: DragCoord.fixed(300, 10),
-                        range: Position(1000, 30),
-                        output: DragCoord.fixed(Option.none(), Option.some(10))
-                      }),
 
-                      Dragging.snap({
-                        sensor: DragCoord.offset(300, 500),
-                        range: Position(40, 40),
-                        output: DragCoord.absolute(Option.some(300), Option.some(500))
-                      })
-                    ];
-                  },
-                  leftAttr: 'data-drag-left',
-                  topAttr: 'data-drag-top'
-                }
-                // initial position?
-              },
+              behaviours: Objects.wrapAll([
+                Dragging.config({
+                  mode: 'mouse',
+                  blockerClass: [ 'blocker' ],
+                  snaps: {
+                    getSnapPoints: function () {
+                      return [
+                        Dragging.snap({
+                          sensor: DragCoord.fixed(300, 10),
+                          range: Position(1000, 30),
+                          output: DragCoord.fixed(Option.none(), Option.some(10))
+                        }),
+
+                        Dragging.snap({
+                          sensor: DragCoord.offset(300, 500),
+                          range: Position(40, 40),
+                          output: DragCoord.absolute(Option.some(300), Option.some(500))
+                        })
+                      ];
+                    },
+                    leftAttr: 'data-drag-left',
+                    topAttr: 'data-drag-top'
+                  }
+                })
+              ]),
               eventOrder: {
                 // Because this is a button, allow dragging. It will stop clicking.
                 mousedown: [ 'dragging', 'alloy.base.behaviour' ]
               },
               unselecting: true
-            }
+            })
           ]
         }
       );
