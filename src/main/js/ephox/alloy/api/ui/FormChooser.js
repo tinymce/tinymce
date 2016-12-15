@@ -7,11 +7,10 @@ define(
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
-    'ephox.alloy.events.EventSource',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
@@ -23,7 +22,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (EventRoot, SystemEvents, BehaviourExport, Highlighting, Representing, CompositeBuilder, EventHandler, Fields, DomModification, EventSource, PartType, ButtonBase, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
+  function (EventRoot, SystemEvents, BehaviourExport, Highlighting, Representing, UiBuilder, EventHandler, Fields, DomModification, PartType, ButtonBase, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
     var schema = [
       Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),
@@ -88,8 +87,8 @@ define(
       )
     ];
 
-    var build = function (f) {
-      return CompositeBuilder.build('form-chooser', schema, partTypes, make, f);
+    var build = function (spec) {
+      return UiBuilder.composite('form-chooser', schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, externals) {
