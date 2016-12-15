@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
@@ -15,7 +16,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (BehaviourExport, Keying, Positioning, CompositeBuilder, PartType, FieldSchema, Merger, Fun, Option, SelectorFind, Traverse) {
+  function (BehaviourExport, Keying, Positioning, CompositeBuilder, UiBuilder, PartType, FieldSchema, Merger, Fun, Option, SelectorFind, Traverse) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('dragBlockClass'),
@@ -60,15 +61,7 @@ define(
         }
       }), Fun.constant({ }))
     ];
-
-    var build = function (spec) {
-      return CompositeBuilder.build('modal-dialog', schema, partTypes, make, spec);
-    };
-
-    var parts = PartType.generate('modal-dialog', partTypes);
-
     
-
     var make = function (detail, components, spec, externals) {
       var showDialog = function (dialog) {
         var sink = detail.lazySink()().getOrDie();
@@ -146,6 +139,13 @@ define(
       var spi = dialog.config(BehaviourExport.spi());
       return spi.getBody(dialog);
     };
+
+    var build = function (spec) {
+      return UiBuilder.composite('modal-dialog', schema, partTypes, make, spec);
+    };
+
+    var parts = PartType.generate('modal-dialog', partTypes);
+
 
     return {
       build: build,
