@@ -11,7 +11,8 @@ define(
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('type', 'input'),
-      FieldSchema.defaulted('tag', 'input')
+      FieldSchema.defaulted('tag', 'input'),
+      FieldSchema.defaulted('hasTabstop', true)
     ];
 
     var behaviours = function (detail) {
@@ -44,7 +45,9 @@ define(
             var value = Value.get(input);
             input.dom().setSelectionRange(0, value.length);
           }
-        }
+        },
+        // FIX: Undefined
+        tabstopping: detail.hasTabstop() ? true : undefined
       };
     };
 
