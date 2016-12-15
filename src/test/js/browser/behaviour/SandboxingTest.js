@@ -51,12 +51,6 @@ asynctest(
             clear: function (sandbox) {
               Remove.empty(sandbox.element());
             },
-            populate: function (sandbox, data) {
-              var input = Element.fromTag('input');
-              Attr.set(input, 'data-test-input', data);
-              Insert.append(sandbox.element(), input);
-              return input;
-            },
             isPartOf: Fun.constant(false)
           })
         ])
@@ -120,6 +114,7 @@ asynctest(
 
       var makeData = function (rawData) {
         return Input.build({
+          uid: rawData,
           dom: {
             attributes: {
               'data-test-input': rawData
@@ -128,16 +123,19 @@ asynctest(
         });
       };
 
+      var firstOpening = makeData('first-opening');
+      var secondOpening = makeData('second-opening');
+
       return [
         // initially
         sCheckClosedState('Initial state', { store: [ ] }),
 
         // // opening sandbox
-        Logger.t('Opening sandbox', sOpenWith(makeData('first-opening'))),
+        Logger.t('Opening sandbox', sOpenWith(firstOpening)),
         sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'onOpen' ] }),
      
         // // opening sandbox again
-        Logger.t('Opening sandbox while it is already open', sOpenWith(makeData('second-opening'))),
+        Logger.t('Opening sandbox while it is already open', sOpenWith(secondOpening)),
         sCheckOpenState('Opening sandbox while it is already open', {
           data: 'second-opening',
           store: [ 'onOpen' ]
@@ -145,7 +143,14 @@ asynctest(
 
         // closing sandbox again
         Logger.t('Closing sandbox 2', sClose),
-        sCheckClosedState('After closing 2', { store: [ 'onClose' ] })
+        sCheckClosedState('After closing 2', { store: [ 'onClose' ] }),
+
+        Logger.t('Opening sandbox with a uid that has already been used: try and re-open firstOpening', sOpenWith(firstOpening)),
+        sCheckOpenState('Opening sandbox with a uid that has already been used', {
+          data: 'first-opening',
+          store: [ 'onOpen' ]
+        })
+
       ];
     }, function () { success(); }, failure);
 

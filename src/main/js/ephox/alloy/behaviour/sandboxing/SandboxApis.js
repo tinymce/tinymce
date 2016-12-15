@@ -12,16 +12,21 @@ define(
   function (Arr, Future, Option, Insert, Remove) {
     var clear = function (sandbox, sInfo) {
       sInfo.state().get().each(function (data) {
-        Arr.each(data, sandbox.getSystem().removeFromWorld);
+        sandbox.getSystem().removeFromWorld(data);
         sInfo.bucket().glue().remove(sandbox, sInfo.bucket());
       });
+    };
+
+    var empty = function (sandbox) {
+      Remove.empty(sandbox.element());
+      sandbox.syncComponents();
     };
 
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sInfo, data) {
       clear(sandbox, sInfo);
-      Remove.empty(sandbox.element());
+      empty(sandbox);
 
       sInfo.bucket().glue().add(sandbox, sInfo.bucket());
       var built = sandbox.getSystem().build(data);
@@ -58,8 +63,8 @@ define(
 
     var close = function (sandbox, sInfo) {
       sInfo.state().get().each(function (data) {
-        Arr.each(data, sandbox.getSystem().removeFromWorld);
-        Remove.empty(sandbox.element());
+        sandbox.getSystem().removeFromWorld(data);
+        empty(sandbox);
 
         sInfo.bucket().glue().remove(sandbox, sInfo.bucket());
         sInfo.onClose()(sandbox, data);

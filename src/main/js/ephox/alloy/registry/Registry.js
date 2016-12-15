@@ -30,7 +30,7 @@ define(
         var conflict = components[tagId];
         if (conflict === component) unregister(component);
         else throw new Error(
-          'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot used it for: ' + AlloyLogger.element(component.element()) + '\n' +
+          'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
             'The conflicting element is' + (Body.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
         );
       };
