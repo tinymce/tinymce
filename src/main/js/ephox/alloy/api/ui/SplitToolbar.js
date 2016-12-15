@@ -4,6 +4,8 @@ define(
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.data.Fields',
@@ -19,7 +21,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (BehaviourExport, Replacing, CompositeBuilder, Toolbar, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Remove, Width) {
+  function (BehaviourExport, Replacing, Sliding, Button, CompositeBuilder, Toolbar, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Remove, Width) {
     var schema = [
       Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
       FieldSchema.state('builtGroups', function () {
@@ -65,7 +67,24 @@ define(
       // Put all the groups inside the primary toolbar
       var groups = detail.builtGroups().get();
 
-      var overflowGroupSpec = Toolbar.createGroups(primary, [ { items: [ { text: 'More' } ] } ])[0];
+      var overflowGroupSpec = Toolbar.createGroups(primary, [
+        {
+          items: [
+            Button.build(
+              Merger.deepMerge(
+                detail.parts()['overflow-button'](),
+                {
+                  action: function (button) {
+                    button.getSystem().getByUid(detail.partUids().overflow).each(function (overflow) {
+                      Sliding.toggleGrow(overflow);
+                    });
+                  }
+                }
+              )
+            )
+          ]
+        }
+      ])[0];
       console.log('overflowGroupSpec', overflowGroupSpec);
       var overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
 

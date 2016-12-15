@@ -72,7 +72,12 @@ asynctest(
               }
             },
 
-            'overflow-button': { }
+            'overflow-button': {
+              dom: {
+                tag: 'button',
+                innerHtml: '+More+'
+              }
+            }
           }
         })
       );
@@ -92,7 +97,7 @@ asynctest(
         GuiSetup.mAddStyles(doc, [
           '.test-sliding-closed { visibility: hidden; opacity: 0; }',
           '.test-sliding-open { visibility: visible; opacity: 1 }',
-          '.test-sliding-height-growing { transition: height 0.3s ease, opacity: 0.2s linear 0.1s; }',
+          '.test-sliding-height-growing { transition: height 0.3s ease, opacity 0.2s linear 0.1s; }',
           '.test-sliding-height-shrinking { transition: opacity 0.3s ease, height 0.2s, linear 0.1s, visibility 0s linear 0.3s }',
 
           '.test-toolbar-group { display: flex; }',
