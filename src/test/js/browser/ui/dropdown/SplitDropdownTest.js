@@ -5,6 +5,8 @@ asynctest(
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.ui.SplitDropdown',
@@ -16,7 +18,7 @@ asynctest(
     'ephox.sugar.api.TextContent'
   ],
  
-  function (FocusTools, Mouse, Step, GuiFactory, Memento, SplitDropdown, MenuData, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
+  function (FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, SplitDropdown, MenuData, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -78,13 +80,13 @@ asynctest(
               dom: {
                 tag: 'button',
                 innerHtml: 'v',
-                classes: [ 'test-split-button-action' ]
+                classes: [ 'test-split-button-arrow' ]
               }
             },
             button: {
               dom: {
                 tag: 'button',
-                classes: [ 'test-split-button-arrow' ]
+                classes: [ 'test-split-button-action' ]
               },
               components: [
                 displayer.asSpec()
@@ -115,9 +117,21 @@ asynctest(
       );
 
       return [
-        Mouse.sClickOn(gui.element(), 'button'),
-        Step.wait(100000),
+        store.sClear,
+        store.sAssertEq('Should be empty', [ ]),
+        Mouse.sClickOn(gui.element(), '.test-split-button-action'),
+        store.sAssertEq('After clicking on action', [ 'dropdown.execute' ]),
+        UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+        store.sClear,
 
+        Mouse.sClickOn(gui.element(), '.test-split-button-arrow'),
+        store.sAssertEq('After clicking on action', [ ]),
+        Waiter.sTryUntil(
+          'Waiting until menu appears',
+          UiFinder.sExists(gui.element(), '[role="menu"]'),
+          100,
+          1000
+        ),
         FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")')
 
         // TODO: Beef up tests.
