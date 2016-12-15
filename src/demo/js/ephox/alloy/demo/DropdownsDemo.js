@@ -309,49 +309,39 @@ define(
         })
       );
 
-
-
-      // DropdownApis.showValue(x, 'dog');
-
-      // console.log('x', x.element().dom());
-
-      // // return;
-
       HtmlDisplay.section(
         gui,
         'This grid dropdown button is a grid of 2 x 2',
-        Dropdown.build(function (parts) {
-          return {
-            text: 'Dropdown',
-            dom: {
-              tag: 'div',
-              innerHtml: 'here'
-            },
-            components: [
-              
-            ],
+        Dropdown.build({
+          text: 'Dropdown',
+          dom: {
+            tag: 'div',
+            innerHtml: 'here'
+          },
+          components: [
+            
+          ],
 
-            name: 'grid-demo',
+          name: 'grid-demo',
 
-            parts: {
-              menu: parts.menu().build(gridMenu)
-            },
-            fetch: function () {
+          parts: {
+            menu: gridMenu
+          },
+          fetch: function () {
 
-              var data = [
-                { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
-                { type: 'item', data: { value: 'beta', text: '+Beta' } },
-                { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
-                { type: 'item', data: { value: 'delta', text: '+Delta' } }
-              ];
-              var future = Future.pure(data);
-              return future.map(function (items) {
-                return MenuData.simple('grid-list', 'Grid List', items);  
-              });
-            },
-           
-            lazySink: lazySink
-          };
+            var data = [
+              { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
+              { type: 'item', data: { value: 'beta', text: '+Beta' } },
+              { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
+              { type: 'item', data: { value: 'delta', text: '+Delta' } }
+            ];
+            var future = Future.pure(data);
+            return future.map(function (items) {
+              return MenuData.simple('grid-list', 'Grid List', items);  
+            });
+          },
+         
+          lazySink: lazySink
         })
       );
 
