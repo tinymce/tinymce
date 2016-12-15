@@ -80,6 +80,11 @@ asynctest(
       store.adder({ eventName: eventName, target: targetValue })();
     };
 
+    var broadcastEvent = function (eventName, event) {
+      var target = event.target();
+      var targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
+      store.adder({ broadcastEventName: eventName, target: targetValue })();
+    };
 
     var sTestFocusInput = GeneralSteps.sequence([
       FocusTools.sSetFocus(
@@ -200,7 +205,8 @@ asynctest(
     ]);
 
     var gui = GuiEvents.setup(page, {
-      triggerEvent: triggerEvent
+      triggerEvent: triggerEvent,
+      broadcastEvent: broadcastEvent
     });
 
     Pipeline.async({}, [
