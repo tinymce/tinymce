@@ -4,48 +4,44 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.behaviour.CustomBehaviour',
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, CustomBehaviour, EventHandler, DomModification, GuiSetup, FieldSchema, ValueSchema, Fun) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, BehaviourExport, EventHandler, DomModification, GuiSetup, FieldSchema, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var behaviourA = CustomBehaviour('behaviourA', {
-        exhibit: function (info, base) {
+      var behaviourA = BehaviourExport.santa([ ], 'behaviourA', {
+        exhibit: function (base, info) {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
           });
         },
-
-        handlers: Fun.constant({
+        events: Fun.constant({
           'alloy.custom.test.event': EventHandler.nu({
             run: function (component) {
               store.adder('behaviour.a.event')();
             }
           })
-        }),
-        apis: Fun.constant({
-          'behave': store.adder('behaviour.a.apis.behave'),
-          'behaveA': store.adder('behaviour.a.apis.behaveA')
-        }),
-        schema: Fun.constant(
-          ValueSchema.anyValue()
-        )
-      });
+        })
+      }, {
+        behaveA: function (comp) {
+          store.adder('behaveA');
+        }
+      }, { });
 
-      var behaviourB = CustomBehaviour('behaviourB', {
-        exhibit: function (info, base) {
+      var behaviourB = BehaviourExport.santa([
+        FieldSchema.strict('attr')
+      ], 'behaviourB', {
+        exhibit: function (base, info) {
           var extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr()
@@ -54,23 +50,14 @@ asynctest(
           return DomModification.nu(extra);
         },
         
-        handlers: Fun.constant({
+        events: Fun.constant({
           'alloy.custom.test.event': EventHandler.nu({
             run: function (component) {
               store.adder('behaviour.b.event')();
             }
           })
-        }),
-        apis: Fun.constant({ 
-          'behave': store.adder('behaviour.b.apis.behave'),
-          'behaveB': store.adder('behaviour.b.apis.behaveB')
-        }),
-        schema: Fun.constant(
-          ValueSchema.objOf([
-            FieldSchema.strict('attr')
-          ])
-        )
-      });
+        })
+      }, { }, { });
 
       return GuiFactory.build({
         uiType: 'custom',
@@ -79,18 +66,17 @@ asynctest(
           classes: [ 'custom-component-test']
         },
         uid: 'custom-uid',
-        behaviours: [
+        customBehaviours: [
           behaviourA,
           behaviourB
         ],
-        'behaviourA': { },
-        'behaviourB': {
-          attr: 'exhibition'
+        behaviours: {
+          'behaviourA': { },
+          'behaviourB': {
+            attr: 'exhibition'
+          }
         },
-        apiOrder: {
-          'behave': [ 'behaviourB', 'behaviourA' ]
-        },
-
+   
         eventOrder: {
           'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
         },
@@ -117,35 +103,6 @@ asynctest(
 
         store.sAssertEq('Nothing in store yet', [ ]),
 
-        Step.sync(function () {
-          component.apis().behave();
-        }),
-
-        store.sAssertEq('Should now have a behaviour.a and behaviour.b log with b first', [
-          'behaviour.b.apis.behave',
-          'behaviour.a.apis.behave'
-        ]),
-
-        store.sClear,
-
-        Step.sync(function () {
-          component.apis().behaveA();
-        }),
-
-        store.sAssertEq('Should now have a behaviour.a and behaviour.b log', [
-          'behaviour.a.apis.behaveA'
-        ]),
-
-        store.sClear,
-
-        Step.sync(function () {
-          component.apis().behaveB();
-        }),
-
-        store.sAssertEq('Should now have a behaviour.a and behaviour.b log', [
-          'behaviour.b.apis.behaveB'
-        ]),
-
         store.sClear,
 
         Step.sync(function () {
@@ -159,20 +116,6 @@ asynctest(
         store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
           'behaviour.a.event',
           'behaviour.b.event'
-        ]),
-
-        store.sClear,
-        Logger.t(
-          'Checking calling an API on a component retrieved by uid',
-          Step.sync(function () {
-            var comp = gui.getByUid('custom-uid').getOrDie();
-            comp.apis().behave();
-          })
-        ),
-
-        store.sAssertEq('Should now have a behaviour.a and behaviour.b log with b first', [
-          'behaviour.b.apis.behave',
-          'behaviour.a.apis.behave'
         ])
       ];
     }, success, failure);
