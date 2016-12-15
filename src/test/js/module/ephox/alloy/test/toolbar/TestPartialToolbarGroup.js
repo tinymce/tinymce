@@ -29,8 +29,6 @@ define(
       itemClass: 'toolbar-item'
     };
 
-
-
     var munge = function (spec) {
       return {
         dom: {

@@ -36,7 +36,13 @@ asynctest(
                 }
               },
               parts: {
-                groups: { }
+                groups: {
+                  dom: {
+                    attributes: {
+                      'data-group-container': 'true'
+                    }
+                  }
+                }
               }
             }),
 
@@ -59,7 +65,9 @@ asynctest(
               parts: {
                 groups: {
                   dom: {
-                    tag: 'div'
+                    attributes: {
+                      'data-group-container': 'true'
+                    }
                   }
                 }
               }
