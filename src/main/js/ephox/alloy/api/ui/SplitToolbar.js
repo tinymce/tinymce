@@ -4,13 +4,16 @@ define(
   [
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Toolbar',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (CompositeBuilder, Toolbar, PartType, Merger, Fun) {
-    var schema = [ ];
+  function (CompositeBuilder, Toolbar, Fields, PartType, Merger, Fun) {
+    var schema = [
+      Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ])
+    ];
 
     var partTypes = [
       PartType.internal(Toolbar, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
@@ -21,10 +24,10 @@ define(
               dimension: {
                 property: 'height'
               },
-              closedStyle: 'a',
-              openStyle: 'a',
-              shrinkingStyle: 'a',
-              growingStyle: 'a'
+              closedStyle: detail.markers().closedStyle(),
+              openStyle: detail.markers().openStyle(),
+              shrinkingStyle: detail.markers().shrinkingStyle(),
+              growingStyle: detail.markers().growingStyle()
             }
           }
         };

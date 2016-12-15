@@ -27,6 +27,13 @@ asynctest(
             SplitToolbar.parts().overflow()
           ],
 
+          markers: {
+            closedStyle: 'test-sliding-closed',
+            openStyle: 'test-sliding-open',
+            shrinkingStyle: 'test-sliding-height-shrinking',
+            growingStyle: 'test-sliding-height-growing'
+          },
+
           parts: {
             primary: {
               dom: {
@@ -62,6 +69,12 @@ asynctest(
 
     }, function (doc, body, gui, component, store) {
       return [
+        GuiSetup.mAddStyles(doc, [
+          '.test-sliding-closed { visibility: hidden; opacity: 0; }',
+          '.test-sliding-open { visibility: visible; opacity: 1 }',
+          '.test-sliding-height-growing { transition: height 0.3s ease, opacity: 0.2s linear 0.1s; }',
+          '.test-sliding-height-shrinking { transition: opacity 0.3s ease, height 0.2s, linear 0.1s, visibility 0s linear 0.3s }'
+        ]),
         Step.fail('split.toolbar')
       ];
     }, function () { success(); }, failure);
