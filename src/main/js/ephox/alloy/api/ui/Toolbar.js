@@ -4,8 +4,8 @@ define(
   [
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -15,7 +15,7 @@ define(
     'ephox.perhaps.Result'
   ],
 
-  function (BehaviourExport, Replacing, CompositeBuilder, ToolbarGroup, Fields, PartType, FieldSchema, Arr, Merger, Fun, Result) {
+  function (BehaviourExport, Replacing, ToolbarGroup, UiBuilder, Fields, PartType, FieldSchema, Arr, Merger, Fun, Result) {
     var schema = [
       FieldSchema.defaulted('shell', true),
       Fields.members([ 'group' ])
@@ -99,7 +99,7 @@ define(
 
 
     var build = function (spec) {
-      return CompositeBuilder.build('toolbar', schema, partTypes, make, spec);
+      return UiBuilder.composite('toolbar', schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe
