@@ -202,7 +202,19 @@ asynctest(
         'After unbinding events, nothing should be listened to any longer',
         [ ]
       )
+
+      // TODO: Any other event triggers here.
     ]);
+
+    var sTestMousedown = Step.pass;
+    var sTestMouseup = Step.pass;
+    var sTestMousemove = Step.pass;
+    var sTestMouseout = Step.pass;
+    var sTestChange = Step.pass;
+    var sTestContextmenu = Step.pass;
+    var sTestTransitionEnd = Step.pass;
+    var sTestWindowScroll = Step.pass;
+
 
     var gui = GuiEvents.setup(page, {
       triggerEvent: triggerEvent,
@@ -217,6 +229,14 @@ asynctest(
       sTestInput,
       sTestMouseover,
       sTestSelectStart,
+      sTestMousedown,
+      sTestMouseup,
+      sTestMousemove,
+      sTestMouseout,
+      sTestChange,
+      sTestContextmenu,
+      sTestTransitionEnd,
+      sTestWindowScroll,
 
       sTestUnbind
     ], function () { 
