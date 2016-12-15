@@ -6,8 +6,8 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Toolbar',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
@@ -17,11 +17,10 @@ define(
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Css',
-    'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width'
   ],
 
-  function (BehaviourExport, Replacing, Sliding, Button, CompositeBuilder, Toolbar, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Remove, Width) {
+  function (BehaviourExport, Replacing, Sliding, Button, Toolbar, UiBuilder, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
     var schema = [
       Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
       FieldSchema.state('builtGroups', function () {
@@ -157,7 +156,7 @@ define(
     };
 
     var build = function (spec) {
-      return CompositeBuilder.build('split-toolbar', schema, partTypes, make, spec);
+      return UiBuilder.composite('split-toolbar', schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

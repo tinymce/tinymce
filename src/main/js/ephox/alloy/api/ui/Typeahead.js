@@ -5,9 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.UiBuilder',
-    'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.composite.TypeaheadSpec',
     'ephox.boulder.api.FieldSchema',
@@ -18,7 +16,7 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Coupling, Representing, Sandboxing, CompositeBuilder, UiBuilder, InternalSink, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, UiBuilder, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('fetch'),
