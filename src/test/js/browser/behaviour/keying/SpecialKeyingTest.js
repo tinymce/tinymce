@@ -7,10 +7,13 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, GuiSetup) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, Focusing, Keying, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -21,9 +24,9 @@ asynctest(
           tag: 'div',
           classes: 'special-keying'
         },
-        behaviours: {
-          focusing: true,
-          keying: {
+        behaviours: Objects.wrapAll([
+          Focusing.config({ }),
+          Keying.config({
             mode: 'special',
             onSpace: store.adderH('space'),
             onEnter: store.adderH('enter'),
@@ -33,8 +36,8 @@ asynctest(
             onDown: store.adderH('down'),
             onRight: store.adderH('right'),
             onEscape: store.adderH('escape')
-          }
-        }
+          })
+        ])
       });
 
     }, function (doc, body, gui, component, store) {
