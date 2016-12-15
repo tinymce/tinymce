@@ -5,7 +5,7 @@
   "scripts": {
     "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
   },
-  "author": "ephox",
+  "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
     "@ephox/bolt": "^1.8.0",
