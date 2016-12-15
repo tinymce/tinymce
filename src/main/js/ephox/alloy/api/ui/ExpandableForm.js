@@ -7,8 +7,8 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -18,7 +18,7 @@ define(
     'ephox.sugar.api.Focus'
   ],
 
-  function (BehaviourExport, Keying, Representing, Sliding, Button, CompositeBuilder, Form, Fields, PartType, FieldSchema, Merger, Fun, Class, Focus) {
+  function (BehaviourExport, Keying, Representing, Sliding, Button, Form, UiBuilder, Fields, PartType, FieldSchema, Merger, Fun, Class, Focus) {
     var schema = [
       Fields.markers([
         'closedStyle',
@@ -98,7 +98,7 @@ define(
 
     // Dupe with Tiered Menu
     var build = function (spec) {
-      return CompositeBuilder.build('expandable-form', schema, partTypes, make, spec);
+      return UiBuilder.composite('expandable-form', schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, _externals) {
