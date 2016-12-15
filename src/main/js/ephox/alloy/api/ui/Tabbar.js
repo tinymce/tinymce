@@ -5,8 +5,8 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.TabButton',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
@@ -14,7 +14,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, BehaviourExport, Highlighting, CompositeBuilder, TabButton, Fields, DomModification, PartType, FieldSchema, Fun) {
+  function (SystemEvents, BehaviourExport, Highlighting, TabButton, UiBuilder, Fields, DomModification, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
@@ -128,7 +128,7 @@ define(
 
 
     var build = function (spec) {
-      return CompositeBuilder.build('tab-bar', schema, partTypes, make, spec);
+      return UiBuilder.composite('tab-bar', schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

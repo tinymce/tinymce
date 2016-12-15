@@ -7,7 +7,6 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.api.ui.UiBuilder',
@@ -20,7 +19,7 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (EventRoot, SystemEvents, Highlighting, Replacing, Representing, CompositeBuilder, Tabbar, Tabview, UiBuilder, EventHandler, PartType, FieldSchema, Objects, Arr, Fun, Attr) {
+  function (EventRoot, SystemEvents, Highlighting, Replacing, Representing, Tabbar, Tabview, UiBuilder, EventHandler, PartType, FieldSchema, Objects, Arr, Fun, Attr) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       FieldSchema.defaulted('tabs', [ ])
