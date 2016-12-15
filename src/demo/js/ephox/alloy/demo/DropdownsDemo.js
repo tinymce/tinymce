@@ -349,44 +349,39 @@ define(
 
       HtmlDisplay.section(
         gui,
-        'This dropdown button has four possible values: alpha, beta, gamma, and delta',
-        Dropdown.build(function (parts) {
-          return {
-            dom: {
-              tag: 'button',
-              innerHtml: 'Click me to expand'
-            },
-            components: [ parts.sink().placeholder() ],
+        'This dropdown button has four possible values: alpha, beta, gamma, and delta AND an internal sink',
+        Dropdown.build({
+          dom: {
+            tag: 'button',
+            innerHtml: 'Click me to expand'
+          },
+          components: [
+            Dropdown.parts().sink()
+          ],
 
+          parts: {
+            menu: listMenu,
+            sink: { }
+          },
+          lazySink: lazySink,
+          fetch: function () {
 
-            name: 'dropdown-list-demo',
+            var data = [
+              { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
+              { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
+              { type: 'separator', data: { value: 'text' } },
+              { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
+              { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
+            ];
 
-            parts: {
-              menu: parts.menu().build(listMenu),
-              sink: parts.sink().build({ })
-            },
-            lazySink: lazySink,
-            fetch: function () {
-
-              var data = [
-                { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
-                { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
-                { type: 'separator', data: { value: 'text' } },
-                { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
-                { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
-              ];
-
-              var future = Future.pure(data);
-              return future.map(function (items) {
-                return MenuData.simple('basic-list', 'Basic List', items);
-              });
-            },
-            // sink: sink,
-            desc: 'demo-dropdown',
-            onExecute: function (sandbox, item, itemValue) {
-              console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
-            }
-          };
+            var future = Future.pure(data);
+            return future.map(function (items) {
+              return MenuData.simple('basic-list', 'Basic List', items);
+            });
+          },
+          onExecute: function (sandbox, item, itemValue) {
+            console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
+          }
         })
       );
 

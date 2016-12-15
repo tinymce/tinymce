@@ -100,8 +100,12 @@ define(
       return UiBuilder.composite('dropdown', schema, partTypes, make, spec);
     };
 
+    // TODO: Remove likely dupe
+    var parts = PartType.generate('dropdown', partTypes);
+
     return {
-      build: build
+      build: build,
+      parts: Fun.constant(parts)
     };
   }
 );
