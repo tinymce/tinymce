@@ -2,15 +2,13 @@ define(
   'ephox.alloy.api.ui.Button',
 
   [
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.highway.Merger'
   ],
 
-  function (Tagger, SpecSchema, ButtonBase, FieldSchema, Merger, Fun) {
+  function (UiBuilder, ButtonBase, FieldSchema, Merger) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.option('action'),
@@ -18,7 +16,6 @@ define(
     ];
 
     var make = function (detail, spec) {
-      
       var events = ButtonBase.events(detail.action());
 
       return Merger.deepMerge(
@@ -55,15 +52,12 @@ define(
     };
 
     // Dupe with Tiered Menu
-    var build = function (rawSpec) {
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
-      var detail = SpecSchema.asStructOrDie('Button', schema, spec, [ ]);
-      return make(detail, spec);
+    var build = function (spec) {
+      return UiBuilder.single('Button', schema, make, spec);
     };
 
     return {
-      build: build,
-      partial: Fun.identity
+      build: build
     };
   }
 );
