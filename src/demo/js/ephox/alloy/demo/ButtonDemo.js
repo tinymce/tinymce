@@ -3,26 +3,19 @@ define(
 
   [
     'ephox.alloy.api.Gui',
-    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.behaviour.Behaviour',
-    'ephox.alloy.behaviour.CustomBehaviour',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, BehaviourExport, Toggling, Behaviour, CustomBehaviour, HtmlDisplay, DomModification, Objects, ValueSchema, Merger, Fun, Class, Css, Element, Html, Insert, document) {
+  function (Gui, BehaviourExport, Toggling, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -74,8 +67,7 @@ define(
       var button1 = HtmlDisplay.section(
         gui,
         'This button is a <code>button</code> tag with an image',
-        {
-          uiType: 'button',
+        Button.build({
           dom: {
             tag: 'button',
             styles: {
@@ -88,14 +80,13 @@ define(
           action: function () {
             console.log('*** Image ButtonDemo click ***');
           }
-        }
+        })
       );
 
       var button2 = HtmlDisplay.section(
         gui,
         'This toggle button is a <code>span</code> tag with an font',
-        {
-          uiType: 'button',
+        Button.build({
           dom: {
             tag: 'button',
             classes: [ 'demo-alloy-bold' ],
@@ -112,7 +103,7 @@ define(
               toggleClass: 'demo-selected'
             })
           ])
-        }
+        })
       );
 
       button2.logSpec();
@@ -125,8 +116,7 @@ define(
         gui,
         'This text button has two custom behaviours. One adds (among other things) "data-cat" and ' +
         'background blue, and the other adds color red',
-        {
-          uiType: 'button',
+        Button.build({
           dom: {
             tag: 'span',
             innerHtml: 'Button.with.Text'
@@ -143,56 +133,7 @@ define(
             catBehaviour,
             redBehaviour            
           ]
-        }
-      );
-
-
-      return;
-
-
-      var group1 = HtmlDisplay.section(
-        gui,
-        'This button can only have one value selected. It can not be turned off',
-        {
-          uiType: 'groupbutton',
-
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            { uiType: 'placeholder', name: '<alloy.group-buttons>', owner: 'groupbutton' }
-          ],
-
-          members: {
-            button: {
-              munge: function (bSpec) {
-                return Merger.deepMerge(
-                  bSpec,
-                  {
-                    dom: {
-                      tag: 'button',
-                      innerHtml: bSpec.text
-                    }
-                  }
-                );
-              }
-            }
-          },
-          
-          markers: {
-            buttonClass: 'group-button',
-            selectedClass: 'demo-selected'
-          },
-          
-          buttons: [
-            { value: 'alpha', text: 'Alpha' },
-            { value: 'beta', text: 'Beta' },
-            { value: 'gamma', text: 'Gamma' }
-          ],
-          action: function (value) {
-            console.log('fired value', value);
-          }
-        }
+        })
       );
     };
   }
