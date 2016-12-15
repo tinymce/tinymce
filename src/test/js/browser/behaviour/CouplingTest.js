@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.StepUtils',
@@ -15,7 +16,7 @@ asynctest(
     'global!Error'
   ],
  
-  function (Assertions, Logger, Step, GuiFactory, Coupling, Tagger, GuiSetup, StepUtils, Attr, Node, Error) {
+  function (Assertions, Logger, Step, GuiFactory, Coupling, Button, Tagger, GuiSetup, StepUtils, Attr, Node, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -30,14 +31,13 @@ asynctest(
           coupling: {
             others: {
               'secondary-1': function (primary) { 
-                return {
-                  uiType: 'button',
+                return Button.build({
                   dom: {
                     tag: 'button'
                   },
                   action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute())),
                   text: 'Click me'
-                };
+                });
               }
             }
           }
