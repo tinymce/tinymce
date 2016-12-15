@@ -11,6 +11,7 @@ define(
 
   function (EventHandler, PartType, UiSubstitutes, Merger, Fun) {
     return PartType.optional(
+      { build: Fun.identity },
       'sink',
       '<alloy.sink>',
       Fun.constant({ }),

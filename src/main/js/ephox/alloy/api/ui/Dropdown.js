@@ -28,7 +28,9 @@ define(
     ];
 
     var partTypes = [
-      PartType.external('menu', 
+      PartType.external(
+        { build: Fun.identity },
+        'menu', 
         function (detail) {
           return {
             onExecute: detail.onExecute()
