@@ -17,7 +17,8 @@ define(
 
       FieldSchema.defaultedOf('store', { mode: 'memory' }, ValueSchema.choose('mode', {
         memory: [
-          FieldSchema.state('state', function () { return Cell(); }),
+          // TODO: Find a better way of storing this.
+          FieldSchema.state('state', function () { return Cell(null); }),
           FieldSchema.defaulted('initialValue', { }),
           
           FieldSchema.state('manager', function () {
@@ -31,7 +32,8 @@ define(
             };
 
             var onLoad = function (component, repInfo) {
-              var data = repInfo.store().initialValue();
+              var current = repInfo.store().state().get();
+              var data = current !== null ? current : repInfo.store().initialValue();
               RepresentApis.extractValue(component, repInfo, data).each(function (newData) {
                 repInfo.store().state().set(newData);
                 repInfo.onSet()(component, newData);

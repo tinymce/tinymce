@@ -35,8 +35,8 @@ define(
 
       // TODO: Make this potentially a single menu also
       return futureData.map(function (data) {
-        return TieredMenu.build(function () {
-          return Merger.deepMerge(
+        return TieredMenu.build(
+          Merger.deepMerge(
             externals.menu(),
             {
               uid: Tagger.generate(''),
@@ -61,8 +61,8 @@ define(
                 return Option.some(true);
               }
             }
-          );
-        });
+          )
+        );
       });
 
     };

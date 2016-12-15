@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.CompositeBuilder',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.composite.TypeaheadSpec',
@@ -17,7 +18,7 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Coupling, Representing, Sandboxing, CompositeBuilder, InternalSink, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, CompositeBuilder, UiBuilder, InternalSink, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.strict('fetch'),
@@ -84,16 +85,14 @@ define(
       )
     ];
 
-    var build = function (f) {
-      return CompositeBuilder.build('dropdown', schema, partTypes, TypeaheadSpec.make, f, function (spec) {
-        return Merger.deepMerge(spec, {
-          fetch: function (input) {
-            input.logSpec();
-            var val = Representing.getValue(input);
-            return spec.fetch(input, val.text);
-          }
-        });
+    var build = function (spec) {
+      var specWithFetch = Merger.deepMerge(spec, {
+        fetch: function (input) {
+          var val = Representing.getValue(input);
+          return spec.fetch(input, val.text);
+        }
       });
+      return UiBuilder.composite('typeahead', schema, partTypes, TypeaheadSpec.make, specWithFetch);
     };
 
     return {

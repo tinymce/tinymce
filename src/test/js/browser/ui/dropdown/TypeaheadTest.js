@@ -1,20 +1,12 @@
 asynctest(
-  'Typeahead',
+  'TypeaheadTest',
  
   [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
-    'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
-    'ephox.agar.api.NamedChain',
-    'ephox.agar.api.RealKeys',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.menus.MenuData',
@@ -26,14 +18,11 @@ asynctest(
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Value',
-    'ephox.sugar.api.Width',
     'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, NamedChain, RealKeys, Step, UiControls, UiFinder, Waiter, GuiFactory, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Css, Focus, Value, Width, Math) {
+  function (FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -45,42 +34,41 @@ asynctest(
         dom: { tag: 'div' },
         components: [
           { built: sink },
-          Typeahead.build(function (parts) {
-            return {
-              minChars: 2,
-              sink: sink,
-              uid: 'test-type',
-              dom: {
-                tag: 'input'
-              },
-              data: {
-                value: 'initial-value',
-                text: 'initial-value'
-              },
 
-              fetch: function (input) {
-                var text = Value.get(input.element());
-                var future = Future.pure([
-                  { type: 'item', data: { value: text + '1', text: text + '1' } },
-                  { type: 'item', data: { value: text + '2', text: text + '2' } }
-                ]);
+          Typeahead.build({
+            minChars: 2,
+            sink: sink,
+            uid: 'test-type',
+            dom: {
+              tag: 'input'
+            },
+            data: {
+              value: 'initial-value',
+              text: 'initial-value'
+            },
 
-                return future.map(function (f) {
-                  // TODO: Test this.
-                  var items = text === 'no-data' ? [
-                    { type: 'separator', text: 'No data' }
-                  ] : f;
-                  return MenuData.simple('blah', 'Blah', items);
-                });
-              },
-              desc: 'test-typeahead',
+            fetch: function (input) {
+              var text = Value.get(input.element());
+              var future = Future.pure([
+                { type: 'item', data: { value: text + '1', text: text + '1' } },
+                { type: 'item', data: { value: text + '2', text: text + '2' } }
+              ]);
 
-              lazySink: function () { return Result.value(sink); },
+              return future.map(function (f) {
+                // TODO: Test this.
+                var items = text === 'no-data' ? [
+                  { type: 'separator', text: 'No data' }
+                ] : f;
+                return MenuData.simple('blah', 'Blah', items);
+              });
+            },
+            desc: 'test-typeahead',
 
-              parts: {
-                menu: TestTypeaheadList
-              }
-            };
+            lazySink: function () { return Result.value(sink); },
+
+            parts: {
+              menu: TestTypeaheadList
+            }
           })
         ]
       });

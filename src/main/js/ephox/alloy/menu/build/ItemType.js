@@ -50,7 +50,10 @@ define(
             mode: 'execution'
           },
           representing: {
-            initialValue: info.data()
+            store: {
+              mode: 'memory',
+              initialValue: info.data()
+            }
           }
         },
         events: Objects.wrapAll([

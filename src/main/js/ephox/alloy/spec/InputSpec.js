@@ -60,7 +60,7 @@ define(
             initialValue: detail.data().getOr({ value: '', text: '' }),
 
             store: {
-              mode: 'menory'
+              mode: 'memory'
             },
 
             interactive: {
