@@ -5,10 +5,12 @@ test(
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.compass.Obj',
+    'ephox.peanut.Fun'
   ],
 
-  function (RawAssertions, BehaviourExport, FieldSchema, Objects) {
+  function (RawAssertions, BehaviourExport, FieldSchema, Objects, Obj, Fun) {
     var schema = [
       FieldSchema.strict('a')
     ];
@@ -33,9 +35,9 @@ test(
     RawAssertions.assertEq(
       'Something',
       { 'a': 'b' },
-      spec.scorps._raw
+      spec.scorps
     );
 
-    console.log('spec', spec);
+    
   }
 );

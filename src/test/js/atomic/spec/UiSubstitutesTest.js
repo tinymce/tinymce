@@ -5,14 +5,15 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.perhaps.Option',
     'ephox.wrap.Jsc'
   ],
 
-  function (Logger, RawAssertions, UiSubstitutes, Jsc) {
+  function (Logger, RawAssertions, UiSubstitutes, Option, Jsc) {
     Logger.sync(
       'Testing empty components',
       function () {
-        var actual = UiSubstitutes.substituteAll('detail', [ ], { }, { });
+        var actual = UiSubstitutes.substitutePlaces(Option.some('detail'), [ ], { }, { });
         RawAssertions.assertEq('Components should stay empty', [ ], actual);
       }
     );
@@ -20,9 +21,9 @@ test(
     Logger.sync(
       'Testing everything normal',
       function () {
-        var actual = UiSubstitutes.substituteAll('detail', [
+        var actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail', [
           { uiType: 'normal' }
-        ], { }, { });
+        ], { });
         RawAssertions.assertEq('Normal should be returned as is', [
           { uiType: 'normal', components: [ ] }
         ], actual); 
@@ -32,17 +33,17 @@ test(
     Logger.sync(
       'Testing one level with a dependent',
       function () {
-        var actual = UiSubstitutes.substituteAll('detail', [
+        var actual = UiSubstitutes.substitutePlaces(Option.some('owner'), 'detail', [
           { uiType: 'normal' },
-          { uiType: 'dependent', name: 'foo' }
+          { uiType: 'placeholder', name: 'foo', owner: 'owner' }
         ], {
-          foo: function (compSpec, detail) {
+          foo: UiSubstitutes.single(true, function (detail) {
             return {
               uiType: 'foo-dependent',
               detail: detail
             };
-          }
-        }, { });
+          })
+        });
         RawAssertions.assertEq('Dependent should be substituted', [
           { uiType: 'normal', components: [ ] },
           { uiType: 'foo-dependent', detail: 'detail', components: [ ] }
