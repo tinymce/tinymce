@@ -26,17 +26,14 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Button.build(function () {
-          return {
-            uiType: 'button',
-            dom: {
-              tag: 'button',
-              innerHtml: 'ButtonSpecTest.button',
-              classes: [ 'test-button' ]
-            },
-            action: store.adder('button.action'),
-            uid: 'test-button-id'
-          };
+        Button.build({
+          dom: {
+            tag: 'button',
+            innerHtml: 'ButtonSpecTest.button',
+            classes: [ 'test-button' ]
+          },
+          action: store.adder('button.action'),
+          uid: 'test-button-id'
         })
       );
     }, function (doc, body, gui, component, store) {
