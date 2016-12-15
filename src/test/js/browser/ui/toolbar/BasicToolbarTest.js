@@ -113,9 +113,10 @@ asynctest(
             {
               value: 'a',
               text: 'A',
-              items: [ 'a1', 'a2' ]
+              items: [ { text: 'a1' }, { text: 'a2' } ]
             }
           ]);
+          Toolbar.setGroups(t1, groups);
           console.log('groups', groups);
           // Toolbar.buildGroups()
         }),

@@ -21,14 +21,23 @@ define(
       Fields.members([ 'group' ])
     ];
 
+    var enhanceGroups = function (detail) {
+      return {
+        behaviours: {
+          replacing: { }
+        }
+      };
+    };
+
     var partTypes = [
-      PartType.optional({ build: Fun.identity }, 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), Fun.constant({ }))
+      PartType.optional({ build: Fun.identity }, 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), enhanceGroups)
     ];
 
     var make = function (detail, components, spec, _externals) {
 
       var setGroups = function (toolbar, groups) {
         getGroupContainer(toolbar).each(function (container) {
+          container.logSpec();
           Replacing.set(container, groups);
         });
       };
@@ -52,7 +61,7 @@ define(
       var extra = (function () {
         if (detail.shell()) {
           return {
-            base: detail.parts().groups(),
+            base: Merger.deepMerge(detail.parts().groups(), enhanceGroups(detail)),
             comps: [ ]
           };
         } else {
@@ -63,8 +72,17 @@ define(
         }
       })();
 
+      console.log('extra', extra);
+
       return Merger.deepMerge(
         extra.base,
+        {
+          dom: {
+            attributes: {
+              role: 'group'
+            }
+          }
+        },
         {
           uiType: 'custom',
           uid: detail.uid(),
