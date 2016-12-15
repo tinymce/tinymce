@@ -30,18 +30,17 @@ define(
     ];
 
     var arrowPart = PartType.internal(
+      Button,
       'arrow',
       '<alloy.split-dropdown.arrow>',
       function (detail) {
-        return Button.partial(function () {
-          return {
-            behaviours: {
-              // FIX undefined
-              tabstopping: undefined,
-              focusing: undefined
-            }
-          };
-        });
+        return {
+          behaviours: {
+            // FIX undefined
+            tabstopping: undefined,
+            focusing: undefined
+          }
+        };
       },
       function (detail) {
         return {
@@ -59,6 +58,7 @@ define(
     );
 
     var buttonPart = PartType.internal(
+      Button,
       'button',
       '<alloy.split-dropdown.button>',
       function (detail) {
@@ -150,8 +150,12 @@ define(
       return CompositeBuilder.build('split-dropdown', schema, partTypes, make, f);
     };
 
+    // TODO: Remove likely dupe
+    var parts = PartType.generate('split-dropdown', partTypes);
+
     return {
-      build: build
+      build: build,
+      parts: Fun.constant(parts)
     };
   }
 );

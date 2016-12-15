@@ -2,26 +2,22 @@ define(
   'ephox.alloy.api.ui.Input',
 
   [
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Value'
   ],
 
-  function (Tagger, SpecSchema, FieldSchema, Merger, Fun, Value) {
+  function (UiBuilder, FieldSchema, Merger, Fun, Value) {
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input')
     ];
 
-    // Dupe with Tiered Menu
-    var build = function (rawSpec) {
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
-      var detail = SpecSchema.asStructOrDie('Input', schema, spec, [ ]);
-      return make(detail, spec);
+    var build = function (spec) {
+      return UiBuilder.single('Input', schema, make, spec);
     };
 
     var make = function (detail, spec) {
