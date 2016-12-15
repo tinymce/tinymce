@@ -11,22 +11,25 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.agar.mouse.Clicks',
     'ephox.alloy.api.GuiEvents',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomRender',
     'ephox.alloy.test.TestStore',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Text',
-    'global!document'
+    'global!document',
+    'global!window'
   ],
  
-  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Clicks, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Node, Remove, Text, document) {
+  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Clicks, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Css, Element, Insert, InsertAll, Node, Remove, Text, document, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -82,9 +85,7 @@ asynctest(
     };
 
     var broadcastEvent = function (eventName, event) {
-      var target = event.target();
-      var targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
-      store.adder({ broadcastEventName: eventName, target: targetValue })();
+      store.adder({ broadcastEventName: eventName })();
     };
 
     var sTestFocusInput = GeneralSteps.sequence([
@@ -193,6 +194,26 @@ asynctest(
       ]);
     };
 
+    var sTestWindowScroll = GeneralSteps.sequence([
+      store.sClear,
+      Step.sync(function () {
+        Css.set(page, 'margin-top', '2000px');
+        window.scrollTo(0, 1000);
+      }),
+      // Wait for window scroll to come through
+      Waiter.sTryUntil(
+        'Waiting for window scroll event to broadcast',
+        store.sAssertEq('Checking scroll should have fired', [ { broadcastEventName: 'alloy.system.scroll' } ]),
+        100,
+        1000
+      ),
+      Step.sync(function () {
+        Css.remove(page, 'margin-top');
+        window.scrollTo(0, 0);
+      }),
+      store.sClear
+    ]);
+
     var sTestUnbind = GeneralSteps.sequence([
       Step.sync(function () {
         gui.unbind();
@@ -225,8 +246,6 @@ asynctest(
 
     var sTestChange = Step.pass;
     var sTestTransitionEnd = Step.pass;
-    var sTestWindowScroll = Step.pass;
-
 
     var gui = GuiEvents.setup(page, {
       triggerEvent: triggerEvent,
@@ -248,8 +267,11 @@ asynctest(
       sTestMouseOperation('mousemove', function (elem) { Clicks.mousemove(elem, 10, 10); }),
       sTestMouseOperation('mouseout', function (elem) { Clicks.mouseout(elem, 10, 10); }),
       sTestMouseOperation('contextmenu', Clicks.contextmenu),
+
+      // FIX: Add API support to agar
       sTestChange,
       sTestTransitionEnd,
+
       sTestWindowScroll,
 
       sTestUnbind
