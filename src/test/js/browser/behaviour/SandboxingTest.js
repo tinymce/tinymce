@@ -8,8 +8,10 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
+    'ephox.boulder.api.Objects',
     'ephox.knoch.future.CachedFuture',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -20,7 +22,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Sandboxing, GuiSetup, Sinks, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Sandboxing, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -34,8 +36,8 @@ asynctest(
           classes: [ 'test-sandbox' ]
         },
         uid: 'no-duplicates',
-        behaviours: {
-          sandboxing: {
+        behaviours: Objects.wrapAll([
+          Sandboxing.config({
             bucket: {
               mode: 'sink',
               lazySink: function () {
@@ -56,8 +58,8 @@ asynctest(
               return input;
             },
             isPartOf: Fun.constant(false)
-          }
-        }
+          })
+        ])
       });
     
       var sOpenWith = function (data) {
@@ -93,7 +95,7 @@ asynctest(
             store.sClear,
             Step.sync(function () {
               var state = Sandboxing.getState(sandbox);
-              Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie()));
+              Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie().element()));
             })
           ])
         );
@@ -116,16 +118,26 @@ asynctest(
         );
       };
 
+      var makeData = function (rawData) {
+        return Input.build({
+          dom: {
+            attributes: {
+              'data-test-input': rawData
+            }
+          }
+        });
+      };
+
       return [
         // initially
         sCheckClosedState('Initial state', { store: [ ] }),
 
         // // opening sandbox
-        Logger.t('Opening sandbox', sOpenWith('first-opening')),
+        Logger.t('Opening sandbox', sOpenWith(makeData('first-opening'))),
         sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'onOpen' ] }),
      
         // // opening sandbox again
-        Logger.t('Opening sandbox while it is already open', sOpenWith('second-opening')),
+        Logger.t('Opening sandbox while it is already open', sOpenWith(makeData('second-opening'))),
         sCheckOpenState('Opening sandbox while it is already open', {
           data: 'second-opening',
           store: [ 'onOpen' ]
