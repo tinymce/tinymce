@@ -9,10 +9,11 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Toggling, GuiSetup) {
+  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Toggling, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,12 +30,12 @@ asynctest(
           }
         },
         uid: 'custom-uid',
-        behaviours: {
-          toggling: {
+        behaviours: Objects.wrapAll([
+          Toggling.config({
             selected: true,
-            toggleClass: 'test-selected'
-          }
-        }
+            toggleClass: 'test-selected'           
+          })
+        ])
       });
 
     }, function (doc, body, gui, component, store) {
