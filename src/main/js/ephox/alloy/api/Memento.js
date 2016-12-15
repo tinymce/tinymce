@@ -8,16 +8,16 @@ define(
 
   function (Tagger, Merger) {
     var record = function (spec) {
-      var uid = Tagger.generate('');
+      var uid = Tagger.generate('memento');
 
       var get = function (any) {
         return any.getSystem().getByUid(uid).getOrDie();
       };
 
       var asSpec = function () {
-        return Merger.deepMerge({
+        return Merger.deepMerge(spec, {
           uid: uid
-        }, spec);
+        });
       };
 
       return {

@@ -5,10 +5,7 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
-    'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
@@ -16,28 +13,30 @@ asynctest(
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Disabling',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'ephox.sugar.api.Focus'
   ],
  
-  function (ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Disabling, EventHandler, GuiSetup, Objects, Focus) {
+  function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Disabling, Button, EventHandler, GuiSetup, Objects, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var subject = Memento.record({
-      uiType: 'button',
-      dom: {
-        tag: 'button',
-        innerHtml: 'button'
-      },
-      behaviours: {
-        disabling: {
-          disabled: true
+    var subject = Memento.record(
+      Button.build({
+        dom: {
+          tag: 'button',
+          innerHtml: 'button'
+        },
+        behaviours: {
+          disabling: {
+            disabled: true
+          }
         }
-      }
-    });
+      })
+    );
 
 
     GuiSetup.setup(function (store, doc, body) {
@@ -61,6 +60,8 @@ asynctest(
         }),
         Mouse.cClick
       ]);
+
+      debugger;
 
       var button = subject.get(component);
       return [
