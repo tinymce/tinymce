@@ -30,11 +30,11 @@ asynctest(
           tag: 'button',
           innerHtml: 'button'
         },
-        behaviours: {
-          disabling: {
+        behaviours: Objects.wrapAll([
+          Disabling.config({
             disabled: true
-          }
-        }
+          })
+        ])
       })
     );
 
@@ -60,8 +60,6 @@ asynctest(
         }),
         Mouse.cClick
       ]);
-
-      debugger;
 
       var button = subject.get(component);
       return [
