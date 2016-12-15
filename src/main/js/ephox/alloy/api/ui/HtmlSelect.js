@@ -2,9 +2,8 @@ define(
   'ephox.alloy.api.ui.HtmlSelect',
 
   [
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
@@ -14,7 +13,7 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (Fields, Tagger, SpecSchema, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
+  function (UiBuilder, Fields, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
     var schema = [
       FieldSchema.strict('options'),
       Fields.members([ 'option' ]),
@@ -22,10 +21,8 @@ define(
     ];
 
     // Dupe with Tiered Menu
-    var build = function (rawSpec) {
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
-      var detail = SpecSchema.asStructOrDie('html-select', schema, spec, [ ]);
-      return make(detail, spec);
+    var build = function (spec) {
+      return UiBuilder.single('html-select', schema, make, spec);
     };
 
     var make = function (detail, spec) {
