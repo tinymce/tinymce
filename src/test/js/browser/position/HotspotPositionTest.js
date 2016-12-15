@@ -5,6 +5,7 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
@@ -13,25 +14,26 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
+  function (Chain, NamedChain, GuiFactory, Button, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var hotspot = GuiFactory.build({
-        uiType: 'button',
-        action: function () { },
-        dom: {
-          styles: {
-            position: 'absolute',
-            left: '100px',
-            top: '120px'
+      var hotspot = GuiFactory.build(
+        Button.build({
+          action: function () { },
+          dom: {
+            styles: {
+              position: 'absolute',
+              left: '100px',
+              top: '120px'
+            },
+            innerHtml: 'Hotspot',
+            tag: 'button'
           },
-          innerHtml: 'Hotspot',
-          tag: 'button'
-        },
-        uid: 'hotspot'
-      });
+          uid: 'hotspot'
+        })
+      );
 
       return GuiFactory.build({
         uiType: 'custom',
