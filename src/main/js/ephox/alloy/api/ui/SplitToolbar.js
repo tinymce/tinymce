@@ -7,17 +7,20 @@ define(
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.toolbar.Overflows',
     'ephox.boulder.api.FieldSchema',
+    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Width'
   ],
 
-  function (BehaviourExport, CompositeBuilder, Toolbar, Fields, PartType, FieldSchema, Merger, Fun, Cell, Css) {
+  function (BehaviourExport, CompositeBuilder, Toolbar, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
     var schema = [
       Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
-      FieldSchema.state('storedGroups', function () {
+      FieldSchema.state('builtGroups', function () {
         return Cell([ ]);
       })
     ];
@@ -38,8 +41,8 @@ define(
             }
           }
         };
-      })
-
+      }),
+      PartType.external({ built: Fun.identity }, 'overflow-button', Fun.constant({ }), Fun.constant({ }))
     ];
 
     var refresh = function (toolbar, detail) {
@@ -47,13 +50,42 @@ define(
       var overflow = toolbar.getSystem().getByUid(detail.partUids().overflow).getOrDie();
 
       // Set the primary toolbar to have visibilty hidden;
-      Toolbar.setGroups(primary, detail.storedGroups().get());
+      Css.set(primary.element(), 'visibility', 'hidden');
+
+      // Clear the overflow toolbar
+      Toolbar.setGroups(overflow, [ ]);
+
+      // Put all the groups inside the primary toolbar
+      var groups = detail.builtGroups().get();
+
+      var bGroups = Arr.map(groups, function (g) { return { built: g }; });
+
+      // Use the { built } version to add to toolbar.
+      Toolbar.setGroups(primary, bGroups);
+
+      debugger;
+      var overflowGroupSpec = Toolbar.createGroups(primary, [ { items: [ { text: 'More' } ] } ])[0];
+      console.log('overflowGroupSpec', overflowGroupSpec);
+      var overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
+
+
+      var total = Width.get(primary.element());
+      console.log('total', total);
+
+      var overflows = Overflows.partition(total, groups, function (comp) {
+        return Width.get(comp.element());
+      }, overflowGroup);
+
+      Css.remove(primary.element(), 'visibility');
+      Css.reflow(primary.element());
+
     };
 
 
     var make = function (detail, components, spec, externals) {
       var doSetGroups = function (toolbar, groups) {
-        detail.storedGroups().set(groups);
+        var built = Arr.map(groups, toolbar.getSystem().build);
+        detail.builtGroups().set(built);
       };
 
       var setGroups = function (toolbar, groups) {
@@ -66,7 +98,6 @@ define(
         return Toolbar.createGroups(primary, gspecs);
       };
 
-    
       return Merger.deepMerge(
         {
           dom: {

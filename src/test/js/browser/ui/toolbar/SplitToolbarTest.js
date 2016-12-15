@@ -68,7 +68,9 @@ asynctest(
                   munge: TestPartialToolbarGroup.munge
                 }
               }
-            }
+            },
+
+            'overflow-button': { }
           }
         })
       );
