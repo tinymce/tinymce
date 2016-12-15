@@ -11,6 +11,7 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.agar.mouse.Clicks',
     'ephox.alloy.api.GuiEvents',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomRender',
@@ -25,7 +26,7 @@ asynctest(
     'global!document'
   ],
  
-  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Node, Remove, Text, document) {
+  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Clicks, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Node, Remove, Text, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -176,6 +177,22 @@ asynctest(
       store.sClear
     ]);
 
+    var sTestMouseOperation = function (eventName, op) {
+      return GeneralSteps.sequence([
+        Step.sync(function () {
+          // TODO: Add others clicks to agar.
+          op(page);
+        }),
+        store.sAssertEq(
+          'Checking event log after ' + eventName + ' on root',
+          [
+            { eventName: eventName, target: 'gui-events-test-container' }
+          ]
+        ),
+        store.sClear
+      ]);
+    };
+
     var sTestUnbind = GeneralSteps.sequence([
       Step.sync(function () {
         gui.unbind();
@@ -206,12 +223,7 @@ asynctest(
       // TODO: Any other event triggers here.
     ]);
 
-    var sTestMousedown = Step.pass;
-    var sTestMouseup = Step.pass;
-    var sTestMousemove = Step.pass;
-    var sTestMouseout = Step.pass;
     var sTestChange = Step.pass;
-    var sTestContextmenu = Step.pass;
     var sTestTransitionEnd = Step.pass;
     var sTestWindowScroll = Step.pass;
 
@@ -229,12 +241,14 @@ asynctest(
       sTestInput,
       sTestMouseover,
       sTestSelectStart,
-      sTestMousedown,
-      sTestMouseup,
-      sTestMousemove,
-      sTestMouseout,
+
+      // FIX: Add API support to agar.
+      sTestMouseOperation('mousedown', Clicks.mousedown),
+      sTestMouseOperation('mouseup', Clicks.mouseup),
+      sTestMouseOperation('mousemove', function (elem) { Clicks.mousemove(elem, 10, 10); }),
+      sTestMouseOperation('mouseout', function (elem) { Clicks.mouseout(elem, 10, 10); }),
+      sTestMouseOperation('contextmenu', Clicks.contextmenu),
       sTestChange,
-      sTestContextmenu,
       sTestTransitionEnd,
       sTestWindowScroll,
 
