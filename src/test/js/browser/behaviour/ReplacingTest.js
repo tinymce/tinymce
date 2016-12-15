@@ -4,27 +4,25 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Keyboard, Keys, Logger, RawAssertions, Step, GuiFactory, Replacing, EventHandler, GuiSetup) {
+  function (ApproxStructure, Assertions, Logger, RawAssertions, Step, GuiFactory, Replacing, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({
         uiType: 'container',
-        behaviours: {
-          replacing: { }
-        },
+        behaviours: Objects.wrapAll([
+          Replacing.config({ })
+        ]),
         components: [
           {
             uiType: 'container',
