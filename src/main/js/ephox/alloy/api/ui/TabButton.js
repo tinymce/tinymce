@@ -12,6 +12,7 @@ define(
 
   function (Tagger, SpecSchema, ButtonBase, FieldSchema, Id, Merger) {
     var schema = [
+      FieldSchema.strict('value'),
       FieldSchema.strict('dom'),
       FieldSchema.option('action'),
       FieldSchema.option('role')
@@ -32,6 +33,12 @@ define(
               mode: 'execution',
               useSpace: true,
               useEnter: true
+            },
+            representing: {
+              store: {
+                mode: 'memory',
+                initialValue: detail.value()
+              }
             }
           }
         },

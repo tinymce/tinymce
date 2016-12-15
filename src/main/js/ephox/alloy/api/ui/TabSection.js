@@ -10,6 +10,7 @@ define(
     'ephox.alloy.api.ui.CompositeBuilder',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -19,7 +20,7 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (EventRoot, SystemEvents, Highlighting, Replacing, Representing, CompositeBuilder, Tabbar, Tabview, EventHandler, PartType, FieldSchema, Objects, Arr, Fun, Attr) {
+  function (EventRoot, SystemEvents, Highlighting, Replacing, Representing, CompositeBuilder, Tabbar, Tabview, UiBuilder, EventHandler, PartType, FieldSchema, Objects, Arr, Fun, Attr) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       FieldSchema.defaulted('tabs', [ ])
@@ -66,11 +67,13 @@ define(
             return t.value === tabValue;
           });
 
-          var panel = tabData.view();
+          if (tabData !== undefined && tabData !== null) {
+            var panel = tabData.view();
 
-          // Update the tabview to refer to the current tab.
-          Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
-          Replacing.set(tabview, panel);
+            // Update the tabview to refer to the current tab.
+            Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
+            Replacing.set(tabview, panel);
+          }
         });
       };
 
@@ -114,8 +117,8 @@ define(
 
     };
 
-    var build = function (f) {
-      return CompositeBuilder.build('tab-section', schema, partTypes, make, f);
+    var build = function (spec) {
+      return UiBuilder.composite('tab-section', schema, partTypes, make, spec);
     };
 
     var parts = PartType.generate('tab-section', partTypes);
