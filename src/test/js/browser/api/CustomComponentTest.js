@@ -11,12 +11,17 @@ asynctest(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun'
+    'ephox.boulder.api.Objects',
+    'ephox.peanut.Fun',
+    'ephox.scullion.Cell'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, BehaviourExport, EventHandler, DomModification, GuiSetup, FieldSchema, Fun) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, BehaviourExport, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var bA = Cell(null);
+    var bB = Cell(null);
 
     GuiSetup.setup(function (store, doc, body) {
       var behaviourA = BehaviourExport.santa([ ], 'behaviourA', {
@@ -34,9 +39,11 @@ asynctest(
         })
       }, {
         behaveA: function (comp) {
-          store.adder('behaveA');
+          store.adder('behaveA')();
         }
       }, { });
+
+      bA.set(behaviourA);
 
       var behaviourB = BehaviourExport.santa([
         FieldSchema.strict('attr')
@@ -58,6 +65,8 @@ asynctest(
           })
         })
       }, { }, { });
+
+      bB.set(behaviourB);
 
       return GuiFactory.build({
         uiType: 'custom',
@@ -116,7 +125,21 @@ asynctest(
         store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
           'behaviour.a.event',
           'behaviour.b.event'
-        ])
+        ]),
+
+        Step.sync(function () {
+          bA.get().behaveA(component);
+        }),
+
+        store.sAssertEq('Should now have an Api log', [
+          'behaviour.a.event',
+          'behaviour.b.event',
+          'behaveA'
+        ]),
+
+        Step.sync(function () {
+          Assertions.assertEq('There should be no internal APIs on component', false, Objects.hasKey(component, 'apis'));
+        })
       ];
     }, success, failure);
  
