@@ -6,15 +6,14 @@ define(
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.SpecSchema',
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, BehaviourExport, Positioning, Sandboxing, Tagger, SpecSchema, FieldSchema, Merger, Future, Fun) {
+  function (ComponentStructure, BehaviourExport, Positioning, Sandboxing, UiBuilder, FieldSchema, Merger, Future, Fun) {
     var schema = [
       FieldSchema.strict('lazySink')
     ];
@@ -53,11 +52,8 @@ define(
       );
     };
 
-    // Dupe with Tiered Menu
-    var build = function (rawSpec) {
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
-      var detail = SpecSchema.asStructOrDie('InlineView', schema, spec, [ ]);
-      return make(detail, spec);
+    var build = function (spec) {
+      return UiBuilder.single('InlineView', schema, make, spec);
     };
 
     return {
