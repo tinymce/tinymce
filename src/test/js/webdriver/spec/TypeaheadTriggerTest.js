@@ -48,6 +48,10 @@ asynctest(
               text: 'initial-value'
             },
 
+            markers: {
+              openClass: 'test-typeahead-open'
+            },
+
             fetch: function (input) {
               var text = Value.get(input.element());
               var future = Future.pure([

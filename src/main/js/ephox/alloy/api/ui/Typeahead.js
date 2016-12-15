@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.composite.TypeaheadSpec',
     'ephox.boulder.api.FieldSchema',
@@ -16,16 +17,19 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Coupling, Representing, Sandboxing, UiBuilder, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, UiBuilder, Fields, PartType, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.strict('dom'),
+      FieldSchema.option('data'),
+      FieldSchema.defaulted('tag', 'input'),
+      FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('minChars', 5),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.defaulted('matchWidth', true),
-      FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
+      Fields.markers([ 'openClass' ]),
 
       FieldSchema.state('previewing', function () {
         return Cell(true);

@@ -38,6 +38,11 @@ asynctest(
           Typeahead.build({
             minChars: 2,
             uid: 'test-type',
+            markers: {
+              // TODO: Test this
+              openClass: 'test-typeahead-open'
+            },
+
             dom: {
               tag: 'input'
             },
@@ -61,8 +66,7 @@ asynctest(
                 return MenuData.simple('blah', 'Blah', items);
               });
             },
-            desc: 'test-typeahead',
-
+            
             lazySink: function () { return Result.value(sink); },
 
             parts: {

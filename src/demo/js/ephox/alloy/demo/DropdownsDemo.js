@@ -4,23 +4,18 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Dropdown',
-    'ephox.alloy.api.ui.DropdownApis',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.menus.MenuData',
-    'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
     'global!document',
     'text!dom-templates/demo.grid.item.html',
@@ -33,7 +28,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Button, Dropdown, DropdownApis, SplitDropdown, MenuData, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Html, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, Representing, Button, Dropdown, Input, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -206,69 +201,70 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        SplitDropdown.build(function (parts) {
-          return { 
-            toggleClass: 'demo-selected',
-            dom: {
-              tag: 'div'
-            },
-            components: [ parts.button().placeholder(), parts.arrow().placeholder(), parts.sink().placeholder() ],
-            fetch: function () {
-              var future = Future.pure({             
-                type: 'widget',
-                autofocus: true,
-                data: {
-                  value: 'widget1',
-                  text: 'Widget1'
-                },
-                widget: {
-                  uiType: 'container',
-                  dom: {
-                    classes: [ 'my-widget' ]
-                  },
-                  behaviours: {
-                    keying: { mode: 'cyclic' }
-                  },
-                  components: [
-                    { uiType: 'input', dom: { tag: 'input' } },
-                    { uiType: 'input', dom: { tag: 'input' } }
-                  ]
-                }
-
-              });
-
-              return future.map(function (f) {
-                return MenuData.single('name', 'label', f);
-              });
-            },
-            lazySink: lazySink,
-            onExecute: function () {
-
-            },
-
-            parts: {
-              button: parts.button().build({
-                // uiType: 'button',
+        SplitDropdown.build({
+          toggleClass: 'demo-selected',
+          dom: {
+            tag: 'div'
+          },
+          components: [ 
+            SplitDropdown.parts().button(),
+            SplitDropdown.parts().arrow(),
+            SplitDropdown.parts().sink()
+          ],
+          fetch: function () {
+            var future = Future.pure({             
+              type: 'widget',
+              autofocus: true,
+              data: {
+                value: 'widget1',
+                text: 'Widget1'
+              },
+              widget: {
+                uiType: 'container',
                 dom: {
-                  tag: 'button',
-                  innerHtml: 'Run'
+                  classes: [ 'my-widget' ]
                 },
-                action: function () {
-                  console.log('*** Clicked on Action ***');
+                behaviours: {
+                  keying: { mode: 'cyclic' }
                 },
-                uid: 'supplied'
-              }),
-              arrow: parts.arrow().build({
-                // uiType: 'button',
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'v'
-                }
-              }),
-              menu: parts.menu().build(widgetMenu),
-              sink: parts.sink().build({ })
-            }
-          };
+                components: [
+                  Input.build({ dom: { tag: 'input' } }),
+                  Input.build({ dom: { tag: 'input' } })
+                ]
+              }
+
+            });
+
+            return future.map(function (f) {
+              return MenuData.single('name', 'label', f);
+            });
+          },
+          lazySink: lazySink,
+          onExecute: function () {
+
+          },
+
+          parts: {
+            button: {
+              dom: {
+                tag: 'button',
+                innerHtml: 'Run'
+              },
+              action: function () {
+                console.log('*** Clicked on Action ***');
+              },
+              uid: 'supplied'
+            },
+            arrow: {
+              // uiType: 'button',
+              dom: {
+                tag: 'button',
+                innerHtml: 'v'
+              }
+            },
+            menu: widgetMenu,
+            sink: { }
+          }
         })
       );
 

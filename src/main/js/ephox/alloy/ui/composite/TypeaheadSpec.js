@@ -10,7 +10,7 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.spec.InputSpec',
+    'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -19,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Sandboxing, EventHandler, Beta, InputSpec, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Sandboxing, EventHandler, Beta, InputBase, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
@@ -99,7 +99,7 @@ define(
         },
 
         toggling: {
-          toggleClass: 'menu-open',
+          toggleClass: detail.markers().openClass(),
           aria: {
             'aria-expanded-attr': 'aria-expanded'
           }
@@ -123,8 +123,10 @@ define(
       };
 
       return Merger.deepMerge(
-        InputSpec.make(spec),
+        { dom: InputBase.dom(detail) },
+        { behaviours: InputBase.behaviours(detail) },
         {
+          uiType: 'custom',
           behaviours: behaviours,
           events: Objects.wrapAll([
             {
