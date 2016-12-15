@@ -3,6 +3,7 @@ test(
 
   [
     'ephox.agar.api.RawAssertions',
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.behaviour.CustomBehaviour',
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.CustomDefinition',
@@ -15,7 +16,7 @@ test(
     'ephox.perhaps.Result'
   ],
 
-  function (RawAssertions, CustomBehaviour, ComponentDom, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldSchema, ValueSchema, Fun, Result) {
+  function (RawAssertions, BehaviourExport, CustomBehaviour, ComponentDom, CustomDefinition, DomDefinition, DomModification, ResultAssertions, FieldSchema, ValueSchema, Fun, Result) {
     var checkErr = function (label, expectedPart, spec) {
       ResultAssertions.checkErrStr(
         label,
@@ -70,74 +71,46 @@ test(
     checkDomVal('Basics supplied', {
       tag: 'span',
       classes: [ ],
-      attributes: { },
+      attributes: {
+        'data-alloy-id': 'basic-uid',
+        'role': 'presentation'
+      },
       styles: { },
       value: '<none>',
       innerHtml: '<none>',
       defChildren: '<none>',
       domChildren: '0 children, but still specified'
     }, {
+      uid: 'basic-uid',
       dom: {
         tag: 'span'
       },
       components: [ ]
     });
 
-    checkDomVal('Basics supplied with behaviour that adds classes but does not use it', {
-      tag: 'span',
-      classes: [ ],
-      attributes: { },
-      styles: { },
-      value: '<none>',
-      innerHtml: '<none>',
-      defChildren: '<none>',
-      domChildren: '0 children, but still specified'
-    }, {
-      dom: {
-        tag: 'span'
-      },
-      components: [ ],
-      behaviours: [
-        CustomBehaviour('behaviourA', {
-          exhibit: function (info, base) {
-            return DomModification.nu({
-              classes: [ 'added-class-a' ]
-            });
-          },
-
-          schema: Fun.constant(
-            ValueSchema.objOf([
-              FieldSchema.strict('a')
-            ])
-          )
-        })
-      ]
-    });
-
     checkErr('Basics supplied with behaviour that adds classes and does have it but does not follow schema', 
       '*strict* value for "a"', 
       {
+        uid: 'missing-a',
         dom: {
           tag: 'span'
         },
         components: [ ],
-        behaviours: [
-          CustomBehaviour('behaviourA', {
+        customBehaviours: [
+          BehaviourExport.santa([
+            FieldSchema.strict('a')
+          ], 'behaviourA', {
             exhibit: function (info, base) {
               return DomModification.nu({
                 classes: [ 'added-class-a' ]
               });
-            },
-
-            schema: Fun.constant(
-              ValueSchema.objOf([
-                FieldSchema.strict('a')
-              ])
-            )
-          })
+            }
+          }, { }, { })
         ],
-        behaviourA: {
+        behaviours: {
+          behaviourA: {
 
+          }
         }
       }
     );
@@ -150,7 +123,8 @@ test(
           'added-class-a'
         ],
         attributes: {
-          'data-alloy-id': 'id-custom-button-1'
+          'data-alloy-id': 'id-custom-button-1',
+          role: 'presentation'
         },
         styles: { },
         value: '<none>',
@@ -163,29 +137,25 @@ test(
         },
         uid: 'id-custom-button-1',
         components: [ ],
-        behaviours: [
-          CustomBehaviour('behaviourA', {
+        behaviours: {
+          'behaviourA': {
+            a: true
+          }
+        },
+
+        customBehaviours: [
+          BehaviourExport.santa([
+            FieldSchema.strict('a')
+          ], 'behaviourA', {
             exhibit: function (info, base) {
               return DomModification.nu({
                 classes: [ 'added-class-a' ]
               });
-            },
-
-            schema: Fun.constant(
-              ValueSchema.objOf([
-                FieldSchema.strict('a')
-              ])
-            )
-          })
-        ],
-        'behaviourA': {
-          a: true
-        }
+            }
+          }, { }, { })
+        ]
       }
     );
-
-    // Add more tests.
-
   }
 
 
