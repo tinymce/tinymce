@@ -80,11 +80,6 @@ define(
       // });
     };
 
-    var preview = function (detail, component, sandbox) {
-      var futureData = fetch(detail, component);
-      Sandboxing.open(sandbox, futureData).get(function () { });
-    };
-
     var close = function (detail, anchor, component, sandbox) {
       Sandboxing.close(sandbox);
       // INVESTIGATE: Not sure if this is needed. 
@@ -101,10 +96,10 @@ define(
     };
 
     // FIX: Reinstate
-    var matchWidth = function (hotspot, container) {
-      var buttonWidth = Width.get(hotspot.element());
-      Width.set(container.element(), buttonWidth);
-    };
+    // var matchWidth = function (hotspot, container) {
+    //   var buttonWidth = Width.get(hotspot.element());
+    //   Width.set(container.element(), buttonWidth);
+    // };
 
     var makeSandbox = function (detail, anchor, anyInSystem, extras) {
       var onOpen = function (component, menu) {
@@ -155,43 +150,10 @@ define(
       };
     };
     
-    var previewPopup = function (detail, hotspot) {
-      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (Sandboxing.isOpen(sandbox)) close(detail, hotspot, sandbox);
-      preview(detail, hotspot, sandbox);
-      return Option.some(true);
-    };
-
-    var enterPopup = function (detail, anchor, hotspot) {
-      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (Sandboxing.isOpen(sandbox)) {
-        Sandboxing.getState(sandbox).each(function (tiers) {
-          Keying.focusIn(tiers);
-        });        
-      } else {
-        open(detail, anchor, hotspot, sandbox);
-      }
-      return Option.some(true);
-    };
-
-    var escapePopup = function (detail, hotspot) {
-      var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-      if (Sandboxing.isOpen(sandbox)) {
-        close(detail, hotspot, sandbox);
-        return Option.some(true);
-      } else {
-        return Option.none();
-      }
-    };
 
     return {
       makeSandbox: makeSandbox,
       togglePopup: togglePopup,
-
-      escapePopup: escapePopup,
-      previewPopup: previewPopup,
-      enterPopup: enterPopup,
-
       open: open
     };
   }

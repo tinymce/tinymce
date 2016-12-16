@@ -3,6 +3,9 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.UiBuilder',
@@ -16,7 +19,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, Toggling, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Fun, Option, Error) {
+  function (SystemEvents, Composing, Highlighting, Keying, Toggling, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -100,7 +103,10 @@ define(
             anchor: 'hotspot',
             hotspot: component
           }, component, externals).get(function (sandbox) {
-
+            Composing.getCurrent(sandbox).each(function (current) {
+              Highlighting.highlightFirst(current);
+              Keying.focusIn(current);
+            });
           });
         }
       ));

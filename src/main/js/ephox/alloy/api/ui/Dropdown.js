@@ -2,7 +2,9 @@ define(
   'ephox.alloy.api.ui.Dropdown',
 
   [
-    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.dropdown.Beta',
@@ -15,7 +17,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Focusing, Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
+  function (Composing, Highlighting, Keying, Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
@@ -51,7 +53,10 @@ define(
                 anchor: 'hotspot',
                 hotspot: component
               }, component, externals).get(function (sandbox) {
-
+                Composing.getCurrent(sandbox).each(function (current) {
+                  Highlighting.highlightFirst(current);
+                  Keying.focusIn(current);
+                });
               });
             })
           )
