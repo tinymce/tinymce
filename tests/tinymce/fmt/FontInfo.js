@@ -35,6 +35,8 @@ ModuleLoader.require(["tinymce/fmt/FontInfo"], function(FontInfo) {
 		assertComputedFontProp('fontSize', '<span><mark></mark></span>', '10px');
 		assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', '10px');
 		assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', '14px');
+		assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', '14pt');
+		assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', '14em');
 		assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', '10px');
 		assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', '14px');
 		assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', '10px');
