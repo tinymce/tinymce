@@ -1,5 +1,5 @@
 asynctest(
-  'DropdownMenuSpecTest',
+  'DropdownMenuTest',
  
   [
     'ephox.agar.api.Assertions',
@@ -220,7 +220,8 @@ asynctest(
             sCheckActive,
             sCheckBackground,
             sCheckOthers,
-            store.sClear
+            store.sClear,
+            Step.wait(0)
           ])
         );
       };
