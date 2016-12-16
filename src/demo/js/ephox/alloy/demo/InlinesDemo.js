@@ -5,8 +5,11 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.InlineView',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoTemplates',
@@ -24,7 +27,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Sandboxing, InlineView, TieredMenu, EventHandler, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
+  function (Gui, GuiFactory, GuiTemplate, Positioning, Sandboxing, Button, InlineView, Input, TieredMenu, EventHandler, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -121,8 +124,19 @@ define(
           }
         },
 
-        onOpenMenu: function () { console.log('open.menu'); },
-        onOpenSubmenu: function () { console.log('open.sub.menu'); },
+        onOpenMenu: function (sandbox, menu) {
+          // handled by inline view itself
+        },
+
+        onOpenSubmenu: function (sandbox, item, submenu) {
+          var sink = lazySink().getOrDie();
+          Positioning.position(sink, {
+            anchor: 'submenu',
+            item: item,
+            bubble: Option.none()
+          }, submenu);
+
+        },
 
         data: {
           expansions: {
@@ -196,8 +210,6 @@ define(
           }
         }
       );
-
-      return;
       
 
       HtmlDisplay.section(
@@ -210,24 +222,25 @@ define(
           dom: {
             tag: 'div'
           },
-          keying: {
-            mode: 'cyclic',
-            selector: 'input'
+
+          behaviours: {
+            keying: {
+              mode: 'cyclic',
+              selector: 'input'
+            }
           },
           components: [
-            {
-              uiType: 'input',
+            Input.build({
               dom: {
                 styles: { display: 'block', 'margin-bottom': '50px' }
               }
-            },
-            {
-              uiType: 'input',
+            }),
+            Input.build({
               dom: {
                 styles: { display: 'block' }
               },
+
               events: {
-                // Want DOM focus. Focusing behaviour uses alloy focus.
                 focusin: EventHandler.nu({
                   run: function (input) {
                     var emptyAnchor = {
@@ -241,51 +254,47 @@ define(
                     };
 
                     var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                    InlineApis.setAnchor(inlineComp, anchor);
-                    Sandboxing.showSandbox(
-                      inlineComp, 
-                      Future.pure({
-                        uiType: 'custom',
-                        dom: {
-                          tag: 'div'
-                        },
+                    InlineView.showAt(inlineComp, anchor, {
+                      uiType: 'custom',
+                      dom: {
+                        tag: 'div'
+                      },
+
+                      behaviours: {
                         keying: {
                           mode: 'flow',
                           selector: 'button'
-                        },
-                        components: [
-                          {
-                            uiType: 'button',
-                            dom: {
-                              tag: 'button',
-                              innerHtml: 'B'
-                            },
-                            action: function () { console.log('inline bold'); }
+                        }
+                      },
+                      components: [
+                        Button.build({
+                          dom: {
+                            tag: 'button',
+                            innerHtml: 'B'
                           },
-                          {
-                            uiType: 'button',
-                            dom: {
-                              tag: 'button',
-                              innerHtml: 'I'
-                            },
-                            action: function () { console.log('inline italic'); }
+                          action: function () { console.log('inline bold'); }
+                        }),
+                        Button.build({
+                          dom: {
+                            tag: 'button',
+                            innerHtml: 'I'
                           },
-                          {
-                            uiType: 'button',
-                            dom: {
-                              tag: 'button',
-                              innerHtml: 'U'
-                            },
-                            action: function () { console.log('inline underline'); }
-                          }
-                        ]
-                      })
-                    ).get(function () { });
+                          action: function () { console.log('inline italic'); }
+                        }),
+                        Button.build({
+                          dom: {
+                            tag: 'button',
+                            innerHtml: 'U'
+                          },
+                          action: function () { console.log('inline underline'); }
+                        })
+                      ]
+
+                    });
                   }
                 })
               }
-            }
-
+            })
           ]
         }
       );
