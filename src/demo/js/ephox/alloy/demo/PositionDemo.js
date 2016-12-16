@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.HtmlDisplay',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, Positioning, Toggling, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
+  function (Gui, GuiFactory, Positioning, Toggling, Button, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -30,8 +31,10 @@ define(
         dom: {
           tag: 'div'
         },
-        positioning: {
-          useFixed: true
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
       });
 
@@ -63,8 +66,7 @@ define(
       var section1 = HtmlDisplay.section(
         gui,
         'Position anchoring to button',
-        {
-          uiType: 'button',
+        Button.build({
           dom: {
             tag: 'button',
             innerHtml: 'Toggle Popup'
@@ -83,10 +85,13 @@ define(
               Positioning.removeContainer(sink, popup);
             }
           },
-          toggling: {
-            toggleClass: 'demo-selected'
+
+          behaviours: {
+            toggling: {
+              toggleClass: 'demo-selected'
+            }
           }
-        }
+        })
       );
 
       var section2 = HtmlDisplay.section(
@@ -154,8 +159,7 @@ define(
               },
               uid: 'text-editor'
             },
-            {
-              uiType: 'button',
+            Button.build({
               dom: {
                 tag: 'button',
                 innerHtml: 'Show popup at cursor'
@@ -169,7 +173,7 @@ define(
                   ).element()
                 }, popup);
               }
-            }
+            })
           ]
         }
       );
@@ -198,7 +202,7 @@ define(
                 uid: 'frame-editor'
               }
             },
-            {
+            Button.build({
               uiType: 'button',
               dom: {
                 tag: 'button',
@@ -211,7 +215,7 @@ define(
                   root: Element.fromDom(frame.dom().contentWindow.document.body)
                 }, popup);
               }
-            }
+            })
           ]
         }
       );
