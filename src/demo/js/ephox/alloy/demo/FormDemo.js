@@ -5,7 +5,9 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.FormChooser',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.demo.HtmlDisplay',
@@ -23,7 +25,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, Keying, Representing, Form, FormField, Input, HtmlDisplay, Tagger, Objects, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
+  function (Gui, Keying, Representing, Tabstopping, Form, FormChooser, FormField, Input, HtmlDisplay, Tagger, Objects, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -205,31 +207,40 @@ define(
           field1: { type: 'text-input', label: 'Omega.1' },
           field2: { type: 'text-input', label: 'Omega.2' }
         },
-        alpha: FormField.build(Input, textMunger({ type: 'text-input', label: 'Alpha', inline: false })),
-        beta: FormField.build(Input, textMunger({ type: 'text-input', label: 'Beta', inline: false })),
-        gamma: {
-          type: 'radio-group',
-          members: {
-            radio: {
-              munge: function (data) {
-                return { uiType: 'custom' };
-              }
-            }
-          },
-          name: 'gamma',
-          candidates: [
-            { value: 'abra', text: 'Abra' },
-            { value: 'cad', text: 'Cad' },
-            { value: 'abra!', text: 'abra!' }
-          ]
-        },
-        delta: { type: 'text-input', label: 'Delta', inline: false },
-        epsilon: { type: 'text-input', label: 'Epsilon' },
-        rho: {
-          type: 'custom-radio-group',
+        alpha: FormField.build(Input, textMunger({ label: 'Alpha', inline: false })),
+        beta: FormField.build(Input, textMunger({ label: 'Beta', inline: false })),
+        gamma: FormField.build(Input, textMunger({ label: 'Gamma', inline: false })),
+        delta: FormField.build(Input, textMunger({ label: 'Delta', inline: false })),
+        epsilon: FormField.build(Input, textMunger({ label: 'Epsilon' })),
+        rho: FormChooser.build({
           radioStyle: 'icons',
+
+          parts: {
+            legend: {
+              dom: {
+                innerHtml: 'Rho'
+              }
+            },
+            choices: { }
+          },
+
+          markers: {
+            choiceClass: 'ephox-pastry-independent-button',
+            selectedClass: 'demo-selected'
+          },
+
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            FormChooser.parts().legend(),
+            FormChooser.parts().choices()
+          ],
+          behaviours: Objects.wrapAll([
+            Tabstopping.config(true)
+          ]),
           members: {
-            radio: {
+            choice: {
               munge: function (data) {
                 return {
                   uiType: 'custom',
@@ -267,12 +278,12 @@ define(
             }
           },
           name: 'rho',
-          candidates: [
+          choices: [
             { value: 'left', text: 'Left' },
             { value: 'middle', text: 'Middle' },
             { value: 'right', text: 'Right' }
           ]
-        },
+        }),
         theta: {
           type: 'select-input',
           label: 'AA',
@@ -300,25 +311,27 @@ define(
               }
             }
           },
-          parts: Objects.narrow(fieldParts, /*[ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]*/ [ 'alpha', 'beta' ]),
+          parts: Objects.narrow(fieldParts, [ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
 
           components: [
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-            // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
-            // {
-            //   uiType: 'container',
-            //   components: [
-            //     { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-            //     { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
-            //   ]
-            // },
-            // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+            {
+              uiType: 'container',
+              components: [
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
+              ]
+            },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
 
           ],
 
-          keying: {
-            mode: 'cyclic'
+          behaviours: {
+            keying: {
+              mode: 'cyclic'
+            }
           }
         })
       );
