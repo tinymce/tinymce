@@ -29,72 +29,74 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var groups = [
-        {
-          label: 'group-1',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+      var groups = function () {
+        return [
+          {
+            label: 'group-1',
+            items: [
+              { text: '1a', action: function () { } },
+              { text: '1b', action: function () { } },
+              { text: '1c', action: function () { } }
 
-          ]
-        },
-        {
-          label: 'group-2',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+            ]
+          },
+          {
+            label: 'group-2',
+            items: [
+              { text: '2a', action: function () { } },
+              { text: '2b', action: function () { } },
+              { text: '2c', action: function () { } }
 
-          ]
-        },
-        {
-          label: 'group-3',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+            ]
+          },
+          {
+            label: 'group-3',
+            items: [
+              { text: '3a', action: function () { } },
+              { text: '3b', action: function () { } },
+              { text: '3c', action: function () { } }
 
-          ]
-        },
-        {
-          label: 'group-4',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+            ]
+          },
+          {
+            label: 'group-4',
+            items: [
+              { text: '4a', action: function () { } },
+              { text: '4b', action: function () { } },
+              { text: '4c', action: function () { } }
 
-          ]
-        },
-        {
-          label: 'group-5',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+            ]
+          },
+          {
+            label: 'group-5',
+            items: [
+              { text: '5a', action: function () { } },
+              { text: '5b', action: function () { } },
+              { text: '5c', action: function () { } }
 
-          ]
-        },
-        {
-          label: 'group-6',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+            ]
+          },
+          {
+            label: 'group-6',
+            items: [
+              { text: '6a', action: function () { } },
+              { text: '6b', action: function () { } }
 
-          ]
-        },
-        {
-          label: 'group-7',
-          items: [
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
-            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
+            ]
+          },
+          {
+            label: 'group-7',
+            items: [
+              { text: '7a', action: function () { } },
+              { text: '7b', action: function () { } }
 
-          ]
-        }
-      ];
+            ]
+          }
+        ];
+      };
 
       var itemMunge = function (s) {
-        return Button.build({
+        return s.behaviours === undefined ? Button.build({
           'dom': {
             'tag': 'div',
             'attributes': {
@@ -103,7 +105,7 @@ define(
               'tabindex': '-1',
               'aria-labelledby': 'mceu_0',
               'role': 'button',
-              'aria-label': 'bullet list',
+              'aria-label': s.text,
               'aria-pressed': 'true'
             }
           },
@@ -141,6 +143,46 @@ define(
               toggleClass: 'mce-active'
             }
           }
+        }) : Button.build({
+          'dom': {
+            'tag': 'div',
+            'attributes': {
+              'id': 'mceu_0',
+              'class': 'mce-widget mce-btn mce-first',
+              'tabindex': '-1',
+              'aria-labelledby': 'mceu_0',
+              'role': 'button',
+              'aria-label': s.dom.innerHtml,
+              'aria-pressed': 'true'
+            }
+          },
+          action: s.action,
+          'components': [
+            {
+              uiType: 'custom',
+              'dom': {
+                'tag': 'button',
+                'attributes': {
+                  'role': 'presentation',
+                  'type': 'button',
+                  'tabindex': '-1'
+                }
+              },
+              'components': [
+                {
+                  'uiType': 'custom',
+                  'dom': {
+                    'tag': 'i',
+                    'attributes': {
+                      'class': 'mce-text mce-i-bullist'
+                    },
+                    innerHtml: s.dom.innerHtml
+                  },
+                  'components': []
+                }
+              ]
+            }
+          ]
         });
       };
 
@@ -178,13 +220,7 @@ define(
         return Merger.deepMerge(extra, {
           dom: {
             tag: 'div',
-            classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ],
-
-            styles: {
-              'overflow-x': 'auto',
-              'max-width': '200px',
-              display: 'flex'
-            }
+            classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
           },
           components: [
             { 
@@ -193,7 +229,9 @@ define(
 
               ]
             }
-          ]
+          ],
+
+          parts: { }
         });
       };
 
@@ -210,7 +248,12 @@ define(
             Toolbar.build(
               toolbarSpec({
                 dom: {
-                  tag: 'div'
+                  tag: 'div',
+                  styles: {
+                    'overflow-x': 'auto',
+                    'max-width': '200px',
+                    display: 'flex'
+                  }
                 },
                 parts: { },
 
@@ -226,12 +269,10 @@ define(
       );
 
       var toolbar1 = subject.components()[0];
-      var gps = Toolbar.createGroups(toolbar1, groups);
+      var gps = Toolbar.createGroups(toolbar1, groups());
       Toolbar.setGroups(toolbar1, gps);
 
-      return;
-
-      var toolbar2 = HtmlDisplay.section(
+      var subject2 = HtmlDisplay.section(
         gui,
         'This toolbar has overflow behaviour that uses a more drawer',
         {
@@ -241,79 +282,96 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            GuiTemplate.use(
-              Option.some('more.toolbar'),
-              TemplateToolstrip,
-              {
-                uid: 'demo-toolstrip',
-                uiType: 'more.toolbar',
-                parts: {
-                  primary: toolbarSpec({ }),
-                  more: toolbarSpec({ })
-                },
-                initGroups: groups,
+            SplitToolbar.build({
+              uid: 'demo-toolstrip',
+              dom: {
+                tag: 'div'
+              },
+              parts: {
+                primary: toolbarSpec({
+                  dom: {
+                    tag: 'div'
+                  },
+                  parts: { },
 
-                moreOpenClass: 'demo-sliding-open',
-                moreClosedClass: 'demo-sliding-closed',
-                moreGrowingClass: 'demo-sliding-height-growing',
-                moreShrinkingClass: 'demo-sliding-height-shrinking',
-
-                // overflowing: {
-                //   mode: 'scroll',
-                //   initWidth: '200px'
-                // },
-                // groups: groups,
-                // members: {
-                //   'group': {
-                //     munge: groupMunge
-                //   }
-                // }
-                members: {
-                  overflow: {
-                    munge: function (spec) {
-                      return GuiTemplate.use(
-                        Option.none(),
-                        TemplateTextButton,
-                        {
-
-                        },
-                        {
-                          fields: { }
-                        }
-                      );
+                  members: {
+                    group: {
+                      munge: groupMunge
                     }
+                  }
+                }),
+                overflow: toolbarSpec({
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      display: 'flex',
+                      'flex-wrap': 'wrap'
+                    }
+                  },
+                  parts: { },
+
+                  members: {
+                    group: {
+                      munge: groupMunge
+                    }
+                  }
+                }),
+                'overflow-button': {
+                  dom: {
+                    tag: 'button',
+                    innerHtml: 'More'
                   }
                 }
               },
-              {
-                fields: { }
+              initGroups: groups,
+
+              components: [
+                SplitToolbar.parts().primary(),
+                SplitToolbar.parts().overflow()
+              ],
+
+              markers: {
+                openStyle: 'demo-sliding-open',
+                closedStyle: 'demo-sliding-closed',
+                growingStyle: 'demo-sliding-height-growing',
+                shrinkingStyle: 'demo-sliding-height-shrinking'
+              },
+
+
+              // overflowing: {
+              //   mode: 'scroll',
+              //   initWidth: '200px'
+              // },
+              // groups: groups,
+              // members: {
+              //   'group': {
+              //     munge: groupMunge
+              //   }
+              // }
+              members: {
+                overflow: {
+                  munge: function (spec) {
+                    return GuiTemplate.use(
+                      Option.none(),
+                      TemplateTextButton,
+                      {
+
+                      },
+                      {
+                        fields: { }
+                      }
+                    );
+                  }
+                }
               }
-            )
+            })
           ]
         }
-        // {
-        //   uiType: 'more.toolbar',
-        //   uid: 'demo-more-toolbar',
-        //   groups: groups,
-        //   initWidth: '100px',
-          
-        //   dom: {
-        //     styles: {
-        //       // width: '300px',
-        //       // display: 'flex',
-        //       overflow: 'hidden'
-        //     }
-        //   },
-        //   overflowButton: {
-        //     uiType: 'button',
-        //     dom: {
-        //       tag: 'button',
-        //       innerHtml: '-More-'
-        //     }
-        //   }
-        // }
       );
 
+      var toolbar2 = subject2.components()[0];
+      var gps2 = Toolbar.createGroups(toolbar2, groups());
+      Toolbar.setGroups(toolbar2, gps2);
       toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
       
 

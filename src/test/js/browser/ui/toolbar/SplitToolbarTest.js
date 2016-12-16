@@ -4,20 +4,17 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.SplitToolbar',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
     'ephox.compass.Arr',
     'ephox.sugar.api.Css'
   ],
  
-  function (ApproxStructure, Assertions, Keyboard, Keys, Step, GuiFactory, Button, SplitToolbar, EventHandler, GuiSetup, TestPartialToolbarGroup, Arr, Css) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Button, SplitToolbar, GuiSetup, TestPartialToolbarGroup, Arr, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
