@@ -6,6 +6,8 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Input',
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Element',
@@ -16,11 +18,11 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Json, Option, Element, Insert, Remove, SelectorFind, Value, document) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, Button, Input, Json, Option, Element, Insert, Remove, SelectorFind, Value, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-   
+    // TODO: Change this to match the simplified UI templating model we have now.
 
       var page = {
         uiType: 'container',
@@ -32,35 +34,25 @@ define(
               innerHtml: 'Copy your HTML structure into this textarea and press <strong>Convert</strong>'
             }
           },
-          {
-            uiType: 'custom',
+          Input.build({
+            tag: 'textarea',
             dom: {
-              tag: 'textarea',
               styles: {
                 width: '90%',
                 height: '300px',
                 display: 'block'
               }
             },
-            uid: 'textarea-input',
-            representing: {
-              query: function (textarea) {
-                return Value.get(textarea.element());
-              },
-              set: function (textarea, newValue) {
-                Value.set(textarea.element(), newValue);
-              }
-            }
-          },
-          {
-            uiType: 'button',
+            uid: 'textarea-input'
+          }),
+          Button.build({
             dom: {
               tag: 'button',
               innerHtml: 'Convert'
             },
             action: function (button) {
               var textarea = button.getSystem().getByUid('textarea-input').getOrDie();
-              var value = Representing.getValue(textarea);
+              var value = Representing.getValue(textarea).value;
 
               var output = GuiTemplate.use(
                 Option.none(),
@@ -76,7 +68,7 @@ define(
               Remove.empty(display.element());
               Insert.append(display.element(), Element.fromText(prettyprint));
             }
-          },
+          }),
 
           {
             uiType: 'container',
