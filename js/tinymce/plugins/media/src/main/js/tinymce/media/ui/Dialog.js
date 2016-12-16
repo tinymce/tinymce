@@ -82,8 +82,7 @@ define('tinymce.media.ui.Dialog', [
 				Service.getEmbedHtml(editor, data)
 					.then(function (response) {
 						handleInsert(editor, response.html);
-					})
-					.catch(handleError(editor)); // eslint-disable-line
+					})["catch"](handleError(editor));
 			}
 		};
 	};
@@ -118,14 +117,16 @@ define('tinymce.media.ui.Dialog', [
 				onpaste: function () {
 					setTimeout(function () {
 						Service.getEmbedHtml(editor, win.toJSON())
-							.then(addEmbedHtml(win, editor))
-							.catch(handleError(editor)); // eslint-disable-line
+							.then(
+								addEmbedHtml(win, editor)
+							)["catch"](handleError(editor));
 					}, 1);
 				},
 				onchange: function (e) {
 					Service.getEmbedHtml(editor, win.toJSON())
-						.then(addEmbedHtml(win, editor))
-						.catch(handleError(editor)); // eslint-disable-line
+						.then(
+							addEmbedHtml(win, editor)
+						)["catch"](handleError(editor));
 
 					populateMeta(win, e.meta);
 				},
