@@ -108,10 +108,9 @@ define("tinymce/ui/FormatControls", [
 				};
 
 				editor.on('nodeChange', function(e) {
-					var fontFamily, firstFont, value = null;
+					var fontFamily, value = null;
 
 					fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
-					firstFont = fontFamily.split(',')[0];
 
 					each(items, function(item) {
 						if (item.value.toLowerCase() === fontFamily.toLowerCase()) {
@@ -120,7 +119,7 @@ define("tinymce/ui/FormatControls", [
 					});
 
 					each(items, function(item) {
-						if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(firstFont).toLowerCase()) {
+						if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(fontFamily).toLowerCase()) {
 							value = item.value;
 						}
 					});
@@ -128,7 +127,7 @@ define("tinymce/ui/FormatControls", [
 					self.value(value);
 
 					if (!value && fontFamily) {
-						self.text(fontFamily.split(',')[0]);
+						self.text(getFirstFont(fontFamily));
 					}
 				});
 			};
