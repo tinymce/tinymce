@@ -5,9 +5,12 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.ui.ExpandableFormApis',
+    'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.FormField',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
+    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
@@ -20,7 +23,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, Keying, Representing, ExpandableFormApis, HtmlDisplay, Tagger, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
+  function (Gui, Keying, Representing, Form, FormField, Input, HtmlDisplay, Tagger, Objects, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -57,12 +60,15 @@ define(
                   onEvent: 'input'
                 }
               }
+            },
+            label: {
+              dom: { tag: 'label', innerHtml: spec.label }
             }
           },
           components: [
-            { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' },
+            FormField.parts(Input).label(),
             { uiType: 'container', uid: invalidUid },
-            { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
+            FormField.parts(Input).field()
           ]
         });
       };
@@ -199,7 +205,7 @@ define(
           field1: { type: 'text-input', label: 'Omega.1' },
           field2: { type: 'text-input', label: 'Omega.2' }
         },
-        alpha: { type: 'text-input', label: 'Alpha', inline: false },
+        alpha: FormField.build(Input, textMunger({ type: 'text-input', label: 'Alpha', inline: false })),
         beta: { type: 'text-input', label: 'Beta', inline: false },
         gamma: {
           type: 'radio-group',
@@ -279,50 +285,49 @@ define(
         }
       };
 
-      // var form = HtmlDisplay.section(
-      //   gui,
-      //   'This form has many fields',
-      //   {
-      //     uiType: 'form',
-      //     dom: {
-      //       tag: 'div',
-      //       classes: [ 'outside-form' ]
-      //     },
-      //     members: {
-      //       ui: {
-      //         munge: function (spec) {
-      //           return mungers[spec.type](spec);
-      //         }
-      //       }
-      //     },
-      //     parts: fieldParts,
+      var form = HtmlDisplay.section(
+        gui,
+        'This form has many fields',
+        Form.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'outside-form' ]
+          },
+          members: {
+            ui: {
+              munge: function (spec) {
+                return mungers[spec.type](spec);
+              }
+            }
+          },
+          parts: Objects.narrow(fieldParts, /*[ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]*/ [ 'alpha' ]),
 
-      //     components: [
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
-      //       {
-      //         uiType: 'container',
-      //         components: [
-      //           { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-      //           { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
-      //         ]
-      //       },
-      //       { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+          components: [
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+            // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+            // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+            // {
+            //   uiType: 'container',
+            //   components: [
+            //     { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+            //     { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
+            //   ]
+            // },
+            // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
 
-      //     ],
+          ],
 
-      //     keying: {
-      //       mode: 'cyclic'
-      //     }
-      //   }
-      // );
+          keying: {
+            mode: 'cyclic'
+          }
+        })
+      );
 
-      // Representing.setValue(form, {
-      //   alpha: 'doggy',
-      //   beta: 'bottle',
-      //   gamma: 'cad'
-      // });
+      Representing.setValue(form, {
+        alpha: { value: 'doggy', text : 'doggy' },
+        beta: { value: 'bottle', text: 'bottle' },
+        gamma: { value: 'cad', text: 'cad' }
+      });
 
       var expform = HtmlDisplay.section(
         gui,
