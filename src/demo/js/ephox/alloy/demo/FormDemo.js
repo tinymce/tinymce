@@ -6,9 +6,13 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormChooser',
+    'ephox.alloy.api.ui.FormCoupledInputs',
     'ephox.alloy.api.ui.FormField',
+    'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
@@ -25,7 +29,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, Keying, Representing, Tabstopping, Form, FormChooser, FormField, Input, HtmlDisplay, Tagger, Objects, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
+  function (Gui, Keying, Representing, Tabstopping, Button, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, HtmlDisplay, Tagger, Objects, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -81,8 +85,8 @@ define(
             tag: 'div'
           },
           parts: {
-            'field-1': spec.field1,
-            'field-2': spec.field2,
+            'field1': spec.field1,
+            'field2': spec.field2,
             lock: { uiType: 'button', dom: { tag: 'button', innerHtml: 'x' }, tabstopping: true }
           },
           markers: {
@@ -94,9 +98,9 @@ define(
           },
 
           components: [
-            { uiType: 'placeholder', name: '<alloy.form.field-1>', owner: 'coupled-text-input' },
-            { uiType: 'placeholder', name: '<alloy.form.field-2>', owner: 'coupled-text-input' },
-            { uiType: 'placeholder', name: '<alloy.form.lock>', owner: 'coupled-text-input' }
+            FormCoupledInputs.parts().field1(),
+            FormCoupledInputs.parts().field2(),
+            FormCoupledInputs.parts().lock()
           ]
         });
       };
@@ -110,39 +114,42 @@ define(
             }
           },
           components: [
-            { uiType: 'placeholder', name: '<alloy.form.field-label>', owner: 'formlabel' },
+            FormField.parts(HtmlSelect).label(),
             {
               uiType: 'container',
               dom: {
                 classes: [ 'wrapper' ]
               },
               components: [
-                { uiType: 'placeholder', name: '<alloy.form.field-input>', owner: 'formlabel' }
+                FormField.parts(HtmlSelect).field()
               ]
             }
           ],
-          members: {
-            option: {
-              munge: function (spec) {
-                return {
-                  dom: {
-                    attributes: {
-                      value: spec.value
-                    },
-                    innerHtml: spec.text
-                  }
-                };
-              }
-            }
-          },
+          
           parts: {
             field: {
               dom: {
                 classes: [ 'ephox-select-wrapper' ]
               },
               tabstopping: true,
-              focusing: true
-            }
+              focusing: true,
+              options: spec.options,
+              members: {
+                option: {
+                  munge: function (spec) {
+                    return {
+                      dom: {
+                        attributes: {
+                          value: spec.value
+                        },
+                        innerHtml: spec.text
+                      }
+                    };
+                  }
+                }
+              }
+            },
+            label: { dom: { tag: 'label', innerHtml: spec.label } }
           }
         });
       };
@@ -201,99 +208,101 @@ define(
         'coupled-text-input': coupledTextMunger
       };
 
-      var fieldParts = {
-        omega: {
-          type: 'coupled-text-input',
-          field1: { type: 'text-input', label: 'Omega.1' },
-          field2: { type: 'text-input', label: 'Omega.2' }
-        },
-        alpha: FormField.build(Input, textMunger({ label: 'Alpha', inline: false })),
-        beta: FormField.build(Input, textMunger({ label: 'Beta', inline: false })),
-        gamma: FormField.build(Input, textMunger({ label: 'Gamma', inline: false })),
-        delta: FormField.build(Input, textMunger({ label: 'Delta', inline: false })),
-        epsilon: FormField.build(Input, textMunger({ label: 'Epsilon' })),
-        rho: FormChooser.build({
-          radioStyle: 'icons',
+      var fieldParts = function () {
+        return {
+          omega: FormCoupledInputs.build(
+            coupledTextMunger({
+              field1: textMunger({ label: 'omega-1', inline: false }),
+              field2: textMunger({ label: 'omega-2', inline: false })
+            })
+          ),
+          alpha: FormField.build(Input, textMunger({ label: 'Alpha', inline: false })),
+          beta: FormField.build(Input, textMunger({ label: 'Beta', inline: false })),
+          gamma: FormField.build(Input, textMunger({ label: 'Gamma', inline: false })),
+          delta: FormField.build(Input, textMunger({ label: 'Delta', inline: false })),
+          epsilon: FormField.build(Input, textMunger({ label: 'Epsilon' })),
+          rho: FormChooser.build({
+            radioStyle: 'icons',
 
-          parts: {
-            legend: {
-              dom: {
-                innerHtml: 'Rho'
+            parts: {
+              legend: {
+                dom: {
+                  innerHtml: 'Rho'
+                }
+              },
+              choices: { }
+            },
+
+            markers: {
+              choiceClass: 'ephox-pastry-independent-button',
+              selectedClass: 'demo-selected'
+            },
+
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              FormChooser.parts().legend(),
+              FormChooser.parts().choices()
+            ],
+            behaviours: Objects.wrapAll([
+              Tabstopping.config(true)
+            ]),
+            members: {
+              choice: {
+                munge: function (data) {
+                  return {
+                    uiType: 'custom',
+                    dom: {
+                      tag: 'span',
+                      classes: [ 'ephox-pastry-independent-button' ],
+                      attributes: {
+                        title: data.text
+                      },
+                      styles: {
+                        display: 'flex'
+                      }
+                    },
+
+  // <span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container ephox-polish-dialog-float-selected" unselectable="on" tabindex="-1" data-float-value="none" 
+  //   title="Align None" aria-label="Align None" role="radio" aria-checked="true" style="-webkit-user-select: none;">
+  //                 <div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon">
+  //                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div>
+  //                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div>
+  //                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div>
+  //                 </div>
+  //               </span>
+
+
+                    label: 'Alignment',
+                    parts: {
+                      legend: { },
+                      fields: { }
+                    },
+                    markers: {
+                      radioSelector: 'input[type="radio"]'
+                    }
+                  };
+                }
               }
             },
-            choices: { }
-          },
-
-          markers: {
-            choiceClass: 'ephox-pastry-independent-button',
-            selectedClass: 'demo-selected'
-          },
-
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            FormChooser.parts().legend(),
-            FormChooser.parts().choices()
-          ],
-          behaviours: Objects.wrapAll([
-            Tabstopping.config(true)
-          ]),
-          members: {
-            choice: {
-              munge: function (data) {
-                return {
-                  uiType: 'custom',
-                  dom: {
-                    tag: 'span',
-                    classes: [ 'ephox-pastry-independent-button' ],
-                    attributes: {
-                      title: data.text
-                    },
-                    styles: {
-                      display: 'flex'
-                    }
-                  },
-
-// <span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container ephox-polish-dialog-float-selected" unselectable="on" tabindex="-1" data-float-value="none" 
-//   title="Align None" aria-label="Align None" role="radio" aria-checked="true" style="-webkit-user-select: none;">
-//                 <div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon">
-//                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div>
-//                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div>
-//                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div>
-//                 </div>
-//               </span>
-
-
-                  label: 'Alignment',
-                  parts: {
-                    legend: { },
-                    fields: { }
-                  },
-                  markers: {
-                    radioSelector: 'input[type="radio"]'
-                  }
-                };
-              }
-            }
-          },
-          name: 'rho',
-          choices: [
-            { value: 'left', text: 'Left' },
-            { value: 'middle', text: 'Middle' },
-            { value: 'right', text: 'Right' }
-          ]
-        }),
-        theta: {
-          type: 'select-input',
-          label: 'AA',
-          options: [
-            { value: 'a.a', text: 'A.A' },
-            { value: 'b.b', text: 'B.B' },
-            { value: 'c.c', text: 'C.C' },
-            { value: 'd.d', text: 'D.D' }
-          ]        
-        }
+            name: 'rho',
+            choices: [
+              { value: 'left', text: 'Left' },
+              { value: 'middle', text: 'Middle' },
+              { value: 'right', text: 'Right' }
+            ]
+          }),
+          theta: FormField.build(HtmlSelect, selectMunger({
+            label: 'AA',
+            options: [
+              { value: 'a.a', text: 'A.A' },
+              { value: 'b.b', text: 'B.B' },
+              { value: 'c.c', text: 'C.C' },
+              { value: 'd.d', text: 'D.D' }
+            ]        
+          }))
+        };
       };
 
       var form = HtmlDisplay.section(
@@ -305,7 +314,7 @@ define(
             classes: [ 'outside-form' ]
           },
        
-          parts: Objects.narrow(fieldParts, [ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
+          parts: Objects.narrow(fieldParts(), [ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
 
           components: [
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
@@ -336,13 +345,10 @@ define(
         gamma: { value: 'cad', text: 'cad' }
       });
 
-      return;
-
       var expform = HtmlDisplay.section(
         gui,
         'This form expands',
-        {
-          uiType: 'expandable-form',
+        ExpandableForm.build({
           dom: {
             tag: 'div',
             classes: [ 'expandable-form' ]
@@ -355,171 +361,85 @@ define(
             }
           },
           markers: {
+            expandedClass: 'a',
+            collapsedClass: 'b',
             closedStyle: 'demo-sliding-closed',
             openStyle: 'demo-sliding-open',
             shrinkingStyle: 'demo-sliding-height-shrinking',
             growingStyle: 'demo-sliding-height-growing'
           },
-          parts: Merger.deepMerge(
-            fieldParts,
-            {
-              'minimal-form': {
-                uiType: 'container',
-                dom: {
-                  classes: [ 'form-section' ]
-                },
-                components: [
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.omega>' },
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.theta>' }
-                ]
+          parts: {
+            'minimal': {
+              dom: {
+                tag: 'div',
+                classes: [ 'form-section' ]
               },
-              'extra-form': {
-                uiType: 'container',
-                dom: {
-                  classes: [ 'form-section' ]
-                },
-                components: [
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' },
-                  { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
-                ]
+              parts: Objects.narrow(fieldParts(), [ 'omega', 'alpha', 'theta' ]),
+              components: [
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.omega>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.theta>' }
+              ]
+            },
+            'extra': {
+              dom: {
+                tag: 'div',
+                classes: [ 'form-section' ]
               },
-              'expander': {
-                dom: {
-                  tag: 'button',
-                  innerHtml: 'v'
-                },
-                keying: {
-                  mode: 'execution'
-                },
-                tabstopping: true
+              parts: Objects.narrow(fieldParts(), [ 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
+              components: [
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' },
+                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+              ]
+            },
+            'expander': {
+              dom: {
+                tag: 'button',
+                innerHtml: 'v'
               },
-              'controls': {
-                uiType: 'container',
-                tabstopping: true,
-                keying: {
-                  mode: 'flow',
-                  selector: 'button'
-                },
-                components: [
-                  { uiType: 'button', dom: { tag: 'button', innerHtml: 'OK' } }
-                ]
-              }
+              keying: {
+                mode: 'execution'
+              },
+              tabstopping: true
+            },
+            'controls': {
+              dom: {
+                tag: 'div'
+              },
+              tabstopping: true,
+              keying: {
+                mode: 'flow',
+                selector: 'button'
+              },
+              components: [
+                Button.build({ dom: { tag: 'button', innerHtml: 'OK' } })
+              ]
             }
-          ),
+          },
 
           components: [
-            { uiType: 'placeholder', name: '<alloy.expandable-form.minimal-form>', owner: 'expandable-form' },
-            { uiType: 'placeholder', name: '<alloy.expandable-form.extra-form>', owner: 'expandable-form' },
-            { uiType: 'placeholder', name: '<alloy.expandable-form.expander>', owner: 'expandable-form' },
-            { uiType: 'placeholder', name: '<alloy.expandable-form.controls>', owner: 'expandable-form' }
+            ExpandableForm.parts().minimal(),
+            ExpandableForm.parts().extra(),
+            ExpandableForm.parts().expander(),
+            ExpandableForm.parts().controls()
           ],
-          keying: {
-            mode: 'cyclic',
-            visibilitySelector: '.form-section'
-          }
-        }
+          behaviours: Objects.wrapAll([
+            Keying.config({
+              mode: 'cyclic',
+              visibilitySelector: '.form-section'
+            })
+          ])
+        })
       );
 
       Keying.focusIn(expform);
 
       setTimeout(function () {
-        ExpandableFormApis.toggleForm(expform);
+        ExpandableForm.toggleForm(expform);
       }, 1000);
-
-      var slideform = HtmlDisplay.section(
-        gui,
-        'This is a sliding form',
-        {
-          uiType: 'slide-form',
-          dom: {
-            tag: 'div',
-            classes: [ 'outside-slide-form' ]
-          },
-          members: {
-            ui: {
-              munge: function (spec) {
-                return mungers[spec.type](spec);
-              }
-            }
-          },
-          parts: Merger.deepMerge(
-            fieldParts,
-            {
-              left: {
-                dom: { tag: 'button', innerHtml: '<' }
-              },
-              right: {
-                dom: { tag: 'button', innerHtml: '>' }
-              },
-              tabbar: {
-                dom: {
-                  tag: 'span'
-                },
-                members: {
-                  tab: {
-                    munge: function (spec) {
-                      return Merger.deepMerge(
-                        spec,
-                        {
-                          dom: {
-                            tag: 'span',
-                            classes: [ 'dot' ]
-                          }
-                        }
-                      );
-                    }
-                  }
-                },
-                markers: {
-                  tabClass: 'dot',
-                  selectedClass: 'selected-dot'
-                },
-                parts: {
-                  tabs: { }
-                },
-                components: [
-                  { uiType: 'placeholder', name: '<alloy.tabs>', owner: 'tabbar' }
-                ]
-              },
-              tabview: {
-
-              }
-            }
-          ),
-          components: [
-            { uiType: 'placeholder', name: '<alloy.tabview>', owner: 'tabbing' },
-            {
-              uiType: 'container',
-              dom: { classes: [ 'dot-container' ] },
-              components: [
-                { uiType: 'placeholder', name: '<alloy.slide-form.left>', owner: 'slide-form' },
-                { uiType: 'placeholder', name: '<alloy.tabbar>', owner: 'tabbing' },
-                { uiType: 'placeholder', name: '<alloy.slide-form.right>', owner: 'slide-form' }
-              ]
-            }
-          ],
-          fields: fieldParts,
-          fieldOrder: [
-            // 'alpha',
-            'beta',
-            // 'gamma',
-            'delta'
-          ],
-          keying: {
-            mode: 'cyclic'
-          }
-        }
-      );
-
-      // Representing.setValue(slideform, {
-      //   delta: 'dog'
-      // });
-
-      // window.SC = slideform;
     };
   }
 );
