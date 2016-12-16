@@ -6,7 +6,8 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.api.ui.InlineApis',
+    'ephox.alloy.api.ui.InlineView',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
@@ -23,7 +24,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Sandboxing, InlineApis, EventHandler, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
+  function (Gui, GuiFactory, GuiTemplate, Sandboxing, InlineView, TieredMenu, EventHandler, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -41,8 +42,10 @@ define(
             'min-height': '10px'
           }
         },
-        positioning: {
-          useFixed: true
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
       });
 
@@ -53,14 +56,17 @@ define(
 
       // Note, this should not in the GUI. It will be connected
       // when it opens.
-      var inlineComp = GuiFactory.build({
-        uiType: 'inline',
-        uid: 'inline-comp',
-        lazySink: Fun.constant(Result.value(sink))
-      });
+      var inlineComp = GuiFactory.build(
+        InlineView.build({
+          uid: 'inline-comp',
+          dom: {
+            tag: 'div'
+          },
+          lazySink: Fun.constant(Result.value(sink))
+        })
+      );
 
-      var inlineMenu = GuiFactory.build({
-        uiType: 'inline-view',
+      var inlineMenu = TieredMenu.build({
         dom: {
           tag: 'div'
         },
@@ -71,48 +77,87 @@ define(
           });
         },
 
+        onEscape: function () {
+          console.log('inline.menu.escape');
+          return Option.some(true);
+        },
+
         onExecute: function () {
-          console.log('here', arguments);
+          console.log('inline.menu.execute')
         },
 
         lazySink: lazySink,
 
-        view: {
-          style: 'layered',
-          markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu'
-          },
-        
-          members: {
-            menu: {
-              munge: function (spec) {
-                return GuiTemplate.use(
-                  Option.none(),
-                  TemplateMenu,
-                  { },
-                  {
-                    fields: {
-                      'aria-label': spec.textkey
-                    }
-                  }
-                );
-              }
-            },
-            item: {
-              munge: function (spec) {
-                return DemoTemplates.item(spec);
-              }
+        members: { 
+          item: {
+            munge: function (itemSpec) {
+              return {
+                dom: {
+                  tag: 'div',
+                  attributes: {
+                    'data-value': itemSpec.data.value
+                  },
+                  classes: [ 'alloy-item' ],
+                  innerHtml: itemSpec.data.text
+                },
+                components: [ ]
+              };              
             }
-            // menu: GuiTempalte.use(TemplateMenu)
-            // dom: {
-            //   tag: 'div'  
-            // },
-            // itemDefn: { }            
           },
-          scaffold: Fun.identity
+          menu: {
+            munge: function (menuSpec) {
+              return {
+                dom: {
+                  tag: 'div',
+                  attributes: {
+                    'data-value': menuSpec.value
+                  },
+                  classes: [ 'alloy-menu' ]
+                },
+                components: [ ],
+                shell: true
+              };
+            }
+          }
+        },
+
+        onOpenMenu: function () { console.log('open.menu'); },
+        onOpenSubmenu: function () { console.log('open.sub.menu'); },
+
+        data: {
+          expansions: {
+            'gamma': 'gamma-menu'
+          },
+          menus: {
+            dog: {
+              value: 'dog',
+              items: [
+                { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
+                { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } },
+                { type: 'item', data: { value: 'gamma', text: 'Gamma', 'item-class': 'gamma' } },
+                { type: 'item', data: { value: 'delta', text: 'Delta', 'item-class': 'delta' } }
+
+              ],
+              textkey: 'Dog'
+            },
+            'gamma-menu': {
+              value: 'gamma-menu',
+              items: [
+                { type: 'item', data: { value: 'gamma-1', text: 'Gamma-1', 'item-class': 'gamma-1' } },
+                { type: 'item', data: { value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' } },
+              ],
+              textkey: 'gamma-menu'
+            }
+          },
+          primary: 'dog'
+        },
+
+        markers: {
+          item: 'alloy-item',
+          selectedItem: 'alloy-selected-item',
+          menu: 'alloy-menu',
+          selectedMenu: 'alloy-selected-menu',
+          backgroundMenu: 'alloy-background-menu'
         }
       });
 
@@ -140,44 +185,19 @@ define(
             contextmenu: EventHandler.nu({
               run: function (component, simulatedEvent) {
                 simulatedEvent.event().kill();
-                InlineApis.setAnchor(inlineMenu, {
+                console.log('inlineMenu', inlineMenu);
+                InlineView.showAt(inlineComp, {
                   anchor: 'makeshift',
                   x: simulatedEvent.event().x(),
                   y: simulatedEvent.event().y()
-                });
-                Sandboxing.showSandbox(
-                  inlineMenu, 
-                  Future.pure({
-                    expansions: {
-                      'gamma': 'gamma-menu'
-                    },
-                    menus: {
-                      dog: {
-                        items: [
-                          { type: 'item', value: 'alpha', text: 'Alpha', 'item-class': 'alpha' },
-                          { type: 'item', value: 'beta', text: 'Beta', 'item-class': 'beta' },
-                          { type: 'item', value: 'gamma', text: 'Gamma', 'item-class': 'gamma' },
-                          { type: 'item', value: 'delta', text: 'Delta', 'item-class': 'delta' }
-
-                        ],
-                        textkey: 'Dog'
-                      },
-                      'gamma-menu': {
-                        items: [
-                          { type: 'item', value: 'gamma-1', text: 'Gamma-1', 'item-class': 'gamma-1' },
-                          { type: 'item', value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' },
-                        ],
-                        textkey: 'gamma-menu'
-                      }
-                    },
-                    primary: 'dog'
-                  })
-                ).get(Fun.identity);
+                }, inlineMenu);
               }
             })
           }
         }
       );
+
+      return;
       
 
       HtmlDisplay.section(
