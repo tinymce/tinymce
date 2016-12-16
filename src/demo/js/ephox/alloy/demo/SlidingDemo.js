@@ -4,14 +4,16 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.boulder.api.Objects',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, Sliding, HtmlDisplay, Class, Element, Insert, document) {
+  function (Gui, Sliding, Button, HtmlDisplay, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -27,19 +29,24 @@ define(
             {
               uiType: 'container',
               uid: 'height-slider',
-              sliding: {
-                mode: 'height',
-                closedStyle: 'demo-sliding-closed',
-                openStyle: 'demo-sliding-open',
-                shrinkingStyle: 'demo-sliding-height-shrinking',
-                growingStyle: 'demo-sliding-height-growing',
-                onShrunk: function () {
-                  console.log('height.slider.shrunk');
-                },
-                onGrown: function () {
-                  console.log('height.slider.grown');
-                }
-              },
+
+              behaviours: Objects.wrapAll([
+                Sliding.config({
+                  dimension: {
+                    property: 'height'
+                  },
+                  closedStyle: 'demo-sliding-closed',
+                  openStyle: 'demo-sliding-open',
+                  shrinkingStyle: 'demo-sliding-height-shrinking',
+                  growingStyle: 'demo-sliding-height-growing',
+                  onShrunk: function () {
+                    console.log('height.slider.shrunk');
+                  },
+                  onGrown: function () {
+                    console.log('height.slider.grown');
+                  }
+                })
+              ]),
               components: [
                 {
                   uiType: 'container',
@@ -50,8 +57,7 @@ define(
               ]
             },
 
-            {
-              uiType: 'button',
+            Button.build({
               dom: {
                 tag: 'button',
                 innerHtml: 'Toggle'
@@ -61,7 +67,7 @@ define(
                 if (Sliding.hasGrown(slider)) Sliding.shrink(slider);
                 else Sliding.grow(slider);
               }
-            }
+            })
           ]
         }
       );
@@ -75,19 +81,25 @@ define(
             {
               uiType: 'container',
               uid: 'width-slider',
-              sliding: {
-                mode: 'width',
-                closedStyle: 'demo-sliding-closed',
-                openStyle: 'demo-sliding-open',
-                shrinkingStyle: 'demo-sliding-width-shrinking',
-                growingStyle: 'demo-sliding-width-growing',
-                onShrunk: function () {
-                  console.log('width.slider.shrunk');
-                },
-                onGrown: function () {
-                  console.log('width.slider.grown');
-                }
-              },
+
+              behaviours: Objects.wrapAll([
+                Sliding.config({
+                  dimension: {
+                    property: 'width'
+                  },
+                  closedStyle: 'demo-sliding-closed',
+                  openStyle: 'demo-sliding-open',
+                  shrinkingStyle: 'demo-sliding-width-shrinking',
+                  growingStyle: 'demo-sliding-width-growing',
+                  onShrunk: function () {
+                    console.log('width.slider.shrunk');
+                  },
+                  onGrown: function () {
+                    console.log('width.slider.grown');
+                  }
+                })
+              ]),
+             
               components: [
                 {
                   uiType: 'container',
@@ -98,8 +110,7 @@ define(
               ]
             },
 
-            {
-              uiType: 'button',
+            Button.build({
               dom: {
                 tag: 'button',
                 innerHtml: 'Toggle'
@@ -109,7 +120,7 @@ define(
                 if (Sliding.hasGrown(slider)) Sliding.shrink(slider);
                 else Sliding.grow(slider);
               }
-            }
+            })
           ]
         }
       );
