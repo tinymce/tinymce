@@ -206,7 +206,7 @@ define(
           field2: { type: 'text-input', label: 'Omega.2' }
         },
         alpha: FormField.build(Input, textMunger({ type: 'text-input', label: 'Alpha', inline: false })),
-        beta: { type: 'text-input', label: 'Beta', inline: false },
+        beta: FormField.build(Input, textMunger({ type: 'text-input', label: 'Beta', inline: false })),
         gamma: {
           type: 'radio-group',
           members: {
@@ -300,11 +300,11 @@ define(
               }
             }
           },
-          parts: Objects.narrow(fieldParts, /*[ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]*/ [ 'alpha' ]),
+          parts: Objects.narrow(fieldParts, /*[ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]*/ [ 'alpha', 'beta' ]),
 
           components: [
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-            // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
             // { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
             // {
             //   uiType: 'container',
@@ -328,6 +328,8 @@ define(
         beta: { value: 'bottle', text: 'bottle' },
         gamma: { value: 'cad', text: 'cad' }
       });
+
+      return;
 
       var expform = HtmlDisplay.section(
         gui,
