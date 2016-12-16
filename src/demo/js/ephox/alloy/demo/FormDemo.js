@@ -304,13 +304,7 @@ define(
             tag: 'div',
             classes: [ 'outside-form' ]
           },
-          members: {
-            ui: {
-              munge: function (spec) {
-                return mungers[spec.type](spec);
-              }
-            }
-          },
+       
           parts: Objects.narrow(fieldParts, [ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
 
           components: [
