@@ -4,7 +4,10 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiTemplate',
-    'ephox.alloy.api.ui.SplitToolbarApis',
+    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.SplitToolbar',
+    'ephox.alloy.api.ui.Toolbar',
+    'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.highway.Merger',
     'ephox.perhaps.Option',
@@ -19,7 +22,7 @@ define(
     'text!dom-templates/tinymce.toolstrip.html'
   ],
 
-  function (Gui, GuiTemplate, SplitToolbarApis, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
+  function (Gui, GuiTemplate, Button, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -30,131 +33,168 @@ define(
         {
           label: 'group-1',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         },
         {
           label: 'group-2',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         },
         {
           label: 'group-3',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         },
         {
           label: 'group-4',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         },
         {
           label: 'group-5',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         },
         {
           label: 'group-6',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         },
         {
           label: 'group-7',
           items: [
-            { uiType: 'button', action: function () { } },
-            { uiType: 'button', action: function () { } }
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } }),
+            Button.build({ dom: { tag: 'button', innerHtml: 'a' }, action: function () { } })
 
           ]
         }
       ];
 
       var itemMunge = function (s) {
-        return Merger.deepMerge(
-          GuiTemplate.use(
-            Option.none(),
-            TemplateButton,
-            {
-              uiType: 'button',
-              action: s.action !== undefined ? s.action : function () {
-                console.log('clicked on button', s);
-              },
-              toggling: {
-                toggleClass: 'mce-active'
-              }
-            }, {
-              fields: { }
+        return Button.build({
+          'dom': {
+            'tag': 'div',
+            'attributes': {
+              'id': 'mceu_0',
+              'class': 'mce-widget mce-btn mce-first',
+              'tabindex': '-1',
+              'aria-labelledby': 'mceu_0',
+              'role': 'button',
+              'aria-label': 'bullet list',
+              'aria-pressed': 'true'
             }
-          ),
-          s
-        );
+          },
+          'components': [
+            {
+              'dom': {
+                'tag': 'button',
+                'attributes': {
+                  'role': 'presentation',
+                  'type': 'button',
+                  'tabindex': '-1'
+                }
+              },
+              'components': [
+                {
+                  'uiType': 'custom',
+                  'dom': {
+                    'tag': 'i',
+                    'attributes': {
+                      'class': 'mce-ico mce-i-bullist'
+                    }
+                  },
+                  'components': []
+                }
+              ],
+              'uiType': 'custom'
+            }
+          ],
+          action: s.action !== undefined ? s.action : function () {
+            console.log('clicked on button', s);
+          },
+
+          behaviours: {
+            toggling: {
+              toggleClass: 'mce-active'
+            }
+          }
+        });
       };
 
       var groupMunge = function (s) {
-        console.log('s', s);
-        return GuiTemplate.use(
-          Option.some('toolbar-group'),
-          TemplateGroup,
-          {
-            items: s.items,
-            members: {
-              'item': {
-                munge: itemMunge
-              }
-            },
-            markers: {
-              itemClass: 'dog'
+        return {
+          dom: {
+            tag: 'div',
+            classes: [ 'mce-container', 'mce-flow-layout-item', 'mce-btn-group' ]
+          },
+
+          members: {
+            item: {
+              munge: itemMunge
             }
           },
-          {
-            fields: { }
-          }
-        );
+
+          markers: {
+            itemClass: 'mce-btn'
+          },
+
+          components: [
+            {
+              uiType: 'custom',
+              dom: { tag: 'div' },
+              components: [
+                ToolbarGroup.parts().items()
+              ]
+            }
+          ],
+          items: s.items
+        };
       };
 
       var toolbarSpec = function (extra) {
-        return Merger.deepMerge(
-          extra,
-          GuiTemplate.use(
-            Option.some('toolbar'),
-            TemplateToolbar,
-            {
-              uiType: 'toolbar',
-              members: {
-                'group': {
-                  munge: groupMunge
-                }
-              },
-              parts: {
-                groups: { }
-              }
-            },
-            {
-              fields: { }
+        return Merger.deepMerge(extra, {
+          dom: {
+            tag: 'div',
+            classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ],
+
+            styles: {
+              'overflow-x': 'auto',
+              'max-width': '200px',
+              display: 'flex'
             }
-          )
-        );
+          },
+          components: [
+            { 
+              uiType: 'container',
+              components: [
+
+              ]
+            }
+          ]
+        });
       };
 
       var subject = HtmlDisplay.section(
@@ -167,16 +207,29 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            toolbarSpec({
-              initGroups: groups,
-              overflowing: {
-                mode: 'scroll',
-                initWidth: '200px'
-              }
-            })
+            Toolbar.build(
+              toolbarSpec({
+                dom: {
+                  tag: 'div'
+                },
+                parts: { },
+
+                members: {
+                  group: {
+                    munge: groupMunge
+                  }
+                }
+              })
+            )
           ]
         }
       );
+
+      var toolbar1 = subject.components()[0];
+      var gps = Toolbar.createGroups(toolbar1, groups);
+      Toolbar.setGroups(toolbar1, gps);
+
+      return;
 
       var toolbar2 = HtmlDisplay.section(
         gui,
@@ -261,11 +314,11 @@ define(
         // }
       );
 
-      toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbarApis.refresh);
+      toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
       
 
       window.addEventListener('resize', function () {
-        toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbarApis.refresh);
+        toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
       });
     };
   }
