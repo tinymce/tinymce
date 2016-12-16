@@ -129,46 +129,49 @@ define(
 
       HtmlDisplay.section(gui,
         'An example of a typeahead component',
-        Typeahead.build(function (parts) {
-          return {
-            minChars: 1,
-            lazySink: lazySink,
-            dom: {
-              tag: 'input'
-            },
+        Typeahead.build({
+          minChars: 1,
+          lazySink: lazySink,
+          dom: {
+            tag: 'input'
+          },
 
-            parts: {
-              menu: listMenu
-            },
-            fetch: function (input) {
-              var text = Value.get(input.element());
-              console.log('text', text);
-              var matching = Arr.bind(dataset, function (d) {
-                var index = d.indexOf(text.toLowerCase());
-                if (index > -1) {
-                  var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
-                    d.substring(index + text.length);
-                  return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
-                } else {
-                  return [ ];
-                }
-              });
+          parts: {
+            menu: listMenu
+          },
 
-              var matches = matching.length > 0 ? matching : [
-                { type: 'separator', text: 'No items' }
-              ];
-     
-              var future = Future.pure(matches);
-              return future.map(function (items) {
-                return MenuData.simple('blah', 'Blah', items);
-              });
-            },
-            onExecute: function (sandbox, item, itemValue) {
-              var value = Representing.getValue(item);
-              return Option.some(true);
-              console.log('*** typeahead menu demo execute on: ' + value + ' ***');
-            }
-          };
+          markers: {
+            openClass: 'demo-typeahead-open'
+          },
+
+          fetch: function (input) {
+            var text = Value.get(input.element());
+            console.log('text', text);
+            var matching = Arr.bind(dataset, function (d) {
+              var index = d.indexOf(text.toLowerCase());
+              if (index > -1) {
+                var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
+                  d.substring(index + text.length);
+                return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
+              } else {
+                return [ ];
+              }
+            });
+
+            var matches = matching.length > 0 ? matching : [
+              { type: 'separator', text: 'No items' }
+            ];
+   
+            var future = Future.pure(matches);
+            return future.map(function (items) {
+              return MenuData.simple('blah', 'Blah', items);
+            });
+          },
+          onExecute: function (sandbox, item, itemValue) {
+            var value = Representing.getValue(item);
+            return Option.some(true);
+            console.log('*** typeahead menu demo execute on: ' + value + ' ***');
+          }
         })
       );
     };
