@@ -28,16 +28,16 @@ tinymce.PluginManager.add('advlist', function(editor) {
 
 	function buildMenuItems(listName, styleValues) {
 		var items = [];
-
-		tinymce.each(styleValues.split(/[ ,]/), function(styleValue) {
-			items.push({
-				text: styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function(chr) {
-					return chr.toUpperCase();
-				}),
-				data: styleValue == 'default' ? '' : styleValue
+		if (styleValues) {
+			tinymce.each(styleValues.split(/[ ,]/), function(styleValue) {
+				items.push({
+					text: styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function(chr) {
+						return chr.toUpperCase();
+					}),
+					data: styleValue == 'default' ? '' : styleValue
+				});
 			});
-		});
-
+		}
 		return items;
 	}
 
@@ -109,7 +109,7 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		});
 
 		editor.addButton('numlist', {
-			type: 'splitbutton',
+			type: (olMenuItems.length > 0) ? 'splitbutton' : 'button',
 			tooltip: 'Numbered list',
 			menu: olMenuItems,
 			onPostRender: listState('OL'),
@@ -123,7 +123,7 @@ tinymce.PluginManager.add('advlist', function(editor) {
 		});
 
 		editor.addButton('bullist', {
-			type: 'splitbutton',
+			type: (ulMenuItems.length > 0) ? 'splitbutton' : 'button',
 			tooltip: 'Bullet list',
 			onPostRender: listState('UL'),
 			menu: ulMenuItems,
