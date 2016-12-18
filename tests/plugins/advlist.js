@@ -190,4 +190,27 @@ ModuleLoader.require([
 		expectedContent: '<ol><li>a<ul><li>b</li></ul></li></ol>',
 		expectedSelection: ['li:nth-child(1)', 0]
 	});
+
+	test("Replace splitbutton control with button when advlist_number_styles/advlist_bullet_styles are empty", function() {
+		QUnit.stop();
+
+		// destroy existing instance
+		editor.destroy();
+
+		tinymce.init({
+            selector:'textarea',
+            advlist_bullet_styles: '',
+			advlist_number_styles: '',
+            plugins: 'advlist lists',
+            toolbar: 'numlist bullist',
+			init_instance_callback: function(ed) {
+				QUnit.start();
+
+				equal(ed.buttons.numlist.type, 'button');
+				deepEqual(ed.buttons.numlist.menu.length, 0);
+				equal(ed.buttons.bullist.type, 'button');
+				deepEqual(ed.buttons.bullist.menu.length, 0);
+			}
+        });
+	});
 });
