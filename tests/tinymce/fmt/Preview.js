@@ -10,6 +10,8 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
                 skin: false,
                 entities: 'raw',
                 indent: false,
+                custom_elements: '~custom',
+                extended_valid_elements: 'custom',
                 init_instance_callback: function (ed) {
                     editor = ed;
                     QUnit.start();
@@ -32,7 +34,10 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
             'Bold not found in preview style');
 
         ok(!/font-weight\:(bold|700)/.test(getCssText({inline: 'b', preview: 'font-size'})),
-            'Bold should not be when only we only preview font-size');
+            'Bold should not be when we only preview font-size');
+
+        ok(/color\:rgb\(255, 0, 0\)/.test(getCssText({inline: 'custom', styles: {color: '#ff0000'}})),
+            'Test preview of a custom element.');
 
         editor.dom.addStyle(
             'table .preview {' +
@@ -141,47 +146,46 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
             }
         ], 'div.class1 > ol.class2 + ul > li:hover ok');
 
-				deepEqual(Preview.parseSelector('.class > *'), [
-            {
-								name: "div",
-								selector: "*",
-								attrs: {},
-								classes: []
-						},
-						{
-								name: "div",
-								selector: ".class",
-								classes: ["class"],
-								attrs: {}
-						}
-        ], '.class > * ok');
+            deepEqual(Preview.parseSelector('.class > *'), [
+                {
+                    name: "div",
+                    selector: "*",
+                    attrs: {},
+                    classes: []
+                },
+                {
+                    name: "div",
+                    selector: ".class",
+                    classes: ["class"],
+                    attrs: {}
+                }
+            ], '.class > * ok');
 
-				deepEqual(Preview.parseSelector('p + *'), [
+            deepEqual(Preview.parseSelector('p + *'), [
             {
-								name: "div",
-								selector: "*",
-								attrs: {},
-								classes: [],
-								siblings: [
-									{
-											name: "p",
-											selector: "p",
-											attrs: {},
-											classes: []
-									}
-								]
-						}
-        ], 'p + * ok');
+                name: "div",
+                selector: "*",
+                attrs: {},
+                classes: [],
+                siblings: [
+                    {
+                        name: "p",
+                        selector: "p",
+                        attrs: {},
+                        classes: []
+                    }
+                ]
+            }
+            ], 'p + * ok');
 
-				deepEqual(Preview.parseSelector('*.test'), [
-            {
-								name: "*",
-								selector: "*.test",
-								attrs: {},
-								classes: ['test']
-						}
-        ], '*.test ok');
-
+            deepEqual(Preview.parseSelector('*.test'), [
+                {
+                    name: "*",
+                    selector: "*.test",
+                    attrs: {},
+                    classes: ['test']
+                }
+            ], '*.test ok');
     });
 
 
