@@ -28,6 +28,7 @@ define('tinymce.media.test.Utils', [
 	var cFindWidthInput = cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Width"]');
 	});
+
 	var cFindHeightInput = cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Height"]');
 	});
@@ -88,7 +89,8 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
-	var sSetFormItemPaste = function (ui, value) {
+
+	var sPasteSourceValue = function (ui, value) {
 		return Chain.asStep({}, [
 			cFindFilepickerInput(ui, 'Source'),
 			cFakeEvent('paste'),
@@ -113,7 +115,7 @@ define('tinymce.media.test.Utils', [
 	var sAssertSizeRecalcConstrained = function (ui) {
 		return GeneralSteps.sequence([
 			sOpenDialog(ui),
-			sSetFormItemPaste(ui, 'http://test.se'),
+			sPasteSourceValue(ui, 'http://test.se'),
 			sAssertWidthValue(ui, "300"),
 			sAssertHeightValue(ui, "150"),
 			sChangeWidthValue(ui, "350"),
@@ -129,7 +131,7 @@ define('tinymce.media.test.Utils', [
 	var sAssertSizeRecalcConstrainedReopen = function (ui) {
 		return GeneralSteps.sequence([
 			sOpenDialog(ui),
-			sSetFormItemPaste(ui, 'http://test.se'),
+			sPasteSourceValue(ui, 'http://test.se'),
 			sAssertWidthValue(ui, "300"),
 			sAssertHeightValue(ui, "150"),
 			sChangeWidthValue(ui, "350"),
@@ -150,7 +152,7 @@ define('tinymce.media.test.Utils', [
 	var sAssertSizeRecalcUnconstrained = function (ui) {
 		return GeneralSteps.sequence([
 			sOpenDialog(ui),
-			sSetFormItemPaste(ui, 'http://test.se'),
+			sPasteSourceValue(ui, 'http://test.se'),
 			ui.sClickOnUi('click checkbox', '.mce-checkbox'),
 			sAssertWidthValue(ui, "300"),
 			sAssertHeightValue(ui, "150"),
@@ -174,14 +176,13 @@ define('tinymce.media.test.Utils', [
 		});
 	};
 
-
 	var cFindFilepickerInput = cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor).querySelector('input');
 	});
+
 	var cFindTextarea = cFindInDialog(function (value) {
 		return document.getElementById(value.dom().htmlFor);
 	});
-
 
 	var cSetFormItem = function (ui, value) {
 		return Chain.fromChains([
@@ -198,7 +199,7 @@ define('tinymce.media.test.Utils', [
 	};
 
 	var sAssertEmbedContent = function (ui, content) {
-		return Waiter.sTryUntil('',
+		return Waiter.sTryUntil('Textarea should have a proper value',
 			Chain.asStep({}, [
 				cGetTextareaContent(ui),
 				Assertions.cAssertEq('Content same as embed', content)
@@ -206,11 +207,10 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
-
 	var sTestEmbedContentFromUrl = function (ui, url, content) {
 		return GeneralSteps.sequence([
 			sOpenDialog(ui),
-			sSetFormItemPaste(ui, url),
+			sPasteSourceValue(ui, url),
 			sAssertEmbedContent(ui, content),
 			sCloseDialog(ui)
 		]);
@@ -231,9 +231,13 @@ define('tinymce.media.test.Utils', [
 		);
 	};
 
+	var sSubmitDialog = function (ui) {
+		return ui.sClickOnUi('Click submit button', 'div.mce-primary > button');
+	};
+
 	var sSubmitAndReopen = function (ui) {
 		return GeneralSteps.sequence([
-			ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
+			sSubmitDialog(ui),
 			sOpenDialog(ui)
 		]);
 	};
@@ -250,6 +254,7 @@ define('tinymce.media.test.Utils', [
 		cFindInDialog: cFindInDialog,
 		sOpenDialog: sOpenDialog,
 		sCloseDialog: sCloseDialog,
+		sSubmitDialog: sSubmitDialog,
 		sTestEmbedContentFromUrl: sTestEmbedContentFromUrl,
 		sSetFormItemNoEvent: sSetFormItemNoEvent,
 		sAssertEditorContent: sAssertEditorContent,
@@ -257,7 +262,7 @@ define('tinymce.media.test.Utils', [
 		sSubmitAndReopen: sSubmitAndReopen,
 		sAssertWidthValue: sAssertWidthValue,
 		sAssertHeightValue: sAssertHeightValue,
-		sSetFormItemPaste: sSetFormItemPaste,
+		sPasteSourceValue: sPasteSourceValue,
 		sAssertSizeRecalcConstrained: sAssertSizeRecalcConstrained,
 		sAssertSizeRecalcConstrainedReopen: sAssertSizeRecalcConstrainedReopen,
 		sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained,
