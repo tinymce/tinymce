@@ -48,7 +48,6 @@ define(
               Sandboxing.open(sandbox, Future.pure(thing)).get(function () {
                 var sink = detail.lazySink()().getOrDie();
                 Positioning.position(sink, anchor, sandbox);
-                debugger;
                 detail.onShow()(sandbox);
               });
             },
