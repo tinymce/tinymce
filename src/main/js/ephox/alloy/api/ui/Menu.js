@@ -71,8 +71,16 @@ define(
       return UiBuilder.single('menu', schema, MenuSpec.make, spec);
     };
 
+    var parts = {
+      // FIX
+      items: Fun.constant({
+        uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' 
+      })
+    };
+
     return {
-      build: build
+      build: build,
+      parts: Fun.constant(parts)
     };
   }
 );

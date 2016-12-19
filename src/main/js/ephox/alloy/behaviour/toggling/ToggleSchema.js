@@ -8,7 +8,7 @@ define(
   function (FieldSchema) {
     return [
       FieldSchema.defaulted('selected', false),
-      FieldSchema.defaulted('toggleClass', 'selected'),
+      FieldSchema.strict('toggleClass'),
       FieldSchema.defaulted('toggleOnExecute', true),
 
       FieldSchema.defaultedObjOf('aria', { }, [
