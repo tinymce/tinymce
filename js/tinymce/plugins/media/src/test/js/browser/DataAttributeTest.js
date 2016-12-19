@@ -16,7 +16,7 @@ asynctest('browser.core.DataAttributeTest', [
 	var sTestEmbedContentFromUrlWithAttribute = function (ui, url, content) {
 		return GeneralSteps.sequence([
 			Utils.sOpenDialog(ui),
-			Utils.sSetFormItemPaste(ui, url),
+			Utils.sPasteSourceValue(ui, url),
 			Utils.sAssertEmbedContent(ui, content),
 			Utils.sSubmitAndReopen(ui),
 			Utils.sAssertSourceValue(ui, url),
@@ -26,11 +26,11 @@ asynctest('browser.core.DataAttributeTest', [
 	var sTestEmbedContentFromUrl2 = function (ui, url, url2, content, content2) {
 		return GeneralSteps.sequence([
 			Utils.sOpenDialog(ui),
-			Utils.sSetFormItemPaste(ui, url),
+			Utils.sPasteSourceValue(ui, url),
 			Utils.sAssertEmbedContent(ui, content),
 			Utils.sSubmitAndReopen(ui),
 			Utils.sAssertSourceValue(ui, url),
-			Utils.sSetFormItemPaste(ui, url2),
+			Utils.sPasteSourceValue(ui, url2),
 			Utils.sAssertEmbedContent(ui, content2),
 			Utils.sCloseDialog(ui)
 		]);

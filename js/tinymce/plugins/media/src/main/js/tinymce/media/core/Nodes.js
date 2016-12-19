@@ -25,7 +25,7 @@ define('tinymce.media.core.Nodes', [
 		return placeHolder;
 	};
 
-	var createPreviewNode = function (editor, node) {
+	var createPreviewIframeNode = function (editor, node) {
 		var previewWrapper;
 		var previewNode;
 		var shimNode;
@@ -92,11 +92,20 @@ define('tinymce.media.core.Nodes', [
 		}
 	};
 
+	var isWithinEphoxEmbed = function (node) {
+		while ((node = node.parent)) {
+			if (node.attr('data-ephox-embed-iri')) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	var placeHolderConverter = function (editor) {
 		return function (nodes) {
 			var i = nodes.length;
 			var node;
-			var placeHolder;
 			var videoScript;
 
 			while (i--) {
@@ -127,17 +136,18 @@ define('tinymce.media.core.Nodes', [
 				}
 
 				if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && Env.ceFalse) {
-					placeHolder = createPreviewNode(editor, node);
+					if (!isWithinEphoxEmbed(node)) {
+						node.replace(createPreviewIframeNode(editor, node));
+					}
 				} else {
-					placeHolder = createPlaceholderNode(editor, node);
+					node.replace(createPlaceholderNode(editor, node));
 				}
-
-				node.replace(placeHolder);
 			}
 		};
 	};
+
 	return {
-		createPreviewNode: createPreviewNode,
+		createPreviewIframeNode: createPreviewIframeNode,
 		createPlaceholderNode: createPlaceholderNode,
 		placeHolderConverter: placeHolderConverter
 	};
