@@ -16,7 +16,8 @@ define(
 
   function (ComponentStructure, BehaviourExport, Positioning, Sandboxing, UiBuilder, Dismissal, FieldSchema, Merger, Future, Fun) {
     var schema = [
-      FieldSchema.strict('lazySink')
+      FieldSchema.strict('lazySink'),
+      FieldSchema.defaulted('onShow', Fun.noop)
     ];
 
     var make = function (detail, spec) {
@@ -44,9 +45,12 @@ define(
 
           apis: {
             showAt: function (sandbox, anchor, thing) {
-              Sandboxing.open(sandbox, Future.pure(thing)).get(Fun.identity);
-              var sink = detail.lazySink()().getOrDie();
-              Positioning.position(sink, anchor, sandbox);
+              Sandboxing.open(sandbox, Future.pure(thing)).get(function () {
+                var sink = detail.lazySink()().getOrDie();
+                Positioning.position(sink, anchor, sandbox);
+                debugger;
+                detail.onShow()(sandbox);
+              });
             },
             hide: function (sandbox) {
               Sandboxing.close(sandbox);

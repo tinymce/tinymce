@@ -29,6 +29,7 @@ define(
 
       var systemApi = Cell(NoContextApi(getSelf));
 
+
       var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
 
       // The behaviour configuration is put into info.behaviours(). For everything else,
