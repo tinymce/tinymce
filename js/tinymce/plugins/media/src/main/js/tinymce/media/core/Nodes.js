@@ -2,9 +2,8 @@ define('tinymce.media.core.Nodes', [
 	'tinymce.media.core.Sanitize',
 	'tinymce.media.core.VideoScript',
 	'global!tinymce.html.Node',
-	'global!tinymce.Env',
-	'global!tinymce.util.Tools'
-], function (Sanitize, VideoScript, Node, Env, Tools) {
+	'global!tinymce.Env'
+], function (Sanitize, VideoScript, Node, Env) {
 	var createPlaceholderNode = function (editor, node) {
 		var placeHolder;
 		var name = node.name;
@@ -147,30 +146,9 @@ define('tinymce.media.core.Nodes', [
 		};
 	};
 
-	var ephoxDataEmbedConverter = function (nodes) {
-		Tools.each(nodes, function (node) {
-			var shimNode;
-
-			shimNode = new Node('span', 1);
-			shimNode.attr('class', 'mce-shim');
-			shimNode.attr('data-mce-bogus', '1');
-
-			node.append(shimNode);
-			node.attr('contenteditable', 'false');
-		});
-	};
-
-	var removeContentEditableFalse = function (nodes) {
-		Tools.each(nodes, function (node) {
-			node.attr('contenteditable', null);
-		});
-	};
-
 	return {
 		createPreviewIframeNode: createPreviewIframeNode,
 		createPlaceholderNode: createPlaceholderNode,
-		placeHolderConverter: placeHolderConverter,
-		ephoxDataEmbedConverter: ephoxDataEmbedConverter,
-		removeContentEditableFalse: removeContentEditableFalse
+		placeHolderConverter: placeHolderConverter
 	};
 });
