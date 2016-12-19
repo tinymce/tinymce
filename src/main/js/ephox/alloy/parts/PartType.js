@@ -196,12 +196,8 @@ define(
     };
 
     var components = function (owner, detail, parts) {
-      var ps = placeholders(owner, detail, parts);
-      console.log('ps', ps, 'owner', owner);
-
-      var comps = UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
-      console.log('comps', comps, detail.components());
-      return comps;
+      var ps = placeholders(owner, detail, parts);      
+      return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
     };
 
     return {
