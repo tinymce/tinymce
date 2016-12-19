@@ -39,7 +39,8 @@ define("tinymce.wordcount.text.UnicodeData", [], function() {
 		FORMAT: 9,
 		KATAKANA: 10,
 		EXTENDNUMLET: 11,
-		OTHER: 12
+		AT: 12,
+		OTHER: 13
 	};
 
 	// RegExp objects generated from code point data. Each regex matches a single
@@ -58,7 +59,8 @@ define("tinymce.wordcount.text.UnicodeData", [], function() {
 		new RegExp(regExps.extend),
 		new RegExp(regExps.format),
 		new RegExp(regExps.katakana),
-		new RegExp(regExps.extendnumlet)
+		new RegExp(regExps.extendnumlet),
+		new RegExp('@')
 	];
 
 	var EMPTY_STRING = '';

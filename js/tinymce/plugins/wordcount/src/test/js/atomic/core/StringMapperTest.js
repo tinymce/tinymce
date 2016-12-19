@@ -17,6 +17,7 @@ test('atomic.core.StringMapperTest', [
 	var KATAKANA = ci.KATAKANA;
 	var EXTENDNUMLET = ci.EXTENDNUMLET;
 	var OTHER = ci.OTHER;
+	var AT = ci.AT;
 
 	var classify = StringMapper.classify;
 
@@ -35,6 +36,7 @@ test('atomic.core.StringMapperTest', [
 		assert.eq([NEWLINE], classify('\x0B'));
 		assert.eq([FORMAT], classify('؃'));
 		assert.eq([EXTENDNUMLET], classify('︴'));
+		assert.eq([AT], classify('@'));
 	};
 
 	testClassify();

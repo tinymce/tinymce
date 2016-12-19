@@ -18,6 +18,12 @@ test('atomic.core.WordGetterTest', [
 		assert.eq(['a', ' ', ' ', ' ', 'b'], getWords('a   b', {includeWhitespace: true}));
 		// ignores case with setting
 		assert.eq(['hello', 'world'], getWords('HELLO World', {ignoreCase: true}));
+
+		assert.eq(['http://www.google.com'], getWords('http://www.google.com'));
+		assert.eq(['https://www.google.com'], getWords('https://www.google.com'));
+		assert.eq(['bengt@mail.se'], getWords('bengt@mail.se'));
+		assert.eq(['bengt@mail.se', 'abc'], getWords('bengt@mail.se abc'));
+		assert.eq(['http://www.google.com', 'abc'], getWords('http://www.google.com abc'));
 	};
 
 	testGetWords();
