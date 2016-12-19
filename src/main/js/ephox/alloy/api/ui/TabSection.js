@@ -22,6 +22,8 @@ define(
   function (EventRoot, SystemEvents, Highlighting, Replacing, Representing, Tabbar, Tabview, UiBuilder, EventHandler, PartType, FieldSchema, Objects, Arr, Fun, Attr) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
+      FieldSchema.defaulted('onChangeTab', Fun.noop),
+      FieldSchema.defaulted('onDismissTab', Fun.noop),
       FieldSchema.defaulted('tabs', [ ])
     ];
 
@@ -72,6 +74,7 @@ define(
             // Update the tabview to refer to the current tab.
             Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
             Replacing.set(tabview, panel);
+            detail.onChangeTab()(tabview, button, panel);
           }
         });
       };
@@ -106,6 +109,16 @@ define(
               run: function (section, simulatedEvent) {
                 var button = simulatedEvent.event().button();
                 changeTab(button);
+              }
+            })
+          },
+
+          {
+            key: SystemEvents.dismissTab(),
+            value: EventHandler.nu({
+              run: function (section, simulatedEvent) {
+                var button = simulatedEvent.event().button();
+                detail.onDismissTab()(section, button);
               }
             })
           }
