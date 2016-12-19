@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.common.FieldUtils',
 
   [
+    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
@@ -12,22 +13,24 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (SystemEvents, Composing, Representing, EventHandler, Objects, Id, Option, Attr) {
+  function (EventRoot, SystemEvents, Composing, Representing, EventHandler, Objects, Id, Option, Attr) {
     var events = function (detail) {
      return Objects.wrap(
         SystemEvents.systemInit(),
         EventHandler.nu({
-          run: function (component) {
-            var system = component.getSystem();
-            system.getByUid(detail.partUids().label).each(function (label) {
-              system.getByUid(detail.partUids().field).each(function (field) {
-                var id = Id.generate(detail.prefix());
-                            
-                // TODO: Find a nicer way of doing this.
-                Attr.set(label.element(), 'for', id);
-                Attr.set(field.element(), 'id', id);    
-              });
-            });          
+          run: function (component, simulatedEvent) {
+            if (EventRoot.isSource(component, simulatedEvent)) {
+              var system = component.getSystem();
+              system.getByUid(detail.partUids().label).each(function (label) {
+                system.getByUid(detail.partUids().field).each(function (field) {
+                  var id = Id.generate(detail.prefix());
+                              
+                  // TODO: Find a nicer way of doing this.
+                  Attr.set(label.element(), 'for', id);
+                  Attr.set(field.element(), 'id', id);    
+                });
+              });          
+            }
           }
         })
       );
