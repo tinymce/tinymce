@@ -161,11 +161,11 @@ define("tinymce/file/Uploader", [
 						resolve(handlerSuccess(blobInfo, url));
 					};
 
-					var failure = function() {
+					var failure = function(error) {
 						closeNotification();
 						uploadStatus.removeFailed(blobInfo.blobUri());
-						resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, failure));
-						resolve(handlerFailure(blobInfo, failure));
+						resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, error));
+						resolve(handlerFailure(blobInfo, error));
 					};
 
 					progress = function(percent) {

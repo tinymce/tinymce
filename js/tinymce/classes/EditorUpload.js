@@ -19,8 +19,9 @@ define("tinymce/EditorUpload", [
 	"tinymce/file/Uploader",
 	"tinymce/file/ImageScanner",
 	"tinymce/file/BlobCache",
-	"tinymce/file/UploadStatus"
-], function(Arr, Uploader, ImageScanner, BlobCache, UploadStatus) {
+	"tinymce/file/UploadStatus",
+	"tinymce/ErrorReporter"
+], function(Arr, Uploader, ImageScanner, BlobCache, UploadStatus, ErrorReporter) {
 	return function(editor) {
 		var blobCache = new BlobCache(), uploader, imageScanner, settings = editor.settings;
 		var uploadStatus = new UploadStatus();
@@ -116,6 +117,8 @@ define("tinymce/EditorUpload", [
 
 						if (uploadInfo.status && editor.settings.images_replace_blob_uris !== false) {
 							replaceImageUri(image, uploadInfo.url);
+						} else if (uploadInfo.error) {
+							ErrorReporter.uploadError(editor, uploadInfo.error);
 						}
 
 						return {

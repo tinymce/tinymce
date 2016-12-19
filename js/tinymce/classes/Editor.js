@@ -71,13 +71,14 @@ define("tinymce/Editor", [
 	"tinymce/EditorUpload",
 	"tinymce/SelectionOverrides",
 	"tinymce/util/Uuid",
-	"tinymce/ui/Sidebar"
+	"tinymce/ui/Sidebar",
+	"tinymce/ErrorReporter"
 ], function(
 	DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
 	Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
 	URI, ScriptLoader, EventUtils, WindowManager, NotificationManager,
 	Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Mode, Shortcuts, EditorUpload,
-	SelectionOverrides, Uuid, Sidebar
+	SelectionOverrides, Uuid, Sidebar, ErrorReporter
 ) {
 	// Shorten these names
 	var DOM = DOMUtils.DOM, ThemeManager = AddOnManager.ThemeManager, PluginManager = AddOnManager.PluginManager;
@@ -473,6 +474,12 @@ define("tinymce/Editor", [
 				});
 
 				scriptLoader.loadQueue(function() {
+					if (!self.removed) {
+						self.init();
+					}
+				}, self, function (urls) {
+					ErrorReporter.pluginLoadError(self, urls[0]);
+
 					if (!self.removed) {
 						self.init();
 					}
