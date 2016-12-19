@@ -26,7 +26,6 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.strict('widget'),
       FieldSchema.defaulted('autofocus', false),
-      FieldSchema.defaulted('base', { }),
       FieldSchema.state('builder', function () {
         return builder;
       })
@@ -65,10 +64,15 @@ define(
       };
 
       var onHorizontalArrow = function (component, simulatedEvent) {
-        return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : Option.some(true);
+        return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (function () {
+          if (info.autofocus()) {
+            simulatedEvent.setSource(component);
+            return Option.none();
+          }
+        });
       };
 
-      return Merger.deepMerge(info.base(), {
+      return Merger.deepMerge({
         uiType: 'custom',
         dom: info.dom(),
         components: components,
@@ -99,7 +103,10 @@ define(
         ]),
         behaviours: {
           representing: {
-            initialValue: info.data()
+            store: {
+              mode: 'memory',
+              initialValue: info.data()
+            }
           },
           focusing: {
             onFocus: function (component) {
