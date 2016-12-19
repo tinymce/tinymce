@@ -22,8 +22,9 @@ define("tinymce/ui/FormatControls", [
 	"tinymce/util/Arr",
 	"tinymce/dom/DOMUtils",
 	"tinymce/EditorManager",
-	"tinymce/Env"
-], function(Control, Widget, FloatPanel, Tools, Arr, DOMUtils, EditorManager, Env) {
+	"tinymce/Env",
+	"tinymce/fmt/FontInfo"
+], function(Control, Widget, FloatPanel, Tools, Arr, DOMUtils, EditorManager, Env, FontInfo) {
 	var each = Tools.each;
 
 	var flatten = function (ar) {
@@ -94,6 +95,67 @@ define("tinymce/ui/FormatControls", [
 					});
 
 					self.value(value);
+				});
+			};
+		}
+
+		function createFontNameListBoxChangeHandler(items) {
+			return function() {
+				var self = this;
+
+				var getFirstFont = function (fontFamily) {
+					return fontFamily ? fontFamily.split(',')[0] : '';
+				};
+
+				editor.on('nodeChange', function(e) {
+					var fontFamily, value = null;
+
+					fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
+
+					each(items, function(item) {
+						if (item.value.toLowerCase() === fontFamily.toLowerCase()) {
+							value = item.value;
+						}
+					});
+
+					each(items, function(item) {
+						if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(fontFamily).toLowerCase()) {
+							value = item.value;
+						}
+					});
+
+					self.value(value);
+
+					if (!value && fontFamily) {
+						self.text(getFirstFont(fontFamily));
+					}
+				});
+			};
+		}
+
+		function createFontSizeListBoxChangeHandler(items) {
+			return function() {
+				var self = this;
+
+				editor.on('nodeChange', function(e) {
+					var px, pt, value = null;
+
+					px = FontInfo.getFontSize(editor.getBody(), e.element);
+					pt = FontInfo.toPt(px);
+
+					each(items, function(item) {
+						if (item.value === px) {
+							value = px;
+						} else if (item.value === pt) {
+							value = pt;
+						}
+					});
+
+					self.value(value);
+
+					if (!value) {
+						self.text(pt);
+					}
 				});
 			};
 		}
@@ -634,7 +696,7 @@ define("tinymce/ui/FormatControls", [
 				tooltip: 'Font Family',
 				values: items,
 				fixedWidth: true,
-				onPostRender: createListBoxChangeHandler(items, 'fontname'),
+				onPostRender: createFontNameListBoxChangeHandler(items),
 				onselect: function(e) {
 					if (e.control.settings.value) {
 						editor.execCommand('FontName', false, e.control.settings.value);
@@ -664,7 +726,7 @@ define("tinymce/ui/FormatControls", [
 				tooltip: 'Font Sizes',
 				values: items,
 				fixedWidth: true,
-				onPostRender: createListBoxChangeHandler(items, 'fontsize'),
+				onPostRender: createFontSizeListBoxChangeHandler(items),
 				onclick: function(e) {
 					if (e.control.settings.value) {
 						editor.execCommand('FontSize', false, e.control.settings.value);
