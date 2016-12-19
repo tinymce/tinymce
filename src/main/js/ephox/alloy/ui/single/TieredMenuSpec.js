@@ -226,14 +226,7 @@ define(
             }
           })
         },
-        {
-          key: SystemEvents.sandboxClose(),
-          value: EventHandler.nu({
-            run: function (sandbox, simulatedEvent) {
-              if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox);
-            }
-          })
-        },
+        
         {
           key: SystemEvents.systemInit(),
           value: EventHandler.nu({
