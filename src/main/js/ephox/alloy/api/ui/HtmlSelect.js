@@ -17,7 +17,8 @@ define(
     var schema = [
       FieldSchema.strict('options'),
       Fields.members([ 'option' ]),
-      FieldSchema.option('data')
+      FieldSchema.option('data'),
+      FieldSchema.defaulted('hasTabstop', true)
     ];
 
     // Dupe with Tiered Menu
@@ -84,7 +85,10 @@ define(
                 initialValue: detail.data().getOr(detail.options()[0]),
                 
               }
-            }
+            },
+
+            // FIX: Undefined
+            tabstopping: detail.hasTabstop() ? true : undefined
           }
         }
       );
