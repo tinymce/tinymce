@@ -23,7 +23,7 @@ define(
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
       // FIX: Remove defaulted toggleClass
-      FieldSchema.defaulted('toggleClass', 'alloy-selected-button'),
+      FieldSchema.strict('toggleClass'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('displayer', Fun.identity),
       FieldSchema.option('lazySink'),
