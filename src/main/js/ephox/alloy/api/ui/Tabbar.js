@@ -18,8 +18,6 @@ define(
     var schema = [
       FieldSchema.strict('tabs'),
 
-      FieldSchema.defaulted('onDismiss', Fun.noop),
-      FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.strict('dom'),
 
       Fields.members([ 'tab' ]),
@@ -38,7 +36,7 @@ define(
       Fun.constant({ }),
       function (barDetail, tabSpec) {
         var dismissTab = function (tabbar, button) {
-          Highlighting.dehighlight(tabbar);
+          Highlighting.dehighlight(tabbar, button);
           SystemEvents.trigger(tabbar, SystemEvents.dismissTab(), {
             tabbar: tabbar,
             button: button
