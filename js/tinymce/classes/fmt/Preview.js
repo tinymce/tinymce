@@ -117,7 +117,7 @@ define("tinymce/fmt/Preview", [
 
 
 	function selectorToHtml(selector, editor) {
-		return parsedSelectorToHtml(parseSelector(selector, editor));
+		return parsedSelectorToHtml(parseSelector(selector), editor);
 	}
 
 
@@ -240,9 +240,9 @@ define("tinymce/fmt/Preview", [
 				items[0].name = name;
 			}
 			name = format.selector;
-			previewFrag = parsedSelectorToHtml(items);
+			previewFrag = parsedSelectorToHtml(items, editor);
 		} else {
-			previewFrag = parsedSelectorToHtml([name]);
+			previewFrag = parsedSelectorToHtml([name], editor);
 		}
 
 		previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
