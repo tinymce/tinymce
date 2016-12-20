@@ -78,7 +78,7 @@ define(
             'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
             'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ],
             'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
-            'input': [ 'representing', 'streaming' ]
+            'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ]
           }),
           ValueSchema.anyValue()
         ),
