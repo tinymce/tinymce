@@ -9,6 +9,6 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@ephox/bolt": "^1.8.0",
-    "@ephox/wrap-jsverify": "0.7.*"
+    "@ephox/wrap-jsverify": "^1.0.0"
   }
 }
