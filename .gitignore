@@ -1,0 +1,15 @@
+.DS_Store
+*~
+*.iws
+*.sublime-workspace
+/lib
+/dist
+/scratch
+/gen
+/config/repl
+/dependency
+/config/bolt/bootstrap*.js
+/inconsistent.dependencies
+node_modules
+/config/repl
+/*.log
