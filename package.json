@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Basic data type library",
   "scripts": {
     "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
