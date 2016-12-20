@@ -1,0 +1,5 @@
+Version 2.0.0
+
+Date: 2016-12-12
+
+* implements basic testing infrastructure
