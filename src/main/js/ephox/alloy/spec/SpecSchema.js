@@ -17,8 +17,16 @@ define(
 
   function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
     var getPartsSchema = function (partNames, _optPartNames) {
-      var optPartNames = _optPartNames !== undefined ? _optPartNames : [ ];
-      if (partNames.length === 0 && optPartNames.length === 0) return [ ];
+      var fallbackThunk = function () {
+        return [
+          FieldSchema.state('partUids', function () {
+            return { };
+          })
+        ];
+      };
+
+      var optPartNames = _optPartNames !== undefined ? _optPartNames : fallbackThunk();
+      if (partNames.length === 0 && optPartNames.length === 0) return fallbackThunk();
 
       // temporary hacking
       var partsSchema = FieldSchema.strictObjOf(
