@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Testing infrastructure",
   "scripts": {
     "test": "bedrock-auto -b chrome --testdir src/test/js/browser"
