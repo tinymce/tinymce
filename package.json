@@ -22,7 +22,7 @@
   "dependencies": {
     "@ephox/jax": "^2.0.0",
     "@ephox/sugar": "^3.0.0",
-    "@ephox/wrap-jsverify": "^0.7.4",
-    "@ephox/wrap-sizzle": "^2.3.3"
+    "@ephox/wrap-jsverify": "^1.0.0",
+    "@ephox/wrap-sizzle": "^3.0.0"
   }
 }
