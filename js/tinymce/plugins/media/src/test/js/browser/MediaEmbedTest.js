@@ -3,17 +3,19 @@ asynctest('browser.core.MediaEmbedTest', [
 	'tinymce.media.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyUi',
+	'ephox.mcagar.api.TinyApis',
 	'ephox.agar.api.Pipeline',
 	'tinymce.media.test.Utils'
 ], function (
 	tinymce, Plugin, TinyLoader,
-	TinyUi, Pipeline, Utils
+	TinyUi, TinyApis, Pipeline, Utils
 ) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 
 	TinyLoader.setup(function (editor, onSuccess, onFailure) {
 		var ui = TinyUi(editor);
+		var api = TinyApis(editor);
 
 		Pipeline.async({}, [
 			Utils.sTestEmbedContentFromUrl(ui,
@@ -28,6 +30,7 @@ asynctest('browser.core.MediaEmbedTest', [
 			),
 			Utils.sAssertSizeRecalcConstrained(ui),
 			Utils.sAssertSizeRecalcUnconstrained(ui),
+			api.sSetContent(''),
 			Utils.sAssertSizeRecalcConstrainedReopen(ui)
 		], onSuccess, onFailure);
 	}, {

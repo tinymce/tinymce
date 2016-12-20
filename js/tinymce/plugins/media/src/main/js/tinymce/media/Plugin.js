@@ -159,7 +159,7 @@ define('tinymce.media.Plugin', [
 		};
 
 		editor.addButton('media', {
-			tooltip: 'Insert/edit video',
+			tooltip: 'Insert/edit media',
 			onclick: this.showDialog,
 			stateSelector: ['img[data-mce-object]', 'span[data-mce-object]', 'div[data-ephox-embed-iri]']
 		});

@@ -140,7 +140,9 @@ define('tinymce.media.core.Nodes', [
 						node.replace(createPreviewIframeNode(editor, node));
 					}
 				} else {
-					node.replace(createPlaceholderNode(editor, node));
+					if (!isWithinEphoxEmbed(node)) {
+						node.replace(createPlaceholderNode(editor, node));
+					}
 				}
 			}
 		};

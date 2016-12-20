@@ -1,8 +1,10 @@
 define('tinymce.media.core.UpdateHtml', [
 	'global!tinymce.html.Writer',
 	'global!tinymce.html.SaxParser',
-	'global!tinymce.html.Schema'
-], function (Writer, SaxParser, Schema) {
+	'global!tinymce.html.Schema',
+	'global!tinymce.dom.DOMUtils.DOM',
+	'tinymce.media.core.Size'
+], function (Writer, SaxParser, Schema, DOM, Size) {
 	var setAttributes = function (attrs, updatedAttrs) {
 		var name;
 		var i;
@@ -38,7 +40,14 @@ define('tinymce.media.core.UpdateHtml', [
 		}
 	};
 
-	var updateHtml = function (html, data, updateAll) {
+	var normalizeHtml = function (html) {
+		var writer = new Writer();
+		var parser = new SaxParser(writer);
+		parser.parse(html);
+		return writer.getContent();
+	};
+
+	var updateHtmlSax = function (html, data, updateAll) {
 		var writer = new Writer();
 		var sourceCount = 0;
 		var hasImage;
@@ -160,6 +169,25 @@ define('tinymce.media.core.UpdateHtml', [
 		}, new Schema({})).parse(html);
 
 		return writer.getContent();
+	};
+
+	var isEphoxEmbed = function (html) {
+		var fragment = DOM.createFragment(html);
+		return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
+	};
+
+	var updateEphoxEmbed = function (html, data) {
+		var fragment = DOM.createFragment(html);
+		var div = fragment.firstChild;
+
+		Size.setMaxWidth(div, data.width);
+		Size.setMaxHeight(div, data.height);
+
+		return normalizeHtml(div.outerHTML);
+	};
+
+	var updateHtml = function (html, data, updateAll) {
+		return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 	};
 
 	return {
