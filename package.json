@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sand",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Platform detection library",
   "scripts": {
     "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
