@@ -32,7 +32,7 @@ define("tinymce.wordcount.text.WordBoundary", [
 
 		// WB6. Don't break letters across certain punctuation.
 		if (type === ci.ALETTER &&
-						(nextType === ci.MIDLETTER || nextType === ci.MIDNUMLET) &&
+						(nextType === ci.MIDLETTER || nextType === ci.MIDNUMLET || nextType === ci.AT) &&
 						nextNextType === ci.ALETTER) {
 			return false;
 		}
@@ -40,7 +40,7 @@ define("tinymce.wordcount.text.WordBoundary", [
 		prevType = map[index - 1];
 
 		// WB7. Don't break letters across certain punctuation.
-		if ((type === ci.MIDLETTER || type === ci.MIDNUMLET) &&
+		if ((type === ci.MIDLETTER || type === ci.MIDNUMLET || nextType === ci.AT) &&
 						nextType === ci.ALETTER &&
 						prevType === ci.ALETTER) {
 			return false;
@@ -107,6 +107,10 @@ define("tinymce.wordcount.text.WordBoundary", [
 		if (type === ci.EXTENDNUMLET &&
 						(nextType === ci.ALETTER || nextType === ci.NUMERIC ||
 						nextType === ci.KATAKANA)) {
+			return false;
+		}
+
+		if (type === ci.AT) {
 			return false;
 		}
 

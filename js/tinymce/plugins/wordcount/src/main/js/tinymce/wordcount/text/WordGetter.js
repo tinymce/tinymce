@@ -16,6 +16,39 @@ define("tinymce.wordcount.text.WordGetter", [
 	var EMPTY_STRING = UnicodeData.EMPTY_STRING;
 	var WHITESPACE = UnicodeData.WHITESPACE;
 	var PUNCTUATION = UnicodeData.PUNCTUATION;
+
+	var isProtocol = function (word) {
+		return word === 'http' || word === 'https';
+	};
+
+	var findWordEnd = function (string, index) {
+		var i;
+		for (i = index; i < string.length; ++i) {
+			var chr = string.charAt(i);
+
+			if (WHITESPACE.test(chr)) {
+				break;
+			}
+		}
+		return i;
+	};
+
+	var extractUrl = function (word, string, index) {
+		var endIndex = findWordEnd(string, index + 1);
+		var peakedWord = string.substring(index + 1, endIndex);
+		if (peakedWord.substr(0, 3) === '://') {
+			return {
+				word: word + peakedWord,
+				index: endIndex
+			};
+		}
+
+		return {
+			word: word,
+			index: index
+		};
+	};
+
 	var getWords = function (string, options) {
 		var i = 0;
 		var map = StringMapper.classify(string);
@@ -55,7 +88,13 @@ define("tinymce.wordcount.text.WordGetter", [
 				if (word &&
 								(includeWhitespace || !WHITESPACE.test(word)) &&
 								(includePunctuation || !PUNCTUATION.test(word))) {
-					words.push(word);
+					if (isProtocol(word)) {
+						var obj = extractUrl(word, string, i);
+						words.push(obj.word);
+						i = obj.index;
+					} else {
+						words.push(word);
+					}
 				}
 
 				word = [];
