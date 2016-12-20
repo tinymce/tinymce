@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "AJAX library",
   "scripts": {
     "test": "bedrock-auto --customRoutes src/test/json/routes.json -b phantomjs --files src/test/js/browser/AjaxTest.js"
