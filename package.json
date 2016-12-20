@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sugar",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Basic DOM manipulation",
   "scripts": {
     "test": "bedrock-auto --testdir src/test/js/browser -b chrome"
