@@ -1,0 +1,24 @@
+{
+  "name": "@ephox/sugar",
+  "version": "3.0.0",
+  "description": "Basic DOM manipulation",
+  "scripts": {
+    "test": "bedrock-auto --testdir src/test/js/browser -b chrome"
+  },
+  "keywords": [
+    "DOM",
+    "insert",
+    "append",
+    "predicate"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ephox/katamari": "^1.0.0",
+    "@ephox/sand": "^1.0.0"
+  },
+  "devDependencies": {
+    "@ephox/bedrock": "^1.3.7",
+    "@ephox/bolt": "^1.8.0"
+  }
+}

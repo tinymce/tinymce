@@ -1,0 +1,16 @@
+- Attr: get should return an option
+- Element: interface for the DOM node
+- Attr: has should delegate to get
+- Compare: value comparison, eq rename
+- Css: clarification for computedStyle / set style
+- Event:
+  - needs a higher-level library
+  - event name differences in browser
+  - remove the event name part ... and have individual functions
+  - document load/ready
+  - resize
+  - iframe load
+  - other ....
+::Browser compatibilities ...
+ - Height: lower level and higher level values. Dupe with width
+ - Traverse: cursor for traversal
