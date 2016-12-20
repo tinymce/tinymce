@@ -37,7 +37,10 @@ define(
           },
 
           onSet: function (input, data) {
-            Value.set(input.element(), data.text);
+            // Only set it if it has changed ... otherwise the cursor goes to the end.
+            if (Value.get(input.element()) !== data.text) {
+              Value.set(input.element(), data.text);
+            }
           }
         },
 
