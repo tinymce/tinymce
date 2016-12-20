@@ -1,0 +1,21 @@
+{
+  "name": "@ephox/jax",
+  "version": "2.0.0",
+  "description": "AJAX library",
+  "scripts": {
+    "test": "bedrock-auto --customRoutes src/test/json/routes.json -b phantomjs --files src/test/js/browser/AjaxTest.js"
+  },
+  "keywords": [
+    "ajax"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@ephox/bedrock": "^1.3.6",
+    "@ephox/bolt": "^1.8.0"
+  },
+  "dependencies": {
+    "@ephox/katamari": "^1.0.0",
+    "@ephox/sand": "^1.0.0"
+  }
+}

@@ -1,0 +1,113 @@
+[
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/1",
+      "headers": { },
+      "query": {
+        "word": "alpha"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "good": [ "alpha" ]
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/sample/get/1",
+      "headers": {
+        "X-custom-header": "X-custom-header-value"
+      },
+      "query": {
+        "word": "beta"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "bad": "custom-header"
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/sample/post/1",
+      "headers": { },
+      "json": {
+        "send-data": "10"
+      }
+    },
+    "response": {
+      "json": {
+        "post-output": [ "Australia", "US" ]
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "put",
+      "path": "/custom/sample/put/1",
+      "headers": { },
+      "json": {
+        "send-data": "15"
+      }
+    },
+    "response": {
+      "json": {
+        "put-output": [ "Australia", "US" ]
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "delete",
+      "path": "/custom/sample/del/1",
+      "headers": { },
+      "query": {
+        "word": "alpha"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "del-good": [ "alpha" ]
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "delete",
+      "path": "/custom/sample/del/1",
+      "headers": {
+        "X-custom-header": "X-del-custom-header-value"
+      },
+      "query": {
+        "word": "beta"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "del-bad": "custom-header"
+        }
+      }
+    }
+  }
+]
