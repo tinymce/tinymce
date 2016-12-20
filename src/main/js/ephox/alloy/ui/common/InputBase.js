@@ -3,15 +3,17 @@ define(
 
   [
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Value'
   ],
 
-  function (FieldSchema, Fun, Value) {
+  function (FieldSchema, Objects, Fun, Value) {
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
+      FieldSchema.option('placeholder'),
       FieldSchema.defaulted('hasTabstop', true)
     ];
 
@@ -54,9 +56,17 @@ define(
     var dom = function (detail) {
       return {
         tag: detail.tag(),
-        attributes: {
-          type: detail.type()
-        }
+        attributes: Objects.wrapAll([
+          {
+            key: 'type',
+            value: detail.type()
+          }
+        ].concat(detail.placeholder().map(function (pc) {
+          return {
+            key: 'placeholder',
+            value: pc
+          };
+        }).toArray()))
       };
     };
 
