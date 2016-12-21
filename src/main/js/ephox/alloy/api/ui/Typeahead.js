@@ -6,11 +6,14 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.InputBase',
     'ephox.alloy.ui.composite.TypeaheadSpec',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -18,7 +21,7 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Coupling, Representing, Sandboxing, UiBuilder, Fields, PartType, InputBase, TypeaheadSpec, FieldSchema, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, UiBuilder, EventHandler, Fields, ItemEvents, PartType, InputBase, TypeaheadSpec, FieldSchema, Objects, Merger, Fun, Option, Cell, Strings) {
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
@@ -79,6 +82,12 @@ define(
                   detail.onExecute()(sandbox, input);
                   return Option.some(true);
                 });
+              });
+            },
+
+            onHover: function (menu, item) {
+              menu.getSystem().getByUid(detail.uid()).each(function (input) {
+                Representing.setValueFrom(input, item);
               });
             }
           };

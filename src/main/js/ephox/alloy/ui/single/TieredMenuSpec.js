@@ -208,6 +208,7 @@ define(
               var item = simulatedEvent.event().item();
               updateView(sandbox, item);
               expandRight(sandbox, item);
+              detail.onHover()(sandbox, item);
             }
           })
         },
