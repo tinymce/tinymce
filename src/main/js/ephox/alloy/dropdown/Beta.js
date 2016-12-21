@@ -13,16 +13,18 @@ define(
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
+    'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (ComponentStructure, Composing, Coupling, Focusing, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Composing, Coupling, Focusing, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Id, Merger, Future, Fun, Option, Attr, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -102,7 +104,11 @@ define(
     };
 
     var makeSandbox = function (detail, anchor, anyInSystem, extras) {
+      var ariaId = Id.generate('aria-owns');
+
+
       var onOpen = function (component, menu) {
+        Attr.set(anyInSystem.element(), 'aria-owns', ariaId);
         // TODO: Reinstate matchWidth
         if (detail.matchWidth()) matchWidth(anyInSystem, menu);
         detail.onOpen()(anchor, component, menu);
@@ -110,6 +116,7 @@ define(
       };
 
       var onClose = function (component, menu) {
+        Attr.remove(anyInSystem.element(), 'aria-owns');
         // FIX: Will need to do this for non split-dropdown
         // Toggling.deselect(hotspot);
         // FIX: Using to hack in turning off the arrow.
@@ -121,7 +128,10 @@ define(
       return {
         uiType: 'custom',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          attributes: {
+            id: ariaId
+          }
         },
         behaviours: {
           sandboxing: {
