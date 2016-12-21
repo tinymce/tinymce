@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.Beta',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Sandboxing, EventHandler, Beta, InputBase, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, EventHandler, Beta, InputBase, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
@@ -94,6 +95,8 @@ define(
             var sandbox = Coupling.getCoupled(comp, 'sandbox');
             if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
             detail.onExecute()(sandbox, comp);
+            var currentValue = Representing.getValue(comp);
+            comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
             return Option.some(true);
           }
         },
