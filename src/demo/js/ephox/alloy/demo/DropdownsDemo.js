@@ -370,6 +370,9 @@ define(
             sink: { }
           },
           lazySink: lazySink,
+
+          matchWidth: true,
+
           fetch: function () {
 
             var data = [
