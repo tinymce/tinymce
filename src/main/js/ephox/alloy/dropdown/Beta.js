@@ -95,16 +95,16 @@ define(
       return action(detail, anchor, hotspot, sandbox, externals);
     };
 
-    // FIX: Reinstate
-    // var matchWidth = function (hotspot, container) {
-    //   var buttonWidth = Width.get(hotspot.element());
-    //   Width.set(container.element(), buttonWidth);
-    // };
+    var matchWidth = function (hotspot, container) {
+      var menu = Composing.getCurrent(container).getOr(container);
+      var buttonWidth = Width.get(hotspot.element());
+      Width.set(menu.element(), buttonWidth);
+    };
 
     var makeSandbox = function (detail, anchor, anyInSystem, extras) {
       var onOpen = function (component, menu) {
         // TODO: Reinstate matchWidth
-        // if (detail.matchWidth()) matchWidth(hotspot, menu);
+        if (detail.matchWidth()) matchWidth(anyInSystem, menu);
         detail.onOpen()(anchor, component, menu);
         if (extras !== undefined && extras.onOpen !== undefined) extras.onOpen(component, menu);
       };
