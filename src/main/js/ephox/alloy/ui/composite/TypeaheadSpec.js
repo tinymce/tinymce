@@ -123,10 +123,13 @@ define(
       };
 
       return Merger.deepMerge(
-        { dom: InputBase.dom(detail) },
-        { behaviours: InputBase.behaviours(detail) },
+        {
+          behaviours: InputBase.behaviours(detail)
+        },
         {
           uiType: 'custom',
+          uid: detail.uid(),
+          dom: InputBase.dom(detail),
           behaviours: behaviours,
           events: Objects.wrapAll([
             {
