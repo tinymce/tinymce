@@ -270,6 +270,8 @@ define(
         Dropdown.build({
           lazySink: lazySink,
 
+          toggleClass: 'demo-selected',
+
           dom: {
             tag: 'div',
             innerHtml: 'Dropdown widget'
@@ -322,6 +324,8 @@ define(
             
           ],
 
+          toggleClass: 'demo-selected',
+
           name: 'grid-demo',
 
           parts: {
@@ -358,6 +362,8 @@ define(
           components: [
             Dropdown.parts().sink()
           ],
+
+          toggleClass: 'demo-selected',
 
           parts: {
             menu: listMenu,
@@ -400,6 +406,8 @@ define(
           parts: {
             menu: listMenu
           },
+
+          toggleClass: 'demo-selected',
 
           onExecute: function (sandbox, item, itemValue) {
             console.trace();

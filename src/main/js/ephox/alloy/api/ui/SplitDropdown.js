@@ -53,7 +53,8 @@ define(
           },
           behaviours: {
             toggling: {
-              toggleOnExecute: false
+              toggleOnExecute: false,
+              toggleClass: detail.toggleClass()
             }
           }
         };
