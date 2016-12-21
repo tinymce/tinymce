@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
@@ -14,9 +15,14 @@ define(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.api.ui.Typeahead',
+    'ephox.alloy.api.ui.menus.MenuData',
+    'ephox.alloy.demo.DemoDataset',
+    'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
+    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
@@ -25,16 +31,35 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Value',
     'global!document',
     'global!setTimeout'
   ],
 
-  function (Gui, Keying, Representing, Tabstopping, Button, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, HtmlDisplay, Tagger, Objects, Merger, Future, Fun, Option, Result, Class, Element, Insert, document, setTimeout) {
+  function (Gui, GuiFactory, Keying, Representing, Tabstopping, Button, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Typeahead, MenuData, DemoDataset, DemoMenus, HtmlDisplay, Tagger, Objects, Arr, Merger, Future, Fun, Option, Result, Class, Element, Insert, Value, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
+
+       var sink = GuiFactory.build({
+        uiType: 'custom',
+        dom: {
+          tag: 'div'
+        },
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
+        }
+      });
+
+      gui.add(sink);
+
+      var lazySink = function () {
+        return Result.value(sink);
+      };
 
       var textMunger = function (spec) {
         var invalidUid = Tagger.generate('demo-invalid-uid');
@@ -301,7 +326,62 @@ define(
               { value: 'c.c', text: 'C.C' },
               { value: 'd.d', text: 'D.D' }
             ]        
-          }))
+          })),
+
+          maxis: FormField.build(Typeahead, {
+            parts: {
+              field: {
+                minChars: 1,
+
+                lazySink: lazySink,
+
+                fetch: function (input) {
+
+                  var text = Value.get(input.element());
+                  console.log('text', text);
+                  var matching = Arr.bind(DemoDataset, function (d) {
+                    var index = d.indexOf(text.toLowerCase());
+                    if (index > -1) {
+                      var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
+                        d.substring(index + text.length);
+                      return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
+                    } else {
+                      return [ ];
+                    }
+                  });
+
+                  var matches = matching.length > 0 ? matching : [
+                    { type: 'separator', text: 'No items' }
+                  ];
+         
+                  var future = Future.pure(matches);
+                  return future.map(function (items) {
+                    return MenuData.simple('blah', 'Blah', items);
+                  });
+                },
+                dom: {
+
+                },
+                parts: {
+                  menu: DemoMenus.list()
+                },
+
+                markers: {
+                  openClass: 'alloy-selected-open'
+                }
+              },
+              label: {
+                dom: {
+                  tag: 'label',
+                  innerHtml: 'Maxis'
+                }
+              }
+            },
+            components: [
+              FormField.parts(Typeahead).label(),
+              FormField.parts(Typeahead).field()
+            ]
+          })
         };
       };
 
@@ -314,10 +394,11 @@ define(
             classes: [ 'outside-form' ]
           },
        
-          parts: Objects.narrow(fieldParts(), [ 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
+          parts: Objects.narrow(fieldParts(), [ 'alpha', 'maxis', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
 
           components: [
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
+            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.maxis>' },
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
             { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
             {

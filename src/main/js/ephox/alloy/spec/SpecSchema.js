@@ -16,7 +16,8 @@ define(
   ],
 
   function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
-    var getPartsSchema = function (partNames, _optPartNames) {
+    var getPartsSchema = function (partNames, _optPartNames, _owner) {
+      var owner = _owner !== undefined ? _owner : 'Unknown owner';
       var fallbackThunk = function () {
         return [
           FieldSchema.state('partUids', function () {
@@ -44,10 +45,12 @@ define(
       var partUidsSchema = FieldSchema.state(
         'partUids',
         function (spec) {
-          if (! Objects.hasKey(spec, 'parts')) throw new Error(
-            'Part uid definition requires "parts"\nSpec: ' +
-            Json.stringify(spec, null, 2)
-          );
+          if (! Objects.hasKey(spec, 'parts')) {
+            throw new Error(
+              'Part uid definition for owner: ' + owner + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
+              Json.stringify(spec, null, 2)
+            );
+          }
           var uids = Obj.map(spec.parts, function (v, k) {
             return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
               return spec.uid + '-' + k;
@@ -61,7 +64,7 @@ define(
     };
 
     var base = function (label, partNames, optPartNames, spec) {
-      var partsSchema = getPartsSchema(partNames, optPartNames !== undefined ? optPartNames : [ ]);
+      var partsSchema = getPartsSchema(partNames, optPartNames !== undefined ? optPartNames : [ ], label);
 
       return partsSchema.concat([
         FieldSchema.strict('uid'),

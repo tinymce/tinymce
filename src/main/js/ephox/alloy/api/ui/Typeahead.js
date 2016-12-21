@@ -97,6 +97,8 @@ define(
     };
 
     return {
+      // Used so that it can be a form factory
+      name: Fun.constant('typeahead'),
       build: build
     };
   }

@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.menus.MenuData',
+    'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoTemplates',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.compass.Arr',
@@ -21,7 +22,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Typeahead, MenuData, DemoTemplates, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, Typeahead, MenuData, DemoMenus, DemoTemplates, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -75,58 +76,6 @@ define(
         return Result.value(sink);
       };
 
-      var listMenu = {
-        members: {
-          menu: {
-            munge: function (spec) {
-              return {
-                dom: {
-                  tag: 'ol',
-                  attributes: {
-                    'aria-label': spec.text
-                  },
-                  classes: [ 'demo-alloy-menu' ]
-                },
-                shell: true,
-                components: [ ]
-              };
-            }
-          },
-          item: {
-            munge: function (spec) {
-
-              return spec.type === 'separator' ? {
-                uiType: 'container',
-                dom: {
-                  tag: 'div',
-                  classes: [  ],
-                  innerHtml: spec.text
-                },
-                components: [
-
-                ]
-              } : {
-                dom: {
-                  tag: 'li',
-                  classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                  innerHtml: spec.data.html
-                },
-                components: [
-
-                ]
-              };
-            }
-          }
-        },
-        markers: {
-          item: 'alloy-item',
-          selectedItem: 'alloy-selected-item',
-          menu: 'alloy-menu',
-          selectedMenu: 'alloy-selected-menu',
-          'backgroundMenu': 'alloy-background-menu'
-        }
-      };
-
       HtmlDisplay.section(gui,
         'An example of a typeahead component',
         Typeahead.build({
@@ -137,7 +86,7 @@ define(
           },
 
           parts: {
-            menu: listMenu
+            menu: DemoMenus.list()
           },
 
           markers: {
