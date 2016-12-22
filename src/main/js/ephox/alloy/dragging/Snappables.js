@@ -63,13 +63,19 @@ define(
       Presnaps.set(component, snapInfo, fixedCoord);
      
       return snap.fold(function () {
-        return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
+        return {
+          coord: DragCoord.fixed(fixedCoord.left(), fixedCoord.top()),
+          snapped: false
+        };
         // No snap.
         // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
         // presnaps.set(element, 'fixed', newfixed.left(), newfixed.top());
         // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
       }, function (spanned) {
-        return spanned;
+        return {
+          coord: spanned,
+          snapped: true
+        };
       });
     };
 

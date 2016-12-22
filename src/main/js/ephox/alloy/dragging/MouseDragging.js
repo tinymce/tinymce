@@ -91,7 +91,13 @@ define(
                   var fixedCoord = DragCoord.asFixed(translated, scroll, origin);
                   return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
                 }, function (snapInfo) {
-                  return Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
+                  var snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
+                  // FIX: Find a better way.
+                  if (snapping.snapped) {
+                    snapInfo.onSensor()(component, snapping.coord);
+                  }
+                  return snapping.coord;
+
                 });
 
                 var styles = DragCoord.toStyles(newCoord, scroll, origin);
@@ -197,6 +203,7 @@ define(
       FieldSchema.defaulted('onDrop', Fun.noop),
       FieldSchema.optionObjOf('snaps', [
         FieldSchema.strict('getSnapPoints'),
+        FieldSchema.defaulted('onSensor', Fun.noop),
         FieldSchema.strict('leftAttr'),
         FieldSchema.strict('topAttr'),
         FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
