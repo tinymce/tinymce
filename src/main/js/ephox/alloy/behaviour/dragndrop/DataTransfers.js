@@ -28,6 +28,7 @@ define(
     var setDragImage = function (transfer, image, x, y) {
       // Neither IE nor Edge support setDragImage
       if (transfer.setDragImage) transfer.setDragImage(image, x, y);
+      else console.error('haha');
     };
 
     var setDropEffect = function (transfer, effect) {

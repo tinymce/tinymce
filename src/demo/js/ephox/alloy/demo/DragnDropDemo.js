@@ -77,7 +77,13 @@ define(
                   width: '100px',
                   height: '100px'
                 }
-              }
+              },
+              behaviours: deriveCapabilities([
+                DragnDrop.config({
+                  mode: 'drop',
+                  type: 'text'
+                })
+              ])
             }
           ]
         }        

@@ -139,6 +139,17 @@ define(
         if (stopped) event.kill();
       });
 
+      var onDragover = DomEvent.bind(container, 'dragover', function (event) {
+        var stopped = settings.triggerEvent('dragover', event);
+        if (stopped) event.kill();
+      });
+
+      var onDrop = DomEvent.bind(container, 'drop', function (event) {
+        debugger;
+        var stopped = settings.triggerEvent('drop', event);
+        if (stopped) event.kill();
+      });
+
       var defaultView = Traverse.defaultView(container);
       var onWindowScroll = DomEvent.bind(defaultView, 'scroll', function (event) {
         var stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
@@ -161,6 +172,8 @@ define(
         onContextmenu.unbind();
         onTransitionEnd.unbind();
         onDragStart.unbind();
+        onDragover.unbind();
+        onDrop.unbind();
         onWindowScroll.unbind();
       };
 
