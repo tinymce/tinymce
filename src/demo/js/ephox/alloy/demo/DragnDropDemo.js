@@ -5,15 +5,19 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.DragnDrop',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Class',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Replication',
     'global!document'
   ],
 
-  function (Gui, DragnDrop, Button, HtmlDisplay, Objects, Class, Element, Insert, document) {
+  function (Gui, DragnDrop, Button, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Insert, Replication, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -46,7 +50,21 @@ define(
               behaviours: deriveCapabilities([
                 DragnDrop.config({
                   mode: 'drag',
-                  type: 'text/html'
+                  type: 'text/html',
+                  getData: function (button) {
+                    return '<button>Hi there</button>';
+                  },
+                  getImage: function (button) {
+                    return {
+                      element: function () {
+                        var clone = Replication.deep(button.element());
+                        Css.set(clone, 'background-color', 'blue');
+                        return clone;
+                      },
+                      x: Fun.constant(0),
+                      y: Fun.constant(0)
+                    };
+                  }
                 })
               ])
             }),
