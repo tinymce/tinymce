@@ -3,10 +3,16 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.fred.PlatformDetection'
+    'ephox.fred.PlatformDetection',
+    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Remove',
+    'global!setTimeout'
   ],
 
-  function (Arr, PlatformDetection) {
+  function (Arr, PlatformDetection, Attr, Css, Element, Insert, Remove, setTimeout) {
     var platform = PlatformDetection.detect();
 
     var setDataTransfer = function (transfer, types, data) {
@@ -35,9 +41,26 @@ define(
       return transfer.getData(type);
     };
 
-    var setDragImage = function (transfer, image, x, y) {
+    var setDragImage = function (target, transfer, image, x, y) {
       // Neither IE nor Edge support setDragImage
       if (transfer.setDragImage) transfer.setDragImage(image, x, y);
+      else {
+        var style = Attr.get(target, 'style');
+        // Css.set(target, 'background', 'blue');
+
+        var nu = Element.fromDom(image.cloneNode(true));
+        Css.set(nu, 'position', 'absolute');
+        Css.set(nu, 'left', '0px');
+        Css.set(nu, 'top', '0px');
+        console.log('nu', nu.dom());
+        Insert.append(target, nu);
+        Css.set(target, 'position', 'relative');
+
+        setTimeout(function () {
+          Attr.set(target, 'style', style);
+          Remove.remove(nu);
+        }, 1000);
+      }
     };
 
     var setDropEffect = function (transfer, effect) {

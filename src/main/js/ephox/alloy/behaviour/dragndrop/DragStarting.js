@@ -75,7 +75,7 @@ define(
                   Remove.empty(ghost);
                   Insert.append(ghost, image.element());
                   Insert.append(parent, ghost);
-                  DataTransfers.setDragImage(transfer, ghost.dom(), image.x(), image.y());
+                  DataTransfers.setDragImage(component.element(), transfer, ghost.dom(), image.x(), image.y());
                 });
                 DataTransfers.setDropEffect(transfer, dragInfo.dropEffect());
               }

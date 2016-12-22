@@ -12,12 +12,13 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Html',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Replication',
     'global!document'
   ],
 
-  function (Gui, DragnDrop, Button, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Insert, Replication, document) {
+  function (Gui, DragnDrop, Button, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Html, Insert, Replication, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
