@@ -7,8 +7,11 @@ define(
   ],
 
   function (Arr, PlatformDetection) {
+    var platform = PlatformDetection.detect();
+
     var setDataTransfer = function (transfer, types, data) {
-      Arr.each(types, function (type) {
+      Arr.each(types, function (rawType) {
+        var type = platform.browser.isIE() && rawType.indexOf('text') === 0 ? 'text' : rawType;
         transfer.setData(type, data);
       });
     };
@@ -23,8 +26,13 @@ define(
     var setData = function (transfer, types, data) {
       // If we use setDataItems on Firefox and Linux, it basically gets into a failed state
       // which corrupts all drag and drops on that Firefox process. Avoid.
-      var set = PlatformDetection.detect().browser.isChrome() ? setDataItems : setDataTransfer;
+      var set = platform.browser.isChrome() ? setDataItems : setDataTransfer;
       set(transfer, types, data);
+    };
+
+    var getData = function (transfer, rawType) {
+      var type = platform.browser.isIE() && rawType.indexOf('text') === 0 ? 'text' : rawType;
+      return transfer.getData(type);
     };
 
     var setDragImage = function (transfer, image, x, y) {
@@ -38,6 +46,7 @@ define(
 
     return {
       setData: setData,
+      getData: getData,
       setDragImage: setDragImage,
       setDropEffect: setDropEffect
     };

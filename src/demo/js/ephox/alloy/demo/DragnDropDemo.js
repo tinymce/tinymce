@@ -83,7 +83,11 @@ define(
               behaviours: deriveCapabilities([
                 DragnDrop.config({
                   mode: 'drop',
-                  type: 'text'
+                  type: 'text/html',
+                  onDrop: function (zone, data) {
+                    var next = Element.fromHtml(data);
+                    Insert.append(zone.element(), next);
+                  }
                 })
               ])
             }

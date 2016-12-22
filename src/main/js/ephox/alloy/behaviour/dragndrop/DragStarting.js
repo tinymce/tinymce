@@ -62,6 +62,7 @@ define(
                 var transfer = simulatedEvent.event().raw().dataTransfer;
                 var types = [ dragInfo.type() ].concat(dragInfo.phoneyTypes());
                 var data = dragInfo.getData()(component);
+                console.log('data', data);
 
                 DataTransfers.setData(transfer, types, data);
                 dragInfo.getImage().each(function (f) {
