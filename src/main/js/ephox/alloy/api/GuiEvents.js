@@ -145,7 +145,6 @@ define(
       });
 
       var onDrop = DomEvent.bind(container, 'drop', function (event) {
-        debugger;
         var stopped = settings.triggerEvent('drop', event);
         if (stopped) event.kill();
       });

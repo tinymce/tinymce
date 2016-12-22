@@ -36,7 +36,7 @@ define(
 
             'drop': EventHandler.nu({
               run: function (component, simulatedEvent) {
-                debugger
+                document.querySelector('h2').innerHTML='Dropped';
               }
             })
           };

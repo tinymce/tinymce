@@ -36,7 +36,7 @@ define(
           components: [
             Button.build({
               dom: {
-                tag: 'button',
+                tag: 'div',
                 styles: {
                   'background-color': 'black',
                   width: '20px',
