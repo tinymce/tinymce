@@ -2,10 +2,11 @@ define(
   'ephox.alloy.behaviour.dragndrop.DataTransfers',
 
   [
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'ephox.fred.PlatformDetection'
   ],
 
-  function (Arr) {
+  function (Arr, PlatformDetection) {
     var setDataTransfer = function (transfer, types, data) {
       Arr.each(types, function (type) {
         transfer.setData(type, data);
@@ -20,15 +21,15 @@ define(
     };
 
     var setData = function (transfer, types, data) {
-      // Check if falsy
-      var set = transfer.items ? setDataItems : setDataTransfer;
+      // If we use setDataItems on Firefox and Linux, it basically gets into a failed state
+      // which corrupts all drag and drops on that Firefox process. Avoid.
+      var set = PlatformDetection.detect().browser.isChrome() ? setDataItems : setDataTransfer;
       set(transfer, types, data);
     };
 
     var setDragImage = function (transfer, image, x, y) {
       // Neither IE nor Edge support setDragImage
       if (transfer.setDragImage) transfer.setDragImage(image, x, y);
-      else console.error('haha');
     };
 
     var setDropEffect = function (transfer, effect) {

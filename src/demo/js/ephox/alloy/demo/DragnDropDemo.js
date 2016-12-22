@@ -34,7 +34,9 @@ define(
         {
           uiType: 'container',
           components: [
-            Button.build({
+            // Button.build({
+            ({
+              uiType: 'custom',
               dom: {
                 tag: 'div',
                 styles: {

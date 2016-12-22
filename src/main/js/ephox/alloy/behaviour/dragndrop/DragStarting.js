@@ -49,13 +49,21 @@ define(
           });
         };
 
+
+        // Inspired by the ideas here. On mousedown, spawn an iamge at pageX, pageY
+        // Fire dragDrop on that image
+        // remove the image in a setTimeout( 0 )
+        // http://jsfiddle.net/stevendwood/akScu/21/
+
         var handlers = function (dragInfo) {
           return {
             'dragstart': EventHandler.nu({
               run: function (component, simulatedEvent) {
                 var transfer = simulatedEvent.event().raw().dataTransfer;
                 var types = [ dragInfo.type() ].concat(dragInfo.phoneyTypes());
-                DataTransfers.setData(transfer, types, dragInfo.getData(component));
+                var data = dragInfo.getData()(component);
+
+                DataTransfers.setData(transfer, types, data);
                 dragInfo.getImage().each(function (f) {
                   var parent = dragInfo.imageParent().getOrThunk(function () {
                     var doc = Traverse.owner(component.element());
