@@ -3,14 +3,16 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.boulder.api.FieldSchema',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'global!document'
   ],
 
-  function (Gui, HtmlDisplay, Class, Element, Insert, document) {
+  function (Gui, BehaviourExport, HtmlDisplay, FieldSchema, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -21,7 +23,30 @@ define(
         gui,
         'This container has orderable buttons',
         {
-          uiType: 'container'
+          uiType: 'container',
+
+
+
+
+
+          behaviours: {
+            ordering: {
+              blah: 'hi'
+            }
+          },
+
+
+          customBehaviours: [
+            BehaviourExport.santa(
+              [
+                FieldSchema.strict('blah')
+              ],
+              'ordering',
+              { },
+              { },
+              { }
+            )
+          ]
         }
       );
     };
