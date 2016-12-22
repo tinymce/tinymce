@@ -40,7 +40,7 @@ define(
               run: function (component, simulatedEvent) {
                 var transfer = simulatedEvent.event().raw().dataTransfer;
                 var data = DataTransfers.getData(transfer, dragInfo.type());
-                dragInfo.onDrop()(component, data);
+                dragInfo.onDrop()(component, data, simulatedEvent.event());
               }
             })
           };

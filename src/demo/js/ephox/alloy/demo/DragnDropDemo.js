@@ -85,7 +85,8 @@ define(
                 DragnDrop.config({
                   mode: 'drop',
                   type: 'text/html',
-                  onDrop: function (zone, data) {
+                  onDrop: function (zone, data, event) {
+                    event.kill();
                     var next = Element.fromHtml(data);
                     Insert.append(zone.element(), next);
                   }
