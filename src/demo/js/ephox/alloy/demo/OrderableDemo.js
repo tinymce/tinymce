@@ -66,13 +66,19 @@ define(
                             // output: DragCoord.absolute(Option.some(loc.left()), Option.some(loc.top()))
 
                             // Do not actually change its position, but create a spot there
-                            output: DragCoord.absolute(Option.none(), Option.none())
+                            output: DragCoord.absolute(Option.none(), Option.none()),
+                            extra: btn
                           })
                         ];
                       });
                     },
                     leftAttr: 'data-drag-left',
-                    topAttr: 'data-drag-top'
+                    topAttr: 'data-drag-top',
+
+                    onSensor: function (primary, extra) {
+                      // REALLY HACKY but sort of holding together.
+                      console.log('extra', extra.dom());
+                    }
                   }
                 }
               },

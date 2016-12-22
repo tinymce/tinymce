@@ -93,9 +93,9 @@ define(
                 }, function (snapInfo) {
                   var snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
                   // FIX: Find a better way.
-                  if (snapping.snapped) {
-                    snapInfo.onSensor()(component, snapping.coord);
-                  }
+                  snapping.extra.each(function (extra) {
+                    snapInfo.onSensor()(component, extra);
+                  });
                   return snapping.coord;
 
                 });

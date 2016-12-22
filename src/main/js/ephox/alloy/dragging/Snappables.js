@@ -4,12 +4,13 @@ define(
   [
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.dragging.Presnaps',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'global!Math'
   ],
 
-  function (DragCoord, Presnaps, Option, Options, Math) {
+  function (DragCoord, Presnaps, Fun, Option, Options, Math) {
     // Types of coordinates
     // Location: This is the position on the screen including scroll.
     // Absolute: This is the css setting that would be applied. Therefore, it subtracts
@@ -65,7 +66,7 @@ define(
       return snap.fold(function () {
         return {
           coord: DragCoord.fixed(fixedCoord.left(), fixedCoord.top()),
-          snapped: false
+          extra: Option.none()
         };
         // No snap.
         // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
@@ -73,8 +74,8 @@ define(
         // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
       }, function (spanned) {
         return {
-          coord: spanned,
-          snapped: true
+          coord: spanned.output(),
+          extra: spanned.extra()
         };
       });
     };
@@ -96,7 +97,10 @@ define(
         var sensor = snap.sensor();
         var inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
         return inRange ? Option.some(
-          DragCoord.absorb(snap.output(), newCoord, scroll, origin)
+          {
+            output: Fun.constant(DragCoord.absorb(snap.output(), newCoord, scroll, origin)),
+            extra: snap.extra
+          }
         ) : Option.none();
       });
     };

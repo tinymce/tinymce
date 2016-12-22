@@ -21,7 +21,7 @@ define(
       { },
       {
         // Extra. Does not need component as input.
-        snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ ])
+        snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ 'extra' ])
 
       }
     );
