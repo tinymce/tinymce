@@ -2,10 +2,8 @@ define(
   'ephox.alloy.api.Component',
 
   [
-    'ephox.alloy.alien.ExtraArgs',
     'ephox.alloy.api.NoContextApi',
     'ephox.alloy.api.behaviour.BehaviourExport',
-    'ephox.alloy.construct.ComponentApis',
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.CustomDefinition',
@@ -21,7 +19,7 @@ define(
     'global!Error'
   ],
 
-  function (ExtraArgs, NoContextApi, BehaviourExport, ComponentApis, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
+  function (NoContextApi, BehaviourExport, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
     var build = function (spec) { 
        var getSelf = function () {
         return self;
@@ -54,16 +52,6 @@ define(
       // };
 
       var events = ComponentEvents.combine(info, behaviours, baseEvents).getOrDie();
-
-
-      // // Curry a lazy argument into the API. Invoke it before calling.
-      // var apis = ComponentApis.combine(info, behaviours, baseApis, [
-      //   // Use the delegate if there is one.
-      //   ExtraArgs.lazy(function () {
-      //     return self;
-      //   })
-      // ]).getOrDie();
-   
 
       var subcomponents = Cell(info.components());
 
