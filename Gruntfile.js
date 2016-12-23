@@ -2,6 +2,9 @@
 
 module.exports = function(grunt) {
   var packageData = grunt.file.readJSON('package.json');
+
+  var driver = 'phantomjs';
+
   // var changelogLine = grunt.file.read('changelog.txt').toString().split('\n")[0];
   // var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
   // packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
@@ -13,7 +16,37 @@ module.exports = function(grunt) {
       'behaviours': {
         config: 'config/bolt/browser.js',
         testdir: 'src/test/js/browser/behaviour',
-        browser: 'phantomjs'
+        browser: driver
+      },
+      'api': {
+        config: 'config/bolt/browser.js',
+        testdir: 'src/test/js/browser/api',
+        browser: driver
+      },
+      'events': {
+        config: 'config/bolt/browser.js',
+        testdir: 'src/test/js/browser/events',
+        browser: driver
+      },
+      'position': {
+        config: 'config/bolt/browser.js',
+        testdir: 'src/test/js/browser/position',
+        browser: driver
+      },
+      'ui': {
+        config: 'config/bolt/browser.js',
+        testdir: 'src/test/js/browser/ui',
+        browser: driver
+      },
+
+
+      browser: {
+        config: 'config/bolt/browser.js',
+        testdir: 'src/test/js/browser',
+        browser: driver,
+        options: {
+          stopOnFailure: true
+        }
       }
     },
 
@@ -21,7 +54,8 @@ module.exports = function(grunt) {
       'behaviours': {
         config: 'config/bolt/browser.js',
         testdir: 'src/test/js/browser/behaviour',
-        browser: 'chrome'
+        browser: driver,
+
       }
       // "advlink-plugin": {
       //   config_js: "config/bolt/prod.js",
@@ -73,7 +107,7 @@ module.exports = function(grunt) {
         files: ['src/**/*.js'],
         tasks: [
 
-          'bedrock-auto:behaviours'
+          'bedrock-auto:browser'
         ],
         options: {
           spawn: false
