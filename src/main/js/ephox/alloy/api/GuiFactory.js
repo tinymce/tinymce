@@ -44,11 +44,6 @@ define(
       return Arr.map(components, build);
     };
 
-    var postprocess = function (spec, components) {
-      var f = Objects.readOr('postprocess', Fun.noop)(spec);
-      f(components);
-    };
-
     var buildFromSpec = function (userSpec) {
       var uiType = userSpec.uiType;
       return Objects.readOptFrom(knownSpecs, uiType).fold(function () {
@@ -58,8 +53,7 @@ define(
 
         // Build the subcomponents
         var components = buildSubcomponents(spec);
-        postprocess(spec, components);
-
+      
         var completeSpec = Merger.deepMerge(
           DefaultEvents,
           spec,

@@ -86,7 +86,6 @@ define(
         FieldSchema.defaulted('domModificationOrder', {}),
 
         FieldSchema.state('definition.input', Fun.identity),
-        FieldSchema.defaulted('postprocess', Fun.noop),
 
         // Could wrap this up in a behaviour ...but won't for the time being
         FieldSchema.optionObjOf('delegate', [
