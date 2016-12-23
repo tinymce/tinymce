@@ -13,35 +13,8 @@ module.exports = function(grunt) {
       'behaviours': {
         config: 'config/bolt/browser.js',
         testdir: 'src/test/js/browser/behaviour',
-        browser: 'chrome'
+        browser: 'phantomjs'
       }
-      // "advlink-plugin": {
-      //   config_js: "config/bolt/prod.js",
-      //   output_dir: "scratch/advlink",
-      //   main: "tinymce.plugins.advlink.Plugin",
-      //   filename: "plugin",
-
-      //   generate_inline: true,
-      //   minimise_module_names: true,
-
-      //   files: {
-      //     src: ["src/main/js/tinymce/plugins/advlink/Plugin.js"]
-      //   }
-      // },
-
-      // "silver-theme": {
-      //   config_js: "config/bolt/prod.js",
-      //   output_dir: "scratch/silver",
-      //   main: "tinymce.themes.silver.Theme",
-      //   filename: "theme",
-
-      //   generate_inline: true,
-      //   minimise_module_names: true,
-
-      //   files: {
-      //     src: ['src/main/js/tinymce/themes/silver/Theme.js']
-      //   }
-      // }
     },
 
     'bedrock-manual': {
