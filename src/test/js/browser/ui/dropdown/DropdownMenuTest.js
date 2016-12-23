@@ -135,6 +135,8 @@ asynctest(
             classes: 'dropdown-button'
           }, 
 
+          toggleClass: 'alloy-selected',
+
           behaviours: Objects.wrapAll([
             Focusing.config({ })
           ]),

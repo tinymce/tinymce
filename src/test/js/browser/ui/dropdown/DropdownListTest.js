@@ -71,6 +71,8 @@ asynctest(
             return Result.value(sink.get(c));
           },
 
+          toggleClass: 'alloy-selected',
+
           parts: {
             menu: TestDropdownMenu(store)
           },

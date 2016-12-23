@@ -11,12 +11,17 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
     'ephox.compass.Arr',
+    'ephox.fred.PlatformDetection',
     'ephox.sugar.api.Css'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Button, SplitToolbar, GuiSetup, TestPartialToolbarGroup, Arr, Css) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Button, SplitToolbar, GuiSetup, TestPartialToolbarGroup, Arr, PlatformDetection, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    // Tests requiring 'flex' do not currently work on phantom. Use the remote debugger to see how it is
+    // viewed as an invalid value.
+    if (navigator.userAgent.indexOf('PhantomJS') > -1) return success();
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(

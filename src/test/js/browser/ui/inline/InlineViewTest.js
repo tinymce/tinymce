@@ -110,6 +110,9 @@ asynctest(
                     innerHtml: '+'
                   },
                   components: [ ],
+
+                  toggleClass: 'alloy-selected',
+
                   lazySink: function () { return Result.value(component); },
                   parts: {
                     menu: TestDropdownMenu(store)

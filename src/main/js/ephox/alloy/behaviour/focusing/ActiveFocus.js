@@ -25,8 +25,6 @@ define(
         SystemEvents.focus(),
         EventHandler.nu({
           run: function (component, simulatedEvent) {
-            console.log('Dispatching focus to ', AlloyLogger.element(simulatedEvent.getSource()));
-            console.trace();
             FocusApis.focus(component, focusInfo);
             simulatedEvent.stop();
           }
