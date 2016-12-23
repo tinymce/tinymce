@@ -1,0 +1,22 @@
+{
+  "name": "alloy",
+  "version": "1.0.0",
+  "description": "Ui Framework",
+  "main": "index.js",
+  "dependencies": {
+    "phantom": "^3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@stash:7999/van/alloy.git"
+  },
+  "keywords": [
+    "ui"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
+}
