@@ -106,7 +106,19 @@ define("tinymce/codesampleplugin/Plugin", [
 
 		editor.addButton('codesample', {
 			cmd: 'codesample',
-			title: 'Insert/Edit code sample'
+			title: 'Insert/Edit code sample',
+			onPostRender: function() {
+				var self = this;
+				editor.on('NodeChange', function(ed) {
+					self.active(Utils.isCodeSample(ed.element));
+				});
+			}
+		});
+
+		editor.on('DblClick', function(ed) {
+			if (Utils.isCodeSample(ed.target)) {
+				Dialog.open(editor);
+			}
 		});
 
 		editor.on('init', loadCss);
