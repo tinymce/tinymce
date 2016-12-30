@@ -41,7 +41,8 @@ define(
       return Redistribution.validate(newSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
     };
 
-
+    // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
+    // Updates CSS of the table, rows, and cells.
     var redistribute = function (table, optWidth, optHeight, direction) {
       var list = DetailsList.fromTable(table);
       var warehouse = Warehouse.generate(list);
