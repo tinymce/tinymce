@@ -9,6 +9,10 @@ define(
   ],
 
   function (Arr, Fun, Warehouse, parseInt) {
+
+    // Returns the sum of elements of measures in the half-open range [start, end)
+    // Measures is in pixels, treated as an array of integers or integers in string format.
+    // NOTE: beware of accumulated rounding errors over multiple columns - could result in noticeable table width changes
     var total = function (start, end, measures) {
       var r = 0;
       for (var i = start; i < end; i++) {
@@ -17,10 +21,13 @@ define(
       return r;
     };
 
+    // Returns an array of all cells in warehouse with updated cell-widths, using 
+    // the array 'widths' of the representative widths of each column of the table 'warehouse'
     var recalculateWidth = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);
 
       return Arr.map(all, function (cell) {
+        // width of a spanning cell is sum of widths of representative columns it spans
         var width = total(cell.column(), cell.column() + cell.colspan(), widths);
         return {
           element: cell.element,
