@@ -47,10 +47,14 @@ define('tinymce.media.ui.Dialog', [
 	var addEmbedHtml = function (win, editor) {
 		return function (response) {
 			var html = response.html;
-			win.find('#embed').value(html);
+			var embed = win.find('#embed')[0];
 			var data = Tools.extend(HtmlToData.htmlToData(editor.settings.media_scripts, html), {source1: response.url});
 			win.fromJSON(data);
-			updateSize(win);
+
+			if (embed) {
+				embed.value(html);
+				updateSize(win);
+			}
 		};
 	};
 
