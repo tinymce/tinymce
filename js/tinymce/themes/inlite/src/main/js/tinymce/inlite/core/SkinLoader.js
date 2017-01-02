@@ -14,6 +14,7 @@ define('tinymce/inlite/core/SkinLoader', [
 ], function (EditorManager, DOM) {
 	var fireSkinLoaded = function (editor, callback) {
 		var done = function () {
+			editor._skinLoaded = true;
 			editor.fire('SkinLoaded');
 			callback();
 		};
