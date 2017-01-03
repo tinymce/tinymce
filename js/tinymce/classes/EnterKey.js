@@ -632,6 +632,10 @@ define("tinymce/EnterKey", [
 			// Insert new block before/after the parent block depending on caret location
 			if (CaretContainer.isCaretContainerBlock(parentBlock)) {
 				newBlock = CaretContainer.showCaretContainerBlock(parentBlock);
+				if (dom.isEmpty(parentBlock)) {
+					emptyBlock(parentBlock);
+				}
+				moveToCaretPosition(newBlock);
 			} else if (isCaretAtStartOrEndOfBlock()) {
 				insertNewBlockAfter();
 			} else if (isCaretAtStartOrEndOfBlock(true)) {

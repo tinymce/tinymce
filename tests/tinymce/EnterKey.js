@@ -1098,3 +1098,24 @@ if (window.getSelection) {
 		notEqual(rng.startContainer.data, ' ');
 	});
 }
+
+if (tinymce.Env.ceFalse) {
+	test('Enter before cE=false div', function() {
+		editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
+		editor.selection.select(editor.dom.select('div')[0]);
+		editor.selection.collapse(true);
+		Utils.pressEnter();
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p><div contenteditable="false">x</div>');
+		equal(editor.selection.getNode().nodeName, 'P');
+	});
+
+	test('Enter after cE=false div', function() {
+		editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
+		editor.selection.select(editor.dom.select('div')[0]);
+		editor.selection.collapse(false);
+		Utils.pressEnter();
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<div contenteditable="false">x</div><p><br data-mce-bogus="1"></p>');
+		equal(editor.selection.getNode().nodeName, 'P');
+	});
+}
+
