@@ -9,6 +9,7 @@ Version 4.5.2 (2017-01-04)
 	Fixed bug where it wasn't possible to delete editor contents if the selection included an empty block.
 	Fixed bug where the formatter wasn't expanding words on some international characters. Patch contributed by Martin Larochelle.
 	Fixed bug where the open link feature wasn't working correctly on IE 11.
+	Fixed bug where enter before/after a cE=false block wouldn't properly padd the paragraph with an br element.
 	Fixed so font size and font family select boxes always displays a value by using the runtime style as a fallback.
 	Fixed so missing plugins will be logged to console as warnings rather than halting the initialization of the editor.
 	Fixed so splitbuttons become normal buttons in advlist plugin if styles are empty. Patch contributed by René Schleusner.
