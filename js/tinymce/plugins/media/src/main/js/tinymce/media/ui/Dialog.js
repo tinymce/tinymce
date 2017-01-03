@@ -3,9 +3,10 @@ define('tinymce.media.ui.Dialog', [
 	'tinymce.media.core.HtmlToData',
 	'tinymce.media.core.UpdateHtml',
 	'tinymce.media.core.Service',
+	'tinymce.media.core.Size',
 	'global!tinymce.util.Tools',
 	'global!tinymce.Env'
-], function (Delay, HtmlToData, UpdateHtml, Service, Tools, Env) {
+], function (Delay, HtmlToData, UpdateHtml, Service, Size, Tools, Env) {
 	var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
 	var handleError = function (editor) {
@@ -22,8 +23,14 @@ define('tinymce.media.ui.Dialog', [
 		var dataEmbed = element.getAttribute('data-ephox-embed-iri');
 
 		if (dataEmbed) {
-			return {source1: dataEmbed, 'data-ephox-embed-iri': dataEmbed};
+			return {
+				source1: dataEmbed,
+				'data-ephox-embed-iri': dataEmbed,
+				width: Size.getMaxWidth(element),
+				height: Size.getMaxHeight(element)
+			};
 		}
+
 		return element.getAttribute('data-mce-object') ?
 			HtmlToData.htmlToData(editor.settings.media_scripts, editor.serializer.serialize(element, {selection: true})) :
 			{};
@@ -37,13 +44,17 @@ define('tinymce.media.ui.Dialog', [
 		}
 	};
 
-	var addEmbedHtml = function (ctx, editor) {
+	var addEmbedHtml = function (win, editor) {
 		return function (response) {
 			var html = response.html;
-			ctx.find('#embed').value(html);
+			var embed = win.find('#embed')[0];
 			var data = Tools.extend(HtmlToData.htmlToData(editor.settings.media_scripts, html), {source1: response.url});
-			ctx.fromJSON(data);
-			updateSize(ctx);
+			win.fromJSON(data);
+
+			if (embed) {
+				embed.value(html);
+				updateSize(win);
+			}
 		};
 	};
 
@@ -72,22 +83,28 @@ define('tinymce.media.ui.Dialog', [
 		editor.nodeChanged();
 	};
 
-	var submitForm = function (editor) {
-		return function () {
-			var data = this.toJSON();
+	var submitForm = function (win, editor) {
+		var data = win.toJSON();
 
-			if (data.embed) {
-				handleInsert(editor, data.embed);
-			} else {
-				Service.getEmbedHtml(editor, data)
-					.then(function (response) {
-						handleInsert(editor, response.html);
-					})["catch"](handleError(editor));
-			}
-		};
+		data.embed = UpdateHtml.updateHtml(data.embed, data);
+
+		if (data.embed) {
+			handleInsert(editor, data.embed);
+		} else {
+			Service.getEmbedHtml(editor, data)
+				.then(function (response) {
+					handleInsert(editor, response.html);
+				})["catch"](handleError(editor));
+		}
 	};
 
-	var updateSize = function (window) {
+	var populateMeta = function (win, meta) {
+		Tools.each(meta, function (value, key) {
+			win.find('#' + key).value(value);
+		});
+	};
+
+	var syncSize = function (window) {
 		var widthCtrl = window.find('#width')[0];
 		var heightCtrl = window.find('#height')[0];
 		if (widthCtrl && heightCtrl) {
@@ -96,10 +113,31 @@ define('tinymce.media.ui.Dialog', [
 		}
 	};
 
-	var populateMeta = function (win, meta) {
-		Tools.each(meta, function (value, key) {
-			win.find('#' + key).value(value);
-		});
+	var updateSize = function (win) {
+		var widthCtrl = win.find('#width')[0];
+		var heightCtrl = win.find('#height')[0];
+		var oldWidth = widthCtrl.state.get('oldVal');
+		var oldHeight = heightCtrl.state.get('oldVal');
+		var newWidth = widthCtrl.value();
+		var newHeight = heightCtrl.value();
+
+		if (win.find('#constrain')[0].checked() && oldWidth && oldHeight && newWidth && newHeight) {
+			if (newWidth !== oldWidth) {
+				newHeight = Math.round((newWidth / oldWidth) * newHeight);
+
+				if (!isNaN(newHeight)) {
+					heightCtrl.value(newHeight);
+				}
+			} else {
+				newWidth = Math.round((newHeight / oldHeight) * newWidth);
+
+				if (!isNaN(newWidth)) {
+					widthCtrl.value(newWidth);
+				}
+			}
+		}
+
+		syncSize(win);
 	};
 
 	var showDialog = function (editor) {
@@ -136,41 +174,20 @@ define('tinymce.media.ui.Dialog', [
 			}
 		];
 
-		var recalcSize = function (e) {
-			var widthCtrl = win.find('#width')[0];
-			var heightCtrl = win.find('#height')[0];
-			var width = widthCtrl.state.get('oldVal');
-			var height = heightCtrl.state.get('oldVal');
+		var advancedFormItems = [];
 
-			var newWidth = widthCtrl.value();
-			var newHeight = heightCtrl.value();
-
-			if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
-				if (e.control.name() === widthCtrl.name()) {
-					newHeight = Math.round((newWidth / width) * newHeight);
-
-					if (!isNaN(newHeight)) {
-						heightCtrl.value(newHeight);
-					}
-				} else {
-					newWidth = Math.round((newHeight / height) * newWidth);
-
-					if (!isNaN(newWidth)) {
-						widthCtrl.value(newWidth);
-					}
-				}
-			}
+		var recalcSize = function () {
+			updateSize(win);
 			data = win.toJSON();
 			win.find('#embed').value(UpdateHtml.updateHtml(data.embed, data));
-			updateSize(win);
 		};
 
 		if (editor.settings.media_alt_source !== false) {
-			generalFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
+			advancedFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
 		}
 
 		if (editor.settings.media_poster !== false) {
-			generalFormItems.push({name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'});
+			advancedFormItems.push({name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'});
 		}
 
 		if (editor.settings.media_dimensions !== false) {
@@ -182,12 +199,12 @@ define('tinymce.media.ui.Dialog', [
 				spacing: 5,
 				items: [
 					{
-						name: 'width', type: 'textbox', maxLength: 5, size: 3,
+						name: 'width', type: 'textbox', maxLength: 5, size: 5,
 						onchange: recalcSize, ariaLabel: 'Width'
 					},
 					{type: 'label', text: 'x'},
 					{
-						name: 'height', type: 'textbox', maxLength: 5, size: 3,
+						name: 'height', type: 'textbox', maxLength: 5, size: 5,
 						onchange: recalcSize, ariaLabel: 'Height'
 					},
 					{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
@@ -204,6 +221,7 @@ define('tinymce.media.ui.Dialog', [
 			name: 'embed',
 			value: getSource(editor),
 			multiline: true,
+			rows: 5,
 			label: 'Source'
 		};
 
@@ -215,7 +233,7 @@ define('tinymce.media.ui.Dialog', [
 		embedTextBox[embedChange] = updateValueOnChange;
 
 		win = editor.windowManager.open({
-			title: 'Insert/edit video',
+			title: 'Insert/edit media',
 			data: data,
 			bodyType: 'tabpanel',
 			body: [
@@ -241,12 +259,21 @@ define('tinymce.media.ui.Dialog', [
 						},
 						embedTextBox
 					]
+				},
+
+				{
+					title: 'Advanced',
+					type: "form",
+					items: advancedFormItems
 				}
 			],
-			onSubmit: submitForm(editor)
+			onSubmit: function () {
+				updateSize(win);
+				submitForm(win, editor);
+			}
 		});
 
-		updateSize(win);
+		syncSize(win);
 	};
 
 	return {

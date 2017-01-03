@@ -10,7 +10,7 @@ define('tinymce.media.test.Utils', [
 	'ephox.agar.api.GeneralSteps'
 ], function (tinymce, TinyDom, UiFinder, Chain, UiControls, Waiter, Step, Assertions, GeneralSteps) {
 	var sOpenDialog = function (ui) {
-		return ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit video"] > button');
+		return ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit media"] > button');
 	};
 
 	var cFindInDialog = function (mapper) {

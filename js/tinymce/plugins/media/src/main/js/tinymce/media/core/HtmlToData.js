@@ -2,9 +2,20 @@ define('tinymce.media.core.HtmlToData', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.html.SaxParser',
 	'global!tinymce.html.Schema',
-	'tinymce.media.core.VideoScript'
-], function (Tools, SaxParser, Schema, VideoScript) {
-	var htmlToData = function (prefixes, html) {
+	'global!tinymce.dom.DOMUtils.DOM',
+	'tinymce.media.core.VideoScript',
+	'tinymce.media.core.Size'
+], function (Tools, SaxParser, Schema, DOM, VideoScript, Size) {
+	var getEphoxEmbedIri = function (elm) {
+		return DOM.getAttrib(elm, 'data-ephox-embed-iri');
+	};
+
+	var isEphoxEmbed = function (html) {
+		var fragment = DOM.createFragment(html);
+		return getEphoxEmbedIri(fragment.firstChild) !== '';
+	};
+
+	var htmlToDataSax = function (prefixes, html) {
 		var data = {};
 
 		new SaxParser({
@@ -14,13 +25,6 @@ define('tinymce.media.core.HtmlToData', [
 			start: function (name, attrs) {
 				if (!data.source1 && name === "param") {
 					data.source1 = attrs.map.movie;
-				}
-
-				var embed = attrs.map['data-ephox-embed-iri'];
-
-				if (embed) {
-					data.type = 'ephox-embed-iri';
-					data.source1 = embed;
 				}
 
 				if (name === "iframe" || name === "object" || name === "embed" || name === "video" || name === "audio") {
@@ -63,18 +67,25 @@ define('tinymce.media.core.HtmlToData', [
 		data.source2 = data.source2 || '';
 		data.poster = data.poster || '';
 
-		if (data.type === 'ephox-embed-iri') {
-			return Tools.extend({}, {
-				type: data.type,
-				source1: data.source1,
-				source2: '',
-				poster: '',
-				width: data.width,
-				height: data.height
-			});
-		}
-
 		return data;
+	};
+
+	var ephoxEmbedHtmlToData = function (html) {
+		var fragment = DOM.createFragment(html);
+		var div = fragment.firstChild;
+
+		return {
+			type: 'ephox-embed-iri',
+			source1: getEphoxEmbedIri(div),
+			source2: '',
+			poster: '',
+			width: Size.getMaxWidth(div),
+			height: Size.getMaxHeight(div)
+		};
+	};
+
+	var htmlToData = function (prefixes, html) {
+		return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
 	};
 
 	return {
