@@ -369,7 +369,8 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				beautify: {
-					ascii_only: true
+					ascii_only: true,
+					screw_ie8: false
 				},
 
 				compress: {
