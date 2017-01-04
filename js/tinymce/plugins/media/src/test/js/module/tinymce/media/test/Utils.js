@@ -93,8 +93,8 @@ define('tinymce.media.test.Utils', [
 	var sPasteSourceValue = function (ui, value) {
 		return Chain.asStep({}, [
 			cFindFilepickerInput(ui, 'Source'),
-			cFakeEvent('paste'),
-			UiControls.cSetValue(value)
+			UiControls.cSetValue(value),
+			cFakeEvent('paste')
 		]);
 	};
 
