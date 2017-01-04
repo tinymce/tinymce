@@ -1,3 +1,19 @@
+Version 4.5.2 (2017-01-04)
+	Added missing keyboard shortcut description for the underline menu item in the format menu.
+	Fixed bug where external blob urls wasn't properly handled by editor upload logic. Patch contributed by David Oviedo.
+	Fixed bug where urls wasn't treated as a single word by the wordcount plugin.
+	Fixed bug where nbsp characters wasn't treated as word delimiters by the wordcount plugin.
+	Fixed bug where editor instance wasn't properly passed to the format preview logic. Patch contributed by NullQuery.
+	Fixed bug where the fake caret wasn't hidden when you moved selection to a cE=false element.
+	Fixed bug where it wasn't possible to edit existing code sample blocks.
+	Fixed bug where it wasn't possible to delete editor contents if the selection included an empty block.
+	Fixed bug where the formatter wasn't expanding words on some international characters. Patch contributed by Martin Larochelle.
+	Fixed bug where the open link feature wasn't working correctly on IE 11.
+	Fixed bug where enter before/after a cE=false block wouldn't properly padd the paragraph with an br element.
+	Fixed so font size and font family select boxes always displays a value by using the runtime style as a fallback.
+	Fixed so missing plugins will be logged to console as warnings rather than halting the initialization of the editor.
+	Fixed so splitbuttons become normal buttons in advlist plugin if styles are empty. Patch contributed by René Schleusner.
+	Fixed so you can multi insert rows/cols by selecting table cells and using insert rows/columns.
 Version 4.5.1 (2016-12-07)
 	Fixed bug where the lists plugin wouldn't initialize without the advlist plugins if served from cdn.
 	Fixed bug where selectors with "*" would cause the style format preview to throw an error.
