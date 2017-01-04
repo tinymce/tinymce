@@ -161,6 +161,9 @@ tinymce.PluginManager.add('link', function(editor) {
 					menuItem.menu = appendItems(item.menu);
 				} else {
 					menuItem.value = item.value;
+					if (item.url) {
+						menuItem.url = item.url;
+					}
 
 					if (itemCallback) {
 						itemCallback(menuItem);
