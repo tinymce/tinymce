@@ -370,6 +370,10 @@ module.exports = function(grunt) {
 			options: {
 				beautify: {
 					ascii_only: true
+				},
+
+				compress: {
+					screw_ie8: false
 				}
 			},
 
