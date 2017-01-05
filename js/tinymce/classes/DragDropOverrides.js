@@ -27,8 +27,8 @@ define("tinymce/DragDropOverrides", [
 	var isContentEditableFalse = NodeType.isContentEditableFalse,
 		isContentEditableTrue = NodeType.isContentEditableTrue;
 
-	var isDraggable = function (elm) {
-		return isContentEditableFalse(elm);
+	var isDraggable = function (rootElm, elm) {
+		return isContentEditableFalse(elm) && elm !== rootElm;
 	};
 
 	var isValidDropTarget = function (editor, targetElement, dragElement) {
@@ -133,7 +133,7 @@ define("tinymce/DragDropOverrides", [
 			if (isLeftMouseButtonPressed(e)) {
 				var ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
 
-				if (isDraggable(ceElm)) {
+				if (isDraggable(editor.getBody(), ceElm)) {
 					var elmPos = editor.dom.getPos(ceElm);
 					var bodyElm = editor.getBody();
 					var docElm = editor.getDoc().documentElement;
