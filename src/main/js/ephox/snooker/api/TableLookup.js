@@ -32,9 +32,7 @@ define(
           return Selectors.is(element, 'table');
         };
 
-        return SelectorFind.ancestor(element, tags.join(','), isRoot).orThunk(function () {
-          return SelectorFind.descendant(element, tags.join(','));
-        });
+        return SelectorFind.ancestor(element, tags.join(','), isRoot);
       }
     };
 
