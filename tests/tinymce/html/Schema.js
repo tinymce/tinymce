@@ -244,9 +244,9 @@ test('getWhiteSpaceElements', function() {
 
 	schema = new tinymce.html.Schema();
 	deepEqual(schema.getWhiteSpaceElements(), {
-		"IFRAME": {}, "NOSCRIPT": {}, "OBJECT": {}, "PRE": {},
+		"IFRAME": {}, "NOSCRIPT": {}, "OBJECT": {}, "PRE": {}, "CODE": {},
 		"SCRIPT": {}, "STYLE": {}, "TEXTAREA": {}, "VIDEO": {}, "AUDIO": {},
-		"iframe": {}, "noscript": {}, "object": {}, "pre": {},
+		"iframe": {}, "noscript": {}, "object": {}, "pre": {}, "code": {},
 		"script": {}, "style": {}, "textarea": {}, "video": {}, "audio": {}
 	});
 });

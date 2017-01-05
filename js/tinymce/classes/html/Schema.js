@@ -382,7 +382,10 @@ define("tinymce/html/Schema", [
 		validClasses = compileElementMap(settings.valid_classes, 'map');
 
 		// Setup map objects
-		whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script noscript style textarea video audio iframe object');
+		whiteSpaceElementsMap = createLookupTable(
+			'whitespace_elements',
+			'pre script noscript style textarea video audio iframe object code'
+		);
 		selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
 		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' +
 		'meta param embed source wbr track');
