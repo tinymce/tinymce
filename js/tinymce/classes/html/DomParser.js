@@ -28,6 +28,14 @@ define("tinymce/html/DomParser", [
 ], function(Node, Schema, SaxParser, Tools) {
 	var makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
 
+	var paddEmptyNode = function (settings, node) {
+		if (settings.padd_empty_with_br) {
+			node.empty().append(new Node('br', '1')).shortEnded = true;
+		} else {
+			node.empty().append(new Node('#text', '3')).value = '\u00a0';
+		}
+	};
+
 	/**
 	 * Constructs a new DomParser instance.
 	 *
@@ -586,7 +594,7 @@ define("tinymce/html/DomParser", [
 						if (elementRule.removeEmpty || elementRule.paddEmpty) {
 							if (node.isEmpty(nonEmptyElements)) {
 								if (elementRule.paddEmpty) {
-									node.empty().append(new Node('#text', '3')).value = '\u00a0';
+									paddEmptyNode(settings, node);
 								} else {
 									// Leave nodes that have a name like <a name="name">
 									if (!node.attributes.map.name && !node.attributes.map.id) {
@@ -726,7 +734,7 @@ define("tinymce/html/DomParser", [
 									if (elementRule.removeEmpty) {
 										parent.remove();
 									} else if (elementRule.paddEmpty) {
-										parent.empty().append(new Node('#text', 3)).value = '\u00a0';
+										paddEmptyNode(settings, parent);
 									}
 								}
 							}
@@ -745,7 +753,7 @@ define("tinymce/html/DomParser", [
 							parent = parent.parent;
 						}
 
-						if (lastParent === parent) {
+						if (lastParent === parent && settings.padd_empty_with_br !== true) {
 							textNode = new Node('#text', 3);
 							textNode.value = '\u00a0';
 							node.replace(textNode);

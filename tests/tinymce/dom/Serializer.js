@@ -234,6 +234,17 @@ test('Padd empty elements', function() {
 	equal(ser.serialize(DOM.get('test')), '<p>test</p><p>&nbsp;</p>');
 });
 
+test('Padd empty elements with BR', function() {
+	var ser = new tinymce.dom.Serializer({padd_empty_with_br: true});
+
+	ser.setRules('#p,table,tr,#td,br');
+
+	DOM.setHTML('test', '<p>a</p><p></p>');
+	equal(ser.serialize(DOM.get('test')), '<p>a</p><p><br /></p>');
+	DOM.setHTML('test', '<p>a</p><table><tr><td><br></td></tr></table>');
+	equal(ser.serialize(DOM.get('test')), '<p>a</p><table><tr><td><br /></td></tr></table>');
+});
+
 test('Remove empty elements', function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 
