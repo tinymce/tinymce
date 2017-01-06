@@ -861,6 +861,17 @@ test('RemoveFormat', function() {
 	equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
 });
 
+if (tinymce.Env.ceFalse) {
+	test('SelectAll', function() {
+		editor.setContent('<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>');
+		Utils.setSelection('div div', 0);
+		editor.execCommand('SelectAll');
+		equal(editor.selection.getStart().nodeName, 'DIV');
+		equal(editor.selection.getEnd().nodeName, 'DIV');
+		equal(editor.selection.isCollapsed(), false);
+	});
+}
+
 test('InsertLineBreak', function() {
 	editor.setContent('<p>123</p>');
 	Utils.setSelection('p', 2);
