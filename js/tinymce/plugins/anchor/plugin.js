@@ -48,7 +48,7 @@ tinymce.PluginManager.add('anchor', function(editor) {
 				if (!isValidId(id)) {
 					e.preventDefault();
 					editor.windowManager.alert(
-						'Id needs to be starting with a letter and be followed by letters, numbers, dashes, dots, colons or underscores.'
+						'Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
 					);
 					return;
 				}
