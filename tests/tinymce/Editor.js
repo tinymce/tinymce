@@ -492,6 +492,14 @@ test('translate', function() {
 	equal(editor.translate('input i18n'), 'output i18n');
 });
 
+test('Treat some paragraphs as empty contents', function() {
+	editor.setContent('<p><br /></p>');
+	equal(editor.getContent(), '');
+
+	editor.setContent('<p>\u00a0</p>');
+	equal(editor.getContent(), '');
+});
+
 test('kamer word bounderies', function() {
 	editor.setContent('<p>!\u200b!\u200b!</p>');
 	equal(editor.getContent(), '<p>!\u200b!\u200b!</p>');

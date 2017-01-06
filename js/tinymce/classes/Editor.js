@@ -1004,7 +1004,7 @@ define("tinymce/Editor", [
 			// Remove empty contents
 			if (settings.padd_empty_editor) {
 				self.on('PostProcess', function(e) {
-					e.content = e.content.replace(/^(<p[^>]*>(&nbsp;|&#160;|\s|\u00a0|)<\/p>[\r\n]*|<br \/>[\r\n]*)$/, '');
+					e.content = e.content.replace(/^(<p[^>]*>(&nbsp;|&#160;|\s|\u00a0|<br \/>|)<\/p>[\r\n]*|<br \/>[\r\n]*)$/, '');
 				});
 			}
 
