@@ -1774,3 +1774,14 @@ test("Bug TINY-671: Background color on nested font size bug", function() {
 
 	equal(getContent(), '<p><span style="background-color: #ff0000; font-size: 18px;"><strong>abc</strong></span></p>');
 });
+
+test("Bug TINY-865: Font size removed when changing background color", function() {
+	editor.getBody().innerHTML = '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt;">bc</span> <span style="font-size: 8pt;">d</span></span></p>';
+
+	Utils.setSelection('span span:nth-child(2)', 1);
+
+	editor.formatter.apply('hilitecolor', {value: '#ffff00'});
+
+	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt; background-color: #ffff00;">bc</span> <span style="font-size: 8pt;">d</span></span></p>');
+
+});
