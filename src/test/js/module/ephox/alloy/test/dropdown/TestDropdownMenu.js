@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.ItemWidget',
     'ephox.alloy.api.ui.Menu'
   ],
 
-  function (Representing, Menu) {
+  function (Representing, ItemWidget, Menu) {
     return function (store) {
       return {
         members: {
@@ -34,9 +35,7 @@ define(
                   classes: [ 'item', 'item-widget' ]
                 },
                 components: [
-
-                  // FIX: Expose through API
-                  { uiType: 'placeholder', owner: 'item-widget', name: '<alloy.item.widget>' }
+                  ItemWidget.parts().widget()
                 ]
               } : {
                 dom: {

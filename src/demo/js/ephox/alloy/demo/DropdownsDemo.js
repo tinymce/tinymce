@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.api.ui.ItemWidget',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.menus.MenuData',
@@ -22,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Behaviour, Representing, Button, Dropdown, Input, Menu, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
+  function (Gui, GuiFactory, Behaviour, Representing, Button, Dropdown, Input, ItemWidget, Menu, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -89,7 +90,7 @@ define(
                   classes: [ 'alloy-item' ]
                 },
                 components: [
-                  { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                  ItemWidget.parts().widget()
                 ]
               };
             }
@@ -174,7 +175,7 @@ define(
                 },
 
                 components: [
-                 { uiType: 'placeholder', name: '<alloy.item.widget>', owner: 'item-widget' }
+                  ItemWidget.parts().widget()
                 ]
               } : {
                 dom: {
