@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
@@ -16,7 +17,7 @@ define(
     'text!dom-templates/tinymce.dialog.html'
   ],
 
-  function (Gui, GuiFactory, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Class, Element, Insert, document, TemplateTinyDialog) {
+  function (Gui, GuiFactory, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Class, Element, Insert, document, TemplateTinyDialog) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -41,18 +42,15 @@ define(
             }
           },
           components: [
-            {
-              uiType: 'custom',
+            Container.build({
               dom: {
                 tag: 'div',
                 classes: [ 'mce-reset' ],
                 attributes: { role: 'application' }
               },
               components: [
-                {
-                  uiType: 'custom',
+                Container.build({
                   dom: {
-                    tag: 'div',
                     classes: [ 'mce-window-head' ]
                   },
                   components: [
@@ -60,29 +58,25 @@ define(
                     ModalDialog.parts().draghandle(),
                     ModalDialog.parts().close()
                   ]
-                },
-                {
-                  uiType: 'custom',
+                }),
+                Container.build({
                   dom: {
-                    tag: 'div',
                     classes: [ 'mce-container-body', 'mce-window-body', 'mce-abs-layout' ]
                   },
                   components: [
                     ModalDialog.parts().body()
                   ]
-                },
-                {
-                  uiType: 'custom',
+                }),
+                Container.build({
                   dom: {
-                    tag: 'div',
                     classes: [ 'mce-container', 'mce-panel', 'mce-foot' ]
                   },
                   components: [
                     ModalDialog.parts().footer()
                   ]
-                }
+                })
               ]
-            }
+            })
           ],
 
           lazySink: lazySink,
