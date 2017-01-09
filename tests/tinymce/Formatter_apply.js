@@ -1744,7 +1744,7 @@ test('Format selection over fragments', function(){
 
 test("Wrapper with fontSize should retain priority within a branch of nested inline format wrappers", function() {
 	editor.setContent("<p>abc</p>");
-	Utils.setSelection('p', 1);
+	Utils.setSelection('p', 0, 'p', 3);
 
 	editor.formatter.apply('fontsize', {value: '18px'});
 	editor.formatter.apply('bold');
@@ -1756,7 +1756,7 @@ test("Wrapper with fontSize should retain priority within a branch of nested inl
 
 test("Bug TINY-782: Can't apply sub/sup to word on own line with large font", function() {
 	editor.setContent("<p>abc</p>");
-	Utils.setSelection('p', 1);
+	Utils.setSelection('p', 0, 'p', 3);
 
 	editor.formatter.apply('fontsize', {value: '18px'});
 	editor.formatter.apply('superscript');
@@ -1766,7 +1766,7 @@ test("Bug TINY-782: Can't apply sub/sup to word on own line with large font", fu
 
 test("Bug TINY-671: Background color on nested font size bug", function() {
 	editor.setContent("<p>abc</p>");
-	Utils.setSelection('p', 1);
+	Utils.setSelection('p', 0, 'p', 3);
 
 	editor.formatter.apply('fontsize', {value: '18px'});
 	editor.formatter.apply('bold');
@@ -1776,12 +1776,11 @@ test("Bug TINY-671: Background color on nested font size bug", function() {
 });
 
 test("Bug TINY-865: Font size removed when changing background color", function() {
-	editor.getBody().innerHTML = '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt;">bc</span> <span style="font-size: 8pt;">d</span></span></p>';
+	editor.getBody().innerHTML = '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>';
 
-	Utils.setSelection('span span:nth-child(2)', 1);
+	Utils.setSelection('span span:nth-child(2)', 0, 'span span:nth-child(2)', 1);
 
 	editor.formatter.apply('hilitecolor', {value: '#ffff00'});
 
-	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt; background-color: #ffff00;">bc</span> <span style="font-size: 8pt;">d</span></span></p>');
-
+	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="background-color: #ffff00; font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
 });
