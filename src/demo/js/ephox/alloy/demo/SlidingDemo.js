@@ -47,12 +47,11 @@ define(
                 })
               ]),
               components: [
-                {
-                  uiType: 'container',
+                Container.build({
                   dom: {
                     styles: { height: '100px', background: 'blue' }
                   }
-                }
+                })
               ]
             }),
 
@@ -98,12 +97,11 @@ define(
               ]),
              
               components: [
-                {
-                  uiType: 'container',
+                Container.build({
                   dom: {
                     styles: { height: '100px', background: 'blue' }
                   }
-                }
+                })
               ]
             }),
 
