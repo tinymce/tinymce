@@ -107,7 +107,7 @@ module.exports = function(grunt) {
         files: ['src/**/*.js'],
         tasks: [
 
-          'bedrock-auto:ui'
+          'bedrock-auto:browser'
         ],
         options: {
           spawn: false

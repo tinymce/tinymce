@@ -10,6 +10,7 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.aria.AriaOwns',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
@@ -24,7 +25,7 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Composing, Coupling, Focusing, Keying, Positioning, Sandboxing, TieredMenu, Gamma, Tagger, Dismissal, Id, Merger, Future, Fun, Option, Attr, Remove, Width, Error) {
+  function (ComponentStructure, Composing, Coupling, Focusing, Keying, Positioning, Sandboxing, TieredMenu, AriaOwns, Gamma, Tagger, Dismissal, Id, Merger, Future, Fun, Option, Attr, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -104,11 +105,10 @@ define(
     };
 
     var makeSandbox = function (detail, anchor, anyInSystem, extras) {
-      var ariaId = Id.generate('aria-owns');
-
+      var ariaOwner = AriaOwns.manager();
 
       var onOpen = function (component, menu) {
-        Attr.set(anyInSystem.element(), 'aria-owns', ariaId);
+        ariaOwner.link(anyInSystem.element());
         // TODO: Reinstate matchWidth
         if (detail.matchWidth()) matchWidth(anyInSystem, menu);
         detail.onOpen()(anchor, component, menu);
@@ -116,10 +116,7 @@ define(
       };
 
       var onClose = function (component, menu) {
-        Attr.remove(anyInSystem.element(), 'aria-owns');
-        // FIX: Will need to do this for non split-dropdown
-        // Toggling.deselect(hotspot);
-        // FIX: Using to hack in turning off the arrow.
+        ariaOwner.unlink(anyInSystem.element(), 'aria-owns');
         if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };
 
@@ -130,7 +127,7 @@ define(
         dom: {
           tag: 'div',
           attributes: {
-            id: ariaId
+            id: ariaOwner.id()
           }
         },
         behaviours: {

@@ -150,25 +150,25 @@ asynctest(
 
         // TODO: Make it not close if the inline toolbar had a dropdown, and the dropdown
         // item was selected. Requires composition of "isPartOf"
-        // Logger.t(
-        //   'Check that clicking on a dropdown item in the inline toolbar does not dismiss popup',
-        //   GeneralSteps.sequence([
-        //     // Click on the dropdown
-        //     Mouse.sClickOn(gui.element(), 'button:contains(+)'),
-        //     // Wait until dropdown loads.
-        //     Waiter.sTryUntil(
-        //       'Waiting for dropdown list to appear',
-        //       UiFinder.sExists(gui.element(), 'li:contains("Option-1")'),
-        //       100, 1000
-        //     ),
-        //     TestBroadcasts.sDismissOn(
-        //       'dropdown item: should not close',
-        //       gui,
-        //       'li:contains("Option-2")'
-        //     ),
-        //     sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
-        //   ])
-        // ),
+        Logger.t(
+          'Check that clicking on a dropdown item in the inline toolbar does not dismiss popup',
+          GeneralSteps.sequence([
+            // Click on the dropdown
+            Mouse.sClickOn(gui.element(), 'button:contains(+)'),
+            // Wait until dropdown loads.
+            Waiter.sTryUntil(
+              'Waiting for dropdown list to appear',
+              UiFinder.sExists(gui.element(), 'li:contains("Option-1")'),
+              100, 1000
+            ),
+            TestBroadcasts.sDismissOn(
+              'dropdown item: should not close',
+              gui,
+              'li:contains("Option-2")'
+            ),
+            sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
+          ])
+        ),
         
         TestBroadcasts.sDismiss(
           'outer gui element: should close',
