@@ -663,12 +663,7 @@ define("tinymce/Formatter", [
 					function mergeStyles(node) {
 						var child, clone;
 
-						each(node.childNodes, function(node) {
-							if (node.nodeType == 1 && !isBookmarkNode(node) && !isCaretNode(node)) {
-								child = node;
-								return FALSE; // break loop
-							}
-						});
+						child = getChildElementNode(node);
 
 						// If child was found and of the same type as the current node
 						if (child && !isBookmarkNode(child) && matchName(child, format)) {
