@@ -27,13 +27,12 @@ define(
 
       var page = Container.build({
         components: [
-          {
-            uiType: 'custom',
+          Container.build({
             dom: {
               tag: 'p',
               innerHtml: 'Copy your HTML structure into this textarea and press <strong>Convert</strong>'
             }
-          },
+          }),
           Input.build({
             tag: 'textarea',
             dom: {
@@ -70,13 +69,12 @@ define(
             }
           }),
 
-          {
-            uiType: 'container',
+          Container.build({
             uid: 'pre-output',
             dom: {
               tag: 'pre'
             }
-          }
+          })
         ]
       });
 
