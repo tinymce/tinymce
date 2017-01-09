@@ -67,44 +67,18 @@ define(
       Arr.each(parts, function (part) {
         part.fold(
           function (factory, name, pname, defaults, overrides) {
-            r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname });
-            // r[name] = {
-            //   placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
-            //   build: function (spec) {
-            //     return UiSubstitutes.single(true, function (detail) {
-            //       return factory.build(function () {
-            //         return combine(name, detail, defaults, spec, overrides);
-            //       });
-            //     });
-            //   }
-            // };
+            r[name] = Fun.constant({ uiType: UiSubstitutes.placeholder(), owner: owner, name: pname });
           },
           function (factory, name, defaults, overrides) {
-            // r[name] = {
-            //   placeholder: Fun.die('The part: ' + name + ' should not appear in components for: ' + owner),
-            //   build: function (spec) {
-            //     return spec;
-            //   }
-            // };
             // Do nothing ... has no placeholder.
           },
           function (factory, name, pname, defaults, overrides) {
-            r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname })
-            // r[name] = {
-            //   placeholder: Fun.constant({uiType: 'placeholder', owner: owner, name: pname }),
-            //   build: function (spec) {
-            //     return UiSubstitutes.single(false, function (detail) {
-            //       return factory.build(function () {
-            //         return combine(name, detail, defaults, spec, overrides);
-            //       });
-            //     });
-            //   }
-            // };
+            r[name] = Fun.constant({ uiType: UiSubstitutes.placeholder(), owner: owner, name: pname });
           },
 
           // Group
           function (factory, name, unit, pname, defualts, overrides) {
-            r[name] = Fun.constant({ uiType: 'placeholder', owner: owner, name: pname });
+            r[name] = Fun.constant({ uiType: UiSubstitutes.placeholder(), owner: owner, name: pname });
           }
         );
       });

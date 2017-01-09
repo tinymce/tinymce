@@ -10,6 +10,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.MenuEvents',
@@ -17,7 +18,7 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (Assertions, Chain, Keyboard, Keys, Step, GuiFactory, SystemEvents, Keying, TieredMenu, EventHandler, MenuEvents, GuiSetup, Objects) {
+  function (Assertions, Chain, Keyboard, Keys, Step, GuiFactory, SystemEvents, Keying, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,7 +37,7 @@ asynctest(
             classes: [ 'test-menu' ]
           },
           components: [
-            { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+            Menu.parts().items()
           ],
 
           markers: {

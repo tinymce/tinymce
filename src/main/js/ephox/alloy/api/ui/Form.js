@@ -88,7 +88,7 @@ define(
     var parts = function (partName) {
       // FIX: Breaking abstraction
       return {
-        uiType: 'placeholder',
+        uiType: UiSubstitutes.placeholder(),
         owner: 'form',
         name: '<alloy.field.' + partName + '>'
       };

@@ -33,7 +33,7 @@ asynctest(
             classes: [ 'test-menu' ]
           },
           components: [
-            { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+            Menu.parts().items()
           ],
 
           markers: {

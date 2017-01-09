@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.HtmlDisplay',
@@ -18,18 +19,10 @@ define(
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'global!document',
-    'text!dom-templates/demo.grid.item.html',
-    'text!dom-templates/demo.menu.html',
-    'text!dom-templates/demo.menu.item.html',
-    'text!dom-templates/demo.menu.separator.html',
-    'text!dom-templates/demo.toolbar.dropdown.html',
-    'text!dom-templates/demo.toolbar.split-dropdown.html',
-    'text!dom-templates/demo.widget.container.html',
-    'text!dom-templates/dropdown-alpha.html'
+    'global!document'
   ],
 
-  function (Gui, GuiFactory, Behaviour, Representing, Button, Dropdown, Input, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, Behaviour, Representing, Button, Dropdown, Input, Menu, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -82,7 +75,7 @@ define(
                   tag: 'div'
                 },
                 components: [
-                  { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'dropdown-list' }
+                  Menu.parts().items()
                 ]
               };
             }
