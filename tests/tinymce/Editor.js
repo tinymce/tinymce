@@ -14,7 +14,7 @@ module("tinymce.Editor", {
 				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
 			},
 			custom_elements: 'custom1,~custom2',
-			extended_valid_elements: 'custom1,custom2,script[*]',
+			extended_valid_elements: 'custom1,custom2,script[*],div[!class]',
 			init_instance_callback: function(ed) {
 				window.editor = ed;
 
@@ -224,6 +224,24 @@ test('setContent with comment bug #4409', function() {
 test('custom elements', function() {
 	editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');
 	equal(editor.getContent(), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
+});
+
+test('br in empty elements', function() {
+	expect(2);
+	editor.setContent('<p></p><h1></h1><h2></h2><h3></h3><h4></h4><h5></h5><h6></h6><div class="a"></div><div class="x"><div class="y"></div></div>');
+	
+	equal(editor.getContent({format: 'raw'}).toLowerCase(),
+			tinymce.isIE && tinymce.isIE < 11	? '<p>&nbsp;</p><h1>&nbsp;</h1><h2>&nbsp;</h2><h3>&nbsp;</h3><h4>&nbsp;</h4><h5>&nbsp;</h5><h6>&nbsp;</h6><div class="a"></div><div class="x"><div class="y"></div></div>'
+												: '<p>&nbsp;<br data-mce-bogus="1"></p><h1>&nbsp;<br data-mce-bogus="1"></h1><h2>&nbsp;<br data-mce-bogus="1"></h2><h3>&nbsp;<br data-mce-bogus="1"></h3><h4>&nbsp;<br data-mce-bogus="1"></h4><h5>&nbsp;<br data-mce-bogus="1"></h5><h6>&nbsp;<br data-mce-bogus="1"></h6><div class="a"><br data-mce-bogus="1"></div><div class="x"><div class="y"><br data-mce-bogus="1"></div></div>');
+	equal(editor.getContent(), '<p>\u00a0</p><h1>\u00a0</h1><h2>\u00a0</h2><h3>\u00a0</h3><h4>\u00a0</h4><h5>\u00a0</h5><h6>\u00a0</h6><div class="a"></div><div class="x"><div class="y"></div></div>');
+});
+
+test('No br in filled elements', function() {
+	expect(2);
+	editor.setContent('<p>a</p><h1>b</h1><h2>c</h2><h3>d</h3><h4>e</h4><h5>f</h5><h6>g</h6><div class="b">h</div>');
+	
+	equal(editor.getContent({format: 'raw'}).toLowerCase(), '<p>a</p><h1>b</h1><h2>c</h2><h3>d</h3><h4>e</h4><h5>f</h5><h6>g</h6><div class="b">h</div>');
+	equal(editor.getContent(), '<p>a</p><h1>b</h1><h2>c</h2><h3>d</h3><h4>e</h4><h5>f</h5><h6>g</h6><div class="b">h</div>');
 });
 
 test('Store/restore tabindex', function() {

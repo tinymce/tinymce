@@ -236,10 +236,7 @@ define("tinymce/EnterKey", [
 					} while ((node = node.parentNode) && node != editableRoot);
 				}
 
-				// BR is needed in empty blocks on non IE browsers
-				if (!isIE) {
-					caretNode.innerHTML = '<br data-mce-bogus="1">';
-				}
+				emptyBlock(caretNode);
 
 				return block;
 			}
