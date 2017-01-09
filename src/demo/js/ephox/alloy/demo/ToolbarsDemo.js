@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
@@ -22,7 +23,7 @@ define(
     'text!dom-templates/tinymce.toolstrip.html'
   ],
 
-  function (Gui, GuiTemplate, Button, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
+  function (Gui, GuiTemplate, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -110,7 +111,7 @@ define(
             }
           },
           'components': [
-            {
+            Container.build({
               'dom': {
                 'tag': 'button',
                 'attributes': {
@@ -120,8 +121,7 @@ define(
                 }
               },
               'components': [
-                {
-                  'uiType': 'custom',
+                Container.build({
                   'dom': {
                     'tag': 'i',
                     'attributes': {
@@ -129,10 +129,9 @@ define(
                     }
                   },
                   'components': []
-                }
-              ],
-              'uiType': 'custom'
-            }
+                })
+              ]
+            })
           ],
           action: s.action !== undefined ? s.action : function () {
             console.log('clicked on button', s);
@@ -158,8 +157,7 @@ define(
           },
           action: s.action,
           'components': [
-            {
-              uiType: 'custom',
+            Container.build({
               'dom': {
                 'tag': 'button',
                 'attributes': {
@@ -169,8 +167,7 @@ define(
                 }
               },
               'components': [
-                {
-                  'uiType': 'custom',
+                Container.build({
                   'dom': {
                     'tag': 'i',
                     'attributes': {
@@ -179,9 +176,9 @@ define(
                     innerHtml: s.dom.innerHtml
                   },
                   'components': []
-                }
+                })
               ]
-            }
+            })
           ]
         });
       };
@@ -204,13 +201,12 @@ define(
           },
 
           components: [
-            {
-              uiType: 'custom',
+            Container.build({
               dom: { tag: 'div' },
               components: [
                 ToolbarGroup.parts().items()
               ]
-            }
+            })
           ],
           items: s.items
         };
@@ -223,12 +219,11 @@ define(
             classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
           },
           components: [
-            { 
-              uiType: 'container',
+            Container.build({ 
               components: [
 
               ]
-            }
+            })
           ],
 
           parts: { }
@@ -238,10 +233,8 @@ define(
       var subject = HtmlDisplay.section(
         gui,
         'This demo plays around with skinning for TinyMCE Ui',
-        {
-          uiType: 'custom',
+        Container.build({
           dom: {
-            tag: 'div', 
             classes: [ 'mce-container' ]
           },
           components: [
@@ -265,7 +258,7 @@ define(
               })
             )
           ]
-        }
+        })
       );
 
       var toolbar1 = subject.components()[0];
@@ -275,10 +268,8 @@ define(
       var subject2 = HtmlDisplay.section(
         gui,
         'This toolbar has overflow behaviour that uses a more drawer',
-        {
-          uiType: 'custom',
+        Container.build({
           dom: {
-            tag: 'div', 
             classes: [ 'mce-container' ]
           },
           components: [
@@ -366,7 +357,7 @@ define(
               }
             })
           ]
-        }
+        })
       );
 
       var toolbar2 = subject2.components()[0];
