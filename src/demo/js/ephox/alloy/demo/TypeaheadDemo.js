@@ -3,13 +3,11 @@ define(
 
   [
     'ephox.alloy.api.Gui',
-    'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoMenus',
-    'ephox.alloy.demo.DemoTemplates',
+    'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.compass.Arr',
     'ephox.knoch.future.Future',
@@ -22,24 +20,14 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Typeahead, MenuData, DemoMenus, DemoTemplates, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, Representing, Typeahead, MenuData, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var sink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        behaviours: {
-          positioning: {
-            useFixed: true
-          }
-        }
-      });
+      var sink = DemoSink.make();
 
       gui.add(sink);
 
