@@ -35,10 +35,8 @@ define(
       var popup = GuiFactory.build(
         Container.build({
           components: [
-            {
-              uiType: 'custom',
+            Container.build({
               dom: {
-                tag: 'div',
                 styles: {
                   'padding': '10px',
                   background: 'white',
@@ -48,7 +46,7 @@ define(
               components: [
                 { text: 'This is a popup' }
               ]
-            }
+            })
           ]
         })
       );
@@ -184,7 +182,6 @@ define(
               }
             },
             Button.build({
-              uiType: 'button',
               dom: {
                 tag: 'button',
                 innerHtml: 'Show popup at cursor'
