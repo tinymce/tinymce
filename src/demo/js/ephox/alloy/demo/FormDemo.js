@@ -343,18 +343,18 @@ define(
           parts: Objects.narrow(fieldParts(), [ 'alpha', 'maxis', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
 
           components: [
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.maxis>' },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
+            Form.parts('alpha'),
+            Form.parts('maxis'),
+            Form.parts('beta'),
+            Form.parts('gamma'),
             {
               uiType: 'container',
               components: [
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' }
+                Form.parts('delta'),
+                Form.parts('epsilon')
               ]
             },
-            { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+            Form.parts('rho')
 
           ],
 
