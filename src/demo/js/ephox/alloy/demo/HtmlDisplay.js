@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.epithet.Id',
     'ephox.sugar.api.Html',
     'ephox.sugar.api.TextContent',
@@ -10,43 +11,40 @@ define(
     'global!setInterval'
   ],
 
-  function (GuiFactory, Id, Html, TextContent, JsBeautify, setInterval) {
+  function (GuiFactory, Container, Id, Html, TextContent, JsBeautify, setInterval) {
 
     var section = function (gui, instructions, spec) {
-      var information = {
-        uiType: 'custom',
+      var information = Container.build({
         dom: {
           tag: 'p',
           innerHtml: instructions
         }
-      };
-
-      var hr = { uiType: 'custom', dom: { tag: 'hr' } };
+      });
 
       var component = GuiFactory.build(spec);
       component.logSpec();
     
-      var display = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          styles: {
-            'padding-left': '100px',
-            'padding-top': '20px',
-            'padding-right': '100px',
-            'border': '1px dashed green'
-          }
-        },
-        components: [
-          { built: component }
-        ]
-      });
+      var display = GuiFactory.build(
+        Container.build({
+          dom: {
+            styles: {
+              'padding-left': '100px',
+              'padding-top': '20px',
+              'padding-right': '100px',
+              'border': '1px dashed green'
+            }
+          },
+          components: [
+            { built: component }
+          
+          ]
+        })
+      );
 
       var dumpUid = Id.generate('html-dump');
 
       var htmlDump = Html.getOuter(component.element());
-      var dump = {
-        uiType: 'custom',
+      var dump = Container.build({
         uid: dumpUid,
         dom: {
           tag: 'p',
@@ -55,7 +53,7 @@ define(
         components: [
           { text: JsBeautify.html(htmlDump) }
         ]
-      };
+      });
 
       var updateHtml = function () {
         gui.getByUid(dumpUid).each(function (dumpC) {
@@ -72,11 +70,11 @@ define(
       var all = GuiFactory.build({
         uiType: 'container',
         components: [
-          hr,
+          Container.build({ dom: { tag: 'hr' } }),
           information,
           { built: display },
           dump,
-          hr
+          Container.build({ dom: { tag: 'hr' } })
         ]
       });
 
