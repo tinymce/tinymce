@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.demo.HtmlDisplay',
@@ -15,7 +16,7 @@ define(
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, Container, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -55,9 +56,7 @@ define(
             }
           ],
           defaultView: function () {
-            return {
-              uiType: 'container'
-            };
+            return Container.build({ });
           },
           parts: {
             tabbar: {
