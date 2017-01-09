@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dragging.DragCoord',
     'ephox.boulder.api.FieldSchema',
@@ -22,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, BehaviourExport, Dragging, Button, HtmlDisplay, DragCoord, FieldSchema, Arr, Option, Position, Class, Compare, Element, Insert, Location, SelectorFilter, Width, document) {
+  function (Gui, BehaviourExport, Dragging, Button, Container, HtmlDisplay, DragCoord, FieldSchema, Arr, Option, Position, Class, Compare, Element, Insert, Location, SelectorFilter, Width, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -32,9 +33,7 @@ define(
       var panel = HtmlDisplay.section(
         gui,
         'This container has orderable buttons',
-        {
-          uiType: 'container',
-
+        Container.build({
           components: Arr.map([
             'alpha',
             'beta',
@@ -109,7 +108,7 @@ define(
               { }
             )
           ]
-        }
+        })
       );
     };
   }
