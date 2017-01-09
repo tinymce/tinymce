@@ -4,15 +4,14 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Positioning',
-    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.demo.DemoTemplates',
+    'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
@@ -27,30 +26,14 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Positioning, Sandboxing, Button, InlineView, Input, TieredMenu, EventHandler, DemoTemplates, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
+  function (Gui, GuiFactory, Positioning, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var sink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          styles: {
-            'background': 'green',
-            margin: '10px',
-            border: '1px solid blue',
-            'min-height': '10px'
-          }
-        },
-        behaviours: {
-          positioning: {
-            useFixed: true
-          }
-        }
-      });
+      var sink = DemoSink.make();
 
 
       var lazySink = function () {
@@ -75,9 +58,9 @@ define(
         },
 
         fetch: function () {
-          return Future.pure({
-            uiType: 'container'
-          });
+          return Future.pure(
+            Container.build({ })
+          );
         },
 
         onEscape: function () {
@@ -186,10 +169,8 @@ define(
       HtmlDisplay.section(
         gui,
         'This inline menu component is a context menu. Right click inside the yellow area',
-        {
-          uiType: 'custom',
+        Container.build({
           dom: {
-            tag: 'div',
             styles: {
               background: '#ffff33',
               height: '100px'
@@ -208,7 +189,7 @@ define(
               }
             })
           }
-        }
+        })
       );
       
 
@@ -217,12 +198,7 @@ define(
         'This inline toolbar shows up when you click in the second input field. Note, ' + 
         'how when you focus an empty input, it will attach at the end of the field, and ' +
         'when you focus a non-empty input, it will attach below',
-        {
-          uiType: 'custom',
-          dom: {
-            tag: 'div'
-          },
-
+        Container.build({
           behaviours: {
             keying: {
               mode: 'cyclic',
@@ -254,12 +230,7 @@ define(
                     };
 
                     var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                    InlineView.showAt(inlineComp, anchor, {
-                      uiType: 'custom',
-                      dom: {
-                        tag: 'div'
-                      },
-
+                    InlineView.showAt(inlineComp, anchor, Container.build({
                       behaviours: {
                         keying: {
                           mode: 'flow',
@@ -290,13 +261,13 @@ define(
                         })
                       ]
 
-                    });
+                    }));
                   }
                 })
               }
             })
           ]
-        }
+        })
       );
     };
   }
