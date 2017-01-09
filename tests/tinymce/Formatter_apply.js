@@ -1740,3 +1740,26 @@ test('Format selection over fragments', function(){
 	editor.formatter.apply('underline');
 	equal(getContent(), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
 });
+
+
+test("Wrapper with fontSize should retain priority within a branch of nested inline format wrappers", function() {
+	editor.setContent("<p>abc</p>");
+	Utils.setSelection('p', 1);
+
+	editor.formatter.apply('fontsize', {value: '18px'});
+	editor.formatter.apply('bold');
+	editor.formatter.apply('underline');
+	editor.formatter.apply('forecolor', {value: '#ff0000'});
+
+	equal(getContent(), '<p><span style="color: #ff0000; font-size: 18px;"><span style="text-decoration: underline;"><strong>abc</strong></span></span></p>');
+});
+
+test("Bug TINY-782: Can't apply sub/sup to word on own line with large font", function() {
+	editor.setContent("<p>abc</p>");
+	Utils.setSelection('p', 1);
+
+	editor.formatter.apply('fontsize', {value: '18px'});
+	editor.formatter.apply('superscript');
+
+	equal(getContent(), '<p><span style="font-size: 18px;"><sup>abc</sup></span></p>');
+});
