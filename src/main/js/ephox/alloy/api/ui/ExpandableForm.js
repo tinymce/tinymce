@@ -108,7 +108,6 @@ define(
         dom: detail.dom(),
         components: components,
 
-        // FIX: Dupe with form
         behaviours: {
           representing: {
             store: {

@@ -22,7 +22,6 @@ define(
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
-      // FIX: Remove defaulted toggleClass
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('displayer', Fun.identity),

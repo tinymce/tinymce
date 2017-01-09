@@ -36,20 +36,20 @@ define(
       return getPart(comp, detail, partName).bind(Composing.getCurrent);
     };
 
-    var partTypes = [
-      PartType.internal(
+    var coupledPart = function (selfName, otherName) {
+      return PartType.internal(
         formInput,
-        'field1',
-        '<alloy.coupled-inputs.field1>',
+        selfName,
+        '<alloy.coupled-inputs.' + selfName + '>',
         Fun.constant({ }),
         function (detail) {
           return {
             events: {
               'input': EventHandler.nu({
-                run: function (field1) {
-                  getField(field1, detail, 'field2').each(function (field2) {
-                    getPart(field1, detail, 'lock').each(function (lock) {
-                      if (Toggling.isSelected(lock)) detail.onLockedChange()(field1, field1, field2, lock);
+                run: function (self) {
+                  getField(self, detail, otherName).each(function (other) {
+                    getPart(self, detail, 'lock').each(function (lock) {
+                      if (Toggling.isSelected(lock)) detail.onLockedChange()(self, other, lock);
                     });
                   });
                 }
@@ -57,30 +57,12 @@ define(
             }
           };
         }
-      ),
+      );
+    };
 
-      // FIX: Dupe
-      PartType.internal(
-        formInput,
-        'field2',
-        '<alloy.coupled-inputs.field2>',
-        Fun.constant({ }),
-        function (detail) {
-          return {
-            events: {
-              'input': EventHandler.nu({
-                run: function (field2) {
-                  getField(field2, detail, 'field1').each(function (field1) {
-                    getPart(field2, detail, 'lock').each(function (lock) {
-                      if (Toggling.isSelected(lock)) detail.onLockedChange()(field1, field2, field1, lock);
-                    });
-                  });
-                }
-              })
-            }
-          };
-        }
-      ),
+    var partTypes = [
+      coupledPart('field1', 'field2'),
+      coupledPart('field2', 'field1'),
 
       PartType.internal(
         Button,

@@ -34,6 +34,7 @@ define(
                   classes: [ 'item', 'item-widget' ]
                 },
                 components: [
+
                   // FIX: Expose through API
                   { uiType: 'placeholder', owner: 'item-widget', name: '<alloy.item.widget>' }
                 ]

@@ -117,7 +117,7 @@ define(
           markers: {
             lockClass: 'demo-selected'
           },
-          onLockedChange: function (primary, current, other) {
+          onLockedChange: function (current, other) {
             var cValue = Representing.getValue(current);
             Representing.setValue(other, cValue);
           },

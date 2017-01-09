@@ -140,7 +140,7 @@ asynctest(
           FormCoupledInputs.parts().lock()
         ],
 
-        onLockedChange: function (primary, current, other) {
+        onLockedChange: function (current, other) {
           Representing.setValueFrom(other, current);
         },
         markers: {

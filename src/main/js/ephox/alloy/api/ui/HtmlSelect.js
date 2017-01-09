@@ -61,7 +61,7 @@ define(
 
                 console.log('matching', matching);
 
-                // FIX: Update with katamari
+                // TODO: Update when using katamari
                 return matching !== undefined && matching !== null ? Result.value(matching) : Result.error('Not found');
               },
 
