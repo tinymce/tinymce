@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Option',
@@ -18,14 +19,13 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Button, Input, Json, Option, Element, Insert, Remove, SelectorFind, Value, document) {
+  function (Gui, GuiFactory, GuiTemplate, Representing, Button, Container, Input, Json, Option, Element, Insert, Remove, SelectorFind, Value, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
     // TODO: Change this to match the simplified UI templating model we have now.
 
-      var page = {
-        uiType: 'container',
+      var page = Container.build({
         components: [
           {
             uiType: 'custom',
@@ -78,7 +78,7 @@ define(
             }
           }
         ]
-      };
+      });
 
       var root = GuiFactory.build(page);
       var gui = Gui.takeover(root);
