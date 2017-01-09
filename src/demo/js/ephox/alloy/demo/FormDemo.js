@@ -3,11 +3,11 @@ define(
 
   [
     'ephox.alloy.api.Gui',
-    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormChooser',
@@ -19,13 +19,13 @@ define(
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoDataset',
     'ephox.alloy.demo.DemoMenus',
+    'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
@@ -36,24 +36,14 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, GuiFactory, Keying, Representing, Tabstopping, Button, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Typeahead, MenuData, DemoDataset, DemoMenus, HtmlDisplay, Tagger, Objects, Arr, Merger, Future, Fun, Option, Result, Class, Element, Insert, Value, document, setTimeout) {
+  function (Gui, Keying, Representing, Tabstopping, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Typeahead, MenuData, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Merger, Future, Option, Result, Class, Element, Insert, Value, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-       var sink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        behaviours: {
-          positioning: {
-            useFixed: true
-          }
-        }
-      });
+       var sink = DemoSink.make();
 
       gui.add(sink);
 
@@ -98,7 +88,7 @@ define(
           },
           components: [
             FormField.parts(Input).label(),
-            { uiType: 'container', uid: invalidUid },
+            Container.build({ uid: invalidUid }),
             FormField.parts(Input).field()
           ]
         });
@@ -112,7 +102,7 @@ define(
           parts: {
             'field1': spec.field1,
             'field2': spec.field2,
-            lock: { uiType: 'button', dom: { tag: 'button', innerHtml: 'x' }, tabstopping: true }
+            lock: { dom: { tag: 'button', innerHtml: 'x' }, tabstopping: true }
           },
           markers: {
             lockClass: 'demo-selected'
@@ -140,15 +130,14 @@ define(
           },
           components: [
             FormField.parts(HtmlSelect).label(),
-            {
-              uiType: 'container',
+            Container.build({
               dom: {
                 classes: [ 'wrapper' ]
               },
               components: [
                 FormField.parts(HtmlSelect).field()
               ]
-            }
+            })
           ],
           
           parts: {
@@ -162,14 +151,14 @@ define(
               members: {
                 option: {
                   munge: function (spec) {
-                    return {
+                    return Container.build({
                       dom: {
                         attributes: {
                           value: spec.value
                         },
                         innerHtml: spec.text
                       }
-                    };
+                    });
                   }
                 }
               }
@@ -222,8 +211,7 @@ define(
             members: {
               choice: {
                 munge: function (data) {
-                  return {
-                    uiType: 'custom',
+                  return Container.build({
                     dom: {
                       tag: 'span',
                       classes: [ 'ephox-pastry-independent-button' ],
@@ -253,7 +241,7 @@ define(
                     markers: {
                       radioSelector: 'input[type="radio"]'
                     }
-                  };
+                  });
                 }
               }
             },
@@ -347,13 +335,12 @@ define(
             Form.parts('maxis'),
             Form.parts('beta'),
             Form.parts('gamma'),
-            {
-              uiType: 'container',
+            Container.build({
               components: [
                 Form.parts('delta'),
                 Form.parts('epsilon')
               ]
-            },
+            }),
             Form.parts('rho')
 
           ],
