@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
     'ephox.perhaps.Option',
@@ -15,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Docking, Dragging, HtmlDisplay, Objects, Option, Class, Css, Element, Insert, document) {
+  function (Gui, Docking, Dragging, Container, HtmlDisplay, Objects, Option, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -29,8 +30,7 @@ define(
       var dockable = HtmlDisplay.section(
         gui,
         'The blue panel will always stay on screen as long as the red rectangle is on screen',
-        {
-          uiType: 'container',
+        Container.build({
           uid: 'panel-container',
           dom: {
             styles: {
@@ -42,10 +42,8 @@ define(
             }
           },
           components: [
-            {
-              uiType: 'container',
+            Container.build({
               dom: {
-                tag: 'div',
                 styles: {
                   background: '#cadbee',
                   width: '400px',
@@ -78,9 +76,9 @@ define(
                   topAttr: 'data-dock-top'
                 })
               ])
-            }
+            })
           ]
-        }
+        })
       );
 
     };
