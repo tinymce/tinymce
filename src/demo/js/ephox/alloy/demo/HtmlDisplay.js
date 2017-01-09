@@ -67,16 +67,17 @@ define(
 
       observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
 
-      var all = GuiFactory.build({
-        uiType: 'container',
-        components: [
-          Container.build({ dom: { tag: 'hr' } }),
-          information,
-          { built: display },
-          dump,
-          Container.build({ dom: { tag: 'hr' } })
-        ]
-      });
+      var all = GuiFactory.build(
+        Container.build({
+          components: [
+            Container.build({ dom: { tag: 'hr' } }),
+            information,
+            { built: display },
+            dump,
+            Container.build({ dom: { tag: 'hr' } })
+          ]
+        })
+      );
 
       gui.add(all);
 
