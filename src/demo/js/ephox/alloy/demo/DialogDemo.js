@@ -100,8 +100,6 @@ define(
             console.log('escaping');
             return Option.some(true);
           },
-
-          // FIX: Make this not necessary
           dragBlockClass: [ 'blocker-class' ],
 
           parts: {
@@ -118,7 +116,7 @@ define(
               dom: {
                 tag: 'div',
                 classes: [ 'mce-dragh' ]
-              }              
+              }
             },
 
             blocker: { },

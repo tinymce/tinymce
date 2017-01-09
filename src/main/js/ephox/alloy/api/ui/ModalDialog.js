@@ -9,16 +9,18 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.Traverse',
+    'global!Error'
   ],
 
-  function (BehaviourExport, Keying, Positioning, UiBuilder, PartType, FieldSchema, Merger, Fun, Option, SelectorFind, Traverse) {
+  function (BehaviourExport, Keying, Positioning, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
-      FieldSchema.strict('dragBlockClass'),
+      FieldSchema.option('dragBlockClass'),
 
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.strict('onEscape')
@@ -28,7 +30,7 @@ define(
 
     var partTypes = [
       PartType.optional(basic, 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
-        function (detail) {
+        function (detail, spec) {
           return {
             behaviours: {
               dragging: {
@@ -36,7 +38,12 @@ define(
                 getTarget: function (handle) {
                   return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
                 },
-                blockerClass: detail.dragBlockClass()
+                blockerClass: detail.dragBlockClass().getOrDie(
+                  new Error(
+                    'The drag blocker class was not specified for a dialog with a drag handle: \n' + 
+                    Json.stringify(spec, null, 2)
+                  )
+                )
               }
             }
           };

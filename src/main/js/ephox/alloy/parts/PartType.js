@@ -51,10 +51,10 @@ define(
 
     var combine = function (name, detail, defaults, spec, overrides) {
       return Merger.deepMerge(
-        defaults(detail),
+        defaults(detail, spec),
         spec,
         { uid: detail.partUids()[name] },
-        overrides(detail),
+        overrides(detail, spec),
         {
           uiType: 'custom'
         }
