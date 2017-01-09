@@ -380,13 +380,7 @@ define(
             tag: 'div',
             classes: [ 'expandable-form' ]
           },
-          members: {
-            ui: {
-              munge: function (spec) {
-                return mungers[spec.type](spec);
-              }
-            }
-          },
+          
           markers: {
             expandedClass: 'a',
             collapsedClass: 'b',
@@ -403,9 +397,9 @@ define(
               },
               parts: Objects.narrow(fieldParts(), [ 'omega', 'alpha', 'theta' ]),
               components: [
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.omega>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.alpha>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.theta>' }
+                Form.parts('omega'),
+                Form.parts('alpha'),
+                Form.parts('theta')
               ]
             },
             'extra': {
@@ -415,11 +409,11 @@ define(
               },
               parts: Objects.narrow(fieldParts(), [ 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
               components: [
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.beta>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.gamma>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.delta>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.epsilon>' },
-                { uiType: 'placeholder', owner: 'form', name: '<alloy.field.rho>' }
+                Form.parts('beta'),
+                Form.parts('gamma'),
+                Form.parts('delta'),
+                Form.parts('epsilon'),
+                Form.parts('rho')
               ]
             },
             'expander': {
