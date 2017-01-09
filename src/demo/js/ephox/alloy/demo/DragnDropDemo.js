@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.DragnDrop',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
@@ -18,13 +19,16 @@ define(
     'global!document'
   ],
 
-  function (Gui, DragnDrop, Button, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Html, Insert, Replication, document) {
+  function (Gui, DragnDrop, Button, Container, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Html, Insert, Replication, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
+
+
+      // FIX: Use this everywhere.
       var deriveCapabilities = function (caps) {
         return Objects.wrapAll(caps);
       };
@@ -32,14 +36,10 @@ define(
       var display1 = HtmlDisplay.section(
         gui,
         'The button can be dragged into the the container',
-        {
-          uiType: 'container',
+        Container.build({
           components: [
-            // Button.build({
-            ({
-              uiType: 'custom',
+            Container.build({
               dom: {
-                tag: 'div',
                 styles: {
                   'background-color': 'black',
                   width: '20px',
@@ -72,8 +72,7 @@ define(
               ])
             }),
 
-            {
-              uiType: 'container',
+            Container.build({
               dom: {
                 styles: {
                   background: 'red',
@@ -92,9 +91,9 @@ define(
                   }
                 })
               ])
-            }
+            })
           ]
-        }        
+        })    
       );
     };
   }
