@@ -7,12 +7,14 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.ItemWidget',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.menus.MenuData',
+    'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
@@ -23,7 +25,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Behaviour, Representing, Button, Dropdown, Input, ItemWidget, Menu, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
+  function (Gui, GuiFactory, Behaviour, Representing, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, MenuData, DemoSink, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -32,17 +34,7 @@ define(
 
       Insert.append(body, gui.element());
 
-      var sink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        behaviours: {
-          positioning: {
-            useFixed: true
-          }
-        }
-      });
+      var sink = DemoSink.make();
 
       gui.add(sink);      
 
@@ -84,7 +76,6 @@ define(
           item: {
             munge: function (spec) {
               return {
-                uiType: 'container',
                 dom: {
                   tag: 'div',
                   classes: [ 'alloy-item' ]
@@ -104,7 +95,6 @@ define(
           item: {
             munge: function (spec) {
               return {
-                uiType: 'custom',
                 dom: {
                   tag: 'span',
                   classes: [ 'alloy-item' ],
@@ -122,7 +112,6 @@ define(
           menu: {
             munge: function (spec) {
               return {
-                uiType: 'container',
                 movement: {
                   mode: 'grid',
                   initSize: {
@@ -168,7 +157,6 @@ define(
             munge: function (spec) {
 
               return spec.type === 'widget' ? {
-                uiType: 'container',
                 dom: {
                   tag: 'div',
                   classes: [ 'alloy-item' ]
@@ -214,8 +202,7 @@ define(
                 value: 'widget1',
                 text: 'Widget1'
               },
-              widget: {
-                uiType: 'container',
+              widget: Container.build({
                 dom: {
                   classes: [ 'my-widget' ]
                 },
@@ -226,7 +213,7 @@ define(
                   Input.build({ dom: { tag: 'input' } }),
                   Input.build({ dom: { tag: 'input' } })
                 ]
-              }
+              })
 
             });
 
@@ -247,7 +234,6 @@ define(
               uid: 'supplied'
             },
             arrow: {
-              // uiType: 'button',
               dom: {
                 tag: 'button',
                 innerHtml: 'v'
@@ -284,8 +270,7 @@ define(
                 value: 'widget1',
                 text: 'Widget1'
               },
-              widget: {
-                uiType: 'container',
+              widget: Container.build({
                 dom: {
                   classes: [ 'my-widget' ]
                 },
@@ -296,7 +281,7 @@ define(
                   Input.build({ }),
                   Input.build({ })
                 ]
-              }
+              })
             });
 
             return future.map(function (data) {
@@ -426,8 +411,7 @@ define(
                         value: 'widget',
                         text: 'Widget'
                       },
-                      widget: {
-                        uiType: 'custom',
+                      widget: Container.build({
                         dom: {
                           tag: 'div'
                         },
@@ -442,11 +426,7 @@ define(
                             },
                             useTabstop: true
                           }),
-                          {
-                            uiType: 'custom',
-                            dom: {
-                              tag: 'div'
-                            },
+                          Container.build({
                             components: [
                               Button.build({
                                 action: function () { console.log('clicked on a button', arguments); },
@@ -476,14 +456,14 @@ define(
                                 selector: 'button'
                               }
                             }
-                          }
+                          })
                         ],
                         behaviours: {
                           keying: {
                             mode: 'cyclic'
                           }
                         }
-                      }
+                      })
                     }
                   ]
                 },
