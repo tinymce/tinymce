@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dragging.DragCoord',
     'ephox.boulder.api.Objects',
@@ -18,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Dragging, Button, HtmlDisplay, DragCoord, Objects, Fun, Option, Position, Class, Css, Element, Insert, document) {
+  function (Gui, Dragging, Button, Container, HtmlDisplay, DragCoord, Objects, Fun, Option, Position, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -31,14 +32,9 @@ define(
       var button1 = HtmlDisplay.section(
         gui,
         'This button is a <code>button</code> that can be dragged',
-        {
-          uiType: 'container',
-          dom: {
-            tag: 'div'
-          },
+        Container.build({
           components: [
-            {
-              uiType: 'container',
+            Container.build({
               dom: {
                 styles: {
                   position: 'fixed',
@@ -50,9 +46,8 @@ define(
                 },
                 innerHtml: 'A fixed dock'
               }
-            },
-            {
-              uiType: 'container',
+            }),
+            Container.build({
               dom: {
                 styles: {
                   position: 'absolute',
@@ -63,7 +58,7 @@ define(
                   background: 'red'
                 }
               }
-            },
+            }),
             Button.build({
               dom: {
                 tag: 'span',
@@ -108,7 +103,7 @@ define(
               unselecting: true
             })
           ]
-        }
+        })
       );
 
     };
