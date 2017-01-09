@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.aria.AriaOwns',
+  'ephox.alloy.aria.AriaOwner',
 
   [
     'ephox.epithet.Id',
@@ -12,7 +12,7 @@ define(
   ],
 
   function (Id, Fun, Attr, Node, PredicateFind, SelectorFind, Traverse) {
-    var findAriaOwner = function (queryElem) {
+    var find = function (queryElem) {
       var dependent = PredicateFind.closest(queryElem, function (elem) {
         if (! Node.isElement(elem)) return false;
         var id = Attr.get(elem, 'id');
@@ -46,7 +46,7 @@ define(
     };
 
     return {
-      findAriaOwner: findAriaOwner,
+      find: find,
       manager: manager
     };
   }

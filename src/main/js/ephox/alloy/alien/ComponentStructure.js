@@ -2,15 +2,15 @@ define(
   'ephox.alloy.alien.ComponentStructure',
 
   [
-    'ephox.alloy.aria.AriaOwns',
+    'ephox.alloy.aria.AriaOwner',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.PredicateExists'
   ],
 
-  function (AriaOwns, Fun, Compare, PredicateExists) {
+  function (AriaOwner, Fun, Compare, PredicateExists) {
     var isAriaPartOf = function (component, queryElem) {
-      return AriaOwns.findAriaOwner(queryElem).exists(function (owner) {
+      return AriaOwner.find(queryElem).exists(function (owner) {
         return isPartOf(component, owner);
       });
     };

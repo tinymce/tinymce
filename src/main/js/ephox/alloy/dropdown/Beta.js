@@ -6,26 +6,23 @@ define(
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
-    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.TieredMenu',
-    'ephox.alloy.aria.AriaOwns',
+    'ephox.alloy.aria.AriaOwner',
     'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
-    'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (ComponentStructure, Composing, Coupling, Focusing, Keying, Positioning, Sandboxing, TieredMenu, AriaOwns, Gamma, Tagger, Dismissal, Id, Merger, Future, Fun, Option, Attr, Remove, Width, Error) {
+  function (ComponentStructure, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -105,7 +102,7 @@ define(
     };
 
     var makeSandbox = function (detail, anchor, anyInSystem, extras) {
-      var ariaOwner = AriaOwns.manager();
+      var ariaOwner = AriaOwner.manager();
 
       var onOpen = function (component, menu) {
         ariaOwner.link(anyInSystem.element());
@@ -116,7 +113,7 @@ define(
       };
 
       var onClose = function (component, menu) {
-        ariaOwner.unlink(anyInSystem.element(), 'aria-owns');
+        ariaOwner.unlink(anyInSystem.element());
         if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };
 
