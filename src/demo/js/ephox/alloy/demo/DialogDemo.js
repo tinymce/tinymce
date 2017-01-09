@@ -109,17 +109,14 @@ define(
                 tag: 'div'
               },
               components: [
-                {
-                  uiType: 'custom',
+                Container.build({
                   dom: {
-                    tag: 'div',
                     styles: {
                       width: '400px',
                       height: '200px'
                     }
                   }
-                }
-
+                })
               ]
             },
             footer: {
@@ -137,7 +134,7 @@ define(
                 classes: [ 'mce-close' ]
               },
               components: [
-                { uiType: 'custom', dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } }
+                Container.build({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
               ]
             }
           }
