@@ -2,10 +2,11 @@ define(
   'ephox.alloy.test.dropdown.TestDropdownMenu',
 
   [
-    'ephox.alloy.api.behaviour.Representing'
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Menu'
   ],
 
-  function (Representing) {
+  function (Representing, Menu) {
     return function (store) {
       return {
         members: {
@@ -20,8 +21,7 @@ define(
                   } : { }
                 },
                 components: [
-                  // FIX: Expose through API
-                  { uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' }
+                  Menu.parts().items()
                 ]
               };
             }
