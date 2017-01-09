@@ -115,10 +115,9 @@ define(
           },
           keying: {
             mode: 'special',
-            // FIX: usage of undefined.
             // focusIn: info.autofocus() ? function (component) {
             //   focusWidget(component);
-            // } : undefined,
+            // } : Behaviour.revoke(),
             onLeft: onHorizontalArrow,
             onRight: onHorizontalArrow,
             onEscape: function (component, simulatedEvent) {

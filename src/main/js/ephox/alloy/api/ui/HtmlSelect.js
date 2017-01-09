@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.HtmlSelect',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
@@ -13,7 +14,7 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (UiBuilder, Fields, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
+  function (Behaviour, UiBuilder, Fields, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
     var schema = [
       FieldSchema.strict('options'),
       Fields.members([ 'option' ]),
@@ -82,13 +83,13 @@ define(
               store: {
                 mode: 'memory',
                 // TODO: Check this
-                initialValue: detail.data().getOr(detail.options()[0]),
+                initialValue: detail.data().getOr(detail.options()[0])
                 
               }
             },
 
             // FIX: Undefined
-            tabstopping: detail.hasTabstop() ? true : undefined
+            tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
           }
         }
       );

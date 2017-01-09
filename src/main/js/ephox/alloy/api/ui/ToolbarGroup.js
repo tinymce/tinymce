@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.ToolbarGroup',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (BehaviourExport, UiBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
+  function (Behaviour, BehaviourExport, UiBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
     var schema = [
       FieldSchema.strict('items'),
       Fields.members([ 'item' ]),
@@ -66,7 +67,7 @@ define(
               selector: '.' + detail.markers().itemClass()
             },
             // fIX: Undefined
-            tabstopping: detail.hasTabstop() ? { } : undefined
+            tabstopping: detail.hasTabstop() ? { } : Behaviour.revoke()
           }
         }
       );

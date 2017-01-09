@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Dropdown',
@@ -28,7 +29,7 @@ define(
     'text!dom-templates/dropdown-alpha.html'
   ],
 
-  function (Gui, GuiFactory, Representing, Button, Dropdown, Input, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
+  function (Gui, GuiFactory, Behaviour, Representing, Button, Dropdown, Input, SplitDropdown, MenuData, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document, TemplateGridItem, TemplateMenu, TemplateMenuItem, TemplateMenuSeparator, TemplateToolbarDropdown, TemplateToolbarSplitButton, TemplateWidgetContainer, TemplateInlineDropdown) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -460,8 +461,7 @@ define(
                                   innerHtml: '-'
                                 },
                                 behaviours: {
-                                  // FIX: This is required to override a previous tabstopping.
-                                  tabstopping: undefined
+                                  tabstopping: Behaviour.revoke()
                                 }
                               }),
                               Button.build({
@@ -471,8 +471,7 @@ define(
                                   innerHtml: '+'
                                 },
                                 behaviours: {
-                                  // FIX: This is required to override a previous tabstopping.
-                                  tabstopping: undefined
+                                  tabstopping: Behaviour.revoke()
                                 }
                               })
                             ],

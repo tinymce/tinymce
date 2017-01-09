@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
@@ -19,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (SystemEvents, Composing, Highlighting, Keying, Toggling, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Fun, Option, Error) {
+  function (SystemEvents, Behaviour, Composing, Highlighting, Keying, Toggling, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Fun, Option, Error) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -39,9 +40,8 @@ define(
       function (detail) {
         return {
           behaviours: {
-            // FIX undefined
-            tabstopping: undefined,
-            focusing: undefined
+            tabstopping: Behaviour.revoke(),
+            focusing: Behaviour.revoke()
           }
         };
       },
@@ -69,7 +69,7 @@ define(
         return {
           behaviours: {
           // FIX: Undefined false
-            focusing: undefined
+            focusing: Behaviour.revoke()
           }
         };
       },

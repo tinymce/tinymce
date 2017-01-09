@@ -2,13 +2,14 @@ define(
   'ephox.alloy.ui.common.InputBase',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Value'
   ],
 
-  function (FieldSchema, Objects, Fun, Value) {
+  function (Behaviour, FieldSchema, Objects, Fun, Value) {
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('type', 'input'),
@@ -52,7 +53,7 @@ define(
           }
         },
         // FIX: Undefined
-        tabstopping: detail.hasTabstop() ? true : undefined
+        tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
       };
     };
 
