@@ -1763,3 +1763,14 @@ test("Bug TINY-782: Can't apply sub/sup to word on own line with large font", fu
 
 	equal(getContent(), '<p><span style="font-size: 18px;"><sup>abc</sup></span></p>');
 });
+
+test("Bug TINY-671: Background color on nested font size bug", function() {
+	editor.setContent("<p>abc</p>");
+	Utils.setSelection('p', 1);
+
+	editor.formatter.apply('fontsize', {value: '18px'});
+	editor.formatter.apply('bold');
+	editor.formatter.apply('hilitecolor', {value: '#ff0000'});
+
+	equal(getContent(), '<p><span style="background-color: #ff0000; font-size: 18px;"><strong>abc</strong></span></p>');
+});
