@@ -27,10 +27,11 @@ define("tinymce/Formatter", [
 	"tinymce/dom/RangeUtils",
 	"tinymce/dom/BookmarkManager",
 	"tinymce/dom/ElementUtils",
+	"tinymce/util/Fun",
 	"tinymce/util/Tools",
 	"tinymce/fmt/Preview",
 	"tinymce/fmt/Hooks"
-], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Tools, Preview, Hooks) {
+], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Fun, Tools, Preview, Hooks) {
 	/**
 	 * Constructs a new formatter instance.
 	 *
@@ -633,15 +634,36 @@ define("tinymce/Formatter", [
 						return count;
 					}
 
+					function getChildElementNode(root) {
+						var child = false;
+						each(root.childNodes, function(node) {
+							if (isElementNode(node)) {
+								child = node;
+								return false; // break loop
+							}
+						});
+						return child;
+					}
+
+					function matchNestedWrapper(node, filter) {
+						do {
+							if (getChildCount(node) !== 1) {
+								return false;
+							}
+
+							node = getChildElementNode(node);
+							if (!node) {
+								return false;
+							} else if (filter(node)) {
+								return node;
+							}
+						} while (node);
+					}
+
 					function mergeStyles(node) {
 						var child, clone;
 
-						each(node.childNodes, function(node) {
-							if (node.nodeType == 1 && !isBookmarkNode(node) && !isCaretNode(node)) {
-								child = node;
-								return FALSE; // break loop
-							}
-						});
+						child = getChildElementNode(node);
 
 						// If child was found and of the same type as the current node
 						if (child && !isBookmarkNode(child) && matchName(child, format)) {
@@ -663,6 +685,15 @@ define("tinymce/Formatter", [
 					if ((newWrappers.length > 1 || !isBlock(node)) && childCount === 0) {
 						dom.remove(node, 1);
 						return;
+					}
+
+					// fontSize defines the line height for the whole branch of nested style wrappers,
+					// therefore it should be set on the outermost wrapper
+					if (!isBlock(node) && !getStyle(node, 'fontSize')) {
+						var styleNode = matchNestedWrapper(node, hasStyle('fontSize'));
+						if (styleNode) {
+							apply('fontsize', {value: getStyle(styleNode, 'fontSize')}, node);
+						}
 					}
 
 					if (format.inline || format.wrapper) {
@@ -1407,6 +1438,16 @@ define("tinymce/Formatter", [
 			str2 = '' + (str2.nodeName || str2);
 
 			return str1.toLowerCase() == str2.toLowerCase();
+		}
+
+		function isElementNode(node) {
+			return node.nodeType == 1 && !isBookmarkNode(node) && !isWhiteSpaceNode(node) && !isCaretNode(node);
+		}
+
+		function hasStyle(name) {
+			return Fun.curry(function(name, node) {
+				return !!(node && getStyle(node, name));
+			}, name);
 		}
 
 		/**

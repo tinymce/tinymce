@@ -1740,3 +1740,43 @@ test('Format selection over fragments', function(){
 	editor.formatter.apply('underline');
 	equal(getContent(), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
 });
+
+
+test("Wrapper with fontSize should retain priority within a branch of nested inline format wrappers", function() {
+	editor.setContent("<p>abc</p>");
+	Utils.setSelection('p', 0, 'p', 3);
+
+	editor.formatter.apply('fontsize', {value: '18px'});
+	editor.formatter.apply('bold');
+	editor.formatter.apply('underline');
+	editor.formatter.apply('forecolor', {value: '#ff0000'});
+
+	equal(getContent(), '<p><span style="color: #ff0000; font-size: 18px;"><span style="text-decoration: underline;"><strong>abc</strong></span></span></p>');
+});
+
+test("Bug TINY-782: Can't apply sub/sup to word on own line with large font", function() {
+	editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</p>';
+	Utils.setSelection('span', 0, 'span', 3);
+
+	editor.formatter.apply('superscript');
+
+	equal(getContent(), '<p><span style="font-size: 18px;"><sup>abc</sup></span></p>');
+});
+
+test("Bug TINY-671: Background color on nested font size bug", function() {
+	editor.getBody().innerHTML = '<p><strong><span style="font-size: 18px;">abc</span></strong></p>';
+
+	Utils.setSelection('span', 0, 'span', 3);
+	editor.formatter.apply('hilitecolor', {value: '#ff0000'});
+
+	equal(getContent(), '<p><span style="background-color: #ff0000; font-size: 18px;"><strong>abc</strong></span></p>');
+});
+
+test("Bug TINY-865: Font size removed when changing background color", function() {
+	editor.getBody().innerHTML = '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>';
+
+	Utils.setSelection('span span:nth-child(2)', 0, 'span span:nth-child(2)', 1);
+	editor.formatter.apply('hilitecolor', {value: '#ffff00'});
+
+	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="background-color: #ffff00; font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
+});
