@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
     'ephox.sugar.api.Class',
@@ -13,7 +14,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Sliding, Button, HtmlDisplay, Objects, Class, Element, Insert, document) {
+  function (Gui, Sliding, Button, Container, HtmlDisplay, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -23,11 +24,9 @@ define(
       HtmlDisplay.section(
         gui,
         'This container slides its height',
-        {
-          uiType: 'container',
+        Container.build({
           components: [
-            {
-              uiType: 'container',
+            Container.build({
               uid: 'height-slider',
 
               behaviours: Objects.wrapAll([
@@ -55,7 +54,7 @@ define(
                   }
                 }
               ]
-            },
+            }),
 
             Button.build({
               dom: {
@@ -69,17 +68,15 @@ define(
               }
             })
           ]
-        }
+        })
       );
 
       HtmlDisplay.section(
         gui,
         'This container slides its width',
-        {
-          uiType: 'container',
+        Container.build({
           components: [
-            {
-              uiType: 'container',
+            Container.build({
               uid: 'width-slider',
 
               behaviours: Objects.wrapAll([
@@ -108,7 +105,7 @@ define(
                   }
                 }
               ]
-            },
+            }),
 
             Button.build({
               dom: {
@@ -122,7 +119,7 @@ define(
               }
             })
           ]
-        }
+        })
       );
     };
   }
