@@ -68,14 +68,12 @@ define(
       function (detail) {
         return {
           behaviours: {
-          // FIX: Undefined false
             focusing: Behaviour.revoke()
           }
         };
       },
       function (detail) {
         return {
-          // uiType: 'button',
           action: detail.onExecute()
         };
       }

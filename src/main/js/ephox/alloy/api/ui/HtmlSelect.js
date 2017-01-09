@@ -88,7 +88,6 @@ define(
               }
             },
 
-            // FIX: Undefined
             tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
           }
         }

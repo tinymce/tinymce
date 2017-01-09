@@ -179,60 +179,6 @@ define(
         });
       };
 
-      var radioMunger = function (spec) {
-        return Merger.deepMerge(spec, {
-          dom: {
-            tag: 'fieldset'
-          },
-          label: 'Radio',
-          parts: {
-            legend: { },
-            fields: { }
-          },
-          markers: {
-            radioSelector: 'input[type="radio"]'
-          },
-          components: [
-            { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' },
-            { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' }
-          ]
-        });
-      };
-
-      var customRadioMunger = function (spec) {
-        return Merger.deepMerge(spec, {
-          dom: {
-            tag: 'fieldset'
-          },
-          label: 'Radio',
-          parts: {
-            legend: { },
-            fields: { }
-          },
-          markers: {
-            itemClass: 'ephox-pastry-independent-button',
-            selectedClass: 'demo-selected'
-          },
-          components: [
-            { uiType: 'placeholder', name: '<alloy.form.field-legend>', owner: 'radio-group' },
-            {
-              uiType: 'container',
-              components: [
-                { uiType: 'placeholder', name: '<alloy.form.radio-fields>', owner: 'radio-group' }
-              ]
-            }
-          ]
-        });
-      };
-
-      var mungers = {
-        'text-input': textMunger,
-        'select-input': selectMunger,
-        'radio-group': radioMunger,
-        'custom-radio-group': customRadioMunger,
-        'coupled-text-input': coupledTextMunger
-      };
-
       var fieldParts = function () {
         return {
           omega: FormCoupledInputs.build(

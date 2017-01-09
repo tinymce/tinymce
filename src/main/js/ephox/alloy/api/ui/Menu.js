@@ -72,7 +72,6 @@ define(
     };
 
     var parts = {
-      // FIX
       items: Fun.constant({
         uiType: 'placeholder', name: '<alloy.menu.items>', owner: 'menu' 
       })
