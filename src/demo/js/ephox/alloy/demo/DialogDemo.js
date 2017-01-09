@@ -28,8 +28,11 @@ define(
         dom: {
           tag: 'div'
         },
-        positioning: {
-          useFixed: true
+
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
       });
 
@@ -39,9 +42,7 @@ define(
         return Result.value(sink);
       };
 
-      var dialog = HtmlDisplay.section(
-        gui,
-        'This dialog is customised (uses TinyMCE styles)',
+      var dialog = GuiFactory.build(
         ModalDialog.build({
           dom: {
             tag: 'div',
@@ -159,6 +160,14 @@ define(
           }
         })
       );
+
+      HtmlDisplay.section(
+        gui,
+        'This dialog is customised (uses TinyMCE styles)',
+        { built: sink }
+      );
+
+      ModalDialog.show(dialog);
     };
   }
 );

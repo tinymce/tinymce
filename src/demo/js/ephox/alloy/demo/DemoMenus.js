@@ -25,9 +25,7 @@ define(
         },
         item: {
           munge: function (spec) {
-
             return spec.type === 'separator' ? {
-              uiType: 'container',
               dom: {
                 tag: 'div',
                 classes: [  ],
