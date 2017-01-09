@@ -7,8 +7,10 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoContent',
+    'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.photon.Writer',
     'ephox.sugar.api.Class',
@@ -18,7 +20,7 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Gui, GuiFactory, Positioning, Toggling, Button, EventHandler, DemoContent, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
+  function (Gui, GuiFactory, Positioning, Toggling, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -26,42 +28,30 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var sink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        behaviours: {
-          positioning: {
-            useFixed: true
-          }
-        }
-      });
+      var sink = DemoSink.make();
 
       gui.add(sink);
 
-      var popup = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        components: [
-          {
-            uiType: 'custom',
-            dom: {
-              tag: 'div',
-              styles: {
-                'padding': '10px',
-                background: 'white',
-                border: '2px solid black'
-              }
-            },
-            components: [
-              { text: 'This is a popup' }
-            ]
-          }
-        ]
-      });
+      var popup = GuiFactory.build(
+        Container.build({
+          components: [
+            {
+              uiType: 'custom',
+              dom: {
+                tag: 'div',
+                styles: {
+                  'padding': '10px',
+                  background: 'white',
+                  border: '2px solid black'
+                }
+              },
+              components: [
+                { text: 'This is a popup' }
+              ]
+            }
+          ]
+        })
+      );
 
       var section1 = HtmlDisplay.section(
         gui,
@@ -97,8 +87,7 @@ define(
       var section2 = HtmlDisplay.section(
         gui,
         'Position anchoring to menu',
-        {
-          uiType: 'custom',
+        Container.build({
           dom: {
             tag: 'ol',
             styles: {
@@ -106,8 +95,7 @@ define(
             }
           },
           components: [
-            {
-              uiType: 'custom',
+            Container.build({
               dom: {
                 tag: 'li',
                 innerHtml: 'Hover over me',
@@ -127,24 +115,21 @@ define(
                   }
                 })
               }
-            }
+            })
           ]
-        }
+        })
       );
 
       var section3 = HtmlDisplay.section(
         gui,
         'Position anchoring to text selection',
-        {
-          uiType: 'custom',
+        Container.build({
           dom: {
             tag: 'div'
           },
           components: [
-            {
-              uiType: 'custom',
+            Container.build({
               dom: {
-                tag: 'div',
                 attributes: {
                   'contenteditable': 'true'
                 },
@@ -158,7 +143,7 @@ define(
                 innerHtml: DemoContent.generate(20)
               },
               uid: 'text-editor'
-            },
+            }),
             Button.build({
               dom: {
                 tag: 'button',
@@ -175,7 +160,7 @@ define(
               }
             })
           ]
-        }
+        })
       );
 
       // Maybe make a component.
@@ -190,11 +175,7 @@ define(
       var section4 = HtmlDisplay.section(
         gui,
         'Position anchoring to text selection [iframe]',
-        {
-          uiType: 'custom',
-          dom: {
-            tag: 'div'
-          },
+        Container.build({
           components: [
             {
               external: {
@@ -217,7 +198,7 @@ define(
               }
             })
           ]
-        }
+        })
       );
     };
   }
