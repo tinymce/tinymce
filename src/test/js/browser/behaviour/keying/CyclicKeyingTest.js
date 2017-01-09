@@ -10,11 +10,12 @@ asynctest(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, Tabstopping, Button, GuiSetup, Objects) {
+  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, Tabstopping, Button, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,46 +30,46 @@ asynctest(
         });
       };
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'cyclic-keying-test'],
-          styles: {
-            background: 'blue',
-            width: '200px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        behaviours: Objects.wrapAll([
-          Keying.config({
-            mode: 'cyclic'
-          })
-        ]),
-        components: [
-          makeButton('button1', 'Button1'),
-          makeButton('button2', 'Button2'),
-          {
-            uiType: 'custom',
-            dom: {
-              tag: 'span',
-              classes: [ 'focusable-span' ],
-              styles: {
-                'display': 'inline-block',
-                'width': '200px',
-                'border': '1px solid green',
-                background: 'white',
-                height: '20px'
-              }
-            },
-            behaviours: Objects.wrapAll([
-              Tabstopping.config({ }),
-              Focusing.config({ })
-            ])
-          }
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'cyclic-keying-test'],
+            styles: {
+              background: 'blue',
+              width: '200px',
+              height: '200px'
+            }
+          },
+          uid: 'custom-uid',
+          behaviours: Objects.wrapAll([
+            Keying.config({
+              mode: 'cyclic'
+            })
+          ]),
+          components: [
+            makeButton('button1', 'Button1'),
+            makeButton('button2', 'Button2'),
+            Container.build({
+              dom: {
+                tag: 'span',
+                classes: [ 'focusable-span' ],
+                styles: {
+                  'display': 'inline-block',
+                  'width': '200px',
+                  'border': '1px solid green',
+                  background: 'white',
+                  height: '20px'
+                }
+              },
+              behaviours: Objects.wrapAll([
+                Tabstopping.config({ }),
+                Focusing.config({ })
+              ])
+            })
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       return [

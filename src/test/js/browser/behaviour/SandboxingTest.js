@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
@@ -22,39 +23,39 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Sandboxing, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return Sinks.fixedSink();
     }, function (doc, body, gui, sink, store) {
-      var sandbox = sink.getSystem().build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'test-sandbox' ]
-        },
-        uid: 'no-duplicates',
-        behaviours: Objects.wrapAll([
-          Sandboxing.config({
-            bucket: {
-              mode: 'sink',
-              lazySink: function () {
-                return Result.value(sink);
-              }
-            },
+      var sandbox = sink.getSystem().build(
+        Container.build({
+          dom: {
+            classes: [ 'test-sandbox' ]
+          },
+          uid: 'no-duplicates',
+          behaviours: Objects.wrapAll([
+            Sandboxing.config({
+              bucket: {
+                mode: 'sink',
+                lazySink: function () {
+                  return Result.value(sink);
+                }
+              },
 
-            onOpen: store.adder('onOpen'),
-            onClose: store.adder('onClose'),
+              onOpen: store.adder('onOpen'),
+              onClose: store.adder('onClose'),
 
-            clear: function (sandbox) {
-              Remove.empty(sandbox.element());
-            },
-            isPartOf: Fun.constant(false)
-          })
-        ])
-      });
+              clear: function (sandbox) {
+                Remove.empty(sandbox.element());
+              },
+              isPartOf: Fun.constant(false)
+            })
+          ])
+        })
+      );
     
       var sOpenWith = function (data) {
         return Step.async(function (next, die) {

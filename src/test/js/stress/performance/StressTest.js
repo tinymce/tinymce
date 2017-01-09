@@ -5,11 +5,12 @@ asynctest(
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.compass.Arr',
     'ephox.lumber.api.Timers'
   ],
 
-  function (RawAssertions, Gui, GuiFactory, Arr, Timers) {
+  function (RawAssertions, Gui, GuiFactory, Container, Arr, Timers) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -34,17 +35,16 @@ asynctest(
 
     var r = [ ];
     for (var i = 0; i < 10000; i++) {
-      r[i] = {
-        uiType: 'container'
-      };
+      r[i] = Container.build({ });
     }
 
     var gui = Gui.create();
 
-    // var parent = GuiFactory.build({
-    //   uiType: 'container',
-    //   components: r
-    // });
+    // var parent = GuiFactory.build(
+    //   Container.build({
+    //     components: r
+    //   })
+    // );
     Arr.map(r, GuiFactory.build);
 
     var after = new Date().getTime();

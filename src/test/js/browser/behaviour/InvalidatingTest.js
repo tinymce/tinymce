@@ -11,6 +11,7 @@ asynctest(
     'ephox.agar.api.UiControls',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Invalidating',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'ephox.knoch.future.Future',
@@ -18,30 +19,31 @@ asynctest(
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Invalidating, GuiSetup, Objects, Future, Result, Value) {
+  function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Invalidating, Container, GuiSetup, Objects, Future, Result, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'input'
-        },
-        behaviours: Objects.wrapAll([
-          Invalidating.config({
-            invalidClass: 'test-invalid',
-            validator: {
-              validate: function (input) {
-                var value = Value.get(input.element());
-                var res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
-                return Future.pure(res);
-              },
-              onEvent: 'custom.test.validate'
-            }
-          })
-        ])
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'input'
+          },
+          behaviours: Objects.wrapAll([
+            Invalidating.config({
+              invalidClass: 'test-invalid',
+              validator: {
+                validate: function (input) {
+                  var value = Value.get(input.element());
+                  var res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
+                  return Future.pure(res);
+                },
+                onEvent: 'custom.test.validate'
+              }
+            })
+          ])
+        })
+      );
     }, function (doc, body, gui, component, store) {
 
       var sCheckValid = function (label) {

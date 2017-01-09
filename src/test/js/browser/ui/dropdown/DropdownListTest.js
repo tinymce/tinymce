@@ -13,6 +13,7 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
@@ -26,36 +27,38 @@ asynctest(
     'ephox.sugar.api.Width'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Dropdown, MenuData, GuiSetup, NavigationUtils, TestBroadcasts, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, TestBroadcasts, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var sink = Memento.record({
-      uiType: 'container',
-      behaviours: {
-        positioning: {
-          useFixed: true
+    var sink = Memento.record(
+      Container.build({
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
-      }
-    });
+      })
+    );
 
     GuiSetup.setup(function (store, doc, body) {
 
 
-      var displayer = Memento.record({
-        uiType: 'custom',
-        dom: {
-          tag: 'span'
-        },
-        behaviours: {
-          representing: {
-            initialValue: 'hi',
-            onSet: function (button, val) {
-              TextContent.set(button.element(), val);
+      var displayer = Memento.record(
+        Container.build({
+          dom: {
+            tag: 'span'
+          },
+          behaviours: {
+            representing: {
+              initialValue: 'hi',
+              onSet: function (button, val) {
+                TextContent.set(button.element(), val);
+              }
             }
           }
-        }
-      });
+        })
+      );
 
       var c = GuiFactory.build(
         Dropdown.build({

@@ -10,11 +10,12 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, ToolbarGroup, GuiSetup) {
+  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, Container, ToolbarGroup, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,8 +34,7 @@ asynctest(
           members: {
             item: {
               munge: function (itemSpec) {
-                return {
-                  uiType: 'custom',
+                return Container.build({
                   dom: {
                     tag: 'button',
                     innerHtml: itemSpec.data.text
@@ -43,7 +43,7 @@ asynctest(
                   behaviours: {
                     focusing: true
                   }
-                };
+                });
               }
             }
           },

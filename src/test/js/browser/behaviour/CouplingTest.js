@@ -8,6 +8,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.StepUtils',
@@ -17,34 +18,31 @@ asynctest(
     'global!Error'
   ],
  
-  function (Assertions, Logger, Step, GuiFactory, Coupling, Button, Tagger, GuiSetup, StepUtils, Objects, Attr, Node, Error) {
+  function (Assertions, Logger, Step, GuiFactory, Coupling, Button, Container, Tagger, GuiSetup, StepUtils, Objects, Attr, Node, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        uid: 'primary',
-        behaviours: Objects.wrapAll([
-          Coupling.config({
-            others: {
-              'secondary-1': function (primary) { 
-                return Button.build({
-                  dom: {
-                    tag: 'button'
-                  },
-                  action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute())),
-                  text: 'Click me'
-                });
+      return GuiFactory.build(
+        Container.build({
+          uid: 'primary',
+          behaviours: Objects.wrapAll([
+            Coupling.config({
+              others: {
+                'secondary-1': function (primary) { 
+                  return Button.build({
+                    dom: {
+                      tag: 'button'
+                    },
+                    action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute())),
+                    text: 'Click me'
+                  });
+                }
               }
-            }
-          })
-        ])
-      });
-
+            })
+          ])
+        })
+      );
     }, function (doc, body, gui, component, store) {
       return [
         StepUtils.sAssertFailIs(

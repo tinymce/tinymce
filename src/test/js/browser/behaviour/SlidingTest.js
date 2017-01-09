@@ -12,6 +12,7 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
@@ -22,7 +23,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Sliding, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Sliding, Container, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -52,35 +53,36 @@ asynctest(
     };
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
-        dom: {
-          styles: {
-            'overflow-x': 'hidden',
-            background: 'blue',
-            'max-width': '300px',
-            height: '20px'
-          }
-        },
-        behaviours: Objects.wrapAll([ 
-          Sliding.config({
-            closedStyle: 'test-sliding-closed',
-            openStyle: 'test-sliding-open',
-            'shrinkingStyle': 'test-sliding-width-shrinking',
-            'growingStyle': 'test-sliding-width-growing',
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            styles: {
+              'overflow-x': 'hidden',
+              background: 'blue',
+              'max-width': '300px',
+              height: '20px'
+            }
+          },
+          behaviours: Objects.wrapAll([ 
+            Sliding.config({
+              closedStyle: 'test-sliding-closed',
+              openStyle: 'test-sliding-open',
+              'shrinkingStyle': 'test-sliding-width-shrinking',
+              'growingStyle': 'test-sliding-width-growing',
 
-            dimension: {
-              property: 'width'
-            },
+              dimension: {
+                property: 'width'
+              },
 
-            onShrunk: store.adder('onShrunk'),
-            onStartShrink: store.adder('onStartShrink'),
-            onGrown: store.adder('onGrown'),
-            onStartGrow: store.adder('onStartGrow')
-          })
+              onShrunk: store.adder('onShrunk'),
+              onStartShrink: store.adder('onStartShrink'),
+              onGrown: store.adder('onGrown'),
+              onStartGrow: store.adder('onStartGrow')
+            })
 
-        ])
-      });
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
 

@@ -12,13 +12,14 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
     'ephox.perhaps.Result'
   ],
  
-  function (ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, GuiFactory, ModalDialog, GuiSetup, Sinks, Result) {
+  function (ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, GuiFactory, Container, ModalDialog, GuiSetup, Sinks, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -81,7 +82,7 @@ asynctest(
                 classes: [ 'test-dialog-body' ]
               },
               components: [
-                { uiType: 'container', dom: { innerHtml: '<p>This is something else</p>' } }
+                Container.build({ dom: { innerHtml: '<p>This is something else</p>' } })
               ]
             },
             footer: {

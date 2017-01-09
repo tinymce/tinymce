@@ -9,6 +9,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
@@ -16,7 +17,7 @@ asynctest(
     'ephox.compass.Arr'
   ],
  
-  function (FocusTools, Keyboard, Keys, Step, GuiFactory, Focusing, Keying, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
+  function (FocusTools, Keyboard, Keys, Step, GuiFactory, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,8 +30,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var item = function (classes) {
-        return {
-          uiType: 'custom',
+        return Container.build({
           dom: {
             tag: 'span',
             styles: {
@@ -50,36 +50,37 @@ asynctest(
           behaviours: Objects.wrapAll([
             Focusing.config({ })
           ])
-        };
+        });
       };
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'flat-grid-keying-test'],
-          styles: {
-            background: 'white',
-            width: '150px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        behaviours: Objects.wrapAll([
-          Keying.config({
-            mode: 'flatgrid',
-            selector: '.square',
-            initSize: {
-              numColumns: 1,
-              numRows: 1
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'flat-grid-keying-test'],
+            styles: {
+              background: 'white',
+              width: '150px',
+              height: '200px'
             }
+          },
+          uid: 'custom-uid',
+          behaviours: Objects.wrapAll([
+            Keying.config({
+              mode: 'flatgrid',
+              selector: '.square',
+              initSize: {
+                numColumns: 1,
+                numRows: 1
+              }
+            })
+          ]),
+          // 4 x 6 grid size
+          components: Arr.map(squares, function (num) {
+            return item([ num ]);
           })
-        ]),
-        // 4 x 6 grid size
-        components: Arr.map(squares, function (num) {
-          return item([ num ]);
         })
-      });
+      );
 
     }, function (doc, body, gui, component, store) {
 

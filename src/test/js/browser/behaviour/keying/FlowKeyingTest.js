@@ -8,6 +8,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
@@ -15,14 +16,13 @@ asynctest(
     'ephox.compass.Arr'
   ],
  
-  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
+  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       var item = function (classes, name) {
-        return {
-          uiType: 'custom',
+        return Container.build({
           dom: {
             tag: 'span',
             styles: {
@@ -42,36 +42,35 @@ asynctest(
           behaviours: Objects.wrapAll([
             Focusing.config({ })
           ])
-        };
+        });
       };
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'flow-keying-test'],
-          styles: {
-            background: 'white',
-            width: '200px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        behaviours: Objects.wrapAll([
-          Keying.config({
-            mode: 'flow',
-            selector: '.stay'
-          })
-        ]),
-        components: [
-          item([ 'stay', 'one' ], 'one'),
-          item([ 'stay', 'two' ], 'two'),
-          item([ 'skip', 'three' ], 'three'),
-          item([ 'skip', 'four' ], 'four'),
-          item([ 'stay', 'five' ], 'five')
-        ]
-      });
-
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            classes: [ 'flow-keying-test'],
+            styles: {
+              background: 'white',
+              width: '200px',
+              height: '200px'
+            }
+          },
+          uid: 'custom-uid',
+          behaviours: Objects.wrapAll([
+            Keying.config({
+              mode: 'flow',
+              selector: '.stay'
+            })
+          ]),
+          components: [
+            item([ 'stay', 'one' ], 'one'),
+            item([ 'stay', 'two' ], 'two'),
+            item([ 'skip', 'three' ], 'three'),
+            item([ 'skip', 'four' ], 'four'),
+            item([ 'stay', 'five' ], 'five')
+          ]
+        })
+      );
     }, function (doc, body, gui, component, store) {
 
       var targets = {

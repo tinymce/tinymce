@@ -10,45 +10,48 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.behaviour.Docking',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'global!window'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, Waiter, GuiFactory, Memento, Docking, GuiSetup, Objects, window) {
+  function (ApproxStructure, Assertions, Logger, Step, Waiter, GuiFactory, Memento, Docking, Container, GuiSetup, Objects, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var subject = Memento.record({
-      uiType: 'container',
-      dom: {
-        styles: {
-          width: '100px',
-          height: '100px',
-          background: 'blue'
-        }
-      },
-      behaviours: Objects.wrapAll([
-        Docking.config({
-          leftAttr: 'data-dock-left',
-          topAttr: 'data-dock-top'
-        })
-      ])
-    });
-
-    GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
+    var subject = Memento.record(
+      Container.build({
         dom: {
           styles: {
-            'margin-top': '2000px',
-            'margin-bottom': '5000px'
+            width: '100px',
+            height: '100px',
+            background: 'blue'
           }
         },
-        components: [
-          subject.asSpec()
-        ]
-      });
+        behaviours: Objects.wrapAll([
+          Docking.config({
+            leftAttr: 'data-dock-left',
+            topAttr: 'data-dock-top'
+          })
+        ])
+      })
+    );
+
+    GuiSetup.setup(function (store, doc, body) {
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            styles: {
+              'margin-top': '2000px',
+              'margin-bottom': '5000px'
+            }
+          },
+          components: [
+            subject.asSpec()
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var box = subject.get(component);

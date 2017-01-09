@@ -9,31 +9,33 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Guard, Step, GuiFactory, Focusing, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, FocusTools, Guard, Step, GuiFactory, Focusing, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
-        dom: {
-          classes: [ 'focusable' ],
-          styles: {
-            width: '100px',
-            height: '100px',
-            background: 'blue'
-          }
-        },
-        behaviours: Objects.wrapAll([
-          Focusing.config({
-            onFocus: store.adder('onFocus')
-          })
-        ])
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            classes: [ 'focusable' ],
+            styles: {
+              width: '100px',
+              height: '100px',
+              background: 'blue'
+            }
+          },
+          behaviours: Objects.wrapAll([
+            Focusing.config({
+              onFocus: store.adder('onFocus')
+            })
+          ])
+        })
+      );
     }, function (doc, body, gui, component, store) {
       return [
         Assertions.sAssertStructure(

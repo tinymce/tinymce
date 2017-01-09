@@ -9,29 +9,26 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Logger, RawAssertions, Step, GuiFactory, Replacing, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Logger, RawAssertions, Step, GuiFactory, Replacing, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
-        behaviours: Objects.wrapAll([
-          Replacing.config({ })
-        ]),
-        components: [
-          {
-            uiType: 'container',
-            dom: {
-              tag: 'span'
-            }
-          }
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          behaviours: Objects.wrapAll([
+            Replacing.config({ })
+          ]),
+          components: [
+            Container.build({ dom: { tag: 'span' } })
+          ]
+        })
+      );
     }, function (doc, body, gui, component, store) {
       return [
         Assertions.sAssertStructure(
@@ -67,14 +64,8 @@ asynctest(
 
         Step.sync(function () {
           Replacing.set(component, [
-            {
-              uiType: 'container',
-              uid: 'first'
-            },
-            {
-              uiType: 'container',
-              uid: 'second'
-            }
+            Container.build({ uid: 'first' }),
+            Container.build({ uid: 'second' })
           ]);
         }),
 
@@ -98,14 +89,8 @@ asynctest(
           'Repeating adding the same uids to check clearing is working',          
           Step.sync(function () {
             Replacing.set(component, [
-              {
-                uiType: 'container',
-                uid: 'first'
-              },
-              {
-                uiType: 'container',
-                uid: 'second'
-              }
+              Container.build({ uid: 'first' }),
+              Container.build({ uid: 'second' })
             ]);
           })
         ),
@@ -129,12 +114,7 @@ asynctest(
         Logger.t(
           'Replacing.append to put a new thing at the end.',          
           Step.sync(function () {
-            Replacing.append(component, {
-              uiType: 'custom',
-              dom: {
-                tag: 'span'
-              }
-            });
+            Replacing.append(component, Container.build({ dom: { tag: 'span' } }));
           })
         ),
         Assertions.sAssertStructure(
@@ -157,12 +137,11 @@ asynctest(
         Logger.t(
           'Replacing.prepend to put a new thing at the start',
           Step.sync(function () {
-            Replacing.prepend(component, {
-              uiType: 'custom',
+            Replacing.prepend(component, Container.build({
               dom: {
                 tag: 'label'
               }
-            });
+            }));
           })
         ),
 

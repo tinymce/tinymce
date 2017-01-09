@@ -26,7 +26,6 @@ asynctest(
       return GuiFactory.build(
         TieredMenu.build({
           uid: 'uid-test-menu-1',
-          uiType: 'custom',
           value: 'test-menu-1',
           items: [
             { type: 'item', data: { value: 'alpha', text: 'Alpha' } },

@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.FormChooser',
     'ephox.alloy.api.ui.FormCoupledInputs',
     'ephox.alloy.api.ui.FormField',
@@ -15,7 +16,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {
+  function (Assertions, Step, GuiFactory, Representing, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -86,8 +87,7 @@ asynctest(
         members: {
           choice: {
             munge: function (choiceSpec) {
-              return {
-                uiType: 'custom',
+              return Container.build({
                 dom: {
                   tag: 'span',
                   innerHtml: choiceSpec.text,
@@ -96,7 +96,7 @@ asynctest(
                   }
                 },
                 components: [ ]
-              };
+              });
             }
           }
         },
@@ -159,15 +159,14 @@ asynctest(
       });
 
       return GuiFactory.build(
-        {
-          uiType: 'container',
+        Container.build({
           components: [
             inputA,
             selectB,
             chooserC,
             coupledD
           ]
-        }
+        })
       );
 
     }, function (doc, body, gui, component, store) {

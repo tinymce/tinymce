@@ -9,34 +9,36 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Toggling, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Toggling, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'custom-component-test'],
-          styles: {
-            background: 'blue',
-            width: '200px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        behaviours: Objects.wrapAll([
-          Toggling.config({
-            selected: true,
-            toggleClass: 'test-selected'           
-          })
-        ])
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'custom-component-test'],
+            styles: {
+              background: 'blue',
+              width: '200px',
+              height: '200px'
+            }
+          },
+          uid: 'custom-uid',
+          behaviours: Objects.wrapAll([
+            Toggling.config({
+              selected: true,
+              toggleClass: 'test-selected'           
+            })
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
 

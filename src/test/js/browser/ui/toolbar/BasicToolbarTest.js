@@ -7,23 +7,20 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
     'ephox.compass.Arr'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Button, Toolbar, GuiSetup, TestPartialToolbarGroup, Arr) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Button, Container, Toolbar, GuiSetup, TestPartialToolbarGroup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        {
-          uiType: 'custom',
-          dom: {
-            tag: 'div'
-          },
+        Container.build({
           components: [
             Toolbar.build({
               uid: 'shell-toolbar',
@@ -77,7 +74,7 @@ asynctest(
               }
             })
           ]
-        }        
+        })        
       );
 
     }, function (doc, body, gui, component, store) {

@@ -9,36 +9,37 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, Focusing, Keying, GuiSetup, Objects) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, Focusing, Keying, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: 'special-keying'
-        },
-        behaviours: Objects.wrapAll([
-          Focusing.config({ }),
-          Keying.config({
-            mode: 'special',
-            onSpace: store.adderH('space'),
-            onEnter: store.adderH('enter'),
-            onShiftEnter: store.adderH('shift+enter'),
-            onLeft: store.adderH('left'),
-            onUp: store.adderH('up'),
-            onDown: store.adderH('down'),
-            onRight: store.adderH('right'),
-            onEscape: store.adderH('escape')
-          })
-        ])
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            classes: 'special-keying'
+          },
+          behaviours: Objects.wrapAll([
+            Focusing.config({ }),
+            Keying.config({
+              mode: 'special',
+              onSpace: store.adderH('space'),
+              onEnter: store.adderH('enter'),
+              onShiftEnter: store.adderH('shift+enter'),
+              onLeft: store.adderH('left'),
+              onUp: store.adderH('up'),
+              onDown: store.adderH('down'),
+              onRight: store.adderH('right'),
+              onEscape: store.adderH('escape')
+            })
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var press = function (expected, key, modifiers) {

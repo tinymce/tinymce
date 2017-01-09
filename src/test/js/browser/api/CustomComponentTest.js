@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
@@ -16,7 +17,7 @@ asynctest(
     'ephox.scullion.Cell'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, BehaviourExport, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, BehaviourExport, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -68,31 +69,32 @@ asynctest(
 
       bB.set(behaviourB);
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'custom-component-test']
-        },
-        uid: 'custom-uid',
-        customBehaviours: [
-          behaviourA,
-          behaviourB
-        ],
-        behaviours: {
-          'behaviourA': { },
-          'behaviourB': {
-            attr: 'exhibition'
-          }
-        },
-   
-        eventOrder: {
-          'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
-        },
-        components: [
-          { uiType: 'custom', uid: 'custom-uid-2', dom: { tag: 'div' } }
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'custom-component-test']
+          },
+          uid: 'custom-uid',
+          customBehaviours: [
+            behaviourA,
+            behaviourB
+          ],
+          behaviours: {
+            'behaviourA': { },
+            'behaviourB': {
+              attr: 'exhibition'
+            }
+          },
+     
+          eventOrder: {
+            'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
+          },
+          components: [
+            Container.build({ uid: 'custom-uid-2' })
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       return [

@@ -14,13 +14,14 @@ asynctest(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'ephox.sugar.api.Focus'
   ],
  
-  function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Disabling, Button, EventHandler, GuiSetup, Objects, Focus) {
+  function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Disabling, Button, Container, EventHandler, GuiSetup, Objects, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -40,18 +41,19 @@ asynctest(
 
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
-        components: [
-          subject.asSpec()
-        ],
-        events: Objects.wrap(
-          SystemEvents.execute(),
-          EventHandler.nu({
-            run: store.adder('execute.reached')
-          })
-        )
-      });
+      return GuiFactory.build(
+        Container.build({
+          components: [
+            subject.asSpec()
+          ],
+          events: Objects.wrap(
+            SystemEvents.execute(),
+            EventHandler.nu({
+              run: store.adder('execute.reached')
+            })
+          )
+        }
+      ));
     }, function (doc, body, gui, component, store) {
 
       var sClickButton = Chain.asStep({ }, [

@@ -6,13 +6,14 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.test.GuiSetup',
     'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, TabSection, Tabbar, GuiSetup, Fun) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Container, TabSection, Tabbar, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,14 +34,12 @@ asynctest(
               dom: { tag: 'button', innerHtml: 'A' },
               view: function () {
                 return [
-                  {
-                    uiType: 'custom',
+                  Container.build({
                     dom: {
-                      tag: 'div',
                       innerHtml: 'This is the view for "A"'
                     },
                     components: [ ]
-                  }
+                  })
                 ];
               }
             }

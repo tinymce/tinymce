@@ -16,6 +16,7 @@ asynctest(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormField',
@@ -27,7 +28,7 @@ asynctest(
     'ephox.sugar.api.Focus'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Representing, Button, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun, Focus) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Representing, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -73,7 +74,7 @@ asynctest(
           classes: [ 'extra-form', 'form-section' ]
         },
         components: [
-          { uiType: 'container', dom: { tag: 'div', styles: { 'height': '100px', 'width': '100px', 'background': 'green' } }},
+          Container.build({ dom: { styles: { 'height': '100px', 'width': '100px', 'background': 'green' } } }),
           Form.parts('form.bull')
         ],
         parts: {

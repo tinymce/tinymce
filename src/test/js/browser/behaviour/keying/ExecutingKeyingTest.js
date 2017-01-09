@@ -8,48 +8,43 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (Keyboard, Keys, Step, GuiFactory, Focusing, Keying, EventHandler, GuiSetup, Objects) {
+  function (Keyboard, Keys, Step, GuiFactory, Focusing, Keying, Container, EventHandler, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'executing-keying-test'],
-          styles: {
-            
-          }
-        },
-        uid: 'custom-uid',
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            classes: [ 'executing-keying-test'],
+            styles: {
+              
+            }
+          },
+          uid: 'custom-uid',
 
-        components: [
-          
-        ],
-        behaviours: Objects.wrapAll([
-          Focusing.config({ }),
-          Keying.config({
-            mode: 'execution'
-          })
-        ]),
-        // {
-        //   focusing: true,
-        //   keying: {
-        //     mode: 'execution'
-        //   }
-        // },
-        events: {
-          'alloy.execute': EventHandler.nu({
-            run: store.adder('event.execute')
-          })
-        }
-      });
+          components: [
+            
+          ],
+          behaviours: Objects.wrapAll([
+            Focusing.config({ }),
+            Keying.config({
+              mode: 'execution'
+            })
+          ]),
+          events: {
+            'alloy.execute': EventHandler.nu({
+              run: store.adder('event.execute')
+            })
+          }
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       return [

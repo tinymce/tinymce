@@ -10,54 +10,54 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, Focusing, Keying, GuiSetup, Objects) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, Focusing, Keying, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       var makeItem = function (name) {
-        return {
-          uiType: 'custom',
+        return Container.build({
           dom: {
-            tag: 'div',
             classes: [ 'test-item', name ],
             innerHtml: name
           },
           behaviours: Objects.wrapAll([
             Focusing.config({ })
           ])
-        };
+        });
       };
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'menu-keying-test'],
-          styles: {
-            
-          }
-        },
-        uid: 'custom-uid',
-        behaviours: Objects.wrapAll([
-          Keying.config({
-            mode: 'menu',
-            selector: '.test-item',
-            onRight: store.adderH('detected.right'),
-            onLeft:  store.adderH('detected.left'),
-            moveOnTab: true
-          })
-        ]),
-        components: [
-          makeItem('alpha'),
-          makeItem('beta'),
-          makeItem('gamma')
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'menu-keying-test'],
+            styles: {
+              
+            }
+          },
+          uid: 'custom-uid',
+          behaviours: Objects.wrapAll([
+            Keying.config({
+              mode: 'menu',
+              selector: '.test-item',
+              onRight: store.adderH('detected.right'),
+              onLeft:  store.adderH('detected.left'),
+              moveOnTab: true
+            })
+          ]),
+          components: [
+            makeItem('alpha'),
+            makeItem('beta'),
+            makeItem('gamma')
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var checkStore = function (label, steps, expected) {

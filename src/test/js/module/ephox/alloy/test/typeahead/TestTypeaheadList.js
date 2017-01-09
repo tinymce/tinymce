@@ -2,10 +2,10 @@ define(
   'ephox.alloy.test.typeahead.TestTypeaheadList',
 
   [
-
+    'ephox.alloy.api.ui.Container'
   ],
 
-  function () {
+  function (Container) {
     return {
       members: {
         menu: {
@@ -27,7 +27,6 @@ define(
           munge: function (spec) {
 
             return spec.type === 'separator' ? {
-              uiType: 'container',
               dom: {
                 tag: 'div',
                 innerHtml: spec.text

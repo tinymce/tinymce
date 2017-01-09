@@ -16,6 +16,7 @@ asynctest(
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
@@ -28,23 +29,23 @@ asynctest(
     'ephox.perhaps.Result'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Focusing, Keying, Dropdown, MenuData, GuiSetup, NavigationUtils, Sinks, TestDropdownMenu, Objects, Arr, Future, Result) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Focusing, Keying, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, Sinks, TestDropdownMenu, Objects, Arr, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var sink = Memento.record({
-      uiType: 'container',
-      behaviours: {
-        positioning: {
-          useFixed: true
+    var sink = Memento.record(
+      Container.build({
+        behaviours: {
+          positioning: {
+            useFixed: true
+          }
         }
-      }
-    });
+      })
+    );
 
     GuiSetup.setup(function (store, doc, body) {
       var makeFlow = function (v) {
-        return {
-          uiType: 'custom',
+        return Container.build({
           dom: {
             tag: 'span',
             innerHtml: ' ' + v + ' ',
@@ -53,14 +54,10 @@ asynctest(
           behaviours: Objects.wrapAll([
             Focusing.config({ })
           ])
-        };
+        });
       };
 
-      var widget = {
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
+      var widget = Container.build({
         behaviours: Objects.wrapAll([
           Keying.config({
             mode: 'flow',
@@ -72,7 +69,7 @@ asynctest(
           'two',
           'three'
         ], makeFlow)
-      };
+      });
 
       var testData = {
         primary: 'tools-menu',

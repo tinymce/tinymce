@@ -8,46 +8,48 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Representing, GuiSetup, Objects, Value) {
+  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Representing, Container, GuiSetup, Objects, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'input'
-        },
-        behaviours: Objects.wrapAll([
-          Representing.config({
-            store: {
-              mode: 'memory',
-              initialValue: {
-                value: 'dog',
-                text: 'Dog'
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'input'
+          },
+          behaviours: Objects.wrapAll([
+            Representing.config({
+              store: {
+                mode: 'memory',
+                initialValue: {
+                  value: 'dog',
+                  text: 'Dog'
+                }
+              },
+              onSet: function (input, value) {
+                Value.set(input.element(), value.text);
+              },
+              interactive: {
+                event: 'input',
+                process: function (input) {
+                  var v = Value.get(input.element());
+                  return {
+                    value: v.toLowerCase(),
+                    text: v
+                  };
+                }
               }
-            },
-            onSet: function (input, value) {
-              Value.set(input.element(), value.text);
-            },
-            interactive: {
-              event: 'input',
-              process: function (input) {
-                var v = Value.get(input.element());
-                return {
-                  value: v.toLowerCase(),
-                  text: v
-                };
-              }
-            }
-          })
-        ])
-      });
+            })
+          ])
+        })
+      );
     }, function (doc, body, gui, component, store) {
       var sAssertValue = function (label, expected) {
         return Step.sync(function () {

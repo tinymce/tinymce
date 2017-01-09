@@ -7,31 +7,33 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Streaming',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (GeneralSteps, Mouse, Step, GuiFactory, Streaming, GuiSetup, Objects) {
+  function (GeneralSteps, Mouse, Step, GuiFactory, Streaming, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'input'
-        },
-        behaviours: Objects.wrapAll([
-          Streaming.config({
-             stream: {
-              mode: 'throttle',
-              delay: 500
-            },
-            event: 'click',
-            onStream: store.adder('onStream')
-          })
-        ])
-      });
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'input'
+          },
+          behaviours: Objects.wrapAll([
+            Streaming.config({
+               stream: {
+                mode: 'throttle',
+                delay: 500
+              },
+              event: 'click',
+              onStream: store.adder('onStream')
+            })
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       return [

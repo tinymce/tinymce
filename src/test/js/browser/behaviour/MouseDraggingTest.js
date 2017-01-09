@@ -5,12 +5,12 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.mouse.Clicks',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
@@ -21,47 +21,49 @@ asynctest(
     'ephox.sugar.api.Css'
   ],
  
-  function (Chain, Guard, NamedChain, Step, UiFinder, Clicks, GuiFactory, Memento, Dragging, DragCoord, GuiSetup, Objects, Json, Option, Result, Position, Css) {
+  function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Dragging, Container, DragCoord, GuiSetup, Objects, Json, Option, Result, Position, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var subject = Memento.record({
-      uiType: 'container',
-      dom: {
-        styles: {
-          'width': '100px',
-          height: '100px',
-          border: '1px solid green'
-        }
-      },
-      behaviours: Objects.wrapAll([
-        Dragging.config({
-          mode: 'mouse',
-          blockerClass: 'test-blocker',
-          snaps: {
-            getSnapPoints: function () {
-              return [
-                Dragging.snap({
-                  sensor: DragCoord.fixed(300, 10),
-                  range: Position(1000, 30),
-                  output: DragCoord.fixed(Option.none(), Option.some(10))
-                })
-              ];
-            },
-            leftAttr: 'data-snap-left',
-            topAttr: 'data-snap-top'
+    var subject = Memento.record(
+      Container.build({
+        dom: {
+          styles: {
+            'width': '100px',
+            height: '100px',
+            border: '1px solid green'
           }
-        })
-      ])
-    });
+        },
+        behaviours: Objects.wrapAll([
+          Dragging.config({
+            mode: 'mouse',
+            blockerClass: 'test-blocker',
+            snaps: {
+              getSnapPoints: function () {
+                return [
+                  Dragging.snap({
+                    sensor: DragCoord.fixed(300, 10),
+                    range: Position(1000, 30),
+                    output: DragCoord.fixed(Option.none(), Option.some(10))
+                  })
+                ];
+              },
+              leftAttr: 'data-snap-left',
+              topAttr: 'data-snap-top'
+            }
+          })
+        ])
+      })
+    );
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
-        components: [
-          subject.asSpec()
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          components: [
+            subject.asSpec()
+          ]
+        })
+      );
     }, function (doc, body, gui, component, store) {
 
       var cSubject = Chain.mapper(function () {

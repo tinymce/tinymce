@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Cursors',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
@@ -20,7 +21,7 @@ asynctest(
     'global!window'
   ],
  
-  function (Chain, Cursors, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Css, Element, Html, Error, setTimeout, window) {
+  function (Chain, Cursors, NamedChain, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Css, Element, Html, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -47,18 +48,16 @@ asynctest(
         border: '1px solid red'
       });
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        components: [
-          { built: Sinks.fixedSink() },
-          { built: Sinks.relativeSink() },
-          { built: Sinks.popup() },
-          { built: inlineEditor }
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          components: [
+            { built: Sinks.fixedSink() },
+            { built: Sinks.relativeSink() },
+            { built: Sinks.popup() },
+            { built: inlineEditor }
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var cSetupAnchor = Chain.mapper(function (data) {

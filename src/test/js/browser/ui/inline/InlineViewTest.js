@@ -10,6 +10,7 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.menus.MenuData',
@@ -21,7 +22,7 @@ asynctest(
     'ephox.perhaps.Result'
   ],
  
-  function (GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Dropdown, InlineView, MenuData, GuiSetup, Sinks, TestBroadcasts, TestDropdownMenu, Future, Result) {
+  function (GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, MenuData, GuiSetup, Sinks, TestBroadcasts, TestDropdownMenu, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -74,12 +75,11 @@ asynctest(
           InlineView.showAt(inline, {
             anchor: 'selection',
             root: gui.element()
-          }, {
-            uiType: 'container',
+          }, Container.build({
             dom: {
               innerHtml: 'Inner HTML'
             }
-          });
+          }));
         }),
         sCheckOpen('After show'),
 
@@ -95,11 +95,7 @@ asynctest(
             InlineView.showAt(inline, {
               anchor: 'selection',
               root: gui.element()
-            }, {
-              uiType: 'custom',
-              dom: {
-                tag: 'div'
-              },
+            }, Container.build({
               components: [
                 Button.build({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') }),
                 Button.build({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I' }, action: store.adder('italic') }),
@@ -129,7 +125,7 @@ asynctest(
                   }
                 })
               ]
-            });
+            }));
           })
         ),
 

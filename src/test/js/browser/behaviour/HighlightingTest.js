@@ -9,6 +9,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
@@ -19,14 +20,13 @@ asynctest(
     'global!Error'
   ],
  
-  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Highlighting, ChainUtils, GuiSetup, Objects, Arr, Result, Attr, Class, Error) {
+  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Highlighting, Container, ChainUtils, GuiSetup, Objects, Arr, Result, Attr, Class, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       var makeItem = function (name) {
-        return {
-          uiType: 'custom',
+        return Container.build({
           dom: {
             tag: 'span',
             styles: {
@@ -40,26 +40,24 @@ asynctest(
             innerHtml: name,
             classes: [ name, 'test-item' ]
           }
-        };
+        });
       };
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        behaviours: Objects.wrapAll([
-          Highlighting.config({
-            highlightClass: 'test-selected',
-            itemClass: 'test-item'
-          })
-        ]),
-        components: Arr.map([
-          'alpha',
-          'beta',
-          'gamma'
-        ], makeItem)
-      });
+      return GuiFactory.build(
+        Container.build({
+          behaviours: Objects.wrapAll([
+            Highlighting.config({
+              highlightClass: 'test-selected',
+              itemClass: 'test-item'
+            })
+          ]),
+          components: Arr.map([
+            'alpha',
+            'beta',
+            'gamma'
+          ], makeItem)
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var cCheckNum = function (label, expected) {

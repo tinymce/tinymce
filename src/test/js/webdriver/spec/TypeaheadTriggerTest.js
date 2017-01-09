@@ -12,6 +12,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
@@ -25,57 +26,57 @@ asynctest(
     'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, RealKeys, UiControls, UiFinder, Waiter, GuiFactory, Typeahead, MenuData, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Focus, Value, Math) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, RealKeys, UiControls, UiFinder, Waiter, GuiFactory, Container, Typeahead, MenuData, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Focus, Value, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       var sink = Sinks.relativeSink();
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: { tag: 'div' },
-        components: [
-          { built: sink },
-          Typeahead.build({
-            uid: 'test-type',
-            minChars: 2,
-            dom: {
-              tag: 'input'
-            },
-            data: {
-              value: 'initial-value',
-              text: 'initial-value'
-            },
+      return GuiFactory.build(
+        Container.build({
+          components: [
+            { built: sink },
+            Typeahead.build({
+              uid: 'test-type',
+              minChars: 2,
+              dom: {
+                tag: 'input'
+              },
+              data: {
+                value: 'initial-value',
+                text: 'initial-value'
+              },
 
-            markers: {
-              openClass: 'test-typeahead-open'
-            },
+              markers: {
+                openClass: 'test-typeahead-open'
+              },
 
-            fetch: function (input) {
-              var text = Value.get(input.element());
-              var future = Future.pure([
-                { type: 'item', data: { value: text + '1', text: text + '1' } },
-                { type: 'item', data: { value: text + '2', text: text + '2' } }
-              ]);
+              fetch: function (input) {
+                var text = Value.get(input.element());
+                var future = Future.pure([
+                  { type: 'item', data: { value: text + '1', text: text + '1' } },
+                  { type: 'item', data: { value: text + '2', text: text + '2' } }
+                ]);
 
-              return future.map(function (f) {
-                // TODO: Test this.
-                var items = text === 'no-data' ? [
-                  { type: 'separator', text: 'No data' }
-                ] : f;
-                return MenuData.simple('blah', 'Blah', items);
-              });
-            },
-            
-            lazySink: function () { return Result.value(sink); },
+                return future.map(function (f) {
+                  // TODO: Test this.
+                  var items = text === 'no-data' ? [
+                    { type: 'separator', text: 'No data' }
+                  ] : f;
+                  return MenuData.simple('blah', 'Blah', items);
+                });
+              },
+              
+              lazySink: function () { return Result.value(sink); },
 
-            parts: {
-              menu: TestTypeaheadList
-            }
-          })
-        ]
-      });
+              parts: {
+                menu: TestTypeaheadList
+              }
+            })
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
 

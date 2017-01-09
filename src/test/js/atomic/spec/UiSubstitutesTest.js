@@ -51,7 +51,7 @@ test(
       }
     );
 
-    // Do a property based test once it has worked that everything retuns a uiType
+    // Do a property based test once it has worked that everything returns a uiType
     // Jsc.property(
     //   'E')
     // assert.eq(1, 2);

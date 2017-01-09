@@ -5,6 +5,7 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
@@ -13,49 +14,49 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
+  function (Chain, NamedChain, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      var item = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'li',
-          innerHtml: 'Trigger Item'
-        },
-        
-        uid: 'test-item'
-      });
+      var item = GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'li',
+            innerHtml: 'Trigger Item'
+          },
+          
+          uid: 'test-item'
+        })
+      );
 
-      var list = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'ol',
-          styles: {
-            position: 'absolute',
-            left: '400px',
-            top: '140px'
-          }
-        },
-        uid: 'test-list',
-        components: [
-          { built: item }
-        ]
-      });
+      var list = GuiFactory.build(
+        Container.build({
+          dom: {
+            tag: 'ol',
+            styles: {
+              position: 'absolute',
+              left: '400px',
+              top: '140px'
+            }
+          },
+          uid: 'test-list',
+          components: [
+            { built: item }
+          ]
+        })
+      );
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        components: [
-          { built: Sinks.fixedSink() },
-          { built: Sinks.relativeSink() },
-          { built: Sinks.popup() },
-          { built: list }
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          components: [
+            { built: Sinks.fixedSink() },
+            { built: Sinks.relativeSink() },
+            { built: Sinks.popup() },
+            { built: list }
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var cSetupAnchor = Chain.mapper(function (item) {

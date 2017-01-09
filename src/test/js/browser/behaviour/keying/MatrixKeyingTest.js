@@ -8,6 +8,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
@@ -15,7 +16,7 @@ asynctest(
     'ephox.compass.Arr'
   ],
  
-  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
+  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -30,8 +31,7 @@ asynctest(
       var rows = Arr.chunk(cells, 6);
 
       var item = function (classes) {
-        return {
-          uiType: 'custom',
+        return Container.build({
           dom: {
             tag: 'span',
             styles: {
@@ -51,44 +51,43 @@ asynctest(
           behaviours: Objects.wrapAll([
             Focusing.config({ })
           ])
-        };
+        });
       };
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'matrix-keying-test'],
-          styles: {
-            background: 'white',
-            width: '150px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        behaviours: Objects.wrapAll([
-          Keying.config({
-            mode: 'matrix',
-            selectors: {
-              row: '.row',
-              cell: '.cell'
+      return GuiFactory.build(
+        Container.build({
+          dom: {
+            classes: [ 'matrix-keying-test'],
+            styles: {
+              background: 'white',
+              width: '150px',
+              height: '200px'
             }
-          })
-        ]),
-        // 4 x 6 grid size
-        components: Arr.map(rows, function (row) {
-          return {
-            uiType: 'custom',
-            dom: {
-              tag: 'span',
-              classes: [ 'row' ]
-            },
-            components: Arr.map(row, function (c) {
-              return item([ c ]);
+          },
+          uid: 'custom-uid',
+          behaviours: Objects.wrapAll([
+            Keying.config({
+              mode: 'matrix',
+              selectors: {
+                row: '.row',
+                cell: '.cell'
+              }
             })
-          };
+          ]),
+          // 4 x 6 grid size
+          components: Arr.map(rows, function (row) {
+            return Container.build({
+              dom: {
+                tag: 'span',
+                classes: [ 'row' ]
+              },
+              components: Arr.map(row, function (c) {
+                return item([ c ]);
+              })
+            });
+          })
         })
-      });
+      );
 
     }, function (doc, body, gui, component, store) {
 

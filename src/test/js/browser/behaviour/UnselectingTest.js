@@ -6,21 +6,23 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Unselecting',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, GuiFactory, Unselecting, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, GuiFactory, Unselecting, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'container',
-        behaviours: Objects.wrapAll([
-          Unselecting.config({ })
-        ])
-      });
+      return GuiFactory.build(
+        Container.build({
+          behaviours: Objects.wrapAll([
+            Unselecting.config({ })
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       return [

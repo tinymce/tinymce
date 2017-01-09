@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
@@ -14,7 +15,7 @@ asynctest(
     'global!setTimeout'
   ],
  
-  function (Chain, NamedChain, GuiFactory, Button, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
+  function (Chain, NamedChain, GuiFactory, Button, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -35,18 +36,16 @@ asynctest(
         })
       );
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        components: [
-          { built: Sinks.fixedSink() },
-          { built: Sinks.relativeSink() },
-          { built: Sinks.popup() },
-          { built: hotspot }
-        ]
-      });
+      return GuiFactory.build(
+        Container.build({
+          components: [
+            { built: Sinks.fixedSink() },
+            { built: Sinks.relativeSink() },
+            { built: Sinks.popup() },
+            { built: hotspot }
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var cSetupAnchor = Chain.mapper(function (hotspot) {
