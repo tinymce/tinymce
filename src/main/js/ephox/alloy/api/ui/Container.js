@@ -7,7 +7,7 @@ define(
   ],
 
   function (UiBuilder, Merger) {
-    var make = function (spec) {
+    var make = function (_detail, spec) {
       return Merger.deepMerge({
         dom: {
           tag: 'div',

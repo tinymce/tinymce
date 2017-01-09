@@ -4,37 +4,26 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.GuiTemplate',
-    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.ui.ModalDialog',
+    'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
+    'global!document',
     'text!dom-templates/tinymce.dialog.html'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Positioning, ModalDialog, HtmlDisplay, Option, Result, Class, Element, Insert, TemplateTinyDialog) {
+  function (Gui, GuiFactory, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Class, Element, Insert, document, TemplateTinyDialog) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Insert.append(body, gui.element());
 
-      var sink = GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-
-        behaviours: {
-          positioning: {
-            useFixed: true
-          }
-        }
-      });
+      var sink = DemoSink.make();
 
       gui.add(sink);
 
