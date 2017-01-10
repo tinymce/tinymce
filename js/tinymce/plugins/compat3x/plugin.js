@@ -215,7 +215,7 @@
 				editor.controlManager.buttons[name] = this;
 
 				if (originalOnPostRender) {
-					return originalOnPostRender.call(this);
+					return originalOnPostRender.apply(this, arguments);
 				}
 			}
 
