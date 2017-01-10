@@ -71,19 +71,9 @@ define(
             response(tabbar, button);
           },
 
-          customBehaviours: [
-            // TODO: Add highlighting tab class.
-            BehaviourExport.santa([ ], 'tabbar.tabbuttons', {
-              exhibit: function (base, info) {
-                return DomModification.nu({
-                  classes: [ barDetail.markers().tabClass() ]
-                });
-              }
-            }, {
-
-
-            }, { })
-          ]
+          domModification: {
+            classes: [ barDetail.markers().tabClass() ]
+          }
         };
       }
     );

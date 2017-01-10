@@ -80,7 +80,16 @@ asynctest(
         Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
             children: [
-              s.element('div', { }),
+              s.element('div', {
+                children: [
+                  s.element('button', {
+                    html: str.is('A'),
+                    classes: [
+                      arr.has('test-tab-button')
+                    ]
+                  })
+                ]
+              }),
               s.element('div', { })
             ]
           });
