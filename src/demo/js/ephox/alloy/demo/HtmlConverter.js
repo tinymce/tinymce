@@ -23,7 +23,7 @@ define(
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-    // TODO: Change this to match the simplified UI templating model we have now.
+    // TODO: Change this to match the simplified UI templating model we have now including text
 
       var page = Container.build({
         components: [
