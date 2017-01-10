@@ -26,22 +26,9 @@ define(
       PartType.group({ build: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
         return {
           'debug.label': 'ToolbarGroup.item',
-          behaviours: {
-            'custom.toolbar-group': { }
-          },
-          customBehaviours: [
-            // FIX: Find a better way of doing this.
-            BehaviourExport.santa([ ], 'custom.toolbar-group', {
-              exhibit: function (base, info) {
-                return DomModification.nu({
-                  classes: [ detail.markers().itemClass() ]
-                });
-              }
-            }, {
-
-
-            }, { })
-          ]
+          domModification: {
+            classes: [ detail.markers().itemClass() ]
+          }
         };
       })
     ];
