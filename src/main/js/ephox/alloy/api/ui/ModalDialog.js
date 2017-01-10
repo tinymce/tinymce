@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -17,7 +18,7 @@ define(
     'global!Error'
   ],
 
-  function (BehaviourExport, Keying, Positioning, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
+  function (BehaviourExport, Keying, Positioning, Container, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
@@ -110,8 +111,7 @@ define(
             }
           }
         },
-        {
-          uiType: 'container',
+        Container.build({
           dom: detail.dom(),
           components: components,
           apis: {
@@ -127,7 +127,7 @@ define(
               onEscape: detail.onEscape()
             }
           }
-        }
+        })
       );
     };
 

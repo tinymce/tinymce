@@ -2,6 +2,7 @@ define(
   'ephox.alloy.dropdown.Gamma',
 
   [
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -9,7 +10,7 @@ define(
     'global!Error'
   ],
 
-  function (EventHandler, Merger, Fun, Result, Error) {
+  function (Container, EventHandler, Merger, Fun, Result, Error) {
     var parts = [
       'display'
     ];
@@ -29,7 +30,7 @@ define(
     var sink  = {
       '<alloy.sink>': function (dSpec, detail) {
         // NOT sure what to do here.
-        if (detail.lazySink().isSome()) return { uiType: 'container' };
+        if (detail.lazySink().isSome()) return Container.build({ });
         return {
           uid: detail.uid() + '-internal-sink',
           uiType: 'custom',

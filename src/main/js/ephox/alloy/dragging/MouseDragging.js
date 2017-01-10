@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.OffsetOrigin',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.dragging.Snappables',
@@ -27,7 +28,7 @@ define(
     'global!window'
   ],
 
-  function (OffsetOrigin, EventHandler, DragCoord, Snappables, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Attr, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
+  function (OffsetOrigin, Container, EventHandler, DragCoord, Snappables, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Attr, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
 
@@ -113,46 +114,47 @@ define(
     };
 
     var hub = function (component, dragInfo, dragApi, settings) {
-      var blocker = component.getSystem().build({
-        uiType: 'container',
-        dom: {
-          styles: {
-            left: '0px',
-            top: '0px',
-            width: '100%',
-            height: '100%',
-            position: 'fixed',
-            opacity: '0.5',
-            background: 'rgb(100, 100, 0)',
-            'z-index': '1000000000000000'
+      var blocker = component.getSystem().build(
+        Container.build({
+          dom: {
+            styles: {
+              left: '0px',
+              top: '0px',
+              width: '100%',
+              height: '100%',
+              position: 'fixed',
+              opacity: '0.5',
+              background: 'rgb(100, 100, 0)',
+              'z-index': '1000000000000000'
+            },
+            classes: [ dragInfo.blockerClass() ]
           },
-          classes: [ dragInfo.blockerClass() ]
-        },
-        events: {
-          mousedown: EventHandler.nu({
-            run: function () {
-              dragApi.forceDrop(); //(safety)
-            }
-          }),
-          mouseup: EventHandler.nu({
-            run: function () { 
-              dragApi.drop();
-            }
-          }),
-          // Missing
-          mousemove: EventHandler.nu({
-            run: function (comp, simulatedEvent) {
-              dragApi.move(simulatedEvent.event());
-            }
-          }),
-          // Missing
-          mouseout: EventHandler.nu({
-            run: function () {
-              // dragApi.delayDrop (give it time to kick back in)
-            }
-          })
-        }
-      });
+          events: {
+            mousedown: EventHandler.nu({
+              run: function () {
+                dragApi.forceDrop(); //(safety)
+              }
+            }),
+            mouseup: EventHandler.nu({
+              run: function () { 
+                dragApi.drop();
+              }
+            }),
+            // Missing
+            mousemove: EventHandler.nu({
+              run: function (comp, simulatedEvent) {
+                dragApi.move(simulatedEvent.event());
+              }
+            }),
+            // Missing
+            mouseout: EventHandler.nu({
+              run: function () {
+                // dragApi.delayDrop (give it time to kick back in)
+              }
+            })
+          }
+        })
+      );
 
       var start = function () {
         component.getSystem().addToGui(blocker);
