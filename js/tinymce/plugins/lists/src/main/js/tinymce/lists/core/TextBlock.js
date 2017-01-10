@@ -34,7 +34,7 @@ define("tinymce.lists.core.TextBlock", [
 			while ((node = contentNode.firstChild)) {
 				var nodeName = node.nodeName;
 
-				if (!hasContentNode && (nodeName != 'SPAN' || node.getAttribute('data-mce-type') != 'bookmark')) {
+				if (!hasContentNode && (nodeName !== 'SPAN' || node.getAttribute('data-mce-type') !== 'bookmark')) {
 					hasContentNode = true;
 				}
 

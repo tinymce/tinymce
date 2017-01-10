@@ -30,13 +30,13 @@ define("tinymce.lists.actions.Outdent", [
 			return true;
 		}
 
-		if (li.nodeName == 'DD') {
+		if (li.nodeName === 'DD') {
 			DOM.rename(li, 'DT');
 			return true;
 		}
 
 		if (NodeType.isFirstChild(li) && NodeType.isLastChild(li)) {
-			if (ulParent.nodeName == "LI") {
+			if (ulParent.nodeName === "LI") {
 				DOM.insertAfter(li, ulParent);
 				removeEmptyLi(editor.dom, ulParent);
 				DOM.remove(ul);
@@ -49,7 +49,7 @@ define("tinymce.lists.actions.Outdent", [
 
 			return true;
 		} else if (NodeType.isFirstChild(li)) {
-			if (ulParent.nodeName == "LI") {
+			if (ulParent.nodeName === "LI") {
 				DOM.insertAfter(li, ulParent);
 				li.appendChild(ul);
 				removeEmptyLi(editor.dom, ulParent);
@@ -62,7 +62,7 @@ define("tinymce.lists.actions.Outdent", [
 
 			return true;
 		} else if (NodeType.isLastChild(li)) {
-			if (ulParent.nodeName == "LI") {
+			if (ulParent.nodeName === "LI") {
 				DOM.insertAfter(li, ulParent);
 			} else if (NodeType.isListNode(ulParent)) {
 				DOM.insertAfter(li, ul);
@@ -74,7 +74,7 @@ define("tinymce.lists.actions.Outdent", [
 			return true;
 		}
 
-		if (ulParent.nodeName == 'LI') {
+		if (ulParent.nodeName === 'LI') {
 			ul = ulParent;
 			newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
 		} else if (NodeType.isListNode(ulParent)) {
@@ -100,7 +100,7 @@ define("tinymce.lists.actions.Outdent", [
 			while (i--) {
 				var node = listElements[i].parentNode;
 
-				while (node && node != root) {
+				while (node && node !== root) {
 					y = listElements.length;
 					while (y--) {
 						if (listElements[y] === node) {

@@ -29,7 +29,7 @@ define("tinymce.lists.actions.Indent", [
 	var indent = function (li) {
 		var sibling, newList, listStyle;
 
-		if (li.nodeName == 'DT') {
+		if (li.nodeName === 'DT') {
 			DOM.rename(li, 'DD');
 			return true;
 		}
@@ -41,7 +41,7 @@ define("tinymce.lists.actions.Indent", [
 			return true;
 		}
 
-		if (sibling && sibling.nodeName == 'LI' && NodeType.isListNode(sibling.lastChild)) {
+		if (sibling && sibling.nodeName === 'LI' && NodeType.isListNode(sibling.lastChild)) {
 			sibling.lastChild.appendChild(li);
 			mergeLists(li.lastChild, sibling.lastChild);
 			return true;
@@ -54,12 +54,12 @@ define("tinymce.lists.actions.Indent", [
 			return true;
 		}
 
-		/*if (sibling && sibling.nodeName == 'LI' && isListNode(li.lastChild)) {
+		/*if (sibling && sibling.nodeName === 'LI' && isListNode(li.lastChild)) {
 			return false;
 		}*/
 
 		sibling = li.previousSibling;
-		if (sibling && sibling.nodeName == 'LI') {
+		if (sibling && sibling.nodeName === 'LI') {
 			newList = DOM.create(li.parentNode.nodeName);
 			listStyle = DOM.getStyle(li.parentNode, 'listStyleType');
 			if (listStyle) {

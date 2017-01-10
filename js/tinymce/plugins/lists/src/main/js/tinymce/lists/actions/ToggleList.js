@@ -29,7 +29,7 @@ define("tinymce.lists.actions.ToggleList", [
 		offset = rng[start ? 'startOffset' : 'endOffset'];
 
 		// Resolve node index
-		if (container.nodeType == 1) {
+		if (container.nodeType === 1) {
 			container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
 		}
 
@@ -58,7 +58,7 @@ define("tinymce.lists.actions.ToggleList", [
 		for (var node = startNode; node; node = node.nextSibling) {
 			siblings.push(node);
 
-			if (node == endNode) {
+			if (node === endNode) {
 				break;
 			}
 		}
@@ -81,7 +81,7 @@ define("tinymce.lists.actions.ToggleList", [
 
 			var nextSibling = node.nextSibling;
 			if (BookmarkManager.isBookmarkNode(node)) {
-				if (NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode == root)) {
+				if (NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
 					block = null;
 					return;
 				}
@@ -109,7 +109,7 @@ define("tinymce.lists.actions.ToggleList", [
 
 		listName = listName.toUpperCase();
 
-		if (listName == 'DL') {
+		if (listName === 'DL') {
 			listItemName = 'DT';
 		}
 
@@ -128,7 +128,7 @@ define("tinymce.lists.actions.ToggleList", [
 			};
 
 			sibling = block.previousSibling;
-			if (sibling && NodeType.isListNode(sibling) && sibling.nodeName == listName && hasCompatibleStyle(sibling)) {
+			if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(sibling)) {
 				listBlock = sibling;
 				block = dom.rename(block, listItemName);
 				sibling.appendChild(block);
@@ -171,7 +171,7 @@ define("tinymce.lists.actions.ToggleList", [
 				return;
 			}
 
-			for (node = li; node && node != root; node = node.parentNode) {
+			for (node = li; node && node !== root; node = node.parentNode) {
 				if (NodeType.isListNode(node)) {
 					rootList = node;
 				}
@@ -194,7 +194,7 @@ define("tinymce.lists.actions.ToggleList", [
 		var sibling, node;
 
 		sibling = listBlock.nextSibling;
-		if (sibling && NodeType.isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(dom, listBlock, sibling)) {
+		if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listBlock.nodeName && shouldMerge(dom, listBlock, sibling)) {
 			while ((node = sibling.firstChild)) {
 				listBlock.appendChild(node);
 			}
@@ -203,7 +203,7 @@ define("tinymce.lists.actions.ToggleList", [
 		}
 
 		sibling = listBlock.previousSibling;
-		if (sibling && NodeType.isListNode(sibling) && sibling.nodeName == listBlock.nodeName && shouldMerge(dom, listBlock, sibling)) {
+		if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listBlock.nodeName && shouldMerge(dom, listBlock, sibling)) {
 			while ((node = sibling.lastChild)) {
 				listBlock.insertBefore(node, listBlock.firstChild);
 			}
@@ -220,7 +220,7 @@ define("tinymce.lists.actions.ToggleList", [
 		}
 
 		if (parentList) {
-			if (parentList.nodeName == listName) {
+			if (parentList.nodeName === listName) {
 				removeList(editor, listName);
 			} else {
 				var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));

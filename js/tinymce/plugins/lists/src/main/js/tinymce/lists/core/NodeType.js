@@ -23,15 +23,15 @@ define("tinymce.lists.core.NodeType", [
 	};
 
 	var isBr = function (node) {
-		return node && node.nodeName == 'BR';
+		return node && node.nodeName === 'BR';
 	};
 
 	var isFirstChild = function (node) {
-		return node.parentNode.firstChild == node;
+		return node.parentNode.firstChild === node;
 	};
 
 	var isLastChild = function (node) {
-		return node.parentNode.lastChild == node;
+		return node.parentNode.lastChild === node;
 	};
 
 	var isTextBlock = function (editor, node) {

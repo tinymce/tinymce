@@ -17,13 +17,13 @@ define("tinymce.lists.core.SplitList", [
 	var splitList = function (editor, ul, li, newBlock) {
 		var tmpRng, fragment, bookmarks, node;
 
-		function removeAndKeepBookmarks(targetNode) {
+		var removeAndKeepBookmarks = function (targetNode) {
 			Tools.each(bookmarks, function(node) {
 				targetNode.parentNode.insertBefore(node, li.parentNode);
 			});
 
 			DOM.remove(targetNode);
-		}
+		};
 
 		bookmarks = DOM.select('span[data-mce-type="bookmark"]', ul);
 		newBlock = newBlock || TextBlock.createNewTextBlock(editor, li);
@@ -33,13 +33,13 @@ define("tinymce.lists.core.SplitList", [
 		fragment = tmpRng.extractContents();
 
 		for (node = fragment.firstChild; node; node = node.firstChild) {
-			if (node.nodeName == 'LI' && DOM.isEmpty(node)) {
+			if (node.nodeName === 'LI' && editor.dom.isEmpty(node)) {
 				DOM.remove(node);
 				break;
 			}
 		}
 
-		if (!DOM.isEmpty(fragment)) {
+		if (!editor.dom.isEmpty(fragment)) {
 			DOM.insertAfter(fragment, ul);
 		}
 

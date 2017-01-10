@@ -21,7 +21,7 @@ define("tinymce.lists.Plugin", [
 	var queryListCommandState = function (editor, listName) {
 		return function () {
 			var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
-			return parentList && parentList.nodeName == listName;
+			return parentList && parentList.nodeName === listName;
 		};
 	};
 
@@ -29,11 +29,11 @@ define("tinymce.lists.Plugin", [
 		editor.on('BeforeExecCommand', function(e) {
 			var cmd = e.command.toLowerCase(), isHandled;
 
-			if (cmd == "indent") {
+			if (cmd === "indent") {
 				if (Indent.indentSelection(editor)) {
 					isHandled = true;
 				}
-			} else if (cmd == "outdent") {
+			} else if (cmd === "outdent") {
 				if (Outdent.outdentSelection(editor)) {
 					isHandled = true;
 				}
@@ -129,7 +129,7 @@ define("tinymce.lists.Plugin", [
 					for (var i = 0, l = blocks.length; !disable && i < l; i++) {
 						var tag = blocks[i].nodeName;
 
-						disable = (tag == 'LI' && NodeType.isFirstChild(blocks[i]) || tag == 'UL' || tag == 'OL' || tag == 'DD');
+						disable = (tag === 'LI' && NodeType.isFirstChild(blocks[i]) || tag === 'UL' || tag === 'OL' || tag === 'DD');
 					}
 
 					ctrl.disabled(disable);

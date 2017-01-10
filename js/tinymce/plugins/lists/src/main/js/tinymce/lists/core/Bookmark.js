@@ -33,7 +33,7 @@ define("tinymce.lists.core.Bookmark", [
 			container = rng[start ? 'startContainer' : 'endContainer'];
 			offset = rng[start ? 'startOffset' : 'endOffset'];
 
-			if (container.nodeType == 1) {
+			if (container.nodeType === 1) {
 				offsetNode = DOM.create('span', {'data-mce-type': 'bookmark'});
 
 				if (container.hasChildNodes()) {
@@ -73,12 +73,12 @@ define("tinymce.lists.core.Bookmark", [
 				var node = container.parentNode.firstChild, idx = 0;
 
 				while (node) {
-					if (node == container) {
+					if (node === container) {
 						return idx;
 					}
 
 					// Skip data-mce-type=bookmark nodes
-					if (node.nodeType != 1 || node.getAttribute('data-mce-type') != 'bookmark') {
+					if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
 						idx++;
 					}
 
@@ -95,7 +95,7 @@ define("tinymce.lists.core.Bookmark", [
 				return;
 			}
 
-			if (container.nodeType == 1) {
+			if (container.nodeType === 1) {
 				offset = nodeIndex(container);
 				container = container.parentNode;
 				DOM.remove(node);

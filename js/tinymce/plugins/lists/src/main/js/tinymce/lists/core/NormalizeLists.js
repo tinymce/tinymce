@@ -17,9 +17,9 @@ define("tinymce.lists.core.NormalizeLists", [
 		var sibling, parentNode = ul.parentNode;
 
 		// Move UL/OL to previous LI if it's the only child of a LI
-		if (parentNode.nodeName == 'LI' && parentNode.firstChild == ul) {
+		if (parentNode.nodeName === 'LI' && parentNode.firstChild === ul) {
 			sibling = parentNode.previousSibling;
-			if (sibling && sibling.nodeName == 'LI') {
+			if (sibling && sibling.nodeName === 'LI') {
 				sibling.appendChild(ul);
 
 				if (NodeType.isEmpty(dom, parentNode)) {
@@ -33,7 +33,7 @@ define("tinymce.lists.core.NormalizeLists", [
 		// Append OL/UL to previous LI if it's in a parent OL/UL i.e. old HTML4
 		if (NodeType.isListNode(parentNode)) {
 			sibling = parentNode.previousSibling;
-			if (sibling && sibling.nodeName == 'LI') {
+			if (sibling && sibling.nodeName === 'LI') {
 				sibling.appendChild(ul);
 			}
 		}

@@ -25,12 +25,12 @@ define("tinymce.lists.core.Delete", [
 		var node = rng.startContainer, offset = rng.startOffset;
 		var nonEmptyBlocks, walker;
 
-		if (node.nodeType == 3 && (isForward ? offset < node.data.length : offset > 0)) {
+		if (node.nodeType === 3 && (isForward ? offset < node.data.length : offset > 0)) {
 			return node;
 		}
 
 		nonEmptyBlocks = editor.schema.getNonEmptyElements();
-		if (node.nodeType == 1) {
+		if (node.nodeType === 1) {
 			node = RangeUtils.getNode(node, offset);
 		}
 
@@ -44,7 +44,7 @@ define("tinymce.lists.core.Delete", [
 		}
 
 		while ((node = walker[isForward ? 'next' : 'prev2']())) {
-			if (node.nodeName == 'LI' && !node.hasChildNodes()) {
+			if (node.nodeName === 'LI' && !node.hasChildNodes()) {
 				return node;
 			}
 
@@ -52,7 +52,7 @@ define("tinymce.lists.core.Delete", [
 				return node;
 			}
 
-			if (node.nodeType == 3 && node.data.length > 0) {
+			if (node.nodeType === 3 && node.data.length > 0) {
 				return node;
 			}
 		}
@@ -69,7 +69,7 @@ define("tinymce.lists.core.Delete", [
 			listNode = toElm.lastChild;
 		}
 
-		if (ul == toElm.lastChild) {
+		if (ul === toElm.lastChild) {
 			if (NodeType.isBr(ul.previousSibling)) {
 				dom.remove(ul.previousSibling);
 			}
@@ -114,7 +114,7 @@ define("tinymce.lists.core.Delete", [
 			rng = Range.normalizeRange(selection.getRng(true));
 			otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
 
-			if (otherLi && otherLi != li) {
+			if (otherLi && otherLi !== li) {
 				var bookmark = Bookmark.createBookmark(rng);
 
 				if (isForward) {
@@ -157,11 +157,11 @@ define("tinymce.lists.core.Delete", [
 
 	var setup = function (editor) {
 		editor.on('keydown', function(e) {
-			if (e.keyCode == VK.BACKSPACE) {
+			if (e.keyCode === VK.BACKSPACE) {
 				if (backspaceDelete(editor, false)) {
 					e.preventDefault();
 				}
-			} else if (e.keyCode == VK.DELETE) {
+			} else if (e.keyCode === VK.DELETE) {
 				if (backspaceDelete(editor, true)) {
 					e.preventDefault();
 				}
