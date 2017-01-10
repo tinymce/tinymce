@@ -53,20 +53,7 @@ define(
         }), null, 2) + '. This is not currently supported.'
       );
     };
-
-    var unsafeMerge = function (chain, aspect) {
-      var output = { };
-      Arr.each(chain, function (c) {
-        var obj = c.modification().getOr({ });
-        Obj.each(obj, function (v, k) {
-          output[k] = v;
-        });
-      });
-      return Result.value(
-        Objects.wrap(aspect, output)
-      );
-    };
-
+    
     var safeMerge = function (chain, aspect) {
       // return unsafeMerge(chain, aspect);
       var y = Arr.foldl(chain, function (acc, c) {

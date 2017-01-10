@@ -87,7 +87,6 @@ define(
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
         return index < 0 ? Option.none() : cycle(tabstops, index, function (elem) {
-          // Not sure if I want this disabled check to be elsewhere.
           return isVisible(cyclicInfo, elem) && cyclicInfo.useTabstopAt(elem);
         }).fold(function () {
           // Even if there is only one, still capture the event.
