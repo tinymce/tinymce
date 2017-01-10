@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
@@ -12,14 +13,16 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, Focusing, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
+  function (SystemEvents, Behaviour, Focusing, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {
     var schema = [
       FieldSchema.strict('data'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
 
-      // TODO: There is probably a better way to do this.
-      FieldSchema.defaulted('base', { }),
+      FieldSchema.optionOf('toggling', [
+        FieldSchema.strict('toggling')
+      ]),
+
       FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.state('builder', function () {
         return builder;
@@ -27,18 +30,17 @@ define(
     ];
 
     var builder = function (info) {
-      // info.base() can contain other things like toggling. I need to find a better way to do
-      // this though. Putting all the behaviours in a single object will probably do it.
-      return Merger.deepMerge(info.base(), {
+      return {
         dom: Merger.deepMerge(
           info.dom(),
           {
             attributes: {
-              role: Objects.hasKey(info.base(), 'toggling') ? 'menuitemcheckbox' : 'menuitem'
+              role: info.toggling().isSome() ? 'menuitemcheckbox' : 'menuitem'
             }
           }
         ),
         behaviours: {
+          toggling: info.toggling().getOr(Behaviour.revoke()),
           focusing: {
             ignore: info.ignoreFocus(),
             onFocus: function (component) {
@@ -90,7 +92,7 @@ define(
           }
         ]),
         components: info.components()
-      });
+      };
     };
 
     return schema;

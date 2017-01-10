@@ -57,6 +57,7 @@ define(
 
       var updateHtml = function () {
         gui.getByUid(dumpUid).each(function (dumpC) {
+          // NOTE: Use Body.body() here for more information.
           TextContent.set(dumpC.element(), JsBeautify.html(Html.getOuter(component.element())));
         });
       };
