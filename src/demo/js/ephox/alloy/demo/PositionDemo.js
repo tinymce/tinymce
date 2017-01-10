@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.PositionDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',

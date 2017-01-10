@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.HtmlConverter',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',

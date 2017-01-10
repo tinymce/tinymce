@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.TabSectionDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TabSection',

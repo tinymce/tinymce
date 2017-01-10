@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.ToolbarsDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',

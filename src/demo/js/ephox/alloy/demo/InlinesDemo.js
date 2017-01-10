@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.InlinesDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.ui.Button',

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.DockableDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.behaviour.Dragging',

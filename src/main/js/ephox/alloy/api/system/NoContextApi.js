@@ -1,8 +1,8 @@
 define(
-  'ephox.alloy.api.NoContextApi',
+  'ephox.alloy.api.system.NoContextApi',
 
   [
-    'ephox.alloy.api.SystemApi',
+    'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.log.AlloyLogger',
     'ephox.peanut.Fun',
     'global!Error'

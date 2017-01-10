@@ -1,9 +1,9 @@
 define(
-  'ephox.alloy.api.Gui',
+  'ephox.alloy.api.system.Gui',
 
   [
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.SystemApi',
+    'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.events.GuiEvents',
     'ephox.alloy.api.ui.Container',

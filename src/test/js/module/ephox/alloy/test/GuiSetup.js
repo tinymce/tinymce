@@ -5,7 +5,7 @@ define(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.test.TestStore',
     'ephox.highway.Merger',
     'ephox.sugar.api.DomEvent',

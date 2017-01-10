@@ -2,7 +2,7 @@ define(
   'ephox.alloy.construct.Components',
 
   [
-    'ephox.alloy.api.NoContextApi',
+    'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',

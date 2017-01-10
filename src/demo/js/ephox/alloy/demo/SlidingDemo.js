@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.SlidingDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',

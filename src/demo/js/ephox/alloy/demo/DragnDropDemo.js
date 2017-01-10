@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.DragnDropDemo',
 
   [
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.DragnDrop',
     'ephox.alloy.api.ui.Button',

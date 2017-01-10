@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.Component',
 
   [
-    'ephox.alloy.api.NoContextApi',
+    'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',

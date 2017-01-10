@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.SystemApi',
+  'ephox.alloy.api.system.SystemApi',
 
   [
     'ephox.scullion.Contracts'

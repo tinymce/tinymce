@@ -3,7 +3,7 @@ asynctest(
 
   [
     'ephox.agar.api.RawAssertions',
-    'ephox.alloy.api.Gui',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.compass.Arr',
