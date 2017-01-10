@@ -13,7 +13,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.agar.mouse.Clicks',
-    'ephox.alloy.api.GuiEvents',
+    'ephox.alloy.api.events.GuiEvents',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomRender',
     'ephox.alloy.test.TestStore',
