@@ -104,32 +104,29 @@ define(
         return dialog.getSystem().getByUid(detail.partUids().body).getOrDie();
       };
 
-      return Merger.deepMerge(
-        {
-          dom: {
-            attributes: {
-              role: 'dialog'
-            }
+      return Container.build({
+        dom: detail.dom(),
+        components: components,
+        apis: {
+          show: showDialog,
+          hide: hideDialog,
+          getBody: getDialogBody
+        },
+
+        domModification: {
+          attributes: {
+            role: 'dialog'
           }
         },
-        Container.build({
-          dom: detail.dom(),
-          components: components,
-          apis: {
-            show: showDialog,
-            hide: hideDialog,
-            getBody: getDialogBody
-          },
 
-          behaviours: {
-            keying: {
-              mode: 'cyclic',
-              onEnter: detail.onExecute(),
-              onEscape: detail.onEscape()
-            }
+        behaviours: {
+          keying: {
+            mode: 'cyclic',
+            onEnter: detail.onExecute(),
+            onEscape: detail.onEscape()
           }
-        })
-      );
+        }
+      });
     };
 
     var build = function (spec) {
