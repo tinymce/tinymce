@@ -2,11 +2,15 @@ asynctest(
   'TypeaheadTest',
  
   [
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.UiControls',
+    'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Typeahead',
@@ -15,15 +19,18 @@ asynctest(
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.TestBroadcasts',
+    'ephox.alloy.test.dropdown.DropdownAssertions',
     'ephox.alloy.test.typeahead.TestTypeaheadList',
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.Value',
+    'ephox.sugar.api.Width',
     'global!Math'
   ],
  
-  function (FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiControls, UiFinder, GuiFactory, Container, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, DropdownAssertions, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Css, Value, Width, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -107,28 +114,9 @@ asynctest(
         steps.sAssertFocusOnTypeahead('Focus stays on typeahead after pressing Down'),
         steps.sWaitForMenu('Down to activate menu'),
 
-        // FIX: reinstate
         // On typeaheads, there should be a width property that is approximately
         // the same size as the input field
-        // NOTE: Dupe with Dropdown test.
-        // Logger.t(
-        //   'Checking that the input width is passed onto the typeahead list width',
-        //   Chain.asStep(gui.element(), [
-        //     UiFinder.cFindIn('.test-typeahead-menu'),
-        //     Chain.op(function (menu) {
-        //       var inputWidth = Width.get(typeahead.element());
-        //       var menuWidth = parseInt(
-        //         Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),
-        //         10
-        //       );
-        //       Assertions.assertEq(
-        //         'Check that the menu width is approximately the same as the input width',
-        //         true,
-        //         Math.abs(menuWidth - inputWidth) < 20
-        //       );
-        //     })
-        //   ])
-        // ),
+        DropdownAssertions.sSameWidth('Typeahead', gui, typeahead, '.test-typeahead-menu'),
 
         NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
           item('peo2'),
