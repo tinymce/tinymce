@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.behaviour.disabling.DisableApis',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',

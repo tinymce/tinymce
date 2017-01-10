@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.behaviour.toggling.ToggleApis',
-    'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr'

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.representing.ActiveRepresenting',
 
   [
-    'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.behaviour.representing.RepresentApis',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects'

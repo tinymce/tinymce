@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.behaviour.Behaviour',
+  'ephox.alloy.behaviour.common.Behaviour',
 
   [
     'ephox.alloy.alien.EventRoot',

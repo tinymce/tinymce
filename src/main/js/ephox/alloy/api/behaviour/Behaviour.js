@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.behaviour.Behaviour',
 
   [
-    'ephox.alloy.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.Behaviour',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
