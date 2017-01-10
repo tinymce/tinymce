@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabbar',
@@ -16,7 +17,7 @@ define(
     'text!dom-templates/demo.tabbing.html'
   ],
 
-  function (Gui, Container, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, GuiFactory, Container, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -41,7 +42,7 @@ define(
               text: 'Alpha',
               view: function () {
                 return [
-                  { text: 'Alpha panel' }
+                  GuiFactory.text('Alpha panel text')
                 ];
               }
             },
@@ -50,7 +51,7 @@ define(
               text: 'Beta',
               view: function () {
                 return [
-                  { text: 'Beta panel' }
+                  GuiFactory.text('Beta panel text')
                 ];
               }
             }
@@ -80,7 +81,7 @@ define(
                         }
                       },
                       components: [
-                        { text: tabSpec.text }
+                        GuiFactory.text(tabSpec.text)
                       ]
                     });
                   }
