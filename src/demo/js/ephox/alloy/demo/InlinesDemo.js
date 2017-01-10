@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',

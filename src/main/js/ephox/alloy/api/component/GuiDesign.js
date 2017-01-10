@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.GuiDesign',
+  'ephox.alloy.api.component.GuiDesign',
 
   [
     'ephox.highway.Merger'

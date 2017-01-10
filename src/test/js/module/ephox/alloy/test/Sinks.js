@@ -2,7 +2,7 @@ define(
   'ephox.alloy.test.Sinks',
 
   [
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.PredicateExists'

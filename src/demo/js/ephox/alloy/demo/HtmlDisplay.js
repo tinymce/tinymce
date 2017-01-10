@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.HtmlDisplay',
 
   [
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.epithet.Id',
     'ephox.sugar.api.Html',

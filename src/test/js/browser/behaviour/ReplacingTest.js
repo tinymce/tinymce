@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.Container',

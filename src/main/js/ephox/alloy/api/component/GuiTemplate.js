@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.GuiTemplate',
+  'ephox.alloy.api.component.GuiTemplate',
 
   [
     'ephox.alloy.spec.UiSubstitutes',

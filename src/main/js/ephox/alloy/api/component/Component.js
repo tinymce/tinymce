@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.Component',
+  'ephox.alloy.api.component.Component',
 
   [
     'ephox.alloy.api.system.NoContextApi',

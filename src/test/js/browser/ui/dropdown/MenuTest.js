@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.UiFinder',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.construct.EventHandler',

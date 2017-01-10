@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.SplitToolbar',
@@ -11,7 +10,6 @@ define(
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -23,7 +21,7 @@ define(
     'text!dom-templates/tinymce.toolstrip.html'
   ],
 
-  function (Gui, GuiTemplate, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Option, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
+  function (Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -326,34 +324,6 @@ define(
                 closedStyle: 'demo-sliding-closed',
                 growingStyle: 'demo-sliding-height-growing',
                 shrinkingStyle: 'demo-sliding-height-shrinking'
-              },
-
-
-              // overflowing: {
-              //   mode: 'scroll',
-              //   initWidth: '200px'
-              // },
-              // groups: groups,
-              // members: {
-              //   'group': {
-              //     munge: groupMunge
-              //   }
-              // }
-              members: {
-                overflow: {
-                  munge: function (spec) {
-                    return GuiTemplate.use(
-                      Option.none(),
-                      TemplateTextButton,
-                      {
-
-                      },
-                      {
-                        fields: { }
-                      }
-                    );
-                  }
-                }
               }
             })
           ]

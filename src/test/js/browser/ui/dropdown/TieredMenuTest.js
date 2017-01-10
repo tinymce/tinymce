@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.ui.Menu',

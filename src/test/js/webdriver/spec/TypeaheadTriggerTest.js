@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.RealKeys',
     'ephox.agar.api.UiControls',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',

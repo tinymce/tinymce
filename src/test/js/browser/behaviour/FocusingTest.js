@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Guard',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.ui.Container',

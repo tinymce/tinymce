@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.system.Gui',
 
   [
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.events.GuiEvents',

@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.Memento',
+  'ephox.alloy.api.component.Memento',
 
   [
     'ephox.alloy.registry.Tagger',

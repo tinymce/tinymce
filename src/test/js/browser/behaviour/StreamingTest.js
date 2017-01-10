@@ -5,7 +5,7 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.ui.Container',

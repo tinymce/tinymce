@@ -2,10 +2,10 @@ define(
   'ephox.alloy.demo.HtmlConverter',
 
   [
-    'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.GuiTemplate',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.GuiTemplate',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
@@ -15,11 +15,10 @@ define(
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Value',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, GuiTemplate, Representing, Button, Container, Input, Json, Option, Element, Insert, Remove, SelectorFind, Value, document) {
+  function (Representing, GuiFactory, GuiTemplate, Gui, Button, Container, Input, Json, Option, Element, Insert, Remove, SelectorFind, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 

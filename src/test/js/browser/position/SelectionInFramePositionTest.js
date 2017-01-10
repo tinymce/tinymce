@@ -6,7 +6,7 @@ asynctest(
     'ephox.agar.api.Cursors',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',

@@ -1,8 +1,8 @@
 define(
-  'ephox.alloy.api.GuiFactory',
+  'ephox.alloy.api.component.GuiFactory',
 
   [
-    'ephox.alloy.api.Component',
+    'ephox.alloy.api.component.Component',
     'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.events.DefaultEvents',

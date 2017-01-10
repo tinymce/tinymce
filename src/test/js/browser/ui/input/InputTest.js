@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Input',

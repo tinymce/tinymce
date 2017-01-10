@@ -9,7 +9,7 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormField',
