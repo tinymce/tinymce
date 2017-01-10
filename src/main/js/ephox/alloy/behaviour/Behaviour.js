@@ -6,81 +6,16 @@ define(
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
-    'ephox.alloy.log.AlloyLogger',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Obj',
-    'ephox.epithet.Id',
+    'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.scullion.Contracts',
     'global!Array',
+    'global!Error',
     'global!console'
   ],
 
-  function (EventRoot, SystemEvents, EventHandler, DomModification, AlloyLogger, FieldSchema, Objects, ValueSchema, Obj, Id, Fun, Contracts, Array, console) {
-    var contract = Contracts.exactly([ 'name', 'exhibit', 'apis', 'handlers', 'schema' ]);
-
-    var truncate = function (element) {
-      return AlloyLogger.element(element);
-    };
-
-    var tryActionOpt = function (field, info, apiName, f) {
-      return function (component/*, */) {
-        var args = Array.prototype.slice.call(arguments, 0);
-        var delegate = component.delegate(component).map(function (dlg) { return dlg.get()(); });
-        return delegate.fold(function () {
-          var behaviourInfo = info[field]();
-          return behaviourInfo.fold(function () {
-            console.error('Ui (' + truncate(component.element()) + ') does not support: ' + apiName);
-            console.error('component', component);
-            return false;
-          }, function (bInfo) {
-            return f.apply(undefined, [ component, bInfo ].concat(args.slice(1)));
-          });
-        }, function (dlg) {
-          return dlg.apis()[apiName].apply(undefined, args.slice(1));
-        });
-      };
-    };
-
-    var exhibition = function (optName, modification) {
-      var name = optName.getOr(Id.generate());
-      return contract({
-        name: Fun.constant(name),
-        exhibit: function () {
-          return DomModification.nu(modification);
-        },
-        handlers: Fun.constant({ }),
-        // Make this better.
-        schema: Fun.constant(
-          FieldSchema.state(name, function () { })
-        )
-      });
-    };
-
-    var activeApis = function (behaviourName, info, apiCalls) {
-      // return Objects.wrap(
-      //   behaviourName,
-        return info[behaviourName]().map(function (behaviourInfo) {
-          return Obj.map(apiCalls, function (f, apiName) {
-            return function (component/*, */) {
-              var args = Array.prototype.slice.call(arguments, 0);
-              return f.apply(undefined, [ component, behaviourInfo ].concat(args.slice(1)));
-            };
-          });
-        }).getOr({ });
-      // );
-    };
-
-    var schema = function (name, fields) {
-      return FieldSchema.optionObjOf(name, fields);
-    };
-
-    var modeSchema = function (name, branchKey, branches) {
-     return  FieldSchema.optionOf(name, ValueSchema.choose(branchKey, branches));
-    };
-
+  function (EventRoot, SystemEvents, EventHandler, DomModification, Objects, Obj, Merger, Fun, Array, Error, console) {
     var executeEvent = function (toggleInfo, executor) {
       return {
         key: SystemEvents.execute(),
@@ -105,16 +40,72 @@ define(
       };
     };
 
-    return {
-      tryActionOpt: tryActionOpt,
-      exhibition: exhibition,
-      contract: contract,
-      activeApis: activeApis,
-      schema: schema,
-      modeSchema: modeSchema,
+    var create = function (schema, name, active, apis, extra) {
+      var getConfig = function (info) {
+        return info.behaviours().bind(function (bs) {
+          return bs[name]();
+        });
+      };
 
+      return Merger.deepMerge(
+        extra !== undefined ? extra : { },
+        Obj.map(apis, function (apiF, apiName) {
+          return function (component) {
+            var args = arguments;
+            return component.config({
+              name: Fun.constant(name)
+            }).fold(
+              function () {
+                component.logSpec();
+                throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
+              },
+              function (info) {
+                var rest = Array.prototype.slice.call(args, 1);
+                return apiF.apply(undefined, [ component, info ].concat(rest));
+              }
+            );
+          };
+        }),
+        {
+          config: function (spec) {
+            return {
+              key: name,
+              value: spec
+            };
+          },
+
+          schema: function () {
+            return schema;
+            // return FieldSchema.optionObjOf(name, schema);
+          },
+
+          exhibit: function (info, base) {
+            return getConfig(info).bind(function (behaviourInfo) {
+              return Objects.readOptFrom(active, 'exhibit').map(function (exhibitor) {
+                return exhibitor(base, behaviourInfo);
+              });
+            }).getOr(DomModification.nu({ }));
+          },
+
+          name: function () {
+            return name;
+          },
+
+          handlers: function (info) {
+            return getConfig(info).bind(function (behaviourInfo) {
+              return Objects.readOptFrom(active, 'events').map(function (events) {
+                return events(behaviourInfo);
+              });
+            }).getOr({ });
+          }
+        }
+      );
+    };
+
+    return {
       executeEvent: executeEvent,
-      loadEvent: loadEvent
+      loadEvent: loadEvent,
+      create: create
     };
   }
 );

@@ -42,8 +42,6 @@ define(
       var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
         return b.schema();
       });
- 
-      // var behaviourSchema = [ Positioning.schema(), Focusing.schema(), Unselecting.schema(), Keying.schema(), Tabstopping.schema(), Transitioning.schema(), Receiving.schema() ];
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
         FieldSchema.strictObjOf('dom', [
@@ -153,27 +151,6 @@ define(
       Tabstopping,
       Unselecting,
       DragnDrop
-      // Toggling,
-      // Keying,
-      // Tabstopping,
-      // Focusing,
-      // Receiving,
-      // Coupling,
-      // Streaming,
-      // Positioning,
-      // Highlighting,
-      // Sandboxing,
-      // Redesigning,
-      // Disabling,
-      // Invalidating,
-      // Replacing,
-      // Representing,
-      // Sliding,
-      // Transitioning,
-      // Dragging,
-      // Docking,
-      // Unselecting,
-      // Remembering
     ];
 
     var behaviours = function (info) {
