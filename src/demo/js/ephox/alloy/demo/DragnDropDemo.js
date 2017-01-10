@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.DragnDrop',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, DragnDrop, Button, Container, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Html, Insert, Replication, document) {
+  function (Gui, Behaviour, DragnDrop, Button, Container, EventHandler, HtmlDisplay, Objects, Fun, Class, Css, Element, Html, Insert, Replication, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -27,11 +28,6 @@ define(
       Insert.append(body, gui.element());
 
 
-
-      // FIX: Use this everywhere.
-      var deriveCapabilities = function (caps) {
-        return Objects.wrapAll(caps);
-      };
 
       var display1 = HtmlDisplay.section(
         gui,
@@ -50,7 +46,7 @@ define(
                 console.log('*** Image ButtonDemo click ***');
               },
 
-              behaviours: deriveCapabilities([
+              behaviours: Behaviour.derive([
                 DragnDrop.config({
                   mode: 'drag',
                   type: 'text/html',
@@ -80,7 +76,7 @@ define(
                   height: '100px'
                 }
               },
-              behaviours: deriveCapabilities([
+              behaviours: Behaviour.derive([
                 DragnDrop.config({
                   mode: 'drop',
                   type: 'text/html',

@@ -21,7 +21,7 @@ define(
         },
         behaviours: {
           positioning: {
-            // FIX: configurable
+            // TODO: Make an internal sink also be able to be used with relative layouts
             useFixed: true
           }
         },

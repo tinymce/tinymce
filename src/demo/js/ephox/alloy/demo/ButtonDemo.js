@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
@@ -15,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, BehaviourExport, Toggling, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
+  function (Gui, Behaviour, BehaviourExport, Toggling, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -59,11 +60,6 @@ define(
 
       });
 
-
-      var deriveCapabilities = function (caps) {
-        return Objects.wrapAll(caps);
-      };
-
       var button1 = HtmlDisplay.section(
         gui,
         'This button is a <code>button</code> tag with an image',
@@ -98,7 +94,7 @@ define(
           action: function () {
             console.log('*** Font ButtonDemo click ***');
           },
-          behaviours: deriveCapabilities([
+          behaviours: Behaviour.derive([
             Toggling.config({
               toggleClass: 'demo-selected'
             })
