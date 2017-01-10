@@ -3,10 +3,12 @@ asynctest(
  
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.Container',
@@ -24,7 +26,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, SystemEvents, Behaviour, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -151,8 +153,21 @@ asynctest(
         sCheckOpenState('Opening sandbox with a uid that has already been used', {
           data: 'first-opening',
           store: [ 'onOpen' ]
-        })
+        }),
 
+        Logger.t(
+          'Firing sandbox close system event',
+          
+          Chain.asStep({}, [
+            Chain.inject(sandbox.element()),
+            UiFinder.cFindIn('input'),
+            Chain.op(function (input) {
+              sandbox.getSystem().triggerEvent(SystemEvents.sandboxClose(), input, { });
+            })
+          ])
+        ),
+
+        sCheckClosedState('After sending system close event', { store: [ 'onClose' ] })
       ];
     }, function () { success(); }, failure);
 
