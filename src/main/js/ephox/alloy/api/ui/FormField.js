@@ -3,19 +3,19 @@ define(
 
   [
     'ephox.alloy.api.ui.UiBuilder',
-    'ephox.alloy.api.ui.common.FieldParts',
-    'ephox.alloy.api.ui.common.FieldUtils',
     'ephox.alloy.parts.PartType',
-    'ephox.boulder.api.FieldSchema'
+    'ephox.alloy.ui.common.FieldBase',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.peanut.Fun'
   ],
 
-  function (UiBuilder, FieldParts, FieldUtils, PartType, FieldSchema) {
+  function (UiBuilder, PartType, FieldBase, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('prefix', 'form-field')
     ];
 
     var build = function (factory, spec) {
-      var partTypes = FieldParts(factory);
+      var partTypes = makePartTypes(factory);
       return UiBuilder.composite(factory.name(), schema, partTypes, make, spec);
     };
 
@@ -25,13 +25,32 @@ define(
           tag: 'div'
         },
         components: components,
-        behaviours: FieldUtils.behaviours(detail),
-        events: FieldUtils.events(detail)
+        behaviours: FieldBase.behaviours(detail),
+        events: FieldBase.events(detail)
       };
     };
 
+    var makePartTypes = function (factory) {
+      return [
+        PartType.optional(
+          { build: Fun.identity },
+          'label',
+          '<alloy.form-field.label>',
+          Fun.constant({ }),
+          Fun.constant({ })
+        ),
+        PartType.internal(
+          factory,
+          'field',
+          '<alloy.form-field.field>',
+          Fun.constant({ }),
+          Fun.constant({ })
+        )
+      ];
+    };
+
     var parts = function (factory) {
-      var partTypes = FieldParts(factory);
+      var partTypes = makePartTypes(factory);
       return PartType.generate(factory.name(), partTypes);
     };
 

@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.ui.common.FieldUtils',
+  'ephox.alloy.ui.common.FieldBase',
 
   [
     'ephox.alloy.alien.EventRoot',
