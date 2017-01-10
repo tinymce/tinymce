@@ -10,7 +10,7 @@ define(
   ],
 
   function (Option, Position, Attr, isNaN, parseInt) {
-    // DUPE with ego with some parameterisation
+    // NOTE: Moved from ego with some parameterisation
     var get = function (component, dockInfo) {
       var element = component.element();
       var x = parseInt(Attr.get(element, dockInfo.leftAttr()), 10);

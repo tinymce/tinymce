@@ -7,9 +7,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.dragging.Snappables',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.dragster.api.DragApis',
     'ephox.dragster.core.Dragging',
     'ephox.dragster.detect.Movement',
@@ -18,17 +16,14 @@ define(
     'ephox.sugar.alien.Position',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
     'ephox.sugar.api.Location',
-    'ephox.sugar.api.Remove',
     'ephox.sugar.api.Scroll',
     'ephox.sugar.api.Traverse',
     'global!parseInt',
     'global!window'
   ],
 
-  function (OffsetOrigin, Container, EventHandler, DragCoord, Snappables, FieldPresence, FieldSchema, ValueSchema, DragApis, Dragging, Movement, Fun, Option, Position, Attr, Css, Element, Insert, Location, Remove, Scroll, Traverse, parseInt, window) {
+  function (OffsetOrigin, Container, EventHandler, DragCoord, Snappables, FieldSchema, DragApis, Dragging, Movement, Fun, Option, Position, Attr, Css, Location, Scroll, Traverse, parseInt, window) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
 
