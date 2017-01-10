@@ -14,7 +14,7 @@ define(
   function (Assertions, Chain, Logger, UiFinder, Css, Width, Math) {
     var sSameWidth = function (label, gui, dropdown, menuSelector) {
       return Logger.t(
-        label + '\nChecking that the input width is passed onto the typeahead list width',
+        label + '\nChecking that the hotspot width is passed onto the menu width',
         Chain.asStep(gui.element(), [
           UiFinder.cFindIn(menuSelector),
           Chain.op(function (menu) {
@@ -25,7 +25,7 @@ define(
             );
 
             Assertions.assertEq(
-              'Check that the menu width is approximately the same as the input width',
+              'Check that the menu width is approximately the same as the hotspot width',
               true,
               Math.abs(menuWidth - dropdownWidth) < 20
             );

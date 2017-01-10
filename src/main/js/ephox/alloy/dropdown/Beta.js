@@ -74,10 +74,6 @@ define(
       return Sandboxing.open(sandbox, processed).map(function () {
         return sandbox;
       });
-      // Sandboxing.open(sandbox, processed).get(function (tiers) {
-      //   Highlighting.highlightFirst(tiers);
-      //   Keying.focusIn(tiers);
-      // });
     };
 
     var close = function (detail, anchor, component, sandbox) {

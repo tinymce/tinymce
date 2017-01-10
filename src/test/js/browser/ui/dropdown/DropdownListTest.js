@@ -19,6 +19,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.TestBroadcasts',
+    'ephox.alloy.test.dropdown.DropdownAssertions',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
@@ -27,7 +28,7 @@ asynctest(
     'ephox.sugar.api.Width'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, TestBroadcasts, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
+  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, TestBroadcasts, DropdownAssertions, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -75,6 +76,8 @@ asynctest(
           },
 
           toggleClass: 'alloy-selected',
+
+          matchWidth: true,
 
           parts: {
             menu: TestDropdownMenu(store)
@@ -139,27 +142,7 @@ asynctest(
           focusables.alpha.selector
         ),
 
-        // TODO: Reinstate
-        // On dropdown buttons, there should be a width property that is approximately
-        // the same size as the button
-        // Logger.t(
-        //   'Checking that the button width is passed onto the menu width',
-        //   Chain.asStep(gui.element(), [
-        //     UiFinder.cFindIn('.menu'),
-        //     Chain.op(function (menu) {
-        //       var buttonWidth = Width.get(component.element());
-        //       var menuWidth = parseInt(
-        //         Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),
-        //         10
-        //       );
-        //       Assertions.assertEq(
-        //         'Check that the menu width is approximately the same as the button width',
-        //         true,
-        //         Math.abs(menuWidth - buttonWidth) < 20
-        //       );
-        //     })
-        //   ])
-        // ),
+        DropdownAssertions.sSameWidth('Dropdown List', gui, component, '.menu'),
 
         NavigationUtils.sequence(doc, Keys.down(), {}, [
           focusables.beta, focusables.gamma, focusables.delta, focusables.alpha
