@@ -517,6 +517,14 @@
 		equal(serializer.serialize(root), '');
 	});
 
+	test('Padd empty with br', function() {
+		var schema = new tinymce.html.Schema();
+		var parser = new tinymce.html.DomParser({padd_empty_with_br: true}, schema);
+		var serializer = new tinymce.html.Serializer({padd_empty_with_br: true}, schema);
+		var root = parser.parse('<p>a</p><p></p>');
+		equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
+	});
+
 	test('Preserve space in inline span', function() {
 		var parser, root, schema = new tinymce.html.Schema();
 

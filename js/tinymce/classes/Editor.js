@@ -911,7 +911,7 @@ define("tinymce/Editor", [
 				while (i--) {
 					node = nodes[i];
 
-					if (node.isEmpty(nonEmptyElements)) {
+					if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
 						node.append(new Node('br', 1)).shortEnded = true;
 					}
 				}
