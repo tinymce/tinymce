@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.alloy.api.Gui',
-    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
@@ -13,7 +12,7 @@ define(
     'ephox.alloy.api.ui.ItemWidget',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
-    'ephox.alloy.api.ui.menus.MenuData',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
@@ -25,7 +24,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Behaviour, Representing, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, MenuData, DemoSink, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
+  function (Gui, Behaviour, Representing, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -218,7 +217,7 @@ define(
             });
 
             return future.map(function (f) {
-              return MenuData.single('name', 'label', f);
+              return TieredMenu.singleData('name', 'label', f);
             });
           },
           lazySink: lazySink,
@@ -285,7 +284,7 @@ define(
             });
 
             return future.map(function (data) {
-              return MenuData.single('primary-menu', 'Widget', data);
+              return TieredMenu.singleData('primary-menu', 'Widget', data);
             });
           }
         })
@@ -321,7 +320,7 @@ define(
             ];
             var future = Future.pure(data);
             return future.map(function (items) {
-              return MenuData.simple('grid-list', 'Grid List', items);  
+              return TieredMenu.simpleData('grid-list', 'Grid List', items);  
             });
           },
          
@@ -365,7 +364,7 @@ define(
 
             var future = Future.pure(data);
             return future.map(function (items) {
-              return MenuData.simple('basic-list', 'Basic List', items);
+              return TieredMenu.simpleData('basic-list', 'Basic List', items);
             });
           },
           onExecute: function (sandbox, item, itemValue) {
@@ -503,7 +502,7 @@ define(
             });
 
             return future.map(function (f) {
-              return MenuData.tiered(f.primary, f.menus, f.expansions);
+              return TieredMenu.tieredData(f.primary, f.menus, f.expansions);
             });
           }
         })

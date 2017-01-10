@@ -16,8 +16,9 @@ define(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.api.ui.Menu',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
-    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoDataset',
     'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoSink',
@@ -37,7 +38,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Gui, Behaviour, Keying, Representing, Tabstopping, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Typeahead, MenuData, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Merger, Future, Option, Result, Class, Element, Insert, Value, document, setTimeout) {
+  function (Gui, Behaviour, Keying, Representing, Tabstopping, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Menu, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Merger, Future, Option, Result, Class, Element, Insert, Value, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -291,7 +292,7 @@ define(
          
                   var future = Future.pure(matches);
                   return future.map(function (items) {
-                    return MenuData.simple('blah', 'Blah', items);
+                    return TieredMenu.simpleData('blah', 'Blah', items);
                   });
                 },
                 dom: {

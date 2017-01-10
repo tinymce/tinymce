@@ -4,8 +4,9 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.Menu',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
-    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
@@ -20,7 +21,7 @@ define(
     'text!dom-templates/demo.menu.html'
   ],
 
-  function (Gui, Representing, Typeahead, MenuData, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, Representing, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -101,7 +102,7 @@ define(
    
             var future = Future.pure(matches);
             return future.map(function (items) {
-              return MenuData.simple('blah', 'Blah', items);
+              return TieredMenu.simpleData('blah', 'Blah', items);
             });
           },
           onExecute: function (sandbox, item, itemValue) {

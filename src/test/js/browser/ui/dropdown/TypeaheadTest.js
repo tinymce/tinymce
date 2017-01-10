@@ -2,19 +2,15 @@ asynctest(
   'TypeaheadTest',
  
   [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
-    'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.UiControls',
-    'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
-    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
@@ -24,13 +20,11 @@ asynctest(
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Css',
     'ephox.sugar.api.Value',
-    'ephox.sugar.api.Width',
     'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiControls, UiFinder, GuiFactory, Container, Typeahead, MenuData, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, DropdownAssertions, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Css, Value, Width, Math) {
+  function (FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, DropdownAssertions, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -70,7 +64,7 @@ asynctest(
                   var items = text === 'no-data' ? [
                     { type: 'separator', text: 'No data' }
                   ] : f;
-                  return MenuData.simple('blah', 'Blah', items);
+                  return TieredMenu.simpleData('blah', 'Blah', items);
                 });
               },
               

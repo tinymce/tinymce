@@ -19,18 +19,16 @@ asynctest(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
-    'ephox.alloy.api.ui.menus.MenuData',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
-    'ephox.alloy.test.Sinks',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
-    'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Behaviour, Focusing, Keying, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, Sinks, TestDropdownMenu, Objects, Arr, Future, Result) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Behaviour, Focusing, Keying, Container, Dropdown, TieredMenu, GuiSetup, NavigationUtils, TestDropdownMenu, Arr, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -151,7 +149,7 @@ asynctest(
 
           fetch: function () {
             return Future.pure(testData).map(function (d) {
-              return MenuData.tiered(d.primary, d.menus, d.expansions);
+              return TieredMenu.tieredData(d.primary, d.menus, d.expansions);
             });
           }
         })

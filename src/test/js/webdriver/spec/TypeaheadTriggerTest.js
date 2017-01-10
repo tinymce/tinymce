@@ -9,8 +9,8 @@ asynctest(
     'ephox.agar.api.UiControls',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
-    'ephox.alloy.api.ui.menus.MenuData',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.typeahead.TestTypeaheadList',
@@ -21,7 +21,7 @@ asynctest(
     'global!Math'
   ],
  
-  function (FocusTools, Keyboard, Keys, RealKeys, UiControls, GuiFactory, Container, Typeahead, MenuData, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
+  function (FocusTools, Keyboard, Keys, RealKeys, UiControls, GuiFactory, Container, TieredMenu, Typeahead, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -59,7 +59,7 @@ asynctest(
                   var items = text === 'no-data' ? [
                     { type: 'separator', text: 'No data' }
                   ] : f;
-                  return MenuData.simple('blah', 'Blah', items);
+                  return TieredMenu.simpleData('blah', 'Blah', items);
                 });
               },
               

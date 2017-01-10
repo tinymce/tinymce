@@ -11,7 +11,7 @@ asynctest(
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.SplitDropdown',
-    'ephox.alloy.api.ui.menus.MenuData',
+    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.knoch.future.Future',
@@ -19,7 +19,7 @@ asynctest(
     'ephox.sugar.api.TextContent'
   ],
  
-  function (FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, MenuData, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
+  function (FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -102,7 +102,7 @@ asynctest(
             ]);
 
             return future.map(function (f) {
-              return MenuData.simple('test', 'Test', f);
+              return TieredMenu.simpleData('test', 'Test', f);
             });
           }
         })
