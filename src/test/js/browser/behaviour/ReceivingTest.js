@@ -4,6 +4,7 @@ asynctest(
   [
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
@@ -12,7 +13,7 @@ asynctest(
     'ephox.boulder.api.ValueSchema'
   ],
  
-  function (Step, GuiFactory, Receiving, Container, GuiSetup, FieldSchema, Objects, ValueSchema) {
+  function (Step, GuiFactory, Behaviour, Receiving, Container, GuiSetup, FieldSchema, Objects, ValueSchema) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,7 +30,7 @@ asynctest(
           components: [
             
           ],
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Receiving.config({
               channels: {
                 'test.channel.1': {

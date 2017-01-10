@@ -23,6 +23,7 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.dom.DomDefinition',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.ephemera.AlloyTags',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -34,7 +35,7 @@ define(
     'global!Error'
   ],
 
-  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);
@@ -83,7 +84,8 @@ define(
           }),
           ValueSchema.anyValue()
         ),
-        FieldSchema.defaulted('domModificationOrder', {}),
+
+        FieldSchema.option('domModification'),
 
         FieldSchema.state('definition.input', Fun.identity),
 
@@ -116,6 +118,12 @@ define(
         info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
         info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
       ));
+    };
+
+    var toModification = function (info) {
+      return info.domModification().fold(function () {
+        return DomModification.nu({ });
+      }, DomModification.nu);
     };
 
     var getDefaultBehaviours = function (spec) {
@@ -187,6 +195,7 @@ define(
     return {
       toInfo: toInfo,
       toDefinition: toDefinition,
+      toModification: toModification,
       behaviours: behaviours,
       toApis: toApis,
       toEvents: toEvents

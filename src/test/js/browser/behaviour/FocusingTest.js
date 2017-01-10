@@ -8,13 +8,14 @@ asynctest(
     'ephox.agar.api.Guard',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Guard, Step, GuiFactory, Focusing, Container, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, FocusTools, Guard, Step, GuiFactory, Behaviour, Focusing, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,7 +30,7 @@ asynctest(
               background: 'blue'
             }
           },
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Focusing.config({
               onFocus: store.adder('onFocus')
             })

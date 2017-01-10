@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
@@ -23,7 +24,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
+  function (Assertions, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,7 +37,7 @@ asynctest(
             classes: [ 'test-sandbox' ]
           },
           uid: 'no-duplicates',
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Sandboxing.config({
               bucket: {
                 mode: 'sink',

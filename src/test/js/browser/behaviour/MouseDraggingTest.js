@@ -9,6 +9,7 @@ asynctest(
     'ephox.agar.mouse.Clicks',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.dragging.DragCoord',
@@ -21,7 +22,7 @@ asynctest(
     'ephox.sugar.api.Css'
   ],
  
-  function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Dragging, Container, DragCoord, GuiSetup, Objects, Json, Option, Result, Position, Css) {
+  function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging, Container, DragCoord, GuiSetup, Objects, Json, Option, Result, Position, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -34,7 +35,7 @@ asynctest(
             border: '1px solid green'
           }
         },
-        behaviours: Objects.wrapAll([
+        behaviours: Behaviour.derive([
           Dragging.config({
             mode: 'mouse',
             blockerClass: 'test-blocker',

@@ -8,20 +8,21 @@ asynctest(
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Logger, RawAssertions, Step, GuiFactory, Replacing, Container, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Logger, RawAssertions, Step, GuiFactory, Behaviour, Replacing, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         Container.build({
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Replacing.config({ })
           ]),
           components: [

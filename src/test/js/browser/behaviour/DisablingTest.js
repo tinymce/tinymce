@@ -12,6 +12,7 @@ asynctest(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -21,7 +22,7 @@ asynctest(
     'ephox.sugar.api.Focus'
   ],
  
-  function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Disabling, Button, Container, EventHandler, GuiSetup, Objects, Focus) {
+  function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Behaviour, Disabling, Button, Container, EventHandler, GuiSetup, Objects, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -31,7 +32,7 @@ asynctest(
           tag: 'button',
           innerHtml: 'button'
         },
-        behaviours: Objects.wrapAll([
+        behaviours: Behaviour.derive([
           Disabling.config({
             disabled: true
           })

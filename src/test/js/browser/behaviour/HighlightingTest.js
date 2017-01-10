@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
@@ -20,7 +21,7 @@ asynctest(
     'global!Error'
   ],
  
-  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Highlighting, Container, ChainUtils, GuiSetup, Objects, Arr, Result, Attr, Class, Error) {
+  function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Behaviour, Highlighting, Container, ChainUtils, GuiSetup, Objects, Arr, Result, Attr, Class, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -45,7 +46,7 @@ asynctest(
 
       return GuiFactory.build(
         Container.build({
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Highlighting.config({
               highlightClass: 'test-selected',
               itemClass: 'test-item'

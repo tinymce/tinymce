@@ -7,12 +7,13 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (ObjIndex, DomModification, Objects, Arr, Obj, Json, Fun, Result) {
+  function (ObjIndex, DomModification, Objects, Arr, Obj, Merger, Json, Fun, Result) {
     var behaviourDom = function (name, modification) {
       return {
         name: Fun.constant(name),
@@ -97,9 +98,9 @@ define(
       value: onlyOne
     };
 
-    var combine = function (info, behaviours, base) {
+    var combine = function (info, baseMod, behaviours, base) {
       // Get the Behaviour DOM modifications
-      var behaviourDoms = { };
+      var behaviourDoms = Merger.deepMerge({ }, baseMod);
       Obj.each(behaviours, function (behaviour) {
         behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
       });

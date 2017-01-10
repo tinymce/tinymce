@@ -41,7 +41,7 @@ test(
 
           var definition = CustomDefinition.toDefinition(inf);
 
-          return ComponentDom.combine(inf, behaviours, definition).map(function (mod) {
+          return ComponentDom.combine(inf, {}, behaviours, definition).map(function (mod) {
             return DomModification.merge(definition, mod);
           });
         }).fold(function (errInfo) {

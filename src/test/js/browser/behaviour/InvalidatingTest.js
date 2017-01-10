@@ -10,16 +10,16 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Value'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Invalidating, Container, GuiSetup, Objects, Future, Result, Value) {
+  function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Behaviour, Invalidating, Container, GuiSetup, Future, Result, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,7 +29,7 @@ asynctest(
           dom: {
             tag: 'input'
           },
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Invalidating.config({
               invalidClass: 'test-invalid',
               validator: {

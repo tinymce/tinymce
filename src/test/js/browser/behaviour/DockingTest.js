@@ -9,6 +9,7 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
@@ -16,7 +17,7 @@ asynctest(
     'global!window'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, Waiter, GuiFactory, Memento, Docking, Container, GuiSetup, Objects, window) {
+  function (ApproxStructure, Assertions, Logger, Step, Waiter, GuiFactory, Memento, Behaviour, Docking, Container, GuiSetup, Objects, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,7 +30,7 @@ asynctest(
             background: 'blue'
           }
         },
-        behaviours: Objects.wrapAll([
+        behaviours: Behaviour.derive([
           Docking.config({
             leftAttr: 'data-dock-left',
             topAttr: 'data-dock-top'

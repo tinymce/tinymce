@@ -2,7 +2,6 @@ asynctest(
   'ExpandableFormTest',
  
   [
-    'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
@@ -14,7 +13,6 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ExpandableForm',
@@ -24,12 +22,11 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.form.TestForm',
-    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Focus'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Representing, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Obj, Fun, Focus) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Fun, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -14,7 +15,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Sliding, Button, Container, HtmlDisplay, Objects, Class, Element, Insert, document) {
+  function (Gui, Behaviour, Sliding, Button, Container, HtmlDisplay, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -29,7 +30,7 @@ define(
             Container.build({
               uid: 'height-slider',
 
-              behaviours: Objects.wrapAll([
+              behaviours: Behaviour.derive([
                 Sliding.config({
                   dimension: {
                     property: 'height'
@@ -78,7 +79,7 @@ define(
             Container.build({
               uid: 'width-slider',
 
-              behaviours: Objects.wrapAll([
+              behaviours: Behaviour.derive([
                 Sliding.config({
                   dimension: {
                     property: 'width'

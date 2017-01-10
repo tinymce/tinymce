@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.ui.Container',
@@ -14,7 +15,7 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, Focusing, Keying, Container, GuiSetup, Objects) {
+  function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -24,7 +25,7 @@ asynctest(
           dom: {
             classes: 'special-keying'
           },
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Focusing.config({ }),
             Keying.config({
               mode: 'special',

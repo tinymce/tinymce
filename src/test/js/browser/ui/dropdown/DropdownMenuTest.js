@@ -14,6 +14,7 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.ui.Container',
@@ -29,7 +30,7 @@ asynctest(
     'ephox.perhaps.Result'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Focusing, Keying, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, Sinks, TestDropdownMenu, Objects, Arr, Future, Result) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Behaviour, Focusing, Keying, Container, Dropdown, MenuData, GuiSetup, NavigationUtils, Sinks, TestDropdownMenu, Objects, Arr, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -51,14 +52,14 @@ asynctest(
             innerHtml: ' ' + v + ' ',
             classes: [ v ]
           },
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Focusing.config({ })
           ])
         });
       };
 
       var widget = Container.build({
-        behaviours: Objects.wrapAll([
+        behaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',
             selector: 'span'  
@@ -134,7 +135,7 @@ asynctest(
 
           toggleClass: 'alloy-selected',
 
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Focusing.config({ })
           ]),
 

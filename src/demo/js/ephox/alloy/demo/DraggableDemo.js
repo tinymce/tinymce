@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Dragging, Button, Container, HtmlDisplay, DragCoord, Objects, Fun, Option, Position, Class, Css, Element, Insert, document) {
+  function (Gui, Behaviour, Dragging, Button, Container, HtmlDisplay, DragCoord, Objects, Fun, Option, Position, Class, Css, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -71,7 +72,7 @@ define(
                 }
               },
 
-              behaviours: Objects.wrapAll([
+              behaviours: Behaviour.derive([
                 Dragging.config({
                   mode: 'mouse',
                   blockerClass: [ 'blocker' ],

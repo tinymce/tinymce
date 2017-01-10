@@ -86,6 +86,11 @@ asynctest(
               attr: 'exhibition'
             }
           },
+
+          // FIX: Wrap in something.
+          domModification: {
+            classes: [ 'base-dom-modification' ]
+          },
      
           eventOrder: {
             'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
@@ -102,7 +107,7 @@ asynctest(
           'Checking initial DOM modification',
           ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
-              classes: [ arr.has('behaviour-a-exhibit') ],
+              classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
               attrs: {
                 'behaviour-b-exhibit': str.is('exhibition'),
                 'data-alloy-id': str.is('custom-uid')

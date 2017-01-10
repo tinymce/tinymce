@@ -36,8 +36,12 @@ define(
       var behaviours = CustomDefinition.behaviours(info);
 
       var definition = CustomDefinition.toDefinition(info);
+
+      var baseModification = {
+        'alloy.base.modification': CustomDefinition.toModification(info)
+      };
       
-      var modification = ComponentDom.combine(info, behaviours, definition).getOrDie();
+      var modification = ComponentDom.combine(info, baseModification, behaviours, definition).getOrDie();
 
       var modDefinition = DomModification.merge(definition, modification);
 

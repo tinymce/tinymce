@@ -11,6 +11,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
@@ -23,7 +24,7 @@ asynctest(
     'ephox.sugar.api.Remove'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Sliding, Container, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Behaviour, Sliding, Container, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -63,7 +64,7 @@ asynctest(
               height: '20px'
             }
           },
-          behaviours: Objects.wrapAll([ 
+          behaviours: Behaviour.derive([ 
             Sliding.config({
               closedStyle: 'test-sliding-closed',
               openStyle: 'test-sliding-open',

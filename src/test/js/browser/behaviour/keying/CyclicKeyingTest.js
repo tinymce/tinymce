@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Tabstopping',
@@ -15,7 +16,7 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (FocusTools, Keyboard, Keys, GuiFactory, Focusing, Keying, Tabstopping, Button, Container, GuiSetup, Objects) {
+  function (FocusTools, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Tabstopping, Button, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -42,7 +43,7 @@ asynctest(
             }
           },
           uid: 'custom-uid',
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Keying.config({
               mode: 'cyclic'
             })

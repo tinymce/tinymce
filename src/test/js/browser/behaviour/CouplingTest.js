@@ -6,19 +6,19 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.StepUtils',
-    'ephox.boulder.api.Objects',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Node',
     'global!Error'
   ],
  
-  function (Assertions, Logger, Step, GuiFactory, Coupling, Button, Container, Tagger, GuiSetup, StepUtils, Objects, Attr, Node, Error) {
+  function (Assertions, Logger, Step, GuiFactory, Behaviour, Coupling, Button, Container, Tagger, GuiSetup, StepUtils, Attr, Node, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -26,7 +26,7 @@ asynctest(
       return GuiFactory.build(
         Container.build({
           uid: 'primary',
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Coupling.config({
               others: {
                 'secondary-1': function (primary) { 

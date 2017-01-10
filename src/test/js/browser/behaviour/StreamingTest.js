@@ -6,13 +6,14 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
  
-  function (GeneralSteps, Mouse, Step, GuiFactory, Streaming, Container, GuiSetup, Objects) {
+  function (GeneralSteps, Mouse, Step, GuiFactory, Behaviour, Streaming, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -22,7 +23,7 @@ asynctest(
           dom: {
             tag: 'input'
           },
-          behaviours: Objects.wrapAll([
+          behaviours: Behaviour.derive([
             Streaming.config({
                stream: {
                 mode: 'throttle',
