@@ -43,11 +43,7 @@ define(
           }
         },
 
-        spec, 
-
-        {
-          uiType: 'custom'
-        }
+        spec
       );
     };
 

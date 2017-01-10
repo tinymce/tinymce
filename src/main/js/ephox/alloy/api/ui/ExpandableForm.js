@@ -104,7 +104,6 @@ define(
     var make = function (detail, components, spec, _externals) {
       return {
         uid: detail.uid(),
-        uiType: 'custom',
         dom: detail.dom(),
         components: components,
 

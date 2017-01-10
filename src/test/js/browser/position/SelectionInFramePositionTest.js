@@ -56,10 +56,10 @@ asynctest(
       return GuiFactory.build(
         Container.build({
           components: [
-            { built: Sinks.fixedSink() },
-            { built: Sinks.relativeSink() },
-            { built: Sinks.popup() },
-            { built: classicEditor }
+            GuiFactory.premade(Sinks.fixedSink()),
+            GuiFactory.premade(Sinks.relativeSink()),
+            GuiFactory.premade(Sinks.popup()),
+            GuiFactory.premade(classicEditor)
           ]
         })
       );

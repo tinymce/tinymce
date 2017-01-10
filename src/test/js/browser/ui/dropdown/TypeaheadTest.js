@@ -33,7 +33,7 @@ asynctest(
       return GuiFactory.build(
         Container.build({
           components: [
-            { built: sink },
+            GuiFactory.premade(sink),
 
             Typeahead.build({
               minChars: 2,

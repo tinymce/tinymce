@@ -3,46 +3,31 @@ define(
 
   [
     'ephox.alloy.api.Component',
-    'ephox.alloy.construct.Components',
+    'ephox.alloy.api.NoContextApi',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.events.DefaultEvents',
     'ephox.alloy.registry.Tagger',
-    'ephox.alloy.spec.ContainerSpec',
     'ephox.alloy.spec.CustomSpec',
+    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.epithet.Id',
     'ephox.highway.Merger',
-    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
     'ephox.perhaps.Result',
+    'ephox.scullion.Cell',
+    'ephox.sugar.api.Element',
     'global!Error'
   ],
 
-  function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
-    // var knownSpecs = {
-    //   container: ContainerSpec.make,
-    //   custom: CustomSpec.make,
-      
-     
-
-    
-    //   // 'slide-form': SlideFormSpec.make,
-    //   // Add other specs here.
-    // };
-
-    // var unknownSpec = function (uiType, userSpec) {
-    //   var known = Obj.keys(knownSpecs);
-    //   return new Result.error(new Error('Unknown component type: ' + uiType + '.\nKnown types: ' + 
-    //     Json.stringify(known, null, 2) + '\nEntire spec: ' + Json.stringify(userSpec, null, 2)
-    //   ));
-    // };
-
+  function (Component, NoContextApi, GuiTypes, DefaultEvents, Tagger, CustomSpec, FieldSchema, Objects, ValueSchema, Arr, Id, Merger, Fun, Result, Cell, Element, Error) {
     var buildSubcomponents = function (spec) {
       var components = Objects.readOr('components', [ ])(spec);
       return Arr.map(components, build);
     };
+
+    var premadeTag = Id.generate('alloy-premade');
 
     var buildFromSpec = function (userSpec) {
       console.log('userSpec', userSpec);
@@ -62,37 +47,83 @@ define(
       );
     };
 
-    var buildFromSpecOrDie = function (userSpec) {
-      return buildFromSpec(userSpec).getOrDie();
+    var text = function (textContent) {
+      var element = Element.fromText(textContent);
+
+      var made = {
+        getSystem: Fun.die('Cannot call getSystem on text node'),
+        debugSystem: Fun.noop,
+        connect: Fun.noop,
+        disconnect: Fun.noop,
+        label: Fun.constant('text'),
+        element: Fun.constant(element),
+        components: Fun.constant([ ]),
+        events: Fun.constant({ }),
+        apis: Fun.constant({ })
+      };
+
+      return GuiTypes.premade(made);
     };
 
-    var types = [
-      { type: 'uiType', build: buildFromSpecOrDie, only: false },
-      { type: 'external', build: Components.external, only: true },
-      { type: 'built', build: Components.premade, only: true },
-      { type: 'text', build: Components.text, only: true }
-    ];
+    var external = function (spec) {
+      var extSpec = ValueSchema.asStructOrDie('external.component', [
+        FieldSchema.strict('element'),
+        FieldSchema.option('uid')
+      ], spec);
+
+      var systemApi = Cell(NoContextApi());
+      
+      var connect = function (newApi) {
+        systemApi.set(newApi);
+      };
+
+      var disconnect = function () {
+        systemApi.set(NoContextApi(function () {
+          return self; 
+        }));
+      };
+
+      var debugSystem = function () {
+        return systemApi.get().debugLabel();
+      };
+
+      extSpec.uid().each(function (uid) {
+        Tagger.writeOnly(extSpec.element(), uid);
+      });
+
+      var self = {
+        getSystem: systemApi.get,
+        debugSystem: debugSystem,
+        connect: connect,
+        disconnect: disconnect,
+        label: Fun.constant(extSpec.label()),
+        element: Fun.constant(extSpec.element()),
+        components: Fun.constant([ ]),
+        events: Fun.constant({ }),
+        apis: Fun.constant({ })
+      };
+
+      // FIX: Invesitage whether I want to do it this way.
+      return GuiTypes.premade(self);
+
+    };
 
     // INVESTIGATE: A better way to provide 'meta-specs'
     var build = function (rawUserSpec) {
-      var userSpec = Merger.deepMerge({
-        uid: Tagger.generate('uid')
-      }, rawUserSpec);
 
-      var builder = Options.findMap(types, function (t) {
-        return userSpec[t.type] !== undefined ? Option.some(function () {
-          var param = t.only === true ? userSpec[t.type] : userSpec;
-          return t.build(param);
-        }) : Option.none();
-      }).getOrThunk(function () {
-        throw new Error('Did not recognise any component type in ' + Json.stringify(userSpec, null, 2))
+      return GuiTypes.getPremade(rawUserSpec).fold(function () {
+        var userSpecWithUid = Merger.deepMerge({ uid: Tagger.generate('') }, rawUserSpec);
+        return buildFromSpec(userSpecWithUid).getOrDie();
+      }, function (prebuilt) {
+        return prebuilt;
       });
-
-      return builder();
     };
 
     return {
-      build: build
+      build: build,
+      premade: GuiTypes.premade,
+      external: external,
+      text: text
     };
   }
 );  

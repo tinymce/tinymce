@@ -15,9 +15,7 @@ define(
             role: 'presentation'
           }
         }
-      }, spec, {
-        uiType: 'custom'
-      });
+      }, spec);
     };
 
     var build = function (spec) {

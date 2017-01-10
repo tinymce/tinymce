@@ -40,7 +40,6 @@ define(
         '<alloy.form-chooser.legend>',
         function (detail) {
           return {
-            uiType: 'custom',
             dom: {
               tag: 'legend'
             }
@@ -106,7 +105,6 @@ define(
       };
 
       return {
-        uiType: 'custom',
         uid: detail.uid(),
         dom: detail.dom(),
         components: components,

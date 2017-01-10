@@ -19,7 +19,6 @@ define(
         dom: {
           tag: 'div'
         },
-        uiType: 'custom',
         behaviours: {
           positioning: {
             // FIX: configurable

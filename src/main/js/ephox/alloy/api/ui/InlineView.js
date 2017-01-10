@@ -24,7 +24,6 @@ define(
       return Merger.deepMerge(
         spec,
         {
-          uiType: 'custom',
           uid: detail.uid(),
           dom: detail.dom(),
           behaviours: {

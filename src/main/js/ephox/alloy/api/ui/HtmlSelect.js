@@ -32,7 +32,6 @@ define(
         return Merger.deepMerge(
           detail.members().option().munge(option),
           {
-            uiType: 'custom',
             dom: {
               tag: 'option',
               value: option.value,

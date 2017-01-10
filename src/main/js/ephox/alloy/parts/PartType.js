@@ -54,10 +54,7 @@ define(
         defaults(detail, spec),
         spec,
         { uid: detail.partUids()[name] },
-        overrides(detail, spec),
-        {
-          uiType: 'custom'
-        }
+        overrides(detail, spec)
       );
     };
 

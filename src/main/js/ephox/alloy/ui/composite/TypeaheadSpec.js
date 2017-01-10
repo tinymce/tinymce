@@ -130,7 +130,6 @@ define(
           behaviours: InputBase.behaviours(detail)
         },
         {
-          uiType: 'custom',
           uid: detail.uid(),
           dom: InputBase.dom(detail),
           behaviours: behaviours,

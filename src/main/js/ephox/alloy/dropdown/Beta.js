@@ -120,7 +120,6 @@ define(
       var lazySink = Gamma.getSink(anyInSystem, detail);
 
       return {
-        uiType: 'custom',
         dom: {
           tag: 'div',
           attributes: {

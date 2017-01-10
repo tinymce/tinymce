@@ -52,7 +52,6 @@ define(
         spec,
         {
           uid: detail.uid(),
-          uiType: 'custom',
           dom: detail.dom(),
           components: components,
 

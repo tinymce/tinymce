@@ -144,7 +144,7 @@ define(
       HtmlDisplay.section(
         gui,
         'This dialog is customised (uses TinyMCE styles)',
-        { built: sink }
+        GuiFactory.premade(sink)
       );
 
       ModalDialog.show(dialog);

@@ -19,7 +19,6 @@ define(
       '<alloy.dropdown.display>': function (dSpec, detail) {
         // Enforce that is has representing behaviour?
         return Merger.deepMerge(detail.parts().display(), {
-          uiType: 'custom',
           dom: dSpec.extra.dom,
           components: dSpec.extra.components,
           uid: detail.partUids().display
@@ -33,7 +32,6 @@ define(
         if (detail.lazySink().isSome()) return Container.build({ });
         return {
           uid: detail.uid() + '-internal-sink',
-          uiType: 'custom',
           dom: dSpec.extra.dom,
           components: dSpec.extra.components,
           positioning: {

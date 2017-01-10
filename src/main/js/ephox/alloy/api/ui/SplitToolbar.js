@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.SplitToolbar',
 
   [
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
@@ -20,7 +21,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (BehaviourExport, Replacing, Sliding, Button, Toolbar, UiBuilder, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
+  function (GuiFactory, BehaviourExport, Replacing, Sliding, Button, Toolbar, UiBuilder, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
     var schema = [
       Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
       FieldSchema.state('builtGroups', function () {
@@ -49,7 +50,7 @@ define(
     ];
 
     var setStoredGroups = function (bar, storedGroups) {
-      var bGroups = Arr.map(storedGroups, function (g) { return { built: g }; });
+      var bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
       Toolbar.setGroups(bar, bGroups);
     };
 
@@ -140,7 +141,6 @@ define(
           }
         }, 
         {
-          uiType: 'custom',
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,

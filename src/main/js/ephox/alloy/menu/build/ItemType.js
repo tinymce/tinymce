@@ -30,7 +30,6 @@ define(
       // info.base() can contain other things like toggling. I need to find a better way to do
       // this though. Putting all the behaviours in a single object will probably do it.
       return Merger.deepMerge(info.base(), {
-        uiType: 'custom',
         dom: Merger.deepMerge(
           info.dom(),
           {

@@ -11,7 +11,6 @@ define(
 
     var make = function (detail, components, spec, externals) {
       return {
-        uiType: 'custom',
         dom: {
           tag: 'div',
           attributes: {

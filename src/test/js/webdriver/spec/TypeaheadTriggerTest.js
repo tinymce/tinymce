@@ -2,15 +2,11 @@ asynctest(
   'TypeaheadSpecTest',
  
   [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.RealKeys',
     'ephox.agar.api.UiControls',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Waiter',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Typeahead',
@@ -21,12 +17,11 @@ asynctest(
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Focus',
     'ephox.sugar.api.Value',
     'global!Math'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, RealKeys, UiControls, UiFinder, Waiter, GuiFactory, Container, Typeahead, MenuData, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Focus, Value, Math) {
+  function (FocusTools, Keyboard, Keys, RealKeys, UiControls, GuiFactory, Container, Typeahead, MenuData, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,7 +31,7 @@ asynctest(
       return GuiFactory.build(
         Container.build({
           components: [
-            { built: sink },
+            GuiFactory.premade(sink),
             Typeahead.build({
               uid: 'test-type',
               minChars: 2,

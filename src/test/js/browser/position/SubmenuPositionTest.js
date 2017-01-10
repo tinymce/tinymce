@@ -42,7 +42,7 @@ asynctest(
           },
           uid: 'test-list',
           components: [
-            { built: item }
+            GuiFactory.premade(item)
           ]
         })
       );
@@ -50,10 +50,10 @@ asynctest(
       return GuiFactory.build(
         Container.build({
           components: [
-            { built: Sinks.fixedSink() },
-            { built: Sinks.relativeSink() },
-            { built: Sinks.popup() },
-            { built: list }
+            GuiFactory.premade(Sinks.fixedSink()),
+            GuiFactory.premade(Sinks.relativeSink()),
+            GuiFactory.premade(Sinks.popup()),
+            GuiFactory.premade(list)
           ]
         })
       );

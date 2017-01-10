@@ -19,7 +19,6 @@ define(
 
     var builder = function (detail) {
       return {
-        uiType: 'custom',
         dom: detail.dom(),
         components: detail.components(),
         events: Objects.wrapAll([

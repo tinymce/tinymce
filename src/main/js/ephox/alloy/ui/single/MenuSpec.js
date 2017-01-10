@@ -56,7 +56,6 @@ define(
       return Merger.deepMerge(
         spec,
         {
-          uiType: 'custom',
           dom: Merger.deepMerge(
             detail.dom(),
             {

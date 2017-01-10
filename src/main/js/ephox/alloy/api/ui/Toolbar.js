@@ -84,7 +84,6 @@ define(
           }
         },
         {
-          uiType: 'custom',
           uid: detail.uid(),
           dom: detail.dom(),
           components: extra.comps,

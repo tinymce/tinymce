@@ -39,10 +39,10 @@ asynctest(
       return GuiFactory.build(
         Container.build({
           components: [
-            { built: Sinks.fixedSink() },
-            { built: Sinks.relativeSink() },
-            { built: Sinks.popup() },
-            { built: hotspot }
+            GuiFactory.premade(Sinks.fixedSink()),
+            GuiFactory.premade(Sinks.relativeSink()),
+            GuiFactory.premade(Sinks.popup()),
+            GuiFactory.premade(hotspot)
           ]
         })
       );

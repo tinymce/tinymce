@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.ModalDialog',
 
   [
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.behaviour.BehaviourExport',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
@@ -18,7 +19,7 @@ define(
     'global!Error'
   ],
 
-  function (BehaviourExport, Keying, Positioning, Container, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
+  function (GuiFactory, BehaviourExport, Keying, Positioning, Container, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
@@ -76,9 +77,8 @@ define(
           Merger.deepMerge(
             externals.blocker(),
             {
-              uiType: 'custom',          
               components: [
-                { built: dialog }
+                GuiFactory.premade(dialog)
               ]
             }
           )

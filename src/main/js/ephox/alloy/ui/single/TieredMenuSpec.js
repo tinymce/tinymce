@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
@@ -27,7 +28,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (EditableFields, EventRoot, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Option, Options, Body, Class, Classes, SelectorFind) {
+  function (EditableFields, EventRoot, GuiFactory, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Option, Options, Body, Class, Classes, SelectorFind) {
     var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
@@ -113,7 +114,7 @@ define(
           });
 
           if (! Body.inBody(activeMenu.element())) {
-            Replacing.append(container, { built: activeMenu });
+            Replacing.append(container, GuiFactory.premade(activeMenu));
           }
           setActiveMenu(container, activeMenu);
           var others = getMenus(state, state.otherMenus(path));
@@ -134,7 +135,7 @@ define(
           Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu) {
             // DUPE with above. Fix later.
             if (! Body.inBody(activeMenu.element())) {
-              Replacing.append(container, { built: activeMenu });
+              Replacing.append(container, GuiFactory.premade(activeMenu));
               detail.onOpenSubmenu()(container, item, activeMenu);
             }
 
@@ -235,7 +236,7 @@ define(
               if (EventRoot.isSource(container, simulatedEvent)) {
                 setup(container).each(function (primary) {
                   console.log('primary', primary);
-                  Replacing.append(container, { built: primary });
+                  Replacing.append(container, GuiFactory.premade(primary));
 
                   if (detail.openImmediately()) {
                     setActiveMenu(container, primary);
@@ -249,7 +250,6 @@ define(
       ]);
 
       return {
-        uiType: 'custom',
         uid: detail.uid(),
         dom: {
           tag: 'div',

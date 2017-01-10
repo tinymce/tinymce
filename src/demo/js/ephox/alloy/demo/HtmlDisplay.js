@@ -35,7 +35,7 @@ define(
             }
           },
           components: [
-            { built: component }
+            GuiFactory.premade(component)
           
           ]
         })
@@ -51,7 +51,7 @@ define(
           classes: [ 'html-display' ]
         },
         components: [
-          { text: JsBeautify.html(htmlDump) }
+          GuiFactory.text(JsBeautify.html(htmlDump))
         ]
       });
 
@@ -72,7 +72,7 @@ define(
           components: [
             Container.build({ dom: { tag: 'hr' } }),
             information,
-            { built: display },
+            GuiFactory.premade(display),
             dump,
             Container.build({ dom: { tag: 'hr' } })
           ]

@@ -44,7 +44,7 @@ define(
                 }
               },
               components: [
-                { text: 'This is a popup' }
+                GuiFactory.text('This is a popup')
               ]
             })
           ]

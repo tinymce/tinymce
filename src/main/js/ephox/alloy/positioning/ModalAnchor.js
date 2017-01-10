@@ -2,6 +2,7 @@ define(
   'ephox.alloy.positioning.ModalAnchor',
 
   [
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.positioning.Anchoring',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
@@ -10,13 +11,12 @@ define(
     'ephox.sugar.api.Insert'
   ],
 
-  function (Anchoring, FieldSchema, Fun, Option, Bubble, Insert) {
+  function (GuiTypes, Anchoring, FieldSchema, Fun, Option, Bubble, Insert) {
     var placement = function (component, posInfo, anchorInfo, origin) {
 
       var placer = function (component, origin, anchoring, posInfo, placee) {
         console.log('placee', placee.element().dom().cloneNode(true));
         var modal = component.getSystem().build({
-          uiType: 'custom',
           dom: {
             tag: 'div',
             styles: {
@@ -32,7 +32,7 @@ define(
             classes: [ 'ephox-gel-centered-dialog', 'ephox-gel-modal' ]
           },
           components: [
-            { built: placee }
+            GuiTypes.premade(placee)
           ]
         });
 

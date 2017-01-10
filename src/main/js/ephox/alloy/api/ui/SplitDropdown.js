@@ -111,7 +111,6 @@ define(
       ));
       return {
         uid: detail.uid(),
-        uiType: 'custom',
         dom: detail.dom(),
         components: components,
         eventOrder: {
