@@ -100,6 +100,8 @@ define(
                 Css.setAll(target, styles);
               }
             };
+
+            // FIX: Non API package of dragster
             var drag = Dragging.setup({ }, mode, { });
             drag.on();
             drag.go();
@@ -195,6 +197,7 @@ define(
     var schema = [
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.strict('blockerClass'),
+      // FIX: Non API package of dragster
       FieldSchema.state('movement', Movement),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.defaulted('onDrop', Fun.noop),
