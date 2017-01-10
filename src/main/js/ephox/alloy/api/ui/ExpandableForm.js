@@ -2,12 +2,13 @@ define(
   'ephox.alloy.api.ui.ExpandableForm',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
@@ -18,7 +19,7 @@ define(
     'ephox.sugar.api.Focus'
   ],
 
-  function (BehaviourExport, Keying, Representing, Sliding, Button, Form, UiBuilder, Fields, PartType, FieldSchema, Merger, Fun, Class, Focus) {
+  function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiBuilder, Fields, PartType, FieldSchema, Merger, Fun, Class, Focus) {
     var schema = [
       Fields.markers([
         'closedStyle',
@@ -146,29 +147,12 @@ define(
 
     var parts = PartType.generate('expandable-form', partTypes);
 
-    return {
-      build: build,
-      parts: Fun.constant(parts),
-
-      toggleForm: function (comp) {
-        var spi = comp.config(BehaviourExport.spi());
-        spi.toggleForm(comp);
+    return Merger.deepMerge(
+      {
+        build: build,
+        parts: Fun.constant(parts)
       },
-
-      collapseForm: function (comp) {
-        var spi = comp.config(BehaviourExport.spi());
-        spi.collapseForm(comp);
-      },
-
-      collapseFormImmediately: function (comp) {
-        var spi = comp.config(BehaviourExport.spi());
-        spi.collapseFormImmediately(comp);
-      },
-
-      expandForm: function (comp) {
-        var spi = comp.config(BehaviourExport.spi());
-        spi.expandForm(comp);
-      }
-    };
+      GuiTypes.makeApis([ 'toggleForm', 'collapseForm', 'collapseFormImmediately', 'expandForm' ])
+    );
   }
 );

@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
@@ -21,7 +22,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (GuiFactory, BehaviourExport, Replacing, Sliding, Button, Toolbar, UiBuilder, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
+  function (GuiFactory, Behaviour, Replacing, Sliding, Button, GuiTypes, Toolbar, UiBuilder, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
     var schema = [
       Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
       FieldSchema.state('builtGroups', function () {
@@ -159,27 +160,15 @@ define(
       return UiBuilder.composite('split-toolbar', schema, partTypes, make, spec);
     };
 
-    // TODO: Remove likely dupe
     var parts = PartType.generate('split-toolbar', partTypes);
 
-    return {
-      build: build,
-      parts: Fun.constant(parts),
-
-      createGroups: function (toolbar, gspecs) {
-        var spi = toolbar.config(BehaviourExport.spi());
-        return spi.createGroups(toolbar, gspecs);
+    return Merger.deepMerge(
+      {
+        build: build,
+        parts: Fun.constant(parts)
       },
 
-      setGroups: function (toolbar, groups) {
-        var spi = toolbar.config(BehaviourExport.spi());
-        spi.setGroups(toolbar, groups);
-      },
-
-      refresh: function (toolbar) {
-        var spi = toolbar.config(BehaviourExport.spi());
-        spi.refresh(toolbar);
-      }
-    };
+      GuiTypes.makeApis([ 'createGroups', 'setGroups', 'refresh' ])
+    );
   }
 );

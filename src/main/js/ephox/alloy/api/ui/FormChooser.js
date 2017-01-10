@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.UiBuilder',
@@ -22,7 +22,7 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (EventRoot, SystemEvents, BehaviourExport, Highlighting, Representing, UiBuilder, EventHandler, Fields, DomModification, PartType, ButtonBase, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
+  function (EventRoot, SystemEvents, Behaviour, Highlighting, Representing, UiBuilder, EventHandler, Fields, DomModification, PartType, ButtonBase, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
     var schema = [
       Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),

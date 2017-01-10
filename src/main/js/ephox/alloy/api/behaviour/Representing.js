@@ -2,15 +2,15 @@ define(
   'ephox.alloy.api.behaviour.Representing',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.representing.ActiveRepresenting',
     'ephox.alloy.behaviour.representing.RepresentApis',
     'ephox.alloy.behaviour.representing.RepresentSchema'
   ],
 
-  function (BehaviourExport, ActiveRepresenting, RepresentApis, RepresentSchema) {
+  function (Behaviour, ActiveRepresenting, RepresentApis, RepresentSchema) {
     // This is clumsy.
-    var self = BehaviourExport.santa(
+    var self = Behaviour.create(
       RepresentSchema,
       'representing',
       ActiveRepresenting,

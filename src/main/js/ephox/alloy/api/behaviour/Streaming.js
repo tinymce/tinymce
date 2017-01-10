@@ -2,13 +2,13 @@ define(
   'ephox.alloy.api.behaviour.Streaming',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.streaming.ActiveStreaming',
     'ephox.alloy.behaviour.streaming.StreamingSchema'
   ],
 
-  function (BehaviourExport, ActiveStreaming, StreamingSchema) {
-    return BehaviourExport.santa(
+  function (Behaviour, ActiveStreaming, StreamingSchema) {
+    return Behaviour.create(
       StreamingSchema,
       'streaming',
       ActiveStreaming,

@@ -2,13 +2,13 @@ define(
   'ephox.alloy.api.behaviour.Tabstopping',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.tabstopping.ActiveTabstopping',
     'ephox.alloy.behaviour.tabstopping.TabstopSchema'
   ],
 
-  function (BehaviourExport, ActiveTabstopping, TabstopSchema) {
-    return BehaviourExport.santa(
+  function (Behaviour, ActiveTabstopping, TabstopSchema) {
+    return Behaviour.create(
       TabstopSchema,
       'tabstopping',
       ActiveTabstopping,

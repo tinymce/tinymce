@@ -3,19 +3,19 @@ test(
 
   [
     'ephox.agar.api.RawAssertions',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
     'ephox.peanut.Fun'
   ],
 
-  function (RawAssertions, BehaviourExport, FieldSchema, Objects, Obj, Fun) {
+  function (RawAssertions, Behaviour, FieldSchema, Objects, Obj, Fun) {
     var schema = [
       FieldSchema.strict('a')
     ];
 
-    var scorps = BehaviourExport.santa(
+    var scorps = Behaviour.create(
       schema,
       'scorps',
       { },

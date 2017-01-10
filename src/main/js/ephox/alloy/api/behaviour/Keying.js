@@ -2,16 +2,16 @@ define(
   'ephox.alloy.api.behaviour.Keying',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.keyboard.KeyboardBranches',
     'ephox.boulder.api.Objects',
     'global!console'
   ],
 
-  function (BehaviourExport, KeyboardBranches, Objects, console) {
+  function (Behaviour, KeyboardBranches, Objects, console) {
     // These APIs are going to be interesting because they are not
     // available for all keying modes
-    return BehaviourExport.modeSanta(
+    return Behaviour.createModes(
       'mode',
       KeyboardBranches,
       'keying',

@@ -2,12 +2,12 @@ define(
   'ephox.alloy.api.behaviour.Replacing',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.replacing.ReplaceApis'
   ],
 
-  function (BehaviourExport, ReplaceApis) {
-    return BehaviourExport.santa(
+  function (Behaviour, ReplaceApis) {
+    return Behaviour.create(
       // Replacing has no schema requirements
       [ ],
       'replacing',

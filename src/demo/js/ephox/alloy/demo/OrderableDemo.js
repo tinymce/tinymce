@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.Gui',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -23,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, BehaviourExport, Dragging, Button, Container, HtmlDisplay, DragCoord, FieldSchema, Arr, Option, Position, Class, Compare, Element, Insert, Location, SelectorFilter, Width, document) {
+  function (Gui, Behaviour, Dragging, Button, Container, HtmlDisplay, DragCoord, FieldSchema, Arr, Option, Position, Class, Compare, Element, Insert, Location, SelectorFilter, Width, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -98,7 +98,7 @@ define(
 
 
           customBehaviours: [
-            BehaviourExport.santa(
+            Behaviour.create(
               [
                 FieldSchema.strict('blah')
               ],

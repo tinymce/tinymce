@@ -2,14 +2,14 @@ define(
   'ephox.alloy.api.behaviour.Sliding',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.sliding.ActiveSliding',
     'ephox.alloy.behaviour.sliding.SlidingApis',
     'ephox.alloy.behaviour.sliding.SlidingSchema'
   ],
 
-  function (BehaviourExport, ActiveSliding, SlidingApis, SlidingSchema) {
-    return BehaviourExport.santa(
+  function (Behaviour, ActiveSliding, SlidingApis, SlidingSchema) {
+    return Behaviour.create(
       SlidingSchema,
       'sliding',
       ActiveSliding,

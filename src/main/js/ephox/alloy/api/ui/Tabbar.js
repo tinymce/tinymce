@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.TabButton',
     'ephox.alloy.api.ui.UiBuilder',
@@ -14,7 +14,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (SystemEvents, BehaviourExport, Highlighting, TabButton, UiBuilder, Fields, DomModification, PartType, FieldSchema, Fun) {
+  function (SystemEvents, Behaviour, Highlighting, TabButton, UiBuilder, Fields, DomModification, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 

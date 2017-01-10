@@ -2,8 +2,9 @@ define(
   'ephox.alloy.api.ui.Toolbar',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
@@ -15,7 +16,7 @@ define(
     'ephox.perhaps.Result'
   ],
 
-  function (BehaviourExport, Replacing, ToolbarGroup, UiBuilder, Fields, PartType, FieldSchema, Arr, Merger, Fun, Result) {
+  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiBuilder, Fields, PartType, FieldSchema, Arr, Merger, Fun, Result) {
     var schema = [
       FieldSchema.defaulted('shell', true),
       Fields.members([ 'group' ])
@@ -104,19 +105,13 @@ define(
     // TODO: Remove likely dupe
     var parts = PartType.generate('toolbar', partTypes);
 
-    return {
-      build: build,
-      parts: Fun.constant(parts),
-
-      createGroups: function (toolbar, gspecs) {
-        var spi = toolbar.config(BehaviourExport.spi());
-        return spi.createGroups(toolbar, gspecs);
+    return Merger.deepMerge(
+      {
+        build: build,
+        parts: Fun.constant(parts)
       },
 
-      setGroups: function (toolbar, gspecs) {
-        var spi = toolbar.config(BehaviourExport.spi());
-        return spi.setGroups(toolbar, gspecs);
-      }
-    };
+      GuiTypes.makeApis([ 'createGroups', 'setGroups' ])
+    );
   }
 );

@@ -2,14 +2,14 @@ define(
   'ephox.alloy.api.behaviour.Disabling',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.disabling.ActiveDisable',
     'ephox.alloy.behaviour.disabling.DisableApis',
     'ephox.alloy.behaviour.disabling.DisableSchema'
   ],
 
-  function (BehaviourExport, ActiveDisable, DisableApis, DisableSchema) {
-    return BehaviourExport.santa(
+  function (Behaviour, ActiveDisable, DisableApis, DisableSchema) {
+    return Behaviour.create(
       DisableSchema,
       'disabling',
       ActiveDisable,

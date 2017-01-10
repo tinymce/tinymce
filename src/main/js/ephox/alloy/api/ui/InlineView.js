@@ -3,9 +3,10 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.boulder.api.FieldSchema',
@@ -14,7 +15,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, BehaviourExport, Positioning, Sandboxing, UiBuilder, Dismissal, FieldSchema, Merger, Future, Fun) {
+  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiBuilder, Dismissal, FieldSchema, Merger, Future, Fun) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.defaulted('onShow', Fun.noop)
@@ -62,18 +63,11 @@ define(
       return UiBuilder.single('InlineView', schema, make, spec);
     };
 
-    return {
-      build: build,
-
-      showAt: function (sandbox, anchor, thing) {
-        var spi = sandbox.config(BehaviourExport.spi());
-        spi.showAt(sandbox, anchor, thing);
+    return Merger.deepMerge(
+      {
+        build: build
       },
-
-      hide: function (sandbox) {
-        var spi = sandbox.config(BehaviourExport.spi());
-        spi.hide(sandbox);
-      }
-    };
+      GuiTypes.makeApis([ 'showAt', 'hide' ])
+    );
   }
 );

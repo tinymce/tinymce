@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -19,7 +20,7 @@ define(
     'global!Error'
   ],
 
-  function (GuiFactory, BehaviourExport, Keying, Positioning, Container, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
+  function (GuiFactory, Behaviour, Keying, Positioning, Container, GuiTypes, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
@@ -131,21 +132,6 @@ define(
       );
     };
 
-    var show = function (dialog) {
-      var spi = dialog.config(BehaviourExport.spi());
-      spi.show(dialog);
-    };
-
-    var hide = function (dialog) {
-      var spi = dialog.config(BehaviourExport.spi());
-      spi.hide(dialog);
-    };
-
-    var getBody = function (dialog) {
-      var spi = dialog.config(BehaviourExport.spi());
-      return spi.getBody(dialog);
-    };
-
     var build = function (spec) {
       return UiBuilder.composite('modal-dialog', schema, partTypes, make, spec);
     };
@@ -153,13 +139,13 @@ define(
     var parts = PartType.generate('modal-dialog', partTypes);
 
 
-    return {
-      build: build,
-      parts: Fun.constant(parts),
+    return Merger.deepMerge(
+      {
+        build: build,
+        parts: Fun.constant(parts)
+      },
 
-      show: show,
-      hide: hide,
-      getBody: getBody
-    };
+      GuiTypes.makeApis([ 'show', 'hide', 'getBody' ])
+    );
   }
 );

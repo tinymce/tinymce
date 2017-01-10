@@ -2,13 +2,13 @@ define(
   'ephox.alloy.api.behaviour.Docking',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.docking.ActiveDocking',
     'ephox.alloy.behaviour.docking.DockingSchema'
   ],
 
-  function (BehaviourExport, ActiveDocking, DockingSchema) {
-    return BehaviourExport.santa(
+  function (Behaviour, ActiveDocking, DockingSchema) {
+    return Behaviour.create(
       DockingSchema,
       'docking',
       ActiveDocking,

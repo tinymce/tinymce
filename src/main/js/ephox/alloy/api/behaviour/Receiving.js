@@ -2,13 +2,13 @@ define(
   'ephox.alloy.api.behaviour.Receiving',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.receiving.ActiveReceiving',
     'ephox.alloy.behaviour.receiving.ReceivingSchema'
   ],
 
-  function (BehaviourExport, ActiveReceiving, ReceivingSchema) {
-    return BehaviourExport.santa(
+  function (Behaviour, ActiveReceiving, ReceivingSchema) {
+    return Behaviour.create(
       ReceivingSchema,
       'receiving',
       ActiveReceiving,

@@ -2,13 +2,13 @@ define(
   'ephox.alloy.api.behaviour.Dragging',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.dragging.DraggingBranches',
     'ephox.scullion.Struct'
   ],
 
-  function (BehaviourExport, DraggingBranches, Struct) {
-    return BehaviourExport.modeSanta(
+  function (Behaviour, DraggingBranches, Struct) {
+    return Behaviour.createModes(
       'mode',
       DraggingBranches,
       'dragging',

@@ -2,12 +2,12 @@ define(
   'ephox.alloy.api.behaviour.DragnDrop',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.dragndrop.DragnDropBranches'
   ],
 
-  function (BehaviourExport, DragnDropBranches) {
-    return BehaviourExport.modeSanta(
+  function (Behaviour, DragnDropBranches) {
+    return Behaviour.createModes(
       'mode',
       DragnDropBranches,
       'dragndrop',

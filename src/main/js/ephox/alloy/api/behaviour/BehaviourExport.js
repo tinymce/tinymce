@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.behaviour.BehaviourExport',
+  'ephox.alloy.api.behaviour.Behaviour',
 
   [
     'ephox.alloy.behaviour.Behaviour',

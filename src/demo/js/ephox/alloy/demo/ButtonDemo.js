@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.demo.HtmlDisplay',
@@ -16,7 +16,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Behaviour, BehaviourExport, Toggling, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
+  function (Gui, Behaviour, Behaviour, Toggling, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -25,7 +25,7 @@ define(
 
    
 
-      var redBehaviour = BehaviourExport.santa([ ], 'red.behaviour', {
+      var redBehaviour = Behaviour.create([ ], 'red.behaviour', {
         exhibit: function (base, info) {
           return DomModification.nu({
             classes: [ 'cat' ],
@@ -42,7 +42,7 @@ define(
       });
 
 
-      var catBehaviour = BehaviourExport.santa([ ], 'cat.behaviour', {
+      var catBehaviour = Behaviour.create([ ], 'cat.behaviour', {
         exhibit: function (base, info) {
           return DomModification.nu({
             classes: [ 'cat' ],

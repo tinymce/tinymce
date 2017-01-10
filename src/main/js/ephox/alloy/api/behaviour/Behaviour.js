@@ -2,26 +2,47 @@ define(
   'ephox.alloy.api.behaviour.Behaviour',
 
   [
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.behaviour.Behaviour',
+    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
+    'ephox.compass.Arr',
+    'ephox.epithet.Id',
     'ephox.peanut.Fun'
   ],
 
-  function (BehaviourExport, Objects, Fun) {
+  function (Behaviour, FieldSchema, Objects, ValueSchema, Arr, Id, Fun) {
     var derive = function (capabilities) {
       return Objects.wrapAll(capabilities);
     };
-
-    var dom = function (name, modification) {
-      return BehaviourExport.exhibitor(name, function (base, info) {
-        return modification;
-      });
+  
+    var create = function (fields, name, active, apis, extra) {
+      return Behaviour.create(
+        FieldSchema.optionObjOf(name, fields),
+        name,
+        active,
+        apis,
+        extra
+      );
     };
+
+    var createModes = function (branchKey, branches, name, active, apis, extra) {
+      return Behaviour.create(
+        FieldSchema.optionOf(name, ValueSchema.choose(branchKey, branches)),
+        name,
+        active,
+        apis,
+        extra
+      );
+    };
+
+    
 
     return {
       derive: derive,
-      dom: dom,
-      revoke: Fun.constant(undefined)
+      revoke: Fun.constant(undefined),
+      create: create,
+      createModes: createModes
     };
   }
 );

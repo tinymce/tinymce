@@ -6,7 +6,7 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.behaviour.BehaviourExport',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
@@ -17,7 +17,7 @@ asynctest(
     'ephox.scullion.Cell'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, BehaviourExport, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Behaviour, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -25,7 +25,7 @@ asynctest(
     var bB = Cell(null);
 
     GuiSetup.setup(function (store, doc, body) {
-      var behaviourA = BehaviourExport.santa([ ], 'behaviourA', {
+      var behaviourA = Behaviour.create([ ], 'behaviourA', {
         exhibit: function (base, info) {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
@@ -46,7 +46,7 @@ asynctest(
 
       bA.set(behaviourA);
 
-      var behaviourB = BehaviourExport.santa([
+      var behaviourB = Behaviour.create([
         FieldSchema.strict('attr')
       ], 'behaviourB', {
         exhibit: function (base, info) {
