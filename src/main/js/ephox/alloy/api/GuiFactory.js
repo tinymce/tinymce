@@ -12,25 +12,22 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.epithet.Id',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.scullion.Cell',
     'ephox.sugar.api.Element',
     'global!Error'
   ],
 
-  function (Component, NoContextApi, GuiTypes, DefaultEvents, Tagger, CustomSpec, FieldSchema, Objects, ValueSchema, Arr, Id, Merger, Fun, Result, Cell, Element, Error) {
+  function (Component, NoContextApi, GuiTypes, DefaultEvents, Tagger, CustomSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Result, Cell, Element, Error) {
     var buildSubcomponents = function (spec) {
       var components = Objects.readOr('components', [ ])(spec);
       return Arr.map(components, build);
     };
 
-    var premadeTag = Id.generate('alloy-premade');
-
     var buildFromSpec = function (userSpec) {
-      console.log('userSpec', userSpec);
       var spec = CustomSpec.make(userSpec);
 
       // Build the subcomponents
@@ -53,23 +50,30 @@ define(
       var made = {
         getSystem: Fun.die('Cannot call getSystem on text node'),
         debugSystem: Fun.noop,
+        config: Option.none,
         connect: Fun.noop,
         disconnect: Fun.noop,
-        label: Fun.constant('text'),
         element: Fun.constant(element),
+        syncComponents: Fun.noop,
         components: Fun.constant([ ]),
         events: Fun.constant({ }),
-        apis: Fun.constant({ })
+
+        logSpec: function () {
+          console.log('debugging :: text spec', textContent);
+        },
+        logInfo: function () {
+          console.log('debugging :: text spec has no info');
+        }
       };
 
       return GuiTypes.premade(made);
     };
 
     var external = function (spec) {
-      var extSpec = ValueSchema.asStructOrDie('external.component', [
+      var extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOf([
         FieldSchema.strict('element'),
         FieldSchema.option('uid')
-      ], spec);
+      ]), spec);
 
       var systemApi = Cell(NoContextApi());
       
@@ -94,13 +98,20 @@ define(
       var self = {
         getSystem: systemApi.get,
         debugSystem: debugSystem,
+        config: Option.none,
         connect: connect,
         disconnect: disconnect,
-        label: Fun.constant(extSpec.label()),
         element: Fun.constant(extSpec.element()),
+        syncComponents: Fun.noop,
         components: Fun.constant([ ]),
         events: Fun.constant({ }),
-        apis: Fun.constant({ })
+
+        logSpec: function () {
+          console.log('debugging :: external spec', spec);
+        },
+        logInfo: function () {
+          console.log('debugging :: external spec has no info');
+        }
       };
 
       // FIX: Invesitage whether I want to do it this way.

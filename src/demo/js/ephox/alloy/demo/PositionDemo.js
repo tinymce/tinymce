@@ -175,12 +175,10 @@ define(
         'Position anchoring to text selection [iframe]',
         Container.build({
           components: [
-            {
-              external: {
-                element: frame,
-                uid: 'frame-editor'
-              }
-            },
+            GuiFactory.external({
+              element: frame,
+              uid: 'frame-editor'
+            }),
             Button.build({
               dom: {
                 tag: 'button',

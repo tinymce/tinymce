@@ -34,12 +34,12 @@ asynctest(
       var editor = Element.fromTag('div');
       Html.set(editor, content);
 
-      var inlineEditor = GuiFactory.build({
-        external: {
+      var inlineEditor = GuiFactory.build(
+        GuiFactory.external({
           uid: 'inline-editor',
           element: editor
-        }
-      });
+        })
+      );
 
       Css.setAll(inlineEditor.element(), {
         'margin-top': '300px',

@@ -99,7 +99,6 @@ define(
 
         config: config,
 
-        delegate: info.delegate,
         connect: connect,
         disconnect: disconnect,
         element: Fun.constant(item),

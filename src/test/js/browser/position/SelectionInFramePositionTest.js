@@ -44,12 +44,12 @@ asynctest(
         Writer.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
       });
 
-      var classicEditor = GuiFactory.build({
-        external: {
+      var classicEditor = GuiFactory.build(
+        GuiFactory.external({
           uid: 'classic-editor',
           element: frame
-        }
-      });
+        })
+      );
 
       Css.set(classicEditor.element(), 'margin-top', '300px');
 
