@@ -104,19 +104,17 @@ define(
         return dialog.getSystem().getByUid(detail.partUids().body).getOrDie();
       };
 
-      return Container.build({
-        dom: detail.dom(),
+      return {
+        dom: Merger.deepMerge({
+          attributes: {
+            role: 'dialog'
+          }
+        }, detail.dom()),
         components: components,
         apis: {
           show: showDialog,
           hide: hideDialog,
           getBody: getDialogBody
-        },
-
-        domModification: {
-          attributes: {
-            role: 'dialog'
-          }
         },
 
         behaviours: {
@@ -126,7 +124,7 @@ define(
             onEscape: detail.onEscape()
           }
         }
-      });
+      };
     };
 
     var build = function (spec) {
