@@ -52,7 +52,7 @@ define(
     };
 
     var notCell = function (element) {
-      return lookupOrStop([ 'caption', 'tr' ], element);
+      return lookupOrStop([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element);
     };
 
     var neighbours = function (selector, element) {
