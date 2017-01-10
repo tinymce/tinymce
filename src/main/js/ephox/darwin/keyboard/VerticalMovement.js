@@ -48,7 +48,7 @@ define(
 
     var navigate = function (bridge, isRoot, direction, initial, anchor) {
       // Do not override the up/down keys on Firefox or IE.
-      if (detection.browser.isFirefox() || detection.browser.isIE()) return Option.none();
+      if (detection.browser.isIE()) return Option.none();
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         var range = info.range();
         return Responses.response(
