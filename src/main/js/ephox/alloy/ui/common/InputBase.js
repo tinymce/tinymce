@@ -52,7 +52,6 @@ define(
             input.dom().setSelectionRange(0, value.length);
           }
         },
-        // FIX: Undefined
         tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
       };
     };
