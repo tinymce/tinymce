@@ -21,23 +21,23 @@ define(
   ],
 
   function (Component, Components, DefaultEvents, Tagger, ContainerSpec, CustomSpec, Objects, Arr, Obj, Merger, Json, Fun, Option, Options, Result, Error) {
-    var knownSpecs = {
-      container: ContainerSpec.make,
-      custom: CustomSpec.make,
+    // var knownSpecs = {
+    //   container: ContainerSpec.make,
+    //   custom: CustomSpec.make,
       
      
 
     
-      // 'slide-form': SlideFormSpec.make,
-      // Add other specs here.
-    };
+    //   // 'slide-form': SlideFormSpec.make,
+    //   // Add other specs here.
+    // };
 
-    var unknownSpec = function (uiType, userSpec) {
-      var known = Obj.keys(knownSpecs);
-      return new Result.error(new Error('Unknown component type: ' + uiType + '.\nKnown types: ' + 
-        Json.stringify(known, null, 2) + '\nEntire spec: ' + Json.stringify(userSpec, null, 2)
-      ));
-    };
+    // var unknownSpec = function (uiType, userSpec) {
+    //   var known = Obj.keys(knownSpecs);
+    //   return new Result.error(new Error('Unknown component type: ' + uiType + '.\nKnown types: ' + 
+    //     Json.stringify(known, null, 2) + '\nEntire spec: ' + Json.stringify(userSpec, null, 2)
+    //   ));
+    // };
 
     var buildSubcomponents = function (spec) {
       var components = Objects.readOr('components', [ ])(spec);
@@ -45,25 +45,21 @@ define(
     };
 
     var buildFromSpec = function (userSpec) {
-      var uiType = userSpec.uiType;
-      return Objects.readOptFrom(knownSpecs, uiType).fold(function () {
-        return unknownSpec(uiType, userSpec);
-      }, function (factory) {
-        var spec = factory(userSpec);
+      console.log('userSpec', userSpec);
+      var spec = CustomSpec.make(userSpec);
 
-        // Build the subcomponents
-        var components = buildSubcomponents(spec);
-      
-        var completeSpec = Merger.deepMerge(
-          DefaultEvents,
-          spec,
-          Objects.wrap('components', components)
-        );
+      // Build the subcomponents
+      var components = buildSubcomponents(spec);
+    
+      var completeSpec = Merger.deepMerge(
+        DefaultEvents,
+        spec,
+        Objects.wrap('components', components)
+      );
 
-        return Result.value(
-          Component.build(completeSpec)
-        );
-      });
+      return Result.value(
+        Component.build(completeSpec)
+      );
     };
 
     var buildFromSpecOrDie = function (userSpec) {

@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.SystemApi',
     'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
@@ -21,11 +22,11 @@ define(
     'global!Error'
   ],
 
-  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error) {
+  function (GuiEvents, GuiFactory, SystemApi, SystemEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error) {
     var create = function ( ) {
-      var root = GuiFactory.build({
-        uiType: 'container'
-      });
+      var root = GuiFactory.build(
+        Container.build()
+      );
       return takeover(root);
     };
 
