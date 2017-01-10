@@ -2,6 +2,7 @@ asynctest(
   'FieldsTest',
  
   [
+    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
@@ -16,7 +17,7 @@ asynctest(
     'ephox.peanut.Fun'
   ],
  
-  function (Assertions, Step, GuiFactory, Representing, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Representing, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -184,6 +185,35 @@ asynctest(
           Assertions.assertEq('Checking input-a value', 'init', val.value);
           Assertions.assertEq('Checking input-a text', 'Init', val.text);
         }),
+
+        Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build(function (s, str, arr) {
+          return s.element('div', {
+            children: [
+              s.element('input', { }),
+              s.element('label', { })
+            ]
+          });
+        }), inputA.element()),
+
+        Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build(function (s, str, arr) {
+          return s.element('div', {
+            children: [
+              s.element('label', { }),
+              s.element('select', { })
+            ]
+          });
+        }), selectB.element()),
+
+        Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build(function (s, str, arr) {
+          return s.element('div', {
+            children: [
+              s.element('legend', { }),
+              s.element('span', { attrs: { role: str.is('radio') } }),
+              s.element('span', { attrs: { role: str.is('radio') } }),
+              s.element('span', { attrs: { role: str.is('radio') } })
+            ]
+          });
+        }), chooserC.element()),
 
         Step.sync(function () {
           var val = Representing.getValue(selectB);

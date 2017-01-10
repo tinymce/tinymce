@@ -57,6 +57,7 @@ define(
         function (detail, choiceSpec) {
           return {
             dom: {
+              // Consider making a domModification, although we probably do not want it overwritten.
               attributes: {
                 role: 'radio'
               }
@@ -68,18 +69,13 @@ define(
                   initialValue: choiceSpec.value
                 }
               },
-              focusing: { },
-              // TODO: Improving adding classes nicely with a behaviour.
-              'choice.behaviour': { }
+              focusing: { }
               
             },
-            customBehaviours: [
-              BehaviourExport.exhibitor('choice.behaviour', function (base, info) {
-                return DomModification.nu({
-                  classes: [ detail.markers().choiceClass() ]
-                });
-              })
-            ],
+
+            domModification: {
+              classes: [ detail.markers().choiceClass() ]
+            },
             events: ButtonBase.events(Option.none())
           };
         }
