@@ -23,12 +23,13 @@ asynctest(
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.form.TestForm',
     'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Focus'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Representing, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, Obj, Fun, Focus) {
+  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Representing, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Obj, Fun, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -94,6 +95,7 @@ asynctest(
                 },                
                 options: [
                   { value: 'select-b-init', text: 'Select-b-init' },
+                  { value: 'select-b-set', text: 'Select-b-set' },
                   { value: 'select-b-other', text: 'Select-b-other' }
                 ],
                 members: {
@@ -179,26 +181,7 @@ asynctest(
       return self;
 
     }, function (doc, body, gui, component, store) {
-      // FIX: Dupe with BasicFormTest
-      var sAssertRep = function (expected) {
-        return Step.sync(function () {
-          var val = Representing.getValue(component);
-          Assertions.assertEq(
-            'Checking form value',
-            expected,
-
-            Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' field is "None"'); 
-            })
-          );
-        });
-      };
-
-      var sSetRep = function (newValues) {
-        return Step.sync(function () {
-          Representing.setValue(component, newValues);
-        });
-      };
+      var helper = TestForm.helper(component);
 
       return [
         GuiSetup.mAddStyles(doc, [
@@ -207,7 +190,7 @@ asynctest(
           '.expandable-growing .extra-form { transition: height 0.3s ease, opacity 0.2s linear 0.1s; }',
           '.expandable-shrinking .extra-form { transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s; }'
         ]),
-        sAssertRep({
+        helper.sAssertRep({
           'form.ant': {
             value: 'init',
             text: 'Init'
@@ -217,6 +200,31 @@ asynctest(
             text: 'Select-b-init'
           }
         }),
+
+        helper.sSetRep({
+          'form.ant': {
+            value: 'first.set',
+            text: 'First.set'
+          },
+          'form.bull': {
+            value: 'select-b-set',
+            text: 'Select-b-set'
+          }
+        }),
+
+        Logger.t(
+          'Checking form after set',
+          helper.sAssertRep({
+            'form.ant': {
+              value: 'first.set',
+              text: 'First.set'
+            },
+            'form.bull': {
+              value: 'select-b-set',
+              text: 'Select-b-set'
+            }
+          })
+        ),
 
         Step.sync(function () {
           Keying.focusIn(component);
@@ -245,14 +253,14 @@ asynctest(
 
         Logger.t(
           'Checking the representing value is still the same when collapsed',
-          sAssertRep({
+          helper.sAssertRep({
             'form.ant': {
-              value: 'init',
-              text: 'Init'
+              value: 'first.set',
+              text: 'First.set'
             },
             'form.bull': {
-              value: 'select-b-init',
-              text: 'Select-b-init'
+              value: 'select-b-set',
+              text: 'Select-b-set'
             }
           })
         ),

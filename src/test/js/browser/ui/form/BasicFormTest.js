@@ -17,11 +17,12 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.form.TestForm',
     'ephox.compass.Obj',
     'ephox.peanut.Fun'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, Obj, Fun) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, TestForm, Obj, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -85,25 +86,7 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
-      var sAssertRep = function (expected) {
-        return Step.sync(function () {
-          var val = Representing.getValue(component);
-          Assertions.assertEq(
-            'Checking form value',
-            expected,
-
-            Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' field is "None"'); 
-            })
-          );
-        });
-      };
-
-      var sSetRep = function (newValues) {
-        return Step.sync(function () {
-          Representing.setValue(component, newValues);
-        });
-      };
+      var helper = TestForm.helper(component);
 
       var sAssertDisplay = function (inputText, selectValue) {
         return Step.sync(function () {
@@ -136,7 +119,7 @@ asynctest(
         Logger.t(
           'Initial values',
           GeneralSteps.sequence([
-            sAssertRep({
+            helper.sAssertRep({
               'form.ant': { value: 'init', text: 'Init' },
               'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
             }),
@@ -147,11 +130,11 @@ asynctest(
         Logger.t(
           'Setting "form.ant" to (ant-value, Ant-value)',
           GeneralSteps.sequence([
-            sSetRep({
+            helper.sSetRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' }
             }),
 
-            sAssertRep({
+            helper.sAssertRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' },
               'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
             }),
@@ -163,12 +146,12 @@ asynctest(
         Logger.t(
           'Setting multiple values but the select value is invalid',
           GeneralSteps.sequence([
-            sSetRep({
+            helper.sSetRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' },
               'form.bull': { value: 'select-b-not-there', text: 'Select-b-not-there' }
             }),
 
-            sAssertRep({
+            helper.sAssertRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' },
               'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
             }),
@@ -180,12 +163,12 @@ asynctest(
         Logger.t(
           'Setting "form.ant" and "form.bull" to valid values',
           GeneralSteps.sequence([
-            sSetRep({
+            helper.sSetRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' },
               'form.bull': { value: 'select-b-other', text: 'missing..' }
             }),
 
-            sAssertRep({
+            helper.sAssertRep({
               'form.ant': { value: 'ant-value', text: 'Ant-value' },
               'form.bull': { value: 'select-b-other', text: 'Select-b-other' }
             }),
