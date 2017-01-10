@@ -10,7 +10,6 @@ define(
 
   function (SystemEvents, SandboxApis, EventHandler, Objects) {
     var events = function (sandboxInfo) {
-      // FIX: Test this.
       return Objects.wrapAll([
         {
           key: SystemEvents.sandboxClose(),
