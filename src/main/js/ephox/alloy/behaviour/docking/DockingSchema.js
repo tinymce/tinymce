@@ -2,17 +2,16 @@ define(
   'ephox.alloy.behaviour.docking.DockingSchema',
 
   [
+    'ephox.alloy.alien.Boxes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.ego.util.Bounds',
     'ephox.sugar.api.Scroll',
     'global!window'
   ],
 
-  function (FieldSchema, Bounds, Scroll, window) {
+  function (Boxes, FieldSchema, Scroll, window) {
     var defaultLazyViewport = function (_component) {
       var scroll = Scroll.get();
-      // FIX: Non API package.
-      return Bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
+      return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
     };
 
     return [

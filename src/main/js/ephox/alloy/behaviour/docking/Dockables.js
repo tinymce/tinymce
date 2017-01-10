@@ -2,8 +2,8 @@ define(
   'ephox.alloy.behaviour.docking.Dockables',
 
   [
+    'ephox.alloy.alien.Boxes',
     'ephox.alloy.dragging.DragCoord',
-    'ephox.ego.util.Bounds',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
@@ -13,7 +13,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (DragCoord, Bounds, Option, Attr, Class, Css, Height, Location, Width) {
+  function (Boxes, DragCoord, Option, Attr, Class, Css, Height, Location, Width) {
     var appear = function (component, contextualInfo) {
       Class.add(component.element(), contextualInfo.transitionClass());
       Class.remove(component.element(), contextualInfo.fadeOutClass());
@@ -47,7 +47,7 @@ define(
           // Only supports position absolute.
           var w = Width.get(component.element());
           var h = Height.get(component.element());
-          return Bounds(left, top, w, h);
+          return Boxes.bounds(left, top, w, h);
         });
       });
     };
@@ -80,7 +80,7 @@ define(
 
     var morphToFixed = function (component, dockInfo, viewport, scroll, origin) {
       var loc = Location.absolute(component.element());
-      var box = Bounds(loc.left(), loc.top(), Width.get(component.element()), Height.get(component.element()));
+      var box = Boxes.bounds(loc.left(), loc.top(), Width.get(component.element()), Height.get(component.element()));
       if (! isCompletelyVisible(box, viewport)) {
         // Convert it to fixed (keeping the x coordinate and throwing away the y coordinate)
         setPrior(component, dockInfo, loc.left(), loc.top());

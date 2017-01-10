@@ -2,13 +2,13 @@ define(
   'ephox.alloy.behaviour.docking.ActiveDocking',
 
   [
+    'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.OffsetOrigin',
     'ephox.alloy.api.SystemEvents',
     'ephox.alloy.behaviour.docking.Dockables',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.DragCoord',
     'ephox.boulder.api.Objects',
-    'ephox.ego.util.Boxes',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Css',
@@ -16,7 +16,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (OffsetOrigin, SystemEvents, Dockables, EventHandler, DragCoord, Objects, Boxes, Class, Compare, Css, Scroll, Traverse) {
+  function (Boxes, OffsetOrigin, SystemEvents, Dockables, EventHandler, DragCoord, Objects, Class, Compare, Css, Scroll, Traverse) {
     var events = function (dockInfo) {
       return Objects.wrapAll([
         {
