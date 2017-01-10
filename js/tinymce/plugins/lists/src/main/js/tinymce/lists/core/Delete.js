@@ -101,7 +101,7 @@ define("tinymce.lists.core.Delete", [
 		}
 	};
 
-	var backspaceDeleteCaret = function (editor, isForward) {
+	var backspaceDeleteFromListToListCaret = function (editor, isForward) {
 		var dom = editor.dom, selection = editor.selection;
 		var li = dom.getParent(selection.getStart(), 'LI'), ul, rng, otherLi;
 
@@ -134,6 +134,28 @@ define("tinymce.lists.core.Delete", [
 		}
 
 		return false;
+	};
+
+	var backspaceDeleteIntoListCaret = function (editor, isForward) {
+		var dom = editor.dom;
+		var block = dom.getParent(editor.selection.getStart(), dom.isBlock);
+
+		if (block && dom.isEmpty(block)) {
+			var rng = Range.normalizeRange(editor.selection.getRng(true));
+			var otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
+
+			dom.remove(block);
+			ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
+			editor.selection.select(otherLi, true);
+			editor.selection.collapse(isForward);
+			return true;
+		}
+
+		return false;
+	};
+
+	var backspaceDeleteCaret = function (editor, isForward) {
+		return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
 	};
 
 	var backspaceDeleteRange = function (editor) {

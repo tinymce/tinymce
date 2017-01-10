@@ -19,7 +19,20 @@ define("tinymce.lists.actions.ToggleList", [
 	"tinymce.lists.actions.Outdent"
 ], function (Tools, BookmarkManager, Selection, NodeType, Bookmark, SplitList, NormalizeLists, Outdent) {
 	var updateListStyle = function (dom, el, detail) {
-		dom.setStyle(el, 'list-style-type', detail ? detail['list-style-type'] : null);
+		var type = detail['list-style-type'] ? detail['list-style-type'] : null;
+		dom.setStyle(el, 'list-style-type', type);
+	};
+
+	var updateListAttrs = function (dom, el, detail) {
+		dom.setAttribs(el, detail['list-attributes']);
+		Tools.each(dom.select('li', el), function (li) {
+			dom.setAttribs(li, detail['list-item-attributes']);
+		});
+	};
+
+	var updateListWithDetails = function (dom, el, detail) {
+		updateListStyle(dom, el, detail ? detail : {});
+		updateListAttrs(dom, el, detail ? detail : {});
 	};
 
 	var getEndPointNode = function (editor, rng, start) {
@@ -139,7 +152,7 @@ define("tinymce.lists.actions.ToggleList", [
 				block = dom.rename(block, listItemName);
 			}
 
-			updateListStyle(dom, listBlock, detail);
+			updateListWithDetails(dom, listBlock, detail);
 			mergeWithAdjacentLists(editor.dom, listBlock);
 		});
 
@@ -184,17 +197,29 @@ define("tinymce.lists.actions.ToggleList", [
 		editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 	};
 
-	var shouldMerge = function (dom, listBlock, sibling) {
-		var targetStyle = dom.getStyle(listBlock, 'list-style-type', true);
-		var style = dom.getStyle(sibling, 'list-style-type', true);
+	var isValidLists = function (list1, list2) {
+		return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
+	};
+
+	var hasSameListStyle = function (dom, list1, list2) {
+		var targetStyle = dom.getStyle(list1, 'list-style-type', true);
+		var style = dom.getStyle(list2, 'list-style-type', true);
 		return targetStyle === style;
+	};
+
+	var hasSameClasses = function (elm1, elm2) {
+		return elm1.className === elm2.className;
+	};
+
+	var shouldMerge = function (dom, list1, list2) {
+		return isValidLists(list1, list2) && hasSameListStyle(dom, list1, list2) && hasSameClasses(list1, list2);
 	};
 
 	var mergeWithAdjacentLists = function (dom, listBlock) {
 		var sibling, node;
 
 		sibling = listBlock.nextSibling;
-		if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listBlock.nodeName && shouldMerge(dom, listBlock, sibling)) {
+		if (shouldMerge(dom, listBlock, sibling)) {
 			while ((node = sibling.firstChild)) {
 				listBlock.appendChild(node);
 			}
@@ -203,7 +228,7 @@ define("tinymce.lists.actions.ToggleList", [
 		}
 
 		sibling = listBlock.previousSibling;
-		if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listBlock.nodeName && shouldMerge(dom, listBlock, sibling)) {
+		if (shouldMerge(dom, listBlock, sibling)) {
 			while ((node = sibling.lastChild)) {
 				listBlock.insertBefore(node, listBlock.firstChild);
 			}
@@ -224,7 +249,7 @@ define("tinymce.lists.actions.ToggleList", [
 				removeList(editor, listName);
 			} else {
 				var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
-				updateListStyle(editor.dom, parentList, detail);
+				updateListWithDetails(editor.dom, parentList, detail);
 				mergeWithAdjacentLists(editor.dom, editor.dom.rename(parentList, listName));
 				editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 			}
@@ -235,7 +260,8 @@ define("tinymce.lists.actions.ToggleList", [
 
 	return {
 		toggleList: toggleList,
-		removeList: removeList
+		removeList: removeList,
+		mergeWithAdjacentLists: mergeWithAdjacentLists
 	};
 });
 
