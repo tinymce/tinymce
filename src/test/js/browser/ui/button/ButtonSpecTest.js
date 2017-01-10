@@ -15,7 +15,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.test.GuiSetup'
   ],

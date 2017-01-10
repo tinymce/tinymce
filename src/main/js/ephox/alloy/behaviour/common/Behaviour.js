@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',

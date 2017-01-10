@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.ui.Tabbar',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.ui.TabButton',

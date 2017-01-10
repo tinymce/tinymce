@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.receiving.ActiveReceiving',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',

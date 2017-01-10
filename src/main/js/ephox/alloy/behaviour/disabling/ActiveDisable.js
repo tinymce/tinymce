@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.disabling.ActiveDisable',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.behaviour.disabling.DisableApis',
     'ephox.alloy.construct.EventHandler',

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.menu.build.ItemType',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',

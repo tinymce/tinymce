@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.focusing.ActiveFocus',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.focusing.FocusApis',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',

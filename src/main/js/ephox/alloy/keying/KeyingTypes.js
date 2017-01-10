@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.highway.Merger',

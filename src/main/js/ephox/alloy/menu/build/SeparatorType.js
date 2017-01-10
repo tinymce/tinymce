@@ -2,7 +2,7 @@ define(
   'ephox.alloy.menu.build.SeparatorType',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects'

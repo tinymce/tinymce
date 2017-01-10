@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EditableFields',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',

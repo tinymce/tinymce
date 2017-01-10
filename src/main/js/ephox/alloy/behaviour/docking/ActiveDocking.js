@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.OffsetOrigin',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.docking.Dockables',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.DragCoord',

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.ui.common.ButtonBase',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',

@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',

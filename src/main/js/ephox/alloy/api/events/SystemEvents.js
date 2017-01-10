@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.SystemEvents',
+  'ephox.alloy.api.events.SystemEvents',
 
   [
     'ephox.compass.Obj',

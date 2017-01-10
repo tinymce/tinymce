@@ -1,9 +1,9 @@
 define(
-  'ephox.alloy.api.GuiEvents',
+  'ephox.alloy.api.events.GuiEvents',
 
   [
     'ephox.alloy.alien.Keys',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',

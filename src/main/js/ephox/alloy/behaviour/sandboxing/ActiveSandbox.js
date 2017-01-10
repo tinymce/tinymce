@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.sandboxing.ActiveSandbox',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.sandboxing.SandboxApis',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects'

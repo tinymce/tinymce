@@ -5,7 +5,7 @@ define(
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',

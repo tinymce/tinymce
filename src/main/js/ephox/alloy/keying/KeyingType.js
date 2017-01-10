@@ -2,7 +2,7 @@ define(
   'ephox.alloy.keying.KeyingType',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.navigation.KeyRules',

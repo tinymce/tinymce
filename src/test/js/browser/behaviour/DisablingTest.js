@@ -11,7 +11,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.GuiFactory',
     'ephox.alloy.api.Memento',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.api.ui.Button',

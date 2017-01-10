@@ -8,7 +8,7 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.Container',

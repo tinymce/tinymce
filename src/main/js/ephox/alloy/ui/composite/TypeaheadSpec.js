@@ -2,7 +2,7 @@ define(
   'ephox.alloy.ui.composite.TypeaheadSpec',
 
   [
-    'ephox.alloy.api.SystemEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
