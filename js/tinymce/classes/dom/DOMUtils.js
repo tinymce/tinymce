@@ -1459,12 +1459,13 @@ define("tinymce/dom/DOMUtils", [
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty: function(node, elements) {
-			var self = this, i, attributes, type, walker, name, brCount = 0;
+			var self = this, i, attributes, type, whitespace, walker, name, brCount = 0;
 
 			node = node.firstChild;
 			if (node) {
 				walker = new TreeWalker(node, node.parentNode);
 				elements = elements || (self.schema ? self.schema.getNonEmptyElements() : null);
+				whitespace = self.schema ? self.schema.getWhiteSpaceElements() : {};
 
 				do {
 					type = node.nodeType;
@@ -1507,7 +1508,12 @@ define("tinymce/dom/DOMUtils", [
 					}
 
 					// Keep non whitespace text nodes
-					if ((type === 3 && !whiteSpaceRegExp.test(node.nodeValue))) {
+					if (type === 3 && !whiteSpaceRegExp.test(node.nodeValue)) {
+						return false;
+					}
+
+					// Keep whitespace preserve elements
+					if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && whiteSpaceRegExp.test(node.nodeValue)) {
 						return false;
 					}
 

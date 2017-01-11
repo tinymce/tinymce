@@ -36,6 +36,10 @@ define("tinymce/html/DomParser", [
 		}
 	};
 
+	var hasOnlyChild = function (node, name) {
+		return node && node.firstChild === node.lastChild && node.firstChild.name === name;
+	};
+
 	/**
 	 * Constructs a new DomParser instance.
 	 *
@@ -54,10 +58,11 @@ define("tinymce/html/DomParser", [
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-			var nonEmptyElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
+			var nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
 			nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
 			nonEmptyElements = schema.getNonEmptyElements();
+			whitespaceElements = schema.getWhiteSpaceElements();
 			textBlockElements = schema.getTextBlockElements();
 			specialElements = schema.getSpecialElements();
 
@@ -124,7 +129,7 @@ define("tinymce/html/DomParser", [
 						currentNode = tempNode;
 					}
 
-					if (!newParent.isEmpty(nonEmptyElements)) {
+					if (!newParent.isEmpty(nonEmptyElements, whitespaceElements)) {
 						parent.insert(newParent, parents[0], true);
 						parent.insert(node, newParent);
 					} else {
@@ -133,7 +138,7 @@ define("tinymce/html/DomParser", [
 
 					// Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
 					parent = parents[0];
-					if (parent.isEmpty(nonEmptyElements) || parent.firstChild === parent.lastChild && parent.firstChild.name === 'br') {
+					if (parent.isEmpty(nonEmptyElements, whitespaceElements) || hasOnlyChild(parent, 'br')) {
 						parent.empty().remove();
 					}
 				} else if (node.parent) {
@@ -592,7 +597,7 @@ define("tinymce/html/DomParser", [
 
 						// Handle empty nodes
 						if (elementRule.removeEmpty || elementRule.paddEmpty) {
-							if (node.isEmpty(nonEmptyElements)) {
+							if (node.isEmpty(nonEmptyElements, whiteSpaceElements)) {
 								if (elementRule.paddEmpty) {
 									paddEmptyNode(settings, node);
 								} else {
@@ -688,6 +693,7 @@ define("tinymce/html/DomParser", [
 			self.addNodeFilter('br', function(nodes) {
 				var i, l = nodes.length, node, blockElements = extend({}, schema.getBlockElements());
 				var nonEmptyElements = schema.getNonEmptyElements(), parent, lastParent, prev, prevName;
+				var whiteSpaceElements = schema.getNonEmptyElements();
 				var elementRule, textNode;
 
 				// Remove brs from body element as well
@@ -726,7 +732,7 @@ define("tinymce/html/DomParser", [
 							node.remove();
 
 							// Is the parent to be considered empty after we removed the BR
-							if (parent.isEmpty(nonEmptyElements)) {
+							if (parent.isEmpty(nonEmptyElements, whiteSpaceElements)) {
 								elementRule = schema.getElementRule(parent.name);
 
 								// Remove or padd the element depending on schema rule
