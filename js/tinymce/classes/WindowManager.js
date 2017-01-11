@@ -236,6 +236,7 @@ define("tinymce/WindowManager", [
 		self.close = function() {
 			if (getTopMostWindow()) {
 				getTopMostWindow().close();
+				editor.nodeChanged();
 			}
 		};
 
