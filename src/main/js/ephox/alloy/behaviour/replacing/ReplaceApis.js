@@ -58,6 +58,7 @@ define(
       });
 
       if (found !== undefined && found !== null) {
+        component.getSystem().removeFromWorld(found);
         Remove.remove(found.element());
         component.syncComponents();
       }

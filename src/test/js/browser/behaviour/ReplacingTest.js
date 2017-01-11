@@ -187,6 +187,31 @@ asynctest(
         ),
         Step.sync(function () {
           RawAssertions.assertEq('Should have 3 children again', 3, Replacing.contents(component).length);
+        }),
+
+        Logger.t(
+          'Removing should have removed from world, so I should be able to re-add it',
+          Step.sync(function () {
+            Replacing.append(component, Container.build({ uid: 'second' }));
+          })
+        ),
+
+        Assertions.sAssertStructure(
+          'After append(second) after remove(second)',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('label', {}),
+                s.element('div', { }),
+                s.element('span', { }),
+                s.element('div', { })
+              ]
+            });
+          }),
+          component.element()
+        ),
+        Step.sync(function () {
+          RawAssertions.assertEq('Should have 4 children again', 4, Replacing.contents(component).length);
         })
       ];
     }, function () { success(); }, failure);
