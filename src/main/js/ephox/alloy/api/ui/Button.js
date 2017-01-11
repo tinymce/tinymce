@@ -34,6 +34,8 @@ define(
           }
         },
 
+        spec,
+
         {
           dom: {
             attributes: {
@@ -41,9 +43,7 @@ define(
               role: detail.role().getOr('button')
             }
           }
-        },
-
-        spec
+        }
       );
     };
 
