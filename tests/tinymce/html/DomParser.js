@@ -99,6 +99,13 @@
 		deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
 	});
 
+	test('Whitespace preserved in PRE', function() {
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('<PRE>  </PRE>');
+		equal(serializer.serialize(root), '<pre>  </pre>', 'Whitespace around and inside PRE');
+		deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
+	});
+
 	test('Whitespace preserved in SPAN inside PRE', function() {
 		parser = new tinymce.html.DomParser({}, schema);
 		root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
@@ -110,6 +117,13 @@
 		parser = new tinymce.html.DomParser({}, schema);
 		root = parser.parse('<code>  a  </code>');
 		equal(serializer.serialize(root), '<code>  a  </code>', 'Whitespace inside code');
+		deepEqual(countNodes(root), {body:1, code:1, '#text':1}, 'Whitespace inside code (count)');
+	});
+
+	test('Whitespace preserved in code', function() {
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('<code>  </code>');
+		equal(serializer.serialize(root), '<code>  </code>', 'Whitespace inside code');
 		deepEqual(countNodes(root), {body:1, code:1, '#text':1}, 'Whitespace inside code (count)');
 	});
 

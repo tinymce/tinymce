@@ -520,3 +520,8 @@ test('Padd empty elements with br on insert at caret', function() {
 	equal(editor.getContent(), '<p>a</p><p>b</p><p><br /></p>');
 	delete editor.settings.padd_empty_with_br;
 });
+
+test('Preserve whitespace pre elements', function() {
+	editor.setContent('<pre> </pre>');
+	equal(editor.getContent(), '<pre> </pre>');
+});
