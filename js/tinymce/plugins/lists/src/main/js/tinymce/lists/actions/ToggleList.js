@@ -31,8 +31,8 @@ define("tinymce.lists.actions.ToggleList", [
 	};
 
 	var updateListWithDetails = function (dom, el, detail) {
-		updateListStyle(dom, el, detail ? detail : {});
-		updateListAttrs(dom, el, detail ? detail : {});
+		updateListStyle(dom, el, detail);
+		updateListAttrs(dom, el, detail);
 	};
 
 	var getEndPointNode = function (editor, rng, start) {
@@ -76,7 +76,7 @@ define("tinymce.lists.actions.ToggleList", [
 			}
 		}
 
-		Tools.each(siblings, function(node) {
+		Tools.each(siblings, function (node) {
 			if (NodeType.isTextBlock(editor, node)) {
 				textBlocks.push(node);
 				block = null;
@@ -116,6 +116,8 @@ define("tinymce.lists.actions.ToggleList", [
 		var rng = editor.selection.getRng(true), bookmark, listItemName = 'LI';
 		var dom = editor.dom;
 
+		detail = detail ? detail : {};
+
 		if (dom.getContentEditable(editor.selection.getNode()) === "false") {
 			return;
 		}
@@ -128,7 +130,7 @@ define("tinymce.lists.actions.ToggleList", [
 
 		bookmark = Bookmark.createBookmark(rng);
 
-		Tools.each(getSelectedTextBlocks(editor, rng), function(block) {
+		Tools.each(getSelectedTextBlocks(editor, rng), function (block) {
 			var listBlock, sibling;
 
 			var hasCompatibleStyle = function (sib) {
@@ -170,14 +172,14 @@ define("tinymce.lists.actions.ToggleList", [
 			return !editor.dom.isEmpty(li);
 		});
 
-		Tools.each(emptyListItems, function(li) {
+		Tools.each(emptyListItems, function (li) {
 			if (NodeType.isEmpty(editor.dom, li)) {
 				Outdent.outdent(editor, li);
 				return;
 			}
 		});
 
-		Tools.each(listItems, function(li) {
+		Tools.each(listItems, function (li) {
 			var node, rootList;
 
 			if (li.parentNode === editor.getBody()) {
@@ -239,6 +241,8 @@ define("tinymce.lists.actions.ToggleList", [
 
 	var toggleList = function (editor, listName, detail) {
 		var parentList = editor.dom.getParent(editor.selection.getStart(), 'OL,UL,DL');
+
+		detail = detail ? detail : {};
 
 		if (parentList === editor.getBody()) {
 			return;

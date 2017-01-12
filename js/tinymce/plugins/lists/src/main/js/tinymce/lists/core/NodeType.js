@@ -9,7 +9,7 @@
  */
 
 define("tinymce.lists.core.NodeType", [
-], function() {
+], function () {
 	var isTextNode = function (node) {
 		return node && node.nodeType === 3;
 	};

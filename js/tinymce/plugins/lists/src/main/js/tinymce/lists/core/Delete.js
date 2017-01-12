@@ -144,11 +144,16 @@ define("tinymce.lists.core.Delete", [
 			var rng = Range.normalizeRange(editor.selection.getRng(true));
 			var otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
 
-			dom.remove(block);
-			ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
-			editor.selection.select(otherLi, true);
-			editor.selection.collapse(isForward);
-			return true;
+			if (otherLi) {
+				editor.undoManager.transact(function () {
+					dom.remove(block);
+					ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
+					editor.selection.select(otherLi, true);
+					editor.selection.collapse(isForward);
+				});
+
+				return true;
+			}
 		}
 
 		return false;
@@ -162,7 +167,7 @@ define("tinymce.lists.core.Delete", [
 		var startListParent = editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD');
 
 		if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
-			editor.undoManager.transact(function() {
+			editor.undoManager.transact(function () {
 				editor.execCommand('Delete');
 				NormalizeLists.normalizeLists(editor.dom, editor.getBody());
 			});
@@ -173,12 +178,12 @@ define("tinymce.lists.core.Delete", [
 		return false;
 	};
 
-	var backspaceDelete = function(editor, isForward) {
+	var backspaceDelete = function (editor, isForward) {
 		return editor.selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
 	};
 
 	var setup = function (editor) {
-		editor.on('keydown', function(e) {
+		editor.on('keydown', function (e) {
 			if (e.keyCode === VK.BACKSPACE) {
 				if (backspaceDelete(editor, false)) {
 					e.preventDefault();

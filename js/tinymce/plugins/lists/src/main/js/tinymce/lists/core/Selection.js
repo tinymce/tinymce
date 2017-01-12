@@ -13,7 +13,7 @@ define("tinymce.lists.core.Selection", [
 	"tinymce.lists.core.NodeType"
 ], function (Tools, NodeType) {
 	var getSelectedListItems = function (editor) {
-		return Tools.grep(editor.selection.getSelectedBlocks(), function(block) {
+		return Tools.grep(editor.selection.getSelectedBlocks(), function (block) {
 			return NodeType.isListItemNode(block);
 		});
 	};

@@ -18,7 +18,7 @@ define("tinymce.lists.core.SplitList", [
 		var tmpRng, fragment, bookmarks, node;
 
 		var removeAndKeepBookmarks = function (targetNode) {
-			Tools.each(bookmarks, function(node) {
+			Tools.each(bookmarks, function (node) {
 				targetNode.parentNode.insertBefore(node, li.parentNode);
 			});
 

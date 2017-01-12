@@ -12,7 +12,7 @@ define("tinymce.lists.core.Bookmark", [
 	"global!tinymce.dom.DOMUtils.DOM",
 	"tinymce.lists.core.NodeType",
 	"tinymce.lists.core.Range"
-], function(DOM, NodeType, Range) {
+], function (DOM, NodeType, Range) {
 	/**
 	 * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
 	 * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans
@@ -66,7 +66,7 @@ define("tinymce.lists.core.Bookmark", [
 	};
 
 	var resolveBookmark = function (bookmark) {
-		function restoreEndPoint(start) {
+		function restoreEndPoint (start) {
 			var container, offset, node;
 
 			var nodeIndex = function (container) {
