@@ -48,155 +48,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		"bolt-init": {
-			"imagetools-plugin": {
-				config_dir: "js/tinymce/plugins/imagetools/config/bolt"
-			},
-
-			"media-plugin": {
-				config_dir: "js/tinymce/plugins/media/config/bolt"
-			},
-
-			"lists-plugin": {
-				config_dir: "js/tinymce/plugins/lists/config/bolt"
-			},
-
-			"wordcount-plugin": {
-				config_dir: "js/tinymce/plugins/wordcount/config/bolt"
-			},
-
-			"inlite-theme": {
-				config_dir: "js/tinymce/themes/inlite/config/bolt"
-			},
-
-			"modern-theme": {
-				config_dir: "js/tinymce/themes/modern/config/bolt"
-			}
-		},
-
-		"bolt-build": {
-			"imagetools-plugin": {
-				config_js: "js/tinymce/plugins/imagetools/config/bolt/prod.js",
-				output_dir: "js/tinymce/plugins/imagetools/scratch",
-				main: "tinymce/imagetoolsplugin/Plugin",
-				filename: "plugin",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ['js/tinymce/plugins/imagetools/src/main/js/Plugin.js']
-				}
-			},
-
-			"lists-plugin": {
-				config_js: "js/tinymce/plugins/lists/config/bolt/prod.js",
-				output_dir: "js/tinymce/plugins/lists/scratch",
-				main: "tinymce.lists.Plugin",
-				filename: "plugin",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ["js/tinymce/plugins/lists/src/main/js/tinymce/lists/Plugin.js"]
-				}
-			},
-
-			"media-plugin": {
-				config_js: "js/tinymce/plugins/media/config/bolt/prod.js",
-				output_dir: "js/tinymce/plugins/media/scratch",
-				main: "tinymce.media.Plugin",
-				filename: "plugin",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ["js/tinymce/plugins/media/src/main/js/tinymce/media/Plugin.js"]
-				}
-			},
-
-			"wordcount-plugin": {
-				config_js: "js/tinymce/plugins/wordcount/config/bolt/prod.js",
-				output_dir: "js/tinymce/plugins/wordcount/scratch",
-				main: "tinymce.wordcount.Plugin",
-				filename: "plugin",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ["js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/Plugin.js"]
-				}
-			},
-
-			"inlite-theme": {
-				config_js: "js/tinymce/themes/inlite/config/bolt/prod.js",
-				output_dir: "js/tinymce/themes/inlite/scratch",
-				main: "tinymce/inlite/Theme",
-				filename: "theme",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ['js/tinymce/themes/inlite/src/main/js/tinymce/inlite/Theme.js']
-				}
-			},
-
-			"modern-theme": {
-				config_js: "js/tinymce/themes/modern/config/bolt/prod.js",
-				output_dir: "js/tinymce/themes/modern/scratch",
-				main: "tinymce.modern.Theme",
-				filename: "theme",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ['js/tinymce/themes/modern/src/main/js/tinymce/modern/Theme.js']
-				}
-			}
-		},
-
-		copy: {
-			"bolt-plugins": {
-				files: [
-					{
-						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.raw.js",
-						dest: "js/tinymce/plugins/imagetools/plugin.js"
-					},
-					{
-						src: "js/tinymce/plugins/media/scratch/inline/plugin.raw.js",
-						dest: "js/tinymce/plugins/media/plugin.js"
-					},
-					{
-						src: "js/tinymce/plugins/lists/scratch/inline/plugin.raw.js",
-						dest: "js/tinymce/plugins/lists/plugin.js"
-					},
-					{
-						src: "js/tinymce/plugins/wordcount/scratch/inline/plugin.raw.js",
-						dest: "js/tinymce/plugins/wordcount/plugin.js"
-					}
-				]
-			},
-
-			"bolt-themes": {
-				files: [
-					{
-						src: "js/tinymce/themes/inlite/scratch/inline/theme.raw.js",
-						dest: "js/tinymce/themes/inlite/theme.js"
-					},
-
-					{
-						src: "js/tinymce/themes/modern/scratch/inline/theme.raw.js",
-						dest: "js/tinymce/themes/modern/theme.js"
-					}
-				]
-			}
-		},
-
 		amdlc: {
 			core: {
 				options: {
@@ -411,44 +262,6 @@ module.exports = function(grunt) {
 				src: ["js/tinymce/plugins/*/plugin.js"],
 				expand: true,
 				ext: ".min.js"
-			},
-
-			"bolt-plugins": {
-				files: [
-					{
-						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.js",
-						dest: "js/tinymce/plugins/imagetools/plugin.min.js"
-					},
-
-					{
-						src: "js/tinymce/plugins/wordcount/scratch/inline/plugin.js",
-						dest: "js/tinymce/plugins/wordcount/plugin.min.js"
-					},
-
-					{
-						src: "js/tinymce/plugins/media/scratch/inline/plugin.js",
-						dest: "js/tinymce/plugins/media/plugin.min.js"
-					},
-
-					{
-						src: "js/tinymce/plugins/lists/scratch/inline/plugin.js",
-						dest: "js/tinymce/plugins/lists/plugin.min.js"
-					}
-				]
-			},
-
-			"bolt-themes": {
-				files: [
-					{
-						src: "js/tinymce/themes/inlite/scratch/inline/theme.js",
-						dest: "js/tinymce/themes/inlite/theme.min.js"
-					},
-
-					{
-						src: "js/tinymce/themes/modern/scratch/inline/theme.js",
-						dest: "js/tinymce/themes/modern/theme.min.js"
-					}
-				]
 			},
 
 			"jquery-plugin": {
@@ -954,6 +767,15 @@ module.exports = function(grunt) {
 					]
 				}
 			}
+		},
+
+		subgrunt: {
+			'wordcount-plugin': {path: 'js/tinymce/plugins/wordcount'},
+			'imagetools-plugin': {path: 'js/tinymce/plugins/imagetools'},
+			'media-plugin': {path: 'js/tinymce/plugins/media'},
+			'lists-plugin': {path: 'js/tinymce/plugins/lists'},
+			'inlite-theme': {path: 'js/tinymce/themes/inlite'},
+			'modern-theme': {path: 'js/tinymce/themes/modern'}
 		}
 	});
 
@@ -966,7 +788,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('@ephox/bolt');
 
 	grunt.registerTask("lint", ["eslint"]);
-	grunt.registerTask("minify", ["amdlc", "bolt-build", "uglify", "copy", "skin", "less"]);
+	grunt.registerTask("minify", ["amdlc", "uglify", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
-	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
+	grunt.registerTask("default", ["lint", "minify", "subgrunt", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
