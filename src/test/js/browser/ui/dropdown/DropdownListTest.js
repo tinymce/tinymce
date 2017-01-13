@@ -2,6 +2,7 @@ asynctest(
   'Dropdown List',
  
   [
+    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
@@ -29,7 +30,7 @@ asynctest(
     'ephox.sugar.api.Width'
   ],
  
-  function (Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, Menu, TieredMenu, GuiSetup, NavigationUtils, TestBroadcasts, DropdownAssertions, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
+  function (ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, Menu, TieredMenu, GuiSetup, NavigationUtils, TestBroadcasts, DropdownAssertions, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -115,6 +116,19 @@ asynctest(
       };
 
       return [
+        // Add more information to this.
+        Assertions.sAssertStructure(
+          'Initial structure of dropdown button',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('button', {
+              attrs: {
+                role: str.is('button')
+              }
+            });
+          }),
+          component.element()
+        ),
+
         Mouse.sClickOn(gui.element(), focusables.button.selector),
 
         FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),

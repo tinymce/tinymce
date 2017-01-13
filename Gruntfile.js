@@ -12,6 +12,16 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: packageData,
 
+    parallel: {
+      assets: {
+        options: {
+          grunt: true,
+          // stream: true
+        },
+        tasks: [ 'bedrock-auto:api', /*'bedrock-auto:ui',*/ 'bedrock-auto:events', 'bedrock-auto:position'/*, 'bedrock-auto:behaviours'*/ ]
+      }
+    },
+
     'bedrock-auto': {
       'behaviours': {
         config: 'config/bolt/browser.js',
@@ -123,5 +133,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('grunt-contrib-watch');
+
+  grunt.loadNpmTasks('grunt-parallel');
   grunt.loadNpmTasks('@ephox/bedrock');
 };

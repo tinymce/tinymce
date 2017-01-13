@@ -26,7 +26,8 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('displayer', Fun.identity),
       FieldSchema.option('lazySink'),
-      FieldSchema.defaulted('matchWidth', false)
+      FieldSchema.defaulted('matchWidth', false),
+      FieldSchema.option('role')
     ];
 
     var partTypes = [
@@ -94,6 +95,14 @@ define(
           eventOrder: {
             // Order, the button state is toggled first, so assumed !selected means close.
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+          }
+        },
+        {
+          dom: {
+            attributes: {
+              type: 'button',
+              role: detail.role().getOr('button')
+            }
           }
         }
       );
