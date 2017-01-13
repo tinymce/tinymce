@@ -125,8 +125,21 @@ asynctest(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('span', {
               attrs: {
-                role: str.is('listbox')
-              }
+                role: str.is('presentation')
+              },
+
+              children: [
+                s.element('button', {
+                  attrs: {
+                    role: str.is('button')
+                  }
+                }),
+                s.element('button', {
+                  attrs: {
+                    role: str.is('listbox')
+                  }
+                })
+              ]
             });
           }),
           component.element()

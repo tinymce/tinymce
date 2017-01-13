@@ -31,8 +31,7 @@ define(
       FieldSchema.defaulted('onOpen', Fun.noop),
       // FieldSchema.defaulted('onClose', Fun.noop),
 
-      FieldSchema.defaulted('matchWidth', false),
-      FieldSchema.option('role')
+      FieldSchema.defaulted('matchWidth', false)
     ];
 
     var arrowPart = PartType.internal(
@@ -41,6 +40,11 @@ define(
       '<alloy.split-dropdown.arrow>',
       function (detail) {
         return {
+          dom: {
+            attributes: {
+              role: 'button'
+            }
+          },
           behaviours: {
             tabstopping: Behaviour.revoke(),
             focusing: Behaviour.revoke()
@@ -69,6 +73,11 @@ define(
       '<alloy.split-dropdown.button>',
       function (detail) {
         return {
+          dom: {
+            attributes: {
+              role: 'button'
+            }
+          },
           behaviours: {
             focusing: Behaviour.revoke()
           }
@@ -154,7 +163,7 @@ define(
         {
           dom: {
             attributes: {
-              role: detail.role().getOr('listbox')
+              role: 'presentation'
             }
           }
         }
