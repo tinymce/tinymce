@@ -100,7 +100,6 @@ define(
         {
           dom: {
             attributes: {
-              type: 'button',
               role: detail.role().getOr('button')
             }
           }

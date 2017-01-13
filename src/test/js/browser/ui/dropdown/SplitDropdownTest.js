@@ -2,6 +2,8 @@ asynctest(
   'SplitDropdown List',
  
   [
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
@@ -19,7 +21,7 @@ asynctest(
     'ephox.sugar.api.TextContent'
   ],
  
-  function (FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
+  function (ApproxStructure, Assertions, FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -118,6 +120,18 @@ asynctest(
       );
 
       return [
+        Assertions.sAssertStructure(
+          'Check basic initial structure',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('span', {
+              attrs: {
+                role: str.is('listbox')
+              }
+            });
+          }),
+          component.element()
+        ),
+
         store.sClear,
         store.sAssertEq('Should be empty', [ ]),
         Mouse.sClickOn(gui.element(), '.test-split-button-action'),
