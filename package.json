@@ -20,6 +20,7 @@
   "devDependencies": {
     "@ephox/bolt": "^1.6.0",
     "@ephox/imagetools": "1.0.6",
+    "@ephox/mcagar": "^1.0.0",
     "amdlc": "^0.1.8",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",

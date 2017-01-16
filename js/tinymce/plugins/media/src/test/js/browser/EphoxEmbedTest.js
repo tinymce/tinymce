@@ -5,7 +5,7 @@ asynctest('browser.core.MediaEmbedTest', [
 	'ephox.mcagar.api.TinyUi',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.agar.api.Assertions',
-	'ephox.sugar.api.Element',
+	'ephox.sugar.api.node.Element',
 	'ephox.agar.api.ApproxStructure',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Pipeline',
