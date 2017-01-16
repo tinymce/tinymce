@@ -1,5 +1,5 @@
 {
-  "name": "@tinymce/mcagar",
+  "name": "@ephox/mcagar",
   "version": "1.0.0",
   "description": "Tinymce agar wrapper",
   "scripts": {
