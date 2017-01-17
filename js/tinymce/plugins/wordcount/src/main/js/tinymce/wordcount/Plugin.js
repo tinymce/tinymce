@@ -7,7 +7,6 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-/* global tinymce: true */
 
 define("tinymce.wordcount.Plugin", [
 	"global!tinymce.PluginManager",
@@ -32,7 +31,7 @@ define("tinymce.wordcount.Plugin", [
 			var debouncedUpdate = Delay.debounce(update, 300);
 
 			if (statusbar) {
-				tinymce.util.Delay.setEditorTimeout(editor, function() {
+				Delay.setEditorTimeout(editor, function() {
 					statusbar.insert({
 						type: 'label',
 						name: 'wordcount',

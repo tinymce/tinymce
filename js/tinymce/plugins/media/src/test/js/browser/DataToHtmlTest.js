@@ -6,7 +6,7 @@ asynctest('browser.core.DataToHtmlTest', [
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Waiter',
 	'ephox.agar.api.Assertions',
-	'ephox.sugar.api.Element',
+	'ephox.sugar.api.node.Element',
 	'ephox.agar.api.ApproxStructure',
 	'tinymce.media.test.Utils',
 	'tinymce.media.core.DataToHtml'
