@@ -119,7 +119,9 @@ define('tinymce.lists.test.LegacyUnit', [
 
 	// Expose to global namespace so that we can verify that
 	// the test/assertion count is equal while doing test porting
-	window.LegacyUnitStats = stats;
+	window.getLegacyUnitStats = function () {
+		return stats;
+	};
 
 	return {
 		test: test,
