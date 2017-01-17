@@ -23,10 +23,16 @@ define("tinymce.lists.actions.ToggleList", [
 		dom.setStyle(el, 'list-style-type', type);
 	};
 
+	var setAttribs = function (elm, attrs) {
+		Tools.each(attrs, function (value, key) {
+			elm.setAttribute(key, value);
+		});
+	};
+
 	var updateListAttrs = function (dom, el, detail) {
-		dom.setAttribs(el, detail['list-attributes']);
+		setAttribs(el, detail['list-attributes']);
 		Tools.each(dom.select('li', el), function (li) {
-			dom.setAttribs(li, detail['list-item-attributes']);
+			setAttribs(li, detail['list-item-attributes']);
 		});
 	};
 

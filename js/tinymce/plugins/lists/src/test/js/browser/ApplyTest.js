@@ -777,11 +777,12 @@ asynctest('tinymce.lists.browser.ApplyTest', [
 
 			'list-item-attributes': {
 				'class': 'b',
-				'data-custom': 'c2'
+				'data-custom1': 'c2',
+				'data-custom2': ''
 			}
 		});
 
-		LegacyUnit.equal(editor.getContent(), '<ul class="a" data-custom="c1"><li class="b" data-custom="c2">a</li></ul>');
+		LegacyUnit.equal(editor.getContent(), '<ul class="a" data-custom="c1"><li class="b" data-custom1="c2" data-custom2="">a</li></ul>');
 	});
 
 	suite.test('Handle one empty unordered list items without error', function (editor) {
