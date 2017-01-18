@@ -21,17 +21,20 @@ define(
     };
 
     /* aria-pressed */
+    var setPressed = function (element, isPressed) {
+      Attr.set(element, 'aria-pressed', isPressed ? 'true' : 'false');
+    };
+
     var press = function (element) {
-      Attr.set(element, 'aria-pressed', 'true');
+      setPressed(element, true);
     };
 
     var release = function (element) {
-      Attr.set(element, 'aria-pressed', 'false');
+      setPressed(element, false);
     };
 
     var pressed = function (button) {
-      var action = button.selected() ? press : release;
-      action(button.element());
+      setPressed(button.element(), button.selected());
     };
 
     var enable = function (element) {
@@ -70,6 +73,7 @@ define(
       expanded: expanded,
       collapsed: collapsed,
       checked: checked,
+      setPressed: setPressed,
       press: press,
       release: release,
       pressed: pressed,
