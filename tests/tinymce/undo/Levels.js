@@ -77,7 +77,7 @@ ModuleLoader.require([
 		});
 	});
 
-	test('createFromEditor removes bogus=al', function() {
+	test('createFromEditor removes bogus=all', function() {
 		editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span>';
 
 		deepEqual(Levels.createFromEditor(editor), {
