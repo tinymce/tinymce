@@ -8,7 +8,7 @@ define('tinymce.media.ui.SizeManager', [
 		var widthCtrl = win.find('#width')[0];
 		var heightCtrl = win.find('#height')[0];
 		var constrained = win.find('#constrain')[0];
-		if (widthCtrl && heightCtrl) {
+		if (widthCtrl && heightCtrl && constrained) {
 			f(widthCtrl, heightCtrl, constrained.checked());
 		}
 	};
@@ -52,6 +52,7 @@ define('tinymce.media.ui.SizeManager', [
 				updateSize(win);
 			});
 		};
+
 		return {
 			type: 'container',
 			label: 'Dimensions',
