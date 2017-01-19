@@ -128,10 +128,14 @@ define(
       });
     };
 
+    var buttonRole = function (element) {
+      Attr.set(element, 'role', 'button');
+    };
+
     var textButton = function (element, contentElement) {
       // Add 'button' roleto a pastry button, and 'presentation' role
       // to the contentElement that contains the button text.
-      Attr.set(element, 'role', 'button');
+      buttonRole(element);
       presentation(contentElement);
     };
 
@@ -358,6 +362,7 @@ define(
       menuItemCheckbox: menuItemCheckbox,
       checkbox: checkbox,
       dialog: dialog,
+      buttonRole: buttonRole,
       button: button,
       labelledField: labelledField,
       textarea: textarea,
