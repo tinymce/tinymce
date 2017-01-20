@@ -6,11 +6,13 @@ asynctest('browser.core.PluginTest', [
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyUi',
 	'ephox.agar.api.Pipeline',
-	'ephox.agar.api.Assertions',
+	'ephox.agar.api.UiFinder',
+	'ephox.agar.api.Step',
+	'ephox.agar.api.Waiter',
 	'tinymce.media.test.Utils'
 ], function (
 	tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
-	TinyUi, Pipeline, Assertions, Utils
+	TinyUi, Pipeline, UiFinder, Step, Waiter, Utils
 ) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
@@ -19,20 +21,18 @@ asynctest('browser.core.PluginTest', [
 		var ui = TinyUi(editor);
 
 		Pipeline.async({}, [
-			Utils.sTestEmbedContentFromUrl(ui,
-				'https://www.youtube.com/watch?v=b3XFjWInBog',
-				'<iframe src="//www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>'
-			),
-			Utils.sTestEmbedContentFromUrl(ui,
-				'https://www.google.com',
-				'<video width="300" height="150" controls="controls">\n<source src="https://www.google.com" />\n</video>'
-			),
-			Utils.sAssertSizeRecalcConstrained(ui),
-			Utils.sAssertSizeRecalcUnconstrained(ui),
-			Utils.sAssertSizeRecalcConstrainedReopen(ui)
+			Utils.sOpenDialog(ui),
+			ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+			Waiter.sTryUntil(
+				'Wait for dialog to close',
+				UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Insert/edit media"][role="dialog"]'),
+				50, 5000
+			)
+
 		], onSuccess, onFailure);
 	}, {
 		plugins: ["media"],
-		toolbar: "media"
+		toolbar: "media",
+		media_dimensions: false
 	}, success, failure);
 });
