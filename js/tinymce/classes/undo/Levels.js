@@ -43,14 +43,15 @@ define("tinymce/undo/Levels", [
 	};
 
 	var createFromEditor = function (editor) {
-		var fragments, content;
+		var fragments, content, trimmedFragments;
 
 		fragments = Fragments.read(editor.getBody());
-		content = Arr.map(fragments, function (html) {
+		trimmedFragments = Arr.map(fragments, function (html) {
 			return editor.serializer.trimContent(html);
-		}).join('');
+		});
+		content = trimmedFragments.join('');
 
-		return hasIframes(content) ? createFragmentedLevel(fragments) : createCompleteLevel(content);
+		return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
 	};
 
 	var applyToEditor = function (editor, level, before) {

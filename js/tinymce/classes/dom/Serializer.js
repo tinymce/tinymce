@@ -106,7 +106,7 @@ define("tinymce/dom/Serializer", [
 				bogusAllRegExp.lastIndex = index - matchLength;
 			}
 
-			return trim(content);
+			return content;
 		}
 
 		/**
