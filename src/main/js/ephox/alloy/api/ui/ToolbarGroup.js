@@ -2,8 +2,6 @@ define(
   'ephox.alloy.api.ui.ToolbarGroup',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
@@ -14,7 +12,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Behaviour, UiBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
+  function (UiBuilder, Fields, DomModification, PartType, FieldSchema, Merger, Fun, Error) {
     var schema = [
       FieldSchema.strict('items'),
       Fields.members([ 'item' ]),

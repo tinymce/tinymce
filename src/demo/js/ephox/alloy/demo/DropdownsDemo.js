@@ -2,9 +2,11 @@ define(
   'ephox.alloy.demo.DropdownsDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
@@ -24,7 +26,7 @@ define(
     'global!document'
   ],
 
-  function (Gui, Behaviour, Representing, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
+  function (Behaviour, Positioning, Representing, GuiFactory, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -33,20 +35,36 @@ define(
 
       Insert.append(body, gui.element());
 
+
       var sink = DemoSink.make();
 
       gui.add(sink);      
 
+
+      
+      var proxySink = GuiFactory.build(
+        Container.build({
+          behaviours: Behaviour.derive([
+            Positioning.config({
+
+            })
+          ])
+        })
+      );
+
+      var proxy = Gui.takeover(proxySink);
+      Insert.append(body, proxy.element());
+
       console.log('sink', sink.element());
 
       var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
-        gui.broadcastOn([ 'dismiss.popups' ], {
-          target: evt.target()
-        });
+        // gui.broadcastOn([ 'dismiss.popups' ], {
+        //   target: evt.target()
+        // });
       });
 
       var lazySink = function () {
-        return Result.value(sink);
+        return Result.value(proxySink);
       };
 
 
