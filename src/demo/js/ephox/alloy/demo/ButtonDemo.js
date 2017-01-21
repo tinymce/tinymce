@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.ButtonDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
@@ -14,7 +15,7 @@ define(
     'global!document'
   ],
 
-  function (Toggling, Gui, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
+  function (Behaviour, Toggling, Gui, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

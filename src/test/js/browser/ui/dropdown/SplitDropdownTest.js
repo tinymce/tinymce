@@ -136,7 +136,7 @@ asynctest(
                 }),
                 s.element('button', {
                   attrs: {
-                    role: str.is('listbox')
+                    role: str.is('button')
                   }
                 })
               ]
