@@ -105,15 +105,31 @@ define(
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var eraseColumn = function (grid, detail, comparator, _genWrappers) {
-      var newGrid = ModificationOperations.deleteColumnAt(grid, detail.column());
-      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+    var eraseColumn = function (grid, details, comparator, _genWrappers) {
+      var cells = details.cells();
+
+      var uniqueRows = Arr.foldl(cells, function (rest, detail) {
+          return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
+      }, []);
+
+      var newGrid = Arr.foldl(uniqueRows, function (rest, item) {
+        return ModificationOperations.deleteColumnAt(rest, cells[0].column());
+      }, grid);
+      var cursor = elementFromGrid(newGrid, cells[0].row(), cells[0].column());
       return outcome(newGrid, cursor);
     };
 
-    var eraseRow = function (grid, detail, comparator, _genWrappers) {
-      var newGrid = ModificationOperations.deleteRowAt(grid, detail.row());
-      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+    var eraseRows = function (grid, details, comparator, _genWrappers) {
+      var cells = details.cells();
+
+      var uniqueRows = Arr.foldl(cells, function (rest, detail) {
+          return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
+      }, []);
+
+      var newGrid = Arr.foldl(uniqueRows, function (rest, item) {
+        return ModificationOperations.deleteRowAt(rest, cells[0].row());
+      }, grid);
+      var cursor = elementFromGrid(newGrid, cells[0].row(), cells[0].column());
       return outcome(newGrid, cursor);
     };
 
@@ -158,8 +174,8 @@ define(
       insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       splitCellIntoRows:  RunOperation.run(splitCellIntoRows, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
-      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, Generators.modification),
-      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, Generators.modification),
+      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCells, resize, prune, Generators.modification),
+      eraseRows:  RunOperation.run(eraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification),
       makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th')),
       unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
       makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th')),

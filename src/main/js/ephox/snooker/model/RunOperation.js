@@ -105,9 +105,25 @@ define(
       return target.unmergable();
     };
 
+    var onCells = function (warehouse, target) {
+      return target.cells().map(function (cells) {
+        var details = Arr.map(cells.cells(), function (cell) {
+          return findInWarehouse(warehouse, cell);
+        });
+        var someDetails = Arr.filter(details, function (detail) {
+          return detail.isSome();
+        });
+        var unwrappedDetails = Arr.map(someDetails, function (detail) {
+          return detail.getOrDie();
+        });
+        return {cells: Fun.constant(unwrappedDetails)};
+      });
+    };
+
     return {
       run: run,
       onCell: onCell,
+      onCells: onCells,
       onPaste: onPaste,
       onMergable: onMergable,
       onUnmergable: onUnmergable
