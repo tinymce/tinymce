@@ -108,11 +108,11 @@ define(
     var eraseColumns = function (grid, details, comparator, _genWrappers) {
       var cells = details.cells();
 
-      var uniqueRows = Arr.foldl(cells, function (rest, detail) {
+      var uniqueColumns = Arr.foldl(cells, function (rest, detail) {
           return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
       }, []);
 
-      var newGrid = Arr.foldl(uniqueRows, function (rest, item) {
+      var newGrid = Arr.foldl(uniqueColumns, function (rest, item) {
         return ModificationOperations.deleteColumnAt(rest, cells[0].column());
       }, grid);
       var cursor = elementFromGrid(newGrid, cells[0].row(), cells[0].column());
