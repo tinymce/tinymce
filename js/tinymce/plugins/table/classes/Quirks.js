@@ -380,7 +380,65 @@ define("tinymce/tableplugin/Quirks", [
 			});
 		}
 
+		/**
+		 * When caption is empty and we continue to delete, caption gets deleted along with the contents.
+		 * So, we take over delete operation (both forward and backward) and once caption is empty, we do
+		 * prevent it from disappearing.
+		 */
+		function handleDeleteInCaption() {
+
+			var isTableCaptionNode = function(node) {
+				return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
+			};
+
+			var restoreCaretPlaceholder = function(node) {
+				node.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
+			};
+
+			var deleteBtnPressed = function(e) {
+				return (e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented();
+			};
+
+			var isEmptyNode = function(node) {
+				var containsOnlyCaretPlaceholder = function(node) {
+					var childNode = node.firstChild;
+					if (childNode !== node.lastChild) {
+						return false;
+					}
+					return childNode.nodeType === 3 && childNode.data === '\u00a0';
+				};
+
+				return editor.dom.isEmpty(node) || containsOnlyCaretPlaceholder(node);
+			};
+
+			editor.on('keydown', function(e) {
+				if (!deleteBtnPressed(e)) {
+					return;
+				}
+
+				var container = editor.dom.getParent(editor.selection.getStart(), 'caption');
+				if (!isTableCaptionNode(container)) {
+					return;
+				}
+
+				if (!editor.selection.isCollapsed()) {
+					editor.undoManager.transact(function () {
+						editor.execCommand('Delete');
+
+						if (isEmptyNode(container)) {
+							restoreCaretPlaceholder(container);
+						}
+					});
+					e.preventDefault();
+				} else if (isEmptyNode(container)) {
+					e.preventDefault();
+				}
+			});
+		}
+
+
 		deleteTable();
+		handleDeleteInCaption();
 
 		if (Env.webkit) {
 			moveWebKitSelection();
