@@ -105,7 +105,7 @@ define(
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var eraseColumn = function (grid, details, comparator, _genWrappers) {
+    var eraseColumns = function (grid, details, comparator, _genWrappers) {
       var cells = details.cells();
 
       var uniqueRows = Arr.foldl(cells, function (rest, detail) {
@@ -174,7 +174,7 @@ define(
       insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       splitCellIntoRows:  RunOperation.run(splitCellIntoRows, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
-      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCells, resize, prune, Generators.modification),
+      eraseColumns:  RunOperation.run(eraseColumn, RunOperation.onCells, resize, prune, Generators.modification),
       eraseRows:  RunOperation.run(eraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification),
       makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th')),
       unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
