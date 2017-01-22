@@ -112,14 +112,9 @@ define(
             return findInWarehouse(warehouse, lc);
           });
         });
-        var someDetails = Arr.filter(details, function (detail) {
-          return detail.isSome();
-        });
-        var unwrappedDetails = Arr.map(someDetails, function (detail) {
-          return detail.getOrDie();
-        });
+        var realCells = Options.cat(details);
         return {
-          cells: Fun.constant(unwrappedDetails)
+          cells: Fun.constant(realCells)
         };
       });
     };
