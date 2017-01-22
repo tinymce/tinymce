@@ -108,7 +108,9 @@ define(
     var onCells = function (warehouse, target) {
       return target.cells().map(function (cells) {
         var details = Arr.map(cells.cells(), function (cell) {
-          return findInWarehouse(warehouse, cell);
+          return TableLookup.cell(cell).bind(function (lc) {
+            return findInWarehouse(warehouse, lc);
+          });
         });
         var someDetails = Arr.filter(details, function (detail) {
           return detail.isSome();
@@ -116,7 +118,9 @@ define(
         var unwrappedDetails = Arr.map(someDetails, function (detail) {
           return detail.getOrDie();
         });
-        return {cells: Fun.constant(unwrappedDetails)};
+        return {
+          cells: Fun.constant(unwrappedDetails)
+        };
       });
     };
 
