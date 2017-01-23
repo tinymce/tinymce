@@ -112,7 +112,7 @@ define(
         });
       });
       var cells = Options.cat(details);
-      return Option.some(cells);
+      return cells.length > 0 ? Option.some(cells) : Option.none();
     };
 
     return {

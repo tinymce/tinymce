@@ -108,11 +108,9 @@ define(
     var eraseColumns = function (grid, details, comparator, _genWrappers) {
       var uniqueColumns = Arr.foldl(details, function (rest, detail) {
           return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
-      }, []);
+      }, []).sort();
 
-      var newGrid = Arr.foldl(uniqueColumns, function (rest, item) {
-        return ModificationOperations.deleteColumnAt(rest, details[0].column());
-      }, grid);
+      var newGrid = ModificationOperations.deleteColumnsAt(grid, uniqueColumns[0], uniqueColumns[uniqueColumns.length - 1]);
       var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
@@ -120,11 +118,9 @@ define(
     var eraseRows = function (grid, details, comparator, _genWrappers) {
       var uniqueRows = Arr.foldl(details, function (rest, detail) {
           return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
-      }, []);
+      }, []).sort();
 
-      var newGrid = Arr.foldl(uniqueRows, function (rest, item) {
-        return ModificationOperations.deleteRowAt(rest, details[0].row());
-      }, grid);
+      var newGrid = ModificationOperations.deleteRowsAt(grid, uniqueRows[0], uniqueRows[uniqueRows.length - 1]);
       var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
