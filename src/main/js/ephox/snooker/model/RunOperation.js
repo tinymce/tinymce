@@ -106,16 +106,14 @@ define(
     };
 
     var onCells = function (warehouse, target) {
-      return target.cells().map(function (cells) {
-        var details = Arr.map(cells.cells(), function (cell) {
-          return TableLookup.cell(cell).bind(function (lc) {
-            return findInWarehouse(warehouse, lc);
-          });
+      var details = Arr.map(target.selection(), function (cell) {
+        return TableLookup.cell(cell).bind(function (lc) {
+          return findInWarehouse(warehouse, lc);
         });
-        var realCells = Options.cat(details);
-        return {
-          cells: Fun.constant(realCells)
-        };
+      });
+      var cells = Options.cat(details);
+      return Option.some({
+        cells: Fun.constant(cells)
       });
     };
 
