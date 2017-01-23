@@ -1,6 +1,6 @@
 module("tinymce.Formatter - Apply", {
 	setupModule: function() {
-		document.getElementById('view').innerHTML = '<textarea id="elm1"></textarea><div id="elm2"></div>';
+		document.getElementById('view').innerHTML = '<textarea id="elm1"></textarea><div id="elm2"></div><textarea id="elm3"></textarea>';
 		QUnit.stop();
 
 		tinymce.init({
@@ -18,32 +18,8 @@ module("tinymce.Formatter - Apply", {
 				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
 			},
 			init_instance_callback: function(ed) {
+				QUnit.start();
 				window.editor = ed;
-
-				if (inlineEditor) {
-					QUnit.start();
-				}
-			}
-		});
-
-		tinymce.init({
-			selector: "#elm2",
-			inline: true,
-			add_unload_trigger: false,
-			skin: false,
-			indent: false,
-			convert_fonts_to_spans: false,
-			disable_nodechange: true,
-			entities: 'raw',
-			valid_styles: {
-				'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
-			},
-			init_instance_callback: function(ed) {
-				window.inlineEditor = ed;
-
-				if (editor) {
-					QUnit.start();
-				}
 			}
 		});
 	}
@@ -1689,39 +1665,51 @@ test('Bug #6471 - Merge left/right style properties', function() {
 	equal(editor.getContent(), '<p><span style="font-weight: bold;">abc</span></p>');
 });
 
-test('Bug #6518 - Apply div blocks to inline editor paragraph', function() {
-	inlineEditor.setContent('<p>a</p><p>b</p>');
-	inlineEditor.selection.select(inlineEditor.getBody().firstChild, true);
-	inlineEditor.selection.collapse(true);
-	inlineEditor.formatter.register('format', {
-		block: 'div'
+asyncTest('Bug #6518 - Apply div blocks to inline editor paragraph', function() {
+	tinymce.init({
+		selector: "#elm2",
+		inline: true,
+		add_unload_trigger: false,
+		skin: false,
+		indent: false,
+		convert_fonts_to_spans: false,
+		disable_nodechange: true,
+		entities: 'raw',
+		valid_styles: {
+			'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
+		},
+		init_instance_callback: function(ed) {
+            QUnit.start();
+
+			ed.setContent('<p>a</p><p>b</p>');
+			ed.selection.select(ed.getBody().firstChild, true);
+			ed.selection.collapse(true);
+			ed.formatter.register('format', {
+				block: 'div'
+			});
+			ed.formatter.apply('format');
+			equal(ed.getContent(), '<div>a</div><p>b</p>');
+		}
 	});
-	inlineEditor.formatter.apply('format');
-	equal(inlineEditor.getContent(), '<div>a</div><p>b</p>');
 });
 
 asyncTest('Bug #7412 - valid_styles affects the Bold and Italic buttons, although it shouldn\'t', function() {
-    tinymce.remove();
-
-    document.getElementById('view').innerHTML = '<textarea id="elm1"></textarea>';
-
     tinymce.init({
-        selector: "#elm1",
+        selector: "#elm3",
         add_unload_trigger: false,
         valid_styles: {
             span: 'color,background-color,font-size,text-decoration,padding-left'
         },
         init_instance_callback: function(ed) {
-            window.editor = ed;
             QUnit.start();
 
-            editor.getBody().innerHTML = '<p>1 <span style="text-decoration: underline;">1234</span> 1</p>';
-            var rng = editor.dom.createRng();
-            rng.setStart(editor.dom.select('span')[0], 0);
-            rng.setEnd(editor.dom.select('span')[0], 1);
-            editor.selection.setRng(rng);
-            editor.formatter.toggle('bold');
-            equal(getContent(), '<p>1 <strong><span style="text-decoration: underline;">1234</span></strong> 1</p>');
+            ed.getBody().innerHTML = '<p>1 <span style="text-decoration: underline;">1234</span> 1</p>';
+            var rng = ed.dom.createRng();
+            rng.setStart(ed.dom.select('span')[0], 0);
+            rng.setEnd(ed.dom.select('span')[0], 1);
+            ed.selection.setRng(rng);
+            ed.formatter.toggle('bold');
+            equal(ed.getContent(), '<p>1 <strong><span style="text-decoration: underline;">1234</span></strong> 1</p>');
         }
     });
 });
@@ -1731,16 +1719,15 @@ test('Format selection from with end at beginning of block', function(){
 	editor.focus();
 	Utils.setSelection('#a', 0, '#b', 0);
 	editor.execCommand('formatBlock', false, 'h1');
-	equal(getContent(), '<h1 id="a">one</h1>\n<div id="b">two</div>');
+	equal(getContent(), '<h1 id="a">one</h1><div id="b">two</div>');
 });
 
 test('Format selection over fragments', function(){
-	editor.setContent("<strong>a</strong>bc<em>d</em>");
+	editor.setContent("<p><strong>a</strong>bc<em>d</em></p>");
 	Utils.setSelection('strong', 1, 'em', 0);
 	editor.formatter.apply('underline');
 	equal(getContent(), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
 });
-
 
 test("Wrapper with fontSize should retain priority within a branch of nested inline format wrappers", function() {
 	editor.setContent("<p>abc</p>");
@@ -1754,29 +1741,30 @@ test("Wrapper with fontSize should retain priority within a branch of nested inl
 	equal(getContent(), '<p><span style="color: #ff0000; font-size: 18px;"><span style="text-decoration: underline;"><strong>abc</strong></span></span></p>');
 });
 
-test("Bug TINY-782: Can't apply sub/sup to word on own line with large font", function() {
+test("Child wrapper having the same format as the immediate parent, shouldn't be removed if it also has other formats merged", function() {
+	editor.getBody().innerHTML = '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>';
+	Utils.setSelection('span span', 0, 'span span', 1);
+	editor.formatter.apply('fontname', {value: "verdana"});
+	equal(getContent(), '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>');
+});
+
+test("TINY-782: Can't apply sub/sup to word on own line with large font", function() {
 	editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</p>';
 	Utils.setSelection('span', 0, 'span', 3);
-
 	editor.formatter.apply('superscript');
-
 	equal(getContent(), '<p><span style="font-size: 18px;"><sup>abc</sup></span></p>');
 });
 
-test("Bug TINY-671: Background color on nested font size bug", function() {
+test("TINY-671: Background color on nested font size bug", function() {
 	editor.getBody().innerHTML = '<p><strong><span style="font-size: 18px;">abc</span></strong></p>';
-
 	Utils.setSelection('span', 0, 'span', 3);
 	editor.formatter.apply('hilitecolor', {value: '#ff0000'});
-
-	equal(getContent(), '<p><span style="background-color: #ff0000; font-size: 18px;"><strong>abc</strong></span></p>');
+	equal(getContent(), '<p><span style="font-size: 18px; background-color: #ff0000;"><strong>abc</strong></span></p>');
 });
 
-test("Bug TINY-865: Font size removed when changing background color", function() {
+test("TINY-865: Font size removed when changing background color", function() {
 	editor.getBody().innerHTML = '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>';
-
 	Utils.setSelection('span span:nth-child(2)', 0, 'span span:nth-child(2)', 1);
 	editor.formatter.apply('hilitecolor', {value: '#ffff00'});
-
-	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="background-color: #ffff00; font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
+	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt; background-color: #ffff00;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
 });

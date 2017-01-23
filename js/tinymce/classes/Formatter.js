@@ -716,19 +716,20 @@ define("tinymce/Formatter", [
 							});
 						});
 
-						// Remove child if direct parent is of same type
+						// Remove format if direct parent already has the same format
 						if (matchNode(node.parentNode, name, vars)) {
-							dom.remove(node, 1);
-							node = 0;
-							return TRUE;
+							if (removeFormat(format, vars, node)) {
+								node = 0;
+							}
 						}
 
-						// Look for parent with similar style format
+						// Remove format if any ancestor already has the same format
 						if (format.merge_with_parents) {
 							dom.getParent(node.parentNode, function(parent) {
 								if (matchNode(parent, name, vars)) {
-									dom.remove(node, 1);
-									node = 0;
+									if (removeFormat(format, vars, node)) {
+										node = 0;
+									}
 									return TRUE;
 								}
 							});
