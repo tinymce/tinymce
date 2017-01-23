@@ -457,12 +457,13 @@ define("tinymce/tableplugin/Quirks", [
 						// and we take over delete operation here to restore it if this happens
 						editor.undoManager.transact(function () {
 							editor.execCommand('Delete');
+
+							if (isEmptyNode(container)) {
+								// caret springs off from the caption (to the first td), we need to bring it back as well
+								restoreCaretPlaceholder(container, true);
+							}
 						});
 
-						if (isEmptyNode(container)) {
-							// caret springs off from the caption (to the first td), we need to bring it back as well
-							restoreCaretPlaceholder(container, true);
-						}
 						e.preventDefault();
 					} else if (hasNoCaretPlaceholder(container)) {
 						// if caret placeholder got accidentally deleted and caption will collapse
