@@ -390,7 +390,7 @@ define("tinymce/tableplugin/Quirks", [
 				return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
 			};
 
-			var restoreCaretPlaceholder = function(node) {
+			var restoreCaretPlaceholder = function(node, insertCaret) {
 				var rng = editor.selection.getRng();
 				var caretNode = node.ownerDocument.createTextNode('\u00a0');
 
@@ -400,6 +400,12 @@ define("tinymce/tableplugin/Quirks", [
 					node.insertBefore(caretNode, node.firstChild);
 				} else {
 					node.appendChild(caretNode);
+				}
+
+				if (insertCaret) {
+					// put the caret into the placeholder
+					editor.selection.select(caretNode, true);
+					editor.selection.collapse(true);
 				}
 			};
 
@@ -454,11 +460,8 @@ define("tinymce/tableplugin/Quirks", [
 						});
 
 						if (isEmptyNode(container)) {
-							restoreCaretPlaceholder(container);
-							// TODO:
-							// caret springs off from the caption (to the first td), we need to bring it back, I tried (with no effect):
-							// editor.selection.select(container, true);
-							// editor.selection.collapse(true);
+							// caret springs off from the caption (to the first td), we need to bring it back as well
+							restoreCaretPlaceholder(container, true);
 						}
 						e.preventDefault();
 					} else if (hasNoCaretPlaceholder(container)) {
