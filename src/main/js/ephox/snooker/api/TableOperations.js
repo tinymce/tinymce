@@ -106,30 +106,26 @@ define(
     };
 
     var eraseColumns = function (grid, details, comparator, _genWrappers) {
-      var cells = details.cells();
-
-      var uniqueColumns = Arr.foldl(cells, function (rest, detail) {
+      var uniqueColumns = Arr.foldl(details, function (rest, detail) {
           return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
       }, []);
 
       var newGrid = Arr.foldl(uniqueColumns, function (rest, item) {
-        return ModificationOperations.deleteColumnAt(rest, cells[0].column());
+        return ModificationOperations.deleteColumnAt(rest, details[0].column());
       }, grid);
-      var cursor = elementFromGrid(newGrid, cells[0].row(), cells[0].column());
+      var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
 
     var eraseRows = function (grid, details, comparator, _genWrappers) {
-      var cells = details.cells();
-
-      var uniqueRows = Arr.foldl(cells, function (rest, detail) {
+      var uniqueRows = Arr.foldl(details, function (rest, detail) {
           return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
       }, []);
 
       var newGrid = Arr.foldl(uniqueRows, function (rest, item) {
-        return ModificationOperations.deleteRowAt(rest, cells[0].row());
+        return ModificationOperations.deleteRowAt(rest, details[0].row());
       }, grid);
-      var cursor = elementFromGrid(newGrid, cells[0].row(), cells[0].column());
+      var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
 

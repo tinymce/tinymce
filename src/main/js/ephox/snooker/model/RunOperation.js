@@ -112,9 +112,7 @@ define(
         });
       });
       var cells = Options.cat(details);
-      return Option.some({
-        cells: Fun.constant(cells)
-      });
+      return Option.some(cells);
     };
 
     return {
