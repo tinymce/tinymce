@@ -648,16 +648,18 @@ define("tinymce/Formatter", [
 					function matchNestedWrapper(node, filter) {
 						do {
 							if (getChildCount(node) !== 1) {
-								return false;
+								break;
 							}
 
 							node = getChildElementNode(node);
 							if (!node) {
-								return false;
+								break;
 							} else if (filter(node)) {
 								return node;
 							}
 						} while (node);
+
+						return null;
 					}
 
 					function mergeStyles(node) {
