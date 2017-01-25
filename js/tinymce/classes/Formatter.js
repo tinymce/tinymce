@@ -648,16 +648,18 @@ define("tinymce/Formatter", [
 					function matchNestedWrapper(node, filter) {
 						do {
 							if (getChildCount(node) !== 1) {
-								return false;
+								break;
 							}
 
 							node = getChildElementNode(node);
 							if (!node) {
-								return false;
+								break;
 							} else if (filter(node)) {
 								return node;
 							}
 						} while (node);
+
+						return null;
 					}
 
 					function mergeStyles(node) {
@@ -785,10 +787,20 @@ define("tinymce/Formatter", [
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList), bookmark);
 
-						// Colored nodes should be underlined so that the color of the underline matches the text color.
-						if (format.styles && (format.styles.color || format.styles.textDecoration)) {
-							walk(curSelNode, processUnderlineAndColor, 'childNodes');
-							processUnderlineAndColor(curSelNode);
+						if (format.styles) {
+							// Colored nodes should be underlined so that the color of the underline matches the text color.
+							if (format.styles.color || format.styles.textDecoration) {
+								walk(curSelNode, processUnderlineAndColor, 'childNodes');
+								processUnderlineAndColor(curSelNode);
+							}
+
+							// nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
+							if (format.styles.backgroundColor) {
+								processChildElements(curSelNode,
+									hasStyle('fontSize'),
+									applyStyle('backgroundColor', replaceVars(format.styles.backgroundColor, vars))
+								);
+							}
 						}
 
 						selection.moveToBookmark(bookmark);
@@ -1441,6 +1453,19 @@ define("tinymce/Formatter", [
 			return str1.toLowerCase() == str2.toLowerCase();
 		}
 
+		function processChildElements(node, filter, process) {
+			each(node.childNodes, function(node) {
+				if (isElementNode(node)) {
+					if (filter(node)) {
+						process(node);
+					}
+					if (node.hasChildNodes()) {
+						processChildElements(node, filter, process);
+					}
+				}
+			});
+		}
+
 		function isElementNode(node) {
 			return node.nodeType == 1 && !isBookmarkNode(node) && !isWhiteSpaceNode(node) && !isCaretNode(node);
 		}
@@ -1449,6 +1474,12 @@ define("tinymce/Formatter", [
 			return Fun.curry(function(name, node) {
 				return !!(node && getStyle(node, name));
 			}, name);
+		}
+
+		function applyStyle(name, value) {
+			return Fun.curry(function(name, value, node) {
+				return !!(node && dom.setStyle(node, name, value));
+			}, name, value);
 		}
 
 		/**
