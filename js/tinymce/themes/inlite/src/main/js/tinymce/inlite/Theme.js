@@ -83,6 +83,17 @@ define('tinymce/inlite/Theme', [
 		};
 	};
 
+	var repositionPanel = function (editor, panel) {
+		return function () {
+			var toolbars = getToolbars(editor);
+			var result = findMatchResult(editor, toolbars);
+
+			if (result) {
+				panel.reposition(editor, result.id, result.rect);
+			}
+		};
+	};
+
 	var ignoreWhenFormIsVisible = function (panel, f) {
 		return function () {
 			if (!panel.inForm()) {
@@ -98,7 +109,8 @@ define('tinymce/inlite/Theme', [
 		editor.on('blur hide ObjectResizeStart', panel.hide);
 		editor.on('click', throttledTogglePanel);
 		editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
-		editor.on('ResizeEditor ResizeWindow keyup', throttledTogglePanel);
+		editor.on('ResizeEditor keyup', throttledTogglePanel);
+		editor.on('ResizeWindow', repositionPanel(editor, panel));
 		editor.on('remove', panel.remove);
 
 		editor.shortcuts.add('Alt+F10', '', panel.focus);
