@@ -226,6 +226,10 @@ define(
       };
     };
 
+    var multiline = function (element) {
+      Attr.set(element, 'aria-multiline', 'true');
+    };
+
     var textarea = function (element) {
       Attr.setAll(element, {
         'aria-multiline': 'true',
@@ -368,6 +372,7 @@ define(
       buttonRole: buttonRole,
       button: button,
       labelledField: labelledField,
+      multiline: multiline,
       textarea: textarea,
       label: label,
       widget: widget,
