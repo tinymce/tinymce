@@ -53,4 +53,23 @@ ModuleLoader.require(["tinymce/fmt/FontInfo"], function(FontInfo) {
 		assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><span><mark></mark></span>', 'Arial,Verdana');
 		assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Helvetica, Verdana"><span><mark></mark></span></span>', 'Arial,Helvetica,Verdana');
 	});
+
+	asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function() {
+				var iframe = document.createElement('iframe');
+				iframe.style.display = 'none';
+				document.body.appendChild(iframe);
+
+				iframe.addEventListener('load', function () {
+					QUnit.start();
+					var fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
+
+					equal(typeof fontFamily, 'string', 'Should always be a string');
+
+					iframe.parentNode.removeChild(iframe);
+				}, false);
+
+				iframe.contentDocument.open();
+				iframe.contentDocument.write('<html><body><p>a</p></body></html>');
+				iframe.contentDocument.close();
+	});
 });

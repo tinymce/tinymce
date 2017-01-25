@@ -26,7 +26,7 @@ define("tinymce/fmt/FontInfo", [
 			elm = elm.parentNode;
 		}
 
-		return 0;
+		return '';
 	};
 
 	var toPt = function (fontSize) {
@@ -48,12 +48,14 @@ define("tinymce/fmt/FontInfo", [
 
 	var getFontSize = function (rootElm, elm) {
 		var specifiedFontSize = getSpecifiedFontProp('fontSize', rootElm, elm);
-		return specifiedFontSize ? specifiedFontSize : getComputedFontProp('fontSize', elm);
+		return specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontSize', elm);
 	};
 
 	var getFontFamily = function (rootElm, elm) {
 		var specifiedFontSize = getSpecifiedFontProp('fontFamily', rootElm, elm);
-		return normalizeFontFamily(specifiedFontSize ? specifiedFontSize : getComputedFontProp('fontFamily', elm));
+		var fontValue = specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontFamily', elm);
+
+		return fontValue !== undefined ? normalizeFontFamily(fontValue) : '';
 	};
 
 	return {
