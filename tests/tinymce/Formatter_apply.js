@@ -1751,8 +1751,12 @@ test("Child wrapper having the same format as the immediate parent, shouldn't be
 test("When format with backgroundColor is applied, all the nested childNodes having fontSize should receive backgroundColor as well", function() {
 	editor.getBody().innerHTML = '<p>a <span style="font-size: 36pt;">b</span> c</p>';
 	editor.selection.select(editor.dom.select('p')[0]);
+
 	editor.formatter.apply('hilitecolor', {value: "#ff0000"});
 	equal(getContent(), '<p><span style="background-color: #ff0000;">a <span style="font-size: 36pt; background-color: #ff0000;">b</span> c</span></p>');
+
+	editor.formatter.remove('hilitecolor', {value: "#ff0000"});
+	equal(getContent(), '<p>a <span style="font-size: 36pt;">b</span> c</p>');
 });
 
 test("TINY-782: Can't apply sub/sup to word on own line with large font", function() {
