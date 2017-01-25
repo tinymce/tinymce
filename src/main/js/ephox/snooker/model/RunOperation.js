@@ -105,9 +105,20 @@ define(
       return target.unmergable();
     };
 
+    var onCells = function (warehouse, target) {
+      var details = Arr.map(target.selection(), function (cell) {
+        return TableLookup.cell(cell).bind(function (lc) {
+          return findInWarehouse(warehouse, lc);
+        });
+      });
+      var cells = Options.cat(details);
+      return cells.length > 0 ? Option.some(cells) : Option.none();
+    };
+
     return {
       run: run,
       onCell: onCell,
+      onCells: onCells,
       onPaste: onPaste,
       onMergable: onMergable,
       onUnmergable: onUnmergable

@@ -70,8 +70,18 @@ define(
       });
     };
 
+    var deleteColumnsAt = function (grid, start, finish) {
+      return Arr.map(grid, function (row) {
+        return row.slice(0, start).concat(row.slice(finish + 1));
+      });
+    };
+
     var deleteRowAt = function (grid, index) {
       return grid.slice(0, index).concat(grid.slice(index + 1));
+    };
+
+    var deleteRowsAt = function (grid, start, finish) {
+      return grid.slice(0, start).concat(grid.slice(finish + 1));
     };
 
     return {
@@ -80,7 +90,9 @@ define(
       splitCellIntoColumns: splitCellIntoColumns,
       splitCellIntoRows: splitCellIntoRows,
       deleteRowAt: deleteRowAt,
-      deleteColumnAt: deleteColumnAt
+      deleteRowsAt: deleteRowsAt,
+      deleteColumnAt: deleteColumnAt,
+      deleteColumnsAt: deleteColumnsAt
     };
   }
 );
