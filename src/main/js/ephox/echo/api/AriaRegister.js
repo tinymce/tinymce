@@ -212,9 +212,12 @@ define(
       var container = Element.fromTag('div');
       presentation(container);
       var id = name + Id.generate('');
+      var lId = Id.generate('label');
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
+      Attr.set(label, 'id', lId);
       Attr.set(field, 'id', id);
+      labelledBy(field, lId); // if the label is hidden the aria-labelledby will still work
       InsertAll.append(container, [ label, field ]);
 
       return {
