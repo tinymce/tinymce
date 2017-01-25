@@ -136,7 +136,10 @@ tinymce.PluginManager.add('template', function(editor) {
 			minHeight: Math.min(tinymce.DOM.getViewPort().h, editor.getParam('template_popup_height', 500))
 		});
 
-		win.find('listbox')[0].fire('select');
+		setTimeout(function(){
+		    win.find('listbox')[0].fire('select');
+		}, 450);
+		
 	}
 
 	function getDateTime(fmt, date) {
