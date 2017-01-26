@@ -246,9 +246,11 @@ define("tinymce/InsertContent", [
 		}
 
 		// Insert node maker where we will insert the new HTML and get it's parent
-		if (!selection.isCollapsed()) {
+		if (!selection.isCollapsed() && editor.settings.forced_root_block !== false) {
 			// Fix for #2595 seems that delete removes one extra character on
 			// WebKit for some odd reason if you double click select a word
+			// Dont do this with forced_root_block: false because it will
+			// set the selection on the resizehandle
 			editor.selection.setRng(editor.selection.getRng());
 			editor.getDoc().execCommand('Delete', false, null);
 			trimNbspAfterDeleteAndPaddValue();
