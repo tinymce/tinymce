@@ -212,15 +212,22 @@ define(
       var container = Element.fromTag('div');
       presentation(container);
       var id = name + Id.generate('');
+      var lId = Id.generate('label');
       var label = Element.fromHtml('<label>' + labelText + '</label>');
       Attr.set(label, 'for', id);
+      Attr.set(label, 'id', lId);
       Attr.set(field, 'id', id);
+      labelledBy(field, lId); // required for JAWS17 if the label above is aria-hidden - the aria-labelledby will still work
       InsertAll.append(container, [ label, field ]);
 
       return {
         element: Fun.constant(container),
         field:   Fun.constant(field)
       };
+    };
+
+    var multiline = function (element) {
+      Attr.set(element, 'aria-multiline', 'true');
     };
 
     var textarea = function (element) {
@@ -365,6 +372,7 @@ define(
       buttonRole: buttonRole,
       button: button,
       labelledField: labelledField,
+      multiline: multiline,
       textarea: textarea,
       label: label,
       widget: widget,
