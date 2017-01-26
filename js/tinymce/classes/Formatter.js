@@ -1478,7 +1478,7 @@ define("tinymce/Formatter", [
 
 		function applyStyle(name, value) {
 			return Fun.curry(function(name, value, node) {
-				return !!(node && dom.setStyle(node, name, value));
+				dom.setStyle(node, name, value);
 			}, name, value);
 		}
 
