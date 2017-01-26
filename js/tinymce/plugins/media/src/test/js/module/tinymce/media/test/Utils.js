@@ -267,6 +267,7 @@ define('tinymce.media.test.Utils', [
 		sAssertSizeRecalcConstrainedReopen: sAssertSizeRecalcConstrainedReopen,
 		sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained,
 		sAssertEmbedContent: sAssertEmbedContent,
-		sAssertSourceValue: sAssertSourceValue
+		sAssertSourceValue: sAssertSourceValue,
+		sChangeWidthValue: sChangeWidthValue
 	};
 });
