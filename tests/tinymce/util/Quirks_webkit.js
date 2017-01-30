@@ -345,6 +345,14 @@ if (tinymce.isWebKit) {
 		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
 		equal(editor.selection.getStart(true).nodeName, 'P');
 	});
+
+	test('Delete with similar sibling nodes', function() {
+		editor.getBody().innerHTML = '<p>Test test</p><p>a</p><p>a</p><p id="t1">a</p><p>test1</p><p id="t2">test2</p>';
+		Utils.setSelection('p#t1', 1, 'p#t2', 5);
+		editor.fire('keydown', {keyCode: 8});
+		equal(Utils.cleanHtml(editor.getBody().innerHTML), '<p>test test</p><p>a</p><p>a</p><p id="t1">a</p>');
+		equal(editor.selection.getStart(true).nodeName, 'P');
+	});
 } else {
 	test("Skipped since the browser isn't WebKit", function() {
 		ok(true, "Skipped");
