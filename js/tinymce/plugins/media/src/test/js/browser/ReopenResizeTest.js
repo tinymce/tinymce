@@ -27,7 +27,11 @@ asynctest('browser.core.PluginTest', [
 						attrs: {
 							width: str.is(width)
 						}
-					})
+					}),
+					s.anything(),
+					s.anything(),
+					s.anything(),
+					s.anything()
 				]
 			});
 		});

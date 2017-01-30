@@ -26,6 +26,23 @@ define("tinymce/InsertContent", [
 ], function(Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType, InsertList) {
 	var isTableCell = NodeType.matchNodeNames('td th');
 
+	var validInsertion = function (editor, value, parentNode) {
+		// Should never insert content into bogus elements, since these can
+		// be resize handles or similar
+		if (parentNode.getAttribute('data-mce-bogus') === 'all') {
+			parentNode.parentNode.insertBefore(editor.dom.createFragment(value), parentNode);
+		} else {
+			// Check if parent is empty or only has one BR element then set the innerHTML of that parent
+			var node = parentNode.firstChild;
+			var node2 = parentNode.lastChild;
+			if (!node || (node === node2 && node.nodeName === 'BR')) {///
+				editor.dom.setHTML(parentNode, value);
+			} else {
+				editor.selection.setContent(value);
+			}
+		}
+	};
+
 	var insertHtmlAtCaret = function(editor, value, details) {
 		var parser, serializer, parentNode, rootNode, fragment, args;
 		var marker, rng, node, node2, bookmarkHtml, merge;
@@ -246,11 +263,9 @@ define("tinymce/InsertContent", [
 		}
 
 		// Insert node maker where we will insert the new HTML and get it's parent
-		if (!selection.isCollapsed() && editor.settings.forced_root_block !== false) {
+		if (!selection.isCollapsed()) {
 			// Fix for #2595 seems that delete removes one extra character on
 			// WebKit for some odd reason if you double click select a word
-			// Dont do this with forced_root_block: false because it will
-			// set the selection on the resizehandle
 			editor.selection.setRng(editor.selection.getRng());
 			editor.getDoc().execCommand('Delete', false, null);
 			trimNbspAfterDeleteAndPaddValue();
@@ -292,15 +307,7 @@ define("tinymce/InsertContent", [
 		// If parser says valid we can insert the contents into that parent
 		if (!parserArgs.invalid) {
 			value = serializer.serialize(fragment);
-
-			// Check if parent is empty or only has one BR element then set the innerHTML of that parent
-			node = parentNode.firstChild;
-			node2 = parentNode.lastChild;
-			if (!node || (node === node2 && node.nodeName === 'BR')) {
-				dom.setHTML(parentNode, value);
-			} else {
-				selection.setContent(value);
-			}
+			validInsertion(editor, value, parentNode);
 		} else {
 			// If the fragment was invalid within that context then we need
 			// to parse and process the parent it's inserted into
