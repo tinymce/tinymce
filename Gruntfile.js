@@ -293,7 +293,8 @@ module.exports = function(grunt) {
 						"js/tinymce/plugins/visualblocks/img",
 						"js/tinymce/skins/*/fonts/*.json",
 						"js/tinymce/skins/*/fonts/readme.md",
-						"readme.md"
+						"readme.md",
+						"js/**/Gruntfile.js"
 					],
 
 					to: "tmp/tinymce_<%= pkg.version %>.zip"
