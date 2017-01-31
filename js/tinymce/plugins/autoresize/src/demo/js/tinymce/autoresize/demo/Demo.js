@@ -12,12 +12,12 @@
 
 define(
 	'tinymce.autoresize.demo.Demo',
-	
+
 	[
 		'tinymce.autoresize.Plugin',
 		'global!tinymce'
 	],
-	
+
 	function (Plugin, tinymce) {
 		return function () {
 

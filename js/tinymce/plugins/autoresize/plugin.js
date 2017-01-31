@@ -81,8 +81,12 @@ var defineGlobal = function (id, ref) {
   define(id, [], function () { return ref; });
 };
 /*jsc
-["tinymce.autoresize.Plugin"]
+["tinymce.autoresize.Plugin","global!tinymce.DOM","global!tinymce.Env","global!tinymce.PluginManager","global!tinymce.util.Delay"]
 jsc*/
+defineGlobal("global!tinymce.DOM", tinymce.DOM);
+defineGlobal("global!tinymce.Env", tinymce.Env);
+defineGlobal("global!tinymce.PluginManager", tinymce.PluginManager);
+defineGlobal("global!tinymce.util.Delay", tinymce.util.Delay);
 /**
  * Plugin.js
  *
@@ -102,11 +106,14 @@ jsc*/
 define(
 	'tinymce.autoresize.Plugin',
 	[
-		
-	],
+    'global!tinymce.DOM',
+    'global!tinymce.Env',
+    'global!tinymce.PluginManager',
+    'global!tinymce.util.Delay'
+  ],
 
-  function () {
-		tinymce.PluginManager.add('autoresize', function(editor) {
+  function (DOM, Env, PluginManager, Delay) {
+		PluginManager.add('autoresize', function(editor) {
 			var settings = editor.settings, oldSize = 0;
 
 			function isFullscreen() {
@@ -121,7 +128,7 @@ define(
 			 * This method gets executed each time the editor needs to resize.
 			 */
 			function resize(e) {
-				var deltaSize, doc, body, docElm, DOM = tinymce.DOM, resizeHeight, myHeight,
+				var deltaSize, doc, body, docElm, resizeHeight, myHeight,
 					marginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;
 
 				doc = editor.getDoc();
@@ -156,7 +163,7 @@ define(
 				// Make sure we have a valid height
 				if (isNaN(myHeight) || myHeight <= 0) {
 					// Get height differently depending on the browser used
-					myHeight = tinymce.Env.ie ? body.scrollHeight : (tinymce.Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);
+					myHeight = Env.ie ? body.scrollHeight : (Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);
 				}
 
 				// Don't make it smaller than the minimum height
@@ -183,7 +190,7 @@ define(
 
 					// WebKit doesn't decrease the size of the body element until the iframe gets resized
 					// So we need to continue to resize the iframe down until the size gets fixed
-					if (tinymce.isWebKit && deltaSize < 0) {
+					if (Env.webKit && deltaSize < 0) {
 						resize(e);
 					}
 				}
@@ -194,7 +201,7 @@ define(
 			 * the CSS files might load async.
 			 */
 			function wait(times, interval, callback) {
-				tinymce.util.Delay.setEditorTimeout(editor, function() {
+				Delay.setEditorTimeout(editor, function() {
 					resize({});
 
 					if (times--) {
@@ -249,6 +256,7 @@ define(
 			editor.addCommand('mceAutoResize', resize);
 		});
 
+		return null;
   }
 );
 dem('tinymce.autoresize.Plugin')();
