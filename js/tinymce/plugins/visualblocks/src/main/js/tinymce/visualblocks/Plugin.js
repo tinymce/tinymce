@@ -19,8 +19,7 @@ define(
 
 	[
     'global!tinymce.DOM',
-    'global!tinymce.PluginManager',
-		'global!tinymce.walk'
+    'global!tinymce.PluginManager'
   ],
 
   function (DOM, PluginManager) {
