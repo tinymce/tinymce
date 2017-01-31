@@ -176,6 +176,6 @@ define(
 			this.isEmpty = isEmpty;
 		});
 
-		return null;
+		return function () {};
   }
 );

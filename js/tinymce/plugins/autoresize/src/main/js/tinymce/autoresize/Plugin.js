@@ -167,6 +167,6 @@ define(
 			editor.addCommand('mceAutoResize', resize);
 		});
 
-		return null;
+		return function () {};
   }
 );

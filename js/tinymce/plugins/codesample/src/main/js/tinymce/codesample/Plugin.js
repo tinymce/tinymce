@@ -117,6 +117,6 @@ define(
 			editor.on('init', loadCss);
 		});
 		
-		return null;
+		return function () {};
   }
 );

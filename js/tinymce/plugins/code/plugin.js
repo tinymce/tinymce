@@ -159,7 +159,7 @@ define(
 			});
 		});
 
-		return null;
+		return function () {};
   }
 );
 dem('tinymce.code.Plugin')();
