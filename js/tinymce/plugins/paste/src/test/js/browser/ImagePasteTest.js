@@ -1,6 +1,8 @@
 asynctest('tinymce.paste.browser.ImagePasteTest', [
 	'global!tinymce.util.Delay',
 	'global!tinymce.util.Promise',
+	'global!atob',
+	'global!Blob',
 	'tinymce.paste.Plugin',
 	'tinymce.paste.core.Clipboard',
 	'tinymce.paste.test.LegacyUnit',
@@ -9,7 +11,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 	'ephox.agar.api.Step',
 	'ephox.katamari.api.Arr'
 ], function (
-	Delay, Promise, Plugin, Clipboard, LegacyUnit,
+	Delay, Promise, atob, Blob, Plugin, Clipboard, LegacyUnit,
 	TinyLoader, Pipeline, Step, Arr
 ) {
 	var success = arguments[arguments.length - 2];
@@ -28,7 +30,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 
 
 	var sTeardown = function (editor) {
-		return Step.sync(function() {
+		return Step.sync(function () {
 			delete editor.settings.paste_data_images;
 			delete editor.settings.images_dataimg_filter;
 			editor.editorUpload.destroy();
@@ -101,7 +103,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		});
 	};
 
-	suite.asyncTest('dropImages', function(editor, done, die) {
+	suite.asyncTest('dropImages', function (editor, done, die) {
 		var rng, event, clipboard = new Clipboard(editor);
 
 		editor.settings.paste_data_images = true;
@@ -118,7 +120,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		})["catch"](die);
 	});
 
-	suite.asyncTest('pasteImages', function(editor, done, die) {
+	suite.asyncTest('pasteImages', function (editor, done, die) {
 		var rng, event, clipboard = new Clipboard(editor);
 
 		editor.settings.paste_data_images = true;
@@ -135,7 +137,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		})["catch"](die);
 	});
 
-	suite.asyncTest('dropImages - images_dataimg_filter', function(editor, done, die) {
+	suite.asyncTest('dropImages - images_dataimg_filter', function (editor, done, die) {
 		var rng, event, clipboard = new Clipboard(editor);
 
 		editor.settings.paste_data_images = true;
@@ -156,7 +158,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		})["catch"](die);
 	});
 
-	suite.asyncTest('pasteImages - images_dataimg_filter', function(editor, done, die) {
+	suite.asyncTest('pasteImages - images_dataimg_filter', function (editor, done, die) {
 		var rng, event, clipboard = new Clipboard(editor);
 
 		editor.settings.paste_data_images = true;

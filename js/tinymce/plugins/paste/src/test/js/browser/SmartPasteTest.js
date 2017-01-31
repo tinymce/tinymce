@@ -12,7 +12,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	suite.test('isAbsoluteUrl', function() {
+	suite.test('isAbsoluteUrl', function () {
 		LegacyUnit.equal(SmartPaste.isAbsoluteUrl('http://www.site.com'), true);
 		LegacyUnit.equal(SmartPaste.isAbsoluteUrl('https://www.site.com'), true);
 		LegacyUnit.equal(SmartPaste.isAbsoluteUrl('http://www.site.com/dir-name/file.gif?query=%42'), true);
@@ -23,7 +23,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(SmartPaste.isAbsoluteUrl(''), false);
 	});
 
-	suite.test('isImageUrl', function() {
+	suite.test('isImageUrl', function () {
 		LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com'), false);
 		LegacyUnit.equal(SmartPaste.isImageUrl('https://www.site.com'), false);
 		LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.jpeg'), true);
@@ -38,7 +38,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(SmartPaste.isImageUrl(''), false);
 	});
 
-	suite.test('smart paste url on selection', function(editor) {
+	suite.test('smart paste url on selection', function (editor) {
 		editor.focus();
 		editor.undoManager.clear();
 		editor.setContent('<p>abc</p>');
@@ -50,7 +50,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.undoManager.data.length, 3);
 	});
 
-	suite.test('smart paste image url', function(editor) {
+	suite.test('smart paste image url', function (editor) {
 		editor.focus();
 		editor.undoManager.clear();
 		editor.setContent('<p>abc</p>');
@@ -62,7 +62,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.undoManager.data.length, 3);
 	});
 
-	suite.test('smart paste option disabled', function(editor) {
+	suite.test('smart paste option disabled', function (editor) {
 		editor.focus();
 		editor.undoManager.clear();
 		editor.setContent('<p>abc</p>');

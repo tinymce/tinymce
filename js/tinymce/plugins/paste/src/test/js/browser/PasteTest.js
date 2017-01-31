@@ -38,7 +38,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
 	};
 
-	suite.test("Plain text toggle event", function(editor) {
+	suite.test("Plain text toggle event", function (editor) {
 		var events = [];
 
 		editor.on('PastePlainTextToggle', function (e) {
@@ -64,7 +64,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		], 'Should be enabled again');
 	});
 
-	suite.test("Paste simple text content", function(editor) {
+	suite.test("Paste simple text content", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -77,7 +77,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>1TEST4</p>');
 	});
 
-	suite.test("Paste styled text content", function(editor) {
+	suite.test("Paste styled text content", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.settings.paste_remove_styles_if_webkit = false;
@@ -91,7 +91,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>1<strong><em><span style="color: red;">TEST</span></em></strong>4</p>');
 	});
 
-	suite.test("Paste paragraph in paragraph", function(editor) {
+	suite.test("Paste paragraph in paragraph", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -103,7 +103,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>1</p><p>TEST</p><p>4</p>');
 	});
 
-	suite.test("Paste paragraphs in complex paragraph", function(editor) {
+	suite.test("Paste paragraphs in complex paragraph", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p><strong><em>1234</em></strong></p>');
@@ -115,7 +115,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><strong><em>1</em></strong></p><p>TEST 1</p><p>TEST 2</p><p><strong><em>4</em></strong></p>');
 	});
 
-	suite.test("Paste Word fake list", function(editor) {
+	suite.test("Paste Word fake list", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -145,7 +145,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<ol><li>Version 7.0:</li></ol>');
 	});
 
-	suite.test("Paste Word fake list before BR", function(editor) {
+	suite.test("Paste Word fake list before BR", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -165,7 +165,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
 	});
 
-	suite.test("Paste Word fake lists interrupted by header", function(editor) {
+	suite.test("Paste Word fake lists interrupted by header", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -177,7 +177,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<ul><li>List before heading A</li><li>List before heading B</li></ul><h1>heading</h1><ul><li>List after heading A</li><li>List after heading B</li></ul>');
 	});
 
-	suite.test("Paste list like paragraph and list", function(editor) {
+	suite.test("Paste list like paragraph and list", function (editor) {
 		editor.setContent('');
 
 		editor.execCommand('mceInsertClipboardContent', false, {
@@ -187,7 +187,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>ABC. X</p><ol><li>Y</li></ol>');
 	});
 
-	suite.test("Paste list like paragraph and list (disabled)", function(editor) {
+	suite.test("Paste list like paragraph and list (disabled)", function (editor) {
 		editor.setContent('');
 
 		editor.settings.paste_convert_word_fake_lists = false;
@@ -201,7 +201,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>ABC. X</p><p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Y</p>');
 	});
 
-	suite.test("Paste Word table", function(editor) {
+	suite.test("Paste Word table", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -213,7 +213,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td width="307"><p>Cell 1</p></td><td width="307"><p>Cell 2</p></td></tr><tr><td width="307"><p>Cell 3</p></td><td width="307"><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
 	});
 
-	suite.test("Paste Office 365", function(editor) {
+	suite.test("Paste Office 365", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -225,7 +225,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
 	});
 
-	suite.test("Paste Google Docs 1", function(editor) {
+	suite.test("Paste Google Docs 1", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -237,7 +237,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
 	});
 
-	suite.test("Paste Google Docs 2", function(editor) {
+	suite.test("Paste Google Docs 2", function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>1234</p>');
@@ -259,7 +259,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>a</p><p>b</p><p>c</p>');
 	});
 
-	suite.test("Paste Word without mso markings", function(editor) {
+	suite.test("Paste Word without mso markings", function (editor) {
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {
 			content: (
@@ -276,7 +276,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		));
 	});
 
-	suite.test("Paste Word links", function(editor) {
+	suite.test("Paste Word links", function (editor) {
 		editor.setContent('');
 		editor.execCommand('mceInsertClipboardContent', false, {
 			content: (
@@ -315,7 +315,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		));
 	});
 
-	suite.test("Paste Word retain styles", function(editor) {
+	suite.test("Paste Word retain styles", function (editor) {
 		editor.settings.paste_retain_style_properties = 'color,background-color,font-family';
 
 		// Test color
@@ -331,7 +331,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p style=\"background-color: #ff0000;\">Test</p>');
 	});
 
-	suite.test("Paste Word retain bold/italic styles to elements", function(editor) {
+	suite.test("Paste Word retain bold/italic styles to elements", function (editor) {
 		editor.settings.paste_retain_style_properties = 'color';
 
 		editor.setContent('');
@@ -350,7 +350,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><strong>bold</strong><em>italic</em><strong><em>bold + italic</em></strong><strong><span style="color: red;">bold + color</span></strong></p>');
 	});
 
-	suite.test('paste track changes comment', function(editor) {
+	suite.test('paste track changes comment', function (editor) {
 		editor.setContent('');
 
 		editor.execCommand('mceInsertClipboardContent', false, {
@@ -365,7 +365,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>1</p>');
 	});
 
-	suite.test('paste nested (UL) word list', function(editor) {
+	suite.test('paste nested (UL) word list', function (editor) {
 		editor.setContent('');
 
 		editor.execCommand('mceInsertClipboardContent', false, {
@@ -401,7 +401,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		);
 	});
 
-	suite.test('paste nested (OL) word list', function(editor) {
+	suite.test('paste nested (OL) word list', function (editor) {
 		editor.setContent('');
 
 		editor.execCommand('mceInsertClipboardContent', false, {
@@ -441,7 +441,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		);
 	});
 
-	suite.test("Paste list start index", function(editor) {
+	suite.test("Paste list start index", function (editor) {
 		editor.settings.paste_merge_formats = true;
 
 		editor.setContent('');
@@ -457,7 +457,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<ol start="10"><li>J</li></ol>');
 	});
 
-	suite.test("Paste paste_merge_formats: true", function(editor) {
+	suite.test("Paste paste_merge_formats: true", function (editor) {
 		editor.settings.paste_merge_formats = true;
 
 		editor.setContent('<p><strong>a</strong></p>');
@@ -466,7 +466,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
 	});
 
-	suite.test("Paste paste_merge_formats: false", function(editor) {
+	suite.test("Paste paste_merge_formats: false", function (editor) {
 		editor.settings.paste_merge_formats = false;
 
 		editor.setContent('<p><strong>a</strong></p>');
@@ -475,21 +475,21 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><strong>a<em><strong>b</strong></em></strong></p>');
 	});
 
-	suite.test("Paste word DIV as P", function(editor) {
+	suite.test("Paste word DIV as P", function (editor) {
 		editor.setContent('');
 		editor.execCommand('SelectAll');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<p class="MsoNormal">1</p><div>2</div>'});
 		LegacyUnit.equal(editor.getContent(), '<p>1</p><p>2</p>');
 	});
 
-	suite.test("Paste part of list from IE", function(editor) {
+	suite.test("Paste part of list from IE", function (editor) {
 		editor.setContent('');
 		editor.execCommand('SelectAll');
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<li>item2</li><li>item3</li>'});
 		LegacyUnit.equal(trimContent(editor.getContent()), '<ul><li>item2</li><li>item3</li></ul>', 'List tags are inferred when pasting LI');
 	});
 
-	suite.test("Disable default filters", function(editor) {
+	suite.test("Disable default filters", function (editor) {
 		editor.settings.paste_enable_default_filters = false;
 
 		// Test color
@@ -500,7 +500,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
 	});
 
-	suite.test('paste invalid content with spans on page', function(editor) {
+	suite.test('paste invalid content with spans on page', function (editor) {
 		var startingContent = '<p>123 testing <span id="x">span later in document</span></p>',
 			insertedContent = '<ul><li>u</li><li>l</li></ul>';
 		editor.setContent(startingContent);
@@ -513,7 +513,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), insertedContent + startingContent);
 	});
 
-	suite.test('paste plain text with space', function(editor) {
+	suite.test('paste plain text with space', function (editor) {
 		editor.setContent('<p>text</p>');
 		var rng = editor.dom.createRng();
 		rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -524,7 +524,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>t a xt</p>');
 	});
 
-	suite.test('paste plain text with linefeeds', function(editor) {
+	suite.test('paste plain text with linefeeds', function (editor) {
 		editor.setContent('<p>text</p>');
 		var rng = editor.dom.createRng();
 		rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -535,7 +535,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c<br />xt</p>');
 	});
 
-	suite.test('paste plain text with double linefeeds', function(editor) {
+	suite.test('paste plain text with double linefeeds', function (editor) {
 		editor.setContent('<p>text</p>');
 		var rng = editor.dom.createRng();
 		rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -546,7 +546,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>t</p><p>a</p><p>b</p><p>c</p><p>xt</p>');
 	});
 
-	suite.test('paste plain text with entities', function(editor) {
+	suite.test('paste plain text with entities', function (editor) {
 		editor.setContent('<p>text</p>');
 		var rng = editor.dom.createRng();
 		rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -557,7 +557,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>t&lt; &amp; &gt;xt</p>');
 	});
 
-	suite.test('paste plain text with paragraphs', function(editor) {
+	suite.test('paste plain text with paragraphs', function (editor) {
 		editor.setContent('<p>text</p>');
 		var rng = editor.dom.createRng();
 		rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -568,7 +568,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>t</p><p>a<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
 	});
 
-	suite.test('paste data image with paste_data_images: false', function(editor) {
+	suite.test('paste data image with paste_data_images: false', function (editor) {
 		editor.setContent('');
 
 		editor.execCommand('mceInsertClipboardContent', false, {content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">'});
@@ -578,7 +578,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '');
 	});
 
-	suite.test('paste data image with paste_data_images: true', function(editor) {
+	suite.test('paste data image with paste_data_images: true', function (editor) {
 		editor.settings.paste_data_images = true;
 
 		editor.setContent('');
@@ -587,8 +587,8 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
 	});
 
-	suite.test('paste pre process text (event)', function(editor) {
-		function callback(e) {
+	suite.test('paste pre process text (event)', function (editor) {
+		function callback (e) {
 			e.content = 'PRE:' + e.content;
 		}
 
@@ -605,8 +605,8 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p>c</p>');
 	});
 
-	suite.test('paste pre process html (event)', function(editor) {
-		function callback(e) {
+	suite.test('paste pre process html (event)', function (editor) {
+		function callback (e) {
 			e.content = 'PRE:' + e.content;
 		}
 
@@ -623,8 +623,8 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><em>c</em></p>');
 	});
 
-	suite.test('paste post process (event)', function(editor) {
-		function callback(e) {
+	suite.test('paste post process (event)', function (editor) {
+		function callback (e) {
 			e.node.innerHTML += ':POST';
 		}
 
@@ -641,51 +641,51 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 		LegacyUnit.equal(editor.getContent(), '<p><em>c</em></p>');
 	});
 
-	suite.test('paste innerText of conditional comments', function() {
+	suite.test('paste innerText of conditional comments', function () {
 		LegacyUnit.equal(Utils.innerText('<![if !supportLists]>X<![endif]>'), 'X');
 	});
 
-	suite.test('paste innerText of single P', function(editor) {
+	suite.test('paste innerText of single P', function (editor) {
 		editor.setContent('<p>a</p>');
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a');
 	});
 
-	suite.test('paste innerText of single P with whitespace wrapped content', function(editor) {
+	suite.test('paste innerText of single P with whitespace wrapped content', function (editor) {
 		editor.setContent('<p>   a   </p>');
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a');
 	});
 
-	suite.test('paste innerText of two P', function(editor) {
+	suite.test('paste innerText of two P', function (editor) {
 		editor.setContent('<p>a</p><p>b</p>');
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\n\nb');
 	});
 
-	suite.test('paste innerText of H1 and P', function(editor) {
+	suite.test('paste innerText of H1 and P', function (editor) {
 		editor.setContent('<h1>a</h1><p>b</p>');
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\nb');
 	});
 
-	suite.test('paste innerText of P with BR', function(editor) {
+	suite.test('paste innerText of P with BR', function (editor) {
 		editor.setContent('<p>a<br>b</p>');
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\nb');
 	});
 
-	suite.test('paste innerText of P with VIDEO', function(editor) {
+	suite.test('paste innerText of P with VIDEO', function (editor) {
 		editor.setContent('<p>a<video>b<br>c</video>d</p>');
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a d');
 	});
 
-	suite.test('paste innerText of PRE', function(editor) {
+	suite.test('paste innerText of PRE', function (editor) {
 		editor.getBody().innerHTML = '<pre>a\nb\n</pre>';
 		LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML).replace(/\r\n/g, '\n'), 'a\nb\n');
 	});
 
-	suite.test('paste innerText of textnode with whitespace', function(editor) {
+	suite.test('paste innerText of textnode with whitespace', function (editor) {
 		editor.getBody().innerHTML = '<pre> a </pre>';
 		LegacyUnit.equal(Utils.innerText(editor.getBody().firstChild.innerHTML), ' a ');
 	});
 
-	suite.test('trim html from clipboard fragments', function() {
+	suite.test('trim html from clipboard fragments', function () {
 		LegacyUnit.equal(Utils.trimHtml('<!--StartFragment-->a<!--EndFragment-->'), 'a');
 		LegacyUnit.equal(Utils.trimHtml('a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'), '\nb\n');
 		LegacyUnit.equal(Utils.trimHtml('a<!--StartFragment-->b<!--EndFragment-->c'), 'abc');
@@ -697,7 +697,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 	});
 
 	if (Env.ie) {
-		suite.test('paste font and u in anchor', function(editor) {
+		suite.test('paste font and u in anchor', function (editor) {
 			editor.setContent('<p>a</p>');
 			LegacyUnit.setSelection(editor, 'p', 1);
 
@@ -710,95 +710,95 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 	}
 
 	if (Env.webkit) {
-		suite.test('paste webkit retains text styles runtime styles internal', function(editor) {
+		suite.test('paste webkit retains text styles runtime styles internal', function (editor) {
 			editor.settings.paste_webkit_styles = 'color';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;'});
 			LegacyUnit.equal(editor.getContent(), '<p>&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;</p>');
 		});
 
-		suite.test('paste webkit remove runtime styles internal', function(editor) {
+		suite.test('paste webkit remove runtime styles internal', function (editor) {
 			editor.settings.paste_webkit_styles = 'color';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (color)', function(editor) {
+		suite.test('paste webkit remove runtime styles (color)', function (editor) {
 			editor.settings.paste_webkit_styles = 'color';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles keep before attr', function(editor) {
+		suite.test('paste webkit remove runtime styles keep before attr', function (editor) {
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span class="c" style="color:red; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span class="c">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles keep after attr', function(editor) {
+		suite.test('paste webkit remove runtime styles keep after attr', function (editor) {
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color:red; text-indent: 10px" title="t">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span title="t">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles keep before/after attr', function(editor) {
+		suite.test('paste webkit remove runtime styles keep before/after attr', function (editor) {
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span class="c" style="color:red; text-indent: 10px" title="t">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span class="c" title="t">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (background-color)', function(editor) {
+		suite.test('paste webkit remove runtime styles (background-color)', function (editor) {
 			editor.settings.paste_webkit_styles = 'background-color';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="background-color:red; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style="background-color: red;">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (font-size)', function(editor) {
+		suite.test('paste webkit remove runtime styles (font-size)', function (editor) {
 			editor.settings.paste_webkit_styles = 'font-size';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-size:42px; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style="font-size: 42px;">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (font-family)', function(editor) {
+		suite.test('paste webkit remove runtime styles (font-family)', function (editor) {
 			editor.settings.paste_webkit_styles = 'font-family';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="font-family:Arial; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style="font-family: Arial;">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles font-family allowed but not specified', function(editor) {
+		suite.test('paste webkit remove runtime styles font-family allowed but not specified', function (editor) {
 			editor.settings.paste_webkit_styles = 'font-family';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<p title="x" style="text-indent: 10px">Test</p>'});
 			LegacyUnit.equal(editor.getContent(), '<p title="x">Test</p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (custom styles)', function(editor) {
+		suite.test('paste webkit remove runtime styles (custom styles)', function (editor) {
 			editor.settings.paste_webkit_styles = 'color font-style';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style="color: red; font-style: italic;">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (all)', function(editor) {
+		suite.test('paste webkit remove runtime styles (all)', function (editor) {
 			editor.settings.paste_webkit_styles = 'all';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p><span style=\"color: red; font-style: italic; text-indent: 10px;\">Test</span></p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (none)', function(editor) {
+		suite.test('paste webkit remove runtime styles (none)', function (editor) {
 			editor.settings.paste_webkit_styles = 'none';
 			editor.setContent('');
 			editor.execCommand('mceInsertClipboardContent', false, {content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>'});
 			LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (color) in the same (color) (named)', function(editor) {
+		suite.test('paste webkit remove runtime styles (color) in the same (color) (named)', function (editor) {
 			editor.settings.paste_webkit_styles = 'color';
 
 			editor.setContent('<p style="color:red">Test</span>');
@@ -814,7 +814,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 			LegacyUnit.equal(editor.getContent(), '<p style="color: red;">ab</p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (color) in the same (color) (hex)', function(editor) {
+		suite.test('paste webkit remove runtime styles (color) in the same (color) (hex)', function (editor) {
 			editor.setContent('<p style="color:#ff0000">Test</span>');
 			LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
 
@@ -829,7 +829,7 @@ asynctest('tinymce.paste.browser.ImagePasteTest', [
 			LegacyUnit.equal(editor.getContent(), '<p style="color: #ff0000;">abc</p>');
 		});
 
-		suite.test('paste webkit remove runtime styles (color) in the same (color) (rgb)', function(editor) {
+		suite.test('paste webkit remove runtime styles (color) in the same (color) (rgb)', function (editor) {
 			editor.setContent('<p style="color:rgb(255, 0, 0)">Test</span>');
 			LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
 
