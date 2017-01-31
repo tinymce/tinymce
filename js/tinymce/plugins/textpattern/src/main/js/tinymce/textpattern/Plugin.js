@@ -18,14 +18,13 @@ define(
 	'tinymce.textpattern.Plugin',
 
 	[
-    'global!tinymce.DOM',
 		'global!tinymce.trim',
     'global!tinymce.PluginManager',
 		'global!tinymce.dom.TreeWalker',
 		'global!tinymce.util.VK'
   ],
 
-  function (DOM, trim, PluginManager, TreeWalker, VK) {
+  function (trim, PluginManager, TreeWalker, VK) {
 		PluginManager.add('textpattern', function(editor) {
 			var isPatternsDirty = true, patterns;
 

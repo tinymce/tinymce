@@ -18,13 +18,12 @@ define(
 	'tinymce.toc.Plugin',
 
 	[
-    'global!tinymce.DOM',
     'global!tinymce.PluginManager',
 		'global!tinymce.map',
 		'global!tinymce.translate'
   ],
 
-  function (DOM, PluginManager, map, translate) {
+  function (PluginManager, map, translate) {
 		PluginManager.add('toc', function(editor) {
 					var $ = editor.$;
 					var opts;

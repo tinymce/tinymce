@@ -18,12 +18,11 @@ define(
 	'tinymce.visualchars.Plugin',
 
 	[
-    'global!tinymce.DOM',
     'global!tinymce.PluginManager',
 		'global!tinymce.walk'
   ],
 
-  function (DOM, PluginManager, walk) {
+  function (PluginManager, walk) {
 		PluginManager.add('visualchars', function(editor) {
 			var self = this, state;
 

@@ -18,11 +18,10 @@ define(
 	'tinymce.visualblocks.Plugin',
 
 	[
-    'global!tinymce.DOM',
     'global!tinymce.PluginManager'
   ],
 
-  function (DOM, PluginManager) {
+  function (PluginManager) {
 		PluginManager.add('visualblocks', function(editor, url) {
 			var cssId, visualBlocksMenuItem, enabled;
 
