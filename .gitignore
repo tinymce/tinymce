@@ -21,6 +21,8 @@ js/tinymce/tinymce.js
 js/tinymce/tinymce.jquery.js
 js/tinymce/plugins/*/plugin.js
 js/tinymce/themes/*/theme.js
+src/plugins/*/plugin.js
+src/themes/*/theme.js
 imagemanager
 filemanager
 mcmanager
