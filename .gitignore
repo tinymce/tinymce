@@ -21,6 +21,7 @@ js/tinymce/tinymce.js
 js/tinymce/tinymce.jquery.js
 js/tinymce/plugins/**
 js/tinymce/themes/**
+js/tinymce/skins/**
 src/plugins/*/plugin.js
 src/themes/*/theme.js
 imagemanager

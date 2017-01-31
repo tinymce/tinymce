@@ -16,11 +16,7 @@ module.exports = function(grunt) {
 				config: ".eslintrc"
 			},
 
-			core: ["js/tinymce/classes/**/*.js"],
-
-			themes: [
-				"js/tinymce/themes/*/src/**/*.js"
-			]
+			core: ["js/tinymce/classes/**/*.js"]
 		},
 
 		qunit: {
@@ -61,64 +57,6 @@ module.exports = function(grunt) {
 						"Register.js"
 					]
 				}
-			}
-		},
-
-		less: {
-			modern: {
-				options: {
-					cleancss: true,
-					strictImports: true,
-					compress: true
-				},
-
-				expand: true,
-				src: ["js/tinymce/skins/**/skin.dev.less"],
-				ext: ".min.css"
-			},
-
-			ie7: {
-				options: {
-					compress: true,
-					strictImports: true,
-					ieCompat: true
-				},
-
-				expand: true,
-				src: ["js/tinymce/skins/**/skin.ie7.dev.less"],
-				ext: ".ie7.min.css"
-			},
-
-			content: {
-				options: {
-					cleancss: true,
-					strictImports: true,
-					compress: true
-				},
-
-				rename: function(dest, src) {
-					return src.toLowerCase();
-				},
-
-				expand: true,
-				src: ["js/tinymce/skins/**/Content.less"],
-				ext: ".min.css"
-			},
-
-			"content-inline": {
-				options: {
-					cleancss: true,
-					strictImports: true,
-					compress: true
-				},
-
-				rename: function(dest, src) {
-					return src.toLowerCase();
-				},
-
-				expand: true,
-				src: ["js/tinymce/skins/**/Content.Inline.less"],
-				ext: ".inline.min.css"
 			}
 		},
 
@@ -685,7 +623,7 @@ module.exports = function(grunt) {
 			'wordcount-plugin': {path: 'src/plugins/wordcount'},
 			'inlite-theme': {path: 'src/themes/inlite'},
 			'modern-theme': {path: 'src/themes/modern'},
-			'lightgray-skin': {path: 'src/skin/lightgray'}
+			'lightgray-skin': {path: 'src/skins/lightgray'}
 		},
 
 		copy: {
@@ -754,7 +692,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('@ephox/bolt');
 
 	grunt.registerTask("lint", ["eslint"]);
-	grunt.registerTask("minify", ["amdlc", "uglify", "less"]);
+	grunt.registerTask("minify", ["amdlc", "uglify"]);
 	grunt.registerTask("test", ["qunit"]);
 	grunt.registerTask("default", ["lint", "minify", "subgrunt", "copy", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
