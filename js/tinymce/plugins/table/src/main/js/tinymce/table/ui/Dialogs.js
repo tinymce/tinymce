@@ -13,7 +13,7 @@
 /**
  * ...
  *
- * @class tinymce.tableplugin.Dialogs
+ * @class tinymce.table.ui.Dialogs
  * @private
  */
 define("tinymce.table.ui.Dialogs", [

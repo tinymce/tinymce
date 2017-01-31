@@ -11,7 +11,7 @@
 /**
  * This class contains all core logic for the table plugin.
  *
- * @class tinymce.tableplugin.Plugin
+ * @class tinymce.table.Plugin
  * @private
  */
 define('tinymce.table.Plugin', [

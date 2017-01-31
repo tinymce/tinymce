@@ -11,7 +11,7 @@
 /**
  * Various utility functions.
  *
- * @class tinymce.tableplugin.Utils
+ * @class tinymce.table.util.Utils
  * @private
  */
 define("tinymce.table.util.Utils", [

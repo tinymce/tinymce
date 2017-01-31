@@ -12,7 +12,7 @@
  * This class handles table cell selection by faking it using a css class that gets applied
  * to cells when dragging the mouse from one cell to another.
  *
- * @class tinymce.tableplugin.CellSelection
+ * @class tinymce.table.selection.CellSelection
  * @private
  */
 define('tinymce.table.selection.CellSelection', [

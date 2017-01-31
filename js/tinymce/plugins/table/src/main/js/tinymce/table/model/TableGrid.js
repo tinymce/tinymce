@@ -13,7 +13,7 @@
  * makes it a whole lot easier to handle complex tables with
  * col/row spans.
  *
- * @class tinymce.tableplugin.TableGrid
+ * @class tinymce.table.model.TableGrid
  * @private
  */
 define("tinymce.table.model.TableGrid", [

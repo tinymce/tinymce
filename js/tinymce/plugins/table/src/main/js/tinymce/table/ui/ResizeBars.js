@@ -12,7 +12,7 @@
  * This class handles table column and row resizing by adding divs over the columns and rows of the table.
  * These divs are then manipulated using mouse events to resize the underlying table.
  *
- * @class tinymce.tableplugin.ResizeBars
+ * @class tinymce.table.ui.ResizeBars
  * @private
  */
 define("tinymce.table.ui.ResizeBars", [

@@ -11,7 +11,7 @@
 /**
  * Contains logic for handling splitting of merged rows.
  *
- * @class tinymce.tableplugin.SplitCols
+ * @class tinymce.table.model.SplitCols
  * @private
  */
 define("tinymce.table.model.SplitCols", [

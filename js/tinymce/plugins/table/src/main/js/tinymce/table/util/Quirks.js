@@ -11,7 +11,7 @@
 /**
  * This class includes fixes for various browser quirks.
  *
- * @class tinymce.tableplugin.Quirks
+ * @class tinymce.table.util.Quirks
  * @private
  */
 define("tinymce.table.util.Quirks", [
