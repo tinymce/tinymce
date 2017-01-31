@@ -18,21 +18,6 @@ module.exports = function(grunt) {
 
 			core: ["js/tinymce/classes/**/*.js"],
 
-			plugins: [
-				"js/tinymce/plugins/*/plugin.js",
-				"js/tinymce/plugins/*/classes/**/*.js",
-				"js/tinymce/plugins/*/src/**/*.js",
-				"!js/tinymce/plugins/paste/plugin.js",
-				"!js/tinymce/plugins/table/plugin.js",
-				"!js/tinymce/plugins/spellchecker/plugin.js",
-				"!js/tinymce/plugins/imagetools/plugin.js",
-				"!js/tinymce/plugins/media/plugin.js",
-				"!js/tinymce/plugins/lists/plugin.js",
-				"!js/tinymce/plugins/wordcount/plugin.js",
-				"!js/tinymce/plugins/codesample/plugin.js",
-				"!js/tinymce/plugins/codesample/classes/Prism.js"
-			],
-
 			themes: [
 				"js/tinymce/themes/*/src/**/*.js"
 			]
@@ -75,66 +60,6 @@ module.exports = function(grunt) {
 						"ui/*.js",
 						"Register.js"
 					]
-				}
-			},
-
-			"paste-plugin": {
-				options: {
-					baseDir: "js/tinymce/plugins/paste/classes",
-					rootNS: "tinymce.pasteplugin",
-					outputSource: "js/tinymce/plugins/paste/plugin.js",
-					outputMinified: "js/tinymce/plugins/paste/plugin.min.js",
-					outputDev: "js/tinymce/plugins/paste/plugin.dev.js",
-					verbose: false,
-					expose: "public",
-					compress: true,
-
-					from: "Plugin.js"
-				}
-			},
-
-			"table-plugin": {
-				options: {
-					baseDir: "js/tinymce/plugins/table/classes",
-					rootNS: "tinymce.tableplugin",
-					outputSource: "js/tinymce/plugins/table/plugin.js",
-					outputMinified: "js/tinymce/plugins/table/plugin.min.js",
-					outputDev: "js/tinymce/plugins/table/plugin.dev.js",
-					verbose: false,
-					expose: "public",
-					compress: true,
-
-					from: "Plugin.js"
-				}
-			},
-
-			"spellchecker-plugin": {
-				options: {
-					baseDir: "js/tinymce/plugins/spellchecker/classes",
-					rootNS: "tinymce.spellcheckerplugin",
-					outputSource: "js/tinymce/plugins/spellchecker/plugin.js",
-					outputMinified: "js/tinymce/plugins/spellchecker/plugin.min.js",
-					outputDev: "js/tinymce/plugins/spellchecker/plugin.dev.js",
-					verbose: false,
-					expose: "public",
-					compress: true,
-
-					from: "Plugin.js"
-				}
-			},
-
-			"codesample-plugin": {
-				options: {
-					baseDir: "js/tinymce/plugins/codesample/classes",
-					rootNS: "tinymce.codesampleplugin",
-					outputSource: "js/tinymce/plugins/codesample/plugin.js",
-					outputMinified: "js/tinymce/plugins/codesample/plugin.min.js",
-					outputDev: "js/tinymce/plugins/codesample/plugin.dev.js",
-					verbose: false,
-					expose: "public",
-					compress: true,
-
-					from: "Plugin.js"
 				}
 			}
 		},
@@ -757,10 +682,50 @@ module.exports = function(grunt) {
 		},
 
 		subgrunt: {
-			'wordcount-plugin': {path: 'js/tinymce/plugins/wordcount'},
+			'advlist-plugin': {path: 'js/tinymce/plugins/advlist'},
+			'anchor-plugin': {path: 'js/tinymce/plugins/anchor'},
+			'autolink-plugin': {path: 'js/tinymce/plugins/autolink'},
+			'autoresize-plugin': {path: 'js/tinymce/plugins/autoresize'},
+			'autosave-plugin': {path: 'js/tinymce/plugins/autosave'},
+			'bbcode-plugin': {path: 'js/tinymce/plugins/bbcode'},
+			'charmap-plugin': {path: 'js/tinymce/plugins/charmap'},
+			'code-plugin': {path: 'js/tinymce/plugins/code'},
+			'codesample-plugin': {path: 'js/tinymce/plugins/codesample'},
+			'colorpicker-plugin': {path: 'js/tinymce/plugins/colorpicker'},
+			'compat3x-plugin': {path: 'js/tinymce/plugins/compat3x'},
+			'contextmenu-plugin': {path: 'js/tinymce/plugins/contextmenu'},
+			'directionality-plugin': {path: 'js/tinymce/plugins/directionality'},
+			'emoticons-plugin': {path: 'js/tinymce/plugins/emoticons'},
+			'fullpage-plugin': {path: 'js/tinymce/plugins/fullpage'},
+			'fullscreen-plugin': {path: 'js/tinymce/plugins/fullscreen'},
+			'hr-plugin': {path: 'js/tinymce/plugins/hr'},
+			'image-plugin': {path: 'js/tinymce/plugins/image'},
 			'imagetools-plugin': {path: 'js/tinymce/plugins/imagetools'},
-			'media-plugin': {path: 'js/tinymce/plugins/media'},
+			'importcss-plugin': {path: 'js/tinymce/plugins/importcss'},
+			'insertdatetime-plugin': {path: 'js/tinymce/plugins/insertdatetime'},
+			'legacyoutput-plugin': {path: 'js/tinymce/plugins/legacyoutput'},
+			'link-plugin': {path: 'js/tinymce/plugins/link'},
 			'lists-plugin': {path: 'js/tinymce/plugins/lists'},
+			'media-plugin': {path: 'js/tinymce/plugins/media'},
+			'nonbreaking-plugin': {path: 'js/tinymce/plugins/nonbreaking'},
+			'noneditable-plugin': {path: 'js/tinymce/plugins/noneditable'},
+			'out.txt-plugin': {path: 'js/tinymce/plugins/out.txt'},
+			'pagebreak-plugin': {path: 'js/tinymce/plugins/pagebreak'},
+			'paste-plugin': {path: 'js/tinymce/plugins/paste'},
+			'preview-plugin': {path: 'js/tinymce/plugins/preview'},
+			'print-plugin': {path: 'js/tinymce/plugins/print'},
+			'save-plugin': {path: 'js/tinymce/plugins/save'},
+			'searchreplace-plugin': {path: 'js/tinymce/plugins/searchreplace'},
+			'spellchecker-plugin': {path: 'js/tinymce/plugins/spellchecker'},
+			'tabfocus-plugin': {path: 'js/tinymce/plugins/tabfocus'},
+			'table-plugin': {path: 'js/tinymce/plugins/table'},
+			'template-plugin': {path: 'js/tinymce/plugins/template'},
+			'textcolor-plugin': {path: 'js/tinymce/plugins/textcolor'},
+			'textpattern-plugin': {path: 'js/tinymce/plugins/textpattern'},
+			'toc-plugin': {path: 'js/tinymce/plugins/toc'},
+			'visualblocks-plugin': {path: 'js/tinymce/plugins/visualblocks'},
+			'visualchars-plugin': {path: 'js/tinymce/plugins/visualchars'},
+			'wordcount-plugin': {path: 'js/tinymce/plugins/wordcount'},
 			'inlite-theme': {path: 'js/tinymce/themes/inlite'},
 			'modern-theme': {path: 'js/tinymce/themes/modern'}
 		}
