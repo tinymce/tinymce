@@ -443,6 +443,14 @@
 		'Mixed text nodes, inline elements and blocks.');
 	});
 
+	test('Parse html4 lists into html5 lists', function() {
+		var parser, root, schema = new tinymce.html.Schema();
+
+		parser = new tinymce.html.DomParser({fix_list_elements: true}, schema);
+		root = parser.parse('<ul><ul><li>a</li></ul></ul><ul><li>a</li><ul><li>b</li></ul></ul>');
+		equal(serializer.serialize(root), '<ul><li style="list-style-type: none"><ul><li>a</li></ul></li></ul><ul><li>a<ul><li>b</li></ul></li></ul>');
+	});
+
 	test('Parse contents with html4 anchors and allow_html_in_named_anchor: false', function() {
 		var parser, root, schema = new tinymce.html.Schema();
 
