@@ -8,24 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*jshint camelcase:false */
-
 /**
- * This class contains all core logic for the spellchecker plugin.
+ * This class contains all core logic for the code plugin.
  *
- * @class tinymce.spellcheckerplugin.Plugin
+ * @class tinymce.spellchecker.Plugin
  * @private
  */
-define("tinymce/spellcheckerplugin/Plugin", [
-	"tinymce/spellcheckerplugin/DomTextMatcher",
-	"tinymce/PluginManager",
-	"tinymce/util/Tools",
-	"tinymce/ui/Menu",
-	"tinymce/dom/DOMUtils",
-	"tinymce/util/XHR",
-	"tinymce/util/URI",
-	"tinymce/util/JSON"
-], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, XHR, URI, JSON) {
+define(
+	'tinymce.spellchecker.Plugin',
+	[
+		'tinymce.spellchecker.core.DomTextMatcher',
+		'global!tinymce.PluginManager',
+		'global!tinymce.util.Tools',
+		'global!tinymce.ui.Menu',
+		'global!tinymce.dom.DOMUtils',
+		'global!tinymce.util.XHR',
+		'global!tinymce.util.URI',
+		'global!tinymce.util.JSON'
+	],
+
+	function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, XHR, URI, JSON) {
 	PluginManager.add('spellchecker', function(editor, url) {
 		var languageMenuItems, self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;
 		var hasDictionarySupport;
@@ -441,4 +443,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		// Set default spellchecker language if it's not specified
 		settings.spellchecker_language = settings.spellchecker_language || settings.language || 'en';
 	});
-});
+
+		return function () {};
+  }
+);
