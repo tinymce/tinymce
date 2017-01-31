@@ -15,9 +15,9 @@
  * @class tinymce.tableplugin.ResizeBars
  * @private
  */
-define("tinymce/tableplugin/ResizeBars", [
-	"tinymce/util/Tools",
-	"tinymce/util/VK"
+define("tinymce.table.ui.ResizeBars", [
+	"global!tinymce.util.Tools",
+	"global!tinymce.util.VK"
 ], function(Tools, VK) {
 	var hoverTable;
 

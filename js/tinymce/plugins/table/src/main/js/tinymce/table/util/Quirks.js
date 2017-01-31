@@ -14,12 +14,12 @@
  * @class tinymce.tableplugin.Quirks
  * @private
  */
-define("tinymce/tableplugin/Quirks", [
-	"tinymce/util/VK",
-	"tinymce/util/Delay",
-	"tinymce/Env",
-	"tinymce/util/Tools",
-	"tinymce/tableplugin/Utils"
+define("tinymce.table.util.Quirks", [
+	"global!tinymce.util.VK",
+	"global!tinymce.util.Delay",
+	"global!tinymce.Env",
+	"global!tinymce.util.Tools",
+	"tinymce.table.util.Utils"
 ], function(VK, Delay, Env, Tools, Utils) {
 	var each = Tools.each, getSpanVal = Utils.getSpanVal;
 

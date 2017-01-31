@@ -15,10 +15,10 @@
  * @class tinymce.tableplugin.CellSelection
  * @private
  */
-define("tinymce/tableplugin/CellSelection", [
-	"tinymce/tableplugin/TableGrid",
-	"tinymce/dom/TreeWalker",
-	"tinymce/util/Tools"
+define('tinymce.table.selection.CellSelection', [
+	'tinymce.table.model.TableGrid',
+	'global!tinymce.dom.TreeWalker',
+	'global!tinymce.util.Tools'
 ], function(TableGrid, TreeWalker, Tools) {
 	return function(editor, selectionChange) {
 		var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing, dragging;

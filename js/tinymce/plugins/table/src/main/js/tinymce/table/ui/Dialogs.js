@@ -16,9 +16,9 @@
  * @class tinymce.tableplugin.Dialogs
  * @private
  */
-define("tinymce/tableplugin/Dialogs", [
-	"tinymce/util/Tools",
-	"tinymce/Env"
+define("tinymce.table.ui.Dialogs", [
+	"global!tinymce.util.Tools",
+	"global!tinymce.Env"
 ], function(Tools, Env) {
 	var each = Tools.each;
 

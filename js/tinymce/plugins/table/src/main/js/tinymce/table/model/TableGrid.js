@@ -16,11 +16,11 @@
  * @class tinymce.tableplugin.TableGrid
  * @private
  */
-define("tinymce/tableplugin/TableGrid", [
-	"tinymce/util/Tools",
-	"tinymce/Env",
-	"tinymce/tableplugin/Utils",
-	"tinymce/tableplugin/SplitCols"
+define("tinymce.table.model.TableGrid", [
+	"global!tinymce.util.Tools",
+	"global!tinymce.Env",
+	"tinymce.table.util.Utils",
+	"tinymce.table.model.SplitCols"
 ], function(Tools, Env, Utils, SplitCols) {
 	var each = Tools.each, getSpanVal = Utils.getSpanVal, setSpanVal = Utils.setSpanVal;
 

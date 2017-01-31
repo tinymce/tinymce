@@ -14,16 +14,16 @@
  * @class tinymce.tableplugin.Plugin
  * @private
  */
-define("tinymce/tableplugin/Plugin", [
-	"tinymce/tableplugin/TableGrid",
-	"tinymce/tableplugin/Quirks",
-	"tinymce/tableplugin/CellSelection",
-	"tinymce/tableplugin/Dialogs",
-	"tinymce/tableplugin/ResizeBars",
-	"tinymce/util/Tools",
-	"tinymce/dom/TreeWalker",
-	"tinymce/Env",
-	"tinymce/PluginManager"
+define('tinymce.table.Plugin', [
+	'tinymce.table.model.TableGrid',
+	'tinymce.table.util.Quirks',
+	'tinymce.table.selection.CellSelection',
+	'tinymce.table.ui.Dialogs',
+	'tinymce.table.ui.ResizeBars',
+	'global!tinymce.util.Tools',
+	'global!tinymce.dom.TreeWalker',
+	'global!tinymce.Env',
+	'global!tinymce.PluginManager'
 ], function(TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
 	var each = Tools.each;
 
@@ -618,4 +618,6 @@ define("tinymce/tableplugin/Plugin", [
 	}
 
 	PluginManager.add('table', Plugin);
+
+	return null;
 });

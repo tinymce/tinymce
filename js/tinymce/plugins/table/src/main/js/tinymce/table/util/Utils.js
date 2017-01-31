@@ -14,8 +14,8 @@
  * @class tinymce.tableplugin.Utils
  * @private
  */
-define("tinymce/tableplugin/Utils", [
-	"tinymce/Env"
+define("tinymce.table.util.Utils", [
+	"global!tinymce.Env"
 ], function(Env) {
 	var setSpanVal = function (name) {
 		return function (td, val) {
