@@ -80,7 +80,9 @@ test(
       '\n',
       '',
       'http://google.com.',
-      'http://google.com)'
+      'http://google.com)',
+      'www.google.com.',
+      'www.google.com)'
     ];
 
     var mathiasBynensFalse = [
@@ -148,8 +150,8 @@ test(
     var autolinks = {
       'http://google.com.': 'http://google.com',
       'http://google.com)': 'http://google.com',
-      // 'www.google.com.': 'www.google.com',
-      // 'www.google.com)': 'www.google.com'
+      'www.google.com.': 'www.google.com',
+      'www.google.com)': 'www.google.com'
     };
 
     // remember don't inline the module function execution, JS regexes have state!
