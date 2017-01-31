@@ -2,47 +2,14 @@
 
 module.exports = function (grunt) {
 	grunt.initConfig({
-		"bolt-init": {
-			"plugin": {
-				config_dir: "config/bolt"
-			}
-		},
-
-		"bolt-build": {
-			"plugin": {
-				config_js: "config/bolt/prod.js",
-				output_dir: "scratch",
-				main: "tinymce.contextmenu.Plugin",
-				filename: "plugin",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ["src/main/js/tinymce/contextmenu/Plugin.js"]
-				}
-			}
-		},
-
 		copy: {
 			"plugin": {
 				files: [
-					{
-						src: "scratch/inline/plugin.raw.js",
-						dest: "plugin.js"
-					}
+					{expand: true, cwd: 'src/main', src: ['img/**'], dest: 'dist/compat3x'},
+					{expand: true, cwd: 'src/main', src: ['css/**'], dest: 'dist/compat3x'},
+					{expand: true, cwd: 'src/main/js', src: ['utils/**', 'plugin.js'], dest: 'dist/compat3x'}
 				]
 			}
-		},
-
-		eslint: {
-			options: {
-				config: "../../../../.eslintrc"
-			},
-
-			src: [
-				"src"
-			]
 		},
 
 		uglify: {
@@ -60,8 +27,8 @@ module.exports = function (grunt) {
 			"plugin": {
 				files: [
 					{
-						src: "scratch/inline/plugin.js",
-						dest: "plugin.min.js"
+						src: "src/main/js/plugin.js",
+						dest: "dist/compat3x/plugin.min.js"
 					}
 				]
 			}
@@ -73,5 +40,5 @@ module.exports = function (grunt) {
 	grunt.task.loadTasks("../../../../node_modules/grunt-contrib-uglify/tasks");
 	grunt.task.loadTasks("../../../../node_modules/grunt-eslint/tasks");
 
-	grunt.registerTask("default", []);
+	grunt.registerTask("default", ["copy", 'uglify']);
 };
