@@ -22,7 +22,7 @@ define(
 		'global!tinymce.dom.TreeWalker',
 		'global!tinymce.util.Tools'
 	],
-	
+
 	function(TableGrid, TreeWalker, Tools) {
 		return function(editor, selectionChange) {
 			var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing, dragging;

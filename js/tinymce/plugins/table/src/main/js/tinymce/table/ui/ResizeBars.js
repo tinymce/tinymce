@@ -17,12 +17,12 @@
  */
 define(
 	'tinymce.table.ui.ResizeBars',
-	
+
 	[
 		'global!tinymce.util.Tools',
 		'global!tinymce.util.VK'
 	],
-	
+
 	function(Tools, VK) {
 		var hoverTable;
 
@@ -485,7 +485,9 @@ define(
 
 				var widthNumber = parseInt(widthString, 10);
 
-				var getWidthFallback = isPercentageBased ? getPercentageWidthFallback(element, table) : getComputedStyleSize(element, 'width');
+				var getWidthFallback = isPercentageBased ?
+					getPercentageWidthFallback(element, table) :
+					getComputedStyleSize(element, 'width');
 
 				// If this is percentage based table, but this cell isn't percentage based.
 				// Or if this is a pixel based table, but this cell isn't pixel based.

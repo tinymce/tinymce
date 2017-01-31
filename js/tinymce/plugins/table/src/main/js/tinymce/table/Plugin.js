@@ -27,7 +27,7 @@ define(
 		'global!tinymce.Env',
 		'global!tinymce.PluginManager'
 	],
-	
+
 	function(TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
 		var each = Tools.each;
 

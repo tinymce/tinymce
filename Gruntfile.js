@@ -709,7 +709,6 @@ module.exports = function(grunt) {
 			'media-plugin': {path: 'js/tinymce/plugins/media'},
 			'nonbreaking-plugin': {path: 'js/tinymce/plugins/nonbreaking'},
 			'noneditable-plugin': {path: 'js/tinymce/plugins/noneditable'},
-			'out.txt-plugin': {path: 'js/tinymce/plugins/out.txt'},
 			'pagebreak-plugin': {path: 'js/tinymce/plugins/pagebreak'},
 			'paste-plugin': {path: 'js/tinymce/plugins/paste'},
 			'preview-plugin': {path: 'js/tinymce/plugins/preview'},

@@ -16,7 +16,7 @@
  */
 define(
 	'tinymce.table.util.Quirks',
-	
+
 	[
 		'global!tinymce.util.VK',
 		'global!tinymce.util.Delay',
@@ -24,7 +24,7 @@ define(
 		'global!tinymce.util.Tools',
 		'tinymce.table.util.Utils'
 	],
-	
+
 	function(VK, Delay, Env, Tools, Utils) {
 		var each = Tools.each, getSpanVal = Utils.getSpanVal;
 

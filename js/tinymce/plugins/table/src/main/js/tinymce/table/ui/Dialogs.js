@@ -18,12 +18,12 @@
  */
 define(
 	'tinymce.table.ui.Dialogs',
-	
+
 	[
 		'global!tinymce.util.Tools',
 		'global!tinymce.Env'
 	],
-	
+
 	function(Tools, Env) {
 		var each = Tools.each;
 
@@ -868,6 +868,6 @@ define(
 					});
 				}
 			};
-		};	
+		};
 	}
 );

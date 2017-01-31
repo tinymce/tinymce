@@ -19,7 +19,7 @@ define(
 	[
 		'global!tinymce.Env'
 	],
-	
+
 	function(Env) {
 		var setSpanVal = function (name) {
 			return function (td, val) {
