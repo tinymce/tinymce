@@ -4,7 +4,7 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.autolink.test', '../../src/test/js/module', mapper.hierarchical),
-    source('amd', 'ephox/tinymce', '', mapper.constant('../../../../../tinymce')),
-    source('amd', 'ephox', '../../../../../../node_modules/@ephox', mapper.repo('js', mapper.flat))
+    source('amd', 'ephox/tinymce', '', mapper.constant('../../../../../../js/tinymce/tinymce')),
+    source('amd', 'ephox', '../../../../../node_modules/@ephox', mapper.repo('js', mapper.flat))
   ]
 });

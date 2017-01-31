@@ -566,12 +566,12 @@ module.exports = function(grunt) {
 				options: {
 					config: 'tools/bolt/config/browser.js',
 					testdirs: [
-						'js/tinymce/plugins/media/src/test',
-						'js/tinymce/plugins/paste/src/test',
-						'js/tinymce/plugins/lists/src/test',
-						'js/tinymce/plugins/wordcount/src/test',
-						'js/tinymce/themes/inlite/src/test',
-						'js/tinymce/themes/modern/src/test'
+						'src/plugins/media/src/test',
+						'src/plugins/paste/src/test',
+						'src/plugins/lists/src/test',
+						'src/plugins/wordcount/src/test',
+						'src/themes/inlite/src/test',
+						'src/themes/modern/src/test'
 					]
 				}
 			}
