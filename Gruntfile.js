@@ -672,6 +672,7 @@ module.exports = function(grunt) {
 					config: 'tools/bolt/config/browser.js',
 					testdirs: [
 						'js/tinymce/plugins/media/src/test',
+						'js/tinymce/plugins/paste/src/test',
 						'js/tinymce/plugins/lists/src/test',
 						'js/tinymce/plugins/wordcount/src/test',
 						'js/tinymce/themes/inlite/src/test',
