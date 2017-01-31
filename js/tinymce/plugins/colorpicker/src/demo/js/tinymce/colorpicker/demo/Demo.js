@@ -21,11 +21,13 @@ define(
 	function (Plugin, tinymce) {
 		return function () {
 
+			document.querySelector('.tinymce').value='<table><tbody><tr><td>One</td></tr></tbody></table>';
+
 			tinymce.init({
 				selector: "textarea.tinymce",
 				theme: "modern",
-				plugins: "code preview",
-				toolbar: "colorpicker code preview",
+				plugins: "table colorpicker code preview",
+				toolbar: "table code preview",
 				height: 600
 			});
 		};

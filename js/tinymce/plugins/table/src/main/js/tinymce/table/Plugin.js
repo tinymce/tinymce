@@ -623,6 +623,6 @@ define(
 
 		PluginManager.add('table', Plugin);
 
-		return null;
+		return function () { };
 	}
 );
