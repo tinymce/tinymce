@@ -10,13 +10,15 @@
  * Import of prism. Disabled DOMContentLoaded event listener.
  */
 
+/*eslint-disable*/
+
 define(
   'tinymce.codesample.core.Prism',
-  
+
   [
 
   ],
-  
+
   function() {
     var window = {};
     // ------------------ Start wrap
@@ -943,3 +945,5 @@ define(
     return Prism;
   }
 );
+
+/*eslint-enable */

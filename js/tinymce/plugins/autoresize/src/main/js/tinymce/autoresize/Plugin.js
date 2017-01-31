@@ -74,6 +74,7 @@ define(
 				// Make sure we have a valid height
 				if (isNaN(myHeight) || myHeight <= 0) {
 					// Get height differently depending on the browser used
+					// eslint-disable-next-line no-nested-ternary
 					myHeight = Env.ie ? body.scrollHeight : (Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);
 				}
 

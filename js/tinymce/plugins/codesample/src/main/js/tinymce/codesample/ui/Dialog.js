@@ -16,13 +16,13 @@
  */
 define(
   'tinymce.codesample.ui.Dialog',
-  
+
   [
     'global!tinymce.dom.DOMUtils',
     'tinymce.codesample.core.Prism',
     'tinymce.codesample.util.Utils'
   ],
-  
+
   function(DOMUtils, Prism, Utils) {
     var DOM = DOMUtils.DOM;
 

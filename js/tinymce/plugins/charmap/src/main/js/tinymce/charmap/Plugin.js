@@ -370,9 +370,11 @@ define(
 							var chrText = chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;';
 
 							gridHtml += (
-								'<td title="' + chr[1] + '"><div tabindex="-1" title="' + chr[1] + '" role="button" data-chr="' + chrText + '">' +
-									chrText +
-								'</div></td>'
+								'<td title="' + chr[1] + '">' +
+									'<div tabindex="-1" title="' + chr[1] + '" role="button" data-chr="' + chrText + '">' +
+										chrText +
+									'</div>' +
+								'</td>'
 							);
 						} else {
 							gridHtml += '<td />';

@@ -20,8 +20,7 @@ define(
 
 	function (Plugin, tinymce) {
 		return function () {
-
-			document.querySelector('.tinymce').value='<table><tbody><tr><td>One</td></tr></tbody></table>';
+			document.querySelector('.tinymce').value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
 			tinymce.init({
 				selector: "textarea.tinymce",

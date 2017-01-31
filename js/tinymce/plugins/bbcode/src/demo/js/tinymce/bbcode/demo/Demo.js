@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*eslint no-console:0 */
+/*eslint no-console:0, no-unused-vars: 0 */
 
 define(
 	'tinymce.bbcode.demo.Demo',
