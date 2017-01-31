@@ -19,8 +19,8 @@ yarn.lock
 node_modules
 js/tinymce/tinymce.js
 js/tinymce/tinymce.jquery.js
-js/tinymce/plugins/*/plugin.js
-js/tinymce/themes/*/theme.js
+js/tinymce/plugins/**
+js/tinymce/themes/**
 src/plugins/*/plugin.js
 src/themes/*/theme.js
 imagemanager
@@ -36,9 +36,6 @@ mentions
 *.full.js
 *.min.css
 *.dev.less
-skin.less
-skin.ie7.less
-skin.ie7.dev.less
 **/bolt/bootstrap*.js
 **/dist
 **/scratch

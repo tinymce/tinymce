@@ -64,49 +64,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		skin: {
-			modern: {
-				options: {
-					prepend: [
-						"Variables.less",
-						"Reset.less",
-						"Mixins.less",
-						"Animations.less",
-						"TinyMCE.less",
-						"CropRect.less",
-						"ImagePanel.less",
-						"Arrows.less",
-						"Sidebar.less"
-					],
-					append: ["Icons.less"],
-					importFrom: "js/tinymce/tinymce.js",
-					path: "js/tinymce/skins",
-					devLess: "skin.dev.less",
-					srcLess: "skin.less"
-				}
-			},
-
-			ie7: {
-				options: {
-					prepend: [
-						"Variables.less",
-						"Reset.less",
-						"Mixins.less",
-						"Animations.less",
-						"TinyMCE.less",
-						"CropRect.less",
-						"ImagePanel.less",
-						"Arrows.less"
-					],
-					append: ["Icons.Ie7.less"],
-					importFrom: "js/tinymce/tinymce.js",
-					path: "js/tinymce/skins",
-					devLess: "skin.ie7.dev.less",
-					srcLess: "skin.ie7.less"
-				}
-			}
-		},
-
 		less: {
 			modern: {
 				options: {
@@ -727,7 +684,8 @@ module.exports = function(grunt) {
 			'visualchars-plugin': {path: 'src/plugins/visualchars'},
 			'wordcount-plugin': {path: 'src/plugins/wordcount'},
 			'inlite-theme': {path: 'src/themes/inlite'},
-			'modern-theme': {path: 'src/themes/modern'}
+			'modern-theme': {path: 'src/themes/modern'},
+			'lightgray-skin': {path: 'src/skin/lightgray'}
 		},
 
 		copy: {
@@ -737,7 +695,43 @@ module.exports = function(grunt) {
 						expand: true,
 						cwd: 'src/plugins',
 						src: ['*/dist/**'],
-						dest: 'js/plugins/',
+						dest: 'js/tinymce/plugins/',
+						filter: function (filePath) {
+							return filePath.endsWith('dist') === false;
+						},
+						rename: function (dest, src) {
+							var newSrc = src.replace(/\w+\/dist\//, '');
+							return dest + newSrc;
+						}
+					}
+				]
+			},
+
+			"themes": {
+				files: [
+					{
+						expand: true,
+						cwd: 'src/themes',
+						src: ['*/dist/**'],
+						dest: 'js/tinymce/themes/',
+						filter: function (filePath) {
+							return filePath.endsWith('dist') === false;
+						},
+						rename: function (dest, src) {
+							var newSrc = src.replace(/\w+\/dist\//, '');
+							return dest + newSrc;
+						}
+					}
+				]
+			},
+
+			"skins": {
+				files: [
+					{
+						expand: true,
+						cwd: 'src/skins',
+						src: ['*/dist/**'],
+						dest: 'js/tinymce/skins/',
 						filter: function (filePath) {
 							return filePath.endsWith('dist') === false;
 						},
@@ -760,7 +754,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('@ephox/bolt');
 
 	grunt.registerTask("lint", ["eslint"]);
-	grunt.registerTask("minify", ["amdlc", "uglify", "skin", "less"]);
+	grunt.registerTask("minify", ["amdlc", "uglify", "less"]);
 	grunt.registerTask("test", ["qunit"]);
-	grunt.registerTask("default", ["lint", "minify", "subgrunt", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
+	grunt.registerTask("default", ["lint", "minify", "subgrunt", "copy", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
