@@ -3,10 +3,11 @@ test(
 
   [
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.polaris.api.Regexes'
   ],
 
-  function (Arr, Regexes) {
+  function (Arr, Obj, Regexes) {
     var ephoxCases = [
       'www.google.com.au',
       'maurizio@ephox.com',
@@ -63,7 +64,7 @@ test(
       // 'http://⌘.ws',
       // 'http://⌘.ws/',
       // 'http://foo.com/unicode_(✪)_in_parens',
-      // // 'http://☺.damowmow.com/',
+      // 'http://☺.damowmow.com/',
     ];
 
     var trueCases = ephoxCases.concat(mathiasBynens);
@@ -129,14 +130,37 @@ test(
     var falseCases = ephoxFalseCases.concat(mathiasBynensFalse);
 
     Arr.each(trueCases, function (cs) {
-      var matched = cs.match(Regexes.link());
+      var matched = Regexes.link().exec(cs);
       assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
+      if (matched.length > 1) {
+        console.log('matched groups:');
+        Arr.each(matched, function (s, i) { console.log(i, s); });
+        assert.fail('link regex must not capture any groups');
+      }
     });
 
     Arr.each(falseCases, function (cs) {
       var match = Regexes.link().test(cs);
       var asserter = match === false ? match : (cs === cs.match(Regexes.link())[0]);
       assert.eq(false, asserter, 'expected false but was true: ' + cs);
+    });
+
+    var autolinks = {
+      'http://google.com.': 'http://google.com',
+      'http://google.com)': 'http://google.com',
+      // 'www.google.com.': 'www.google.com',
+      // 'www.google.com)': 'www.google.com'
+    };
+
+    // remember don't inline the module function execution, JS regexes have state!
+    Obj.each(autolinks, function (v, k) {
+      var match = Regexes.autolink().test(k);
+      if (match) {
+        var url = Regexes.autolink().exec(k)[1];
+        assert.eq(true, v === url, 'expected ' + v + ' but was "' + url + '"');
+      } else {
+        assert.fail('expected ' + v + ' but did not match "' + k + '"');
+      }
     });
 
   }
