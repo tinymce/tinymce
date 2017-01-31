@@ -39,10 +39,13 @@ define(
 
     var autolink = function () {
       /*
-       * Takes the above link, and makes two additions:
+       * Takes the link regex, and makes two additions:
        *
        * - allows punctuation at the end (so it can be used for TBIO autolink macro)
        * - wraps the link regex in a group so that match[1] returns the desired contents
+       *
+       * We may need to inline the link regex if this refactoring technique causes performance issues; we're assuming browsers can optimise the above regex but not this style.
+       * TBIO calls this method every time space or enter is pressed.
        */
       var linksource = link().source;
       return new RegExp('(' + linksource + ')[\-_.~*+=!&;:\'%@?^${}(),]*', 'g');
