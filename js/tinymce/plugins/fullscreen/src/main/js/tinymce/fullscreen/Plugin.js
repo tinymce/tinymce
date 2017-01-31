@@ -23,7 +23,7 @@ define(
   ],
 
   function (DOM, PluginManager) {
-		tinymce.PluginManager.add('fullscreen', function(editor) {
+		PluginManager.add('fullscreen', function(editor) {
 			var fullscreenState = false, iframeWidth, iframeHeight, resizeHandler;
 			var containerWidth, containerHeight, scrollPos;
 

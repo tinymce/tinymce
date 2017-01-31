@@ -318,7 +318,10 @@ define(
 					imgElm = dom.select('img', figureElm)[0];
 				}
 
-				if (imgElm && (imgElm.nodeName != 'IMG' || imgElm.getAttribute('data-mce-object') || imgElm.getAttribute('data-mce-placeholder'))) {
+				if (imgElm &&
+					(imgElm.nodeName != 'IMG' ||
+					imgElm.getAttribute('data-mce-object') ||
+					imgElm.getAttribute('data-mce-placeholder'))) {
 					imgElm = null;
 				}
 

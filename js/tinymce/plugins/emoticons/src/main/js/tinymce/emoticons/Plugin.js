@@ -66,7 +66,10 @@ define(
 
 						if (linkElm) {
 							editor.insertContent(
-								'<img src="' + linkElm.getAttribute('data-mce-url') + '" alt="' + linkElm.getAttribute('data-mce-alt') + '" />'
+								'<img src="' +
+										linkElm.getAttribute('data-mce-url') +
+									'" alt="' + linkElm.getAttribute('data-mce-alt') +
+								'" />'
 							);
 
 							this.hide();
