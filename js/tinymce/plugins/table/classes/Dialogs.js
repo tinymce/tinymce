@@ -711,7 +711,11 @@ define("tinymce/tableplugin/Dialogs", [
 							if (!parentElm) {
 								parentElm = dom.create(toType);
 								if (tableElm.firstChild) {
-									tableElm.insertBefore(parentElm, tableElm.firstChild);
+									if (dom.select('caption', tableElm)[0]) {
+										tableElm.insertBefore(parentElm, tableElm.children[1]);
+									} else {
+										tableElm.insertBefore(parentElm, tableElm.firstChild);
+									}
 								} else {
 									tableElm.appendChild(parentElm);
 								}
