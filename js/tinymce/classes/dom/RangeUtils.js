@@ -333,6 +333,14 @@ define("tinymce/dom/RangeUtils", [
 				function isPrevNode(node, name) {
 					return node.previousSibling && node.previousSibling.nodeName == name;
 				}
+				
+				function isAtNewLineBeginning(textNode) {
+					var caretRect = textNode.parentNode.getBoundingClientRect(),
+						rootRect = dom.getRoot().getBoundingClientRect();
+
+					return caretRect.x == rootRect.x && caretRect.y != rootRect.y;
+				}
+
 
 				// Walks the dom left/right to find a suitable text node to move the endpoint into
 				// It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
@@ -478,7 +486,10 @@ define("tinymce/dom/RangeUtils", [
 					// Becomes: <b>x|</b><i>x</i>
 					// Seems that only gecko has issues with this
 					if (container.nodeType === 3 && offset === 0) {
-						findTextNodeRelative(true);
+						// but if <i>|x</i> is at the beginning of a new line, skip it (issue #2804)
+						if (!isAtNewLineBeginning(container)) {
+							findTextNodeRelative(true);
+						}
 					}
 
 					// Lean left into empty inline elements when the caret is before a BR
