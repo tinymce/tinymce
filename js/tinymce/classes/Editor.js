@@ -700,7 +700,7 @@ define("tinymce/Editor", [
 				allowTransparency: "true",
 				title: self.editorManager.translate(
 						"Rich Text Area. Press ALT-F9 for menu. " +
-						"Press ALT-F10 for toolbar. Press ALT-0 for help"
+						"Press ALT-F10 for toolbar. Press ALT-0 for help."
 				),
 				style: {
 					width: '100%',
