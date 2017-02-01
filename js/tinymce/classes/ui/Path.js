@@ -16,8 +16,10 @@
  * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Path", [
-	"tinymce/ui/Widget"
-], function(Widget) {
+	"tinymce/ui/Widget",
+	"tinymce/util/Arr"
+
+], function(Widget, Arr) {
 	"use strict";
 
 	return Widget.extend({
@@ -91,7 +93,7 @@ define("tinymce/ui/Path", [
 
 			return (
 				'<div id="' + self._id + '" class="' + self.classes + '">' +
-					self._getDataPathHtml(self.state.get('row')) +
+				self._getDataPathHtml(self.state.get('row')) +
 				'</div>'
 			);
 		},
@@ -110,10 +112,13 @@ define("tinymce/ui/Path", [
 			var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
 
 			for (i = 0, l = parts.length; i < l; i++) {
+				var tooltipTitle = Arr.filter(Arr.toArray(parts[i].element.classList, function (item) {
+					return item.indexOf('mce-') === 0 ? null : item;
+				}));
 				html += (
 					(i > 0 ? '<div class="' + prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
 					'<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
-					i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + (i + 1) + '">' + parts[i].name + '</div>'
+					i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + (i + 1) + '" title="' + tooltipTitle + '">' + parts[i].name + '</div>'
 				);
 			}
 
