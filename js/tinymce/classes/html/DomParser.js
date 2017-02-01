@@ -49,14 +49,14 @@ define("tinymce/html/DomParser", [
 	 * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
 	 */
 	return function(settings, schema) {
-		var self = this, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};
+		var self = this, nodeFilters = {}, attributeFilters = [];
 
 		settings = settings || {};
 		settings.validate = "validate" in settings ? settings.validate : true;
 		settings.root_name = settings.root_name || 'body';
 		self.schema = schema = schema || new Schema();
 
-		function fixInvalidChildren(nodes) {
+		function fixInvalidChildren(nodes, matchedNodes, matchedAttributes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
 			var nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
@@ -109,12 +109,12 @@ define("tinymce/html/DomParser", [
 					parents.reverse();
 
 					// Clone the related parent and insert that after the moved node
-					newParent = currentNode = self.filterNode(parents[0].clone());
+					newParent = currentNode = self.filterNode(parents[0].clone(), matchedNodes, matchedAttributes);
 
 					// Start cloning and moving children on the left side of the target node
 					for (i = 0; i < parents.length - 1; i++) {
 						if (schema.isValidChild(currentNode.name, parents[i].name)) {
-							tempNode = self.filterNode(parents[i].clone());
+							tempNode = self.filterNode(parents[i].clone(), matchedNodes, matchedAttributes);
 							currentNode.append(tempNode);
 						} else {
 							tempNode = currentNode;
@@ -156,13 +156,13 @@ define("tinymce/html/DomParser", [
 							continue;
 						}
 
-						node.wrap(self.filterNode(new Node('ul', 1)));
+						node.wrap(self.filterNode(new Node('ul', 1), matchedNodes, matchedAttributes));
 						continue;
 					}
 
 					// Try wrapping the element in a DIV
 					if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-						node.wrap(self.filterNode(new Node('div', 1)));
+						node.wrap(self.filterNode(new Node('div', 1), matchedNodes, matchedAttributes));
 					} else {
 						// We failed wrapping it, then remove or unwrap it
 						if (specialElements[node.name]) {
@@ -182,7 +182,7 @@ define("tinymce/html/DomParser", [
 		 * @param {tinymce.html.Node} Node the node to run filters on.
 		 * @return {tinymce.html.Node} The passed in node.
 		 */
-		self.filterNode = function(node) {
+		self.filterNode = function(node, matchedNodes, matchedAttributes) {
 			var i, name, list;
 
 			// Run element filters
@@ -284,7 +284,7 @@ define("tinymce/html/DomParser", [
 			var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate;
 			var blockElements, startWhiteSpaceRegExp, invalidChildren = [], isInWhiteSpacePreservedElement;
 			var endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements;
-			var children, nonEmptyElements, rootBlockName;
+			var children, nonEmptyElements, rootBlockName, matchedNodes, matchedAttributes;
 
 			args = args || {};
 			matchedNodes = {};
@@ -630,7 +630,7 @@ define("tinymce/html/DomParser", [
 			// Fix invalid children or report invalid children in a contextual parsing
 			if (validate && invalidChildren.length) {
 				if (!args.context) {
-					fixInvalidChildren(invalidChildren);
+					fixInvalidChildren(invalidChildren, matchedNodes, matchedAttributes);
 				} else {
 					args.invalid = true;
 				}
