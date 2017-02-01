@@ -428,6 +428,7 @@ module.exports = function(grunt) {
 						"js/**/lib",
 						"js/**/dependency",
 						"js/**/src",
+						"js/**/Gruntfile.js",
 						"js/**/*.less",
 						"js/**/*.dev.svg",
 						"js/**/*.dev.js",
