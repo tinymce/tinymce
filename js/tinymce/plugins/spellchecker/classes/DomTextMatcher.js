@@ -244,7 +244,9 @@ define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {
 
 		function unwrapElement(element) {
 			var parentNode = element.parentNode;
-			parentNode.insertBefore(element.firstChild, element);
+			while(element.childNodes.length > 0) {
+				parentNode.insertBefore(element.childNodes[0], element);
+			}
 			element.parentNode.removeChild(element);
 		}
 
