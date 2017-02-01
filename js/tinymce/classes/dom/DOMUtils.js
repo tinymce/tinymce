@@ -1596,7 +1596,7 @@ define("tinymce/dom/DOMUtils", [
 						// Also keep text nodes with only spaces if surrounded by spans.
 						// eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
 						var trimmedLength = trim(node.nodeValue).length;
-						if (!self.isBlock(node.parentNode) || trimmedLength > 0 || trimmedLength === 0 && surroundedBySpans(node)) {
+						if (self.isBlock(node.parentNode) || trimmedLength > 0 || trimmedLength === 0 && surroundedBySpans(node)) {
 							return;
 						}
 					} else if (type == 1) {
