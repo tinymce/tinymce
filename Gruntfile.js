@@ -385,7 +385,8 @@ module.exports = function(grunt) {
 						"js/tinymce/skins/*/fonts/*.dev.svg",
 						"js/tinymce/skins/*/fonts/readme.md",
 						"readme.md",
-						"js/tests/.jshintrc"
+						"js/tests/.jshintrc",
+						"js/**/Gruntfile.js"
 					],
 
 					concat: [
@@ -579,6 +580,7 @@ module.exports = function(grunt) {
 						"js/**/*.less",
 						"js/**/*.dev.svg",
 						"js/**/*.dev.js",
+						"js/**/Gruntfile.js",
 						"js/tinymce/tinymce.full.min.js"
 					],
 					outputDir: "tmp"
@@ -621,6 +623,7 @@ module.exports = function(grunt) {
 						"js/**/*.less",
 						"js/**/*.dev.svg",
 						"js/**/*.dev.js",
+						"js/**/Gruntfile.js",
 						"js/tinymce/tinymce.full.min.js"
 					],
 					outputDir: "tmp"
