@@ -112,12 +112,11 @@ define("tinymce/pasteplugin/WordFilter", [
 						}
 					}
 
-					if ((node = node.firstChild)) {
-						do {
-							if (!trimListStart(node, regExp)) {
-								return false;
-							}
-						} while ((node = node.next));
+					while ((node = node.firstChild)) 
+					{
+						if (!trimListStart(node, regExp)) {
+							return false;
+						}
 					}
 
 					return true;
