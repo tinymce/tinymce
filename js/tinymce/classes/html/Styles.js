@@ -237,6 +237,8 @@ define("tinymce/html/Styles", [], function() {
 				}
 
 				if (css) {
+					css = css.replace(/;[;\s]*/g,'; ');
+					
 					css = css.replace(/[\u0000-\u001F]/g, '');
 
 					// Encode \" \' % and ; and : inside strings so they don't interfere with the style parsing
