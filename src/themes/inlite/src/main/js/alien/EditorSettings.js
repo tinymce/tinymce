@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/alien/EditorSettings', [
-	'tinymce/inlite/alien/Type'
+define('tinymce.themes.inlite.alien.EditorSettings', [
+	'tinymce.themes.inlite.alien.Type'
 ], function (Type) {
 	var validDefaultOrDie = function (value, predicate) {
 		if (predicate(value)) {

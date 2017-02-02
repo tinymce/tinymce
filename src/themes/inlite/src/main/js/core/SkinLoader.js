@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/SkinLoader', [
+define('tinymce.themes.inlite.core.SkinLoader', [
 	'global!tinymce.EditorManager',
 	'global!tinymce.DOM'
 ], function (EditorManager, DOM) {

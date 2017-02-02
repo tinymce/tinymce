@@ -12,14 +12,14 @@ module.exports = function (grunt) {
 			"theme": {
 				config_js: "config/bolt/prod.js",
 				output_dir: "scratch",
-				main: "tinymce/inlite/Theme",
+				main: "tinymce.themes.inlite.Theme",
 				filename: "theme",
 
 				generate_inline: true,
 				minimise_module_names: true,
 
 				files: {
-					src: ["src/main/js/tinymce/inlite/Theme.js"]
+					src: ["src/main/js/Theme.js"]
 				}
 			}
 		},

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/Matcher', [
+define('tinymce.themes.inlite.core.Matcher', [
 ], function () {
 	// result :: String, Rect -> Matcher.result
 	var result = function (id, rect) {

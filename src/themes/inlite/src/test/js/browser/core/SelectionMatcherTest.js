@@ -1,10 +1,10 @@
-asynctest('browser/core/SelectionMatcherTest', [
+asynctest('browser.core.SelectionMatcherTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Assertions',
-	'tinymce/inlite/core/SelectionMatcher',
-	'tinymce/inlite/core/PredicateId',
+	'tinymce.themes.inlite.core.SelectionMatcher',
+	'tinymce.themes.inlite.core.PredicateId',
 	'ephox.agar.api.GeneralSteps',
 	'ephox.agar.api.Pipeline'
 ], function (TinyLoader, TinyApis, Step, Assertions, SelectionMatcher, PredicateId, GeneralSteps, Pipeline) {
@@ -35,7 +35,7 @@ asynctest('browser/core/SelectionMatcherTest', [
 
 	var sTextSelectionTests = function (tinyApis, editor) {
 		return GeneralSteps.sequence([
-			sTextSelectionTest(tinyApis, editor, '<p>a</p>', [0], 0, [0], 1, true),
+			sTextSelectionTest(tinyApis, editor, '<p>a<.p>', [0], 0, [0], 1, true),
 			sTextSelectionTest(tinyApis, editor, '<p>a</p>', [0], 0, [0], 0, false)
 		]);
 	};

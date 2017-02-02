@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/file/Conversions', [
+define('tinymce.themes.inlite.file.Conversions', [
 	'global!tinymce.util.Promise'
 ], function (Promise) {
 	var blobToBase64 = function (blob) {

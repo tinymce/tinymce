@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/alien/Bookmark', [
+define('tinymce.themes.inlite.alien.Bookmark', [
 ], function () {
 	/**
 	 * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with

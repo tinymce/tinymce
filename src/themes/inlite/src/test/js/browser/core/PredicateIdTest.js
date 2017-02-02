@@ -1,6 +1,6 @@
-test('browser/core/PredicateIdTest', [
+test('browser.core.PredicateIdTest', [
 	'ephox/tinymce',
-	'tinymce/inlite/core/PredicateId'
+	'tinymce.themes.inlite.core.PredicateId'
 ], function (tinymce, PredicateId) {
 	var testFromContextToolbars = function () {
 		var isTrue = function () {

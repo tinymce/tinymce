@@ -1,7 +1,7 @@
 asynctest('browser/core/ActionsTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
-	'tinymce/inlite/core/Actions',
+	'tinymce.themes.inlite.core.Actions',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.GeneralSteps'

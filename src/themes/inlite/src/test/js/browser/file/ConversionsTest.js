@@ -1,6 +1,6 @@
-asynctest('atomic/core/ConvertTest', [
+asynctest('atomic.core.ConvertTest', [
 	'ephox/tinymce',
-	'tinymce/inlite/file/Conversions',
+	'tinymce.inlite.file.Conversions',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Assertions'

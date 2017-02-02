@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/Measure', [
+define('tinymce.themes.inlite.core.Measure', [
 	'global!tinymce.DOM',
 	'global!tinymce.geom.Rect',
-	'tinymce/inlite/core/Convert'
+	'tinymce.themes.inlite.core.Convert'
 ], function (DOM, Rect, Convert) {
 	var toAbsolute = function (rect) {
 		var vp = DOM.getViewPort();

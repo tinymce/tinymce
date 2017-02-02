@@ -12,7 +12,7 @@
  * Generates unique ids this is the same as in core but since
  * it's not exposed as a global we can't access it.
  */
-define("tinymce/inlite/alien/Uuid", [
+define("tinymce.themes.inlite.alien.Uuid", [
 ], function() {
 	var count = 0;
 

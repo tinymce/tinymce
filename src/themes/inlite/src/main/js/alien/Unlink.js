@@ -14,8 +14,8 @@
  * instead of:
  *  a[b<a href="x">c]d</a>e -> a[bc]<a href="x">d</a>e
  */
-define("tinymce/inlite/alien/Unlink", [
-	'tinymce/inlite/alien/Bookmark',
+define("tinymce.themes.inlite.alien.Unlink", [
+	'tinymce.themes.inlite.alien.Bookmark',
 	'global!tinymce.util.Tools',
 	'global!tinymce.dom.TreeWalker',
 	'global!tinymce.dom.RangeUtils'

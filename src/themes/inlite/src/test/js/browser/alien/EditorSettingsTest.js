@@ -1,5 +1,5 @@
-asynctest('browser/alien/EditorSettingsTest', [
-	'tinymce/inlite/alien/EditorSettings',
+asynctest('browser.alien.EditorSettingsTest', [
+	'tinymce.themes.inlite.alien.EditorSettings',
 	'ephox/tinymce',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Pipeline',

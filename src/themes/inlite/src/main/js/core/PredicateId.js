@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/PredicateId', [
+define('tinymce.themes.inlite.core.PredicateId', [
 	'global!tinymce.util.Tools'
 ], function (Tools) {
 	var create = function (id, predicate) {

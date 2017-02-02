@@ -1,5 +1,5 @@
-test('browser/atomic/MatcherTest', [
-	'tinymce/inlite/core/Matcher'
+test('browser.themes.inlite.MatcherTest', [
+	'tinymce.themes.inlite.core.Matcher'
 ], function (Matcher) {
 	var testMatch = function (mockEditor, matches, expectedResult) {
 		var result;

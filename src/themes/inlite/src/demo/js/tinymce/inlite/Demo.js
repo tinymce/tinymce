@@ -10,8 +10,8 @@
 
 /*eslint no-console:0 */
 
-define('tinymce/inlite/Demo', [
-	'tinymce/inlite/Theme',
+define('tinymce.inlite.Demo', [
+	'tinymce.themes.inlite.Theme',
 	'global!tinymce'
 ], function(Theme, tinymce) {
 	tinymce.init({

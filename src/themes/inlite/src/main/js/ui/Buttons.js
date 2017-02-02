@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/ui/Buttons', [
-	'tinymce/inlite/ui/Panel',
-	'tinymce/inlite/file/Conversions',
-	'tinymce/inlite/file/Picker',
-	'tinymce/inlite/core/Actions'
+define('tinymce.themes.inlite.ui.Buttons', [
+	'tinymce.themes.inlite.ui.Panel',
+	'tinymce.themes.inlite.file.Conversions',
+	'tinymce.themes.inlite.file.Picker',
+	'tinymce.themes.inlite.core.Actions'
 ], function (Panel, Conversions, Picker, Actions) {
 	var addHeaderButtons = function (editor) {
 		var formatBlock = function (name) {

@@ -1,11 +1,11 @@
-asynctest('browser/alien/BookmarkTest', [
+asynctest('browser.alien.BookmarkTest', [
 	'ephox/tinymce',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Chain',
 	'ephox.agar.api.Cursors',
 	'ephox.agar.api.Assertions',
 	'ephox.mcagar.api.TinyDom',
-	'tinymce/inlite/alien/Bookmark'
+	'tinymce.themes.inlite.alien.Bookmark'
 ], function (tinymce, Pipeline, Chain, Cursors, Assertions, TinyDom, Bookmark) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

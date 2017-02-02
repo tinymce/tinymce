@@ -1,6 +1,6 @@
 asynctest('browser/core/MeasureTest', [
 	'ephox.mcagar.api.TinyLoader',
-	'tinymce/inlite/core/Measure',
+	'tinymce.themes.inlite.core.Measure',
 	'ephox.agar.api.Pipeline',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.agar.api.Step',

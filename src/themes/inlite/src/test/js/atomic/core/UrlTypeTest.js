@@ -1,5 +1,5 @@
-test('atomic/core/UrlTypeTest', [
-	'tinymce/inlite/core/UrlType'
+test('atomic.themes.core.UrlTypeTest', [
+	'tinymce.themes.inlite.core.UrlType'
 ], function (UrlType) {
 	var testIsDomainLike = function () {
 		var mostUsedTopLevelDomains = [

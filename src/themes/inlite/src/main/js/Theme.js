@@ -8,18 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/Theme', [
+define('tinymce.themes.inlite.Theme', [
 	'global!tinymce.ThemeManager',
 	'global!tinymce.util.Delay',
-	'tinymce/inlite/ui/Panel',
-	'tinymce/inlite/ui/Buttons',
-	'tinymce/inlite/core/SkinLoader',
-	'tinymce/inlite/core/SelectionMatcher',
-	'tinymce/inlite/core/ElementMatcher',
-	'tinymce/inlite/core/Matcher',
-	'tinymce/inlite/alien/Arr',
-	'tinymce/inlite/alien/EditorSettings',
-	'tinymce/inlite/core/PredicateId'
+	'tinymce.themes.inlite.ui.Panel',
+	'tinymce.themes.inlite.ui.Buttons',
+	'tinymce.themes.inlite.core.SkinLoader',
+	'tinymce.themes.inlite.core.SelectionMatcher',
+	'tinymce.themes.inlite.core.ElementMatcher',
+	'tinymce.themes.inlite.core.Matcher',
+	'tinymce.themes.inlite.alien.Arr',
+	'tinymce.themes.inlite.alien.EditorSettings',
+	'tinymce.themes.inlite.core.PredicateId'
 ], function(ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, EditorSettings, PredicateId) {
 	var getSelectionElements = function (editor) {
 		var node = editor.selection.getNode();

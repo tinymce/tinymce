@@ -1,10 +1,10 @@
-asynctest('browser/core/ThemeTest', [
+asynctest('browser.core.ThemeTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyActions',
 	'ephox.mcagar.api.TinyDom',
-	'tinymce.inlite.test.Toolbar',
-	'tinymce/inlite/Theme',
+	'tinymce.themes.inlite.test.Toolbar',
+	'tinymce.themes.inlite.Theme',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Chain',
 	'ephox.agar.api.UiFinder',

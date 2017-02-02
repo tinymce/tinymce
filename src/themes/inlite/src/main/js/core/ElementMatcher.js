@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/ElementMatcher', [
-	'tinymce/inlite/core/Matcher',
-	'tinymce/inlite/core/Measure'
+define('tinymce.themes.inlite.core.ElementMatcher', [
+	'tinymce.themes.inlite.core.Matcher',
+	'tinymce.themes.inlite.core.Measure'
 ], function (Matcher, Measure) {
 	// element :: Element, [PredicateId] -> (Editor -> Matcher.result | Null)
 	var element = function (element, predicateIds) {

@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/SelectionMatcher', [
-	'tinymce/inlite/core/Matcher',
-	'tinymce/inlite/core/Measure'
+define('tinymce.themes.inlite.core.SelectionMatcher', [
+	'tinymce.themes.inlite.core.Matcher',
+	'tinymce.themes.inlite.core.Measure'
 ], function (Matcher, Measure) {
 	// textSelection :: String -> (Editor -> Matcher.result | Null)
 	var textSelection = function (id) {

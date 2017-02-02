@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/alien/Type', [
+define('tinymce.themes.inlite.alien.Type', [
 ], function () {
 	var isType = function (type) {
 		return function (value) {

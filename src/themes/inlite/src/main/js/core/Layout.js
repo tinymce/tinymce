@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/Layout', [
+define('tinymce.themes.inlite.core.Layout', [
 	'global!tinymce.geom.Rect',
-	'tinymce/inlite/core/Convert'
+	'tinymce.themes.inlite.core.Convert'
 ], function (Rect, Convert) {
 	var result = function (rect, position) {
 		return {

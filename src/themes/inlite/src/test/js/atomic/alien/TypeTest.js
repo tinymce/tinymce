@@ -1,5 +1,5 @@
-test('atomic/alien/TypeTest', [
-	'tinymce/inlite/alien/Type'
+test('atomic.themes.alien.TypeTest', [
+	'tinymce.themes.inlite.alien.Type'
 ], function (Type) {
 	var testIsString = function () {
 		assert.eq(Type.isString('a'), true);

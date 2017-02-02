@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/alien/Arr', [
+define('tinymce.themes.inlite.alien.Arr', [
 ], function () {
 	var flatten = function (arr) {
 		return arr.reduce(function (results, item) {

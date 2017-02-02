@@ -1,7 +1,7 @@
-asynctest('browser/alien/UnlinkTest', [
+asynctest('browser.alien.UnlinkTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
-	'tinymce/inlite/alien/Unlink',
+	'tinymce.themes.inlite.alien.Unlink',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.GeneralSteps'

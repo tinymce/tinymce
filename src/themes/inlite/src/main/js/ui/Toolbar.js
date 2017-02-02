@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/ui/Toolbar', [
+define('tinymce.themes.inlite.ui.Toolbar', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory',
-	'tinymce/inlite/alien/Type'
+	'tinymce.themes.inlite.alien.Type'
 ], function (Tools, Factory, Type) {
 	var getSelectorStateResult = function (itemName, item) {
 		var result = function (selector, handler) {

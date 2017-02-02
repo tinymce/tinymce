@@ -1,10 +1,10 @@
-asynctest('browser/core/ElementMatcherTest', [
+asynctest('browser.core.ElementMatcherTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Assertions',
-	'tinymce/inlite/core/ElementMatcher',
-	'tinymce/inlite/core/PredicateId',
+	'tinymce.themes.inlite.core.ElementMatcher',
+	'tinymce.themes.inlite.core.PredicateId',
 	'ephox.agar.api.Pipeline'
 ], function (TinyLoader, TinyApis, Step, Assertions, ElementMatcher, PredicateId, Pipeline) {
 	var success = arguments[arguments.length - 2];

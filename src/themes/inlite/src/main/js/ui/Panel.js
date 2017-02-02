@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/ui/Panel', [
+define('tinymce.themes.inlite.ui.Panel', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory',
 	'global!tinymce.DOM',
-	'tinymce/inlite/ui/Toolbar',
-	'tinymce/inlite/ui/Forms',
-	'tinymce/inlite/core/Measure',
-	'tinymce/inlite/core/Layout',
-	'tinymce/inlite/alien/EditorSettings'
+	'tinymce.themes.inlite.ui.Toolbar',
+	'tinymce.themes.inlite.ui.Forms',
+	'tinymce.themes.inlite.core.Measure',
+	'tinymce.themes.inlite.core.Layout',
+	'tinymce.themes.inlite.alien.EditorSettings'
 ], function (Tools, Factory, DOM, Toolbar, Forms, Measure, Layout, EditorSettings) {
 	return function () {
 		var DEFAULT_TEXT_SELECTION_ITEMS = ['bold', 'italic', '|', 'quicklink', 'h2', 'h3', 'blockquote'];

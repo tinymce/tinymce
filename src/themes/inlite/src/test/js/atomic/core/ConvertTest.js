@@ -1,5 +1,5 @@
-test('atomic/core/ConvertTest', [
-	'tinymce/inlite/core/Convert'
+test('atomic.themes.core.ConvertTest', [
+	'tinymce.themes.inlite.core.Convert'
 ], function (Convert) {
 	var testConvert = function () {
 		assert.eq({x: 1, y: 2, w: 3, h: 4}, Convert.fromClientRect({left: 1, top: 2, width: 3, height: 4}));

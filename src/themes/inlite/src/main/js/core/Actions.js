@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/Actions', [
-	'tinymce/inlite/alien/Uuid',
-	'tinymce/inlite/alien/Unlink'
+define('tinymce.themes.inlite.core.Actions', [
+	'tinymce.themes.inlite.alien.Uuid',
+	'tinymce.themes.inlite.alien.Unlink'
 ], function (Uuid, Unlink) {
 	var createTableHtml = function (cols, rows) {
 		var x, y, html;

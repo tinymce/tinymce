@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/file/Picker', [
+define('tinymce.themes.inlite.file.Picker', [
 	'global!tinymce.util.Promise'
 ], function (Promise) {
 	var pickFile = function () {

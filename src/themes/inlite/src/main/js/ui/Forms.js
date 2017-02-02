@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/ui/Forms', [
+define('tinymce.themes.inlite.ui.Forms', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory',
 	'global!tinymce.util.Promise',
-	'tinymce/inlite/core/Actions',
-	'tinymce/inlite/core/UrlType'
+	'tinymce.themes.inlite.core.Actions',
+	'tinymce.themes.inlite.core.UrlType'
 ], function (Tools, Factory, Promise, Actions, UrlType) {
 	var focusFirstTextBox = function (form) {
 		form.find('textbox').eq(0).each(function (ctrl) {

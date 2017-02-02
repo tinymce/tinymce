@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce/inlite/core/Convert', [
+define('tinymce.themes.inlite.core.Convert', [
 ], function () {
 	var fromClientRect = function (clientRect) {
 		return {
