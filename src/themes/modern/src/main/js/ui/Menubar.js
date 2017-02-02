@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.ui.Menubar', [
+define('tinymce.themes.modern.ui.Menubar', [
 	'global!tinymce.util.Tools'
 ], function (Tools) {
 	var defaultMenus = {

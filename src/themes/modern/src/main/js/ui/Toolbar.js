@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.ui.Toolbar', [
+define('tinymce.themes.modern.ui.Toolbar', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory'
 ], function (Tools, Factory) {

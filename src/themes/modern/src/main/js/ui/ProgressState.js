@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.ui.ProgressState', [
+define('tinymce.themes.modern.ui.ProgressState', [
 	'global!tinymce.ui.Throbber'
 ], function (Throbber) {
 	var setup = function (editor, theme) {

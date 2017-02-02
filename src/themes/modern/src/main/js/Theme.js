@@ -8,14 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.Theme', [
+define('tinymce.themes.modern.Theme', [
     'global!tinymce.AddOnManager',
     'global!tinymce.EditorManager',
     'global!tinymce.Env',
-    'tinymce.modern.modes.Iframe',
-    'tinymce.modern.modes.Inline',
-    'tinymce.modern.ui.ProgressState',
-    'tinymce.modern.ui.Resize'
+    'tinymce.themes.modern.modes.Iframe',
+    'tinymce.themes.modern.modes.Inline',
+    'tinymce.themes.modern.ui.ProgressState',
+    'tinymce.themes.modern.ui.Resize'
   ], function (AddOnManager, EditorManager, Env, Iframe, Inline, ProgressState, Resize) {
 		var ThemeManager = AddOnManager.ThemeManager;
 	var renderUI = function(editor, theme, args) {

@@ -10,8 +10,8 @@
 
 /*eslint no-console:0 */
 
-define('tinymce.modern.Demo', [
-	'tinymce.modern.Theme',
+define('tinymce.themes.modern.demo.Demo', [
+	'tinymce.themes.modern.Theme',
 	'global!tinymce'
 ], function(Theme, tinymce) {
 	var config = {

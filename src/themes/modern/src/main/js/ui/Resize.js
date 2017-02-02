@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.ui.Resize', [
+define('tinymce.themes.modern.ui.Resize', [
 	'global!tinymce.dom.DOMUtils'
 ], function (DOMUtils) {
 	var DOM = DOMUtils.DOM;

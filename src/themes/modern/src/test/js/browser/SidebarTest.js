@@ -1,8 +1,8 @@
-asynctest('tinymce.modern.test.browser.SidebarTest', [
+asynctest('tinymce.themes.modern.test.browser.SidebarTest', [
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyDom',
 	'ephox.agar.api.Assertions',
-	'tinymce.modern.Theme',
+	'tinymce.themes.modern.Theme',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Chain',
 	'ephox.agar.api.UiFinder',

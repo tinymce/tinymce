@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.ui.SkinLoaded', [
+define('tinymce.themes.modern.ui.SkinLoaded', [
 ], function () {
 	var fireSkinLoaded = function (editor) {
 		var done = function () {

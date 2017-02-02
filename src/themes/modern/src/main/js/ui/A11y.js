@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.ui.A11y', [
+define('tinymce.themes.modern.ui.A11y', [
 ], function () {
 	var focus = function (panel, type) {
 		return function () {

@@ -8,17 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.modern.modes.Iframe', [
+define('tinymce.themes.modern.modes.Iframe', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.ui.Factory',
 	'global!tinymce.dom.DOMUtils',
-	'tinymce.modern.ui.Toolbar',
-	'tinymce.modern.ui.Menubar',
-	'tinymce.modern.ui.ContextToolbars',
-	'tinymce.modern.ui.A11y',
-	'tinymce.modern.ui.Sidebar',
-	'tinymce.modern.ui.SkinLoaded',
-	'tinymce.modern.ui.Resize'
+	'tinymce.themes.modern.ui.Toolbar',
+	'tinymce.themes.modern.ui.Menubar',
+	'tinymce.themes.modern.ui.ContextToolbars',
+	'tinymce.themes.modern.ui.A11y',
+	'tinymce.themes.modern.ui.Sidebar',
+	'tinymce.themes.modern.ui.SkinLoaded',
+	'tinymce.themes.modern.ui.Resize'
 ], function (Tools, Factory, DOMUtils, Toolbar, Menubar, ContextToolbars, A11y, Sidebar, SkinLoaded, Resize) {
 	var DOM = DOMUtils.DOM;
 
