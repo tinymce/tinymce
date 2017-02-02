@@ -3,20 +3,22 @@
 .@{prefix}-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	height: 100%;
+	/* d2l */
+	/*height: 100%;*/
+	/* end d2l */
 }
 
 div.@{prefix}-fullscreen {
-	position: fixed;
+	/* d2l */
+	/*position: fixed;*/
+	/* end d2l */
 	top: 0; left: 0;
 }
 
 #@{prefix}-modal-block {
-	.opacity(0);
 	position: fixed;
 	left: 0; top: 0;
 	width: 100%; height: 100%;
-	background: @window-modalblock-bg;
 }
 
 #@{prefix}-modal-block.@{prefix}-in {
@@ -28,15 +30,16 @@ div.@{prefix}-fullscreen {
 }
 
 .@{prefix}-window {
-	.border-radius(6px);
-	.box-shadow(@window-box-shadow);
+	.border-radius(7px);  //d2l originally 6px
 	.reset-gradient();
 	background: @window-bg;
 	position: fixed;
 	top: 0; left: 0;
 	opacity: 0;
 	transform: scale(0.1);
-	transition: transform 100ms ease-in, opacity 150ms ease-in;
+	transition: @d2l-window-appear-transition; //d2l originally transition: transform 100ms ease-in, opacity 150ms ease-in;
+	box-shadow: @d2l-window-box-shadow; //d2l originally @window-box-shadow
+	padding: @d2l-window-padding;
 }
 
 .@{prefix}-window.@{prefix}-in {
@@ -45,35 +48,39 @@ div.@{prefix}-fullscreen {
 }
 
 .@{prefix}-window-head {
-	padding: 9px 15px;
-	border-bottom: 1px solid @window-head-border;
+//	padding: 9px 15px; //d2l commented out
+//  border-bottom: 1px solid @window-head-border; //d2l commented out	
 	position: relative;
 }
 
 .@{prefix}-window-head .@{prefix}-close {
 	position: absolute;
-	right: 0;
-	top: 0;
-	height: 38px;
-	width: 38px;
+	right: -0.1rem; //d2l orginally 0
+	top: -0.27rem; //d2l orginally 0
+	min-height: 1.3rem !important; //d2l overrides 2rem min-height constraint on buttons
+	width: 1.3rem; 
 	text-align: center;
 	cursor: pointer;
+	border: @d2l-window-close-button-border;
+	border-radius: 0.3rem;
 
-	i {
-		color: @window-head-close;
-	}
+    // i {
+    //     color: @window-head-close;
+    // } //d2l
 }
 
-.@{prefix}-close:hover i {
-	color: @window-head-close-hover;
+button.@{prefix}-close:hover {
+	border: @d2l-window-close-border-hover;
+//    color: @window-head-close-hover;
 }
 
 .@{prefix}-window-head .@{prefix}-title {
 	line-height: 20px;
 	font-size: @window-title-font-size;
 	font-weight: bold;
+	letter-spacing: @d2l-window-title-letter-spacing;
 	text-rendering: optimizelegibility;
-	padding-right: 20px;
+	//padding-right: 20px;  
 }
 
 .@{prefix}-window .@{prefix}-container-body {
@@ -82,9 +89,7 @@ div.@{prefix}-fullscreen {
 
 .@{prefix}-foot {
 	display: block;
-	background-color: @window-foot-bg;
-	border-top: 1px solid @window-foot-border;
-	.border-radius(0 0 6px 6px);
+	border-width: 0px !important; //d2l overrides the foot border 
 }
 
 .@{prefix}-window-head .@{prefix}-dragh {
@@ -96,7 +101,7 @@ div.@{prefix}-fullscreen {
 }
 
 .@{prefix}-window iframe {
-	width: 100%;
+	width: 100%
 	height: 100%;
 }
 

@@ -7,12 +7,16 @@
 .@{prefix}-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	height: 100%;
+	/* d2l */
+	/*height: 100%;*/
+	/* end d2l */
 	z-index: 100;
 }
 
 div.@{prefix}-fullscreen {
-	position: fixed;
+	/* d2l */
+	/*position: fixed;*/
+	/* end d2l */
 	top: 0; left: 0;
 	width: 100%;
 	height: auto;
@@ -20,7 +24,12 @@ div.@{prefix}-fullscreen {
 
 .@{prefix}-tinymce {
 	display: block;
-	.border-radius(2px);
+	.border-radius(0.3rem); // .border-radius(2px);
+
+	/* d2l */
+	padding: 0.15rem;
+	box-shadow: 0 0.1rem 0.6rem 0 @panel-border;
+	/* end d2l */
 }
 
 .@{prefix}-wordcount {
@@ -46,6 +55,47 @@ div.@{prefix}-edit-area {
 .@{prefix}-fullscreen .@{prefix}-resizehandle {
 	display: none;
 }
+
+//D2L 
+.@{prefix}-i-arrowdown ~ .@{prefix}-caret {
+	display: none !important;
+}
+
+.@{prefix}-fullscreen {
+	.@{prefix}-toolbar-grp {
+		margin: 0.5rem;
+	}
+	.@{prefix}-toolbar {
+		.@{prefix}-btn-group:not(:first-child) {
+			padding-left: .25rem;
+			margin-left: .25rem;
+		}
+		.@{prefix}-btn-group.@{prefix}-last {
+			position: absolute;
+			right: 0;
+			border: none;
+		}
+		.@{prefix}-btn {
+			min-height: 1.5rem;
+		}
+	}
+}
+
+.@{prefix}-fullscreen > .@{prefix}-container-body {
+	padding-left: 3rem;
+	padding-right: 3rem;
+	padding-top: 1rem;
+	.@{prefix}-toolbar-grp {
+		position: relative;
+	}
+}
+
+// For the table button
+.@{prefix}-i-table {
+	margin-right: 0.3rem;
+}
+
+// END OF D2L
 
 // Charmap
 
@@ -149,6 +199,12 @@ div.@{prefix}-tinymce-inline {
 
 .@{prefix}-toolbar-grp .@{prefix}-flow-layout-item {
 	margin-bottom: 0;
+
+	/* D2L */
+	margin-top: 0;
+	/* end D2L */
+
+
 }
 
 // RTL

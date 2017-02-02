@@ -55,7 +55,8 @@
 		"no-multi-spaces": 2,
 		"no-sequences": 2,
 		"no-new": 2,
-		"no-caller": 2
+		"no-caller": 2,
+		"no-control-regex": 0
 	},
 
 	"extends": "eslint:recommended"

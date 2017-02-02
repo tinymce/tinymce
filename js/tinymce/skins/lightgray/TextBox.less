@@ -2,8 +2,8 @@
 
 .@{prefix}-textbox {
 	background: @textbox-bg;
-	border: 1px solid @textbox-border;
-	.border-radius(3px);
+	border: 1px solid @d2l-textbox-border;
+	.border-radius(7px);  //d2l orginally 3px
 	.box-shadow(@textbox-box-shadow);
 	display: inline-block;
 	.transition(~"border linear .2s, box-shadow linear .2s");
@@ -13,6 +13,9 @@
 	white-space: pre-wrap;
 	*white-space: pre;
 	color: @text;
+	font-family: @font-family;
+	font-size: @d2l-textbox-font-size;
+	font-weight: @d2l-textbox-font-weight;
 }
 
 .@{prefix}-textbox:focus, .@{prefix}-textbox.@{prefix}-focus {
@@ -39,3 +42,17 @@
 	text-align: right;
 	direction: rtl;
 }
+
+// D2L
+// Fix Input box issues in color picker
+.@{prefix}-colorpicker + .@{prefix}-container.@{prefix}-form.@{prefix}-abs-layout-item.@{prefix}-last .@{prefix}-textbox {
+	height: 1.5rem !important;
+
+	&:hover, &:focus {
+		border-color: rgb(0, 111, 191);
+    	border-width: 2px;
+    	padding: 0 0.2rem 0 0.2rem;
+	}
+}
+// End of D2L
+

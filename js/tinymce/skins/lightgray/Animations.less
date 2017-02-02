@@ -2,9 +2,9 @@
 
 .@{prefix}-fade {
 	opacity: 0;
-	.transition(opacity .15s linear);
+	.transition(opacity .3s linear); //d2l orginally 0.15s
 
 	&.@{prefix}-in {
-		opacity: 1;
+		background-color: @d2l-dialog-shim-color; //d2l originally #f9fafb
 	}
 }
