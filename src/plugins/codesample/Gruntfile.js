@@ -30,6 +30,10 @@ module.exports = function (grunt) {
 					{
 						src: "scratch/inline/plugin.raw.js",
 						dest: "dist/codesample/plugin.js"
+					},
+					{
+						src: "src/main/css/prism.css",
+						dest: "dist/codesample/css/prism.css"
 					}
 				]
 			}
