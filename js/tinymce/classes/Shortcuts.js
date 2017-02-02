@@ -27,7 +27,9 @@ define("tinymce/Shortcuts", [
 	var keyCodeLookup = {
 		"f9": 120,
 		"f10": 121,
-		"f11": 122
+		"f11": 122,
+		"[": 219,
+		"]": 221
 	};
 
 	var modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
