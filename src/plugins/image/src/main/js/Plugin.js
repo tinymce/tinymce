@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.image.Plugin',
+	'tinymce.plugins.image.Plugin',
 
 	[
     'global!tinymce.Env',

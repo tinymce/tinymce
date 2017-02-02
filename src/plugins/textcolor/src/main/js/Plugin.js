@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.textcolor.Plugin',
+	'tinymce.plugins.textcolor.Plugin',
 
 	[
     'global!tinymce.DOM',

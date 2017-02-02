@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.wordcount.text.WordBoundary", [
-	"tinymce.wordcount.text.UnicodeData"
+define("tinymce.plugins.wordcount.text.WordBoundary", [
+	"tinymce.plugins.wordcount.text.UnicodeData"
 ], function(UnicodeData) {
 	var ci = UnicodeData.characterIndices;
 	var isWordBoundary = function (map, index) {

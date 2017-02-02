@@ -13,7 +13,7 @@
  *
  * @class tinymce.pasteplugin.Utils
  */
-define('tinymce.paste.core.Utils', [
+define('tinymce.plugins.paste.core.Utils', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.html.DomParser',
 	'global!tinymce.html.Schema'

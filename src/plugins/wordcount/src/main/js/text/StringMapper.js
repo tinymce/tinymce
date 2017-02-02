@@ -7,9 +7,9 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-define('tinymce.wordcount.text.StringMapper', [
-	'tinymce.wordcount.text.UnicodeData',
-	'tinymce.wordcount.alien.Arr'
+define('tinymce.plugins.wordcount.text.StringMapper', [
+	'tinymce.plugins.wordcount.text.UnicodeData',
+	'tinymce.plugins.wordcount.alien.Arr'
 ], function(UnicodeData, Arr) {
 	var SETS = UnicodeData.SETS;
 	var OTHER = UnicodeData.characterIndices.OTHER;

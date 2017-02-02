@@ -15,7 +15,7 @@
  *  imagetools_proxy - Url to proxy that streams images from remote host to local host.
  *  imagetools_toolbar - Toolbar items to render when an editable image is selected.
  */
-define("tinymce.imagetools.Plugin", [
+define("tinymce.plugins.imagetools.Plugin", [
 	"global!tinymce.PluginManager",
 	"global!tinymce.Env",
 	"global!tinymce.util.Promise",
@@ -24,9 +24,9 @@ define("tinymce.imagetools.Plugin", [
 	"global!tinymce.util.Delay",
 	"ephox/imagetools/api/ImageTransformations",
 	"ephox/imagetools/api/BlobConversions",
-	"tinymce.imagetools.Dialog",
-	"tinymce.imagetools.ImageSize",
-	"tinymce.imagetools.Proxy"
+	"tinymce.plugins.imagetools.Dialog",
+	"tinymce.plugins.imagetools.ImageSize",
+	"tinymce.plugins.imagetools.Proxy"
 ], function(PluginManager, Env, Promise, URI, Tools, Delay, ImageTransformations, BlobConversions, Dialog, ImageSize, Proxy) {
 	var plugin = function(editor) {
 		var count = 0, imageUploadTimer, lastSelectedImage;

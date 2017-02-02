@@ -13,13 +13,13 @@
  *
  * @-x-less ImagePanel.less
  */
-define("tinymce.imagetools.ImagePanel", [
+define("tinymce.plugins.imagetools.ImagePanel", [
 	"global!tinymce.ui.Control",
 	"global!tinymce.ui.DragHelper",
 	"global!tinymce.geom.Rect",
 	"global!tinymce.util.Tools",
 	"global!tinymce.util.Promise",
-	"tinymce.imagetools.CropRect"
+	"tinymce.plugins.imagetools.CropRect"
 ], function(Control, DragHelper, Rect, Tools, Promise, CropRect) {
 	function loadImage(image) {
 		return new Promise(function(resolve) {

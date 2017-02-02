@@ -1,4 +1,4 @@
-define('tinymce.media.ui.SizeManager', [
+define('tinymce.plugins.media.ui.SizeManager', [
 ], function () {
 	var doSyncSize = function (widthCtrl, heightCtrl) {
 		widthCtrl.state.set('oldVal', widthCtrl.value());

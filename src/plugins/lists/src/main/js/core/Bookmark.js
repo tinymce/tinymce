@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.Bookmark", [
+define("tinymce.plugins.lists.core.Bookmark", [
 	"global!tinymce.dom.DOMUtils.DOM",
-	"tinymce.lists.core.NodeType",
-	"tinymce.lists.core.Range"
+	"tinymce.plugins.lists.core.NodeType",
+	"tinymce.plugins.lists.core.Range"
 ], function (DOM, NodeType, Range) {
 	/**
 	 * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with

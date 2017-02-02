@@ -1,5 +1,5 @@
-define('tinymce.media.core.Service', [
-	'tinymce.media.core.DataToHtml',
+define('tinymce.plugins.media.core.Service', [
+	'tinymce.plugins.media.core.DataToHtml',
 	'global!tinymce.util.Promise'
 ], function (DataToHtml, Promise) {
 

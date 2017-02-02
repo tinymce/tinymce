@@ -10,8 +10,8 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.wordcount.Demo", [
-	"tinymce.wordcount.Plugin",
+define("tinymce.plugins.wordcount.Demo", [
+	"tinymce.plugins.wordcount.Plugin",
 	"global!tinymce"
 ], function(Plugin, tinymce) {
 	return function() {

@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.bbcode', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/bbcode\//, '');
+    source('amd', 'tinymce.plugins.bbcode', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/bbcode\//, '');
 		})
   ]
 });

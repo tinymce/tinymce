@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.anchor.Plugin',
+	'tinymce.plugins.anchor.Plugin',
 	[
     'global!tinymce.Env',
     'global!tinymce.PluginManager'

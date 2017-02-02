@@ -1,4 +1,4 @@
-define('tinymce.media.core.Sanitize', [
+define('tinymce.plugins.media.core.Sanitize', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.html.Writer',
 	'global!tinymce.html.SaxParser',

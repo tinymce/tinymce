@@ -3,8 +3,8 @@ configure({
     './prod.js'
   ],
   sources: [
-    source('amd', 'tinymce.charmap.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/charmap\//, '');
+    source('amd', 'tinymce.plugins.charmap.demo', '../../src/demo/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/charmap\//, '');
 		})
   ]
 });

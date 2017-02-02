@@ -14,13 +14,13 @@
  * @class tinymce.pasteplugin.WordFilter
  * @private
  */
-define('tinymce.paste.core.WordFilter', [
+define('tinymce.plugins.paste.core.WordFilter', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.html.DomParser',
 	'global!tinymce.html.Schema',
 	'global!tinymce.html.Serializer',
 	'global!tinymce.html.Node',
-	'tinymce.paste.core.Utils'
+	'tinymce.plugins.paste.core.Utils'
 ], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
 	/**
 	 * Checks if the specified content is from any of the following sources: MS Word/Office 365/Google docs.

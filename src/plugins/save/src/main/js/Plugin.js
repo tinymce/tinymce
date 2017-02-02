@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.save.Plugin',
+	'tinymce.plugins.save.Plugin',
 
 	[
     'global!tinymce.PluginManager',

@@ -3,8 +3,8 @@ configure({
     './prod.js'
   ],
   sources: [
-    source('amd', 'tinymce.nonbreaking.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/nonbreaking\//, '');
+    source('amd', 'tinymce.plugins.nonbreaking.demo', '../../src/demo/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/nonbreaking\//, '');
 		})
   ]
 });

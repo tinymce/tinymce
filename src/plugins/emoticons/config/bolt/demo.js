@@ -3,8 +3,8 @@ configure({
     './prod.js'
   ],
   sources: [
-    source('amd', 'tinymce.emoticons.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/emoticons\//, '');
+    source('amd', 'tinymce.plugins.emoticons.demo', '../../src/demo/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/emoticons\//, '');
 		})
   ]
 });

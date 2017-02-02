@@ -15,9 +15,9 @@
  * @private
  */
 define(
-	'tinymce.spellchecker.Plugin',
+	'tinymce.plugins.spellchecker.Plugin',
 	[
-		'tinymce.spellchecker.core.DomTextMatcher',
+		'tinymce.plugins.spellchecker.core.DomTextMatcher',
 		'global!tinymce.PluginManager',
 		'global!tinymce.util.Tools',
 		'global!tinymce.ui.Menu',

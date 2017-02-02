@@ -1,4 +1,4 @@
-define('tinymce.media.core.VideoScript', [
+define('tinymce.plugins.media.core.VideoScript', [
 ], function () {
 	var getVideoScriptMatch = function (prefixes, src) {
 		// var prefixes = editor.settings.media_scripts;

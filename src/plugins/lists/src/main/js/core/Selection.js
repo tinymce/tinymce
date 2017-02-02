@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.Selection", [
+define("tinymce.plugins.lists.core.Selection", [
 	"global!tinymce.util.Tools",
-	"tinymce.lists.core.NodeType"
+	"tinymce.plugins.lists.core.NodeType"
 ], function (Tools, NodeType) {
 	var getSelectedListItems = function (editor) {
 		return Tools.grep(editor.selection.getSelectedBlocks(), function (block) {

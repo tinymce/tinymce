@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.Plugin", [
+define("tinymce.plugins.lists.Plugin", [
 	"global!tinymce.PluginManager",
 	"global!tinymce.util.Tools",
 	"global!tinymce.util.VK",
-	"tinymce.lists.core.NodeType",
-	"tinymce.lists.core.Delete",
-	"tinymce.lists.actions.Indent",
-	"tinymce.lists.actions.Outdent",
-	"tinymce.lists.actions.ToggleList"
+	"tinymce.plugins.lists.core.NodeType",
+	"tinymce.plugins.lists.core.Delete",
+	"tinymce.plugins.lists.actions.Indent",
+	"tinymce.plugins.lists.actions.Outdent",
+	"tinymce.plugins.lists.actions.ToggleList"
 ], function (PluginManager, Tools, VK, NodeType, Delete, Indent, Outdent, ToggleList) {
 	var queryListCommandState = function (editor, listName) {
 		return function () {

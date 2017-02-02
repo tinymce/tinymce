@@ -1,6 +1,6 @@
-define('tinymce.media.core.Nodes', [
-	'tinymce.media.core.Sanitize',
-	'tinymce.media.core.VideoScript',
+define('tinymce.plugins.media.core.Nodes', [
+	'tinymce.plugins.media.core.Sanitize',
+	'tinymce.plugins.media.core.VideoScript',
 	'global!tinymce.html.Node',
 	'global!tinymce.Env'
 ], function (Sanitize, VideoScript, Node, Env) {

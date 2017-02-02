@@ -13,7 +13,7 @@
 /*eslint-disable*/
 
 define(
-  'tinymce.codesample.core.Prism',
+  'tinymce.plugins.codesample.core.Prism',
 
   [
 

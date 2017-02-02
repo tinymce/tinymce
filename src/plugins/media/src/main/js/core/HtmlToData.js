@@ -1,10 +1,10 @@
-define('tinymce.media.core.HtmlToData', [
+define('tinymce.plugins.media.core.HtmlToData', [
 	'global!tinymce.util.Tools',
 	'global!tinymce.html.SaxParser',
 	'global!tinymce.html.Schema',
 	'global!tinymce.dom.DOMUtils.DOM',
-	'tinymce.media.core.VideoScript',
-	'tinymce.media.core.Size'
+	'tinymce.plugins.media.core.VideoScript',
+	'tinymce.plugins.media.core.Size'
 ], function (Tools, SaxParser, Schema, DOM, VideoScript, Size) {
 	var getEphoxEmbedIri = function (elm) {
 		return DOM.getAttrib(elm, 'data-ephox-embed-iri');

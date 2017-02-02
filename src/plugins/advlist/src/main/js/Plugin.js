@@ -11,11 +11,11 @@
 /**
  * This class contains all core logic for the advlist plugin.
  *
- * @class tinymce.advlist.Plugin
+ * @class tinymce.plugins.advlist.Plugin
  * @private
  */
 define(
-	'tinymce.advlist.Plugin',
+	'tinymce.plugins.advlist.Plugin',
 
 	[
     'global!tinymce.PluginManager',

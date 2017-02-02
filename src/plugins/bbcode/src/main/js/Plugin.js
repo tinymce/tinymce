@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.bbcode.Plugin',
+	'tinymce.plugins.bbcode.Plugin',
 
 	[
     'global!tinymce.PluginManager',

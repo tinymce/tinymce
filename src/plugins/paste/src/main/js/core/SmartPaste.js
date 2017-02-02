@@ -16,7 +16,7 @@
  * @class tinymce.pasteplugin.SmartPaste
  * @private
  */
-define('tinymce.paste.core.SmartPaste', [
+define('tinymce.plugins.paste.core.SmartPaste', [
 	'global!tinymce.util.Tools'
 ], function (Tools) {
 	var isAbsoluteUrl = function (url) {

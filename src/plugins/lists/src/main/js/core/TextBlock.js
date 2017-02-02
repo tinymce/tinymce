@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.TextBlock", [
+define("tinymce.plugins.lists.core.TextBlock", [
 	"global!tinymce.dom.DOMUtils.DOM",
 	"global!tinymce.Env"
 ], function (DOM, Env) {

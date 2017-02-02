@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.toc.Plugin',
+	'tinymce.plugins.toc.Plugin',
 
 	[
     'global!tinymce.PluginManager',

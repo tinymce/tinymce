@@ -1,5 +1,5 @@
 define(
-	'tinymce.spellchecker.core.DomTextMatcher',
+	'tinymce.plugins.spellchecker.core.DomTextMatcher',
 	[],
 
 	function() {

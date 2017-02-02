@@ -1,4 +1,4 @@
-define('tinymce.media.core.UrlPatterns', [
+define('tinymce.plugins.media.core.UrlPatterns', [
 ], function () {
 	var urlPatterns = [
 		{

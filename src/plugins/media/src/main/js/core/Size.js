@@ -1,4 +1,4 @@
-define('tinymce.media.core.Size', [
+define('tinymce.plugins.media.core.Size', [
 ], function () {
 	var trimPx = function (value) {
 		return value.replace(/px$/, '');

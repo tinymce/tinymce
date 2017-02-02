@@ -12,7 +12,7 @@
 /*eslint no-labels:0, no-constant-condition: 0 */
 
 define(
-  'tinymce.searchreplace.core.FindReplaceText',
+  'tinymce.plugins.searchreplace.core.FindReplaceText',
 
   [
   ],

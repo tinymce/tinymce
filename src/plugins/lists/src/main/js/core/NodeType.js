@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.NodeType", [
+define("tinymce.plugins.lists.core.NodeType", [
 ], function () {
 	var isTextNode = function (node) {
 		return node && node.nodeType === 3;

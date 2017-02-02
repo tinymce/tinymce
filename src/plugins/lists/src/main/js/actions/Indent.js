@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.actions.Indent", [
+define("tinymce.plugins.lists.actions.Indent", [
 	"global!tinymce.dom.DOMUtils.DOM",
-	"tinymce.lists.core.NodeType",
-	"tinymce.lists.core.Bookmark",
-	"tinymce.lists.core.Selection"
+	"tinymce.plugins.lists.core.NodeType",
+	"tinymce.plugins.lists.core.Bookmark",
+	"tinymce.plugins.lists.core.Selection"
 ], function (DOM, NodeType, Bookmark, Selection) {
 	var mergeLists = function (from, to) {
 		var node;

@@ -16,11 +16,11 @@
  * @class tinymce.pasteplugin.Quirks
  * @private
  */
-define('tinymce.paste.core.Quirks', [
+define('tinymce.plugins.paste.core.Quirks', [
 	'global!tinymce.Env',
 	'global!tinymce.util.Tools',
-	'tinymce.paste.core.WordFilter',
-	'tinymce.paste.core.Utils'
+	'tinymce.plugins.paste.core.WordFilter',
+	'tinymce.plugins.paste.core.Utils'
 ], function(Env, Tools, WordFilter, Utils) {
 	"use strict";
 

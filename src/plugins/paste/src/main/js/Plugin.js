@@ -15,13 +15,13 @@
  * @private
  */
 define(
-	'tinymce.paste.Plugin',
+	'tinymce.plugins.paste.Plugin',
 
 	[
     'global!tinymce.PluginManager',
-	'tinymce.paste.core.Clipboard',
-	'tinymce.paste.core.WordFilter',
-	'tinymce.paste.core.Quirks'
+	'tinymce.plugins.paste.core.Clipboard',
+	'tinymce.plugins.paste.core.WordFilter',
+	'tinymce.plugins.paste.core.Quirks'
   ],
 
   function (PluginManager, Clipboard, WordFilter, Quirks) {

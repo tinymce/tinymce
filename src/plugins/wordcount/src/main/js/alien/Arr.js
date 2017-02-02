@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.wordcount.alien.Arr', [
+define('tinymce.plugins.wordcount.alien.Arr', [
 ], function () {
 	var each = function (o, cb, s) {
 		var n, l;

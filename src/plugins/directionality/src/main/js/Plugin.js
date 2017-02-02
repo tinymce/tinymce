@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.directionality.Plugin',
+	'tinymce.plugins.directionality.Plugin',
 
 	[
     'global!tinymce.PluginManager',

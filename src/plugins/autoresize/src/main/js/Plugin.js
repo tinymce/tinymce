@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.autoresize.Plugin',
+	'tinymce.plugins.autoresize.Plugin',
 	[
     'global!tinymce.DOM',
     'global!tinymce.Env',

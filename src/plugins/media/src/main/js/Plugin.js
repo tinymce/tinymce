@@ -12,12 +12,12 @@
 /*eslint max-len:0 */
 /*global tinymce:true */
 
-define('tinymce.media.Plugin', [
+define('tinymce.plugins.media.Plugin', [
 	'global!tinymce.PluginManager',
-	'tinymce.media.ui.Dialog',
-	'tinymce.media.core.Sanitize',
-	'tinymce.media.core.UpdateHtml',
-	'tinymce.media.core.Nodes'
+	'tinymce.plugins.media.ui.Dialog',
+	'tinymce.plugins.media.core.Sanitize',
+	'tinymce.plugins.media.core.UpdateHtml',
+	'tinymce.plugins.media.core.Nodes'
 ], function (PluginManager, Dialog, Sanitize, UpdateHtml, Nodes) {
 	var Plugin = function (editor) {
 		editor.on('ResolveName', function (e) {

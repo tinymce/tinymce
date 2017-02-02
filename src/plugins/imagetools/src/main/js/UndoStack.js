@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.imagetools.UndoStack", [
+define("tinymce.plugins.imagetools.UndoStack", [
 ], function() {
 	return function() {
 		var data = [], index = -1;

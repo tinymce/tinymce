@@ -27,12 +27,12 @@
  * @class tinymce.pasteplugin.Clipboard
  * @private
  */
-define('tinymce.paste.core.Clipboard', [
+define('tinymce.plugins.paste.core.Clipboard', [
 	'global!tinymce.Env',
 	'global!tinymce.dom.RangeUtils',
 	'global!tinymce.util.VK',
-	'tinymce.paste.core.Utils',
-	'tinymce.paste.core.SmartPaste',
+	'tinymce.plugins.paste.core.Utils',
+	'tinymce.plugins.paste.core.SmartPaste',
 	'global!tinymce.util.Delay'
 ], function(Env, RangeUtils, VK, Utils, SmartPaste, Delay) {
 	return function(editor) {

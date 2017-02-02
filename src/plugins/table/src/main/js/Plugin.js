@@ -15,13 +15,13 @@
  * @private
  */
 define(
-	'tinymce.table.Plugin',
+	'tinymce.plugins.table.Plugin',
 	[
-		'tinymce.table.model.TableGrid',
-		'tinymce.table.util.Quirks',
-		'tinymce.table.selection.CellSelection',
-		'tinymce.table.ui.Dialogs',
-		'tinymce.table.ui.ResizeBars',
+		'tinymce.plugins.table.model.TableGrid',
+		'tinymce.plugins.table.util.Quirks',
+		'tinymce.plugins.table.selection.CellSelection',
+		'tinymce.plugins.table.ui.Dialogs',
+		'tinymce.plugins.table.ui.ResizeBars',
 		'global!tinymce.util.Tools',
 		'global!tinymce.dom.TreeWalker',
 		'global!tinymce.Env',

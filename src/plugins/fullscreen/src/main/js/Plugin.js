@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.fullscreen.Plugin',
+	'tinymce.plugins.fullscreen.Plugin',
 
 	[
     'global!tinymce.DOM',

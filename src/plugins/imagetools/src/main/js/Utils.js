@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.imagetools.Utils", [
+define("tinymce.plugins.imagetools.Utils", [
 	"global!tinymce.util.Promise",
 	"global!tinymce.util.Tools"
 ], function(Promise, Tools) {

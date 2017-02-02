@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.actions.ToggleList", [
+define("tinymce.plugins.lists.actions.ToggleList", [
 	"global!tinymce.util.Tools",
 	"global!tinymce.dom.BookmarkManager",
-	"tinymce.lists.core.Selection",
-	"tinymce.lists.core.NodeType",
-	"tinymce.lists.core.Bookmark",
-	"tinymce.lists.core.SplitList",
-	"tinymce.lists.core.NormalizeLists",
-	"tinymce.lists.actions.Outdent"
+	"tinymce.plugins.lists.core.Selection",
+	"tinymce.plugins.lists.core.NodeType",
+	"tinymce.plugins.lists.core.Bookmark",
+	"tinymce.plugins.lists.core.SplitList",
+	"tinymce.plugins.lists.core.NormalizeLists",
+	"tinymce.plugins.lists.actions.Outdent"
 ], function (Tools, BookmarkManager, Selection, NodeType, Bookmark, SplitList, NormalizeLists, Outdent) {
 	var updateListStyle = function (dom, el, detail) {
 		var type = detail['list-style-type'] ? detail['list-style-type'] : null;

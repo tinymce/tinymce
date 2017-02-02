@@ -15,12 +15,12 @@
  * @private
  */
 define(
-  'tinymce.codesample.ui.Dialog',
+  'tinymce.plugins.codesample.ui.Dialog',
 
   [
     'global!tinymce.dom.DOMUtils',
-    'tinymce.codesample.core.Prism',
-    'tinymce.codesample.util.Utils'
+    'tinymce.plugins.codesample.core.Prism',
+    'tinymce.plugins.codesample.util.Utils'
   ],
 
   function(DOMUtils, Prism, Utils) {

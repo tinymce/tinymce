@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.tabfocus.Plugin',
+	'tinymce.plugins.tabfocus.Plugin',
 
 	[
     'global!tinymce.PluginManager',

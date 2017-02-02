@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.textpattern.Plugin',
+	'tinymce.plugins.textpattern.Plugin',
 
 	[
 		'global!tinymce.trim',

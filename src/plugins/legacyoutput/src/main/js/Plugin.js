@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.legacyoutput.Plugin',
+	'tinymce.plugins.legacyoutput.Plugin',
 
 	[
     'global!tinymce.PluginManager',

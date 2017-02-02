@@ -18,12 +18,12 @@
  * @private
  */
 define(
-	'tinymce.searchreplace.Plugin',
+	'tinymce.plugins.searchreplace.Plugin',
 
 	[
     'global!tinymce.PluginManager',
 	'global!tinymce.util.Tools',
-	'tinymce.searchreplace.core.FindReplaceText'
+	'tinymce.plugins.searchreplace.core.FindReplaceText'
   ],
 
   function (PluginManager, Tools, FindReplaceText) {

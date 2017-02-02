@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.fullpage.Plugin',
+	'tinymce.plugins.fullpage.Plugin',
 
 	[
     'global!tinymce.html.DomParser',

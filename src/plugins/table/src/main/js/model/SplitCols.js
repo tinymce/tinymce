@@ -15,11 +15,11 @@
  * @private
  */
 define(
-	'tinymce.table.model.SplitCols',
+	'tinymce.plugins.table.model.SplitCols',
 
 	[
 		'global!tinymce.util.Tools',
-		'tinymce.table.util.Utils'
+		'tinymce.plugins.table.util.Utils'
 	],
 
 	function(Tools, Utils) {

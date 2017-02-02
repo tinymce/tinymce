@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.insertdatetime.Plugin',
+	'tinymce.plugins.insertdatetime.Plugin',
 
 	[
     'global!tinymce.PluginManager',

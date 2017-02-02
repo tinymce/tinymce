@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.paste', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/paste\//, '');
+    source('amd', 'tinymce.plugins.paste', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/paste\//, '');
 		})
   ]
 });

@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.emoticons', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/emoticons\//, '');
+    source('amd', 'tinymce.plugins.emoticons', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/emoticons\//, '');
 		})
   ]
 });

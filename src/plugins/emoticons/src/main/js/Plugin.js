@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.emoticons.Plugin',
+	'tinymce.plugins.emoticons.Plugin',
 
 	[
     'global!tinymce.PluginManager',

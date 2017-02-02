@@ -10,8 +10,8 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.lists.Demo", [
-	"tinymce.lists.Plugin",
+define("tinymce.plugins.lists.Demo", [
+	"tinymce.plugins.lists.Plugin",
 	"global!tinymce"
 ], function (Plugin, tinymce) {
 	return function () {

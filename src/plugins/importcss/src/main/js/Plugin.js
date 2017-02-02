@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.importcss.Plugin',
+	'tinymce.plugins.importcss.Plugin',
 
 	[
     'global!tinymce',

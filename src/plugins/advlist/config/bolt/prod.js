@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.advlist', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/advlist\//, '');
+    source('amd', 'tinymce.plugins.advlist', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/advlist\//, '');
 		})
   ]
 });

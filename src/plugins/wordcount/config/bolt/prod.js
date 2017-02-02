@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.wordcount', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/wordcount\//, '');
+    source('amd', 'tinymce.plugins.wordcount', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/wordcount\//, '');
 		})
   ]
 });

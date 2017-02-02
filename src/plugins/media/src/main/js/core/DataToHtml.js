@@ -1,9 +1,9 @@
-define('tinymce.media.core.DataToHtml', [
-	'tinymce.media.core.Mime',
-	'tinymce.media.core.HtmlToData',
-	'tinymce.media.core.UrlPatterns',
-	'tinymce.media.core.VideoScript',
-	'tinymce.media.core.UpdateHtml',
+define('tinymce.plugins.media.core.DataToHtml', [
+	'tinymce.plugins.media.core.Mime',
+	'tinymce.plugins.media.core.HtmlToData',
+	'tinymce.plugins.media.core.UrlPatterns',
+	'tinymce.plugins.media.core.VideoScript',
+	'tinymce.plugins.media.core.UpdateHtml',
 	'global!tinymce.util.Tools'
 ], function (Mime, HtmlToData, UrlPatterns, VideoScript, UpdateHtml, Tools) {
 	var dataToHtml = function (editor, dataIn) {

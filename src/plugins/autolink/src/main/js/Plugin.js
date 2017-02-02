@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.autolink.Plugin',
+	'tinymce.plugins.autolink.Plugin',
 	[
     'global!tinymce.Env',
     'global!tinymce.PluginManager'

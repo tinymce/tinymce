@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.charmap', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/charmap\//, '');
+    source('amd', 'tinymce.plugins.charmap', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/charmap\//, '');
 		})
   ]
 });

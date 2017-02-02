@@ -16,9 +16,9 @@
  * @private
  */
 define(
-	'tinymce.table.selection.CellSelection',
+	'tinymce.plugins.table.selection.CellSelection',
 	[
-		'tinymce.table.model.TableGrid',
+		'tinymce.plugins.table.model.TableGrid',
 		'global!tinymce.dom.TreeWalker',
 		'global!tinymce.util.Tools'
 	],

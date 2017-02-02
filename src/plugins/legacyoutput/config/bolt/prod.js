@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.legacyoutput', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/legacyoutput\//, '');
+    source('amd', 'tinymce.plugins.legacyoutput', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/legacyoutput\//, '');
 		})
   ]
 });

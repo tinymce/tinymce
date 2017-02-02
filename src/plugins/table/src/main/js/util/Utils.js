@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.table.util.Utils',
+	'tinymce.plugins.table.util.Utils',
 	[
 		'global!tinymce.Env'
 	],

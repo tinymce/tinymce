@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.wordcount.text.WordGetter", [
-	"tinymce.wordcount.text.UnicodeData",
-	"tinymce.wordcount.text.StringMapper",
-	"tinymce.wordcount.text.WordBoundary"
+define("tinymce.plugins.wordcount.text.WordGetter", [
+	"tinymce.plugins.wordcount.text.UnicodeData",
+	"tinymce.plugins.wordcount.text.StringMapper",
+	"tinymce.plugins.wordcount.text.WordBoundary"
 ], function(UnicodeData, StringMapper, WordBoundary) {
 	var EMPTY_STRING = UnicodeData.EMPTY_STRING;
 	var WHITESPACE = UnicodeData.WHITESPACE;

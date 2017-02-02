@@ -15,14 +15,14 @@
  * @private
  */
 define(
-	'tinymce.table.util.Quirks',
+	'tinymce.plugins.table.util.Quirks',
 
 	[
 		'global!tinymce.util.VK',
 		'global!tinymce.util.Delay',
 		'global!tinymce.Env',
 		'global!tinymce.util.Tools',
-		'tinymce.table.util.Utils'
+		'tinymce.plugins.table.util.Utils'
 	],
 
 	function(VK, Delay, Env, Tools, Utils) {

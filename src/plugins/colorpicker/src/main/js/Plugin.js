@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.colorpicker.Plugin',
+	'tinymce.plugins.colorpicker.Plugin',
 
 	[
     'global!tinymce.PluginManager',

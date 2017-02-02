@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.wordcount.Plugin", [
+define("tinymce.plugins.wordcount.Plugin", [
 	"global!tinymce.PluginManager",
 	"global!tinymce.util.Delay",
-	"tinymce.wordcount.text.WordGetter"
+	"tinymce.plugins.wordcount.text.WordGetter"
 ], function(PluginManager, Delay, WordGetter) {
 	PluginManager.add('wordcount', function(editor) {
 		var getTextContent = function(editor) {

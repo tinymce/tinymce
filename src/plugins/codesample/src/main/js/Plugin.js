@@ -15,14 +15,14 @@
  * @private
  */
 define(
-	'tinymce.codesample.Plugin',
+	'tinymce.plugins.codesample.Plugin',
 
 	[
     'global!tinymce.Env',
     'global!tinymce.PluginManager',
-    'tinymce.codesample.core.Prism',
-    'tinymce.codesample.ui.Dialog',
-    'tinymce.codesample.util.Utils'
+    'tinymce.plugins.codesample.core.Prism',
+    'tinymce.plugins.codesample.ui.Dialog',
+    'tinymce.plugins.codesample.util.Utils'
   ],
 
   function (Env, PluginManager, Prism, Dialog, Utils) {

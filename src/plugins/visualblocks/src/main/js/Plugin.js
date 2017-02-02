@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.visualblocks.Plugin',
+	'tinymce.plugins.visualblocks.Plugin',
 
 	[
     'global!tinymce.PluginManager'

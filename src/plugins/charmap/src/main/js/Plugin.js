@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.charmap.Plugin',
+	'tinymce.plugins.charmap.Plugin',
 
 	[
     'global!tinymce.PluginManager',

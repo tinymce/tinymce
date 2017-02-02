@@ -1,4 +1,4 @@
-define('tinymce.media.core.Mime', [
+define('tinymce.plugins.media.core.Mime', [
 ], function () {
 	var guess = function (url) {
 		var mimes = {

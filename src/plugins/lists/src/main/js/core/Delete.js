@@ -8,16 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.Delete", [
+define("tinymce.plugins.lists.core.Delete", [
 	"global!tinymce.dom.TreeWalker",
 	"global!tinymce.dom.RangeUtils",
 	"global!tinymce.util.VK",
-	"tinymce.lists.core.Selection",
-	"tinymce.lists.core.NodeType",
-	"tinymce.lists.core.Bookmark",
-	"tinymce.lists.core.Range",
-	"tinymce.lists.core.NormalizeLists",
-	"tinymce.lists.actions.ToggleList"
+	"tinymce.plugins.lists.core.Selection",
+	"tinymce.plugins.lists.core.NodeType",
+	"tinymce.plugins.lists.core.Bookmark",
+	"tinymce.plugins.lists.core.Range",
+	"tinymce.plugins.lists.core.NormalizeLists",
+	"tinymce.plugins.lists.actions.ToggleList"
 ], function (
 	TreeWalker, RangeUtils, VK, Selection, NodeType, Bookmark, Range, NormalizeLists, ToggleList
 ) {

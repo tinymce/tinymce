@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.contextmenu.Plugin',
+	'tinymce.plugins.contextmenu.Plugin',
 
 	[
     'global!tinymce.DOM',

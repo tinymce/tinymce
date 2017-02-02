@@ -1,7 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.noneditable', '../../src/main/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/noneditable\//, '');
+    source('amd', 'tinymce.plugins.noneditable', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/noneditable\//, '');
 		})
   ]
 });

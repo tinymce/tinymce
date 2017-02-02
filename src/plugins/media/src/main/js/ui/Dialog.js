@@ -1,12 +1,12 @@
-define('tinymce.media.ui.Dialog', [
+define('tinymce.plugins.media.ui.Dialog', [
 	'global!tinymce.util.Delay',
-	'tinymce.media.core.HtmlToData',
-	'tinymce.media.core.UpdateHtml',
-	'tinymce.media.core.Service',
-	'tinymce.media.core.Size',
+	'tinymce.plugins.media.core.HtmlToData',
+	'tinymce.plugins.media.core.UpdateHtml',
+	'tinymce.plugins.media.core.Service',
+	'tinymce.plugins.media.core.Size',
 	'global!tinymce.util.Tools',
 	'global!tinymce.Env',
-	'tinymce.media.ui.SizeManager'
+	'tinymce.plugins.media.ui.SizeManager'
 ], function (Delay, HtmlToData, UpdateHtml, Service, Size, Tools, Env, SizeManager) {
 	var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 

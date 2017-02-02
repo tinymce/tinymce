@@ -17,13 +17,13 @@
  * @private
  */
 define(
-	'tinymce.table.model.TableGrid',
+	'tinymce.plugins.table.model.TableGrid',
 
 	[
 		'global!tinymce.util.Tools',
 		'global!tinymce.Env',
-		'tinymce.table.util.Utils',
-		'tinymce.table.model.SplitCols'
+		'tinymce.plugins.table.util.Utils',
+		'tinymce.plugins.table.model.SplitCols'
 	],
 
 	function(Tools, Env, Utils, SplitCols) {

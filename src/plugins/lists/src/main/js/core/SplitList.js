@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.SplitList", [
+define("tinymce.plugins.lists.core.SplitList", [
 	"global!tinymce.dom.DOMUtils.DOM",
 	"global!tinymce.util.Tools",
-	"tinymce.lists.core.TextBlock",
-	"tinymce.lists.core.NodeType"
+	"tinymce.plugins.lists.core.TextBlock",
+	"tinymce.plugins.lists.core.NodeType"
 ], function (DOM, Tools, TextBlock, NodeType) {
 	var splitList = function (editor, ul, li, newBlock) {
 		var tmpRng, fragment, bookmarks, node;

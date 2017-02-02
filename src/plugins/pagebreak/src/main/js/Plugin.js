@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.pagebreak.Plugin',
+	'tinymce.plugins.pagebreak.Plugin',
 
 	[
     'global!tinymce.PluginManager',

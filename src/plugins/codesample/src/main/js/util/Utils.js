@@ -15,7 +15,7 @@
  * @private
  */
 define(
-  'tinymce.codesample.util.Utils',
+  'tinymce.plugins.codesample.util.Utils',
 
   [
 

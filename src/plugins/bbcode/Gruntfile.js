@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 			"plugin": {
 				config_js: "config/bolt/prod.js",
 				output_dir: "scratch",
-				main: "tinymce.bbcode.Plugin",
+				main: "tinymce.plugins.bbcode.Plugin",
 				filename: "plugin",
 
 				generate_inline: true,

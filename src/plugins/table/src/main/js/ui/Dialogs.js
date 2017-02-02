@@ -17,7 +17,7 @@
  * @private
  */
 define(
-	'tinymce.table.ui.Dialogs',
+	'tinymce.plugins.table.ui.Dialogs',
 
 	[
 		'global!tinymce.util.Tools',

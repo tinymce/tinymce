@@ -15,7 +15,7 @@
  * @private
  */
 define(
-	'tinymce.noneditable.Plugin',
+	'tinymce.plugins.noneditable.Plugin',
 
 	[
     'global!tinymce.PluginManager',

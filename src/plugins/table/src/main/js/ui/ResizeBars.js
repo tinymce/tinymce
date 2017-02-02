@@ -16,7 +16,7 @@
  * @private
  */
 define(
-	'tinymce.table.ui.ResizeBars',
+	'tinymce.plugins.table.ui.ResizeBars',
 
 	[
 		'global!tinymce.util.Tools',

@@ -1,9 +1,9 @@
-define('tinymce.media.core.UpdateHtml', [
+define('tinymce.plugins.media.core.UpdateHtml', [
 	'global!tinymce.html.Writer',
 	'global!tinymce.html.SaxParser',
 	'global!tinymce.html.Schema',
 	'global!tinymce.dom.DOMUtils.DOM',
-	'tinymce.media.core.Size'
+	'tinymce.plugins.media.core.Size'
 ], function (Writer, SaxParser, Schema, DOM, Size) {
 	var setAttributes = function (attrs, updatedAttrs) {
 		var name;

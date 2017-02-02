@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.core.Range", [
+define("tinymce.plugins.lists.core.Range", [
 	"global!tinymce.dom.RangeUtils",
-	"tinymce.lists.core.NodeType"
+	"tinymce.plugins.lists.core.NodeType"
 ], function (RangeUtils, NodeType) {
 	var getNormalizedEndPoint = function (container, offset) {
 		var node = RangeUtils.getNode(container, offset);

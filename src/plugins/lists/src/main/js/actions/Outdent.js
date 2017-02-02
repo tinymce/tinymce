@@ -8,14 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.lists.actions.Outdent", [
+define("tinymce.plugins.lists.actions.Outdent", [
 	"global!tinymce.dom.DOMUtils.DOM",
-	"tinymce.lists.core.NodeType",
-	"tinymce.lists.core.Bookmark",
-	"tinymce.lists.core.Selection",
-	"tinymce.lists.core.SplitList",
-	"tinymce.lists.core.NormalizeLists",
-	"tinymce.lists.core.TextBlock"
+	"tinymce.plugins.lists.core.NodeType",
+	"tinymce.plugins.lists.core.Bookmark",
+	"tinymce.plugins.lists.core.Selection",
+	"tinymce.plugins.lists.core.SplitList",
+	"tinymce.plugins.lists.core.NormalizeLists",
+	"tinymce.plugins.lists.core.TextBlock"
 ], function (DOM, NodeType, Bookmark, Selection, SplitList, NormalizeLists, TextBlock) {
 	var removeEmptyLi = function (dom, li) {
 		if (NodeType.isEmpty(dom, li)) {
