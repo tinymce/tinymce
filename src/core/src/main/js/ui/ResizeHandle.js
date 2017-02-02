@@ -2,7 +2,7 @@
  * ResizeHandle.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Renders a resize handle that fires ResizeStart, Resize and ResizeEnd events.
  *
  * @-x-less ResizeHandle.less
- * @class tinymce.core.ui.ResizeHandle
+ * @class tinymce.ui.ResizeHandle
  * @extends tinymce.core.ui.Widget
  */
 define("tinymce.core.ui.ResizeHandle", [

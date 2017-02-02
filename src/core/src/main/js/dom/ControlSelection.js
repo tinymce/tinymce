@@ -2,7 +2,7 @@
  * ControlSelection.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
  * to all browser engines that support properly disabling the built in resize logic.
  *
- * @class tinymce.core.dom.ControlSelection
+ * @class tinymce.dom.ControlSelection
  */
 define("tinymce.core.dom.ControlSelection", [
 	"tinymce.core.util.VK",

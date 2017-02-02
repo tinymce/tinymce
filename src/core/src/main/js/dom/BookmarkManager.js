@@ -2,7 +2,7 @@
  * BookmarkManager.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This class handles selection bookmarks.
  *
- * @class tinymce.core.dom.BookmarkManager
+ * @class tinymce.dom.BookmarkManager
  */
 define("tinymce.core.dom.BookmarkManager", [
 	"tinymce.core.Env",
@@ -29,7 +29,7 @@ define("tinymce.core.dom.BookmarkManager", [
 	 *
 	 * @constructor
 	 * @method BookmarkManager
-	 * @param {tinymce.core.dom.Selection} selection Selection instance to handle bookmarks for.
+	 * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
 	 */
 	function BookmarkManager(selection) {
 		var dom = selection.dom;

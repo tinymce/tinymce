@@ -2,7 +2,7 @@
  * Diff.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * JS Implementation of the O(ND) Difference Algorithm by Eugene W. Myers.
  *
- * @class tinymce.core.undo.Diff
+ * @class tinymce.undo.Diff
  * @private
  */
 define("tinymce.core.undo.Diff", [

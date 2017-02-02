@@ -2,7 +2,7 @@
  * Container.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,7 +14,7 @@
  * generic container instance. The container doesn't have any specific role or style.
  *
  * @-x-less Container.less
- * @class tinymce.core.ui.Container
+ * @class tinymce.ui.Container
  * @extends tinymce.core.ui.Control
  */
 define("tinymce.core.ui.Container", [

@@ -2,7 +2,7 @@
  * LocalStorage.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -20,7 +20,7 @@
  * For example this data key1=value1,key2=value2 would be:
  * 4,key1,6,value1,4,key2,6,value2
  *
- * @class tinymce.core.util.LocalStorage
+ * @class tinymce.util.LocalStorage
  * @static
  * @version 4.0
  * @example

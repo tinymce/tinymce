@@ -2,7 +2,7 @@
  * EditorManager.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,7 +14,7 @@
  * @example
  * tinymce.EditorManager.init({});
  *
- * @class tinymce.core.EditorManager
+ * @class tinymce.EditorManager
  * @mixes tinymce.core.util.Observable
  * @static
  */
@@ -282,7 +282,7 @@ define("tinymce.core.EditorManager", [
 		 *
 		 * @method init
 		 * @param {Object} settings Settings object to be passed to each editor instance.
-		 * @return {tinymce.core.util.Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
+		 * @return {tinymce.util.Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
 		 * @example
 		 * // Initializes a editor using the longer method
 		 * tinymce.EditorManager.init({

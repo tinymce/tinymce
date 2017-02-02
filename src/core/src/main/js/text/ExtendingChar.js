@@ -2,7 +2,7 @@
  * ExtendingChar.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class contains logic for detecting extending characters.
  *
  * @private
- * @class tinymce.core.text.ExtendingChar
+ * @class tinymce.text.ExtendingChar
  * @example
  * var isExtending = ExtendingChar.isExtendingChar('a');
  */

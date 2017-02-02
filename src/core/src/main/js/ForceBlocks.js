@@ -2,7 +2,7 @@
  * ForceBlocks.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Makes sure that everything gets wrapped in paragraphs.
  *
  * @private
- * @class tinymce.core.ForceBlocks
+ * @class tinymce.ForceBlocks
  */
 define("tinymce.core.ForceBlocks", [], function() {
 	return function(editor) {

@@ -2,7 +2,7 @@
  * Observable.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This mixin will add event binding logic to classes.
  *
- * @mixin tinymce.core.util.Observable
+ * @mixin tinymce.util.Observable
  */
 define("tinymce.core.util.Observable", [
 	"tinymce.core.util.EventDispatcher"

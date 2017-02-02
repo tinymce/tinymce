@@ -2,7 +2,7 @@
  * FloatPanel.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class creates a floating panel.
  *
  * @-x-less FloatPanel.less
- * @class tinymce.core.ui.FloatPanel
+ * @class tinymce.ui.FloatPanel
  * @extends tinymce.core.ui.Panel
  * @mixes tinymce.ui.Movable
  * @mixes tinymce.ui.Resizable

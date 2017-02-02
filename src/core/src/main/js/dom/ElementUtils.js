@@ -2,7 +2,7 @@
  * ElementUtils.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Utility class for various element specific functions.
  *
  * @private
- * @class tinymce.core.dom.ElementUtils
+ * @class tinymce.dom.ElementUtils
  */
 define("tinymce.core.dom.ElementUtils", [
 	"tinymce.core.dom.BookmarkManager",

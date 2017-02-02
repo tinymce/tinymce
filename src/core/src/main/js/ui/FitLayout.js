@@ -2,7 +2,7 @@
  * FitLayout.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * In other words width: 100% and height: 100%.
  *
  * @-x-less FitLayout.less
- * @class tinymce.core.ui.FitLayout
+ * @class tinymce.ui.FitLayout
  * @extends tinymce.core.ui.AbsoluteLayout
  */
 define("tinymce.core.ui.FitLayout", [

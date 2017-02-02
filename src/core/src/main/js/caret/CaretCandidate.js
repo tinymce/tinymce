@@ -2,7 +2,7 @@
  * CaretCandidate.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * for example text nodes, images, input elements, cE=false elements etc.
  *
  * @private
- * @class tinymce.core.caret.CaretCandidate
+ * @class tinymce.caret.CaretCandidate
  */
 define("tinymce.core.caret.CaretCandidate", [
 	"tinymce.core.dom.NodeType",

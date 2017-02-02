@@ -64,7 +64,7 @@ define('tinymce.core.api.Main', [
 	'tinymce.core.util.JSONRequest',
 	'tinymce.core.util.JSONP',
 	'tinymce.core.util.LocalStorage',
-	'tinymce.core.Compat',
+	'tinymce.core.api.Compat',
 	'tinymce.core.ui.Layout',
 	'tinymce.core.ui.AbsoluteLayout',
 	'tinymce.core.ui.Button',
@@ -241,6 +241,8 @@ define('tinymce.core.api.Main', [
 	expose('tinymce.ui.StackLayout', StackLayout);
 	expose('tinymce.ui.TabPanel', TabPanel);
 	expose('tinymce.ui.TextBox', TextBox);
+
+	Compat.register(window.tinymce);
 
 	return window.tinymce;
 });

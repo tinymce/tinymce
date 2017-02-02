@@ -2,7 +2,7 @@
  * ColorButton.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,7 +14,7 @@
  * the caret button displays a color picker, allowing the user to select a new color.
  *
  * @-x-less ColorButton.less
- * @class tinymce.core.ui.ColorButton
+ * @class tinymce.ui.ColorButton
  * @extends tinymce.core.ui.PanelButton
  */
 define("tinymce.core.ui.ColorButton", [

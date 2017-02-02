@@ -2,7 +2,7 @@
  * BlobCache.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Hold blob info objects where a blob has extra internal information.
  *
  * @private
- * @class tinymce.core.file.BlobCache
+ * @class tinymce.file.BlobCache
  */
 define("tinymce.core.file.BlobCache", [
 	"tinymce.core.util.Arr",

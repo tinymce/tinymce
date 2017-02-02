@@ -2,7 +2,7 @@
  * Window.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Creates a new window.
  *
  * @-x-less Window.less
- * @class tinymce.core.ui.Window
+ * @class tinymce.ui.Window
  * @extends tinymce.core.ui.FloatPanel
  */
 define("tinymce.core.ui.Window", [

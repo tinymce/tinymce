@@ -2,7 +2,7 @@
  * Levels.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This module handles getting/setting undo levels to/from editor instances.
  *
- * @class tinymce.core.undo.Levels
+ * @class tinymce.undo.Levels
  * @private
  */
 define("tinymce.core.undo.Levels", [

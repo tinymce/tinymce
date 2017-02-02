@@ -2,7 +2,7 @@
  * ImageScanner.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Finds images with data uris or blob uris. If data uris are found it will convert them into blob uris.
  *
  * @private
- * @class tinymce.core.file.ImageScanner
+ * @class tinymce.file.ImageScanner
  */
 define("tinymce.core.file.ImageScanner", [
 	"tinymce.core.util.Promise",

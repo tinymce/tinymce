@@ -2,7 +2,7 @@
  * FormatControls.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Internal class containing all TinyMCE specific control types such as
  * format listboxes, fontlist boxes, toolbar buttons etc.
  *
- * @class tinymce.core.ui.FormatControls
+ * @class tinymce.ui.FormatControls
  */
 define("tinymce.core.ui.FormatControls", [
 	"tinymce.core.ui.Control",

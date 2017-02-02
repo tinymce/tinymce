@@ -2,7 +2,7 @@
  * MenuBar.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Creates a new menubar.
  *
  * @-x-less MenuBar.less
- * @class tinymce.core.ui.MenuBar
+ * @class tinymce.ui.MenuBar
  * @extends tinymce.core.ui.Container
  */
 define("tinymce.core.ui.MenuBar", [

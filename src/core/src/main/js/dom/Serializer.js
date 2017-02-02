@@ -2,7 +2,7 @@
  * Serializer.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for
  * more details and examples on how to use this class.
  *
- * @class tinymce.core.dom.Serializer
+ * @class tinymce.dom.Serializer
  */
 define("tinymce.core.dom.Serializer", [
 	"tinymce.core.dom.DOMUtils",

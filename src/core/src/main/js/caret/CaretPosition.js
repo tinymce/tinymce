@@ -2,7 +2,7 @@
  * CaretPosition.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,7 +14,7 @@
  * since it's now updated live when the DOM changes.
  *
  * @private
- * @class tinymce.core.caret.CaretPosition
+ * @class tinymce.caret.CaretPosition
  * @example
  * var caretPos1 = new CaretPosition(container, offset);
  * var caretPos2 = CaretPosition.fromRangeStart(someRange);

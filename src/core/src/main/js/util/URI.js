@@ -2,7 +2,7 @@
  * URI.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -10,7 +10,7 @@
 
 /**
  * This class handles parsing, modification and serialization of URI/URL strings.
- * @class tinymce.core.util.URI
+ * @class tinymce.util.URI
  */
 define("tinymce.core.util.URI", [
 	"tinymce.core.util.Tools"
@@ -139,7 +139,7 @@ define("tinymce.core.util.URI", [
 		 * @return {String} Relative URI from the point specified in the current URI instance.
 		 * @example
 		 * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
-		 * var url = new tinymce.core.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
+		 * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
 		 */
 		toRelative: function(uri) {
 			var self = this, output;
@@ -187,7 +187,7 @@ define("tinymce.core.util.URI", [
 		 * @return {String} Absolute URI from the point specified in the current URI instance.
 		 * @example
 		 * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
-		 * var url = new tinymce.core.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
+		 * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
 		 */
 		toAbsolute: function(uri, noHost) {
 			uri = new URI(uri, {base_uri: this});
@@ -201,7 +201,7 @@ define("tinymce.core.util.URI", [
 		 * won't match, if the port specifications differ.
 		 *
 		 * @method isSameOrigin
-		 * @param {tinymce.core.util.URI} uri Uri instance to compare.
+		 * @param {tinymce.util.URI} uri Uri instance to compare.
 		 * @returns {Boolean} True if the origins are the same.
 		 */
 		isSameOrigin: function(uri) {

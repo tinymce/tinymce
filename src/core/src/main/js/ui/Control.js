@@ -2,7 +2,7 @@
  * Control.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,7 +14,7 @@
  * This is the base class for all controls and containers. All UI control instances inherit
  * from this one as it has the base logic needed by all of them.
  *
- * @class tinymce.core.ui.Control
+ * @class tinymce.ui.Control
  */
 define("tinymce.core.ui.Control", [
 	"tinymce.core.util.Class",

@@ -2,7 +2,7 @@
  * ScriptLoader.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,18 +14,18 @@
  * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks
  * when various items gets loaded. This class is useful to load external JavaScript files.
  *
- * @class tinymce.core.dom.ScriptLoader
+ * @class tinymce.dom.ScriptLoader
  * @example
  * // Load a script from a specific URL using the global script loader
  * tinymce.ScriptLoader.load('somescript.js');
  *
  * // Load a script using a unique instance of the script loader
- * var scriptLoader = new tinymce.core.dom.ScriptLoader();
+ * var scriptLoader = new tinymce.dom.ScriptLoader();
  *
  * scriptLoader.load('somescript.js');
  *
  * // Load multiple scripts
- * var scriptLoader = new tinymce.core.dom.ScriptLoader();
+ * var scriptLoader = new tinymce.dom.ScriptLoader();
  *
  * scriptLoader.add('somescript1.js');
  * scriptLoader.add('somescript2.js');

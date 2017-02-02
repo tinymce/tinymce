@@ -2,7 +2,7 @@
  * Env.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * Normally you don't want to sniff specific browser versions but sometimes you have
  * to when it's impossible to feature detect. So use this with care.
  *
- * @class tinymce.core.Env
+ * @class tinymce.Env
  * @static
  */
 define("tinymce.core.Env", [], function() {

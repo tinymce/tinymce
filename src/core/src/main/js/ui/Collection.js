@@ -2,7 +2,7 @@
  * Collection.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -15,7 +15,7 @@
  * @example
  * someCollection.show().disabled(true);
  *
- * @class tinymce.core.ui.Collection
+ * @class tinymce.ui.Collection
  */
 define("tinymce.core.ui.Collection", [
 	"tinymce.core.util.Tools",

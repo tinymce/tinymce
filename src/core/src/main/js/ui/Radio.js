@@ -2,7 +2,7 @@
  * Radio.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Creates a new radio button.
  *
  * @-x-less Radio.less
- * @class tinymce.core.ui.Radio
+ * @class tinymce.ui.Radio
  * @extends tinymce.core.ui.Checkbox
  */
 define("tinymce.core.ui.Radio", [

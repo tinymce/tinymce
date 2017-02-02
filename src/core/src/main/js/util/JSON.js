@@ -2,7 +2,7 @@
  * JSON.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * JSON parser and serializer class.
  *
- * @class tinymce.core.util.JSON
+ * @class tinymce.util.JSON
  * @static
  * @example
  * // JSON parse a string into an object

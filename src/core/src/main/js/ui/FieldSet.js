@@ -2,7 +2,7 @@
  * FieldSet.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class creates fieldset containers.
  *
  * @-x-less FieldSet.less
- * @class tinymce.core.ui.FieldSet
+ * @class tinymce.ui.FieldSet
  * @extends tinymce.core.ui.Form
  */
 define("tinymce.core.ui.FieldSet", [

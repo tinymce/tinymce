@@ -2,7 +2,7 @@
  * Uploader.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Upload blobs or blob infos to the specified URL or handler.
  *
  * @private
- * @class tinymce.core.file.Uploader
+ * @class tinymce.file.Uploader
  * @example
  * var uploader = new Uploader({
  *     url: '/upload.php',

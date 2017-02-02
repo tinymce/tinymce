@@ -2,7 +2,7 @@
  * Editor.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -19,7 +19,7 @@
 /**
  * This class contains the core logic for a TinyMCE editor.
  *
- * @class tinymce.core.Editor
+ * @class tinymce.Editor
  * @mixes tinymce.core.util.Observable
  * @example
  * // Add a class to all paragraphs in the editor.
@@ -2213,7 +2213,7 @@ define("tinymce.core.Editor", [
 		 *
 		 * @method uploadImages
 		 * @param {function} callback Optional callback with images and status for each image.
-		 * @return {tinymce.core.util.Promise} Promise instance.
+		 * @return {tinymce.util.Promise} Promise instance.
 		 */
 		uploadImages: function(callback) {
 			return this.editorUpload.uploadImages(callback);

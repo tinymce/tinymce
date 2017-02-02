@@ -2,7 +2,7 @@
  * InsertContent.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * Handles inserts of contents into the editor instance.
  *
- * @class tinymce.core.InsertContent
+ * @class tinymce.InsertContent
  * @private
  */
 define("tinymce.core.InsertContent", [

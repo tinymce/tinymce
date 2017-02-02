@@ -2,7 +2,7 @@
  * FilePicker.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
 /**
  * This class creates a file picker control.
  *
- * @class tinymce.core.ui.FilePicker
+ * @class tinymce.ui.FilePicker
  * @extends tinymce.core.ui.ComboBox
  */
 define("tinymce.core.ui.FilePicker", [

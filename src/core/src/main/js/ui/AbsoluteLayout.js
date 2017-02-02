@@ -2,7 +2,7 @@
  * AbsoluteLayout.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * a base class for other layouts but can be created and used directly.
  *
  * @-x-less AbsoluteLayout.less
- * @class tinymce.core.ui.AbsoluteLayout
+ * @class tinymce.ui.AbsoluteLayout
  * @extends tinymce.core.ui.Layout
  */
 define("tinymce.core.ui.AbsoluteLayout", [

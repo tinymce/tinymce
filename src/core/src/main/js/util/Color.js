@@ -2,7 +2,7 @@
  * Color.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,10 +11,10 @@
 /**
  * This class lets you parse/serialize colors and convert rgb/hsb.
  *
- * @class tinymce.core.util.Color
+ * @class tinymce.util.Color
  * @example
- * var white = new tinymce.core.util.Color({r: 255, g: 255, b: 255});
- * var red = new tinymce.core.util.Color('#FF0000');
+ * var white = new tinymce.util.Color({r: 255, g: 255, b: 255});
+ * var red = new tinymce.util.Color('#FF0000');
  *
  * console.log(white.toHex(), red.toHsv());
  */
@@ -185,7 +185,7 @@ define("tinymce.core.util.Color", [], function() {
 		 *
 		 * @method parse
 		 * @param {Object/String} value Color value to parse.
-		 * @return {tinymce.core.util.Color} Current color instance.
+		 * @return {tinymce.util.Color} Current color instance.
 		 */
 		function parse(value) {
 			var matches;

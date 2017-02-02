@@ -2,7 +2,7 @@
  * EventDispatcher.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class lets you add/remove and fire events by name on the specified scope. This makes
  * it easy to add event listener logic to any class.
  *
- * @class tinymce.core.util.EventDispatcher
+ * @class tinymce.util.EventDispatcher
  * @example
  *  var eventDispatcher = new EventDispatcher();
  *

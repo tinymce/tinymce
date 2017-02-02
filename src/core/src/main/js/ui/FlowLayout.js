@@ -2,7 +2,7 @@
  * FlowLayout.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This layout manager will place the controls by using the browsers native layout.
  *
  * @-x-less FlowLayout.less
- * @class tinymce.core.ui.FlowLayout
+ * @class tinymce.ui.FlowLayout
  * @extends tinymce.core.ui.Layout
  */
 define("tinymce.core.ui.FlowLayout", [

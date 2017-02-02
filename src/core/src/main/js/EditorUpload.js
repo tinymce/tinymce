@@ -2,7 +2,7 @@
  * EditorUpload.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Handles image uploads, updates undo stack and patches over various internal functions.
  *
  * @private
- * @class tinymce.core.EditorUpload
+ * @class tinymce.EditorUpload
  */
 define("tinymce.core.EditorUpload", [
 	"tinymce.core.util.Arr",

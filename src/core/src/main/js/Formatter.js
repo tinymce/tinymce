@@ -2,7 +2,7 @@
  * Formatter.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * etc to the current selection or specific nodes. This engine was built to replace the browser's
  * default formatting logic for execCommand due to its inconsistent and buggy behavior.
  *
- * @class tinymce.core.Formatter
+ * @class tinymce.Formatter
  * @example
  *  tinymce.activeEditor.formatter.register('mycustomformat', {
  *    inline: 'span',

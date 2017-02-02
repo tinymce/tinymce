@@ -2,7 +2,7 @@
  * WindowManager.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
  *
- * @class tinymce.core.WindowManager
+ * @class tinymce.WindowManager
  * @example
  * // Opens a new dialog with the file.htm file and the size 320x240
  * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.

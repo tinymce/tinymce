@@ -2,7 +2,7 @@
  * FontInfo.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Internal class for computing font size for elements.
  *
  * @private
- * @class tinymce.core.fmt.FontInfo
+ * @class tinymce.fmt.FontInfo
  */
 define("tinymce.core.fmt.FontInfo", [
 	"tinymce.core.dom.DOMUtils"

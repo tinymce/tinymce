@@ -2,7 +2,7 @@
  * NodeChange.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This class handles the nodechange event dispatching both manual and through selection change events.
  *
- * @class tinymce.core.NodeChange
+ * @class tinymce.NodeChange
  * @private
  */
 define("tinymce.core.NodeChange", [

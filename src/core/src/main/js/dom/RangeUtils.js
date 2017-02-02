@@ -2,7 +2,7 @@
  * RangeUtils.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This class contains a few utility methods for ranges.
  *
- * @class tinymce.core.dom.RangeUtils
+ * @class tinymce.dom.RangeUtils
  */
 define("tinymce.core.dom.RangeUtils", [
 	"tinymce.core.util.Tools",

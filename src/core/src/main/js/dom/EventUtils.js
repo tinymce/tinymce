@@ -2,7 +2,7 @@
  * EventUtils.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -14,7 +14,7 @@
 /**
  * This class wraps the browsers native event logic with more convenient methods.
  *
- * @class tinymce.core.dom.EventUtils
+ * @class tinymce.dom.EventUtils
  */
 define("tinymce.core.dom.EventUtils", [
 	"tinymce.core.util.Delay",

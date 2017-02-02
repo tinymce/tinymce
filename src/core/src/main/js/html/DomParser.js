@@ -2,7 +2,7 @@
  * DomParser.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -17,7 +17,7 @@
  * var parser = new tinymce.html.DomParser({validate: true}, schema);
  * var rootNode = parser.parse('<h1>content</h1>');
  *
- * @class tinymce.core.html.DomParser
+ * @class tinymce.html.DomParser
  * @version 3.4
  */
 define("tinymce.core.html.DomParser", [

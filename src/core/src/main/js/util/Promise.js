@@ -2,7 +2,7 @@
  * Promise.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * Promise polyfill under MIT license: https://github.com/taylorhakes/promise-polyfill
  *

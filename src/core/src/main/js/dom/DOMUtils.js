@@ -2,7 +2,7 @@
  * DOMUtils.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * Utility class for various DOM manipulation and retrieval functions.
  *
- * @class tinymce.core.dom.DOMUtils
+ * @class tinymce.dom.DOMUtils
  * @example
  * // Add a class to an element by id in the page
  * tinymce.DOM.addClass('someid', 'someclass');

@@ -2,7 +2,7 @@
  * FocusManager.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -15,7 +15,7 @@
  * This class will fire two events focus and blur on the editor instances that got affected.
  * It will also handle the restore of selection when the focus is lost and returned.
  *
- * @class tinymce.core.FocusManager
+ * @class tinymce.FocusManager
  */
 define("tinymce.core.FocusManager", [
 	"tinymce.core.dom.DOMUtils",

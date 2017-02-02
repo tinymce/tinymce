@@ -2,7 +2,7 @@
  * AddOnManager.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This class handles the loading of themes/plugins or other add-ons and their language packs.
  *
- * @class tinymce.core.AddOnManager
+ * @class tinymce.AddOnManager
  */
 define("tinymce.core.AddOnManager", [
 	"tinymce.core.dom.ScriptLoader",
@@ -213,7 +213,7 @@ define("tinymce.core.AddOnManager", [
 /**
  * TinyMCE theme class.
  *
- * @class tinymce.core.Theme
+ * @class tinymce.Theme
  */
 
 /**
@@ -227,7 +227,7 @@ define("tinymce.core.AddOnManager", [
 /**
  * Plugin base class, this is a pseudo class that describes how a plugin is to be created for TinyMCE. The methods below are all optional.
  *
- * @class tinymce.core.Plugin
+ * @class tinymce.Plugin
  * @example
  * tinymce.PluginManager.add('example', function(editor, url) {
  *     // Add a button that opens a window

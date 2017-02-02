@@ -2,7 +2,7 @@
  * Uuid.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * Generates unique ids.
  *
- * @class tinymce.core.util.Uuid
+ * @class tinymce.util.Uuid
  * @private
  */
 define("tinymce.core.util.Uuid", [

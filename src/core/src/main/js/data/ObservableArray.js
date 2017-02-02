@@ -2,7 +2,7 @@
  * ObservableArray.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class is an array that emmits events when mutation occurs.
  *
  * @private
- * @class tinymce.core.data.ObservableArray
+ * @class tinymce.data.ObservableArray
  */
 define("tinymce.core.data.ObservableArray", [
 	"tinymce.core.util.Observable",

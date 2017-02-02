@@ -2,7 +2,7 @@
  * FlexLayout.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,7 +16,7 @@
  * @setting {String} align start|end|center|stretch
  * @setting {String} pack start|end|justify
  *
- * @class tinymce.core.ui.FlexLayout
+ * @class tinymce.ui.FlexLayout
  * @extends tinymce.core.ui.AbsoluteLayout
  */
 define("tinymce.core.ui.FlexLayout", [

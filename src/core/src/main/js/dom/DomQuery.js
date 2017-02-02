@@ -2,7 +2,7 @@
  * DomQuery.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -27,7 +27,7 @@
  * var $ = tinymce.core.dom.DomQuery;
  * $('p').attr('attr', 'value').addClass('class');
  *
- * @class tinymce.core.dom.DomQuery
+ * @class tinymce.dom.DomQuery
  */
 define("tinymce.core.dom.DomQuery", [
 	"tinymce.core.dom.EventUtils",
@@ -334,7 +334,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method add
 		 * @param {Array/tinymce.core.dom.DomQuery} items Array of all nodes to add to set.
 		 * @param {Boolean} sort Optional sort flag that enables sorting of elements.
-		 * @return {tinymce.core.dom.DomQuery} New instance with nodes added.
+		 * @return {tinymce.dom.DomQuery} New instance with nodes added.
 		 */
 		add: function(items, sort) {
 			var self = this, nodes, i;
@@ -362,7 +362,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method attr
 		 * @param {String/Object} name Name of attribute to get or an object with attributes to set.
 		 * @param {String} value Optional value to set.
-		 * @return {tinymce.core.dom.DomQuery/String} Current set or the specified attribute when only the name is specified.
+		 * @return {tinymce.dom.DomQuery/String} Current set or the specified attribute when only the name is specified.
 		 */
 		attr: function(name, value) {
 			var self = this, hook;
@@ -418,7 +418,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method removeAttr
 		 * @param {String/Object} name Name of attribute to remove.
-		 * @return {tinymce.core.dom.DomQuery/String} Current set.
+		 * @return {tinymce.dom.DomQuery/String} Current set.
 		 */
 		removeAttr: function(name) {
 			return this.attr(name, null);
@@ -430,7 +430,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method attr
 		 * @param {String/Object} name Name of property to get or an object with properties to set.
 		 * @param {String} value Optional value to set.
-		 * @return {tinymce.core.dom.DomQuery/String} Current set or the specified property when only the name is specified.
+		 * @return {tinymce.dom.DomQuery/String} Current set or the specified property when only the name is specified.
 		 */
 		prop: function(name, value) {
 			var self = this;
@@ -464,7 +464,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method css
 		 * @param {String/Object} name Name of style to get or an object with styles to set.
 		 * @param {String} value Optional value to set.
-		 * @return {tinymce.core.dom.DomQuery/String} Current set or the specified style when only the name is specified.
+		 * @return {tinymce.dom.DomQuery/String} Current set or the specified style when only the name is specified.
 		 */
 		css: function(name, value) {
 			var self = this, elm, hook;
@@ -544,7 +544,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Removes all nodes in set from the document.
 		 *
 		 * @method remove
-		 * @return {tinymce.core.dom.DomQuery} Current set with the removed nodes.
+		 * @return {tinymce.dom.DomQuery} Current set with the removed nodes.
 		 */
 		remove: function() {
 			var self = this, node, i = this.length;
@@ -565,7 +565,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Empties all elements in set.
 		 *
 		 * @method empty
-		 * @return {tinymce.core.dom.DomQuery} Current set with the empty nodes.
+		 * @return {tinymce.dom.DomQuery} Current set with the empty nodes.
 		 */
 		empty: function() {
 			var self = this, node, i = this.length;
@@ -585,7 +585,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method html
 		 * @param {String} value Optional innerHTML value to set on each element.
-		 * @return {tinymce.core.dom.DomQuery/String} Current set or the innerHTML of the first element.
+		 * @return {tinymce.dom.DomQuery/String} Current set or the innerHTML of the first element.
 		 */
 		html: function(value) {
 			var self = this, i;
@@ -613,7 +613,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method text
 		 * @param {String} value Optional innerText value to set on each element.
-		 * @return {tinymce.core.dom.DomQuery/String} Current set or the innerText of the first element.
+		 * @return {tinymce.dom.DomQuery/String} Current set or the innerText of the first element.
 		 */
 		text: function(value) {
 			var self = this, i;
@@ -639,7 +639,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method append
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to append to each element in set.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		append: function() {
 			return domManipulate(this, arguments, function(node) {
@@ -655,7 +655,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method prepend
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to prepend to each element in set.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		prepend: function() {
 			return domManipulate(this, arguments, function(node) {
@@ -671,7 +671,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method before
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to add before to each element in set.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		before: function() {
 			var self = this;
@@ -690,7 +690,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method after
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to add after to each element in set.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		after: function() {
 			var self = this;
@@ -709,7 +709,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method appendTo
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} val Item to append the current set to.
-		 * @return {tinymce.core.dom.DomQuery} Current set with the appended nodes.
+		 * @return {tinymce.dom.DomQuery} Current set with the appended nodes.
 		 */
 		appendTo: function(val) {
 			DomQuery(val).append(this);
@@ -722,7 +722,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method prependTo
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} val Item to prepend the current set to.
-		 * @return {tinymce.core.dom.DomQuery} Current set with the prepended nodes.
+		 * @return {tinymce.dom.DomQuery} Current set with the prepended nodes.
 		 */
 		prependTo: function(val) {
 			DomQuery(val).prepend(this);
@@ -735,7 +735,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method replaceWith
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to replace nodes with.
-		 * @return {tinymce.core.dom.DomQuery} Set with replaced nodes.
+		 * @return {tinymce.dom.DomQuery} Set with replaced nodes.
 		 */
 		replaceWith: function(content) {
 			return this.before(content).remove();
@@ -746,7 +746,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method wrap
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to wrap nodes with.
-		 * @return {tinymce.core.dom.DomQuery} Set with wrapped nodes.
+		 * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
 		 */
 		wrap: function(content) {
 			return wrap(this, content);
@@ -758,7 +758,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method wrapAll
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to wrap nodes with.
-		 * @return {tinymce.core.dom.DomQuery} Set with wrapped nodes.
+		 * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
 		 */
 		wrapAll: function(content) {
 			return wrap(this, content, true);
@@ -769,7 +769,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method wrapInner
 		 * @param {String/Element/Array/tinymce.core.dom.DomQuery} content Content to wrap nodes with.
-		 * @return {tinymce.core.dom.DomQuery} Set with wrapped nodes.
+		 * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
 		 */
 		wrapInner: function(content) {
 			this.each(function() {
@@ -783,7 +783,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Unwraps all elements by removing the parent element of each item in set.
 		 *
 		 * @method unwrap
-		 * @return {tinymce.core.dom.DomQuery} Set with unwrapped nodes.
+		 * @return {tinymce.dom.DomQuery} Set with unwrapped nodes.
 		 */
 		unwrap: function() {
 			return this.parent().each(function() {
@@ -795,7 +795,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Clones all nodes in set.
 		 *
 		 * @method clone
-		 * @return {tinymce.core.dom.DomQuery} Set with cloned nodes.
+		 * @return {tinymce.dom.DomQuery} Set with cloned nodes.
 		 */
 		clone: function() {
 			var result = [];
@@ -812,7 +812,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method addClass
 		 * @param {String} className Class name to add.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		addClass: function(className) {
 			return this.toggleClass(className, true);
@@ -823,7 +823,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method removeClass
 		 * @param {String} className Class name to remove.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		removeClass: function(className) {
 			return this.toggleClass(className, false);
@@ -835,7 +835,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method toggleClass
 		 * @param {String} className Class name to add/remove.
 		 * @param {Boolean} state Optional state to toggle on/off.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		toggleClass: function(className, state) {
 			var self = this;
@@ -886,7 +886,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method each
 		 * @param {function} callback Callback function to execute for each item.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		each: function(callback) {
 			return each(this, callback);
@@ -898,7 +898,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method on
 		 * @param {String} name Name of the event to bind.
 		 * @param {function} callback Callback function to execute when the event occurs.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		on: function(name, callback) {
 			return this.each(function() {
@@ -912,7 +912,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method off
 		 * @param {String} name Optional name of the event to bind.
 		 * @param {function} callback Optional callback function to execute when the event occurs.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		off: function(name, callback) {
 			return this.each(function() {
@@ -925,7 +925,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method trigger
 		 * @param {String/Object} name Name of the event to trigger or event object.
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		trigger: function(name) {
 			return this.each(function() {
@@ -941,7 +941,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Shows all elements in set.
 		 *
 		 * @method show
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		show: function() {
 			return this.css('display', '');
@@ -951,7 +951,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Hides all elements in set.
 		 *
 		 * @method hide
-		 * @return {tinymce.core.dom.DomQuery} Current set.
+		 * @return {tinymce.dom.DomQuery} Current set.
 		 */
 		hide: function() {
 			return this.css('display', 'none');
@@ -963,7 +963,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method slice
 		 * @param {Number} start Start index to slice at.
 		 * @param {Number} end Optional end index to end slice at.
-		 * @return {tinymce.core.dom.DomQuery} Sliced set.
+		 * @return {tinymce.dom.DomQuery} Sliced set.
 		 */
 		slice: function() {
 			return new DomQuery(slice.apply(this, arguments));
@@ -974,7 +974,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method eq
 		 * @param {Number} index Index to set it equal to.
-		 * @return {tinymce.core.dom.DomQuery} Single item set.
+		 * @return {tinymce.dom.DomQuery} Single item set.
 		 */
 		eq: function(index) {
 			return index === -1 ? this.slice(index) : this.slice(index, +index + 1);
@@ -984,7 +984,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Makes the set equal to first element in set.
 		 *
 		 * @method first
-		 * @return {tinymce.core.dom.DomQuery} Single item set.
+		 * @return {tinymce.dom.DomQuery} Single item set.
 		 */
 		first: function() {
 			return this.eq(0);
@@ -994,7 +994,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * Makes the set equal to last element in set.
 		 *
 		 * @method last
-		 * @return {tinymce.core.dom.DomQuery} Single item set.
+		 * @return {tinymce.dom.DomQuery} Single item set.
 		 */
 		last: function() {
 			return this.eq(-1);
@@ -1005,7 +1005,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method find
 		 * @param {String} selector Selector to find elements by.
-		 * @return {tinymce.core.dom.DomQuery} Set with matches elements.
+		 * @return {tinymce.dom.DomQuery} Set with matches elements.
 		 */
 		find: function(selector) {
 			var i, l, ret = [];
@@ -1022,7 +1022,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method filter
 		 * @param {String/function} selector Selector to filter elements by.
-		 * @return {tinymce.core.dom.DomQuery} Set with filtered elements.
+		 * @return {tinymce.dom.DomQuery} Set with filtered elements.
 		 */
 		filter: function(selector) {
 			if (typeof selector == 'function') {
@@ -1039,7 +1039,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method closest
 		 * @param {String/Element/tinymce.core.dom.DomQuery} selector Selector or element to find.
-		 * @return {tinymce.core.dom.DomQuery} Set with closest elements.
+		 * @return {tinymce.dom.DomQuery} Set with closest elements.
 		 */
 		closest: function(selector) {
 			var result = [];
@@ -1291,7 +1291,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method parent
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to match parents against.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching parents.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
 		 */
 		parent: function(node) {
 			var parent = node.parentNode;
@@ -1304,7 +1304,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method parents
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to match parents against.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching parents.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
 		 */
 		parents: function(node) {
 			return dir(node, "parentNode");
@@ -1315,7 +1315,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method next
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to match the next element against.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching elements.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		next: function(node) {
 			return firstSibling(node, 'nextSibling', 1);
@@ -1326,7 +1326,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method prev
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to match the previous element against.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching elements.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		prev: function(node) {
 			return firstSibling(node, 'previousSibling', 1);
@@ -1337,7 +1337,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method children
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to match the elements against.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching elements.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		children: function(node) {
 			return sibling(node.firstChild, 'nextSibling', 1);
@@ -1348,7 +1348,7 @@ define("tinymce.core.dom.DomQuery", [
 		 *
 		 * @method contents
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to get the contents of.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching elements.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		contents: function(node) {
 			return Tools.toArray((node.nodeName === "iframe" ? node.contentDocument || node.contentWindow.document : node).childNodes);
@@ -1398,7 +1398,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method parentsUntil
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to find parent of.
 		 * @param {String/Element/tinymce.core.dom.DomQuery} until Until the matching selector or element.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching parents.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
 		 */
 		parentsUntil: function(node, until) {
 			return dir(node, "parentNode", until);
@@ -1410,7 +1410,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method nextUntil
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to find next siblings on.
 		 * @param {String/Element/tinymce.core.dom.DomQuery} until Until the matching selector or element.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching elements.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		nextUntil: function(node, until) {
 			return sibling(node, 'nextSibling', 1, until).slice(1);
@@ -1422,7 +1422,7 @@ define("tinymce.core.dom.DomQuery", [
 		 * @method prevUntil
 		 * @param {Element/tinymce.core.dom.DomQuery} node Node to find previous siblings on.
 		 * @param {String/Element/tinymce.core.dom.DomQuery} until Until the matching selector or element.
-		 * @return {tinymce.core.dom.DomQuery} New DomQuery instance with all matching elements.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
 		 */
 		prevUntil: function(node, until) {
 			return sibling(node, 'previousSibling', 1, until).slice(1);

@@ -2,7 +2,7 @@
  * ReflowQueue.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,7 +13,7 @@
  * If the user manually reflows then the automatic reflow will be cancelled. This class is used internally when various control states
  * changes that triggers a reflow.
  *
- * @class tinymce.core.ui.ReflowQueue
+ * @class tinymce.ui.ReflowQueue
  * @static
  */
 define("tinymce.core.ui.ReflowQueue", [

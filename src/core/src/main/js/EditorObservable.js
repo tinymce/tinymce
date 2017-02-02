@@ -2,7 +2,7 @@
  * EditorObservable.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -11,7 +11,7 @@
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
  *
- * @mixin tinymce.core.EditorObservable
+ * @mixin tinymce.EditorObservable
  * @extends tinymce.core.util.Observable
  */
 define("tinymce.core.EditorObservable", [

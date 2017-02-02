@@ -2,7 +2,7 @@
  * XHR.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -10,7 +10,7 @@
 
 /**
  * This class enables you to send XMLHTTPRequests cross browser.
- * @class tinymce.core.util.XHR
+ * @class tinymce.util.XHR
  * @mixes tinymce.core.util.Observable
  * @static
  * @example

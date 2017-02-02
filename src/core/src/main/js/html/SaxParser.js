@@ -2,7 +2,7 @@
  * SaxParser.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -47,7 +47,7 @@
  *         console.log('DocType:', text);
  *     }
  * }, schema);
- * @class tinymce.core.html.SaxParser
+ * @class tinymce.html.SaxParser
  * @version 3.4
  */
 define("tinymce.core.html.SaxParser", [

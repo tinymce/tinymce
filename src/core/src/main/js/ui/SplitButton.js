@@ -2,7 +2,7 @@
  * SplitButton.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * Creates a split button.
  *
  * @-x-less SplitButton.less
- * @class tinymce.core.ui.SplitButton
+ * @class tinymce.ui.SplitButton
  * @extends tinymce.core.ui.Button
  */
 define("tinymce.core.ui.SplitButton", [

@@ -2,7 +2,7 @@
  * Tools.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,7 +12,7 @@
  * This class contains various utlity functions. These are also exposed
  * directly on the tinymce namespace.
  *
- * @class tinymce.core.util.Tools
+ * @class tinymce.util.Tools
  */
 define("tinymce.core.util.Tools", [
 	"tinymce.core.Env",
