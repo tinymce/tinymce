@@ -11,7 +11,7 @@
 /**
  * ...
  */
-define("tinymce/imagetoolsplugin/CropRect", [
+define("tinymce.imagetools.CropRect", [
 	"global!tinymce.dom.DomQuery",
 	"global!tinymce.ui.DragHelper",
 	"global!tinymce.geom.Rect",

@@ -1,5 +1,7 @@
 configure({
   sources: [
-    source('amd', 'tinymce.template', '../../src/main/js', mapper.hierarchical)
+    source('amd', 'tinymce.template', '../../src/main/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/template\//, '');
+		})
   ]
 });

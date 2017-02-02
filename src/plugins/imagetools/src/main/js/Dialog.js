@@ -11,17 +11,17 @@
 /**
  * ...
  */
-define("tinymce/imagetoolsplugin/Dialog", [
+define("tinymce.imagetools.Dialog", [
 	"global!tinymce.dom.DOMUtils",
 	"global!tinymce.util.Tools",
 	"global!tinymce.util.Promise",
 	"global!tinymce.ui.Factory",
 	"global!tinymce.ui.Form",
 	"global!tinymce.ui.Container",
-	"tinymce/imagetoolsplugin/ImagePanel",
+	"tinymce.imagetools.ImagePanel",
 	"ephox/imagetools/api/ImageTransformations",
 	"ephox/imagetools/api/BlobConversions",
-	"tinymce/imagetoolsplugin/UndoStack"
+	"tinymce.imagetools.UndoStack"
 ], function(DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTransformations, BlobConversions, UndoStack) {
 	function createState(blob) {
 		return {

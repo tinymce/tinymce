@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce/imagetoolsplugin/ImageSize", [
+define("tinymce.imagetools.ImageSize", [
 ], function() {
 	function getImageSize(img) {
 		var width, height;

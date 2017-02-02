@@ -3,6 +3,8 @@ configure({
     './prod.js'
   ],
   sources: [
-		source('amd', 'tinymce.wordcount.Demo', '../../src/demo/js', mapper.hierarchical)
+    source('amd', 'tinymce.wordcount.demo', '../../src/demo/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/wordcount\//, '');
+		})
   ]
 });

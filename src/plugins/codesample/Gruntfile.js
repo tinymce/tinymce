@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 				minimise_module_names: true,
 
 				files: {
-					src: ["src/main/js/tinymce/codesample/Plugin.js"]
+					src: ["src/main/js/Plugin.js"]
 				}
 			}
 		},

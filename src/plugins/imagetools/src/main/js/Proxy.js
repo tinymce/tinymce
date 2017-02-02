@@ -11,10 +11,10 @@
 /**
  * Handles loading images though a proxy for working around cors.
  */
-define("tinymce/imagetoolsplugin/Proxy", [
+define("tinymce.imagetools.Proxy", [
 	"global!tinymce.util.Promise",
 	"global!tinymce.util.Tools",
-	"tinymce/imagetoolsplugin/Utils"
+	"tinymce.imagetools.Utils"
 ], function(Promise, Tools, Utils) {
 	var isServiceErrorCode = function (code) {
 		return code === 400 || code === 403 || code === 500;

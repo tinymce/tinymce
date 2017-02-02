@@ -10,8 +10,8 @@
 
 /*eslint no-console:0 */
 
-define("tinymce/imagetoolsplugin/Demo", [
-	"tinymce/imagetoolsplugin/Plugin",
+define("tinymce.imagetools.demo.Demo", [
+	"tinymce.imagetools.Plugin",
 	"global!tinymce",
 	"global!tinymce.dom.DomQuery",
 	"global!console"

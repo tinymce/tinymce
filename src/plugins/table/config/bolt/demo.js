@@ -3,6 +3,8 @@ configure({
     './prod.js'
   ],
   sources: [
-    source('amd', 'tinymce.table.Demo', '../../src/demo/js', mapper.hierarchical)
+    source('amd', 'tinymce.table.demo', '../../src/demo/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/table\//, '');
+		})
   ]
 });
