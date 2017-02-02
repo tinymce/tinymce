@@ -105,7 +105,7 @@ define("tinymce/dom/Selection", [
 			self.editor.fire('BeforeGetContent', args);
 
 			if (args.format == 'text') {
-				return self.isCollapsed() ? '' : (rng.text || (se.toString ? se.toString() : ''));
+				return self.isCollapsed() ? '' : (rng.text || (se.toString ? se.toString() : '') || rng.toString());
 			}
 
 			if (rng.cloneContents) {
