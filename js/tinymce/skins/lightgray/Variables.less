@@ -6,10 +6,10 @@
 
 // Default font
 @font-family:                    "Helvetica Neue", Helvetica, Arial, sans-serif;
-@font-size:                      14px;
-@line-height:                    20px;
+@font-size:                      0.7rem; // 14px;
+@line-height:                    1rem; // 20px;
 @has-gradients:                  false;
-@has-radius:                     false;
+@has-radius:                     true; // false;
 @has-boxshadow:                  false;
 @has-button-borders:             false;
 
@@ -35,12 +35,12 @@
 @btn-box-shadow-active:          inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
 @btn-box-disabled-opacity:       0.4;
 @btn-bg:                         white;
-@btn-bg-hlight:                  #D9D9D9;
-@btn-bg-hover:                   darken(@btn-bg, 5%);
+@btn-bg-hlight:                  white; // #D9D9D9;
+@btn-bg-hover:                   #f2f3f5; // darken(@btn-bg, 5%);
 @btn-bg-hlight-hover:            darken(@btn-bg-hlight, 5%);
-@btn-border-hover:               darken(@btn-bg, 20%);
+@btn-border-hover:               #d3d9e3; // darken(@btn-bg, 20%);
 @btn-border-active:              darken(@btn-bg, 20%);
-@btn-padding:                    4px 8px;
+@btn-padding:                    0.5rem; // 4px 8px;
 
 @btn-primary-bg:                 #2980b9;
 @btn-primary-bg-hlight:          #3498db;
@@ -80,9 +80,9 @@
 @menubar-menubtn-text:           #333;
 
 // Panel
-@panel-border:                   rgba(0,0,0,.2);
-@panel-bg:                       #FDFDFD;
-@panel-bg-hlight:                #DDD;
+@panel-border:                   #d3d9e3; // rgba(0,0,0,.2);
+@panel-bg:                       white; //#FDFDFD;
+@panel-bg-hlight:                white; // #DDD;
 
 // Tabs
 @tab-border:                     #c5c5c5;
@@ -94,10 +94,10 @@
 // Tooltip
 @tooltip-bg:                     #000;
 @tooltip-text:                   white;
-@tooltip-font-size:              11px;
+@tooltip-font-size:              0.5rem; // 11px;
 
 // Notification
-@notification-font-size:         14px;
+@notification-font-size:         1rem; // 14px;
 @notification-bg:                #F0F0F0;
 @notification-border:            #CCCCCC;
 @notification-text:              #333333;
@@ -143,11 +143,11 @@
 @window-modalblock-opacity:      0.3;
 @window-box-shadow:              0 3px 7px rgba(0, 0, 0, 0.3);
 @window-bg:                      #FFF;
-@window-title-font-size:         20px;
+@window-title-font-size:         1rem; // 20px;
 
 // Popover
 @popover-bg:                     @window-bg;
-@popover-arrow-width:            10px;
+@popover-arrow-width:            0.5rem; // 10px;
 @popover-arrow:                  @window-bg;
 @popover-arrow-outer-width:      @popover-arrow-width + 1;
 @popover-arrow-outer:            rgba(0, 0, 0, 0.25);

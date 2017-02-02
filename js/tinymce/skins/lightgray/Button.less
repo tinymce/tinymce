@@ -6,14 +6,17 @@
 	position: relative;
 	text-shadow: @text-shadow;
 
+	min-height: ~"calc(2rem)"; // d2l
+	padding: 0 0.05rem; // d2l
+
 	.inline-block();
-	.border-radius(3px);
+	.border-radius(0.3rem); // d2l .border-radius(3px);
 	.box-shadow(@btn-box-shadow);
 	.vertical-gradient(@btn-bg, @btn-bg-hlight);
 
 	&:hover, &:focus {
 		color: @btn-text;
-		.vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
+		background-color: @btn-bg-hover; // d2l .vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
 		border-color: @btn-border-hover;
 	}
 
@@ -24,15 +27,15 @@
 	}
 
 	&.@{prefix}-active, &.@{prefix}-active:hover {
-		.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));
-		.box-shadow(@btn-box-shadow-active);
-		border-color: darken(@btn-bg, 20%);
+		background-color: @btn-bg-hover; // d2l .vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));
+		// d2l .box-shadow(@btn-box-shadow-active);
+		border-color: @btn-border-hover; // d2l border-color: darken(@btn-bg, 20%);
 	}
 
 	&:active {
-		.vertical-gradient(darken(@btn-bg, 7%), darken(@btn-bg-hlight, 5%));
-		.box-shadow(@btn-box-shadow-active);
-		border-color: @btn-border-active;
+		background-color: @btn-bg-hover; // d2l.vertical-gradient(darken(@btn-bg, 7%), darken(@btn-bg-hlight, 5%));
+		// d2l .box-shadow(@btn-box-shadow-active);
+		border-color: @btn-border-hover; // d2l @btn-border-active;
 
 	}
 }
@@ -53,6 +56,7 @@
 		border: 0;
 		padding: 0;
 	}
+	min-height: 0; // d2l
 }
 
 .@{prefix}-btn i {
@@ -173,3 +177,13 @@
 .@{prefix}-rtl .@{prefix}-btn button {
 	direction: rtl;
 }
+
+// D2L
+// For the down arrow
+.@{prefix}-btn i.@{prefix}-caret {
+	display: inline;
+	border: none;
+	width: auto;
+	position: relative;
+}
+// End of D2L
