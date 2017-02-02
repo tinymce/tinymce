@@ -219,7 +219,7 @@ tinymce.PluginManager.add('template', function(editor) {
 		}
 
 		function hasClass(n, c) {
-			return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
+			return new RegExp('(?:^|\\s)(?:' + c + ')(?:\\s|$)', 'g').test(n.className);
 		}
 
 		each(dom.select('*', el), function(n) {
