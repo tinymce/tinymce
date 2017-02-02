@@ -566,6 +566,16 @@ module.exports = function(grunt) {
 						cwd: 'src/core/dist/tinymce',
 						src: ['**'],
 						dest: 'js/tinymce/'
+					},
+
+					{
+						expand: true,
+						flatten: true,
+						src: 'LICENSE.TXT',
+						rename: function (dest) {
+							return dest + 'license.txt';
+						},
+						dest: 'js/tinymce/'
 					}
 				]
 			},

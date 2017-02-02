@@ -30,6 +30,11 @@ module.exports = function (grunt) {
 					{
 						src: "scratch/inline/tinymce.raw.js",
 						dest: "dist/tinymce/tinymce.js"
+					},
+
+					{
+						src: "src/main/text/readme_lang.md",
+						dest: "dist/tinymce/langs/readme.md"
 					}
 				]
 			}
