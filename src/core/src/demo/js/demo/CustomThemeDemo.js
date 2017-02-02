@@ -11,7 +11,7 @@
 /*eslint no-console:0 */
 
 define("tinymce.core.demo.CustomThemeDemo", [
-	"tinymce.core.api.Main"
+	"tinymce.core.api.Tinymce"
 ], function (tinymce) {
 	return function () {
 		var textarea = document.createElement('textarea');

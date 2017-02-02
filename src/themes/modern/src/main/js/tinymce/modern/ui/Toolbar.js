@@ -9,8 +9,8 @@
  */
 
 define('tinymce.modern.ui.Toolbar', [
-	'tinymce.core.util.Tools',
-	'tinymce.core.ui.Factory'
+	'global!tinymce.util.Tools',
+	'global!tinymce.ui.Factory'
 ], function (Tools, Factory) {
 	var defaultToolbar = "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
 		"bullist numlist outdent indent | link image";

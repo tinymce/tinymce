@@ -68,10 +68,10 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.task.loadTasks("../../../../node_modules/@ephox/bolt/tasks");
-	grunt.task.loadTasks("../../../../node_modules/grunt-contrib-copy/tasks");
-	grunt.task.loadTasks("../../../../node_modules/grunt-contrib-uglify/tasks");
-	grunt.task.loadTasks("../../../../node_modules/grunt-eslint/tasks");
+	grunt.task.loadTasks("../../../node_modules/@ephox/bolt/tasks");
+	grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
+	grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
+	grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
 
 	grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
 };

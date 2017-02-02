@@ -9,10 +9,10 @@
  */
 
 define('tinymce.modern.modes.Inline', [
-	'tinymce.core.util.Tools',
-	'tinymce.core.ui.Factory',
-	'tinymce.core.dom.DOMUtils',
-	'tinymce.core.ui.FloatPanel',
+	'global!tinymce.util.Tools',
+	'global!tinymce.ui.Factory',
+	'global!tinymce.dom.DOMUtils',
+	'global!tinymce.ui.FloatPanel',
 	'tinymce.modern.ui.Toolbar',
 	'tinymce.modern.ui.Menubar',
 	'tinymce.modern.ui.ContextToolbars',

@@ -9,7 +9,7 @@
  */
 
 define('tinymce.modern.ui.Menubar', [
-	'tinymce.core.util.Tools'
+	'global!tinymce.util.Tools'
 ], function (Tools) {
 	var defaultMenus = {
 		file: {title: 'File', items: 'newdocument'},

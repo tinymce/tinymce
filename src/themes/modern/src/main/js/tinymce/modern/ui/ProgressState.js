@@ -9,7 +9,7 @@
  */
 
 define('tinymce.modern.ui.ProgressState', [
-	'tinymce.core.ui.Throbber'
+	'global!tinymce.ui.Throbber'
 ], function (Throbber) {
 	var setup = function (editor, theme) {
 		var throbber;

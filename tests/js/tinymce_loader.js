@@ -15,6 +15,6 @@
 	if (document.location.search.indexOf('min=true') > 0) {
 		document.write('<script src="' + baseURL + '/../../js/tinymce/tinymce.min.js"></script>');
 	} else {
-		document.write('<script src="' + baseURL + '/../../js/tinymce/tinymce.dev.js"></script>');
+		document.write('<script src="' + baseURL + '/../../js/tinymce/tinymce.js"></script>');
 	}
 })();

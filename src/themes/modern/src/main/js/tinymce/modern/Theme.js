@@ -9,9 +9,9 @@
  */
 
 define('tinymce.modern.Theme', [
-    'tinymce.core.AddOnManager',
-    'tinymce.core.EditorManager',
-    'tinymce.core.Env',
+    'global!tinymce.AddOnManager',
+    'global!tinymce.EditorManager',
+    'global!tinymce.Env',
     'tinymce.modern.modes.Iframe',
     'tinymce.modern.modes.Inline',
     'tinymce.modern.ui.ProgressState',

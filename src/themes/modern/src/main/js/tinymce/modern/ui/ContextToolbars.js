@@ -9,13 +9,13 @@
  */
 
 define('tinymce.modern.ui.ContextToolbars', [
-	'tinymce.core.dom.DOMUtils',
-	'tinymce.core.util.Tools',
-	'tinymce.core.util.Delay',
-	'tinymce.modern.ui.Toolbar',
-	'tinymce.core.ui.Factory',
-	'tinymce.core.geom.Rect'
-], function (DOMUtils, Tools, Delay, Toolbar, Factory, Rect) {
+	'global!tinymce.dom.DOMUtils',
+	'global!tinymce.util.Tools',
+	'global!tinymce.util.Delay',
+	'global!tinymce.ui.Factory',
+	'global!tinymce.geom.Rect',
+	'tinymce.modern.ui.Toolbar'
+], function (DOMUtils, Tools, Delay, Factory, Rect, Toolbar) {
 	var DOM = DOMUtils.DOM;
 
 	var toClientRect = function (geomRect) {

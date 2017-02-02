@@ -9,9 +9,9 @@
  */
 
 define('tinymce.modern.ui.Sidebar', [
-	'tinymce.core.util.Tools',
-	'tinymce.core.ui.Factory',
-	'tinymce.core.Env'
+	'global!tinymce.util.Tools',
+	'global!tinymce.ui.Factory',
+	'global!tinymce.Env'
 ], function (Tools, Factory, Env) {
 	var api = function (elm) {
 		return {

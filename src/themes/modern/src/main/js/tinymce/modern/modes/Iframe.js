@@ -9,9 +9,9 @@
  */
 
 define('tinymce.modern.modes.Iframe', [
-	'tinymce.core.util.Tools',
-	'tinymce.core.ui.Factory',
-	'tinymce.core.dom.DOMUtils',
+	'global!tinymce.util.Tools',
+	'global!tinymce.ui.Factory',
+	'global!tinymce.dom.DOMUtils',
 	'tinymce.modern.ui.Toolbar',
 	'tinymce.modern.ui.Menubar',
 	'tinymce.modern.ui.ContextToolbars',

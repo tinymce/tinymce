@@ -9,7 +9,7 @@
  */
 
 define('tinymce.modern.ui.Resize', [
-	'tinymce.core.dom.DOMUtils'
+	'global!tinymce.dom.DOMUtils'
 ], function (DOMUtils) {
 	var DOM = DOMUtils.DOM;
 	var getSize = function (elm) {
