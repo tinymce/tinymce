@@ -26,7 +26,6 @@
 		"wrap-iife": [2, "inside"],
 		"consistent-this": [2, "self"],
 		"no-bitwise": 2,
-		"max-params": [2, 50],
 		"max-depth": [1, 8],
 		"max-statements": [2, 150],
 		"max-len": [1, 140, 4],
