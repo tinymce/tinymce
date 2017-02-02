@@ -52,7 +52,7 @@ define("tinymce/dom/EventUtils", [
 	}
 
 	/**
-	 * Gets the event target based on shadow dom properties like path and deepPath.
+	 * Gets the event target based on shadow dom properties like path and composedPath.
 	 */
 	function getTargetFromShadowDom(event, defaultTarget) {
 		var path, target = defaultTarget;
@@ -67,8 +67,8 @@ define("tinymce/dom/EventUtils", [
 		}
 
 		// Normalize target for WebComponents v1 implementation (standard)
-		if (event.deepPath) {
-			path = event.deepPath();
+		if (event.composedPath) {
+			path = event.composedPath();
 			if (path && path.length > 0) {
 				target = path[0];
 			}
