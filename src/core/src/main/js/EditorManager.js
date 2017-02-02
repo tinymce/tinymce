@@ -29,8 +29,9 @@ define("tinymce.core.EditorManager", [
 	"tinymce.core.util.Observable",
 	"tinymce.core.util.I18n",
 	"tinymce.core.FocusManager",
-	"tinymce.core.AddOnManager"
-], function(Editor, $, DOMUtils, URI, Env, Tools, Promise, Observable, I18n, FocusManager, AddOnManager) {
+	"tinymce.core.AddOnManager",
+	"tinymce.core.LegacyInput"
+], function(Editor, $, DOMUtils, URI, Env, Tools, Promise, Observable, I18n, FocusManager, AddOnManager, LegacyInput) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
 	var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
@@ -733,9 +734,7 @@ define("tinymce.core.EditorManager", [
 	extend(EditorManager, Observable);
 
 	EditorManager.setup();
-
-	// Export EditorManager as tinymce/tinymce in global namespace
-	window.tinymce = window.tinyMCE = EditorManager;
+	LegacyInput.register(EditorManager);
 
 	return EditorManager;
 });

@@ -15,68 +15,73 @@
  * @private
  */
 define("tinymce.core.LegacyInput", [
-	"tinymce.core.EditorManager",
 	"tinymce.core.util.Tools"
-], function(EditorManager, Tools) {
+], function(Tools) {
 	var each = Tools.each, explode = Tools.explode;
 
-	EditorManager.on('AddEditor', function(e) {
-		var editor = e.editor;
+	var register = function (EditorManager) {
+		EditorManager.on('AddEditor', function(e) {
+			var editor = e.editor;
 
-		editor.on('preInit', function() {
-			var filters, fontSizes, dom, settings = editor.settings;
+			editor.on('preInit', function() {
+				var filters, fontSizes, dom, settings = editor.settings;
 
-			function replaceWithSpan(node, styles) {
-				each(styles, function(value, name) {
-					if (value) {
-						dom.setStyle(node, name, value);
-					}
-				});
-
-				dom.rename(node, 'span');
-			}
-
-			function convert(e) {
-				dom = editor.dom;
-
-				if (settings.convert_fonts_to_spans) {
-					each(dom.select('font,u,strike', e.node), function(node) {
-						filters[node.nodeName.toLowerCase()](dom, node);
+				function replaceWithSpan(node, styles) {
+					each(styles, function(value, name) {
+						if (value) {
+							dom.setStyle(node, name, value);
+						}
 					});
+
+					dom.rename(node, 'span');
 				}
-			}
 
-			if (settings.inline_styles) {
-				fontSizes = explode(settings.font_size_legacy_values);
+				function convert(e) {
+					dom = editor.dom;
 
-				filters = {
-					font: function(dom, node) {
-						replaceWithSpan(node, {
-							backgroundColor: node.style.backgroundColor,
-							color: node.color,
-							fontFamily: node.face,
-							fontSize: fontSizes[parseInt(node.size, 10) - 1]
+					if (settings.convert_fonts_to_spans) {
+						each(dom.select('font,u,strike', e.node), function(node) {
+							filters[node.nodeName.toLowerCase()](dom, node);
 						});
-					},
+					}
+				}
 
-					u: function(dom, node) {
-						// HTML5 allows U element
-						if (editor.settings.schema === "html4") {
+				if (settings.inline_styles) {
+					fontSizes = explode(settings.font_size_legacy_values);
+
+					filters = {
+						font: function(dom, node) {
 							replaceWithSpan(node, {
-								textDecoration: 'underline'
+								backgroundColor: node.style.backgroundColor,
+								color: node.color,
+								fontFamily: node.face,
+								fontSize: fontSizes[parseInt(node.size, 10) - 1]
+							});
+						},
+
+						u: function(dom, node) {
+							// HTML5 allows U element
+							if (editor.settings.schema === "html4") {
+								replaceWithSpan(node, {
+									textDecoration: 'underline'
+								});
+							}
+						},
+
+						strike: function(dom, node) {
+							replaceWithSpan(node, {
+								textDecoration: 'line-through'
 							});
 						}
-					},
+					};
 
-					strike: function(dom, node) {
-						replaceWithSpan(node, {
-							textDecoration: 'line-through'
-						});
-					}
-				};
-
-				editor.on('PreProcess SetContent', convert);
-			}
+					editor.on('PreProcess SetContent', convert);
+				}
+			});
 		});
-	});
+	};
+
+	return {
+		register: register
+	};
 });
