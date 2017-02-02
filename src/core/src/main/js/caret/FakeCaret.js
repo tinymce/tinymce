@@ -17,11 +17,11 @@
 define("tinymce.core.caret.FakeCaret", [
 	"tinymce.core.caret.CaretContainer",
 	"tinymce.core.caret.CaretPosition",
-	"tinymce.dom.NodeType",
-	"tinymce.dom.RangeUtils",
-	"tinymce.dom.DomQuery",
-	"tinymce.geom.ClientRect",
-	"tinymce.util.Delay"
+	"tinymce.core.dom.NodeType",
+	"tinymce.core.dom.RangeUtils",
+	"tinymce.core.dom.DomQuery",
+	"tinymce.core.geom.ClientRect",
+	"tinymce.core.util.Delay"
 ], function(CaretContainer, CaretPosition, NodeType, RangeUtils, $, ClientRect, Delay) {
 	var isContentEditableFalse = NodeType.isContentEditableFalse;
 

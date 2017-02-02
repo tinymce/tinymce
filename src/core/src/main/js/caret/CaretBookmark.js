@@ -27,10 +27,10 @@
  * var caretPosition = CaretBookmark.resolve(bookmark);
  */
 define('tinymce.core.caret.CaretBookmark', [
-	'tinymce.dom.NodeType',
-	'tinymce.dom.DOMUtils',
-	'tinymce.util.Fun',
-	'tinymce.util.Arr',
+	'tinymce.core.dom.NodeType',
+	'tinymce.core.dom.DOMUtils',
+	'tinymce.core.util.Fun',
+	'tinymce.core.util.Arr',
 	'tinymce.core.caret.CaretPosition'
 ], function(NodeType, DomUtils, Fun, Arr, CaretPosition) {
 	var isText = NodeType.isText,

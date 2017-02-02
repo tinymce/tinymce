@@ -739,4 +739,6 @@ define("tinymce.core.ui.FormatControls", [
 			menu: formatMenu
 		});
 	}
+
+	return {};
 });

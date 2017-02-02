@@ -20,13 +20,13 @@
  * var caretPos2 = CaretPosition.fromRangeStart(someRange);
  */
 define("tinymce.core.caret.CaretPosition", [
-	"tinymce.util.Fun",
-	"tinymce.dom.NodeType",
-	"tinymce.dom.DOMUtils",
-	"tinymce.dom.RangeUtils",
+	"tinymce.core.util.Fun",
+	"tinymce.core.dom.NodeType",
+	"tinymce.core.dom.DOMUtils",
+	"tinymce.core.dom.RangeUtils",
 	"tinymce.core.caret.CaretCandidate",
-	"tinymce.geom.ClientRect",
-	"tinymce.text.ExtendingChar"
+	"tinymce.core.geom.ClientRect",
+	"tinymce.core.text.ExtendingChar"
 ], function(Fun, NodeType, DOMUtils, RangeUtils, CaretCandidate, ClientRect, ExtendingChar) {
 	var isElement = NodeType.isElement,
 		isCaretCandidate = CaretCandidate.isCaretCandidate,

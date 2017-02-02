@@ -15,11 +15,11 @@
  * @class tinymce.core.caret.LineUtils
  */
 define("tinymce.core.caret.LineUtils", [
-	"tinymce.util.Fun",
-	"tinymce.util.Arr",
-	"tinymce.dom.NodeType",
-	"tinymce.dom.Dimensions",
-	"tinymce.geom.ClientRect",
+	"tinymce.core.util.Fun",
+	"tinymce.core.util.Arr",
+	"tinymce.core.dom.NodeType",
+	"tinymce.core.dom.Dimensions",
+	"tinymce.core.geom.ClientRect",
 	"tinymce.core.caret.CaretUtils",
 	"tinymce.core.caret.CaretCandidate"
 ], function(Fun, Arr, NodeType, Dimensions, ClientRect, CaretUtils, CaretCandidate) {

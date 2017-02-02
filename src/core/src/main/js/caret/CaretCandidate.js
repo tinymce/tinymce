@@ -16,8 +16,8 @@
  * @class tinymce.core.caret.CaretCandidate
  */
 define("tinymce.core.caret.CaretCandidate", [
-	"tinymce.dom.NodeType",
-	"tinymce.util.Arr",
+	"tinymce.core.dom.NodeType",
+	"tinymce.core.util.Arr",
 	"tinymce.core.caret.CaretContainer"
 ], function(NodeType, Arr, CaretContainer) {
 	var isContentEditableTrue = NodeType.isContentEditableTrue,

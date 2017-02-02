@@ -242,5 +242,5 @@ define('tinymce.core.api.Main', [
 	expose('tinymce.ui.TabPanel', TabPanel);
 	expose('tinymce.ui.TextBox', TextBox);
 
-	return target.tinymce;
+	return window.tinymce;
 });
