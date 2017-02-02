@@ -1,5 +1,5 @@
 /**
- * Demo.js
+ * CustomThemeDemo.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
@@ -10,12 +10,19 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.core.demo.Demo", [
+define("tinymce.core.demo.CustomThemeDemo", [
 	"tinymce.core.api.Main"
 ], function (tinymce) {
 	return function () {
+		var textarea = document.createElement('textarea');
+		textarea.rows = 20;
+		textarea.cols = 80;
+		textarea.innerHTML = '<p>Bolt</p>';
+		textarea.classList.add('tinymce');
+		document.querySelector('#ephox-ui').appendChild(textarea);
+
 		tinymce.init({
-			selector: "textarea.tinymce",
+			selector: "textarea",
 			theme: function(editor, target) {
 				var dom = tinymce.DOM, editorContainer;
 

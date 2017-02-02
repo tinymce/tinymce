@@ -37,8 +37,8 @@ define("tinymce.core.Compat", [
 	tinymce.PluginManager = AddOnManager.PluginManager;
 	tinymce.ThemeManager = AddOnManager.ThemeManager;
 
-	tinymce.core.dom.= tinymce.core.dom.|| {};
-	tinymce.core.dom.Event = EventUtils.Event;
+	tinymce.dom = tinymce.dom || {};
+	tinymce.dom.Event = EventUtils.Event;
 
 	Tools.each(
 		'trim isArray is toArray makeMap each map grep inArray extend create walk createNS resolve explode _addCacheSuffix'.split(' '),

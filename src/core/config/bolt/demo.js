@@ -1,9 +1,12 @@
 configure({
   configs: [
-    './prod.js'
+    './prod.js',
+		'../../../themes/modern/config/bolt/prod.js'
   ],
   sources: [
-    source('amd', 'tinymce.core.demo', '../../src/demo/js', mapper.hierarchical)
+    source('amd', 'tinymce.core.demo', '../../src/demo/js', function (id) {
+			return mapper.hierarchical(id).replace(/^tinymce\/core\//, '');
+		})
   ]
 });
 
