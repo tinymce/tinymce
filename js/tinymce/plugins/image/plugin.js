@@ -332,7 +332,7 @@ tinymce.PluginManager.add('image', function(editor) {
 					},
 					[{text: 'None', value: ''}]
 				),
-				value: data.src && editor.convertURL(data.src, 'src'),
+				value: data.src ? editor.convertURL(data.src, 'src') : '',
 				onselect: function(e) {
 					var altCtrl = win.find('#alt');
 
