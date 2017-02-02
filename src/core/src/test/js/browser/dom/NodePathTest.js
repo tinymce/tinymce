@@ -8,13 +8,19 @@ asynctest('browser.tinymce.core.noname', [
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	function getRoot () {
-		return document.getElementById('view');
-	}
+	var getRoot = function () {
+		var view = document.getElementById('view');
+		if (!view) {
+			view = document.createElement('div');
+			view.id = 'view';
+			document.body.appendChild(view);
+		}
+		return view;
+	};
 
-	function setupHtml (html) {
+	var setupHtml = function (html) {
 		getRoot().innerHTML = html;
-	}
+	};
 
 	suite.test("create", function () {
 		setupHtml('<p>a<b>12<input></b></p>');

@@ -7,41 +7,18 @@ asynctest('browser.tinymce.core.CaretUtilTest', [
 	'tinymce.core.caret.CaretPosition',
 	'tinymce.core.text.Zwsp',
 	'tinymce.core.dom.DomQuery',
+	'tinymce.core.test.CaretAsserts',
 	'global!document'
-], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretUtils, CaretPosition, Zwsp, $, document) {
+], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretUtils, CaretPosition, Zwsp, $, CaretAsserts, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var assertRange = CaretAsserts.assertRange;
+	var createRange = CaretAsserts.createRange;
 
 	if (!Env.ceFalse) {
 		return;
 	}
-
-	var createRange = function (startContainer, startOffset, endContainer, endOffset) {
-		var rng = DOMUtils.DOM.createRng();
-
-		rng.setStart(startContainer, startOffset);
-
-		if (endContainer) {
-			rng.setEnd(endContainer, endOffset);
-		}
-
-		return rng;
-	};
-
-	var assertRange = function (actual, expected) {
-		LegacyUnit.deepEqual({
-			startContainer: actual.startContainer,
-			startOffset: actual.startOffset,
-			endContainer: actual.endContainer,
-			endOffset: actual.endOffset
-		}, {
-			startContainer: expected.startContainer,
-			startOffset: expected.startOffset,
-			endContainer: expected.endContainer,
-			endOffset: expected.endOffset
-		});
-	};
 
 	var ZWSP = Zwsp.ZWSP;
 

@@ -1,8 +1,8 @@
 asynctest('browser.tinymce.core.noname', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/Env",
-	"tinymce.caret.LineUtils"
+	"tinymce.core.Env",
+	"tinymce.core.caret.LineUtils"
 ], function (LegacyUnit, Pipeline, Env, LineUtils) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
@@ -12,7 +12,7 @@ asynctest('browser.tinymce.core.noname', [
 		return;
 	}
 
-	function rect (x, y, w, h) {
+	var rect = function (x, y, w, h) {
 		return {
 			left: x,
 			top: y,
@@ -21,7 +21,7 @@ asynctest('browser.tinymce.core.noname', [
 			width: w,
 			height: h
 		};
-	}
+	};
 
 	suite.test('findClosestClientRect', function () {
 		LegacyUnit.deepEqual(LineUtils.findClosestClientRect([rect(10, 10, 10, 10), rect(30, 10, 10, 10)], 15), rect(10, 10, 10, 10));

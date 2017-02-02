@@ -1,11 +1,13 @@
 asynctest('browser.tinymce.core.noname', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/Env",
-	"tinymce.caret.FakeCaret",
-	"tinymce.dom.DomQuery",
-	"tinymce.text.Zwsp"
-], function (LegacyUnit, Pipeline, Env, FakeCaret, $, Zwsp) {
+	"tinymce.core.Env",
+	"tinymce.core.caret.FakeCaret",
+	"tinymce.core.dom.DomQuery",
+	"tinymce.core.text.Zwsp",
+	'tinymce.core.test.CaretAsserts',
+	'global!document'
+], function (LegacyUnit, Pipeline, Env, FakeCaret, $, Zwsp, CaretAsserts, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
@@ -16,19 +18,27 @@ asynctest('browser.tinymce.core.noname', [
 		return;
 	}
 
-	module("tinymce.caret.FakeCaret", {
-		setupModule: function () {
-			fakeCaret = new FakeCaret($('#view')[0], isBlock);
-		},
-
-		teardownModule: function () {
-			fakeCaret.destroy();
+	var getRoot = function () {
+		var view = document.getElementById('view');
+		if (!view) {
+			view = document.createElement('div');
+			view.id = 'view';
+			document.body.appendChild(view);
 		}
-	});
+		return view;
+	};
 
-	function isBlock (node) {
-		return node.nodeName == 'DIV';
-	}
+	var setup = function () {
+		fakeCaret = new FakeCaret(getRoot(), isBlock);
+	};
+
+	var teardown = function () {
+		fakeCaret.destroy();
+	};
+
+	var isBlock = function (node) {
+		return node.nodeName === 'DIV';
+	};
 
 	suite.test('show/hide (before, block)', function () {
 		var rng, $fakeCaretElm;
@@ -40,7 +50,7 @@ asynctest('browser.tinymce.core.noname', [
 
 		LegacyUnit.equal($fakeCaretElm[0].nodeName, 'P');
 		LegacyUnit.equal($fakeCaretElm.attr('data-mce-caret'), 'before');
-		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[0], 0, $fakeCaretElm[0], 0));
+		CaretAsserts.assertRange(rng, CaretAsserts.createRange($fakeCaretElm[0], 0, $fakeCaretElm[0], 0));
 
 		fakeCaret.hide();
 		LegacyUnit.equal($('#view *[data-mce-caret]').length, 0);
@@ -56,7 +66,7 @@ asynctest('browser.tinymce.core.noname', [
 
 		LegacyUnit.equal($fakeCaretElm[1].nodeName, 'P');
 		LegacyUnit.equal($fakeCaretElm.eq(1).attr('data-mce-caret'), 'after');
-		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[1], 0, $fakeCaretElm[1], 0));
+		CaretAsserts.assertRange(rng, CaretAsserts.createRange($fakeCaretElm[1], 0, $fakeCaretElm[1], 0));
 
 		fakeCaret.hide();
 		LegacyUnit.equal($('#view *[data-mce-caret]').length, 0);
@@ -72,7 +82,7 @@ asynctest('browser.tinymce.core.noname', [
 
 		LegacyUnit.equal($fakeCaretText[0].nodeName, '#text');
 		LegacyUnit.equal($fakeCaretText[0].data, Zwsp.ZWSP);
-		Utils.assertRange(rng, Utils.createRange($fakeCaretText[0], 1));
+		CaretAsserts.assertRange(rng, CaretAsserts.createRange($fakeCaretText[0], 1));
 
 		fakeCaret.hide();
 		LegacyUnit.equal($('#view').contents()[0].nodeName, 'SPAN');
@@ -88,7 +98,7 @@ asynctest('browser.tinymce.core.noname', [
 
 		LegacyUnit.equal($fakeCaretText[1].nodeName, '#text');
 		LegacyUnit.equal($fakeCaretText[1].data, Zwsp.ZWSP);
-		Utils.assertRange(rng, Utils.createRange($fakeCaretText[1], 1));
+		CaretAsserts.assertRange(rng, CaretAsserts.createRange($fakeCaretText[1], 1));
 
 		fakeCaret.hide();
 		LegacyUnit.equal($('#view').contents()[0].nodeName, 'SPAN');
@@ -98,7 +108,10 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(fakeCaret.getCss().length > 10, true);
 	});
 
+	setup();
+
 	Pipeline.async({}, suite.toSteps({}), function () {
+		teardown();
 		success();
 	}, failure);
 });

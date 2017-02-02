@@ -3,61 +3,18 @@ asynctest('browser.tinymce.core.CaretPositionTest', [
 	'ephox.agar.api.Pipeline',
 	'tinymce.core.dom.DOMUtils',
 	'tinymce.core.Env',
-	'tinymce.core.caret.CaretPosition'
-], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretPosition) {
+	'tinymce.core.caret.CaretPosition',
+	'tinymce.core.test.CaretAsserts',
+	'global!document'
+], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretPosition, CaretAsserts, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var createRange = CaretAsserts.createRange;
 
 	if (!Env.ceFalse) {
 		return;
 	}
-
-	var createRange = function (startContainer, startOffset, endContainer, endOffset) {
-		var rng = DOMUtils.DOM.createRng();
-
-		rng.setStart(startContainer, startOffset);
-
-		if (endContainer) {
-			rng.setEnd(endContainer, endOffset);
-		}
-
-		return rng;
-	};
-
-	var assertRange = function (actual, expected) {
-		LegacyUnit.deepEqual({
-			startContainer: actual.startContainer,
-			startOffset: actual.startOffset,
-			endContainer: actual.endContainer,
-			endOffset: actual.endOffset
-		}, {
-			startContainer: expected.startContainer,
-			startOffset: expected.startOffset,
-			endContainer: expected.endContainer,
-			endOffset: expected.endOffset
-		});
-	};
-
-	var assertCaretPosition = function (actual, expected, message) {
-		if (expected === null) {
-			LegacyUnit.strictEqual(actual, expected, message || 'Expected null.');
-			return;
-		}
-
-		if (actual === null) {
-			LegacyUnit.strictEqual(actual, expected, message || 'Didn\'t expect null.');
-			return;
-		}
-
-		LegacyUnit.deepEqual({
-			container: actual.container(),
-			offset: actual.offset()
-		}, {
-			container: expected.container(),
-			offset: expected.offset()
-		}, message);
-	};
 
 	var setupHtml = function (html) {
 		var child, rootElm = getRoot();
@@ -90,15 +47,21 @@ asynctest('browser.tinymce.core.CaretPositionTest', [
 
 	suite.test('fromRangeStart', function () {
 		setupHtml('abc');
-		assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot(), 0)), new CaretPosition(getRoot(), 0));
-		assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot(), 1)), new CaretPosition(getRoot(), 1));
-		assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot().firstChild, 1)), new CaretPosition(getRoot().firstChild, 1));
+		CaretAsserts.assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot(), 0)), new CaretPosition(getRoot(), 0));
+		CaretAsserts.assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot(), 1)), new CaretPosition(getRoot(), 1));
+		CaretAsserts.assertCaretPosition(
+			CaretPosition.fromRangeStart(createRange(getRoot().firstChild, 1)),
+			new CaretPosition(getRoot().firstChild, 1)
+		);
 	});
 
 	suite.test('fromRangeEnd', function () {
 		setupHtml('abc');
-		assertCaretPosition(CaretPosition.fromRangeEnd(createRange(getRoot(), 0, getRoot(), 1)), new CaretPosition(getRoot(), 1));
-		assertCaretPosition(
+		CaretAsserts.assertCaretPosition(
+			CaretPosition.fromRangeEnd(createRange(getRoot(), 0, getRoot(), 1)),
+			new CaretPosition(getRoot(), 1)
+		);
+		CaretAsserts.assertCaretPosition(
 			CaretPosition.fromRangeEnd(createRange(getRoot().firstChild, 0, getRoot().firstChild, 1)),
 			new CaretPosition(getRoot().firstChild, 1)
 		);
@@ -106,14 +69,14 @@ asynctest('browser.tinymce.core.CaretPositionTest', [
 
 	suite.test('after', function () {
 		setupHtml('abc<b>123</b>');
-		assertCaretPosition(CaretPosition.after(getRoot().firstChild), new CaretPosition(getRoot(), 1));
-		assertCaretPosition(CaretPosition.after(getRoot().lastChild), new CaretPosition(getRoot(), 2));
+		CaretAsserts.assertCaretPosition(CaretPosition.after(getRoot().firstChild), new CaretPosition(getRoot(), 1));
+		CaretAsserts.assertCaretPosition(CaretPosition.after(getRoot().lastChild), new CaretPosition(getRoot(), 2));
 	});
 
 	suite.test('before', function () {
 		setupHtml('abc<b>123</b>');
-		assertCaretPosition(CaretPosition.before(getRoot().firstChild), new CaretPosition(getRoot(), 0));
-		assertCaretPosition(CaretPosition.before(getRoot().lastChild), new CaretPosition(getRoot(), 1));
+		CaretAsserts.assertCaretPosition(CaretPosition.before(getRoot().firstChild), new CaretPosition(getRoot(), 0));
+		CaretAsserts.assertCaretPosition(CaretPosition.before(getRoot().lastChild), new CaretPosition(getRoot(), 1));
 	});
 
 	suite.test('isAtStart', function () {
@@ -138,9 +101,9 @@ asynctest('browser.tinymce.core.CaretPositionTest', [
 
 	suite.test('toRange', function () {
 		setupHtml('abc');
-		assertRange(new CaretPosition(getRoot(), 0).toRange(), createRange(getRoot(), 0));
-		assertRange(new CaretPosition(getRoot(), 1).toRange(), createRange(getRoot(), 1));
-		assertRange(new CaretPosition(getRoot().firstChild, 1).toRange(), createRange(getRoot().firstChild, 1));
+		CaretAsserts.assertRange(new CaretPosition(getRoot(), 0).toRange(), createRange(getRoot(), 0));
+		CaretAsserts.assertRange(new CaretPosition(getRoot(), 1).toRange(), createRange(getRoot(), 1));
+		CaretAsserts.assertRange(new CaretPosition(getRoot().firstChild, 1).toRange(), createRange(getRoot().firstChild, 1));
 	});
 
 	suite.test('isEqual', function () {

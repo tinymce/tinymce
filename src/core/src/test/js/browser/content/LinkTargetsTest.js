@@ -1,8 +1,8 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.content.LinkTargetsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.content.LinkTargets",
-	"tinymce.util.Arr",
+	"tinymce.core.content.LinkTargets",
+	"tinymce.core.util.Arr",
 	'global!document'
 ], function (LegacyUnit, Pipeline, LinkTargets, Arr, document) {
 	var success = arguments[arguments.length - 2];
@@ -99,7 +99,7 @@ asynctest('browser.tinymce.core.noname', [
 		var afterAttachHtml = elm.innerHTML;
 
 		LegacyUnit.equal(afterAttachHtml, '<h1 id="' + idA + '">a</h1><h2 id="' + idB + '">b</h2>', 'Should have unique id:s');
-		ok(idA !== idB, 'Should not be equal id:s');
+		LegacyUnit.equal(idA === idB, false, 'Should not be equal id:s');
 
 		targets[0].attach();
 		targets[1].attach();

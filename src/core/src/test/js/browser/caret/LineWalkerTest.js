@@ -1,10 +1,10 @@
 asynctest('browser.tinymce.core.noname', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/Env",
-	"tinymce.caret.LineWalker",
-	"tinymce.caret.CaretPosition",
-	"tinymce.dom.DomQuery"
+	"tinymce.core.Env",
+	"tinymce.core.caret.LineWalker",
+	"tinymce.core.caret.CaretPosition",
+	"tinymce.core.dom.DomQuery"
 ], function (LegacyUnit, Pipeline, Env, LineWalker, CaretPosition, $) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
@@ -17,10 +17,10 @@ asynctest('browser.tinymce.core.noname', [
 	suite.test('positionsUntil', function () {
 		var result, predicateCallCount = 0;
 
-		function predicate () {
+		var predicate = function () {
 			predicateCallCount++;
 			return false;
-		}
+		};
 
 		$('#view').html('<span contentEditable="false">a</span><span>b</span>');
 		result = LineWalker.positionsUntil(1, $('#view')[0], predicate, $('#view')[0].firstChild);
@@ -43,10 +43,10 @@ asynctest('browser.tinymce.core.noname', [
 	suite.test('upUntil', function () {
 		var caretPosition, result, predicateCallCount = 0;
 
-		function predicate () {
+		var predicate = function () {
 			predicateCallCount++;
 			return false;
-		}
+		};
 
 		$('#view').html('<p>a</p><p>b</p><p>c</p>');
 
@@ -63,10 +63,10 @@ asynctest('browser.tinymce.core.noname', [
 	suite.test('downUntil', function () {
 		var caretPosition, result, predicateCallCount = 0;
 
-		function predicate () {
+		var predicate = function () {
 			predicateCallCount++;
 			return false;
-		}
+		};
 
 		$('#view').html('<p>a</p><p>b</p><p>c</p>');
 

@@ -1,4 +1,4 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.DimensionsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
 	"tinymce.util.Arr",
@@ -9,14 +9,22 @@ asynctest('browser.tinymce.core.noname', [
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	function setupHtml (html) {
+	var getRoot = function () {
+		var view = document.getElementById('view');
+		if (!view) {
+			view = document.createElement('div');
+			view.id = 'view';
+			document.body.appendChild(view);
+		}
+		return view;
+	};
+
+	var setupHtml = function (html) {
 		var viewElm;
-
-		viewElm = document.getElementById('view');
+		viewElm = getRoot();
 		viewElm.innerHTML = html;
-
 		return viewElm;
-	}
+	};
 
 	suite.test('getClientRects', function () {
 		var viewElm = setupHtml('abc<span>123</span>');
