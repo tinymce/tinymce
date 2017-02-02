@@ -19,21 +19,23 @@ define("tinymce.core.Register", [
 	/*eslint consistent-this: 0 */
 	var context = this || window;
 
-	var tinymce = function() {
-		return context.tinymce;
+	var exposeToModuleLoaders = function (tinymce) {
+		if (typeof context.define === "function") {
+			// Bolt
+			if (!context.define.amd) {
+				context.define("ephox/tinymce", [], function () {
+					return tinymce;
+				});
+			}
+		}
+
+		if (typeof module === 'object') {
+			/* global module */
+			module.exports = tinymce;
+		}
 	};
 
-	if (typeof context.define === "function") {
-		// Bolt
-		if (!context.define.amd) {
-			context.define("ephox/tinymce", [], tinymce);
-		}
-	}
-
-	if (typeof module === 'object') {
-		/* global module */
-		module.exports = window.tinymce;
-	}
-
-	return {};
+	return {
+		exposeToModuleLoaders: exposeToModuleLoaders
+	};
 });

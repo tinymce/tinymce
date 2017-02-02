@@ -3,7 +3,7 @@ asynctest('browser.AutoCompleteTest', [
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyActions',
 	'ephox.mcagar.api.TinyDom',
-	'tinymce.inlite.test.Toolbar',
+	'tinymce.themes.inlite.test.Toolbar',
 	'tinymce.themes.inlite.Theme',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Chain',

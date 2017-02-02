@@ -4,6 +4,6 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.core.test', '../../src/test/js/module', mapper.hierarchical),
-    source('amd', 'ephox', '../../../../../node_modules/@ephox', mapper.repo('js', mapper.flat))
+    source('amd', 'ephox', '../../../../node_modules/@ephox', mapper.repo('js', mapper.flat))
   ]
 });

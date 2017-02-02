@@ -1,4 +1,4 @@
-define('tinymce.inlite.test.Toolbar', [
+define('tinymce.themes.inlite.test.Toolbar', [
 	'ephox.mcagar.api.TinyDom',
 	'ephox.agar.api.Chain',
 	'ephox.agar.api.UiFinder',
