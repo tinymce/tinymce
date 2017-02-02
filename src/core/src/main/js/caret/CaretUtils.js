@@ -15,9 +15,9 @@
  * @class tinymce.core.caret.CaretUtils
  */
 define("tinymce.core.caret.CaretUtils", [
-	"tinymce.util.Fun",
-	"tinymce.dom.TreeWalker",
-	"tinymce.dom.NodeType",
+	"tinymce.core.util.Fun",
+	"tinymce.core.dom.TreeWalker",
+	"tinymce.core.dom.NodeType",
 	"tinymce.core.caret.CaretPosition",
 	"tinymce.core.caret.CaretContainer",
 	"tinymce.core.caret.CaretCandidate"

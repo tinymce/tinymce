@@ -16,8 +16,8 @@
  * @class tinymce.core.caret.CaretContainer
  */
 define("tinymce.core.caret.CaretContainer", [
-	"tinymce.dom.NodeType",
-	"tinymce.text.Zwsp"
+	"tinymce.core.dom.NodeType",
+	"tinymce.core.text.Zwsp"
 ], function(NodeType, Zwsp) {
 	var isElement = NodeType.isElement,
 		isText = NodeType.isText;

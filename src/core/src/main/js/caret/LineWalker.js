@@ -16,14 +16,14 @@
  * @class tinymce.core.caret.LineWalker
  */
 define("tinymce.core.caret.LineWalker", [
-	"tinymce.util.Fun",
-	"tinymce.util.Arr",
-	"tinymce.dom.Dimensions",
+	"tinymce.core.util.Fun",
+	"tinymce.core.util.Arr",
+	"tinymce.core.dom.Dimensions",
 	"tinymce.core.caret.CaretCandidate",
 	"tinymce.core.caret.CaretUtils",
 	"tinymce.core.caret.CaretWalker",
 	"tinymce.core.caret.CaretPosition",
-	"tinymce.geom.ClientRect"
+	"tinymce.core.geom.ClientRect"
 ], function(Fun, Arr, Dimensions, CaretCandidate, CaretUtils, CaretWalker, CaretPosition, ClientRect) {
 	var curry = Fun.curry;
 

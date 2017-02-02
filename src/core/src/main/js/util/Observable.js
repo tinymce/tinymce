@@ -11,7 +11,7 @@
 /**
  * This mixin will add event binding logic to classes.
  *
- * @mixin tinymce.util.Observable
+ * @mixin tinymce.core.util.Observable
  */
 define("tinymce.core.util.Observable", [
 	"tinymce.core.util.EventDispatcher"

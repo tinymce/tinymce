@@ -9,14 +9,15 @@
  */
 
 define('tinymce.modern.Theme', [
-	'global!tinymce.Env',
-	'global!tinymce.EditorManager',
-	'global!tinymce.ThemeManager',
-	'tinymce.modern.modes.Iframe',
-	'tinymce.modern.modes.Inline',
-	'tinymce.modern.ui.Resize',
-	'tinymce.modern.ui.ProgressState'
-], function (Env, EditorManager, ThemeManager, Iframe, Inline, Resize, ProgressState) {
+    'tinymce.core.AddOnManager',
+    'tinymce.core.EditorManager',
+    'tinymce.core.Env',
+    'tinymce.modern.modes.Iframe',
+    'tinymce.modern.modes.Inline',
+    'tinymce.modern.ui.ProgressState',
+    'tinymce.modern.ui.Resize'
+  ], function (AddOnManager, EditorManager, Env, Iframe, Inline, ProgressState, Resize) {
+		var ThemeManager = AddOnManager.ThemeManager;
 	var renderUI = function(editor, theme, args) {
 		var settings = editor.settings;
 		var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;

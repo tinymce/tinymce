@@ -101,7 +101,7 @@ define("tinymce.core.EditorManager", [
 		 * Dom query instance.
 		 *
 		 * @property $
-		 * @type tinymce.dom.DomQuery
+		 * @type tinymce.core.dom.DomQuery
 		 */
 		$: $,
 
@@ -234,7 +234,7 @@ define("tinymce.core.EditorManager", [
 			 * Absolute baseURI for the installation path of TinyMCE.
 			 *
 			 * @property baseURI
-			 * @type tinymce.util.URI
+			 * @type tinymce.core.util.URI
 			 */
 			self.baseURI = new URI(self.baseURL);
 
@@ -282,7 +282,7 @@ define("tinymce.core.EditorManager", [
 		 *
 		 * @method init
 		 * @param {Object} settings Settings object to be passed to each editor instance.
-		 * @return {tinymce.util.Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
+		 * @return {tinymce.core.util.Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
 		 * @example
 		 * // Initializes a editor using the longer method
 		 * tinymce.EditorManager.init({

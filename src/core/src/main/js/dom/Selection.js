@@ -36,10 +36,10 @@ define("tinymce.core.dom.Selection", [
 	 *
 	 * @constructor
 	 * @method Selection
-	 * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
+	 * @param {tinymce.core.dom.DOMUtils} dom DOMUtils object reference.
 	 * @param {Window} win Window to bind the selection object to.
 	 * @param {tinymce.Editor} editor Editor instance of the selection.
-	 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
+	 * @param {tinymce.core.dom.Serializer} serializer DOM serialization class to use for getContent.
 	 */
 	function Selection(dom, win, serializer, editor) {
 		var self = this;

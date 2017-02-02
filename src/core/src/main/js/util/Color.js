@@ -13,8 +13,8 @@
  *
  * @class tinymce.core.util.Color
  * @example
- * var white = new tinymce.util.Color({r: 255, g: 255, b: 255});
- * var red = new tinymce.util.Color('#FF0000');
+ * var white = new tinymce.core.util.Color({r: 255, g: 255, b: 255});
+ * var red = new tinymce.core.util.Color('#FF0000');
  *
  * console.log(white.toHex(), red.toHsv());
  */
@@ -185,7 +185,7 @@ define("tinymce.core.util.Color", [], function() {
 		 *
 		 * @method parse
 		 * @param {Object/String} value Color value to parse.
-		 * @return {tinymce.util.Color} Current color instance.
+		 * @return {tinymce.core.util.Color} Current color instance.
 		 */
 		function parse(value) {
 			var matches;

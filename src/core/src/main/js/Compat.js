@@ -27,8 +27,8 @@ define("tinymce.core.Compat", [
 	var tinymce = window.tinymce;
 
 	/**
-	 * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.
-	 * @property {tinymce.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.
+	 * @property {tinymce.core.dom.DOMUtils} DOM Global DOM instance.
+	 * @property {tinymce.core.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.
 	 * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance.
 	 * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance.
 	 */
@@ -37,8 +37,8 @@ define("tinymce.core.Compat", [
 	tinymce.PluginManager = AddOnManager.PluginManager;
 	tinymce.ThemeManager = AddOnManager.ThemeManager;
 
-	tinymce.dom = tinymce.dom || {};
-	tinymce.dom.Event = EventUtils.Event;
+	tinymce.core.dom.= tinymce.core.dom.|| {};
+	tinymce.core.dom.Event = EventUtils.Event;
 
 	Tools.each(
 		'trim isArray is toArray makeMap each map grep inArray extend create walk createNS resolve explode _addCacheSuffix'.split(' '),

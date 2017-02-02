@@ -29,7 +29,7 @@ define("tinymce.core.dom.BookmarkManager", [
 	 *
 	 * @constructor
 	 * @method BookmarkManager
-	 * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
+	 * @param {tinymce.core.dom.Selection} selection Selection instance to handle bookmarks for.
 	 */
 	function BookmarkManager(selection) {
 		var dom = selection.dom;

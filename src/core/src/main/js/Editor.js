@@ -200,7 +200,7 @@ define("tinymce.core.Editor", [
 		 * URI object to document configured for the TinyMCE instance.
 		 *
 		 * @property documentBaseURI
-		 * @type tinymce.util.URI
+		 * @type tinymce.core.util.URI
 		 * @example
 		 * // Get relative URL from the location of document_base_url
 		 * tinymce.activeEditor.documentBaseURI.toRelative('/somedir/somefile.htm');
@@ -216,7 +216,7 @@ define("tinymce.core.Editor", [
 		 * URI object to current document that holds the TinyMCE editor instance.
 		 *
 		 * @property baseURI
-		 * @type tinymce.util.URI
+		 * @type tinymce.core.util.URI
 		 * @example
 		 * // Get relative URL from the location of the API
 		 * tinymce.activeEditor.baseURI.toRelative('/somedir/somefile.htm');
@@ -267,7 +267,7 @@ define("tinymce.core.Editor", [
 		 * Dom query instance with default scope to the editor document and default element is the body of the editor.
 		 *
 		 * @property $
-		 * @type tinymce.dom.DomQuery
+		 * @type tinymce.core.dom.DomQuery
 		 * @example
 		 * tinymce.activeEditor.$('p').css('color', 'red');
 		 * tinymce.activeEditor.$().append('<p>new</p>');
@@ -818,7 +818,7 @@ define("tinymce.core.Editor", [
 			 * DOM instance for the editor.
 			 *
 			 * @property dom
-			 * @type tinymce.dom.DOMUtils
+			 * @type tinymce.core.dom.DOMUtils
 			 * @example
 			 * // Adds a class to all paragraphs within the editor
 			 * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
@@ -921,7 +921,7 @@ define("tinymce.core.Editor", [
 			 * DOM serializer for the editor. Will be used when contents is extracted from the editor.
 			 *
 			 * @property serializer
-			 * @type tinymce.dom.Serializer
+			 * @type tinymce.core.dom.Serializer
 			 * @example
 			 * // Serializes the first paragraph in the editor into a string
 			 * tinymce.activeEditor.serializer.serialize(tinymce.activeEditor.dom.select('p')[0]);
@@ -932,7 +932,7 @@ define("tinymce.core.Editor", [
 			 * Selection instance for the editor.
 			 *
 			 * @property selection
-			 * @type tinymce.dom.Selection
+			 * @type tinymce.core.dom.Selection
 			 * @example
 			 * // Sets some contents to the current selection in the editor
 			 * tinymce.activeEditor.selection.setContent('Some contents');
@@ -2213,7 +2213,7 @@ define("tinymce.core.Editor", [
 		 *
 		 * @method uploadImages
 		 * @param {function} callback Optional callback with images and status for each image.
-		 * @return {tinymce.util.Promise} Promise instance.
+		 * @return {tinymce.core.util.Promise} Promise instance.
 		 */
 		uploadImages: function(callback) {
 			return this.editorUpload.uploadImages(callback);

@@ -20,12 +20,12 @@
  * tinymce.ScriptLoader.load('somescript.js');
  *
  * // Load a script using a unique instance of the script loader
- * var scriptLoader = new tinymce.dom.ScriptLoader();
+ * var scriptLoader = new tinymce.core.dom.ScriptLoader();
  *
  * scriptLoader.load('somescript.js');
  *
  * // Load multiple scripts
- * var scriptLoader = new tinymce.dom.ScriptLoader();
+ * var scriptLoader = new tinymce.core.dom.ScriptLoader();
  *
  * scriptLoader.add('somescript1.js');
  * scriptLoader.add('somescript2.js');

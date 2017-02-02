@@ -9,18 +9,19 @@
  */
 
 define('tinymce.modern.modes.Inline', [
-	'global!tinymce.util.Tools',
-	'global!tinymce.ui.Factory',
-	'global!tinymce.DOM',
-	'global!tinymce.ui.FloatPanel',
+	'tinymce.core.util.Tools',
+	'tinymce.core.ui.Factory',
+	'tinymce.core.dom.DOMUtils',
+	'tinymce.core.ui.FloatPanel',
 	'tinymce.modern.ui.Toolbar',
 	'tinymce.modern.ui.Menubar',
 	'tinymce.modern.ui.ContextToolbars',
 	'tinymce.modern.ui.A11y',
 	'tinymce.modern.ui.SkinLoaded'
-], function (Tools, Factory, DOM, FloatPanel, Toolbar, Menubar, ContextToolbars, A11y, SkinLoaded) {
+], function (Tools, Factory, DOMUtils, FloatPanel, Toolbar, Menubar, ContextToolbars, A11y, SkinLoaded) {
 	var render = function (editor, theme, args) {
 		var panel, inlineToolbarContainer, settings = editor.settings;
+		var DOM = DOMUtils.DOM;
 
 		if (settings.fixed_toolbar_container) {
 			inlineToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];
