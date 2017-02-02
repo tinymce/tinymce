@@ -520,19 +520,21 @@ define("tinymce/dom/DomQuery", [
 				} else {
 					elm = self[0];
 
-					hook = cssHooks[name];
-					if (hook && hook.get) {
-						return hook.get(elm);
-					}
-
-					if (elm.ownerDocument.defaultView) {
-						try {
-							return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
-						} catch (ex) {
-							return undef;
+					if (elm != undefined) {
+						hook = cssHooks[name];
+						if (hook && hook.get) {
+							return hook.get(elm);
 						}
-					} else if (elm.currentStyle) {
-						return elm.currentStyle[camel(name)];
+
+						if (elm.ownerDocument.defaultView) {
+							try {
+								return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
+							} catch (ex) {
+								return undef;
+							}
+						} else if (elm.currentStyle) {
+							return elm.currentStyle[camel(name)];
+						}
 					}
 				}
 			}
