@@ -1,8 +1,14 @@
-ModuleLoader.require([
-	"tinymce/caret/CaretContainer",
-	"tinymce/text/Zwsp",
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce.caret.CaretContainer",
+	"tinymce.text.Zwsp",
 	"tinymce/Env"
-], function(CaretContainer, Zwsp, Env) {
+], function(LegacyUnit, Pipeline, CaretContainer, Zwsp, Env) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
+
 	module("tinymce.dom.Selection", {
 		setupModule: function() {
 			QUnit.stop();
@@ -26,7 +32,7 @@ ModuleLoader.require([
 		}
 	});
 
-	test('getContent', function() {
+	suite.test('getContent', function() {
 		var rng, eventObj;
 
 		// Get selected contents
@@ -35,7 +41,7 @@ ModuleLoader.require([
 		rng.setStart(editor.getBody(), 0);
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
-		equal(editor.selection.getContent(), '<p>text</p>', 'Get selected contents');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>text</p>', 'Get selected contents');
 
 		// Get selected contents (collapsed)
 		editor.setContent('<p>text</p>');
@@ -43,7 +49,7 @@ ModuleLoader.require([
 		rng.setStart(editor.getBody(), 0);
 		rng.setEnd(editor.getBody(), 0);
 		editor.selection.setRng(rng);
-		equal(editor.selection.getContent(), '', 'Get selected contents (collapsed)');
+		LegacyUnit.equal(editor.selection.getContent(), '', 'Get selected contents (collapsed)');
 
 		// Get selected contents, onGetContent event
 		eventObj = {};
@@ -59,11 +65,11 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
 		editor.selection.getContent();
-		equal(eventObj.content, '<p>text</p>', 'Get selected contents, onGetContent event');
+		LegacyUnit.equal(eventObj.content, '<p>text</p>', 'Get selected contents, onGetContent event');
 		editor.off('GetContent', handler);
 	});
 
-	test('setContent', function() {
+	suite.test('setContent', function() {
 		var rng, eventObj;
 
 		// Set contents at selection
@@ -73,7 +79,7 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
 		editor.selection.setContent('<div>test</div>');
-		equal(editor.getContent(), '<div>test</div>', 'Set contents at selection');
+		LegacyUnit.equal(editor.getContent(), '<div>test</div>', 'Set contents at selection');
 
 		// Set contents at selection (collapsed)
 		editor.setContent('<p>text</p>');
@@ -82,7 +88,7 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody(), 0);
 		editor.selection.setRng(rng);
 		editor.selection.setContent('<div>test</div>');
-		equal(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
+		LegacyUnit.equal(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
 
 		// Insert in middle of paragraph
 		editor.setContent('<p>beforeafter</p>');
@@ -91,21 +97,21 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().firstChild.firstChild, 'before'.length);
 		editor.selection.setRng(rng);
 		editor.selection.setContent('<br />');
-		equal(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
+		LegacyUnit.equal(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
 
 		// Check the caret is left in the correct position.
 		rng = editor.selection.getRng(true);
 		if (document.createRange) {
-			equal(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
-			equal(rng.startOffset, 2, 'Selection start offset');
-			equal(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
-			equal(rng.endOffset, 2, 'Selection end offset');
+			LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
+			LegacyUnit.equal(rng.startOffset, 2, 'Selection start offset');
+			LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
+			LegacyUnit.equal(rng.endOffset, 2, 'Selection end offset');
 		} else {
 			// TridentSelection resolves indexed text nodes
-			equal(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
-			equal(rng.startOffset, 0, 'Selection start offset');
-			equal(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
-			equal(rng.endOffset, 0, 'Selection end offset');
+			LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
+			LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
+			LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
+			LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
 		}
 
 		editor.setContent('<p>text</p>');
@@ -114,19 +120,19 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody(), 0);
 		editor.selection.setRng(rng);
 		editor.selection.setContent('');
-		equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
+		LegacyUnit.equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
 		rng = editor.selection.getRng(true);
 		if (!document.createRange) {
 			// The old IE selection can only be positioned in text nodes
-			equal(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
-			equal(rng.startOffset, 0, 'Selection start offset');
-			equal(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
-			equal(rng.endOffset, 0, 'Selection end offset');
+			LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
+			LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
+			LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
+			LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
 		} else {
-			equal(rng.startContainer, editor.getBody(), 'Selection start container');
-			equal(rng.startOffset, 0, 'Selection start offset');
-			equal(rng.endContainer, editor.getBody(), 'Selection end container');
-			equal(rng.endOffset, 0, 'Selection end offset');
+			LegacyUnit.equal(rng.startContainer, editor.getBody(), 'Selection start container');
+			LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
+			LegacyUnit.equal(rng.endContainer, editor.getBody(), 'Selection end container');
+			LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
 		}
 
 		// Set selected contents, onSetContent event
@@ -143,11 +149,11 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
 		editor.selection.setContent('<div>text</div>');
-		equal(eventObj.content, '<div>text</div>', 'Set selected contents, onSetContent event');
+		LegacyUnit.equal(eventObj.content, '<div>text</div>', 'Set selected contents, onSetContent event');
 		editor.off('SetContent', handler);
 	});
 
-	test('getStart/getEnd', function() {
+	suite.test('getStart/getEnd', function() {
 		var rng;
 
 		// Selected contents
@@ -156,8 +162,8 @@ ModuleLoader.require([
 		rng.setStart(editor.getBody().firstChild.firstChild, 0);
 		rng.setEnd(editor.getBody().lastChild.firstChild, 0);
 		editor.selection.setRng(rng);
-		equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart)');
-		equal(editor.selection.getEnd().id, 'b', 'Selected contents (getEnd)');
+		LegacyUnit.equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart)');
+		LegacyUnit.equal(editor.selection.getEnd().id, 'b', 'Selected contents (getEnd)');
 
 		// Selected contents (collapsed)
 		editor.setContent('<p id="a">text</p>\n<p id="b">text</p>');
@@ -165,11 +171,11 @@ ModuleLoader.require([
 		rng.setStart(editor.getBody().firstChild.firstChild, 0);
 		rng.setEnd(editor.getBody().firstChild.firstChild, 0);
 		editor.selection.setRng(rng);
-		equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart, collapsed)');
-		equal(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
+		LegacyUnit.equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart, collapsed)');
+		LegacyUnit.equal(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
 	});
 
-	test('getBookmark/setBookmark (persistent)', function() {
+	suite.test('getBookmark/setBookmark (persistent)', function() {
 		var rng, bookmark;
 
 		// Get persistent bookmark simple text selection
@@ -179,9 +185,9 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark();
-		equal(editor.getContent(), 'text', 'Editor contents (text)');
+		LegacyUnit.equal(editor.getContent(), 'text', 'Editor contents (text)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+		LegacyUnit.equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 		// Get persistent bookmark multiple elements text selection
 		editor.setContent('<p>text</p>\n<p>text</p>');
@@ -190,12 +196,12 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark();
-		equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
+		LegacyUnit.equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 	});
 
-	test('getBookmark/setBookmark (simple)', function() {
+	suite.test('getBookmark/setBookmark (simple)', function() {
 		var rng, bookmark;
 
 		// Get persistent bookmark simple text selection
@@ -205,9 +211,9 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(1);
-		equal(editor.getContent(), 'text', 'Editor contents (text)');
+		LegacyUnit.equal(editor.getContent(), 'text', 'Editor contents (text)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+		LegacyUnit.equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 		// Get persistent bookmark multiple elements text selection
 		editor.setContent('<p>text</p>\n<p>text</p>');
@@ -216,15 +222,13 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(1);
-		equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
+		LegacyUnit.equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - simple text selection', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - simple text selection', function() {
 		var rng, bookmark;
-
-		expect(2);
 
 		editor.setContent('text');
 		rng = editor.dom.createRng();
@@ -232,15 +236,13 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(2);
-		equal(editor.getContent(), 'text', 'Editor contents (text)');
+		LegacyUnit.equal(editor.getContent(), 'text', 'Editor contents (text)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+		LegacyUnit.equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function() {
 		var rng, bookmark;
-
-		expect(1);
 
 		// Get non intrusive bookmark simple element selection
 		editor.setContent('<p>text<em>a<strong>b</strong>c</em></p>');
@@ -250,13 +252,11 @@ ModuleLoader.require([
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(2);
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
+		LegacyUnit.equal(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function() {
 		var rng, bookmark;
-
-		expect(2);
 
 		// Get non intrusive bookmark multiple elements text selection
 		editor.setContent('<p>text</p>\n<p>text</p>');
@@ -265,15 +265,13 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(2);
-		equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
+		LegacyUnit.equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 	});
 
-	test('getBookmark/setBookmark (nonintrusive)', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive)', function() {
 		var rng, bookmark;
-
-		expect(2);
 
 		// Get non intrusive bookmark multiple elements text selection fragmented
 		editor.setContent('<p>text</p><p>text</p>');
@@ -286,15 +284,13 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(2);
-		equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
+		LegacyUnit.equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function() {
 		var rng, bookmark;
-
-		expect(2);
 
 		// Get non intrusive bookmark multiple elements text selection fragmented
 		editor.setContent('<p>text</p><p>text</p>');
@@ -308,15 +304,13 @@ ModuleLoader.require([
 		editor.selection.setRng(rng);
 		bookmark = editor.selection.getBookmark(2, true);
 		editor.setContent(editor.getContent());
-		equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
+		LegacyUnit.equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('<p><img src="about:blank" /></p>');
 		rng = editor.dom.createRng();
@@ -327,16 +321,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().firstChild);
-		equal(rng.startOffset, 0);
-		equal(rng.endContainer, editor.getBody().firstChild);
-		equal(rng.endOffset, 0);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.startOffset, 0);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.endOffset, 0);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('<p><img src="about:blank" /></p>');
 		rng = editor.dom.createRng();
@@ -347,16 +339,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().firstChild);
-		equal(rng.startOffset, 0);
-		equal(rng.endContainer, editor.getBody().firstChild);
-		equal(rng.endOffset, 1);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.startOffset, 0);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.endOffset, 1);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('<p><img src="about:blank" /></p>');
 		rng = editor.dom.createRng();
@@ -367,16 +357,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().firstChild);
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer, editor.getBody().firstChild);
-		equal(rng.endOffset, 1);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.startOffset, 1);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.endOffset, 1);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('abc<b>123</b>');
 		rng = editor.dom.createRng();
@@ -387,16 +375,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().firstChild);
-		equal(rng.startOffset, 0);
-		equal(rng.endContainer, editor.getBody().firstChild);
-		equal(rng.endOffset, 2);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.startOffset, 0);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		// Get bookmark after element
 		editor.setContent('<b>123</b>abc');
@@ -408,16 +394,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().lastChild);
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer, editor.getBody().lastChild);
-		equal(rng.endOffset, 2);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().lastChild);
+		LegacyUnit.equal(rng.startOffset, 1);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().lastChild);
+		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('abc<b>123</b>abc');
 		rng = editor.dom.createRng();
@@ -428,16 +412,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().childNodes[1].firstChild);
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer, editor.getBody().childNodes[1].firstChild);
-		equal(rng.endOffset, 2);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().childNodes[1].firstChild);
+		LegacyUnit.equal(rng.startOffset, 1);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().childNodes[1].firstChild);
+		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('abc');
 		rng = editor.dom.createRng();
@@ -448,16 +430,14 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.getBody().firstChild);
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer, editor.getBody().firstChild);
-		equal(rng.endOffset, 2);
+		LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.startOffset, 1);
+		LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function() {
 		var rng, bookmark;
-
-		expect(4);
 
 		editor.setContent('<p>abc</p>123<p>123</p><p>123<b>123</b><table><tr><td>abc</td></tr></table></p>');
 		editor.execCommand('SelectAll');
@@ -466,13 +446,13 @@ ModuleLoader.require([
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer, editor.dom.select('td')[0].firstChild);
-		equal(rng.startOffset, 1);
-		equal(rng.endContainer, editor.dom.select('td')[0].firstChild);
-		equal(rng.endOffset, 2);
+		LegacyUnit.equal(rng.startContainer, editor.dom.select('td')[0].firstChild);
+		LegacyUnit.equal(rng.startOffset, 1);
+		LegacyUnit.equal(rng.endContainer, editor.dom.select('td')[0].firstChild);
+		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	test('getBookmark/setBookmark on cE=false', function() {
+	suite.test('getBookmark/setBookmark on cE=false', function() {
 		var bookmark;
 
 		editor.setContent('text<span contentEditable="false">1</span>');
@@ -480,10 +460,10 @@ ModuleLoader.require([
 		bookmark = editor.selection.getBookmark(2);
 		editor.setContent('text<span contentEditable="false">1</span>');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getNode(), editor.$('span')[0]);
+		LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
 	});
 
-	test('getBookmark/setBookmark before cE=false', function() {
+	suite.test('getBookmark/setBookmark before cE=false', function() {
 		var rng, bookmark;
 
 		editor.setContent('<p><input><span contentEditable="false">1</span></p>');
@@ -495,10 +475,10 @@ ModuleLoader.require([
 		bookmark = editor.selection.getBookmark(2);
 		editor.setContent('<p><input><span contentEditable="false">1</span></p>');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getNode(), editor.$('span')[0]);
+		LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
 	});
 
-	test('getBookmark/setBookmark before cE=false block', function() {
+	suite.test('getBookmark/setBookmark before cE=false block', function() {
 		var rng, bookmark;
 
 		editor.setContent('<p contentEditable="false">1</p>');
@@ -510,44 +490,44 @@ ModuleLoader.require([
 		bookmark = editor.selection.getBookmark(2);
 		editor.setContent('<p contentEditable="false">1</p>');
 		editor.selection.moveToBookmark(bookmark);
-		equal(editor.selection.getNode(), editor.$('p')[0]);
+		LegacyUnit.equal(editor.selection.getNode(), editor.$('p')[0]);
 	});
 
-	test('select empty TD', function() {
+	suite.test('select empty TD', function() {
 		editor.getBody().innerHTML = '<table><tr><td><br></td></tr></table>';
 		editor.selection.select(editor.dom.select('td')[0], true);
-		equal(editor.selection.getRng(true).startContainer.nodeName, 'TD');
+		LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'TD');
 	});
 
-	test('select first p', 2, function() {
+	suite.test('select first p', 2, function() {
 		editor.setContent('<p>text1</p><p>text2</p>');
 		editor.selection.select(editor.dom.select('p')[0]);
-		equal(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
-		equal(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
+		LegacyUnit.equal(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
+		LegacyUnit.equal(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
 	});
 
-	test('select table', 2, function() {
+	suite.test('select table', 2, function() {
 		editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
 		editor.selection.select(editor.dom.select('table')[0]);
-		equal(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
-		equal(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
+		LegacyUnit.equal(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
+		LegacyUnit.equal(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
 	});
 
-	test('select table text 1', 2, function() {
+	suite.test('select table text 1', 2, function() {
 		editor.setContent('<table><tbody><tr><td id="a">text1</td><td id="b">text2</td></tr></tbody></table>');
 		editor.selection.select(editor.dom.select('table')[0], true);
-		equal(editor.selection.getStart().id, 'a', 'Expand to text content 1 (start)');
-		equal(editor.selection.getEnd().id, 'b', 'Expand to text content 1 (end)');
+		LegacyUnit.equal(editor.selection.getStart().id, 'a', 'Expand to text content 1 (start)');
+		LegacyUnit.equal(editor.selection.getEnd().id, 'b', 'Expand to text content 1 (end)');
 	});
 
-	test('select table text 2', 2, function() {
+	suite.test('select table text 2', 2, function() {
 		editor.setContent('<table><tbody><tr><td id="a"><br /></td><td id="b"><br /></td></tr></tbody></table>');
 		editor.selection.select(editor.dom.select('table')[0], true);
-		equal(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
-		equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
+		LegacyUnit.equal(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
+		LegacyUnit.equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
 	});
 
-	test('getNode', function() {
+	suite.test('getNode', function() {
 		var rng;
 
 		editor.setContent('<p id="p1"><span id="s1">span1</span> word <span id="s2">span2</span> word <span id="s3">span3</span></p>');
@@ -555,28 +535,28 @@ ModuleLoader.require([
 		rng.setStart(editor.dom.get('s1').firstChild, 0);
 		rng.setEnd(editor.dom.get('s1').nextSibling, 0);
 		editor.selection.setRng(rng);
-		deepEqual(editor.selection.getNode(), editor.dom.get('s1'), 'Detect selection ends immediately after node at start of paragraph.');
+		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('s1'), 'Detect selection ends immediately after node at start of paragraph.');
 
 		rng = editor.dom.createRng();
 		rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
 		rng.setEnd(editor.dom.get('s2').nextSibling, 0);
 		editor.selection.setRng(rng);
-		deepEqual(editor.selection.getNode(), editor.dom.get('s2'), 'Detect selection immediately surrounds node in middle of paragraph.');
+		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('s2'), 'Detect selection immediately surrounds node in middle of paragraph.');
 
 		rng = editor.dom.createRng();
 		rng.setStart(editor.dom.get('s3').previousSibling, editor.dom.get('s3').previousSibling.length);
 		rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
 		editor.selection.setRng(rng);
-		deepEqual(editor.selection.getNode(), editor.dom.get('s3'), 'Detect selection starts immediately before node at end of paragraph.');
+		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('s3'), 'Detect selection starts immediately before node at end of paragraph.');
 
 		rng = editor.dom.createRng();
 		rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
 		rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
 		editor.selection.setRng(rng);
-		deepEqual(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
+		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
 	});
 
-	test('normalize to text node from document', function() {
+	suite.test('normalize to text node from document', function() {
 		var rng;
 
 		if (tinymce.isOpera || tinymce.isIE) {
@@ -592,13 +572,13 @@ ModuleLoader.require([
 		editor.selection.normalize();
 
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer.nodeType, 3, 'startContainer node type');
-		equal(rng.startOffset, 0, 'startContainer offset');
-		equal(rng.endContainer.nodeType, 3, 'endContainer node type');
-		equal(rng.endOffset, 0, 'endOffset offset');
+		LegacyUnit.equal(rng.startContainer.nodeType, 3, 'startContainer node type');
+		LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+		LegacyUnit.equal(rng.endContainer.nodeType, 3, 'endContainer node type');
+		LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 	});
 
-	test('normalize to br from document', function() {
+	suite.test('normalize to br from document', function() {
 		var rng;
 
 		if (tinymce.isOpera || tinymce.isIE) {
@@ -614,16 +594,16 @@ ModuleLoader.require([
 		editor.selection.normalize();
 
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-		equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-		equal(rng.startOffset, 0, 'startContainer offset');
-		equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-		equal(rng.endOffset, 0, 'endOffset offset');
+		LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+		LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+		LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+		LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+		LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 	});
 
 	// Only run on browser with W3C DOM Range support
 	if (tinymce.Env.range) {
-		test('normalize with contentEditable:false element', function() {
+		suite.test('normalize with contentEditable:false element', function() {
 			var rng;
 
 			editor.setContent('<p>a<b contentEditable="false">b</b>c</p>');
@@ -634,19 +614,19 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.collapsed, true);
-			equal(CaretContainer.isCaretContainer(rng.startContainer), true);
+			LegacyUnit.equal(rng.collapsed, true);
+			LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 		});
 
-		test('normalize with contentEditable:false parent and contentEditable:true child element', function() {
+		suite.test('normalize with contentEditable:false parent and contentEditable:true child element', function() {
 			editor.setContent('<p contentEditable="false">a<em contentEditable="true">b</em></p>');
 			Utils.setSelection('em', 0);
 			editor.selection.normalize();
 
 			var rng = editor.selection.getRng(true);
-			equal(rng.collapsed, true);
-			equal(rng.startContainer.nodeType, 3);
-			equal(rng.startContainer.data, 'b');
+			LegacyUnit.equal(rng.collapsed, true);
+			LegacyUnit.equal(rng.startContainer.nodeType, 3);
+			LegacyUnit.equal(rng.startContainer.data, 'b');
 
 			// WebKit is in some state state here, so lets restore it
 			rng.setStart(editor.getBody(), 0);
@@ -654,7 +634,7 @@ ModuleLoader.require([
 			editor.selection.setRng(rng);
 		});
 
-		test('normalize with contentEditable:true parent and contentEditable:false child element', function() {
+		suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function() {
 			editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
 			Utils.setSelection('em', 0);
 			editor.selection.normalize();
@@ -665,16 +645,16 @@ ModuleLoader.require([
 				// IE automatically normalizes
 				ok(rng.startContainer.parentNode.contentEditable != 'false');
 			} else {
-				equal(CaretContainer.isCaretContainer(rng.startContainer), true);
+				LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 			}
 
 			// Excluding assert on IE since it's a minor issue
 			if (tinymce.ie) {
-				equal(rng.startOffset, 1);
+				LegacyUnit.equal(rng.startOffset, 1);
 			}
 		});
 
-		test('normalize to text node from body', function() {
+		suite.test('normalize to text node from body', function() {
 			var rng;
 
 			editor.setContent('<p>text</p>');
@@ -685,13 +665,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeType, 3, 'startContainer node type');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeType, 3, 'endContainer node type');
-			equal(rng.endOffset, 0, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeType, 3, 'startContainer node type');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeType, 3, 'endContainer node type');
+			LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
-		test('normalize to br from body', function() {
+		suite.test('normalize to br from body', function() {
 			var rng;
 
 			editor.setContent('<p><br /></p>');
@@ -702,14 +682,14 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-			equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-			equal(rng.endOffset, 0, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+			LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+			LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
-		test('normalize ignore img', function() {
+		suite.test('normalize ignore img', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<img src="about:blank " />';
@@ -720,15 +700,15 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
-			equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
-			equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-			equal(rng.endOffset, 1, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
+			LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
+			LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		test('normalize to before/after img', function() {
+		suite.test('normalize to before/after img', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
@@ -739,15 +719,15 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-			equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-			equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-			equal(rng.endOffset, 1, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+			LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+			LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		test('normalize to text node inside P', function() {
+		suite.test('normalize to text node inside P', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>abc</p>';
@@ -758,13 +738,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
-			equal(rng.endOffset, 3, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+			LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
 		});
 
-		test('normalize lean left if at the start of text node', function() {
+		suite.test('normalize lean left if at the start of text node', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
@@ -772,15 +752,15 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-			equal(rng.startContainer.parentNode.nodeName, 'B');
-			equal(rng.startOffset, 1, 'startContainer offset');
-			equal(rng.endContainer.nodeName, '#text');
-			equal(rng.endContainer.parentNode.nodeName, 'B');
-			equal(rng.endOffset, 1, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+			LegacyUnit.equal(rng.startContainer.parentNode.nodeName, 'B');
+			LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+			LegacyUnit.equal(rng.endContainer.parentNode.nodeName, 'B');
+			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		test('normalize lean start to the right if at end of text node', function() {
+		suite.test('normalize lean start to the right if at end of text node', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
@@ -788,15 +768,15 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-			equal(rng.startContainer.parentNode.nodeName, 'I');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeName, '#text');
-			equal(rng.endContainer.parentNode.nodeName, 'I');
-			equal(rng.endOffset, 1, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+			LegacyUnit.equal(rng.startContainer.parentNode.nodeName, 'I');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+			LegacyUnit.equal(rng.endContainer.parentNode.nodeName, 'I');
+			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		test('normalize lean left but break before br', function() {
+		suite.test('normalize lean left but break before br', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a<br><b>b</b></p>';
@@ -804,11 +784,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeValue, 'b');
-			equal(rng.startOffset, 0);
+			LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		test('normalize lean left but break before img', function() {
+		suite.test('normalize lean left but break before img', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a<img><b>b</b></p>';
@@ -816,11 +796,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeValue, 'b');
-			equal(rng.startOffset, 0);
+			LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		test('normalize lean left but don\'t walk out the parent block', function() {
+		suite.test('normalize lean left but don\'t walk out the parent block', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a</p><p><b>b</b></p>';
@@ -828,11 +808,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeValue, 'b');
-			equal(rng.startOffset, 0);
+			LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		test('normalize lean left into empty inline elements when caret is before br', function() {
+		suite.test('normalize lean left into empty inline elements when caret is before br', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
@@ -843,11 +823,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'B');
-			equal(rng.startOffset, 0);
+			LegacyUnit.equal(rng.startContainer.nodeName, 'B');
+			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		test('normalize lean left from br into formatter caret container', function() {
+		suite.test('normalize lean left from br into formatter caret container', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
@@ -858,11 +838,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeType, 3);
-			equal(rng.startOffset, 1);
+			LegacyUnit.equal(rng.startContainer.nodeType, 3);
+			LegacyUnit.equal(rng.startOffset, 1);
 		});
 
-		test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function() {
+		suite.test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
@@ -873,11 +853,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P');
-			equal(rng.startOffset, 2);
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+			LegacyUnit.equal(rng.startOffset, 2);
 		});
 
-		test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function() {
+		suite.test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
@@ -888,11 +868,11 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P');
-			equal(rng.startOffset, 1);
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+			LegacyUnit.equal(rng.startOffset, 1);
 		});
 
-		test('normalize don\'t move start/end if it\'s before/after table', function() {
+		suite.test('normalize don\'t move start/end if it\'s before/after table', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
@@ -903,13 +883,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'BODY');
-			equal(rng.startOffset, 0);
-			equal(rng.endContainer.nodeName, 'BODY');
-			equal(rng.endOffset, 1);
+			LegacyUnit.equal(rng.startContainer.nodeName, 'BODY');
+			LegacyUnit.equal(rng.startOffset, 0);
+			LegacyUnit.equal(rng.endContainer.nodeName, 'BODY');
+			LegacyUnit.equal(rng.endOffset, 1);
 		});
 
-		test('normalize after paragraph', function() {
+		suite.test('normalize after paragraph', function() {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a</p>';
@@ -920,13 +900,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, '#text');
-			equal(rng.startOffset, 1);
-			equal(rng.endContainer.nodeName, '#text');
-			equal(rng.endOffset, 1);
+			LegacyUnit.equal(rng.startContainer.nodeName, '#text');
+			LegacyUnit.equal(rng.startOffset, 1);
+			LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+			LegacyUnit.equal(rng.endOffset, 1);
 		});
 
-		test('normalize caret after trailing BR', function() {
+		suite.test('normalize caret after trailing BR', function() {
 			var rng;
 
 			editor.setContent('<p>a<br /></p>');
@@ -937,13 +917,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-			equal(rng.startOffset, 1, 'startContainer offset');
-			equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
-			equal(rng.endOffset, 1, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+			LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		test('normalize caret after bogus block BR', function() {
+		suite.test('normalize caret after bogus block BR', function() {
 			var rng;
 
 			editor.setContent('<p><br /></p>');
@@ -954,13 +934,13 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-			equal(rng.startOffset, 0, 'startContainer offset');
-			equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-			equal(rng.endOffset, 0, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+			LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+			LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
-		test('normalize after table should not move', function() {
+		suite.test('normalize after table should not move', function() {
 			var rng;
 
 			if (tinymce.isOpera || tinymce.isIE) {
@@ -976,12 +956,12 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.endContainer, editor.getBody());
-			equal(rng.endOffset, 1);
+			LegacyUnit.equal(rng.endContainer, editor.getBody());
+			LegacyUnit.equal(rng.endOffset, 1);
 		});
 
 	/*
-		test('normalize caret after last BR in block', function() {
+		suite.test('normalize caret after last BR in block', function() {
 			var rng;
 
 			editor.setContent('<p><br /><br /></p>');
@@ -992,14 +972,14 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-			equal(rng.startOffset, 1, 'startContainer offset');
-			equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-			equal(rng.endOffset, 1, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+			LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 	*/
 
-		test('normalize caret after double BR', function() {
+		suite.test('normalize caret after double BR', function() {
 			var rng;
 
 			editor.setContent('<p>a<br /><br /></p>');
@@ -1010,14 +990,14 @@ ModuleLoader.require([
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
-			equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-			equal(rng.startOffset, 3, 'startContainer offset');
-			equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-			equal(rng.endOffset, 3, 'endOffset offset');
+			LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+			LegacyUnit.equal(rng.startOffset, 3, 'startContainer offset');
+			LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+			LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
 		});
 	}
 
-	test('custom elements', function() {
+	suite.test('custom elements', function() {
 		var rng;
 
 		editor.setContent('<custom1>test</custom1><custom2>test</custom2>');
@@ -1027,10 +1007,10 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody(), 2);
 		editor.selection.setRng(rng);
 
-		equal(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
+		LegacyUnit.equal(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
 	});
 
-	test('selectorChanged', function() {
+	suite.test('selectorChanged', function() {
 		var newState, newArgs;
 
 		editor.selection.selectorChanged('a[href]', function(state, args) {
@@ -1043,19 +1023,19 @@ ModuleLoader.require([
 		editor.nodeChanged();
 
 		ok(newState);
-		equal(newArgs.selector, 'a[href]');
-		equal(newArgs.node, editor.getBody().firstChild.firstChild);
-		equal(newArgs.parents.length, 2);
+		LegacyUnit.equal(newArgs.selector, 'a[href]');
+		LegacyUnit.equal(newArgs.node, editor.getBody().firstChild.firstChild);
+		LegacyUnit.equal(newArgs.parents.length, 2);
 
 		editor.getBody().innerHTML = '<p>text</p>';
 		Utils.setSelection('p', 0, 'p', 4);
 		editor.nodeChanged();
-		equal(newArgs.selector, 'a[href]');
-		equal(newArgs.node, editor.getBody().firstChild);
-		equal(newArgs.parents.length, 1);
+		LegacyUnit.equal(newArgs.selector, 'a[href]');
+		LegacyUnit.equal(newArgs.node, editor.getBody().firstChild);
+		LegacyUnit.equal(newArgs.parents.length, 1);
 	});
 
-	test('setRng', function() {
+	suite.test('setRng', function() {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>x</p>');
@@ -1066,13 +1046,13 @@ ModuleLoader.require([
 		editor.selection.setRng(null);
 
 		rng = editor.selection.getRng(true);
-		equal(rng.startContainer.nodeName, '#text');
-		equal(rng.startOffset, 0);
-		equal(rng.endContainer.nodeName, '#text');
-		equal(rng.endOffset, 1);
+		LegacyUnit.equal(rng.startContainer.nodeName, '#text');
+		LegacyUnit.equal(rng.startOffset, 0);
+		LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+		LegacyUnit.equal(rng.endOffset, 1);
 	});
 
-	test('getRng should return null if win.document is not defined or null', function() {
+	suite.test('getRng should return null if win.document is not defined or null', function() {
 		var win = editor.selection.win,
 			rng = editor.dom.createRng();
 
@@ -1086,11 +1066,11 @@ ModuleLoader.require([
 
 		editor.selection.win = {};
 		rng = editor.selection.getRng(true);
-		equal(rng, null);
+		LegacyUnit.equal(rng, null);
 
 		editor.selection.win = {document:null};
 		rng = editor.selection.getRng(true);
-		equal(rng, null);
+		LegacyUnit.equal(rng, null);
 
 		editor.selection.win = win;
 	});

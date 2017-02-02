@@ -1,5 +1,11 @@
-ModuleLoader.require(['tinymce/undo/Fragments'], function(Fragments) {
-	module('tinymce.undo.Fragments');
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	'tinymce.undo.Fragments'
+], function (LegacyUnit, Pipeline, Fragments) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	var div = function (html) {
 		var div = document.createElement('div');
@@ -11,22 +17,26 @@ ModuleLoader.require(['tinymce/undo/Fragments'], function(Fragments) {
 		return elm.innerHTML;
 	};
 
-	test('read', function() {
-		deepEqual(Fragments.read(div('')), []);
-		deepEqual(Fragments.read(div('a')), ['a']);
-		deepEqual(Fragments.read(div('<!--a-->')), ['<!--a-->']);
-		deepEqual(Fragments.read(div('<b>a</b>')), ['<b>a</b>']);
-		deepEqual(Fragments.read(div('a<!--b--><b>c</b>')), ['a', '<!--b-->', '<b>c</b>']);
+	suite.test('read', function () {
+		LegacyUnit.deepEqual(Fragments.read(div('')), []);
+		LegacyUnit.deepEqual(Fragments.read(div('a')), ['a']);
+		LegacyUnit.deepEqual(Fragments.read(div('<!--a-->')), ['<!--a-->']);
+		LegacyUnit.deepEqual(Fragments.read(div('<b>a</b>')), ['<b>a</b>']);
+		LegacyUnit.deepEqual(Fragments.read(div('a<!--b--><b>c</b>')), ['a', '<!--b-->', '<b>c</b>']);
 	});
 
-	test('write', function() {
-		deepEqual(html(Fragments.write([], div(''))), '');
-		deepEqual(html(Fragments.write([], div('a'))), '');
-		deepEqual(html(Fragments.write(['a'], div(''))), 'a');
-		deepEqual(html(Fragments.write(['a'], div('a'))), 'a');
-		deepEqual(html(Fragments.write(['a'], div('b'))), 'a');
-		deepEqual(html(Fragments.write(['a', '<b>c</b>'], div('a<b>b</b>'))), 'a<b>c</b>');
-		deepEqual(html(Fragments.write(['<b>c</b>', '<b>d</b>'], div('a<b>b</b>'))), '<b>c</b><b>d</b>');
-		deepEqual(html(Fragments.write(['<b>c</b>', '<b>d</b>', '<!--e-->'], div('a<b>b</b>'))), '<b>c</b><b>d</b><!--e-->');
+	suite.test('write', function () {
+		LegacyUnit.deepEqual(html(Fragments.write([], div(''))), '');
+		LegacyUnit.deepEqual(html(Fragments.write([], div('a'))), '');
+		LegacyUnit.deepEqual(html(Fragments.write(['a'], div(''))), 'a');
+		LegacyUnit.deepEqual(html(Fragments.write(['a'], div('a'))), 'a');
+		LegacyUnit.deepEqual(html(Fragments.write(['a'], div('b'))), 'a');
+		LegacyUnit.deepEqual(html(Fragments.write(['a', '<b>c</b>'], div('a<b>b</b>'))), 'a<b>c</b>');
+		LegacyUnit.deepEqual(html(Fragments.write(['<b>c</b>', '<b>d</b>'], div('a<b>b</b>'))), '<b>c</b><b>d</b>');
+		LegacyUnit.deepEqual(html(Fragments.write(['<b>c</b>', '<b>d</b>', '<!--e-->'], div('a<b>b</b>'))), '<b>c</b><b>d</b><!--e-->');
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

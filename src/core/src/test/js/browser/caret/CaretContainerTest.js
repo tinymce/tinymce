@@ -1,16 +1,21 @@
-ModuleLoader.require([
-	"tinymce/Env",
-	"tinymce/caret/CaretContainer",
-	"tinymce/dom/DomQuery",
-	"tinymce/text/Zwsp"
-], function(Env, CaretContainer, $, Zwsp) {
-	module("tinymce.caret.CaretContainer");
+asynctest('browser.tinymce.core.CaretContainerTest', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	'tinymce.core.Env',
+	'tinymce.core.caret.CaretContainer',
+	'tinymce.core.dom.DomQuery',
+	'tinymce.core.text.Zwsp',
+	'global!document'
+], function (LegacyUnit, Pipeline, Env, CaretContainer, $, Zwsp, document) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
-	function setViewHtml(html) {
+	var setViewHtml = function (html) {
 		var child, rootElm = getRoot();
 
 		// IE leaves zwsp in the dom on innerHTML
@@ -19,119 +24,129 @@ ModuleLoader.require([
 		}
 
 		rootElm.innerHTML = html;
-	}
+	};
 
-	function getRoot() {
-		return document.getElementById('view');
-	}
+	var getRoot = function () {
+		var view = document.getElementById('view');
+		if (!view) {
+			view = document.createElement('div');
+			view.id = 'view';
+			document.body.appendChild(view);
+		}
+		return view;
+	};
 
-	test('isCaretContainer', function() {
-		equal(CaretContainer.isCaretContainer(document.createTextNode('text')), false);
-		equal(CaretContainer.isCaretContainer($('<span></span>')[0]), false);
-		equal(CaretContainer.isCaretContainer($('<span data-mce-caret="1"></span>')[0]), true);
-		equal(CaretContainer.isCaretContainer($('<span data-mce-caret="1">x</span>')[0].firstChild), true);
-		equal(CaretContainer.isCaretContainer(document.createTextNode(Zwsp.ZWSP)), true);
+	suite.test('isCaretContainer', function () {
+		LegacyUnit.equal(CaretContainer.isCaretContainer(document.createTextNode('text')), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainer($('<span></span>')[0]), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainer($('<span data-mce-caret="1"></span>')[0]), true);
+		LegacyUnit.equal(CaretContainer.isCaretContainer($('<span data-mce-caret="1">x</span>')[0].firstChild), true);
+		LegacyUnit.equal(CaretContainer.isCaretContainer(document.createTextNode(Zwsp.ZWSP)), true);
 	});
 
-	test('isCaretContainerBlock', function() {
-		equal(CaretContainer.isCaretContainerBlock(document.createTextNode('text')), false);
-		equal(CaretContainer.isCaretContainerBlock($('<span></span>')[0]), false);
-		equal(CaretContainer.isCaretContainerBlock($('<span data-mce-caret="1"></span>')[0]), true);
-		equal(CaretContainer.isCaretContainerBlock($('<span data-mce-caret="1">a</span>')[0].firstChild), true);
-		equal(CaretContainer.isCaretContainerBlock(document.createTextNode(Zwsp.ZWSP)), false);
+	suite.test('isCaretContainerBlock', function () {
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock(document.createTextNode('text')), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock($('<span></span>')[0]), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock($('<span data-mce-caret="1"></span>')[0]), true);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock($('<span data-mce-caret="1">a</span>')[0].firstChild), true);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock(document.createTextNode(Zwsp.ZWSP)), false);
 	});
 
-	test('isCaretContainerInline', function() {
-		equal(CaretContainer.isCaretContainerInline(document.createTextNode('text')), false);
-		equal(CaretContainer.isCaretContainerInline($('<span></span>')[0]), false);
-		equal(CaretContainer.isCaretContainerInline($('<span data-mce-caret="1"></span>')[0]), false);
-		equal(CaretContainer.isCaretContainerInline($('<span data-mce-caret="1">a</span>')[0].firstChild), false);
-		equal(CaretContainer.isCaretContainerInline(document.createTextNode(Zwsp.ZWSP)), true);
+	suite.test('isCaretContainerInline', function () {
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(document.createTextNode('text')), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline($('<span></span>')[0]), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline($('<span data-mce-caret="1"></span>')[0]), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline($('<span data-mce-caret="1">a</span>')[0].firstChild), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(document.createTextNode(Zwsp.ZWSP)), true);
 	});
 
-	test('insertInline before element', function() {
+	suite.test('insertInline before element', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
-		equal(CaretContainer.insertInline(getRoot().firstChild, true), getRoot().firstChild);
-		equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
+		LegacyUnit.equal(CaretContainer.insertInline(getRoot().firstChild, true), getRoot().firstChild);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
 	});
 
-	test('insertInline after element', function() {
+	suite.test('insertInline after element', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
-		equal(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().lastChild);
-		equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), true);
+		LegacyUnit.equal(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().lastChild);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), true);
 	});
 
-	test('insertInline between elements', function() {
+	suite.test('insertInline between elements', function () {
 		setViewHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
-		equal(CaretContainer.insertBlock('p', getRoot().lastChild, true), getRoot().childNodes[1]);
-		equal(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), true);
+		LegacyUnit.equal(CaretContainer.insertBlock('p', getRoot().lastChild, true), getRoot().childNodes[1]);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), true);
 	});
 
-	test('insertInline before element with ZWSP', function() {
+	suite.test('insertInline before element with ZWSP', function () {
 		setViewHtml('abc' + Zwsp.ZWSP + '<span contentEditable="false">1</span>');
-		equal(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
-		equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
-		equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
+		LegacyUnit.equal(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
 	});
 
-	test('insertInline after element with ZWSP', function() {
+	suite.test('insertInline after element with ZWSP', function () {
 		setViewHtml('<span contentEditable="false">1</span>' + Zwsp.ZWSP + 'abc');
-		equal(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().childNodes[1]);
-		equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), false);
-		equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
+		LegacyUnit.equal(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().childNodes[1]);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
 	});
 
-	test('insertBlock before element', function() {
+	suite.test('insertBlock before element', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
-		equal(CaretContainer.insertBlock('p', getRoot().firstChild, true), getRoot().firstChild);
-		equal(CaretContainer.isCaretContainerBlock(getRoot().firstChild), true);
+		LegacyUnit.equal(CaretContainer.insertBlock('p', getRoot().firstChild, true), getRoot().firstChild);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().firstChild), true);
 	});
 
-	test('insertBlock after element', function() {
+	suite.test('insertBlock after element', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
-		equal(CaretContainer.insertBlock('p', getRoot().firstChild, false), getRoot().lastChild);
-		equal(CaretContainer.isCaretContainerBlock(getRoot().lastChild), true);
+		LegacyUnit.equal(CaretContainer.insertBlock('p', getRoot().firstChild, false), getRoot().lastChild);
+		LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().lastChild), true);
 	});
 
-	test('insertBlock between elements', function() {
+	suite.test('insertBlock between elements', function () {
 		setViewHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
-		equal(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
-		equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
+		LegacyUnit.equal(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
 	});
 
-	test('remove', function() {
+	suite.test('remove', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
 
 		CaretContainer.insertInline(getRoot().firstChild, true);
-		equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
 
 		CaretContainer.remove(getRoot().firstChild);
-		equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
+		LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
 	});
 
-	test('startsWithCaretContainer', function() {
+	suite.test('startsWithCaretContainer', function () {
 		setViewHtml(Zwsp.ZWSP + 'abc');
-		equal(CaretContainer.startsWithCaretContainer(getRoot().firstChild), true);
+		LegacyUnit.equal(CaretContainer.startsWithCaretContainer(getRoot().firstChild), true);
 	});
 
-	test('endsWithCaretContainer', function() {
+	suite.test('endsWithCaretContainer', function () {
 		setViewHtml('abc' + Zwsp.ZWSP);
-		equal(CaretContainer.endsWithCaretContainer(getRoot().firstChild), true);
+		LegacyUnit.equal(CaretContainer.endsWithCaretContainer(getRoot().firstChild), true);
 	});
 
-	test('hasContent', function() {
+	suite.test('hasContent', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
 		var caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
-		equal(CaretContainer.hasContent(caretContainerBlock), false);
+		LegacyUnit.equal(CaretContainer.hasContent(caretContainerBlock), false);
 		caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
-		equal(CaretContainer.hasContent(caretContainerBlock), true);
+		LegacyUnit.equal(CaretContainer.hasContent(caretContainerBlock), true);
 	});
 
-	test('showCaretContainerBlock', function() {
+	suite.test('showCaretContainerBlock', function () {
 		setViewHtml('<span contentEditable="false">1</span>');
 		var caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
 		caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
 		CaretContainer.showCaretContainerBlock(caretContainerBlock);
-		equal(caretContainerBlock.outerHTML, '<p>a</p>');
+		LegacyUnit.equal(caretContainerBlock.outerHTML, '<p>a</p>');
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

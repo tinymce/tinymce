@@ -1,4 +1,12 @@
-ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce/fmt/Preview"
+], function(LegacyUnit, Pipeline, Preview) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
+
     module("tinymce.fmt.Preview", {
         setupModule: function () {
             QUnit.stop();
@@ -244,4 +252,8 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
         ].join('')), 'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok');
 
     });
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

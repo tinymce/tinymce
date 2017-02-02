@@ -1,41 +1,49 @@
-ModuleLoader.require([
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
 	"tinymce/InsertList",
 	"tinymce/html/Node",
 	"tinymce/html/DomParser",
-	"tinymce/dom/DOMUtils"
-], function(InsertList, Node, DomParser, DOMUtils) {
-	module("tinymce.InsertList", {});
+	"tinymce.dom.DOMUtils"
+], function (LegacyUnit, Pipeline, InsertList, Node, DomParser, DOMUtils) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
-	var createFragment = function(html) {
+	var createFragment = function (html) {
 		var parser = new DomParser({validate: false});
 		var fragment = parser.parse(html);
 
 		return fragment;
 	};
 
-	var createDomFragment = function(html) {
+	var createDomFragment = function (html) {
 		return DOMUtils.DOM.createFragment(html);
 	};
 
-	test('isListFragment', function() {
-		equal(InsertList.isListFragment(createFragment('<ul><li>x</li></ul>')), true);
-		equal(InsertList.isListFragment(createFragment('<ol><li>x</li></ol>')), true);
-		equal(InsertList.isListFragment(createFragment('<meta><ul><li>x</li></ul>')), true);
-		equal(InsertList.isListFragment(createFragment('<ul><li>x</li></ul><span id="mce_marker"></span>')), true);
-		equal(InsertList.isListFragment(createFragment('<div></div>')), false);
+	suite.test('isListFragment', function () {
+		LegacyUnit.equal(InsertList.isListFragment(createFragment('<ul><li>x</li></ul>')), true);
+		LegacyUnit.equal(InsertList.isListFragment(createFragment('<ol><li>x</li></ol>')), true);
+		LegacyUnit.equal(InsertList.isListFragment(createFragment('<meta><ul><li>x</li></ul>')), true);
+		LegacyUnit.equal(InsertList.isListFragment(createFragment('<ul><li>x</li></ul><span id="mce_marker"></span>')), true);
+		LegacyUnit.equal(InsertList.isListFragment(createFragment('<div></div>')), false);
 	});
 
-	test('listItems', function() {
+	suite.test('listItems', function () {
 		var list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild;
 
-		equal(InsertList.listItems(list).length, 3);
-		equal(InsertList.listItems(list)[0].nodeName, 'LI');
+		LegacyUnit.equal(InsertList.listItems(list).length, 3);
+		LegacyUnit.equal(InsertList.listItems(list)[0].nodeName, 'LI');
 	});
 
-	test('trimListItems', function() {
+	suite.test('trimListItems', function () {
 		var list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild;
 
-		equal(InsertList.listItems(list).length, 3);
-		equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
+		LegacyUnit.equal(InsertList.listItems(list).length, 3);
+		LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

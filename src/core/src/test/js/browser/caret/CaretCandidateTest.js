@@ -1,63 +1,80 @@
-ModuleLoader.require([
-	"tinymce/Env",
-	"tinymce/caret/CaretCandidate",
-	"tinymce/dom/DomQuery",
-	"tinymce/text/Zwsp"
-], function(Env, CaretCandidate, $, Zwsp) {
-	module("tinymce.caret.CaretCandidate");
+asynctest('browser.tinymce.core.CaretCandidateTest', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	'tinymce.core.Env',
+	'tinymce.core.caret.CaretCandidate',
+	'tinymce.core.dom.DomQuery',
+	'tinymce.core.text.Zwsp',
+	'global!document'
+], function (LegacyUnit, Pipeline, Env, CaretCandidate, $, Zwsp, document) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
-	function getRoot() {
-		return document.getElementById('view');
-	}
+	var getRoot = function () {
+		var view = document.getElementById('view');
+		if (!view) {
+			view = document.createElement('div');
+			view.id = 'view';
+			document.body.appendChild(view);
+		}
+		return view;
+	};
 
-	function setupHtml(html) {
+	var setupHtml = function (html) {
 		getRoot().innerHTML = html;
-	}
+	};
 
-	test('isCaretCandidate', function() {
-		$.each("img input textarea hr table iframe video audio object".split(' '), function(index, name) {
-			equal(CaretCandidate.isCaretCandidate(document.createElement(name)), true);
+	suite.test('isCaretCandidate', function () {
+		$.each("img input textarea hr table iframe video audio object".split(' '), function (index, name) {
+			LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createElement(name)), true);
 		});
 
-		equal(CaretCandidate.isCaretCandidate(document.createTextNode('text')), true);
-		equal(CaretCandidate.isCaretCandidate($('<span contentEditable="false"></span>')[0]), true);
-		equal(CaretCandidate.isCaretCandidate($('<div contentEditable="false"></div>')[0]), true);
-		equal(CaretCandidate.isCaretCandidate($('<table><tr><td>X</td></tr></table>')[0]), true);
-		equal(CaretCandidate.isCaretCandidate($('<span contentEditable="true"></span>')[0]), false);
-		equal(CaretCandidate.isCaretCandidate($('<span></span>')[0]), false);
-		equal(CaretCandidate.isCaretCandidate(document.createComment('text')), false);
-		equal(CaretCandidate.isCaretCandidate($('<span data-mce-caret="1"></span>')[0]), false);
-		equal(CaretCandidate.isCaretCandidate(document.createTextNode(Zwsp.ZWSP)), false);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createTextNode('text')), true);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span contentEditable="false"></span>')[0]), true);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<div contentEditable="false"></div>')[0]), true);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<table><tr><td>X</td></tr></table>')[0]), true);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span contentEditable="true"></span>')[0]), false);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span></span>')[0]), false);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createComment('text')), false);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span data-mce-caret="1"></span>')[0]), false);
+		LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createTextNode(Zwsp.ZWSP)), false);
 	});
 
-	test('isInEditable', function() {
+	suite.test('isInEditable', function () {
 		setupHtml('abc<span contentEditable="true"><b><span contentEditable="false">X</span></b></span>');
-		equal(CaretCandidate.isInEditable($('span span', getRoot())[0].firstChild, getRoot()), false);
-		equal(CaretCandidate.isInEditable($('span span', getRoot())[0], getRoot()), true);
-		equal(CaretCandidate.isInEditable($('span', getRoot())[0], getRoot()), true);
-		equal(CaretCandidate.isInEditable(getRoot().firstChild, getRoot()), true);
+		LegacyUnit.equal(CaretCandidate.isInEditable($('span span', getRoot())[0].firstChild, getRoot()), false);
+		LegacyUnit.equal(CaretCandidate.isInEditable($('span span', getRoot())[0], getRoot()), true);
+		LegacyUnit.equal(CaretCandidate.isInEditable($('span', getRoot())[0], getRoot()), true);
+		LegacyUnit.equal(CaretCandidate.isInEditable(getRoot().firstChild, getRoot()), true);
 	});
 
-	test('isAtomic', function() {
-		$.each(["img", "input", "textarea", "hr"], function(index, name) {
-			equal(CaretCandidate.isAtomic(document.createElement(name)), true);
+	suite.test('isAtomic', function () {
+		$.each(["img", "input", "textarea", "hr"], function (index, name) {
+			LegacyUnit.equal(CaretCandidate.isAtomic(document.createElement(name)), true);
 		});
 
-		equal(CaretCandidate.isAtomic(document.createTextNode('text')), false);
-		equal(CaretCandidate.isAtomic($('<table><tr><td>X</td></tr></table>')[0]), false);
-		equal(CaretCandidate.isAtomic($('<span contentEditable="false">X</span>')[0]), true);
-		equal(CaretCandidate.isAtomic($('<span contentEditable="false">X<span contentEditable="true">Y</span>Z</span>')[0]), false);
+		LegacyUnit.equal(CaretCandidate.isAtomic(document.createTextNode('text')), false);
+		LegacyUnit.equal(CaretCandidate.isAtomic($('<table><tr><td>X</td></tr></table>')[0]), false);
+		LegacyUnit.equal(CaretCandidate.isAtomic($('<span contentEditable="false">X</span>')[0]), true);
+		LegacyUnit.equal(CaretCandidate.isAtomic(
+			$('<span contentEditable="false">X<span contentEditable="true">Y</span>Z</span>')[0]), false
+		);
 	});
 
-	test('isEditableCaretCandidate', function() {
+	suite.test('isEditableCaretCandidate', function () {
 		setupHtml('abc<b>xx</b><span contentEditable="false"><span contentEditable="false">X</span></span>');
-		equal(CaretCandidate.isEditableCaretCandidate(getRoot().firstChild, getRoot()), true);
-		equal(CaretCandidate.isEditableCaretCandidate($('b', getRoot())[0]), false);
-		equal(CaretCandidate.isEditableCaretCandidate($('span', getRoot())[0]), true);
-		equal(CaretCandidate.isEditableCaretCandidate($('span span', getRoot())[0]), false);
+		LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate(getRoot().firstChild, getRoot()), true);
+		LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate($('b', getRoot())[0]), false);
+		LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate($('span', getRoot())[0]), true);
+		LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate($('span span', getRoot())[0]), false);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

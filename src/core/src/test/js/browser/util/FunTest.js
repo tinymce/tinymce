@@ -1,49 +1,57 @@
-ModuleLoader.require([
-	"tinymce/util/Fun"
-], function(Fun) {
-	module("tinymce.util.Fun");
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce.util.Fun"
+], function (LegacyUnit, Pipeline, Fun) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
-	function isTrue(value) {
+	function isTrue (value) {
 		return value === true;
 	}
 
-	function isFalse(value) {
+	function isFalse (value) {
 		return value === true;
 	}
 
-	function isAbove(target, value) {
+	function isAbove (target, value) {
 		return value() > target();
 	}
 
-	test('constant', function() {
-		strictEqual(Fun.constant(1)(), 1);
-		strictEqual(Fun.constant("1")(), "1");
-		strictEqual(Fun.constant(null)(), null);
+	suite.test('constant', function () {
+		LegacyUnit.strictEqual(Fun.constant(1)(), 1);
+		LegacyUnit.strictEqual(Fun.constant("1")(), "1");
+		LegacyUnit.strictEqual(Fun.constant(null)(), null);
 	});
 
-	test('negate', function() {
-		strictEqual(Fun.negate(isTrue)(false), true);
-		strictEqual(Fun.negate(isFalse)(true), false);
+	suite.test('negate', function () {
+		LegacyUnit.strictEqual(Fun.negate(isTrue)(false), true);
+		LegacyUnit.strictEqual(Fun.negate(isFalse)(true), false);
 	});
 
-	test('and', function() {
+	suite.test('and', function () {
 		var isAbove5 = Fun.curry(isAbove, Fun.constant(5));
 		var isAbove10 = Fun.curry(isAbove, Fun.constant(10));
 
-		strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(10)), false);
-		strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(30)), true);
+		LegacyUnit.strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(10)), false);
+		LegacyUnit.strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(30)), true);
 	});
 
-	test('or', function() {
+	suite.test('or', function () {
 		var isAbove5 = Fun.curry(isAbove, Fun.constant(5));
 		var isAbove10 = Fun.curry(isAbove, Fun.constant(10));
 
-		strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(5)), false);
-		strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(15)), true);
-		strictEqual(Fun.or(isAbove5, isAbove10)(Fun.constant(15)), true);
+		LegacyUnit.strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(5)), false);
+		LegacyUnit.strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(15)), true);
+		LegacyUnit.strictEqual(Fun.or(isAbove5, isAbove10)(Fun.constant(15)), true);
 	});
 
-	test('compose', function() {
-		strictEqual(Fun.compose(Fun.curry(isAbove, Fun.constant(5)), Fun.constant)(10), true);
+	suite.test('compose', function () {
+		LegacyUnit.strictEqual(Fun.compose(Fun.curry(isAbove, Fun.constant(5)), Fun.constant)(10), true);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

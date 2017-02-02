@@ -1,8 +1,14 @@
-ModuleLoader.require([
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
 	"tinymce/InsertContent"
-], function(InsertContent) {
+], function (LegacyUnit, Pipeline, InsertContent) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
+
 	module("tinymce.InsertContentForcedRootFalse", {
-		setupModule: function() {
+		setupModule: function () {
 			QUnit.stop();
 
 			tinymce.init({
@@ -12,7 +18,7 @@ ModuleLoader.require([
 				skin: false,
 				entities: 'raw',
 				indent: false,
-				init_instance_callback: function(ed) {
+				init_instance_callback: function (ed) {
 					window.editor = ed;
 					QUnit.start();
 				},
@@ -21,20 +27,20 @@ ModuleLoader.require([
 		}
 	});
 
-	var trimBrs = function(string) {
+	var trimBrs = function (string) {
 		return string.replace(/<br>/g, '');
 	};
 
-	test('insertAtCaret - selected image with bogus div', function() {
+	suite.test('insertAtCaret - selected image with bogus div', function () {
 		editor.getBody().innerHTML = '<img src="about:blank" /><div data-mce-bogus="all">x</div>';
 		editor.focus();
 		// editor.selection.setCursorLocation(editor.getBody(), 0);
 		editor.selection.select(editor.dom.select('img')[0]);
 		InsertContent.insertAtCaret(editor, 'a');
-		equal(trimBrs(editor.getBody().innerHTML), 'a<div data-mce-bogus="all">x</div>');
+		LegacyUnit.equal(trimBrs(editor.getBody().innerHTML), 'a<div data-mce-bogus="all">x</div>');
 	});
 
-	test('insertAtCaret - selected text with bogus div', function() {
+	suite.test('insertAtCaret - selected text with bogus div', function () {
 		editor.getBody().innerHTML = 'a<div data-mce-bogus="all">x</div>';
 		editor.focus();
 		var rng = editor.dom.createRng();
@@ -42,6 +48,6 @@ ModuleLoader.require([
 		rng.setEnd(editor.getBody().firstChild, 1);
 		editor.selection.setRng(rng);
 		InsertContent.insertAtCaret(editor, 'b');
-		equal(trimBrs(editor.getBody().innerHTML), 'b<div data-mce-bogus="all">x</div>');
+		LegacyUnit.equal(trimBrs(editor.getBody().innerHTML), 'b<div data-mce-bogus="all">x</div>');
 	});
 });

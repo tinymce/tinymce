@@ -1,8 +1,14 @@
-ModuleLoader.require([
-	'tinymce/undo/Levels'
-], function(Levels) {
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	'tinymce.undo.Levels'
+], function (LegacyUnit, Pipeline, Levels) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
+
 	module('tinymce.undo.ForcedRootBlock', {
-		setupModule: function() {
+		setupModule: function () {
 			QUnit.stop();
 
 			tinymce.init({
@@ -13,7 +19,7 @@ ModuleLoader.require([
 				entities: 'raw',
 				indent: false,
 				forced_root_block: false,
-				init_instance_callback: function(ed) {
+				init_instance_callback: function (ed) {
 					window.editor = ed;
 					QUnit.start();
 				}
@@ -21,10 +27,10 @@ ModuleLoader.require([
 		}
 	});
 
-	test('createFromEditor forced_root_block: false', function() {
+	suite.test('createFromEditor forced_root_block: false', function () {
 		editor.getBody().innerHTML = '<strong>a</strong> <span>b</span>';
 
-		deepEqual(Levels.createFromEditor(editor), {
+		LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
 			'beforeBookmark': null,
 			'bookmark': null,
 			'content': '<strong>a</strong> <span>b</span>',
@@ -33,10 +39,10 @@ ModuleLoader.require([
 		});
 	});
 
-	test('createFromEditor forced_root_block: false', function() {
+	suite.test('createFromEditor forced_root_block: false', function () {
 		editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
 
-		deepEqual(Levels.createFromEditor(editor), {
+		LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
 			'beforeBookmark': null,
 			'bookmark': null,
 			'content': '',
@@ -51,4 +57,7 @@ ModuleLoader.require([
 		});
 	});
 
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

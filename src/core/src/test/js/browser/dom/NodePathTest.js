@@ -1,29 +1,44 @@
-ModuleLoader.require([
-	"tinymce/dom/NodePath"
-], function(NodePath) {
-	module("tinymce.dom.NodePath", {});
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce.dom.NodePath",
+	'global!document'
+], function (LegacyUnit, Pipeline, NodePath, document) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
-	function getRoot() {
+	function getRoot () {
 		return document.getElementById('view');
 	}
 
-	function setupHtml(html) {
+	function setupHtml (html) {
 		getRoot().innerHTML = html;
 	}
 
-	test("create", function() {
+	suite.test("create", function () {
 		setupHtml('<p>a<b>12<input></b></p>');
 
-		deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [0]);
-		deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [0, 0]);
-		deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [1, 1, 0]);
+		LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [0]);
+		LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [0, 0]);
+		LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [1, 1, 0]);
 	});
 
-	test("resolve", function() {
+	suite.test("resolve", function () {
 		setupHtml('<p>a<b>12<input></b></p>');
 
-		deepEqual(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
-		deepEqual(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.firstChild)), getRoot().firstChild.firstChild);
-		deepEqual(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild)), getRoot().firstChild.lastChild.lastChild);
+		LegacyUnit.deepEqual(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
+		LegacyUnit.deepEqual(
+			NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.firstChild)),
+			getRoot().firstChild.firstChild
+		);
+		LegacyUnit.deepEqual(
+			NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild)),
+			getRoot().firstChild.lastChild.lastChild
+		);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

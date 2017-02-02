@@ -1,7 +1,13 @@
-ModuleLoader.require([
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
 	"tinymce/file/Conversions",
 	"tinymce/Env"
-], function(Conversions, Env) {
+], function (LegacyUnit, Pipeline, Conversions, Env) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
+
 	var testBlobDataUri;
 
 	if (!tinymce.Env.fileApi) {
@@ -9,7 +15,7 @@ ModuleLoader.require([
 	}
 
 	module("tinymce.EditorUpload", {
-		setupModule: function() {
+		setupModule: function () {
 			QUnit.stop();
 
 			tinymce.init({
@@ -20,7 +26,7 @@ ModuleLoader.require([
 				entities: 'raw',
 				indent: false,
 				automatic_uploads: false,
-				init_instance_callback: function(ed) {
+				init_instance_callback: function (ed) {
 					var canvas, context;
 
 					window.editor = ed;
@@ -41,14 +47,14 @@ ModuleLoader.require([
 
 					testBlobDataUri = canvas.toDataURL();
 
-					Conversions.uriToBlob(testBlobDataUri).then(function() {
+					Conversions.uriToBlob(testBlobDataUri).then(function () {
 						QUnit.start();
 					});
 				}
 			});
 		},
 
-		teardown: function() {
+		teardown: function () {
 			editor.editorUpload.destroy();
 			editor.settings.automatic_uploads = false;
 			delete editor.settings.images_replace_blob_uris;
@@ -56,11 +62,11 @@ ModuleLoader.require([
 		}
 	});
 
-	function imageHtml(uri) {
+	function imageHtml (uri) {
 		return tinymce.DOM.createHTML('img', {src: uri});
 	}
 
-	function assertResult(uploadedBlobInfo, result) {
+	function assertResult (uploadedBlobInfo, result) {
 		QUnit.strictEqual(result.length, 1);
 		QUnit.strictEqual(result[0].status, true);
 		QUnit.ok(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1);
@@ -69,14 +75,14 @@ ModuleLoader.require([
 		return result;
 	}
 
-	function hasBlobAsSource(elm) {
+	function hasBlobAsSource (elm) {
 		return elm.src.indexOf('blob:') === 0;
 	}
 
-	asyncTest('_scanForImages', function() {
+	asyncTest('_scanForImages', function () {
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor._scanForImages().then(function(result) {
+		editor._scanForImages().then(function (result) {
 			var blobInfo = result[0].blobInfo;
 
 			QUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
@@ -86,17 +92,17 @@ ModuleLoader.require([
 		}).then(QUnit.start);
 	});
 
-	asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function() {
+	asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function () {
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			success('file.png');
 		};
 
-		editor._scanForImages().then(function(result) {
+		editor._scanForImages().then(function (result) {
 			var blobUri = result[0].blobInfo.blobUri();
 
-			editor.uploadImages(function() {
+			editor.uploadImages(function () {
 				editor.setContent(imageHtml(blobUri));
 				QUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), false);
 				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
@@ -105,18 +111,18 @@ ModuleLoader.require([
 		});
 	});
 
-	asyncTest('don\'t replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained', function() {
+	asyncTest('don\'t replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained', function () {
 		editor.settings.images_replace_blob_uris = false;
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			success('file.png');
 		};
 
-		editor._scanForImages().then(function(result) {
+		editor._scanForImages().then(function (result) {
 			var blobUri = result[0].blobInfo.blobUri();
 
-			editor.uploadImages(function() {
+			editor.uploadImages(function () {
 				editor.setContent(imageHtml(blobUri));
 				QUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), true);
 				QUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
@@ -125,42 +131,42 @@ ModuleLoader.require([
 		});
 	});
 
-	asyncTest('uploadImages (callback)', function() {
+	asyncTest('uploadImages (callback)', function () {
 		var uploadedBlobInfo;
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadedBlobInfo = data;
 			success(data.id() + '.png');
 		};
 
-		editor.uploadImages(function(result) {
+		editor.uploadImages(function (result) {
 			assertResult(uploadedBlobInfo, result);
 
-			editor.uploadImages(function(result) {
+			editor.uploadImages(function (result) {
 				QUnit.strictEqual(result.length, 0);
 				QUnit.start();
 			});
 		});
 	});
 
-	asyncTest('uploadImages (promise)', function() {
+	asyncTest('uploadImages (promise)', function () {
 		var uploadedBlobInfo;
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadedBlobInfo = data;
 			success(data.id() + '.png');
 		};
 
-		editor.uploadImages().then(function(result) {
+		editor.uploadImages().then(function (result) {
 			assertResult(uploadedBlobInfo, result);
-		}).then(function() {
+		}).then(function () {
 			uploadedBlobInfo = null;
 
-			return editor.uploadImages().then(function(result) {
+			return editor.uploadImages().then(function (result) {
 				QUnit.strictEqual(result.length, 0);
 				QUnit.strictEqual(uploadedBlobInfo, null);
 				QUnit.start();
@@ -168,10 +174,10 @@ ModuleLoader.require([
 		});
 	});
 
-	asyncTest('uploadImages retain blob urls after upload', function() {
+	asyncTest('uploadImages retain blob urls after upload', function () {
 		var uploadedBlobInfo;
 
-		function assertResult(result) {
+		function assertResult (result) {
 			QUnit.strictEqual(result[0].status, true);
 			QUnit.ok(hasBlobAsSource(result[0].element), 'Not a blob url');
 			QUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
@@ -182,43 +188,43 @@ ModuleLoader.require([
 		editor.setContent(imageHtml(testBlobDataUri));
 
 		editor.settings.images_replace_blob_uris = false;
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadedBlobInfo = data;
 			success(data.id() + '.png');
 		};
 
-		editor.uploadImages(assertResult).then(assertResult).then(function() {
+		editor.uploadImages(assertResult).then(assertResult).then(function () {
 			uploadedBlobInfo = null;
 
-			return editor.uploadImages(function() {}).then(function(result) {
+			return editor.uploadImages(function () {}).then(function (result) {
 				QUnit.strictEqual(result.length, 0);
 				QUnit.strictEqual(uploadedBlobInfo, null);
 			});
 		}).then(QUnit.start);
 	});
 
-	asyncTest('uploadConcurrentImages', function() {
+	asyncTest('uploadConcurrentImages', function () {
 		var uploadCount = 0, callCount = 0;
 
-		function done(result) {
+		function done (result) {
 			callCount++;
 
 			if (callCount == 2) {
 				QUnit.start();
-				equal(uploadCount, 1, 'Should only be one upload.');
+				LegacyUnit.equal(uploadCount, 1, 'Should only be one upload.');
 			}
 
-			equal(editor.getContent(), '<p><img src="myimage.png" /></p>');
-			equal(result[0].element, editor.$('img')[0]);
-			equal(result[0].status, true);
+			LegacyUnit.equal(editor.getContent(), '<p><img src="myimage.png" /></p>');
+			LegacyUnit.equal(result[0].element, editor.$('img')[0]);
+			LegacyUnit.equal(result[0].status, true);
 		}
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadCount++;
 
-			setTimeout(function() {
+			setTimeout(function () {
 				success('myimage.png');
 			}, 0);
 		};
@@ -227,10 +233,10 @@ ModuleLoader.require([
 		editor.uploadImages(done);
 	});
 
-	asyncTest('uploadConcurrentImages (fail)', function() {
+	asyncTest('uploadConcurrentImages (fail)', function () {
 		var uploadCount = 0, callCount = 0;
 
-		function done(result) {
+		function done (result) {
 			callCount++;
 
 			if (callCount == 2) {
@@ -239,16 +245,16 @@ ModuleLoader.require([
 				ok(uploadCount >= 1, 'Should at least be one.');
 			}
 
-			equal(result[0].element, editor.$('img')[0]);
-			equal(result[0].status, false);
+			LegacyUnit.equal(result[0].element, editor.$('img')[0]);
+			LegacyUnit.equal(result[0].status, false);
 		}
 
 		editor.setContent(imageHtml(testBlobDataUri));
 
-		editor.settings.images_upload_handler = function(data, success, failure) {
+		editor.settings.images_upload_handler = function (data, success, failure) {
 			uploadCount++;
 
-			setTimeout(function() {
+			setTimeout(function () {
 				failure('Error');
 			}, 0);
 		};
@@ -257,17 +263,17 @@ ModuleLoader.require([
 		editor.uploadImages(done);
 	});
 
-	asyncTest('Don\'t upload transparent image', function() {
+	asyncTest('Don\'t upload transparent image', function () {
 		var uploadCount = 0;
 
-		function done() {
+		function done () {
 			QUnit.start();
-			equal(uploadCount, 0, 'Should not upload.');
+			LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
 		}
 
 		editor.setContent(imageHtml(Env.transparentSrc));
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadCount++;
 			success('url');
 		};
@@ -275,17 +281,17 @@ ModuleLoader.require([
 		editor.uploadImages(done);
 	});
 
-	asyncTest('Don\'t upload bogus image', function() {
+	asyncTest('Don\'t upload bogus image', function () {
 		var uploadCount = 0;
 
-		function done() {
+		function done () {
 			QUnit.start();
-			equal(uploadCount, 0, 'Should not upload.');
+			LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
 		}
 
 		editor.getBody().innerHTML = '<img src="' + testBlobDataUri + '" data-mce-bogus="1">';
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadCount++;
 			success('url');
 		};
@@ -293,23 +299,23 @@ ModuleLoader.require([
 		editor.uploadImages(done);
 	});
 
-	asyncTest('Don\'t upload filtered image', function() {
+	asyncTest('Don\'t upload filtered image', function () {
 		var uploadCount = 0;
 
-		function done() {
+		function done () {
 			QUnit.start();
-			equal(uploadCount, 0, 'Should not upload.');
+			LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
 		}
 
 		editor.getBody().innerHTML = (
 			'<img src="' + testBlobDataUri + '" data-skip="1">'
 		);
 
-		editor.settings.images_dataimg_filter = function(img) {
+		editor.settings.images_dataimg_filter = function (img) {
 			return !img.hasAttribute('data-skip');
 		};
 
-		editor.settings.images_upload_handler = function(data, success) {
+		editor.settings.images_upload_handler = function (data, success) {
 			uploadCount++;
 			success('url');
 		};
@@ -317,7 +323,7 @@ ModuleLoader.require([
 		editor.uploadImages(done);
 	});
 
-	test('Retain blobs not in blob cache', function() {
+	suite.test('Retain blobs not in blob cache', function () {
 		editor.getBody().innerHTML = '<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">';
 		QUnit.equal('<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', editor.getContent());
 	});

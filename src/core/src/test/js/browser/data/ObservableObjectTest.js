@@ -1,21 +1,27 @@
-ModuleLoader.require(["tinymce/data/ObservableObject"], function(ObservableObject) {
-	module("tinymce.data.ObservableObject");
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce.data.ObservableObject"
+], function (LegacyUnit, Pipeline, ObservableObject) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
-	test("Constructor", function(assert) {
+	suite.test("Constructor", function () {
 		var obj;
 
 		obj = new ObservableObject();
-		assert.ok(!obj.has('a'));
+		LegacyUnit.strictEqual(!obj.has('a'), true);
 
 		obj = new ObservableObject({a: 1, b: 2});
-		assert.strictEqual(obj.get('a'), 1);
-		assert.strictEqual(obj.get('b'), 2);
+		LegacyUnit.strictEqual(obj.get('a'), 1);
+		LegacyUnit.strictEqual(obj.get('b'), 2);
 	});
 
-	test("set/get and observe all", function(assert) {
+	suite.test("set/get and observe all", function () {
 		var obj = new ObservableObject(), events = [];
 
-		obj.on('change', function(e) {
+		obj.on('change', function (e) {
 			events.push(e);
 		});
 
@@ -23,29 +29,33 @@ ModuleLoader.require(["tinymce/data/ObservableObject"], function(ObservableObjec
 		obj.set('a', 'a2');
 		obj.set('a', 'a3');
 		obj.set('b', 'b');
-		assert.strictEqual(obj.get('a'), 'a3');
+		LegacyUnit.strictEqual(obj.get('a'), 'a3');
 
-		equal(events[0].type, 'change');
-		equal(events[0].value, 'a');
-		equal(events[1].type, 'change');
-		equal(events[1].value, 'a2');
-		equal(events[2].type, 'change');
-		equal(events[2].value, 'a3');
-		equal(events[3].type, 'change');
-		equal(events[3].value, 'b');
+		LegacyUnit.equal(events[0].type, 'change');
+		LegacyUnit.equal(events[0].value, 'a');
+		LegacyUnit.equal(events[1].type, 'change');
+		LegacyUnit.equal(events[1].value, 'a2');
+		LegacyUnit.equal(events[2].type, 'change');
+		LegacyUnit.equal(events[2].value, 'a3');
+		LegacyUnit.equal(events[3].type, 'change');
+		LegacyUnit.equal(events[3].value, 'b');
 	});
 
-	test("set/get and observe specific", function(assert) {
+	suite.test("set/get and observe specific", function () {
 		var obj = new ObservableObject(), events = [];
 
-		obj.on('change:a', function(e) {
+		obj.on('change:a', function (e) {
 			events.push(e);
 		});
 
 		obj.set('a', 'a');
 		obj.set('b', 'b');
-		equal(events[0].type, 'change');
-		equal(events[0].value, 'a');
-		equal(events.length, 1);
+		LegacyUnit.equal(events[0].type, 'change');
+		LegacyUnit.equal(events[0].value, 'a');
+		LegacyUnit.equal(events.length, 1);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

@@ -1,45 +1,49 @@
-ModuleLoader.require([
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
 	"tinymce/Env",
-	"tinymce/caret/LineWalker",
-	"tinymce/caret/CaretPosition",
-	"tinymce/dom/DomQuery"
-], function(Env, LineWalker, CaretPosition, $) {
-	module("tinymce.caret.LineWalker");
+	"tinymce.caret.LineWalker",
+	"tinymce.caret.CaretPosition",
+	"tinymce.dom.DomQuery"
+], function (LegacyUnit, Pipeline, Env, LineWalker, CaretPosition, $) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
-	test('positionsUntil', function() {
+	suite.test('positionsUntil', function () {
 		var result, predicateCallCount = 0;
 
-		function predicate() {
+		function predicate () {
 			predicateCallCount++;
 			return false;
 		}
 
 		$('#view').html('<span contentEditable="false">a</span><span>b</span>');
 		result = LineWalker.positionsUntil(1, $('#view')[0], predicate, $('#view')[0].firstChild);
-		equal(result.length, 3);
-		equal(result[0].position.getNode(), $('#view')[0].lastChild);
-		equal(result[1].position.getNode(), $('#view')[0].lastChild.firstChild);
-		equal(result[2].position.getNode(), $('#view')[0].lastChild.firstChild);
-		equal(predicateCallCount, 3);
+		LegacyUnit.equal(result.length, 3);
+		LegacyUnit.equal(result[0].position.getNode(), $('#view')[0].lastChild);
+		LegacyUnit.equal(result[1].position.getNode(), $('#view')[0].lastChild.firstChild);
+		LegacyUnit.equal(result[2].position.getNode(), $('#view')[0].lastChild.firstChild);
+		LegacyUnit.equal(predicateCallCount, 3);
 
 		predicateCallCount = 0;
 		$('#view').html('<span>a</span><span contentEditable="false">b</span>');
 		result = LineWalker.positionsUntil(-1, $('#view')[0], predicate, $('#view')[0].lastChild);
-		equal(result.length, 3);
-		equal(result[0].position.getNode(), $('#view')[0].lastChild);
-		equal(result[1].position.getNode(), $('#view')[0].firstChild.firstChild);
-		equal(result[2].position.getNode(), $('#view')[0].firstChild.firstChild);
-		equal(predicateCallCount, 3);
+		LegacyUnit.equal(result.length, 3);
+		LegacyUnit.equal(result[0].position.getNode(), $('#view')[0].lastChild);
+		LegacyUnit.equal(result[1].position.getNode(), $('#view')[0].firstChild.firstChild);
+		LegacyUnit.equal(result[2].position.getNode(), $('#view')[0].firstChild.firstChild);
+		LegacyUnit.equal(predicateCallCount, 3);
 	});
 
-	test('upUntil', function() {
+	suite.test('upUntil', function () {
 		var caretPosition, result, predicateCallCount = 0;
 
-		function predicate() {
+		function predicate () {
 			predicateCallCount++;
 			return false;
 		}
@@ -49,17 +53,17 @@ ModuleLoader.require([
 		caretPosition = new CaretPosition($('#view')[0].lastChild.lastChild, 1);
 		result = LineWalker.upUntil($('#view')[0], predicate, caretPosition);
 
-		equal(result.length, 3);
-		equal(result[0].line, 0);
-		equal(result[1].line, 1);
-		equal(result[2].line, 2);
-		equal(predicateCallCount, 3);
+		LegacyUnit.equal(result.length, 3);
+		LegacyUnit.equal(result[0].line, 0);
+		LegacyUnit.equal(result[1].line, 1);
+		LegacyUnit.equal(result[2].line, 2);
+		LegacyUnit.equal(predicateCallCount, 3);
 	});
 
-	test('downUntil', function() {
+	suite.test('downUntil', function () {
 		var caretPosition, result, predicateCallCount = 0;
 
-		function predicate() {
+		function predicate () {
 			predicateCallCount++;
 			return false;
 		}
@@ -69,20 +73,24 @@ ModuleLoader.require([
 		caretPosition = new CaretPosition($('#view')[0].firstChild.firstChild, 0);
 		result = LineWalker.downUntil($('#view')[0], predicate, caretPosition);
 
-		equal(result.length, 3);
-		equal(result[0].line, 0);
-		equal(result[1].line, 1);
-		equal(result[2].line, 2);
-		equal(predicateCallCount, 3);
+		LegacyUnit.equal(result.length, 3);
+		LegacyUnit.equal(result[0].line, 0);
+		LegacyUnit.equal(result[1].line, 1);
+		LegacyUnit.equal(result[2].line, 2);
+		LegacyUnit.equal(predicateCallCount, 3);
 	});
 
-	test('isAboveLine', function() {
-		equal(LineWalker.isAboveLine(5)({line: 10}), true);
-		equal(LineWalker.isAboveLine(5)({line: 2}), false);
+	suite.test('isAboveLine', function () {
+		LegacyUnit.equal(LineWalker.isAboveLine(5)({line: 10}), true);
+		LegacyUnit.equal(LineWalker.isAboveLine(5)({line: 2}), false);
 	});
 
-	test('isLine', function() {
-		equal(LineWalker.isLine(3)({line: 3}), true);
-		equal(LineWalker.isLine(3)({line: 4}), false);
+	suite.test('isLine', function () {
+		LegacyUnit.equal(LineWalker.isLine(3)({line: 3}), true);
+		LegacyUnit.equal(LineWalker.isLine(3)({line: 4}), false);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

@@ -1,100 +1,162 @@
-ModuleLoader.require([
-	"tinymce/Env",
-	"tinymce/caret/CaretPosition"
-], function(Env, CaretPosition) {
-	module("tinymce.caret.CaretPosition");
+asynctest('browser.tinymce.core.CaretPositionTest', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	'tinymce.core.dom.DOMUtils',
+	'tinymce.core.Env',
+	'tinymce.core.caret.CaretPosition'
+], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretPosition) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
-	var createRange = Utils.createRange,
-		assertCaretPosition = Utils.assertCaretPosition,
-		assertRange = Utils.assertRange;
+	var createRange = function (startContainer, startOffset, endContainer, endOffset) {
+		var rng = DOMUtils.DOM.createRng();
 
-	function getRoot() {
-		return document.getElementById('view');
-	}
+		rng.setStart(startContainer, startOffset);
 
-	function setupHtml(html) {
-		tinymce.$(getRoot()).empty();
-		getRoot().innerHTML = html;
-	}
+		if (endContainer) {
+			rng.setEnd(endContainer, endOffset);
+		}
 
-	test('Constructor', function() {
+		return rng;
+	};
+
+	var assertRange = function (actual, expected) {
+		LegacyUnit.deepEqual({
+			startContainer: actual.startContainer,
+			startOffset: actual.startOffset,
+			endContainer: actual.endContainer,
+			endOffset: actual.endOffset
+		}, {
+			startContainer: expected.startContainer,
+			startOffset: expected.startOffset,
+			endContainer: expected.endContainer,
+			endOffset: expected.endOffset
+		});
+	};
+
+	var assertCaretPosition = function (actual, expected, message) {
+		if (expected === null) {
+			LegacyUnit.strictEqual(actual, expected, message || 'Expected null.');
+			return;
+		}
+
+		if (actual === null) {
+			LegacyUnit.strictEqual(actual, expected, message || 'Didn\'t expect null.');
+			return;
+		}
+
+		LegacyUnit.deepEqual({
+			container: actual.container(),
+			offset: actual.offset()
+		}, {
+			container: expected.container(),
+			offset: expected.offset()
+		}, message);
+	};
+
+	var setupHtml = function (html) {
+		var child, rootElm = getRoot();
+
+		// IE leaves zwsp in the dom on innerHTML
+		while ((child = rootElm.firstChild)) {
+			rootElm.removeChild(child);
+		}
+
+		rootElm.innerHTML = html;
+	};
+
+	var getRoot = function () {
+		var view = document.getElementById('view');
+		if (!view) {
+			view = document.createElement('div');
+			view.id = 'view';
+			document.body.appendChild(view);
+		}
+		return view;
+	};
+
+	suite.test('Constructor', function () {
 		setupHtml('abc');
-		strictEqual(new CaretPosition(getRoot(), 0).container(), getRoot());
-		strictEqual(new CaretPosition(getRoot(), 1).offset(), 1);
-		strictEqual(new CaretPosition(getRoot().firstChild, 0).container(), getRoot().firstChild);
-		strictEqual(new CaretPosition(getRoot().firstChild, 1).offset(), 1);
+		LegacyUnit.strictEqual(new CaretPosition(getRoot(), 0).container(), getRoot());
+		LegacyUnit.strictEqual(new CaretPosition(getRoot(), 1).offset(), 1);
+		LegacyUnit.strictEqual(new CaretPosition(getRoot().firstChild, 0).container(), getRoot().firstChild);
+		LegacyUnit.strictEqual(new CaretPosition(getRoot().firstChild, 1).offset(), 1);
 	});
 
-	test('fromRangeStart', function() {
+	suite.test('fromRangeStart', function () {
 		setupHtml('abc');
 		assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot(), 0)), new CaretPosition(getRoot(), 0));
 		assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot(), 1)), new CaretPosition(getRoot(), 1));
 		assertCaretPosition(CaretPosition.fromRangeStart(createRange(getRoot().firstChild, 1)), new CaretPosition(getRoot().firstChild, 1));
 	});
 
-	test('fromRangeEnd', function() {
+	suite.test('fromRangeEnd', function () {
 		setupHtml('abc');
 		assertCaretPosition(CaretPosition.fromRangeEnd(createRange(getRoot(), 0, getRoot(), 1)), new CaretPosition(getRoot(), 1));
-		assertCaretPosition(CaretPosition.fromRangeEnd(createRange(getRoot().firstChild, 0, getRoot().firstChild, 1)), new CaretPosition(getRoot().firstChild, 1));
+		assertCaretPosition(
+			CaretPosition.fromRangeEnd(createRange(getRoot().firstChild, 0, getRoot().firstChild, 1)),
+			new CaretPosition(getRoot().firstChild, 1)
+		);
 	});
 
-	test('after', function() {
+	suite.test('after', function () {
 		setupHtml('abc<b>123</b>');
 		assertCaretPosition(CaretPosition.after(getRoot().firstChild), new CaretPosition(getRoot(), 1));
 		assertCaretPosition(CaretPosition.after(getRoot().lastChild), new CaretPosition(getRoot(), 2));
 	});
 
-	test('before', function() {
+	suite.test('before', function () {
 		setupHtml('abc<b>123</b>');
 		assertCaretPosition(CaretPosition.before(getRoot().firstChild), new CaretPosition(getRoot(), 0));
 		assertCaretPosition(CaretPosition.before(getRoot().lastChild), new CaretPosition(getRoot(), 1));
 	});
 
-	test('isAtStart', function() {
+	suite.test('isAtStart', function () {
 		setupHtml('abc<b>123</b>123');
-		ok(new CaretPosition(getRoot(), 0).isAtStart());
-		ok(!new CaretPosition(getRoot(), 1).isAtStart());
-		ok(!new CaretPosition(getRoot(), 3).isAtStart());
-		ok(new CaretPosition(getRoot().firstChild, 0).isAtStart());
-		ok(!new CaretPosition(getRoot().firstChild, 1).isAtStart());
-		ok(!new CaretPosition(getRoot().firstChild, 3).isAtStart());
+		LegacyUnit.equal(new CaretPosition(getRoot(), 0).isAtStart(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot(), 1).isAtStart(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot(), 3).isAtStart(), true);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 0).isAtStart(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot().firstChild, 1).isAtStart(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot().firstChild, 3).isAtStart(), true);
 	});
 
-	test('isAtEnd', function() {
+	suite.test('isAtEnd', function () {
 		setupHtml('abc<b>123</b>123');
-		ok(new CaretPosition(getRoot(), 3).isAtEnd());
-		ok(!new CaretPosition(getRoot(), 2).isAtEnd());
-		ok(!new CaretPosition(getRoot(), 0).isAtEnd());
-		ok(new CaretPosition(getRoot().firstChild, 3).isAtEnd());
-		ok(!new CaretPosition(getRoot().firstChild, 0).isAtEnd());
-		ok(!new CaretPosition(getRoot().firstChild, 1).isAtEnd());
+		LegacyUnit.equal(new CaretPosition(getRoot(), 3).isAtEnd(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot(), 2).isAtEnd(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot(), 0).isAtEnd(), true);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 3).isAtEnd(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot().firstChild, 0).isAtEnd(), true);
+		LegacyUnit.equal(!new CaretPosition(getRoot().firstChild, 1).isAtEnd(), true);
 	});
 
-	test('toRange', function() {
+	suite.test('toRange', function () {
 		setupHtml('abc');
 		assertRange(new CaretPosition(getRoot(), 0).toRange(), createRange(getRoot(), 0));
 		assertRange(new CaretPosition(getRoot(), 1).toRange(), createRange(getRoot(), 1));
 		assertRange(new CaretPosition(getRoot().firstChild, 1).toRange(), createRange(getRoot().firstChild, 1));
 	});
 
-	test('isEqual', function() {
+	suite.test('isEqual', function () {
 		setupHtml('abc');
-		equal(new CaretPosition(getRoot(), 0).isEqual(new CaretPosition(getRoot(), 0)), true);
-		equal(new CaretPosition(getRoot(), 1).isEqual(new CaretPosition(getRoot(), 0)), false);
-		equal(new CaretPosition(getRoot(), 0).isEqual(new CaretPosition(getRoot().firstChild, 0)), false);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 0).isEqual(new CaretPosition(getRoot(), 0)), true);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 1).isEqual(new CaretPosition(getRoot(), 0)), false);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 0).isEqual(new CaretPosition(getRoot().firstChild, 0)), false);
 	});
 
-	test('isVisible', function() {
+	suite.test('isVisible', function () {
 		setupHtml('<b>  abc</b>');
-		equal(new CaretPosition(getRoot().firstChild.firstChild, 0).isVisible(), false);
-		equal(new CaretPosition(getRoot().firstChild.firstChild, 3).isVisible(), true);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 0).isVisible(), false);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 3).isVisible(), true);
 	});
 
-	test('getClientRects', function() {
+	suite.test('getClientRects', function () {
 		setupHtml(
 			'<b>abc</b>' +
 			'<div contentEditable="false">1</div>' +
@@ -107,67 +169,71 @@ ModuleLoader.require([
 			'<br>'
 		);
 
-		equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot(), 1).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot(), 2).getClientRects().length, 2);
-		equal(new CaretPosition(getRoot(), 3).getClientRects().length, 2);
-		equal(new CaretPosition(getRoot(), 4).getClientRects().length, 2);
-		equal(new CaretPosition(getRoot(), 5).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot(), 6).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot(), 7).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot(), 8).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot(), 9).getClientRects().length, 0);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 1).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 2).getClientRects().length, 2);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 3).getClientRects().length, 2);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 4).getClientRects().length, 2);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 5).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 6).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 7).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 8).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 9).getClientRects().length, 0);
 	});
 
-	test('getClientRects between inline node and cE=false', function() {
+	suite.test('getClientRects between inline node and cE=false', function () {
 		setupHtml(
 			'<span contentEditable="false">def</span>' +
 			'<b>ghi</b>'
 		);
 
-		equal(new CaretPosition(getRoot(), 1).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 1).getClientRects().length, 1);
 	});
 
-	test('getClientRects at last visible character', function() {
+	suite.test('getClientRects at last visible character', function () {
 		setupHtml('<b>a  </b>');
 
-		equal(new CaretPosition(getRoot().firstChild.firstChild, 1).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 1).getClientRects().length, 1);
 	});
 
-	test('getClientRects at extending character', function() {
+	suite.test('getClientRects at extending character', function () {
 		setupHtml('a\u0301b');
 
-		equal(new CaretPosition(getRoot().firstChild, 0).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot().firstChild, 1).getClientRects().length, 0);
-		equal(new CaretPosition(getRoot().firstChild, 2).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 0).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 1).getClientRects().length, 0);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 2).getClientRects().length, 1);
 	});
 
-	test('getClientRects at whitespace character', function() {
+	suite.test('getClientRects at whitespace character', function () {
 		setupHtml('  a  ');
 
-		equal(new CaretPosition(getRoot().firstChild, 0).getClientRects().length, 0);
-		equal(new CaretPosition(getRoot().firstChild, 1).getClientRects().length, 0);
-		equal(new CaretPosition(getRoot().firstChild, 2).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot().firstChild, 3).getClientRects().length, 1);
-		equal(new CaretPosition(getRoot().firstChild, 4).getClientRects().length, 0);
-		equal(new CaretPosition(getRoot().firstChild, 5).getClientRects().length, 0);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 0).getClientRects().length, 0);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 1).getClientRects().length, 0);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 2).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 3).getClientRects().length, 1);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 4).getClientRects().length, 0);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 5).getClientRects().length, 0);
 	});
 
-	test('getNode', function() {
+	suite.test('getNode', function () {
 		setupHtml('<b>abc</b><input><input>');
 
-		equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(), getRoot().firstChild.firstChild);
-		equal(new CaretPosition(getRoot(), 1).getNode(), getRoot().childNodes[1]);
-		equal(new CaretPosition(getRoot(), 2).getNode(), getRoot().childNodes[2]);
-		equal(new CaretPosition(getRoot(), 3).getNode(), getRoot().childNodes[2]);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(), getRoot().firstChild.firstChild);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 1).getNode(), getRoot().childNodes[1]);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 2).getNode(), getRoot().childNodes[2]);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 3).getNode(), getRoot().childNodes[2]);
 	});
 
-	test('getNode (before)', function() {
+	suite.test('getNode (before)', function () {
 		setupHtml('<b>abc</b><input><input>');
 
-		equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(true), getRoot().firstChild.firstChild);
-		equal(new CaretPosition(getRoot(), 1).getNode(true), getRoot().childNodes[0]);
-		equal(new CaretPosition(getRoot(), 2).getNode(true), getRoot().childNodes[1]);
-		equal(new CaretPosition(getRoot(), 3).getNode(true), getRoot().childNodes[2]);
+		LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(true), getRoot().firstChild.firstChild);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 1).getNode(true), getRoot().childNodes[0]);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 2).getNode(true), getRoot().childNodes[1]);
+		LegacyUnit.equal(new CaretPosition(getRoot(), 3).getNode(true), getRoot().childNodes[2]);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

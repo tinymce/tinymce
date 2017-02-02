@@ -1,8 +1,13 @@
-ModuleLoader.require([
-	"tinymce/content/LinkTargets",
-	"tinymce/util/Arr"
-], function(LinkTargets, Arr) {
-	module("tinymce.content.LinkTargets", {});
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce.content.LinkTargets",
+	"tinymce.util.Arr",
+	'global!document'
+], function (LegacyUnit, Pipeline, LinkTargets, Arr, document) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	var createFromHtml = function (html) {
 		var elm = document.createElement('div');
@@ -25,16 +30,16 @@ ModuleLoader.require([
 			};
 		});
 
-		deepEqual(nonAttachedTargets, expectedTargets, message);
+		LegacyUnit.deepEqual(nonAttachedTargets, expectedTargets, message);
 	};
 
-	test('Non link targets', function() {
-		equal(targetsIn('a').length, 0, 'Text has no targets');
-		equal(targetsIn('<p>a</p>').length, 0, 'Paragraph has no targets');
-		equal(targetsIn('<a href="#1">a</a>').length, 0, 'Link has no targets');
+	suite.test('Non link targets', function () {
+		LegacyUnit.equal(targetsIn('a').length, 0, 'Text has no targets');
+		LegacyUnit.equal(targetsIn('<p>a</p>').length, 0, 'Paragraph has no targets');
+		LegacyUnit.equal(targetsIn('<a href="#1">a</a>').length, 0, 'Link has no targets');
 	});
 
-	test('Anchor targets', function() {
+	suite.test('Anchor targets', function () {
 		equalTargets(targetsIn('<a id="a"></a>'), [{level: 0, title: '#a', type: 'anchor', url: '#a'}], 'Anchor with id');
 		equalTargets(targetsIn('<a name="a"></a>'), [{level: 0, title: '#a', type: 'anchor', url: '#a'}], 'Anchor with name');
 		equalTargets(targetsIn('<a name="a" contentEditable="false"></a>'), [], 'cE=false anchor');
@@ -43,7 +48,7 @@ ModuleLoader.require([
 		equalTargets(targetsIn('<a id=""></a>'), [], 'Empty anchor id should not produce a target');
 	});
 
-	test('Header targets', function() {
+	suite.test('Header targets', function () {
 		equalTargets(targetsIn('<h1 id="a">a</h1>'), [{level: 1, title: 'a', type: 'header', url: '#a'}], 'Header 1 with id');
 		equalTargets(targetsIn('<h2 id="a">a</h2>'), [{level: 2, title: 'a', type: 'header', url: '#a'}], 'Header 2 with id');
 		equalTargets(targetsIn('<h3 id="a">a</h3>'), [{level: 3, title: 'a', type: 'header', url: '#a'}], 'Header 3 with id');
@@ -55,7 +60,7 @@ ModuleLoader.require([
 		equalTargets(targetsIn('<h1 id="a" contentEditable="false">a</h1>'), [], 'cE=false header');
 	});
 
-	test('Mixed targets', function() {
+	suite.test('Mixed targets', function () {
 		equalTargets(
 			targetsIn('<h1 id="a">a</h1><a id="b"></a>'),
 			[
@@ -66,23 +71,23 @@ ModuleLoader.require([
 		);
 	});
 
-	test('Anchor attach', function() {
+	suite.test('Anchor attach', function () {
 		var elm = createFromHtml('<a id="a"></a>');
 		var targets = LinkTargets.find(elm);
 
 		targets[0].attach();
-		equal(elm.innerHTML, '<a id="a"></a>', 'Should remain the same as before attach');
+		LegacyUnit.equal(elm.innerHTML, '<a id="a"></a>', 'Should remain the same as before attach');
 	});
 
-	test('Header attach on header with id', function() {
+	suite.test('Header attach on header with id', function () {
 		var elm = createFromHtml('<h1 id="a">a</h1>');
 		var targets = LinkTargets.find(elm);
 
 		targets[0].attach();
-		equal(elm.innerHTML, '<h1 id="a">a</h1>', 'Should remain the same as before attach');
+		LegacyUnit.equal(elm.innerHTML, '<h1 id="a">a</h1>', 'Should remain the same as before attach');
 	});
 
-	test('Header attach on headers without ids', function() {
+	suite.test('Header attach on headers without ids', function () {
 		var elm = createFromHtml('<h1>a</h1><h2>b</h2>');
 		var targets = LinkTargets.find(elm);
 
@@ -93,12 +98,16 @@ ModuleLoader.require([
 		var idB = elm.lastChild.id;
 		var afterAttachHtml = elm.innerHTML;
 
-		equal(afterAttachHtml, '<h1 id="' + idA + '">a</h1><h2 id="' + idB + '">b</h2>', 'Should have unique id:s');
+		LegacyUnit.equal(afterAttachHtml, '<h1 id="' + idA + '">a</h1><h2 id="' + idB + '">b</h2>', 'Should have unique id:s');
 		ok(idA !== idB, 'Should not be equal id:s');
 
 		targets[0].attach();
 		targets[1].attach();
 
-		equal(elm.innerHTML, afterAttachHtml, 'Should be the same id:s regardless of how many times you attach');
+		LegacyUnit.equal(elm.innerHTML, afterAttachHtml, 'Should be the same id:s regardless of how many times you attach');
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

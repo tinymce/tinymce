@@ -1,51 +1,56 @@
-ModuleLoader.require([
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
 	"tinymce/Env",
-	"tinymce/caret/CaretWalker",
-	"tinymce/caret/CaretPosition"
-], function(Env, CaretWalker, CaretPosition) {
-	module("tinymce.caret.CaretWalker");
+	"tinymce.caret.CaretWalker",
+	"tinymce.caret.CaretPosition",
+	'global!document'
+], function (LegacyUnit, Pipeline, Env, CaretWalker, CaretPosition, document) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
-	function getRoot() {
+	function getRoot () {
 		return document.getElementById('view');
 	}
 
-	function setupHtml(html) {
+	function setupHtml (html) {
 		tinymce.$(getRoot()).empty();
 		getRoot().innerHTML = html;
 	}
 
-	function findElm(selector) {
+	function findElm (selector) {
 		return tinymce.$(selector, getRoot())[0];
 	}
 
-	function findElmPos(selector, offset) {
+	function findElmPos (selector, offset) {
 		return CaretPosition(tinymce.$(selector, getRoot())[0], offset);
 	}
 
-	function findTextPos(selector, offset) {
+	function findTextPos (selector, offset) {
 		return CaretPosition(tinymce.$(selector, getRoot())[0].firstChild, offset);
 	}
 
 	var assertCaretPosition = Utils.assertCaretPosition,
 		logicalCaret = new CaretWalker(getRoot());
 
-	test('inside empty root', function() {
+	suite.test('inside empty root', function () {
 		setupHtml('');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), null);
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
 	});
 
-	test('on null', function() {
+	suite.test('on null', function () {
 		setupHtml('');
 		assertCaretPosition(logicalCaret.next(null), null);
 		assertCaretPosition(logicalCaret.prev(null), null);
 	});
 
-	test('within text node in root', function() {
+	suite.test('within text node in root', function () {
 		setupHtml('abc');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 0)), CaretPosition(getRoot().firstChild, 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot().firstChild, 2));
@@ -57,7 +62,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().firstChild, 0)), null);
 	});
 
-	test('within text node in element', function() {
+	suite.test('within text node in element', function () {
 		setupHtml('<p>abc</p>');
 		assertCaretPosition(logicalCaret.next(findTextPos('p', 0)), findTextPos('p', 1));
 		assertCaretPosition(logicalCaret.next(findTextPos('p', 1)), findTextPos('p', 2));
@@ -69,7 +74,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(findTextPos('p', 0)), null);
 	});
 
-	test('from index text node over comment', function() {
+	suite.test('from index text node over comment', function () {
 		setupHtml('abcd<!-- x -->abcd');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot().firstChild, 0));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().lastChild, 0));
@@ -77,41 +82,41 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), CaretPosition(getRoot().lastChild, 4));
 	});
 
-	test('from text to text across elements', function() {
+	suite.test('from text to text across elements', function () {
 		setupHtml('<p>abc</p><p>abc</p>');
 		assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), findTextPos('p:last', 0));
 		assertCaretPosition(logicalCaret.prev(findTextPos('p:last', 0)), findTextPos('p:first', 3));
 	});
 
-	test('from text to text across elements with siblings', function() {
+	suite.test('from text to text across elements with siblings', function () {
 		setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>abc</p>');
 		assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), CaretPosition(findElm('p:last').lastChild, 0));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild)), findTextPos('p:first', 3));
 	});
 
-	test('from input to text', function() {
+	suite.test('from input to text', function () {
 		setupHtml('123<input>456');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), CaretPosition(getRoot().lastChild, 0));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().firstChild, 3));
 	});
 
-	test('from input to input across elements', function() {
+	suite.test('from input to input across elements', function () {
 		setupHtml('<p><input></p><p><input></p>');
 		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 1)), CaretPosition(findElm('p:last'), 0));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 1));
 	});
 
-	test('next br to br across elements', function() {
+	suite.test('next br to br across elements', function () {
 		setupHtml('<p><br></p><p><br></p>');
 		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 0)), CaretPosition(findElm('p:last'), 0));
 	});
 
-	test('prev br to br across elements', function() {
+	suite.test('prev br to br across elements', function () {
 		setupHtml('<p><br></p><p><br></p>');
 		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 0));
 	});
 
-	test('from before/after br to text', function() {
+	suite.test('from before/after br to text', function () {
 		setupHtml('<br>123<br>456<br>789');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), CaretPosition(getRoot(), 3));
@@ -122,7 +127,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 0));
 	});
 
-	test('over br', function() {
+	suite.test('over br', function () {
 		setupHtml('<br><br><br>');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -134,7 +139,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
 	});
 
-	test('over input', function() {
+	suite.test('over input', function () {
 		setupHtml('<input><input><input>');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -146,7 +151,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
 	});
 
-	test('over img', function() {
+	suite.test('over img', function () {
 		setupHtml('<img src="about:blank"><img src="about:blank"><img src="about:blank">');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -158,7 +163,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
 	});
 
-	test('over script/style/textarea', function() {
+	suite.test('over script/style/textarea', function () {
 		setupHtml('a<script>//x</script>b<style>x{}</style>c<textarea>x</textarea>d');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot().childNodes[2], 0));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().childNodes[2], 1)), CaretPosition(getRoot().childNodes[4], 0));
@@ -168,7 +173,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(getRoot().childNodes[0], 1));
 	});
 
-	test('around tables', function() {
+	suite.test('around tables', function () {
 		setupHtml('a<table><tr><td>A</td></tr></table><table><tr><td>B</td></tr></table>b');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('td:first', 0));
@@ -184,7 +189,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().firstChild, 1));
 	});
 
-	test('over cE=false', function() {
+	suite.test('over cE=false', function () {
 		setupHtml('123<span contentEditable="false">a</span>456');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 3)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -192,7 +197,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot(), 2));
 	});
 /*
-	test('from outside cE=false to nested cE=true', function() {
+	suite.test('from outside cE=false to nested cE=true', function() {
 		setupHtml('abc<span contentEditable="false">b<span contentEditable="true">c</span></span>def');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 3)), CaretPosition(getRoot(), 1));
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('span span', 0));
@@ -200,14 +205,14 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), findTextPos('span span', 1));
 	});
 
-	test('from outside cE=false to nested cE=true before/after cE=false', function() {
+	suite.test('from outside cE=false to nested cE=true before/after cE=false', function() {
 		setupHtml('a<span contentEditable="false">b<span contentEditable="true"><span contentEditable="false"></span></span></span>d');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(findElm('span span'), 0));
 		assertCaretPosition(logicalCaret.next(CaretPosition(findElm('span span'), 1)), CaretPosition(getRoot(), 2));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(findElm('span span'), 1));
 	});
 */
-	test('from inside cE=true in cE=false to after cE=false', function() {
+	suite.test('from inside cE=true in cE=false to after cE=false', function () {
 		setupHtml(
 			'<p>' +
 				'<span contentEditable="false">' +
@@ -223,7 +228,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.next(findTextPos('span span', 3)), CaretPosition(findElm('p'), 1));
 	});
 
-	test('around cE=false inside nested cE=true', function() {
+	suite.test('around cE=false inside nested cE=true', function () {
 		setupHtml(
 			'<span contentEditable="false">' +
 				'<span contentEditable="true">' +
@@ -244,7 +249,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('span span'), 3)), CaretPosition(findElm('span span'), 2));
 	});
 
-	test('next from last node', function() {
+	suite.test('next from last node', function () {
 		setupHtml(
 			'<p><b><input></b></p>' +
 			'<input>' +
@@ -255,7 +260,7 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.next(findElmPos('p:last', 1)), null);
 	});
 
-	test('left/right between cE=false inlines in different blocks', function() {
+	suite.test('left/right between cE=false inlines in different blocks', function () {
 		setupHtml(
 			'<p>' +
 				'<span contentEditable="false">abc</span>' +
@@ -269,9 +274,13 @@ ModuleLoader.require([
 		assertCaretPosition(logicalCaret.prev(findElmPos('p:last', 0)), findElmPos('p:first', 1));
 	});
 
-	test('never into caret containers', function() {
+	suite.test('never into caret containers', function () {
 		setupHtml('abc<b data-mce-caret="1">def</b>ghi');
 		assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 3)), CaretPosition(getRoot().lastChild, 0));
 		assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot().firstChild, 3));
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

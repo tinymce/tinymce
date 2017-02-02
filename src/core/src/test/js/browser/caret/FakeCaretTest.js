@@ -1,9 +1,15 @@
-ModuleLoader.require([
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
 	"tinymce/Env",
-	"tinymce/caret/FakeCaret",
-	"tinymce/dom/DomQuery",
-	"tinymce/text/Zwsp"
-], function(Env, FakeCaret, $, Zwsp) {
+	"tinymce.caret.FakeCaret",
+	"tinymce.dom.DomQuery",
+	"tinymce.text.Zwsp"
+], function (LegacyUnit, Pipeline, Env, FakeCaret, $, Zwsp) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
+
 	var fakeCaret;
 
 	if (!Env.ceFalse) {
@@ -11,20 +17,20 @@ ModuleLoader.require([
 	}
 
 	module("tinymce.caret.FakeCaret", {
-		setupModule: function() {
+		setupModule: function () {
 			fakeCaret = new FakeCaret($('#view')[0], isBlock);
 		},
 
-		teardownModule: function() {
+		teardownModule: function () {
 			fakeCaret.destroy();
 		}
 	});
 
-	function isBlock(node) {
+	function isBlock (node) {
 		return node.nodeName == 'DIV';
 	}
 
-	test('show/hide (before, block)', function() {
+	suite.test('show/hide (before, block)', function () {
 		var rng, $fakeCaretElm;
 
 		$('#view').html('<div>a</div>');
@@ -32,15 +38,15 @@ ModuleLoader.require([
 		rng = fakeCaret.show(true, $('#view div')[0]);
 		$fakeCaretElm = $('#view').children();
 
-		equal($fakeCaretElm[0].nodeName, 'P');
-		equal($fakeCaretElm.attr('data-mce-caret'), 'before');
+		LegacyUnit.equal($fakeCaretElm[0].nodeName, 'P');
+		LegacyUnit.equal($fakeCaretElm.attr('data-mce-caret'), 'before');
 		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[0], 0, $fakeCaretElm[0], 0));
 
 		fakeCaret.hide();
-		equal($('#view *[data-mce-caret]').length, 0);
+		LegacyUnit.equal($('#view *[data-mce-caret]').length, 0);
 	});
 
-	test('show/hide (before, block)', function() {
+	suite.test('show/hide (before, block)', function () {
 		var rng, $fakeCaretElm;
 
 		$('#view').html('<div>a</div>');
@@ -48,15 +54,15 @@ ModuleLoader.require([
 		rng = fakeCaret.show(false, $('#view div')[0]);
 		$fakeCaretElm = $('#view').children();
 
-		equal($fakeCaretElm[1].nodeName, 'P');
-		equal($fakeCaretElm.eq(1).attr('data-mce-caret'), 'after');
+		LegacyUnit.equal($fakeCaretElm[1].nodeName, 'P');
+		LegacyUnit.equal($fakeCaretElm.eq(1).attr('data-mce-caret'), 'after');
 		Utils.assertRange(rng, Utils.createRange($fakeCaretElm[1], 0, $fakeCaretElm[1], 0));
 
 		fakeCaret.hide();
-		equal($('#view *[data-mce-caret]').length, 0);
+		LegacyUnit.equal($('#view *[data-mce-caret]').length, 0);
 	});
 
-	test('show/hide (before, inline)', function() {
+	suite.test('show/hide (before, inline)', function () {
 		var rng, $fakeCaretText;
 
 		$('#view').html('<span>a</span>');
@@ -64,15 +70,15 @@ ModuleLoader.require([
 		rng = fakeCaret.show(true, $('#view span')[0]);
 		$fakeCaretText = $('#view').contents();
 
-		equal($fakeCaretText[0].nodeName, '#text');
-		equal($fakeCaretText[0].data, Zwsp.ZWSP);
+		LegacyUnit.equal($fakeCaretText[0].nodeName, '#text');
+		LegacyUnit.equal($fakeCaretText[0].data, Zwsp.ZWSP);
 		Utils.assertRange(rng, Utils.createRange($fakeCaretText[0], 1));
 
 		fakeCaret.hide();
-		equal($('#view').contents()[0].nodeName, 'SPAN');
+		LegacyUnit.equal($('#view').contents()[0].nodeName, 'SPAN');
 	});
 
-	test('show/hide (after, inline)', function() {
+	suite.test('show/hide (after, inline)', function () {
 		var rng, $fakeCaretText;
 
 		$('#view').html('<span>a</span>');
@@ -80,15 +86,19 @@ ModuleLoader.require([
 		rng = fakeCaret.show(false, $('#view span')[0]);
 		$fakeCaretText = $('#view').contents();
 
-		equal($fakeCaretText[1].nodeName, '#text');
-		equal($fakeCaretText[1].data, Zwsp.ZWSP);
+		LegacyUnit.equal($fakeCaretText[1].nodeName, '#text');
+		LegacyUnit.equal($fakeCaretText[1].data, Zwsp.ZWSP);
 		Utils.assertRange(rng, Utils.createRange($fakeCaretText[1], 1));
 
 		fakeCaret.hide();
-		equal($('#view').contents()[0].nodeName, 'SPAN');
+		LegacyUnit.equal($('#view').contents()[0].nodeName, 'SPAN');
 	});
 
-	test('getCss', function() {
-		equal(fakeCaret.getCss().length > 10, true);
+	suite.test('getCss', function () {
+		LegacyUnit.equal(fakeCaret.getCss().length > 10, true);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });

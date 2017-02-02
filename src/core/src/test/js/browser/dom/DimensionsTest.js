@@ -1,10 +1,15 @@
-ModuleLoader.require([
-	"tinymce/util/Arr",
-	"tinymce/dom/Dimensions"
-], function(Arr, Dimensions) {
-	module("tinymce.dom.Dimensions");
+asynctest('browser.tinymce.core.noname', [
+	'ephox.mcagar.api.LegacyUnit',
+	'ephox.agar.api.Pipeline',
+	"tinymce.util.Arr",
+	"tinymce.dom.Dimensions",
+	'global!document'
+], function (LegacyUnit, Pipeline, Arr, Dimensions, document) {
+	var success = arguments[arguments.length - 2];
+	var failure = arguments[arguments.length - 1];
+	var suite = LegacyUnit.createSuite();
 
-	function setupHtml(html) {
+	function setupHtml (html) {
 		var viewElm;
 
 		viewElm = document.getElementById('view');
@@ -13,22 +18,26 @@ ModuleLoader.require([
 		return viewElm;
 	}
 
-	test('getClientRects', function() {
+	suite.test('getClientRects', function () {
 		var viewElm = setupHtml('abc<span>123</span>');
 
-		strictEqual(Dimensions.getClientRects(viewElm.firstChild).length, 1);
-		strictEqual(Dimensions.getClientRects(viewElm.lastChild).length, 1);
-		strictEqual(Dimensions.getClientRects(viewElm.firstChild)[0].node, viewElm.firstChild);
-		strictEqual(Dimensions.getClientRects(viewElm.firstChild)[0].left > 3, true);
-		strictEqual(Dimensions.getClientRects(viewElm.lastChild)[0].left > 3, true);
+		LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.firstChild).length, 1);
+		LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.lastChild).length, 1);
+		LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.firstChild)[0].node, viewElm.firstChild);
+		LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.firstChild)[0].left > 3, true);
+		LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.lastChild)[0].left > 3, true);
 	});
 
-	test('getClientRects from array', function() {
+	suite.test('getClientRects from array', function () {
 		var viewElm = setupHtml('<b>a</b><b>b</b>'),
 			clientRects = Dimensions.getClientRects(Arr.toArray(viewElm.childNodes));
 
-		strictEqual(clientRects.length, 2);
-		strictEqual(clientRects[0].node, viewElm.childNodes[0]);
-		strictEqual(clientRects[1].node, viewElm.childNodes[1]);
+		LegacyUnit.strictEqual(clientRects.length, 2);
+		LegacyUnit.strictEqual(clientRects[0].node, viewElm.childNodes[0]);
+		LegacyUnit.strictEqual(clientRects[1].node, viewElm.childNodes[1]);
 	});
+
+	Pipeline.async({}, suite.toSteps({}), function () {
+		success();
+	}, failure);
 });
