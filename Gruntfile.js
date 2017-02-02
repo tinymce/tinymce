@@ -560,6 +560,14 @@ module.exports = function(grunt) {
 
 		copy: {
 			"core": {
+				options: {
+					process: function (content) {
+						return content.
+							replace('@@majorVersion@@', packageData.version.split('.')[0]).
+							replace('@@minorVersion@@', packageData.version.split('.').slice(1).join('.')).
+							replace('@@releaseDate@@', packageData.date);
+					}
+				},
 				files: [
 					{
 						expand: true,
