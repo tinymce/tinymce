@@ -17,11 +17,11 @@
  * @borrow-members tinymce.core.util.Tools
  */
 define("tinymce.core.Compat", [
-	"tinymce/dom/DOMUtils",
-	"tinymce/dom/EventUtils",
-	"tinymce/dom/ScriptLoader",
+	"tinymce.core.dom.DOMUtils",
+	"tinymce.core.dom.EventUtils",
+	"tinymce.core.dom.ScriptLoader",
 	"tinymce.core.AddOnManager",
-	"tinymce/util/Tools",
+	"tinymce.core.util.Tools",
 	"tinymce.core.Env"
 ], function(DOMUtils, EventUtils, ScriptLoader, AddOnManager, Tools, Env) {
 	var tinymce = window.tinymce;

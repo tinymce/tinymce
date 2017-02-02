@@ -19,7 +19,7 @@ define("tinymce.core.ui.Window", [
 	"tinymce.core.ui.FloatPanel",
 	"tinymce.core.ui.Panel",
 	"tinymce.core.ui.DomUtils",
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.ui.DragHelper",
 	"tinymce.core.ui.BoxUtils",
 	"tinymce.core.Env",

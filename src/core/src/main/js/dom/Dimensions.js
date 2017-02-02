@@ -18,7 +18,7 @@
 define("tinymce.core.dom.Dimensions", [
 	"tinymce.core.util.Arr",
 	"tinymce.core.dom.NodeType",
-	"tinymce/geom/ClientRect"
+	"tinymce.core.geom.ClientRect"
 ], function(Arr, NodeType, ClientRect) {
 
 	function getClientRects(node) {

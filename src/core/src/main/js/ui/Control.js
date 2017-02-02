@@ -20,10 +20,10 @@ define("tinymce.core.ui.Control", [
 	"tinymce.core.util.Class",
 	"tinymce.core.util.Tools",
 	"tinymce.core.util.EventDispatcher",
-	"tinymce/data/ObservableObject",
+	"tinymce.core.data.ObservableObject",
 	"tinymce.core.ui.Collection",
 	"tinymce.core.ui.DomUtils",
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.ui.BoxUtils",
 	"tinymce.core.ui.ClassList",
 	"tinymce.core.ui.ReflowQueue"

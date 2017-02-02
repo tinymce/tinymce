@@ -22,7 +22,7 @@ define("tinymce.core.ui.FilePicker", [
 	"tinymce.core.util.Arr",
 	"tinymce.core.util.Fun",
 	"tinymce.core.util.VK",
-	"tinymce/content/LinkTargets"
+	"tinymce.core.content.LinkTargets"
 ], function(ComboBox, Tools, Arr, Fun, VK, LinkTargets) {
 	"use strict";
 

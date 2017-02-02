@@ -23,14 +23,14 @@
  *  tinymce.activeEditor.formatter.apply('mycustomformat');
  */
 define("tinymce.core.Formatter", [
-	"tinymce/dom/TreeWalker",
-	"tinymce/dom/RangeUtils",
-	"tinymce/dom/BookmarkManager",
-	"tinymce/dom/ElementUtils",
-	"tinymce/util/Fun",
-	"tinymce/util/Tools",
-	"tinymce/fmt/Preview",
-	"tinymce/fmt/Hooks"
+	"tinymce.core.dom.TreeWalker",
+	"tinymce.core.dom.RangeUtils",
+	"tinymce.core.dom.BookmarkManager",
+	"tinymce.core.dom.ElementUtils",
+	"tinymce.core.util.Fun",
+	"tinymce.core.util.Tools",
+	"tinymce.core.fmt.Preview",
+	"tinymce.core.fmt.Hooks"
 ], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Fun, Tools, Preview, Hooks) {
 	/**
 	 * Constructs a new formatter instance.

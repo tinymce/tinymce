@@ -20,14 +20,14 @@
  */
 define("tinymce.core.EditorManager", [
 	"tinymce.core.Editor",
-	"tinymce/dom/DomQuery",
-	"tinymce/dom/DOMUtils",
-	"tinymce/util/URI",
+	"tinymce.core.dom.DomQuery",
+	"tinymce.core.dom.DOMUtils",
+	"tinymce.core.util.URI",
 	"tinymce.core.Env",
-	"tinymce/util/Tools",
-	"tinymce/util/Promise",
-	"tinymce/util/Observable",
-	"tinymce/util/I18n",
+	"tinymce.core.util.Tools",
+	"tinymce.core.util.Promise",
+	"tinymce.core.util.Observable",
+	"tinymce.core.util.I18n",
 	"tinymce.core.FocusManager",
 	"tinymce.core.AddOnManager"
 ], function(Editor, $, DOMUtils, URI, Env, Tools, Promise, Observable, I18n, FocusManager, AddOnManager) {

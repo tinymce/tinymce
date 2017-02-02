@@ -19,7 +19,7 @@
  */
 define("tinymce.core.ui.ColorButton", [
 	"tinymce.core.ui.PanelButton",
-	"tinymce/dom/DOMUtils"
+	"tinymce.core.dom.DOMUtils"
 ], function(PanelButton, DomUtils) {
 	"use strict";
 

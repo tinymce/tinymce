@@ -15,9 +15,9 @@
  * @class tinymce.core.EnterKey
  */
 define("tinymce.core.EnterKey", [
-	"tinymce/dom/TreeWalker",
-	"tinymce/dom/RangeUtils",
-	"tinymce/caret/CaretContainer",
+	"tinymce.core.dom.TreeWalker",
+	"tinymce.core.dom.RangeUtils",
+	"tinymce.core.caret.CaretContainer",
 	"tinymce.core.Env"
 ], function(TreeWalker, RangeUtils, CaretContainer, Env) {
 	var isIE = Env.ie && Env.ie < 11;

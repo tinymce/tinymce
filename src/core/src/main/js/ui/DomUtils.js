@@ -17,7 +17,7 @@
 define("tinymce.core.ui.DomUtils", [
 	"tinymce.core.Env",
 	"tinymce.core.util.Tools",
-	"tinymce/dom/DOMUtils"
+	"tinymce.core.dom.DOMUtils"
 ], function(Env, Tools, DOMUtils) {
 	"use strict";
 

@@ -15,11 +15,11 @@
  * @class tinymce.core.EditorUpload
  */
 define("tinymce.core.EditorUpload", [
-	"tinymce/util/Arr",
-	"tinymce/file/Uploader",
-	"tinymce/file/ImageScanner",
-	"tinymce/file/BlobCache",
-	"tinymce/file/UploadStatus",
+	"tinymce.core.util.Arr",
+	"tinymce.core.file.Uploader",
+	"tinymce.core.file.ImageScanner",
+	"tinymce.core.file.BlobCache",
+	"tinymce.core.file.UploadStatus",
 	"tinymce.core.ErrorReporter"
 ], function(Arr, Uploader, ImageScanner, BlobCache, UploadStatus, ErrorReporter) {
 	return function(editor) {

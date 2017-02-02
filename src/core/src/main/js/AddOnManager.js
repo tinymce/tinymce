@@ -14,8 +14,8 @@
  * @class tinymce.core.AddOnManager
  */
 define("tinymce.core.AddOnManager", [
-	"tinymce/dom/ScriptLoader",
-	"tinymce/util/Tools"
+	"tinymce.core.dom.ScriptLoader",
+	"tinymce.core.util.Tools"
 ], function(ScriptLoader, Tools) {
 	var each = Tools.each;
 

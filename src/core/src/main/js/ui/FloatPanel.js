@@ -22,7 +22,7 @@ define("tinymce.core.ui.FloatPanel", [
 	"tinymce.core.ui.Movable",
 	"tinymce.core.ui.Resizable",
 	"tinymce.core.ui.DomUtils",
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.util.Delay"
 ], function(Panel, Movable, Resizable, DomUtils, $, Delay) {
 	"use strict";

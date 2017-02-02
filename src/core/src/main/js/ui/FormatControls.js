@@ -20,10 +20,10 @@ define("tinymce.core.ui.FormatControls", [
 	"tinymce.core.ui.FloatPanel",
 	"tinymce.core.util.Tools",
 	"tinymce.core.util.Arr",
-	"tinymce/dom/DOMUtils",
+	"tinymce.core.dom.DOMUtils",
 	"tinymce.core.EditorManager",
 	"tinymce.core.Env",
-	"tinymce/fmt/FontInfo"
+	"tinymce.core.fmt.FontInfo"
 ], function(Control, Widget, FloatPanel, Tools, Arr, DOMUtils, EditorManager, Env, FontInfo) {
 	var each = Tools.each;
 

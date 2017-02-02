@@ -15,9 +15,9 @@
  * @extends tinymce.core.util.Observable
  */
 define("tinymce.core.EditorObservable", [
-	"tinymce/util/Observable",
-	"tinymce/dom/DOMUtils",
-	"tinymce/util/Tools"
+	"tinymce.core.util.Observable",
+	"tinymce.core.dom.DOMUtils",
+	"tinymce.core.util.Tools"
 ], function(Observable, DOMUtils, Tools) {
 	var DOM = DOMUtils.DOM, customEventRootDelegates;
 

@@ -24,7 +24,7 @@ define("tinymce.core.ui.Container", [
 	"tinymce.core.ui.Factory",
 	"tinymce.core.ui.KeyboardNavigation",
 	"tinymce.core.util.Tools",
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.ui.ClassList",
 	"tinymce.core.ui.ReflowQueue"
 ], function(Control, Collection, Selector, Factory, KeyboardNavigation, Tools, $, ClassList, ReflowQueue) {

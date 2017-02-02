@@ -18,17 +18,17 @@
  */
 define("tinymce.core.util.Quirks", [
 	"tinymce.core.util.VK",
-	"tinymce/dom/RangeUtils",
-	"tinymce/dom/TreeWalker",
-	"tinymce/dom/NodePath",
-	"tinymce/html/Node",
-	"tinymce/html/Entities",
+	"tinymce.core.dom.RangeUtils",
+	"tinymce.core.dom.TreeWalker",
+	"tinymce.core.dom.NodePath",
+	"tinymce.core.html.Node",
+	"tinymce.core.html.Entities",
 	"tinymce.core.Env",
 	"tinymce.core.util.Tools",
 	"tinymce.core.util.Delay",
-	"tinymce/caret/CaretContainer",
-	"tinymce/caret/CaretPosition",
-	"tinymce/caret/CaretWalker"
+	"tinymce.core.caret.CaretContainer",
+	"tinymce.core.caret.CaretPosition",
+	"tinymce.core.caret.CaretWalker"
 ], function(VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools, Delay, CaretContainer, CaretPosition, CaretWalker) {
 	return function(editor) {
 		var each = Tools.each, $ = editor.$;

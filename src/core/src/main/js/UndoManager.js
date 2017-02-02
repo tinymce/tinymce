@@ -14,9 +14,9 @@
  * @class tinymce.core.UndoManager
  */
 define("tinymce.core.UndoManager", [
-	"tinymce/util/VK",
-	"tinymce/util/Tools",
-	"tinymce/undo/Levels"
+	"tinymce.core.util.VK",
+	"tinymce.core.util.Tools",
+	"tinymce.core.undo.Levels"
 ], function(VK, Tools, Levels) {
 	return function(editor) {
 		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;

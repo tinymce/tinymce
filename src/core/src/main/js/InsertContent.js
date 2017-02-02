@@ -16,12 +16,12 @@
  */
 define("tinymce.core.InsertContent", [
 	"tinymce.core.Env",
-	"tinymce/util/Tools",
-	"tinymce/html/Serializer",
-	"tinymce/caret/CaretWalker",
-	"tinymce/caret/CaretPosition",
-	"tinymce/dom/ElementUtils",
-	"tinymce/dom/NodeType",
+	"tinymce.core.util.Tools",
+	"tinymce.core.html.Serializer",
+	"tinymce.core.caret.CaretWalker",
+	"tinymce.core.caret.CaretPosition",
+	"tinymce.core.dom.ElementUtils",
+	"tinymce.core.dom.NodeType",
 	"tinymce.core.InsertList"
 ], function(Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType, InsertList) {
 	var isTableCell = NodeType.matchNodeNames('td th');

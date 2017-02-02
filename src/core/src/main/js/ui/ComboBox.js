@@ -20,7 +20,7 @@ define("tinymce.core.ui.ComboBox", [
 	"tinymce.core.ui.Widget",
 	"tinymce.core.ui.Factory",
 	"tinymce.core.ui.DomUtils",
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.util.VK",
 	"tinymce.core.util.Tools"
 ], function(Widget, Factory, DomUtils, $, VK, Tools) {

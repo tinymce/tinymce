@@ -15,7 +15,7 @@
  * @mixin tinymce.ui.Scrollable
  */
 define("tinymce.core.ui.Scrollable", [
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.ui.DragHelper"
 ], function($, DragHelper) {
 	"use strict";

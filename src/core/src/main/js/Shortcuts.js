@@ -19,7 +19,7 @@
  * editor.shortcuts.add('access+a', function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
  */
 define("tinymce.core.Shortcuts", [
-	"tinymce/util/Tools",
+	"tinymce.core.util.Tools",
 	"tinymce.core.Env"
 ], function(Tools, Env) {
 	var each = Tools.each, explode = Tools.explode;

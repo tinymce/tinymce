@@ -20,7 +20,7 @@
 define("tinymce.core.fmt.Preview", [
 	"tinymce.core.dom.DOMUtils",
 	"tinymce.core.util.Tools",
-	"tinymce/html/Schema"
+	"tinymce.core.html.Schema"
 ], function(DOMUtils, Tools, Schema) {
 	var each = Tools.each;
 	var dom = DOMUtils.DOM;

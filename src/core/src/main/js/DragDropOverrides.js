@@ -15,12 +15,12 @@
  * @class tinymce.core.DragDropOverrides
  */
 define("tinymce.core.DragDropOverrides", [
-	"tinymce/dom/NodeType",
-	"tinymce/util/Arr",
-	"tinymce/util/Fun",
-	"tinymce/util/Delay",
-	"tinymce/dom/DOMUtils",
-	"tinymce/dom/MousePosition"
+	"tinymce.core.dom.NodeType",
+	"tinymce.core.util.Arr",
+	"tinymce.core.util.Fun",
+	"tinymce.core.util.Delay",
+	"tinymce.core.dom.DOMUtils",
+	"tinymce.core.dom.MousePosition"
 ], function(
 	NodeType, Arr, Fun, Delay, DOMUtils, MousePosition
 ) {

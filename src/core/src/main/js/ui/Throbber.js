@@ -15,7 +15,7 @@
  * @class tinymce.core.ui.Throbber
  */
 define("tinymce.core.ui.Throbber", [
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.ui.Control",
 	"tinymce.core.util.Delay"
 ], function($, Control, Delay) {

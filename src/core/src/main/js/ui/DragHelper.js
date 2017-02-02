@@ -26,7 +26,7 @@
  * @class tinymce.core.ui.DragHelper
  */
 define("tinymce.core.ui.DragHelper", [
-	"tinymce/dom/DomQuery"
+	"tinymce.core.dom.DomQuery"
 ], function($) {
 	"use strict";
 

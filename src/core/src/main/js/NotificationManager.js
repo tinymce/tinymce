@@ -20,9 +20,9 @@
  * });
  */
 define("tinymce.core.NotificationManager", [
-	"tinymce/ui/Notification",
-	"tinymce/util/Delay",
-	"tinymce/util/Tools"
+	"tinymce.core.ui.Notification",
+	"tinymce.core.util.Delay",
+	"tinymce.core.util.Tools"
 ], function(Notification, Delay, Tools) {
 	return function(editor) {
 		var self = this, notifications = [];

@@ -18,7 +18,7 @@
 define("tinymce.core.ui.SplitButton", [
 	"tinymce.core.ui.MenuButton",
 	"tinymce.core.ui.DomUtils",
-	"tinymce/dom/DomQuery"
+	"tinymce.core.dom.DomQuery"
 ], function(MenuButton, DomUtils, $) {
 	return MenuButton.extend({
 		Defaults: {

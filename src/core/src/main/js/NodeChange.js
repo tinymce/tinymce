@@ -15,9 +15,9 @@
  * @private
  */
 define("tinymce.core.NodeChange", [
-	"tinymce/dom/RangeUtils",
+	"tinymce.core.dom.RangeUtils",
 	"tinymce.core.Env",
-	"tinymce/util/Delay"
+	"tinymce.core.util.Delay"
 ], function(RangeUtils, Env, Delay) {
 	return function(editor) {
 		var lastRng, lastPath = [];

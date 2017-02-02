@@ -15,9 +15,9 @@
  * @private
  */
 define("tinymce.core.InsertList", [
-	"tinymce/util/Tools",
-	"tinymce/caret/CaretWalker",
-	"tinymce/caret/CaretPosition"
+	"tinymce.core.util.Tools",
+	"tinymce.core.caret.CaretWalker",
+	"tinymce.core.caret.CaretPosition"
 ], function(Tools, CaretWalker, CaretPosition) {
 	var isListFragment = function(fragment) {
 		var firstChild = fragment.firstChild;

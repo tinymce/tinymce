@@ -9,7 +9,7 @@
  */
 
 define("tinymce.core.util.JSONP", [
-	"tinymce/dom/DOMUtils"
+	"tinymce.core.dom.DOMUtils"
 ], function(DOMUtils) {
 	return {
 		callbacks: {},

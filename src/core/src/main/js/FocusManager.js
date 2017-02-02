@@ -18,8 +18,8 @@
  * @class tinymce.core.FocusManager
  */
 define("tinymce.core.FocusManager", [
-	"tinymce/dom/DOMUtils",
-	"tinymce/util/Delay",
+	"tinymce.core.dom.DOMUtils",
+	"tinymce.core.util.Delay",
 	"tinymce.core.Env"
 ], function(DOMUtils, Delay, Env) {
 	var selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;

@@ -16,7 +16,7 @@
  */
 define("tinymce.core.undo.Fragments", [
 	"tinymce.core.util.Arr",
-	"tinymce/html/Entities",
+	"tinymce.core.html.Entities",
 	"tinymce.core.undo.Diff"
 ], function (Arr, Entities, Diff) {
 	var getOuterHtml = function (elm) {

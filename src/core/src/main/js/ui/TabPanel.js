@@ -19,7 +19,7 @@
  */
 define("tinymce.core.ui.TabPanel", [
 	"tinymce.core.ui.Panel",
-	"tinymce/dom/DomQuery",
+	"tinymce.core.dom.DomQuery",
 	"tinymce.core.ui.DomUtils"
 ], function(Panel, $, DomUtils) {
 	"use strict";

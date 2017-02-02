@@ -16,7 +16,7 @@
  */
 define("tinymce.core.LegacyInput", [
 	"tinymce.core.EditorManager",
-	"tinymce/util/Tools"
+	"tinymce.core.util.Tools"
 ], function(EditorManager, Tools) {
 	var each = Tools.each, explode = Tools.explode;
 

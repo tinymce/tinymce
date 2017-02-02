@@ -16,11 +16,11 @@
  */
 define("tinymce.core.EditorCommands", [
 	"tinymce.core.Env",
-	"tinymce/util/Tools",
-	"tinymce/dom/RangeUtils",
-	"tinymce/dom/TreeWalker",
+	"tinymce.core.util.Tools",
+	"tinymce.core.dom.RangeUtils",
+	"tinymce.core.dom.TreeWalker",
 	"tinymce.core.InsertContent",
-	"tinymce/dom/NodeType"
+	"tinymce.core.dom.NodeType"
 ], function(Env, Tools, RangeUtils, TreeWalker, InsertContent, NodeType) {
 	// Added for compression purposes
 	var each = Tools.each, extend = Tools.extend;

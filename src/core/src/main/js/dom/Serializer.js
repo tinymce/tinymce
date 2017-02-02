@@ -16,15 +16,15 @@
  */
 define("tinymce.core.dom.Serializer", [
 	"tinymce.core.dom.DOMUtils",
-	"tinymce/html/DomParser",
-	"tinymce/html/SaxParser",
-	"tinymce/html/Entities",
-	"tinymce/html/Serializer",
-	"tinymce/html/Node",
-	"tinymce/html/Schema",
+	"tinymce.core.html.DomParser",
+	"tinymce.core.html.SaxParser",
+	"tinymce.core.html.Entities",
+	"tinymce.core.html.Serializer",
+	"tinymce.core.html.Node",
+	"tinymce.core.html.Schema",
 	"tinymce.core.Env",
 	"tinymce.core.util.Tools",
-	"tinymce/text/Zwsp"
+	"tinymce.core.text.Zwsp"
 ], function(DOMUtils, DomParser, SaxParser, Entities, Serializer, Node, Schema, Env, Tools, Zwsp) {
 	var each = Tools.each, trim = Tools.trim;
 	var DOM = DOMUtils.DOM;

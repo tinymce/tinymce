@@ -35,8 +35,8 @@
  * });
  */
 define("tinymce.core.WindowManager", [
-	"tinymce/ui/Window",
-	"tinymce/ui/MessageBox"
+	"tinymce.core.ui.Window",
+	"tinymce.core.ui.MessageBox"
 ], function(Window, MessageBox) {
 	return function(editor) {
 		var self = this, windows = [];

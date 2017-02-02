@@ -22,11 +22,11 @@
 define("tinymce.core.dom.DOMUtils", [
 	"tinymce.core.dom.Sizzle",
 	"tinymce.core.dom.DomQuery",
-	"tinymce/html/Styles",
+	"tinymce.core.html.Styles",
 	"tinymce.core.dom.EventUtils",
 	"tinymce.core.dom.TreeWalker",
 	"tinymce.core.dom.Range",
-	"tinymce/html/Entities",
+	"tinymce.core.html.Entities",
 	"tinymce.core.Env",
 	"tinymce.core.util.Tools",
 	"tinymce.core.dom.StyleSheetLoader"
