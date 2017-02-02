@@ -62,6 +62,11 @@ module.exports = function (grunt) {
 					{
 						src: "scratch/inline/tinymce.js",
 						dest: "dist/tinymce/tinymce.min.js"
+					},
+
+					{
+						src: "src/main/js/jquery.tinymce.js",
+						dest: "dist/tinymce/jquery.tinymce.min.js"
 					}
 				]
 			}

@@ -11,14 +11,6 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: packageData,
 
-		eslint: {
-			options: {
-				config: ".eslintrc"
-			},
-
-			core: ["js/tinymce/classes/**/*.js"]
-		},
-
 		qunit: {
 			core: {
 				options: {
@@ -26,67 +18,6 @@ module.exports = function(grunt) {
 						"tests/index.html"
 					]
 				}
-			}
-		},
-
-		amdlc: {
-			core: {
-				options: {
-					version: packageData.version,
-					releaseDate: packageData.date,
-					baseDir: "js/tinymce/classes",
-					rootNS: "tinymce",
-					outputSource: "js/tinymce/tinymce.js",
-					outputMinified: "js/tinymce/tinymce.min.js",
-					outputDev: "js/tinymce/tinymce.dev.js",
-					verbose: false,
-					expose: "public",
-					compress: true,
-
-					from: [
-						"geom/Rect.js",
-						"dom/DomQuery.js",
-						"EditorManager.js",
-						"LegacyInput.js",
-						"util/XHR.js",
-						"util/JSONRequest.js",
-						"util/JSONP.js",
-						"util/LocalStorage.js",
-						"Compat.js",
-						"ui/*.js",
-						"Register.js"
-					]
-				}
-			}
-		},
-
-		uglify: {
-			options: {
-				beautify: {
-					ascii_only: true,
-					screw_ie8: false
-				},
-
-				compress: {
-					screw_ie8: false
-				}
-			},
-
-			themes: {
-				src: ["js/tinymce/themes/*/theme.js"],
-				expand: true,
-				ext: ".min.js"
-			},
-
-			plugins: {
-				src: ["js/tinymce/plugins/*/plugin.js"],
-				expand: true,
-				ext: ".min.js"
-			},
-
-			"jquery-plugin": {
-				src: ["js/tinymce/classes/jquery.tinymce.js"],
-				dest: "js/tinymce/jquery.tinymce.min.js"
 			}
 		},
 
@@ -578,6 +509,7 @@ module.exports = function(grunt) {
 		},
 
 		subgrunt: {
+			'core': {path: 'src/core'},
 			'advlist-plugin': {path: 'src/plugins/advlist'},
 			'anchor-plugin': {path: 'src/plugins/anchor'},
 			'autolink-plugin': {path: 'src/plugins/autolink'},
@@ -627,6 +559,17 @@ module.exports = function(grunt) {
 		},
 
 		copy: {
+			"core": {
+				files: [
+					{
+						expand: true,
+						cwd: 'src/core/dist/tinymce',
+						src: ['**'],
+						dest: 'js/tinymce/'
+					}
+				]
+			},
+
 			"plugins": {
 				files: [
 					{
@@ -691,8 +634,6 @@ module.exports = function(grunt) {
 	grunt.loadTasks("tools/tasks");
 	grunt.loadNpmTasks('@ephox/bolt');
 
-	grunt.registerTask("lint", ["eslint"]);
-	grunt.registerTask("minify", ["amdlc", "uglify"]);
 	grunt.registerTask("test", ["qunit"]);
-	grunt.registerTask("default", ["lint", "minify", "subgrunt", "copy", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
+	grunt.registerTask("default", ["subgrunt", "copy", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
