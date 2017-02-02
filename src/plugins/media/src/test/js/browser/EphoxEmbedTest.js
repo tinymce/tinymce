@@ -1,6 +1,6 @@
 asynctest('browser.core.MediaEmbedTest', [
 	'global!tinymce',
-	'tinymce.media.Plugin',
+	'tinymce.plugins.media.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyUi',
 	'ephox.mcagar.api.TinyApis',
@@ -9,7 +9,7 @@ asynctest('browser.core.MediaEmbedTest', [
 	'ephox.agar.api.ApproxStructure',
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Pipeline',
-	'tinymce.media.test.Utils'
+	'tinymce.plugins.media.test.Utils'
 ], function (
 	tinymce, Plugin, TinyLoader,
 	TinyUi, TinyApis, Assertions, Element, ApproxStructure, Step, Pipeline, Utils

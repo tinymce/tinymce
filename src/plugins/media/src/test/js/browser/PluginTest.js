@@ -1,13 +1,13 @@
 asynctest('browser.core.PluginTest', [
 	'global!tinymce',
-	'tinymce.media.Plugin',
+	'tinymce.plugins.media.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyDom',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyUi',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Assertions',
-	'tinymce.media.test.Utils'
+	'tinymce.plugins.media.test.Utils'
 ], function (
 	tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
 	TinyUi, Pipeline, Assertions, Utils

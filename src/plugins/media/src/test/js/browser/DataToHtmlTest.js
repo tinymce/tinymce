@@ -1,6 +1,6 @@
 asynctest('browser.core.DataToHtmlTest', [
 	'global!tinymce',
-	'tinymce.media.Plugin',
+	'tinymce.plugins.media.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Step',
@@ -8,8 +8,8 @@ asynctest('browser.core.DataToHtmlTest', [
 	'ephox.agar.api.Assertions',
 	'ephox.sugar.api.node.Element',
 	'ephox.agar.api.ApproxStructure',
-	'tinymce.media.test.Utils',
-	'tinymce.media.core.DataToHtml'
+	'tinymce.plugins.media.test.Utils',
+	'tinymce.plugins.media.core.DataToHtml'
 ], function (
 	tinymce, Plugin, TinyLoader,
 	Pipeline, Step, Waiter, Assertions, Element, ApproxStructure, Utils, DataToHtml

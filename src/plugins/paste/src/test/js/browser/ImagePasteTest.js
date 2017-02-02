@@ -1,11 +1,11 @@
-asynctest('tinymce.paste.browser.ImagePasteTest', [
+asynctest('tinymce.plugins.paste.browser.ImagePasteTest', [
 	'global!tinymce.util.Delay',
 	'global!tinymce.util.Promise',
 	'global!atob',
 	'global!Blob',
-	'tinymce.paste.Plugin',
-	'tinymce.paste.core.Clipboard',
-	'tinymce.paste.test.LegacyUnit',
+	'tinymce.plugins.paste.Plugin',
+	'tinymce.plugins.paste.core.Clipboard',
+	'ephox.mcagar.api.LegacyUnit',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.agar.api.Pipeline',
 	'ephox.agar.api.Step',

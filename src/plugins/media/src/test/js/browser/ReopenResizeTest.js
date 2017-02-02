@@ -1,6 +1,6 @@
 asynctest('browser.core.PluginTest', [
 	'global!tinymce',
-	'tinymce.media.Plugin',
+	'tinymce.plugins.media.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyDom',
 	'ephox.mcagar.api.TinyApis',
@@ -11,7 +11,7 @@ asynctest('browser.core.PluginTest', [
 	'ephox.agar.api.Step',
 	'ephox.agar.api.Waiter',
 	'ephox.agar.api.ApproxStructure',
-	'tinymce.media.test.Utils'
+	'tinymce.plugins.media.test.Utils'
 ], function (
 	tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
 	TinyUi, Pipeline, UiFinder, FocusTools, Step, Waiter, ApproxStructure, Utils

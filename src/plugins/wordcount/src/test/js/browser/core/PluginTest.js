@@ -1,5 +1,5 @@
 asynctest('browser.core.PluginTest', [
-	'tinymce.wordcount.Plugin',
+	'tinymce.plugins.wordcount.Plugin',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyDom',

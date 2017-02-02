@@ -1,4 +1,4 @@
-define('tinymce.paste.test.Strings', [
+define('tinymce.plugins.paste.test.Strings', [
 ], function () {
 	/* eslint-disable max-len */
 

@@ -1,5 +1,6 @@
 configure({
     configs: [
+		'../../../src/core/config/bolt/browser.js',
         '../../../src/plugins/wordcount/config/bolt/browser.js',
         '../../../src/plugins/media/config/bolt/browser.js',
         '../../../src/plugins/lists/config/bolt/browser.js',

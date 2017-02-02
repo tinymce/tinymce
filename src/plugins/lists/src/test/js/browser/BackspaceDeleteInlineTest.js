@@ -1,8 +1,8 @@
 asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', [
 	'global!document',
 	'ephox/tinymce',
-	'tinymce.lists.Plugin',
-	'tinymce.lists.test.LegacyUnit',
+	'tinymce.plugins.lists.Plugin',
+	'ephox.mcagar.api.LegacyUnit',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.agar.api.Pipeline'
 ], function (

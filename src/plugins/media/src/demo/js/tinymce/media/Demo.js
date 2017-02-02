@@ -10,8 +10,8 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.media.Demo", [
-	"tinymce.media.Plugin",
+define("tinymce.plugins.mediaDemo", [
+	"tinymce.plugins.mediaPlugin",
 	"global!tinymce"
 ], function (Plugin, tinymce) {
 	return function () {

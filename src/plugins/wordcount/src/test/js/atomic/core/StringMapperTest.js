@@ -1,6 +1,6 @@
 test('atomic.core.StringMapperTest', [
-	'tinymce.wordcount.text.StringMapper',
-	'tinymce.wordcount.text.UnicodeData'
+	'tinymce.plugins.wordcount.text.StringMapper',
+	'tinymce.plugins.wordcount.text.UnicodeData'
 ], function (StringMapper, UnicodeData) {
 	var ci = UnicodeData.characterIndices;
 

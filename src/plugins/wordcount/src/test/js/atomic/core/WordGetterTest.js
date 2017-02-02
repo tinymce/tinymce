@@ -1,5 +1,5 @@
 test('atomic.core.WordGetterTest', [
-	'tinymce.wordcount.text.WordGetter'
+	'tinymce.plugins.wordcount.text.WordGetter'
 ], function (WordGetter) {
 	var getWords = WordGetter.getWords;
 

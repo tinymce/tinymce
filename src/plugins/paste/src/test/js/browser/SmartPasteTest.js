@@ -1,7 +1,7 @@
-asynctest('tinymce.paste.browser.ImagePasteTest', [
-	'tinymce.paste.Plugin',
-	'tinymce.paste.core.SmartPaste',
-	'tinymce.paste.test.LegacyUnit',
+asynctest('tinymce.plugins.paste.browser.ImagePasteTest', [
+	'tinymce.plugins.paste.Plugin',
+	'tinymce.plugins.paste.core.SmartPaste',
+	'ephox.mcagar.api.LegacyUnit',
 	'ephox.mcagar.api.TinyLoader',
 	'ephox.agar.api.Pipeline'
 ], function (

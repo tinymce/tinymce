@@ -1,6 +1,6 @@
 test('atomic.core.HtmlToDataTest', [
 	'ephox/tinymce',
-	'tinymce.media.core.HtmlToData',
+	'tinymce.plugins.media.core.HtmlToData',
 	'ephox.agar.api.RawAssertions'
 ], function (tinymce, HtmlToData, RawAssertions) {
 	var testHtmlToData = function (html, expected) {

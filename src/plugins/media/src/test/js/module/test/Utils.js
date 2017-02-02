@@ -1,4 +1,4 @@
-define('tinymce.media.test.Utils', [
+define('tinymce.plugins.media.test.Utils', [
 	'global!tinymce',
 	'ephox.mcagar.api.TinyDom',
 	'ephox.agar.api.UiFinder',

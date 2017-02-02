@@ -1,6 +1,6 @@
 test('atomic.core.WordBoundaryTest', [
-	'tinymce.wordcount.text.StringMapper',
-	'tinymce.wordcount.text.WordBoundary'
+	'tinymce.plugins.wordcount.text.StringMapper',
+	'tinymce.plugins.wordcount.text.WordBoundary'
 ], function (StringMapper, WordBoundary) {
 	var iwb = function(str, index) {
 		return WordBoundary.isWordBoundary(StringMapper.classify(str), index);
