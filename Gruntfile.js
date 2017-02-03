@@ -70,12 +70,12 @@ module.exports = function(grunt) {
 					baseDir: "tinymce",
 
 					excludes: [
-						"js/**/bolt/bootstrap-*",
-						"js/**/scratch",
-						"js/**/lib",
-						"js/**/dependency",
+						"src/**/bolt/bootstrap-*",
+						"src/**/dist",
+						"src/**/scratch",
+						"src/**/lib",
+						"src/**/dependency",
 						"js/tinymce/tinymce.full.min.js",
-						"js/tinymce/plugins/moxiemanager",
 						"js/tests/.jshintrc"
 					],
 
@@ -83,6 +83,8 @@ module.exports = function(grunt) {
 				},
 
 				src: [
+					"config",
+					"src",
 					"js",
 					"tests",
 					"tools",
@@ -445,51 +447,6 @@ module.exports = function(grunt) {
 				"node_modules",
 				"npm-debug.log"
 			]
-		},
-
-		watch: {
-			core: {
-				files: ["js/tinymce/classes/**/*.js"],
-				tasks: ["amdlc:core", "bolt-build", "skin"],
-				options: {
-					spawn: false
-				}
-			},
-
-			plugins: {
-				files: ["js/tinymce/plugins/**/*.js"],
-				tasks: [
-					"amdlc:paste-plugin",
-					"bolt-build:imagetools-plugin",
-					"bolt-build:media-plugin",
-					"bolt-build:wordcount-plugin",
-					"bolt-build:lists-plugin",
-					"amdlc:codesample-plugin",
-					"amdlc:table-plugin",
-					"amdlc:spellchecker-plugin",
-					"uglify:plugins",
-					"eslint:plugins"
-				],
-				options: {
-					spawn: false
-				}
-			},
-
-			themes: {
-				files: ["js/tinymce/themes/**/*.js"],
-				tasks: ["eslint:themes", "uglify:themes"],
-				options: {
-					spawn: false
-				}
-			},
-
-			skins: {
-				files: ["js/tinymce/skins/**/*"],
-				tasks: ["less"],
-				options: {
-					spawn: false
-				}
-			}
 		},
 
 		bedrock: {

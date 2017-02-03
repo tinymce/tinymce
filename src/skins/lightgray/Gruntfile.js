@@ -81,6 +81,16 @@ module.exports = function (grunt) {
 					}
 				]
 			}
+		},
+
+		watch: {
+			skin: {
+				files: ["src/main/less/**/*"],
+				tasks: ["less", "copy"],
+				options: {
+					spawn: false
+				}
+			}
 		}
 	});
 
@@ -88,6 +98,7 @@ module.exports = function (grunt) {
 	grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
 	grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
 	grunt.task.loadTasks("../../../node_modules/grunt-contrib-less/tasks");
+	grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
 
 	grunt.registerTask("default", ["less", "copy"]);
 };
