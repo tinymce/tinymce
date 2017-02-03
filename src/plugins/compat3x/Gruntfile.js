@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 				files: [
 					{expand: true, cwd: 'src/main', src: ['img/**'], dest: 'dist/compat3x'},
 					{expand: true, cwd: 'src/main', src: ['css/**'], dest: 'dist/compat3x'},
-					{expand: true, cwd: 'src/main/js', src: ['utils/**', 'plugin.js'], dest: 'dist/compat3x'}
+					{expand: true, cwd: 'src/main/js', src: ['utils/**', 'plugin.js', 'tiny_mce_popup.js'], dest: 'dist/compat3x'}
 				]
 			}
 		},

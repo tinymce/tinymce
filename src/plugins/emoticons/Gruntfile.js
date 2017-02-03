@@ -30,6 +30,14 @@ module.exports = function (grunt) {
 					{
 						src: "scratch/inline/plugin.raw.js",
 						dest: "dist/emoticons/plugin.js"
+					},
+
+					{
+						flatten: true,
+						expand: true,
+						cwd: "src/main/img",
+						src: "*.gif",
+						dest: "dist/emoticons/img/"
 					}
 				]
 			}
