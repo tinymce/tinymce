@@ -4,15 +4,12 @@ define('ephox.mcagar.api.LegacyUnit', [
   'ephox.agar.api.Logger',
   'ephox.agar.api.Assertions'
 ], function (window, Step, Logger, Assertions) {
-  var stats = { assertions: 0, tests: 0 };
-
   var test = function (message, fn) {
     return function (editor) {
       return Logger.t(
         message,
         Step.sync(function () {
           fn(editor);
-          stats.tests++;
         })
       );
     };
@@ -24,7 +21,6 @@ define('ephox.mcagar.api.LegacyUnit', [
         message,
         Step.async(function (done, die) {
           fn(editor, done, die);
-          stats.tests++;
         })
       );
     };
@@ -111,13 +107,6 @@ define('ephox.mcagar.api.LegacyUnit', [
 
   var equal = function (actual, expected, message) {
     Assertions.assertEq(message ? 'No message specified' : message, expected, actual);
-    stats.assertions++;
-  };
-
-  // Expose to global namespace so that we can verify that
-  // the test/assertion count is equal while doing test porting
-  window.getLegacyUnitStats = function () {
-    return stats;
   };
 
   return {
