@@ -1,38 +1,20 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.fmt.HooksTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/fmt/Hooks"
-], function (LegacyUnit, Pipeline, Hooks) {
+	'ephox.mcagar.api.TinyLoader',
+	'tinymce.core.fmt.Hooks'
+], function (LegacyUnit, Pipeline, TinyLoader, Hooks) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	module("tinymce.fmt.Hooks", {
-		setupModule: function () {
-			QUnit.stop();
-
-			tinymce.init({
-				selector: "textarea",
-				add_unload_trigger: false,
-				disable_nodechange: true,
-				skin: false,
-				entities: 'raw',
-				indent: false,
-				init_instance_callback: function (ed) {
-					editor = ed;
-					QUnit.start();
-				}
-			});
-		}
-	});
-
-	suite.test('pre - postProcessHook', function () {
-		function assertPreHook (setupHtml, setupSelection, expected) {
+	suite.test('pre - postProcessHook', function (editor) {
+		var assertPreHook = function (setupHtml, setupSelection, expected) {
 			editor.getBody().innerHTML = setupHtml;
-			Utils.setSelection.apply(Utils, setupSelection);
+			LegacyUnit.setSelection.apply(LegacyUnit, [editor].concat(setupSelection));
 			Hooks.postProcess('pre', editor);
 			LegacyUnit.equal(editor.getContent(), expected);
-		}
+		};
 
 		assertPreHook(
 			'<pre>a</pre><pre>b</pre>',
@@ -77,7 +59,13 @@ asynctest('browser.tinymce.core.noname', [
 		);
 	});
 
-	Pipeline.async({}, suite.toSteps({}), function () {
-		success();
-	}, failure);
+	TinyLoader.setup(function (editor, onSuccess, onFailure) {
+		Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+	}, {
+		selector: "textarea",
+		add_unload_trigger: false,
+		disable_nodechange: true,
+		entities: 'raw',
+		indent: false
+	}, success, failure);
 });

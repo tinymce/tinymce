@@ -1,8 +1,8 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.LineUtilsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.core.Env",
-	"tinymce.core.caret.LineUtils"
+	'tinymce.core.Env',
+	'tinymce.core.caret.LineUtils'
 ], function (LegacyUnit, Pipeline, Env, LineUtils) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

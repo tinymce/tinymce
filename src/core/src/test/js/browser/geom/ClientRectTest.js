@@ -1,15 +1,13 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.geom.ClientRectTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/geom/ClientRect"
+	'tinymce.core.geom.ClientRect'
 ], function (LegacyUnit, Pipeline, ClientRect) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	module("tinymce.geom.ClientRect");
-
-	function rect (x, y, w, h) {
+	var rect = function (x, y, w, h) {
 		return {
 			left: x,
 			top: y,
@@ -18,7 +16,7 @@ asynctest('browser.tinymce.core.noname', [
 			width: w,
 			height: h
 		};
-	}
+	};
 
 	suite.test('clone', function () {
 		LegacyUnit.deepEqual(ClientRect.clone(rect(10, 20, 30, 40)), rect(10, 20, 30, 40));

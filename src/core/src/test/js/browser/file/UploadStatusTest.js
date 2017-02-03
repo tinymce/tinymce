@@ -1,13 +1,13 @@
-asynctest('browser.tinymce.core.noname', [
-	'ephox.mcagar.api.LegacyUnit',
+asynctest('browser.tinymce.core.file.UploadStatusTest', [
 	'ephox.agar.api.Pipeline',
-	"tinymce/file/UploadStatus"
-], function (LegacyUnit, Pipeline, UploadStatus) {
+	'ephox.mcagar.api.LegacyUnit',
+	'tinymce.core.file.UploadStatus'
+], function (Pipeline, LegacyUnit, UploadStatus) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	suite.test("hasBlobUri/markPending", function () {
+	suite.test('hasBlobUri/markPending', function () {
 		var status = new UploadStatus();
 
 		LegacyUnit.strictEqual(status.hasBlobUri("nonexisting_uri"), false);

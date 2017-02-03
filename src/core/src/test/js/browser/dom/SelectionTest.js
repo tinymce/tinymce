@@ -1,38 +1,17 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.dom.SelectionTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.caret.CaretContainer",
-	"tinymce.text.Zwsp",
-	"tinymce/Env"
-], function(LegacyUnit, Pipeline, CaretContainer, Zwsp, Env) {
+	'ephox.mcagar.api.TinyLoader',
+	'tinymce.core.caret.CaretContainer',
+	'tinymce.core.text.Zwsp',
+	'tinymce.core.Env',
+	'global!document'
+], function (LegacyUnit, Pipeline, TinyLoader, CaretContainer, Zwsp, Env, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	module("tinymce.dom.Selection", {
-		setupModule: function() {
-			QUnit.stop();
-
-			tinymce.init({
-				selector: "textarea",
-				add_unload_trigger: false,
-				skin: false,
-				forced_root_block: '',
-				entities: 'raw',
-				valid_styles: {
-					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
-				},
-				custom_elements: 'custom1,~custom2',
-				extended_valid_elements: 'custom1,custom2',
-				init_instance_callback: function(ed) {
-					window.editor = ed;
-					QUnit.start();
-				}
-			});
-		}
-	});
-
-	suite.test('getContent', function() {
+	suite.test('getContent', function (editor) {
 		var rng, eventObj;
 
 		// Get selected contents
@@ -54,9 +33,9 @@ asynctest('browser.tinymce.core.noname', [
 		// Get selected contents, onGetContent event
 		eventObj = {};
 
-		function handler(event) {
+		var handler = function (event) {
 			eventObj = event;
-		}
+		};
 
 		editor.on('GetContent', handler);
 		editor.setContent('<p>text</p>');
@@ -69,7 +48,7 @@ asynctest('browser.tinymce.core.noname', [
 		editor.off('GetContent', handler);
 	});
 
-	suite.test('setContent', function() {
+	suite.test('setContent', function (editor) {
 		var rng, eventObj;
 
 		// Set contents at selection
@@ -138,9 +117,9 @@ asynctest('browser.tinymce.core.noname', [
 		// Set selected contents, onSetContent event
 		eventObj = {};
 
-		function handler(event) {
+		var handler = function (event) {
 			eventObj = event;
-		}
+		};
 
 		editor.on('SetContent', handler);
 		editor.setContent('<p>text</p>');
@@ -153,7 +132,7 @@ asynctest('browser.tinymce.core.noname', [
 		editor.off('SetContent', handler);
 	});
 
-	suite.test('getStart/getEnd', function() {
+	suite.test('getStart/getEnd', function (editor) {
 		var rng;
 
 		// Selected contents
@@ -175,7 +154,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
 	});
 
-	suite.test('getBookmark/setBookmark (persistent)', function() {
+	suite.test('getBookmark/setBookmark (persistent)', function (editor) {
 		var rng, bookmark;
 
 		// Get persistent bookmark simple text selection
@@ -201,7 +180,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 	});
 
-	suite.test('getBookmark/setBookmark (simple)', function() {
+	suite.test('getBookmark/setBookmark (simple)', function (editor) {
 		var rng, bookmark;
 
 		// Get persistent bookmark simple text selection
@@ -227,7 +206,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - simple text selection', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - simple text selection', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('text');
@@ -241,7 +220,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function (editor) {
 		var rng, bookmark;
 
 		// Get non intrusive bookmark simple element selection
@@ -255,7 +234,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function (editor) {
 		var rng, bookmark;
 
 		// Get non intrusive bookmark multiple elements text selection
@@ -270,7 +249,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive)', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive)', function (editor) {
 		var rng, bookmark;
 
 		// Get non intrusive bookmark multiple elements text selection fragmented
@@ -289,7 +268,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function (editor) {
 		var rng, bookmark;
 
 		// Get non intrusive bookmark multiple elements text selection fragmented
@@ -309,7 +288,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('<p><img src="about:blank" /></p>');
@@ -327,7 +306,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 0);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('<p><img src="about:blank" /></p>');
@@ -345,7 +324,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 1);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('<p><img src="about:blank" /></p>');
@@ -363,7 +342,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 1);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('abc<b>123</b>');
@@ -381,7 +360,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function (editor) {
 		var rng, bookmark;
 
 		// Get bookmark after element
@@ -400,7 +379,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('abc<b>123</b>abc');
@@ -418,7 +397,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('abc');
@@ -436,12 +415,12 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function() {
+	suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('<p>abc</p>123<p>123</p><p>123<b>123</b><table><tr><td>abc</td></tr></table></p>');
 		editor.execCommand('SelectAll');
-		Utils.setSelection('td', 1, 'td', 2);
+		LegacyUnit.setSelection(editor, 'td', 1, 'td', 2);
 		bookmark = editor.selection.getBookmark(2, true);
 		editor.getBody().innerHTML = editor.getBody().innerHTML;
 		editor.selection.moveToBookmark(bookmark);
@@ -452,7 +431,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 2);
 	});
 
-	suite.test('getBookmark/setBookmark on cE=false', function() {
+	suite.test('getBookmark/setBookmark on cE=false', function (editor) {
 		var bookmark;
 
 		editor.setContent('text<span contentEditable="false">1</span>');
@@ -463,7 +442,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
 	});
 
-	suite.test('getBookmark/setBookmark before cE=false', function() {
+	suite.test('getBookmark/setBookmark before cE=false', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('<p><input><span contentEditable="false">1</span></p>');
@@ -478,7 +457,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
 	});
 
-	suite.test('getBookmark/setBookmark before cE=false block', function() {
+	suite.test('getBookmark/setBookmark before cE=false block', function (editor) {
 		var rng, bookmark;
 
 		editor.setContent('<p contentEditable="false">1</p>');
@@ -493,41 +472,45 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getNode(), editor.$('p')[0]);
 	});
 
-	suite.test('select empty TD', function() {
+	suite.test('select empty TD', function (editor) {
 		editor.getBody().innerHTML = '<table><tr><td><br></td></tr></table>';
 		editor.selection.select(editor.dom.select('td')[0], true);
 		LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'TD');
 	});
 
-	suite.test('select first p', 2, function() {
+	suite.test('select first p', function (editor) {
 		editor.setContent('<p>text1</p><p>text2</p>');
 		editor.selection.select(editor.dom.select('p')[0]);
 		LegacyUnit.equal(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
 		LegacyUnit.equal(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
 	});
 
-	suite.test('select table', 2, function() {
+	suite.test('select table', function (editor) {
 		editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
 		editor.selection.select(editor.dom.select('table')[0]);
-		LegacyUnit.equal(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
+		LegacyUnit.equal(
+			editor.selection.getContent(),
+			'<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>',
+			'Select complex element, content'
+		);
 		LegacyUnit.equal(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
 	});
 
-	suite.test('select table text 1', 2, function() {
+	suite.test('select table text 1', function (editor) {
 		editor.setContent('<table><tbody><tr><td id="a">text1</td><td id="b">text2</td></tr></tbody></table>');
 		editor.selection.select(editor.dom.select('table')[0], true);
 		LegacyUnit.equal(editor.selection.getStart().id, 'a', 'Expand to text content 1 (start)');
 		LegacyUnit.equal(editor.selection.getEnd().id, 'b', 'Expand to text content 1 (end)');
 	});
 
-	suite.test('select table text 2', 2, function() {
+	suite.test('select table text 2', function (editor) {
 		editor.setContent('<table><tbody><tr><td id="a"><br /></td><td id="b"><br /></td></tr></tbody></table>');
 		editor.selection.select(editor.dom.select('table')[0], true);
 		LegacyUnit.equal(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
 		LegacyUnit.equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
 	});
 
-	suite.test('getNode', function() {
+	suite.test('getNode', function (editor) {
 		var rng;
 
 		editor.setContent('<p id="p1"><span id="s1">span1</span> word <span id="s2">span2</span> word <span id="s3">span3</span></p>');
@@ -535,34 +518,50 @@ asynctest('browser.tinymce.core.noname', [
 		rng.setStart(editor.dom.get('s1').firstChild, 0);
 		rng.setEnd(editor.dom.get('s1').nextSibling, 0);
 		editor.selection.setRng(rng);
-		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('s1'), 'Detect selection ends immediately after node at start of paragraph.');
+		LegacyUnit.deepEqual(
+			editor.selection.getNode(),
+			editor.dom.get('s1'),
+			'Detect selection ends immediately after node at start of paragraph.'
+		);
 
 		rng = editor.dom.createRng();
 		rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
 		rng.setEnd(editor.dom.get('s2').nextSibling, 0);
 		editor.selection.setRng(rng);
-		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('s2'), 'Detect selection immediately surrounds node in middle of paragraph.');
+		LegacyUnit.deepEqual(
+			editor.selection.getNode(),
+			editor.dom.get('s2'),
+			'Detect selection immediately surrounds node in middle of paragraph.'
+		);
 
 		rng = editor.dom.createRng();
 		rng.setStart(editor.dom.get('s3').previousSibling, editor.dom.get('s3').previousSibling.length);
 		rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
 		editor.selection.setRng(rng);
-		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('s3'), 'Detect selection starts immediately before node at end of paragraph.');
+		LegacyUnit.deepEqual(
+			editor.selection.getNode(),
+			editor.dom.get('s3'),
+			'Detect selection starts immediately before node at end of paragraph.'
+		);
 
 		rng = editor.dom.createRng();
 		rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
 		rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
 		editor.selection.setRng(rng);
-		LegacyUnit.deepEqual(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
+		LegacyUnit.deepEqual(
+			editor.selection.getNode(),
+			editor.dom.get('p1'),
+			'Detect selection wrapping multiple nodes does not collapse.'
+		);
 	});
 
-	suite.test('normalize to text node from document', function() {
+	suite.test('normalize to text node from document', function (editor) {
 		var rng;
 
-		if (tinymce.isOpera || tinymce.isIE) {
-			ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-			return;
-		}
+		// if (tinymce.isOpera || tinymce.isIE) {
+		// 	ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+		// 	return;
+		// }
 
 		editor.setContent('<p>text</p>');
 		rng = editor.dom.createRng();
@@ -578,13 +577,13 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 	});
 
-	suite.test('normalize to br from document', function() {
+	suite.test('normalize to br from document', function (editor) {
 		var rng;
 
-		if (tinymce.isOpera || tinymce.isIE) {
-			ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-			return;
-		}
+		// if (tinymce.isOpera || tinymce.isIE) {
+		// 	ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+		// 	return;
+		// }
 
 		editor.setContent('<p><br /></p>');
 		rng = editor.dom.createRng();
@@ -602,8 +601,8 @@ asynctest('browser.tinymce.core.noname', [
 	});
 
 	// Only run on browser with W3C DOM Range support
-	if (tinymce.Env.range) {
-		suite.test('normalize with contentEditable:false element', function() {
+	if (Env.range) {
+		suite.test('normalize with contentEditable:false element', function (editor) {
 			var rng;
 
 			editor.setContent('<p>a<b contentEditable="false">b</b>c</p>');
@@ -618,9 +617,9 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 		});
 
-		suite.test('normalize with contentEditable:false parent and contentEditable:true child element', function() {
+		suite.test('normalize with contentEditable:false parent and contentEditable:true child element', function (editor) {
 			editor.setContent('<p contentEditable="false">a<em contentEditable="true">b</em></p>');
-			Utils.setSelection('em', 0);
+			LegacyUnit.setSelection(editor, 'em', 0);
 			editor.selection.normalize();
 
 			var rng = editor.selection.getRng(true);
@@ -634,27 +633,27 @@ asynctest('browser.tinymce.core.noname', [
 			editor.selection.setRng(rng);
 		});
 
-		suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function() {
+		suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
 			editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-			Utils.setSelection('em', 0);
+			LegacyUnit.setSelection(editor, 'em', 0);
 			editor.selection.normalize();
 
 			var rng = editor.selection.getRng(true);
 
 			if (Env.ie && Env.ie < 12) {
 				// IE automatically normalizes
-				ok(rng.startContainer.parentNode.contentEditable != 'false');
+				LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
 			} else {
 				LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
 			}
 
 			// Excluding assert on IE since it's a minor issue
-			if (tinymce.ie) {
+			if (Env.ie) {
 				LegacyUnit.equal(rng.startOffset, 1);
 			}
 		});
 
-		suite.test('normalize to text node from body', function() {
+		suite.test('normalize to text node from body', function (editor) {
 			var rng;
 
 			editor.setContent('<p>text</p>');
@@ -671,7 +670,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
-		suite.test('normalize to br from body', function() {
+		suite.test('normalize to br from body', function (editor) {
 			var rng;
 
 			editor.setContent('<p><br /></p>');
@@ -689,7 +688,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
-		suite.test('normalize ignore img', function() {
+		suite.test('normalize ignore img', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<img src="about:blank " />';
@@ -708,7 +707,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		suite.test('normalize to before/after img', function() {
+		suite.test('normalize to before/after img', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
@@ -727,7 +726,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		suite.test('normalize to text node inside P', function() {
+		suite.test('normalize to text node inside P', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>abc</p>';
@@ -744,11 +743,11 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
 		});
 
-		suite.test('normalize lean left if at the start of text node', function() {
+		suite.test('normalize lean left if at the start of text node', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
-			Utils.setSelection('i', 0);
+			LegacyUnit.setSelection(editor, 'i', 0);
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
@@ -760,11 +759,11 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		suite.test('normalize lean start to the right if at end of text node', function() {
+		suite.test('normalize lean start to the right if at end of text node', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
-			Utils.setSelection('b', 1, 'i', 1);
+			LegacyUnit.setSelection(editor, 'b', 1, 'i', 1);
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
@@ -776,11 +775,11 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		suite.test('normalize lean left but break before br', function() {
+		suite.test('normalize lean left but break before br', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a<br><b>b</b></p>';
-			Utils.setSelection('b', 0);
+			LegacyUnit.setSelection(editor, 'b', 0);
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
@@ -788,11 +787,11 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		suite.test('normalize lean left but break before img', function() {
+		suite.test('normalize lean left but break before img', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a<img><b>b</b></p>';
-			Utils.setSelection('b', 0);
+			LegacyUnit.setSelection(editor, 'b', 0);
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
@@ -800,11 +799,11 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		suite.test('normalize lean left but don\'t walk out the parent block', function() {
+		suite.test('normalize lean left but don\'t walk out the parent block', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a</p><p><b>b</b></p>';
-			Utils.setSelection('b', 0);
+			LegacyUnit.setSelection(editor, 'b', 0);
 			editor.selection.normalize();
 
 			rng = editor.selection.getRng(true);
@@ -812,7 +811,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		suite.test('normalize lean left into empty inline elements when caret is before br', function() {
+		suite.test('normalize lean left into empty inline elements when caret is before br', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
@@ -827,7 +826,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 0);
 		});
 
-		suite.test('normalize lean left from br into formatter caret container', function() {
+		suite.test('normalize lean left from br into formatter caret container', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
@@ -842,7 +841,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 1);
 		});
 
-		suite.test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function() {
+		suite.test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
@@ -857,7 +856,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 2);
 		});
 
-		suite.test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function() {
+		suite.test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
@@ -872,7 +871,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.startOffset, 1);
 		});
 
-		suite.test('normalize don\'t move start/end if it\'s before/after table', function() {
+		suite.test('normalize don\'t move start/end if it\'s before/after table', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
@@ -889,7 +888,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1);
 		});
 
-		suite.test('normalize after paragraph', function() {
+		suite.test('normalize after paragraph', function (editor) {
 			var rng;
 
 			editor.getBody().innerHTML = '<p>a</p>';
@@ -906,7 +905,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1);
 		});
 
-		suite.test('normalize caret after trailing BR', function() {
+		suite.test('normalize caret after trailing BR', function (editor) {
 			var rng;
 
 			editor.setContent('<p>a<br /></p>');
@@ -923,7 +922,7 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
 		});
 
-		suite.test('normalize caret after bogus block BR', function() {
+		suite.test('normalize caret after bogus block BR', function (editor) {
 			var rng;
 
 			editor.setContent('<p><br /></p>');
@@ -940,13 +939,13 @@ asynctest('browser.tinymce.core.noname', [
 			LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
 		});
 
-		suite.test('normalize after table should not move', function() {
+		suite.test('normalize after table should not move', function (editor) {
 			var rng;
 
-			if (tinymce.isOpera || tinymce.isIE) {
-				ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-				return;
-			}
+			// if (tinymce.isOpera || tinymce.isIE) {
+			// 	ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+			// 	return;
+			// }
 
 			editor.setContent('a<table><tr><td>b</td></tr></table>');
 			rng = editor.dom.createRng();
@@ -961,7 +960,7 @@ asynctest('browser.tinymce.core.noname', [
 		});
 
 	/*
-		suite.test('normalize caret after last BR in block', function() {
+		suite.test('normalize caret after last BR in block', function(editor) {
 			var rng;
 
 			editor.setContent('<p><br /><br /></p>');
@@ -979,7 +978,7 @@ asynctest('browser.tinymce.core.noname', [
 		});
 	*/
 
-		suite.test('normalize caret after double BR', function() {
+		suite.test('normalize caret after double BR', function (editor) {
 			var rng;
 
 			editor.setContent('<p>a<br /><br /></p>');
@@ -997,7 +996,7 @@ asynctest('browser.tinymce.core.noname', [
 		});
 	}
 
-	suite.test('custom elements', function() {
+	suite.test('custom elements', function (editor) {
 		var rng;
 
 		editor.setContent('<custom1>test</custom1><custom2>test</custom2>');
@@ -1010,32 +1009,32 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
 	});
 
-	suite.test('selectorChanged', function() {
+	suite.test('selectorChanged', function (editor) {
 		var newState, newArgs;
 
-		editor.selection.selectorChanged('a[href]', function(state, args) {
+		editor.selection.selectorChanged('a[href]', function (state, args) {
 			newState = state;
 			newArgs = args;
 		});
 
 		editor.getBody().innerHTML = '<p><a href="#">text</a></p>';
-		Utils.setSelection('a', 0, 'a', 4);
+		LegacyUnit.setSelection(editor, 'a', 0, 'a', 4);
 		editor.nodeChanged();
 
-		ok(newState);
+		LegacyUnit.equal(newState, true);
 		LegacyUnit.equal(newArgs.selector, 'a[href]');
 		LegacyUnit.equal(newArgs.node, editor.getBody().firstChild.firstChild);
 		LegacyUnit.equal(newArgs.parents.length, 2);
 
 		editor.getBody().innerHTML = '<p>text</p>';
-		Utils.setSelection('p', 0, 'p', 4);
+		LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
 		editor.nodeChanged();
 		LegacyUnit.equal(newArgs.selector, 'a[href]');
 		LegacyUnit.equal(newArgs.node, editor.getBody().firstChild);
 		LegacyUnit.equal(newArgs.parents.length, 1);
 	});
 
-	suite.test('setRng', function() {
+	suite.test('setRng', function (editor) {
 		var rng = editor.dom.createRng();
 
 		editor.setContent('<p>x</p>');
@@ -1052,7 +1051,7 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.equal(rng.endOffset, 1);
 	});
 
-	suite.test('getRng should return null if win.document is not defined or null', function() {
+	suite.test('getRng should return null if win.document is not defined or null', function (editor) {
 		var win = editor.selection.win,
 			rng = editor.dom.createRng();
 
@@ -1074,5 +1073,18 @@ asynctest('browser.tinymce.core.noname', [
 
 		editor.selection.win = win;
 	});
-});
 
+	TinyLoader.setup(function (editor, onSuccess, onFailure) {
+		Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+	}, {
+		add_unload_trigger: false,
+		forced_root_block: '',
+		entities: 'raw',
+		valid_styles: {
+			'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,' +
+				'margin-top,margin-right,margin-bottom,margin-left,display'
+		},
+		custom_elements: 'custom1,~custom2',
+		extended_valid_elements: 'custom1,custom2'
+	}, success, failure);
+});

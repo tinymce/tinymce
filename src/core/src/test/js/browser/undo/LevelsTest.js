@@ -1,31 +1,13 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.undo.LevelsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	'tinymce.undo.Levels',
-	'tinymce/Env'
-], function (LegacyUnit, Pipeline, Levels, Env) {
+	'ephox.mcagar.api.TinyLoader',
+	'tinymce.core.undo.Levels',
+	'tinymce.core.Env'
+], function (LegacyUnit, Pipeline, TinyLoader, Levels, Env) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
-
-	module('tinymce.undo.Levels', {
-		setupModule: function () {
-			QUnit.stop();
-
-			tinymce.init({
-				selector: 'textarea',
-				add_unload_trigger: false,
-				disable_nodechange: true,
-				skin: false,
-				entities: 'raw',
-				indent: false,
-				init_instance_callback: function (ed) {
-					window.editor = ed;
-					QUnit.start();
-				}
-			});
-		}
-	});
 
 	var getBookmark = function (editor) {
 		return editor.selection.getBookmark(2, true);
@@ -51,7 +33,7 @@ asynctest('browser.tinymce.core.noname', [
 		});
 	});
 
-	suite.test('createFromEditor', function () {
+	suite.test('createFromEditor', function (editor) {
 		LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
 			'beforeBookmark': null,
 			'bookmark': null,
@@ -71,7 +53,7 @@ asynctest('browser.tinymce.core.noname', [
 		});
 	});
 
-	suite.test('createFromEditor removes bogus=al', function () {
+	suite.test('createFromEditor removes bogus=al', function (editor) {
 		editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span>';
 
 		LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
@@ -83,7 +65,7 @@ asynctest('browser.tinymce.core.noname', [
 		});
 	});
 
-	suite.test('createFromEditor removes bogus=all', function () {
+	suite.test('createFromEditor removes bogus=all', function (editor) {
 		editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span>';
 
 		LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
@@ -101,36 +83,36 @@ asynctest('browser.tinymce.core.noname', [
 		});
 	});
 
-	suite.test('applyToEditor to equal content with complete level', function () {
+	suite.test('applyToEditor to equal content with complete level', function (editor) {
 		var level = Levels.createCompleteLevel('<p>a</p>');
 		level.bookmark = {start: [1, 0, 0]};
 
 		editor.getBody().innerHTML = '<p>a</p>';
-		Utils.setSelection('p', 0);
+		LegacyUnit.setSelection(editor, 'p', 0);
 		Levels.applyToEditor(editor, level, false);
 
 		LegacyUnit.strictEqual(editor.getBody().innerHTML, '<p>a</p>');
 		LegacyUnit.deepEqual(getBookmark(editor), {start: [1, 0, 0]});
 	});
 
-	suite.test('applyToEditor to different content with complete level', function () {
+	suite.test('applyToEditor to different content with complete level', function (editor) {
 		var level = Levels.createCompleteLevel('<p>b</p>');
 		level.bookmark = {start: [1, 0, 0]};
 
 		editor.getBody().innerHTML = '<p>a</p>';
-		Utils.setSelection('p', 0);
+		LegacyUnit.setSelection(editor, 'p', 0);
 		Levels.applyToEditor(editor, level, false);
 
 		LegacyUnit.strictEqual(editor.getBody().innerHTML, '<p>b</p>');
 		LegacyUnit.deepEqual(getBookmark(editor), {start: [1, 0, 0]});
 	});
 
-	suite.test('applyToEditor to different content with fragmented level', function () {
+	suite.test('applyToEditor to different content with fragmented level', function (editor) {
 		var level = Levels.createFragmentedLevel(['<p>a</p>', '<p>b</p>']);
 		level.bookmark = {start: [1, 0, 0]};
 
 		editor.getBody().innerHTML = '<p>c</p>';
-		Utils.setSelection('p', 0);
+		LegacyUnit.setSelection(editor, 'p', 0);
 		Levels.applyToEditor(editor, level, false);
 
 		LegacyUnit.strictEqual(editor.getBody().innerHTML, '<p>a</p><p>b</p>');
@@ -146,7 +128,13 @@ asynctest('browser.tinymce.core.noname', [
 		LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel(['a'])), true);
 	});
 
-	Pipeline.async({}, suite.toSteps({}), function () {
-		success();
-	}, failure);
+	TinyLoader.setup(function (editor, onSuccess, onFailure) {
+		Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+	}, {
+		selector: "textarea",
+		add_unload_trigger: false,
+		disable_nodechange: true,
+		entities: 'raw',
+		indent: false
+	}, success, failure);
 });

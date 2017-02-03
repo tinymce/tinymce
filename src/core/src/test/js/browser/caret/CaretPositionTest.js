@@ -5,36 +5,24 @@ asynctest('browser.tinymce.core.CaretPositionTest', [
 	'tinymce.core.Env',
 	'tinymce.core.caret.CaretPosition',
 	'tinymce.core.test.CaretAsserts',
-	'global!document'
-], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretPosition, CaretAsserts, document) {
+	'tinymce.core.test.ViewBlock'
+], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretPosition, CaretAsserts, ViewBlock) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 	var createRange = CaretAsserts.createRange;
+	var viewBlock = new ViewBlock();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
-	var setupHtml = function (html) {
-		var child, rootElm = getRoot();
-
-		// IE leaves zwsp in the dom on innerHTML
-		while ((child = rootElm.firstChild)) {
-			rootElm.removeChild(child);
-		}
-
-		rootElm.innerHTML = html;
+	var getRoot = function () {
+		return viewBlock.get();
 	};
 
-	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
+	var setupHtml = function (html) {
+		viewBlock.update(html);
 	};
 
 	suite.test('Constructor', function () {
@@ -196,7 +184,9 @@ asynctest('browser.tinymce.core.CaretPositionTest', [
 		LegacyUnit.equal(new CaretPosition(getRoot(), 3).getNode(true), getRoot().childNodes[2]);
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

@@ -1,8 +1,8 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.dom.NodeTypeTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.dom.NodeType",
-	"tinymce.dom.DomQuery",
+	'tinymce.core.dom.NodeType',
+	'tinymce.core.dom.DomQuery',
 	'global!document'
 ], function (LegacyUnit, Pipeline, NodeType, $, document) {
 	var success = arguments[arguments.length - 2];

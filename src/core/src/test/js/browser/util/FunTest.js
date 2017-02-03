@@ -1,23 +1,23 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.util.FunTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.util.Fun"
+	'tinymce.core.util.Fun'
 ], function (LegacyUnit, Pipeline, Fun) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 
-	function isTrue (value) {
+	var isTrue = function (value) {
 		return value === true;
-	}
+	};
 
-	function isFalse (value) {
+	var isFalse = function (value) {
 		return value === true;
-	}
+	};
 
-	function isAbove (target, value) {
+	var isAbove = function (target, value) {
 		return value() > target();
-	}
+	};
 
 	suite.test('constant', function () {
 		LegacyUnit.strictEqual(Fun.constant(1)(), 1);

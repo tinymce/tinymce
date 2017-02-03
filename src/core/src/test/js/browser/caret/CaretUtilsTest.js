@@ -8,13 +8,15 @@ asynctest('browser.tinymce.core.CaretUtilTest', [
 	'tinymce.core.text.Zwsp',
 	'tinymce.core.dom.DomQuery',
 	'tinymce.core.test.CaretAsserts',
+	'tinymce.core.test.ViewBlock',
 	'global!document'
-], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretUtils, CaretPosition, Zwsp, $, CaretAsserts, document) {
+], function (LegacyUnit, Pipeline, DOMUtils, Env, CaretUtils, CaretPosition, Zwsp, $, CaretAsserts, ViewBlock, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
 	var assertRange = CaretAsserts.assertRange;
 	var createRange = CaretAsserts.createRange;
+	var viewBlock = new ViewBlock();
 
 	if (!Env.ceFalse) {
 		return;
@@ -23,13 +25,15 @@ asynctest('browser.tinymce.core.CaretUtilTest', [
 	var ZWSP = Zwsp.ZWSP;
 
 	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
+		return viewBlock.get();
+	};
+
+	var setupHtml = function (html) {
+		viewBlock.update(html);
+
+		// IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations
+		viewBlock.get().innerHTML = html.replace(new RegExp(ZWSP, 'g'), '__ZWSP__');
+		replaceWithZwsp(viewBlock.get());
 	};
 
 	var replaceWithZwsp = function (node) {
@@ -42,19 +46,6 @@ asynctest('browser.tinymce.core.CaretUtilTest', [
 				replaceWithZwsp(childNode);
 			}
 		}
-	};
-
-	var setupHtml = function (html) {
-		var child, rootElm = getRoot();
-
-		// IE leaves zwsp in the dom on innerHTML
-		while ((child = rootElm.firstChild)) {
-			rootElm.removeChild(child);
-		}
-
-		// IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations
-		rootElm.innerHTML = html.replace(new RegExp(ZWSP, 'g'), '__ZWSP__');
-		replaceWithZwsp(rootElm);
 	};
 
 	var findElm = function (selector) {
@@ -287,7 +278,9 @@ asynctest('browser.tinymce.core.CaretUtilTest', [
 		assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot().lastChild, 0));
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

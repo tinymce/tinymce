@@ -1,4 +1,4 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.CaretWalkerTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
 	"tinymce.core.Env",
@@ -6,29 +6,23 @@ asynctest('browser.tinymce.core.noname', [
 	"tinymce.core.caret.CaretPosition",
 	'tinymce.core.dom.DomQuery',
 	'tinymce.core.test.CaretAsserts',
-	'global!document'
-], function (LegacyUnit, Pipeline, Env, CaretWalker, CaretPosition, $, CaretAsserts, document) {
+	'tinymce.core.test.ViewBlock'
+], function (LegacyUnit, Pipeline, Env, CaretWalker, CaretPosition, $, CaretAsserts, ViewBlock) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var viewBlock = new ViewBlock();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
 	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
+		return viewBlock.get();
 	};
 
 	var setupHtml = function (html) {
-		$(getRoot()).empty();
-		getRoot().innerHTML = html;
+		viewBlock.update(html);
 	};
 
 	var findElm = function (selector) {
@@ -296,7 +290,9 @@ asynctest('browser.tinymce.core.noname', [
 		CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot().firstChild, 3));
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

@@ -1,36 +1,34 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.file.ImageScannerTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/file/ImageScanner",
-	"tinymce/file/UploadStatus",
-	"tinymce/file/BlobCache",
-	"tinymce/file/Conversions",
-	"tinymce/Env"
-], function (LegacyUnit, Pipeline, ImageScanner, UploadStatus, BlobCache, Conversions, Env) {
+	'tinymce.core.file.ImageScanner',
+	'tinymce.core.file.UploadStatus',
+	'tinymce.core.file.BlobCache',
+	'tinymce.core.file.Conversions',
+	'tinymce.core.Env',
+	'global!URL',
+	'tinymce.core.test.ViewBlock'
+], function (LegacyUnit, Pipeline, ImageScanner, UploadStatus, BlobCache, Conversions, Env, URL, ViewBlock) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var viewBlock = new ViewBlock();
 
-	if (!tinymce.Env.fileApi) {
+	if (!Env.fileApi) {
 		return;
 	}
-
-	QUnit.config.autostart = false;
-
-	module("tinymce.file.ImageScanner");
 
 	var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
 	var blobUriSrc;
 
 	Conversions.uriToBlob(base64Src).then(function (blob) {
 		blobUriSrc = URL.createObjectURL(blob);
-		QUnit.start();
 	});
 
-	QUnit.asyncTest("findAll", function () {
+	suite.asyncTest("findAll", function (_, done) {
 		var imageScanner = new ImageScanner(new UploadStatus(), new BlobCache());
 
-		document.getElementById('view').innerHTML = (
+		viewBlock.update(
 			'<img src="' + base64Src + '">' +
 			'<img src="' + blobUriSrc + '">' +
 			'<img src="' + Env.transparentSrc + '">' +
@@ -38,36 +36,42 @@ asynctest('browser.tinymce.core.noname', [
 			'<img src="' + base64Src + '" data-mce-placeholder="1">'
 		);
 
-		imageScanner.findAll(document.getElementById('view')).then(function (result) {
-			QUnit.start();
+		imageScanner.findAll(viewBlock.get()).then(function (result) {
+			done();
 			var blobInfo = result[0].blobInfo;
 			LegacyUnit.equal(result.length, 2);
 			LegacyUnit.equal('data:image/gif;base64,' + blobInfo.base64(), base64Src);
-			LegacyUnit.strictEqual(result[0].image, document.getElementById('view').firstChild);
+			LegacyUnit.strictEqual(result[0].image, viewBlock.get().firstChild);
 		});
 	});
 
-	QUnit.asyncTest("findAll (filtered)", function () {
+	suite.asyncTest("findAll (filtered)", function (_, done) {
 		var imageScanner = new ImageScanner(new UploadStatus(), new BlobCache());
 
-		function predicate (img) {
+		var predicate = function (img) {
 			return !img.hasAttribute('data-skip');
-		}
+		};
 
-		document.getElementById('view').innerHTML = (
+		viewBlock.update(
 			'<img src="' + base64Src + '">' +
 			'<img src="' + base64Src + '" data-skip="1">'
 		);
 
-		imageScanner.findAll(document.getElementById('view'), predicate).then(function (result) {
-			QUnit.start();
+		imageScanner.findAll(viewBlock.get(), predicate).then(function (result) {
+			done();
 			LegacyUnit.equal(result.length, 1);
 			LegacyUnit.equal('data:image/gif;base64,' + result[0].blobInfo.base64(), base64Src);
-			LegacyUnit.strictEqual(result[0].image, document.getElementById('view').firstChild);
+			LegacyUnit.strictEqual(result[0].image, viewBlock.get().firstChild);
 		});
 	});
 
-	Pipeline.async({}, suite.toSteps({}), function () {
-		success();
-	}, failure);
+	Conversions.uriToBlob(base64Src).then(function (blob) {
+		blobUriSrc = URL.createObjectURL(blob);
+
+		viewBlock.attach();
+		Pipeline.async({}, suite.toSteps({}), function () {
+			viewBlock.detach();
+			success();
+		}, failure);
+	});
 });

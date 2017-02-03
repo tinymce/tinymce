@@ -497,6 +497,7 @@ module.exports = function(grunt) {
 				options: {
 					config: 'tools/bolt/config/browser.js',
 					testdirs: [
+						'src/core/src/test',
 						'src/plugins/media/src/test',
 						'src/plugins/paste/src/test',
 						'src/plugins/lists/src/test',

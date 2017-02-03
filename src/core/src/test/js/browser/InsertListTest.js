@@ -1,10 +1,10 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.InsertListTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/InsertList",
-	"tinymce/html/Node",
-	"tinymce/html/DomParser",
-	"tinymce.dom.DOMUtils"
+	'tinymce.core.InsertList',
+	'tinymce.core.html.Node',
+	'tinymce.core.html.DomParser',
+	'tinymce.core.dom.DOMUtils'
 ], function (LegacyUnit, Pipeline, InsertList, Node, DomParser, DOMUtils) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

@@ -1,8 +1,9 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.undo.FragmentsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	'tinymce.undo.Fragments'
-], function (LegacyUnit, Pipeline, Fragments) {
+	'tinymce.core.undo.Fragments',
+	'global!document'
+], function (LegacyUnit, Pipeline, Fragments, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();

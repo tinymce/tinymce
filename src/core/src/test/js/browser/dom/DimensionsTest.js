@@ -1,29 +1,18 @@
-asynctest('browser.tinymce.core.DimensionsTest', [
+asynctest('browser.tinymce.core.dom.DimensionsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.util.Arr",
-	"tinymce.dom.Dimensions",
-	'global!document'
-], function (LegacyUnit, Pipeline, Arr, Dimensions, document) {
+	'tinymce.core.util.Arr',
+	'tinymce.core.dom.Dimensions',
+	'tinymce.core.test.ViewBlock'
+], function (LegacyUnit, Pipeline, Arr, Dimensions, ViewBlock) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
-
-	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
-	};
+	var viewBlock = new ViewBlock();
 
 	var setupHtml = function (html) {
-		var viewElm;
-		viewElm = getRoot();
-		viewElm.innerHTML = html;
-		return viewElm;
+		viewBlock.update(html);
+		return viewBlock.get();
 	};
 
 	suite.test('getClientRects', function () {
@@ -45,7 +34,9 @@ asynctest('browser.tinymce.core.DimensionsTest', [
 		LegacyUnit.strictEqual(clientRects[1].node, viewElm.childNodes[1]);
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

@@ -1,25 +1,20 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.dom.NodePathTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.dom.NodePath",
-	'global!document'
-], function (LegacyUnit, Pipeline, NodePath, document) {
+	'tinymce.core.dom.NodePath',
+	'tinymce.core.test.ViewBlock'
+], function (LegacyUnit, Pipeline, NodePath, ViewBlock) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var viewBlock = new ViewBlock();
 
 	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
+		return viewBlock.get();
 	};
 
 	var setupHtml = function (html) {
-		getRoot().innerHTML = html;
+		viewBlock.update(html);
 	};
 
 	suite.test("create", function () {
@@ -44,7 +39,9 @@ asynctest('browser.tinymce.core.noname', [
 		);
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

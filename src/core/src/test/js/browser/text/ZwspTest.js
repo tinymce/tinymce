@@ -1,7 +1,7 @@
-asynctest('browser.tinymce.core.ZwspTest', [
+asynctest('browser.tinymce.core.text.ZwspTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.text.Zwsp"
+	'tinymce.core.text.Zwsp'
 ], function (LegacyUnit, Pipeline, Zwsp) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

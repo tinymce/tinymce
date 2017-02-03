@@ -5,28 +5,24 @@ asynctest('browser.tinymce.core.CaretCandidateTest', [
 	'tinymce.core.caret.CaretCandidate',
 	'tinymce.core.dom.DomQuery',
 	'tinymce.core.text.Zwsp',
+	'tinymce.core.test.ViewBlock',
 	'global!document'
-], function (LegacyUnit, Pipeline, Env, CaretCandidate, $, Zwsp, document) {
+], function (LegacyUnit, Pipeline, Env, CaretCandidate, $, Zwsp, ViewBlock, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var viewBlock = new ViewBlock();
 
 	if (!Env.ceFalse) {
 		return;
 	}
 
 	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
+		return viewBlock.get();
 	};
 
 	var setupHtml = function (html) {
-		getRoot().innerHTML = html;
+		viewBlock.update(html);
 	};
 
 	suite.test('isCaretCandidate', function () {
@@ -74,7 +70,9 @@ asynctest('browser.tinymce.core.CaretCandidateTest', [
 		LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate($('span span', getRoot())[0]), false);
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

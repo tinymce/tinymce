@@ -1,7 +1,7 @@
-asynctest('browser.tinymce.core.ExtendingCharTest', [
+asynctest('browser.tinymce.core.text.ExtendingCharTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.text.ExtendingChar"
+	'tinymce.core.text.ExtendingChar'
 ], function (LegacyUnit, Pipeline, ExtendingChar) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

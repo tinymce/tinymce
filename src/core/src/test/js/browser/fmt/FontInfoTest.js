@@ -1,8 +1,9 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.fmt.FontInfoTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce/fmt/FontInfo"
-], function (LegacyUnit, Pipeline, FontInfo) {
+	'tinymce.core.fmt.FontInfo',
+	'global!document'
+], function (LegacyUnit, Pipeline, FontInfo, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
@@ -14,7 +15,11 @@ asynctest('browser.tinymce.core.noname', [
 		document.body.appendChild(div);
 		div.style[fontProp] = expected;
 		div.innerHTML = html;
-		LegacyUnit.equal(fontGetProp(div, div.getElementsByTagName('mark')[0]), expected, 'Doesn\'t match the expected computed runtime style');
+		LegacyUnit.equal(
+			fontGetProp(div, div.getElementsByTagName('mark')[0]),
+			expected,
+			'Doesn\'t match the expected computed runtime style'
+		);
 		div.parentNode.removeChild(div);
 	};
 
@@ -24,7 +29,11 @@ asynctest('browser.tinymce.core.noname', [
 
 		document.body.appendChild(div);
 		div.innerHTML = html;
-		LegacyUnit.equal(fontGetProp(div, div.getElementsByTagName('mark')[0]), expected, 'Doesn\'t match the expected specific element style');
+		LegacyUnit.equal(
+			fontGetProp(div, div.getElementsByTagName('mark')[0]),
+			expected,
+			'Doesn\'t match the expected specific element style'
+		);
 		div.parentNode.removeChild(div);
 	};
 
@@ -55,24 +64,35 @@ asynctest('browser.tinymce.core.noname', [
 		assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', 'Arial,Verdana');
 		assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', 'Arial,Helvetica,Verdana');
 		assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', 'Arial,Verdana');
-		assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Helvetica, Verdana"><mark></mark></span>', 'Arial,Helvetica,Verdana');
-		assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><span><mark></mark></span>', 'Arial,Verdana');
-		assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Helvetica, Verdana"><span><mark></mark></span></span>', 'Arial,Helvetica,Verdana');
+		assertSpecificFontProp(
+			'fontFamily',
+			'<span style="font-family: Arial, Helvetica, Verdana"><mark></mark></span>',
+			'Arial,Helvetica,Verdana'
+		);
+		assertSpecificFontProp(
+			'fontFamily',
+			'<span style="font-family: Arial, Verdana"><span><mark></mark></span>',
+			'Arial,Verdana'
+		);
+		assertSpecificFontProp(
+			'fontFamily',
+			'<span style="font-family: Arial, Helvetica, Verdana"><span><mark></mark></span></span>',
+			'Arial,Helvetica,Verdana'
+		);
 	});
 
-	asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function () {
+	suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function (_, done) {
 		var iframe = document.createElement('iframe');
 		iframe.style.display = 'none';
 		document.body.appendChild(iframe);
 
 		iframe.addEventListener('load', function () {
-					QUnit.start();
-					var fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
+			var fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
+			LegacyUnit.equal(typeof fontFamily, 'string', 'Should always be a string');
+			iframe.parentNode.removeChild(iframe);
 
-					LegacyUnit.equal(typeof fontFamily, 'string', 'Should always be a string');
-
-					iframe.parentNode.removeChild(iframe);
-				}, false);
+			done();
+		}, false);
 
 		iframe.contentDocument.open();
 		iframe.contentDocument.write('<html><body><p>a</p></body></html>');

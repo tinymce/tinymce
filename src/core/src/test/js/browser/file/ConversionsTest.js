@@ -1,8 +1,8 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.file.ConversionsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.core.file.Conversions",
-	"tinymce.core.Env"
+	'tinymce.core.file.Conversions',
+	'tinymce.core.Env'
 ], function (LegacyUnit, Pipeline, Conversions, Env) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

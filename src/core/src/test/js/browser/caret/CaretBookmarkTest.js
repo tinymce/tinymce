@@ -4,24 +4,20 @@ asynctest('browser.tinymce.core.CaretBookmarkTest', [
 	'tinymce.core.caret.CaretBookmark',
 	'tinymce.core.caret.CaretPosition',
 	'tinymce.core.test.CaretAsserts',
+	'tinymce.core.test.ViewBlock',
 	'global!document'
-], function (LegacyUnit, Pipeline, CaretBookmark, CaretPosition, CaretAsserts, document) {
+], function (LegacyUnit, Pipeline, CaretBookmark, CaretPosition, CaretAsserts, ViewBlock, document) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];
 	var suite = LegacyUnit.createSuite();
+	var viewBlock = new ViewBlock();
 
 	var getRoot = function () {
-		var view = document.getElementById('view');
-		if (!view) {
-			view = document.createElement('div');
-			view.id = 'view';
-			document.body.appendChild(view);
-		}
-		return view;
+		return viewBlock.get();
 	};
 
 	var setupHtml = function (html) {
-		getRoot().innerHTML = html;
+		viewBlock.update(html);
 	};
 
 	var createTextPos = function (textNode, offset) {
@@ -169,7 +165,9 @@ asynctest('browser.tinymce.core.CaretBookmarkTest', [
 		LegacyUnit.equal(CaretBookmark.resolve(getRoot(), null), null);
 	});
 
+	viewBlock.attach();
 	Pipeline.async({}, suite.toSteps({}), function () {
+		viewBlock.detach();
 		success();
 	}, failure);
 });

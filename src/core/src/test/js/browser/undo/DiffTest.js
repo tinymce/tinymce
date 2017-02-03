@@ -1,7 +1,7 @@
-asynctest('browser.tinymce.core.noname', [
+asynctest('browser.tinymce.core.undo.DiffTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.undo.Diff"
+	'tinymce.core.undo.Diff'
 ], function (LegacyUnit, Pipeline, Diff) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

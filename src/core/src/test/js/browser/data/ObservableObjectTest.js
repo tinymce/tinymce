@@ -1,7 +1,7 @@
 asynctest('browser.tinymce.core.data.ObservableObjectTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.core.data.ObservableObject"
+	'tinymce.core.data.ObservableObject'
 ], function (LegacyUnit, Pipeline, ObservableObject) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

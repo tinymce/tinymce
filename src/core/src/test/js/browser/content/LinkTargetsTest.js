@@ -1,8 +1,8 @@
 asynctest('browser.tinymce.core.content.LinkTargetsTest', [
 	'ephox.mcagar.api.LegacyUnit',
 	'ephox.agar.api.Pipeline',
-	"tinymce.core.content.LinkTargets",
-	"tinymce.core.util.Arr",
+	'tinymce.core.content.LinkTargets',
+	'tinymce.core.util.Arr',
 	'global!document'
 ], function (LegacyUnit, Pipeline, LinkTargets, Arr, document) {
 	var success = arguments[arguments.length - 2];
