@@ -108,8 +108,8 @@ define("tinymce/pasteplugin/WordFilter", [
 					if (node.type === 3) {
 						if (regExp.test(node.value)) {
 							node.value = node.value.replace(regExp, '');
-							return false;
 						}
+						return false;
 					}
 
 					if ((node = node.firstChild)) {
