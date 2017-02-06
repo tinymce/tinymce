@@ -10,16 +10,18 @@ define(
       { setOf: [ 'validator', 'valueType' ] },
       { arrOf: [ 'valueType' ] },
       { objOf: [ 'fields' ] },
-      { itemOf: [ 'validator' ] }
+      { itemOf: [ 'validator' ] },
+      { choiceOf: [ 'key', 'branches' ] }
+
     ]);
 
     var fieldAdt = Adt.generate([
-      { field: [ 'type', 'presence' ] },
-      { state: [ ] }
+      { field: [ 'name', 'presence', 'type' ] },
+      { state: [ 'name' ] }
     ]);
 
-    var foldType = function (subject, onSet, onArr, onObj) {
-      return subject.fold(onSet, onArr, onObj);
+    var foldType = function (subject, onSet, onArr, onObj, onItem, onChoice) {
+      return subject.fold(onSet, onArr, onObj, onItem, onChoice);
     };
 
     var foldField = function (subject, onField, onState) {

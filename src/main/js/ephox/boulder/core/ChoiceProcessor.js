@@ -5,11 +5,12 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
+    'ephox.boulder.format.TypeTokens',
     'ephox.compass.Obj',
     'ephox.perhaps.Result'
   ],
 
-  function (Objects, SchemaError, ValueProcessor, Obj, Result) {
+  function (Objects, SchemaError, ValueProcessor, TypeTokens, Obj, Result) {
     var chooseFrom = function (path, strength, input, branches, ch) {
       var fields = Objects.readOptFrom(branches, ch);
       return fields.fold(function () {
@@ -35,9 +36,14 @@ define(
         return 'chooseOn(' + key + '). Possible values: ' + Obj.keys(branches);
       };
 
+      var toDsl = function () {
+        return TypeTokens.typeAdt.choiceOf(key, branches);
+      }
+
       return {
         extract: extract,
-        toString: toString
+        toString: toString,
+        toDsl: toDsl
       };
     };
 
