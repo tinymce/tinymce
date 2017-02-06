@@ -31,8 +31,20 @@
         color: blue;
       }
 
+      .docs-field.defaulted {
+        color: green;
+      }
+
+      .docs-field.defaulted > .docs-field-name:after {
+        content: attr(title);
+      }
+
       .docs-field.strict {
-        color: red;
+        color: darkred;
+      }
+
+      .docs-field.optional .docs-field.strict {
+        color: purple;
       }
     </style>
   </head>

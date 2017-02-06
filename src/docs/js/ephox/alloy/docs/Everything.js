@@ -62,6 +62,7 @@ define(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.Objects',
     'ephox.boulder.format.TypeTokens',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
@@ -73,13 +74,13 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, FieldPresence, Objects, TypeTokens, Arr, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, FieldPresence, Objects, TypeTokens, Type, Arr, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
     
       var getDescription = function (key) {
         if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
-        else return '<span style="background-color: red;">' + key + '</span>';
+        else return '<span style="outline: 1px solid red;">' + key + '</span>';
       };
       
 
@@ -113,19 +114,32 @@ define(
       // { asOption: [ ] },
       // { asDefaultedOptionThunk: [ 'fallbackThunk' ] },
       // { mergeWithThunk: [ 'baseThunk' ] }
-                var presenceClass = presence.fold(
-                  function () { return 'strict'; },
-                  function () { return 'defaulted'; },
-                  function () { return 'optional'; },
-                  function () { return 'defaulted'; },
-                  function () { return 'merged'; }
-                );
-                Class.add(wrapper, presenceClass);
-
+              
+                
+              
                 Class.add(wrapper, 'docs-field');
                 var span = Element.fromTag('span');
                 Class.add(span, 'docs-field-name');
                 Html.set(span, key + ': ');
+
+
+                presence.fold(
+                  function () {
+                    Class.add(wrapper, 'strict');
+                  },
+                  function (fallbackThunk) {
+                    var fallback = fallbackThunk();
+                    Attr.set(span, 'title', Type.isFunction(fallback) ? '(function) ' : ('(' + JSON.stringify(fallback, null, 2)) + ') ');
+                    Class.add(wrapper, 'defaulted');
+                  },
+                  function () {
+                    Class.add(wrapper, 'optional')
+                  },
+                  function () {  },
+                  function () {  }
+                );
+
+
                 InsertAll.append(wrapper, [ span, t ]);
                 return [ wrapper ];
               }, Fun.constant([ ]))
