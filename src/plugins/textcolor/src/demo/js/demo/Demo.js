@@ -11,21 +11,21 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.textcolor.demo.Demo',
+  'tinymce.textcolor.demo.Demo',
 
-	[
-		'tinymce.textcolor.Plugin',
-		'global!tinymce'
-	],
-	function (Plugin, tinymce) {
-		return function () {
+  [
+    'tinymce.textcolor.Plugin',
+    'global!tinymce'
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				plugins: "textcolor preview",
-				toolbar: "forecolor backcolor preview",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        plugins: "textcolor preview",
+        toolbar: "forecolor backcolor preview",
+        height: 600
+      });
+    };
+  }
 );

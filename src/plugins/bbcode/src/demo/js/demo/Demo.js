@@ -11,27 +11,27 @@
 /*eslint no-console:0, no-unused-vars: 0 */
 
 define(
-	'tinymce.bbcode.demo.Demo',
+  'tinymce.bbcode.demo.Demo',
 
-	[
+  [
     'global!tinymce',
     'tinymce.bbcode.Plugin'
   ],
 
-	function (tinymce, Plugin) {
-		return function () {
-			document.querySelector('.tinymce').value = '[b]bbcode plugin[/b]';
+  function (tinymce, Plugin) {
+    return function () {
+      document.querySelector('.tinymce').value = '[b]bbcode plugin[/b]';
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				theme: "modern",
-				plugins: "bbcode code preview",
-				toolbar: "bbcode code preview",
-				height: 600
-			});
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "bbcode code preview",
+        toolbar: "bbcode code preview",
+        height: 600
+      });
 
 
-			// tinymce.activeEditor.setContent('<p>dog</p>');
-		};
-	}
+      // tinymce.activeEditor.setContent('<p>dog</p>');
+    };
+  }
 );

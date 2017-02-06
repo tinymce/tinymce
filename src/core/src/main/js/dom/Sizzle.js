@@ -311,8 +311,8 @@ define(
     /**
      * Create key-value caches of limited size
      * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
-     *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
-     *	deleting the oldest entry
+     * property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
+     * deleting the oldest entry
      */
     function createCache() {
       var keys = [];

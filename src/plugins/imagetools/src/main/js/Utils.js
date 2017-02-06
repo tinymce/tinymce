@@ -8,79 +8,83 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.plugins.imagetools.Utils", [
-	"global!tinymce.util.Promise",
-	"global!tinymce.util.Tools"
-], function(Promise, Tools) {
-	var isValue = function (obj) {
-		return obj !== null && obj !== undefined;
-	};
+define(
+  'tinymce.plugins.imagetools.Utils',
+  [
+    "global!tinymce.util.Promise",
+    "global!tinymce.util.Tools"
+  ],
+  function (Promise, Tools) {
+    var isValue = function (obj) {
+      return obj !== null && obj !== undefined;
+    };
 
-	var traverse = function (json, path) {
-		var value;
+    var traverse = function (json, path) {
+      var value;
 
-		value = path.reduce(function(result, key) {
-			return isValue(result) ? result[key] : undefined;
-		}, json);
+      value = path.reduce(function (result, key) {
+        return isValue(result) ? result[key] : undefined;
+      }, json);
 
-		return isValue(value) ? value : null;
-	};
+      return isValue(value) ? value : null;
+    };
 
-	var requestUrlAsBlob = function (url, headers) {
-		return new Promise(function(resolve) {
-			var xhr;
+    var requestUrlAsBlob = function (url, headers) {
+      return new Promise(function (resolve) {
+        var xhr;
 
-			xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest();
 
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState === 4) {
-					resolve({
-						status: xhr.status,
-						blob: this.response
-					});
-				}
-			};
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            resolve({
+              status: xhr.status,
+              blob: this.response
+            });
+          }
+        };
 
-			xhr.open('GET', url, true);
+        xhr.open('GET', url, true);
 
-			Tools.each(headers, function (value, key) {
-				xhr.setRequestHeader(key, value);
-			});
+        Tools.each(headers, function (value, key) {
+          xhr.setRequestHeader(key, value);
+        });
 
-			xhr.responseType = 'blob';
-			xhr.send();
-		});
-	};
+        xhr.responseType = 'blob';
+        xhr.send();
+      });
+    };
 
-	var readBlob = function (blob) {
-		return new Promise(function(resolve) {
-			var fr = new FileReader();
+    var readBlob = function (blob) {
+      return new Promise(function (resolve) {
+        var fr = new FileReader();
 
-			fr.onload = function (e) {
-				var data = e.target;
-				resolve(data.result);
-			};
+        fr.onload = function (e) {
+          var data = e.target;
+          resolve(data.result);
+        };
 
-			fr.readAsText(blob);
-		});
-	};
+        fr.readAsText(blob);
+      });
+    };
 
-	var parseJson = function (text) {
-		var json;
+    var parseJson = function (text) {
+      var json;
 
-		try {
-			json = JSON.parse(text);
-		} catch (ex) {
-			// Ignore
-		}
+      try {
+        json = JSON.parse(text);
+      } catch (ex) {
+        // Ignore
+      }
 
-		return json;
-	};
+      return json;
+    };
 
-	return {
-		traverse: traverse,
-		readBlob: readBlob,
-		requestUrlAsBlob: requestUrlAsBlob,
-		parseJson: parseJson
-	};
-});
+    return {
+      traverse: traverse,
+      readBlob: readBlob,
+      requestUrlAsBlob: requestUrlAsBlob,
+      parseJson: parseJson
+    };
+  }
+);

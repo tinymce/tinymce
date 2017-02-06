@@ -11,21 +11,21 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.textpattern.demo.Demo',
+  'tinymce.textpattern.demo.Demo',
 
-	[
-		'tinymce.textpattern.Plugin',
-		'global!tinymce'
-	],
-	function (Plugin, tinymce) {
-		return function () {
+  [
+    'tinymce.textpattern.Plugin',
+    'global!tinymce'
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				plugins: "textpattern preview",
-				toolbar: "preview",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        plugins: "textpattern preview",
+        toolbar: "preview",
+        height: 600
+      });
+    };
+  }
 );

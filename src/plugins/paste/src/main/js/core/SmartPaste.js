@@ -16,75 +16,79 @@
  * @class tinymce.pasteplugin.SmartPaste
  * @private
  */
-define('tinymce.plugins.paste.core.SmartPaste', [
-	'global!tinymce.util.Tools'
-], function (Tools) {
-	var isAbsoluteUrl = function (url) {
-		return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
-	};
+define(
+  'tinymce.plugins.paste.core.SmartPaste',
+  [
+    'global!tinymce.util.Tools'
+  ],
+  function (Tools) {
+    var isAbsoluteUrl = function (url) {
+      return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+    };
 
-	var isImageUrl = function (url) {
-		return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
-	};
+    var isImageUrl = function (url) {
+      return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
+    };
 
-	var createImage = function (editor, url, pasteHtml) {
-		editor.undoManager.extra(function () {
-			pasteHtml(editor, url);
-		}, function () {
-			editor.insertContent('<img src="' + url + '">');
-		});
+    var createImage = function (editor, url, pasteHtml) {
+      editor.undoManager.extra(function () {
+        pasteHtml(editor, url);
+      }, function () {
+        editor.insertContent('<img src="' + url + '">');
+      });
 
-		return true;
-	};
+      return true;
+    };
 
-	var createLink = function (editor, url, pasteHtml) {
-		editor.undoManager.extra(function () {
-			pasteHtml(editor, url);
-		}, function () {
-			editor.execCommand('mceInsertLink', false, url);
-		});
+    var createLink = function (editor, url, pasteHtml) {
+      editor.undoManager.extra(function () {
+        pasteHtml(editor, url);
+      }, function () {
+        editor.execCommand('mceInsertLink', false, url);
+      });
 
-		return true;
-	};
+      return true;
+    };
 
-	var linkSelection = function (editor, html, pasteHtml) {
-		return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : false;
-	};
+    var linkSelection = function (editor, html, pasteHtml) {
+      return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : false;
+    };
 
-	var insertImage = function (editor, html, pasteHtml) {
-		return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
-	};
+    var insertImage = function (editor, html, pasteHtml) {
+      return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
+    };
 
-	var pasteHtml = function (editor, html) {
-		editor.insertContent(html, {
-			merge: editor.settings.paste_merge_formats !== false,
-			paste: true
-		});
+    var pasteHtml = function (editor, html) {
+      editor.insertContent(html, {
+        merge: editor.settings.paste_merge_formats !== false,
+        paste: true
+      });
 
-		return true;
-	};
+      return true;
+    };
 
-	var smartInsertContent = function (editor, html) {
-		Tools.each([
-			linkSelection,
-			insertImage,
-			pasteHtml
-		], function (action) {
-			return action(editor, html, pasteHtml) !== true;
-		});
-	};
+    var smartInsertContent = function (editor, html) {
+      Tools.each([
+        linkSelection,
+        insertImage,
+        pasteHtml
+      ], function (action) {
+        return action(editor, html, pasteHtml) !== true;
+      });
+    };
 
-	var insertContent = function (editor, html) {
-		if (editor.settings.smart_paste === false) {
-			pasteHtml(editor, html);
-		} else {
-			smartInsertContent(editor, html);
-		}
-	};
+    var insertContent = function (editor, html) {
+      if (editor.settings.smart_paste === false) {
+        pasteHtml(editor, html);
+      } else {
+        smartInsertContent(editor, html);
+      }
+    };
 
-	return {
-		isImageUrl: isImageUrl,
-		isAbsoluteUrl: isAbsoluteUrl,
-		insertContent: insertContent
-	};
-});
+    return {
+      isImageUrl: isImageUrl,
+      isAbsoluteUrl: isAbsoluteUrl,
+      insertContent: insertContent
+    };
+  }
+);

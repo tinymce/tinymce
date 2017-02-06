@@ -10,18 +10,22 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.plugins.advlist.demo.Demo", [
-	"tinymce.plugins.advlist.Plugin",
-	"global!tinymce"
-], function (Plugin, tinymce) {
-	return function () {
+define(
+  'tinymce.plugins.advlist.demo.Demo',
+  [
+    "tinymce.plugins.advlist.Plugin",
+    "global!tinymce"
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-		tinymce.init({
-			selector: "textarea.tinymce",
-			theme: "modern",
-			plugins: "lists advlist code preview",
-			toolbar: "bullist numlist ol code preview",
-			height: 600
-		});
-	};
-});
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "lists advlist code preview",
+        toolbar: "bullist numlist ol code preview",
+        height: 600
+      });
+    };
+  }
+);

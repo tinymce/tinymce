@@ -7,72 +7,72 @@
 var path = require('path');
 var fs = require('fs');
 
-module.exports = function(grunt) {
-	/**
-	 * Compiles a less file with imports for all the specified paths.
-	 */
-	function compileLessFile(paths, lessFilePath) {
-		var lessImportCode = "";
+module.exports = function (grunt) {
+  /**
+   * Compiles a less file with imports for all the specified paths.
+   */
+  function compileLessFile(paths, lessFilePath) {
+    var lessImportCode = "";
 
-		paths.forEach(function(filePath) {
-			lessImportCode += '@import "' + filePath + '";\n';
-		});
+    paths.forEach(function (filePath) {
+      lessImportCode += '@import "' + filePath + '";\n';
+    });
 
-		fs.writeFileSync(lessFilePath, lessImportCode);
-	}
+    fs.writeFileSync(lessFilePath, lessImportCode);
+  }
 
-	/**
-	 * Compiles a less source file from all the specified paths.
-	 */
-	function compileLessSourceFile(paths, lessFilePath) {
-		var lessSourceCode = "";
+  /**
+   * Compiles a less source file from all the specified paths.
+   */
+  function compileLessSourceFile(paths, lessFilePath) {
+    var lessSourceCode = "";
 
-		paths.forEach(function(filePath) {
-			lessSourceCode += "\n" + fs.readFileSync(path.join(path.dirname(lessFilePath), filePath)) + "\n";
-		});
+    paths.forEach(function (filePath) {
+      lessSourceCode += "\n" + fs.readFileSync(path.join(path.dirname(lessFilePath), filePath)) + "\n";
+    });
 
-		fs.writeFileSync(lessFilePath, lessSourceCode);
-	}
+    fs.writeFileSync(lessFilePath, lessSourceCode);
+  }
 
-	/**
-	 * Parses the JS doc comments for -x-less items and include returns them as an array.
-	 */
-	function parseLessDocs(filePath) {
-		var matches, docCommentRegExp = /\/\*\*([\s\S]+?)\*\//g, lessFiles = [];
-		var source = grunt.file.read(filePath).toString();
+  /**
+   * Parses the JS doc comments for -x-less items and include returns them as an array.
+   */
+  function parseLessDocs(filePath) {
+    var matches, docCommentRegExp = /\/\*\*([\s\S]+?)\*\//g, lessFiles = [];
+    var source = grunt.file.read(filePath).toString();
 
-		for (matches = docCommentRegExp.exec(source); matches; matches = docCommentRegExp.exec(source)) {
-			var docComment = matches[1];
+    for (matches = docCommentRegExp.exec(source); matches; matches = docCommentRegExp.exec(source)) {
+      var docComment = matches[1];
 
-			var lessMatch = /\@\-x\-less\s+(.+)/g.exec(docComment);
-			if (lessMatch) {
-				lessFiles.push(lessMatch[1]);
-			}
-		}
+      var lessMatch = /\@\-x\-less\s+(.+)/g.exec(docComment);
+      if (lessMatch) {
+        lessFiles.push(lessMatch[1]);
+      }
+    }
 
-		return lessFiles;
-	}
+    return lessFiles;
+  }
 
-	grunt.registerMultiTask("skin", "Creates skin less files out of registred UI components.", function() {
-		var options = grunt.config([this.name, this.target]).options;
+  grunt.registerMultiTask("skin", "Creates skin less files out of registred UI components.", function () {
+    var options = grunt.config([this.name, this.target]).options;
 
-		fs.readdirSync(options.path).forEach(function(dirName) {
-			var skinDirPath = path.join(options.path, dirName);
+    fs.readdirSync(options.path).forEach(function (dirName) {
+      var skinDirPath = path.join(options.path, dirName);
 
-			if (fs.statSync(skinDirPath).isDirectory()) {
-				var lessFiles = options.prepend || [];
+      if (fs.statSync(skinDirPath).isDirectory()) {
+        var lessFiles = options.prepend || [];
 
-				if (options.importFrom) {
-					lessFiles = lessFiles.concat(parseLessDocs(options.importFrom));
-				}
+        if (options.importFrom) {
+          lessFiles = lessFiles.concat(parseLessDocs(options.importFrom));
+        }
 
-				if (options.append) {
-					lessFiles = lessFiles.concat(options.append);
-				}
+        if (options.append) {
+          lessFiles = lessFiles.concat(options.append);
+        }
 
-				compileLessFile(lessFiles, path.join(skinDirPath, options.devLess));
-				compileLessSourceFile(lessFiles, path.join(skinDirPath, options.srcLess));
-			}
-		});
-	});
+        compileLessFile(lessFiles, path.join(skinDirPath, options.devLess));
+        compileLessSourceFile(lessFiles, path.join(skinDirPath, options.srcLess));
+      }
+    });
+  });
 };

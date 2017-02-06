@@ -8,93 +8,97 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define("tinymce.plugins.lists.actions.Indent", [
-	"global!tinymce.dom.DOMUtils.DOM",
-	"tinymce.plugins.lists.core.NodeType",
-	"tinymce.plugins.lists.core.Bookmark",
-	"tinymce.plugins.lists.core.Selection"
-], function (DOM, NodeType, Bookmark, Selection) {
-	var mergeLists = function (from, to) {
-		var node;
+define(
+  'tinymce.plugins.lists.actions.Indent',
+  [
+    "global!tinymce.dom.DOMUtils.DOM",
+    "tinymce.plugins.lists.core.NodeType",
+    "tinymce.plugins.lists.core.Bookmark",
+    "tinymce.plugins.lists.core.Selection"
+  ],
+  function (DOM, NodeType, Bookmark, Selection) {
+    var mergeLists = function (from, to) {
+      var node;
 
-		if (NodeType.isListNode(from)) {
-			while ((node = from.firstChild)) {
-				to.appendChild(node);
-			}
+      if (NodeType.isListNode(from)) {
+        while ((node = from.firstChild)) {
+          to.appendChild(node);
+        }
 
-			DOM.remove(from);
-		}
-	};
+        DOM.remove(from);
+      }
+    };
 
-	var indent = function (li) {
-		var sibling, newList, listStyle;
+    var indent = function (li) {
+      var sibling, newList, listStyle;
 
-		if (li.nodeName === 'DT') {
-			DOM.rename(li, 'DD');
-			return true;
-		}
+      if (li.nodeName === 'DT') {
+        DOM.rename(li, 'DD');
+        return true;
+      }
 
-		sibling = li.previousSibling;
+      sibling = li.previousSibling;
 
-		if (sibling && NodeType.isListNode(sibling)) {
-			sibling.appendChild(li);
-			return true;
-		}
+      if (sibling && NodeType.isListNode(sibling)) {
+        sibling.appendChild(li);
+        return true;
+      }
 
-		if (sibling && sibling.nodeName === 'LI' && NodeType.isListNode(sibling.lastChild)) {
-			sibling.lastChild.appendChild(li);
-			mergeLists(li.lastChild, sibling.lastChild);
-			return true;
-		}
+      if (sibling && sibling.nodeName === 'LI' && NodeType.isListNode(sibling.lastChild)) {
+        sibling.lastChild.appendChild(li);
+        mergeLists(li.lastChild, sibling.lastChild);
+        return true;
+      }
 
-		sibling = li.nextSibling;
+      sibling = li.nextSibling;
 
-		if (sibling && NodeType.isListNode(sibling)) {
-			sibling.insertBefore(li, sibling.firstChild);
-			return true;
-		}
+      if (sibling && NodeType.isListNode(sibling)) {
+        sibling.insertBefore(li, sibling.firstChild);
+        return true;
+      }
 
-		/*if (sibling && sibling.nodeName === 'LI' && isListNode(li.lastChild)) {
-			return false;
-		}*/
+      /*if (sibling && sibling.nodeName === 'LI' && isListNode(li.lastChild)) {
+        return false;
+      }*/
 
-		sibling = li.previousSibling;
-		if (sibling && sibling.nodeName === 'LI') {
-			newList = DOM.create(li.parentNode.nodeName);
-			listStyle = DOM.getStyle(li.parentNode, 'listStyleType');
-			if (listStyle) {
-				DOM.setStyle(newList, 'listStyleType', listStyle);
-			}
-			sibling.appendChild(newList);
-			newList.appendChild(li);
-			mergeLists(li.lastChild, newList);
-			return true;
-		}
+      sibling = li.previousSibling;
+      if (sibling && sibling.nodeName === 'LI') {
+        newList = DOM.create(li.parentNode.nodeName);
+        listStyle = DOM.getStyle(li.parentNode, 'listStyleType');
+        if (listStyle) {
+          DOM.setStyle(newList, 'listStyleType', listStyle);
+        }
+        sibling.appendChild(newList);
+        newList.appendChild(li);
+        mergeLists(li.lastChild, newList);
+        return true;
+      }
 
-		return false;
-	};
+      return false;
+    };
 
-	var indentSelection = function (editor) {
-		var listElements = Selection.getSelectedListItems(editor);
+    var indentSelection = function (editor) {
+      var listElements = Selection.getSelectedListItems(editor);
 
-		if (listElements.length) {
-			var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+      if (listElements.length) {
+        var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
-			for (var i = 0; i < listElements.length; i++) {
-				if (!indent(listElements[i]) && i === 0) {
-					break;
-				}
-			}
+        for (var i = 0; i < listElements.length; i++) {
+          if (!indent(listElements[i]) && i === 0) {
+            break;
+          }
+        }
 
-			editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
-			editor.nodeChanged();
+        editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+        editor.nodeChanged();
 
-			return true;
-		}
-	};
+        return true;
+      }
+    };
 
-	return {
-		indentSelection: indentSelection
-	};
-});
+    return {
+      indentSelection: indentSelection
+    };
+  }
+);
 

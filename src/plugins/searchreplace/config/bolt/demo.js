@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.searchreplace.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/searchreplace\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/searchreplace\//, '');
+    })
   ]
 });
 

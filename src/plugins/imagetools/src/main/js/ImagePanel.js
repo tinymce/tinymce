@@ -13,220 +13,224 @@
  *
  * @-x-less ImagePanel.less
  */
-define("tinymce.plugins.imagetools.ImagePanel", [
-	"global!tinymce.ui.Control",
-	"global!tinymce.ui.DragHelper",
-	"global!tinymce.geom.Rect",
-	"global!tinymce.util.Tools",
-	"global!tinymce.util.Promise",
-	"tinymce.plugins.imagetools.CropRect"
-], function(Control, DragHelper, Rect, Tools, Promise, CropRect) {
-	function loadImage(image) {
-		return new Promise(function(resolve) {
-			function loaded() {
-				image.removeEventListener('load', loaded);
-				resolve(image);
-			}
+define(
+  'tinymce.plugins.imagetools.ImagePanel',
+  [
+    "global!tinymce.ui.Control",
+    "global!tinymce.ui.DragHelper",
+    "global!tinymce.geom.Rect",
+    "global!tinymce.util.Tools",
+    "global!tinymce.util.Promise",
+    "tinymce.plugins.imagetools.CropRect"
+  ],
+  function (Control, DragHelper, Rect, Tools, Promise, CropRect) {
+    function loadImage(image) {
+      return new Promise(function (resolve) {
+        function loaded() {
+          image.removeEventListener('load', loaded);
+          resolve(image);
+        }
 
-			if (image.complete) {
-				resolve(image);
-			} else {
-				image.addEventListener('load', loaded);
-			}
-		});
-	}
+        if (image.complete) {
+          resolve(image);
+        } else {
+          image.addEventListener('load', loaded);
+        }
+      });
+    }
 
-	return Control.extend({
-		Defaults: {
-			classes: "imagepanel"
-		},
+    return Control.extend({
+      Defaults: {
+        classes: "imagepanel"
+      },
 
-		selection: function(rect) {
-			if (arguments.length) {
-				this.state.set('rect', rect);
-				return this;
-			}
+      selection: function (rect) {
+        if (arguments.length) {
+          this.state.set('rect', rect);
+          return this;
+        }
 
-			return this.state.get('rect');
-		},
+        return this.state.get('rect');
+      },
 
-		imageSize: function() {
-			var viewRect = this.state.get('viewRect');
+      imageSize: function () {
+        var viewRect = this.state.get('viewRect');
 
-			return {
-				w: viewRect.w,
-				h: viewRect.h
-			};
-		},
+        return {
+          w: viewRect.w,
+          h: viewRect.h
+        };
+      },
 
-		toggleCropRect: function(state) {
-			this.state.set('cropEnabled', state);
-		},
+      toggleCropRect: function (state) {
+        this.state.set('cropEnabled', state);
+      },
 
-		imageSrc: function(url) {
-			var self = this, img = new Image();
+      imageSrc: function (url) {
+        var self = this, img = new Image();
 
-			img.src = url;
+        img.src = url;
 
-			loadImage(img).then(function() {
-				var rect, $img, lastRect = self.state.get('viewRect');
+        loadImage(img).then(function () {
+          var rect, $img, lastRect = self.state.get('viewRect');
 
-				$img = self.$el.find('img');
-				if ($img[0]) {
-					$img.replaceWith(img);
-				} else {
-					var bg = document.createElement('div');
-					bg.className = 'mce-imagepanel-bg';
-					self.getEl().appendChild(bg);
-					self.getEl().appendChild(img);
-				}
+          $img = self.$el.find('img');
+          if ($img[0]) {
+            $img.replaceWith(img);
+          } else {
+            var bg = document.createElement('div');
+            bg.className = 'mce-imagepanel-bg';
+            self.getEl().appendChild(bg);
+            self.getEl().appendChild(img);
+          }
 
-				rect = {x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight};
-				self.state.set('viewRect', rect);
-				self.state.set('rect', Rect.inflate(rect, -20, -20));
+          rect = { x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight };
+          self.state.set('viewRect', rect);
+          self.state.set('rect', Rect.inflate(rect, -20, -20));
 
-				if (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {
-					self.zoomFit();
-				}
+          if (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {
+            self.zoomFit();
+          }
 
-				self.repaintImage();
-				self.fire('load');
-			});
-		},
+          self.repaintImage();
+          self.fire('load');
+        });
+      },
 
-		zoom: function(value) {
-			if (arguments.length) {
-				this.state.set('zoom', value);
-				return this;
-			}
+      zoom: function (value) {
+        if (arguments.length) {
+          this.state.set('zoom', value);
+          return this;
+        }
 
-			return this.state.get('zoom');
-		},
+        return this.state.get('zoom');
+      },
 
-		postRender: function() {
-			this.imageSrc(this.settings.imageSrc);
-			return this._super();
-		},
+      postRender: function () {
+        this.imageSrc(this.settings.imageSrc);
+        return this._super();
+      },
 
-		zoomFit: function() {
-			var self = this, $img, pw, ph, w, h, zoom, padding;
+      zoomFit: function () {
+        var self = this, $img, pw, ph, w, h, zoom, padding;
 
-			padding = 10;
-			$img = self.$el.find('img');
-			pw = self.getEl().clientWidth;
-			ph = self.getEl().clientHeight;
-			w = $img[0].naturalWidth;
-			h = $img[0].naturalHeight;
-			zoom = Math.min((pw - padding) / w, (ph - padding) / h);
+        padding = 10;
+        $img = self.$el.find('img');
+        pw = self.getEl().clientWidth;
+        ph = self.getEl().clientHeight;
+        w = $img[0].naturalWidth;
+        h = $img[0].naturalHeight;
+        zoom = Math.min((pw - padding) / w, (ph - padding) / h);
 
-			if (zoom >= 1) {
-				zoom = 1;
-			}
+        if (zoom >= 1) {
+          zoom = 1;
+        }
 
-			self.zoom(zoom);
-		},
+        self.zoom(zoom);
+      },
 
-		repaintImage: function() {
-			var x, y, w, h, pw, ph, $img, $bg, zoom, rect, elm;
+      repaintImage: function () {
+        var x, y, w, h, pw, ph, $img, $bg, zoom, rect, elm;
 
-			elm = this.getEl();
-			zoom = this.zoom();
-			rect = this.state.get('rect');
-			$img = this.$el.find('img');
-			$bg = this.$el.find('.mce-imagepanel-bg');
-			pw = elm.offsetWidth;
-			ph = elm.offsetHeight;
-			w = $img[0].naturalWidth * zoom;
-			h = $img[0].naturalHeight * zoom;
-			x = Math.max(0, pw / 2 - w / 2);
-			y = Math.max(0, ph / 2 - h / 2);
+        elm = this.getEl();
+        zoom = this.zoom();
+        rect = this.state.get('rect');
+        $img = this.$el.find('img');
+        $bg = this.$el.find('.mce-imagepanel-bg');
+        pw = elm.offsetWidth;
+        ph = elm.offsetHeight;
+        w = $img[0].naturalWidth * zoom;
+        h = $img[0].naturalHeight * zoom;
+        x = Math.max(0, pw / 2 - w / 2);
+        y = Math.max(0, ph / 2 - h / 2);
 
-			$img.css({
-				left: x,
-				top: y,
-				width: w,
-				height: h
-			});
+        $img.css({
+          left: x,
+          top: y,
+          width: w,
+          height: h
+        });
 
-			$bg.css({
-				left: x,
-				top: y,
-				width: w,
-				height: h
-			});
+        $bg.css({
+          left: x,
+          top: y,
+          width: w,
+          height: h
+        });
 
-			if (this.cropRect) {
-				this.cropRect.setRect({
-					x: rect.x * zoom + x,
-					y: rect.y * zoom + y,
-					w: rect.w * zoom,
-					h: rect.h * zoom
-				});
+        if (this.cropRect) {
+          this.cropRect.setRect({
+            x: rect.x * zoom + x,
+            y: rect.y * zoom + y,
+            w: rect.w * zoom,
+            h: rect.h * zoom
+          });
 
-				this.cropRect.setClampRect({
-					x: x,
-					y: y,
-					w: w,
-					h: h
-				});
+          this.cropRect.setClampRect({
+            x: x,
+            y: y,
+            w: w,
+            h: h
+          });
 
-				this.cropRect.setViewPortRect({
-					x: 0,
-					y: 0,
-					w: pw,
-					h: ph
-				});
-			}
-		},
+          this.cropRect.setViewPortRect({
+            x: 0,
+            y: 0,
+            w: pw,
+            h: ph
+          });
+        }
+      },
 
-		bindStates: function() {
-			var self = this;
+      bindStates: function () {
+        var self = this;
 
-			function setupCropRect(rect) {
-				self.cropRect = new CropRect(
-					rect,
-					self.state.get('viewRect'),
-					self.state.get('viewRect'),
-					self.getEl(),
-					function() {
-						self.fire('crop');
-					}
-				);
+        function setupCropRect(rect) {
+          self.cropRect = new CropRect(
+            rect,
+            self.state.get('viewRect'),
+            self.state.get('viewRect'),
+            self.getEl(),
+            function () {
+              self.fire('crop');
+            }
+          );
 
-				self.cropRect.on('updateRect', function(e) {
-					var rect = e.rect, zoom = self.zoom();
+          self.cropRect.on('updateRect', function (e) {
+            var rect = e.rect, zoom = self.zoom();
 
-					rect = {
-						x: Math.round(rect.x / zoom),
-						y: Math.round(rect.y / zoom),
-						w: Math.round(rect.w / zoom),
-						h: Math.round(rect.h / zoom)
-					};
+            rect = {
+              x: Math.round(rect.x / zoom),
+              y: Math.round(rect.y / zoom),
+              w: Math.round(rect.w / zoom),
+              h: Math.round(rect.h / zoom)
+            };
 
-					self.state.set('rect', rect);
-				});
+            self.state.set('rect', rect);
+          });
 
-				self.on('remove', self.cropRect.destroy);
-			}
+          self.on('remove', self.cropRect.destroy);
+        }
 
-			self.state.on('change:cropEnabled', function(e) {
-				self.cropRect.toggleVisibility(e.value);
-				self.repaintImage();
-			});
+        self.state.on('change:cropEnabled', function (e) {
+          self.cropRect.toggleVisibility(e.value);
+          self.repaintImage();
+        });
 
-			self.state.on('change:zoom', function() {
-				self.repaintImage();
-			});
+        self.state.on('change:zoom', function () {
+          self.repaintImage();
+        });
 
-			self.state.on('change:rect', function(e) {
-				var rect = e.value;
+        self.state.on('change:rect', function (e) {
+          var rect = e.value;
 
-				if (!self.cropRect) {
-					setupCropRect(rect);
-				}
+          if (!self.cropRect) {
+            setupCropRect(rect);
+          }
 
-				self.cropRect.setRect(rect);
-			});
-		}
-	});
-});
+          self.cropRect.setRect(rect);
+        });
+      }
+    });
+  }
+);

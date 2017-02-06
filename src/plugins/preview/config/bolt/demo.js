@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.preview.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/preview\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/preview\//, '');
+    })
   ]
 });
 

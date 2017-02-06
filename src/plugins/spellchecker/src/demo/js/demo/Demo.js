@@ -11,21 +11,21 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.spellchecker.demo.Demo',
+  'tinymce.spellchecker.demo.Demo',
 
-	[
-		'tinymce.spellchecker.Plugin',
-		'global!tinymce'
-	],
-	function (Plugin, tinymce) {
-		return function () {
+  [
+    'tinymce.spellchecker.Plugin',
+    'global!tinymce'
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				plugins: "spellchecker preview",
-				toolbar: "spellchecker preview",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        plugins: "spellchecker preview",
+        toolbar: "spellchecker preview",
+        height: 600
+      });
+    };
+  }
 );

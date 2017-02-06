@@ -8,24 +8,28 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.themes.modern.ui.ProgressState', [
-	'global!tinymce.ui.Throbber'
-], function (Throbber) {
-	var setup = function (editor, theme) {
-		var throbber;
+define(
+  'tinymce.themes.modern.ui.ProgressState',
+  [
+    'global!tinymce.ui.Throbber'
+  ],
+  function (Throbber) {
+    var setup = function (editor, theme) {
+      var throbber;
 
-		editor.on('ProgressState', function(e) {
-			throbber = throbber || new Throbber(theme.panel.getEl('body'));
+      editor.on('ProgressState', function (e) {
+        throbber = throbber || new Throbber(theme.panel.getEl('body'));
 
-			if (e.state) {
-				throbber.show(e.time);
-			} else {
-				throbber.hide();
-			}
-		});
-	};
+        if (e.state) {
+          throbber.show(e.time);
+        } else {
+          throbber.hide();
+        }
+      });
+    };
 
-	return {
-		setup: setup
-	};
-});
+    return {
+      setup: setup
+    };
+  }
+);

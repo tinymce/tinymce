@@ -11,23 +11,23 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.legacyoutput.demo.Demo',
+  'tinymce.legacyoutput.demo.Demo',
 
-	[
-		'tinymce.legacyoutput.Plugin',
-		'global!tinymce'
-	],
+  [
+    'tinymce.legacyoutput.Plugin',
+    'global!tinymce'
+  ],
 
-	function (Plugin, tinymce) {
-		return function () {
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				theme: "modern",
-				plugins: "legacyoutput code preview",
-				toolbar: "legacyoutput code preview",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "legacyoutput code preview",
+        toolbar: "legacyoutput code preview",
+        height: 600
+      });
+    };
+  }
 );

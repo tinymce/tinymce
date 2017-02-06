@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.bbcode.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/bbcode\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/bbcode\//, '');
+    })
   ]
 });
 

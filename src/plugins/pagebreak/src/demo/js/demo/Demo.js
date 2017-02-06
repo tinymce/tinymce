@@ -11,23 +11,23 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.pagebreak.demo.Demo',
+  'tinymce.pagebreak.demo.Demo',
 
-	[
-		'tinymce.pagebreak.Plugin',
-		'global!tinymce'
-	],
+  [
+    'tinymce.pagebreak.Plugin',
+    'global!tinymce'
+  ],
 
-	function (Plugin, tinymce) {
-		return function () {
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				theme: "modern",
-				plugins: "pagebreak code preview",
-				toolbar: "pagebreak code preview",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "pagebreak code preview",
+        toolbar: "pagebreak code preview",
+        height: 600
+      });
+    };
+  }
 );

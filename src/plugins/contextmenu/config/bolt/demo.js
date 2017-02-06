@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.contextmenu.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/contextmenu\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/contextmenu\//, '');
+    })
   ]
 });
 

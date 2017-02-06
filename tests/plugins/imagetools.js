@@ -1,25 +1,25 @@
 (function() {
-	if (!tinymce.Env.fileApi) {
-		return;
-	}
+  if (!tinymce.Env.fileApi) {
+    return;
+  }
 
-	module("tinymce.plugins.ImageTools", {
+  module("tinymce.plugins.ImageTools", {
         setup: function() {
             document.getElementById('view').innerHTML = '<textarea></textarea>';
         },
 
-		teardown: function() {
-			var ed, win;
+    teardown: function() {
+      var ed, win;
             win = Utils.getFrontmostWindow();
-			if (win) {
-				win.close();
-			}
+      if (win) {
+        win.close();
+      }
 
             while ((ed = tinymce.editors.pop())) {
                 ed.remove();
             }
-		}
-	});
+    }
+  });
 
     function invokeWhen(predicate, cb) {
         var args = arguments;
@@ -77,7 +77,7 @@
             editor.selection.select(editor.dom.select('img')[0]);
             editor.execCommand('mceImageFlipHorizontal');
         });
-	});
+  });
 
 
     asyncTest('images_reuse_filename:true - upload is submitted with original filename', function() {
@@ -106,6 +106,6 @@
             editor.selection.select(editor.dom.select('img')[0]);
             editor.execCommand('mceImageFlipHorizontal');
         });
-	});
+  });
 
 })();

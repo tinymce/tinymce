@@ -1,87 +1,87 @@
 /*eslint-env node */
 
 module.exports = function (grunt) {
-	grunt.initConfig({
-		"bolt-init": {
-			"core": {
-				config_dir: "config/bolt"
-			}
-		},
+  grunt.initConfig({
+    "bolt-init": {
+      "core": {
+        config_dir: "config/bolt"
+      }
+    },
 
-		"bolt-build": {
-			"core": {
-				config_js: "config/bolt/prod.js",
-				output_dir: "scratch",
-				main: "tinymce.core.api.Main",
-				filename: "tinymce",
+    "bolt-build": {
+      "core": {
+        config_js: "config/bolt/prod.js",
+        output_dir: "scratch",
+        main: "tinymce.core.api.Main",
+        filename: "tinymce",
 
-				generate_inline: true,
-				minimise_module_names: true,
+        generate_inline: true,
+        minimise_module_names: true,
 
-				files: {
-					src: ["src/main/js/api/Main.js"]
-				}
-			}
-		},
+        files: {
+          src: ["src/main/js/api/Main.js"]
+        }
+      }
+    },
 
-		copy: {
-			"core": {
-				files: [
-					{
-						src: "scratch/inline/tinymce.raw.js",
-						dest: "dist/tinymce/tinymce.js"
-					},
+    copy: {
+      "core": {
+        files: [
+          {
+            src: "scratch/inline/tinymce.raw.js",
+            dest: "dist/tinymce/tinymce.js"
+          },
 
-					{
-						src: "src/main/text/readme_lang.md",
-						dest: "dist/tinymce/langs/readme.md"
-					}
-				]
-			}
-		},
+          {
+            src: "src/main/text/readme_lang.md",
+            dest: "dist/tinymce/langs/readme.md"
+          }
+        ]
+      }
+    },
 
-		eslint: {
-			options: {
-				config: "../../../.eslintrc"
-			},
+    eslint: {
+      options: {
+        config: "../../../.eslintrc"
+      },
 
-			src: [
-				"src"
-			]
-		},
+      src: [
+        "src"
+      ]
+    },
 
-		uglify: {
-			options: {
-				beautify: {
-					ascii_only: true,
-					screw_ie8: false
-				},
+    uglify: {
+      options: {
+        beautify: {
+          ascii_only: true,
+          screw_ie8: false
+        },
 
-				compress: {
-					screw_ie8: false
-				}
-			},
+        compress: {
+          screw_ie8: false
+        }
+      },
 
-			"tinymce": {
-				files: [
-					{
-						src: "scratch/inline/tinymce.js",
-						dest: "dist/tinymce/tinymce.min.js"
-					},
+      "tinymce": {
+        files: [
+          {
+            src: "scratch/inline/tinymce.js",
+            dest: "dist/tinymce/tinymce.min.js"
+          },
 
-					{
-						src: "src/main/js/jquery.tinymce.js",
-						dest: "dist/tinymce/jquery.tinymce.min.js"
-					}
-				]
-			}
-		}
-	});
+          {
+            src: "src/main/js/jquery.tinymce.js",
+            dest: "dist/tinymce/jquery.tinymce.min.js"
+          }
+        ]
+      }
+    }
+  });
 
-	grunt.task.loadTasks("../../node_modules/@ephox/bolt/tasks");
-	grunt.task.loadTasks("../../node_modules/grunt-contrib-copy/tasks");
-	grunt.task.loadTasks("../../node_modules/grunt-contrib-uglify/tasks");
-	grunt.task.loadTasks("../../node_modules/grunt-eslint/tasks");
+  grunt.task.loadTasks("../../node_modules/@ephox/bolt/tasks");
+  grunt.task.loadTasks("../../node_modules/grunt-contrib-copy/tasks");
+  grunt.task.loadTasks("../../node_modules/grunt-contrib-uglify/tasks");
+  grunt.task.loadTasks("../../node_modules/grunt-eslint/tasks");
 
-	grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
+  grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
 };

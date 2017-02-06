@@ -11,25 +11,25 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.template.demo.Demo',
+  'tinymce.template.demo.Demo',
 
-	[
-		'tinymce.template.Plugin',
-		'global!tinymce'
-	],
-	function (Plugin, tinymce) {
-		return function () {
+  [
+    'tinymce.template.Plugin',
+    'global!tinymce'
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				plugins: "template preview",
-				toolbar: "template preview",
-				height: 600,
-				templates: [
-						{title: 'Some title 1', description: 'Some desc 1', content: 'My content'},
-						{title: 'Some title 2', description: 'Some desc 2', content: 'My other content'}
-				]
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        plugins: "template preview",
+        toolbar: "template preview",
+        height: 600,
+        templates: [
+          { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
+          { title: 'Some title 2', description: 'Some desc 2', content: 'My other content' }
+        ]
+      });
+    };
+  }
 );

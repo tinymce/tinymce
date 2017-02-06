@@ -10,17 +10,21 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.plugins.wordcount.Demo", [
-	"tinymce.plugins.wordcount.Plugin",
-	"global!tinymce"
-], function(Plugin, tinymce) {
-	return function() {
+define(
+  'tinymce.plugins.wordcount.Demo',
+  [
+    "tinymce.plugins.wordcount.Plugin",
+    "global!tinymce"
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-		tinymce.init({
-			selector: "textarea.tinymce",
-			theme: "modern",
-			plugins: ["wordcount"],
-			height: 600
-		});
-	};
-});
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: ["wordcount"],
+        height: 600
+      });
+    };
+  }
+);

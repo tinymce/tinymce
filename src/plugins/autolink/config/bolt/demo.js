@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.autolink.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/autolink\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/autolink\//, '');
+    })
   ]
 });
 

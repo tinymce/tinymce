@@ -2,7 +2,7 @@
  * Dialog.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -23,21 +23,21 @@ define(
     'tinymce.plugins.codesample.util.Utils'
   ],
 
-  function(DOMUtils, Prism, Utils) {
+  function (DOMUtils, Prism, Utils) {
     var DOM = DOMUtils.DOM;
 
     function getLanguages(editor) {
       var defaultLanguages = [
-        {text: 'HTML/XML', value: 'markup'},
-        {text: 'JavaScript', value: 'javascript'},
-        {text: 'CSS', value: 'css'},
-        {text: 'PHP', value: 'php'},
-        {text: 'Ruby', value: 'ruby'},
-        {text: 'Python', value: 'python'},
-        {text: 'Java', value: 'java'},
-        {text: 'C', value: 'c'},
-        {text: 'C#', value: 'csharp'},
-        {text: 'C++', value: 'cpp'}
+        { text: 'HTML/XML', value: 'markup' },
+        { text: 'JavaScript', value: 'javascript' },
+        { text: 'CSS', value: 'css' },
+        { text: 'PHP', value: 'php' },
+        { text: 'Ruby', value: 'ruby' },
+        { text: 'Python', value: 'python' },
+        { text: 'Java', value: 'java' },
+        { text: 'C', value: 'c' },
+        { text: 'C#', value: 'csharp' },
+        { text: 'C++', value: 'cpp' }
       ];
 
       var customLanguages = editor.settings.codesample_languages;
@@ -45,7 +45,7 @@ define(
     }
 
     function insertCodeSample(editor, language, code) {
-      editor.undoManager.transact(function() {
+      editor.undoManager.transact(function () {
         var node = getSelectedCodeSample(editor);
 
         code = DOM.encode(code);
@@ -94,7 +94,7 @@ define(
     }
 
     return {
-      open: function(editor) {
+      open: function (editor) {
         editor.windowManager.open({
           title: "Insert/Edit code sample",
           minWidth: Math.min(DOM.getViewPort().w, editor.getParam('codesample_dialog_width', 800)),
@@ -125,7 +125,7 @@ define(
               autofocus: true
             }
           ],
-          onSubmit: function(e) {
+          onSubmit: function (e) {
             insertCodeSample(editor, e.data.language, e.data.code);
           }
         });

@@ -11,23 +11,23 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.searchreplace.demo.Demo',
+  'tinymce.searchreplace.demo.Demo',
 
-	[
-		'tinymce.searchreplace.Plugin',
-		'global!tinymce'
-	],
+  [
+    'tinymce.searchreplace.Plugin',
+    'global!tinymce'
+  ],
 
-	function (Plugin, tinymce) {
-		return function () {
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				theme: "modern",
-				plugins: "searchreplace code",
-				toolbar: "searchreplace code",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "searchreplace code",
+        toolbar: "searchreplace code",
+        height: 600
+      });
+    };
+  }
 );

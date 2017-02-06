@@ -40,9 +40,9 @@
         $el.find('[' + attr + ']').removeAttr(attr);
     }
 
-	function trimBr(html) {
-		return html.replace(/<br data-mce-bogus="1" \/>/g, '');
-	}
+  function trimBr(html) {
+    return html.replace(/<br data-mce-bogus="1" \/>/g, '');
+  }
 
     test("mceInsertToc", function() {
         editor.getBody().innerHTML =

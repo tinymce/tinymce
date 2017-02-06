@@ -64,9 +64,9 @@ asynctest(
         LegacyUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
         LegacyUnit.equal(editor.getBody().innerHTML, '<p><img src="' + blobInfo.blobUri() + '"></p>');
         LegacyUnit.equal(
-				'<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" /></p>',
-				editor.getContent()
-			);
+          '<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" /></p>',
+          editor.getContent()
+        );
         LegacyUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
       }).then(done)["catch"](fail);
     });
@@ -90,8 +90,10 @@ asynctest(
       });
     });
 
-    suite.asyncTest('don\'t replace uploaded blob uri with result uri (copy/paste of' +
-		' an uploaded blob uri) since blob uris are retained', function (editor, done) {
+    suite.asyncTest(
+    'don\'t replace uploaded blob uri with result uri (copy/paste of' +
+    ' an uploaded blob uri) since blob uris are retained',
+    function (editor, done) {
       editor.settings.images_replace_blob_uris = false;
       editor.setContent(imageHtml(testBlobDataUri));
 
@@ -221,7 +223,7 @@ asynctest(
 
         if (callCount === 2) {
           done();
-				// This is in exact since the status of the image can be pending or failed meaing it should try again
+          // This is in exact since the status of the image can be pending or failed meaing it should try again
           LegacyUnit.equal(uploadCount >= 1, true, 'Should at least be one.');
         }
 
@@ -288,8 +290,8 @@ asynctest(
       };
 
       editor.getBody().innerHTML = (
-			'<img src="' + testBlobDataUri + '" data-skip="1">'
-		);
+        '<img src="' + testBlobDataUri + '" data-skip="1">'
+      );
 
       editor.settings.images_dataimg_filter = function (img) {
         return !img.hasAttribute('data-skip');

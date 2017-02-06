@@ -1,53 +1,53 @@
 /* Icons IE7 */
 
 @font-face {
-	font-family: 'tinymce';
-	src:url('fonts/tinymce.eot');
-	src:url('fonts/tinymce.eot?#iefix') format('embedded-opentype'),
-		url('fonts/tinymce.woff') format('woff'),
-		url('fonts/tinymce.ttf') format('truetype'),
-		url('fonts/tinymce.svg#tinymce') format('svg');
-	font-weight: normal;
-	font-style: normal;
+  font-family: 'tinymce';
+  src:url('fonts/tinymce.eot');
+  src:url('fonts/tinymce.eot?#iefix') format('embedded-opentype'),
+    url('fonts/tinymce.woff') format('woff'),
+    url('fonts/tinymce.ttf') format('truetype'),
+    url('fonts/tinymce.svg#tinymce') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-	font-family: 'tinymce-small';
-	src:url('fonts/tinymce-small.eot');
-	src:url('fonts/tinymce-small.eot?#iefix') format('embedded-opentype'),
-		url('fonts/tinymce-small.woff') format('woff'),
-		url('fonts/tinymce-small.ttf') format('truetype'),
-		url('fonts/tinymce-small.svg#tinymce') format('svg');
-	font-weight: normal;
-	font-style: normal;
+  font-family: 'tinymce-small';
+  src:url('fonts/tinymce-small.eot');
+  src:url('fonts/tinymce-small.eot?#iefix') format('embedded-opentype'),
+    url('fonts/tinymce-small.woff') format('woff'),
+    url('fonts/tinymce-small.ttf') format('truetype'),
+    url('fonts/tinymce-small.svg#tinymce') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @iconSize: 16px;
 
 .@{prefix}-ico {
-	font-family: 'tinymce';
-	font-style: normal;
-	font-weight: normal;
-	font-size: @iconSize;
-	line-height: 16px;
-	vertical-align: text-top;
-	-webkit-font-smoothing: antialiased;
+  font-family: 'tinymce';
+  font-style: normal;
+  font-weight: normal;
+  font-size: @iconSize;
+  line-height: 16px;
+  vertical-align: text-top;
+  -webkit-font-smoothing: antialiased;
 
-	display: inline-block;
-	background: transparent center center;
-	width: 16px;
-	height: 16px;
-	color: @btn-text;
-	-ie7-icon: ' ';
+  display: inline-block;
+  background: transparent center center;
+  width: 16px;
+  height: 16px;
+  color: @btn-text;
+  -ie7-icon: ' ';
 }
 
 .@{prefix}-btn-small .@{prefix}-ico {
-	font-family: 'tinymce-small';
+  font-family: 'tinymce-small';
 }
 
 // .@{prefix}-i-checkbox needs to have zoom overridden since it's set by the gradient mixin
 .@{prefix}-ico, i.@{prefix}-i-checkbox {
-	zoom: ~"expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = this.currentStyle['-ie7-icon'].substr(1, 1) + '&nbsp;')";	
+  zoom: ~"expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = this.currentStyle['-ie7-icon'].substr(1, 1) + '&nbsp;')";  
 }
 
 .@{prefix}-i-save           { -ie7-icon: "\e000"; }
@@ -129,7 +129,7 @@
 .@{prefix}-i-remove         { -ie7-icon: "\ed6a"; }
 .@{prefix}-i-codesample     { -ie7-icon: "\e603"; }
 .@{prefix}-i-checkbox, .@{prefix}-i-selected {
-	-ie7-icon: "\e033";
+  -ie7-icon: "\e033";
 }
 
 .@{prefix}-i-selected              { visibility: hidden; }

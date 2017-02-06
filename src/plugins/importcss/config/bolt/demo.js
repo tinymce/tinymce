@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.importcss.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/importcss\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/importcss\//, '');
+    })
   ]
 });
 

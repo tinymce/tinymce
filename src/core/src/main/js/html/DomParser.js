@@ -224,9 +224,9 @@ define(
        *
        * @example
        * parser.addNodeFilter('p,h1', function(nodes, name) {
-       *		for (var i = 0; i < nodes.length; i++) {
-       *			console.log(nodes[i].name);
-       *		}
+       *  for (var i = 0; i < nodes.length; i++) {
+       *   console.log(nodes[i].name);
+       *  }
        * });
        * @method addNodeFilter
        * @method {String} name Comma separated list of nodes to collect.
@@ -250,9 +250,9 @@ define(
        *
        * @example
        * parser.addAttributeFilter('src,href', function(nodes, name) {
-       *		for (var i = 0; i < nodes.length; i++) {
-       *			console.log(nodes[i].name);
-       *		}
+       *  for (var i = 0; i < nodes.length; i++) {
+       *   console.log(nodes[i].name);
+       *  }
        * });
        * @method addAttributeFilter
        * @method {String} name Comma separated list of nodes to collect.

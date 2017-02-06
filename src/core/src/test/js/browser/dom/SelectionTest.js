@@ -562,8 +562,8 @@ asynctest(
       var rng;
 
       // if (tinymce.isOpera || tinymce.isIE) {
-      // 	ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-      // 	return;
+      //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+      //  return;
       // }
 
       editor.setContent('<p>text</p>');
@@ -584,8 +584,8 @@ asynctest(
       var rng;
 
       // if (tinymce.isOpera || tinymce.isIE) {
-      // 	ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-      // 	return;
+      //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+      //  return;
       // }
 
       editor.setContent('<p><br /></p>');
@@ -946,8 +946,8 @@ asynctest(
         var rng;
 
         // if (tinymce.isOpera || tinymce.isIE) {
-        // 	ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-        // 	return;
+        //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+        //  return;
         // }
 
         editor.setContent('a<table><tr><td>b</td></tr></table>');

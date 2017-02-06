@@ -2,7 +2,7 @@
  * Plugin.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -15,15 +15,15 @@
  * @private
  */
 define(
-	'tinymce.plugins.advlist.Plugin',
+  'tinymce.plugins.advlist.Plugin',
 
-	[
+  [
     'global!tinymce.PluginManager',
     'global!tinymce.util.Tools'
   ],
 
   function (PluginManager, Tools) {
-    PluginManager.add('advlist', function(editor) {
+    PluginManager.add('advlist', function (editor) {
       var olMenuItems, ulMenuItems;
 
       var hasPlugin = function (editor, plugin) {
@@ -42,9 +42,9 @@ define(
       function buildMenuItems(listName, styleValues) {
         var items = [];
         if (styleValues) {
-          Tools.each(styleValues.split(/[ ,]/), function(styleValue) {
+          Tools.each(styleValues.split(/[ ,]/), function (styleValue) {
             items.push({
-              text: styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function(chr) {
+              text: styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
                 return chr.toUpperCase();
               }),
               data: styleValue == 'default' ? '' : styleValue
@@ -62,7 +62,7 @@ define(
       ulMenuItems = buildMenuItems('UL', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));
 
       function applyListFormat(listName, styleValue) {
-        editor.undoManager.transact(function() {
+        editor.undoManager.transact(function () {
           var list, dom = editor.dom, sel = editor.selection;
 
           // Check for existing list element
@@ -96,7 +96,7 @@ define(
       function updateSelection(e) {
         var listStyleType = editor.dom.getStyle(editor.dom.getParent(editor.selection.getNode(), 'ol,ul'), 'listStyleType') || '';
 
-        e.control.items().each(function(ctrl) {
+        e.control.items().each(function (ctrl) {
           ctrl.active(ctrl.settings.data === listStyleType);
         });
       }
@@ -127,10 +127,10 @@ define(
           menu: olMenuItems,
           onPostRender: listState('OL'),
           onshow: updateSelection,
-          onselect: function(e) {
+          onselect: function (e) {
             applyListFormat('OL', e.control.settings.data);
           },
-          onclick: function() {
+          onclick: function () {
             applyListFormat('OL', false);
           }
         });
@@ -141,17 +141,17 @@ define(
           onPostRender: listState('UL'),
           menu: ulMenuItems,
           onshow: updateSelection,
-          onselect: function(e) {
+          onselect: function (e) {
             applyListFormat('UL', e.control.settings.data);
           },
-          onclick: function() {
+          onclick: function () {
             applyListFormat('UL', false);
           }
         });
       }
     });
 
-    return function () {};
+    return function () { };
 
   }
 );

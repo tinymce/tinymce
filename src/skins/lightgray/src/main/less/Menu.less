@@ -1,31 +1,31 @@
 // Menu
 
 .@{prefix}-menu {
-	position: absolute;
-	left: 0; top: 0;
-	.reset-gradient();
-	z-index: 1000;
-	padding: 5px 0 5px 0;
-	margin: @menu-margin; 
-	min-width: 160px;
-	background: @menu-bg;
-	border: 1px solid mix(rgb(red(@menu-border), green(@menu-border), blue(@menu-border)), @panel-bg, round(alpha(@menu-border) * 200));
-	border: 1px solid @menu-border;
-	z-index: 1002;
-	.border-radius(6px);
-	.box-shadow(0 5px 10px rgba(0,0,0,.2));
-	max-height: 400px;
-	overflow: auto;
-	overflow-x: hidden;
+  position: absolute;
+  left: 0; top: 0;
+  .reset-gradient();
+  z-index: 1000;
+  padding: 5px 0 5px 0;
+  margin: @menu-margin; 
+  min-width: 160px;
+  background: @menu-bg;
+  border: 1px solid mix(rgb(red(@menu-border), green(@menu-border), blue(@menu-border)), @panel-bg, round(alpha(@menu-border) * 200));
+  border: 1px solid @menu-border;
+  z-index: 1002;
+  .border-radius(6px);
+  .box-shadow(0 5px 10px rgba(0,0,0,.2));
+  max-height: 400px;
+  overflow: auto;
+  overflow-x: hidden;
 }
 
 .@{prefix}-menu i {
-	display: none;
+  display: none;
 }
 
 .@{prefix}-menu-has-icons i {
-	display: inline-block;
-	*display: inline;
+  display: inline-block;
+  *display: inline;
 }
 
 .@{prefix}-menu-sub-tr-tl { margin: -6px 0 0 -1px; }

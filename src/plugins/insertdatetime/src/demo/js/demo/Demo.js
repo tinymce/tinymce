@@ -11,23 +11,23 @@
 /*eslint no-console:0 */
 
 define(
-	'tinymce.insertdatetime.demo.Demo',
+  'tinymce.insertdatetime.demo.Demo',
 
-	[
-		'tinymce.insertdatetime.Plugin',
-		'global!tinymce'
-	],
+  [
+    'tinymce.insertdatetime.Plugin',
+    'global!tinymce'
+  ],
 
-	function (Plugin, tinymce) {
-		return function () {
+  function (Plugin, tinymce) {
+    return function () {
 
-			tinymce.init({
-				selector: "textarea.tinymce",
-				theme: "modern",
-				plugins: "insertdatetime code preview",
-				toolbar: "insertdatetime code preview",
-				height: 600
-			});
-		};
-	}
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "insertdatetime code preview",
+        toolbar: "insertdatetime code preview",
+        height: 600
+      });
+    };
+  }
 );

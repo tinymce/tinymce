@@ -8,7 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.themes.modern.Theme', [
+define(
+  'tinymce.themes.modern.Theme',
+  [
     'global!tinymce.AddOnManager',
     'global!tinymce.EditorManager',
     'global!tinymce.Env',
@@ -16,56 +18,58 @@ define('tinymce.themes.modern.Theme', [
     'tinymce.themes.modern.modes.Inline',
     'tinymce.themes.modern.ui.ProgressState',
     'tinymce.themes.modern.ui.Resize'
-  ], function (AddOnManager, EditorManager, Env, Iframe, Inline, ProgressState, Resize) {
-		var ThemeManager = AddOnManager.ThemeManager;
-	var renderUI = function(editor, theme, args) {
-		var settings = editor.settings;
-		var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
+  ],
+  function (AddOnManager, EditorManager, Env, Iframe, Inline, ProgressState, Resize) {
+    var ThemeManager = AddOnManager.ThemeManager;
+    var renderUI = function (editor, theme, args) {
+      var settings = editor.settings;
+      var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
 
-		if (skin) {
-			var skinUrl = settings.skin_url;
+      if (skin) {
+        var skinUrl = settings.skin_url;
 
-			if (skinUrl) {
-				skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
-			} else {
-				skinUrl = EditorManager.baseURL + '/skins/' + skin;
-			}
+        if (skinUrl) {
+          skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
+        } else {
+          skinUrl = EditorManager.baseURL + '/skins/' + skin;
+        }
 
-			// Load special skin for IE7
-			// TODO: Remove this when we drop IE7 support
-			if (Env.documentMode <= 7) {
-				args.skinUiCss = skinUrl + '/skin.ie7.min.css';
-			} else {
-				args.skinUiCss = skinUrl + '/skin.min.css';
-			}
+        // Load special skin for IE7
+        // TODO: Remove this when we drop IE7 support
+        if (Env.documentMode <= 7) {
+          args.skinUiCss = skinUrl + '/skin.ie7.min.css';
+        } else {
+          args.skinUiCss = skinUrl + '/skin.min.css';
+        }
 
-			// Load content.min.css or content.inline.min.css
-			editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
-		}
+        // Load content.min.css or content.inline.min.css
+        editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
+      }
 
-		ProgressState.setup(editor, theme);
+      ProgressState.setup(editor, theme);
 
-		if (settings.inline) {
-			return Inline.render(editor, theme, args);
-		}
+      if (settings.inline) {
+        return Inline.render(editor, theme, args);
+      }
 
-		return Iframe.render(editor, theme, args);
-	};
+      return Iframe.render(editor, theme, args);
+    };
 
-	ThemeManager.add('modern', function (editor) {
-		return {
-			renderUI: function (args) {
-				return renderUI(editor, this, args);
-			},
-			resizeTo: function (w, h) {
-				return Resize.resizeTo(editor, w, h);
-			},
-			resizeBy: function (dw, dh) {
-				return Resize.resizeBy(editor, dw, dh);
-			}
-		};
-	});
+    ThemeManager.add('modern', function (editor) {
+      return {
+        renderUI: function (args) {
+          return renderUI(editor, this, args);
+        },
+        resizeTo: function (w, h) {
+          return Resize.resizeTo(editor, w, h);
+        },
+        resizeBy: function (dw, dh) {
+          return Resize.resizeBy(editor, dw, dh);
+        }
+      };
+    });
 
-	return function () {
-	};
-});
+    return function () {
+    };
+  }
+);

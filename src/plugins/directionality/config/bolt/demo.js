@@ -4,8 +4,8 @@ configure({
   ],
   sources: [
     source('amd', 'tinymce.plugins.directionality.demo', '../../src/demo/js', function (id) {
-			return mapper.hierarchical(id).replace(/^tinymce\/plugins\/directionality\//, '');
-		})
+      return mapper.hierarchical(id).replace(/^tinymce\/plugins\/directionality\//, '');
+    })
   ]
 });
 

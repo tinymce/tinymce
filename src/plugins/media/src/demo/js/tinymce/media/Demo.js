@@ -10,24 +10,28 @@
 
 /*eslint no-console:0 */
 
-define("tinymce.plugins.mediaDemo", [
-	"tinymce.plugins.mediaPlugin",
-	"global!tinymce"
-], function (Plugin, tinymce) {
-	return function () {
+define(
+  'tinymce.plugins.mediaDemo',
+  [
+    "tinymce.plugins.mediaPlugin",
+    "global!tinymce"
+  ],
+  function (Plugin, tinymce) {
+    return function () {
 
-		tinymce.init({
-			selector: "textarea.tinymce",
-			theme: "modern",
-			plugins: "media code preview",
-			toolbar: "media code preview",
-			media_dimensions: false,
-			// media_live_embeds: false,
-			// media_url_resolver: function (data, resolve) {
-			// 	resolve({
-			// 		html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
-			// },
-			height: 600
-		});
-	};
-});
+      tinymce.init({
+        selector: "textarea.tinymce",
+        theme: "modern",
+        plugins: "media code preview",
+        toolbar: "media code preview",
+        media_dimensions: false,
+        // media_live_embeds: false,
+        // media_url_resolver: function (data, resolve) {
+        // resolve({
+        //   html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
+        // },
+        height: 600
+      });
+    };
+  }
+);

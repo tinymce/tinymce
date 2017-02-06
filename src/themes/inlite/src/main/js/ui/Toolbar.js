@@ -8,107 +8,111 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define('tinymce.themes.inlite.ui.Toolbar', [
-	'global!tinymce.util.Tools',
-	'global!tinymce.ui.Factory',
-	'tinymce.themes.inlite.alien.Type'
-], function (Tools, Factory, Type) {
-	var getSelectorStateResult = function (itemName, item) {
-		var result = function (selector, handler) {
-			return {
-				selector: selector,
-				handler: handler
-			};
-		};
+define(
+  'tinymce.themes.inlite.ui.Toolbar',
+  [
+    'global!tinymce.util.Tools',
+    'global!tinymce.ui.Factory',
+    'tinymce.themes.inlite.alien.Type'
+  ],
+  function (Tools, Factory, Type) {
+    var getSelectorStateResult = function (itemName, item) {
+      var result = function (selector, handler) {
+        return {
+          selector: selector,
+          handler: handler
+        };
+      };
 
-		var activeHandler = function(state) {
-			item.active(state);
-		};
+      var activeHandler = function (state) {
+        item.active(state);
+      };
 
-		var disabledHandler = function (state) {
-			item.disabled(state);
-		};
+      var disabledHandler = function (state) {
+        item.disabled(state);
+      };
 
-		if (item.settings.stateSelector) {
-			return result(item.settings.stateSelector, activeHandler);
-		}
+      if (item.settings.stateSelector) {
+        return result(item.settings.stateSelector, activeHandler);
+      }
 
-		if (item.settings.disabledStateSelector) {
-			return result(item.settings.disabledStateSelector, disabledHandler);
-		}
+      if (item.settings.disabledStateSelector) {
+        return result(item.settings.disabledStateSelector, disabledHandler);
+      }
 
-		return null;
-	};
+      return null;
+    };
 
-	var bindSelectorChanged = function (editor, itemName, item) {
-		return function () {
-			var result = getSelectorStateResult(itemName, item);
-			if (result !== null) {
-				editor.selection.selectorChanged(result.selector, result.handler);
-			}
-		};
-	};
+    var bindSelectorChanged = function (editor, itemName, item) {
+      return function () {
+        var result = getSelectorStateResult(itemName, item);
+        if (result !== null) {
+          editor.selection.selectorChanged(result.selector, result.handler);
+        }
+      };
+    };
 
-	var itemsToArray = function (items) {
-		if (Type.isArray(items)) {
-			return items;
-		} else if (Type.isString(items)) {
-			return items.split(/[ ,]/);
-		}
+    var itemsToArray = function (items) {
+      if (Type.isArray(items)) {
+        return items;
+      } else if (Type.isString(items)) {
+        return items.split(/[ ,]/);
+      }
 
-		return [];
-	};
+      return [];
+    };
 
-	var create = function (editor, name, items) {
-		var toolbarItems = [], buttonGroup;
+    var create = function (editor, name, items) {
+      var toolbarItems = [], buttonGroup;
 
-		if (!items) {
-			return;
-		}
+      if (!items) {
+        return;
+      }
 
-		Tools.each(itemsToArray(items), function(item) {
-			var itemName;
+      Tools.each(itemsToArray(items), function (item) {
+        var itemName;
 
-			if (item == '|') {
-				buttonGroup = null;
-			} else {
-				if (Factory.has(item)) {
-					item = {type: item};
-					toolbarItems.push(item);
-					buttonGroup = null;
-				} else {
-					if (editor.buttons[item]) {
-						if (!buttonGroup) {
-							buttonGroup = {type: 'buttongroup', items: []};
-							toolbarItems.push(buttonGroup);
-						}
+        if (item == '|') {
+          buttonGroup = null;
+        } else {
+          if (Factory.has(item)) {
+            item = { type: item };
+            toolbarItems.push(item);
+            buttonGroup = null;
+          } else {
+            if (editor.buttons[item]) {
+              if (!buttonGroup) {
+                buttonGroup = { type: 'buttongroup', items: [] };
+                toolbarItems.push(buttonGroup);
+              }
 
-						itemName = item;
-						item = editor.buttons[itemName];
+              itemName = item;
+              item = editor.buttons[itemName];
 
-						if (typeof item == 'function') {
-							item = item();
-						}
+              if (typeof item == 'function') {
+                item = item();
+              }
 
-						item.type = item.type || 'button';
+              item.type = item.type || 'button';
 
-						item = Factory.create(item);
-						item.on('postRender', bindSelectorChanged(editor, itemName, item));
-						buttonGroup.items.push(item);
-					}
-				}
-			}
-		});
+              item = Factory.create(item);
+              item.on('postRender', bindSelectorChanged(editor, itemName, item));
+              buttonGroup.items.push(item);
+            }
+          }
+        }
+      });
 
-		return Factory.create({
-			type: 'toolbar',
-			layout: 'flow',
-			name: name,
-			items: toolbarItems
-		});
-	};
+      return Factory.create({
+        type: 'toolbar',
+        layout: 'flow',
+        name: name,
+        items: toolbarItems
+      });
+    };
 
-	return {
-		create: create
-	};
-});
+    return {
+      create: create
+    };
+  }
+);
