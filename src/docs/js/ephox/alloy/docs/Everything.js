@@ -43,6 +43,7 @@ define(
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.UiBuilder',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.format.TypeTokens',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
@@ -54,11 +55,18 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Composing, Disabling, Keying, Streaming, Toggling, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, TypeTokens, Arr, Fun, Class, Element, Html, Insert, InsertAll, SelectorFind) {
+  function (Composing, Disabling, Keying, Streaming, Toggling, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Objects, TypeTokens, Arr, Fun, Class, Element, Html, Insert, InsertAll, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       
-      var getDescription = Fun.identity;
+      var documentation = {
+        'toggling > selected': 'specify whether or not the component starts toggled'
+      };
+
+      var getDescription = function (key) {
+        if (Objects.hasKey(documentation, key)) return documentation[key];
+        else return '<span style="background-color: red;">' + key + '</span>';
+      };
       
 
       var build = function (path, dsl) {
@@ -103,11 +111,6 @@ define(
         );
       };
 
-      var prettyprint = function (level, dsl) {
-        var d = build([], dsl);
-        return d;
-      };
-
       var behaviours = Arr.map([
         Toggling,
         Streaming,
@@ -124,7 +127,7 @@ define(
         schema.fold(function (name, output, presence, value) {
           var dsl = value.toDsl();
 
-          Insert.after(h3, prettyprint(0, dsl));
+          Insert.after(h3, build([ b.name() ], dsl));
         }, function () { });
 
         
