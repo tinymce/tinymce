@@ -7,6 +7,7 @@ define(
     'ephox.boulder.core.ObjReader',
     'ephox.boulder.core.ObjWriter',
     'ephox.boulder.core.SchemaError',
+    'ephox.boulder.format.TypeTokens',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -17,7 +18,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, SchemaError, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
+  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -127,9 +128,14 @@ define(
         return 'val';
       };
 
+      var toDsl = function () {
+        return TypeTokens.typeAdt.itemOf(validator);
+      };
+
       return {
         extract: extract,
-        toString: toString
+        toString: toString,
+        toDsl: toDsl
       };      
     };
 
@@ -149,9 +155,22 @@ define(
         return 'obj{\n' + fieldStrings.join('\n') + '}'; 
       };
 
+      var toDsl = function () {
+        return TypeTokens.typeAdt.objOf(
+          Arr.map(fields, function (f) {
+            return f.fold(function (key, okey, presence, prop) {
+              return TypeTokens.fieldAdt.field(key, presence, prop);
+            }, function (okey, instantiator) {
+              return TypeTokens.fieldAdt.state(okey);
+            });
+          })
+        );
+      }
+
       return {
         extract: extract,
-        toString: toString
+        toString: toString,
+        toDsl: toDsl
       };
     };
 
@@ -167,9 +186,14 @@ define(
         return 'array(' + prop.toString() + ')';
       };
 
+      var toDsl = function () {
+        return TypeTokens.typeAdt.arrOf(prop);
+      };
+
       return {
         extract: extract,
-        toString: toString
+        toString: toString,
+        toDsl: toDsl
       };
     };
 
@@ -193,9 +217,14 @@ define(
         return 'setOf(' + prop.toString() + ')';
       };
 
+      var toDsl = function () {
+        return TypeTokens.typeAdt.setOf(validator, prop);
+      }
+
       return {
         extract: extract,
-        toString: toString
+        toString: toString,
+        toDsl: toDsl
       };
     };
 
