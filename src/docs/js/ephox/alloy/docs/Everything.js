@@ -77,7 +77,7 @@ define(
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
     
       var getDescription = function (key) {
-        if (Objects.hasKey(Documentation, key)) return Documentation[key];
+        if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
         else return '<span style="background-color: red;">' + key + '</span>';
       };
       
@@ -128,6 +128,8 @@ define(
       };
 
       var behaviours = Arr.map([
+        // First while developing
+        Toggling,
         Composing,
         Coupling,
         Disabling,
@@ -146,7 +148,7 @@ define(
         Sliding,
         Streaming,
         Tabstopping,
-        Toggling,
+        // Toggling,
         Unselecting
       ], function (b) {
         var wrapper = Element.fromTag('div');
