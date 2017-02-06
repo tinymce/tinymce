@@ -64,6 +64,7 @@ define(
     'ephox.boulder.format.TypeTokens',
     'ephox.classify.Type',
     'ephox.compass.Arr',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
@@ -74,7 +75,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, FieldPresence, Objects, TypeTokens, Type, Arr, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, FieldPresence, Objects, TypeTokens, Type, Arr, Json, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
     
@@ -129,7 +130,13 @@ define(
                   },
                   function (fallbackThunk) {
                     var fallback = fallbackThunk();
-                    Attr.set(span, 'title', Type.isFunction(fallback) ? '(function) ' : ('(' + JSON.stringify(fallback, null, 2)) + ') ');
+                    var title = (function () {
+                      if (Type.isFunction(fallback) && fallback === Fun.noop) return 'noOp';
+                      else if (fallback === Fun.identity) return 'identity';
+                      else if (Type.isFunction(fallback)) return 'function';
+                      else return Json.stringify(fallback, null, 2);
+                    })();
+                    Attr.set(span, 'title', '(' + title + ') ');
                     Class.add(wrapper, 'defaulted');
                   },
                   function () {
@@ -158,15 +165,30 @@ define(
       };
 
       var uis = Arr.map([
-        Container,
         Button,
-        Input,
-        TabSection,
+        Container,        
         Dropdown,
         ExpandableForm,
         // Form,
         FormChooser,
-        HtmlSelect
+        FormCoupledInputs,
+        // FormField,
+        HtmlSelect,
+        InlineView,
+        Input,
+        // ItemWidget,
+        Menu,
+        ModalDialog,
+        SplitDropdown,
+        SplitToolbar,
+        Tabbar,
+        TabButton,
+        TabSection,
+        Tabview,
+        TieredMenu,
+        Toolbar,
+        ToolbarGroup,
+        Typeahead
         
       ], function (ui) {
         var b = ui.build({

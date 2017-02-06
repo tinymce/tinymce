@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.TabButton',
 
   [
+    'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.ui.common.ButtonBase',
@@ -10,7 +11,7 @@ define(
     'ephox.highway.Merger'
   ],
 
-  function (Tagger, SpecSchema, ButtonBase, FieldSchema, Id, Merger) {
+  function (UiBuilder, Tagger, SpecSchema, ButtonBase, FieldSchema, Id, Merger) {
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('dom'),
@@ -58,10 +59,8 @@ define(
     };
 
     // Dupe with Button
-    var build = function (rawSpec) {
-      var spec = Merger.deepMerge({ uid: Tagger.generate('') }, rawSpec);
-      var detail = SpecSchema.asStructOrDie('TabButton', schema, spec, [ ]);
-      return make(detail, spec);
+    var build = function (spec) {
+      return UiBuilder.single('TabButton', schema, make, spec);
     };
 
     return {
