@@ -3,10 +3,25 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Disabling',
+    'ephox.alloy.api.behaviour.Docking',
+    'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.behaviour.DragnDrop',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Receiving',
+    'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.behaviour.Streaming',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.Component',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
@@ -43,10 +58,12 @@ define(
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.docs.Documentation',
     'ephox.boulder.api.Objects',
     'ephox.boulder.format.TypeTokens',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Html',
@@ -55,16 +72,12 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Composing, Disabling, Keying, Streaming, Toggling, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Objects, TypeTokens, Arr, Fun, Class, Element, Html, Insert, InsertAll, SelectorFind) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, Objects, TypeTokens, Arr, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-      
-      var documentation = {
-        'toggling > selected': 'specify whether or not the component starts toggled'
-      };
-
+    
       var getDescription = function (key) {
-        if (Objects.hasKey(documentation, key)) return documentation[key];
+        if (Objects.hasKey(Documentation, key)) return Documentation[key];
         else return '<span style="background-color: red;">' + key + '</span>';
       };
       
@@ -94,7 +107,10 @@ define(
                 var t = build(path.concat(key), type.toDsl());
                 var wrapper = Element.fromTag('div');
                 Class.add(wrapper, 'docs-field');
-                InsertAll.append(wrapper, [ Element.fromText(key + ' : '), t ]);
+                var span = Element.fromTag('span');
+                Class.add(span, 'docs-field-name');
+                Html.set(span, key + ': ');
+                InsertAll.append(wrapper, [ span, t ]);
                 return [ wrapper ];
               }, Fun.constant([ ]))
             });
@@ -112,14 +128,30 @@ define(
       };
 
       var behaviours = Arr.map([
-        Toggling,
-        Streaming,
-        Keying,
         Composing,
-        Disabling
+        Coupling,
+        Disabling,
+        Docking,
+        Dragging,
+        DragnDrop,
+        Focusing,
+        Highlighting,
+        Invalidating,
+        Keying,
+        Positioning,
+        Receiving,
+        Replacing,
+        Representing,
+        Sandboxing,
+        Sliding,
+        Streaming,
+        Tabstopping,
+        Toggling,
+        Unselecting
       ], function (b) {
         var wrapper = Element.fromTag('div');
         var h3 = Element.fromTag('h3');
+        Attr.set(h3, 'id', 'behaviour_' + b.name());
         Html.set(h3, b.name());
         Insert.append(wrapper, h3);
 
