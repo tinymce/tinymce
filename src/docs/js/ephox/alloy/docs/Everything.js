@@ -59,6 +59,7 @@ define(
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.docs.Documentation',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.Objects',
     'ephox.boulder.format.TypeTokens',
     'ephox.compass.Arr',
@@ -72,7 +73,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, Objects, TypeTokens, Arr, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Component, GuiFactory, Memento, GuiEvents, SystemEvents, FocusManagers, Channels, Gui, NoContextApi, SystemApi, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, GuiTypes, HtmlSelect, InlineView, Input, ItemWidget, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, UiBuilder, Documentation, FieldPresence, Objects, TypeTokens, Arr, Fun, Attr, Class, Element, Html, Insert, InsertAll, SelectorFind) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
     
@@ -106,6 +107,21 @@ define(
               return TypeTokens.foldField(child, function (key, presence, type) {
                 var t = build(path.concat(key), type.toDsl());
                 var wrapper = Element.fromTag('div');
+
+      //           { strict: [ ] },
+      // { defaultedThunk: [ 'fallbackThunk' ] },
+      // { asOption: [ ] },
+      // { asDefaultedOptionThunk: [ 'fallbackThunk' ] },
+      // { mergeWithThunk: [ 'baseThunk' ] }
+                var presenceClass = presence.fold(
+                  function () { return 'strict'; },
+                  function () { return 'defaulted'; },
+                  function () { return 'optional'; },
+                  function () { return 'defaulted'; },
+                  function () { return 'merged'; }
+                );
+                Class.add(wrapper, presenceClass);
+
                 Class.add(wrapper, 'docs-field');
                 var span = Element.fromTag('span');
                 Class.add(span, 'docs-field-name');
@@ -157,11 +173,15 @@ define(
         Html.set(h3, b.name());
         Insert.append(wrapper, h3);
 
+        var desc = Element.fromTag('p');
+        Html.set(desc, getDescription(b.name()));
+        Insert.after(h3, desc);
+
         var schema = b.schema();
         schema.fold(function (name, output, presence, value) {
           var dsl = value.toDsl();
 
-          Insert.after(h3, build([ b.name() ], dsl));
+          Insert.after(desc, build([ b.name() ], dsl));
         }, function () { });
 
         

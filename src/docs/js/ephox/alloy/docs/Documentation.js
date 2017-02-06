@@ -7,6 +7,11 @@ define(
 
   function (Merger) {
     var toggling = {
+      'toggling': {
+        desc: 'The <em>toggling</em> behaviour is used to allow a component to switch ' +
+          'between two states: off and on. At the moment, this <strong>must</strong> be ' +
+          'associated with a change in ARIA state, but that might change in the future'
+      },
       'toggling > selected': {
         desc: 'specify whether or not the component starts toggled',
       },
