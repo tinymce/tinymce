@@ -213,7 +213,7 @@ asynctest(
       LegacyUnit.setSelection(editor, 'p', 0);
       editor.fire("keydown", { keyCode: 46, ctrlKey: true });
 
-		// Remove nbsp since very old WebKit has an slight issue
+      // Remove nbsp since very old WebKit has an slight issue
       LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML).replace('&nbsp;', ''), '<p>123</p>');
       LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
     });
