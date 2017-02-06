@@ -175,12 +175,33 @@ define(
         Html.set(desc, getDescription(b.name()));
         Insert.after(h3, desc);
 
+        var schemaDiv = Element.fromTag('div');
+        Insert.after(desc, schemaDiv);
+
         var schema = b.schema();
         schema.fold(function (name, output, presence, value) {
           var dsl = value.toDsl();
 
-          Insert.after(desc, build([ b.name() ], dsl));
+          Insert.append(schemaDiv, build([ b.name() ], dsl));
         }, function () { });
+
+        var parts = b.parts();
+        if (parts.length > 0) {
+          var h4 = Element.fromTag('h4');
+          Html.set(h4, 'Parts');
+
+          var list = Element.fromTag('ul');
+          var partContainers = Arr.map(parts, function (p) {
+            var li = Element.fromTag('li');
+            Html.set(li, p);
+            return li;
+          })
+          InsertAll.append(list, partContainers);
+          
+
+          Insert.after(schemaDiv, h4);
+          Insert.after(h4, list);
+        }
 
         return wrapper;
       });
