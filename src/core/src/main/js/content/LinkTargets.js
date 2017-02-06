@@ -14,120 +14,117 @@
  * @private
  * @class tinymce.content.LinkTargets
  */
-define('tinymce.core.content.LinkTargets', [
-	'tinymce.core.dom.DOMUtils',
-	'tinymce.core.util.Fun',
-	'tinymce.core.util.Arr',
-	'tinymce.core.util.Uuid',
-	'tinymce.core.util.Tools',
-	'tinymce.core.dom.NodeType'
-], function(
-	DOMUtils,
-	Fun,
-	Arr,
-	Uuid,
-	Tools,
-	NodeType
-) {
-	var trim = Tools.trim;
+define(
+  'tinymce.core.content.LinkTargets',
+  [
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.util.Arr',
+    'tinymce.core.util.Fun',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.Uuid'
+  ],
+  function (DOMUtils, NodeType, Arr, Fun, Tools, Uuid) {
+    var trim = Tools.trim;
 
-	var create = function (type, title, url, level, attach) {
-		return {
-			type: type,
-			title: title,
-			url: url,
-			level: level,
-			attach: attach
-		};
-	};
+    var create = function (type, title, url, level, attach) {
+      return {
+        type: type,
+        title: title,
+        url: url,
+        level: level,
+        attach: attach
+      };
+    };
 
-	var isChildOfContentEditableTrue = function (node) {
-		while ((node = node.parentNode)) {
-			var value = node.contentEditable;
-			if (value && value !== 'inherit') {
-				return NodeType.isContentEditableTrue(node);
-			}
-		}
+    var isChildOfContentEditableTrue = function (node) {
+      while ((node = node.parentNode)) {
+        var value = node.contentEditable;
+        if (value && value !== 'inherit') {
+          return NodeType.isContentEditableTrue(node);
+        }
+      }
 
-		return false;
-	};
+      return false;
+    };
 
-	var select = function (selector, root) {
-		return DOMUtils.DOM.select(selector, root);
-	};
+    var select = function (selector, root) {
+      return DOMUtils.DOM.select(selector, root);
+    };
 
-	var getElementText = function (elm) {
-		return elm.innerText || elm.textContent;
-	};
+    var getElementText = function (elm) {
+      return elm.innerText || elm.textContent;
+    };
 
-	var getOrGenerateId = function (elm) {
-		return elm.id ? elm.id : Uuid.uuid('h');
-	};
+    var getOrGenerateId = function (elm) {
+      return elm.id ? elm.id : Uuid.uuid('h');
+    };
 
-	var isAnchor = function (elm) {
-		return elm && elm.nodeName === 'A' && (elm.id || elm.name);
-	};
+    var isAnchor = function (elm) {
+      return elm && elm.nodeName === 'A' && (elm.id || elm.name);
+    };
 
-	var isValidAnchor = function (elm) {
-		return isAnchor(elm) && isEditable(elm);
-	};
+    var isValidAnchor = function (elm) {
+      return isAnchor(elm) && isEditable(elm);
+    };
 
-	var isHeader = function (elm) {
-		return elm && /^(H[1-6])$/.test(elm.nodeName);
-	};
+    var isHeader = function (elm) {
+      return elm && /^(H[1-6])$/.test(elm.nodeName);
+    };
 
-	var isEditable = function (elm) {
-		return isChildOfContentEditableTrue(elm) && !NodeType.isContentEditableFalse(elm);
-	};
+    var isEditable = function (elm) {
+      return isChildOfContentEditableTrue(elm) && !NodeType.isContentEditableFalse(elm);
+    };
 
-	var isValidHeader = function (elm) {
-		return isHeader(elm) && isEditable(elm);
-	};
+    var isValidHeader = function (elm) {
+      return isHeader(elm) && isEditable(elm);
+    };
 
-	var getLevel = function (elm) {
-		return isHeader(elm) ? parseInt(elm.nodeName.substr(1), 10) : 0;
-	};
+    var getLevel = function (elm) {
+      return isHeader(elm) ? parseInt(elm.nodeName.substr(1), 10) : 0;
+    };
 
-	var headerTarget = function (elm) {
-		var headerId = getOrGenerateId(elm);
+    var headerTarget = function (elm) {
+      var headerId = getOrGenerateId(elm);
 
-		var attach = function () {
-			elm.id = headerId;
-		};
+      var attach = function () {
+        elm.id = headerId;
+      };
 
-		return create('header', getElementText(elm), '#' + headerId, getLevel(elm), attach);
-	};
+      return create('header', getElementText(elm), '#' + headerId, getLevel(elm), attach);
+    };
 
-	var anchorTarget = function (elm) {
-		var anchorId = elm.id || elm.name;
-		var anchorText = getElementText(elm);
+    var anchorTarget = function (elm) {
+      var anchorId = elm.id || elm.name;
+      var anchorText = getElementText(elm);
 
-		return create('anchor', anchorText ? anchorText : '#' + anchorId, '#' + anchorId, 0, Fun.noop);
-	};
+      return create('anchor', anchorText ? anchorText : '#' + anchorId, '#' + anchorId, 0, Fun.noop);
+    };
 
-	var getHeaderTargets = function (elms) {
-		return Arr.map(Arr.filter(elms, isValidHeader), headerTarget);
-	};
+    var getHeaderTargets = function (elms) {
+      return Arr.map(Arr.filter(elms, isValidHeader), headerTarget);
+    };
 
-	var getAnchorTargets = function (elms) {
-		return Arr.map(Arr.filter(elms, isValidAnchor), anchorTarget);
-	};
+    var getAnchorTargets = function (elms) {
+      return Arr.map(Arr.filter(elms, isValidAnchor), anchorTarget);
+    };
 
-	var getTargetElements = function (elm) {
-		var elms = select('h1,h2,h3,h4,h5,h6,a:not([href])', elm);
-		return elms;
-	};
+    var getTargetElements = function (elm) {
+      var elms = select('h1,h2,h3,h4,h5,h6,a:not([href])', elm);
+      return elms;
+    };
 
-	var hasTitle = function (target) {
-		return trim(target.title).length > 0;
-	};
+    var hasTitle = function (target) {
+      return trim(target.title).length > 0;
+    };
 
-	var find = function (elm) {
-		var elms = getTargetElements(elm);
-		return Arr.filter(getHeaderTargets(elms).concat(getAnchorTargets(elms)), hasTitle);
-	};
+    var find = function (elm) {
+      var elms = getTargetElements(elm);
+      return Arr.filter(getHeaderTargets(elms).concat(getAnchorTargets(elms)), hasTitle);
+    };
 
-	return {
-		find: find
-	};
-});
+    return {
+      find: find
+    };
+  }
+);

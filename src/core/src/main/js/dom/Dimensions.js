@@ -15,50 +15,54 @@
  * @private
  * @class tinymce.dom.Dimensions
  */
-define("tinymce.core.dom.Dimensions", [
-	"tinymce.core.util.Arr",
-	"tinymce.core.dom.NodeType",
-	"tinymce.core.geom.ClientRect"
-], function(Arr, NodeType, ClientRect) {
+define(
+  'tinymce.core.dom.Dimensions',
+  [
+    "tinymce.core.util.Arr",
+    "tinymce.core.dom.NodeType",
+    "tinymce.core.geom.ClientRect"
+  ],
+  function (Arr, NodeType, ClientRect) {
 
-	function getClientRects(node) {
-		function toArrayWithNode(clientRects) {
-			return Arr.map(clientRects, function(clientRect) {
-				clientRect = ClientRect.clone(clientRect);
-				clientRect.node = node;
+    function getClientRects(node) {
+      function toArrayWithNode(clientRects) {
+        return Arr.map(clientRects, function (clientRect) {
+          clientRect = ClientRect.clone(clientRect);
+          clientRect.node = node;
 
-				return clientRect;
-			});
-		}
+          return clientRect;
+        });
+      }
 
-		if (Arr.isArray(node)) {
-			return Arr.reduce(node, function(result, node) {
-				return result.concat(getClientRects(node));
-			}, []);
-		}
+      if (Arr.isArray(node)) {
+        return Arr.reduce(node, function (result, node) {
+          return result.concat(getClientRects(node));
+        }, []);
+      }
 
-		if (NodeType.isElement(node)) {
-			return toArrayWithNode(node.getClientRects());
-		}
+      if (NodeType.isElement(node)) {
+        return toArrayWithNode(node.getClientRects());
+      }
 
-		if (NodeType.isText(node)) {
-			var rng = node.ownerDocument.createRange();
+      if (NodeType.isText(node)) {
+        var rng = node.ownerDocument.createRange();
 
-			rng.setStart(node, 0);
-			rng.setEnd(node, node.data.length);
+        rng.setStart(node, 0);
+        rng.setEnd(node, node.data.length);
 
-			return toArrayWithNode(rng.getClientRects());
-		}
-	}
+        return toArrayWithNode(rng.getClientRects());
+      }
+    }
 
-	return {
-		/**
-		 * Returns the client rects for a specific node.
-		 *
-		 * @method getClientRects
-		 * @param {Array/DOMNode} node Node or array of nodes to get client rects on.
-		 * @param {Array} Array of client rects with a extra node property.
-		 */
-		getClientRects: getClientRects
-	};
-});
+    return {
+      /**
+       * Returns the client rects for a specific node.
+       *
+       * @method getClientRects
+       * @param {Array/DOMNode} node Node or array of nodes to get client rects on.
+       * @param {Array} Array of client rects with a extra node property.
+       */
+      getClientRects: getClientRects
+    };
+  }
+);

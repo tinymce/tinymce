@@ -16,45 +16,49 @@
  * @borrow-members tinymce.EditorManager
  * @borrow-members tinymce.util.Tools
  */
-define("tinymce.core.api.Compat", [
-	"tinymce.core.dom.DOMUtils",
-	"tinymce.core.dom.EventUtils",
-	"tinymce.core.dom.ScriptLoader",
-	"tinymce.core.AddOnManager",
-	"tinymce.core.util.Tools",
-	"tinymce.core.Env"
-], function(DOMUtils, EventUtils, ScriptLoader, AddOnManager, Tools, Env) {
-	var register = function (tinymce) {
-		/**
-		 * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.
-		 * @property {tinymce.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.
-		 * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance.
-		 * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance.
-		 */
-		tinymce.DOM = DOMUtils.DOM;
-		tinymce.ScriptLoader = ScriptLoader.ScriptLoader;
-		tinymce.PluginManager = AddOnManager.PluginManager;
-		tinymce.ThemeManager = AddOnManager.ThemeManager;
+define(
+  'tinymce.core.api.Compat',
+  [
+    "tinymce.core.dom.DOMUtils",
+    "tinymce.core.dom.EventUtils",
+    "tinymce.core.dom.ScriptLoader",
+    "tinymce.core.AddOnManager",
+    "tinymce.core.util.Tools",
+    "tinymce.core.Env"
+  ],
+  function (DOMUtils, EventUtils, ScriptLoader, AddOnManager, Tools, Env) {
+    var register = function (tinymce) {
+      /**
+       * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.
+       * @property {tinymce.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.
+       * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance.
+       * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance.
+       */
+      tinymce.DOM = DOMUtils.DOM;
+      tinymce.ScriptLoader = ScriptLoader.ScriptLoader;
+      tinymce.PluginManager = AddOnManager.PluginManager;
+      tinymce.ThemeManager = AddOnManager.ThemeManager;
 
-		tinymce.dom = tinymce.dom || {};
-		tinymce.dom.Event = EventUtils.Event;
+      tinymce.dom = tinymce.dom || {};
+      tinymce.dom.Event = EventUtils.Event;
 
-		Tools.each(
-			'trim isArray is toArray makeMap each map grep inArray extend create walk createNS resolve explode _addCacheSuffix'.split(' '),
-			function(key) {
-				tinymce[key] = Tools[key];
-			}
-		);
+      Tools.each(
+        'trim isArray is toArray makeMap each map grep inArray extend create walk createNS resolve explode _addCacheSuffix'.split(' '),
+        function (key) {
+          tinymce[key] = Tools[key];
+        }
+      );
 
-		Tools.each('isOpera isWebKit isIE isGecko isMac'.split(' '), function(name) {
-			tinymce[name] = Env[name.substr(2).toLowerCase()];
-		});
-	};
+      Tools.each('isOpera isWebKit isIE isGecko isMac'.split(' '), function (name) {
+        tinymce[name] = Env[name.substr(2).toLowerCase()];
+      });
+    };
 
-	return {
-		register: register
-	};
-});
+    return {
+      register: register
+    };
+  }
+);
 
 // Describe the different namespaces
 

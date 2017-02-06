@@ -15,181 +15,185 @@
  * @class tinymce.ui.Menu
  * @extends tinymce.core.ui.FloatPanel
  */
-define("tinymce.core.ui.Menu", [
-	"tinymce.core.ui.FloatPanel",
-	"tinymce.core.ui.MenuItem",
-	"tinymce.core.ui.Throbber",
-	"tinymce.core.util.Tools"
-], function(FloatPanel, MenuItem, Throbber, Tools) {
-	"use strict";
+define(
+  'tinymce.core.ui.Menu',
+  [
+    "tinymce.core.ui.FloatPanel",
+    "tinymce.core.ui.MenuItem",
+    "tinymce.core.ui.Throbber",
+    "tinymce.core.util.Tools"
+  ],
+  function (FloatPanel, MenuItem, Throbber, Tools) {
+    "use strict";
 
-	return FloatPanel.extend({
-		Defaults: {
-			defaultType: 'menuitem',
-			border: 1,
-			layout: 'stack',
-			role: 'application',
-			bodyRole: 'menu',
-			ariaRoot: true
-		},
+    return FloatPanel.extend({
+      Defaults: {
+        defaultType: 'menuitem',
+        border: 1,
+        layout: 'stack',
+        role: 'application',
+        bodyRole: 'menu',
+        ariaRoot: true
+      },
 
-		/**
-		 * Constructs a instance with the specified settings.
-		 *
-		 * @constructor
-		 * @param {Object} settings Name/value object with settings.
-		 */
-		init: function(settings) {
-			var self = this;
+      /**
+       * Constructs a instance with the specified settings.
+       *
+       * @constructor
+       * @param {Object} settings Name/value object with settings.
+       */
+      init: function (settings) {
+        var self = this;
 
-			settings.autohide = true;
-			settings.constrainToViewport = true;
+        settings.autohide = true;
+        settings.constrainToViewport = true;
 
-			if (typeof settings.items === 'function') {
-				settings.itemsFactory = settings.items;
-				settings.items = [];
-			}
+        if (typeof settings.items === 'function') {
+          settings.itemsFactory = settings.items;
+          settings.items = [];
+        }
 
-			if (settings.itemDefaults) {
-				var items = settings.items, i = items.length;
+        if (settings.itemDefaults) {
+          var items = settings.items, i = items.length;
 
-				while (i--) {
-					items[i] = Tools.extend({}, settings.itemDefaults, items[i]);
-				}
-			}
+          while (i--) {
+            items[i] = Tools.extend({}, settings.itemDefaults, items[i]);
+          }
+        }
 
-			self._super(settings);
-			self.classes.add('menu');
-		},
+        self._super(settings);
+        self.classes.add('menu');
+      },
 
-		/**
-		 * Repaints the control after a layout operation.
-		 *
-		 * @method repaint
-		 */
-		repaint: function() {
-			this.classes.toggle('menu-align', true);
+      /**
+       * Repaints the control after a layout operation.
+       *
+       * @method repaint
+       */
+      repaint: function () {
+        this.classes.toggle('menu-align', true);
 
-			this._super();
+        this._super();
 
-			this.getEl().style.height = '';
-			this.getEl('body').style.height = '';
+        this.getEl().style.height = '';
+        this.getEl('body').style.height = '';
 
-			return this;
-		},
+        return this;
+      },
 
-		/**
-		 * Hides/closes the menu.
-		 *
-		 * @method cancel
-		 */
-		cancel: function() {
-			var self = this;
+      /**
+       * Hides/closes the menu.
+       *
+       * @method cancel
+       */
+      cancel: function () {
+        var self = this;
 
-			self.hideAll();
-			self.fire('select');
-		},
+        self.hideAll();
+        self.fire('select');
+      },
 
-		/**
-		 * Loads new items from the factory items function.
-		 *
-		 * @method load
-		 */
-		load: function() {
-			var self = this, time, factory;
+      /**
+       * Loads new items from the factory items function.
+       *
+       * @method load
+       */
+      load: function () {
+        var self = this, time, factory;
 
-			function hideThrobber() {
-				if (self.throbber) {
-					self.throbber.hide();
-					self.throbber = null;
-				}
-			}
+        function hideThrobber() {
+          if (self.throbber) {
+            self.throbber.hide();
+            self.throbber = null;
+          }
+        }
 
-			factory = self.settings.itemsFactory;
-			if (!factory) {
-				return;
-			}
+        factory = self.settings.itemsFactory;
+        if (!factory) {
+          return;
+        }
 
-			if (!self.throbber) {
-				self.throbber = new Throbber(self.getEl('body'), true);
+        if (!self.throbber) {
+          self.throbber = new Throbber(self.getEl('body'), true);
 
-				if (self.items().length === 0) {
-					self.throbber.show();
-					self.fire('loading');
-				} else {
-					self.throbber.show(100, function() {
-						self.items().remove();
-						self.fire('loading');
-					});
-				}
+          if (self.items().length === 0) {
+            self.throbber.show();
+            self.fire('loading');
+          } else {
+            self.throbber.show(100, function () {
+              self.items().remove();
+              self.fire('loading');
+            });
+          }
 
-				self.on('hide close', hideThrobber);
-			}
+          self.on('hide close', hideThrobber);
+        }
 
-			self.requestTime = time = new Date().getTime();
+        self.requestTime = time = new Date().getTime();
 
-			self.settings.itemsFactory(function(items) {
-				if (items.length === 0) {
-					self.hide();
-					return;
-				}
+        self.settings.itemsFactory(function (items) {
+          if (items.length === 0) {
+            self.hide();
+            return;
+          }
 
-				if (self.requestTime !== time) {
-					return;
-				}
+          if (self.requestTime !== time) {
+            return;
+          }
 
-				self.getEl().style.width = '';
-				self.getEl('body').style.width = '';
+          self.getEl().style.width = '';
+          self.getEl('body').style.width = '';
 
-				hideThrobber();
-				self.items().remove();
-				self.getEl('body').innerHTML = '';
+          hideThrobber();
+          self.items().remove();
+          self.getEl('body').innerHTML = '';
 
-				self.add(items);
-				self.renderNew();
-				self.fire('loaded');
-			});
-		},
+          self.add(items);
+          self.renderNew();
+          self.fire('loaded');
+        });
+      },
 
-		/**
-		 * Hide menu and all sub menus.
-		 *
-		 * @method hideAll
-		 */
-		hideAll: function() {
-			var self = this;
+      /**
+       * Hide menu and all sub menus.
+       *
+       * @method hideAll
+       */
+      hideAll: function () {
+        var self = this;
 
-			this.find('menuitem').exec('hideMenu');
+        this.find('menuitem').exec('hideMenu');
 
-			return self._super();
-		},
+        return self._super();
+      },
 
-		/**
-		 * Invoked before the menu is rendered.
-		 *
-		 * @method preRender
-		 */
-		preRender: function() {
-			var self = this;
+      /**
+       * Invoked before the menu is rendered.
+       *
+       * @method preRender
+       */
+      preRender: function () {
+        var self = this;
 
-			self.items().each(function(ctrl) {
-				var settings = ctrl.settings;
+        self.items().each(function (ctrl) {
+          var settings = ctrl.settings;
 
-				if (settings.icon || settings.image || settings.selectable) {
-					self._hasIcons = true;
-					return false;
-				}
-			});
+          if (settings.icon || settings.image || settings.selectable) {
+            self._hasIcons = true;
+            return false;
+          }
+        });
 
-			if (self.settings.itemsFactory) {
-				self.on('postrender', function() {
-					if (self.settings.itemsFactory) {
-						self.load();
-					}
-				});
-			}
+        if (self.settings.itemsFactory) {
+          self.on('postrender', function () {
+            if (self.settings.itemsFactory) {
+              self.load();
+            }
+          });
+        }
 
-			return self._super();
-		}
-	});
-});
+        return self._super();
+      }
+    });
+  }
+);

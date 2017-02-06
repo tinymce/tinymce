@@ -14,37 +14,41 @@
  * @private
  * @class tinymce.dom.NodePath
  */
-define("tinymce.core.dom.NodePath", [
-	"tinymce.core.dom.DOMUtils"
-], function(DOMUtils) {
-	function create(rootNode, targetNode, normalized) {
-		var path = [];
+define(
+  'tinymce.core.dom.NodePath',
+  [
+    "tinymce.core.dom.DOMUtils"
+  ],
+  function (DOMUtils) {
+    function create(rootNode, targetNode, normalized) {
+      var path = [];
 
-		for (; targetNode && targetNode != rootNode; targetNode = targetNode.parentNode) {
-			path.push(DOMUtils.nodeIndex(targetNode, normalized));
-		}
+      for (; targetNode && targetNode != rootNode; targetNode = targetNode.parentNode) {
+        path.push(DOMUtils.nodeIndex(targetNode, normalized));
+      }
 
-		return path;
-	}
+      return path;
+    }
 
-	function resolve(rootNode, path) {
-		var i, node, children;
+    function resolve(rootNode, path) {
+      var i, node, children;
 
-		for (node = rootNode, i = path.length - 1; i >= 0; i--) {
-			children = node.childNodes;
+      for (node = rootNode, i = path.length - 1; i >= 0; i--) {
+        children = node.childNodes;
 
-			if (path[i] > children.length - 1) {
-				return null;
-			}
+        if (path[i] > children.length - 1) {
+          return null;
+        }
 
-			node = children[path[i]];
-		}
+        node = children[path[i]];
+      }
 
-		return node;
-	}
+      return node;
+    }
 
-	return {
-		create: create,
-		resolve: resolve
-	};
-});
+    return {
+      create: create,
+      resolve: resolve
+    };
+  }
+);

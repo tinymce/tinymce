@@ -14,56 +14,60 @@
  * @class tinymce.ErrorReporter
  * @private
  */
-define("tinymce.core.ErrorReporter", [
-	"tinymce.core.AddOnManager"
-], function (AddOnManager) {
-	var PluginManager = AddOnManager.PluginManager;
+define(
+  'tinymce.core.ErrorReporter',
+  [
+    "tinymce.core.AddOnManager"
+  ],
+  function (AddOnManager) {
+    var PluginManager = AddOnManager.PluginManager;
 
-	var resolvePluginName = function (targetUrl, suffix) {
-		for (var name in PluginManager.urls) {
-			var matchUrl = PluginManager.urls[name] + '/plugin' + suffix + '.js';
-			if (matchUrl === targetUrl) {
-				return name;
-			}
-		}
+    var resolvePluginName = function (targetUrl, suffix) {
+      for (var name in PluginManager.urls) {
+        var matchUrl = PluginManager.urls[name] + '/plugin' + suffix + '.js';
+        if (matchUrl === targetUrl) {
+          return name;
+        }
+      }
 
-		return null;
-	};
+      return null;
+    };
 
-	var pluginUrlToMessage = function (editor, url) {
-		var plugin = resolvePluginName(url, editor.suffix);
-		return plugin ?
-			'Failed to load plugin: ' + plugin + ' from url ' + url :
-			'Failed to load plugin url: ' + url;
-	};
+    var pluginUrlToMessage = function (editor, url) {
+      var plugin = resolvePluginName(url, editor.suffix);
+      return plugin ?
+        'Failed to load plugin: ' + plugin + ' from url ' + url :
+        'Failed to load plugin url: ' + url;
+    };
 
-	var displayNotification = function (editor, message) {
-		editor.notificationManager.open({
-			type: 'error',
-			text: message
-		});
-	};
+    var displayNotification = function (editor, message) {
+      editor.notificationManager.open({
+        type: 'error',
+        text: message
+      });
+    };
 
-	var displayError = function (editor, message) {
-		if (editor._skinLoaded) {
-			displayNotification(editor, message);
-		} else {
-			editor.on('SkinLoaded', function () {
-				displayNotification(editor, message);
-			});
-		}
-	};
+    var displayError = function (editor, message) {
+      if (editor._skinLoaded) {
+        displayNotification(editor, message);
+      } else {
+        editor.on('SkinLoaded', function () {
+          displayNotification(editor, message);
+        });
+      }
+    };
 
-	var uploadError = function (editor, message) {
-		displayError(editor, 'Failed to upload image: ' + message);
-	};
+    var uploadError = function (editor, message) {
+      displayError(editor, 'Failed to upload image: ' + message);
+    };
 
-	var pluginLoadError = function (editor, url) {
-		displayError(editor, pluginUrlToMessage(editor, url));
-	};
+    var pluginLoadError = function (editor, url) {
+      displayError(editor, pluginUrlToMessage(editor, url));
+    };
 
-	return {
-		pluginLoadError: pluginLoadError,
-		uploadError: uploadError
-	};
-});
+    return {
+      pluginLoadError: pluginLoadError,
+      uploadError: uploadError
+    };
+  }
+);

@@ -25,133 +25,137 @@
  * @class tinymce.ui.Form
  * @extends tinymce.core.ui.Container
  */
-define("tinymce.core.ui.Form", [
-	"tinymce.core.ui.Container",
-	"tinymce.core.ui.FormItem",
-	"tinymce.core.util.Tools"
-], function(Container, FormItem, Tools) {
-	"use strict";
+define(
+  'tinymce.core.ui.Form',
+  [
+    "tinymce.core.ui.Container",
+    "tinymce.core.ui.FormItem",
+    "tinymce.core.util.Tools"
+  ],
+  function (Container, FormItem, Tools) {
+    "use strict";
 
-	return Container.extend({
-		Defaults: {
-			containerCls: 'form',
-			layout: 'flex',
-			direction: 'column',
-			align: 'stretch',
-			flex: 1,
-			padding: 20,
-			labelGap: 30,
-			spacing: 10,
-			callbacks: {
-				submit: function() {
-					this.submit();
-				}
-			}
-		},
+    return Container.extend({
+      Defaults: {
+        containerCls: 'form',
+        layout: 'flex',
+        direction: 'column',
+        align: 'stretch',
+        flex: 1,
+        padding: 20,
+        labelGap: 30,
+        spacing: 10,
+        callbacks: {
+          submit: function () {
+            this.submit();
+          }
+        }
+      },
 
-		/**
-		 * This method gets invoked before the control is rendered.
-		 *
-		 * @method preRender
-		 */
-		preRender: function() {
-			var self = this, items = self.items();
+      /**
+       * This method gets invoked before the control is rendered.
+       *
+       * @method preRender
+       */
+      preRender: function () {
+        var self = this, items = self.items();
 
-			if (!self.settings.formItemDefaults) {
-				self.settings.formItemDefaults = {
-					layout: 'flex',
-					autoResize: "overflow",
-					defaults: {flex: 1}
-				};
-			}
+        if (!self.settings.formItemDefaults) {
+          self.settings.formItemDefaults = {
+            layout: 'flex',
+            autoResize: "overflow",
+            defaults: { flex: 1 }
+          };
+        }
 
-			// Wrap any labeled items in FormItems
-			items.each(function(ctrl) {
-				var formItem, label = ctrl.settings.label;
+        // Wrap any labeled items in FormItems
+        items.each(function (ctrl) {
+          var formItem, label = ctrl.settings.label;
 
-				if (label) {
-					formItem = new FormItem(Tools.extend({
-						items: {
-							type: 'label',
-							id: ctrl._id + '-l',
-							text: label,
-							flex: 0,
-							forId: ctrl._id,
-							disabled: ctrl.disabled()
-						}
-					}, self.settings.formItemDefaults));
+          if (label) {
+            formItem = new FormItem(Tools.extend({
+              items: {
+                type: 'label',
+                id: ctrl._id + '-l',
+                text: label,
+                flex: 0,
+                forId: ctrl._id,
+                disabled: ctrl.disabled()
+              }
+            }, self.settings.formItemDefaults));
 
-					formItem.type = 'formitem';
-					ctrl.aria('labelledby', ctrl._id + '-l');
+            formItem.type = 'formitem';
+            ctrl.aria('labelledby', ctrl._id + '-l');
 
-					if (typeof ctrl.settings.flex == "undefined") {
-						ctrl.settings.flex = 1;
-					}
+            if (typeof ctrl.settings.flex == "undefined") {
+              ctrl.settings.flex = 1;
+            }
 
-					self.replace(ctrl, formItem);
-					formItem.add(ctrl);
-				}
-			});
-		},
+            self.replace(ctrl, formItem);
+            formItem.add(ctrl);
+          }
+        });
+      },
 
-		/**
-		 * Fires a submit event with the serialized form.
-		 *
-		 * @method submit
-		 * @return {Object} Event arguments object.
-		 */
-		submit: function() {
-			return this.fire('submit', {data: this.toJSON()});
-		},
+      /**
+       * Fires a submit event with the serialized form.
+       *
+       * @method submit
+       * @return {Object} Event arguments object.
+       */
+      submit: function () {
+        return this.fire('submit', { data: this.toJSON() });
+      },
 
-		/**
-		 * Post render method. Called after the control has been rendered to the target.
-		 *
-		 * @method postRender
-		 * @return {tinymce.ui.ComboBox} Current combobox instance.
-		 */
-		postRender: function() {
-			var self = this;
+      /**
+       * Post render method. Called after the control has been rendered to the target.
+       *
+       * @method postRender
+       * @return {tinymce.ui.ComboBox} Current combobox instance.
+       */
+      postRender: function () {
+        var self = this;
 
-			self._super();
-			self.fromJSON(self.settings.data);
-		},
+        self._super();
+        self.fromJSON(self.settings.data);
+      },
 
-		bindStates: function() {
-			var self = this;
+      bindStates: function () {
+        var self = this;
 
-			self._super();
+        self._super();
 
-			function recalcLabels() {
-				var maxLabelWidth = 0, labels = [], i, labelGap, items;
+        function recalcLabels() {
+          var maxLabelWidth = 0, labels = [], i, labelGap, items;
 
-				if (self.settings.labelGapCalc === false) {
-					return;
-				}
+          if (self.settings.labelGapCalc === false) {
+            return;
+          }
 
-				if (self.settings.labelGapCalc == "children") {
-					items = self.find('formitem');
-				} else {
-					items = self.items();
-				}
+          if (self.settings.labelGapCalc == "children") {
+            items = self.find('formitem');
+          } else {
+            items = self.items();
+          }
 
-				items.filter('formitem').each(function(item) {
-					var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
+          items.filter('formitem').each(function (item) {
+            var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
 
-					maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;
-					labels.push(labelCtrl);
-				});
+            maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;
+            labels.push(labelCtrl);
+          });
 
-				labelGap = self.settings.labelGap || 0;
+          labelGap = self.settings.labelGap || 0;
 
-				i = labels.length;
-				while (i--) {
-					labels[i].settings.minWidth = maxLabelWidth + labelGap;
-				}
-			}
+          i = labels.length;
+          while (i--) {
+            labels[i].settings.minWidth = maxLabelWidth + labelGap;
+          }
+        }
 
-			self.on('show', recalcLabels);
-			recalcLabels();
-		}
-	});
-});
+        self.on('show', recalcLabels);
+        recalcLabels();
+      }
+    });
+  }
+);

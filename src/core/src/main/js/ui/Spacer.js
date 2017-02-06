@@ -15,25 +15,29 @@
  * @class tinymce.ui.Spacer
  * @extends tinymce.core.ui.Widget
  */
-define("tinymce.core.ui.Spacer", [
-	"tinymce.core.ui.Widget"
-], function(Widget) {
-	"use strict";
+define(
+  'tinymce.core.ui.Spacer',
+  [
+    "tinymce.core.ui.Widget"
+  ],
+  function (Widget) {
+    "use strict";
 
-	return Widget.extend({
-		/**
-		 * Renders the control as a HTML string.
-		 *
-		 * @method renderHtml
-		 * @return {String} HTML representing the control.
-		 */
-		renderHtml: function() {
-			var self = this;
+    return Widget.extend({
+      /**
+       * Renders the control as a HTML string.
+       *
+       * @method renderHtml
+       * @return {String} HTML representing the control.
+       */
+      renderHtml: function () {
+        var self = this;
 
-			self.classes.add('spacer');
-			self.canFocus = false;
+        self.classes.add('spacer');
+        self.canFocus = false;
 
-			return '<div id="' + self._id + '" class="' + self.classes + '"></div>';
-		}
-	});
-});
+        return '<div id="' + self._id + '" class="' + self.classes + '"></div>';
+      }
+    });
+  }
+);

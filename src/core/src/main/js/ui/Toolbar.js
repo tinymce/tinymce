@@ -14,43 +14,47 @@
  * @class tinymce.ui.Toolbar
  * @extends tinymce.core.ui.Container
  */
-define("tinymce.core.ui.Toolbar", [
-	"tinymce.core.ui.Container"
-], function(Container) {
-	"use strict";
+define(
+  'tinymce.core.ui.Toolbar',
+  [
+    "tinymce.core.ui.Container"
+  ],
+  function (Container) {
+    "use strict";
 
-	return Container.extend({
-		Defaults: {
-			role: 'toolbar',
-			layout: 'flow'
-		},
+    return Container.extend({
+      Defaults: {
+        role: 'toolbar',
+        layout: 'flow'
+      },
 
-		/**
-		 * Constructs a instance with the specified settings.
-		 *
-		 * @constructor
-		 * @param {Object} settings Name/value object with settings.
-		 */
-		init: function(settings) {
-			var self = this;
+      /**
+       * Constructs a instance with the specified settings.
+       *
+       * @constructor
+       * @param {Object} settings Name/value object with settings.
+       */
+      init: function (settings) {
+        var self = this;
 
-			self._super(settings);
-			self.classes.add('toolbar');
-		},
+        self._super(settings);
+        self.classes.add('toolbar');
+      },
 
-		/**
-		 * Called after the control has been rendered.
-		 *
-		 * @method postRender
-		 */
-		postRender: function() {
-			var self = this;
+      /**
+       * Called after the control has been rendered.
+       *
+       * @method postRender
+       */
+      postRender: function () {
+        var self = this;
 
-			self.items().each(function(ctrl) {
-				ctrl.classes.add('toolbar-item');
-			});
+        self.items().each(function (ctrl) {
+          ctrl.classes.add('toolbar-item');
+        });
 
-			return self._super();
-		}
-	});
-});
+        return self._super();
+      }
+    });
+  }
+);

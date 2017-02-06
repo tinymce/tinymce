@@ -15,67 +15,71 @@
  * @class tinymce.ui.Progress
  * @extends tinymce.core.ui.Control
  */
-define("tinymce.core.ui.Progress", [
-	"tinymce.core.ui.Widget"
-], function(Widget) {
-	"use strict";
+define(
+  'tinymce.core.ui.Progress',
+  [
+    "tinymce.core.ui.Widget"
+  ],
+  function (Widget) {
+    "use strict";
 
-	return Widget.extend({
-		Defaults: {
-			value: 0
-		},
+    return Widget.extend({
+      Defaults: {
+        value: 0
+      },
 
-		init: function(settings) {
-			var self = this;
+      init: function (settings) {
+        var self = this;
 
-			self._super(settings);
-			self.classes.add('progress');
+        self._super(settings);
+        self.classes.add('progress');
 
-			if (!self.settings.filter) {
-				self.settings.filter = function(value) {
-					return Math.round(value);
-				};
-			}
-		},
+        if (!self.settings.filter) {
+          self.settings.filter = function (value) {
+            return Math.round(value);
+          };
+        }
+      },
 
-		renderHtml: function() {
-			var self = this, id = self._id, prefix = this.classPrefix;
+      renderHtml: function () {
+        var self = this, id = self._id, prefix = this.classPrefix;
 
-			return (
-				'<div id="' + id + '" class="' + self.classes + '">' +
-					'<div class="' + prefix + 'bar-container">' +
-						'<div class="' + prefix + 'bar"></div>' +
-					'</div>' +
-					'<div class="' + prefix + 'text">0%</div>' +
-				'</div>'
-			);
-		},
+        return (
+          '<div id="' + id + '" class="' + self.classes + '">' +
+          '<div class="' + prefix + 'bar-container">' +
+          '<div class="' + prefix + 'bar"></div>' +
+          '</div>' +
+          '<div class="' + prefix + 'text">0%</div>' +
+          '</div>'
+        );
+      },
 
-		postRender: function() {
-			var self = this;
+      postRender: function () {
+        var self = this;
 
-			self._super();
-			self.value(self.settings.value);
+        self._super();
+        self.value(self.settings.value);
 
-			return self;
-		},
+        return self;
+      },
 
-		bindStates: function() {
-			var self = this;
+      bindStates: function () {
+        var self = this;
 
-			function setValue(value) {
-				value = self.settings.filter(value);
-				self.getEl().lastChild.innerHTML = value + '%';
-				self.getEl().firstChild.firstChild.style.width = value + '%';
-			}
+        function setValue(value) {
+          value = self.settings.filter(value);
+          self.getEl().lastChild.innerHTML = value + '%';
+          self.getEl().firstChild.firstChild.style.width = value + '%';
+        }
 
-			self.state.on('change:value', function(e) {
-				setValue(e.value);
-			});
+        self.state.on('change:value', function (e) {
+          setValue(e.value);
+        });
 
-			setValue(self.state.get('value'));
+        setValue(self.state.get('value'));
 
-			return self._super();
-		}
-	});
-});
+        return self._super();
+      }
+    });
+  }
+);

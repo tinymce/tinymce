@@ -14,53 +14,57 @@
  * @private
  * @class tinymce.fmt.FontInfo
  */
-define("tinymce.core.fmt.FontInfo", [
-	"tinymce.core.dom.DOMUtils"
-], function(DOMUtils) {
-	var getSpecifiedFontProp = function (propName, rootElm, elm) {
-		while (elm !== rootElm) {
-			if (elm.style[propName]) {
-				return elm.style[propName];
-			}
+define(
+  'tinymce.core.fmt.FontInfo',
+  [
+    "tinymce.core.dom.DOMUtils"
+  ],
+  function (DOMUtils) {
+    var getSpecifiedFontProp = function (propName, rootElm, elm) {
+      while (elm !== rootElm) {
+        if (elm.style[propName]) {
+          return elm.style[propName];
+        }
 
-			elm = elm.parentNode;
-		}
+        elm = elm.parentNode;
+      }
 
-		return '';
-	};
+      return '';
+    };
 
-	var toPt = function (fontSize) {
-		if (/[0-9.]+px$/.test(fontSize)) {
-			return Math.round(parseInt(fontSize, 10) * 72 / 96) + 'pt';
-		}
+    var toPt = function (fontSize) {
+      if (/[0-9.]+px$/.test(fontSize)) {
+        return Math.round(parseInt(fontSize, 10) * 72 / 96) + 'pt';
+      }
 
-		return fontSize;
-	};
+      return fontSize;
+    };
 
-	var normalizeFontFamily = function (fontFamily) {
-		// 'Font name', Font -> Font name,Font
-		return fontFamily.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
-	};
+    var normalizeFontFamily = function (fontFamily) {
+      // 'Font name', Font -> Font name,Font
+      return fontFamily.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
+    };
 
-	var getComputedFontProp = function (propName, elm) {
-		return DOMUtils.DOM.getStyle(elm, propName, true);
-	};
+    var getComputedFontProp = function (propName, elm) {
+      return DOMUtils.DOM.getStyle(elm, propName, true);
+    };
 
-	var getFontSize = function (rootElm, elm) {
-		var specifiedFontSize = getSpecifiedFontProp('fontSize', rootElm, elm);
-		return specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontSize', elm);
-	};
+    var getFontSize = function (rootElm, elm) {
+      var specifiedFontSize = getSpecifiedFontProp('fontSize', rootElm, elm);
+      return specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontSize', elm);
+    };
 
-	var getFontFamily = function (rootElm, elm) {
-		var specifiedFontSize = getSpecifiedFontProp('fontFamily', rootElm, elm);
-		var fontValue = specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontFamily', elm);
+    var getFontFamily = function (rootElm, elm) {
+      var specifiedFontSize = getSpecifiedFontProp('fontFamily', rootElm, elm);
+      var fontValue = specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontFamily', elm);
 
-		return fontValue !== undefined ? normalizeFontFamily(fontValue) : '';
-	};
+      return fontValue !== undefined ? normalizeFontFamily(fontValue) : '';
+    };
 
-	return {
-		getFontSize: getFontSize,
-		getFontFamily: getFontFamily,
-		toPt: toPt
-	};
-});
+    return {
+      getFontSize: getFontSize,
+      getFontFamily: getFontFamily,
+      toPt: toPt
+    };
+  }
+);

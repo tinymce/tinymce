@@ -14,72 +14,76 @@
  * @private
  * @class tinymce.file.BlobCache
  */
-define("tinymce.core.file.BlobCache", [
-	"tinymce.core.util.Arr",
-	"tinymce.core.util.Fun"
-], function(Arr, Fun) {
-	return function() {
-		var cache = [], constant = Fun.constant;
+define(
+  'tinymce.core.file.BlobCache',
+  [
+    "tinymce.core.util.Arr",
+    "tinymce.core.util.Fun"
+  ],
+  function (Arr, Fun) {
+    return function () {
+      var cache = [], constant = Fun.constant;
 
-		function create(id, blob, base64, filename) {
-			return {
-				id: constant(id),
-				filename: constant(filename || id),
-				blob: constant(blob),
-				base64: constant(base64),
-				blobUri: constant(URL.createObjectURL(blob))
-			};
-		}
+      function create(id, blob, base64, filename) {
+        return {
+          id: constant(id),
+          filename: constant(filename || id),
+          blob: constant(blob),
+          base64: constant(base64),
+          blobUri: constant(URL.createObjectURL(blob))
+        };
+      }
 
-		function add(blobInfo) {
-			if (!get(blobInfo.id())) {
-				cache.push(blobInfo);
-			}
-		}
+      function add(blobInfo) {
+        if (!get(blobInfo.id())) {
+          cache.push(blobInfo);
+        }
+      }
 
-		function get(id) {
-			return findFirst(function(cachedBlobInfo) {
-				return cachedBlobInfo.id() === id;
-			});
-		}
+      function get(id) {
+        return findFirst(function (cachedBlobInfo) {
+          return cachedBlobInfo.id() === id;
+        });
+      }
 
-		function findFirst(predicate) {
-			return Arr.filter(cache, predicate)[0];
-		}
+      function findFirst(predicate) {
+        return Arr.filter(cache, predicate)[0];
+      }
 
-		function getByUri(blobUri) {
-			return findFirst(function(blobInfo) {
-				return blobInfo.blobUri() == blobUri;
-			});
-		}
+      function getByUri(blobUri) {
+        return findFirst(function (blobInfo) {
+          return blobInfo.blobUri() == blobUri;
+        });
+      }
 
-		function removeByUri(blobUri) {
-			cache = Arr.filter(cache, function(blobInfo) {
-				if (blobInfo.blobUri() === blobUri) {
-					URL.revokeObjectURL(blobInfo.blobUri());
-					return false;
-				}
+      function removeByUri(blobUri) {
+        cache = Arr.filter(cache, function (blobInfo) {
+          if (blobInfo.blobUri() === blobUri) {
+            URL.revokeObjectURL(blobInfo.blobUri());
+            return false;
+          }
 
-				return true;
-			});
-		}
+          return true;
+        });
+      }
 
-		function destroy() {
-			Arr.each(cache, function(cachedBlobInfo) {
-				URL.revokeObjectURL(cachedBlobInfo.blobUri());
-			});
+      function destroy() {
+        Arr.each(cache, function (cachedBlobInfo) {
+          URL.revokeObjectURL(cachedBlobInfo.blobUri());
+        });
 
-			cache = [];
-		}
+        cache = [];
+      }
 
-		return {
-			create: create,
-			add: add,
-			get: get,
-			getByUri: getByUri,
-			findFirst: findFirst,
-			removeByUri: removeByUri,
-			destroy: destroy
-		};
-	};
-});
+      return {
+        create: create,
+        add: add,
+        get: get,
+        getByUri: getByUri,
+        findFirst: findFirst,
+        removeByUri: removeByUri,
+        destroy: destroy
+      };
+    };
+  }
+);

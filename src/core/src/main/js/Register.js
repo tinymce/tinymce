@@ -14,28 +14,32 @@
  * @private
  * @class tinymce.Register
  */
-define("tinymce.core.Register", [
-], function() {
-	/*eslint consistent-this: 0 */
-	var context = this || window;
+define(
+  'tinymce.core.Register',
+  [
+  ],
+  function () {
+    /*eslint consistent-this: 0 */
+    var context = this || window;
 
-	var exposeToModuleLoaders = function (tinymce) {
-		if (typeof context.define === "function") {
-			// Bolt
-			if (!context.define.amd) {
-				context.define("ephox/tinymce", [], function () {
-					return tinymce;
-				});
-			}
-		}
+    var exposeToModuleLoaders = function (tinymce) {
+      if (typeof context.define === "function") {
+        // Bolt
+        if (!context.define.amd) {
+          context.define("ephox/tinymce", [], function () {
+            return tinymce;
+          });
+        }
+      }
 
-		if (typeof module === 'object') {
-			/* global module */
-			module.exports = tinymce;
-		}
-	};
+      if (typeof module === 'object') {
+        /* global module */
+        module.exports = tinymce;
+      }
+    };
 
-	return {
-		exposeToModuleLoaders: exposeToModuleLoaders
-	};
-});
+    return {
+      exposeToModuleLoaders: exposeToModuleLoaders
+    };
+  }
+);

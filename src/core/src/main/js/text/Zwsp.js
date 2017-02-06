@@ -18,20 +18,25 @@
  * var isZwsp = Zwsp.isZwsp('\uFEFF');
  * var abc = Zwsp.trim('a\uFEFFc');
  */
-define("tinymce.core.text.Zwsp", [], function() {
-	var ZWSP = '\uFEFF';
+define(
+  'tinymce.core.text.Zwsp',
+  [
+  ],
+  function () {
+    var ZWSP = '\uFEFF';
 
-	function isZwsp(chr) {
-		return chr == ZWSP;
-	}
+    function isZwsp(chr) {
+      return chr == ZWSP;
+    }
 
-	function trim(str) {
-		return str.replace(new RegExp(ZWSP, 'g'), '');
-	}
+    function trim(str) {
+      return str.replace(new RegExp(ZWSP, 'g'), '');
+    }
 
-	return {
-		isZwsp: isZwsp,
-		ZWSP: ZWSP,
-		trim: trim
-	};
-});
+    return {
+      isZwsp: isZwsp,
+      ZWSP: ZWSP,
+      trim: trim
+    };
+  }
+);

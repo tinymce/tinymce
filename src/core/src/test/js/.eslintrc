@@ -12,8 +12,6 @@
 
   "rules": {
     "eqeqeq": "error",
-    "indent": ["error", "tab"],
-    "no-mixed-spaces-and-tabs": "error",
     "space-before-function-paren": ["error", "always"],
     "yoda": "error",
     "func-style": ["error", "expression"]

@@ -16,33 +16,37 @@
  * @class tinymce.ui.FitLayout
  * @extends tinymce.core.ui.AbsoluteLayout
  */
-define("tinymce.core.ui.FitLayout", [
-	"tinymce.core.ui.AbsoluteLayout"
-], function(AbsoluteLayout) {
-	"use strict";
+define(
+  'tinymce.core.ui.FitLayout',
+  [
+    "tinymce.core.ui.AbsoluteLayout"
+  ],
+  function (AbsoluteLayout) {
+    "use strict";
 
-	return AbsoluteLayout.extend({
-		/**
-		 * Recalculates the positions of the controls in the specified container.
-		 *
-		 * @method recalc
-		 * @param {tinymce.ui.Container} container Container instance to recalc.
-		 */
-		recalc: function(container) {
-			var contLayoutRect = container.layoutRect(), paddingBox = container.paddingBox;
+    return AbsoluteLayout.extend({
+      /**
+       * Recalculates the positions of the controls in the specified container.
+       *
+       * @method recalc
+       * @param {tinymce.ui.Container} container Container instance to recalc.
+       */
+      recalc: function (container) {
+        var contLayoutRect = container.layoutRect(), paddingBox = container.paddingBox;
 
-			container.items().filter(':visible').each(function(ctrl) {
-				ctrl.layoutRect({
-					x: paddingBox.left,
-					y: paddingBox.top,
-					w: contLayoutRect.innerW - paddingBox.right - paddingBox.left,
-					h: contLayoutRect.innerH - paddingBox.top - paddingBox.bottom
-				});
+        container.items().filter(':visible').each(function (ctrl) {
+          ctrl.layoutRect({
+            x: paddingBox.left,
+            y: paddingBox.top,
+            w: contLayoutRect.innerW - paddingBox.right - paddingBox.left,
+            h: contLayoutRect.innerH - paddingBox.top - paddingBox.bottom
+          });
 
-				if (ctrl.recalc) {
-					ctrl.recalc();
-				}
-			});
-		}
-	});
-});
+          if (ctrl.recalc) {
+            ctrl.recalc();
+          }
+        });
+      }
+    });
+  }
+);

@@ -13,108 +13,112 @@
  *
  * @class tinymce.ui.Layout
  */
-define("tinymce.core.ui.Layout", [
-	"tinymce.core.util.Class",
-	"tinymce.core.util.Tools"
-], function(Class, Tools) {
-	"use strict";
+define(
+  'tinymce.core.ui.Layout',
+  [
+    "tinymce.core.util.Class",
+    "tinymce.core.util.Tools"
+  ],
+  function (Class, Tools) {
+    "use strict";
 
-	return Class.extend({
-		Defaults: {
-			firstControlClass: 'first',
-			lastControlClass: 'last'
-		},
+    return Class.extend({
+      Defaults: {
+        firstControlClass: 'first',
+        lastControlClass: 'last'
+      },
 
-		/**
-		 * Constructs a layout instance with the specified settings.
-		 *
-		 * @constructor
-		 * @param {Object} settings Name/value object with settings.
-		 */
-		init: function(settings) {
-			this.settings = Tools.extend({}, this.Defaults, settings);
-		},
+      /**
+       * Constructs a layout instance with the specified settings.
+       *
+       * @constructor
+       * @param {Object} settings Name/value object with settings.
+       */
+      init: function (settings) {
+        this.settings = Tools.extend({}, this.Defaults, settings);
+      },
 
-		/**
-		 * This method gets invoked before the layout renders the controls.
-		 *
-		 * @method preRender
-		 * @param {tinymce.ui.Container} container Container instance to preRender.
-		 */
-		preRender: function(container) {
-			container.bodyClasses.add(this.settings.containerClass);
-		},
+      /**
+       * This method gets invoked before the layout renders the controls.
+       *
+       * @method preRender
+       * @param {tinymce.ui.Container} container Container instance to preRender.
+       */
+      preRender: function (container) {
+        container.bodyClasses.add(this.settings.containerClass);
+      },
 
-		/**
-		 * Applies layout classes to the container.
-		 *
-		 * @private
-		 */
-		applyClasses: function(items) {
-			var self = this, settings = self.settings, firstClass, lastClass, firstItem, lastItem;
+      /**
+       * Applies layout classes to the container.
+       *
+       * @private
+       */
+      applyClasses: function (items) {
+        var self = this, settings = self.settings, firstClass, lastClass, firstItem, lastItem;
 
-			firstClass = settings.firstControlClass;
-			lastClass = settings.lastControlClass;
+        firstClass = settings.firstControlClass;
+        lastClass = settings.lastControlClass;
 
-			items.each(function(item) {
-				item.classes.remove(firstClass).remove(lastClass).add(settings.controlClass);
+        items.each(function (item) {
+          item.classes.remove(firstClass).remove(lastClass).add(settings.controlClass);
 
-				if (item.visible()) {
-					if (!firstItem) {
-						firstItem = item;
-					}
+          if (item.visible()) {
+            if (!firstItem) {
+              firstItem = item;
+            }
 
-					lastItem = item;
-				}
-			});
+            lastItem = item;
+          }
+        });
 
-			if (firstItem) {
-				firstItem.classes.add(firstClass);
-			}
+        if (firstItem) {
+          firstItem.classes.add(firstClass);
+        }
 
-			if (lastItem) {
-				lastItem.classes.add(lastClass);
-			}
-		},
+        if (lastItem) {
+          lastItem.classes.add(lastClass);
+        }
+      },
 
-		/**
-		 * Renders the specified container and any layout specific HTML.
-		 *
-		 * @method renderHtml
-		 * @param {tinymce.ui.Container} container Container to render HTML for.
-		 */
-		renderHtml: function(container) {
-			var self = this, html = '';
+      /**
+       * Renders the specified container and any layout specific HTML.
+       *
+       * @method renderHtml
+       * @param {tinymce.ui.Container} container Container to render HTML for.
+       */
+      renderHtml: function (container) {
+        var self = this, html = '';
 
-			self.applyClasses(container.items());
+        self.applyClasses(container.items());
 
-			container.items().each(function(item) {
-				html += item.renderHtml();
-			});
+        container.items().each(function (item) {
+          html += item.renderHtml();
+        });
 
-			return html;
-		},
+        return html;
+      },
 
-		/**
-		 * Recalculates the positions of the controls in the specified container.
-		 *
-		 * @method recalc
-		 * @param {tinymce.ui.Container} container Container instance to recalc.
-		 */
-		recalc: function() {
-		},
+      /**
+       * Recalculates the positions of the controls in the specified container.
+       *
+       * @method recalc
+       * @param {tinymce.ui.Container} container Container instance to recalc.
+       */
+      recalc: function () {
+      },
 
-		/**
-		 * This method gets invoked after the layout renders the controls.
-		 *
-		 * @method postRender
-		 * @param {tinymce.ui.Container} container Container instance to postRender.
-		 */
-		postRender: function() {
-		},
+      /**
+       * This method gets invoked after the layout renders the controls.
+       *
+       * @method postRender
+       * @param {tinymce.ui.Container} container Container instance to postRender.
+       */
+      postRender: function () {
+      },
 
-		isNative: function() {
-			return false;
-		}
-	});
-});
+      isNative: function () {
+        return false;
+      }
+    });
+  }
+);

@@ -16,58 +16,62 @@
  * @class tinymce.ui.ColorBox
  * @extends tinymce.core.ui.ComboBox
  */
-define("tinymce.core.ui.ColorBox", [
-	"tinymce.core.ui.ComboBox"
-], function(ComboBox) {
-	"use strict";
+define(
+  'tinymce.core.ui.ColorBox',
+  [
+    "tinymce.core.ui.ComboBox"
+  ],
+  function (ComboBox) {
+    "use strict";
 
-	return ComboBox.extend({
-		/**
-		 * Constructs a new control instance with the specified settings.
-		 *
-		 * @constructor
-		 * @param {Object} settings Name/value object with settings.
-		 */
-		init: function(settings) {
-			var self = this;
+    return ComboBox.extend({
+      /**
+       * Constructs a new control instance with the specified settings.
+       *
+       * @constructor
+       * @param {Object} settings Name/value object with settings.
+       */
+      init: function (settings) {
+        var self = this;
 
-			settings.spellcheck = false;
+        settings.spellcheck = false;
 
-			if (settings.onaction) {
-				settings.icon = 'none';
-			}
+        if (settings.onaction) {
+          settings.icon = 'none';
+        }
 
-			self._super(settings);
+        self._super(settings);
 
-			self.classes.add('colorbox');
-			self.on('change keyup postrender', function() {
-				self.repaintColor(self.value());
-			});
-		},
+        self.classes.add('colorbox');
+        self.on('change keyup postrender', function () {
+          self.repaintColor(self.value());
+        });
+      },
 
-		repaintColor: function(value) {
-			var openElm = this.getEl('open');
-			var elm = openElm ? openElm.getElementsByTagName('i')[0] : null;
+      repaintColor: function (value) {
+        var openElm = this.getEl('open');
+        var elm = openElm ? openElm.getElementsByTagName('i')[0] : null;
 
-			if (elm) {
-				try {
-					elm.style.background = value;
-				} catch (ex) {
-					// Ignore
-				}
-			}
-		},
+        if (elm) {
+          try {
+            elm.style.background = value;
+          } catch (ex) {
+            // Ignore
+          }
+        }
+      },
 
-		bindStates: function() {
-			var self = this;
+      bindStates: function () {
+        var self = this;
 
-			self.state.on('change:value', function(e) {
-				if (self.state.get('rendered')) {
-					self.repaintColor(e.value);
-				}
-			});
+        self.state.on('change:value', function (e) {
+          if (self.state.get('rendered')) {
+            self.repaintColor(e.value);
+          }
+        });
 
-			return self._super();
-		}
-	});
-});
+        return self._super();
+      }
+    });
+  }
+);

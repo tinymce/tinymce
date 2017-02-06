@@ -16,129 +16,133 @@
  * @class tinymce.ui.Label
  * @extends tinymce.core.ui.Widget
  */
-define("tinymce.core.ui.Label", [
-	"tinymce.core.ui.Widget",
-	"tinymce.core.ui.DomUtils"
-], function(Widget, DomUtils) {
-	"use strict";
+define(
+  'tinymce.core.ui.Label',
+  [
+    "tinymce.core.ui.Widget",
+    "tinymce.core.ui.DomUtils"
+  ],
+  function (Widget, DomUtils) {
+    "use strict";
 
-	return Widget.extend({
-		/**
-		 * Constructs a instance with the specified settings.
-		 *
-		 * @constructor
-		 * @param {Object} settings Name/value object with settings.
-		 * @setting {Boolean} multiline Multiline label.
-		 */
-		init: function(settings) {
-			var self = this;
+    return Widget.extend({
+      /**
+       * Constructs a instance with the specified settings.
+       *
+       * @constructor
+       * @param {Object} settings Name/value object with settings.
+       * @setting {Boolean} multiline Multiline label.
+       */
+      init: function (settings) {
+        var self = this;
 
-			self._super(settings);
-			self.classes.add('widget').add('label');
-			self.canFocus = false;
+        self._super(settings);
+        self.classes.add('widget').add('label');
+        self.canFocus = false;
 
-			if (settings.multiline) {
-				self.classes.add('autoscroll');
-			}
+        if (settings.multiline) {
+          self.classes.add('autoscroll');
+        }
 
-			if (settings.strong) {
-				self.classes.add('strong');
-			}
-		},
+        if (settings.strong) {
+          self.classes.add('strong');
+        }
+      },
 
-		/**
-		 * Initializes the current controls layout rect.
-		 * This will be executed by the layout managers to determine the
-		 * default minWidth/minHeight etc.
-		 *
-		 * @method initLayoutRect
-		 * @return {Object} Layout rect instance.
-		 */
-		initLayoutRect: function() {
-			var self = this, layoutRect = self._super();
+      /**
+       * Initializes the current controls layout rect.
+       * This will be executed by the layout managers to determine the
+       * default minWidth/minHeight etc.
+       *
+       * @method initLayoutRect
+       * @return {Object} Layout rect instance.
+       */
+      initLayoutRect: function () {
+        var self = this, layoutRect = self._super();
 
-			if (self.settings.multiline) {
-				var size = DomUtils.getSize(self.getEl());
+        if (self.settings.multiline) {
+          var size = DomUtils.getSize(self.getEl());
 
-				// Check if the text fits within maxW if not then try word wrapping it
-				if (size.width > layoutRect.maxW) {
-					layoutRect.minW = layoutRect.maxW;
-					self.classes.add('multiline');
-				}
+          // Check if the text fits within maxW if not then try word wrapping it
+          if (size.width > layoutRect.maxW) {
+            layoutRect.minW = layoutRect.maxW;
+            self.classes.add('multiline');
+          }
 
-				self.getEl().style.width = layoutRect.minW + 'px';
-				layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, DomUtils.getSize(self.getEl()).height);
-			}
+          self.getEl().style.width = layoutRect.minW + 'px';
+          layoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, DomUtils.getSize(self.getEl()).height);
+        }
 
-			return layoutRect;
-		},
+        return layoutRect;
+      },
 
-		/**
-		 * Repaints the control after a layout operation.
-		 *
-		 * @method repaint
-		 */
-		repaint: function() {
-			var self = this;
+      /**
+       * Repaints the control after a layout operation.
+       *
+       * @method repaint
+       */
+      repaint: function () {
+        var self = this;
 
-			if (!self.settings.multiline) {
-				self.getEl().style.lineHeight = self.layoutRect().h + 'px';
-			}
+        if (!self.settings.multiline) {
+          self.getEl().style.lineHeight = self.layoutRect().h + 'px';
+        }
 
-			return self._super();
-		},
+        return self._super();
+      },
 
-		severity: function(level) {
-			this.classes.remove('error');
-			this.classes.remove('warning');
-			this.classes.remove('success');
-			this.classes.add(level);
-		},
+      severity: function (level) {
+        this.classes.remove('error');
+        this.classes.remove('warning');
+        this.classes.remove('success');
+        this.classes.add(level);
+      },
 
-		/**
-		 * Renders the control as a HTML string.
-		 *
-		 * @method renderHtml
-		 * @return {String} HTML representing the control.
-		 */
-		renderHtml: function() {
-			var self = this, targetCtrl, forName, forId = self.settings.forId;
+      /**
+       * Renders the control as a HTML string.
+       *
+       * @method renderHtml
+       * @return {String} HTML representing the control.
+       */
+      renderHtml: function () {
+        var self = this, targetCtrl, forName, forId = self.settings.forId;
 
-			if (!forId && (forName = self.settings.forName)) {
-				targetCtrl = self.getRoot().find('#' + forName)[0];
+        if (!forId && (forName = self.settings.forName)) {
+          targetCtrl = self.getRoot().find('#' + forName)[0];
 
-				if (targetCtrl) {
-					forId = targetCtrl._id;
-				}
-			}
+          if (targetCtrl) {
+            forId = targetCtrl._id;
+          }
+        }
 
-			if (forId) {
-				return (
-					'<label id="' + self._id + '" class="' + self.classes + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
-						self.encode(self.state.get('text')) +
-					'</label>'
-				);
-			}
+        if (forId) {
+          return (
+            '<label id="' + self._id + '" class="' + self.classes + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
+            self.encode(self.state.get('text')) +
+            '</label>'
+          );
+        }
 
-			return (
-				'<span id="' + self._id + '" class="' + self.classes + '">' +
-					self.encode(self.state.get('text')) +
-				'</span>'
-			);
-		},
+        return (
+          '<span id="' + self._id + '" class="' + self.classes + '">' +
+          self.encode(self.state.get('text')) +
+          '</span>'
+        );
+      },
 
-		bindStates: function() {
-			var self = this;
+      bindStates: function () {
+        var self = this;
 
-			self.state.on('change:text', function(e) {
-				self.innerHtml(self.encode(e.value));
+        self.state.on('change:text', function (e) {
+          self.innerHtml(self.encode(e.value));
 
-				if (self.state.get('rendered')) {
-					self.updateLayoutRect();
-				}
-			});
+          if (self.state.get('rendered')) {
+            self.updateLayoutRect();
+          }
+        });
 
-			return self._super();
-		}
-	});
-});
+        return self._super();
+      }
+    });
+  }
+);

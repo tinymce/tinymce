@@ -48,7 +48,7 @@
     "no-multiple-empty-lines": [1, {"max": 2}],
     "operator-linebreak": [2, "after"],
     "semi": [2, "always"],
-    "indent": ["error", 2],
+    "indent": ["error", 2, {"SwitchCase": 1}],
     "curly": [2, "all"],
     "dot-notation": [2, {"allowKeywords": false}],
     "no-else-return": 0,
