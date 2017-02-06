@@ -158,7 +158,10 @@ define(
       };
 
       var uis = Arr.map([
-        Button
+        Container,
+        Button,
+        Input
+        
       ], function (ui) {
         var b = ui.build({});
         var wrapper = Element.fromTag('div');

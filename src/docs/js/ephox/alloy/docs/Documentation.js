@@ -42,11 +42,40 @@ define(
       'Button > role': {
         desc: 'The ARIA role for this button'
       }
+    };
+
+    var container = {
+      'Container': {
+        desc: 'The simplest component. Defaults to a <code>div</code>'
+      }
+    };
+
+    var input = {
+      'Input': {
+        desc: 'A basic input area for the user. Can be an <code>input</code> or a <code>textarea</code>'
+      },
+      'Input > data': {
+        desc: 'a <code>(value, text)</code> pair of information representing the value inside the input. Note, both values are required because the display value may be different from the internal value.'
+      },
+      'Input > type': {
+        desc: 'the <code>type</code> attribute of the input'
+      },
+      'Input > tag': {
+        desc: 'the tag to use for the input. Can be <code>input</code> or <code>textarea</code>'
+      },
+      'Input > placeholder': {
+        desc: 'the placeholder to use for the input'
+      },
+      'Input > hasTabstop': {
+        desc: 'Whether or not the input component should be a tabstop'
+      }
     }
 
     return Merger.deepMerge(
       toggling,
-      button
+      button,
+      container,
+      input
     );
   }
 );
