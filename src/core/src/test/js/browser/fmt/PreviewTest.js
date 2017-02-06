@@ -5,44 +5,15 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.core.fmt.Preview',
-    'tinymce.core.html.Writer',
-    'tinymce.core.html.SaxParser'
+    'tinymce.core.test.HtmlUtils'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, Preview, Writer, SaxParser) {
+  function (LegacyUnit, Pipeline, TinyLoader, Preview, HtmlUtils) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
 
     var ok = function (value, label) {
       return LegacyUnit.equal(value, true, label);
-    };
-
-    var normalizeHtml = function (html) {
-      var writer = new Writer();
-
-      new SaxParser({
-        validate: false,
-        comment: writer.comment,
-        cdata: writer.cdata,
-        text: writer.text,
-        end: writer.end,
-        pi: writer.pi,
-        doctype: writer.doctype,
-
-        start: function (name, attrs, empty) {
-          attrs.sort(function (a, b) {
-            if (a.name === b.name) {
-              return 0;
-            }
-
-            return a.name > b.name ? 1 : -1;
-          });
-
-          writer.start(name, attrs, empty);
-        }
-      }).parse(html);
-
-      return writer.getContent();
     };
 
     suite.test('Get preview css text for formats', function (editor) {
@@ -212,7 +183,7 @@ asynctest(
       };
 
       var selectorToHtml = function (selector) {
-        return normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
+        return HtmlUtils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
       };
 
       LegacyUnit.equal(selectorToHtml('ul > li.class1'), trimSpaces([

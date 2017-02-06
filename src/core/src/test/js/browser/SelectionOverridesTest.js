@@ -10,9 +10,10 @@ asynctest(
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.util.VK',
     'tinymce.core.text.Zwsp',
-    'tinymce.core.Env'
+    'tinymce.core.Env',
+    'tinymce.core.test.HtmlUtils'
   ],
-  function (LegacyUnit, Pipeline, Keyboard, TinyLoader, TinyDom, CaretPosition, CaretContainer, VK, Zwsp, Env) {
+  function (LegacyUnit, Pipeline, Keyboard, TinyLoader, TinyDom, CaretPosition, CaretContainer, VK, Zwsp, Env, HtmlUtils) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -130,16 +131,6 @@ asynctest(
       }
 
       fakeEvent(startElm, 'keyup', evt);
-    };
-
-    var cleanHtml = function (html) {
-      return html.toLowerCase().replace(/[\r\n]+/gi, '')
-        .replace(/ (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '')
-        .replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi, '')
-        .replace(/ style="([^"]+)"/gi, function (val1, val2) {
-          val2 = val2.replace(/;$/, '');
-          return ' style="' + val2.replace(/\:([^ ])/g, ': $1') + ';"';
-        });
     };
 
     var exitPreTest = function (arrow, offset, expectedContent) {
@@ -280,7 +271,7 @@ asynctest(
 
       type(editor, '\b');
       LegacyUnit.equal(
-        cleanHtml(editor.getBody().innerHTML),
+        HtmlUtils.cleanHtml(editor.getBody().innerHTML),
         '<div contenteditable="false">1<div contenteditable="true"><br data-mce-bogus="1"></div>3</div>'
       );
       LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('div div')[0]);
