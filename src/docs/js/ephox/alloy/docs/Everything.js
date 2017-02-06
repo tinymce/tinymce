@@ -157,6 +157,30 @@ define(
         );
       };
 
+      var uis = Arr.map([
+        Button
+      ], function (ui) {
+        var b = ui.build({});
+        var wrapper = Element.fromTag('div');
+        var h3 = Element.fromTag('h3');
+        Attr.set(h3, 'id', 'behaviour_' + b.name());
+        Html.set(h3, b.name());
+        Insert.append(wrapper, h3);
+
+        var desc = Element.fromTag('p');
+        Html.set(desc, getDescription(b.name()));
+        Insert.after(h3, desc);
+
+        var schema = b.schema();
+        schema.fold(function (name, output, presence, value) {
+          var dsl = value.toDsl();
+
+          Insert.after(desc, build([ b.name() ], dsl));
+        }, function () { });
+
+        return wrapper;
+      });
+
       var behaviours = Arr.map([
         // First while developing
         Toggling,
@@ -203,6 +227,7 @@ define(
         return wrapper;
       });
 
+      InsertAll.append(ephoxUi, uis);
       InsertAll.append(ephoxUi, behaviours);
 
     };

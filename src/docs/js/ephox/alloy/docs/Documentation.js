@@ -29,8 +29,24 @@ define(
       }
     };
 
+    var button = {
+      'Button': {
+        desc: 'A basic component with execution behaviour'
+      },
+      'Button > dom': {
+        desc: 'The DOM structure of the button'
+      },
+      'Button > action': {
+        desc: 'The action to fire on execute. If one is not supplied, it just triggers an execute on click'
+      },
+      'Button > role': {
+        desc: 'The ARIA role for this button'
+      }
+    }
+
     return Merger.deepMerge(
-      toggling
+      toggling,
+      button
     );
   }
 );
