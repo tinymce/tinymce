@@ -121,8 +121,8 @@ test(
 
     var optionValue4 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), { alpha: true });    
-    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', optionValue4.alpha.getOrDie());
+    ]), { alpha: true });
+    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', optionValue4.alpha.getOrDie()());
 
     var optionValue5 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())

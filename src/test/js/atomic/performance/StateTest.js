@@ -21,9 +21,9 @@ test(
       b: 'b'
     };
 
-    var x = ValueSchema.asStructOrDie('performance :: StateTest', ValueSchema.objOf(fields), spec);
-    console.log('x', Object.keys(x).length);
-    Timers.log();
+    // var x = ValueSchema.asStructOrDie('performance :: StateTest', ValueSchema.objOf(fields), spec);
+    // console.log('x', Object.keys(x).length);
+    // Timers.log();
 
 
   }

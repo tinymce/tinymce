@@ -10,6 +10,8 @@ test(
   ],
 
   function (FieldPresence, FieldSchema, ValueSchema, Timers, Fun) {
+    return;
+    
     var domSchema = ValueSchema.objOf([
       FieldSchema.strict('tag'),
       FieldSchema.defaulted('styles', {}),

@@ -10,6 +10,7 @@ test(
   ],
 
   function (FieldPresence, FieldSchema, ValueSchema, Timers, Fun) {
+    return;
     var fields = [ ];
 
     for (var i = 0; i < 40000; i++) {

@@ -9,6 +9,7 @@ test(
   ],
 
   function (FieldSchema, ValueSchema, Timers, Fun) {
+    return;
     var fields = [ ];
 
     for (var i = 0; i < 20200; i++) {
