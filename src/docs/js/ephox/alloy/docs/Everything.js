@@ -161,10 +161,17 @@ define(
         Container,
         Button,
         Input,
-        TabSection
+        TabSection,
+        Dropdown,
+        ExpandableForm,
+        // Form,
+        FormChooser,
+        HtmlSelect
         
       ], function (ui) {
-        var b = ui.build({});
+        var b = ui.build({
+          parts: { }
+        });
         var wrapper = Element.fromTag('div');
         var h3 = Element.fromTag('h3');
         Attr.set(h3, 'id', 'behaviour_' + b.name());
