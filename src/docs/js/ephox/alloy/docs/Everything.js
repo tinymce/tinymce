@@ -160,7 +160,8 @@ define(
       var uis = Arr.map([
         Container,
         Button,
-        Input
+        Input,
+        TabSection
         
       ], function (ui) {
         var b = ui.build({});

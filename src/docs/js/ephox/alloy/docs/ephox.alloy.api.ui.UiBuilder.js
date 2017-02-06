@@ -17,12 +17,19 @@ define(
         name: Fun.constant(owner),
         schema: Fun.constant(
           FieldSchema.strictObjOf(owner, schema)
-        )
+        ),
+        parts: Fun.constant([ ])
       };
     };
 
     var composite = function (owner, schema,  partTypes, factory, spec) {
-      return schema;
+      return {
+        name: Fun.constant(owner),
+        schema: Fun.constant(
+          FieldSchema.strictObjOf(owner, schema)
+        ),
+        parts: Fun.constant([ ])
+      };
     };
 
     var supplyUid = function (spec) {
