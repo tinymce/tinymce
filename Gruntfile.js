@@ -452,7 +452,7 @@ module.exports = function (grunt) {
     bedrock: {
       all: {
         options: {
-          config: 'tools/bolt/config/browser.js',
+          config: 'config/bolt/browser.js',
           testdirs: [
             'src/core/src/test',
             'src/plugins/media/src/test',
