@@ -400,7 +400,9 @@ define("tinymce/ui/Window", [
 				self.statusbar.postRender();
 			}
 
-			self.focus();
+	            	setTimeout(function() {
+	               		self.focus();
+	            	}, 0);
 
 			this.dragHelper = new DragHelper(self._id + '-dragh', {
 				start: function() {
