@@ -9,6 +9,7 @@ define(
     'ephox.boulder.core.ObjWriter',
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.format.TypeTokens',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -19,7 +20,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Type, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -150,7 +151,7 @@ define(
       }, { });
 
       var extract = function (path, strength, o) {
-        var keys = Obj.keys(o);
+        var keys = Type.isBoolean(o) ? [ ] : Obj.keys(o);
         var extra = Arr.filter(keys, function (k) {
           return !Objects.hasKey(fieldNames, k);
         });
