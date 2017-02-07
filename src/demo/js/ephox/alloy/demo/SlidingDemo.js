@@ -25,9 +25,9 @@ define(
       HtmlDisplay.section(
         gui,
         'This container slides its height',
-        Container.build({
+        Container.sketch({
           components: [
-            Container.build({
+            Container.sketch({
               uid: 'height-slider',
 
               behaviours: Behaviour.derive([
@@ -48,7 +48,7 @@ define(
                 })
               ]),
               components: [
-                Container.build({
+                Container.sketch({
                   dom: {
                     styles: { height: '100px', background: 'blue' }
                   }
@@ -74,9 +74,9 @@ define(
       HtmlDisplay.section(
         gui,
         'This container slides its width',
-        Container.build({
+        Container.sketch({
           components: [
-            Container.build({
+            Container.sketch({
               uid: 'width-slider',
 
               behaviours: Behaviour.derive([
@@ -98,7 +98,7 @@ define(
               ]),
              
               components: [
-                Container.build({
+                Container.sketch({
                   dom: {
                     styles: { height: '100px', background: 'blue' }
                   }

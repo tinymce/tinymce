@@ -90,7 +90,7 @@ define(
           },
           components: [
             FormField.parts(Input).label(),
-            Container.build({ uid: invalidUid }),
+            Container.sketch({ uid: invalidUid }),
             FormField.parts(Input).field()
           ]
         });
@@ -132,7 +132,7 @@ define(
           },
           components: [
             FormField.parts(HtmlSelect).label(),
-            Container.build({
+            Container.sketch({
               dom: {
                 classes: [ 'wrapper' ]
               },
@@ -153,7 +153,7 @@ define(
               members: {
                 option: {
                   munge: function (spec) {
-                    return Container.build({
+                    return Container.sketch({
                       dom: {
                         attributes: {
                           value: spec.value
@@ -213,7 +213,7 @@ define(
             members: {
               choice: {
                 munge: function (data) {
-                  return Container.build({
+                  return Container.sketch({
                     dom: {
                       tag: 'span',
                       classes: [ 'ephox-pastry-independent-button' ],
@@ -337,7 +337,7 @@ define(
             Form.parts('maxis'),
             Form.parts('beta'),
             Form.parts('gamma'),
-            Container.build({
+            Container.sketch({
               components: [
                 Form.parts('delta'),
                 Form.parts('epsilon')

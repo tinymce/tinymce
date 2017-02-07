@@ -42,14 +42,14 @@ define(
             }
           },
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 tag: 'div',
                 classes: [ 'mce-reset' ],
                 attributes: { role: 'application' }
               },
               components: [
-                Container.build({
+                Container.sketch({
                   dom: {
                     classes: [ 'mce-window-head' ]
                   },
@@ -59,7 +59,7 @@ define(
                     ModalDialog.parts().close()
                   ]
                 }),
-                Container.build({
+                Container.sketch({
                   dom: {
                     classes: [ 'mce-container-body', 'mce-window-body', 'mce-abs-layout' ]
                   },
@@ -67,7 +67,7 @@ define(
                     ModalDialog.parts().body()
                   ]
                 }),
-                Container.build({
+                Container.sketch({
                   dom: {
                     classes: [ 'mce-container', 'mce-panel', 'mce-foot' ]
                   },
@@ -109,7 +109,7 @@ define(
                 tag: 'div'
               },
               components: [
-                Container.build({
+                Container.sketch({
                   dom: {
                     styles: {
                       width: '400px',
@@ -134,7 +134,7 @@ define(
                 classes: [ 'mce-close' ]
               },
               components: [
-                Container.build({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
+                Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
               ]
             }
           }

@@ -34,7 +34,7 @@ asynctest(
           members: {
             item: {
               munge: function (itemSpec) {
-                return Container.build({
+                return Container.sketch({
                   dom: {
                     tag: 'button',
                     innerHtml: itemSpec.data.text

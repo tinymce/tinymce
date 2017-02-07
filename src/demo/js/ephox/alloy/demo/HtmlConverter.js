@@ -24,9 +24,9 @@ define(
 
     // TODO: Change this to match the simplified UI templating model we have now including text
 
-      var page = Container.build({
+      var page = Container.sketch({
         components: [
-          Container.build({
+          Container.sketch({
             dom: {
               tag: 'p',
               innerHtml: 'Copy your HTML structure into this textarea and press <strong>Convert</strong>'
@@ -68,7 +68,7 @@ define(
             }
           }),
 
-          Container.build({
+          Container.sketch({
             uid: 'pre-output',
             dom: {
               tag: 'pre'

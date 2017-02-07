@@ -33,9 +33,9 @@ define(
       var button1 = HtmlDisplay.section(
         gui,
         'This button is a <code>button</code> that can be dragged',
-        Container.build({
+        Container.sketch({
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 styles: {
                   position: 'fixed',
@@ -48,7 +48,7 @@ define(
                 innerHtml: 'A fixed dock'
               }
             }),
-            Container.build({
+            Container.sketch({
               dom: {
                 styles: {
                   position: 'absolute',

@@ -35,13 +35,13 @@ asynctest(
 
     var r = [ ];
     for (var i = 0; i < 10000; i++) {
-      r[i] = Container.build({ });
+      r[i] = Container.sketch({ });
     }
 
     var gui = Gui.create();
 
     // var parent = GuiFactory.build(
-    //   Container.build({
+    //   Container.sketch({
     //     components: r
     //   })
     // );

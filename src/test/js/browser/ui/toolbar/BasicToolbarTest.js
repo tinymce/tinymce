@@ -20,7 +20,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             Toolbar.build({
               uid: 'shell-toolbar',

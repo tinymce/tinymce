@@ -11,7 +11,7 @@ define(
   function (GuiFactory, Container, Compare, PredicateExists) {
     var fixedSink = function () {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             styles: {
               border: '1px solid green'
@@ -29,7 +29,7 @@ define(
 
     var relativeSink = function () {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div',
             styles: {
@@ -48,7 +48,7 @@ define(
 
     var popup = function () {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             innerHtml: 'Demo day',
             styles: {

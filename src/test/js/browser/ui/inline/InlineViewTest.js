@@ -75,7 +75,7 @@ asynctest(
           InlineView.showAt(inline, {
             anchor: 'selection',
             root: gui.element()
-          }, Container.build({
+          }, Container.sketch({
             dom: {
               innerHtml: 'Inner HTML'
             }
@@ -95,7 +95,7 @@ asynctest(
             InlineView.showAt(inline, {
               anchor: 'selection',
               root: gui.element()
-            }, Container.build({
+            }, Container.sketch({
               components: [
                 Button.build({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') }),
                 Button.build({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I' }, action: store.adder('italic') }),

@@ -202,7 +202,7 @@ define(
                 value: 'widget1',
                 text: 'Widget1'
               },
-              widget: Container.build({
+              widget: Container.sketch({
                 dom: {
                   classes: [ 'my-widget' ]
                 },
@@ -270,7 +270,7 @@ define(
                 value: 'widget1',
                 text: 'Widget1'
               },
-              widget: Container.build({
+              widget: Container.sketch({
                 dom: {
                   classes: [ 'my-widget' ]
                 },
@@ -411,7 +411,7 @@ define(
                         value: 'widget',
                         text: 'Widget'
                       },
-                      widget: Container.build({
+                      widget: Container.sketch({
                         dom: {
                           tag: 'div'
                         },
@@ -426,7 +426,7 @@ define(
                             },
                             useTabstop: true
                           }),
-                          Container.build({
+                          Container.sketch({
                             components: [
                               Button.build({
                                 action: function () { console.log('clicked on a button', arguments); },

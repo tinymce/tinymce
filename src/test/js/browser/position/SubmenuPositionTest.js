@@ -20,7 +20,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var item = GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'li',
             innerHtml: 'Trigger Item'
@@ -31,7 +31,7 @@ asynctest(
       );
 
       var list = GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'ol',
             styles: {
@@ -48,7 +48,7 @@ asynctest(
       );
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             GuiFactory.premade(Sinks.fixedSink()),
             GuiFactory.premade(Sinks.relativeSink()),

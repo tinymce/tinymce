@@ -22,7 +22,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var makeItem = function (name) {
-        return Container.build({
+        return Container.sketch({
           dom: {
             classes: [ 'test-item', name ],
             innerHtml: name
@@ -34,7 +34,7 @@ asynctest(
       };
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div',
             classes: [ 'menu-keying-test'],

@@ -31,7 +31,7 @@ define(
       var dockable = HtmlDisplay.section(
         gui,
         'The blue panel will always stay on screen as long as the red rectangle is on screen',
-        Container.build({
+        Container.sketch({
           uid: 'panel-container',
           dom: {
             styles: {
@@ -43,7 +43,7 @@ define(
             }
           },
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 styles: {
                   background: '#cadbee',

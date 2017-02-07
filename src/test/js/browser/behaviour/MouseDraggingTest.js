@@ -27,7 +27,7 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     var subject = Memento.record(
-      Container.build({
+      Container.sketch({
         dom: {
           styles: {
             'width': '100px',
@@ -59,7 +59,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             subject.asSpec()
           ]

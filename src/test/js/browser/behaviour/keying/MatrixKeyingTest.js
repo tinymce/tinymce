@@ -32,7 +32,7 @@ asynctest(
       var rows = Arr.chunk(cells, 6);
 
       var item = function (classes) {
-        return Container.build({
+        return Container.sketch({
           dom: {
             tag: 'span',
             styles: {
@@ -56,7 +56,7 @@ asynctest(
       };
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             classes: [ 'matrix-keying-test'],
             styles: {
@@ -77,7 +77,7 @@ asynctest(
           ]),
           // 4 x 6 grid size
           components: Arr.map(rows, function (row) {
-            return Container.build({
+            return Container.sketch({
               dom: {
                 tag: 'span',
                 classes: [ 'row' ]

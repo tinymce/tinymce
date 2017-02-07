@@ -59,7 +59,7 @@ define(
 
         fetch: function () {
           return Future.pure(
-            Container.build({ })
+            Container.sketch({ })
           );
         },
 
@@ -169,7 +169,7 @@ define(
       HtmlDisplay.section(
         gui,
         'This inline menu component is a context menu. Right click inside the yellow area',
-        Container.build({
+        Container.sketch({
           dom: {
             styles: {
               background: '#ffff33',
@@ -198,7 +198,7 @@ define(
         'This inline toolbar shows up when you click in the second input field. Note, ' + 
         'how when you focus an empty input, it will attach at the end of the field, and ' +
         'when you focus a non-empty input, it will attach below',
-        Container.build({
+        Container.sketch({
           behaviours: {
             keying: {
               mode: 'cyclic',
@@ -230,7 +230,7 @@ define(
                     };
 
                     var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                    InlineView.showAt(inlineComp, anchor, Container.build({
+                    InlineView.showAt(inlineComp, anchor, Container.sketch({
                       behaviours: {
                         keying: {
                           mode: 'flow',

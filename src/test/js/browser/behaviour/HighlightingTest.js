@@ -27,7 +27,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var makeItem = function (name) {
-        return Container.build({
+        return Container.sketch({
           dom: {
             tag: 'span',
             styles: {
@@ -45,7 +45,7 @@ asynctest(
       };
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           behaviours: Behaviour.derive([
             Highlighting.config({
               highlightClass: 'test-selected',

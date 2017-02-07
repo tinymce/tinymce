@@ -23,7 +23,7 @@ define(
     };
 
     var buildSet = function (path, _sValidator, sType) {
-      return Container.build({
+      return Container.sketch({
         dom: {
           tag: 'div',
           classes: [ 'docs-set' ]
@@ -35,7 +35,7 @@ define(
     };
 
     var buildArray = function (path, aType) {
-      return Container.build({
+      return Container.sketch({
         dom: {
           tag: 'div',
           classes: [ 'docs-array' ]
@@ -100,14 +100,14 @@ define(
         }
       );
 
-      return Container.build({
+      return Container.sketch({
         dom: {
           tag: 'div',
           classes: [ 'docs-field' ]
         },
         domModification: extraDom.wrapper,
         components: [
-          Container.build({
+          Container.sketch({
             dom: {
               tag: 'span',
               classes: [ 'docs-field-name' ]
@@ -134,7 +134,7 @@ define(
         );
       });
 
-      return Container.build({
+      return Container.sketch({
         dom: {
           tag: 'div',
           classes: [ 'docs-obj' ]
@@ -157,7 +157,7 @@ define(
           return buildObject(path, oFields);
         },
         function (oValue) {
-          return Container.build({
+          return Container.sketch({
             dom: {
               tag: 'span',
               classes: [ 'docs-item' ],
@@ -170,13 +170,13 @@ define(
           var branches = Obj.keys(cBranches);
 
           var cs = Arr.map(branches, function (b) {
-            return Container.build({
+            return Container.sketch({
               dom: {
                 tag: 'div',
                 classes: [ 'docs-branch-mode' ]
               },
               components: [
-                Container.build({
+                Container.sketch({
                   dom: {
                     tag: 'span',
                     classes: [ 'docs-branch-mode-identifier' ],
@@ -188,7 +188,7 @@ define(
             });
           });
 
-          return Container.build({
+          return Container.sketch({
             dom: {
               tag: 'span',
               classes: [ 'docs-mode' ]

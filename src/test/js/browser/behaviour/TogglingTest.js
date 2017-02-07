@@ -21,7 +21,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div',
             classes: [ 'custom-component-test'],

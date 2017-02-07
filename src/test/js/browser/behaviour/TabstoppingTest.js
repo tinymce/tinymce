@@ -18,7 +18,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           behaviours: Behaviour.derive([
             Tabstopping.config({ })
           ])

@@ -33,9 +33,9 @@ define(
       gui.add(sink);
 
       var popup = GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 styles: {
                   'padding': '10px',
@@ -85,7 +85,7 @@ define(
       var section2 = HtmlDisplay.section(
         gui,
         'Position anchoring to menu',
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'ol',
             styles: {
@@ -93,7 +93,7 @@ define(
             }
           },
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 tag: 'li',
                 innerHtml: 'Hover over me',
@@ -121,12 +121,12 @@ define(
       var section3 = HtmlDisplay.section(
         gui,
         'Position anchoring to text selection',
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div'
           },
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 attributes: {
                   'contenteditable': 'true'
@@ -173,7 +173,7 @@ define(
       var section4 = HtmlDisplay.section(
         gui,
         'Position anchoring to text selection [iframe]',
-        Container.build({
+        Container.sketch({
           components: [
             GuiFactory.external({
               element: frame,

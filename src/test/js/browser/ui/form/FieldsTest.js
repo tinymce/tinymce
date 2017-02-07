@@ -88,7 +88,7 @@ asynctest(
         members: {
           choice: {
             munge: function (choiceSpec) {
-              return Container.build({
+              return Container.sketch({
                 dom: {
                   tag: 'span',
                   innerHtml: choiceSpec.text,
@@ -160,7 +160,7 @@ asynctest(
       });
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             inputA,
             selectB,

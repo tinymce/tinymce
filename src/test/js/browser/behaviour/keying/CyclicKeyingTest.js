@@ -32,7 +32,7 @@ asynctest(
       };
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div',
             classes: [ 'cyclic-keying-test'],
@@ -51,7 +51,7 @@ asynctest(
           components: [
             makeButton('button1', 'Button1'),
             makeButton('button2', 'Button2'),
-            Container.build({
+            Container.sketch({
               dom: {
                 tag: 'span',
                 classes: [ 'focusable-span' ],

@@ -57,7 +57,7 @@ define(
             }
           ],
           defaultView: function () {
-            return Container.build({ });
+            return Container.sketch({ });
           },
           parts: {
             tabbar: {

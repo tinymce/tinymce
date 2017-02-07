@@ -29,7 +29,7 @@ define(
     var sink  = {
       '<alloy.sink>': function (dSpec, detail) {
         // NOT sure what to do here.
-        if (detail.lazySink().isSome()) return Container.build({ });
+        if (detail.lazySink().isSome()) return Container.sketch({ });
         return {
           uid: detail.uid() + '-internal-sink',
           dom: dSpec.extra.dom,

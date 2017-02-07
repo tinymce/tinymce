@@ -9,7 +9,7 @@ define(
   function (GuiFactory, Container) {
     var make = function () {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           behaviours: {
             positioning: {
               useFixed: true

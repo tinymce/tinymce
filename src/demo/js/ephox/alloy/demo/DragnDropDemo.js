@@ -32,9 +32,9 @@ define(
       var display1 = HtmlDisplay.section(
         gui,
         'The button can be dragged into the the container',
-        Container.build({
+        Container.sketch({
           components: [
-            Container.build({
+            Container.sketch({
               dom: {
                 styles: {
                   'background-color': 'black',
@@ -68,7 +68,7 @@ define(
               ])
             }),
 
-            Container.build({
+            Container.sketch({
               dom: {
                 styles: {
                   background: 'red',

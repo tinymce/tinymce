@@ -34,7 +34,7 @@ asynctest(
       return Sinks.fixedSink();
     }, function (doc, body, gui, sink, store) {
       var sandbox = sink.getSystem().build(
-        Container.build({
+        Container.sketch({
           dom: {
             classes: [ 'test-sandbox' ]
           },

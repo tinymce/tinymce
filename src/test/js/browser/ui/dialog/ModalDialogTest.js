@@ -82,7 +82,7 @@ asynctest(
                 classes: [ 'test-dialog-body' ]
               },
               components: [
-                Container.build({ dom: { innerHtml: '<p>This is something else</p>' } })
+                Container.sketch({ dom: { innerHtml: '<p>This is something else</p>' } })
               ]
             },
             footer: {

@@ -19,12 +19,12 @@ define(
       }, spec);
     };
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(ContainerSchema.name(), ContainerSchema.schema(), make, spec);
     };
 
     return {
-      build: build
+      sketch: sketch
     };
   }
 );

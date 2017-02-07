@@ -70,7 +70,7 @@ asynctest(
       bB.set(behaviourB);
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div',
             classes: [ 'custom-component-test']
@@ -96,7 +96,7 @@ asynctest(
             'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
           },
           components: [
-            Container.build({ uid: 'custom-uid-2' })
+            Container.sketch({ uid: 'custom-uid-2' })
           ]
         })
       );

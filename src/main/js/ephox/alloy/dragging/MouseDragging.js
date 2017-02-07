@@ -112,7 +112,7 @@ define(
 
     var hub = function (component, dragInfo, dragApi, settings) {
       var blocker = component.getSystem().build(
-        Container.build({
+        Container.sketch({
           dom: {
             styles: {
               left: '0px',

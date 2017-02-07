@@ -24,7 +24,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           uid: 'primary',
           behaviours: Behaviour.derive([
             Coupling.config({

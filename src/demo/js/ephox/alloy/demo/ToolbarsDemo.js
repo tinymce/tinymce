@@ -109,7 +109,7 @@ define(
             }
           },
           'components': [
-            Container.build({
+            Container.sketch({
               'dom': {
                 'tag': 'button',
                 'attributes': {
@@ -119,7 +119,7 @@ define(
                 }
               },
               'components': [
-                Container.build({
+                Container.sketch({
                   'dom': {
                     'tag': 'i',
                     'attributes': {
@@ -155,7 +155,7 @@ define(
           },
           action: s.action,
           'components': [
-            Container.build({
+            Container.sketch({
               'dom': {
                 'tag': 'button',
                 'attributes': {
@@ -165,7 +165,7 @@ define(
                 }
               },
               'components': [
-                Container.build({
+                Container.sketch({
                   'dom': {
                     'tag': 'i',
                     'attributes': {
@@ -199,7 +199,7 @@ define(
           },
 
           components: [
-            Container.build({
+            Container.sketch({
               dom: { tag: 'div' },
               components: [
                 ToolbarGroup.parts().items()
@@ -217,7 +217,7 @@ define(
             classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
           },
           components: [
-            Container.build({ 
+            Container.sketch({ 
               components: [
 
               ]
@@ -231,7 +231,7 @@ define(
       var subject = HtmlDisplay.section(
         gui,
         'This demo plays around with skinning for TinyMCE Ui',
-        Container.build({
+        Container.sketch({
           dom: {
             classes: [ 'mce-container' ]
           },
@@ -266,7 +266,7 @@ define(
       var subject2 = HtmlDisplay.section(
         gui,
         'This toolbar has overflow behaviour that uses a more drawer',
-        Container.build({
+        Container.sketch({
           dom: {
             classes: [ 'mce-container' ]
           },

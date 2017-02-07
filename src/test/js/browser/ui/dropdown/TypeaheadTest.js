@@ -32,7 +32,7 @@ asynctest(
       var sink = Sinks.relativeSink();
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             GuiFactory.premade(sink),
 

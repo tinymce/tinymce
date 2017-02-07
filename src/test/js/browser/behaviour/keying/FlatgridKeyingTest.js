@@ -31,7 +31,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var item = function (classes) {
-        return Container.build({
+        return Container.sketch({
           dom: {
             tag: 'span',
             styles: {
@@ -55,7 +55,7 @@ asynctest(
       };
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'div',
             classes: [ 'flat-grid-keying-test'],

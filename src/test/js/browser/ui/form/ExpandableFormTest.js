@@ -72,7 +72,7 @@ asynctest(
           classes: [ 'extra-form', 'form-section' ]
         },
         components: [
-          Container.build({ dom: { styles: { 'height': '100px', 'width': '100px', 'background': 'green' } } }),
+          Container.sketch({ dom: { styles: { 'height': '100px', 'width': '100px', 'background': 'green' } } }),
           Form.parts('form.bull')
         ],
         parts: {

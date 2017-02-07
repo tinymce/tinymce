@@ -10,14 +10,14 @@ define(
   function (Container, SchemaView, Arr) {
     var make = function (bs) {
       return Arr.map(bs, function (b) {
-        var heading = Container.build({
+        var heading = Container.sketch({
           dom: {
             tag: 'h3',
             innerHtml: b.name()
           }
         });
 
-        var description = Container.build({
+        var description = Container.sketch({
           dom: {
             tag: 'p',
             innerHtml: SchemaView.getDescription(b.name())
@@ -28,10 +28,10 @@ define(
           var dsl = value.toDsl();
           return SchemaView.build([ b.name() ], dsl);
         }, function () {
-          return Container.build({ });
+          return Container.sketch({ });
         });
 
-        var wrapper = Container.build({
+        var wrapper = Container.sketch({
           dom: {
             tag: 'div'
           },

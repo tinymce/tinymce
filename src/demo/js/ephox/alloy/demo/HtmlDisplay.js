@@ -14,7 +14,7 @@ define(
   function (GuiFactory, Container, Id, Html, TextContent, JsBeautify, setInterval) {
 
     var section = function (gui, instructions, spec) {
-      var information = Container.build({
+      var information = Container.sketch({
         dom: {
           tag: 'p',
           innerHtml: instructions
@@ -25,7 +25,7 @@ define(
       component.logSpec();
     
       var display = GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             styles: {
               'padding-left': '100px',
@@ -44,7 +44,7 @@ define(
       var dumpUid = Id.generate('html-dump');
 
       var htmlDump = Html.getOuter(component.element());
-      var dump = Container.build({
+      var dump = Container.sketch({
         uid: dumpUid,
         dom: {
           tag: 'p',
@@ -69,13 +69,13 @@ define(
       observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
 
       var all = GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
-            Container.build({ dom: { tag: 'hr' } }),
+            Container.sketch({ dom: { tag: 'hr' } }),
             information,
             GuiFactory.premade(display),
             dump,
-            Container.build({ dom: { tag: 'hr' } })
+            Container.sketch({ dom: { tag: 'hr' } })
           ]
         })
       );

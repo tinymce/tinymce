@@ -37,7 +37,7 @@ asynctest(
       );
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             GuiFactory.premade(Sinks.fixedSink()),
             GuiFactory.premade(Sinks.relativeSink()),

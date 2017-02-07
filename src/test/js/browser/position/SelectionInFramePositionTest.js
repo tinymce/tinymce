@@ -54,7 +54,7 @@ asynctest(
       Css.set(classicEditor.element(), 'margin-top', '300px');
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           components: [
             GuiFactory.premade(Sinks.fixedSink()),
             GuiFactory.premade(Sinks.relativeSink()),

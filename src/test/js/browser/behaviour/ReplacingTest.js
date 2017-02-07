@@ -21,12 +21,12 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           behaviours: Behaviour.derive([
             Replacing.config({ })
           ]),
           components: [
-            Container.build({ dom: { tag: 'span' } })
+            Container.sketch({ dom: { tag: 'span' } })
           ]
         })
       );
@@ -65,8 +65,8 @@ asynctest(
 
         Step.sync(function () {
           Replacing.set(component, [
-            Container.build({ uid: 'first' }),
-            Container.build({ uid: 'second' })
+            Container.sketch({ uid: 'first' }),
+            Container.sketch({ uid: 'second' })
           ]);
         }),
 
@@ -90,8 +90,8 @@ asynctest(
           'Repeating adding the same uids to check clearing is working',          
           Step.sync(function () {
             Replacing.set(component, [
-              Container.build({ uid: 'first' }),
-              Container.build({ uid: 'second' })
+              Container.sketch({ uid: 'first' }),
+              Container.sketch({ uid: 'second' })
             ]);
           })
         ),
@@ -115,7 +115,7 @@ asynctest(
         Logger.t(
           'Replacing.append to put a new thing at the end.',          
           Step.sync(function () {
-            Replacing.append(component, Container.build({ dom: { tag: 'span' } }));
+            Replacing.append(component, Container.sketch({ dom: { tag: 'span' } }));
           })
         ),
         Assertions.sAssertStructure(
@@ -138,7 +138,7 @@ asynctest(
         Logger.t(
           'Replacing.prepend to put a new thing at the start',
           Step.sync(function () {
-            Replacing.prepend(component, Container.build({
+            Replacing.prepend(component, Container.sketch({
               dom: {
                 tag: 'label'
               }
@@ -192,7 +192,7 @@ asynctest(
         Logger.t(
           'Removing should have removed from world, so I should be able to re-add it',
           Step.sync(function () {
-            Replacing.append(component, Container.build({ uid: 'second' }));
+            Replacing.append(component, Container.sketch({ uid: 'second' }));
           })
         ),
 

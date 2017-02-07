@@ -35,7 +35,7 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     var sink = Memento.record(
-      Container.build({
+      Container.sketch({
         behaviours: {
           positioning: {
             useFixed: true
@@ -48,7 +48,7 @@ asynctest(
 
 
       var displayer = Memento.record(
-        Container.build({
+        Container.sketch({
           dom: {
             tag: 'span'
           },

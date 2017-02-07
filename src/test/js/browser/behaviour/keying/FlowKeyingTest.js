@@ -23,7 +23,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var item = function (classes, name) {
-        return Container.build({
+        return Container.sketch({
           dom: {
             tag: 'span',
             styles: {
@@ -47,7 +47,7 @@ asynctest(
       };
 
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             classes: [ 'flow-keying-test'],
             styles: {

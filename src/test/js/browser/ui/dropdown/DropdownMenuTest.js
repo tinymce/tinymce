@@ -33,7 +33,7 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     var sink = Memento.record(
-      Container.build({
+      Container.sketch({
         behaviours: {
           positioning: {
             useFixed: true
@@ -44,7 +44,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var makeFlow = function (v) {
-        return Container.build({
+        return Container.sketch({
           dom: {
             tag: 'span',
             innerHtml: ' ' + v + ' ',
@@ -56,7 +56,7 @@ asynctest(
         });
       };
 
-      var widget = Container.build({
+      var widget = Container.sketch({
         behaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',

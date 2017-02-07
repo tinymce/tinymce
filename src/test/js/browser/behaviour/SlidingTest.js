@@ -55,7 +55,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Container.build({
+        Container.sketch({
           dom: {
             styles: {
               'overflow-x': 'hidden',

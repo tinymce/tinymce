@@ -34,7 +34,7 @@ asynctest(
               dom: { tag: 'button', innerHtml: 'A' },
               view: function () {
                 return [
-                  Container.build({
+                  Container.sketch({
                     dom: {
                       innerHtml: 'This is the view for "A"'
                     },

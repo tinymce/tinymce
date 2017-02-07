@@ -33,7 +33,7 @@ define(
       var panel = HtmlDisplay.section(
         gui,
         'This container has orderable buttons',
-        Container.build({
+        Container.sketch({
           components: Arr.map([
             'alpha',
             'beta',
