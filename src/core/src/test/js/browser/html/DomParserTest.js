@@ -197,7 +197,7 @@ asynctest(
       LegacyUnit.equal(
         serializer.serialize(root),
         '<p class="a">a<strong>b<span>c<em>d</em></span></strong></p><p class="b">e</p>' +
-          '<p class="a"><strong><span><em>f</em>g</span>h</strong>i</p>',
+        '<p class="a"><strong><span><em>f</em>g</span>h</strong>i</p>',
         'P in P wrapped in inline elements'
       );
       LegacyUnit.deepEqual(
@@ -485,6 +485,17 @@ asynctest(
         'Mixed text nodes, inline elements and blocks.');
     });
 
+    suite.test('Parse html4 lists into html5 lists', function () {
+      var parser, root, schema = new Schema();
+
+      parser = new DomParser({ fix_list_elements: true }, schema);
+      root = parser.parse('<ul><ul><li>a</li></ul></ul><ul><li>a</li><ul><li>b</li></ul></ul>');
+      LegacyUnit.equal(
+        serializer.serialize(root),
+        '<ul><li style="list-style-type: none"><ul><li>a</li></ul></li></ul><ul><li>a<ul><li>b</li></ul></li></ul>'
+      );
+    });
+
     suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: false', function () {
       var parser, root, schema = new Schema();
 
@@ -527,7 +538,7 @@ asynctest(
       LegacyUnit.equal(
         serializer.serialize(root),
         '<datalist><option label="a1" value="b1"></option><option label="a2" value="b2"></option>' +
-          '<option label="a3" value="b3"></option></datalist>'
+        '<option label="a3" value="b3"></option></datalist>'
       );
     });
 

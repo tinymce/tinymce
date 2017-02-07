@@ -69,10 +69,10 @@ define(
        *
        * @method showMenu
        */
-      showMenu: function () {
+      showMenu: function (toggle) {
         var self = this, menu;
 
-        if (self.menu && self.menu.visible()) {
+        if (self.menu && self.menu.visible() && toggle !== false) {
           return self.hideMenu();
         }
 
@@ -208,7 +208,8 @@ define(
 
         self.on('click', function (e) {
           if (e.control === self && isChildOf(e.target, self.getEl())) {
-            self.showMenu();
+            self.focus();
+            self.showMenu(!e.aria);
 
             if (e.aria) {
               self.menu.items().filter(':visible')[0].focus();

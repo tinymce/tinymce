@@ -826,6 +826,27 @@ define(
         });
       }
 
+      if (settings.fix_list_elements) {
+        self.addNodeFilter('ul,ol', function (nodes) {
+          var i = nodes.length, node, parentNode;
+
+          while (i--) {
+            node = nodes[i];
+            parentNode = node.parent;
+
+            if (parentNode.name === 'ul' || parentNode.name === 'ol') {
+              if (node.prev && node.prev.name === 'li') {
+                node.prev.append(node);
+              } else {
+                var li = new Node('li', 1);
+                li.attr('style', 'list-style-type: none');
+                node.wrap(li);
+              }
+            }
+          }
+        });
+      }
+
       if (settings.validate && schema.getValidClasses()) {
         self.addAttributeFilter('class', function (nodes) {
           var i = nodes.length, node, classList, ci, className, classValue;
