@@ -51,6 +51,7 @@ define(
       return Merger.deepMerge(
         spec,
         {
+          'debug.sketcher': 'Form',
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,

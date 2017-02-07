@@ -39,7 +39,6 @@ define(
     var behaviours = function (detail) {
       return {
         representing: {
-          initialValue: { value: '', text: '' },
           store: {
             mode: 'manual',
             getValue: function (container) {

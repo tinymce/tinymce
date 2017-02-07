@@ -54,7 +54,10 @@ asynctest(
           },
           behaviours: {
             representing: {
-              initialValue: 'hi',
+              store: {
+                mode: 'memory',
+                initialValue: 'hi'
+              },
               onSet: function (button, val) {
                 TextContent.set(button.element(), val);
               }

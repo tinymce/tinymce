@@ -74,7 +74,10 @@ define(
               onHighlight: detail.onHighlight()
             },
             representing: {
-              initialValue: detail.value()
+              store: {
+                mode: 'memory',
+                initialValue: detail.value()
+              }
             },
 
             composing: {

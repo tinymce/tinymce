@@ -51,9 +51,6 @@ asynctest(
               onOpen: store.adder('onOpen'),
               onClose: store.adder('onClose'),
 
-              clear: function (sandbox) {
-                Remove.empty(sandbox.element());
-              },
               isPartOf: Fun.constant(false)
             })
           ])
