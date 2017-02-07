@@ -175,7 +175,11 @@ define(
 
       var tabsection = TabSection.build({
         dom: {
-          tag: 'div'
+          tag: 'div',
+          styles: {
+            display: 'flex',
+            'flex-direction': 'row'
+          }
         },
         components: [
           TabSection.parts().tabbar(),
@@ -194,10 +198,10 @@ define(
           tabbar: {
             
             dom: {
-              tag: 'div',
+              tag: 'ul',
               styles: {
-                display: 'flex',
-                'flex-wrap': 'wrap'
+                'list-style-type': 'none',
+                'margin-right': '10px'
               }
             },
             components: [
@@ -209,7 +213,7 @@ define(
                   return {
                     value: tSpec.value,
                     dom: {
-                      tag: 'span',
+                      tag: 'li',
                       styles: {
                         margin: '2px',
                         padding: '2px',
