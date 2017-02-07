@@ -59,12 +59,15 @@ define(
 
     var optionOf = function (key, schema) {
        return ValueProcessor.field(key, key, FieldPresence.asOption(), schema);
-    };   
+    };
 
     var optionObjOf = function (key, objSchema) {
       return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.obj(objSchema));
     };
 
+    var optionObjOfOnly = function (key, objSchema) {
+      return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOnly(objSchema));
+    };
 
     var defaulted = function (key, fallback) {
       return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.anyValue());
@@ -99,6 +102,7 @@ define(
       option: option,
       optionOf: optionOf,
       optionObjOf: optionObjOf,
+      optionObjOfOnly: optionObjOfOnly,
 
       defaulted: defaulted,
       defaultedOf: defaultedOf,
