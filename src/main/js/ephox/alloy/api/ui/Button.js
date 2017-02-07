@@ -4,17 +4,12 @@ define(
   [
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger'
   ],
 
-  function (UiBuilder, ButtonBase, FieldSchema, Merger) {
-    var schema = [
-      FieldSchema.strict('dom'),
-      FieldSchema.option('action'),
-      FieldSchema.option('role')
-    ];
-
+  function (UiBuilder, ButtonBase, ButtonSchema, FieldSchema, Merger) {
     var make = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
@@ -49,7 +44,7 @@ define(
 
     // Dupe with Tiered Menu
     var build = function (spec) {
-      return UiBuilder.single('Button', schema, make, spec);
+      return UiBuilder.single(ButtonSchema.name(), ButtonSchema.schema(), make, spec);
     };
 
     return {

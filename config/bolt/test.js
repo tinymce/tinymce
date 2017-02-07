@@ -1,4 +1,7 @@
 configure({
+  configs: [
+    './prod.js'
+  ],
   sources: [
     source('amd', 'ephox.alloy.test', '../../src/test/js/module', mapper.hierarchical),
     source('amd', 'ephox.agar', '../../lib/test', mapper.flat),
