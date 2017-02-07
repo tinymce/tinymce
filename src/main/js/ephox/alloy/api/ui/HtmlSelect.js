@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.ui.schema.HtmlSelectSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
@@ -14,17 +15,12 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (Behaviour, UiBuilder, Fields, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
-    var schema = [
-      FieldSchema.strict('options'),
-      Fields.members([ 'option' ]),
-      FieldSchema.option('data'),
-      FieldSchema.defaulted('hasTabstop', true)
-    ];
+  function (Behaviour, UiBuilder, Fields, HtmlSelectSchema, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
+    var schema = HtmlSelectSchema.schema()
 
     // Dupe with Tiered Menu
     var build = function (spec) {
-      return UiBuilder.single('html-select', schema, make, spec);
+      return UiBuilder.single(HtmlSelectSchema.name(), schema, make, spec);
     };
 
     var make = function (detail, spec) {
@@ -95,7 +91,7 @@ define(
 
     return {
       build: build,
-      name: Fun.constant('html-select')
+      name: Fun.constant(HtmlSelectSchema.name())
     };
   }
 );
