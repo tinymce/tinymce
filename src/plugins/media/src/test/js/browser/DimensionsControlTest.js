@@ -1,5 +1,5 @@
 asynctest(
-  'browser.core.PluginTest',
+  'browser.tinymce.plugins.media.DimensionsControlTest',
   [
     'global!tinymce',
     'tinymce.plugins.media.Plugin',

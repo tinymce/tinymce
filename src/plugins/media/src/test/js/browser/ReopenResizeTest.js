@@ -1,5 +1,5 @@
 asynctest(
-  'browser.core.PluginTest',
+  'browser.tinymce.plugins.media.ReopenResizeTest',
   [
     'global!tinymce',
     'tinymce.plugins.media.Plugin',
