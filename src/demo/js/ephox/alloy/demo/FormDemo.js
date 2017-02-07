@@ -184,8 +184,6 @@ define(
           delta: FormField.sketch(Input, textMunger({ label: 'Delta', inline: false })),
           epsilon: FormField.sketch(Input, textMunger({ label: 'Epsilon' })),
           rho: FormChooser.sketch({
-            radioStyle: 'icons',
-
             parts: {
               legend: {
                 dom: {
@@ -373,10 +371,10 @@ define(
           markers: {
             expandedClass: 'a',
             collapsedClass: 'b',
-            closedStyle: 'demo-sliding-closed',
-            openStyle: 'demo-sliding-open',
-            shrinkingStyle: 'demo-sliding-height-shrinking',
-            growingStyle: 'demo-sliding-height-growing'
+            closedClass: 'demo-sliding-closed',
+            openClass: 'demo-sliding-open',
+            shrinkingClass: 'demo-sliding-height-shrinking',
+            growingClass: 'demo-sliding-height-growing'
           },
           parts: {
             'minimal': {

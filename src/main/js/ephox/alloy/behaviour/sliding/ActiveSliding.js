@@ -14,10 +14,10 @@ define(
       var expanded = slideInfo.expanded();
 
       return expanded ? DomModification.nu({
-        classes: [ slideInfo.openStyle() ],
+        classes: [ slideInfo.openClass() ],
         styles: { }
       }) : DomModification.nu({
-        classes: [ slideInfo.closedStyle() ],
+        classes: [ slideInfo.closedClass() ],
         styles: Objects.wrap(slideInfo.dimension().property(), '0px')
       });
     };

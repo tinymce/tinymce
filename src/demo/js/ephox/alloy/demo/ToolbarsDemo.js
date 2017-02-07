@@ -320,10 +320,10 @@ define(
               ],
 
               markers: {
-                openStyle: 'demo-sliding-open',
-                closedStyle: 'demo-sliding-closed',
-                growingStyle: 'demo-sliding-height-growing',
-                shrinkingStyle: 'demo-sliding-height-shrinking'
+                openClass: 'demo-sliding-open',
+                closedClass: 'demo-sliding-closed',
+                growingClass: 'demo-sliding-height-growing',
+                shrinkingClass: 'demo-sliding-height-shrinking'
               }
             })
           ]

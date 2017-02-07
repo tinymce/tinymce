@@ -35,10 +35,10 @@ define(
                   dimension: {
                     property: 'height'
                   },
-                  closedStyle: 'demo-sliding-closed',
-                  openStyle: 'demo-sliding-open',
-                  shrinkingStyle: 'demo-sliding-height-shrinking',
-                  growingStyle: 'demo-sliding-height-growing',
+                  closedClass: 'demo-sliding-closed',
+                  openClass: 'demo-sliding-open',
+                  shrinkingClass: 'demo-sliding-height-shrinking',
+                  growingClass: 'demo-sliding-height-growing',
                   onShrunk: function () {
                     console.log('height.slider.shrunk');
                   },
@@ -84,10 +84,10 @@ define(
                   dimension: {
                     property: 'width'
                   },
-                  closedStyle: 'demo-sliding-closed',
-                  openStyle: 'demo-sliding-open',
-                  shrinkingStyle: 'demo-sliding-width-shrinking',
-                  growingStyle: 'demo-sliding-width-growing',
+                  closedClass: 'demo-sliding-closed',
+                  openClass: 'demo-sliding-open',
+                  shrinkingClass: 'demo-sliding-width-shrinking',
+                  growingClass: 'demo-sliding-width-growing',
                   onShrunk: function () {
                     console.log('width.slider.shrunk');
                   },

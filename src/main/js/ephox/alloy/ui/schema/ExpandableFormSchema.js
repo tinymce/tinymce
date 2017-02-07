@@ -17,10 +17,10 @@ define(
   function (Keying, Sliding, Button, Form, Fields, PartType, FieldSchema, Fun, Class, Focus) {
     var schema = [
       Fields.markers([
-        'closedStyle',
-        'openStyle',
-        'shrinkingStyle',
-        'growingStyle',
+        'closedClass',
+        'openClass',
+        'shrinkingClass',
+        'growingClass',
 
         // TODO: Sync with initial value
         'expandedClass',
@@ -47,10 +47,10 @@ define(
               dimension: {
                 property: 'height'
               },
-              closedStyle: detail.markers().closedStyle(),
-              openStyle: detail.markers().openStyle(),
-              shrinkingStyle: detail.markers().shrinkingStyle(),
-              growingStyle: detail.markers().growingStyle(),
+              closedClass: detail.markers().closedClass(),
+              openClass: detail.markers().openClass(),
+              shrinkingClass: detail.markers().shrinkingClass(),
+              growingClass: detail.markers().growingClass(),
               expanded: true,
               onStartShrink: function (extra) {
                 // If the focus is inside the extra part, move the focus to the expander button

@@ -17,10 +17,10 @@ define(
     return function (dimensionProperty, getDimension) {
 
        var schema = [
-        FieldSchema.strict('closedStyle'),
-        FieldSchema.strict('openStyle'),
-        FieldSchema.strict('shrinkingStyle'),
-        FieldSchema.strict('growingStyle'),
+        FieldSchema.strict('closedClass'),
+        FieldSchema.strict('openClass'),
+        FieldSchema.strict('shrinkingClass'),
+        FieldSchema.strict('growingClass'),
 
         // Element which shrinking and growing animations
         FieldSchema.option('getAnimationRoot'),
@@ -47,22 +47,22 @@ define(
           var doExhibit = function (oInfo, base) {
             var expanded = oInfo.expanded();
             return expanded ? DomModification.nu({
-              classes: [ oInfo.openStyle() ],
+              classes: [ oInfo.openClass() ],
               styles: { }
             }) : DomModification.nu({
-              classes: [ oInfo.closedStyle() ],
+              classes: [ oInfo.closedClass() ],
               styles: Objects.wrap(dimensionProperty, '0px')
             });
           };
 
           var disableTransitions = function (component, oInfo) {
             var root = getAnimationRoot(component, oInfo);
-            Classes.remove(root, [ oInfo.shrinkingStyle(), oInfo.growingStyle() ]);
+            Classes.remove(root, [ oInfo.shrinkingClass(), oInfo.growingClass() ]);
           };
 
           var setShrunk = function (component, oInfo) {
-            Class.remove(component.element(), oInfo.openStyle());
-            Class.add(component.element(), oInfo.closedStyle());
+            Class.remove(component.element(), oInfo.openClass());
+            Class.add(component.element(), oInfo.closedClass());
 
             Css.set(component.element(), dimensionProperty, '0px');
             Css.reflow(component.element());
@@ -77,8 +77,8 @@ define(
           };
 
           var setGrown = function (component, oInfo) {
-            Class.remove(component.element(), oInfo.closedStyle());
-            Class.add(component.element(), oInfo.openStyle());
+            Class.remove(component.element(), oInfo.closedClass());
+            Class.add(component.element(), oInfo.openClass());
             Css.remove(component.element(), dimensionProperty);
             // Reflow?
           };
@@ -105,7 +105,7 @@ define(
             Css.reflow(component.element());
 
             var root = getAnimationRoot(component, oInfo);
-            Class.add(root, oInfo.shrinkingStyle()); // enable transitions
+            Class.add(root, oInfo.shrinkingClass()); // enable transitions
             setShrunk(component, oInfo);
             oInfo.onStartShrink()(component);
           };
@@ -117,7 +117,7 @@ define(
             
             // Start the growing animation styles
             var root = getAnimationRoot(component, oInfo);
-            Class.add(root, oInfo.growingStyle());
+            Class.add(root, oInfo.growingClass());
 
             setGrown(component, oInfo);
             Css.set(component.element(), dimensionProperty, fullSize);

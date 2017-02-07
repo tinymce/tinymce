@@ -66,10 +66,10 @@ asynctest(
           },
           behaviours: Behaviour.derive([ 
             Sliding.config({
-              closedStyle: 'test-sliding-closed',
-              openStyle: 'test-sliding-open',
-              'shrinkingStyle': 'test-sliding-width-shrinking',
-              'growingStyle': 'test-sliding-width-growing',
+              closedClass: 'test-sliding-closed',
+              openClass: 'test-sliding-open',
+              'shrinkingClass': 'test-sliding-width-shrinking',
+              'growingClass': 'test-sliding-width-growing',
 
               dimension: {
                 property: 'width'

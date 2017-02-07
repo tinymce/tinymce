@@ -164,10 +164,10 @@ asynctest(
           },
 
           markers: {
-            closedStyle: 'expandable-closed',
-            openStyle: 'expandable-open',
-            shrinkingStyle: 'expandable-shrinking',
-            growingStyle: 'expandable-growing',
+            closedClass: 'expandable-closed',
+            openClass: 'expandable-open',
+            shrinkingClass: 'expandable-shrinking',
+            growingClass: 'expandable-growing',
 
             expandedClass: 'expandable-expanded',
             collapsedClass: 'expandable-collapsed'

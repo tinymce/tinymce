@@ -40,10 +40,10 @@ asynctest(
           ],
 
           markers: {
-            closedStyle: 'test-sliding-closed',
-            openStyle: 'test-sliding-open',
-            shrinkingStyle: 'test-sliding-height-shrinking',
-            growingStyle: 'test-sliding-height-growing'
+            closedClass: 'test-sliding-closed',
+            openClass: 'test-sliding-open',
+            shrinkingClass: 'test-sliding-height-shrinking',
+            growingClass: 'test-sliding-height-growing'
           },
 
           parts: {

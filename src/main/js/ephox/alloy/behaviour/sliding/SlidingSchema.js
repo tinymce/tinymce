@@ -12,10 +12,10 @@ define(
 
   function (FieldSchema, ValueSchema, Fun, Cell, Height, Width) {
     return [
-      FieldSchema.strict('closedStyle'),
-      FieldSchema.strict('openStyle'),
-      FieldSchema.strict('shrinkingStyle'),
-      FieldSchema.strict('growingStyle'),
+      FieldSchema.strict('closedClass'),
+      FieldSchema.strict('openClass'),
+      FieldSchema.strict('shrinkingClass'),
+      FieldSchema.strict('growingClass'),
 
       // Element which shrinking and growing animations
       FieldSchema.option('getAnimationRoot'),

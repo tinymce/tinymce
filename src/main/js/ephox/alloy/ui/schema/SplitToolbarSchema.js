@@ -12,7 +12,7 @@ define(
 
   function (Toolbar, Fields, PartType, FieldSchema, Fun, Cell) {
     var schema = [
-      Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
+      Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
       FieldSchema.state('builtGroups', function () {
         return Cell([ ]);
       })
@@ -27,10 +27,10 @@ define(
               dimension: {
                 property: 'height'
               },
-              closedStyle: detail.markers().closedStyle(),
-              openStyle: detail.markers().openStyle(),
-              shrinkingStyle: detail.markers().shrinkingStyle(),
-              growingStyle: detail.markers().growingStyle()
+              closedClass: detail.markers().closedClass(),
+              openClass: detail.markers().openClass(),
+              shrinkingClass: detail.markers().shrinkingClass(),
+              growingClass: detail.markers().growingClass()
             }
           }
         };

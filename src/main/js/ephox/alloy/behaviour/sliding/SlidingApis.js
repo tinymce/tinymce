@@ -29,12 +29,12 @@ define(
 
     var disableTransitions = function (component, slideInfo) {
       var root = getAnimationRoot(component, slideInfo);
-      Classes.remove(root, [ slideInfo.shrinkingStyle(), slideInfo.growingStyle() ]);
+      Classes.remove(root, [ slideInfo.shrinkingClass(), slideInfo.growingClass() ]);
     };
 
     var setShrunk = function (component, slideInfo) {
-      Class.remove(component.element(), slideInfo.openStyle());
-      Class.add(component.element(), slideInfo.closedStyle());
+      Class.remove(component.element(), slideInfo.openClass());
+      Class.add(component.element(), slideInfo.closedClass());
 
       Css.set(component.element(), getDimensionProperty(slideInfo), '0px');
       Css.reflow(component.element());
@@ -49,8 +49,8 @@ define(
     };
 
     var setGrown = function (component, slideInfo) {
-      Class.remove(component.element(), slideInfo.closedStyle());
-      Class.add(component.element(), slideInfo.openStyle());
+      Class.remove(component.element(), slideInfo.closedClass());
+      Class.add(component.element(), slideInfo.openClass());
       Css.remove(component.element(), getDimensionProperty(slideInfo));
       // Reflow?
     };
@@ -77,7 +77,7 @@ define(
       Css.reflow(component.element());
 
       var root = getAnimationRoot(component, slideInfo);
-      Class.add(root, slideInfo.shrinkingStyle()); // enable transitions
+      Class.add(root, slideInfo.shrinkingClass()); // enable transitions
       setShrunk(component, slideInfo);
       slideInfo.onStartShrink()(component);
     };
@@ -89,7 +89,7 @@ define(
       
       // Start the growing animation styles
       var root = getAnimationRoot(component, slideInfo);
-      Class.add(root, slideInfo.growingStyle());
+      Class.add(root, slideInfo.growingClass());
 
       setGrown(component, slideInfo);
       Css.set(component.element(), getDimensionProperty(slideInfo), fullSize);
