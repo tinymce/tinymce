@@ -18,7 +18,7 @@ define(
   
     var create = function (fields, name, active, apis, extra) {
       return Behaviour.create(
-        FieldSchema.optionObjOf(name, fields),
+        FieldSchema.optionObjOfOnly(name, fields),
         name,
         active,
         apis,
@@ -35,8 +35,6 @@ define(
         extra
       );
     };
-
-    
 
     return {
       derive: derive,

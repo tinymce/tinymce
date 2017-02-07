@@ -49,12 +49,6 @@ define(
         };
 
         return {
-          behaviours: {
-            representing: {
-              initialValue: tabSpec.value
-            },
-            'tabbar.tabbuttons': { }
-          },
           action: function (button) {
             var tabbar = button.getSystem().getByUid(barDetail.uid()).getOrDie();
             var activeButton = Highlighting.isHighlighted(tabbar, button);
