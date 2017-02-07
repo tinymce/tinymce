@@ -2,12 +2,13 @@ define(
   'ephox.alloy.api.ui.Tabview',
 
   [
-    'ephox.alloy.api.ui.UiBuilder'
+    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.ui.schema.TabviewSchema'
   ],
 
-  function (UiBuilder) {
-    var schema = [ ];
-    var partTypes = [ ];
+  function (UiBuilder, TabviewSchema) {
+    var schema = TabviewSchema.schema();
+    var partTypes = TabviewSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       return {
@@ -25,8 +26,7 @@ define(
     };
 
     var build = function (f) {
-      // TODO: Reconsider if this should stay composite.
-      return UiBuilder.composite('tab-view', schema, partTypes, make, f);
+      return UiBuilder.composite(TabviewSchema.name(), schema, partTypes, make, f);
     };
 
     return {
