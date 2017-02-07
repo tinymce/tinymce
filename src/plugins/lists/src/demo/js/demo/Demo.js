@@ -11,7 +11,7 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.plugins.lists.Demo',
+  'tinymce.plugins.lists.demo.Demo',
   [
     "tinymce.plugins.lists.Plugin",
     "global!tinymce"
