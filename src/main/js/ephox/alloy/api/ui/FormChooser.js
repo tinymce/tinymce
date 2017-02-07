@@ -27,7 +27,7 @@ define(
     var schema = FormChooserSchema.schema();
     var partTypes = FormChooserSchema.parts();
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite(FormChooserSchema.name(), schema, partTypes, make, spec);
     };
 
@@ -127,7 +127,7 @@ define(
     var parts = PartType.generate(FormChooserSchema.name(), partTypes);
 
     return {
-      build: build,
+      sketch: sketch,
       parts: Fun.constant(parts)
     };
   }

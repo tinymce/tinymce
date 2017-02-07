@@ -21,7 +21,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        ToolbarGroup.build({
+        ToolbarGroup.sketch({
           dom: {
             tag: 'div'
           },

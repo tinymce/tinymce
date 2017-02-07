@@ -9,7 +9,7 @@ define(
 
   function (Tabbar, TabSection, Arr) {
     var make = function (tabs) {
-      return TabSection.build({
+      return TabSection.sketch({
         dom: {
           tag: 'div',
           styles: {

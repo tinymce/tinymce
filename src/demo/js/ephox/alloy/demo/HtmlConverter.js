@@ -32,7 +32,7 @@ define(
               innerHtml: 'Copy your HTML structure into this textarea and press <strong>Convert</strong>'
             }
           }),
-          Input.build({
+          Input.sketch({
             tag: 'textarea',
             dom: {
               styles: {

@@ -57,13 +57,13 @@ define(
       );
     };
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(InlineViewSchema.name(), schema, make, spec);
     };
 
     return Merger.deepMerge(
       {
-        build: build
+        sketch: sketch
       },
       GuiTypes.makeApis([ 'showAt', 'hide' ])
     );

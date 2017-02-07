@@ -22,7 +22,7 @@ asynctest(
       return GuiFactory.build(
         Container.sketch({
           components: [
-            Toolbar.build({
+            Toolbar.sketch({
               uid: 'shell-toolbar',
               shell: true,
               dom: {
@@ -46,7 +46,7 @@ asynctest(
               }
             }),
 
-            Toolbar.build({
+            Toolbar.sketch({
               uid: 'not-shell-toolbar',
               shell: false,
               dom: {

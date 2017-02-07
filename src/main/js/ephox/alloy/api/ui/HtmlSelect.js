@@ -19,7 +19,7 @@ define(
     var schema = HtmlSelectSchema.schema()
 
     // Dupe with Tiered Menu
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(HtmlSelectSchema.name(), schema, make, spec);
     };
 
@@ -90,7 +90,7 @@ define(
     };
 
     return {
-      build: build,
+      sketch: sketch,
       name: Fun.constant(HtmlSelectSchema.name())
     };
   }

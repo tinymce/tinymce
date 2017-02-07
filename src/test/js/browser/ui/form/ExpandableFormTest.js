@@ -41,7 +41,7 @@ asynctest(
           Form.parts('form.ant')
         ],
         parts: {
-          'form.ant': FormField.build(Input, {
+          'form.ant': FormField.sketch(Input, {
             uid: 'input-ant',
             dom: {
               tag: 'div'
@@ -76,7 +76,7 @@ asynctest(
           Form.parts('form.bull')
         ],
         parts: {
-          'form.bull': FormField.build(HtmlSelect, {
+          'form.bull': FormField.sketch(HtmlSelect, {
             uid: 'select-bull',
             dom: {
               tag: 'div'
@@ -108,7 +108,7 @@ asynctest(
       };
 
       var self = GuiFactory.build(
-        ExpandableForm.build({
+        ExpandableForm.sketch({
           dom: {
             tag: 'div'
           },

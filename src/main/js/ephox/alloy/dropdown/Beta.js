@@ -36,7 +36,7 @@ define(
 
       // TODO: Make this potentially a single menu also
       return futureData.map(function (data) {
-        return TieredMenu.build(
+        return TieredMenu.sketch(
           Merger.deepMerge(
             externals.menu(),
             {

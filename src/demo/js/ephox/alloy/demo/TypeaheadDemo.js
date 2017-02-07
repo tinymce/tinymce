@@ -67,7 +67,7 @@ define(
 
       HtmlDisplay.section(gui,
         'An example of a typeahead component',
-        Typeahead.build({
+        Typeahead.sketch({
           minChars: 1,
           lazySink: lazySink,
           dom: {

@@ -19,7 +19,7 @@ define(
 
     var partTypes = [
       PartType.internal(
-        { build: Fun.identity },
+        { sketch: Fun.identity },
         'legend',
         '<alloy.form-chooser.legend>',
         function (detail) {
@@ -33,7 +33,7 @@ define(
       ),
 
       PartType.group(
-        { build: Fun.identity },
+        { sketch: Fun.identity },
         'choices',
         'choice',
         '<alloy.form-chooser.choices>',

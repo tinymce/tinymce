@@ -90,7 +90,7 @@ define(
           action: runOnExtra(detail, Sliding.toggleGrow)
         };
       }),
-      PartType.internal({ build: Fun.identity }, 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
+      PartType.internal({ sketch: Fun.identity }, 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
     ];
 
     return {

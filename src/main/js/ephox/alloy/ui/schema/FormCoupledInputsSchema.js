@@ -20,8 +20,8 @@ define(
     ];
 
     var formInput = {
-      build: function (spec) {
-        return FormField.build(Input, spec);
+      sketch: function (spec) {
+        return FormField.sketch(Input, spec);
       }
     };
 

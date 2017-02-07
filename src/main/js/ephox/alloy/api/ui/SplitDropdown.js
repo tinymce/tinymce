@@ -90,7 +90,7 @@ define(
       );
     };
 
-    var build = function (f) {
+    var sketch = function (f) {
       return UiBuilder.composite(SplitDropdownSchema.name(), schema, partTypes, make, f);
     };
 
@@ -98,7 +98,7 @@ define(
     var parts = PartType.generate(SplitDropdownSchema.name(), partTypes);
 
     return {
-      build: build,
+      sketch: sketch,
       parts: Fun.constant(parts)
     };
   }

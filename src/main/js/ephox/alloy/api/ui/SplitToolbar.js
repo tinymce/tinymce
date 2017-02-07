@@ -133,7 +133,7 @@ define(
       );
     };
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite('split-toolbar', schema, partTypes, make, spec);
     };
 
@@ -141,7 +141,7 @@ define(
 
     return Merger.deepMerge(
       {
-        build: build,
+        sketch: sketch,
         parts: Fun.constant(parts)
       },
 

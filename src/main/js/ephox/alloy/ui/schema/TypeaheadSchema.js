@@ -35,7 +35,7 @@ define(
 
     var partTypes = [
       PartType.external(
-        { build: Fun.identity },
+        { sketch: Fun.identity },
         'menu',
         function (detail) {
           return { };

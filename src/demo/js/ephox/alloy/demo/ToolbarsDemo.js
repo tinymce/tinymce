@@ -236,7 +236,7 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            Toolbar.build(
+            Toolbar.sketch(
               toolbarSpec({
                 dom: {
                   tag: 'div',
@@ -271,7 +271,7 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            SplitToolbar.build({
+            SplitToolbar.sketch({
               uid: 'demo-toolstrip',
               dom: {
                 tag: 'div'

@@ -25,12 +25,12 @@ define(
       };
     };
 
-    var build = function (f) {
+    var sketch = function (f) {
       return UiBuilder.composite(TabviewSchema.name(), schema, partTypes, make, f);
     };
 
     return {
-      build: build
+      sketch: sketch
     };
   }
 );

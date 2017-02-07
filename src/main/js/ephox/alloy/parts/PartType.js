@@ -116,7 +116,7 @@ define(
         part.fold(
           function (factory, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(true, function (detail) {
-              return factory.build(
+              return factory.sketch(
                 combine(name, detail, defaults, detail.parts()[name](), overrides)
               );
             });
@@ -134,7 +134,11 @@ define(
               if (! detail.parts()[name]) {
                 debugger;
               }
-              return factory.build(
+
+              if (! factory.sketch) {
+                debugger;
+              }
+              return factory.sketch(
                 combine(name, detail, defaults, detail.parts()[name](), overrides)
               );
             });
@@ -150,7 +154,7 @@ define(
                 var munged = detail.members()[unit]().munge(u);
 
                 // Group multiples do not take the uid because there is more than one.
-                return factory.build(
+                return factory.sketch(
                   Merger.deepMerge(
                     defaults(detail, u),
                     munged,

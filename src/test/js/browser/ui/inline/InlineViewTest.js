@@ -32,7 +32,7 @@ asynctest(
 
     }, function (doc, body, gui, component, store) {
       var inline =  GuiFactory.build(
-        InlineView.build({
+        InlineView.sketch({
           dom: {
             tag: 'div',
             classes: [ 'test-inline' ]
@@ -100,7 +100,7 @@ asynctest(
                 Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') }),
                 Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I' }, action: store.adder('italic') }),
                 Button.sketch({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U' }, action: store.adder('underline') }),
-                Dropdown.build({
+                Dropdown.sketch({
                   dom: {
                     tag: 'button',
                     innerHtml: '+'

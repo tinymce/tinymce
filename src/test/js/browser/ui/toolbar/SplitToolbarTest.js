@@ -25,7 +25,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        SplitToolbar.build({
+        SplitToolbar.sketch({
           dom: {
             tag: 'div',
             classes: [ 'test-split-toolbar' ],

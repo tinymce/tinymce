@@ -92,14 +92,14 @@ define(
 
     };
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite(TabSectionSchema.name(), schema, partTypes, make, spec);
     };
 
     var parts = PartType.generate(TabSectionSchema.name(), partTypes);
 
     return {
-      build: build,
+      sketch: sketch,
       parts: Fun.constant(parts)
     };
   }

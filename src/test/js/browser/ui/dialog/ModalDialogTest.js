@@ -28,7 +28,7 @@ asynctest(
 
     }, function (doc, body, gui, sink, store) {
       var dialog = GuiFactory.build(
-        ModalDialog.build({
+        ModalDialog.sketch({
           dom: {
             tag: 'div',
             classes: [ 'test-dialog' ]

@@ -32,7 +32,7 @@ define(
     var partTypes = ExpandableFormSchema.parts();
 
     // Dupe with Tiered Menu
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite(ExpandableFormSchema.name(), schema, partTypes, make, spec);
     };
 
@@ -83,7 +83,7 @@ define(
 
     return Merger.deepMerge(
       {
-        build: build,
+        sketch: sketch,
         parts: Fun.constant(parts)
       },
       GuiTypes.makeApis([ 'toggleForm', 'collapseForm', 'collapseFormImmediately', 'expandForm' ])

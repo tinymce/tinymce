@@ -17,7 +17,7 @@ define(
       
     ];
 
-    var build = function (rawSpec) {
+    var sketch = function (rawSpec) {
       var spec = UiBuilder.supplyUid(rawSpec);
       var detail = SpecSchema.asStructOrDie('form', schema, spec, Obj.keys(rawSpec.parts));
 
@@ -94,7 +94,7 @@ define(
     };
 
     return {
-      build: build,
+      sketch: sketch,
       parts: parts
     };
   }

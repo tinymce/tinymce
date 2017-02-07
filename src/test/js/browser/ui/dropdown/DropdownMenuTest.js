@@ -123,7 +123,7 @@ asynctest(
 
 
       var c = GuiFactory.build(
-        Dropdown.build({
+        Dropdown.sketch({
           uid: 'test-dropdown',
           dom: {
             tag: 'div',

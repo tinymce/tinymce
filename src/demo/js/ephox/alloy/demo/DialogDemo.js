@@ -33,7 +33,7 @@ define(
       };
 
       var dialog = GuiFactory.build(
-        ModalDialog.build({
+        ModalDialog.sketch({
           dom: {
             tag: 'div',
             classes: [ 'mce-container', 'mce-panel', 'mce-floatpanel', 'mce-window', 'mce-in' ],

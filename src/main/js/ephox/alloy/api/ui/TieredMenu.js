@@ -14,7 +14,7 @@ define(
   function (UiBuilder, Fields, TieredMenuSchema, TieredMenuSpec, FieldSchema, Objects, Fun) {
     var schema = TieredMenuSchema.schema();
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(TieredMenuSchema.name(), schema, TieredMenuSpec.make, spec);
     };
 
@@ -54,7 +54,7 @@ define(
     };
 
     return {
-      build: build,
+      sketch: sketch,
       simpleData: simpleData,
       tieredData: tieredData,
       singleData: singleData

@@ -32,7 +32,7 @@ define(
     var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
-          var data = Menu.build(
+          var data = Menu.sketch(
             Merger.deepMerge(
               detail.members().menu().munge(spec),
               {

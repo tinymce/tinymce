@@ -19,7 +19,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        TabSection.build({
+        TabSection.sketch({
           dom: {
             tag: 'div'
           },

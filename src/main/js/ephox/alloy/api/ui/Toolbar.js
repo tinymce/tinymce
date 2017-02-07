@@ -48,7 +48,7 @@ define(
 
       var createGroups = function (toolbar, gspecs) {
         return Arr.map(gspecs, function (grp) {
-          return ToolbarGroup.build(
+          return ToolbarGroup.sketch(
             Merger.deepMerge(
               detail.members().group().munge(grp)
             )
@@ -95,7 +95,7 @@ define(
     };
 
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite('toolbar', schema, partTypes, make, spec);
     };
 
@@ -104,7 +104,7 @@ define(
 
     return Merger.deepMerge(
       {
-        build: build,
+        sketch: sketch,
         parts: Fun.constant(parts)
       },
 

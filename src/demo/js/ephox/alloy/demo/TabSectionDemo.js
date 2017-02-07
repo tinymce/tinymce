@@ -28,7 +28,7 @@ define(
       var subject = HtmlDisplay.section(
         gui,
         'A basic tab view (refactoring)',
-        TabSection.build({
+        TabSection.sketch({
           dom: {
             tag: 'div'
           },

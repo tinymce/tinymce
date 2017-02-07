@@ -13,7 +13,7 @@ define(
   function (UiBuilder, PartType, FieldBase, FormFieldSchema, FieldSchema, Fun) {
     var schema = FormFieldSchema.schema()
 
-    var build = function (factory, spec) {
+    var sketch = function (factory, spec) {
       var partTypes = FormFieldSchema.makeParts(factory);
       return UiBuilder.composite(factory.name(), schema, partTypes, make, spec);
     };
@@ -35,7 +35,7 @@ define(
     };
 
     return {
-      build: build,
+      sketch: sketch,
       parts: parts
     };
   }

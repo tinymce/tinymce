@@ -64,7 +64,7 @@ asynctest(
       );
 
       var c = GuiFactory.build(
-        Dropdown.build({
+        Dropdown.sketch({
           dom: {
             tag: 'button'
           },

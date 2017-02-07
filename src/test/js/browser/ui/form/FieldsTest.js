@@ -31,7 +31,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
 
-      var inputA = FormField.build(Input, {
+      var inputA = FormField.sketch(Input, {
         uid: 'input-a',
         dom: {
           tag: 'div'
@@ -51,7 +51,7 @@ asynctest(
         }
       });
 
-      var selectB = FormField.build(HtmlSelect, {
+      var selectB = FormField.sketch(HtmlSelect, {
         uid: 'select-b',
         dom: {
           tag: 'div'
@@ -76,7 +76,7 @@ asynctest(
         }
       });
 
-      var chooserC = FormChooser.build({
+      var chooserC = FormChooser.sketch({
         uid: 'chooser-c',
         dom: {
           tag: 'div'
@@ -130,7 +130,7 @@ asynctest(
         }
       };
 
-      var coupledD = FormCoupledInputs.build({
+      var coupledD = FormCoupledInputs.sketch({
         dom: {
           tag: 'div',
           classes: [ 'coupled-group' ]

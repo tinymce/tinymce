@@ -117,7 +117,7 @@ asynctest(
       };
 
       var makeData = function (rawData) {
-        return Input.build({
+        return Input.sketch({
           uid: rawData,
           dom: {
             attributes: {

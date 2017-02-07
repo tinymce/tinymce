@@ -184,7 +184,7 @@ define(
       HtmlDisplay.section(
         gui,
         'Thi is a split-button dropdown',
-        SplitDropdown.build({
+        SplitDropdown.sketch({
           toggleClass: 'demo-selected',
           dom: {
             tag: 'div'
@@ -210,8 +210,8 @@ define(
                   keying: { mode: 'cyclic' }
                 },
                 components: [
-                  Input.build({ dom: { tag: 'input' } }),
-                  Input.build({ dom: { tag: 'input' } })
+                  Input.sketch({ dom: { tag: 'input' } }),
+                  Input.sketch({ dom: { tag: 'input' } })
                 ]
               })
 
@@ -248,7 +248,7 @@ define(
       var x = HtmlDisplay.section(
         gui,
         'This dropdown button shows a widget',
-        Dropdown.build({
+        Dropdown.sketch({
           lazySink: lazySink,
 
           toggleClass: 'demo-selected',
@@ -278,8 +278,8 @@ define(
                   keying: { mode: 'cyclic' }
                 },
                 components: [
-                  Input.build({ }),
-                  Input.build({ })
+                  Input.sketch({ }),
+                  Input.sketch({ })
                 ]
               })
             });
@@ -294,7 +294,7 @@ define(
       HtmlDisplay.section(
         gui,
         'This grid dropdown button is a grid of 2 x 2',
-        Dropdown.build({
+        Dropdown.sketch({
           text: 'Dropdown',
           dom: {
             tag: 'div',
@@ -334,7 +334,7 @@ define(
       HtmlDisplay.section(
         gui,
         'This dropdown button has four possible values: alpha, beta, gamma, and delta AND an internal sink',
-        Dropdown.build({
+        Dropdown.sketch({
           dom: {
             tag: 'button',
             innerHtml: 'Click me to expand'
@@ -377,7 +377,7 @@ define(
       HtmlDisplay.section(
         gui,
         'This dropdown menu has an intricate menu system derived from Sublime sorting',
-        Dropdown.build({
+        Dropdown.sketch({
           dom: {
             tag: 'div',
             innerHtml: '+'
@@ -416,7 +416,7 @@ define(
                           tag: 'div'
                         },
                         components: [
-                          Input.build({
+                          Input.sketch({
                             dom: {
                               tag: 'input',
                               styles: {

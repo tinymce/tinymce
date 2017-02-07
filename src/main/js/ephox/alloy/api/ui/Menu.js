@@ -11,9 +11,7 @@ define(
   ],
 
   function (UiBuilder, UiSubstitutes, MenuSchema, MenuSpec, Merger, Fun) {
-    
-
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(MenuSchema.name(), MenuSchema.schema(), MenuSpec.make, spec);
     };
 
@@ -30,7 +28,7 @@ define(
     };
 
     return {
-      build: build,
+      sketch: sketch,
       parts: Fun.constant(parts),
 
       item: itemType('item'),

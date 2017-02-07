@@ -36,7 +36,7 @@ asynctest(
           components: [
             GuiFactory.premade(sink),
 
-            Typeahead.build({
+            Typeahead.sketch({
               minChars: 2,
               uid: 'test-type',
               markers: {

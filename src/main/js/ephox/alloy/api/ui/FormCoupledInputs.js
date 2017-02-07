@@ -21,7 +21,7 @@ define(
     var schema = FormCoupledInputsSchema.schema();
     var partTypes = FormCoupledInputsSchema.parts();
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite(FormCoupledInputsSchema.name(), schema, partTypes, make, spec);
     };
 
@@ -36,7 +36,7 @@ define(
     var parts = PartType.generate(FormCoupledInputsSchema.name(), partTypes);
 
     return {
-      build: build,
+      sketch: sketch,
       parts: Fun.constant(parts)
     };
   }

@@ -13,7 +13,7 @@ define(
   function (UiBuilder, InputBase, InputSchema, FieldSchema, Merger, Fun) {
     var schema = InputSchema.schema();
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(InputSchema.name(), schema, make, spec);
     };
 
@@ -28,7 +28,7 @@ define(
     };
 
     return {
-      build: build,
+      sketch: sketch,
       name: Fun.constant(InputSchema.name())
     };
   }

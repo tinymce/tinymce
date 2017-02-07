@@ -17,7 +17,7 @@ define(
     ];
 
     var partTypes = [
-      PartType.group({ build: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
+      PartType.group({ sketch: Fun.identity }, 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
         return {
           'debug.label': 'ToolbarGroup.item',
           domModification: {

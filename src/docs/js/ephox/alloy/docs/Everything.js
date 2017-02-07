@@ -172,7 +172,7 @@ define(
         // Form (just too different),
         FormChooser,
         FormCoupledInputs,
-        { build: Fun.curry(FormField.build, { name: Fun.constant('Form Field') }) },
+        { build: Fun.curry(FormField.sketch, { name: Fun.constant('Form Field') }) },
         HtmlSelect,
         InlineView,
         Input,

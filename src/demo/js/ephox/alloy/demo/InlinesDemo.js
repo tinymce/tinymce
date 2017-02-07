@@ -43,7 +43,7 @@ define(
       // Note, this should not in the GUI. It will be connected
       // when it opens.
       var inlineComp = GuiFactory.build(
-        InlineView.build({
+        InlineView.sketch({
           uid: 'inline-comp',
           dom: {
             tag: 'div'
@@ -52,7 +52,7 @@ define(
         })
       );
 
-      var inlineMenu = TieredMenu.build({
+      var inlineMenu = TieredMenu.sketch({
         dom: {
           tag: 'div'
         },
@@ -206,12 +206,12 @@ define(
             }
           },
           components: [
-            Input.build({
+            Input.sketch({
               dom: {
                 styles: { display: 'block', 'margin-bottom': '50px' }
               }
             }),
-            Input.build({
+            Input.sketch({
               dom: {
                 styles: { display: 'block' }
               },

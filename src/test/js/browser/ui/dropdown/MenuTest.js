@@ -22,7 +22,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Menu.build({
+        Menu.sketch({
           value: 'test-menu-1',
           items: [
             { type: 'item', data: { value: 'alpha', text: 'Alpha' } },

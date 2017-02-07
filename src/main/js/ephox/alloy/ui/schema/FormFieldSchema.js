@@ -16,7 +16,7 @@ define(
     var makeParts = function (factory) {
       return [
         PartType.optional(
-          { build: Fun.identity },
+          { sketch: Fun.identity },
           'label',
           '<alloy.form-field.label>',
           Fun.constant({ }),

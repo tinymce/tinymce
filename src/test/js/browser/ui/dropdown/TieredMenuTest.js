@@ -24,7 +24,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        TieredMenu.build({
+        TieredMenu.sketch({
           uid: 'uid-test-menu-1',
           value: 'test-menu-1',
           items: [

@@ -172,18 +172,18 @@ define(
 
       var fieldParts = function () {
         return {
-          omega: FormCoupledInputs.build(
+          omega: FormCoupledInputs.sketch(
             coupledTextMunger({
               field1: textMunger({ label: 'omega-1', inline: false }),
               field2: textMunger({ label: 'omega-2', inline: false })
             })
           ),
-          alpha: FormField.build(Input, textMunger({ label: 'Alpha', inline: false })),
-          beta: FormField.build(Input, textMunger({ label: 'Beta', inline: false })),
-          gamma: FormField.build(Input, textMunger({ label: 'Gamma', inline: false })),
-          delta: FormField.build(Input, textMunger({ label: 'Delta', inline: false })),
-          epsilon: FormField.build(Input, textMunger({ label: 'Epsilon' })),
-          rho: FormChooser.build({
+          alpha: FormField.sketch(Input, textMunger({ label: 'Alpha', inline: false })),
+          beta: FormField.sketch(Input, textMunger({ label: 'Beta', inline: false })),
+          gamma: FormField.sketch(Input, textMunger({ label: 'Gamma', inline: false })),
+          delta: FormField.sketch(Input, textMunger({ label: 'Delta', inline: false })),
+          epsilon: FormField.sketch(Input, textMunger({ label: 'Epsilon' })),
+          rho: FormChooser.sketch({
             radioStyle: 'icons',
 
             parts: {
@@ -254,7 +254,7 @@ define(
               { value: 'right', text: 'Right' }
             ]
           }),
-          theta: FormField.build(HtmlSelect, selectMunger({
+          theta: FormField.sketch(HtmlSelect, selectMunger({
             label: 'AA',
             options: [
               { value: 'a.a', text: 'A.A' },
@@ -264,7 +264,7 @@ define(
             ]        
           })),
 
-          maxis: FormField.build(Typeahead, {
+          maxis: FormField.sketch(Typeahead, {
             parts: {
               field: {
                 minChars: 1,
@@ -324,7 +324,7 @@ define(
       var form = HtmlDisplay.section(
         gui,
         'This form has many fields',
-        Form.build({
+        Form.sketch({
           dom: {
             tag: 'div',
             classes: [ 'outside-form' ]
@@ -364,7 +364,7 @@ define(
       var expform = HtmlDisplay.section(
         gui,
         'This form expands',
-        ExpandableForm.build({
+        ExpandableForm.sketch({
           dom: {
             tag: 'div',
             classes: [ 'expandable-form' ]

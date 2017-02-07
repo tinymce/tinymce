@@ -26,7 +26,7 @@ define(
     var schema = TypeaheadSchema.schema();
     var partTypes = TypeaheadSchema.parts();
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       var specWithFetch = Merger.deepMerge(spec, {
         fetch: function (input) {
           var val = Representing.getValue(input);
@@ -39,7 +39,7 @@ define(
     return {
       // Used so that it can be a form factory
       name: Fun.constant(TypeaheadSchema.name()),
-      build: build
+      sketch: sketch
     };
   }
 );

@@ -55,12 +55,12 @@ define(
     };
 
     // Dupe with Button
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(TabButtonSchema.name(), schema, make, spec);
     };
 
     return {
-      build: build
+      sketch: sketch
     };
   }
 );

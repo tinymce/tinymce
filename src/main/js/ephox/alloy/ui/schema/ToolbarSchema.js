@@ -24,7 +24,7 @@ define(
     };
 
     var partTypes = [
-      PartType.optional({ build: Fun.identity }, 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), enhanceGroups)
+      PartType.optional({ sketch: Fun.identity }, 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), enhanceGroups)
     ];
 
     return {

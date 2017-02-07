@@ -28,12 +28,12 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Form.build({
+        Form.sketch({
           dom: {
             tag: 'div'
           },
           parts: {
-            'form.ant': FormField.build(Input, {
+            'form.ant': FormField.sketch(Input, {
               uid: 'input-ant',
               dom: {
                 tag: 'div'
@@ -53,7 +53,7 @@ asynctest(
               }
             }),
 
-            'form.bull': FormField.build(HtmlSelect, {
+            'form.bull': FormField.sketch(HtmlSelect, {
               uid: 'select-bull',
               dom: {
                 tag: 'div'

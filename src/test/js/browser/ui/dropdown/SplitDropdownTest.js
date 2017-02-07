@@ -60,7 +60,7 @@ asynctest(
       console.log('displayer', displayer.asSpec());
 
       var c = GuiFactory.build(
-        SplitDropdown.build({
+        SplitDropdown.sketch({
           dom: {
             tag: 'span'
           },

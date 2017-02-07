@@ -81,7 +81,7 @@ define(
       };
     };
 
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.composite(ModalDialogSchema.name(), schema, partTypes, make, spec);
     };
 
@@ -90,7 +90,7 @@ define(
 
     return Merger.deepMerge(
       {
-        build: build,
+        sketch: sketch,
         parts: Fun.constant(parts)
       },
 

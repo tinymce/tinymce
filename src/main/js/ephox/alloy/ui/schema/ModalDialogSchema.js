@@ -19,7 +19,7 @@ define(
       FieldSchema.strict('onEscape')
     ];
 
-    var basic = { build: Fun.identity };
+    var basic = { sketch: Fun.identity };
 
     var partTypes = [
       PartType.optional(basic, 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
