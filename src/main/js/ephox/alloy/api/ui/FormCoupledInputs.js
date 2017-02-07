@@ -7,7 +7,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
@@ -17,12 +17,12 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Toggling, Button, FormField, Input, UiBuilder, EventHandler, Fields, PartType, FormCoupledInputsSchema, FieldSchema, Fun, Option) {
+  function (Composing, Toggling, Button, FormField, Input, UiSketcher, EventHandler, Fields, PartType, FormCoupledInputsSchema, FieldSchema, Fun, Option) {
     var schema = FormCoupledInputsSchema.schema();
     var partTypes = FormCoupledInputsSchema.parts();
 
     var sketch = function (spec) {
-      return UiBuilder.composite(FormCoupledInputsSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(FormCoupledInputsSchema.name(), schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, externals) { 

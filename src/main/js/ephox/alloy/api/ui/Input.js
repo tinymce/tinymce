@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.ui.Input',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.InputBase',
     'ephox.alloy.ui.schema.InputSchema',
     'ephox.boulder.api.FieldSchema',
@@ -10,11 +10,11 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (UiBuilder, InputBase, InputSchema, FieldSchema, Merger, Fun) {
+  function (UiSketcher, InputBase, InputSchema, FieldSchema, Merger, Fun) {
     var schema = InputSchema.schema();
 
     var sketch = function (spec) {
-      return UiBuilder.single(InputSchema.name(), schema, make, spec);
+      return UiSketcher.single(InputSchema.name(), schema, make, spec);
     };
 
     var make = function (detail, spec) {

@@ -7,7 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
@@ -23,12 +23,12 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (EventRoot, Behaviour, Highlighting, Representing, SystemEvents, UiBuilder, EventHandler, Fields, DomModification, PartType, ButtonBase, FormChooserSchema, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
+  function (EventRoot, Behaviour, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, Fields, DomModification, PartType, ButtonBase, FormChooserSchema, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
     var schema = FormChooserSchema.schema();
     var partTypes = FormChooserSchema.parts();
 
     var sketch = function (spec) {
-      return UiBuilder.composite(FormChooserSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(FormChooserSchema.name(), schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, externals) {

@@ -2,11 +2,11 @@ define(
   'ephox.alloy.api.ui.Tabview',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.TabviewSchema'
   ],
 
-  function (UiBuilder, TabviewSchema) {
+  function (UiSketcher, TabviewSchema) {
     var schema = TabviewSchema.schema();
     var partTypes = TabviewSchema.parts();
 
@@ -26,7 +26,7 @@ define(
     };
 
     var sketch = function (f) {
-      return UiBuilder.composite(TabviewSchema.name(), schema, partTypes, make, f);
+      return UiSketcher.composite(TabviewSchema.name(), schema, partTypes, make, f);
     };
 
     return {

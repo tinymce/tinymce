@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.ui.Menu',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.ui.schema.MenuSchema',
     'ephox.alloy.ui.single.MenuSpec',
@@ -10,9 +10,9 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (UiBuilder, UiSubstitutes, MenuSchema, MenuSpec, Merger, Fun) {
+  function (UiSketcher, UiSubstitutes, MenuSchema, MenuSpec, Merger, Fun) {
     var sketch = function (spec) {
-      return UiBuilder.single(MenuSchema.name(), MenuSchema.schema(), MenuSpec.make, spec);
+      return UiSketcher.single(MenuSchema.name(), MenuSchema.schema(), MenuSpec.make, spec);
     };
 
     var parts = {

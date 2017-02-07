@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.ui.TabButton',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.ui.common.ButtonBase',
@@ -12,7 +12,7 @@ define(
     'ephox.highway.Merger'
   ],
 
-  function (UiBuilder, Tagger, SpecSchema, ButtonBase, TabButtonSchema, FieldSchema, Id, Merger) {
+  function (UiSketcher, Tagger, SpecSchema, ButtonBase, TabButtonSchema, FieldSchema, Id, Merger) {
     var schema = TabButtonSchema.schema();
 
     var make = function (detail, spec) {
@@ -56,7 +56,7 @@ define(
 
     // Dupe with Button
     var sketch = function (spec) {
-      return UiBuilder.single(TabButtonSchema.name(), schema, make, spec);
+      return UiSketcher.single(TabButtonSchema.name(), schema, make, spec);
     };
 
     return {

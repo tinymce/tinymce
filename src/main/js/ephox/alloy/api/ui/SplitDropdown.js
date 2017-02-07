@@ -9,7 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -22,7 +22,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Composing, Highlighting, Keying, Toggling, SystemEvents, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, SplitDropdownSchema, FieldSchema, Merger, Fun, Option, Error) {
+  function (Behaviour, Composing, Highlighting, Keying, Toggling, SystemEvents, Button, UiSketcher, Beta, InternalSink, PartType, ButtonBase, SplitDropdownSchema, FieldSchema, Merger, Fun, Option, Error) {
     var schema = SplitDropdownSchema.schema();
     var partTypes = SplitDropdownSchema.parts();
 
@@ -91,7 +91,7 @@ define(
     };
 
     var sketch = function (f) {
-      return UiBuilder.composite(SplitDropdownSchema.name(), schema, partTypes, make, f);
+      return UiSketcher.composite(SplitDropdownSchema.name(), schema, partTypes, make, f);
     };
 
     // TODO: Remove likely dupe

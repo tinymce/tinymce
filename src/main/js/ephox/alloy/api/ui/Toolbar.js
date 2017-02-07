@@ -6,7 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarSchema',
@@ -17,7 +17,7 @@ define(
     'ephox.perhaps.Result'
   ],
 
-  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiBuilder, Fields, PartType, ToolbarSchema, FieldSchema, Arr, Merger, Fun, Result) {
+  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, Fields, PartType, ToolbarSchema, FieldSchema, Arr, Merger, Fun, Result) {
     var schema = ToolbarSchema.schema();
 
     // TODO: Dupe with ToolbarSchema
@@ -96,7 +96,7 @@ define(
 
 
     var sketch = function (spec) {
-      return UiBuilder.composite('toolbar', schema, partTypes, make, spec);
+      return UiSketcher.composite('toolbar', schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

@@ -8,7 +8,7 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.GuiTypes',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ModalDialogSchema',
     'ephox.boulder.api.FieldSchema',
@@ -21,7 +21,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Keying, Positioning, GuiFactory, Container, GuiTypes, UiBuilder, PartType, ModalDialogSchema, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
+  function (Behaviour, Keying, Positioning, GuiFactory, Container, GuiTypes, UiSketcher, PartType, ModalDialogSchema, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
     var schema = ModalDialogSchema.schema();
     var partTypes = ModalDialogSchema.parts();
         
@@ -82,7 +82,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.composite(ModalDialogSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(ModalDialogSchema.name(), schema, partTypes, make, spec);
     };
 
     var parts = PartType.generate(ModalDialogSchema.name(), partTypes);

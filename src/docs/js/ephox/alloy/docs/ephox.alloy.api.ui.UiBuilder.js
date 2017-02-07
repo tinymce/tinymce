@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.ui.UiBuilder',
+  'ephox.alloy.api.ui.UiSketcher',
 
   [
     'ephox.alloy.parts.PartType',

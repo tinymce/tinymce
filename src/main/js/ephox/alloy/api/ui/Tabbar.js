@@ -6,7 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.TabButton',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
@@ -15,7 +15,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, Highlighting, SystemEvents, TabButton, UiBuilder, Fields, DomModification, PartType, TabbarSchema, FieldSchema, Fun) {
+  function (Behaviour, Highlighting, SystemEvents, TabButton, UiSketcher, Fields, DomModification, PartType, TabbarSchema, FieldSchema, Fun) {
     var schema = TabbarSchema.schema();
     var partTypes = TabbarSchema.parts();
 
@@ -52,7 +52,7 @@ define(
 
 
     var sketch = function (spec) {
-      return UiBuilder.composite(TabbarSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(TabbarSchema.name(), schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

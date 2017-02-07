@@ -9,7 +9,7 @@ define(
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabSectionSchema',
@@ -20,7 +20,7 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, Tabbar, Tabview, UiBuilder, EventHandler, PartType, TabSectionSchema, FieldSchema, Objects, Arr, Fun, Attr) {
+  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, Tabbar, Tabview, UiSketcher, EventHandler, PartType, TabSectionSchema, FieldSchema, Objects, Arr, Fun, Attr) {
     var schema = TabSectionSchema.schema();
     var partTypes = TabSectionSchema.parts();
 
@@ -93,7 +93,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.composite(TabSectionSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(TabSectionSchema.name(), schema, partTypes, make, spec);
     };
 
     var parts = PartType.generate(TabSectionSchema.name(), partTypes);

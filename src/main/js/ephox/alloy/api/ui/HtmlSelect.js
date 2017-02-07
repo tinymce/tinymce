@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.ui.schema.HtmlSelectSchema',
     'ephox.boulder.api.FieldSchema',
@@ -15,12 +15,12 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (Behaviour, UiBuilder, Fields, HtmlSelectSchema, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
+  function (Behaviour, UiSketcher, Fields, HtmlSelectSchema, FieldSchema, Arr, Merger, Fun, Result, TextContent, Value) {
     var schema = HtmlSelectSchema.schema()
 
     // Dupe with Tiered Menu
     var sketch = function (spec) {
-      return UiBuilder.single(HtmlSelectSchema.name(), schema, make, spec);
+      return UiSketcher.single(HtmlSelectSchema.name(), schema, make, spec);
     };
 
     var make = function (detail, spec) {

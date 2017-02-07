@@ -2,12 +2,12 @@ define(
   'ephox.alloy.api.ui.Container',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.ContainerSchema',
     'ephox.highway.Merger'
   ],
 
-  function (UiBuilder, ContainerSchema, Merger) {
+  function (UiSketcher, ContainerSchema, Merger) {
     var make = function (_detail, spec) {
       return Merger.deepMerge({
         dom: {
@@ -20,7 +20,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.single(ContainerSchema.name(), ContainerSchema.schema(), make, spec);
+      return UiSketcher.single(ContainerSchema.name(), ContainerSchema.schema(), make, spec);
     };
 
     return {

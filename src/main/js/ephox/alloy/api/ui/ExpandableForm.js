@@ -9,7 +9,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.GuiTypes',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ExpandableFormSchema',
@@ -20,7 +20,7 @@ define(
     'ephox.sugar.api.Focus'
   ],
 
-  function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiBuilder, Fields, PartType, ExpandableFormSchema, FieldSchema, Merger, Fun, Class, Focus) {
+  function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiSketcher, Fields, PartType, ExpandableFormSchema, FieldSchema, Merger, Fun, Class, Focus) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
@@ -33,7 +33,7 @@ define(
 
     // Dupe with Tiered Menu
     var sketch = function (spec) {
-      return UiBuilder.composite(ExpandableFormSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(ExpandableFormSchema.name(), schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, _externals) {

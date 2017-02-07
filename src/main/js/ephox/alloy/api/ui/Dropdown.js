@@ -6,7 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.dropdown.Beta',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -18,7 +18,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Highlighting, Keying, Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, DropdownSchema, FieldSchema, Merger, Fun, Option) {
+  function (Composing, Highlighting, Keying, Toggling, UiSketcher, Beta, InternalSink, PartType, ButtonBase, DropdownSchema, FieldSchema, Merger, Fun, Option) {
     var schema = DropdownSchema.schema();
     var partTypes = DropdownSchema.parts();
 
@@ -86,7 +86,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.composite(DropdownSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(DropdownSchema.name(), schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

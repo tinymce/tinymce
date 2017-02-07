@@ -9,7 +9,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.Toolbar',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
@@ -23,7 +23,7 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiBuilder, Fields, PartType, Overflows, SplitToolbarSchema, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
+  function (Behaviour, Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, Fields, PartType, Overflows, SplitToolbarSchema, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
     var schema = SplitToolbarSchema.schema();
     var partTypes = SplitToolbarSchema.parts();
 
@@ -134,7 +134,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.composite('split-toolbar', schema, partTypes, make, spec);
+      return UiSketcher.composite('split-toolbar', schema, partTypes, make, spec);
     };
 
     var parts = PartType.generate('split-toolbar', partTypes);

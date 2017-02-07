@@ -2,14 +2,14 @@ define(
   'ephox.alloy.api.ui.Button',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger'
   ],
 
-  function (UiBuilder, ButtonBase, ButtonSchema, FieldSchema, Merger) {
+  function (UiSketcher, ButtonBase, ButtonSchema, FieldSchema, Merger) {
     var make = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
@@ -44,7 +44,7 @@ define(
 
     // Dupe with Tiered Menu
     var sketch = function (spec) {
-      return UiBuilder.single(ButtonSchema.name(), ButtonSchema.schema(), make, spec);
+      return UiSketcher.single(ButtonSchema.name(), ButtonSchema.schema(), make, spec);
     };
 
     return {

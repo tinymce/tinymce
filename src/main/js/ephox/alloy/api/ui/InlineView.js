@@ -7,7 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.GuiTypes',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.ui.schema.InlineViewSchema',
     'ephox.boulder.api.FieldSchema',
@@ -16,7 +16,7 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiBuilder, Dismissal, InlineViewSchema, FieldSchema, Merger, Future, Fun) {
+  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, FieldSchema, Merger, Future, Fun) {
     var schema = InlineViewSchema.schema();
 
     var make = function (detail, spec) {
@@ -58,7 +58,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.single(InlineViewSchema.name(), schema, make, spec);
+      return UiSketcher.single(InlineViewSchema.name(), schema, make, spec);
     };
 
     return Merger.deepMerge(

@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.util.ItemEvents',
@@ -22,7 +22,7 @@ define(
     'ephox.violin.Strings'
   ],
 
-  function (Coupling, Representing, Sandboxing, UiBuilder, EventHandler, Fields, ItemEvents, PartType, InputBase, TypeaheadSpec, TypeaheadSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Strings) {
+  function (Coupling, Representing, Sandboxing, UiSketcher, EventHandler, Fields, ItemEvents, PartType, InputBase, TypeaheadSpec, TypeaheadSchema, FieldSchema, Objects, Merger, Fun, Option, Cell, Strings) {
     var schema = TypeaheadSchema.schema();
     var partTypes = TypeaheadSchema.parts();
 
@@ -33,7 +33,7 @@ define(
           return spec.fetch(input, val.text);
         }
       });
-      return UiBuilder.composite(TypeaheadSchema.name(), schema, partTypes, TypeaheadSpec.make, specWithFetch);
+      return UiSketcher.composite(TypeaheadSchema.name(), schema, partTypes, TypeaheadSpec.make, specWithFetch);
     };
 
     return {

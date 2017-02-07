@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
@@ -15,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, UiBuilder, Fields, DomModification, PartType, ToolbarGroupSchema, ToolbarSchema, FieldSchema, Merger, Fun, Error) {
+  function (Behaviour, UiSketcher, Fields, DomModification, PartType, ToolbarGroupSchema, ToolbarSchema, FieldSchema, Merger, Fun, Error) {
     var schema = ToolbarGroupSchema.schema();
     var partTypes = ToolbarGroupSchema.parts();
 
@@ -46,7 +46,7 @@ define(
     };
 
     var sketch = function (spec) {
-      return UiBuilder.composite(ToolbarGroupSchema.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite(ToolbarGroupSchema.name(), schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe

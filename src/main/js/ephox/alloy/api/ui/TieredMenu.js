@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.ui.TieredMenu',
 
   [
-    'ephox.alloy.api.ui.UiBuilder',
+    'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.ui.schema.TieredMenuSchema',
     'ephox.alloy.ui.single.TieredMenuSpec',
@@ -11,11 +11,11 @@ define(
     'ephox.peanut.Fun'
   ],
 
-  function (UiBuilder, Fields, TieredMenuSchema, TieredMenuSpec, FieldSchema, Objects, Fun) {
+  function (UiSketcher, Fields, TieredMenuSchema, TieredMenuSpec, FieldSchema, Objects, Fun) {
     var schema = TieredMenuSchema.schema();
 
     var sketch = function (spec) {
-      return UiBuilder.single(TieredMenuSchema.name(), schema, TieredMenuSpec.make, spec);
+      return UiSketcher.single(TieredMenuSchema.name(), schema, TieredMenuSpec.make, spec);
     };
 
     var simpleData = function (name, label, items) {
