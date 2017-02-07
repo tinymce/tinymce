@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.docs.DocsPage',
+  'ephox.alloy.demo.docs.DocsPage',
 
   [
     'ephox.alloy.api.behaviour.Composing',
@@ -27,11 +27,11 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TabSection',
-    'ephox.alloy.docs.BehaviourDocumentation',
-    'ephox.alloy.docs.DocSidetabs',
-    'ephox.alloy.docs.DocToptabs',
-    'ephox.alloy.docs.SchemaView',
-    'ephox.alloy.docs.UiDocumentation',
+    'ephox.alloy.demo.docs.BehaviourDocumentation',
+    'ephox.alloy.demo.docs.DocSidetabs',
+    'ephox.alloy.demo.docs.DocToptabs',
+    'ephox.alloy.demo.docs.SchemaView',
+    'ephox.alloy.demo.docs.UiDocumentation',
     'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.alloy.ui.schema.ContainerSchema',
     'ephox.alloy.ui.schema.DropdownSchema',

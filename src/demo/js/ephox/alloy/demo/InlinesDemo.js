@@ -22,11 +22,10 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Value',
-    'global!document',
-    'text!dom-templates/demo.menu.html'
+    'global!document'
   ],
 
-  function (Gui, GuiFactory, Positioning, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document, TemplateMenu) {
+  function (Gui, GuiFactory, Positioning, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

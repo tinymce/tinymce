@@ -1,9 +1,9 @@
 define(
-  'ephox.alloy.docs.BehaviourDocumentation',
+  'ephox.alloy.demo.docs.BehaviourDocumentation',
 
   [
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.docs.SchemaView',
+    'ephox.alloy.demo.docs.SchemaView',
     'ephox.compass.Arr'
   ],
 

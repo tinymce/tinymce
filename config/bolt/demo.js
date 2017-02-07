@@ -1,13 +1,9 @@
 configure({
   configs: [
-    './doc.js'
-  ],
-  types: [
-    type('text', 'ephox.modulator.text')
+    './prod.js'
   ],
   sources: [
     source('amd', 'ephox.alloy.demo', '../../src/demo/js', mapper.hierarchical),
-    source('text', 'dom-templates', '../../src/main/html'),
     source('amd', 'ephox.wrap.JsBeautify', '../../lib/demo', mapper.flat)
   ]
 });

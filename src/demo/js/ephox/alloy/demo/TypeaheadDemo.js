@@ -17,11 +17,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Value',
-    'text!dom-templates/demo.menu.html'
+    'ephox.sugar.api.Value'
   ],
 
-  function (Gui, Representing, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value, TemplateMenu) {
+  function (Gui, Representing, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

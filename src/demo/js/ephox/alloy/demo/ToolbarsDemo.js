@@ -13,15 +13,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'global!document',
-    'text!dom-templates/tinymce.toolbar.group.button.html',
-    'text!dom-templates/tinymce.toolbar.group.html',
-    'text!dom-templates/tinymce.toolbar.group.textbutton.html',
-    'text!dom-templates/tinymce.toolbar.html',
-    'text!dom-templates/tinymce.toolstrip.html'
+    'global!document'
   ],
 
-  function (Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateButton, TemplateGroup, TemplateTextButton, TemplateToolbar, TemplateToolstrip) {
+  function (Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

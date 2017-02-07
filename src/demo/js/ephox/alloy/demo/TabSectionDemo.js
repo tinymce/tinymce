@@ -12,12 +12,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'global!document',
-    'text!dom-templates/demo.tabbar.html',
-    'text!dom-templates/demo.tabbing.html'
+    'global!document'
   ],
 
-  function (Gui, GuiFactory, Container, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document, TemplateTabbar, TemplateTabs) {
+  function (Gui, GuiFactory, Container, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

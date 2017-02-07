@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.docs.DocToptabs',
+  'ephox.alloy.demo.docs.DocToptabs',
 
   [
     'ephox.alloy.api.ui.Tabbar',

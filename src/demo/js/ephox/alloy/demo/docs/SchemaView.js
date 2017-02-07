@@ -1,10 +1,10 @@
 define(
-  'ephox.alloy.docs.SchemaView',
+  'ephox.alloy.demo.docs.SchemaView',
 
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.docs.Documentation',
+    'ephox.alloy.demo.docs.Documentation',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.boulder.format.TypeTokens',

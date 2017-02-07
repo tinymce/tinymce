@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.docs.Documentation',
+  'ephox.alloy.demo.docs.Documentation',
 
   [
     'ephox.highway.Merger'

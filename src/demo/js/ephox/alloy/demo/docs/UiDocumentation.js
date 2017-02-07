@@ -1,9 +1,9 @@
 define(
-  'ephox.alloy.docs.UiDocumentation',
+  'ephox.alloy.demo.docs.UiDocumentation',
 
   [
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.docs.SchemaView',
+    'ephox.alloy.demo.docs.SchemaView',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr'
   ],

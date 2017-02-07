@@ -13,11 +13,10 @@ define(
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
-    'global!document',
-    'text!dom-templates/tinymce.dialog.html'
+    'global!document'
   ],
 
-  function (Gui, GuiFactory, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Class, Element, Insert, document, TemplateTinyDialog) {
+  function (Gui, GuiFactory, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
