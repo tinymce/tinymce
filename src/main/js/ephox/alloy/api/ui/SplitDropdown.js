@@ -14,6 +14,7 @@ define(
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.alloy.ui.schema.SplitDropdownSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -21,90 +22,9 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Composing, Highlighting, Keying, Toggling, SystemEvents, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option, Error) {
-    var schema = [
-      FieldSchema.strict('toggleClass'),
-      FieldSchema.strict('fetch'),
-      FieldSchema.strict('onExecute'),
-      FieldSchema.option('lazySink'),
-      FieldSchema.strict('dom'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      // FieldSchema.defaulted('onClose', Fun.noop),
-
-      FieldSchema.defaulted('matchWidth', false)
-    ];
-
-    var arrowPart = PartType.internal(
-      Button,
-      'arrow',
-      '<alloy.split-dropdown.arrow>',
-      function (detail) {
-        return {
-          dom: {
-            attributes: {
-              role: 'button'
-            }
-          },
-          behaviours: {
-            tabstopping: Behaviour.revoke(),
-            focusing: Behaviour.revoke()
-          }
-        };
-      },
-      function (detail) {
-        return {
-          action: function (arrow) {
-            var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-            hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
-          },
-          behaviours: {
-            toggling: {
-              toggleOnExecute: false,
-              toggleClass: detail.toggleClass()
-            }
-          }
-        };
-      }
-    );
-
-    var buttonPart = PartType.internal(
-      Button,
-      'button',
-      '<alloy.split-dropdown.button>',
-      function (detail) {
-        return {
-          dom: {
-            attributes: {
-              role: 'button'
-            }
-          },
-          behaviours: {
-            focusing: Behaviour.revoke()
-          }
-        };
-      },
-      function (detail) {
-        return {
-          action: detail.onExecute()
-        };
-      }
-    );
-
-    var partTypes = [
-      arrowPart,
-      buttonPart,
-      PartType.external(
-        { build: Fun.identity },
-        'menu', 
-        function (detail) {
-          return {
-            onExecute: detail.onExecute()
-          };
-        },
-        Fun.constant({ })
-      ),
-      InternalSink
-    ];
+  function (Behaviour, Composing, Highlighting, Keying, Toggling, SystemEvents, Button, UiBuilder, Beta, InternalSink, PartType, ButtonBase, SplitDropdownSchema, FieldSchema, Merger, Fun, Option, Error) {
+    var schema = SplitDropdownSchema.schema();
+    var partTypes = SplitDropdownSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       var buttonEvents = ButtonBase.events(Option.some(
@@ -171,11 +91,11 @@ define(
     };
 
     var build = function (f) {
-      return UiBuilder.composite('split-dropdown', schema, partTypes, make, f);
+      return UiBuilder.composite(SplitDropdownSchema.name(), schema, partTypes, make, f);
     };
 
     // TODO: Remove likely dupe
-    var parts = PartType.generate('split-dropdown', partTypes);
+    var parts = PartType.generate(SplitDropdownSchema.name(), partTypes);
 
     return {
       build: build,
