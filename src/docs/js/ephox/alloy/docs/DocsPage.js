@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.docs.DocSidetabs',
     'ephox.alloy.docs.SchemaView',
+    'ephox.alloy.docs.UiDocumentation',
     'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.alloy.ui.schema.ContainerSchema',
     'ephox.alloy.ui.schema.DropdownSchema',
@@ -39,7 +40,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (GuiFactory, Gui, Container, Tabbar, TabSection, DocSidetabs, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
+  function (GuiFactory, Gui, Container, Tabbar, TabSection, DocSidetabs, SchemaView, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -76,90 +77,7 @@ define(
         TypeaheadSchema
       ];
 
-      var extractParts = function (partTypes) {
-        return Arr.map(partTypes, function (pt) {
-          return pt.fold(
-            function (_, name, _, _, _) {
-              return name;
-            },
-            function (_, name, _, _, _) {
-              return name;
-            },
-            function (_, name, _, _, _) {
-              return name;
-            },
-            function (_, name, _, _, _, _) {
-              return name;
-            }
-          );
-        });
-      };
-
-      var makeParts = function (partTypes) {
-        var parts = extractParts(partTypes);
-
-        return Container.build({
-          dom: {
-            tag: 'div',
-            classes: [ 'doc-component-parts' ]
-          },
-          components: Arr.flatten([
-            parts.length > 0 ? [
-              Container.build({
-                dom: { tag: 'h4', innerHtml: 'Parts' }
-              }),
-              Container.build({
-                dom: {
-                  tag: 'ul'
-                },
-                components: Arr.map(parts, function (p) {
-                  return Container.build({
-                    dom: {
-                      tag: 'li',
-                      innerHtml: p
-                    }
-                  });
-                })
-              })] : [ ]
-          ])
-        });
-      };
-
-      var definitions = Arr.map(uiSchemas, function (s) {
-        var heading = Container.build({
-          dom: {
-            tag: 'h3',
-            innerHtml: s.name()
-          }
-        });
-
-        var description = Container.build({
-          dom: {
-            tag: 'p',
-            innerHtml: SchemaView.getDescription(s.name())
-          }
-        });
-
-        var schema = SchemaView.build([ s.name() ],  ValueSchema.objOf(s.schema()).toDsl());
-
-        var wrapper = Container.build({
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            heading,
-            description,
-            schema,
-            makeParts(s.parts())
-          ]
-        });
-
-        
-        return {
-          value: s.name(),
-          wrapper: wrapper
-        };
-      });
+      var definitions = UiDocumentation.make(uiSchemas);
 
       // 
 
