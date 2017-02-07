@@ -67,7 +67,7 @@ asynctest(
         })
       );
     }, function (doc, body, gui, component, store) {
-      // FIX: Flesh out test.
+      // TODO: Flesh out test.
       var cAssertStructure = function (label, expected) {
         return Chain.op(function (element) {
           Assertions.assertStructure(label, expected, element);

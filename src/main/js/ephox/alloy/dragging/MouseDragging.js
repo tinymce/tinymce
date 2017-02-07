@@ -88,7 +88,6 @@ define(
                   return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
                 }, function (snapInfo) {
                   var snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
-                  // FIX: Find a better way.
                   snapping.extra.each(function (extra) {
                     snapInfo.onSensor()(component, extra);
                   });

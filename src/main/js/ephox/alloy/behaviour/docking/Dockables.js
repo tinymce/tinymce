@@ -84,7 +84,7 @@ define(
       if (! isCompletelyVisible(box, viewport)) {
         // Convert it to fixed (keeping the x coordinate and throwing away the y coordinate)
         setPrior(component, dockInfo, loc.left(), loc.top());
-        // FIX: Move to generic area?
+        // TODO: Move to generic area?
         var coord = DragCoord.absolute(loc.left(), loc.top());
         var asFixed = DragCoord.asFixed(coord, scroll, origin);
 

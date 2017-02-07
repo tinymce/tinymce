@@ -51,7 +51,6 @@ define(
               } else {
                 // Highlight the rest of the text so that the user types over it.
                 menu.getSystem().getByUid(detail.uid()).each(function (input) {
-                  // FIX: itemData.value
                   var currentValue = Representing.getValue(input).text;
                   var nextValue = Representing.getValue(item);
                   if (Strings.startsWith(nextValue.text, currentValue)) {
@@ -68,7 +67,6 @@ define(
                 var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
                 Sandboxing.close(sandbox);
                 return item.getSystem().getByUid(detail.uid()).bind(function (input) {
-                  // FIX: itemData.text
                   Representing.setValueFrom(input, item);
                   var currentValue = Representing.getValue(input);
                   input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);

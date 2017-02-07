@@ -133,7 +133,7 @@ define(
         if (stopped) event.kill();
       });
 
-      // FIX: Test
+      // TODO: Test
       var onDragStart = DomEvent.bind(container, 'dragstart', function (event) {
         var stopped = settings.triggerEvent('dragstart', event);
         if (stopped) event.kill();

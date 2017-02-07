@@ -75,9 +75,9 @@ define(
         // Update the component list with the current children
         var children = Traverse.children(item);
         var subs = Arr.bind(children, function (child) {
-          // FIX: Not sure about how to handle text nodes here.
+          
           return systemApi.get().getByDom(child).fold(function () {
-            console.warn('Did not find: ', child.dom());
+            // INVESTIGATE: Not sure about how to handle text nodes here.
             return [ ];
           }, function (c) {
             return [ c ];

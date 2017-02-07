@@ -17,7 +17,6 @@ define(
   ],
 
   function (Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
-    // FIX: Dupe with Flowtype
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),

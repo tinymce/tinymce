@@ -87,7 +87,6 @@ asynctest(
             }
           },
 
-          // FIX: Wrap in something.
           domModification: {
             classes: [ 'base-dom-modification' ]
           },

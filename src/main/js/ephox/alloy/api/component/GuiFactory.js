@@ -114,7 +114,6 @@ define(
         }
       };
 
-      // FIX: Invesitage whether I want to do it this way.
       return GuiTypes.premade(self);
 
     };

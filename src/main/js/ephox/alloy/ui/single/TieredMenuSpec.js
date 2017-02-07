@@ -75,7 +75,6 @@ define(
       };
 
       var getItemValue = function (item) {
-        // FIX: itemData.value
         return Representing.getValue(item).value;
       };
 
