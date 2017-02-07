@@ -194,7 +194,11 @@ define(
           tabbar: {
             
             dom: {
-              tag: 'div'
+              tag: 'div',
+              styles: {
+                display: 'flex',
+                'flex-wrap': 'wrap'
+              }
             },
             components: [
               Tabbar.parts().tabs()
@@ -206,6 +210,12 @@ define(
                     value: tSpec.value,
                     dom: {
                       tag: 'span',
+                      styles: {
+                        margin: '2px',
+                        padding: '2px',
+                        border: '1px solid grey',
+                        cursor: 'pointer'
+                      },
                       innerHtml: tSpec.value
                     }
                   };
