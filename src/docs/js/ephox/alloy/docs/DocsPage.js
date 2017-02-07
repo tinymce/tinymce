@@ -8,10 +8,12 @@ define(
   ],
 
   function (Gui, Insert, SelectorFind) {
-    var root = Gui.create();
+    return function () {
+      var root = Gui.create();
 
-    var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+      var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-    Insert.append(ephoxUi, root);
+      Insert.append(ephoxUi, root.element());
+    };
   }
 );
