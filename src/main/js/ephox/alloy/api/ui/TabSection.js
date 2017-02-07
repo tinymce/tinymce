@@ -3,15 +3,16 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.ui.schema.TabSectionSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
@@ -19,46 +20,9 @@ define(
     'ephox.sugar.api.Attr'
   ],
 
-  function (EventRoot, SystemEvents, Highlighting, Replacing, Representing, Tabbar, Tabview, UiBuilder, EventHandler, PartType, FieldSchema, Objects, Arr, Fun, Attr) {
-    var schema = [
-      FieldSchema.defaulted('selectFirst', true),
-      FieldSchema.defaulted('onChangeTab', Fun.noop),
-      FieldSchema.defaulted('onDismissTab', Fun.noop),
-      FieldSchema.defaulted('tabs', [ ])
-    ];
-
-    var barPart = PartType.internal(
-      Tabbar,
-      'tabbar',
-      '<alloy.tab-section.tabbar>',
-      function (detail) {
-        return {
-          onChange: function (tabbar, button) {
-            tabbar.getSystem().triggerEvent(SystemEvents.changeTab(), tabbar.element(), {
-              tabbar: Fun.constant(tabbar),
-              button: Fun.constant(button)
-            });
-          },
-          tabs: detail.tabs()
-        };
-      },
-      Fun.constant({ })
-    );
-
-    var viewPart = PartType.internal(
-      Tabview,
-      'tabview',
-      '<alloy.tab-section.tabview>',
-      Fun.constant({ }),
-      Fun.constant({ })
-    );
-
-
-    var partTypes = [
-      barPart,
-      viewPart
-    ];
-
+  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, Tabbar, Tabview, UiBuilder, EventHandler, PartType, TabSectionSchema, FieldSchema, Objects, Arr, Fun, Attr) {
+    var schema = TabSectionSchema.schema();
+    var partTypes = TabSectionSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       var changeTab = function (button) {
@@ -129,10 +93,10 @@ define(
     };
 
     var build = function (spec) {
-      return UiBuilder.composite('tab-section', schema, partTypes, make, spec);
+      return UiBuilder.composite(TabSectionSchema.name(), schema, partTypes, make, spec);
     };
 
-    var parts = PartType.generate('tab-section', partTypes);
+    var parts = PartType.generate(TabSectionSchema.name(), partTypes);
 
     return {
       build: build,
