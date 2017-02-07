@@ -6,18 +6,14 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.alloy.ui.schema.TabButtonSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.epithet.Id',
     'ephox.highway.Merger'
   ],
 
-  function (UiBuilder, Tagger, SpecSchema, ButtonBase, FieldSchema, Id, Merger) {
-    var schema = [
-      FieldSchema.strict('value'),
-      FieldSchema.strict('dom'),
-      FieldSchema.option('action'),
-      FieldSchema.option('role')
-    ];
+  function (UiBuilder, Tagger, SpecSchema, ButtonBase, TabButtonSchema, FieldSchema, Id, Merger) {
+    var schema = TabButtonSchema.schema();
 
     var make = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
@@ -60,7 +56,7 @@ define(
 
     // Dupe with Button
     var build = function (spec) {
-      return UiBuilder.single('TabButton', schema, make, spec);
+      return UiBuilder.single(TabButtonSchema.name(), schema, make, spec);
     };
 
     return {
