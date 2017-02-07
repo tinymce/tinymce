@@ -2,10 +2,10 @@ define(
   'ephox.alloy.api.ui.SplitToolbar',
 
   [
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.Toolbar',
@@ -13,6 +13,7 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
+    'ephox.alloy.ui.schema.SplitToolbarSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
@@ -22,33 +23,9 @@ define(
     'ephox.sugar.api.Width'
   ],
 
-  function (GuiFactory, Behaviour, Replacing, Sliding, Button, GuiTypes, Toolbar, UiBuilder, Fields, PartType, Overflows, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
-    var schema = [
-      Fields.markers([ 'closedStyle', 'openStyle', 'shrinkingStyle', 'growingStyle' ]),
-      FieldSchema.state('builtGroups', function () {
-        return Cell([ ]);
-      })
-    ];
-
-    var partTypes = [
-      PartType.internal(Toolbar, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
-      PartType.internal(Toolbar, 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
-        return {
-          behaviours: {
-            sliding: {
-              dimension: {
-                property: 'height'
-              },
-              closedStyle: detail.markers().closedStyle(),
-              openStyle: detail.markers().openStyle(),
-              shrinkingStyle: detail.markers().shrinkingStyle(),
-              growingStyle: detail.markers().growingStyle()
-            }
-          }
-        };
-      }),
-      PartType.external({ built: Fun.identity }, 'overflow-button', Fun.constant({ }), Fun.constant({ }))
-    ];
+  function (Behaviour, Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiBuilder, Fields, PartType, Overflows, SplitToolbarSchema, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
+    var schema = SplitToolbarSchema.schema();
+    var partTypes = SplitToolbarSchema.parts();
 
     var setStoredGroups = function (bar, storedGroups) {
       var bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
