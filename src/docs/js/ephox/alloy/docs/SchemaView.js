@@ -177,6 +177,7 @@ define(
     };
 
     return {
+      getDescription: getDescription,
       build: build
     };
  
