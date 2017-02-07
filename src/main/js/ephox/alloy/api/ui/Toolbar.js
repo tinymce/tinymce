@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
@@ -16,12 +17,10 @@ define(
     'ephox.perhaps.Result'
   ],
 
-  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiBuilder, Fields, PartType, FieldSchema, Arr, Merger, Fun, Result) {
-    var schema = [
-      FieldSchema.defaulted('shell', true),
-      Fields.members([ 'group' ])
-    ];
+  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiBuilder, Fields, PartType, ToolbarSchema, FieldSchema, Arr, Merger, Fun, Result) {
+    var schema = ToolbarSchema.schema();
 
+    // TODO: Dupe with ToolbarSchema
     var enhanceGroups = function (detail) {
       return {
         behaviours: {
@@ -30,9 +29,7 @@ define(
       };
     };
 
-    var partTypes = [
-      PartType.optional({ build: Fun.identity }, 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), enhanceGroups)
-    ];
+    var partTypes = ToolbarSchema.parts();
 
     var make = function (detail, components, spec, _externals) {
 
