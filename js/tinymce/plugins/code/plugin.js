@@ -12,6 +12,9 @@
 
 tinymce.PluginManager.add('code', function(editor) {
 	function showDialog() {
+		function identity(value) {
+			return value;
+		}
 		var win = editor.windowManager.open({
 			title: "Source code",
 			body: {
@@ -30,7 +33,7 @@ tinymce.PluginManager.add('code', function(editor) {
 				editor.focus();
 
 				editor.undoManager.transact(function() {
-					editor.setContent(e.data.code);
+					editor.setContent(editor.getParam("code_get_content", identity)(e.data.code));
 				});
 
 				editor.selection.setCursorLocation();
@@ -40,7 +43,7 @@ tinymce.PluginManager.add('code', function(editor) {
 
 		// Gecko has a major performance issue with textarea
 		// contents so we need to set it when all reflows are done
-		win.find('#code').value(editor.getContent({source_view: true}));
+		win.find('#code').value(editor.getParam("code_set_content", identity)(editor.getContent({source_view: true})));
 	}
 
 	editor.addCommand("mceCodeEditor", showDialog);
