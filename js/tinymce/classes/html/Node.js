@@ -343,6 +343,9 @@ define("tinymce/html/Node", [], function() {
 				if (ref_node === parent.lastChild) {
 					parent.lastChild = node;
 				} else {
+					if (ref_node.next == null)
+				        	ref_node.next = ref_node;
+				        	
 					ref_node.next.prev = node;
 				}
 
