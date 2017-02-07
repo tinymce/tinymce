@@ -43,7 +43,7 @@ configure({
     '../../src/plugins/visualblocks/config/bolt/browser.js',
     '../../src/plugins/visualchars/config/bolt/browser.js',
     '../../src/plugins/wordcount/config/bolt/browser.js',
-	'../../src/themes/inlite/config/bolt/browser.js',
-	'../../src/themes/modern/config/bolt/browser.js'
+    '../../src/themes/inlite/config/bolt/browser.js',
+    '../../src/themes/modern/config/bolt/browser.js'
   ]
 })
