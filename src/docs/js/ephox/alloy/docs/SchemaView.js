@@ -6,15 +6,17 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.docs.Documentation',
     'ephox.boulder.api.Objects',
+    'ephox.boulder.api.ValueSchema',
     'ephox.boulder.format.TypeTokens',
     'ephox.classify.Type',
     'ephox.compass.Arr',
+    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun'
   ],
 
-  function (GuiFactory, Container, Documentation, Objects, TypeTokens, Type, Arr, Merger, Json, Fun) {
+  function (GuiFactory, Container, Documentation, Objects, ValueSchema, TypeTokens, Type, Arr, Obj, Merger, Json, Fun) {
     var getDescription = function (key) {
       if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
       else return '<span style="outline: 1px solid red;">' + key + '</span>';
@@ -165,12 +167,35 @@ define(
         },
 
         function (cKey, cBranches) {
+          var branches = Obj.keys(cBranches);
+
+          var cs = Arr.map(branches, function (b) {
+            return Container.build({
+              dom: {
+                tag: 'div',
+                classes: [ 'docs-branch-mode' ]
+              },
+              components: [
+                Container.build({
+                  dom: {
+                    tag: 'span',
+                    classes: [ 'docs-branch-mode-identifier' ],
+                    innerHtml: cKey + ' == ' + b + ': '
+                  }
+                }),
+                build(path.concat([ '::' + b + '::' ]), ValueSchema.objOf(cBranches[b]).toDsl())
+              ]
+            });
+          });
+
           return Container.build({
             dom: {
               tag: 'span',
-              classes: [ 'docs-mode' ],
-              innerHtml: 'branch on ' + cKey + ' > NOT IMPLEMENTED'
-            }
+              classes: [ 'docs-mode' ]
+            },
+            components: [
+              GuiFactory.text('branch on ' + cKey)
+            ].concat(cs)
           });
         }
       );
