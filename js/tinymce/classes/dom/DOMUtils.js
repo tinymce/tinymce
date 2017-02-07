@@ -858,7 +858,7 @@ define("tinymce/dom/DOMUtils", [
 			if (elm) {
 				// Use getBoundingClientRect if it exists since it's faster than looping offset nodes
 				// Fallback to offsetParent calculations if the body isn't static better since it stops at the body root
-				if (rootElm === body && elm.getBoundingClientRect && $(body).css('position') === 'static') {
+				if (rootElm === body && elm.getBoundingClientRect && ($(body).css('position') === 'static' || $(body).css('position') === 'relative')) {
 					pos = elm.getBoundingClientRect();
 					rootElm = self.boxModel ? doc.documentElement : body;
 
