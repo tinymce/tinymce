@@ -2,14 +2,15 @@ define(
   'ephox.alloy.api.ui.ModalDialog',
 
   [
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.ui.schema.ModalDialogSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
@@ -20,57 +21,10 @@ define(
     'global!Error'
   ],
 
-  function (GuiFactory, Behaviour, Keying, Positioning, Container, GuiTypes, UiBuilder, PartType, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
-    var schema = [
-      FieldSchema.strict('lazySink'),
-      FieldSchema.option('dragBlockClass'),
-
-      FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.strict('onEscape')
-    ];
-
-    var basic = { build: Fun.identity };
-
-    var partTypes = [
-      PartType.optional(basic, 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
-        function (detail, spec) {
-          return {
-            behaviours: {
-              dragging: {
-                mode: 'mouse',
-                getTarget: function (handle) {
-                  return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
-                },
-                blockerClass: detail.dragBlockClass().getOrDie(
-                  new Error(
-                    'The drag blocker class was not specified for a dialog with a drag handle: \n' + 
-                    Json.stringify(spec, null, 2)
-                  )
-                )
-              }
-            }
-          };
-        }
-      ),
-      PartType.internal(basic, 'title', '<alloy.dialog.title>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'close', '<alloy.dialog.close>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'body', '<alloy.dialog.body>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({})),
-
-      PartType.external(basic, 'blocker', Fun.constant({
-        dom: {
-          tag: 'div',
-          styles: {
-            position: 'fixed',
-            left: '0px',
-            top: '0px',
-            right: '0px',
-            bottom: '0px'
-          }
-        }
-      }), Fun.constant({ }))
-    ];
-    
+  function (Behaviour, Keying, Positioning, GuiFactory, Container, GuiTypes, UiBuilder, PartType, ModalDialogSchema, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
+    var schema = ModalDialogSchema.schema();
+    var partTypes = ModalDialogSchema.parts();
+        
     var make = function (detail, components, spec, externals) {
       var showDialog = function (dialog) {
         var sink = detail.lazySink()().getOrDie();
@@ -128,10 +82,10 @@ define(
     };
 
     var build = function (spec) {
-      return UiBuilder.composite('modal-dialog', schema, partTypes, make, spec);
+      return UiBuilder.composite(ModalDialogSchema.name(), schema, partTypes, make, spec);
     };
 
-    var parts = PartType.generate('modal-dialog', partTypes);
+    var parts = PartType.generate(ModalDialogSchema.name(), partTypes);
 
 
     return Merger.deepMerge(
