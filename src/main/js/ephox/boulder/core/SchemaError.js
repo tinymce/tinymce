@@ -33,6 +33,12 @@ define(
       });
     };
 
+    var unsupportedFields = function (path, unsupported) {
+      return nu(path, function () {
+        return 'There are unsupported fields: [' + unsupported.join(', ') + '] specified';
+      });
+    };
+
     var custom = function (path, err) {
       return nu(path, function () { return err; });
     };
@@ -45,6 +51,7 @@ define(
       missingStrict: missingStrict,
       missingKey: missingKey,
       missingBranch: missingBranch,
+      unsupportedFields: unsupportedFields,
       custom: custom,
       toString: toString
     };

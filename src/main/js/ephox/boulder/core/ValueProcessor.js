@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.boulder.api.FieldPresence',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.combine.ResultCombine',
     'ephox.boulder.core.ObjReader',
     'ephox.boulder.core.ObjWriter',
@@ -18,7 +19,7 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -139,9 +140,35 @@ define(
       };      
     };
 
+    var objOnly = function (fields) {
+      var delegate = obj(fields);
+
+      var fieldNames = Arr.foldr(fields, function (acc, f) {
+        return f.fold(function (key) {
+          return Merger.deepMerge(acc, Objects.wrap(f, true));
+        }, Fun.constant(acc));
+      }, { });
+
+      var extract = function (path, strength, o) {
+        var keys = Obj.keys(o);
+        var extra = Arr.filter(keys, function (k) {
+          return !Objects.hasKey(fieldNames, k);
+        });
+
+        return extra.length === 0  ? delegate.extract(path, strength, o) : 
+          SchemaError.unsupportedFields(path, extra);
+      };
+
+      return {
+        extract: extract,
+        toString: delegate.toString,
+        toDsl: delegate.toDsl
+      };
+    };
+
     var obj = function (fields) {
-      var extract = function (path, strength, obj) {
-        return cExtract(path, obj, fields, strength);
+      var extract = function (path, strength, o) {
+        return cExtract(path, o, fields, strength);
       };
 
       var toString = function () {
@@ -165,7 +192,7 @@ define(
             });
           })
         );
-      }
+      };
 
       return {
         extract: extract,
@@ -237,6 +264,7 @@ define(
 
       value: value,
       obj: obj,
+      objOnly: objOnly,
       arr: arr,
       setOf: setOf,
 

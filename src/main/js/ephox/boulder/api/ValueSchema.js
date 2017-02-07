@@ -29,6 +29,8 @@ define(
 
     var objOf = ValueProcessor.obj;
 
+    var objOfOnly = ValueProcessor.objOnly;
+
     var setOf = ValueProcessor.setOf;
 
     var valueOf = function (validator) {
@@ -89,6 +91,7 @@ define(
       setOf: setOf,
 
       objOf: objOf,
+      objOfOnly: objOfOnly,
 
       asStruct: asStruct,
       asRaw: asRaw,
