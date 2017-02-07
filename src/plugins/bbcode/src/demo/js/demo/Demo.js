@@ -11,11 +11,11 @@
 /*eslint no-console:0, no-unused-vars: 0 */
 
 define(
-  'tinymce.bbcode.demo.Demo',
+  'tinymce.plugins.bbcode.demo.Demo',
 
   [
     'global!tinymce',
-    'tinymce.bbcode.Plugin'
+    'tinymce.plugins.bbcode.Plugin'
   ],
 
   function (tinymce, Plugin) {

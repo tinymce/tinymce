@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.contextmenu.demo.Demo',
+  'tinymce.plugins.contextmenu.demo.Demo',
 
   [
-    'tinymce.contextmenu.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
     'global!tinymce'
   ],
 

@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.spellchecker.demo.Demo',
+  'tinymce.plugins.spellchecker.demo.Demo',
 
   [
-    'tinymce.spellchecker.Plugin',
+    'tinymce.plugins.spellchecker.Plugin',
     'global!tinymce'
   ],
   function (Plugin, tinymce) {

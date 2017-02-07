@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.emoticons.demo.Demo',
+  'tinymce.plugins.emoticons.demo.Demo',
 
   [
-    'tinymce.emoticons.Plugin',
+    'tinymce.plugins.emoticons.Plugin',
     'global!tinymce'
   ],
 

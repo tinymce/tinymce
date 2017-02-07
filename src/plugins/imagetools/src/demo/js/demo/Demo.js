@@ -11,16 +11,16 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.imagetools.demo.Demo',
+  'tinymce.plugins.imagetools.demo.Demo',
   [
-    "tinymce.imagetools.Plugin",
+    "tinymce.plugins.imagetools.Plugin",
     "global!tinymce",
     "global!tinymce.dom.DomQuery",
     "global!console"
   ],
   function (Plugin, tinymce, $, console) {
     return function () {
-      var imgSrc = '../../../../../../../tests/manual/img/dogleft.jpg';
+      var imgSrc = '../img/dogleft.jpg';
 
       $(
         '<textarea class="tinymce">' +

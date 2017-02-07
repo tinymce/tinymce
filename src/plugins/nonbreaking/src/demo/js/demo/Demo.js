@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.nonbreaking.demo.Demo',
+  'tinymce.plugins.nonbreaking.demo.Demo',
 
   [
-    'tinymce.nonbreaking.Plugin',
+    'tinymce.plugins.nonbreaking.Plugin',
     'global!tinymce'
   ],
 

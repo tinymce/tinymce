@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.autoresize.demo.Demo',
+  'tinymce.plugins.autoresize.demo.Demo',
 
   [
-    'tinymce.autoresize.Plugin',
+    'tinymce.plugins.autoresize.Plugin',
     'global!tinymce'
   ],
 

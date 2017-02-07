@@ -19,16 +19,16 @@ define(
 
   [
     'global!tinymce.PluginManager',
-    'global!tinymce.DOM',
-    'global!tinymce.each',
-    'global!tinymce.explode',
-    'global!tinymce.get',
+    'global!tinymce.dom.DOMUtils',
+    'global!tinymce.util.Tools',
+    'global!tinymce.EditorManager',
     'global!tinymce.util.Delay',
     'global!tinymce.Env'
   ],
 
-  function (PluginManager, DOM, each, explode, get, Delay, Env) {
+  function (PluginManager, DOMUtils, Tools, EditorManager, Delay, Env) {
     PluginManager.add('tabfocus', function (editor) {
+      var DOM = DOMUtils.DOM;
 
       function tabCancel(e) {
         if (e.keyCode === 9 && !e.ctrlKey && !e.altKey && !e.metaKey) {
@@ -53,10 +53,10 @@ define(
           }
 
           function canSelect(el) {
-            return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && get(e.id) && el.tabIndex != -1 && canSelectRecursive(el);
+            return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex != -1 && canSelectRecursive(el);
           }
 
-          each(el, function (e, i) {
+          Tools.each(el, function (e, i) {
             if (e.id == editor.id) {
               x = i;
               return false;
@@ -79,7 +79,7 @@ define(
           return null;
         }
 
-        v = explode(editor.getParam('tab_focus', editor.getParam('tabfocus_elements', ':prev,:next')));
+        v = Tools.explode(editor.getParam('tab_focus', editor.getParam('tabfocus_elements', ':prev,:next')));
 
         if (v.length == 1) {
           v[1] = v[0];
@@ -102,7 +102,7 @@ define(
         }
 
         if (el) {
-          var focusEditor = get(el.id || el.name);
+          var focusEditor = EditorManager.get(el.id || el.name);
 
           if (el.id && focusEditor) {
             focusEditor.focus();

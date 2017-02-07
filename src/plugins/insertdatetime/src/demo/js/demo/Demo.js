@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.insertdatetime.demo.Demo',
+  'tinymce.plugins.insertdatetime.demo.Demo',
 
   [
-    'tinymce.insertdatetime.Plugin',
+    'tinymce.plugins.insertdatetime.Plugin',
     'global!tinymce'
   ],
 

@@ -40,12 +40,12 @@
                 var img;
                 img = new Image();
                 img.onload = function() {
-                    ed.setContent('<p><img src="manual/img/dogleft.jpg" /></p>');
+                    ed.setContent('<p><img src="../src/plugins/imagetools/src/demo/img/dogleft.jpg" /></p>');
                     if (typeof cb == 'function') {
                         cb();
                     }
                 };
-                img.src = "manual/img/dogleft.jpg";
+                img.src = "../src/plugins/imagetools/src/demo/img/dogleft.jpg";
 
                 window.editor = ed;
             }

@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.tabfocus.demo.Demo',
+  'tinymce.plugins.tabfocus.demo.Demo',
 
   [
-    'tinymce.tabfocus.Plugin',
+    'tinymce.plugins.tabfocus.Plugin',
     'global!tinymce'
   ],
   function (Plugin, tinymce) {

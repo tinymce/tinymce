@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.fullscreen.demo.Demo',
+  'tinymce.plugins.fullscreen.demo.Demo',
 
   [
-    'tinymce.fullscreen.Plugin',
+    'tinymce.plugins.fullscreen.Plugin',
     'global!tinymce'
   ],
 

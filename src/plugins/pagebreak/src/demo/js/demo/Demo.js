@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.pagebreak.demo.Demo',
+  'tinymce.plugins.pagebreak.demo.Demo',
 
   [
-    'tinymce.pagebreak.Plugin',
+    'tinymce.plugins.pagebreak.Plugin',
     'global!tinymce'
   ],
 

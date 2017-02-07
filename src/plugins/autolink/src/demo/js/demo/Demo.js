@@ -11,9 +11,9 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.autolink.demo.Demo',
+  'tinymce.plugins.autolink.demo.Demo',
   [
-    "tinymce.autolink.Plugin",
+    "tinymce.plugins.autolink.Plugin",
     "global!tinymce"
   ],
   function (Plugin, tinymce) {

@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.textcolor.demo.Demo',
+  'tinymce.plugins.textcolor.demo.Demo',
 
   [
-    'tinymce.textcolor.Plugin',
+    'tinymce.plugins.textcolor.Plugin',
     'global!tinymce'
   ],
   function (Plugin, tinymce) {

@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.toc.demo.Demo',
+  'tinymce.plugins.toc.demo.Demo',
 
   [
-    'tinymce.toc.Plugin',
+    'tinymce.plugins.toc.Plugin',
     'global!tinymce'
   ],
   function (Plugin, tinymce) {

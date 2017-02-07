@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.directionality.demo.Demo',
+  'tinymce.plugins.directionality.demo.Demo',
 
   [
-    'tinymce.directionality.Plugin',
+    'tinymce.plugins.directionality.Plugin',
     'global!tinymce'
   ],
 

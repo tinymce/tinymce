@@ -11,9 +11,9 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.plugins.mediaDemo',
+  'tinymce.plugins.table.demo.Demo',
   [
-    "tinymce.plugins.mediaPlugin",
+    "tinymce.plugins.table.Plugin",
     "global!tinymce"
   ],
   function (Plugin, tinymce) {
@@ -22,8 +22,8 @@ define(
       tinymce.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "media code preview",
-        toolbar: "media code preview",
+        plugins: "table code preview",
+        toolbar: "table code preview",
         media_dimensions: false,
         // media_live_embeds: false,
         // media_url_resolver: function (data, resolve) {

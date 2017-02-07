@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.searchreplace.demo.Demo',
+  'tinymce.plugins.searchreplace.demo.Demo',
 
   [
-    'tinymce.searchreplace.Plugin',
+    'tinymce.plugins.searchreplace.Plugin',
     'global!tinymce'
   ],
 

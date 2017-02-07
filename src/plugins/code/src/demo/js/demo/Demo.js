@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.code.demo.Demo',
+  'tinymce.plugins.code.demo.Demo',
 
   [
-    'tinymce.code.Plugin',
+    'tinymce.plugins.code.Plugin',
     'global!tinymce'
   ],
 
@@ -24,8 +24,8 @@ define(
       tinymce.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "code code preview",
-        toolbar: "code code preview",
+        plugins: "code preview",
+        toolbar: "code preview",
         height: 600
       });
     };

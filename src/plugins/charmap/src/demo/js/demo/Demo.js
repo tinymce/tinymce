@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.charmap.demo.Demo',
+  'tinymce.plugins.charmap.demo.Demo',
 
   [
-    'tinymce.charmap.Plugin',
+    'tinymce.plugins.charmap.Plugin',
     'global!tinymce'
   ],
 

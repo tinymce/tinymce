@@ -11,9 +11,9 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.anchor.demo.Demo',
+  'tinymce.plugins.anchor.demo.Demo',
   [
-    "tinymce.anchor.Plugin",
+    "tinymce.plugins.anchor.Plugin",
     "global!tinymce"
   ],
   function (Plugin, tinymce) {

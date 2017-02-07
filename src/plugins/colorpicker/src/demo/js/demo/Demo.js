@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.colorpicker.demo.Demo',
+  'tinymce.plugins.colorpicker.demo.Demo',
 
   [
-    'tinymce.colorpicker.Plugin',
+    'tinymce.plugins.colorpicker.Plugin',
     'global!tinymce'
   ],
 

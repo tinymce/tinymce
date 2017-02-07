@@ -11,10 +11,10 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.link.demo.Demo',
+  'tinymce.plugins.link.demo.Demo',
 
   [
-    'tinymce.link.Plugin',
+    'tinymce.plugins.link.Plugin',
     'global!tinymce'
   ],
 
