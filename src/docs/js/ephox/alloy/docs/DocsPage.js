@@ -5,6 +5,8 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.Tabbar',
+    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.docs.SchemaView',
     'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.alloy.ui.schema.ContainerSchema',
@@ -36,7 +38,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (GuiFactory, Gui, Container, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
+  function (GuiFactory, Gui, Container, Tabbar, TabSection, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -152,12 +154,77 @@ define(
         });
 
         
-        return GuiFactory.build(wrapper);
+        return {
+          value: s.name(),
+          wrapper: wrapper
+        };
       });
 
-      Arr.each(definitions, root.add);
+      // 
+
+      // Arr.each(definitions, function (s) {
+      //   var built = GuiFactory.build(s);
+      //   root.add(built);
+      // });
+
 
       Insert.append(ephoxUi, root.element());
+
+
+
+
+      var tabsection = TabSection.build({
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          TabSection.parts().tabbar(),
+          TabSection.parts().tabview()
+        ],
+
+        tabs: Arr.map(definitions, function (defn) {
+          return {
+            value: defn.value,
+            view: function () {
+              return [ defn.wrapper ];
+            }
+          };
+        }),
+        parts: {
+          tabbar: {
+            
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              Tabbar.parts().tabs()
+            ],
+            members: {
+              tab: {
+                munge: function (tSpec) {
+                  return {
+                    value: tSpec.value,
+                    dom: {
+                      tag: 'span',
+                      innerHtml: tSpec.value
+                    }
+                  };
+                }
+              }
+            },
+            markers: {
+              tabClass: 'tab-item',
+              selectedClass: 'selected-tab-item'
+            }
+          },
+          tabview: { }
+        }
+      });
+
+
+      var built = GuiFactory.build(tabsection);
+      root.add(built);
+
     };
   }
 );
