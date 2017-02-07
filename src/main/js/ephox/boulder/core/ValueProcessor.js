@@ -145,7 +145,7 @@ define(
 
       var fieldNames = Arr.foldr(fields, function (acc, f) {
         return f.fold(function (key) {
-          return Merger.deepMerge(acc, Objects.wrap(f, true));
+          return Merger.deepMerge(acc, Objects.wrap(key, true));
         }, Fun.constant(acc));
       }, { });
 

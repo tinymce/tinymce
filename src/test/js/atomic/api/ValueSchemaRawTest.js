@@ -43,6 +43,43 @@ test(
       FieldSchema.strict('b')
     ]));
 
+    checkIs('test.3 (with extra)', {
+      a: 'a',
+      b: 'b'
+    }, {
+      a: 'a',
+      b: 'b',
+      c: 'c'
+    }, ValueSchema.objOf([
+      FieldSchema.strict('a'),
+      FieldSchema.strict('b')
+    ]));
+
+    checkErr(
+      'test.3 (with extra and only) and two fields',
+      'unsupported fields: [c]',
+      {
+        a: 'a',
+        b: 'b',
+        c: 'c'
+      },
+      ValueSchema.objOfOnly([
+        FieldSchema.strict('a'),
+        FieldSchema.strict('b')
+      ])
+    );
+
+    checkErr(
+      'test.3 (with extra and only) and no fields',
+      'unsupported fields: [aa]',
+      {
+        aa: 'aa'
+      },
+      ValueSchema.objOfOnly([
+        
+      ])
+    );
+
     check('test.4', {
       urls: [
         { url: 'hi', fresh: 'true' },
