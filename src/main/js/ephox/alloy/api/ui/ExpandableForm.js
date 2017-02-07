@@ -12,6 +12,7 @@ define(
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.ui.schema.ExpandableFormSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
@@ -19,22 +20,7 @@ define(
     'ephox.sugar.api.Focus'
   ],
 
-  function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiBuilder, Fields, PartType, FieldSchema, Merger, Fun, Class, Focus) {
-    var schema = [
-      Fields.markers([
-        'closedStyle',
-        'openStyle',
-        'shrinkingStyle',
-        'growingStyle',
-
-        // TODO: Sync with initial value
-        'expandedClass',
-        'collapsedClass'
-      ]),
-      FieldSchema.defaulted('onShrunk', Fun.identity),
-      FieldSchema.defaulted('onGrown', Fun.identity)
-    ];
-
+  function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiBuilder, Fields, PartType, ExpandableFormSchema, FieldSchema, Merger, Fun, Class, Focus) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
@@ -42,64 +28,12 @@ define(
       };
     };
 
-    var partTypes = [
-      PartType.internal(Form, 'minimal', '<alloy.expandable-form.minimal>', Fun.constant({ }), Fun.constant({ })),
-      PartType.internal(Form, 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
-        return {
-          behaviours: {
-            sliding: {
-              dimension: {
-                property: 'height'
-              },
-              closedStyle: detail.markers().closedStyle(),
-              openStyle: detail.markers().openStyle(),
-              shrinkingStyle: detail.markers().shrinkingStyle(),
-              growingStyle: detail.markers().growingStyle(),
-              expanded: true,
-              onStartShrink: function (extra) {
-                // If the focus is inside the extra part, move the focus to the expander button
-                Focus.search(extra.element()).each(function (_) {
-                  var comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
-                  Keying.focusIn(comp);
-                });
-
-                extra.getSystem().getByUid(detail.uid()).each(function (form) {
-                  Class.remove(form.element(), detail.markers().expandedClass());
-                  Class.add(form.element(), detail.markers().collapsedClass());
-                });
-              },
-              onStartGrow: function (extra) {
-                extra.getSystem().getByUid(detail.uid()).each(function (form) {
-                  Class.add(form.element(), detail.markers().expandedClass());
-                  Class.remove(form.element(), detail.markers().collapsedClass());
-                });
-              },
-              onShrunk: function (extra) {
-                detail.onShrunk()(extra);
-                console.log('height.slider.shrunk');
-              },
-              onGrown: function (extra) {
-                detail.onGrown()(extra);
-                console.log('height.slider.grown');
-              },
-              getAnimationRoot: function (extra) {
-                return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
-              }
-            }
-          }
-        };
-      }),
-      PartType.internal(Button, 'expander', '<alloy.expandable-form.expander>', Fun.constant({}), function (detail) {
-        return {
-          action: runOnExtra(detail, Sliding.toggleGrow)
-        };
-      }),
-      PartType.internal({ build: Fun.identity }, 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
-    ];
+    var schema = ExpandableFormSchema.schema();
+    var partTypes = ExpandableFormSchema.parts();
 
     // Dupe with Tiered Menu
     var build = function (spec) {
-      return UiBuilder.composite('expandable-form', schema, partTypes, make, spec);
+      return UiBuilder.composite(ExpandableFormSchema.name(), schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, _externals) {
@@ -145,7 +79,7 @@ define(
 
     };
 
-    var parts = PartType.generate('expandable-form', partTypes);
+    var parts = PartType.generate(ExpandableFormSchema.name(), partTypes);
 
     return Merger.deepMerge(
       {

@@ -3,16 +3,17 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.alloy.ui.schema.FormChooserSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
@@ -22,68 +23,12 @@ define(
     'ephox.sugar.api.SelectorFilter'
   ],
 
-  function (EventRoot, SystemEvents, Behaviour, Highlighting, Representing, UiBuilder, EventHandler, Fields, DomModification, PartType, ButtonBase, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
-    var schema = [
-      Fields.members([ 'choice' ]),
-      FieldSchema.strict('choices'),
-
-      Fields.markers([ 'choiceClass', 'selectedClass' ])
-      // FieldSchema.strict('options'),
-      // Fields.members([ 'option' ]),
-      // FieldSchema.option('data')
-    ];
-
-    var partTypes = [
-      PartType.internal(
-        { build: Fun.identity },
-        'legend',
-        '<alloy.form-chooser.legend>',
-        function (detail) {
-          return {
-            dom: {
-              tag: 'legend'
-            }
-          };
-        },
-        Fun.constant({ })
-      ),
-
-      PartType.group(
-        { build: Fun.identity },
-        'choices',
-        'choice',
-        '<alloy.form-chooser.choices>',
-        Fun.constant({ }),
-        function (detail, choiceSpec) {
-          return {
-            dom: {
-              // Consider making a domModification, although we probably do not want it overwritten.
-              attributes: {
-                role: 'radio'
-              }
-            },
-            behaviours: {
-              representing: {
-                store: {
-                  mode: 'memory',
-                  initialValue: choiceSpec.value
-                }
-              },
-              focusing: { }
-              
-            },
-
-            domModification: {
-              classes: [ detail.markers().choiceClass() ]
-            },
-            events: ButtonBase.events(Option.none())
-          };
-        }
-      )
-    ];
+  function (EventRoot, Behaviour, Highlighting, Representing, SystemEvents, UiBuilder, EventHandler, Fields, DomModification, PartType, ButtonBase, FormChooserSchema, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
+    var schema = FormChooserSchema.schema();
+    var partTypes = FormChooserSchema.parts();
 
     var build = function (spec) {
-      return UiBuilder.composite('form-chooser', schema, partTypes, make, spec);
+      return UiBuilder.composite(FormChooserSchema.name(), schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, externals) {
@@ -179,7 +124,7 @@ define(
       };
     };
 
-    var parts = PartType.generate('form-chooser', partTypes);
+    var parts = PartType.generate(FormChooserSchema.name(), partTypes);
 
     return {
       build: build,
