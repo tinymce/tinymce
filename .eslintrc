@@ -7,7 +7,9 @@
   "globals": {
     "escape": true,
     "unescape": true,
-    "Uint8Array": true
+    "Uint8Array": true,
+    "asynctest": true,
+    "test": true
   },
 
   "rules": {
