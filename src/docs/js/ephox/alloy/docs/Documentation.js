@@ -69,7 +69,7 @@ define(
       'Input > hasTabstop': {
         desc: 'Whether or not the input component should be a tabstop'
       }
-    }
+    };
 
     return Merger.deepMerge(
       toggling,

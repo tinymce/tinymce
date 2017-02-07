@@ -2,11 +2,32 @@ define(
   'ephox.alloy.docs.DocsPage',
 
   [
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Disabling',
+    'ephox.alloy.api.behaviour.Docking',
+    'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.behaviour.DragnDrop',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Invalidating',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Receiving',
+    'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.behaviour.Streaming',
+    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TabSection',
+    'ephox.alloy.docs.BehaviourDocumentation',
     'ephox.alloy.docs.DocSidetabs',
     'ephox.alloy.docs.DocToptabs',
     'ephox.alloy.docs.SchemaView',
@@ -41,7 +62,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (GuiFactory, Gui, Container, Tabbar, TabSection, DocSidetabs, DocToptabs, SchemaView, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Gui, Container, Tabbar, TabSection, BehaviourDocumentation, DocSidetabs, DocToptabs, SchemaView, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -78,9 +99,37 @@ define(
         TypeaheadSchema
       ];
 
+      var behaviours = [
+        // First while developing
+        // Toggling,
+        Composing,
+        Coupling,
+        Disabling,
+        Docking,
+        Dragging,
+        DragnDrop,
+        Focusing,
+        Highlighting,
+        Invalidating,
+        Keying,
+        Positioning,
+        Receiving,
+        Replacing,
+        Representing,
+        Sandboxing,
+        Sliding,
+        Streaming,
+        Tabstopping,
+        Toggling,
+        Unselecting
+      ]
+
       var uiDefs = UiDocumentation.make(uiSchemas);
+      var behaviourDefs = BehaviourDocumentation.make(behaviours)
 
       var uiSection = GuiFactory.build(DocSidetabs.make(uiDefs));
+      var behaviourSection = GuiFactory.build(DocSidetabs.make(behaviourDefs));
+
 
       var topTabs = DocToptabs.make([
         {
@@ -95,26 +144,16 @@ define(
         {
           value: 'Behaviours',
           text: 'Behaviours',
-          view: Fun.constant([ ])
+          view: function () {
+            return [
+              GuiFactory.premade(behaviourSection)
+            ]
+          }
         }
       ]);
 
 
-
-      // 
-
-      // Arr.each(uiDefs, function (s) {
-      //   var built = GuiFactory.build(s);
-      //   root.add(built);
-      // });
-
-
       Insert.append(ephoxUi, root.element());
-
-
-
-
-     
 
       var built = GuiFactory.build(topTabs);
       root.add(built);
