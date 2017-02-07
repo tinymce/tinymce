@@ -23,6 +23,17 @@ define(
       }));
     };
 
+    var forbid = function (key, message) {
+      return ValueProcessor.field(
+        key,
+        key,
+        FieldPresence.asOption(),
+        ValueProcessor.value(function (v) {
+          return Result.error('The field: ' + key + ' is forbidden. ' + message);
+        })
+      );
+    };
+
     // TODO: Deprecate
     var strictArrayOf = function (key, prop) {
       return strictOf(key, prop);
@@ -82,6 +93,8 @@ define(
       strictArrayOf: strictArrayOf,
       strictArrayOfObj: strictArrayOfObj,
       strictFunction: strictFunction,
+
+      forbid: forbid,
 
       option: option,
       optionOf: optionOf,

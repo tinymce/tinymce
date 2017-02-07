@@ -80,6 +80,33 @@ test(
       ])
     );
 
+    check(
+      'test.3 with no forbidden field',
+      {
+        a: 'a',
+        b: 'b'
+      },
+      ValueSchema.objOfOnly([
+        FieldSchema.strict('a'),
+        FieldSchema.strict('b')
+      ])
+    );
+
+    checkErr(
+      'test.3 with 1 forbidden field',
+      'Do not use c. Use b',
+      {
+        a: 'a',
+        b: 'b',
+        c: 'c'
+      },
+      ValueSchema.objOf([
+        FieldSchema.strict('a'),
+        FieldSchema.strict('b'),
+        FieldSchema.forbid('c', 'Do not use c. Use b')
+      ])
+    );
+
     check('test.4', {
       urls: [
         { url: 'hi', fresh: 'true' },
