@@ -29,7 +29,10 @@ define(
             dom: {
               tag: 'div',
               styles: {
-
+                width: '100%',
+                display: 'flex',
+                border: '2px solid black',
+                'margin-bottom': '10px'
               }
             },
             components: [
@@ -42,7 +45,14 @@ define(
                     value: tSpec.value,
                     dom: {
                       tag: 'span',
-                      innerHtml: tSpec.value
+                      innerHtml: tSpec.value,
+                      styles: {
+                        display: 'flex',
+                        padding: '10px',
+                        'justify-content': 'center',
+                        'flex-grow': '1',
+                        cursor: 'pointer'
+                      }
                     }
                   };
                 }
@@ -53,7 +63,9 @@ define(
               selectedClass: 'selected-tab-item'
             }
           },
-          tabview: { }
+          tabview: {
+            dom: { }
+          }
         }
       });
     };

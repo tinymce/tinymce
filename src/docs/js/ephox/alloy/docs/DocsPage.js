@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.docs.DocSidetabs',
+    'ephox.alloy.docs.DocToptabs',
     'ephox.alloy.docs.SchemaView',
     'ephox.alloy.docs.UiDocumentation',
     'ephox.alloy.ui.schema.ButtonSchema',
@@ -40,7 +41,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (GuiFactory, Gui, Container, Tabbar, TabSection, DocSidetabs, SchemaView, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
+  function (GuiFactory, Gui, Container, Tabbar, TabSection, DocSidetabs, DocToptabs, SchemaView, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -77,11 +78,32 @@ define(
         TypeaheadSchema
       ];
 
-      var definitions = UiDocumentation.make(uiSchemas);
+      var uiDefs = UiDocumentation.make(uiSchemas);
+
+      var uiSection = GuiFactory.build(DocSidetabs.make(uiDefs));
+
+      var topTabs = DocToptabs.make([
+        {
+          value: 'Ui',
+          text: 'Ui Components',
+          view: function () {
+            return [
+              GuiFactory.premade(uiSection)
+            ]
+          }
+        },
+        {
+          value: 'Behaviours',
+          text: 'Behaviours',
+          view: Fun.constant([ ])
+        }
+      ]);
+
+
 
       // 
 
-      // Arr.each(definitions, function (s) {
+      // Arr.each(uiDefs, function (s) {
       //   var built = GuiFactory.build(s);
       //   root.add(built);
       // });
@@ -92,9 +114,9 @@ define(
 
 
 
-      var tabsection = DocSidetabs.make(definitions);
+     
 
-      var built = GuiFactory.build(tabsection);
+      var built = GuiFactory.build(topTabs);
       root.add(built);
 
     };
