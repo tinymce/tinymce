@@ -213,11 +213,12 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       var table = editor.dom.select('table')[0];
+      var beforeWidth1 = table.clientWidth;
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 0);
 
       LegacyUnit.equal(editor.getContent(),
-        '<table style=\"width: 426px;\">' +
+        '<table style=\"width: ' + beforeWidth1 + 'px;\">' +
         '<tbody>' +
         '<tr>' +
         '<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
@@ -243,11 +244,12 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       table = editor.dom.select('table')[0];
+      var beforeWidth2 = table.clientWidth;
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 1);
 
       LegacyUnit.equal(editor.getContent(),
-        '<table style=\"width: 426px;\">' +
+        '<table style=\"width: ' + beforeWidth2 + 'px;\">' +
         '<tbody>' +
         '<tr>' +
         '<td style=\"width: 250px; height: 20px;\" colspan=\"2\">A1</td>' +
@@ -273,11 +275,12 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       table = editor.dom.select('table')[0];
+      var beforeWidth3 = table.clientWidth;
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 2);
 
       LegacyUnit.equal(editor.getContent(),
-        '<table style=\"width: 426px;\">' +
+        '<table style=\"width: ' + beforeWidth3 + 'px;\">' +
         '<tbody>' +
         '<tr>' +
         '<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
@@ -303,11 +306,12 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       table = editor.dom.select('table')[0];
+      var beforeWidth4 = table.clientWidth;
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 3);
 
       LegacyUnit.equal(editor.getContent(),
-        '<table style=\"width: 476px;\">' +
+        '<table style=\"width: ' + (beforeWidth4 + 50) + 'px;\">' +
         '<tbody>' +
         '<tr>' +
         '<td style=\"width: 200px; height: 20px;\" colspan=\"2\">A1</td>' +
