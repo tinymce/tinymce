@@ -7,10 +7,14 @@ define(
     'ephox.alloy.docs.Documentation',
     'ephox.boulder.api.Objects',
     'ephox.boulder.format.TypeTokens',
-    'ephox.compass.Arr'
+    'ephox.classify.Type',
+    'ephox.compass.Arr',
+    'ephox.highway.Merger',
+    'ephox.numerosity.api.JSON',
+    'ephox.peanut.Fun'
   ],
 
-  function (GuiFactory, Container, Documentation, Objects, TypeTokens, Arr) {
+  function (GuiFactory, Container, Documentation, Objects, TypeTokens, Type, Arr, Merger, Json, Fun) {
     var getDescription = function (key) {
       if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
       else return '<span style="outline: 1px solid red;">' + key + '</span>';
@@ -43,11 +47,63 @@ define(
     var buildField = function (path, key, presence, type) {
       var fieldComp = build(path.concat(key), type.toDsl());
 
+      var extraDom = presence.fold(
+        function () {
+          return {
+            wrapper: {
+              classes: [ 'strict' ]
+            },
+            span: { }
+          };
+        },
+        function (fallbackThunk) {
+          var fallback = fallbackThunk();
+          var value = (function () {
+            if (Type.isFunction(fallback) && fallback === Fun.noop) return 'noOp';
+            else if (fallback === Fun.identity) return 'identity';
+            else if (Type.isFunction(fallback)) return 'function';
+            else return Json.stringify(fallback, null, 2);
+          })();
+
+          return {
+            wrapper: {
+              classes: [ 'defaulted' ]
+            },
+            span: {
+              attributes: {
+                'title': '(' + value + ') '
+              }
+            }
+          };
+        },
+        function () {
+          return {
+            wrapper: { classes: [ 'optional' ] },
+            span: { }
+          }
+        },
+
+        function () {
+          return {
+            wrapper: { },
+            span: { }
+          };
+        },
+
+        function () {
+          return {
+            wrapper: { },
+            span: { }
+          };
+        }
+      );
+
       return Container.build({
         dom: {
           tag: 'div',
           classes: [ 'docs-field' ]
         },
+        domModification: extraDom.wrapper,
         components: [
           Container.build({
             dom: {
@@ -56,52 +112,13 @@ define(
             },
             components: [
               GuiFactory.text(key + ': ')
-            ]
+            ],
+            domModification: extraDom.span
           }),
           fieldComp
         ]
-      })
-      //   var wrapper = Element.fromTag('div');
-
-      // //           { strict: [ ] },
-      // // { defaultedThunk: [ 'fallbackThunk' ] },
-      // // { asOption: [ ] },
-      // // { asDefaultedOptionThunk: [ 'fallbackThunk' ] },
-      // // { mergeWithThunk: [ 'baseThunk' ] }
-              
-                
-              
-      //           Class.add(wrapper, 'docs-field');
-      //           var span = Element.fromTag('span');
-      //           Class.add(span, 'docs-field-name');
-      //           Html.set(span, key + ': ');
-
-
-      //           presence.fold(
-      //             function () {
-      //               Class.add(wrapper, 'strict');
-      //             },
-      //             function (fallbackThunk) {
-      //               var fallback = fallbackThunk();
-      //               var title = (function () {
-      //                 if (Type.isFunction(fallback) && fallback === Fun.noop) return 'noOp';
-      //                 else if (fallback === Fun.identity) return 'identity';
-      //                 else if (Type.isFunction(fallback)) return 'function';
-      //                 else return Json.stringify(fallback, null, 2);
-      //               })();
-      //               Attr.set(span, 'title', '(' + title + ') ');
-      //               Class.add(wrapper, 'defaulted');
-      //             },
-      //             function () {
-      //               Class.add(wrapper, 'optional')
-      //             },
-      //             function () {  },
-      //             function () {  }
-      //           );
-
-
-      //           InsertAll.append(wrapper, [ span, t ]);
-      //           return [ wrapper ];
+      });
+   
     };
 
     var buildObject = function (path, oFields) {
