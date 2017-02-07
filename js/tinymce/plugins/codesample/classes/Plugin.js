@@ -34,6 +34,10 @@ define("tinymce/codesampleplugin/Plugin", [
 		function loadCss() {
 			var linkElm, contentCss = editor.settings.codesample_content_css;
 
+			if (!editor.loadCss) {
+				return;
+			}
+
 			if (editor.inline && addedInlineCss) {
 				return;
 			}
