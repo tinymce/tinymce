@@ -17,7 +17,7 @@ define(
 
   function (Behaviour, Highlighting, SystemEvents, TabButton, UiBuilder, Fields, DomModification, PartType, TabbarSchema, FieldSchema, Fun) {
     var schema = TabbarSchema.schema();
-    var partTypes = TabbarSchema.partTypes();
+    var partTypes = TabbarSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       return {

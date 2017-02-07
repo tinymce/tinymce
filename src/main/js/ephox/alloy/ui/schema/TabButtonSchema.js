@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.ui.schema.TabButton',
+  'ephox.alloy.ui.schema.TabButtonSchema',
 
   [
     'ephox.boulder.api.FieldSchema',

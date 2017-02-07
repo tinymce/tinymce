@@ -13,6 +13,21 @@ define(
     'ephox.alloy.ui.schema.FormChooserSchema',
     'ephox.alloy.ui.schema.FormCoupledInputsSchema',
     'ephox.alloy.ui.schema.FormFieldSchema',
+    'ephox.alloy.ui.schema.HtmlSelectSchema',
+    'ephox.alloy.ui.schema.InlineViewSchema',
+    'ephox.alloy.ui.schema.InputSchema',
+    'ephox.alloy.ui.schema.MenuSchema',
+    'ephox.alloy.ui.schema.ModalDialogSchema',
+    'ephox.alloy.ui.schema.SplitDropdownSchema',
+    'ephox.alloy.ui.schema.SplitToolbarSchema',
+    'ephox.alloy.ui.schema.TabbarSchema',
+    'ephox.alloy.ui.schema.TabButtonSchema',
+    'ephox.alloy.ui.schema.TabSectionSchema',
+    'ephox.alloy.ui.schema.TabviewSchema',
+    'ephox.alloy.ui.schema.TieredMenuSchema',
+    'ephox.alloy.ui.schema.ToolbarGroupSchema',
+    'ephox.alloy.ui.schema.ToolbarSchema',
+    'ephox.alloy.ui.schema.TypeaheadSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
@@ -21,7 +36,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (GuiFactory, Gui, Container, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
+  function (GuiFactory, Gui, Container, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -39,7 +54,23 @@ define(
           name: FormFieldSchema.name,
           schema: FormFieldSchema.schema,
           parts: Fun.curry(FormFieldSchema.makeParts, { })
-        }
+        },
+        HtmlSelectSchema,
+        InlineViewSchema,
+        InputSchema,
+        // ItemWidget (just has parts),
+        MenuSchema,
+        ModalDialogSchema,
+        SplitDropdownSchema,
+        SplitToolbarSchema,
+        TabbarSchema,
+        TabButtonSchema,
+        TabSectionSchema,
+        TabviewSchema,
+        TieredMenuSchema,
+        ToolbarSchema,
+        ToolbarGroupSchema,
+        TypeaheadSchema
       ];
 
       var extractParts = function (partTypes) {
