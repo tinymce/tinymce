@@ -14,7 +14,7 @@ define(
     var schema = FormFieldSchema.schema()
 
     var build = function (factory, spec) {
-      var partTypes = FormFieldSchema.makePartTypes(factory);
+      var partTypes = FormFieldSchema.makeParts(factory);
       return UiBuilder.composite(factory.name(), schema, partTypes, make, spec);
     };
 
@@ -30,7 +30,7 @@ define(
     };
 
     var parts = function (factory) {
-      var partTypes = FormFieldSchema.makePartTypes(factory);
+      var partTypes = FormFieldSchema.makeParts(factory);
       return PartType.generate(factory.name(), partTypes);
     };
 
