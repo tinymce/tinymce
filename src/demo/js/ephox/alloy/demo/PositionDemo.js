@@ -54,7 +54,7 @@ define(
       var section1 = HtmlDisplay.section(
         gui,
         'Position anchoring to button',
-        Button.build({
+        Button.sketch({
           dom: {
             tag: 'button',
             innerHtml: 'Toggle Popup'
@@ -142,7 +142,7 @@ define(
               },
               uid: 'text-editor'
             }),
-            Button.build({
+            Button.sketch({
               dom: {
                 tag: 'button',
                 innerHtml: 'Show popup at cursor'
@@ -179,7 +179,7 @@ define(
               element: frame,
               uid: 'frame-editor'
             }),
-            Button.build({
+            Button.sketch({
               dom: {
                 tag: 'button',
                 innerHtml: 'Show popup at cursor'

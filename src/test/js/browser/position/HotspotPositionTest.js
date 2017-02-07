@@ -21,7 +21,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var hotspot = GuiFactory.build(
-        Button.build({
+        Button.sketch({
           action: function () { },
           dom: {
             styles: {

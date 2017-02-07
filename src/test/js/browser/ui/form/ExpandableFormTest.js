@@ -140,7 +140,7 @@ asynctest(
             ExpandableForm.parts().expander(),
             ExpandableForm.parts().extra(),
 
-            Button.build({
+            Button.sketch({
               dom: {
                 tag: 'button',
                 innerHtml: 'Shrink!'

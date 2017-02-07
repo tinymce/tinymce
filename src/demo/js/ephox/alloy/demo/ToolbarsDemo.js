@@ -95,7 +95,7 @@ define(
       };
 
       var itemMunge = function (s) {
-        return s.behaviours === undefined ? Button.build({
+        return s.behaviours === undefined ? Button.sketch({
           'dom': {
             'tag': 'div',
             'attributes': {
@@ -140,7 +140,7 @@ define(
               toggleClass: 'mce-active'
             }
           }
-        }) : Button.build({
+        }) : Button.sketch({
           'dom': {
             'tag': 'div',
             'attributes': {

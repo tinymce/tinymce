@@ -56,7 +56,7 @@ define(
               ]
             }),
 
-            Button.build({
+            Button.sketch({
               dom: {
                 tag: 'button',
                 innerHtml: 'Toggle'
@@ -106,7 +106,7 @@ define(
               ]
             }),
 
-            Button.build({
+            Button.sketch({
               dom: {
                 tag: 'button',
                 innerHtml: 'Toggle'

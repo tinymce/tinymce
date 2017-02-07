@@ -41,7 +41,7 @@ define(
             'delta',
             'epsilon'
           ], function (c) {
-            return Button.build({
+            return Button.sketch({
               dom: {
                 tag: 'button',
                 innerHtml: c

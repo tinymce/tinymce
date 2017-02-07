@@ -79,7 +79,7 @@ asynctest(
 
     }, function (doc, body, gui, component, store) {
       var makeButton = function (itemSpec) {
-        return Button.build({
+        return Button.sketch({
           dom: {
             tag: 'button',
             innerHtml: itemSpec.text

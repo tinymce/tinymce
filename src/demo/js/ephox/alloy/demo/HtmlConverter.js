@@ -43,7 +43,7 @@ define(
             },
             uid: 'textarea-input'
           }),
-          Button.build({
+          Button.sketch({
             dom: {
               tag: 'button',
               innerHtml: 'Convert'

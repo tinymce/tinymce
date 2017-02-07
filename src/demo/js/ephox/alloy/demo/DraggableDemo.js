@@ -60,7 +60,7 @@ define(
                 }
               }
             }),
-            Button.build({
+            Button.sketch({
               dom: {
                 tag: 'span',
                 innerHtml: 'Drag me!',

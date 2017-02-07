@@ -27,7 +27,7 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     var subject = Memento.record(
-      Button.build({
+      Button.sketch({
         dom: {
           tag: 'button',
           innerHtml: 'button'

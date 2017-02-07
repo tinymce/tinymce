@@ -26,7 +26,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Button.build({
+        Button.sketch({
           dom: {
             tag: 'button',
             innerHtml: 'ButtonSpecTest.button',

@@ -97,9 +97,9 @@ asynctest(
               root: gui.element()
             }, Container.sketch({
               components: [
-                Button.build({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') }),
-                Button.build({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I' }, action: store.adder('italic') }),
-                Button.build({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U' }, action: store.adder('underline') }),
+                Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B' }, action: store.adder('bold') }),
+                Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I' }, action: store.adder('italic') }),
+                Button.sketch({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U' }, action: store.adder('underline') }),
                 Dropdown.build({
                   dom: {
                     tag: 'button',

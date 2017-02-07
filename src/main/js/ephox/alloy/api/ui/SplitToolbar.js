@@ -48,7 +48,7 @@ define(
       var overflowGroupSpec = Toolbar.createGroups(primary, [
         {
           items: [
-            Button.build(
+            Button.sketch(
               Merger.deepMerge(
                 detail.parts()['overflow-button'](),
                 {

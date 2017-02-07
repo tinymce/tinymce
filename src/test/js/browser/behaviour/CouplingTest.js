@@ -30,7 +30,7 @@ asynctest(
             Coupling.config({
               others: {
                 'secondary-1': function (primary) { 
-                  return Button.build({
+                  return Button.sketch({
                     dom: {
                       tag: 'button'
                     },

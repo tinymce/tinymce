@@ -43,12 +43,12 @@ define(
     };
 
     // Dupe with Tiered Menu
-    var build = function (spec) {
+    var sketch = function (spec) {
       return UiBuilder.single(ButtonSchema.name(), ButtonSchema.schema(), make, spec);
     };
 
     return {
-      build: build
+      sketch: sketch
     };
   }
 );

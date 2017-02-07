@@ -62,7 +62,7 @@ define(
       var button1 = HtmlDisplay.section(
         gui,
         'This button is a <code>button</code> tag with an image',
-        Button.build({
+        Button.sketch({
           dom: {
             tag: 'button',
             styles: {
@@ -81,7 +81,7 @@ define(
       var button2 = HtmlDisplay.section(
         gui,
         'This toggle button is a <code>span</code> tag with an font',
-        Button.build({
+        Button.sketch({
           dom: {
             tag: 'button',
             classes: [ 'demo-alloy-bold' ],
@@ -111,7 +111,7 @@ define(
         gui,
         'This text button has two custom behaviours. One adds (among other things) "data-cat" and ' +
         'background blue, and the other adds color red',
-        Button.build({
+        Button.sketch({
           dom: {
             tag: 'span',
             innerHtml: 'Button.with.Text'

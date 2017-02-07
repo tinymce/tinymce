@@ -22,7 +22,7 @@ asynctest(
 
     GuiSetup.setup(function (store, doc, body) {
       var makeButton = function (v, t) {
-        return Button.build({
+        return Button.sketch({
           dom: { tag: 'button', innerHtml: t },
           action: store.adder(v + '.clicked'),
           behaviours: {

@@ -238,21 +238,21 @@ define(
                         }
                       },
                       components: [
-                        Button.build({
+                        Button.sketch({
                           dom: {
                             tag: 'button',
                             innerHtml: 'B'
                           },
                           action: function () { console.log('inline bold'); }
                         }),
-                        Button.build({
+                        Button.sketch({
                           dom: {
                             tag: 'button',
                             innerHtml: 'I'
                           },
                           action: function () { console.log('inline italic'); }
                         }),
-                        Button.build({
+                        Button.sketch({
                           dom: {
                             tag: 'button',
                             innerHtml: 'U'

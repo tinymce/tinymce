@@ -428,7 +428,7 @@ define(
                           }),
                           Container.sketch({
                             components: [
-                              Button.build({
+                              Button.sketch({
                                 action: function () { console.log('clicked on a button', arguments); },
                                 dom: {
                                   tag: 'button',
@@ -438,7 +438,7 @@ define(
                                   tabstopping: Behaviour.revoke()
                                 }
                               }),
-                              Button.build({
+                              Button.sketch({
                                 action: function () { console.log('clicked on a button', arguments); },
                                 dom: {
                                   tag: 'button',

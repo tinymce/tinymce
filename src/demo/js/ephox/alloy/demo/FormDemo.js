@@ -425,7 +425,7 @@ define(
                 selector: 'button'
               },
               components: [
-                Button.build({ dom: { tag: 'button', innerHtml: 'OK' } })
+                Button.sketch({ dom: { tag: 'button', innerHtml: 'OK' } })
               ]
             }
           },
