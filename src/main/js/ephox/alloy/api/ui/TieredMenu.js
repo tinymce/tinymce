@@ -4,38 +4,18 @@ define(
   [
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.ui.schema.TieredMenuSchema',
     'ephox.alloy.ui.single.TieredMenuSpec',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.peanut.Fun'
   ],
 
-  function (UiBuilder, Fields, TieredMenuSpec, FieldSchema, Objects, Fun) {
-    var schema = [
-      FieldSchema.strict('onExecute'),
-      FieldSchema.strict('onEscape'),
-
-      FieldSchema.strict('onOpenMenu'),
-      FieldSchema.strict('onOpenSubmenu'),
-
-      FieldSchema.defaulted('openImmediately', true),
-
-      FieldSchema.strictObjOf('data', [
-        FieldSchema.strict('primary'),
-        FieldSchema.strict('menus'),
-        FieldSchema.strict('expansions')
-      ]),
-
-    
-      FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.defaulted('onHighlight', Fun.noop),
-      FieldSchema.defaulted('onHover', Fun.noop),
-      Fields.tieredMenuMarkers(),
-      Fields.members([ 'menu', 'item' ])
-    ];
+  function (UiBuilder, Fields, TieredMenuSchema, TieredMenuSpec, FieldSchema, Objects, Fun) {
+    var schema = TieredMenuSchema.schema();
 
     var build = function (spec) {
-      return UiBuilder.single('TieredMenu', schema, TieredMenuSpec.make, spec);
+      return UiBuilder.single(TieredMenuSchema.name(), schema, TieredMenuSpec.make, spec);
     };
 
     var simpleData = function (name, label, items) {
