@@ -13,7 +13,7 @@
  *
  * @-x-less ColorPicker.less
  * @class tinymce.ui.ColorPicker
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.ColorPicker',

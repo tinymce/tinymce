@@ -13,7 +13,7 @@
  *
  * @-x-less SelectBox.less
  * @class tinymce.ui.SelectBox
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.SelectBox',

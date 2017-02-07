@@ -14,7 +14,7 @@
  * This class creates a file picker control.
  *
  * @class tinymce.ui.FilePicker
- * @extends tinymce.core.ui.ComboBox
+ * @extends tinymce.ui.ComboBox
  */
 define(
   'tinymce.core.ui.FilePicker',

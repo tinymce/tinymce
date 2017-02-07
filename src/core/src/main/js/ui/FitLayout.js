@@ -14,7 +14,7 @@
  *
  * @-x-less FitLayout.less
  * @class tinymce.ui.FitLayout
- * @extends tinymce.core.ui.AbsoluteLayout
+ * @extends tinymce.ui.AbsoluteLayout
  */
 define(
   'tinymce.core.ui.FitLayout',

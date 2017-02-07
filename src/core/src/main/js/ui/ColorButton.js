@@ -15,7 +15,7 @@
  *
  * @-x-less ColorButton.less
  * @class tinymce.ui.ColorButton
- * @extends tinymce.core.ui.PanelButton
+ * @extends tinymce.ui.PanelButton
  */
 define(
   'tinymce.core.ui.ColorButton',

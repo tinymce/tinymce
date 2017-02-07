@@ -20,7 +20,7 @@
  * @setting {String} pack start|end
  *
  * @class tinymce.ui.GridLayout
- * @extends tinymce.core.ui.AbsoluteLayout
+ * @extends tinymce.ui.AbsoluteLayout
  */
 define(
   'tinymce.core.ui.GridLayout',

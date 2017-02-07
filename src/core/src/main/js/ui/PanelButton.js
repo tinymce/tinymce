@@ -12,7 +12,7 @@
  * Creates a new panel button.
  *
  * @class tinymce.ui.PanelButton
- * @extends tinymce.core.ui.Button
+ * @extends tinymce.ui.Button
  */
 define(
   'tinymce.core.ui.PanelButton',

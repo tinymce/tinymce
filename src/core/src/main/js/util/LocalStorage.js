@@ -24,8 +24,8 @@
  * @static
  * @version 4.0
  * @example
- * tinymce.core.util.LocalStorage.setItem('key', 'value');
- * var value = tinymce.core.util.LocalStorage.getItem('key');
+ * tinymce.util.LocalStorage.setItem('key', 'value');
+ * var value = tinymce.util.LocalStorage.getItem('key');
  */
 define(
   'tinymce.core.util.LocalStorage',

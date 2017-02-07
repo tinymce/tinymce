@@ -15,7 +15,7 @@
  * tinymce.EditorManager.init({});
  *
  * @class tinymce.EditorManager
- * @mixes tinymce.core.util.Observable
+ * @mixes tinymce.util.Observable
  * @static
  */
 define(
@@ -105,7 +105,7 @@ define(
        * Dom query instance.
        *
        * @property $
-       * @type tinymce.core.dom.DomQuery
+       * @type tinymce.dom.DomQuery
        */
       $: $,
 
@@ -238,7 +238,7 @@ define(
          * Absolute baseURI for the installation path of TinyMCE.
          *
          * @property baseURI
-         * @type tinymce.core.util.URI
+         * @type tinymce.util.URI
          */
         self.baseURI = new URI(self.baseURL);
 

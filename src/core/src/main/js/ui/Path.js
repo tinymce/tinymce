@@ -13,7 +13,7 @@
  *
  * @-x-less Path.less
  * @class tinymce.ui.Path
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Path',

@@ -24,7 +24,7 @@
  *
  * @-x-less ButtonGroup.less
  * @class tinymce.ui.ButtonGroup
- * @extends tinymce.core.ui.Container
+ * @extends tinymce.ui.Container
  */
 define(
   'tinymce.core.ui.ButtonGroup',

@@ -13,7 +13,7 @@
  *
  * @-x-less Spacer.less
  * @class tinymce.ui.Spacer
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Spacer',

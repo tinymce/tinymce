@@ -14,7 +14,7 @@
  *
  * @-x-less AbsoluteLayout.less
  * @class tinymce.ui.AbsoluteLayout
- * @extends tinymce.core.ui.Layout
+ * @extends tinymce.ui.Layout
  */
 define(
   'tinymce.core.ui.AbsoluteLayout',

@@ -13,7 +13,7 @@
  *
  * @-x-less FloatPanel.less
  * @class tinymce.ui.FloatPanel
- * @extends tinymce.core.ui.Panel
+ * @extends tinymce.ui.Panel
  * @mixes tinymce.ui.Movable
  * @mixes tinymce.ui.Resizable
  */

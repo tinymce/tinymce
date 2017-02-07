@@ -12,7 +12,7 @@
  * This control creates an path for the current selections parent elements in TinyMCE.
  *
  * @class tinymce.ui.ElementPath
- * @extends tinymce.core.ui.Path
+ * @extends tinymce.ui.Path
  */
 define(
   'tinymce.core.ui.ElementPath',

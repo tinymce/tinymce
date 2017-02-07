@@ -13,7 +13,7 @@
  *
  * @-x-less ResizeHandle.less
  * @class tinymce.ui.ResizeHandle
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.ResizeHandle',

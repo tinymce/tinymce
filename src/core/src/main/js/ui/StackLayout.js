@@ -13,7 +13,7 @@
  *
  * @-x-less StackLayout.less
  * @class tinymce.ui.StackLayout
- * @extends tinymce.core.ui.FlowLayout
+ * @extends tinymce.ui.FlowLayout
  */
 define(
   'tinymce.core.ui.StackLayout',

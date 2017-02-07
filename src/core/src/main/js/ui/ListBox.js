@@ -13,7 +13,7 @@
  *
  * @-x-less ListBox.less
  * @class tinymce.ui.ListBox
- * @extends tinymce.core.ui.MenuButton
+ * @extends tinymce.ui.MenuButton
  */
 define(
   'tinymce.core.ui.ListBox',

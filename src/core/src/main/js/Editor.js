@@ -13,14 +13,14 @@
 /**
  * Include the base event class documentation.
  *
- * @include ../../../tools/docs/tinymce.Event.js
+ * @include ../../../../../tools/docs/tinymce.Event.js
  */
 
 /**
  * This class contains the core logic for a TinyMCE editor.
  *
  * @class tinymce.Editor
- * @mixes tinymce.core.util.Observable
+ * @mixes tinymce.util.Observable
  * @example
  * // Add a class to all paragraphs in the editor.
  * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
@@ -93,7 +93,7 @@ define(
     /**
      * Include documentation for all the events.
      *
-     * @include ../../../tools/docs/tinymce.Editor.js
+     * @include ../../../../../tools/docs/tinymce.Editor.js
      */
 
     /**
@@ -203,7 +203,7 @@ define(
        * URI object to document configured for the TinyMCE instance.
        *
        * @property documentBaseURI
-       * @type tinymce.core.util.URI
+       * @type tinymce.util.URI
        * @example
        * // Get relative URL from the location of document_base_url
        * tinymce.activeEditor.documentBaseURI.toRelative('/somedir/somefile.htm');
@@ -219,7 +219,7 @@ define(
        * URI object to current document that holds the TinyMCE editor instance.
        *
        * @property baseURI
-       * @type tinymce.core.util.URI
+       * @type tinymce.util.URI
        * @example
        * // Get relative URL from the location of the API
        * tinymce.activeEditor.baseURI.toRelative('/somedir/somefile.htm');
@@ -270,7 +270,7 @@ define(
        * Dom query instance with default scope to the editor document and default element is the body of the editor.
        *
        * @property $
-       * @type tinymce.core.dom.DomQuery
+       * @type tinymce.dom.DomQuery
        * @example
        * tinymce.activeEditor.$('p').css('color', 'red');
        * tinymce.activeEditor.$().append('<p>new</p>');
@@ -821,7 +821,7 @@ define(
          * DOM instance for the editor.
          *
          * @property dom
-         * @type tinymce.core.dom.DOMUtils
+         * @type tinymce.dom.DOMUtils
          * @example
          * // Adds a class to all paragraphs within the editor
          * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
@@ -924,7 +924,7 @@ define(
          * DOM serializer for the editor. Will be used when contents is extracted from the editor.
          *
          * @property serializer
-         * @type tinymce.core.dom.Serializer
+         * @type tinymce.dom.Serializer
          * @example
          * // Serializes the first paragraph in the editor into a string
          * tinymce.activeEditor.serializer.serialize(tinymce.activeEditor.dom.select('p')[0]);
@@ -935,7 +935,7 @@ define(
          * Selection instance for the editor.
          *
          * @property selection
-         * @type tinymce.core.dom.Selection
+         * @type tinymce.dom.Selection
          * @example
          * // Sets some contents to the current selection in the editor
          * tinymce.activeEditor.selection.setContent('Some contents');

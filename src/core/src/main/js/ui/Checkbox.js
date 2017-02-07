@@ -21,7 +21,7 @@
  *
  * @-x-less Checkbox.less
  * @class tinymce.ui.Checkbox
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Checkbox',

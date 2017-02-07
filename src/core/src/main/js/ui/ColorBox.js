@@ -14,7 +14,7 @@
  *
  * @-x-less ColorBox.less
  * @class tinymce.ui.ColorBox
- * @extends tinymce.core.ui.ComboBox
+ * @extends tinymce.ui.ComboBox
  */
 define(
   'tinymce.core.ui.ColorBox',

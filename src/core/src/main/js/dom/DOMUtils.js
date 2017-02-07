@@ -758,7 +758,7 @@ define(
        * tinymce.activeEditor.dom.setAttrib(tinymce.activeEditor.dom.select('p'), 'class', 'myclass');
        *
        * // Sets class attribute on a specific element in the current page
-       * tinymce.core.dom.setAttrib('mydiv', 'class', 'myclass');
+       * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
        */
       setAttrib: function (elm, name, value) {
         var self = this, originalValue, hook, settings = self.settings;
@@ -1855,7 +1855,7 @@ define(
      *
      * @static
      * @property DOM
-     * @type tinymce.core.dom.DOMUtils
+     * @type tinymce.dom.DOMUtils
      * @example
      * // Example of how to add a class to some element by id
      * tinymce.DOM.addClass('someid', 'someclass');

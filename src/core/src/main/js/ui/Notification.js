@@ -13,7 +13,7 @@
  *
  * @-x-less Notification.less
  * @class tinymce.ui.Notification
- * @extends tinymce.core.ui.Container
+ * @extends tinymce.ui.Container
  * @mixes tinymce.ui.Movable
  */
 define(

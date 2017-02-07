@@ -13,7 +13,7 @@
  *
  * @-x-less Window.less
  * @class tinymce.ui.Window
- * @extends tinymce.core.ui.FloatPanel
+ * @extends tinymce.ui.FloatPanel
  */
 define(
   'tinymce.core.ui.Window',

@@ -13,7 +13,7 @@
  *
  * @-x-less MenuButton.less
  * @class tinymce.ui.MenuButton
- * @extends tinymce.core.ui.Button
+ * @extends tinymce.ui.Button
  */
 define(
   'tinymce.core.ui.MenuButton',

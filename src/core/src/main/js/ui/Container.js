@@ -15,7 +15,7 @@
  *
  * @-x-less Container.less
  * @class tinymce.ui.Container
- * @extends tinymce.core.ui.Control
+ * @extends tinymce.ui.Control
  */
 define(
   'tinymce.core.ui.Container',

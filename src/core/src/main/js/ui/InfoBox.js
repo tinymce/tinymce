@@ -13,7 +13,7 @@
  *
  * @-x-less InfoBox.less
  * @class tinymce.ui.InfoBox
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.InfoBox',

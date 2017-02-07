@@ -13,7 +13,7 @@
  *
  * @-x-less MenuItem.less
  * @class tinymce.ui.MenuItem
- * @extends tinymce.core.ui.Control
+ * @extends tinymce.ui.Control
  */
 define(
   'tinymce.core.ui.MenuItem',

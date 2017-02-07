@@ -13,7 +13,7 @@
  *
  * @-x-less Progress.less
  * @class tinymce.ui.Progress
- * @extends tinymce.core.ui.Control
+ * @extends tinymce.ui.Control
  */
 define(
   'tinymce.core.ui.Progress',

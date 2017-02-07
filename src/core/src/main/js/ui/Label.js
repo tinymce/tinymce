@@ -14,7 +14,7 @@
  *
  * @-x-less Label.less
  * @class tinymce.ui.Label
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Label',

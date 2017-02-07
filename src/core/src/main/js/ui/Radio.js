@@ -13,7 +13,7 @@
  *
  * @-x-less Radio.less
  * @class tinymce.ui.Radio
- * @extends tinymce.core.ui.Checkbox
+ * @extends tinymce.ui.Checkbox
  */
 define(
   'tinymce.core.ui.Radio',

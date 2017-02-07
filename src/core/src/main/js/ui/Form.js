@@ -23,7 +23,7 @@
  * }).renderTo(document.body);
  *
  * @class tinymce.ui.Form
- * @extends tinymce.core.ui.Container
+ * @extends tinymce.ui.Container
  */
 define(
   'tinymce.core.ui.Form',

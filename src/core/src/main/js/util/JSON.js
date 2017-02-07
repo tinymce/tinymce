@@ -15,10 +15,10 @@
  * @static
  * @example
  * // JSON parse a string into an object
- * var obj = tinymce.core.util.JSON.parse(somestring);
+ * var obj = tinymce.util.JSON.parse(somestring);
  *
  * // JSON serialize a object into an string
- * var str = tinymce.core.util.JSON.serialize(obj);
+ * var str = tinymce.util.JSON.serialize(obj);
  */
 define(
   'tinymce.core.util.JSON',

@@ -12,7 +12,7 @@
  * This mixin contains the event logic for the tinymce.Editor class.
  *
  * @mixin tinymce.EditorObservable
- * @extends tinymce.core.util.Observable
+ * @extends tinymce.util.Observable
  */
 define(
   'tinymce.core.EditorObservable',

@@ -13,7 +13,7 @@
  * a label and control item.
  *
  * @class tinymce.ui.FormItem
- * @extends tinymce.core.ui.Container
+ * @extends tinymce.ui.Container
  * @setting {String} label Label to display for the form item.
  */
 define(

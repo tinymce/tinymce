@@ -13,7 +13,7 @@
  *
  * @-x-less FieldSet.less
  * @class tinymce.ui.FieldSet
- * @extends tinymce.core.ui.Form
+ * @extends tinymce.ui.Form
  */
 define(
   'tinymce.core.ui.FieldSet',

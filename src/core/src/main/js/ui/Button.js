@@ -20,7 +20,7 @@
  *
  * @-x-less Button.less
  * @class tinymce.ui.Button
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Button',

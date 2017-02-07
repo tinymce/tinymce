@@ -13,7 +13,7 @@
  *
  * @-x-less TextBox.less
  * @class tinymce.ui.TextBox
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.TextBox',

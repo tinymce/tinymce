@@ -17,7 +17,7 @@
  *
  * @-x-less Iframe.less
  * @class tinymce.ui.Iframe
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Iframe',

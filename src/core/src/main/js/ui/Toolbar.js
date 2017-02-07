@@ -12,7 +12,7 @@
  * Creates a new toolbar.
  *
  * @class tinymce.ui.Toolbar
- * @extends tinymce.core.ui.Container
+ * @extends tinymce.ui.Container
  */
 define(
   'tinymce.core.ui.Toolbar',

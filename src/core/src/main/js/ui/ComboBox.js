@@ -14,7 +14,7 @@
  *
  * @-x-less ComboBox.less
  * @class tinymce.ui.ComboBox
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.ComboBox',

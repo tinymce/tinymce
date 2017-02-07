@@ -13,7 +13,7 @@
  *
  * @-x-less Slider.less
  * @class tinymce.ui.Slider
- * @extends tinymce.core.ui.Widget
+ * @extends tinymce.ui.Widget
  */
 define(
   'tinymce.core.ui.Slider',

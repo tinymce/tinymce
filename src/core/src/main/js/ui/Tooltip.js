@@ -13,7 +13,7 @@
  *
  * @-x-less ToolTip.less
  * @class tinymce.ui.ToolTip
- * @extends tinymce.core.ui.Control
+ * @extends tinymce.ui.Control
  * @mixes tinymce.ui.Movable
  */
 define(

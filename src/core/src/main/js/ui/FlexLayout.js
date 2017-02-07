@@ -17,7 +17,7 @@
  * @setting {String} pack start|end|justify
  *
  * @class tinymce.ui.FlexLayout
- * @extends tinymce.core.ui.AbsoluteLayout
+ * @extends tinymce.ui.AbsoluteLayout
  */
 define(
   'tinymce.core.ui.FlexLayout',

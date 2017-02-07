@@ -13,7 +13,7 @@
  *
  * @-x-less Panel.less
  * @class tinymce.ui.Panel
- * @extends tinymce.core.ui.Container
+ * @extends tinymce.ui.Container
  * @mixes tinymce.ui.Scrollable
  */
 define(

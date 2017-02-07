@@ -13,7 +13,7 @@
  *
  * @-x-less TabPanel.less
  * @class tinymce.ui.TabPanel
- * @extends tinymce.core.ui.Panel
+ * @extends tinymce.ui.Panel
  *
  * @setting {Number} activeTab Active tab index.
  */
