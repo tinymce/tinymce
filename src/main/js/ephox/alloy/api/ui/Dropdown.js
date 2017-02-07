@@ -11,38 +11,16 @@ define(
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.alloy.ui.schema.DropdownSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Highlighting, Keying, Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, FieldSchema, Merger, Fun, Option) {
-    var schema = [
-      FieldSchema.strict('fetch'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.strict('toggleClass'),
-      FieldSchema.strict('dom'),
-      FieldSchema.defaulted('displayer', Fun.identity),
-      FieldSchema.option('lazySink'),
-      FieldSchema.defaulted('matchWidth', false),
-      FieldSchema.option('role')
-    ];
-
-    var partTypes = [
-      PartType.external(
-        { build: Fun.identity },
-        'menu', 
-        function (detail) {
-          return {
-            onExecute: detail.onExecute()
-          };
-        },
-        Fun.constant({ })
-      ),
-      InternalSink
-    ];
+  function (Composing, Highlighting, Keying, Toggling, UiBuilder, Beta, InternalSink, PartType, ButtonBase, DropdownSchema, FieldSchema, Merger, Fun, Option) {
+    var schema = DropdownSchema.schema();
+    var partTypes = DropdownSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       return Merger.deepMerge(
@@ -108,11 +86,11 @@ define(
     };
 
     var build = function (spec) {
-      return UiBuilder.composite('dropdown', schema, partTypes, make, spec);
+      return UiBuilder.composite(DropdownSchema.name(), schema, partTypes, make, spec);
     };
 
     // TODO: Remove likely dupe
-    var parts = PartType.generate('dropdown', partTypes);
+    var parts = PartType.generate(DropdownSchema.name(), partTypes);
 
     return {
       build: build,
