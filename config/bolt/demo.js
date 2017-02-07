@@ -1,6 +1,6 @@
 configure({
   configs: [
-    './prod.js'
+    './doc.js'
   ],
   types: [
     type('text', 'ephox.modulator.text')
