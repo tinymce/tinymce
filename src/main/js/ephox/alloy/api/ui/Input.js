@@ -4,16 +4,17 @@ define(
   [
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.ui.common.InputBase',
+    'ephox.alloy.ui.schema.InputSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (UiBuilder, InputBase, FieldSchema, Merger, Fun) {
-    var schema = InputBase.schema();
+  function (UiBuilder, InputBase, InputSchema, FieldSchema, Merger, Fun) {
+    var schema = InputSchema.schema();
 
     var build = function (spec) {
-      return UiBuilder.single('Input', schema, make, spec);
+      return UiBuilder.single(InputSchema.name(), schema, make, spec);
     };
 
     var make = function (detail, spec) {
@@ -28,7 +29,7 @@ define(
 
     return {
       build: build,
-      name: Fun.constant('input')
+      name: Fun.constant(InputSchema.name())
     };
   }
 );

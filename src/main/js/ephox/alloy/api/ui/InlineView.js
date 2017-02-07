@@ -9,17 +9,15 @@ define(
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiBuilder',
     'ephox.alloy.sandbox.Dismissal',
+    'ephox.alloy.ui.schema.InlineViewSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiBuilder, Dismissal, FieldSchema, Merger, Future, Fun) {
-    var schema = [
-      FieldSchema.strict('lazySink'),
-      FieldSchema.defaulted('onShow', Fun.noop)
-    ];
+  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiBuilder, Dismissal, InlineViewSchema, FieldSchema, Merger, Future, Fun) {
+    var schema = InlineViewSchema.schema();
 
     var make = function (detail, spec) {
       return Merger.deepMerge(
@@ -60,7 +58,7 @@ define(
     };
 
     var build = function (spec) {
-      return UiBuilder.single('InlineView', schema, make, spec);
+      return UiBuilder.single(InlineViewSchema.name(), schema, make, spec);
     };
 
     return Merger.deepMerge(
