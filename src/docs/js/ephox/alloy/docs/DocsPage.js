@@ -12,14 +12,16 @@ define(
     'ephox.alloy.ui.schema.ExpandableFormSchema',
     'ephox.alloy.ui.schema.FormChooserSchema',
     'ephox.alloy.ui.schema.FormCoupledInputsSchema',
+    'ephox.alloy.ui.schema.FormFieldSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
+    'ephox.peanut.Fun',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (GuiFactory, Gui, Container, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FieldSchema, ValueSchema, Arr, Insert, SelectorFind) {
+  function (GuiFactory, Gui, Container, SchemaView, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -32,7 +34,12 @@ define(
         ExpandableFormSchema,
         // Form,
         FormChooserSchema,
-        FormCoupledInputsSchema
+        FormCoupledInputsSchema,
+        {
+          name: FormFieldSchema.name,
+          schema: FormFieldSchema.schema,
+          parts: Fun.curry(FormFieldSchema.makeParts, { })
+        }
       ];
 
       var extractParts = function (partTypes) {
@@ -82,24 +89,7 @@ define(
               })] : [ ]
           ])
         });
-        // var parts = b.parts();
-        // if (parts.length > 0) {
-        //   var h4 = Element.fromTag('h4');
-        //   Html.set(h4, 'Parts');
-
-        //   var list = Element.fromTag('ul');
-        //   var partContainers = Arr.map(parts, function (p) {
-        //     var li = Element.fromTag('li');
-        //     Html.set(li, p);
-        //     return li;
-        //   })
-        //   InsertAll.append(list, partContainers);
-          
-
-        //   Insert.after(schemaDiv, h4);
-        //   Insert.after(h4, list);
-        // }
-      }
+      };
 
       var definitions = Arr.map(uiSchemas, function (s) {
         var heading = Container.build({
