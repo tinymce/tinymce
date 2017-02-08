@@ -54,11 +54,13 @@ define(
         });
 
         return [{
-          dom: {
-            tag: Node.name(elem),
-            attributes: attrs,
-            classes: classes
-          },
+          dom: Objects.wrapAll(
+            Arr.flatten([
+              [ { key: 'tag', value: Node.name(elem) } ],
+              Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
+              classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]            
+            ])
+          ),
           components: components
         }];
       }
@@ -75,11 +77,13 @@ define(
       });
 
       return {
-        dom: {
-          tag: Node.name(elem),
-          attributes: attrs,
-          classes: classes
-        },
+        dom: Objects.wrapAll(
+          Arr.flatten([
+            [ { key: 'tag', value: Node.name(elem) } ],
+            Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
+            classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]            
+          ])
+        ),
         components: components
       };
     };
