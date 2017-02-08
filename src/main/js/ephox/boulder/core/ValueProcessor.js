@@ -13,14 +13,13 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
-    'ephox.lumber.api.Timers',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.scullion.ADT'
   ],
 
-  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Type, Arr, Obj, Merger, Timers, Fun, Option, Result, Adt) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Type, Arr, Obj, Merger, Fun, Option, Result, Adt) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -114,9 +113,7 @@ define(
         return cExtractOne(path, obj, field, strength);
       });
 
-      return Timers.run('cExtract.consolidateObj', function () {
-        return ResultCombine.consolidateObj(results, {});
-      });
+      return ResultCombine.consolidateObj(results, {});
     };
 
     var value = function (validator) {
