@@ -41,6 +41,10 @@ define(
                 display: 'block'
               }
             },
+            data: {
+              value: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>',
+              text: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>'
+            },
             uid: 'textarea-input'
           }),
           Button.sketch({
@@ -52,12 +56,7 @@ define(
               var textarea = button.getSystem().getByUid('textarea-input').getOrDie();
               var value = Representing.getValue(textarea).value;
 
-              var output = GuiTemplate.use(
-                Option.none(),
-                value,
-                { },
-                { fields: { } }
-              );
+              var output = GuiTemplate.readHtml(value).getOrDie();
 
               console.log('output', output);
               var display = button.getSystem().getByUid('pre-output').getOrDie();
