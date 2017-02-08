@@ -106,7 +106,7 @@ define('ephox.mcagar.api.LegacyUnit', [
   };
 
   var equal = function (actual, expected, message) {
-    Assertions.assertEq(message ? 'No message specified' : message, expected, actual);
+    Assertions.assertEq(message ? message : 'No message specified', expected, actual);
   };
 
   return {
