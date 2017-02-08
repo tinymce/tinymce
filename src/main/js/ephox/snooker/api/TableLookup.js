@@ -35,7 +35,9 @@ define(
       return LayerSelector.firstLayer(ancestor, 'th,td');
     };
 
-    var notCell = Fun.not(cell);
+    var notCell = function (element) {
+      return lookup([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element);
+    };
 
     var neighbours = function (selector, element) {
       return Traverse.parent(element).map(function (parent) {
