@@ -1,0 +1,44 @@
+// TabPanel
+
+.@{prefix}-tabs {
+  display: block;
+  border-bottom: 1px solid @tab-border;
+}
+
+.@{prefix}-tabs,
+.@{prefix}-tabs + .@{prefix}-container-body {
+  background: @tabs-bg;
+}
+
+.@{prefix}-tab {
+  .inline-block();
+  border: 1px solid @tab-border;
+  border-width: 0 1px 0 0;
+  background: @tab-bg;
+  padding: 8px;
+  text-shadow: @text-shadow;
+  height: 13px;
+  cursor: pointer;
+}
+
+.@{prefix}-tab:hover {
+  background: @tab-bg-hover;
+}
+
+.@{prefix}-tab.@{prefix}-active {
+  background: @tab-bg-active;
+  border-bottom-color: transparent;
+  margin-bottom: -1px;
+  height: 14px;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-tabs {
+  text-align: right;
+  direction: rtl;
+}
+
+.@{prefix}-rtl .@{prefix}-tab {
+  border-width: 0 0 0 1px;
+}

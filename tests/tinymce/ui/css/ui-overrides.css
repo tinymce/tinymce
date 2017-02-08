@@ -1,20 +1,20 @@
 /* Hardcodes sizes since fonts vary on platforms */
 
 .mce-spacer {
-	width: 20px;
-	height: 20px;
-	visibility: visible;
-	border: 0 solid black;
+  width: 20px;
+  height: 20px;
+  visibility: visible;
+  border: 0 solid black;
 }
 
 .mce-head .mce-title {
-	width: 100px;
-	height: 20px;
-	display: inline-block;
+  width: 100px;
+  height: 20px;
+  display: inline-block;
 }
 
 .mce-btn .mce-txt {
-	width: 20px;
+  width: 20px;
 }
 
 /* Colors used for debugging */
@@ -29,5 +29,5 @@
 .mce-i-test {background: red;}
 
 body .mce-window, body .mce-notification {
-	 transform: none;
+   transform: none;
  }

@@ -1,16 +1,16 @@
 .example1 {
-	font-weight: bold;
-	font-size: 14px
+  font-weight: bold;
+  font-size: 14px
 }
 
 .example2 {
-	font-weight: bold;
-	font-size: 12px;
-	color: #FF0000
+  font-weight: bold;
+  font-size: 12px;
+  color: #FF0000
 }
 
 tr.tablerow1 {
-	background-color: #BBBBBB;
+  background-color: #BBBBBB;
 }
 
 p.red {color:red;}
