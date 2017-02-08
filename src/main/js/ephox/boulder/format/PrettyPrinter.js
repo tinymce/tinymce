@@ -21,7 +21,6 @@ define(
           getErrorInfo: function () {
             return '... (only showing first ten failures)';
           }
-          // SchemaError.custom([ ], '...')
         }
       ]) : errors;
 

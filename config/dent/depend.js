@@ -98,17 +98,6 @@ var dependencies = [
       { name: 'module/*.js', path: test },
       { name: 'depend/*.js', path: test }
     ]
-  },
-
-  {
-    name: 'lumber',
-    repository: 'buildrepo2',
-    version: 'latest',
-    source: 'lumber.zip',
-    targets: [
-      { name: 'module/*.js', path: test },
-      { name: 'depend/*.js', path: test }
-    ]
   }
 ];
 

@@ -105,11 +105,7 @@ define(
     };
 
     var cExtract = function (path, obj, fields, strength) {
-      if (obj === undefined) {
-        return SchemaError.custom(path, 'Obj was undefined');
-      }
-
-       var results = Arr.map(fields, function (field) {
+      var results = Arr.map(fields, function (field) {
         return cExtractOne(path, obj, field, strength);
       });
 

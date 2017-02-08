@@ -9,6 +9,8 @@ define(
 
   function (Arr, Merger, Result) {
     var consolidateObj = function (objects, base) {
+      // This used to be done in a functional way with folding, but
+      // I was worried about its performance (because this is called a lot)
       var passed = [ base ];
       var failed = [ ];
       var unsuccessful = false;
@@ -27,22 +29,6 @@ define(
       else return Result.value(
         Merger.deepMerge.apply(undefined, passed)
       );
-
-      // return Arr.foldl(objects, function (acc, obj) {
-      //   return acc.fold(function (accErrs) {
-      //     return obj.fold(function (errs) {
-      //       return Result.error(accErrs.concat(errs));
-      //     }, function (_) {
-      //       return Result.error(accErrs);
-      //     }) ; 
-      //   }, function (accRest) {
-      //     return obj.fold(function (errs) {
-      //       return Result.error(errs);
-      //     }, function (v) {
-      //       return Result.value(Merger.deepMerge(accRest, v));
-      //     });
-      //   });
-      // }, Result.value(base));
     };
 
     var consolidateArr = function (objects) {
@@ -59,23 +45,10 @@ define(
         });
       });
 
+      // This used to (also) be done in a functional way with folding, but
+      // I was worried about its performance (because this is called a lot)
       if (unsuccessful) return Result.error(failed);
       else return Result.value(passed);
-      // return Arr.foldl(objects, function (acc, obj) {
-      //   return acc.fold(function (accErrs) {
-      //     return obj.fold(function (errs) {
-      //       return Result.error(accErrs.concat(errs));
-      //     }, function (_) {
-      //       return Result.error(accErrs);
-      //     }) ; 
-      //   }, function (accRest) {
-      //     return obj.fold(function (errs) {
-      //       return Result.error(errs);
-      //     }, function (v) {
-      //       return Result.value(accRest.concat([ v ]));
-      //     });
-      //   });
-      // }, Result.value([ ]));
     };
 
     return {
