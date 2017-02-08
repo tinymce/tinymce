@@ -2,10 +2,13 @@ define(
   'ephox.snooker.api.TableLookup',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.util.LayerSelector',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.SelectorFilter',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Selectors',
@@ -13,15 +16,19 @@ define(
     'global!parseInt'
   ],
 
-  function (Fun, Structs, LayerSelector, Attr, SelectorFilter, SelectorFind, Selectors, Traverse, parseInt) {
+  function (Arr, Fun, Option, Structs, LayerSelector, Attr, Node, SelectorFilter, SelectorFind, Selectors, Traverse, parseInt) {
 
     // lookup inside this table
     var lookup = function (tags, element) {
+      // This looks a lot like SelectorFind.closest, with one big exception - the isRoot check.
+      // The code here will look for parents if passed a table, SelectorFind.closest with that specific isRoot check won't.
+      if (Arr.contains(tags, Node.name(element))) return Option.some(element);
+
       var isRoot = function (element) {
         return Selectors.is(element, 'table');
       };
 
-      return SelectorFind.closest(element, tags.join(','), isRoot);
+      return SelectorFind.ancestor(element, tags.join(','), isRoot);
     };
 
     /*
