@@ -1,5 +1,5 @@
 asynctest(
-  'bbrowser.tinymce.plugins.wordcount.PluginTest',
+  'browser.tinymce.plugins.wordcount.PluginTest',
   [
     'tinymce.plugins.wordcount.Plugin',
     'ephox.mcagar.api.TinyLoader',
