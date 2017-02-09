@@ -11,9 +11,9 @@
 define(
   'tinymce.themes.modern.modes.Iframe',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.ui.Factory',
-    'global!tinymce.dom.DOMUtils',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.themes.modern.ui.Toolbar',
     'tinymce.themes.modern.ui.Menubar',
     'tinymce.themes.modern.ui.ContextToolbars',

@@ -11,16 +11,21 @@
 define(
   'tinymce.themes.modern.Theme',
   [
-    'global!tinymce.AddOnManager',
-    'global!tinymce.EditorManager',
-    'global!tinymce.Env',
+    'global!window',
+    'tinymce.core.AddOnManager',
+    'tinymce.core.EditorManager',
+    'tinymce.core.Env',
+    'tinymce.core.ui.Api',
     'tinymce.themes.modern.modes.Iframe',
     'tinymce.themes.modern.modes.Inline',
     'tinymce.themes.modern.ui.ProgressState',
     'tinymce.themes.modern.ui.Resize'
   ],
-  function (AddOnManager, EditorManager, Env, Iframe, Inline, ProgressState, Resize) {
+  function (window, AddOnManager, EditorManager, Env, Api, Iframe, Inline, ProgressState, Resize) {
     var ThemeManager = AddOnManager.ThemeManager;
+
+    Api.appendTo(window.tinymce ? window.tinymce : {});
+
     var renderUI = function (editor, theme, args) {
       var settings = editor.settings;
       var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;

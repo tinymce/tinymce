@@ -44,26 +44,7 @@ define(
     'tinymce.core.util.Class',
     'tinymce.core.util.EventDispatcher',
     'tinymce.core.util.Observable',
-    'tinymce.core.ui.Selector',
-    'tinymce.core.ui.Collection',
-    'tinymce.core.ui.ReflowQueue',
-    'tinymce.core.ui.Control',
-    'tinymce.core.ui.Factory',
-    'tinymce.core.ui.KeyboardNavigation',
-    'tinymce.core.ui.Container',
-    'tinymce.core.ui.DragHelper',
-    'tinymce.core.ui.Scrollable',
-    'tinymce.core.ui.Panel',
-    'tinymce.core.ui.Movable',
-    'tinymce.core.ui.Resizable',
-    'tinymce.core.ui.FloatPanel',
-    'tinymce.core.ui.Window',
-    'tinymce.core.ui.MessageBox',
     'tinymce.core.WindowManager',
-    'tinymce.core.ui.Tooltip',
-    'tinymce.core.ui.Widget',
-    'tinymce.core.ui.Progress',
-    'tinymce.core.ui.Notification',
     'tinymce.core.NotificationManager',
     'tinymce.core.EditorObservable',
     'tinymce.core.Shortcuts',
@@ -77,58 +58,15 @@ define(
     'tinymce.core.util.JSONP',
     'tinymce.core.util.LocalStorage',
     'tinymce.core.api.Compat',
-    'tinymce.core.ui.Layout',
-    'tinymce.core.ui.AbsoluteLayout',
-    'tinymce.core.ui.Button',
-    'tinymce.core.ui.ButtonGroup',
-    'tinymce.core.ui.Checkbox',
-    'tinymce.core.ui.ComboBox',
-    'tinymce.core.ui.ColorBox',
-    'tinymce.core.ui.PanelButton',
-    'tinymce.core.ui.ColorButton',
     'tinymce.core.util.Color',
-    'tinymce.core.ui.ColorPicker',
-    'tinymce.core.ui.Path',
-    'tinymce.core.ui.ElementPath',
-    'tinymce.core.ui.FormItem',
-    'tinymce.core.ui.Form',
-    'tinymce.core.ui.FieldSet',
-    'tinymce.core.ui.FilePicker',
-    'tinymce.core.ui.FitLayout',
-    'tinymce.core.ui.FlexLayout',
-    'tinymce.core.ui.FlowLayout',
-    'tinymce.core.ui.FormatControls',
-    'tinymce.core.ui.GridLayout',
-    'tinymce.core.ui.Iframe',
-    'tinymce.core.ui.InfoBox',
-    'tinymce.core.ui.Label',
-    'tinymce.core.ui.Toolbar',
-    'tinymce.core.ui.MenuBar',
-    'tinymce.core.ui.MenuButton',
-    'tinymce.core.ui.MenuItem',
-    'tinymce.core.ui.Throbber',
-    'tinymce.core.ui.Menu',
-    'tinymce.core.ui.ListBox',
-    'tinymce.core.ui.Radio',
-    'tinymce.core.ui.ResizeHandle',
-    'tinymce.core.ui.SelectBox',
-    'tinymce.core.ui.Slider',
-    'tinymce.core.ui.Spacer',
-    'tinymce.core.ui.SplitButton',
-    'tinymce.core.ui.StackLayout',
-    'tinymce.core.ui.TabPanel',
-    'tinymce.core.ui.TextBox'
+    'tinymce.core.ui.Api'
   ],
   function (
     Rect, Promise, Delay, Env, EventUtils, Sizzle, Tools, DomQuery, Styles, TreeWalker, Entities, DOMUtils, ScriptLoader, AddOnManager,
     RangeUtils, Node, Schema, SaxParser, DomParser, Writer, HtmlSerializer, DomSerializer, VK, ControlSelection, BookmarkManager, Selection,
-    Formatter, UndoManager, EditorCommands, URI, Class, EventDispatcher, Observable, Selector, Collection, ReflowQueue, Control, Factory,
-    KeyboardNavigation, Container, DragHelper, Scrollable, Panel, Movable, Resizable, FloatPanel, Window, MessageBox, WindowManager,
-    Tooltip, Widget, Progress, Notification, NotificationManager, EditorObservable, Shortcuts, Editor, I18n, FocusManager, EditorManager,
-    XHR, JSON, JSONRequest, JSONP, LocalStorage, Compat, Layout, AbsoluteLayout, Button, ButtonGroup, Checkbox, ComboBox, ColorBox,
-    PanelButton, ColorButton, Color, ColorPicker, Path, ElementPath, FormItem, Form, FieldSet, FilePicker, FitLayout, FlexLayout,
-    FlowLayout, FormatControls, GridLayout, Iframe, InfoBox, Label, Toolbar, MenuBar, MenuButton, MenuItem, Throbber, Menu,
-    ListBox, Radio, ResizeHandle, SelectBox, Slider, Spacer, SplitButton, StackLayout, TabPanel, TextBox
+    Formatter, UndoManager, EditorCommands, URI, Class, EventDispatcher, Observable, WindowManager,
+    NotificationManager, EditorObservable, Shortcuts, Editor, I18n, FocusManager, EditorManager,
+    XHR, JSON, JSONRequest, JSONP, LocalStorage, Compat, Color, Api
   ) {
     var tinymce = EditorManager;
 
@@ -180,26 +118,7 @@ define(
     expose(tinymce, 'util.Class', Class);
     expose(tinymce, 'util.EventDispatcher', EventDispatcher);
     expose(tinymce, 'util.Observable', Observable);
-    expose(tinymce, 'ui.Selector', Selector);
-    expose(tinymce, 'ui.Collection', Collection);
-    expose(tinymce, 'ui.ReflowQueue', ReflowQueue);
-    expose(tinymce, 'ui.Control', Control);
-    expose(tinymce, 'ui.Factory', Factory);
-    expose(tinymce, 'ui.KeyboardNavigation', KeyboardNavigation);
-    expose(tinymce, 'ui.Container', Container);
-    expose(tinymce, 'ui.DragHelper', DragHelper);
-    expose(tinymce, 'ui.Scrollable', Scrollable);
-    expose(tinymce, 'ui.Panel', Panel);
-    expose(tinymce, 'ui.Movable', Movable);
-    expose(tinymce, 'ui.Resizable', Resizable);
-    expose(tinymce, 'ui.FloatPanel', FloatPanel);
-    expose(tinymce, 'ui.Window', Window);
-    expose(tinymce, 'ui.MessageBox', MessageBox);
     expose(tinymce, 'WindowManager', WindowManager);
-    expose(tinymce, 'ui.Tooltip', Tooltip);
-    expose(tinymce, 'ui.Widget', Widget);
-    expose(tinymce, 'ui.Progress', Progress);
-    expose(tinymce, 'ui.Notification', Notification);
     expose(tinymce, 'NotificationManager', NotificationManager);
     expose(tinymce, 'EditorObservable', EditorObservable);
     expose(tinymce, 'Shortcuts', Shortcuts);
@@ -213,47 +132,9 @@ define(
     expose(tinymce, 'util.JSONP', JSONP);
     expose(tinymce, 'util.LocalStorage', LocalStorage);
     expose(tinymce, 'Compat', Compat);
-    expose(tinymce, 'ui.Layout', Layout);
-    expose(tinymce, 'ui.AbsoluteLayout', AbsoluteLayout);
-    expose(tinymce, 'ui.Button', Button);
-    expose(tinymce, 'ui.ButtonGroup', ButtonGroup);
-    expose(tinymce, 'ui.Checkbox', Checkbox);
-    expose(tinymce, 'ui.ComboBox', ComboBox);
-    expose(tinymce, 'ui.ColorBox', ColorBox);
-    expose(tinymce, 'ui.PanelButton', PanelButton);
-    expose(tinymce, 'ui.ColorButton', ColorButton);
     expose(tinymce, 'util.Color', Color);
-    expose(tinymce, 'ui.ColorPicker', ColorPicker);
-    expose(tinymce, 'ui.Path', Path);
-    expose(tinymce, 'ui.ElementPath', ElementPath);
-    expose(tinymce, 'ui.FormItem', FormItem);
-    expose(tinymce, 'ui.Form', Form);
-    expose(tinymce, 'ui.FieldSet', FieldSet);
-    expose(tinymce, 'ui.FilePicker', FilePicker);
-    expose(tinymce, 'ui.FitLayout', FitLayout);
-    expose(tinymce, 'ui.FlexLayout', FlexLayout);
-    expose(tinymce, 'ui.FlowLayout', FlowLayout);
-    expose(tinymce, 'ui.FormatControls', FormatControls);
-    expose(tinymce, 'ui.GridLayout', GridLayout);
-    expose(tinymce, 'ui.Iframe', Iframe);
-    expose(tinymce, 'ui.InfoBox', InfoBox);
-    expose(tinymce, 'ui.Label', Label);
-    expose(tinymce, 'ui.Toolbar', Toolbar);
-    expose(tinymce, 'ui.MenuBar', MenuBar);
-    expose(tinymce, 'ui.MenuButton', MenuButton);
-    expose(tinymce, 'ui.MenuItem', MenuItem);
-    expose(tinymce, 'ui.Throbber', Throbber);
-    expose(tinymce, 'ui.Menu', Menu);
-    expose(tinymce, 'ui.ListBox', ListBox);
-    expose(tinymce, 'ui.Radio', Radio);
-    expose(tinymce, 'ui.ResizeHandle', ResizeHandle);
-    expose(tinymce, 'ui.SelectBox', SelectBox);
-    expose(tinymce, 'ui.Slider', Slider);
-    expose(tinymce, 'ui.Spacer', Spacer);
-    expose(tinymce, 'ui.SplitButton', SplitButton);
-    expose(tinymce, 'ui.StackLayout', StackLayout);
-    expose(tinymce, 'ui.TabPanel', TabPanel);
-    expose(tinymce, 'ui.TextBox', TextBox);
+
+    Api.appendTo(tinymce);
 
     Compat.register(tinymce);
 

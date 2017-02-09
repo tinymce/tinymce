@@ -13,17 +13,23 @@
 define(
   'tinymce.plugins.anchor.demo.Demo',
   [
-    "tinymce.plugins.anchor.Plugin",
-    "global!tinymce"
+    'tinymce.core.EditorManager',
+    'tinymce.themes.modern.Theme',
+    'tinymce.plugins.anchor.Plugin',
+    'tinymce.plugins.code.Plugin'
   ],
-  function (Plugin, tinymce) {
-    return function () {
+  function (EditorManager, Theme, AnchorPlugin, CodePlugin) {
+    Theme();
+    AnchorPlugin();
+    CodePlugin();
 
-      tinymce.init({
+    return function () {
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "anchor code preview",
-        toolbar: "anchor code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "anchor code",
+        toolbar: "anchor code",
         height: 600
       });
     };

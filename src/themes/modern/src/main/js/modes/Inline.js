@@ -11,10 +11,10 @@
 define(
   'tinymce.themes.modern.modes.Inline',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.ui.Factory',
-    'global!tinymce.dom.DOMUtils',
-    'global!tinymce.ui.FloatPanel',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.ui.FloatPanel',
     'tinymce.themes.modern.ui.Toolbar',
     'tinymce.themes.modern.ui.Menubar',
     'tinymce.themes.modern.ui.ContextToolbars',

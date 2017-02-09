@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.modern.ui.Resize',
   [
-    'global!tinymce.dom.DOMUtils'
+    'tinymce.core.dom.DOMUtils'
   ],
   function (DOMUtils) {
     var DOM = DOMUtils.DOM;

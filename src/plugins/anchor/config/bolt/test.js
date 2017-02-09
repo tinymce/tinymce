@@ -1,6 +1,6 @@
 configure({
   configs: [
-    './prod.js'
+    './../../../../core/config/bolt/test.js'
   ],
   sources: [
     source('amd', 'tinymce.plugins.anchor.test', '../../src/test/js/module', mapper.hierarchical),

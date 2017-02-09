@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.modern.ui.Menubar',
   [
-    'global!tinymce.util.Tools'
+    'tinymce.core.util.Tools'
   ],
   function (Tools) {
     var defaultMenus = {

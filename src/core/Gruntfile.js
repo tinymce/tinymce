@@ -75,6 +75,13 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+
+    "globals": {
+      options: {
+        outputDir: 'dist/globals',
+        templateFile: 'src/main/js/api/ResolveGlobal.js'
+      }
     }
   });
 
@@ -82,6 +89,7 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../node_modules/grunt-contrib-copy/tasks");
   grunt.task.loadTasks("../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../node_modules/grunt-eslint/tasks");
+  grunt.task.loadTasks("../../tools/tasks");
 
-  grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
+  grunt.registerTask("default", ["bolt-init", "bolt-build", "globals", "copy", "eslint", "uglify"]);
 };
