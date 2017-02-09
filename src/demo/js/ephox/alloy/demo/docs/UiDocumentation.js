@@ -29,20 +29,6 @@ define(
               })
             },
             function (_, pSchema, name, _, _, _) {
-              var builtSchema = SchemaView.build([ name ],  ValueSchema.objOf(pSchema).toDsl());
-              return Container.sketch({
-                dom: {
-                  tag: 'div'
-                },
-                components: [
-                  Container.sketch({
-                    dom: { tag: 'span', classes: [ ], innerHtml: '(optional) ' + name }
-                  }),
-                  builtSchema
-                ]
-              })
-            },
-            function (_, pSchema, name, _, _, _) {
               // DUPE
               var builtSchema = SchemaView.build([ name ],  ValueSchema.objOf(pSchema).toDsl());
               return Container.sketch({
@@ -57,6 +43,20 @@ define(
                 ]
               })
               return GuiFactory.text('(external) ' + name);
+            },
+            function (_, pSchema, name, _, _, _) {
+              var builtSchema = SchemaView.build([ name ],  ValueSchema.objOf(pSchema).toDsl());
+              return Container.sketch({
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  Container.sketch({
+                    dom: { tag: 'span', classes: [ ], innerHtml: '(optional) ' + name }
+                  }),
+                  builtSchema
+                ]
+              })
             },
             function (_, _, name, _, _, _, _) {
               return GuiFactory.text('(group) ' + name);

@@ -4,16 +4,14 @@ define(
   [
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
-    'ephox.compass.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.ADT'
   ],
 
-  function (UiSubstitutes, FieldSchema, ValueSchema, Arr, Obj, Merger, Fun, Option, Adt) {
+  function (UiSubstitutes, FieldSchema, Arr, Merger, Fun, Option, Adt) {
     var adt = Adt.generate([
       { internal: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
       { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
