@@ -6,20 +6,38 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.paste.core.CutCopy',
+    'tinymce.plugins.paste.core.InternalHtml',
+    'tinymce.plugins.paste.Plugin',
     'tinymce.plugins.paste.test.MockDataTransfer'
   ],
-  function (GeneralSteps, Logger, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, CutCopy, MockDataTransfer) {
+  function (
+    GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter,
+    TinyApis, TinyLoader, CutCopy, InternalHtml, Plugin, MockDataTransfer
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
-    var dataTransfer;
+    var dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
 
-    var sDataTransferEvent = function (editor, type) {
+    var sResetProcessEvents = Step.sync(function () {
+      lastPreProcessEvent = null;
+      lastPostProcessEvent = null;
+    });
+
+    var sCutCopyDataTransferEvent = function (editor, type) {
       return Step.sync(function () {
         dataTransfer = MockDataTransfer.create({});
         editor.fire(type, { clipboardData: dataTransfer });
+      });
+    };
+
+    var sPasteDataTransferEvent = function (editor, data) {
+      return Step.sync(function () {
+        dataTransfer = MockDataTransfer.create(data);
+        editor.fire('paste', { clipboardData: dataTransfer });
       });
     };
 
@@ -34,7 +52,7 @@ asynctest(
       return GeneralSteps.sequence([
         tinyApis.sSetContent(html),
         tinyApis.sSetSelection(spath, soffset, fpath, foffset),
-        sDataTransferEvent(editor, 'copy')
+        sCutCopyDataTransferEvent(editor, 'copy')
       ]);
     };
 
@@ -42,7 +60,16 @@ asynctest(
       return GeneralSteps.sequence([
         tinyApis.sSetContent(html),
         tinyApis.sSetSelection(spath, soffset, fpath, foffset),
-        sDataTransferEvent(editor, 'cut')
+        sCutCopyDataTransferEvent(editor, 'cut')
+      ]);
+    };
+
+    var sPaste = function (editor, tinyApis, startHtml, pasteData, spath, soffset, fpath, foffset) {
+      return GeneralSteps.sequence([
+        tinyApis.sSetContent(startHtml),
+        tinyApis.sSetSelection(spath, soffset, fpath, foffset),
+        sResetProcessEvents,
+        sPasteDataTransferEvent(editor, pasteData)
       ]);
     };
 
@@ -110,6 +137,53 @@ asynctest(
       ]));
     };
 
+    var sAssertLastPreProcessEvent = function (expectedData) {
+      return Step.sync(function () {
+        RawAssertions.assertEq('Internal property should be equal', lastPreProcessEvent.internal, expectedData.internal);
+        RawAssertions.assertEq('Content property should be equal', lastPreProcessEvent.content, expectedData.content);
+      });
+    };
+
+    var sAssertLastPostProcessEvent = function (expectedData) {
+      return Step.sync(function () {
+        RawAssertions.assertEq('Internal property should be equal', lastPostProcessEvent.internal, expectedData.internal);
+        RawAssertions.assertEq('Content property should be equal', lastPostProcessEvent.node.innerHTML, expectedData.content);
+      });
+    };
+
+    var sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(function () {
+      RawAssertions.assertEq('PastePreProcess event object', lastPreProcessEvent !== null, true);
+      RawAssertions.assertEq('PastePostProcess event object', lastPostProcessEvent !== null, true);
+    }), 100, 100);
+
+    var sTestPaste = function (editor, tinyApis) {
+      return Logger.t('Paste tests', GeneralSteps.sequence([
+        Logger.t('Paste external content', GeneralSteps.sequence([
+          sPaste(editor, tinyApis, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [0, 0], 0, [0, 0], 3),
+          sWaitForProcessEvents,
+          sAssertLastPreProcessEvent({ internal: false, content: '<p>X</p>' }),
+          sAssertLastPostProcessEvent({ internal: false, content: '<p>X</p>' })
+        ])),
+
+        Logger.t('Paste internal content with mark', GeneralSteps.sequence([
+          sPaste(editor, tinyApis, '<p>abc</p>', { 'text/plain': 'X', 'text/html': InternalHtml.mark('<p>X</p>') }, [0, 0], 0, [0, 0], 3),
+          sWaitForProcessEvents,
+          sAssertLastPreProcessEvent({ internal: true, content: '<p>X</p>' }),
+          sAssertLastPostProcessEvent({ internal: true, content: '<p>X</p>' })
+        ])),
+
+        Logger.t('Paste internal content with mime', GeneralSteps.sequence([
+          sPaste(editor, tinyApis, '<p>abc</p>',
+            { 'text/plain': 'X', 'text/html': '<p>X</p>', 'x-tinymce/html': '<p>X</p>' },
+            [0, 0], 0, [0, 0], 3
+          ),
+          sWaitForProcessEvents,
+          sAssertLastPreProcessEvent({ internal: true, content: '<p>X</p>' }),
+          sAssertLastPostProcessEvent({ internal: true, content: '<p>X</p>' })
+        ]))
+      ]));
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
 
@@ -117,9 +191,20 @@ asynctest(
 
       Pipeline.async({}, [
         sTestCopy(editor, tinyApis),
-        sTestCut(editor, tinyApis)
+        sTestCut(editor, tinyApis),
+        sTestPaste(editor, tinyApis)
       ], onSuccess, onFailure);
     }, {
+      plugins: 'paste',
+      init_instance_callback: function (editor) {
+        editor.on('PastePreProcess', function (evt) {
+          lastPreProcessEvent = evt;
+        });
+
+        editor.on('PastePostProcess', function (evt) {
+          lastPostProcessEvent = evt;
+        });
+      }
     }, success, failure);
   }
 );

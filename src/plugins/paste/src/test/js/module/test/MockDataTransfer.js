@@ -41,10 +41,6 @@ define(
         });
       };
 
-      Obj.each(inputData, function (value, key) {
-        setData(value, key);
-      });
-
       result = {
         dropEffect: '',
         effectAllowed: 'all',
@@ -57,6 +53,10 @@ define(
         setDragImage: notImplemented,
         addElement: notImplemented
       };
+
+      Obj.each(inputData, function (value, key) {
+        setData(key, value);
+      });
 
       return result;
     };
