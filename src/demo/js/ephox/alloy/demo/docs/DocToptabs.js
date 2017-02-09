@@ -61,6 +61,9 @@ define(
             markers: {
               tabClass: 'tab-item',
               selectedClass: 'selected-tab-item'
+            },
+            parts: {
+              tabs: { }
             }
           },
           tabview: {
