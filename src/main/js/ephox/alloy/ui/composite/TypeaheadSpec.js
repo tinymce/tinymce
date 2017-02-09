@@ -10,7 +10,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.dropdown.Beta',
+    'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
@@ -20,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, EventHandler, Beta, InputBase, Objects, Merger, Fun, Option, Value, document) {
+  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, EventHandler, DropdownUtils, InputBase, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
@@ -33,7 +33,7 @@ define(
             });
           });
         } else {
-          Beta.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
+          DropdownUtils.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
             Composing.getCurrent(sandbox).each(highlighter);
           });
         } 
@@ -65,7 +65,7 @@ define(
                 detail.previewing().set(true);
 
                 
-                Beta.open(detail, {
+                DropdownUtils.open(detail, {
                   anchor: 'hotspot',
                   hotspot: component
                 }, component, sandbox, externals).get(function () {
@@ -113,7 +113,7 @@ define(
         coupling: {
           others: {
             sandbox: function (hotspot) {
-              return Beta.makeSandbox(detail, {
+              return DropdownUtils.makeSandbox(detail, {
                 anchor: 'hotspot',
                 hotspot: hotspot
               }, hotspot, {
@@ -138,7 +138,7 @@ define(
               key: SystemEvents.execute(),
               value: EventHandler.nu({
                 run: function (comp) {
-                  Beta.togglePopup(detail, {
+                  DropdownUtils.togglePopup(detail, {
                     anchor: 'hotspot',
                     hotspot: comp
                   }, comp, externals);

@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.dropdown.Beta',
+  'ephox.alloy.dropdown.DropdownUtils',
 
   [
     'ephox.alloy.alien.ComponentStructure',
@@ -10,19 +10,19 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.aria.AriaOwner',
-    'ephox.alloy.dropdown.Gamma',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Width',
     'global!Error'
   ],
 
-  function (ComponentStructure, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, Gamma, Tagger, Dismissal, Merger, Future, Fun, Option, Remove, Width, Error) {
+  function (ComponentStructure, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, Tagger, Dismissal, Merger, Future, Fun, Option, Result, Remove, Width, Error) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -32,7 +32,7 @@ define(
     var openF = function (detail, anchor, component, sandbox, externals) {
       var futureData = fetch(detail, component);
 
-      var lazySink = Gamma.getSink(component, detail);
+      var lazySink = getSink(component, detail);
 
       // TODO: Make this potentially a single menu also
       return futureData.map(function (data) {
@@ -97,6 +97,22 @@ define(
       Width.set(menu.element(), buttonWidth);
     };
 
+    var getSink = function (anyInSystem, detail) {
+      return anyInSystem.getSystem().getByUid(detail.uid() + '-internal-sink').map(function (internalSink) {
+        return Fun.constant(
+          Result.value(internalSink)
+        );
+      }).getOrThunk(function () {
+        return detail.lazySink().fold(function () {
+          return Fun.constant(
+            Result.error(new Error(
+              'No internal sink is specified, nor could an external sink be found'
+            ))
+          );
+        }, Fun.identity);
+      });
+    };
+
     var makeSandbox = function (detail, anchor, anyInSystem, extras) {
       var ariaOwner = AriaOwner.manager();
 
@@ -113,7 +129,7 @@ define(
         if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
       };
 
-      var lazySink = Gamma.getSink(anyInSystem, detail);
+      var lazySink = getSink(anyInSystem, detail);
 
       return {
         dom: {

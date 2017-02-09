@@ -7,18 +7,16 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.parts.InternalSink',
+    'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.DropdownSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Highlighting, Keying, Toggling, UiSketcher, Beta, InternalSink, PartType, ButtonBase, DropdownSchema, FieldSchema, Merger, Fun, Option) {
+  function (Composing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, DropdownSchema, Merger, Fun, Option) {
     var schema = DropdownSchema.schema();
     var partTypes = DropdownSchema.parts();
 
@@ -27,7 +25,7 @@ define(
         {
           events: ButtonBase.events(
             Option.some(function (component) {
-              Beta.togglePopup(detail, {
+              DropdownUtils.togglePopup(detail, {
                 anchor: 'hotspot',
                 hotspot: component
               }, component, externals).get(function (sandbox) {
@@ -53,7 +51,7 @@ define(
             coupling: {
               others: {
                 sandbox: function (hotspot) {
-                  return Beta.makeSandbox(detail, {
+                  return DropdownUtils.makeSandbox(detail, {
                     anchor: 'hotspot',
                     hotspot: hotspot
                   }, hotspot, {

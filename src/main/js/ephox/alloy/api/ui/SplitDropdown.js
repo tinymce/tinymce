@@ -2,34 +2,28 @@ define(
   'ephox.alloy.api.ui.SplitDropdown',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.dropdown.Beta',
-    'ephox.alloy.parts.InternalSink',
+    'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.SplitDropdownSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'global!Error'
+    'ephox.perhaps.Option'
   ],
 
-  function (Behaviour, Composing, Highlighting, Keying, Toggling, SystemEvents, Button, UiSketcher, Beta, InternalSink, PartType, ButtonBase, SplitDropdownSchema, FieldSchema, Merger, Fun, Option, Error) {
+  function (Composing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, SplitDropdownSchema, Merger, Fun, Option) {
     var schema = SplitDropdownSchema.schema();
     var partTypes = SplitDropdownSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       var buttonEvents = ButtonBase.events(Option.some(
         function (component) {
-          Beta.togglePopup(detail, {
+          DropdownUtils.togglePopup(detail, {
             anchor: 'hotspot',
             hotspot: component
           }, component, externals).get(function (sandbox) {
@@ -66,7 +60,7 @@ define(
                     }
                   };
 
-                  return Beta.makeSandbox(detail, {
+                  return DropdownUtils.makeSandbox(detail, {
                     anchor: 'hotspot',
                     hotspot: hotspot
                   }, hotspot, extras);
