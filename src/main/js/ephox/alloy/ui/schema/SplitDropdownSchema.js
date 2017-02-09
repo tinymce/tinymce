@@ -27,7 +27,13 @@ define(
     var arrowPart = PartType.internal(
       Button,
       [
-        FieldSchema.option('mogel')
+        FieldSchema.option('mogel'),
+        FieldSchema.strict('sparrow'),
+        FieldSchema.strictObjOf('finch', [
+          FieldSchema.option('finch-red'),
+          FieldSchema.strict('finch-blue'),
+          FieldSchema.defaulted('finch-black', 'crow')
+        ])
       ],
       'arrow',
       '<alloy.split-dropdown.arrow>',

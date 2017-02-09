@@ -15,10 +15,17 @@ define(
         return Arr.map(partTypes, function (pt) {
           return pt.fold(
             function (_, pSchema, name, _, _, _) {
+              var builtSchema = SchemaView.build([ name ],  ValueSchema.objOf(pSchema).toDsl());
               return Container.sketch({
                 dom: {
-                  innerHtml: '(required) ' + name
-                }
+                  tag: 'div'
+                },
+                components: [
+                  Container.sketch({
+                    dom: { tag: 'span', classes: [ 'strict-docs-field' ], innerHtml: name }
+                  }),
+                  builtSchema
+                ]
               })
             },
             function (_, _, name, _, _, _) {
