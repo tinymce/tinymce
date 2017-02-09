@@ -7,20 +7,17 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.Tabbar',
-    'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabSectionSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr'
   ],
 
-  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, Tabbar, Tabview, UiSketcher, EventHandler, PartType, TabSectionSchema, FieldSchema, Objects, Arr, Fun, Attr) {
+  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, UiSketcher, EventHandler, PartType, TabSectionSchema, Objects, Arr, Fun, Attr) {
     var schema = TabSectionSchema.schema();
     var partTypes = TabSectionSchema.parts();
 

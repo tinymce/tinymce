@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -11,42 +13,50 @@ define(
     'ephox.scullion.ADT'
   ],
 
-  function (UiSubstitutes, Arr, Obj, Merger, Fun, Option, Adt) {
+  function (UiSubstitutes, FieldSchema, ValueSchema, Arr, Obj, Merger, Fun, Option, Adt) {
     var adt = Adt.generate([
-      { internal: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
-      { external: [ 'factory', 'name', 'defaults', 'overrides' ] },
-      { optional: [ 'factory', 'name', 'pname', 'defaults', 'overrides' ] },
-      { group: [ 'factory', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
+      { internal: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
+      { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
+      { optional: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
+      { group: [ 'factory', 'schema', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
     ]);
 
     // TODO: Make more functional if performance isn't an issue.
 
     var schemas = function (parts) {
-      var required = [ ];
-      var optional = [ ];
+     var r = [ ];
 
       Arr.each(parts, function (part) {
         part.fold(
-          function (factory, name, pname, defaults, overrides) {
-            required.push(name);
+          function (factory, schema, name, pname, defaults, overrides) {
+            r.push(
+              FieldSchema.strictObjOf(name, schema.concat([
+                FieldSchema.state('entirety', Fun.identity)
+              ]))
+            );
           },
-          function (factory, name, _defaults, _overrides) {
-            required.push(name);
+          function (factory, schema, name, _defaults, _overrides) {
+            r.push(
+              FieldSchema.strictObjOf(name, schema.concat([
+                FieldSchema.state('entirety', Fun.identity)
+              ]))
+            );
           },
-          function (factory, name, pname, defaults, overrides) {
-            optional.push(name);
+          function (factory, schema, name, pname, defaults, overrides) {
+            r.push(
+              FieldSchema.optionObjOf(name, schema.concat([
+                FieldSchema.state('entirety', Fun.identity)
+              ]))
+            );
           },
-          function (factory, name, unit, pname, defaults, overrides) {
+          function (factory, schema, name, unit, pname, defaults, overrides) {
             // TODO: Shell support
             // required.push(name);
           }
         );
       });
 
-      return {
-        required: Fun.constant(required),
-        optional: Fun.constant(optional)
-      };
+      return r;
     };
 
     var combine = function (name, detail, defaults, spec, overrides) {
@@ -63,18 +73,18 @@ define(
 
       Arr.each(parts, function (part) {
         part.fold(
-          function (factory, name, pname, defaults, overrides) {
+          function (factory, schema, name, pname, defaults, overrides) {
             r[name] = Fun.constant({ uiType: UiSubstitutes.placeholder(), owner: owner, name: pname });
           },
-          function (factory, name, defaults, overrides) {
+          function (factory, schema, name, defaults, overrides) {
             // Do nothing ... has no placeholder.
           },
-          function (factory, name, pname, defaults, overrides) {
+          function (factory, schema, name, pname, defaults, overrides) {
             r[name] = Fun.constant({ uiType: UiSubstitutes.placeholder(), owner: owner, name: pname });
           },
 
           // Group
-          function (factory, name, unit, pname, defualts, overrides) {
+          function (factory, schema, name, unit, pname, defualts, overrides) {
             r[name] = Fun.constant({ uiType: UiSubstitutes.placeholder(), owner: owner, name: pname });
           }
         );
@@ -88,20 +98,20 @@ define(
       var ex = { };
       Arr.each(parts, function (part) {
         part.fold(
-          function (factory, name, pname, defaults, overrides) {
+          function (factory, schema, name, pname, defaults, overrides) {
             //
           },
-          function (factory, name, defaults, overrides) {
+          function (factory, schema, name, defaults, overrides) {
             ex[name] = Fun.constant(
               combine(name, detail, defaults, detail.parts()[name](), overrides)
             );
             // do nothing ... should not be in components
           },
-          function (factory, name, pname, defaults, overrides) {
+          function (factory, schema, name, pname, defaults, overrides) {
             // ps[pname] = detail.parts()[name]();
           },
 
-          function (factory, name, unit, pname, defaults, overrides) {
+          function (factory, schema, name, unit, pname, defaults, overrides) {
             // not an external
           }
         );
@@ -114,19 +124,22 @@ define(
       var ps = { };
       Arr.each(parts, function (part) {
         part.fold(
-          function (factory, name, pname, defaults, overrides) {
+          // Internal
+          function (factory, schema, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(true, function (detail) {
               return factory.sketch(
-                combine(name, detail, defaults, detail.parts()[name](), overrides)
+                combine(name, detail, defaults, detail.parts()[name]().entirety(), overrides)
               );
             });
           },
 
-          function (factory, name, defaults, overrides) {
+          // External
+          function (factory, schema, name, defaults, overrides) {
             // no placeholders
           },
 
-          function (factory, name, pname, defaults, overrides) {
+          // Optional
+          function (factory, schema, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(false, function (detail) {
               if (! detail.parts) {
                 debugger;
@@ -144,7 +157,8 @@ define(
             });
           },
 
-          function (factory, name, unit, pname, defaults, overrides) {
+          // Group
+          function (factory, schema, name, unit, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.multiple(true, function (detail) {
               if (! detail[name]) {
                 debugger;

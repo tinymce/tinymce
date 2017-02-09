@@ -20,6 +20,7 @@ define(
 
     var barPart = PartType.internal(
       Tabbar,
+      [ ],
       'tabbar',
       '<alloy.tab-section.tabbar>',
       function (detail) {
@@ -38,6 +39,7 @@ define(
 
     var viewPart = PartType.internal(
       Tabview,
+      [ ],
       'tabview',
       '<alloy.tab-section.tabview>',
       Fun.constant({ }),

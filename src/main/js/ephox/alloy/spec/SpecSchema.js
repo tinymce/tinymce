@@ -63,10 +63,34 @@ define(
       return [ partsSchema, partUidsSchema ];
     };
 
-    var base = function (label, partNames, optPartNames, spec) {
-      var partsSchema = getPartsSchema(partNames, optPartNames !== undefined ? optPartNames : [ ], label);
+    var getPartUidsSchema = function (label, spec) {
+      return FieldSchema.state(
+        'partUids',
+        function (spec) {
+          if (! Objects.hasKey(spec, 'parts')) {
+            throw new Error(
+              'Part uid definition for owner: ' + label + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
+              Json.stringify(spec, null, 2)
+            );
+          }
+          var uids = Obj.map(spec.parts, function (v, k) {
+            return Objects.readOptFrom(v, 'uid').getOrThunk(function () {
+              return spec.uid + '-' + k;
+            });
+          });
+          return uids;
+        }
+      );
+    };
 
-      return partsSchema.concat([
+    var base = function (label, partSchemas, spec) {
+      var ps = partSchemas.length > 0 ? 
+        [
+          FieldSchema.strictObjOf('parts', partSchemas),
+          getPartUidsSchema(label, spec)
+        ] : [ ];
+
+      return ps.concat([
         FieldSchema.strict('uid'),
         FieldSchema.defaulted('dom', { }), // Maybe get rid of.
         FieldSchema.defaulted('components', [ ]),
@@ -75,14 +99,14 @@ define(
     };
 
 
-    var asRawOrDie = function (label, schema, spec, partNames, optPartNames) {
+    var asRawOrDie = function (label, schema, spec, partSchemas) {
 
-      var baseS = base(label, partNames, optPartNames, spec);
+      var baseS = base(label, partSchemas, spec);
       return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 
-    var asStructOrDie = function (label, schema, spec, partNames, optPartNames) {
-      var baseS = base(label, partNames, optPartNames, spec);
+    var asStructOrDie = function (label, schema, spec, partSchemas) {
+      var baseS = base(label, partSchemas, spec);
       return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
     };
 

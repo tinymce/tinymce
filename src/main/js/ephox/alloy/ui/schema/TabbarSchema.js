@@ -27,6 +27,7 @@ define(
 
     var tabsPart = PartType.group(
       TabButton,
+      [ ],
       'tabs',
       'tab',
       '<alloy.tabs>',

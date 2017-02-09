@@ -5,12 +5,13 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.classify.Type',
     'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (PartType, Tagger, SpecSchema, Type, Merger, Fun) {
+  function (PartType, Tagger, SpecSchema, ValueSchema, Type, Merger, Fun) {
     var single = function (owner, schema, factory, spec) {
       var specWithUid = supplyUid(spec);
       var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ]);
@@ -27,9 +28,11 @@ define(
       
       var specWithUid = supplyUid(spec);
 
-      var schemas = PartType.schemas(partTypes);
+      var partSchemas = PartType.schemas(partTypes);
+
+      console.log('ss', ValueSchema.objOf(partSchemas).toString());
       
-      var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, schemas.required(), schemas.optional());
+      var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, partSchemas);
        
       // This is the point where internal parts are created (internal and optional)
       var components = PartType.components(owner, detail, partTypes);
