@@ -13,8 +13,8 @@ define(
   [
   ],
   function () {
-    var internalMark = '<!-- tinymce:internal -->';
     var internalMimeType = 'x-tinymce/html';
+    var internalMark = '<!-- ' + internalMimeType + ' -->';
 
     var mark = function (html) {
       return internalMark + html;

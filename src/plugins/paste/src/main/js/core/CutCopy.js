@@ -75,15 +75,19 @@ define(
 
     var cut = function (editor) {
       return function (evt) {
-        setClipboardData(evt, getData(editor), fallback(editor), function () {
-          editor.execCommand('Delete');
-        });
+        if (editor.selection.isCollapsed() === false) {
+          setClipboardData(evt, getData(editor), fallback(editor), function () {
+            editor.execCommand('Delete');
+          });
+        }
       };
     };
 
     var copy = function (editor) {
       return function (evt) {
-        setClipboardData(evt, getData(editor), fallback(editor), noop);
+        if (editor.selection.isCollapsed() === false) {
+          setClipboardData(evt, getData(editor), fallback(editor), noop);
+        }
       };
     };
 

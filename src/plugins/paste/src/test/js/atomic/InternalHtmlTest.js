@@ -5,17 +5,17 @@ test(
   ],
   function (InternalHtml) {
     var testMark = function () {
-      assert.eq('<!-- tinymce:internal -->abc', InternalHtml.mark('abc'));
+      assert.eq('<!-- x-tinymce/html -->abc', InternalHtml.mark('abc'));
     };
 
     var testUnmark = function () {
-      assert.eq('abc', InternalHtml.unmark('<!-- tinymce:internal -->abc'));
-      assert.eq('abc', InternalHtml.unmark('abc<!-- tinymce:internal -->'));
+      assert.eq('abc', InternalHtml.unmark('<!-- x-tinymce/html -->abc'));
+      assert.eq('abc', InternalHtml.unmark('abc<!-- x-tinymce/html -->'));
     };
 
     var testIsMarked = function () {
-      assert.eq(true, InternalHtml.isMarked('<!-- tinymce:internal -->abc'));
-      assert.eq(true, InternalHtml.isMarked('abc<!-- tinymce:internal -->'));
+      assert.eq(true, InternalHtml.isMarked('<!-- x-tinymce/html -->abc'));
+      assert.eq(true, InternalHtml.isMarked('abc<!-- x-tinymce/html -->'));
       assert.eq(false, InternalHtml.isMarked('abc'));
     };
 
