@@ -2,28 +2,33 @@ define(
   'ephox.alloy.demo.docs.UiDocumentation',
 
   [
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.docs.SchemaView',
     'ephox.boulder.api.ValueSchema',
     'ephox.compass.Arr'
   ],
 
-  function (Container, SchemaView, ValueSchema, Arr) {
+  function (GuiFactory, Container, SchemaView, ValueSchema, Arr) {
     var make = function (uis) {
       var extractParts = function (partTypes) {
         return Arr.map(partTypes, function (pt) {
           return pt.fold(
-            function (_, _, name, _, _, _) {
-              return name;
+            function (_, pSchema, name, _, _, _) {
+              return Container.sketch({
+                dom: {
+                  innerHtml: '(required) ' + name
+                }
+              })
             },
             function (_, _, name, _, _, _) {
-              return name;
+              return GuiFactory.text(name);
             },
             function (_, _, name, _, _, _) {
-              return name;
+              return GuiFactory.text(name);
             },
             function (_, _, name, _, _, _, _) {
-              return name;
+              return GuiFactory.text(name);
             }
           );
         });
@@ -49,9 +54,9 @@ define(
                 components: Arr.map(parts, function (p) {
                   return Container.sketch({
                     dom: {
-                      tag: 'li',
-                      innerHtml: p
-                    }
+                      tag: 'li'
+                    },
+                    components: [ p ]
                   });
                 })
               })] : [ ]

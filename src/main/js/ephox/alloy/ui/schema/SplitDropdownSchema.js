@@ -26,7 +26,9 @@ define(
 
     var arrowPart = PartType.internal(
       Button,
-      [ ],
+      [
+        FieldSchema.option('mogel')
+      ],
       'arrow',
       '<alloy.split-dropdown.arrow>',
       function (detail) {
