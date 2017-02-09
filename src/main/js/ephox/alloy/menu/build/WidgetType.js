@@ -73,6 +73,7 @@ define(
       return Merger.deepMerge({
         dom: info.dom(),
         components: components,
+        domModification: info.domModification(),
         events: Objects.wrapAll([
           {
             key: SystemEvents.execute(),

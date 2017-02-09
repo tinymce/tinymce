@@ -6,6 +6,9 @@ define(
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Dropdown',
+    'ephox.alloy.api.ui.ExpandableForm',
+    'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.TieredMenu',
@@ -20,7 +23,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Gui, Button, Dropdown, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, Gui, Button, Dropdown, ExpandableForm, Form, Input, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -190,10 +193,72 @@ define(
         });
       };
 
+      var sketchExpandableForm = function () {
+        return ExpandableForm.sketch({
+          dom: {
+            tag: 'div'
+          },
+
+          markers: {
+            closedClass: 'tutorial-expanded-form-closed',
+            openClass: 'tutorial-expanded-form-open',
+            shrinkingClass: 'tutorial-expanded-form-shrinking',
+            growingClass: 'tutorial-expanded-form-growing',
+            expandedClass: 'tutorial-expanded-section-expanded',
+            collapsedClass: 'tutorial-expanded-section-collapsed'
+          },
+
+          components: [
+            ExpandableForm.parts().minimal(),
+            ExpandableForm.parts().expander(),
+            ExpandableForm.parts().extra(),
+            ExpandableForm.parts().controls()
+          ],
+
+          parts: {
+            minimal: {
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                Form.parts('alpha')
+              ],
+              parts: {
+                alpha: Input.sketch({
+                  
+                })
+              }
+            },
+            extra: {
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                Form.parts('beta')
+              ],
+              parts: {
+                beta: Input.sketch({ })
+              }
+            },
+            expander: {
+              dom: {
+                tag: 'button',
+                innerHtml: 'v'
+              }
+            },
+            controls: {
+              dom: {
+                tag: 'div'
+              }
+            }
+          }
+        });
+      };
+
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchDropdown()
+        sketchExpandableForm()
       );
     };
   }
