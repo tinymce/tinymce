@@ -17,10 +17,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Value',
+    'global!console',
     'global!document'
   ],
 
-  function (Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, SystemEvents, EventHandler, DropdownUtils, InputBase, Objects, Merger, Fun, Option, Value, document) {
+  function (Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, SystemEvents, EventHandler, DropdownUtils, InputBase, Objects, Merger, Fun, Option, Value, console, document) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
