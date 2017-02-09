@@ -2,13 +2,13 @@ define(
   'ephox.alloy.ui.composite.TypeaheadSpec',
 
   [
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.InputBase',
@@ -20,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (SystemEvents, Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, EventHandler, DropdownUtils, InputBase, Objects, Merger, Fun, Option, Value, document) {
+  function (Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, SystemEvents, EventHandler, DropdownUtils, InputBase, Objects, Merger, Fun, Option, Value, document) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
@@ -38,6 +38,9 @@ define(
           });
         } 
       };
+
+
+      
       
       var behaviours = {
         streaming: {
