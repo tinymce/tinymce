@@ -5,9 +5,11 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
+    'ephox.alloy.api.ui.FormChooser',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
@@ -23,7 +25,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Gui, Button, Dropdown, ExpandableForm, Form, Input, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, Input, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -224,8 +226,40 @@ define(
                 Form.parts('alpha')
               ],
               parts: {
-                alpha: Input.sketch({
-                  
+                alpha: FormChooser.sketch({
+                  dom: {
+                    tag: 'div'
+                  },
+                  components: [
+                    FormChooser.parts().legend(),
+                    FormChooser.parts().choices()
+                  ],
+
+                  choices: [
+                    { value: 'a' }
+                  ],
+
+                  parts: {
+                    legend: { },
+                    choices: { }
+                  },
+                  members: {
+                    choice: {
+                      munge: function (c) {
+                        return Container.sketch({
+                          dom: {
+                            tag: 'span',
+                            innerHtml: c.value
+                          }
+                        });
+                      }
+                    }
+                  },
+
+                  markers: {
+                    choiceClass: 'tutorial-choice',
+                    selectedClass: 'tutorial-selected-choice'
+                  }
                 })
               }
             },
