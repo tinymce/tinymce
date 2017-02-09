@@ -16,7 +16,11 @@ define(
     ]);
 
     var members = function (required) {
-      return FieldSchema.strictObjOf('members', Arr.map(required, FieldSchema.strict));
+      return FieldSchema.strictObjOf('members', Arr.map(required, function (reqd) {
+        return FieldSchema.strictObjOf(reqd, [
+          FieldSchema.strict('munge')
+        ]);
+      }));
     };
 
     var itemMarkers = function () {

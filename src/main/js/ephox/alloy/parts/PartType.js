@@ -172,7 +172,7 @@ define(
               }
               var units = detail[name]();
               return Arr.map(units, function (u) {
-                var munged = detail.members()[unit]().munge(u);
+                var munged = detail.members()[unit]().munge()(u);
 
                 // Group multiples do not take the uid because there is more than one.
                 return factory.sketch(

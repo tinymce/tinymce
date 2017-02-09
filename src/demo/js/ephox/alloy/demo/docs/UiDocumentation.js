@@ -22,20 +22,44 @@ define(
                 },
                 components: [
                   Container.sketch({
-                    dom: { tag: 'span', classes: [ 'strict-docs-field' ], innerHtml: name }
+                    dom: { tag: 'span', classes: [ 'strict-docs-field' ], innerHtml: '(reqd) ' + name }
                   }),
                   builtSchema
                 ]
               })
             },
-            function (_, _, name, _, _, _) {
-              return GuiFactory.text(name);
+            function (_, pSchema, name, _, _, _) {
+              var builtSchema = SchemaView.build([ name ],  ValueSchema.objOf(pSchema).toDsl());
+              return Container.sketch({
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  Container.sketch({
+                    dom: { tag: 'span', classes: [ ], innerHtml: '(optional) ' + name }
+                  }),
+                  builtSchema
+                ]
+              })
             },
-            function (_, _, name, _, _, _) {
-              return GuiFactory.text(name);
+            function (_, pSchema, name, _, _, _) {
+              // DUPE
+              var builtSchema = SchemaView.build([ name ],  ValueSchema.objOf(pSchema).toDsl());
+              return Container.sketch({
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  Container.sketch({
+                    dom: { tag: 'span', classes: [ ], innerHtml: '(external) ' + name }
+                  }),
+                  builtSchema
+                ]
+              })
+              return GuiFactory.text('(external) ' + name);
             },
             function (_, _, name, _, _, _, _) {
-              return GuiFactory.text(name);
+              return GuiFactory.text('(group) ' + name);
             }
           );
         });

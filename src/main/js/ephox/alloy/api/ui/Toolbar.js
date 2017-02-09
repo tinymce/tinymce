@@ -50,7 +50,7 @@ define(
         return Arr.map(gspecs, function (grp) {
           return ToolbarGroup.sketch(
             Merger.deepMerge(
-              detail.members().group().munge(grp)
+              detail.members().group().munge()(grp)
             )
           );
         });

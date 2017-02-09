@@ -5,13 +5,14 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, SystemEvents, Button, InternalSink, PartType, FieldSchema, Fun) {
+  function (Behaviour, SystemEvents, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -27,13 +28,7 @@ define(
     var arrowPart = PartType.internal(
       Button,
       [
-        FieldSchema.option('mogel'),
-        FieldSchema.strict('sparrow'),
-        FieldSchema.strictObjOf('finch', [
-          FieldSchema.option('finch-red'),
-          FieldSchema.strict('finch-blue'),
-          FieldSchema.defaulted('finch-black', 'crow')
-        ])
+        FieldSchema.strict('dom')
       ],
       'arrow',
       '<alloy.split-dropdown.arrow>',
@@ -68,7 +63,9 @@ define(
 
     var buttonPart = PartType.internal(
       Button,
-      [ ],
+      [
+        FieldSchema.strict('dom')
+      ],
       'button',
       '<alloy.split-dropdown.button>',
       function (detail) {
@@ -95,7 +92,10 @@ define(
       buttonPart,
       PartType.external(
         { sketch: Fun.identity },
-        [ ],
+        [
+          Fields.tieredMenuMarkers(),
+          Fields.members([ 'menu', 'item' ])
+        ],
         'menu', 
         function (detail) {
           return {

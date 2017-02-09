@@ -32,7 +32,7 @@ define(
 
     var make = function (detail, spec) {
       var builtItems = Arr.map(detail.items(), function (i) {
-        var munged = detail.members().item().munge(i);
+        var munged = detail.members().item().munge()(i);
         var fallbackUid = Tagger.generate('');
         var merged = Merger.deepMerge({
           uid: fallbackUid

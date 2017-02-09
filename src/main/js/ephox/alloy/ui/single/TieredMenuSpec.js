@@ -34,7 +34,7 @@ define(
         return Obj.map(menus, function (spec, name) {
           var data = Menu.sketch(
             Merger.deepMerge(
-              detail.members().menu().munge(spec),
+              detail.members().menu().munge()(spec),
               {
                 value: name,
                 items: spec.items,

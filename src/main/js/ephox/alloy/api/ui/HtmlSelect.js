@@ -26,7 +26,7 @@ define(
     var make = function (detail, spec) {
       var options = Arr.map(detail.options(), function (option) {
         return Merger.deepMerge(
-          detail.members().option().munge(option),
+          detail.members().option().munge()(option),
           {
             dom: {
               tag: 'option',

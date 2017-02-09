@@ -3,15 +3,12 @@ define(
 
   [
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
     'ephox.alloy.ui.schema.TieredMenuSchema',
     'ephox.alloy.ui.single.TieredMenuSpec',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.peanut.Fun'
+    'ephox.boulder.api.Objects'
   ],
 
-  function (UiSketcher, Fields, TieredMenuSchema, TieredMenuSpec, FieldSchema, Objects, Fun) {
+  function (UiSketcher, TieredMenuSchema, TieredMenuSpec, Objects) {
     var schema = TieredMenuSchema.schema();
 
     var sketch = function (spec) {
