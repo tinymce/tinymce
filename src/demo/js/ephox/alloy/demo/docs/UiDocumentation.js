@@ -13,16 +13,16 @@ define(
       var extractParts = function (partTypes) {
         return Arr.map(partTypes, function (pt) {
           return pt.fold(
-            function (_, name, _, _, _) {
+            function (_, _, name, _, _, _) {
               return name;
             },
-            function (_, name, _, _, _) {
+            function (_, _, name, _, _, _) {
               return name;
             },
-            function (_, name, _, _, _) {
+            function (_, _, name, _, _, _) {
               return name;
             },
-            function (_, name, _, _, _, _) {
+            function (_, _, name, _, _, _, _) {
               return name;
             }
           );
