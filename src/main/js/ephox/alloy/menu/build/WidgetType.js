@@ -8,17 +8,14 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.ItemEvents',
-    'ephox.alloy.menu.util.MenuMarkers',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.highway.Merger',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Traverse'
+    'ephox.perhaps.Option'
   ],
 
-  function (EditableFields, SystemEvents, Focusing, Keying, EventHandler, ItemEvents, MenuMarkers, UiSubstitutes, FieldPresence, FieldSchema, Objects, Merger, Option, Traverse) {
+  function (EditableFields, SystemEvents, Focusing, Keying, EventHandler, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {
     var schema = [
       FieldSchema.strict('uid'),
       FieldSchema.strict('data'),
@@ -26,6 +23,7 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.strict('widget'),
       FieldSchema.defaulted('autofocus', false),
+      FieldSchema.defaulted('domModification', { }),
       FieldSchema.state('builder', function () {
         return builder;
       })

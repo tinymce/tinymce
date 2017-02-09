@@ -4,12 +4,12 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.construct.EventHandler',
@@ -20,6 +20,7 @@ define(
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'ephox.sugar.api.Body',
@@ -28,7 +29,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (EditableFields, EventRoot, GuiFactory, SystemEvents, Highlighting, Replacing, Representing, Sandboxing, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Option, Options, Body, Class, Classes, SelectorFind) {
+  function (EditableFields, EventRoot, Highlighting, Replacing, Representing, Sandboxing, GuiFactory, SystemEvents, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
     var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
@@ -40,7 +41,7 @@ define(
                 items: spec.items,
                 markers: rawUiSpec.markers,
                 members: {
-                  item: detail.members().item()
+                  item: Obj.map(detail.members().item(), Fun.apply)
                 },
 
                 // Fake focus.

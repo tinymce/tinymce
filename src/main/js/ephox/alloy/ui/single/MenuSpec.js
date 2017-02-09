@@ -37,7 +37,10 @@ define(
         var merged = Merger.deepMerge({
           uid: fallbackUid
         }, i, munged, {
-          ignoreFocus: detail.fakeFocus()
+          ignoreFocus: detail.fakeFocus(),
+          domModification: {
+            classes: [ detail.markers().item() ]
+          }
         });
 
         var itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, merged);

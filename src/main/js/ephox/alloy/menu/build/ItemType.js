@@ -24,6 +24,7 @@ define(
       ]),
 
       FieldSchema.defaulted('ignoreFocus', false),
+      FieldSchema.defaulted('domModification', { }),
       FieldSchema.state('builder', function () {
         return builder;
       })
@@ -91,7 +92,9 @@ define(
             })
           }
         ]),
-        components: info.components()
+        components: info.components(),
+
+        domModification: info.domModification()
       };
     };
 

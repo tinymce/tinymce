@@ -32,7 +32,7 @@ define(
               return itemSpec.type === 'widget' ? {
                 dom: { 
                   tag: 'li',
-                  classes: [ 'item', 'item-widget' ]
+                  classes: [ 'item-widget' ]
                 },
                 components: [
                   ItemWidget.parts().widget()
@@ -40,7 +40,7 @@ define(
               } : {
                 dom: {
                   tag: 'li',
-                  classes: [ 'item' ],
+                  classes: [ ],
                   innerHtml: itemSpec.data.text
                 },
                 components: [ ]
