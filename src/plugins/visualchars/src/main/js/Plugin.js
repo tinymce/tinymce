@@ -181,10 +181,6 @@ define(
       });
     });
 
-    return {
-      charMap: charMap,
-      charMapToRegExp: charMapToRegExp,
-      getNodeList: getNodeList
-    };
+    return function () {};
   }
 );

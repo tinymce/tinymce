@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // asynctest(
 //   'browser.tinymce.plugins.visualchars.GetNodeListTest',
 //   [
