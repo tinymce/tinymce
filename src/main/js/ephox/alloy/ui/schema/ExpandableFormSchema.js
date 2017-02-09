@@ -39,8 +39,8 @@ define(
     };
 
     var partTypes = [
-      PartType.internal(Form, 'minimal', '<alloy.expandable-form.minimal>', Fun.constant({ }), Fun.constant({ })),
-      PartType.internal(Form, 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
+      PartType.internal(Form, [ ], 'minimal', '<alloy.expandable-form.minimal>', Fun.constant({ }), Fun.constant({ })),
+      PartType.internal(Form, [ ], 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
         return {
           behaviours: {
             sliding: {
@@ -85,12 +85,12 @@ define(
           }
         };
       }),
-      PartType.internal(Button, 'expander', '<alloy.expandable-form.expander>', Fun.constant({}), function (detail) {
+      PartType.internal(Button, [ ], 'expander', '<alloy.expandable-form.expander>', Fun.constant({}), function (detail) {
         return {
           action: runOnExtra(detail, Sliding.toggleGrow)
         };
       }),
-      PartType.internal({ sketch: Fun.identity }, 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
+      PartType.internal({ sketch: Fun.identity }, [ ], 'controls', '<alloy.expandable-form.controls>', Fun.constant({}), Fun.constant({}))
     ];
 
     return {

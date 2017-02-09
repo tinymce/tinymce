@@ -58,6 +58,9 @@ asynctest(
                   munge: Fun.identity
                 }
               },
+              parts: {
+                'tabs': { }
+              },
               markers: {
                 tabClass: 'test-tab-button',
                 selectedClass: 'selected-test-tab-button'

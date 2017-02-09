@@ -50,6 +50,11 @@ define(
             );
           },
           function (factory, schema, name, unit, pname, defaults, overrides) {
+            r.push(
+              FieldSchema.strictObjOf(name, schema.concat([
+                FieldSchema.state('entirety', Fun.identity)
+              ]))
+            );
             // TODO: Shell support
             // required.push(name);
           }
@@ -103,7 +108,7 @@ define(
           },
           function (factory, schema, name, defaults, overrides) {
             ex[name] = Fun.constant(
-              combine(name, detail, defaults, detail.parts()[name](), overrides)
+              combine(name, detail, defaults, detail.parts()[name]().entirety(), overrides)
             );
             // do nothing ... should not be in components
           },
@@ -152,7 +157,9 @@ define(
                 debugger;
               }
               return factory.sketch(
-                combine(name, detail, defaults, detail.parts()[name](), overrides)
+                combine(name, detail, defaults, detail.parts()[name]().getOrDie(
+                  'Included optional part: ' + name + ' but has no part information'  
+                ).entirety(), overrides)
               );
             });
           },

@@ -59,7 +59,10 @@ define(
       var extra = (function () {
         if (detail.shell()) {
           return {
-            base: Merger.deepMerge(detail.parts().groups(), enhanceGroups(detail)),
+            // TODO: Consolidate this "entirety"
+            base: Merger.deepMerge(detail.parts().groups().getOrDie(
+              'Shell mode specified for toolbar, but no groups part provided'
+            ).entirety(), enhanceGroups(detail)),
             comps: [ ]
           };
         } else {

@@ -36,6 +36,7 @@ define(
     var coupledPart = function (selfName, otherName) {
       return PartType.internal(
         formInput,
+        [ ],
         selfName,
         '<alloy.coupled-inputs.' + selfName + '>',
         Fun.constant({ }),
@@ -63,6 +64,7 @@ define(
 
       PartType.internal(
         Button,
+        [ ],
         'lock',
         '<alloy.coupled-inputs.lock>',
         Fun.constant({ }),

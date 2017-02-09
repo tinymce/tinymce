@@ -69,7 +69,7 @@ define(
         function (spec) {
           if (! Objects.hasKey(spec, 'parts')) {
             throw new Error(
-              'Part uid definition for owner: ' + label + ' requires "parts"\nExpected parts: ' + partNames.join(', ') + '\nSpec: ' +
+              'Part uid definition for owner: ' + label + ' requires "parts\nSpec: ' +
               Json.stringify(spec, null, 2)
             );
           }

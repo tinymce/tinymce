@@ -19,8 +19,8 @@ define(
     ];
 
     var partTypes = [
-      PartType.internal(Toolbar, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
-      PartType.internal(Toolbar, 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
+      PartType.internal(Toolbar, [ ], 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
+      PartType.internal(Toolbar, [ ], 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
         return {
           behaviours: {
             sliding: {
@@ -35,7 +35,7 @@ define(
           }
         };
       }),
-      PartType.external({ built: Fun.identity }, 'overflow-button', Fun.constant({ }), Fun.constant({ }))
+      PartType.external({ built: Fun.identity }, [ ], 'overflow-button', Fun.constant({ }), Fun.constant({ }))
     ];
 
     return {

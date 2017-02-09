@@ -38,7 +38,11 @@ define(
         ],
         items: spec.items,
         markers: markers,
-        members: members
+        members: members,
+
+        parts: {
+          items: { }
+        }
       };
     };
 

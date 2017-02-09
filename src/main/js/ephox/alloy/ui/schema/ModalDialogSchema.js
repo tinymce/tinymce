@@ -22,7 +22,7 @@ define(
     var basic = { sketch: Fun.identity };
 
     var partTypes = [
-      PartType.optional(basic, 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
+      PartType.optional(basic, [ ], 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
         function (detail, spec) {
           return {
             behaviours: {
@@ -42,12 +42,12 @@ define(
           };
         }
       ),
-      PartType.internal(basic, 'title', '<alloy.dialog.title>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'close', '<alloy.dialog.close>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'body', '<alloy.dialog.body>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [ ], 'title', '<alloy.dialog.title>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [ ], 'close', '<alloy.dialog.close>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [ ], 'body', '<alloy.dialog.body>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [ ], 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({})),
 
-      PartType.external(basic, 'blocker', Fun.constant({
+      PartType.external(basic, [ ], 'blocker', Fun.constant({
         dom: {
           tag: 'div',
           styles: {

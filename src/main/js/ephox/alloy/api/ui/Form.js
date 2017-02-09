@@ -7,26 +7,41 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
+    'ephox.peanut.Fun',
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Representing, UiSketcher, SpecSchema, UiSubstitutes, Obj, Merger, Option) {
+  function (Composing, Representing, UiSketcher, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
     var schema = [
       
     ];
 
     var sketch = function (rawSpec) {
       var spec = UiSketcher.supplyUid(rawSpec);
-      var detail = SpecSchema.asStructOrDie('form', schema, spec, Obj.keys(rawSpec.parts));
+      var partSchemas = Arr.map(
+        Obj.keys(rawSpec.parts),
+        function (p) {
+          return FieldSchema.strictObjOf(p, schema.concat([
+            FieldSchema.state('entirety', Fun.identity)
+          ]));
+        }
+      );
 
+      var detail = SpecSchema.asStructOrDie('form', schema, spec, partSchemas);
+
+      
+      console.log('spec.parts', spec.parts);
       var placeholders = Obj.tupleMap(spec.parts !== undefined ? spec.parts : {}, function (partSpec, partName) {
         return {
           k: '<alloy.field.' + partName + '>',
           v: UiSubstitutes.single(true, function () {
             var partUid = detail.partUids()[partName];
             return Merger.deepMerge(
+              // could use entirety here.
               partSpec,
               {
                 uid: partUid

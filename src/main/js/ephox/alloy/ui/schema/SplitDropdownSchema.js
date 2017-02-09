@@ -26,6 +26,7 @@ define(
 
     var arrowPart = PartType.internal(
       Button,
+      [ ],
       'arrow',
       '<alloy.split-dropdown.arrow>',
       function (detail) {
@@ -59,6 +60,7 @@ define(
 
     var buttonPart = PartType.internal(
       Button,
+      [ ],
       'button',
       '<alloy.split-dropdown.button>',
       function (detail) {
@@ -85,6 +87,7 @@ define(
       buttonPart,
       PartType.external(
         { sketch: Fun.identity },
+        [ ],
         'menu', 
         function (detail) {
           return {

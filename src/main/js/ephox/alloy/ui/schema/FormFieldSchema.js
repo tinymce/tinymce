@@ -17,6 +17,7 @@ define(
       return [
         PartType.optional(
           { sketch: Fun.identity },
+          [ ],
           'label',
           '<alloy.form-field.label>',
           Fun.constant({ }),
@@ -24,6 +25,7 @@ define(
         ),
         PartType.internal(
           factory,
+          [ ],
           'field',
           '<alloy.form-field.field>',
           Fun.constant({ }),
