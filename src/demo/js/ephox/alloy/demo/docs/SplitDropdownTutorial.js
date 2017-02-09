@@ -4,6 +4,8 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
+    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.TieredMenu',
@@ -18,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Gui, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, Gui, Button, Dropdown, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -27,12 +29,10 @@ define(
 
       var sink = DemoSink.make();
 
-      gui.add(sink);      
+      gui.add(sink);
 
-      HtmlDisplay.section(
-        gui,
-        'Testing out the self-documentation',
-        SplitDropdown.sketch({
+      var sketchSplitDropdown = function () {
+        return SplitDropdown.sketch({
           dom: {
             tag: 'div',
             classes: 'tutorial-split-dropdown'
@@ -116,7 +116,84 @@ define(
               }
             }
           }
-        })
+        });
+      };
+      
+      var sketchButton = function () {
+        return Button.sketch({
+          dom: {
+            tag: 'button',
+            innerHtml: 'Click me'
+          }
+        });
+      };
+
+      var sketchDropdown = function () {
+        return Dropdown.sketch({
+          fetch: function () {
+            return Future.pure(
+              TieredMenu.simpleData('a', 'a', [
+                { data: { value: 'A', text: 'A' } }
+              ])
+            );
+          },
+          toggleClass: 'toggle',
+          dom: {
+            tag: 'button',
+            innerHtml: 'Dropdown'
+          },
+
+          lazySink: function () {
+            return Result.value(sink);
+          },
+
+          parts: {
+            menu: {
+              markers: {
+                backgroundMenu: 'tutorial-background-menu',
+                menu: 'tutorial-menu',
+                selectedMenu: 'tutorial-selected-menu',
+                item: 'tutorial-item',
+                selectedItem: 'tutorial-selected-item'
+              },
+
+              members: {
+                menu: {
+                  munge: function (m) {
+                    return {
+                      dom: {
+                        tag: 'div'
+                      },
+                      components: [
+                        Menu.parts().items()
+                      ]
+                    }
+                  }
+                },
+                item: {
+                  munge: function (i) {
+                    return {
+                      type: 'item',
+                      data: i.data,
+                      dom: {
+                        tag: 'li'
+                      },
+                      components: [
+                        GuiFactory.text(i.data.text)
+                      ]
+                    };
+                  }
+                }
+              }
+            }
+          }
+        });
+      };
+
+      HtmlDisplay.section(
+        gui,
+        'Testing out the self-documentation',
+        sketchDropdown()
       );
     };
   }

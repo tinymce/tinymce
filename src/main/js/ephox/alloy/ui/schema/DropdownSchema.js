@@ -2,6 +2,7 @@ define(
   'ephox.alloy.ui.schema.DropdownSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -9,7 +10,7 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (InternalSink, PartType, FieldSchema, Fun, Option) {
+  function (Fields, InternalSink, PartType, FieldSchema, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('onOpen', Fun.noop),
@@ -25,7 +26,10 @@ define(
     var partTypes = [
       PartType.external(
         { sketch: Fun.identity },
-        [ ],
+        [
+          Fields.tieredMenuMarkers(),
+          Fields.members([ 'menu', 'item' ])
+        ],
         'menu', 
         function (detail) {
           return {
