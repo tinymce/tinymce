@@ -14,10 +14,12 @@ test('encodeAllRaw', function() {
 });
 
 test('encodeNumeric', function() {
-	expect(2);
+	expect(4);
 
 	equal(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6\u03b8\u2170\ufa11'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;&#952;&#8560;&#64017;', 'Numeric encoding text');
 	equal(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;', 'Numeric encoding attribute');
+	equal(tinymce.html.Entities.encodeNumeric('\ud87e\udc04'), '&#194564;', 'Numeric high-byte encoding text');
+	equal(tinymce.html.Entities.encodeNumeric('\ud87e\udc04', true), '&#194564;', 'Numeric high-byte encoding attribute');
 });
 
 test('encodeNamed', function() {
@@ -32,30 +34,42 @@ test('encodeNamed', function() {
 test('getEncodeFunc', function() {
 	var encodeFunc;
 
-	expect(10);
+	expect(20);
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('raw');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding text');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
+	equal(encodeFunc('\ud87e\udc04'), '\ud87e\udc04', 'Raw high-byte encoding text');
+	equal(encodeFunc('\ud87e\udc04', true), '\ud87e\udc04', 'Raw high-byte encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('named');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&auml;&ouml;', 'Named encoding text');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&aring;&auml;&ouml;', 'Named encoding attribute');
+	equal(encodeFunc('\ud87e\udc04'), '\ud87e\udc04', 'Named high-byte encoding text');
+	equal(encodeFunc('\ud87e\udc04', true), '\ud87e\udc04', 'Named high-byte encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('numeric');
-	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Named encoding text');
-	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;', 'Named encoding attribute');
+	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Numeric encoding text');
+	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;', 'Numeric encoding attribute');
+	equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Numeric high-byte encoding text');
+	equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Numeric high-byte encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('named+numeric', '229,aring');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding text');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding attribute');
+	equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Named+numeric high-byte encoding text');
+	equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('named,numeric', '229,aring');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding text');
 	equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding attribute');
+	equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Named+numeric high-byte encoding text');
+	equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
 });
 
 test('decode', function() {
+	expect(7);
+
 	equal(tinymce.html.Entities.decode('&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;'), '<>"\'&\u00e5\u00e4\u00f6&unknown;', 'Decode text with various entities');
 	equal(tinymce.html.Entities.decode('&#65;&#66;&#039;'), 'AB\'', 'Decode numeric entities');
 	equal(tinymce.html.Entities.decode('&#x4F;&#X4F;&#x27;'), 'OO\'', 'Decode hexanumeric entities');
