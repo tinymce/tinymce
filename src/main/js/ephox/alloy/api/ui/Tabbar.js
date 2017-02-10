@@ -2,25 +2,20 @@ define(
   'ephox.alloy.api.ui.Tabbar',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.TabButton',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabbarSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, Highlighting, SystemEvents, TabButton, UiSketcher, Fields, DomModification, PartType, TabbarSchema, FieldSchema, Fun) {
+  function (Highlighting, UiSketcher, PartType, TabbarSchema, Fun) {
     var schema = TabbarSchema.schema();
     var partTypes = TabbarSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       return {
+        uid: detail.uid(),
         dom: {
           tag: 'div',
           attributes: {
@@ -28,6 +23,7 @@ define(
           }
         },
         components: components,
+        'debug.sketcher': 'Tabbar',
 
         behaviours: {
           highlighting: {

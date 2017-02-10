@@ -18,6 +18,7 @@ define(
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.SplitToolbar',
+    'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.construct.EventHandler',
@@ -33,7 +34,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -463,6 +464,46 @@ define(
         });
       };
 
+      var sketchTabbar = function () {
+        return Tabbar.sketch({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            Tabbar.parts().tabs()
+          ],
+
+          tabs: [
+            { value: 'a' },
+            { value: 'b' },
+            { value: 'c' }
+          ],
+
+          markers: {
+            tabClass: 'tutorial-tab',
+            selectedClass: 'tutorial-selected-tab'
+          },
+
+          members: {
+            tab: {
+              munge: function (t) {
+                return {
+                  dom: {
+                    tag: 'span',
+                    innerHtml: t.value
+                  },
+                  value: t.value
+                };
+              }
+            }
+          },
+
+          parts: {
+            tabs: { }
+          }
+        })
+      };
+
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()
       // );
@@ -472,12 +513,12 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchSplitToolbar()
+        sketchTabbar()
       );
 
-      gui.getByUid('hacky').each(function (toolbar) {
-        Toolbar.setGroups(toolbar, [ ]);
-      })
+      // gui.getByUid('hacky').each(function (toolbar) {
+      //   Toolbar.setGroups(toolbar, [ ]);
+      // })
     };
   }
 );
