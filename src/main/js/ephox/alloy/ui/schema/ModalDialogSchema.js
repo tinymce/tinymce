@@ -7,10 +7,11 @@ define(
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.SelectorFind',
+    'global!Error'
   ],
 
-  function (PartType, FieldSchema, Json, Fun, Option, SelectorFind) {
+  function (PartType, FieldSchema, Json, Fun, Option, SelectorFind, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
@@ -42,10 +43,18 @@ define(
           };
         }
       ),
-      PartType.internal(basic, [ ], 'title', '<alloy.dialog.title>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, [ ], 'close', '<alloy.dialog.close>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, [ ], 'body', '<alloy.dialog.body>', Fun.constant({}), Fun.constant({})),
-      PartType.internal(basic, [ ], 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [
+        FieldSchema.strict('dom')
+      ], 'title', '<alloy.dialog.title>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [
+        FieldSchema.strict('dom')
+      ], 'close', '<alloy.dialog.close>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [
+        FieldSchema.strict('dom')
+      ], 'body', '<alloy.dialog.body>', Fun.constant({}), Fun.constant({})),
+      PartType.internal(basic, [
+        FieldSchema.strict('dom')
+      ], 'footer', '<alloy.dialog.footer>', Fun.constant({}), Fun.constant({})),
 
       PartType.external(basic, [ ], 'blocker', Fun.constant({
         dom: {

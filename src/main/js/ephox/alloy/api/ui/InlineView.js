@@ -3,20 +3,18 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.ui.schema.InlineViewSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun'
   ],
 
-  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, FieldSchema, Merger, Future, Fun) {
+  function (ComponentStructure, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, Merger, Future, Fun) {
     var schema = InlineViewSchema.schema();
 
     var make = function (detail, spec) {

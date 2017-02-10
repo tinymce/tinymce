@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -14,10 +15,13 @@ define(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.Menu',
+    'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.boulder.api.Objects',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -27,7 +31,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -352,10 +356,62 @@ define(
         });
       };
 
+      var sketchModalDialog = function () {
+        return ModalDialog.sketch({
+          lazySink: function () { 
+            return Result.value(sink);
+          },
+
+          onEscape: function () {
+          
+          },
+          
+          dom: {
+            tag: 'div'
+          },
+
+          components: [
+            ModalDialog.parts().title(),
+            ModalDialog.parts().close(),
+            ModalDialog.parts().body(),
+            ModalDialog.parts().footer()
+          ],
+
+          parts: {
+            title: {
+              dom: { tag: 'div', innerHtml: 'Title' }
+            },
+            close: {
+              dom: { tag: 'div', innerHtml: 'X' }
+            },
+            body: {
+              dom: { tag: 'div' }
+            },
+            footer: {
+              dom: { tag: 'div' }
+            },
+            blocker: {
+              // dom: {
+              //   styles: {
+              //     background: 'blue',
+              //     opacity: '0.5'
+              //   }
+              // }
+            }
+          }
+        });
+      };
+
+      // var dialog = GuiFactory.build(
+      //   sketchModalDialog()
+      // );
+
+      // ModalDialog.show(dialog);
+
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchExpandableForm()
+        sketchModalDialog()
       );
     };
   }
