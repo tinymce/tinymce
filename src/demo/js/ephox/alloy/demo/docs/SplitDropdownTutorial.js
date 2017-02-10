@@ -19,6 +19,8 @@ define(
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.api.ui.Tabbar',
+    'ephox.alloy.api.ui.TabButton',
+    'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.construct.EventHandler',
@@ -34,7 +36,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, Tabview, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -504,6 +506,22 @@ define(
         })
       };
 
+      var sketchTabview = function () {
+        return Tabview.sketch({
+          
+        })
+      };
+
+      var sketchTabButton = function () {
+        return TabButton.sketch({
+          value: 'tab.button.1',
+          dom: {
+            tag: 'button',
+            innerHtml: '1'
+          }
+        })
+      }
+
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()
       // );
@@ -513,7 +531,7 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchTabbar()
+        sketchTabButton()
       );
 
       // gui.getByUid('hacky').each(function (toolbar) {
