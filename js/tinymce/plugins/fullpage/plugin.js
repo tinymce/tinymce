@@ -412,6 +412,9 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 		// Add new
 		tinymce.each(headerFragment.getAll('link'), function(stylesheet) {
 			var href = stylesheet.attr('href');
+			if (!href) {
+				return true;
+			}
 
 			if (!currentStyleSheetsMap[href] && stylesheet.attr('rel') == 'stylesheet') {
 				dom.add(headElm, 'link', {

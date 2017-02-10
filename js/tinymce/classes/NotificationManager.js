@@ -21,8 +21,9 @@
  */
 define("tinymce/NotificationManager", [
 	"tinymce/ui/Notification",
-	"tinymce/util/Delay"
-], function(Notification, Delay) {
+	"tinymce/util/Delay",
+	"tinymce/util/Tools"
+], function(Notification, Delay, Tools) {
 	return function(editor) {
 		var self = this, notifications = [];
 
@@ -80,39 +81,50 @@ define("tinymce/NotificationManager", [
 		 * @param {Object} args Optional name/value settings collection contains things like timeout/color/message etc.
 		 */
 		self.open = function(args) {
+			// Never open notification if editor has been removed.
+			if (editor.removed) {
+				return;
+			}
+
 			var notif;
 
 			editor.editorManager.setActive(editor);
 
-			notif = new Notification(args);
-			notifications.push(notif);
+			var duplicate = findDuplicateMessage(notifications, args);
 
-			//If we have a timeout value
-			if (args.timeout > 0) {
-				notif.timer = setTimeout(function() {
-					notif.close();
-				}, args.timeout);
-			}
+			if (duplicate === null) {
+				notif = new Notification(args);
+				notifications.push(notif);
 
-			notif.on('close', function() {
-				var i = notifications.length;
-
-				if (notif.timer) {
-					editor.getWin().clearTimeout(notif.timer);
+				//If we have a timeout value
+				if (args.timeout > 0) {
+						notif.timer = setTimeout(function() {
+							notif.close();
+						}, args.timeout);
 				}
 
-				while (i--) {
-					if (notifications[i] === notif) {
-						notifications.splice(i, 1);
+				notif.on('close', function() {
+					var i = notifications.length;
+
+					if (notif.timer) {
+						editor.getWin().clearTimeout(notif.timer);
 					}
-				}
+
+					while (i--) {
+						if (notifications[i] === notif) {
+							notifications.splice(i, 1);
+						}
+					}
+
+					positionNotifications();
+				});
+
+				notif.renderTo();
 
 				positionNotifications();
-			});
-
-			notif.renderTo();
-
-			positionNotifications();
+			} else {
+				notif = duplicate;
+			}
 
 			return notif;
 		};
@@ -150,6 +162,49 @@ define("tinymce/NotificationManager", [
 				});
 			}
 		});
+
+		/**
+		 * Finds any existing notification with the same properties as the new one.
+		 * Returns either the found notification or null.
+		 *
+		 * @param {Notification[]} notificationArray - Array of current notifications
+		 * @param {type: string, } newNotification - New notification object
+		 * @returns {?Notification}
+		 */
+		function findDuplicateMessage(notificationArray, newNotification) {
+			if (!isPlainTextNotification(newNotification)) {
+				return null;
+			}
+
+			var filteredNotifications = Tools.grep(notificationArray, function (notification) {
+				return isSameNotification(newNotification, notification);
+			});
+
+			return filteredNotifications.length === 0 ? null : filteredNotifications[0];
+		}
+
+		/**
+		 * Checks if the passed in args object has the same
+		 * type and text properties as the sent in notification.
+		 *
+		 * @param {type: string, text: string} a - New notification args object
+		 * @param {Notification} b - Old notification
+		 * @returns {boolean}
+		 */
+		function isSameNotification(a, b) {
+			return a.type === b.settings.type && a.text === b.settings.text;
+		}
+
+		/**
+		 * Checks that the notification does not have a progressBar
+		 * or timeour property.
+		 *
+		 * @param {Notification} notification - Notification to check
+		 * @returns {boolean}
+		 */
+		function isPlainTextNotification(notification) {
+			return !notification.progressBar && !notification.timeout;
+		}
 
 		//self.positionNotifications = positionNotifications;
 	};

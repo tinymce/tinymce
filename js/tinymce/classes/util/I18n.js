@@ -14,7 +14,9 @@
  *
  * @class tinymce.util.I18n
  */
-define("tinymce/util/I18n", [], function() {
+define("tinymce/util/I18n", [
+	"tinymce/util/Tools"
+], function(Tools) {
 	"use strict";
 
 	var data = {}, code = "en";
@@ -85,30 +87,52 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			var langData;
+			var langData = data[code] || {};
 
-			langData = data[code];
-			if (!langData) {
-				langData = {};
+			/**
+			 * number - string
+			 * null, undefined and empty string - empty string
+			 * array - comma-delimited string
+			 * object - in [object Object]
+			 * function - in [object Function]
+			 *
+			 * @param obj
+			 * @returns {string}
+			 */
+			function toString(obj) {
+				if (Tools.is(obj, 'function')) {
+					return Object.prototype.toString.call(obj);
+				}
+				return !isEmpty(obj) ? '' + obj : '';
 			}
 
-			if (typeof text == "undefined") {
-				return text;
+			function isEmpty(text) {
+				return text === '' || text === null || Tools.is(text, 'undefined');
 			}
 
-			if (typeof text != "string" && text.raw) {
-				return text.raw;
+			function getLangData(text) {
+				// make sure we work on a string and return a string
+				text = toString(text);
+				return Tools.hasOwn(langData, text) ? toString(langData[text]) : text;
 			}
 
-			if (text.push) {
+
+			if (isEmpty(text)) {
+				return '';
+			}
+
+			if (Tools.is(text, 'object') && Tools.hasOwn(text, 'raw')) {
+				return toString(text.raw);
+			}
+
+			if (Tools.is(text, 'array')) {
 				var values = text.slice(1);
-
-				text = (langData[text[0]] || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
-					return values[match2];
+				text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function($1, $2) {
+					return Tools.hasOwn(values, $2) ? toString(values[$2]) : $1;
 				});
 			}
 
-			return (langData[text] || text).replace(/{context:\w+}$/, '');
+			return getLangData(text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data

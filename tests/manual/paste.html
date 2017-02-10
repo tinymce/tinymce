@@ -21,7 +21,7 @@
 		add_unload_trigger: false,
 
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
-
+paste_data_images: true,
 		style_formats: [
 			{title: 'Bold text', format: 'h1'},
 			{title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
@@ -32,7 +32,12 @@
 			{title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
 		],
 
-		setup: function(ed) {
+		images_dataimg_filter: function (img) {
+			console.log(img);
+			return false;
+		},
+
+		set2up: function(ed) {
 			ed.on('BeforePastePreProcess PastePreProcess', function(e) {
 				if (window.console && console.dir) {
 					console.log(e.type + ": " + e.content);
@@ -133,7 +138,7 @@
 		<p><strong>abc</strong>def</p>
 		<p><strong>abc</strong>def</p>
 	</div>
-	
+
 	<div>
 <textarea style="height: 140px">
 a

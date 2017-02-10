@@ -1,9 +1,11 @@
 /*eslint-env node */
 
+var zipUtils = require('./tools/modules/zip-helper');
+
 module.exports = function(grunt) {
 	var packageData = grunt.file.readJSON("package.json");
 	var changelogLine = grunt.file.read("changelog.txt").toString().split("\n")[0];
-	packageData.version = /^Version ([0-9xabrc.]+)/.exec(changelogLine)[1];
+	var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
 	packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
 
 	grunt.initConfig({
@@ -19,15 +21,21 @@ module.exports = function(grunt) {
 			plugins: [
 				"js/tinymce/plugins/*/plugin.js",
 				"js/tinymce/plugins/*/classes/**/*.js",
+				"js/tinymce/plugins/*/src/**/*.js",
 				"!js/tinymce/plugins/paste/plugin.js",
 				"!js/tinymce/plugins/table/plugin.js",
 				"!js/tinymce/plugins/spellchecker/plugin.js",
 				"!js/tinymce/plugins/imagetools/plugin.js",
+				"!js/tinymce/plugins/media/plugin.js",
+				"!js/tinymce/plugins/lists/plugin.js",
+				"!js/tinymce/plugins/wordcount/plugin.js",
 				"!js/tinymce/plugins/codesample/plugin.js",
 				"!js/tinymce/plugins/codesample/classes/Prism.js"
 			],
 
-			themes: ["js/tinymce/themes/*/theme.js"]
+			themes: [
+				"js/tinymce/themes/*/src/**/*.js"
+			]
 		},
 
 		qunit: {
@@ -37,39 +45,6 @@ module.exports = function(grunt) {
 						"tests/index.html"
 					]
 				}
-			}
-		},
-
-		"bolt-init": {
-			"imagetools-plugin": {
-				config_dir: "js/tinymce/plugins/imagetools/config/bolt"
-			}
-		},
-
-		"bolt-build": {
-			"imagetools-plugin": {
-				config_js: "js/tinymce/plugins/imagetools/config/bolt/prod.js",
-				output_dir: "js/tinymce/plugins/imagetools/scratch",
-				main: "tinymce/imagetoolsplugin/Plugin",
-				filename: "plugin",
-
-				generate_inline: true,
-				minimise_module_names: true,
-
-				files: {
-					src: ['js/tinymce/plugins/imagetools/src/main/js/Plugin.js']
-				}
-			}
-		},
-
-		copy: {
-			"bolt-plugins": {
-				files: [
-					{
-						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.raw.js",
-						dest: "js/tinymce/plugins/imagetools/plugin.js"
-					}
-				]
 			}
 		},
 
@@ -175,7 +150,8 @@ module.exports = function(grunt) {
 						"TinyMCE.less",
 						"CropRect.less",
 						"ImagePanel.less",
-						"Arrows.less"
+						"Arrows.less",
+						"Sidebar.less"
 					],
 					append: ["Icons.less"],
 					importFrom: "js/tinymce/tinymce.js",
@@ -267,7 +243,12 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				beautify: {
-					ascii_only: true
+					ascii_only: true,
+					screw_ie8: false
+				},
+
+				compress: {
+					screw_ie8: false
 				}
 			},
 
@@ -283,15 +264,6 @@ module.exports = function(grunt) {
 				ext: ".min.js"
 			},
 
-			"bolt-plugins": {
-				files: [
-					{
-						src: "js/tinymce/plugins/imagetools/scratch/inline/plugin.js",
-						dest: "js/tinymce/plugins/imagetools/plugin.min.js"
-					}
-				]
-			},
-
 			"jquery-plugin": {
 				src: ["js/tinymce/classes/jquery.tinymce.js"],
 				dest: "js/tinymce/jquery.tinymce.min.js"
@@ -304,21 +276,25 @@ module.exports = function(grunt) {
 					baseDir: "tinymce",
 
 					excludes: [
+						"js/**/config",
+						"js/**/scratch",
+						"js/**/lib",
+						"js/**/dependency",
+						"js/**/classes",
+						"js/**/src",
+						"js/**/plugin.js",
+						"js/**/theme.js",
+						"js/**/*.less",
+						"js/**/*.dev.svg",
+						"js/**/*.dev.js",
+						"js/tinymce/tinymce.full.min.js",
 						"js/tinymce/plugins/moxiemanager",
 						"js/tinymce/plugins/compat3x",
 						"js/tinymce/plugins/visualblocks/img",
-						"js/tinymce/plugins/*/config",
-						"js/tinymce/plugins/*/scratch",
-						"js/tinymce/plugins/*/classes",
-						"js/tinymce/plugins/*/src",
-						"js/tinymce/plugins/*/plugin.js",
-						"js/tinymce/plugins/*/plugin.dev.js",
-						"js/tinymce/themes/*/theme.js",
-						"js/tinymce/skins/*/*.less",
 						"js/tinymce/skins/*/fonts/*.json",
-						"js/tinymce/skins/*/fonts/*.dev.svg",
 						"js/tinymce/skins/*/fonts/readme.md",
-						"readme.md"
+						"readme.md",
+						"js/**/Gruntfile.js"
 					],
 
 					to: "tmp/tinymce_<%= pkg.version %>.zip"
@@ -343,8 +319,10 @@ module.exports = function(grunt) {
 					baseDir: "tinymce",
 
 					excludes: [
-						"js/tinymce/plugins/*/config/bolt/bootstrap-*",
-						"js/tinymce/plugins/*/scratch",
+						"js/**/bolt/bootstrap-*",
+						"js/**/scratch",
+						"js/**/lib",
+						"js/**/dependency",
 						"js/tinymce/tinymce.full.min.js",
 						"js/tinymce/plugins/moxiemanager",
 						"js/tests/.jshintrc"
@@ -391,20 +369,24 @@ module.exports = function(grunt) {
 					},
 
 					excludes: [
+						"js/**/config",
+						"js/**/scratch",
+						"js/**/classes",
+						"js/**/lib",
+						"js/**/dependency",
+						"js/**/src",
+						"js/**/*.less",
+						"js/**/*.dev.js",
+						"js/**/*.dev.svg",
 						"js/tinymce/tinymce.full.min.js",
 						"js/tinymce/plugins/moxiemanager",
 						"js/tinymce/plugins/visualblocks/img",
-						"js/tinymce/plugins/*/plugin.dev.js",
-						"js/tinymce/skins/*/*.less",
 						"js/tinymce/skins/*/fonts/*.json",
 						"js/tinymce/skins/*/fonts/*.dev.svg",
 						"js/tinymce/skins/*/fonts/readme.md",
-						"js/tinymce/plugins/*/config",
-						"js/tinymce/plugins/*/scratch",
-						"js/tinymce/plugins/*/classes",
-						"js/tinymce/plugins/*/src",
 						"readme.md",
-						"js/tests/.jshintrc"
+						"js/tests/.jshintrc",
+						"js/**/Gruntfile.js"
 					],
 
 					concat: [
@@ -415,8 +397,7 @@ module.exports = function(grunt) {
 								"js/tinymce/plugins/*/plugin.min.js",
 								"!js/tinymce/plugins/compat3x/plugin.min.js",
 								"!js/tinymce/plugins/example/plugin.min.js",
-								"!js/tinymce/plugins/example_dependency/plugin.min.js",
-								"!js/tinymce/plugins/layer/plugin.min.js"
+								"!js/tinymce/plugins/example_dependency/plugin.min.js"
 							],
 
 							dest: [
@@ -442,21 +423,24 @@ module.exports = function(grunt) {
 			component: {
 				options: {
 					excludes: [
+						"js/**/config",
+						"js/**/scratch",
+						"js/**/classes",
+						"js/**/lib",
+						"js/**/dependency",
+						"js/**/src",
+						"js/**/Gruntfile.js",
+						"js/**/*.less",
+						"js/**/*.dev.svg",
+						"js/**/*.dev.js",
+						"js/tinymce/tinymce.full.min.js",
 						"js/tinymce/plugins/moxiemanager",
 						"js/tinymce/plugins/example",
 						"js/tinymce/plugins/example_dependency",
 						"js/tinymce/plugins/compat3x",
 						"js/tinymce/plugins/visualblocks/img",
-						"js/tinymce/plugins/*/config",
-						"js/tinymce/plugins/*/scratch",
-						"js/tinymce/plugins/*/classes",
-						"js/tinymce/plugins/*/src",
-						"js/tinymce/plugins/*/plugin.dev.js",
-						"js/tinymce/skins/*/*.less",
 						"js/tinymce/skins/*/fonts/*.json",
-						"js/tinymce/skins/*/fonts/*.dev.svg",
-						"js/tinymce/skins/*/fonts/readme.md",
-						"readme.md"
+						"js/tinymce/skins/*/fonts/readme.md"
 					],
 
 					pathFilter: function(zipFilePath) {
@@ -485,6 +469,7 @@ module.exports = function(grunt) {
 							"name": "tinymce",
 							"version": packageData.version,
 							"description": "Web based JavaScript HTML WYSIWYG editor control.",
+							"main": "tinymce.js",
 							"license": "LGPL-2.1",
 							"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
 							"bugs": {"url": "http://www.tinymce.com/develop/bugtracker.php"}
@@ -534,6 +519,19 @@ module.exports = function(grunt) {
 							"jquery.tinymce.js",
 							"js/tinymce/classes/jquery.tinymce.js"
 						);
+
+						var getDirs = zipUtils.getDirectories(grunt, this.excludes);
+
+						zipUtils.addIndexFiles(
+							zip,
+							getDirs('js/tinymce/plugins'),
+							zipUtils.generateIndex("plugins", "plugin")
+						);
+						zipUtils.addIndexFiles(
+							zip,
+							getDirs('js/tinymce/themes'),
+							zipUtils.generateIndex("themes", "theme")
+						);
 					},
 
 					to: "tmp/tinymce_<%= pkg.version %>_component.zip"
@@ -547,38 +545,9 @@ module.exports = function(grunt) {
 					"js/tinymce/tinymce.min.js",
 					"js/tinymce/jquery.tinymce.min.js",
 					"js/tinymce/license.txt",
-					"changelog.txt"
+					"changelog.txt",
+					"readme.md"
 				]
-			}
-		},
-
-		connect: {
-			server: {
-				options: {
-					port: 9999
-				}
-			}
-		},
-
-		"saucelabs-qunit": {
-			all: {
-				options: {
-					urls: ["127.0.0.1:9999/tests/index.html?min=true"],
-					testname: "TinyMCE QUnit Tests",
-					browsers: [
-						{browserName: "firefox", platform: "XP"},
-						{browserName: "googlechrome", platform: "XP"},
-						{browserName: "firefox", platform: "Linux"},
-						{browserName: "googlechrome", platform: "Linux"},
-						{browserName: "internet explorer", platform: "XP", version: "8"},
-						{browserName: "internet explorer", platform: "Windows 7", version: "9"},
-						{browserName: "internet explorer", platform: "Windows 7", version: "10"},
-						{browserName: "internet explorer", platform: "Windows 7", version: "11"},
-						{browserName: "microsoftedge", platform: "Windows 10", version: "20.10240"},
-						{browserName: "safari", platform: "OS X 10.9", version: "7"},
-						{browserName: "safari", platform: "OS X 10.8", version: "6"}
-					]
-				}
 			}
 		},
 
@@ -602,13 +571,17 @@ module.exports = function(grunt) {
 					requireLicenseAcceptance: true,
 					tags: "Editor TinyMCE HTML HTMLEditor",
 					excludes: [
-						"js/tinymce/skins/**/*.dev.svg",
-						"js/tinymce/skins/**/*.less",
-						"js/tinymce/plugins/*/config",
-						"js/tinymce/plugins/*/scratch",
-						"js/tinymce/plugins/*/classes",
-						"js/tinymce/plugins/*/src",
-						"js/tinymce/plugins/**/*.dev.js"
+						"js/**/config",
+						"js/**/scratch",
+						"js/**/classes",
+						"js/**/lib",
+						"js/**/dependency",
+						"js/**/src",
+						"js/**/*.less",
+						"js/**/*.dev.svg",
+						"js/**/*.dev.js",
+						"js/**/Gruntfile.js",
+						"js/tinymce/tinymce.full.min.js"
 					],
 					outputDir: "tmp"
 				},
@@ -641,13 +614,17 @@ module.exports = function(grunt) {
 					requireLicenseAcceptance: true,
 					tags: "Editor TinyMCE HTML HTMLEditor",
 					excludes: [
-						"js/tinymce/skins/**/*.dev.svg",
-						"js/tinymce/skins/**/*.less",
-						"js/tinymce/plugins/*/config",
-						"js/tinymce/plugins/*/scratch",
-						"js/tinymce/plugins/*/classes",
-						"js/tinymce/plugins/*/src",
-						"js/tinymce/plugins/**/*.dev.js"
+						"js/**/config",
+						"js/**/scratch",
+						"js/**/classes",
+						"js/**/lib",
+						"js/**/dependency",
+						"js/**/src",
+						"js/**/*.less",
+						"js/**/*.dev.svg",
+						"js/**/*.dev.js",
+						"js/**/Gruntfile.js",
+						"js/tinymce/tinymce.full.min.js"
 					],
 					outputDir: "tmp"
 				},
@@ -720,11 +697,6 @@ module.exports = function(grunt) {
 			npm: [
 				"node_modules",
 				"npm-debug.log"
-			],
-
-			saucelabs: [
-				"?sc.log",
-				"sc_*.log"
 			]
 		},
 
@@ -740,8 +712,15 @@ module.exports = function(grunt) {
 			plugins: {
 				files: ["js/tinymce/plugins/**/*.js"],
 				tasks: [
-					"amdlc:paste-plugin", "bolt-build:imagetools-plugin", "amdlc:codesample-plugin",
-					"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",
+					"amdlc:paste-plugin",
+					"bolt-build:imagetools-plugin",
+					"bolt-build:media-plugin",
+					"bolt-build:wordcount-plugin",
+					"bolt-build:lists-plugin",
+					"amdlc:codesample-plugin",
+					"amdlc:table-plugin",
+					"amdlc:spellchecker-plugin",
+					"uglify:plugins",
 					"eslint:plugins"
 				],
 				options: {
@@ -764,7 +743,35 @@ module.exports = function(grunt) {
 					spawn: false
 				}
 			}
+		},
+
+		bedrock: {
+			all: {
+				options: {
+					config: 'tools/bolt/config/browser.js',
+					testdirs: [
+						'js/tinymce/plugins/media/src/test',
+						'js/tinymce/plugins/lists/src/test',
+						'js/tinymce/plugins/wordcount/src/test',
+						'js/tinymce/themes/inlite/src/test',
+						'js/tinymce/themes/modern/src/test'
+					]
+				}
+			}
+		},
+
+		subgrunt: {
+			'wordcount-plugin': {path: 'js/tinymce/plugins/wordcount'},
+			'imagetools-plugin': {path: 'js/tinymce/plugins/imagetools'},
+			'media-plugin': {path: 'js/tinymce/plugins/media'},
+			'lists-plugin': {path: 'js/tinymce/plugins/lists'},
+			'inlite-theme': {path: 'js/tinymce/themes/inlite'},
+			'modern-theme': {path: 'js/tinymce/themes/modern'}
 		}
+	});
+
+	grunt.registerTask('version', 'Creates a version file', function () {
+		grunt.file.write('tmp/version.txt', BUILD_VERSION);
 	});
 
 	require("load-grunt-tasks")(grunt);
@@ -772,8 +779,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('@ephox/bolt');
 
 	grunt.registerTask("lint", ["eslint"]);
-	grunt.registerTask("minify", ["amdlc", "bolt-build", "uglify", "copy", "skin", "less"]);
+	grunt.registerTask("minify", ["amdlc", "uglify", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
-	grunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);
-	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack"]);
+	grunt.registerTask("default", ["lint", "minify", "subgrunt", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
 };

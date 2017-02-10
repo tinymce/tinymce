@@ -112,6 +112,11 @@ define("tinymce/AddOnManager", [
 			return addOn;
 		},
 
+		remove: function(name) {
+			delete this.urls[name];
+			delete this.lookup[name];
+		},
+
 		createUrl: function(baseUrl, dep) {
 			if (typeof dep === "object") {
 				return dep;
@@ -143,8 +148,9 @@ define("tinymce/AddOnManager", [
 		 * @method load
 		 * @param {String} name Short name of the add-on that gets loaded.
 		 * @param {String} addOnUrl URL to the add-on that will get loaded.
-		 * @param {function} callback Optional callback to execute ones the add-on is loaded.
+		 * @param {function} success Optional success callback to execute when an add-on is loaded.
 		 * @param {Object} scope Optional scope to execute the callback in.
+		 * @param {function} failure Optional failure callback to execute when an add-on failed to load.
 		 * @example
 		 * // Loads a plugin from an external URL
 		 * tinymce.PluginManager.load('myplugin', '/some/dir/someplugin/plugin.js');
@@ -155,7 +161,7 @@ define("tinymce/AddOnManager", [
 		 *  plugins: '-myplugin' // Don't try to load it again
 		 * });
 		 */
-		load: function(name, addOnUrl, callback, scope) {
+		load: function(name, addOnUrl, success, scope, failure) {
 			var self = this, url = addOnUrl;
 
 			function loadDependencies() {
@@ -167,11 +173,11 @@ define("tinymce/AddOnManager", [
 					self.load(newUrl.resource, newUrl, undefined, undefined);
 				});
 
-				if (callback) {
+				if (success) {
 					if (scope) {
-						callback.call(scope);
+						success.call(scope);
 					} else {
-						callback.call(ScriptLoader);
+						success.call(ScriptLoader);
 					}
 				}
 			}
@@ -193,7 +199,7 @@ define("tinymce/AddOnManager", [
 			if (self.lookup[name]) {
 				loadDependencies();
 			} else {
-				ScriptLoader.ScriptLoader.add(url, loadDependencies, scope);
+				ScriptLoader.ScriptLoader.add(url, loadDependencies, scope, failure);
 			}
 		}
 	};

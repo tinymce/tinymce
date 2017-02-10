@@ -48,11 +48,3 @@
  *
  * @property {String} type
  */
-
-/**
- * @include tinymce.ContentEvent.js
- * @include tinymce.CommandEvent.js
- * @include tinymce.ProgressStateEvent.js
- * @include tinymce.FocusEvent.js
- * @include tinymce.ResizeEvent.js
- */

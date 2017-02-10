@@ -96,7 +96,7 @@ test('Typing state', function() {
 	editor.dom.fire(editor.getBody(), 'keydown', {keyCode: 65});
 	ok(editor.undoManager.typing);
 
-	editor.dom.fire(editor.getBody(), 'keyup', {keyCode: 13});
+	editor.dom.fire(editor.getBody(), 'keydown', {keyCode: 13});
 	ok(!editor.undoManager.typing);
 
 	selectAllFlags = {keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false};
@@ -193,7 +193,7 @@ test('No undo/redo cmds on Undo/Redo shortcut', function() {
 });
 
 test('Transact', function() {
-	var count = 0;
+	var count = 0, level;
 
 	editor.undoManager.clear();
 
@@ -201,12 +201,32 @@ test('Transact', function() {
 		count++;
 	});
 
-	editor.undoManager.transact(function() {
+	level = editor.undoManager.transact(function() {
 		editor.undoManager.add();
 		editor.undoManager.add();
 	});
 
 	equal(count, 1);
+	equal(level !== null, true);
+});
+
+test('Transact no change', function() {
+	editor.undoManager.add();
+
+	var level = editor.undoManager.transact(function() {
+	});
+
+	equal(level, null);
+});
+
+test('Transact with change', function() {
+	editor.undoManager.add();
+
+	var level = editor.undoManager.transact(function() {
+		editor.setContent('x');
+	});
+
+	equal(level !== null, true);
 });
 
 test('Transact nested', function() {
@@ -253,6 +273,35 @@ test('Transact exception', function() {
 	equal(count, 1);
 });
 
+test('Extra with changes', function() {
+	var data;
+
+	editor.undoManager.clear();
+	editor.setContent('<p>abc</p>');
+	Utils.setSelection('p', 0);
+	editor.undoManager.add();
+
+	editor.undoManager.extra(function() {
+		Utils.setSelection('p', 1, 'p', 2);
+		editor.insertContent('1');
+	}, function () {
+		Utils.setSelection('p', 1, 'p', 2);
+		editor.insertContent('2');
+	});
+
+	data = editor.undoManager.data;
+	equal(data.length, 3);
+	equal(data[0].content, '<p>abc</p>');
+	deepEqual(data[0].bookmark, {start: [0, 0, 0]});
+	deepEqual(data[0].beforeBookmark, {start: [0, 0, 0]});
+	equal(data[1].content, '<p>a1c</p>');
+	deepEqual(data[1].bookmark, {start: [2, 0, 0]});
+	deepEqual(data[1].beforeBookmark, {start: [2, 0, 0]});
+	equal(data[2].content, '<p>a2c</p>');
+	deepEqual(data[2].bookmark, {start: [2, 0, 0]});
+	deepEqual(data[1].beforeBookmark, data[2].bookmark);
+});
+
 test('Exclude internal elements', function() {
 	var count = 0, lastLevel;
 
@@ -289,6 +338,7 @@ test('Exclude internal elements', function() {
 		'<img src="about:blank" data-mce-bogus="all">' +
 		'<br data-mce-bogus="1">' +
 		'test' +
+		'\u200B' +
 		'<img src="about:blank" />' +
 		'<table><tr><td>x</td></tr></table>'
 	);
@@ -298,6 +348,7 @@ test('Exclude internal elements', function() {
 	equal(Utils.cleanHtml(lastLevel.content),
 		'<br data-mce-bogus="1">' +
 		'test' +
+		'\u200B' +
 		'<img src="about:blank">' +
 		'<table><tbody><tr><td>x</td></tr></tbody></table>'
 	);
@@ -399,4 +450,42 @@ test('Dirty state type AltGr+letter', function() {
 	Utils.type({keyCode: 65, charCode: 66, ctrlKey: true, altKey: true});
 	equal(editor.getContent(), "<p>aB</p>");
 	ok(editor.isDirty(), "Dirty state should be true");
+});
+
+test('ExecCommand while typing should produce undo level', function() {
+	editor.undoManager.clear();
+	editor.setDirty(false);
+	editor.setContent('<p>a</p>');
+	Utils.setSelection('p', 1);
+
+	equal(editor.undoManager.typing, false);
+	Utils.type({keyCode: 66, charCode: 66});
+	equal(editor.undoManager.typing, true);
+	equal(editor.getContent(), '<p>aB</p>');
+	editor.execCommand('mceInsertContent', false, 'C');
+	equal(editor.undoManager.typing, false);
+	equal(editor.undoManager.data.length, 3);
+	equal(editor.undoManager.data[0].content, '<p>a</p>');
+	equal(editor.undoManager.data[1].content, '<p>aB</p>');
+	equal(editor.undoManager.data[2].content, '<p>aBC</p>');
+});
+
+test('transact while typing should produce undo level', function() {
+	editor.undoManager.clear();
+	editor.setDirty(false);
+	editor.setContent('<p>a</p>');
+	Utils.setSelection('p', 1);
+
+	equal(editor.undoManager.typing, false);
+	Utils.type({keyCode: 66, charCode: 66});
+	equal(editor.undoManager.typing, true);
+	equal(editor.getContent(), '<p>aB</p>');
+	editor.undoManager.transact(function () {
+		editor.getBody().firstChild.firstChild.data = 'aBC';
+	});
+	equal(editor.undoManager.typing, false);
+	equal(editor.undoManager.data.length, 3);
+	equal(editor.undoManager.data[0].content, '<p>a</p>');
+	equal(editor.undoManager.data[1].content, '<p>aB</p>');
+	equal(editor.undoManager.data[2].content, '<p>aBC</p>');
 });

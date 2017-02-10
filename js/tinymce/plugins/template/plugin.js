@@ -132,8 +132,8 @@ tinymce.PluginManager.add('template', function(editor) {
 				insertTemplate(false, templateHtml);
 			},
 
-			width: editor.getParam('template_popup_width', 600),
-			height: editor.getParam('template_popup_height', 500)
+			minWidth: Math.min(tinymce.DOM.getViewPort().w, editor.getParam('template_popup_width', 600)),
+			minHeight: Math.min(tinymce.DOM.getViewPort().h, editor.getParam('template_popup_height', 500))
 		});
 
 		win.find('listbox')[0].fire('select');
@@ -253,7 +253,7 @@ tinymce.PluginManager.add('template', function(editor) {
 	});
 
 	editor.addMenuItem('template', {
-		text: 'Insert template',
+		text: 'Template',
 		onclick: createTemplateList(showDialog),
 		context: 'insert'
 	});

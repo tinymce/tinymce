@@ -27,6 +27,32 @@ module("tinymce.plugins.Paste", {
 	}
 });
 
+test("Plain text toggle event", function() {
+	var events = [];
+
+	editor.on('PastePlainTextToggle', function (e) {
+		events.push({state: e.state});
+	});
+
+	editor.execCommand('mceTogglePlainTextPaste');
+	deepEqual(events, [
+		{state: true}
+	], 'Should be enabled');
+
+	editor.execCommand('mceTogglePlainTextPaste');
+	deepEqual(events, [
+		{state: true},
+		{state: false}
+	], 'Should be disabled');
+
+	editor.execCommand('mceTogglePlainTextPaste');
+	deepEqual(events, [
+		{state: true},
+		{state: false},
+		{state: true}
+	], 'Should be enabled again');
+});
+
 test("Paste simple text content", function() {
 	var rng = editor.dom.createRng();
 
@@ -658,6 +684,19 @@ test('trim html from clipboard fragments', function() {
 	equal(tinymce.pasteplugin.Utils.trimHtml('a<span class="Apple-converted-space">\u00a0<\/span>'), 'a ');
 	equal(tinymce.pasteplugin.Utils.trimHtml('<span class="Apple-converted-space">\u00a0<\/span>'), ' ');
 });
+
+if (tinymce.Env.ie) {
+	test('paste font and u in anchor', function() {
+		editor.setContent('<p>a</p>');
+		Utils.setSelection('p', 1);
+
+		editor.execCommand('mceInsertClipboardContent', false, {
+			content: '<p><a href="#"><font size="3"><u>b</u></font></a></p>'
+		});
+
+		equal(editor.getContent(), '<p>a</p><p><a href="#">b</a></p>');
+	});
+}
 
 if (tinymce.Env.webkit) {
 	test('paste webkit retains text styles runtime styles internal', function() {

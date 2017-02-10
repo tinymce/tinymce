@@ -25,7 +25,7 @@ test('Schema rules', function() {
 
 	ser.setRules('a[href|target<_blank?_top|title:forced value]');
 	DOM.setHTML('test', '<a href="file.htm" data-mce-href="file.htm" target="_blank" title="title">link</a><a href="#" data-mce-href="#" target="test">test2</a>');
-	equal(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value">link</a><a href="#" title="forced value">test2</a>');
+	equal(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value" rel="noopener noreferrer">link</a><a href="#" title="forced value">test2</a>');
 
 	ser.setRules('img[src|border=0|alt=]');
 	DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" border="0" alt="" />');
@@ -234,6 +234,17 @@ test('Padd empty elements', function() {
 	equal(ser.serialize(DOM.get('test')), '<p>test</p><p>&nbsp;</p>');
 });
 
+test('Padd empty elements with BR', function() {
+	var ser = new tinymce.dom.Serializer({padd_empty_with_br: true});
+
+	ser.setRules('#p,table,tr,#td,br');
+
+	DOM.setHTML('test', '<p>a</p><p></p>');
+	equal(ser.serialize(DOM.get('test')), '<p>a</p><p><br /></p>');
+	DOM.setHTML('test', '<p>a</p><table><tr><td><br></td></tr></table>');
+	equal(ser.serialize(DOM.get('test')), '<p>a</p><table><tr><td><br /></td></tr></table>');
+});
+
 test('Remove empty elements', function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 
@@ -344,6 +355,14 @@ test('Script whitespace in beginning/end and cdata', 1, function() {
 
 	DOM.setHTML('test', '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
 	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+});
+
+test('Whitespace preserve in pre', function() {
+	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
+	ser.setRules('pre');
+
+	DOM.setHTML('test', '<pre>  </pre>');
+	equal(ser.serialize(DOM.get('test')), '<pre>  </pre>');
 });
 
 test('Script with src attr', 1, function() {
@@ -523,4 +542,18 @@ test('addTempAttr', function() {
 	DOM.setHTML('test', '<p data-x="1" data-y="2" data-z="3">a</p>');
 	equal(ser.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
 	equal(ser.trimHtml('<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
+});
+
+test('addTempAttr same attr twice', function() {
+	var ser1 = new tinymce.dom.Serializer({});
+	var ser2 = new tinymce.dom.Serializer({});
+
+	ser1.addTempAttr('data-x');
+	ser2.addTempAttr('data-x');
+
+	DOM.setHTML('test', '<p data-x="1" data-z="3">a</p>');
+	equal(ser1.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
+	equal(ser1.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+	equal(ser2.serialize(DOM.get('test'), {getInner: 1}), '<p data-z="3">a</p>');
+	equal(ser2.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
 });

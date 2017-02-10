@@ -105,6 +105,15 @@
 	};
 
 	function patchEditor(editor) {
+
+		function translate(str) {
+			var prefix = editor.settings.language || "en";
+			var prefixedStr = [prefix, str].join('.');
+			var translatedStr = tinymce.i18n.translate(prefixedStr);
+
+			return prefixedStr !== translatedStr ? translatedStr : tinymce.i18n.translate(str);
+		}
+
 		function patchEditorEvents(oldEventNames, argsMap) {
 			tinymce.each(oldEventNames.split(" "), function(oldName) {
 				editor["on" + oldName] = new Dispatcher(editor, oldName, argsMap);
@@ -215,7 +224,7 @@
 				editor.controlManager.buttons[name] = this;
 
 				if (originalOnPostRender) {
-					return originalOnPostRender.call(this);
+					return originalOnPostRender.apply(this, arguments);
 				}
 			}
 
@@ -231,7 +240,7 @@
 			}
 
 			if (settings.title) {
-				settings.title = tinymce.i18n.translate((editor.settings.language || "en") + "." + settings.title);
+				settings.title = translate(settings.title);
 			}
 
 			return originalAddButton.call(this, name, settings);

@@ -830,13 +830,17 @@ define("tinymce/tableplugin/ResizeBars", [
 					var newLeft = editor.dom.getPos(dragBar).x;
 					index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_ATTRIBUTE), 10);
 					delta = isRtl() ? initialLeft - newLeft : newLeft - initialLeft;
-					adjustWidth(hoverTable, delta, index);
+					if (Math.abs(delta) >= 1) {			// simple click with no real resize (<1px) must not add CSS properties
+						adjustWidth(hoverTable, delta, index);
+					}
 				} else if (isRow(dragBar)) {
 					var initialTop = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE), 10);
 					var newTop = editor.dom.getPos(dragBar).y;
 					index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_ROW_DATA_ATTRIBUTE), 10);
 					delta = newTop - initialTop;
-					adjustHeight(hoverTable, delta, index);
+					if (Math.abs(delta) >= 1) {			// simple click with no real resize (<1px) must not add CSS properties
+						adjustHeight(hoverTable, delta, index);
+					}
 				}
 				refreshBars(hoverTable);
 				editor.nodeChanged();
@@ -905,6 +909,8 @@ define("tinymce/tableplugin/ResizeBars", [
 				var initialTop = editor.dom.getPos(target).y;
 				editor.dom.setAttrib(target, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE, initialTop);
 				setupRowDrag(target);
+			} else {
+				clearBars();
 			}
 		}
 

@@ -114,7 +114,7 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 
 	editor.addMenuItem('insertdatetime', {
 		icon: 'date',
-		text: 'Insert date/time',
+		text: 'Date/time',
 		menu: menuItems,
 		context: 'insert'
 	});

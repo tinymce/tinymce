@@ -45,6 +45,11 @@ ModuleLoader.require([
 		};
 	}
 
+	function assertCaretInCaretBlockContainer() {
+		var beforeRng = editor.selection.getRng();
+		equal(CaretContainer.isCaretContainerBlock(beforeRng.startContainer), true, 'Not in caret block container.');
+	}
+
 	var leftArrow = pressKey(VK.LEFT);
 	var rightArrow = pressKey(VK.RIGHT);
 	var backspace = pressKey(VK.BACKSPACE);
@@ -181,6 +186,114 @@ ModuleLoader.require([
 		equal(editor.selection.getRng().startContainer.nextSibling.nodeName, 'SPAN');
 	});
 
+	test('backspace from before cE=false block to text', function() {
+		editor.setContent('<p>1</p><p contenteditable="false">2</p><p>3</p>');
+		editor.selection.select(editor.dom.select('p')[1]);
+		editor.selection.collapse(true);
+		assertCaretInCaretBlockContainer();
+
+		Utils.type('\b');
+		var rng = editor.selection.getRng();
+
+		equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p><p>3</p>');
+		equal(rng.startContainer, editor.dom.select('p')[0].firstChild);
+		equal(rng.startOffset, 1);
+		equal(rng.collapsed, true);
+	});
+
+	test('backspace from before first cE=false block', function() {
+		editor.setContent('<p contenteditable="false">1</p><p>2</p>');
+		editor.selection.select(editor.dom.select('p')[0]);
+		editor.selection.collapse(true);
+		assertCaretInCaretBlockContainer();
+
+		Utils.type('\b');
+
+		equal(editor.getContent(), '<p contenteditable="false">1</p><p>2</p>');
+		assertCaretInCaretBlockContainer();
+	});
+
+	test('backspace from before cE=false block to after cE=false block', function() {
+		editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
+		editor.selection.select(editor.dom.select('p')[1]);
+		editor.selection.collapse(true);
+		assertCaretInCaretBlockContainer();
+
+		Utils.type('\b');
+		var rng = editor.selection.getRng();
+
+		equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
+		assertCaretInCaretBlockContainer();
+		equal(rng.startContainer.previousSibling, editor.dom.select('p')[0]);
+	});
+
+	test('delete from after cE=false block to text', function() {
+		editor.setContent('<p>1</p><p contenteditable="false">2</p><p>3</p>');
+		editor.selection.select(editor.dom.select('p')[1]);
+		editor.selection.collapse(false);
+		assertCaretInCaretBlockContainer();
+
+		forwardDelete();
+		var rng = editor.selection.getRng();
+
+		equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p><p>3</p>');
+		equal(rng.startContainer, editor.dom.select('p')[2].firstChild);
+		equal(rng.startOffset, 0);
+		equal(rng.collapsed, true);
+	});
+
+	test('delete from after last cE=false block', function() {
+		editor.setContent('<p>1</p><p contenteditable="false">2</p>');
+		editor.selection.select(editor.dom.select('p')[1]);
+		editor.selection.collapse(false);
+		assertCaretInCaretBlockContainer();
+		forwardDelete();
+		equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p>');
+		assertCaretInCaretBlockContainer();
+	});
+
+	test('delete from after cE=false block to before cE=false block', function() {
+		editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
+		editor.selection.select(editor.dom.select('p')[0]);
+		rightArrow();
+		assertCaretInCaretBlockContainer();
+
+		forwardDelete();
+		var rng = editor.selection.getRng();
+
+		equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
+		assertCaretInCaretBlockContainer();
+		equal(rng.startContainer.nextSibling, editor.dom.select('p')[2]);
+	});
+
+	test('delete from block to before cE=false inline', function() {
+		editor.setContent('<p>1</p><p><span contenteditable="false">2</span>3</p>');
+		Utils.setSelection('p:nth-child(1)', 1);
+
+		forwardDelete();
+		equal(editor.getContent(), '<p>1<span contenteditable="false">2</span>3</p>');
+		ok(Zwsp.isZwsp(editor.selection.getRng().startContainer.data));
+		equal(editor.selection.getRng().startContainer.nextSibling.nodeName, 'SPAN');
+	});
+
+	test('backspace from empty block to after cE=false', function() {
+		editor.getBody().innerHTML = '<p contenteditable="false">1</p><p><br></p>';
+		Utils.setSelection('p:nth-child(2)', 0);
+
+		backspace();
+		equal(editor.getContent(), '<p contenteditable="false">1</p>');
+		assertCaretInCaretBlockContainer();
+	});
+
+	test('delete from empty block to before cE=false', function() {
+		editor.getBody().innerHTML = '<p><br></p><p contenteditable="false">2</p>';
+		Utils.setSelection('p:nth-child(1)', 0);
+
+		forwardDelete();
+		equal(editor.getContent(), '<p contenteditable="false">2</p>');
+		assertCaretInCaretBlockContainer();
+	});
+
 	test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (left)', exitPreTest(leftArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));
 	test('exit pre block (down)', exitPreTest(downArrow, 3, '<pre>abc</pre><p>\u00a0</p>'));
@@ -191,5 +304,54 @@ ModuleLoader.require([
 		var evt = editor.fire('click', {target: editor.$('strong')[0]});
 
 		equal(evt.isDefaultPrevented(), true);
+	});
+
+	test('click next to cE=false block', function() {
+		editor.setContent(
+			'<table style="width: 100%">' +
+				'<tr>' +
+					'<td style="vertical-align: top">1</td>' +
+					'<td><div contentEditable="false" style="width: 100px; height: 100px">2</div></td>' +
+				'</tr>' +
+			'</table>'
+		);
+
+		var firstTd = editor.dom.select('td')[0];
+		var rect = editor.dom.getRect(firstTd);
+
+		editor.fire('mousedown', {
+			target: firstTd,
+			clientX: rect.x + rect.w,
+			clientY: rect.y + 10
+		});
+
+		// Since we can't do a real click we need to check if it gets sucked in towards the cE=false block
+		equal(editor.selection.getNode().nodeName !== 'P', true);
+	});
+
+	test('offscreen copy of cE=false block remains offscreen', function() {
+		if (tinymce.isIE || tinymce.isGecko || tinymce.isOpera) {
+			editor.setContent(
+				'<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
+				'<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
+				'</table>'
+			);
+
+			editor.selection.select(editor.dom.select('table')[0]);
+			var offscreenSelection = editor.dom.select('.mce-offscreen-selection')[0];
+
+			ok(offscreenSelection.offsetLeft !== undefined, 'The offscreen selection\'s left border is undefined');
+			ok(offscreenSelection.offsetLeft < 0, 'The offscreen selection\'s left border is onscreen');
+			ok(offscreenSelection.offsetWidth + offscreenSelection.offsetLeft < 0,
+				'The cE=false offscreen selection is visible on-screen. Right edge: ' +
+				offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
+				(offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
+			);
+		} else {
+			// Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
+			// put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
+			// so everything is off-screen anyway :-)
+			ok(true, 'Not a tested browser - Chrome & Safari work, PhantomJS does not put the selection off screen');
+		}
 	});
 });

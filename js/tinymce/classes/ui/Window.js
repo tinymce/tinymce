@@ -52,14 +52,19 @@ define("tinymce/ui/Window", [
 		viewport.setAttribute('content', state ? noScaleMetaValue : oldMetaValue);
 	}
 
-	function toggleBodyFullScreenClasses(classPrefix) {
+	function toggleBodyFullScreenClasses(classPrefix, state) {
+		if (checkFullscreenWindows() && state === false) {
+			$([document.documentElement, document.body]).removeClass(classPrefix + 'fullscreen');
+		}
+	}
+
+	function checkFullscreenWindows() {
 		for (var i = 0; i < windows.length; i++) {
 			if (windows[i]._fullscreen) {
-				return;
+				return true;
 			}
 		}
-
-		$([document.documentElement, document.body]).removeClass(classPrefix + 'fullscreen');
+		return false;
 	}
 
 	function handleWindowResize() {
@@ -446,6 +451,8 @@ define("tinymce/ui/Window", [
 				this.statusbar.remove();
 			}
 
+			toggleBodyFullScreenClasses(self.classPrefix, false);
+
 			i = windows.length;
 			while (i--) {
 				if (windows[i] === self) {
@@ -454,7 +461,6 @@ define("tinymce/ui/Window", [
 			}
 
 			toggleFullScreenState(windows.length > 0);
-			toggleBodyFullScreenClasses(self.classPrefix);
 		},
 
 		/**

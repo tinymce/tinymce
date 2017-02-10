@@ -26,6 +26,7 @@ define("tinymce/caret/CaretUtils", [
 		isContentEditableFalse = NodeType.isContentEditableFalse,
 		isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption'),
 		isCaretContainer = CaretContainer.isCaretContainer,
+		isCaretContainerBlock = CaretContainer.isCaretContainerBlock,
 		curry = Fun.curry,
 		isElement = NodeType.isElement,
 		isCaretCandidate = CaretCandidate.isCaretCandidate;
@@ -38,18 +39,30 @@ define("tinymce/caret/CaretUtils", [
 		return direction < 0;
 	}
 
+	function skipCaretContainers(walk, shallow) {
+		var node;
+
+		while ((node = walk(shallow))) {
+			if (!isCaretContainerBlock(node)) {
+				return node;
+			}
+		}
+
+		return null;
+	}
+
 	function findNode(node, direction, predicateFn, rootNode, shallow) {
 		var walker = new TreeWalker(node, rootNode);
 
 		if (isBackwards(direction)) {
-			if (isContentEditableFalse(node)) {
-				node = walker.prev(true);
+			if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+				node = skipCaretContainers(walker.prev, true);
 				if (predicateFn(node)) {
 					return node;
 				}
 			}
 
-			while ((node = walker.prev(shallow))) {
+			while ((node = skipCaretContainers(walker.prev, shallow))) {
 				if (predicateFn(node)) {
 					return node;
 				}
@@ -57,14 +70,14 @@ define("tinymce/caret/CaretUtils", [
 		}
 
 		if (isForwards(direction)) {
-			if (isContentEditableFalse(node)) {
-				node = walker.next(true);
+			if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+				node = skipCaretContainers(walker.next, true);
 				if (predicateFn(node)) {
 					return node;
 				}
 			}
 
-			while ((node = walker.next(shallow))) {
+			while ((node = skipCaretContainers(walker.next, shallow))) {
 				if (predicateFn(node)) {
 					return node;
 				}

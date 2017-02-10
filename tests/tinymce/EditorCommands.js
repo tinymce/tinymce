@@ -750,6 +750,13 @@ test('unlink', function() {
 	equal(editor.getContent(), '<p>test 123</p>');
 });
 
+test('unlink - unselected a[href] with childNodes', function() {
+	editor.setContent('<p><a href="test"><strong><em>test</em></strong></a></p>');
+	Utils.setSelection('em', 0);
+	editor.execCommand('unlink');
+	equal(editor.getContent(), '<p><strong><em>test</em></strong></p>');
+});
+
 test('subscript/superscript', function() {
 	expect(4);
 
@@ -803,6 +810,33 @@ test('indent/outdent', function() {
 	equal(editor.getContent(), '<p>test 123</p>');
 });
 
+test('indent/outdent table always uses margin', function () {
+	expect(4);
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Indent');
+	equal(editor.getContent(), '<table style="margin-left: 30px;"><tbody><tr><td>test</td></tr></tbody></table>');
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Indent');
+	editor.execCommand('Indent');
+	equal(editor.getContent(), '<table style="margin-left: 60px;"><tbody><tr><td>test</td></tr></tbody></table>');
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Indent');
+	editor.execCommand('Indent');
+	editor.execCommand('Outdent');
+	equal(editor.getContent(), '<table style="margin-left: 30px;"><tbody><tr><td>test</td></tr></tbody></table>');
+
+	editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Outdent');
+	equal(editor.getContent(), '<table><tbody><tr><td>test</td></tr></tbody></table>');
+});
+
 test('RemoveFormat', function() {
 	expect(4);
 
@@ -826,6 +860,17 @@ test('RemoveFormat', function() {
 	editor.execCommand('RemoveFormat');
 	equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
 });
+
+if (tinymce.Env.ceFalse) {
+	test('SelectAll', function() {
+		editor.setContent('<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>');
+		Utils.setSelection('div div', 0);
+		editor.execCommand('SelectAll');
+		equal(editor.selection.getStart().nodeName, 'DIV');
+		equal(editor.selection.getEnd().nodeName, 'DIV');
+		equal(editor.selection.isCollapsed(), false);
+	});
+}
 
 test('InsertLineBreak', function() {
 	editor.setContent('<p>123</p>');

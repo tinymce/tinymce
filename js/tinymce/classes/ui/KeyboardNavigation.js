@@ -135,7 +135,7 @@ define("tinymce/ui/KeyboardNavigation", [
 			var elements = [];
 
 			function collect(elm) {
-				if (elm.nodeType != 1 || elm.style.display == 'none') {
+				if (elm.nodeType != 1 || elm.style.display == 'none' || elm.disabled) {
 					return;
 				}
 

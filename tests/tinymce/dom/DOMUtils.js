@@ -35,7 +35,7 @@
 			dom.serializeStyle(dom.parseStyle('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')),
 			'border: 1pt none black;'
 		);
-		
+
 		equal(
 			dom.serializeStyle(dom.parseStyle('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')),
 			'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;'
@@ -339,15 +339,21 @@
 		DOM.remove('test');
 	});
 
+	var eqNodeName = function(name) {
+		return function (n) {
+			return n.nodeName === name;
+		};
+	};
+
 	test('getParent', 6, function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.get('test').innerHTML = '<div><span>ab<a id="test2" href="">abc</a>c</span></div>';
 
-		equal(DOM.getParent('test2', function(n) {return n.nodeName == 'SPAN';}).nodeName, 'SPAN');
-		equal(DOM.getParent('test2', function(n) {return n.nodeName == 'BODY';}).nodeName, 'BODY');
-		equal(DOM.getParent('test2', function(n) {return n.nodeName == 'BODY';}, document.body), null);
-		equal(DOM.getParent('test2', function() {return false;}), null);
+		equal(DOM.getParent('test2', eqNodeName('SPAN')).nodeName, 'SPAN');
+		equal(DOM.getParent('test2', eqNodeName('BODY')).nodeName, 'BODY');
+		equal(DOM.getParent('test2', eqNodeName('BODY'), document.body), null);
+		equal(DOM.getParent('test2', eqNodeName('X')), null);
 		equal(DOM.getParent('test2', 'SPAN').nodeName, 'SPAN');
 		equal(DOM.getParent('test2', 'body', DOM.get('test')), null);
 
@@ -360,7 +366,7 @@
 		DOM.add(document.body, 'div', {id : 'test'});
 		DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
 
-		equal(DOM.getParents('test2', function(n) {return n.nodeName == 'SPAN';}).length, 2);
+		equal(DOM.getParents('test2', eqNodeName('SPAN')).length, 2);
 		equal(DOM.getParents('test2', 'span').length, 2);
 		equal(DOM.getParents('test2', 'span.test').length, 1);
 		equal(DOM.getParents('test2', 'body', DOM.get('test')).length, 0);
@@ -433,7 +439,7 @@
 		equal(DOM.getNext(DOM.get('test').firstChild, 'em').nodeName, 'EM');
 		equal(DOM.getNext(DOM.get('test').firstChild, 'div'), null);
 		equal(DOM.getNext(null, 'div'), null);
-		equal(DOM.getNext(DOM.get('test').firstChild, function(n) {return n.nodeName == 'EM';}).nodeName, 'EM');
+		equal(DOM.getNext(DOM.get('test').firstChild, eqNodeName('EM')).nodeName, 'EM');
 
 		DOM.remove('test');
 	});
@@ -446,7 +452,7 @@
 		equal(DOM.getPrev(DOM.get('test').lastChild, 'strong').nodeName, 'STRONG');
 		equal(DOM.getPrev(DOM.get('test').lastChild, 'div'), null);
 		equal(DOM.getPrev(null, 'div'), null);
-		equal(DOM.getPrev(DOM.get('test').lastChild, function(n) {return n.nodeName == 'STRONG';}).nodeName, 'STRONG');
+		equal(DOM.getPrev(DOM.get('test').lastChild, eqNodeName('STRONG')).nodeName, 'STRONG');
 
 		DOM.remove('test');
 	});
@@ -581,7 +587,7 @@
 		DOM.remove('test');
 	});
 
-	test('isEmpty', 14, function() {
+	test('isEmpty', function() {
 		DOM.schema = new tinymce.html.Schema(); // A schema will be added when used within a editor instance
 		DOM.add(document.body, 'div', {id : 'test'}, '');
 
@@ -626,12 +632,41 @@
 		DOM.setHTML('test', '<div><!-- comment --></div>');
 		ok(!DOM.isEmpty(DOM.get('test')), 'Element with comment.');
 
+		DOM.setHTML('test', '<span data-mce-bogus="1"></span>');
+		ok(DOM.isEmpty(DOM.get('test')), 'Contains just a bogus element.');
+
+		DOM.setHTML('test', '<span data-mce-bogus="1">a</span>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Contains a text node in a bogus element.');
+
+		DOM.setHTML('test', '<span data-mce-bogus="all">a</span>');
+		ok(DOM.isEmpty(DOM.get('test')), 'Contains just a bogus all element.');
+
+		DOM.setHTML('test', '<span data-mce-bogus="all">a</span>b');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Contains a bogus all element but some text as well.');
+
+		DOM.setHTML('test', '<code> </code>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Contains a code element should be treated as content.');
+
+		DOM.setHTML('test', '<pre> </pre>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Contains a pre element should be treated as content.');
+
+		DOM.setHTML('test', '<code></code>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Contains a code element should be treated as content.');
+
+		DOM.setHTML('test', '<pre></pre>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Contains a pre element should be treated as content.');
+
 		DOM.remove('test');
 	});
 
 	test('isEmpty with list of elements considered non-empty', function() {
 		var elm = DOM.create('p', null, '<img>');
 		equal(false, DOM.isEmpty(elm, {img: true}));
+	});
+
+	test('isEmpty on pre', function() {
+		var elm = DOM.create('pre', null, '  ');
+		equal(false, DOM.isEmpty(elm));
 	});
 
 	test('isEmpty with list of elements considered non-empty without schema', function() {
@@ -645,7 +680,7 @@
 		var elm = DOM.create('p', null, '<em><br></em>');
 		ok(DOM.isEmpty(elm, 'No children'));
 	});
-	
+
 	test('isEmpty on P with two BR in EM', function() {
 		var elm = DOM.create('p', null, '<em><br><br></em>');
 		equal(false, DOM.isEmpty(elm));
@@ -654,13 +689,18 @@
 	test('bind/unbind/fire', function() {
 		var count = 0;
 
-		DOM.bind(document, 'click', function() {count++;});
+		DOM.bind(document, 'click', function() {
+			count++;
+		});
 		DOM.fire(document, 'click');
 		DOM.unbind(document, 'click');
 		equal(count, 1);
 
 		count = 0;
-		DOM.bind([document, window], 'click', function(e) {e.stopPropagation(); count++;});
+		DOM.bind([document, window], 'click', function(e) {
+			e.stopPropagation();
+			count++;
+		});
 		DOM.fire(document, 'click');
 		DOM.fire(window, 'click');
 		DOM.unbind([document, window], 'click');

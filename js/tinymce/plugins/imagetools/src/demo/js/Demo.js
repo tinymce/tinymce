@@ -34,6 +34,7 @@ define("tinymce/imagetoolsplugin/Demo", [
 		tinymce.init({
 			//imagetools_cors_hosts: ["moxiecode.cachefly.net"],
 			//imagetools_proxy: "proxy.php",
+			//imagetools_api_key: '123',
 
 			//images_upload_url: 'postAcceptor.php',
 			//images_upload_base_path: 'base/path',
@@ -42,24 +43,23 @@ define("tinymce/imagetoolsplugin/Demo", [
 			selector: "textarea.tinymce",
 			theme: "modern",
 			plugins: [
-				"imagetools"
+				"imagetools paste"
 			],
 			add_unload_trigger: false,
+			//images_replace_blob_uris: false,
+			paste_data_images: true,
 			image_caption: true,
 			height: 600,
 			toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons",
-			images_upload_handler: function(data, success, failure, openNotification) {
-				var notification;
-
+			images_upload_handler: function(data, success, failure, progress) {
 				console.log('blob upload [started]', data.id());
 
-				notification = openNotification();
-				notification.progressBar.value(100);
+				progress(0);
 
 				setTimeout(function() {
 					console.log('blob upload [ended]', data.id());
 					success(data.id() + '.png');
-					notification.close();
+					progress(100);
 				}, 1000);
 			}
 		});

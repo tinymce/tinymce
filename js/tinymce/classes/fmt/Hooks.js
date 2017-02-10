@@ -19,7 +19,7 @@ define("tinymce/fmt/Hooks", [
 	"tinymce/dom/NodeType",
 	"tinymce/dom/DomQuery"
 ], function(Arr, NodeType, $) {
-	var postProcessHooks = [], filter = Arr.filter, each = Arr.each;
+	var postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
 
 	function addPostProcessHook(name, hook) {
 		var hooks = postProcessHooks[name];

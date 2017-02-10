@@ -35,32 +35,6 @@ function fillAndSubmitWindowForm(data) {
 	win.close();
 }
 
-test('Default media dialog on empty editor', function() {
-	editor.settings.media_live_embeds = false;
-
-	editor.setContent('');
-	editor.plugins.media.showDialog();
-
-	deepEqual(Utils.getFrontmostWindow().toJSON(), {
-		constrain: true,
-		embed: "",
-		height: "",
-		poster: "",
-		source1: "",
-		source2: "",
-		width: ""
-	});
-
-	fillAndSubmitWindowForm({
-		"source1": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-	});
-
-	equal(
-		editor.getContent(),
-		'<p><iframe src=\"//www.youtube.com/embed/dQw4w9WgXcQ\" width=\"560\" height=\"314\" allowfullscreen=\"allowfullscreen\"></iframe></p>'
-	);
-});
-
 test("Object retain as is", function() {
 	editor.setContent(
 		'<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">' +
@@ -158,7 +132,7 @@ test("Resize complex object", function() {
 					'<param name="allowfullscreen" value="true" />' +
 					'<param name="allowscriptaccess" value="always" />' +
 					'<param name="flashvars" value="video_src=s" />' +
-					'<!--[if IE]>' +
+					'<!-- [if IE]>' +
 						'<param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf" />' +
 					'<![endif]-->' +
 				'</object>' +
@@ -202,4 +176,20 @@ test("XSS content", function() {
 	testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
 	testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img /></audio></p>');
 	testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;" /></audio></p>');
+	testXss(
+		'<p><video><noscript><svg onload="javascript:alert(1)"></svg></noscript></video>',
+		'<p><video width="300" height="150"></video></p>'
+	);
+	testXss(
+		'<p><video><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></video>',
+		'<p><video width="300" height="150"></video></p>'
+	);
+	testXss(
+		'<p><audio><noscript><svg onload="javascript:alert(1)"></svg></noscript></audio>',
+		'<p><audio></audio></p>'
+	);
+	testXss(
+		'<p><audio><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></audio>',
+		'<p><audio></audio></p>'
+	);
 });

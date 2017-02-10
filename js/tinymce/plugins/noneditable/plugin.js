@@ -24,10 +24,22 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 
 		function replaceMatchWithSpan(match) {
 			var args = arguments, index = args[args.length - 2];
+			var prevChar = index > 0 ? content.charAt(index - 1) : '';
 
 			// Is value inside an attribute then don't replace
-			if (index > 0 && content.charAt(index - 1) == '"') {
+			if (prevChar === '"') {
 				return match;
+			}
+
+			// Is value inside a contentEditable="false" tag
+			if (prevChar === '>') {
+				var findStartTagIndex = content.lastIndexOf('<', index);
+				if (findStartTagIndex !== -1) {
+					var tagHtml = content.substring(findStartTagIndex, index);
+					if (tagHtml.indexOf('contenteditable="false"') !== -1) {
+						return match;
+					}
+				}
 			}
 
 			return (

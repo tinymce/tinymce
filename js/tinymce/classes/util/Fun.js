@@ -76,12 +76,16 @@ define("tinymce/util/Fun", [], function() {
 		};
 	}
 
+	function noop() {
+	}
+
 	return {
 		constant: constant,
 		negate: negate,
 		and: and,
 		or: or,
 		curry: curry,
-		compose: compose
+		compose: compose,
+		noop: noop
 	};
 });

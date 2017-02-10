@@ -436,7 +436,7 @@ define("tinymce/html/SaxParser", [
 						value = ' ' + value;
 					}
 
-					if (!settings.allow_conditional_comments && value.substr(0, 3) === '[if') {
+					if (!settings.allow_conditional_comments && value.substr(0, 3).toLowerCase() === '[if') {
 						value = ' ' + value;
 					}
 

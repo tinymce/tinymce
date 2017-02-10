@@ -189,14 +189,14 @@ define("tinymce/tableplugin/Plugin", [
 
 		if (editor.settings.table_grid === false) {
 			editor.addMenuItem('inserttable', {
-				text: 'Insert table',
+				text: 'Table',
 				icon: 'table',
 				context: 'table',
 				onclick: dialogs.table
 			});
 		} else {
 			editor.addMenuItem('inserttable', {
-				text: 'Insert table',
+				text: 'Table',
 				icon: 'table',
 				context: 'table',
 				ariaHideMenu: true,
@@ -345,7 +345,11 @@ define("tinymce/tableplugin/Plugin", [
 		self.quirks = new Quirks(editor);
 
 		editor.on('Init', function() {
-			self.cellSelection = new CellSelection(editor);
+			self.cellSelection = new CellSelection(editor, function (selecting) {
+				if (selecting && resizeBars) {
+					resizeBars.clearBars();
+				}
+			});
 			self.resizeBars = resizeBars;
 		});
 
@@ -382,19 +386,19 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableInsertRowBefore: function(grid) {
-				grid.insertRow(true);
+				grid.insertRows(true);
 			},
 
 			mceTableInsertRowAfter: function(grid) {
-				grid.insertRow();
+				grid.insertRows();
 			},
 
 			mceTableInsertColBefore: function(grid) {
-				grid.insertCol(true);
+				grid.insertCols(true);
 			},
 
 			mceTableInsertColAfter: function(grid) {
-				grid.insertCol();
+				grid.insertCols();
 			},
 
 			mceTableDeleteCol: function(grid) {
@@ -419,6 +423,14 @@ define("tinymce/tableplugin/Plugin", [
 
 			mceTablePasteRowAfter: function(grid) {
 				grid.pasteRows(clipboardRows);
+			},
+
+			mceSplitColsBefore: function(grid) {
+				grid.splitCols(true);
+			},
+
+			mceSplitColsAfter: function(grid) {
+				grid.splitCols(false);
 			},
 
 			mceTableDelete: function(grid) {
@@ -563,6 +575,14 @@ define("tinymce/tableplugin/Plugin", [
 			);
 		}
 
+		function getClipboardRows() {
+			return clipboardRows;
+		}
+
+		function setClipboardRows(rows) {
+			clipboardRows = rows;
+		}
+
 		addButtons();
 		addToolbars();
 
@@ -593,6 +613,8 @@ define("tinymce/tableplugin/Plugin", [
 		}
 
 		self.insertTable = insertTable;
+		self.setClipboardRows = setClipboardRows;
+		self.getClipboardRows = getClipboardRows;
 	}
 
 	PluginManager.add('table', Plugin);

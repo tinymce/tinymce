@@ -13,27 +13,27 @@ test('Whildcard element rule', function() {
 	expect(17);
 
 	schema = new tinymce.html.Schema({valid_elements: '*[id|class]'});
-	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('b').attributesOrder, ["id", "class"]);
 
 	schema = new tinymce.html.Schema({valid_elements: 'b*[id|class]'});
-	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('b').attributesOrder, ["id", "class"]);
-	deepEqual(schema.getElementRule('body').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('body').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('body').attributesOrder, ["id", "class"]);
 	equal(schema.getElementRule('img'), undefined);
 
 	schema = new tinymce.html.Schema({valid_elements: 'b?[id|class]'});
-	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('b').attributesOrder, ["id", "class"]);
-	deepEqual(schema.getElementRule('bx').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('bx').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('bx').attributesOrder, ["id", "class"]);
 	equal(schema.getElementRule('body'), undefined);
 
 	schema = new tinymce.html.Schema({valid_elements: 'b+[id|class]'});
-	deepEqual(schema.getElementRule('body').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('body').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('body').attributesOrder, ["id", "class"]);
-	deepEqual(schema.getElementRule('bx').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('bx').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('bx').attributesOrder, ["id", "class"]);
 	equal(schema.getElementRule('b'), undefined);
 });
@@ -44,19 +44,19 @@ test('Whildcard attribute rule', function() {
 	expect(13);
 
 	schema = new tinymce.html.Schema({valid_elements: 'b[id|class|*]'});
-	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('b').attributesOrder, ["id", "class"]);
 	ok(schema.getElementRule('b').attributePatterns[0].pattern.test('x'));
 
 	schema = new tinymce.html.Schema({valid_elements: 'b[id|class|x?]'});
-	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('b').attributesOrder, ["id", "class"]);
 	ok(schema.getElementRule('b').attributePatterns[0].pattern.test('xy'));
 	ok(!schema.getElementRule('b').attributePatterns[0].pattern.test('xba'));
 	ok(!schema.getElementRule('b').attributePatterns[0].pattern.test('a'));
 
 	schema = new tinymce.html.Schema({valid_elements: 'b[id|class|x+]'});
-	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {} });
+	deepEqual(schema.getElementRule('b').attributes, {"id": {}, "class": {}});
 	deepEqual(schema.getElementRule('b').attributesOrder, ["id", "class"]);
 	ok(!schema.getElementRule('b').attributePatterns[0].pattern.test('x'));
 	ok(schema.getElementRule('b').attributePatterns[0].pattern.test('xb'));
@@ -117,6 +117,15 @@ test('Required attribute values', function() {
 
 	schema = new tinymce.html.Schema({valid_elements: 'span[dir<ltr?rtl]'});
 	deepEqual(schema.getElementRule('span'), {"attributes": {"dir": {"validValues": {"rtl": {}, "ltr": {}}}}, "attributesOrder": ["dir"]});
+});
+
+test('Required parents', function() {
+	var schema;
+
+	schema = new tinymce.html.Schema();
+	deepEqual(schema.getElementRule('tr').parentsRequired, ['tbody', 'thead', 'tfoot']);
+	deepEqual(schema.getElementRule('li').parentsRequired, ['ul', 'ol']);
+	deepEqual(schema.getElementRule('div').parentsRequired, undefined);
 });
 
 test('Remove empty elements', function() {
@@ -220,11 +229,11 @@ test('getNonEmptyElements', function() {
 		"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},
 		"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},
 		"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {},
-		"TD": {}, "TH": {}, "IFRAME": {}, "VIDEO": {}, "AUDIO": {}, "OBJECT": {}, "WBR": {}, "TRACK" : {}, "SCRIPT" : {},
+		"TD": {}, "TH": {}, "IFRAME": {}, "VIDEO": {}, "AUDIO": {}, "OBJECT": {}, "WBR": {}, "TRACK" : {}, "SCRIPT" : {}, "PRE": {}, "CODE": {},
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {},
-		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}, "wbr" : {}, "track" : {},  "script" : {}
+		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}, "wbr" : {}, "track" : {}, "script" : {}, "pre": {}, "code": {}
 	});
 });
 
@@ -235,9 +244,9 @@ test('getWhiteSpaceElements', function() {
 
 	schema = new tinymce.html.Schema();
 	deepEqual(schema.getWhiteSpaceElements(), {
-		"IFRAME": {}, "NOSCRIPT": {}, "OBJECT": {}, "PRE": {},
+		"IFRAME": {}, "NOSCRIPT": {}, "OBJECT": {}, "PRE": {}, "CODE": {},
 		"SCRIPT": {}, "STYLE": {}, "TEXTAREA": {}, "VIDEO": {}, "AUDIO": {},
-		"iframe": {}, "noscript": {}, "object": {}, "pre": {},
+		"iframe": {}, "noscript": {}, "object": {}, "pre": {}, "code": {},
 		"script": {}, "style": {}, "textarea": {}, "video": {}, "audio": {}
 	});
 });

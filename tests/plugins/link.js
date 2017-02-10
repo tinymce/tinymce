@@ -66,7 +66,7 @@
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p><a title="title" href="href" target="_blank">text</a></p>'
+			'<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">text</a></p>'
 		);
 	});
 
@@ -90,7 +90,7 @@
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p>a<a title="title" href="href" target="_blank">b</a>c</p>'
+			'<p>a<a title="title" href="href" target="_blank" rel="noopener noreferrer">b</a>c</p>'
 		);
 	});
 
@@ -113,8 +113,8 @@
 
 		equal(
 			cleanHtml(editor.getContent()),
-			'<p><a title="title" href="href" target="_blank">a</a></p>' +
-			'<p><a title="title" href="href" target="_blank">bc</a></p>'
+			'<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">a</a></p>' +
+			'<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">bc</a></p>'
 		);
 	});
 

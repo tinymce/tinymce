@@ -20,8 +20,10 @@ define("tinymce/ui/ComboBox", [
 	"tinymce/ui/Widget",
 	"tinymce/ui/Factory",
 	"tinymce/ui/DomUtils",
-	"tinymce/dom/DomQuery"
-], function(Widget, Factory, DomUtils, $) {
+	"tinymce/dom/DomQuery",
+	"tinymce/util/VK",
+	"tinymce/util/Tools"
+], function(Widget, Factory, DomUtils, $, VK, Tools) {
 	"use strict";
 
 	return Widget.extend({
@@ -74,31 +76,66 @@ define("tinymce/ui/ComboBox", [
 
 			// TODO: Rework this
 			self.on('keydown', function(e) {
-				if (e.target.nodeName == "INPUT" && e.keyCode == 13) {
+				var rootControl;
+
+				if (e.keyCode == 13 && e.target.nodeName === 'INPUT') {
+					e.preventDefault();
+
+					// Find root control that we can do toJSON on
 					self.parents().reverse().each(function(ctrl) {
-						var stateValue = self.state.get('value'), inputValue = self.getEl('inp').value;
-
-						e.preventDefault();
-
-						self.state.set('value', inputValue);
-
-						if (stateValue != inputValue) {
-							self.fire('change');
-						}
-
-						if (ctrl.hasEventListeners('submit') && ctrl.toJSON) {
-							ctrl.fire('submit', {data: ctrl.toJSON()});
+						if (ctrl.toJSON) {
+							rootControl = ctrl;
 							return false;
 						}
 					});
+
+					// Fire event on current text box with the serialized data of the whole form
+					self.fire('submit', {data: rootControl.toJSON()});
 				}
 			});
 
 			self.on('keyup', function(e) {
 				if (e.target.nodeName == "INPUT") {
-					self.state.set('value', e.target.value);
+					var oldValue = self.state.get('value');
+					var newValue = e.target.value;
+
+					if (newValue !== oldValue) {
+						self.state.set('value', newValue);
+						self.fire('autocomplete', e);
+					}
 				}
 			});
+
+			self.on('mouseover', function(e) {
+				var tooltip = self.tooltip().moveTo(-0xFFFF);
+
+				if (self.statusLevel() && e.target.className.indexOf(self.classPrefix + 'status') !== -1) {
+					var statusMessage = self.statusMessage() || 'Ok';
+					var rel = tooltip.text(statusMessage).show().testMoveRel(e.target, ['bc-tc', 'bc-tl', 'bc-tr']);
+
+					tooltip.classes.toggle('tooltip-n', rel == 'bc-tc');
+					tooltip.classes.toggle('tooltip-nw', rel == 'bc-tl');
+					tooltip.classes.toggle('tooltip-ne', rel == 'bc-tr');
+
+					tooltip.moveRel(e.target, rel);
+				}
+			});
+		},
+
+		statusLevel: function (value) {
+			if (arguments.length > 0) {
+				this.state.set('statusLevel', value);
+			}
+
+			return this.state.get('statusLevel');
+		},
+
+		statusMessage: function (value) {
+			if (arguments.length > 0) {
+				this.state.set('statusMessage', value);
+			}
+
+			return this.state.get('statusMessage');
 		},
 
 		showMenu: function() {
@@ -166,7 +203,14 @@ define("tinymce/ui/ComboBox", [
 		 */
 		repaint: function() {
 			var self = this, elm = self.getEl(), openElm = self.getEl('open'), rect = self.layoutRect();
-			var width, lineHeight;
+			var width, lineHeight, innerPadding = 0, inputElm = elm.firstChild;
+
+			if (self.statusLevel() && self.statusLevel() !== 'none') {
+				innerPadding = (
+					parseInt(DomUtils.getRuntimeStyle(inputElm, 'padding-right'), 10) -
+					parseInt(DomUtils.getRuntimeStyle(inputElm, 'padding-left'), 10)
+				);
+			}
 
 			if (openElm) {
 				width = rect.w - DomUtils.getSize(openElm).width - 10;
@@ -180,8 +224,8 @@ define("tinymce/ui/ComboBox", [
 				lineHeight = (self.layoutRect().h - 2) + 'px';
 			}
 
-			$(elm.firstChild).css({
-				width: width,
+			$(inputElm).css({
+				width: width - innerPadding,
 				lineHeight: lineHeight
 			});
 
@@ -216,7 +260,7 @@ define("tinymce/ui/ComboBox", [
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;
 			var value = self.state.get('value') || '';
-			var icon, text, openBtnHtml = '', extraAttrs = '';
+			var icon, text, openBtnHtml = '', extraAttrs = '', statusHtml = '';
 
 			if ("spellcheck" in settings) {
 				extraAttrs += ' spellcheck="' + settings.spellcheck + '"';
@@ -233,6 +277,8 @@ define("tinymce/ui/ComboBox", [
 			if (settings.subtype) {
 				extraAttrs += ' type="' + settings.subtype + '"';
 			}
+
+			statusHtml = '<i id="' + id + '-status" class="mce-status mce-ico" style="display: none"></i>';
 
 			if (self.disabled()) {
 				extraAttrs += ' disabled="disabled"';
@@ -263,6 +309,7 @@ define("tinymce/ui/ComboBox", [
 					'<input id="' + id + '-inp" class="' + prefix + 'textbox" value="' +
 					self.encode(value, false) + '" hidefocus="1"' + extraAttrs + ' placeholder="' +
 					self.encode(settings.placeholder) + '" />' +
+					statusHtml +
 					openBtnHtml +
 				'</div>'
 			);
@@ -282,6 +329,71 @@ define("tinymce/ui/ComboBox", [
 			return this.state.get('value');
 		},
 
+		showAutoComplete: function (items, term) {
+			var self = this;
+
+			if (items.length === 0) {
+				self.hideMenu();
+				return;
+			}
+
+			var insert = function (value, title) {
+				return function () {
+					self.fire('selectitem', {
+						title: title,
+						value: value
+					});
+				};
+			};
+
+			if (self.menu) {
+				self.menu.items().remove();
+			} else {
+				self.menu = Factory.create({
+					type: 'menu',
+					classes: 'combobox-menu',
+					layout: 'flow'
+				}).parent(self).renderTo();
+			}
+
+			Tools.each(items, function (item) {
+				self.menu.add({
+					text: item.title,
+					url: item.previewUrl,
+					match: term,
+					classes: 'menu-item-ellipsis',
+					onclick: insert(item.value, item.title)
+				});
+			});
+
+			self.menu.renderNew();
+			self.hideMenu();
+
+			self.menu.on('cancel', function(e) {
+				if (e.control.parent() === self.menu) {
+					e.stopPropagation();
+					self.focus();
+					self.hideMenu();
+				}
+			});
+
+			self.menu.on('select', function() {
+				self.focus();
+			});
+
+			var maxW = self.layoutRect().w;
+			self.menu.layoutRect({w: maxW, minW: 0, maxW: maxW});
+			self.menu.reflow();
+			self.menu.show();
+			self.menu.moveRel(self.getEl(), self.isRtl() ? ['br-tr', 'tr-br'] : ['bl-tl', 'tl-bl']);
+		},
+
+		hideMenu: function() {
+			if (this.menu) {
+				this.menu.hide();
+			}
+		},
+
 		bindStates: function() {
 			var self = this;
 
@@ -295,11 +407,60 @@ define("tinymce/ui/ComboBox", [
 				self.getEl('inp').disabled = e.value;
 			});
 
+			self.state.on('change:statusLevel', function(e) {
+				var statusIconElm = self.getEl('status');
+				var prefix = self.classPrefix, value = e.value;
+
+				DomUtils.css(statusIconElm, 'display', value === 'none' ? 'none' : '');
+				DomUtils.toggleClass(statusIconElm, prefix + 'i-checkmark', value === 'ok');
+				DomUtils.toggleClass(statusIconElm, prefix + 'i-warning', value === 'warn');
+				DomUtils.toggleClass(statusIconElm, prefix + 'i-error', value === 'error');
+				self.classes.toggle('has-status', value !== 'none');
+				self.repaint();
+			});
+
+			DomUtils.on(self.getEl('status'), 'mouseleave', function () {
+				self.tooltip().hide();
+			});
+
+			self.on('cancel', function (e) {
+				if (self.menu && self.menu.visible()) {
+					e.stopPropagation();
+					self.hideMenu();
+				}
+			});
+
+			var focusIdx = function (idx, menu) {
+				if (menu && menu.items().length > 0) {
+					menu.items().eq(idx)[0].focus();
+				}
+			};
+
+			self.on('keydown', function (e) {
+				var keyCode = e.keyCode;
+
+				if (e.target.nodeName === 'INPUT') {
+					if (keyCode === VK.DOWN) {
+						e.preventDefault();
+						self.fire('autocomplete');
+						focusIdx(0, self.menu);
+					} else if (keyCode === VK.UP) {
+						e.preventDefault();
+						focusIdx(-1, self.menu);
+					}
+				}
+			});
+
 			return self._super();
 		},
 
 		remove: function() {
 			$(this.getEl('inp')).off();
+
+			if (this.menu) {
+				this.menu.remove();
+			}
+
 			this._super();
 		}
 	});

@@ -1,4 +1,6 @@
-(function() {
+ModuleLoader.require([
+	"tinymce/dom/Range"
+], function(Range) {
 	module("tinymce.dom.Range", {
 		setup: function() {
 			document.getElementById('view').innerHTML = (
@@ -23,7 +25,7 @@
 	});
 
 	function createRng() {
-		return document.createRange ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);
+		return document.createRange ? document.createRange() : new Range(tinymce.DOM);
 	}
 
 	function getHTML(co) {
@@ -477,7 +479,7 @@
 
 	test("test_compareBoundaryPoints", function() {
 		var r1 = createRng(), r2 = createRng(), START_TO_START = 0, START_TO_END = 1, END_TO_END = 2, END_TO_START = 3;
-		 
+
 		r1.setStartBefore(document.getElementById('strong'));
 		r1.setEndAfter(document.getElementById('strong'));
 		r2.setStartBefore(document.getElementById('strong'));
@@ -545,4 +547,4 @@
 			equal(rng.toString().replace(/\r\n/g, ''), "strong second em strong.barsome text");
 		});
 	}
-})();
+});

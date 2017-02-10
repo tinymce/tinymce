@@ -3,7 +3,7 @@ module("tinymce.html.Styles");
 test('Basic parsing/serializing', function() {
 	var styles = new tinymce.html.Styles();
 
-	expect(11);
+	expect(12);
 
 	equal(styles.serialize(styles.parse('FONT-SIZE:10px')), "font-size: 10px;");
 	equal(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), "font-size: 10px; color: red;");
@@ -16,6 +16,7 @@ test('Basic parsing/serializing', function() {
 	equal(styles.serialize(styles.parse('value: "&amp;"')), "value: '&amp;';");
 	equal(styles.serialize(styles.parse('value: "&"')), "value: '&';");
 	equal(styles.serialize(styles.parse('value: ')), "");
+	equal(styles.serialize(styles.parse("background: url('http://www.site.com/(foo)');")), "background: url('http://www.site.com/(foo)');");
 });
 
 test('Colors force hex and lowercase', function() {
@@ -61,7 +62,7 @@ test('Compress styles', function() {
 		styles.serialize(styles.parse('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')),
 		'border: 1pt none black;'
 	);
-	
+
 	equal(
 		styles.serialize(styles.parse('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')),
 		'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;'
@@ -137,10 +138,19 @@ test('Invalid styles', function() {
 	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; margin-right: 10px;'), 'a'), "margin-right: 10px;");
 });
 
+test('Suspicious (XSS) property names', function() {
+	var styles = new tinymce.html.Styles();
+
+	equal(styles.serialize(styles.parse('font-fa"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
+	equal(styles.serialize(styles.parse('font-fa\\"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
+	equal(styles.serialize(styles.parse('font-fa\\22on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
+});
+
 test('Script urls denied', function() {
 	var styles = new tinymce.html.Styles();
 
 	equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "");
+	equal(styles.serialize(styles.parse('b\\65havior:url(test.htc)')), "");
 	equal(styles.serialize(styles.parse('color:expression(alert(1))')), "");
 	equal(styles.serialize(styles.parse('color:\\65xpression(alert(1))')), "");
 	equal(styles.serialize(styles.parse('color:exp/**/ression(alert(1))')), "");
@@ -148,9 +158,20 @@ test('Script urls denied', function() {
 	equal(styles.serialize(styles.parse('color:  expression  (  alert(1))')), "");
 	equal(styles.serialize(styles.parse('background:url(jAvaScript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), "");
+	equal(styles.serialize(styles.parse('background:url(j\\61vascript:alert(1)')), "");
+	equal(styles.serialize(styles.parse('background:url(\\6a\\61vascript:alert(1)')), "");
+	equal(styles.serialize(styles.parse('background:url(\\6A\\61vascript:alert(1)')), "");
+	equal(styles.serialize(styles.parse('background:url\\28\\6A\\61vascript:alert(1)')), "");
+	equal(styles.serialize(styles.parse('background:\\75rl(j\\61vascript:alert(1)')), "");
+	equal(styles.serialize(styles.parse('b\\61ckground:\\75rl(j\\61vascript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(j\navas\u0000cr\tipt:alert(1)')), "");
 	equal(styles.serialize(styles.parse('background:url(data:image/svg+xml,%3Csvg/%3E)')), "");
+	equal(styles.serialize(styles.parse('background:url( data:image/svg+xml,%3Csvg/%3E)')), "");
+	equal(styles.serialize(styles.parse('background:url\\28 data:image/svg+xml,%3Csvg/%3E)')), "");
+	equal(styles.serialize(styles.parse('background:url("data: image/svg+xml,%3Csvg/%3E")')), "");
+	equal(styles.serialize(styles.parse('background:url("data: ima ge/svg+xml,%3Csvg/%3E")')), "");
+	equal(styles.serialize(styles.parse('background:url("data: image /svg+xml,%3Csvg/%3E")')), "");
 });
 
 test('Script urls allowed', function() {

@@ -108,7 +108,7 @@ define("tinymce/Shortcuts", [
 		}
 
 		function isFunctionKey(e) {
-			return e.keyCode >= 112 && e.keyCode <= 123;
+			return e.type === "keydown" && e.keyCode >= 112 && e.keyCode <= 123;
 		}
 
 		function matchShortcut(e, shortcut) {
@@ -165,7 +165,7 @@ define("tinymce/Shortcuts", [
 		/**
 		 * Adds a keyboard shortcut for some command or function.
 		 *
-		 * @method addShortcut
+		 * @method add
 		 * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
 		 * @param {String} desc Text description for the command.
 		 * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.
