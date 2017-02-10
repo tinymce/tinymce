@@ -25,6 +25,7 @@ define(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
@@ -40,7 +41,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, EventHandler, DemoSink, HtmlDisplay, Objects, Arr, Merger, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, EventHandler, DemoSink, HtmlDisplay, Objects, Arr, Merger, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -672,7 +673,98 @@ define(
           }
         })
       };
+
+      var sketchToolbarGroup = function () {
+        return ToolbarGroup.sketch({
+          items: [
+            Container.sketch({
+              dom: {
+                innerHtml: 'A'
+              }
+            })
+          ],
+
+          dom: {
+            tag: 'div'
+          },
+
+          components: [
+            ToolbarGroup.parts().items()
+          ],
+
+          members: {
+            item: {
+              munge: Fun.identity
+            }
+          },
+          markers: {
+            itemClass: 'tutorial-item'
+          },
+
+          parts: {
+            items: { }
+          }
+        })
+      };
    
+      var sketchTypeahead = function () {
+        return Typeahead.sketch({
+          lazySink: function () { return Result.value(sink); },
+
+          fetch: function () {
+            return Future.pure(
+              TieredMenu.simpleData('a', 'a', [
+                { data: { value: 'A', text: 'A' } }
+              ])
+            );
+          },
+          
+          markers: {
+            openClass: 'tutorial-open'
+          },
+
+          parts: {
+            menu: {
+              markers: {
+                backgroundMenu: 'tutorial-background-menu',
+                menu: 'tutorial-menu',
+                selectedMenu: 'tutorial-selected-menu',
+                item: 'tutorial-item',
+                selectedItem: 'tutorial-selected-item'
+              },
+
+              members: {
+                menu: {
+                  munge: function (m) {
+                    return {
+                      dom: {
+                        tag: 'div'
+                      },
+                      components: [
+                        Menu.parts().items()
+                      ]
+                    }
+                  }
+                },
+                item: {
+                  munge: function (i) {
+                    return {
+                      type: 'item',
+                      data: i.data,
+                      dom: {
+                        tag: 'li'
+                      },
+                      components: [
+                        GuiFactory.text(i.data.text)
+                      ]
+                    };
+                  }
+                }
+              }
+            }
+          }
+        })
+      }
 
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()
@@ -683,19 +775,19 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchToolbar()
+        sketchTypeahead()
       );
 
-      gui.getByUid('hacky').each(function (toolbar) {
-        var gs = Toolbar.createGroups(toolbar, [
-          {
-            items: [
-              Container.sketch({ dom: { innerHtml: 'hi' } })
-            ]
-          }
-        ]);
-        Toolbar.setGroups(toolbar, gs);
-      })
+      // gui.getByUid('hacky').each(function (toolbar) {
+      //   var gs = Toolbar.createGroups(toolbar, [
+      //     {
+      //       items: [
+      //         Container.sketch({ dom: { innerHtml: 'hi' } })
+      //       ]
+      //     }
+      //   ]);
+      //   Toolbar.setGroups(toolbar, gs);
+      // })
     };
   }
 );

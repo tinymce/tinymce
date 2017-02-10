@@ -19,7 +19,6 @@ define(
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
-      FieldSchema.strict('dom'),
       FieldSchema.defaulted('minChars', 5),
       FieldSchema.defaulted('onOpen', Fun.noop),
       FieldSchema.defaulted('onExecute', Option.none),
@@ -36,7 +35,10 @@ define(
     var partTypes = [
       PartType.external(
         { sketch: Fun.identity },
-        [ ],
+        [
+          Fields.menuMarkers(),
+          Fields.members([ 'menu', 'item' ])
+        ],
         'menu',
         function (detail) {
           return { };
