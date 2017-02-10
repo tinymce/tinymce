@@ -5,18 +5,17 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.docs.Documentation',
+    'ephox.boulder.api.DslType',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.boulder.format.TypeTokens',
     'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
-    'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun'
   ],
 
-  function (GuiFactory, Container, Documentation, Objects, ValueSchema, TypeTokens, Type, Arr, Obj, Merger, Json, Fun) {
+  function (GuiFactory, Container, Documentation, DslType, Objects, ValueSchema, Type, Arr, Obj, Json, Fun) {
     var getDescription = function (key) {
       if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
       else return '<span style="outline: 1px solid red;">' + key + '</span>';
@@ -125,7 +124,7 @@ define(
 
     var buildObject = function (path, oFields) {
       var subs = Arr.bind(oFields, function (f) {
-        return TypeTokens.foldField(f, 
+        return DslType.foldField(f, 
           function (key, presence, type) {
             return [ buildField(path, key, presence, type) ];
           }, function (_) {
@@ -145,7 +144,7 @@ define(
 
 
     var build = function (path, dsl) {
-      return TypeTokens.foldType(
+      return DslType.foldType(
         dsl,
         function (_sValidator, sType) {
           return buildSet(path, _sValidator, sType);
