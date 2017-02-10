@@ -87,7 +87,7 @@ define("tinymce/codesampleplugin/Plugin", [
 						});
 
 						elm.contentEditable = false;
-						elm.innerHTML = editor.dom.encode(elm.textContent);
+						elm.innerHTML = editor.dom.encode(elm.innerHTML);
 						Prism.highlightElement(elm);
 						elm.className = $.trim(elm.className);
 					});
