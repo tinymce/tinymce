@@ -55,6 +55,7 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
         return Arr.map(gspecs, function (grp) {
           return ToolbarGroup.sketch(
             Merger.deepMerge(
+              grp,
               detail.members().group().munge()(grp)
             )
           );

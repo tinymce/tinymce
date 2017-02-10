@@ -24,10 +24,13 @@ define(
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Toolbar',
+    'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
+    'ephox.compass.Arr',
+    'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -37,7 +40,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, EventHandler, DemoSink, HtmlDisplay, Objects, Arr, Merger, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -629,6 +632,46 @@ define(
         })
       };
 
+      var sketchToolbar = function () {
+        return Toolbar.sketch({
+          uid: 'hacky',
+          dom: {
+            tag: 'div'
+          },
+          components: [ ],
+          parts: {
+            groups: {}
+          },
+
+          members: {
+            group: {
+              munge: function (g) {
+                return Merger.deepMerge(g, {
+                  dom: {
+                    tag: 'div'
+                  },
+                  components: [
+                    ToolbarGroup.parts().items()
+                  ],
+                  parts: {
+                    items: { }
+                  },
+
+                  members: {
+                    item: {
+                      munge: Fun.identity
+                    }
+                  },
+                  markers: {
+                    selectedItem: 'tutorial-selected-item',
+                    itemClass: 'tutorial-item'
+                  }
+                })
+              }
+            }
+          }
+        })
+      };
    
 
       // var dialog = GuiFactory.build(
@@ -640,12 +683,19 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchTieredMenu()
+        sketchToolbar()
       );
 
-      // gui.getByUid('hacky').each(function (toolbar) {
-      //   Toolbar.setGroups(toolbar, [ ]);
-      // })
+      gui.getByUid('hacky').each(function (toolbar) {
+        var gs = Toolbar.createGroups(toolbar, [
+          {
+            items: [
+              Container.sketch({ dom: { innerHtml: 'hi' } })
+            ]
+          }
+        ]);
+        Toolbar.setGroups(toolbar, gs);
+      })
     };
   }
 );

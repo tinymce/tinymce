@@ -4,18 +4,14 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
-    'ephox.alloy.ui.schema.ToolbarSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (Behaviour, UiSketcher, Fields, DomModification, PartType, ToolbarGroupSchema, ToolbarSchema, FieldSchema, Merger, Fun, Error) {
+  function (Behaviour, UiSketcher, PartType, ToolbarGroupSchema, Merger, Fun, Error) {
     var schema = ToolbarGroupSchema.schema();
     var partTypes = ToolbarGroupSchema.parts();
 
@@ -40,7 +36,9 @@ define(
             },
             // fIX: Undefined
             tabstopping: detail.hasTabstop() ? { } : Behaviour.revoke()
-          }
+          },
+
+          'debug.sketcher': spec['debug.sketcher']
         }
       );
     };
