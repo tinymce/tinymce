@@ -63,8 +63,6 @@ define(
       var setup = function (container) {
         var componentMap = buildMenus(container, detail.data().menus());
          addToWorld(container, componentMap);
-
-        
         
         state.setContents(detail.data().primary(), componentMap, detail.data().expansions(), function (sMenus) {
           return toMenuValues(container, sMenus);

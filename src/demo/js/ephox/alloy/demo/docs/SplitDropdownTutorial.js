@@ -573,6 +573,64 @@ define(
         });
       };
 
+      var sketchTieredMenu = function () {
+        return TieredMenu.sketch({
+          onExecute: function () { },
+          onEscape: Fun.noop,
+          onOpenMenu: Fun.noop,
+          onOpenSubmenu: Fun.noop,
+          data: {
+            primary: 'primary',
+            menus: {
+              primary: {
+                value: 'primary',
+                items: [
+                  { data: { value: 'a', text: 'a' } }
+                ]
+              }
+            },
+            expansions: { }
+          },
+          markers: {
+            backgroundMenu: 'tutorial-background-menu',
+            menu: 'tutorial-menu',
+            selectedMenu: 'tutorial-selected-menu',
+            item: 'tutorial-item',
+            selectedItem: 'tutorial-selected-item'
+          },
+          members: {
+            menu: {
+              munge: function (m) {
+                return {
+                  dom: {
+                    tag: 'div'
+                  },
+                  components: [
+                    Menu.parts().items()
+                  ]
+                }
+              }
+            },
+            item: {
+              munge: function (i) {
+                return {
+                  type: 'item',
+                  data: i.data,
+                  dom: {
+                    tag: 'li'
+                  },
+                  components: [
+                    GuiFactory.text(i.data.text)
+                  ]
+                };
+              }
+            }
+          }
+        })
+      };
+
+   
+
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()
       // );
@@ -582,7 +640,7 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchTabSection()
+        sketchTieredMenu()
       );
 
       // gui.getByUid('hacky').each(function (toolbar) {
