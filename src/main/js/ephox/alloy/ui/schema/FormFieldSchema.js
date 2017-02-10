@@ -17,7 +17,9 @@ define(
       return [
         PartType.optional(
           { sketch: Fun.identity },
-          [ ],
+          [
+            FieldSchema.strict('dom')
+          ],
           'label',
           '<alloy.form-field.label>',
           Fun.constant({ }),
