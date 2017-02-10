@@ -5,17 +5,15 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.FieldBase',
-    'ephox.alloy.ui.schema.FormFieldSchema',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun'
+    'ephox.alloy.ui.schema.FormFieldSchema'
   ],
 
-  function (UiSketcher, PartType, FieldBase, FormFieldSchema, FieldSchema, Fun) {
+  function (UiSketcher, PartType, FieldBase, FormFieldSchema) {
     var schema = FormFieldSchema.schema()
 
     var sketch = function (factory, spec) {
       var partTypes = FormFieldSchema.makeParts(factory);
-      return UiSketcher.composite(factory.name(), schema, partTypes, make, spec);
+      return UiSketcher.composite('FormField(' + factory.name() + ')', schema, partTypes, make, spec);
     };
 
     var make = function (detail, components, spec, externals) {
@@ -31,7 +29,7 @@ define(
 
     var parts = function (factory) {
       var partTypes = FormFieldSchema.makeParts(factory);
-      return PartType.generate(factory.name(), partTypes);
+      return PartType.generate('FormField(' + factory.name() + ')', partTypes);
     };
 
     return {

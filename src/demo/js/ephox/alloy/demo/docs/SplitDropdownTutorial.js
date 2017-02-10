@@ -10,6 +10,8 @@ define(
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormChooser',
+    'ephox.alloy.api.ui.FormCoupledInputs',
+    'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
@@ -25,7 +27,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, Input, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -195,6 +197,101 @@ define(
         });
       };
 
+      var sketchFormChooser = function () {
+        return FormChooser.sketch({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            FormChooser.parts().legend(),
+            FormChooser.parts().choices()
+          ],
+
+          choices: [
+            { value: 'a' }
+          ],
+
+          parts: {
+            legend: { },
+            choices: { }
+          },
+          members: {
+            choice: {
+              munge: function (c) {
+                return Container.sketch({
+                  dom: {
+                    tag: 'span',
+                    innerHtml: c.value
+                  }
+                });
+              }
+            }
+          },
+
+          markers: {
+            choiceClass: 'tutorial-choice',
+            selectedClass: 'tutorial-selected-choice'
+          }
+        });
+      };
+
+      var sketchCoupledInput = function () {
+        return FormCoupledInputs.sketch({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            FormCoupledInputs.parts().field1(),
+            FormCoupledInputs.parts().field2(),
+            FormCoupledInputs.parts().lock()
+          ],
+
+          parts: {
+            field1: {
+              parts: { 
+                label: {
+                  dom: {
+                    tag: 'label'
+                  }
+                },
+                field: { }
+              },
+
+              components: [
+                FormField.parts(Input).label(),
+                FormField.parts(Input).field()
+              ]
+            },
+            field2: {
+              parts: {
+                label: {
+                  dom: {
+                    tag: 'label'
+                  }
+                },
+                field: { }
+              },
+
+              components: [
+                FormField.parts(Input).label(),
+                FormField.parts(Input).field()
+              ]
+            },
+            lock: {
+              dom: {
+                tag: 'button',
+                innerHtml: 'x'
+              }
+            }
+          },
+
+          onLockedChange: function () { },
+          markers: {
+            lockClass: 'tutorial-locked'
+          }
+        })
+      }
+
       var sketchExpandableForm = function () {
         return ExpandableForm.sketch({
           dom: {
@@ -226,41 +323,7 @@ define(
                 Form.parts('alpha')
               ],
               parts: {
-                alpha: FormChooser.sketch({
-                  dom: {
-                    tag: 'div'
-                  },
-                  components: [
-                    FormChooser.parts().legend(),
-                    FormChooser.parts().choices()
-                  ],
-
-                  choices: [
-                    { value: 'a' }
-                  ],
-
-                  parts: {
-                    legend: { },
-                    choices: { }
-                  },
-                  members: {
-                    choice: {
-                      munge: function (c) {
-                        return Container.sketch({
-                          dom: {
-                            tag: 'span',
-                            innerHtml: c.value
-                          }
-                        });
-                      }
-                    }
-                  },
-
-                  markers: {
-                    choiceClass: 'tutorial-choice',
-                    selectedClass: 'tutorial-selected-choice'
-                  }
-                })
+                alpha: sketchCoupledInput()
               }
             },
             extra: {
