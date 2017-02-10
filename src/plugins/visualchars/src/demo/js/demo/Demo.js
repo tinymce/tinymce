@@ -22,8 +22,8 @@ define(
 
       tinymce.init({
         selector: "textarea.tinymce",
-        plugins: "visualchars preview",
-        toolbar: "visualchars preview",
+        plugins: "visualchars preview code",
+        toolbar: "visualchars preview code",
         height: 600
       });
     };
