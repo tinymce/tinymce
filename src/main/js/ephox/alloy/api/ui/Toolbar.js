@@ -2,22 +2,22 @@ define(
   'ephox.alloy.api.ui.Toolbar',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Result'
+    'ephox.perhaps.Result',
+    'global!console',
+    'global!Error'
   ],
 
-  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, Fields, PartType, ToolbarSchema, FieldSchema, Arr, Merger, Fun, Result) {
+function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Merger, Json, Fun, Result, console, Error) {
     var schema = ToolbarSchema.schema();
 
     // TODO: Dupe with ToolbarSchema
@@ -32,9 +32,14 @@ define(
     var partTypes = ToolbarSchema.parts();
 
     var make = function (detail, components, spec, _externals) {
-
       var setGroups = function (toolbar, groups) {
-        getGroupContainer(toolbar).each(function (container) {
+        getGroupContainer(toolbar).fold(function (err) {
+          // check that the group container existed. It may not have if the components
+          // did not list anything, and shell was false.
+          console.error('Toolbar was defined to not be a shell, but no groups container was specified in components');
+          console.error(Json.stringify(spec, null, 2));
+          throw new Error(err);
+        }, function (container) {
           container.logSpec();
           Replacing.set(container, groups);
         });

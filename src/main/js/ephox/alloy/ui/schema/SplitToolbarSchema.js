@@ -18,9 +18,22 @@ define(
       })
     ];
 
+    var toolbarSchema = [
+      FieldSchema.strict('dom'),
+      FieldSchema.strictObjOf('parts', [
+        // NOTE: In shell===false mode, this is a little different (for a toolbar)
+        FieldSchema.strict('groups')
+      ]),
+      FieldSchema.strictObjOf('members', [
+        FieldSchema.strictObjOf('group', [
+          FieldSchema.strict('munge')
+        ])
+      ])
+    ];
+
     var partTypes = [
-      PartType.internal(Toolbar, [ ], 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
-      PartType.internal(Toolbar, [ ], 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
+      PartType.internal(Toolbar, toolbarSchema, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
+      PartType.internal(Toolbar, toolbarSchema, 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
         return {
           behaviours: {
             sliding: {

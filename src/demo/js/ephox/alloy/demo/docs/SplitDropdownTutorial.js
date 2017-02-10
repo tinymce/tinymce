@@ -17,7 +17,9 @@ define(
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.api.ui.SplitDropdown',
+    'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
@@ -31,7 +33,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -402,6 +404,65 @@ define(
         });
       };
 
+      var sketchSplitToolbar = function () {
+        return SplitToolbar.sketch({
+          markers: {
+            closedClass: 'tutorial-split-toolbar-closed',
+            openClass: 'tutorial-split-toolbar-open',
+            shrinkingClass: 'tutorial-split-toolbar-shrinking',
+            growingClass: 'tutorial-split-toolbar-growing'
+          },
+
+          dom: {
+            tag: 'div'
+          },
+          
+          components: [
+            SplitToolbar.parts().primary(),
+            SplitToolbar.parts().overflow()
+          ],
+
+          parts: {
+            primary: {
+              dom: {
+                tag: 'div'
+              },
+              parts: {
+                groups: { }
+              },
+              members: {
+                group: {
+                  munge: Fun.identity
+                }
+              }
+            },
+            overflow: {
+              uid: 'hacky',
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                Toolbar.parts().groups()
+              ],
+              shell: false,
+              parts: { 
+                groups: {
+                  dom: {
+                    tag: 'div'
+                  }
+                }
+              },
+              members: {
+                group: {
+                  munge: Fun.identity
+                }
+              }
+            },
+            'overflow-button': { }
+          }
+        });
+      };
+
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()
       // );
@@ -411,8 +472,12 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchModalDialog()
+        sketchSplitToolbar()
       );
+
+      gui.getByUid('hacky').each(function (toolbar) {
+        Toolbar.setGroups(toolbar, [ ]);
+      })
     };
   }
 );
