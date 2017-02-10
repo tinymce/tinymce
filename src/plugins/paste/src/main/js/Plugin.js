@@ -100,7 +100,7 @@ define(
 
       editor.addCommand('mceInsertClipboardContent', function (ui, value) {
         if (value.content) {
-          self.clipboard.pasteHtml(value.content);
+          self.clipboard.pasteHtml(value.content, value.internal);
         }
 
         if (value.text) {

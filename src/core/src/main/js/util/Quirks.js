@@ -132,10 +132,11 @@ define(
        *
        * @private
        * @param {String} content Content to insert at selection.
+       * @param {Boolean} internal State if the paste is to be considered internal or external.
        */
-      function insertClipboardContents(content) {
+      function insertClipboardContents(content, internal) {
         if (editor.queryCommandSupported('mceInsertClipboardContent')) {
-          editor.execCommand('mceInsertClipboardContent', false, { content: content });
+          editor.execCommand('mceInsertClipboardContent', false, { content: content, internal: internal });
         } else {
           editor.execCommand('mceInsertContent', false, content);
         }
@@ -744,7 +745,7 @@ define(
                 }
 
                 selection.setRng(pointRng);
-                insertClipboardContents(internalContent.html);
+                insertClipboardContents(internalContent.html, true);
               });
             }
           }
@@ -1651,7 +1652,7 @@ define(
 
               var rng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, editor.getDoc());
               selection.setRng(rng);
-              insertClipboardContents(internalContent.html);
+              insertClipboardContents(internalContent.html, true);
             }
           }
         });
