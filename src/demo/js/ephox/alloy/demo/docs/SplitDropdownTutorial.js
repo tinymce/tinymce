@@ -20,6 +20,7 @@ define(
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TabButton',
+    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Toolbar',
@@ -36,7 +37,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, Tabview, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, EventHandler, DemoSink, HtmlDisplay, Objects, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -520,7 +521,57 @@ define(
             innerHtml: '1'
           }
         })
-      }
+      };
+
+      var sketchTabSection = function () {
+        return TabSection.sketch({
+          dom: {
+            tag: 'div'
+          },
+          tabs: [
+            { value: 'alpha', view: function () { return [ ]; } },
+            { value: 'beta', view: function () { return [ ]; } }
+          ],
+          components: [
+            TabSection.parts().tabbar(),
+            TabSection.parts().tabview()
+          ],
+
+          parts: {
+            tabbar: {
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                Tabbar.parts().tabs()
+              ],
+              parts: {
+                tabs: { }
+              },
+
+              markers: {
+                tabClass: 'tutorial-tab',
+                selectedClass: 'tutorial-selected-tab'
+              },
+
+              members: {
+                tab: {
+                  munge: function (t) {
+                    return {
+                      dom: {
+                        tag: 'span',
+                        innerHtml: t.value
+                      },
+                      value: t.value
+                    };
+                  }
+                }
+              }
+            },
+            tabview: { }
+          }
+        });
+      };
 
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()
@@ -531,7 +582,7 @@ define(
       HtmlDisplay.section(
         gui,
         'Testing out the self-documentation',
-        sketchTabButton()
+        sketchTabSection()
       );
 
       // gui.getByUid('hacky').each(function (toolbar) {

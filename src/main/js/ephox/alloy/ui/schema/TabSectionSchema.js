@@ -20,7 +20,21 @@ define(
 
     var barPart = PartType.internal(
       Tabbar,
-      [ ],
+      [
+        FieldSchema.strict('dom'),
+        FieldSchema.strictObjOf('parts', [
+          FieldSchema.strict('tabs')
+        ]),
+        FieldSchema.strictObjOf('markers', [
+          FieldSchema.strict('tabClass'),
+          FieldSchema.strict('selectedClass')
+        ]),
+        FieldSchema.strictObjOf('members', [
+          FieldSchema.strictObjOf('tab', [
+            FieldSchema.strict('munge')
+          ])
+        ])
+      ],
       'tabbar',
       '<alloy.tab-section.tabbar>',
       function (detail) {
