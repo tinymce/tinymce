@@ -16,15 +16,13 @@
  */
 define(
   'tinymce.plugins.codesample.Plugin',
-
   [
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
     'tinymce.plugins.codesample.core.Prism',
     'tinymce.plugins.codesample.ui.Dialog',
     'tinymce.plugins.codesample.util.Utils'
   ],
-
   function (Env, PluginManager, Prism, Dialog, Utils) {
     var addedInlineCss, trimArg = Utils.trimArg;
 

@@ -16,20 +16,18 @@
  */
 define(
   'tinymce.plugins.save.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.DOM',
-    'global!tinymce.EditorManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.EditorManager',
+    'tinymce.core.util.Tools'
   ],
-
-  function (PluginManager, DOM, EditorManager, Tools) {
+  function (PluginManager, DOMUtils, EditorManager, Tools) {
     PluginManager.add('save', function (editor) {
       function save() {
         var formObj;
 
-        formObj = DOM.getParent(editor.id, 'form');
+        formObj = DOMUtils.DOM.getParent(editor.id, 'form');
 
         if (editor.getParam("save_enablewhendirty", true) && !editor.isDirty()) {
           return;

@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.noneditable.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Tools) {
     PluginManager.add('noneditable', function (editor) {
       var editClass, nonEditClass, nonEditableRegExps, contentEditableAttrName = 'contenteditable';

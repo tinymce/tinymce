@@ -11,15 +11,17 @@
 define(
   'tinymce.plugins.lists.actions.Outdent',
   [
-    "global!tinymce.dom.DOMUtils.DOM",
-    "tinymce.plugins.lists.core.NodeType",
-    "tinymce.plugins.lists.core.Bookmark",
-    "tinymce.plugins.lists.core.Selection",
-    "tinymce.plugins.lists.core.SplitList",
-    "tinymce.plugins.lists.core.NormalizeLists",
-    "tinymce.plugins.lists.core.TextBlock"
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.plugins.lists.core.Bookmark',
+    'tinymce.plugins.lists.core.NodeType',
+    'tinymce.plugins.lists.core.NormalizeLists',
+    'tinymce.plugins.lists.core.Selection',
+    'tinymce.plugins.lists.core.SplitList',
+    'tinymce.plugins.lists.core.TextBlock'
   ],
-  function (DOM, NodeType, Bookmark, Selection, SplitList, NormalizeLists, TextBlock) {
+  function (DOMUtils, Bookmark, NodeType, NormalizeLists, Selection, SplitList, TextBlock) {
+    var DOM = DOMUtils.DOM;
+
     var removeEmptyLi = function (dom, li) {
       if (NodeType.isEmpty(dom, li)) {
         DOM.remove(li);

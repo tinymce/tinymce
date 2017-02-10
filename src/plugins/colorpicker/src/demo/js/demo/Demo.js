@@ -12,21 +12,28 @@
 
 define(
   'tinymce.plugins.colorpicker.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.colorpicker.Plugin',
-    'global!tinymce'
+    'tinymce.plugins.table.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, ColorPickerPlugin, TablePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      ColorPickerPlugin();
+      TablePlugin();
+      ModernTheme();
+
       document.querySelector('.tinymce').value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "table colorpicker code preview",
-        toolbar: "table code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "table colorpicker code",
+        toolbar: "table code",
         height: 600
       });
     };

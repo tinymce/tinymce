@@ -1,5 +1,5 @@
 /**
- * plugin.js
+ * Plugin.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -8,20 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*jshint maxlen:255 */
-/*eslint max-len:0 */
-/*global tinymce:true */
-
 define(
   'tinymce.plugins.media.Plugin',
   [
-    'global!tinymce.PluginManager',
-    'tinymce.plugins.media.ui.Dialog',
+    'tinymce.core.html.Node',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.media.core.Nodes',
     'tinymce.plugins.media.core.Sanitize',
     'tinymce.plugins.media.core.UpdateHtml',
-    'tinymce.plugins.media.core.Nodes'
+    'tinymce.plugins.media.ui.Dialog'
   ],
-  function (PluginManager, Dialog, Sanitize, UpdateHtml, Nodes) {
+  function (Node, PluginManager, Tools, Nodes, Sanitize, UpdateHtml, Dialog) {
     var Plugin = function (editor) {
       editor.on('ResolveName', function (e) {
         var name;
@@ -34,16 +32,18 @@ define(
       editor.on('preInit', function () {
         // Make sure that any messy HTML is retained inside these
         var specialElements = editor.schema.getSpecialElements();
-        tinymce.each('video audio iframe object'.split(' '), function (name) {
+        Tools.each('video audio iframe object'.split(' '), function (name) {
           specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
         });
 
         // Allow elements
-        //editor.schema.addValidElements('object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]');
+        //editor.schema.addValidElements(
+        //  'object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]'
+        //);
 
         // Set allowFullscreen attribs as boolean
         var boolAttrs = editor.schema.getBoolAttrs();
-        tinymce.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
+        Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
           boolAttrs[name] = {};
         });
 
@@ -70,7 +70,7 @@ define(
             }
 
             realElmName = node.attr(name);
-            realElm = new tinymce.html.Node(realElmName, 1);
+            realElm = new Node(realElmName, 1);
 
             // Add width/height to everything but audio
             if (realElmName !== "audio" && realElmName !== "script") {
@@ -110,7 +110,7 @@ define(
             // Inject innerhtml
             innerHtml = node.attr('data-mce-html');
             if (innerHtml) {
-              innerNode = new tinymce.html.Node('#text', 3);
+              innerNode = new Node('#text', 3);
               innerNode.raw = true;
               innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
               realElm.append(innerNode);

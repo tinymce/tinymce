@@ -14,16 +14,22 @@ define(
   'tinymce.plugins.visualchars.demo.Demo',
 
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.visualchars.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, VisualCharsPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      VisualCharsPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "visualchars preview",
-        toolbar: "visualchars preview",
+        plugins: "visualchars code",
+        toolbar: "visualchars code",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         height: 600
       });
     };

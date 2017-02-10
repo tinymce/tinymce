@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.advlist.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Tools) {
     PluginManager.add('advlist', function (editor) {
       var olMenuItems, ulMenuItems;

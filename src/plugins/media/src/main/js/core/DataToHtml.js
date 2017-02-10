@@ -1,3 +1,13 @@
+/**
+ * DataToHtml.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.media.core.DataToHtml',
   [
@@ -6,7 +16,7 @@ define(
     'tinymce.plugins.media.core.UrlPatterns',
     'tinymce.plugins.media.core.VideoScript',
     'tinymce.plugins.media.core.UpdateHtml',
-    'global!tinymce.util.Tools'
+    'tinymce.core.util.Tools'
   ],
   function (Mime, HtmlToData, UrlPatterns, VideoScript, UpdateHtml, Tools) {
     var dataToHtml = function (editor, dataIn) {

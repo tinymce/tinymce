@@ -11,10 +11,12 @@
 define(
   'tinymce.plugins.lists.core.TextBlock',
   [
-    "global!tinymce.dom.DOMUtils.DOM",
-    "global!tinymce.Env"
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env'
   ],
-  function (DOM, Env) {
+  function (DOMUtils, Env) {
+    var DOM = DOMUtils.DOM;
+
     var createNewTextBlock = function (editor, contentNode, blockName) {
       var node, textBlock, fragment = DOM.createFragment(), hasContentNode;
       var blockElements = editor.schema.getBlockElements();

@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.hr.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.hr.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, HrPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      HrPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "hr code preview",
-        toolbar: "hr code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "hr code",
+        toolbar: "hr code",
         height: 600
       });
     };

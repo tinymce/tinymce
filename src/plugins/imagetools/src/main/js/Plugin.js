@@ -18,12 +18,12 @@
 define(
   'tinymce.plugins.imagetools.Plugin',
   [
-    "global!tinymce.PluginManager",
-    "global!tinymce.Env",
-    "global!tinymce.util.Promise",
-    "global!tinymce.util.URI",
-    "global!tinymce.util.Tools",
-    "global!tinymce.util.Delay",
+    "tinymce.core.PluginManager",
+    "tinymce.core.Env",
+    "tinymce.core.util.Promise",
+    "tinymce.core.util.URI",
+    "tinymce.core.util.Tools",
+    "tinymce.core.util.Delay",
     "ephox/imagetools/api/ImageTransformations",
     "ephox/imagetools/api/BlobConversions",
     "tinymce.plugins.imagetools.Dialog",

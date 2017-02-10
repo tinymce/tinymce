@@ -1,13 +1,25 @@
+/**
+ * UpdateHtml.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.media.core.UpdateHtml',
   [
-    'global!tinymce.html.Writer',
-    'global!tinymce.html.SaxParser',
-    'global!tinymce.html.Schema',
-    'global!tinymce.dom.DOMUtils.DOM',
+    'tinymce.core.html.Writer',
+    'tinymce.core.html.SaxParser',
+    'tinymce.core.html.Schema',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.plugins.media.core.Size'
   ],
-  function (Writer, SaxParser, Schema, DOM, Size) {
+  function (Writer, SaxParser, Schema, DOMUtils, Size) {
+    var DOM = DOMUtils.DOM;
+
     var setAttributes = function (attrs, updatedAttrs) {
       var name;
       var i;

@@ -14,8 +14,8 @@
 define(
   'tinymce.plugins.imagetools.Proxy',
   [
-    "global!tinymce.util.Promise",
-    "global!tinymce.util.Tools",
+    "tinymce.core.util.Promise",
+    "tinymce.core.util.Tools",
     "tinymce.plugins.imagetools.Utils"
   ],
   function (Promise, Tools, Utils) {

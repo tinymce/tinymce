@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.pagebreak.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.Env'
+    'tinymce.core.PluginManager',
+    'tinymce.core.Env'
   ],
-
   function (PluginManager, Env) {
     PluginManager.add('pagebreak', function (editor) {
       var pageBreakClass = 'mce-pagebreak', separatorHtml = editor.getParam('pagebreak_separator', '<!-- pagebreak -->');

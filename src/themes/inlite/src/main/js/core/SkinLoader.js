@@ -11,10 +11,10 @@
 define(
   'tinymce.themes.inlite.core.SkinLoader',
   [
-    'global!tinymce.EditorManager',
-    'global!tinymce.DOM'
+    'tinymce.core.EditorManager',
+    'tinymce.core.dom.DOMUtils'
   ],
-  function (EditorManager, DOM) {
+  function (EditorManager, DOMUtils) {
     var fireSkinLoaded = function (editor, callback) {
       var done = function () {
         editor._skinLoaded = true;
@@ -46,7 +46,7 @@ define(
         fireSkinLoaded(editor, callback);
       };
 
-      DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
+      DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
       editor.contentCSS.push(skinUrl + '/content.inline.min.css');
     };
 

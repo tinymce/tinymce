@@ -16,15 +16,13 @@
  */
 define(
   'tinymce.plugins.fullpage.Plugin',
-
   [
-    'global!tinymce.html.DomParser',
-    'global!tinymce.html.Node',
-    'global!tinymce.html.Serializer',
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.html.DomParser',
+    'tinymce.core.html.Node',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (DomParser, Node, Serializer, PluginManager, Tools) {
     PluginManager.add('fullpage', function (editor) {
       var each = Tools.each;

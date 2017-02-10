@@ -1,10 +1,20 @@
+/**
+ * Nodes.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.media.core.Nodes',
   [
     'tinymce.plugins.media.core.Sanitize',
     'tinymce.plugins.media.core.VideoScript',
-    'global!tinymce.html.Node',
-    'global!tinymce.Env'
+    'tinymce.core.html.Node',
+    'tinymce.core.Env'
   ],
   function (Sanitize, VideoScript, Node, Env) {
     var createPlaceholderNode = function (editor, node) {

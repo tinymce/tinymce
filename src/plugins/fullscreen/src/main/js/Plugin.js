@@ -16,13 +16,13 @@
  */
 define(
   'tinymce.plugins.fullscreen.Plugin',
-
   [
-    'global!tinymce.DOM',
-    'global!tinymce.PluginManager'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.PluginManager'
   ],
+  function (DOMUtils, PluginManager) {
+    var DOM = DOMUtils.DOM;
 
-  function (DOM, PluginManager) {
     PluginManager.add('fullscreen', function (editor) {
       var fullscreenState = false, iframeWidth, iframeHeight, resizeHandler;
       var containerWidth, containerHeight, scrollPos;

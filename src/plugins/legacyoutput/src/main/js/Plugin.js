@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.legacyoutput.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Tools) {
     PluginManager.add('legacyoutput', function (editor, url, $) {
       editor.settings.inline_styles = false;

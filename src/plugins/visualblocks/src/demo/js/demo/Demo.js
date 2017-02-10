@@ -12,19 +12,27 @@
 
 define(
   'tinymce.plugins.visualblocks.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.core.PluginManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.visualblocks.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, PluginManager, CodePlugin, VisualBlocksPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      VisualBlocksPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      PluginManager.urls.visualblocks = '../../../dist/visualblocks';
+
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "visualblocks preview code",
-        toolbar: "visualblocks preview code",
+        plugins: "visualblocks code",
+        toolbar: "visualblocks code",
         visualblocks_default_state: true,
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         //end_container_on_empty_block: true,
         // Style formats
         style_formats: [

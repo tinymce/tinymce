@@ -1,10 +1,20 @@
+/**
+ * Sanitize.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.media.core.Sanitize',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.html.Writer',
-    'global!tinymce.html.SaxParser',
-    'global!tinymce.html.Schema'
+    'tinymce.core.util.Tools',
+    'tinymce.core.html.Writer',
+    'tinymce.core.html.SaxParser',
+    'tinymce.core.html.Schema'
   ],
   function (Tools, Writer, SaxParser, Schema) {
     var sanitize = function (editor, html) {

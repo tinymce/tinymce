@@ -19,10 +19,9 @@ define(
   'tinymce.plugins.table.selection.CellSelection',
   [
     'tinymce.plugins.table.model.TableGrid',
-    'global!tinymce.dom.TreeWalker',
-    'global!tinymce.util.Tools'
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.util.Tools'
   ],
-
   function (TableGrid, TreeWalker, Tools) {
     return function (editor, selectionChange) {
       var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing, dragging;

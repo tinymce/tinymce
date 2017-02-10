@@ -17,12 +17,10 @@
  */
 define(
   'tinymce.plugins.table.ui.ResizeBars',
-
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.util.VK'
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK'
   ],
-
   function (Tools, VK) {
     var hoverTable;
 

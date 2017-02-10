@@ -12,18 +12,22 @@
 
 define(
   'tinymce.plugins.searchreplace.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.searchreplace.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, SearchReplacePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      SearchReplacePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "searchreplace code",
         toolbar: "searchreplace code",
         height: 600

@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.fullscreen.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.fullscreen.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, FullscreenPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      FullscreenPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "fullscreen code preview",
-        toolbar: "fullscreen code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "fullscreen code",
+        toolbar: "fullscreen code",
         height: 600
       });
     };

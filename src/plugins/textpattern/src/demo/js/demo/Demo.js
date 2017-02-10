@@ -12,18 +12,23 @@
 
 define(
   'tinymce.plugins.textpattern.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.textpattern.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, TextPatternPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      TextPatternPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "textpattern preview",
-        toolbar: "preview",
+        plugins: "textpattern code",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        toolbar: "code",
         height: 600
       });
     };

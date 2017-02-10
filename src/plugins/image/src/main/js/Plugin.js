@@ -16,15 +16,13 @@
  */
 define(
   'tinymce.plugins.image.Plugin',
-
   [
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.JSON',
-    'global!tinymce.util.Tools',
-    'global!tinymce.util.XHR'
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.JSON',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.XHR'
   ],
-
   function (Env, PluginManager, JSON, Tools, XHR) {
     PluginManager.add('image', function (editor) {
       function getImageSize(url, callback) {

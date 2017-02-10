@@ -11,8 +11,8 @@
 define(
   'tinymce.themes.inlite.ui.Toolbar',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.ui.Factory',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Factory',
     'tinymce.themes.inlite.alien.Type'
   ],
   function (Tools, Factory, Type) {

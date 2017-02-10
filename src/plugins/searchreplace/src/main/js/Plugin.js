@@ -19,13 +19,11 @@
  */
 define(
   'tinymce.plugins.searchreplace.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
     'tinymce.plugins.searchreplace.core.FindReplaceText'
   ],
-
   function (PluginManager, Tools, FindReplaceText) {
     function Plugin(editor) {
       var self = this, currentIndex = -1;

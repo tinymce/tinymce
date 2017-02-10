@@ -22,12 +22,11 @@ define(
     'tinymce.plugins.table.selection.CellSelection',
     'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.ResizeBars',
-    'global!tinymce.util.Tools',
-    'global!tinymce.dom.TreeWalker',
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager'
+    'tinymce.core.util.Tools',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager'
   ],
-
   function (TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
     var each = Tools.each;
 

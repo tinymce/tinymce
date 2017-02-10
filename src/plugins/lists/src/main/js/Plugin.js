@@ -11,16 +11,16 @@
 define(
   'tinymce.plugins.lists.Plugin',
   [
-    "global!tinymce.PluginManager",
-    "global!tinymce.util.Tools",
-    "global!tinymce.util.VK",
-    "tinymce.plugins.lists.core.NodeType",
-    "tinymce.plugins.lists.core.Delete",
-    "tinymce.plugins.lists.actions.Indent",
-    "tinymce.plugins.lists.actions.Outdent",
-    "tinymce.plugins.lists.actions.ToggleList"
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK',
+    'tinymce.plugins.lists.actions.Indent',
+    'tinymce.plugins.lists.actions.Outdent',
+    'tinymce.plugins.lists.actions.ToggleList',
+    'tinymce.plugins.lists.core.Delete',
+    'tinymce.plugins.lists.core.NodeType'
   ],
-  function (PluginManager, Tools, VK, NodeType, Delete, Indent, Outdent, ToggleList) {
+  function (PluginManager, Tools, VK, Indent, Outdent, ToggleList, Delete, NodeType) {
     var queryListCommandState = function (editor, listName) {
       return function () {
         var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');

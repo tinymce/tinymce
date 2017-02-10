@@ -19,8 +19,8 @@
 define(
   'tinymce.plugins.paste.core.Quirks',
   [
-    'global!tinymce.Env',
-    'global!tinymce.util.Tools',
+    'tinymce.core.Env',
+    'tinymce.core.util.Tools',
     'tinymce.plugins.paste.core.WordFilter',
     'tinymce.plugins.paste.core.Utils'
   ],

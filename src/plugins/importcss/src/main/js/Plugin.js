@@ -16,16 +16,14 @@
  */
 define(
   'tinymce.plugins.importcss.Plugin',
-
   [
-    'global!tinymce',
-    'global!tinymce.DOM',
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.EditorManager',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
-  function (tinymce, DOM, Env, PluginManager, Tools) {
+  function (EditorManager, DOMUtils, Env, PluginManager, Tools) {
     PluginManager.add('importcss', function (editor) {
       var self = this, each = Tools.each;
 
@@ -48,7 +46,7 @@ define(
           if (skinUrl) {
             skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
           } else {
-            skinUrl = tinymce.baseURL + '/skins/' + skin;
+            skinUrl = EditorManager.baseURL + '/skins/' + skin;
           }
 
           return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css';
@@ -236,7 +234,7 @@ define(
 
             var format = convertSelectorToFormat(self, selector, group);
             if (format) {
-              var formatName = format.name || DOM.uniqueId();
+              var formatName = format.name || DOMUtils.DOM.uniqueId();
               editor.formatter.register(formatName, format);
 
               return Tools.extend({}, ctrl.settings.itemDefaults, {

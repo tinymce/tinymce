@@ -13,17 +13,25 @@
 define(
   'tinymce.plugins.advlist.demo.Demo',
   [
-    "tinymce.plugins.advlist.Plugin",
-    "global!tinymce"
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.advlist.Plugin',
+    'tinymce.plugins.code.Plugin',
+    'tinymce.plugins.lists.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
-    return function () {
+  function (EditorManager, AdvListPlugin, ListsPlugin, CodePlugin, ModernTheme) {
+    AdvListPlugin();
+    ListsPlugin();
+    CodePlugin();
+    ModernTheme();
 
-      tinymce.init({
+    return function () {
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "lists advlist code preview",
-        toolbar: "bullist numlist ol code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "lists advlist code",
+        toolbar: "bullist numlist | outdent indent | code",
         height: 600
       });
     };

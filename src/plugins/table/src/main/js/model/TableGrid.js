@@ -18,14 +18,12 @@
  */
 define(
   'tinymce.plugins.table.model.TableGrid',
-
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.Env',
+    'tinymce.core.util.Tools',
+    'tinymce.core.Env',
     'tinymce.plugins.table.util.Utils',
     'tinymce.plugins.table.model.SplitCols'
   ],
-
   function (Tools, Env, Utils, SplitCols) {
     var each = Tools.each, getSpanVal = Utils.getSpanVal, setSpanVal = Utils.setSpanVal;
 

@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.pagebreak.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.pagebreak.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, PageBreakPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      PageBreakPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "pagebreak code preview",
-        toolbar: "pagebreak code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "pagebreak code",
+        toolbar: "pagebreak code",
         height: 600
       });
     };

@@ -11,9 +11,9 @@
 define(
   'tinymce.themes.inlite.ui.Forms',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.ui.Factory',
-    'global!tinymce.util.Promise',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.Promise',
     'tinymce.themes.inlite.core.Actions',
     'tinymce.themes.inlite.core.UrlType'
   ],

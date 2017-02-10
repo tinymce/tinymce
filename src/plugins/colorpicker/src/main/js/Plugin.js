@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.colorpicker.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Color'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Color'
   ],
-
   function (PluginManager, Color) {
     PluginManager.add('colorpicker', function (editor) {
       function colorPickerCallback(callback, value) {

@@ -11,12 +11,14 @@
 define(
   'tinymce.plugins.lists.actions.Indent',
   [
-    "global!tinymce.dom.DOMUtils.DOM",
-    "tinymce.plugins.lists.core.NodeType",
-    "tinymce.plugins.lists.core.Bookmark",
-    "tinymce.plugins.lists.core.Selection"
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.plugins.lists.core.Bookmark',
+    'tinymce.plugins.lists.core.NodeType',
+    'tinymce.plugins.lists.core.Selection'
   ],
-  function (DOM, NodeType, Bookmark, Selection) {
+  function (DOMUtils, Bookmark, NodeType, Selection) {
+    var DOM = DOMUtils.DOM;
+
     var mergeLists = function (from, to) {
       var node;
 

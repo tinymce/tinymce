@@ -16,16 +16,14 @@
  */
 define(
   'tinymce.plugins.tabfocus.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.dom.DOMUtils',
-    'global!tinymce.util.Tools',
-    'global!tinymce.EditorManager',
-    'global!tinymce.util.Delay',
-    'global!tinymce.Env'
+    'tinymce.core.PluginManager',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.Tools',
+    'tinymce.core.EditorManager',
+    'tinymce.core.util.Delay',
+    'tinymce.core.Env'
   ],
-
   function (PluginManager, DOMUtils, Tools, EditorManager, Delay, Env) {
     PluginManager.add('tabfocus', function (editor) {
       var DOM = DOMUtils.DOM;

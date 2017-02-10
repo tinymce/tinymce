@@ -16,15 +16,14 @@
  */
 define(
   'tinymce.plugins.template.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.DOM',
-    'global!tinymce.each',
-    'global!tinymce.util'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.JSON',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.XHR'
   ],
-
-  function (PluginManager, DOM, each, util) {
+  function (DOMUtils, PluginManager, JSON, Tools, XHR) {
     PluginManager.add('template', function (editor) {
       function createTemplateList(callback) {
         return function () {
@@ -36,10 +35,10 @@ define(
           }
 
           if (typeof templateList == "string") {
-            util.XHR.send({
+            XHR.send({
               url: templateList,
               success: function (text) {
-                callback(util.JSON.parse(text));
+                callback(JSON.parse(text));
               }
             });
           } else {
@@ -57,7 +56,7 @@ define(
           return;
         }
 
-        each(templateList, function (template) {
+        Tools.each(templateList, function (template) {
           values.push({
             selected: !values.length,
             text: template.title,
@@ -76,7 +75,7 @@ define(
             if (html.indexOf('<html>') == -1) {
               var contentCssLinks = '';
 
-              each(editor.contentCSS, function (url) {
+              Tools.each(editor.contentCSS, function (url) {
                 contentCssLinks += '<link type="text/css" rel="stylesheet" href="' +
                   editor.documentBaseURI.toAbsolute(url) +
                   '">';
@@ -110,7 +109,7 @@ define(
           }
 
           if (value.url) {
-            util.XHR.send({
+            XHR.send({
               url: value.url,
               success: function (html) {
                 templateHtml = html;
@@ -151,8 +150,8 @@ define(
             insertTemplate(false, templateHtml);
           },
 
-          minWidth: Math.min(DOM.getViewPort().w, editor.getParam('template_popup_width', 600)),
-          minHeight: Math.min(DOM.getViewPort().h, editor.getParam('template_popup_height', 500))
+          minWidth: Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('template_popup_width', 600)),
+          minHeight: Math.min(DOMUtils.DOM.getViewPort().h, editor.getParam('template_popup_height', 500))
         });
 
         win.find('listbox')[0].fire('select');
@@ -201,8 +200,8 @@ define(
       function replaceVals(e) {
         var dom = editor.dom, vl = editor.getParam('template_replace_values');
 
-        each(dom.select('*', e), function (e) {
-          each(vl, function (v, k) {
+        Tools.each(dom.select('*', e), function (e) {
+          Tools.each(vl, function (v, k) {
             if (dom.hasClass(e, k)) {
               if (typeof vl[k] == 'function') {
                 vl[k](e);
@@ -213,7 +212,7 @@ define(
       }
 
       function replaceTemplateValues(html, templateValuesOptionName) {
-        each(editor.getParam(templateValuesOptionName), function (v, k) {
+        Tools.each(editor.getParam(templateValuesOptionName), function (v, k) {
           if (typeof v == 'function') {
             v = v(k);
           }
@@ -241,7 +240,7 @@ define(
           return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
         }
 
-        each(dom.select('*', el), function (n) {
+        Tools.each(dom.select('*', el), function (n) {
           // Replace cdate
           if (hasClass(n, editor.getParam('template_cdate_classes', 'cdate').replace(/\s+/g, '|'))) {
             n.innerHTML = getDateTime(editor.getParam("template_cdate_format", editor.getLang("template.cdate_format")));
@@ -280,9 +279,9 @@ define(
       editor.on('PreProcess', function (o) {
         var dom = editor.dom;
 
-        each(dom.select('div', o.node), function (e) {
+        Tools.each(dom.select('div', o.node), function (e) {
           if (dom.hasClass(e, 'mceTmpl')) {
-            each(dom.select('*', e), function (e) {
+            Tools.each(dom.select('*', e), function (e) {
               if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
                 e.innerHTML = getDateTime(editor.getParam("template_mdate_format", editor.getLang("template.mdate_format")));
               }

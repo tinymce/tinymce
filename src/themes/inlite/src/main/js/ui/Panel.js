@@ -11,16 +11,16 @@
 define(
   'tinymce.themes.inlite.ui.Panel',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.ui.Factory',
-    'global!tinymce.DOM',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.themes.inlite.ui.Toolbar',
     'tinymce.themes.inlite.ui.Forms',
     'tinymce.themes.inlite.core.Measure',
     'tinymce.themes.inlite.core.Layout',
     'tinymce.themes.inlite.alien.EditorSettings'
   ],
-  function (Tools, Factory, DOM, Toolbar, Forms, Measure, Layout, EditorSettings) {
+  function (Tools, Factory, DOMUtils, Toolbar, Forms, Measure, Layout, EditorSettings) {
     return function () {
       var DEFAULT_TEXT_SELECTION_ITEMS = ['bold', 'italic', '|', 'quicklink', 'h2', 'h3', 'blockquote'];
       var DEFAULT_INSERT_TOOLBAR_ITEMS = ['quickimage', 'quicktable'];
@@ -124,7 +124,7 @@ define(
 
         userConstainHandler = EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
         contentAreaRect = Measure.getContentAreaRect(editor);
-        panelRect = DOM.getRect(panel.getEl());
+        panelRect = DOMUtils.DOM.getRect(panel.getEl());
 
         if (id === 'insert') {
           result = Layout.calcInsert(targetRect, contentAreaRect, panelRect);
@@ -178,7 +178,7 @@ define(
 
           userConstainHandler = EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
           contentAreaRect = Measure.getContentAreaRect(editor);
-          panelRect = DOM.getRect(panel.getEl());
+          panelRect = DOMUtils.DOM.getRect(panel.getEl());
 
           result = Layout.calc(currentRect, contentAreaRect, panelRect);
 

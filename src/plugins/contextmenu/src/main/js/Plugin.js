@@ -16,16 +16,16 @@
  */
 define(
   'tinymce.plugins.contextmenu.Plugin',
-
   [
-    'global!tinymce.DOM',
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager',
-    'global!tinymce.ui.Menu',
-    'global!tinymce.util.Tools'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.ui.Menu',
+    'tinymce.core.util.Tools'
   ],
+  function (DOMUtils, Env, PluginManager, Menu, Tools) {
+    var DOM = DOMUtils.DOM;
 
-  function (DOM, Env, PluginManager, Menu, Tools) {
     PluginManager.add('contextmenu', function (editor) {
       var menu, visibleState, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
 

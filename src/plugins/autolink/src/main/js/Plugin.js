@@ -17,10 +17,9 @@
 define(
   'tinymce.plugins.autolink.Plugin',
   [
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager'
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager'
   ],
-
   function (Env, PluginManager) {
     PluginManager.add('autolink', function (editor) {
       var AutoUrlDetectState;

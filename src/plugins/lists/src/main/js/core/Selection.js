@@ -11,8 +11,8 @@
 define(
   'tinymce.plugins.lists.core.Selection',
   [
-    "global!tinymce.util.Tools",
-    "tinymce.plugins.lists.core.NodeType"
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.lists.core.NodeType'
   ],
   function (Tools, NodeType) {
     var getSelectedListItems = function (editor) {

@@ -12,18 +12,23 @@
 
 define(
   'tinymce.plugins.spellchecker.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.spellchecker.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, SpellCheckerPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      SpellCheckerPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "spellchecker preview",
-        toolbar: "spellchecker preview",
+        plugins: "spellchecker code",
+        toolbar: "spellchecker code",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         height: 600
       });
     };

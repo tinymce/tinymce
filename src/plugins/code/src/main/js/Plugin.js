@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.code.Plugin',
-
   [
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.PluginManager'
   ],
-
   function (DOMUtils, PluginManager) {
     PluginManager.add('code', function (editor) {
       function showDialog() {

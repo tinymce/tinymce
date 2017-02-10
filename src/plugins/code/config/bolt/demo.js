@@ -8,6 +8,14 @@ configure({
     }),
     source('amd', 'tinymce.plugins.code', '../../src/main/js', function (id) {
       return mapper.hierarchical(id).replace(/^tinymce\/plugins\/code\//, '');
+    }),
+    source('amd', 'tinymce.plugins', '../../../../plugins', function (id) {
+      var parts = id.split('.');
+      return parts.slice(2, 3).concat(['src/main/js']).concat(parts.slice(3)).join('/');
+    }),
+    source('amd', 'tinymce.themes', '../../../../themes', function (id) {
+      var parts = id.split('.');
+      return parts.slice(2, 3).concat(['src/main/js']).concat(parts.slice(3)).join('/');
     })
   ]
 });

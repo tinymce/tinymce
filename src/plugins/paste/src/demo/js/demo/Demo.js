@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.paste.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.paste.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, PastePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      PastePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "paste code preview",
-        toolbar: "pastetext code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "paste code",
+        toolbar: "pastetext code",
         height: 600
       });
     };

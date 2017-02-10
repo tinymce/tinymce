@@ -17,11 +17,11 @@
 define(
   'tinymce.plugins.paste.core.WordFilter',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.html.DomParser',
-    'global!tinymce.html.Schema',
-    'global!tinymce.html.Serializer',
-    'global!tinymce.html.Node',
+    'tinymce.core.util.Tools',
+    'tinymce.core.html.DomParser',
+    'tinymce.core.html.Schema',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.html.Node',
     'tinymce.plugins.paste.core.Utils'
   ],
   function (Tools, DomParser, Schema, Serializer, Node, Utils) {

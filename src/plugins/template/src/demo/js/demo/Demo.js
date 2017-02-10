@@ -12,18 +12,23 @@
 
 define(
   'tinymce.plugins.template.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.template.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, TemplatePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      TemplatePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "template preview",
-        toolbar: "template preview",
+        plugins: "template code",
+        toolbar: "template code",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         height: 600,
         templates: [
           { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },

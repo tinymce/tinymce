@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.emoticons.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Tools) {
     PluginManager.add('emoticons', function (editor, url) {
       var emoticons = [

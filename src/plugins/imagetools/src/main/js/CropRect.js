@@ -14,12 +14,12 @@
 define(
   'tinymce.plugins.imagetools.CropRect',
   [
-    "global!tinymce.dom.DomQuery",
-    "global!tinymce.ui.DragHelper",
-    "global!tinymce.geom.Rect",
-    "global!tinymce.util.Tools",
-    "global!tinymce.util.Observable",
-    "global!tinymce.util.VK"
+    "tinymce.core.dom.DomQuery",
+    "tinymce.core.ui.DragHelper",
+    "tinymce.core.geom.Rect",
+    "tinymce.core.util.Tools",
+    "tinymce.core.util.Observable",
+    "tinymce.core.util.VK"
   ],
   function ($, DragHelper, Rect, Tools, Observable, VK) {
     var count = 0;

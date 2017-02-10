@@ -16,15 +16,13 @@
  */
 define(
   'tinymce.plugins.table.util.Quirks',
-
   [
-    'global!tinymce.util.VK',
-    'global!tinymce.util.Delay',
-    'global!tinymce.Env',
-    'global!tinymce.util.Tools',
+    'tinymce.core.util.VK',
+    'tinymce.core.util.Delay',
+    'tinymce.core.Env',
+    'tinymce.core.util.Tools',
     'tinymce.plugins.table.util.Utils'
   ],
-
   function (VK, Delay, Env, Tools, Utils) {
     var each = Tools.each, getSpanVal = Utils.getSpanVal;
 

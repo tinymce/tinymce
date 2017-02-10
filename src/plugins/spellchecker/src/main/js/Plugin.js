@@ -18,15 +18,14 @@ define(
   'tinymce.plugins.spellchecker.Plugin',
   [
     'tinymce.plugins.spellchecker.core.DomTextMatcher',
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools',
-    'global!tinymce.ui.Menu',
-    'global!tinymce.dom.DOMUtils',
-    'global!tinymce.util.XHR',
-    'global!tinymce.util.URI',
-    'global!tinymce.util.JSON'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Menu',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.XHR',
+    'tinymce.core.util.URI',
+    'tinymce.core.util.JSON'
   ],
-
   function (DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, XHR, URI, JSON) {
     PluginManager.add('spellchecker', function (editor, url) {
       var languageMenuItems, self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;

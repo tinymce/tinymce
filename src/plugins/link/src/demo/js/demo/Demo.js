@@ -14,18 +14,24 @@ define(
   'tinymce.plugins.link.demo.Demo',
 
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.link.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
 
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, LinkPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      LinkPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "link code preview",
-        toolbar: "link code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "link code",
+        toolbar: "link code",
         height: 600
       });
     };

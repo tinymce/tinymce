@@ -11,11 +11,13 @@
 define(
   'tinymce.plugins.lists.core.NormalizeLists',
   [
-    "global!tinymce.dom.DOMUtils.DOM",
-    "global!tinymce.util.Tools",
-    "tinymce.plugins.lists.core.NodeType"
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.lists.core.NodeType'
   ],
-  function (DOM, Tools, NodeType) {
+  function (DOMUtils, Tools, NodeType) {
+    var DOM = DOMUtils.DOM;
+
     var normalizeList = function (dom, ul) {
       var sibling, parentNode = ul.parentNode;
 

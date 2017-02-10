@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.autoresize.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
     'tinymce.plugins.autoresize.Plugin',
-    'global!tinymce'
+    'tinymce.plugins.code.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
+  function (EditorManager, AutoResizePlugin, CodePlugin, ModernTheme) {
+    AutoResizePlugin();
+    CodePlugin();
+    ModernTheme();
 
-  function (Plugin, tinymce) {
     return function () {
-
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "autoresize code preview",
-        toolbar: "autoresize code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "autoresize code",
+        toolbar: "autoresize code",
         height: 600
       });
     };

@@ -13,10 +13,8 @@
 
 define(
   'tinymce.plugins.searchreplace.core.FindReplaceText',
-
   [
   ],
-
   function () {
     function isContentEditableFalse(node) {
       return node && node.nodeType == 1 && node.contentEditable === "false";

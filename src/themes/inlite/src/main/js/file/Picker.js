@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.inlite.file.Picker',
   [
-    'global!tinymce.util.Promise'
+    'tinymce.core.util.Promise'
   ],
   function (Promise) {
     var pickFile = function () {

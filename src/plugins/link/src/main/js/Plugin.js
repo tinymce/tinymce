@@ -16,19 +16,17 @@
  */
 define(
   'tinymce.plugins.link.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools',
-    'global!tinymce.Env',
-    'global!tinymce.DOM',
-    'global!tinymce.util.XHR',
-    'global!tinymce.util.JSON',
-    'global!tinymce.util.Delay',
-    'global!tinymce.util.VK'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.Env',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.XHR',
+    'tinymce.core.util.JSON',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.VK'
   ],
-
-  function (PluginManager, Tools, Env, DOM, XHR, JSON, Delay, VK) {
+  function (PluginManager, Tools, Env, DOMUtils, XHR, JSON, Delay, VK) {
     PluginManager.add('link', function (editor) {
       var attachState = {};
 
@@ -104,7 +102,7 @@ define(
             win.opener = null;
             var doc = win.document;
             doc.open();
-            doc.write('<meta http-equiv="refresh" content="0; url=' + DOM.encode(url) + '">');
+            doc.write('<meta http-equiv="refresh" content="0; url=' + DOMUtils.DOM.encode(url) + '">');
             doc.close();
           }
         }

@@ -13,10 +13,105 @@
 define(
   'tinymce.themes.modern.demo.Demo',
   [
-    'tinymce.themes.modern.Theme',
-    'global!tinymce'
+    'tinymce.core.EditorManager',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.advlist.Plugin',
+    'tinymce.plugins.anchor.Plugin',
+    'tinymce.plugins.autolink.Plugin',
+    'tinymce.plugins.autoresize.Plugin',
+    'tinymce.plugins.autosave.Plugin',
+    'tinymce.plugins.bbcode.Plugin',
+    'tinymce.plugins.charmap.Plugin',
+    'tinymce.plugins.code.Plugin',
+    'tinymce.plugins.codesample.Plugin',
+    'tinymce.plugins.colorpicker.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.directionality.Plugin',
+    'tinymce.plugins.emoticons.Plugin',
+    'tinymce.plugins.fullpage.Plugin',
+    'tinymce.plugins.fullscreen.Plugin',
+    'tinymce.plugins.hr.Plugin',
+    'tinymce.plugins.image.Plugin',
+    'tinymce.plugins.imagetools.Plugin',
+    'tinymce.plugins.importcss.Plugin',
+    'tinymce.plugins.insertdatetime.Plugin',
+    'tinymce.plugins.legacyoutput.Plugin',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.plugins.lists.Plugin',
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.nonbreaking.Plugin',
+    'tinymce.plugins.noneditable.Plugin',
+    'tinymce.plugins.pagebreak.Plugin',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.plugins.preview.Plugin',
+    'tinymce.plugins.print.Plugin',
+    'tinymce.plugins.save.Plugin',
+    'tinymce.plugins.searchreplace.Plugin',
+    'tinymce.plugins.spellchecker.Plugin',
+    'tinymce.plugins.tabfocus.Plugin',
+    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.template.Plugin',
+    'tinymce.plugins.textcolor.Plugin',
+    'tinymce.plugins.textpattern.Plugin',
+    'tinymce.plugins.toc.Plugin',
+    'tinymce.plugins.visualblocks.Plugin',
+    'tinymce.plugins.visualchars.Plugin',
+    'tinymce.plugins.wordcount.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Theme, tinymce) {
+  function (
+    EditorManager, Factory, Tools, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin,
+    CharMapPlugin, CodePlugin, CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin,
+    FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin, ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin,
+    LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin,
+    SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin,
+    TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+  ) {
+    AdvListPlugin();
+    AnchorPlugin();
+    AutoLinkPlugin();
+    AutoResizePlugin();
+    AutoSavePlugin();
+    BbCodePlugin();
+    CharMapPlugin();
+    CodePlugin();
+    CodeSamplePlugin();
+    ColorPickerPlugin();
+    ContextMenuPlugin();
+    DirectionalityPlugin();
+    EmoticonsPlugin();
+    FullPagePlugin();
+    FullScreenPlugin();
+    HrPlugin();
+    ImagePlugin();
+    ImageToolsPlugin();
+    ImportCssPlugin();
+    InsertDatetimePlugin();
+    LegacyOutputPlugin();
+    LinkPlugin();
+    ListsPlugin();
+    MediaPlugin();
+    NonBreakingPlugin();
+    NonEditablePlugin();
+    PageBreakPlugin();
+    PastePlugin();
+    PreviewPlugin();
+    PrintPlugin();
+    SavePlugin();
+    SearchReplacePlugin();
+    SpellCheckerPlugin();
+    TabFocusPlugin();
+    TablePlugin();
+    TemplatePlugin();
+    TextColorPlugin();
+    TextPatternPlugin();
+    TocPlugin();
+    VisualBlocksPlugin();
+    VisualCharsPlugin();
+    WordCountPlugin();
+    ModernTheme();
+
     var config = {
       theme: "modern",
       plugins: [
@@ -34,7 +129,7 @@ define(
           icon: 'bold',
           onrender: function (api) {
             var rect = api.element().getBoundingClientRect();
-            var panel = tinymce.ui.Factory.create({
+            var panel = Factory.create({
               layout: 'flex',
               direction: 'column',
               pack: 'center',
@@ -74,16 +169,20 @@ define(
       }
     };
 
-    tinymce.init(
-      tinymce.extend({}, config, {
-        selector: 'textarea.tinymce'
+    EditorManager.init(
+      Tools.extend({}, config, {
+        selector: 'textarea.tinymce',
+        skin_url: '../../../../../skins/lightgray/dist/lightgray',
+        codesample_content_css: '../../../../../plugins/codesample/dist/codesample/css/prism.css'
       })
     );
 
-    tinymce.init(
-      tinymce.extend({}, config, {
+    EditorManager.init(
+      Tools.extend({}, config, {
         selector: 'div.tinymce',
-        inline: true
+        inline: true,
+        skin_url: '../../../../../skins/lightgray/dist/lightgray',
+        codesample_content_css: '../../../../../plugins/codesample/dist/codesample/css/prism.css'
       })
     );
 

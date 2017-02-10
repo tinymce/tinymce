@@ -16,11 +16,11 @@
 define(
   'tinymce.plugins.imagetools.ImagePanel',
   [
-    "global!tinymce.ui.Control",
-    "global!tinymce.ui.DragHelper",
-    "global!tinymce.geom.Rect",
-    "global!tinymce.util.Tools",
-    "global!tinymce.util.Promise",
+    "tinymce.core.ui.Control",
+    "tinymce.core.ui.DragHelper",
+    "tinymce.core.geom.Rect",
+    "tinymce.core.util.Tools",
+    "tinymce.core.util.Promise",
     "tinymce.plugins.imagetools.CropRect"
   ],
   function (Control, DragHelper, Rect, Tools, Promise, CropRect) {

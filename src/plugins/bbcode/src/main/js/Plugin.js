@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.bbcode.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Tools) {
     PluginManager.add('bbcode', function () {
       return {

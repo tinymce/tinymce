@@ -16,11 +16,9 @@
  */
 define(
   'tinymce.plugins.hr.Plugin',
-
   [
-    'global!tinymce.PluginManager'
+    'tinymce.core.PluginManager'
   ],
-
   function (PluginManager) {
     PluginManager.add('hr', function (editor) {
       editor.addCommand('InsertHorizontalRule', function () {

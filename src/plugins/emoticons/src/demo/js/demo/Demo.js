@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.emoticons.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.emoticons.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, EmoticonsPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      EmoticonsPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "emoticons code preview",
-        toolbar: "emoticons code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "emoticons code",
+        toolbar: "emoticons code",
         height: 600
       });
     };
