@@ -13,11 +13,10 @@ asynctest(
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects',
     'global!window'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, Waiter, GuiFactory, Memento, Behaviour, Docking, Container, GuiSetup, Objects, window) {
+  function (ApproxStructure, Assertions, Logger, Step, Waiter, GuiFactory, Memento, Behaviour, Docking, Container, GuiSetup, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

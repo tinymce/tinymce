@@ -6,6 +6,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Json, Fun, Array, Error) {
+  function (FieldPresence, FieldSchema, Objects, ValueSchema, Type, Arr, Json, Fun, Array, Error) {
     var nu = function (parts) {
       if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) throw new Error(
         'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
@@ -43,6 +44,14 @@ define(
       };
     };
 
+    var read = function (handler) {
+      return Type.isFunction(handler) ? {
+        can: Fun.constant(true),
+        abort: Fun.constant(false),
+        run: handler
+      } : handler;
+    };
+
     var fuse = function (handlers) {
       var can = all(handlers, function (handler) {
         return handler.can;
@@ -68,6 +77,7 @@ define(
     };
 
     return {
+      read: read,
       fuse: fuse,
       nu: nu
     };
