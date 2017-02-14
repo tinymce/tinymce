@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.inlite.core.PredicateId',
   [
-    'global!tinymce.util.Tools'
+    'tinymce.core.util.Tools'
   ],
   function (Tools) {
     var create = function (id, predicate) {

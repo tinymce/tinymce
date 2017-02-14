@@ -12,18 +12,22 @@
 
 define(
   'tinymce.plugins.save.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.save.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, SavePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      SavePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "save code",
         toolbar: "save code",
         height: 600

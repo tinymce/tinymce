@@ -18,12 +18,10 @@
  */
 define(
   'tinymce.plugins.table.ui.Dialogs',
-
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.Env'
+    'tinymce.core.util.Tools',
+    'tinymce.core.Env'
   ],
-
   function (Tools, Env) {
     var each = Tools.each;
 

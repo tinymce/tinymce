@@ -17,8 +17,8 @@
 define(
   'tinymce.plugins.anchor.Plugin',
   [
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager'
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager'
   ],
 
   function (Env, PluginManager) {

@@ -16,11 +16,9 @@
  */
 define(
   'tinymce.plugins.nonbreaking.Plugin',
-
   [
-    'global!tinymce.PluginManager'
+    'tinymce.core.PluginManager'
   ],
-
   function (PluginManager) {
     PluginManager.add('nonbreaking', function (editor) {
       var setting = editor.getParam('nonbreaking_force_tab');

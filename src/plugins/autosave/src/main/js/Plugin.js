@@ -16,20 +16,18 @@
  */
 define(
   'tinymce.plugins.autosave.Plugin',
-
   [
-    'global!tinymce',
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.LocalStorage',
-    'global!tinymce.util.Tools',
+    'tinymce.core.EditorManager',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.LocalStorage',
+    'tinymce.core.util.Tools',
     'global!window'
   ],
-
-  function (tinymce, PluginManager, LocalStorage, Tools, window) {
-    tinymce._beforeUnloadHandler = function () {
+  function (EditorManager, PluginManager, LocalStorage, Tools, window) {
+    EditorManager._beforeUnloadHandler = function () {
       var msg;
 
-      Tools.each(tinymce.editors, function (editor) {
+      Tools.each(EditorManager.editors, function (editor) {
         // Store a draft for each editor instance
         if (editor.plugins.autosave) {
           editor.plugins.autosave.storeDraft();
@@ -148,7 +146,7 @@ define(
       function isEmpty(html) {
         var forcedRootBlockName = editor.settings.forced_root_block;
 
-        html = tinymce.trim(typeof html == "undefined" ? editor.getBody().innerHTML : html);
+        html = Tools.trim(typeof html == "undefined" ? editor.getBody().innerHTML : html);
 
         return html === '' || new RegExp(
           '^<' + forcedRootBlockName + '[^>]*>((\u00a0|&nbsp;|[ \t]|<br[^>]*>)+?|)<\/' + forcedRootBlockName + '>|<br>$', 'i'
@@ -167,7 +165,7 @@ define(
         });
       }
 
-      window.onbeforeunload = tinymce._beforeUnloadHandler;
+      window.onbeforeunload = EditorManager._beforeUnloadHandler;
 
       this.hasDraft = hasDraft;
       this.storeDraft = storeDraft;

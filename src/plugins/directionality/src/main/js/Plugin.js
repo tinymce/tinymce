@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.directionality.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Tools) {
     PluginManager.add('directionality', function (editor) {
       function setDir(dir) {

@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.charmap.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
     'tinymce.plugins.charmap.Plugin',
-    'global!tinymce'
+    'tinymce.plugins.code.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CharMapPlugin, CodePlugin, ModernTheme) {
     return function () {
+      CharMapPlugin();
+      CodePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "charmap code preview",
-        toolbar: "charmap code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "charmap code",
+        toolbar: "charmap code",
         height: 600
       });
     };

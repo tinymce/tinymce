@@ -8,8 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*global tinymce:true */
-
 /**
  * This class is a factory for control instances. This enables you
  * to create instances of controls without having to require the UI controls directly.
@@ -25,7 +23,7 @@ define(
   function () {
     "use strict";
 
-    var types = {}, namespaceInit;
+    var types = {};
 
     return {
       /**
@@ -66,18 +64,7 @@ define(
        * @return {tinymce.ui.Control} Control instance based on the specified type.
        */
       create: function (type, settings) {
-        var ControlType, name, namespace;
-
-        // Build type lookup
-        if (!namespaceInit) {
-          namespace = tinymce.ui;
-
-          for (name in namespace) {
-            types[name.toLowerCase()] = namespace[name];
-          }
-
-          namespaceInit = true;
-        }
+        var ControlType;
 
         // If string is specified then use it as the type
         if (typeof type == 'string') {

@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.autosave.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
     'tinymce.plugins.autosave.Plugin',
-    'global!tinymce'
+    'tinymce.plugins.code.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, AutoSavePlugin, CodePlugin, ModernTheme) {
     return function () {
+      AutoSavePlugin();
+      CodePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "autosave code preview",
-        toolbar: "restoredraft code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "autosave code",
+        toolbar: "restoredraft code",
         height: 600
       });
     };

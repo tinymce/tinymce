@@ -12,18 +12,23 @@
 
 define(
   'tinymce.plugins.toc.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.toc.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, TocPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      TocPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "toc preview",
-        toolbar: "toc preview formatselect",
+        plugins: "toc code",
+        toolbar: "toc code formatselect",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         height: 600
       });
     };

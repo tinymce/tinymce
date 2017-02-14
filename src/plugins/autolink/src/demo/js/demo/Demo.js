@@ -2,7 +2,7 @@
  * Demo.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,17 +13,23 @@
 define(
   'tinymce.plugins.autolink.demo.Demo',
   [
-    "tinymce.plugins.autolink.Plugin",
-    "global!tinymce"
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.autolink.Plugin',
+    'tinymce.plugins.code.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
-    return function () {
+  function (EditorManager, AutoLinkPlugin, CodePlugin, Theme) {
+    AutoLinkPlugin();
+    CodePlugin();
+    Theme();
 
-      tinymce.init({
+    return function () {
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "autolink code preview",
-        toolbar: "autolink code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "autolink code",
+        toolbar: "autolink code",
         height: 600
       });
     };

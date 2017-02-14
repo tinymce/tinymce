@@ -1,13 +1,23 @@
+/**
+ * Dialog.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.media.ui.Dialog',
   [
-    'global!tinymce.util.Delay',
+    'tinymce.core.util.Delay',
     'tinymce.plugins.media.core.HtmlToData',
     'tinymce.plugins.media.core.UpdateHtml',
     'tinymce.plugins.media.core.Service',
     'tinymce.plugins.media.core.Size',
-    'global!tinymce.util.Tools',
-    'global!tinymce.Env',
+    'tinymce.core.util.Tools',
+    'tinymce.core.Env',
     'tinymce.plugins.media.ui.SizeManager'
   ],
   function (Delay, HtmlToData, UpdateHtml, Service, Size, Tools, Env, SizeManager) {

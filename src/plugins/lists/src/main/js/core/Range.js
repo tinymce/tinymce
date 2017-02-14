@@ -11,8 +11,8 @@
 define(
   'tinymce.plugins.lists.core.Range',
   [
-    "global!tinymce.dom.RangeUtils",
-    "tinymce.plugins.lists.core.NodeType"
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.plugins.lists.core.NodeType'
   ],
   function (RangeUtils, NodeType) {
     var getNormalizedEndPoint = function (container, offset) {

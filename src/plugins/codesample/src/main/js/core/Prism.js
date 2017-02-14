@@ -14,11 +14,8 @@
 
 define(
   'tinymce.plugins.codesample.core.Prism',
-
   [
-
   ],
-
   function () {
     var window = {};
     // ------------------ Start wrap

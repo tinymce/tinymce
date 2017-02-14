@@ -16,15 +16,15 @@
  */
 define(
   'tinymce.plugins.textcolor.Plugin',
-
   [
-    'global!tinymce.DOM',
-    'global!tinymce.PluginManager',
-    'global!tinymce.translate',
-    'global!tinymce.map'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.I18n',
+    'tinymce.core.util.Tools'
   ],
+  function (DOMUtils, PluginManager, I18n, Tools) {
+    var translate = I18n.translate;
 
-  function (DOM, PluginManager, translate, map) {
     PluginManager.add('textcolor', function (editor) {
       var cols, rows;
 
@@ -221,14 +221,14 @@ define(
           div.setAttribute('data-mce-color', value);
         }
 
-        if (DOM.getParent(e.target, '.mce-custom-color-btn')) {
+        if (DOMUtils.DOM.getParent(e.target, '.mce-custom-color-btn')) {
           buttonCtrl.hidePanel();
 
           editor.settings.color_picker_callback.call(editor, function (value) {
             var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
             var customColorCells, div, i;
 
-            customColorCells = map(tableElm.rows[tableElm.rows.length - 1].childNodes, function (elm) {
+            customColorCells = Tools.map(tableElm.rows[tableElm.rows.length - 1].childNodes, function (elm) {
               return elm.firstChild;
             });
 

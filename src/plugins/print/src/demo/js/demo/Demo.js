@@ -12,18 +12,22 @@
 
 define(
   'tinymce.plugins.print.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.print.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, PrintPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      PrintPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "print code",
         toolbar: "print code",
         height: 600

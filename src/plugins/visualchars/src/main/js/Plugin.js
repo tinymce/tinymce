@@ -16,13 +16,11 @@
  */
 define(
   'tinymce.plugins.visualchars.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.walk'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools'
   ],
-
-  function (PluginManager, walk) {
+  function (PluginManager, Tools) {
     PluginManager.add('visualchars', function (editor) {
       var self = this, state;
 
@@ -74,7 +72,7 @@ define(
 
         if (state) {
           nodeList = [];
-          walk(body, function (n) {
+          Tools.walk(body, function (n) {
             if (n.nodeType == 3 && n.nodeValue && visualCharsRegExp.test(n.nodeValue)) {
               nodeList.push(n);
             }

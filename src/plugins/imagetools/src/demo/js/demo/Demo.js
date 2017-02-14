@@ -13,13 +13,21 @@
 define(
   'tinymce.plugins.imagetools.demo.Demo',
   [
-    "tinymce.plugins.imagetools.Plugin",
-    "global!tinymce",
-    "global!tinymce.dom.DomQuery",
-    "global!console"
+    'global!console',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
+    'tinymce.plugins.imagetools.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce, $, console) {
+  function (console, DomQuery, EditorManager, CodePlugin, ImageToolsPlugin, ModernTheme) {
     return function () {
+      var $ = DomQuery;
+
+      CodePlugin();
+      ImageToolsPlugin();
+      ModernTheme();
+
       var imgSrc = '../img/dogleft.jpg';
 
       $(
@@ -34,7 +42,7 @@ define(
         '</textarea>'
       ).appendTo('#ephox-ui');
 
-      tinymce.init({
+      EditorManager.init({
         //imagetools_cors_hosts: ["moxiecode.cachefly.net"],
         //imagetools_proxy: "proxy.php",
         //imagetools_api_key: '123',
@@ -45,9 +53,8 @@ define(
 
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: [
-          "imagetools paste"
-        ],
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "imagetools code",
         add_unload_trigger: false,
         //images_replace_blob_uris: false,
         paste_data_images: true,
@@ -68,21 +75,21 @@ define(
       });
 
       function send() {
-        tinymce.activeEditor.uploadImages(function () {
-          console.log('saving:', tinymce.activeEditor.getContent());
+        EditorManager.activeEditor.uploadImages(function () {
+          console.log('saving:', EditorManager.activeEditor.getContent());
         });
       }
 
       function upload() {
         console.log('upload [started]');
 
-        tinymce.activeEditor.uploadImages(function (success) {
+        EditorManager.activeEditor.uploadImages(function (success) {
           console.log('upload [ended]', success);
         });
       }
 
       function dump() {
-        var content = tinymce.activeEditor.getContent();
+        var content = EditorManager.activeEditor.getContent();
 
         $('#view').html(content);
         console.log(content);

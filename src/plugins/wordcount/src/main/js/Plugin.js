@@ -11,8 +11,8 @@
 define(
   'tinymce.plugins.wordcount.Plugin',
   [
-    "global!tinymce.PluginManager",
-    "global!tinymce.util.Delay",
+    "tinymce.core.PluginManager",
+    "tinymce.core.util.Delay",
     "tinymce.plugins.wordcount.text.WordGetter"
   ],
   function (PluginManager, Delay, WordGetter) {

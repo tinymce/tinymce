@@ -16,9 +16,9 @@
 define(
   'tinymce.plugins.paste.core.Utils',
   [
-    'global!tinymce.util.Tools',
-    'global!tinymce.html.DomParser',
-    'global!tinymce.html.Schema'
+    'tinymce.core.util.Tools',
+    'tinymce.core.html.DomParser',
+    'tinymce.core.html.Schema'
   ],
   function (Tools, DomParser, Schema) {
     function filter(content, items) {

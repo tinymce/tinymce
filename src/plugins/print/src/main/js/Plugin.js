@@ -16,11 +16,9 @@
  */
 define(
   'tinymce.plugins.print.Plugin',
-
   [
-    'global!tinymce.PluginManager'
+    'tinymce.core.PluginManager'
   ],
-
   function (PluginManager) {
     PluginManager.add('print', function (editor) {
       editor.addCommand('mcePrint', function () {

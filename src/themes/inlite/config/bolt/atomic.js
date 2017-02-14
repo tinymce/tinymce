@@ -1,5 +1,5 @@
 configure({
   configs: [
-    './prod.js'
+    './test.js'
   ]
 });

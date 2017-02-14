@@ -30,12 +30,12 @@
 define(
   'tinymce.plugins.paste.core.Clipboard',
   [
-    'global!tinymce.Env',
-    'global!tinymce.dom.RangeUtils',
-    'global!tinymce.util.VK',
+    'tinymce.core.Env',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.util.VK',
     'tinymce.plugins.paste.core.Utils',
     'tinymce.plugins.paste.core.SmartPaste',
-    'global!tinymce.util.Delay'
+    'tinymce.core.util.Delay'
   ],
   function (Env, RangeUtils, VK, Utils, SmartPaste, Delay) {
     return function (editor) {

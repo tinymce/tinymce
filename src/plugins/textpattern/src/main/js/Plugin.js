@@ -16,15 +16,13 @@
  */
 define(
   'tinymce.plugins.textpattern.Plugin',
-
   [
-    'global!tinymce.trim',
-    'global!tinymce.PluginManager',
-    'global!tinymce.dom.TreeWalker',
-    'global!tinymce.util.VK'
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK'
   ],
-
-  function (trim, PluginManager, TreeWalker, VK) {
+  function (TreeWalker, PluginManager, Tools, VK) {
     PluginManager.add('textpattern', function (editor) {
       var isPatternsDirty = true, patterns;
 
@@ -196,7 +194,7 @@ define(
               offset = Math.max(0, offset - pattern.start.length);
             }
 
-            if (trim(firstTextNode.data).length == pattern.start.length) {
+            if (Tools.trim(firstTextNode.data).length == pattern.start.length) {
               return;
             }
 

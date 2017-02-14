@@ -11,12 +11,14 @@
 define(
   'tinymce.plugins.lists.core.SplitList',
   [
-    "global!tinymce.dom.DOMUtils.DOM",
-    "global!tinymce.util.Tools",
-    "tinymce.plugins.lists.core.TextBlock",
-    "tinymce.plugins.lists.core.NodeType"
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.plugins.lists.core.NodeType',
+    'tinymce.plugins.lists.core.TextBlock',
+    'tinymce.core.util.Tools'
   ],
-  function (DOM, Tools, TextBlock, NodeType) {
+  function (DOMUtils, NodeType, TextBlock, Tools) {
+    var DOM = DOMUtils.DOM;
+
     var splitList = function (editor, ul, li, newBlock) {
       var tmpRng, fragment, bookmarks, node;
 

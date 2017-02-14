@@ -11,8 +11,8 @@
 define(
   'tinymce.plugins.imagetools.Utils',
   [
-    "global!tinymce.util.Promise",
-    "global!tinymce.util.Tools"
+    "tinymce.core.util.Promise",
+    "tinymce.core.util.Tools"
   ],
   function (Promise, Tools) {
     var isValue = function (obj) {

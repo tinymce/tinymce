@@ -12,23 +12,26 @@
 
 define(
   'tinymce.plugins.contextmenu.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.contextmenu.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, ContextMenuPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      ContextMenuPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "contextmenu code preview",
-        toolbar: "contextmenu code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "contextmenu code",
+        toolbar: "contextmenu code",
         height: 600,
-
-        contextmenu: 'code preview'
+        contextmenu: 'code'
       });
     };
   }

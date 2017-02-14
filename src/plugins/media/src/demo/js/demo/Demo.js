@@ -13,17 +13,23 @@
 define(
   'tinymce.plugins.media.demo.Demo',
   [
-    "tinymce.plugins.media.Plugin",
-    "global!tinymce"
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
+    'tinymce.plugins.media.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, MediaPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      MediaPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "media code preview",
-        toolbar: "media code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "media code",
+        toolbar: "media code",
         media_dimensions: false,
         // media_live_embeds: false,
         // media_url_resolver: function (data, resolve) {

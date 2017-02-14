@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.noneditable.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.noneditable.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, NonEditablePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      NonEditablePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "noneditable code preview",
-        toolbar: "code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "noneditable code",
+        toolbar: "code",
         height: 600
       });
     };

@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.insertdatetime.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.insertdatetime.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, InsertDateTimePlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      InsertDateTimePlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "insertdatetime code preview",
-        toolbar: "insertdatetime code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "insertdatetime code",
+        toolbar: "insertdatetime code",
         height: 600
       });
     };

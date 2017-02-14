@@ -16,14 +16,12 @@
  */
 define(
   'tinymce.plugins.paste.Plugin',
-
   [
-    'global!tinymce.PluginManager',
+    'tinymce.core.PluginManager',
     'tinymce.plugins.paste.core.Clipboard',
     'tinymce.plugins.paste.core.WordFilter',
     'tinymce.plugins.paste.core.Quirks'
   ],
-
   function (PluginManager, Clipboard, WordFilter, Quirks) {
     var userIsInformed;
 

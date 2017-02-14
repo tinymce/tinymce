@@ -16,13 +16,11 @@
  */
 define(
   'tinymce.plugins.preview.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.Env',
-    'global!tinymce.util.Tools'
+    'tinymce.core.PluginManager',
+    'tinymce.core.Env',
+    'tinymce.core.util.Tools'
   ],
-
   function (PluginManager, Env, Tools) {
     PluginManager.add('preview', function (editor) {
       var settings = editor.settings, sandbox = !Env.ie;

@@ -16,12 +16,10 @@
  */
 define(
   'tinymce.plugins.table.model.SplitCols',
-
   [
-    'global!tinymce.util.Tools',
+    'tinymce.core.util.Tools',
     'tinymce.plugins.table.util.Utils'
   ],
-
   function (Tools, Utils) {
     var getCellAt = function (grid, x, y) {
       return grid[y] ? grid[y][x] : null;

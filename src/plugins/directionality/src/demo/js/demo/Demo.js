@@ -12,20 +12,24 @@
 
 define(
   'tinymce.plugins.directionality.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.directionality.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, DirectionalityPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      DirectionalityPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "directionality code preview",
-        toolbar: "ltr rtl code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "directionality code",
+        toolbar: "ltr rtl code",
         height: 600
       });
     };

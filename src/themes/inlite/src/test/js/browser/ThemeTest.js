@@ -15,12 +15,14 @@ asynctest(
     'ephox.agar.api.UiControls',
     'ephox.agar.api.FocusTools'
   ], function (
-    TinyLoader, TinyApis, TinyActions, TinyDom, Toolbar, Theme,
+    TinyLoader, TinyApis, TinyActions, TinyDom, Toolbar, InliteTheme,
     Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var dialogRoot = TinyDom.fromDom(document.body);
+
+    InliteTheme();
 
     var sClickFocusedButton = Chain.asStep(TinyDom.fromDom(document), [
       FocusTools.cGetFocused,

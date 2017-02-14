@@ -12,26 +12,28 @@
 
 define(
   'tinymce.plugins.bbcode.demo.Demo',
-
   [
-    'global!tinymce',
-    'tinymce.plugins.bbcode.Plugin'
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.bbcode.Plugin',
+    'tinymce.plugins.code.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
+  function (EditorManager, BbCodePlugin, CodePlugin, ModernTheme) {
+    BbCodePlugin();
+    CodePlugin();
+    ModernTheme();
 
-  function (tinymce, Plugin) {
     return function () {
       document.querySelector('.tinymce').value = '[b]bbcode plugin[/b]';
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "bbcode code preview",
-        toolbar: "bbcode code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "bbcode code",
+        toolbar: "bbcode code",
         height: 600
       });
-
-
-      // tinymce.activeEditor.setContent('<p>dog</p>');
     };
   }
 );

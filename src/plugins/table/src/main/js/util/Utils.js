@@ -17,9 +17,8 @@
 define(
   'tinymce.plugins.table.util.Utils',
   [
-    'global!tinymce.Env'
+    'tinymce.core.Env'
   ],
-
   function (Env) {
     var setSpanVal = function (name) {
       return function (td, val) {

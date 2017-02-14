@@ -16,11 +16,8 @@
  */
 define(
   'tinymce.plugins.codesample.util.Utils',
-
   [
-
   ],
-
   function () {
     function isCodeSample(elm) {
       return elm && elm.nodeName == 'PRE' && elm.className.indexOf('language-') !== -1;

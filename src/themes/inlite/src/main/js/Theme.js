@@ -11,19 +11,23 @@
 define(
   'tinymce.themes.inlite.Theme',
   [
-    'global!tinymce.ThemeManager',
-    'global!tinymce.util.Delay',
-    'tinymce.themes.inlite.ui.Panel',
-    'tinymce.themes.inlite.ui.Buttons',
-    'tinymce.themes.inlite.core.SkinLoader',
-    'tinymce.themes.inlite.core.SelectionMatcher',
-    'tinymce.themes.inlite.core.ElementMatcher',
-    'tinymce.themes.inlite.core.Matcher',
+    'tinymce.core.ThemeManager',
+    'tinymce.core.ui.Api',
+    'tinymce.core.util.Delay',
     'tinymce.themes.inlite.alien.Arr',
     'tinymce.themes.inlite.alien.EditorSettings',
-    'tinymce.themes.inlite.core.PredicateId'
+    'tinymce.themes.inlite.core.ElementMatcher',
+    'tinymce.themes.inlite.core.Matcher',
+    'tinymce.themes.inlite.core.PredicateId',
+    'tinymce.themes.inlite.core.SelectionMatcher',
+    'tinymce.themes.inlite.core.SkinLoader',
+    'tinymce.themes.inlite.ui.Buttons',
+    'tinymce.themes.inlite.ui.Panel'
   ],
-  function (ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, EditorSettings, PredicateId) {
+  function (
+    ThemeManager, Api, Delay, Arr, EditorSettings, ElementMatcher, Matcher,
+    PredicateId, SelectionMatcher, SkinLoader, Buttons, Panel
+  ) {
     var getSelectionElements = function (editor) {
       var node = editor.selection.getNode();
       var elms = editor.dom.getParents(node);
@@ -159,6 +163,8 @@ define(
         renderUI: renderUI
       };
     });
+
+    Api.appendTo(window.tinymce ? window.tinymce : {});
 
     return function () { };
   }

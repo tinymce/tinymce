@@ -12,18 +12,23 @@
 
 define(
   'tinymce.plugins.textcolor.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.textcolor.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, TextColorPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      TextColorPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "textcolor preview",
-        toolbar: "forecolor backcolor preview",
+        plugins: "textcolor code",
+        toolbar: "forecolor backcolor code",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         height: 600
       });
     };

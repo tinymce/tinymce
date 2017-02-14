@@ -11,19 +11,17 @@
 define(
   'tinymce.plugins.lists.core.Delete',
   [
-    "global!tinymce.dom.TreeWalker",
-    "global!tinymce.dom.RangeUtils",
-    "global!tinymce.util.VK",
-    "tinymce.plugins.lists.core.Selection",
-    "tinymce.plugins.lists.core.NodeType",
-    "tinymce.plugins.lists.core.Bookmark",
-    "tinymce.plugins.lists.core.Range",
-    "tinymce.plugins.lists.core.NormalizeLists",
-    "tinymce.plugins.lists.actions.ToggleList"
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.util.VK',
+    'tinymce.plugins.lists.actions.ToggleList',
+    'tinymce.plugins.lists.core.Bookmark',
+    'tinymce.plugins.lists.core.NodeType',
+    'tinymce.plugins.lists.core.NormalizeLists',
+    'tinymce.plugins.lists.core.Range',
+    'tinymce.plugins.lists.core.Selection'
   ],
-  function (
-    TreeWalker, RangeUtils, VK, Selection, NodeType, Bookmark, Range, NormalizeLists, ToggleList
-  ) {
+  function (RangeUtils, TreeWalker, VK, ToggleList, Bookmark, NodeType, NormalizeLists, Range, Selection) {
     var findNextCaretContainer = function (editor, rng, isForward) {
       var node = rng.startContainer, offset = rng.startOffset;
       var nonEmptyBlocks, walker;

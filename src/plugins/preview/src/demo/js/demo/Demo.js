@@ -12,18 +12,22 @@
 
 define(
   'tinymce.plugins.preview.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.preview.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, PreviewPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      PreviewPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "preview code",
         toolbar: "preview code",
         height: 600

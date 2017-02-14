@@ -12,22 +12,26 @@
 
 define(
   'tinymce.plugins.importcss.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.importcss.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, ImportCssPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      ImportCssPlugin();
+      ModernTheme();
 
       document.querySelector('.tinymce').value = 'The format menu should show "red"';
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
-        plugins: "importcss code preview",
-        toolbar: "styleselect code preview",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
+        plugins: "importcss code",
+        toolbar: "styleselect code",
         height: 600,
         content_css: '../css/rules.css'
       });

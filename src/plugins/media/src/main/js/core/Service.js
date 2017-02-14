@@ -1,11 +1,20 @@
+/**
+ * Service.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.media.core.Service',
   [
     'tinymce.plugins.media.core.DataToHtml',
-    'global!tinymce.util.Promise'
+    'tinymce.core.util.Promise'
   ],
   function (DataToHtml, Promise) {
-
     var embedPromise = function (data, dataToHtml, handler) {
       var cache = {};
       return new Promise(function (res, rej) {

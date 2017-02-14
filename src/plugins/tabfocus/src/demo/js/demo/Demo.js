@@ -12,18 +12,23 @@
 
 define(
   'tinymce.plugins.tabfocus.demo.Demo',
-
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.code.Plugin',
     'tinymce.plugins.tabfocus.Plugin',
-    'global!tinymce'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Plugin, tinymce) {
+  function (EditorManager, CodePlugin, TabFocusPlugin, ModernTheme) {
     return function () {
+      CodePlugin();
+      TabFocusPlugin();
+      ModernTheme();
 
-      tinymce.init({
+      EditorManager.init({
         selector: "textarea.tinymce",
-        plugins: "tabfocus preview",
-        toolbar: "preview",
+        plugins: "tabfocus code",
+        toolbar: "code",
+        skin_url: "../../../../../skins/lightgray/dist/lightgray",
         height: 600
       });
     };

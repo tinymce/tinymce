@@ -18,9 +18,9 @@ define(
   "tinymce.themes.inlite.alien.Unlink",
   [
     'tinymce.themes.inlite.alien.Bookmark',
-    'global!tinymce.util.Tools',
-    'global!tinymce.dom.TreeWalker',
-    'global!tinymce.dom.RangeUtils'
+    'tinymce.core.util.Tools',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.dom.RangeUtils'
   ],
   function (Bookmark, Tools, TreeWalker, RangeUtils) {
     var getSelectedElements = function (rootElm, startNode, endNode) {

@@ -11,11 +11,11 @@
 define(
   'tinymce.themes.modern.ui.ContextToolbars',
   [
-    'global!tinymce.dom.DOMUtils',
-    'global!tinymce.util.Tools',
-    'global!tinymce.util.Delay',
-    'global!tinymce.ui.Factory',
-    'global!tinymce.geom.Rect',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.Delay',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.geom.Rect',
     'tinymce.themes.modern.ui.Toolbar'
   ],
   function (DOMUtils, Tools, Delay, Factory, Rect, Toolbar) {

@@ -19,7 +19,7 @@
 define(
   'tinymce.plugins.paste.core.SmartPaste',
   [
-    'global!tinymce.util.Tools'
+    'tinymce.core.util.Tools'
   ],
   function (Tools) {
     var isAbsoluteUrl = function (url) {

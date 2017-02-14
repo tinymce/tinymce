@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.inlite.core.Layout',
   [
-    'global!tinymce.geom.Rect',
+    'tinymce.core.geom.Rect',
     'tinymce.themes.inlite.core.Convert'
   ],
   function (Rect, Convert) {

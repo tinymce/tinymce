@@ -13,14 +13,36 @@
 define(
   'tinymce.themes.inlite.demo.Demo',
   [
-    'tinymce.themes.inlite.Theme',
-    'global!tinymce'
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.anchor.Plugin',
+    'tinymce.plugins.autolink.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.image.Plugin',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.textpattern.Plugin',
+    'tinymce.themes.inlite.Theme'
   ],
-  function (Theme, tinymce) {
-    tinymce.init({
+  function (
+    EditorManager, AnchorPlugin, AutoLinkPlugin, ContextMenuPlugin, ImagePlugin,
+    LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, InliteTheme
+  ) {
+    AnchorPlugin();
+    AutoLinkPlugin();
+    ContextMenuPlugin();
+    ImagePlugin();
+    LinkPlugin();
+    PastePlugin();
+    TablePlugin();
+    TextPatternPlugin();
+    InliteTheme();
+
+    EditorManager.init({
       selector: 'div.tinymce',
       theme: 'inlite',
       plugins: 'image table link anchor paste contextmenu textpattern autolink',
+      skin_url: '../../../../../skins/lightgray/dist/lightgray',
       insert_toolbar: 'quickimage quicktable',
       selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
       inline: true,

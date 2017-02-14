@@ -8,8 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*global tinymce:true */
-
 /**
  * This class creates a file picker control.
  *
@@ -19,15 +17,20 @@
 define(
   'tinymce.core.ui.FilePicker',
   [
-    "tinymce.core.ui.ComboBox",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Arr",
-    "tinymce.core.util.Fun",
-    "tinymce.core.util.VK",
-    "tinymce.core.content.LinkTargets"
+    'global!window',
+    'tinymce.core.content.LinkTargets',
+    'tinymce.core.EditorManager',
+    'tinymce.core.ui.ComboBox',
+    'tinymce.core.util.Arr',
+    'tinymce.core.util.Fun',
+    'tinymce.core.util.Tools'
   ],
-  function (ComboBox, Tools, Arr, Fun, VK, LinkTargets) {
+  function (window, LinkTargets, EditorManager, ComboBox, Arr, Fun, Tools) {
     "use strict";
+
+    var getActiveEditor = function () {
+      return window.tinymce ? window.tinymce.activeEditor : EditorManager.activeEditor;
+    };
 
     var history = {};
     var HISTORY_LENGTH = 5;
@@ -252,7 +255,7 @@ define(
        * @param {Object} settings Name/value object with settings.
        */
       init: function (settings) {
-        var self = this, editor = tinymce.activeEditor, editorSettings = editor.settings;
+        var self = this, editor = getActiveEditor(), editorSettings = editor.settings;
         var actionCallback, fileBrowserCallback, fileBrowserCallbackTypes;
         var fileType = settings.filetype;
 

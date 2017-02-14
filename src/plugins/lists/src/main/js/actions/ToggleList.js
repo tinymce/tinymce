@@ -11,16 +11,16 @@
 define(
   'tinymce.plugins.lists.actions.ToggleList',
   [
-    "global!tinymce.util.Tools",
-    "global!tinymce.dom.BookmarkManager",
-    "tinymce.plugins.lists.core.Selection",
-    "tinymce.plugins.lists.core.NodeType",
-    "tinymce.plugins.lists.core.Bookmark",
-    "tinymce.plugins.lists.core.SplitList",
-    "tinymce.plugins.lists.core.NormalizeLists",
-    "tinymce.plugins.lists.actions.Outdent"
+    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.lists.actions.Outdent',
+    'tinymce.plugins.lists.core.Bookmark',
+    'tinymce.plugins.lists.core.NodeType',
+    'tinymce.plugins.lists.core.NormalizeLists',
+    'tinymce.plugins.lists.core.Selection',
+    'tinymce.plugins.lists.core.SplitList'
   ],
-  function (Tools, BookmarkManager, Selection, NodeType, Bookmark, SplitList, NormalizeLists, Outdent) {
+  function (BookmarkManager, Tools, Outdent, Bookmark, NodeType, NormalizeLists, Selection, SplitList) {
     var updateListStyle = function (dom, el, detail) {
       var type = detail['list-style-type'] ? detail['list-style-type'] : null;
       dom.setStyle(el, 'list-style-type', type);

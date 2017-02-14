@@ -17,13 +17,14 @@
 define(
   'tinymce.plugins.autoresize.Plugin',
   [
-    'global!tinymce.DOM',
-    'global!tinymce.Env',
-    'global!tinymce.PluginManager',
-    'global!tinymce.util.Delay'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Delay'
   ],
+  function (DOMUtils, Env, PluginManager, Delay) {
+    var DOM = DOMUtils.DOM;
 
-  function (DOM, Env, PluginManager, Delay) {
     PluginManager.add('autoresize', function (editor) {
       var settings = editor.settings, oldSize = 0;
 

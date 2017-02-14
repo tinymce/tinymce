@@ -16,13 +16,11 @@
  */
 define(
   'tinymce.plugins.code.Plugin',
-
   [
-    'global!tinymce.DOM',
-    'global!tinymce.PluginManager'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.PluginManager'
   ],
-
-  function (DOM, PluginManager) {
+  function (DOMUtils, PluginManager) {
     PluginManager.add('code', function (editor) {
       function showDialog() {
         var win = editor.windowManager.open({
@@ -32,7 +30,7 @@ define(
             name: 'code',
             multiline: true,
             minWidth: editor.getParam("code_dialog_width", 600),
-            minHeight: editor.getParam("code_dialog_height", Math.min(DOM.getViewPort().h - 200, 500)),
+            minHeight: editor.getParam("code_dialog_height", Math.min(DOMUtils.DOM.getViewPort().h - 200, 500)),
             spellcheck: false,
             style: 'direction: ltr; text-align: left'
           },

@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.inlite.file.Conversions',
   [
-    'global!tinymce.util.Promise'
+    'tinymce.core.util.Promise'
   ],
   function (Promise) {
     var blobToBase64 = function (blob) {

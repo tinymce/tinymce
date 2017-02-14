@@ -16,14 +16,12 @@
  */
 define(
   'tinymce.plugins.toc.Plugin',
-
   [
-    'global!tinymce.PluginManager',
-    'global!tinymce.map',
-    'global!tinymce.translate'
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.I18n',
+    'tinymce.core.util.Tools'
   ],
-
-  function (PluginManager, map, translate) {
+  function (PluginManager, I18n, Tools) {
     PluginManager.add('toc', function (editor) {
       var $ = editor.$;
       var opts;
@@ -91,7 +89,7 @@ define(
           });
         }
 
-        return map(headers, function (h) {
+        return Tools.map(headers, function (h) {
           if (!h.id) {
             h.id = tocId();
           }
@@ -144,7 +142,7 @@ define(
           return '';
         }
 
-        html += generateTitle(o.headerTag, translate("Table of Contents"));
+        html += generateTitle(o.headerTag, I18n.translate("Table of Contents"));
 
         for (i = 0; i < headers.length; i++) {
           h = headers[i];
