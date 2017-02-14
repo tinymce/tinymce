@@ -76,7 +76,7 @@ define(
         parseCurrentLine(editor, -1, '', false);
       }
 
-      function parseCurrentLine(editor, end_offset, delimiter) {
+      function parseCurrentLine(editor, endOffset, delimiter) {
         var rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
 
         function scopeIndex(container, index) {
@@ -160,7 +160,7 @@ define(
           if (rng.endOffset == 1) {
             end = 2;
           } else {
-            end = rng.endOffset - 1 - end_offset;
+            end = rng.endOffset - 1 - endOffset;
           }
         }
 

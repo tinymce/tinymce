@@ -14,42 +14,17 @@ define(
   'tinymce.core.demo.TinyMceDemo',
   [
     'tinymce.core.EditorManager',
-    'tinymce.core.ui.Button',
-    'tinymce.core.ui.ButtonGroup',
-    'tinymce.core.ui.ElementPath',
-    'tinymce.core.ui.Factory',
-    'tinymce.core.ui.FormatControls',
-    'tinymce.core.ui.FlowLayout',
-    'tinymce.core.ui.Layout',
-    'tinymce.core.ui.Panel',
-    'tinymce.core.ui.ResizeHandle',
-    'tinymce.core.ui.StackLayout',
-    'tinymce.core.ui.Toolbar',
-    'tinymce.modern.Theme'
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    EditorManager, Button, ButtonGroup, ElementPath, Factory, FormatControls,
-    FlowLayout, Layout, Panel, ResizeHandle, StackLayout, Toolbar, Theme
-  ) {
+  function (EditorManager, ModernTheme) {
+    ModernTheme();
+
     return function () {
       var textarea = document.createElement('textarea');
       textarea.innerHTML = '<p>Bolt</p>';
 
       textarea.classList.add('tinymce');
       document.querySelector('#ephox-ui').appendChild(textarea);
-
-      Theme;
-      FormatControls;
-
-      Factory.add('button', Button);
-      Factory.add('buttongroup', ButtonGroup);
-      Factory.add('panel', Panel);
-      Factory.add('stacklayout', StackLayout);
-      Factory.add('toolbar', Toolbar);
-      Factory.add('flowlayout', FlowLayout);
-      Factory.add('layout', Layout);
-      Factory.add('elementpath', ElementPath);
-      Factory.add('resizehandle', ResizeHandle);
 
       EditorManager.init({
         //imagetools_cors_hosts: ["moxiecode.cachefly.net"],
@@ -63,7 +38,10 @@ define(
         setup: function (ed) {
           ed.addButton('demoButton', {
             type: 'button',
-            text: 'Demo'
+            text: 'Demo',
+            onclick: function () {
+              ed.insertContent('Hello world!');
+            }
           });
         },
 
