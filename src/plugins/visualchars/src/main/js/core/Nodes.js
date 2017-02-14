@@ -8,23 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class contains all core logic for the code plugin.
- *
- * @class tinymce.visualchars.Plugin
- * @private
- */
 define(
   'tinymce.plugins.visualchars.core.Nodes',
 
   [
-    'tinymce.plugins.visualchars.core.Data',
     'ephox.katamari.api.Arr',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.node.Element'
+    'tinymce.plugins.visualchars.core.Data',
+    'tinymce.plugins.visualchars.core.Html'
   ],
 
-  function (Data, Arr, Node, Element) {
+  function (Arr, Element, Node, Data, Html) {
     var isMatch = function (n) {
       return Node.isText(n) &&
         Node.value(n) !== undefined &&
@@ -55,13 +50,9 @@ define(
       }
     };
 
-    var wrapCharWithSpan = function (value) {
-      return '<span data-mce-bogus="1" class="mce-' + Data.charMap[value] + '">' + value + '</span>';
-    };
-
     var replaceWithSpans = function (string) {
       return Arr.map(string.split(''), function (c) {
-        return Data.regExp.test(c) ? wrapCharWithSpan(c) : c;
+        return Data.regExp.test(c) ? Html.wrapCharWithSpan(c) : c;
       }).join('');
     };
 

@@ -8,12 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class contains all core logic for the code plugin.
- *
- * @class tinymce.visualchars.Plugin
- * @private
- */
 define(
   'tinymce.plugins.visualchars.core.VisualChars',
 

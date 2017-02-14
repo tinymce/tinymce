@@ -1,5 +1,5 @@
 test(
-  'browser.tinymce.plugins.visualchars.NodesTest',
+  'atomic.tinymce.plugins.visualchars.NodesTest',
   [
     'tinymce.plugins.visualchars.core.Nodes',
     'ephox.agar.api.Assertions',

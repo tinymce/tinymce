@@ -7,13 +7,6 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-/**
- * This class contains all core logic for the code plugin.
- *
- * @class tinymce.visualchars.Plugin
- * @private
- */
 define(
   'tinymce.plugins.visualchars.core.Data',
 
@@ -52,7 +45,9 @@ define(
     return {
       charMap: charMap,
       regExp: charMapToRegExp(charMap),
-      selector: charMapToSelector(charMap)
+      selector: charMapToSelector(charMap),
+      charMapToRegExp: charMapToRegExp,
+      charMapToSelector: charMapToSelector
     };
   }
 );
