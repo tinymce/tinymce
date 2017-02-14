@@ -50,10 +50,8 @@ define(
       }
     };
 
-    var replaceWithSpans = function (string) {
-      return Arr.map(string.split(''), function (c) {
-        return Data.regExp.test(c) ? Html.wrapCharWithSpan(c) : c;
-      }).join('');
+    var replaceWithSpans = function (html) {
+      return html.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
     };
 
     return {

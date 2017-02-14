@@ -16,5 +16,11 @@ test(
         "/[ab]/",
         Data.charMapToRegExp({ a: "a", b: "b" }).toString()
       );
+
+      RawAssertions.assertEq(
+        'should return correct global regexp',
+        "/[ab]/g",
+        Data.charMapToRegExp({ a: "a", b: "b" }, true).toString()
+      );
     }
 );

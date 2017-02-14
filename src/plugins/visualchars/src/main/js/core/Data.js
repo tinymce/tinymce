@@ -19,14 +19,14 @@ define(
       '\u00ad': 'shy'
     };
 
-    var charMapToRegExp = function (charMap) {
+    var charMapToRegExp = function (charMap, global) {
       var key, regExp = '';
 
       for (key in charMap) {
         regExp += key;
       }
 
-      return new RegExp('[' + regExp + ']');
+      return new RegExp('[' + regExp + ']', global ? 'g' : '');
     };
 
     var charMapToSelector = function (charMap) {
@@ -45,6 +45,7 @@ define(
     return {
       charMap: charMap,
       regExp: charMapToRegExp(charMap),
+      regExpGlobal: charMapToRegExp(charMap, true),
       selector: charMapToSelector(charMap),
       charMapToRegExp: charMapToRegExp,
       charMapToSelector: charMapToSelector
