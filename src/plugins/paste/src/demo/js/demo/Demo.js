@@ -30,6 +30,15 @@ define(
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "paste code",
         toolbar: "pastetext code",
+        init_instance_callback: function (editor) {
+          editor.on('PastePreProcess', function (evt) {
+            console.log(evt);
+          });
+
+          editor.on('PastePostProcess', function (evt) {
+            console.log(evt);
+          });
+        },
         height: 600
       });
     };

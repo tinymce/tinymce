@@ -19,10 +19,11 @@ define(
   [
     'tinymce.core.PluginManager',
     'tinymce.plugins.paste.core.Clipboard',
-    'tinymce.plugins.paste.core.WordFilter',
-    'tinymce.plugins.paste.core.Quirks'
+    'tinymce.plugins.paste.core.CutCopy',
+    'tinymce.plugins.paste.core.Quirks',
+    'tinymce.plugins.paste.core.WordFilter'
   ],
-  function (PluginManager, Clipboard, WordFilter, Quirks) {
+  function (PluginManager, Clipboard, CutCopy, Quirks, WordFilter) {
     var userIsInformed;
 
     PluginManager.add('paste', function (editor) {
@@ -97,7 +98,7 @@ define(
 
       editor.addCommand('mceInsertClipboardContent', function (ui, value) {
         if (value.content) {
-          self.clipboard.pasteHtml(value.content);
+          self.clipboard.pasteHtml(value.content, value.internal);
         }
 
         if (value.text) {
@@ -140,6 +141,8 @@ define(
         onclick: togglePlainTextPaste,
         onPostRender: stateChange
       });
+
+      CutCopy.register(editor);
     });
 
     return function () { };

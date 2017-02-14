@@ -30,14 +30,16 @@
 define(
   'tinymce.plugins.paste.core.Clipboard',
   [
-    'tinymce.core.Env',
     'tinymce.core.dom.RangeUtils',
+    'tinymce.core.Env',
+    'tinymce.core.util.Delay',
     'tinymce.core.util.VK',
-    'tinymce.plugins.paste.core.Utils',
+    'tinymce.plugins.paste.core.CutCopy',
+    'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.SmartPaste',
-    'tinymce.core.util.Delay'
+    'tinymce.plugins.paste.core.Utils'
   ],
-  function (Env, RangeUtils, VK, Utils, SmartPaste, Delay) {
+  function (RangeUtils, Env, Delay, VK, CutCopy, InternalHtml, SmartPaste, Utils) {
     return function (editor) {
       var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
       var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
@@ -50,11 +52,15 @@ define(
        * for custom user filtering.
        *
        * @param {String} html HTML code to paste into the current selection.
+       * @param {Boolean?} internalFlag Optional true/false flag if the contents is internal or external.
        */
-      function pasteHtml(html) {
-        var args, dom = editor.dom;
+      function pasteHtml(html, internalFlag) {
+        var args, dom = editor.dom, internal;
 
-        args = editor.fire('BeforePastePreProcess', { content: html }); // Internal event used by Quirks
+        internal = internalFlag || InternalHtml.isMarked(html);
+        html = InternalHtml.unmark(html);
+
+        args = editor.fire('BeforePastePreProcess', { content: html, internal: internal }); // Internal event used by Quirks
         args = editor.fire('PastePreProcess', args);
         html = args.content;
 
@@ -65,7 +71,7 @@ define(
           if (editor.hasEventListeners('PastePostProcess') && !args.isDefaultPrevented()) {
             // We need to attach the element to the DOM so Sizzle selectors work on the contents
             var tempBody = dom.add(editor.getBody(), 'div', { style: 'display:none' }, html);
-            args = editor.fire('PastePostProcess', { node: tempBody });
+            args = editor.fire('PastePostProcess', { node: tempBody, internal: internal });
             dom.remove(tempBody);
             html = args.node.innerHTML;
           }
@@ -111,7 +117,7 @@ define(
           }
         }
 
-        pasteHtml(text);
+        pasteHtml(text, false);
       }
 
       /**
@@ -374,9 +380,9 @@ define(
             blobInfo = existingBlobInfo;
           }
 
-          pasteHtml('<img src="' + blobInfo.blobUri() + '">');
+          pasteHtml('<img src="' + blobInfo.blobUri() + '">', false);
         } else {
-          pasteHtml('<img src="' + dataUri + '">');
+          pasteHtml('<img src="' + dataUri + '">', false);
         }
       }
 
@@ -487,7 +493,7 @@ define(
           }
         });
 
-        function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode) {
+        function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
           var content;
 
           // Grab HTML from Clipboard API or paste bin as a fallback
@@ -542,7 +548,7 @@ define(
           if (plainTextMode) {
             pasteText(content);
           } else {
-            pasteHtml(content);
+            pasteHtml(content, internal);
           }
         }
 
@@ -558,6 +564,7 @@ define(
 
           var isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
           var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
+          var internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
           keyboardPastePlainTextState = false;
 
@@ -591,10 +598,10 @@ define(
           // If clipboard API has HTML then use that directly
           if (hasContentType(clipboardContent, 'text/html')) {
             e.preventDefault();
-            insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode);
+            insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
           } else {
             Delay.setEditorTimeout(editor, function () {
-              insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode);
+              insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
             }, 0);
           }
         });
@@ -618,6 +625,7 @@ define(
           }
 
           dropContent = getDataTransferItems(e.dataTransfer);
+          var internal = hasContentType(dropContent, InternalHtml.internalHtmlMime());
 
           if ((!hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && pasteImageData(e, rng)) {
             return;
@@ -643,7 +651,7 @@ define(
                   if (!dropContent['text/html']) {
                     pasteText(content);
                   } else {
-                    pasteHtml(content);
+                    pasteHtml(content, internal);
                   }
                 });
               });
