@@ -114,6 +114,13 @@ define(
         }
       });
 
+      // Some UI elements like the font size/family select boxes needs to be updated after the skin has been loaded
+      editor.on('SkinLoaded', function () {
+        Delay.setEditorTimeout(editor, function () {
+          editor.nodeChanged();
+        }, 0);
+      });
+
       /**
        * Dispatches out a onNodeChange event to all observers. This method should be called when you
        * need to update the UI states or element path etc.
