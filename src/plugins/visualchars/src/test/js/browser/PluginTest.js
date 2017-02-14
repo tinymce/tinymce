@@ -14,11 +14,34 @@ asynctest(
     var suite = LegacyUnit.createSuite();
 
     suite.test('Visualchar toggle on/off', function (editor) {
+
       editor.setContent('<p>a&nbsp;&nbsp;b</p>');
       LegacyUnit.equal(0, editor.dom.select('span').length);
+
+      // first click on
       editor.execCommand('mceVisualChars');
-      LegacyUnit.equal('<p>a&nbsp;&nbsp;b</p>', editor.getContent());
+      LegacyUnit.equal(
+        '<p>a<span data-mce-bogus="1" class="mce-nbsp">&nbsp;</span>' +
+        '<span data-mce-bogus="1" class="mce-nbsp">&nbsp;</span>b</p>',
+        editor.getContent({ format: 'raw' })
+      );
       LegacyUnit.equal(2, editor.dom.select('span').length);
+
+      // then off
+      editor.execCommand('mceVisualChars');
+      LegacyUnit.equal('<p>a&nbsp;&nbsp;b</p>', editor.getContent({ format: 'raw' }));
+      LegacyUnit.equal(0, editor.dom.select('span').length);
+
+      // second click on
+      editor.execCommand('mceVisualChars');
+      LegacyUnit.equal(
+        '<p>a<span data-mce-bogus="1" class="mce-nbsp">&nbsp;</span>' +
+        '<span data-mce-bogus="1" class="mce-nbsp">&nbsp;</span>b</p>',
+        editor.getContent({ format: 'raw' })
+      );
+      LegacyUnit.equal(2, editor.dom.select('span').length);
+
+      // then off
       editor.execCommand('mceVisualChars');
       LegacyUnit.equal(0, editor.dom.select('span').length);
     });
