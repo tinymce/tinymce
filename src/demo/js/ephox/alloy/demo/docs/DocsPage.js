@@ -7,7 +7,6 @@ define(
     'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.behaviour.Dragging',
-    'ephox.alloy.api.behaviour.DragnDrop',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Invalidating',
@@ -24,13 +23,9 @@ define(
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.ui.Container',
-    'ephox.alloy.api.ui.Tabbar',
-    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.demo.docs.BehaviourDocumentation',
     'ephox.alloy.demo.docs.DocSidetabs',
     'ephox.alloy.demo.docs.DocToptabs',
-    'ephox.alloy.demo.docs.SchemaView',
     'ephox.alloy.demo.docs.UiDocumentation',
     'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.alloy.ui.schema.ContainerSchema',
@@ -54,15 +49,12 @@ define(
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.alloy.ui.schema.TypeaheadSchema',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Composing, Coupling, Disabling, Docking, Dragging, DragnDrop, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Gui, Container, Tabbar, TabSection, BehaviourDocumentation, DocSidetabs, DocToptabs, SchemaView, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, FieldSchema, ValueSchema, Arr, Fun, Insert, SelectorFind) {
+  function (Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, Fun, Insert, SelectorFind) {
     return function () {
       var root = Gui.create();
 
@@ -107,7 +99,6 @@ define(
         Disabling,
         Docking,
         Dragging,
-        DragnDrop,
         Focusing,
         Highlighting,
         Invalidating,
