@@ -6,12 +6,10 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
-    'ephox.epithet.Id',
     'ephox.peanut.Fun'
   ],
 
-  function (Behaviour, FieldSchema, Objects, ValueSchema, Arr, Id, Fun) {
+  function (Behaviour, FieldSchema, Objects, ValueSchema, Fun) {
     var derive = function (capabilities) {
       return Objects.wrapAll(capabilities);
     };
