@@ -12,15 +12,19 @@ asynctest(
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.Plugin',
-    'tinymce.plugins.paste.test.MockDataTransfer'
+    'tinymce.plugins.paste.test.MockDataTransfer',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter,
-    TinyApis, TinyLoader, CutCopy, InternalHtml, Plugin, MockDataTransfer
+    GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter, TinyApis, TinyLoader,
+    CutCopy, InternalHtml, Plugin, MockDataTransfer, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
+
+    Plugin();
+    Theme();
 
     var sResetProcessEvents = Step.sync(function () {
       lastPreProcessEvent = null;
@@ -204,7 +208,8 @@ asynctest(
         editor.on('PastePostProcess', function (evt) {
           lastPostProcessEvent = evt;
         });
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

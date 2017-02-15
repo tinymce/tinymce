@@ -1,23 +1,24 @@
 asynctest(
   'tinymce.plugins.paste.browser.ImagePasteTest',
   [
-    'global!tinymce.Env',
-    'tinymce.plugins.paste.Plugin',
-    'tinymce.plugins.paste.core.Utils',
-    'ephox.mcagar.api.LegacyUnit',
-    'tinymce.plugins.paste.test.Strings',
-    'ephox.mcagar.api.TinyLoader',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.katamari.api.Arr'
+    'ephox.katamari.api.Arr',
+    'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
+    'tinymce.core.Env',
+    'tinymce.plugins.paste.core.Utils',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.plugins.paste.test.Strings',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    Env, Plugin, Utils, LegacyUnit, Strings, TinyLoader,
-    Pipeline, Step, Arr
-  ) {
+  function (Pipeline, Step, Arr, LegacyUnit, TinyLoader, Env, Utils, Plugin, Strings, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     /* eslint-disable max-len */
 
@@ -853,7 +854,8 @@ asynctest(
     }, {
       add_unload_trigger: false,
       indent: false,
-      plugins: 'paste'
+      plugins: 'paste',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

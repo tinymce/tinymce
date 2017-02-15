@@ -24,6 +24,8 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    Theme();
+
     var cKeyStroke = function (keyvalue, modifiers) {
       return Chain.op(function (dispatcher) {
         Keyboard.keystroke(keyvalue, modifiers, dispatcher);
@@ -79,7 +81,8 @@ asynctest(
       plugins: 'image table link paste contextmenu textpattern',
       insert_toolbar: 'quickimage media quicktable',
       selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
-      inline: true
+      inline: true,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

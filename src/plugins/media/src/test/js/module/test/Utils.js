@@ -1,17 +1,17 @@
 define(
   'tinymce.plugins.media.test.Utils',
   [
-    'global!tinymce',
-    'ephox.mcagar.api.TinyDom',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.UiControls',
-    'ephox.agar.api.Waiter',
-    'ephox.agar.api.Step',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.GeneralSteps'
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Step',
+    'ephox.agar.api.UiControls',
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
+    'ephox.mcagar.api.TinyDom',
+    'tinymce.core.dom.DOMUtils'
   ],
-  function (tinymce, TinyDom, UiFinder, Chain, UiControls, Waiter, Step, Assertions, GeneralSteps) {
+  function (Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, TinyDom, DOMUtils) {
     var sOpenDialog = function (ui) {
       return ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit media"] > button');
     };
@@ -175,7 +175,7 @@ define(
 
     var cFakeEvent = function (name) {
       return Chain.op(function (elm) {
-        tinymce.DOM.fire(elm.dom(), name);
+        DOMUtils.DOM.fire(elm.dom(), name);
       });
     };
 

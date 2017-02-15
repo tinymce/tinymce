@@ -1,24 +1,27 @@
 asynctest(
   'browser.core.SubmitTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyApis',
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Waiter',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.GeneralSteps',
-    'tinymce.plugins.media.test.Utils'
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyLoader',
+    'ephox.mcagar.api.TinyUi',
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader,
-    TinyUi, TinyApis, Pipeline, Waiter, Chain, Assertions, GeneralSteps, Utils
+    Assertions, Chain, GeneralSteps, Pipeline, Waiter, TinyApis, TinyLoader, TinyUi,
+    Plugin, Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var sTestEmbedContentSubmit = function (ui, editor, apis, url, expected) {
       return GeneralSteps.sequence([
@@ -54,7 +57,8 @@ asynctest(
             html: '<span id="fake">' + data.url + '</span>'
           });
         }, 500);
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

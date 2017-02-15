@@ -1,24 +1,27 @@
 asynctest(
   'browser.core.MediaEmbedTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.agar.api.Assertions',
     'ephox.sugar.api.node.Element',
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.Pipeline',
-    'tinymce.plugins.media.test.Utils'
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader,
-    TinyUi, TinyApis, Assertions, Element, ApproxStructure, Step, Pipeline, Utils
+    ApproxStructure, Assertions, Pipeline, Step, TinyApis, TinyLoader, TinyUi, Element,
+    Plugin, Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var ephoxEmbedStructure = ApproxStructure.build(function (s, str/*, arr*/) {
       return s.element('p', {
@@ -73,7 +76,8 @@ asynctest(
           html: '<video width="300" height="150" ' +
             'controls="controls">\n<source src="' + data.url + '" />\n</video>'
         });
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

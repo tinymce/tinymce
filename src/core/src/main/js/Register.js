@@ -29,6 +29,10 @@ define(
           context.define("ephox/tinymce", [], function () {
             return tinymce;
           });
+
+          context.define("tinymce.core.EditorManager", [], function () {
+            return tinymce;
+          });
         }
       }
 

@@ -3,13 +3,17 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.charmap.Plugin',
-    'ephox.mcagar.api.TinyLoader'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader) {
+  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     suite.test('Replace characters by array', function (editor) {
       editor.settings.charmap = [
@@ -88,7 +92,8 @@ asynctest(
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'charmap',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

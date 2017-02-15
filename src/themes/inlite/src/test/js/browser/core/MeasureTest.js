@@ -2,6 +2,7 @@ asynctest(
   'browser/core/MeasureTest',
   [
     'ephox.mcagar.api.TinyLoader',
+    'tinymce.themes.inlite.Theme',
     'tinymce.themes.inlite.core.Measure',
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.TinyApis',
@@ -10,7 +11,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Assertions'
   ],
-  function (TinyLoader, Measure, Pipeline, TinyApis, Step, Chain, UiFinder, Assertions) {
+  function (TinyLoader, Theme, Measure, Pipeline, TinyApis, Step, Chain, UiFinder, Assertions) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -60,7 +61,9 @@ asynctest(
         sAssertRect(editor, getSelectionRectFromSelector(editor))
       ], onSuccess, onFailure);
     }, {
-      inline: true
+      inline: true,
+      theme: 'inlite',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

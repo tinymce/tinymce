@@ -1,11 +1,10 @@
 test(
   'atomic.core.HtmlToDataTest',
   [
-    'ephox/tinymce',
     'tinymce.plugins.media.core.HtmlToData',
     'ephox.agar.api.RawAssertions'
   ],
-  function (tinymce, HtmlToData, RawAssertions) {
+  function (HtmlToData, RawAssertions) {
     var testHtmlToData = function (html, expected) {
       var actual = HtmlToData.htmlToData([], html);
       RawAssertions.assertEq('Assert equal', expected, actual);

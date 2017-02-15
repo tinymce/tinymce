@@ -1,27 +1,30 @@
 asynctest(
   'browser.tinymce.plugins.media.ReopenResizeTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyDom',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyUi',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.FocusTools',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.Waiter',
     'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.FocusTools',
+    'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
-    'tinymce.plugins.media.test.Utils'
+    'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
+    'ephox.mcagar.api.TinyUi',
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
-    TinyUi, Pipeline, UiFinder, FocusTools, Step, Waiter, ApproxStructure, RawAssertions, Utils
+    ApproxStructure, FocusTools, Pipeline, RawAssertions, Step, UiFinder, Waiter, TinyApis,
+    TinyDom, TinyLoader, TinyUi, Plugin, Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var videoWithWidth = function (width) {
       return ApproxStructure.build(function (s, str) {
@@ -66,7 +69,8 @@ asynctest(
     }, {
       plugins: ["media"],
       toolbar: "media",
-      forced_root_block: false
+      forced_root_block: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

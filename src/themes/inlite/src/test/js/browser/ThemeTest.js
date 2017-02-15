@@ -179,7 +179,8 @@ asynctest(
       plugins: 'image table link paste contextmenu textpattern',
       insert_toolbar: 'quickimage media quicktable',
       selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
-      inline: true
+      inline: true,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

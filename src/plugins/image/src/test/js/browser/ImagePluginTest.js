@@ -5,7 +5,7 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'tinymce.plugins.image.Plugin',
     'ephox.mcagar.api.TinyLoader',
-    'global!tinymce.Env'
+    'tinymce.core.Env'
   ],
   function (Pipeline, LegacyUnit, Plugin, TinyLoader, Env) {
     var success = arguments[arguments.length - 2];

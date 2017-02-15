@@ -1,15 +1,18 @@
 asynctest(
   'browser.tinymce.core.InsertContentTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.InsertContent'
+    'tinymce.core.InsertContent',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, InsertContent) {
+  function (Pipeline, LegacyUnit, TinyLoader, InsertContent, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var assertSelection = function (editor, selector, offset) {
       var node = editor.$(selector)[0];
@@ -109,7 +112,8 @@ asynctest(
       add_unload_trigger: false,
       disable_nodechange: true,
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

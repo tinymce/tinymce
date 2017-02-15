@@ -164,7 +164,8 @@ asynctest(
           onshow: storeEvent('mysidebar3:show'),
           onhide: storeEvent('mysidebar3:hide')
         });
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );
