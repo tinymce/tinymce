@@ -1,9 +1,8 @@
 define(
-  'ephox.alloy.demo.docs.SplitDropdownTutorial',
+  'ephox.alloy.demo.TutorialDemo',
 
   [
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -26,11 +25,8 @@ define(
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.api.ui.Typeahead',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.knoch.future.Future',
     'ephox.peanut.Fun',
@@ -41,7 +37,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, EventHandler, DemoSink, HtmlDisplay, Objects, Arr, Merger, Future, Fun, Result, Class, Element, Insert, document) {
+  function (GuiFactory, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, DemoSink, HtmlDisplay, Merger, Future, Fun, Result, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
