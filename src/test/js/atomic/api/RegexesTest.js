@@ -10,6 +10,7 @@ test(
   function (Arr, Obj, Regexes) {
     var ephoxCases = [
       'www.google.com.au',
+      'www.google.com.au:80',
       'maurizio@ephox.com',
       'http://www.ephox.com',
       'https://www.google.it',
@@ -82,7 +83,8 @@ test(
       'http://google.com.',
       'http://google.com)',
       'www.google.com.',
-      'www.google.com)'
+      'www.google.com)',
+      'asdf:one'
     ];
 
     var mathiasBynensFalse = [

@@ -11,30 +11,43 @@ define(
         Modified to:
         - include port numbers
         - allow full stops in email addresses
-        - allow -_.~*+=!&;:'%@?^${}()\w+, after the #
-        - allow -_.~*+=!&;:'%@?^${}()\w+, after the ?
+        - allow [-.~*+=!&;:'%@?^${}(),\w] after the #
+        - allow [-.~*+=!&;:'%@?^${}(),\w] after the ?
         - move allow -_.~*+=!&;:'%@?^${}() in email usernames to the first @ match (TBIO-4809)
         - enforce domains to be [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)* so they can't end in a period (TBIO-4809)
         - removed a bunch of escaping, made every group non-capturing (during TBIO-4809)
+        - colons are only valid when followed directly by // or some text and then @ (TBIO-4867)
 
       (?:
-        (?:[A-Za-z]{3,9}:(?:\/\/)?)
-        (?:[\-;:&=.+$,\w_~*+=!&;:'%@?^${}(),]+@)?
+        (?:[A-Za-z]{3,9}:(?:\/\/))
+        (?:[-.~*+=!&;:'%@?^${}(),\w]+@)?
         [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*
         |
           (?:www\.
           |
-            [-;:&=+$,\w.]+@)
-          [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*
+            [-;:&=+$,.\w]+@
+          )
+        [A-Za-z0-9-]+
+        (?:\.[A-Za-z0-9-]+)*
       )
       (?::[0-9]+)?
-      (?:\/[+~%\/.()\w-_]*)?
-      (?:\?(?:[\-_.~*+=!&;:'%@?^${}()\w,]*))?
-      (?:#(?:[\-_.~*+=!&;:'%@?^${}()\w,\/]*))?
+      (?:\/[-+~%.()\/\w]*)?
+      (?:
+        \?
+        (?:
+          [-.~*+=!&;:'%@?^${}(),\w]*
+        )
+      )?
+      (?:
+        #
+        (?:
+          [-.~*+=!&;:'%@?^${}(),\/\w]*
+        )
+      )?
 
       */
 
-      return /(?:(?:[A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=.+$,\w_~*+=!&;:'%@?^${}(),]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,\w.]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[+~%\/.()\w-_]*)?(?:\?(?:[-_.~*+=!&;:'%@?^${}()\w,]*))?(?:#(?:[-_.~*+=!&;:'%@?^${}()\w,\/]*))?/g;
+      return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\w]*))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]*))?/g;
     };
 
     var autolink = function () {
@@ -48,7 +61,7 @@ define(
        * TBIO calls this method every time space or enter is pressed.
        */
       var linksource = link().source;
-      return new RegExp('(' + linksource + ')[\-_.~*+=!&;:\'%@?^${}(),]*', 'g');
+      return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?^${}(),]*', 'g');
     };
 
     var tokens = function (value, parameters) {
