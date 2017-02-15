@@ -43,6 +43,70 @@ test(
       FieldSchema.strict('b')
     ]));
 
+    checkIs('test.3 (with extra)', {
+      a: 'a',
+      b: 'b'
+    }, {
+      a: 'a',
+      b: 'b',
+      c: 'c'
+    }, ValueSchema.objOf([
+      FieldSchema.strict('a'),
+      FieldSchema.strict('b')
+    ]));
+
+    checkErr(
+      'test.3 (with extra and only) and two fields',
+      'unsupported fields: [c]',
+      {
+        a: 'a',
+        b: 'b',
+        c: 'c'
+      },
+      ValueSchema.objOfOnly([
+        FieldSchema.strict('a'),
+        FieldSchema.strict('b')
+      ])
+    );
+
+    checkErr(
+      'test.3 (with extra and only) and no fields',
+      'unsupported fields: [aa]',
+      {
+        aa: 'aa'
+      },
+      ValueSchema.objOfOnly([
+        
+      ])
+    );
+
+    check(
+      'test.3 with no forbidden field',
+      {
+        a: 'a',
+        b: 'b'
+      },
+      ValueSchema.objOfOnly([
+        FieldSchema.strict('a'),
+        FieldSchema.strict('b')
+      ])
+    );
+
+    checkErr(
+      'test.3 with 1 forbidden field',
+      'Do not use c. Use b',
+      {
+        a: 'a',
+        b: 'b',
+        c: 'c'
+      },
+      ValueSchema.objOf([
+        FieldSchema.strict('a'),
+        FieldSchema.strict('b'),
+        FieldSchema.forbid('c', 'Do not use c. Use b')
+      ])
+    );
+
     check('test.4', {
       urls: [
         { url: 'hi', fresh: 'true' },
@@ -121,8 +185,8 @@ test(
 
     var optionValue4 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), { alpha: true });    
-    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', optionValue4.alpha.getOrDie());
+    ]), { alpha: true });
+    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', optionValue4.alpha.getOrDie()());
 
     var optionValue5 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())

@@ -9,39 +9,49 @@ define(
 
   function (Arr, Merger, Result) {
     var consolidateObj = function (objects, base) {
-      return Arr.foldl(objects, function (acc, obj) {
-        return acc.fold(function (accErrs) {
-          return obj.fold(function (errs) {
-            return Result.error(accErrs.concat(errs));
-          }, function (_) {
-            return Result.error(accErrs);
-          }) ; 
-        }, function (accRest) {
-          return obj.fold(function (errs) {
-            return Result.error(errs);
-          }, function (v) {
-            return Result.value(Merger.deepMerge(accRest, v));
-          });
+      // This used to be done in a functional way with folding, but
+      // I was worried about its performance (because this is called a lot)
+
+      // Note, we should use katamari's Results.partition (or other) when this is
+      // migrated.
+      var passed = [ base ];
+      var failed = [ ];
+      var unsuccessful = false;
+      Arr.each(objects, function (obj) {
+        obj.fold(function (errs) {
+          // errs can be empty ,but this should still fail
+          unsuccessful = true;
+          failed = failed.concat(errs);
+        }, function (obj) {
+          passed.push(obj);
         });
-      }, Result.value(base));
+      });
+
+      if (unsuccessful) return Result.error(failed);
+      else if (passed.length === 0) return Result.value({ });
+      else return Result.value(
+        Merger.deepMerge.apply(undefined, passed)
+      );
     };
 
     var consolidateArr = function (objects) {
-      return Arr.foldl(objects, function (acc, obj) {
-        return acc.fold(function (accErrs) {
-          return obj.fold(function (errs) {
-            return Result.error(accErrs.concat(errs));
-          }, function (_) {
-            return Result.error(accErrs);
-          }) ; 
-        }, function (accRest) {
-          return obj.fold(function (errs) {
-            return Result.error(errs);
-          }, function (v) {
-            return Result.value(accRest.concat([ v ]));
-          });
+      var passed = [ ];
+      var failed = [ ];
+      var unsuccessful = false;
+      Arr.each(objects, function (obj) {
+        obj.fold(function (errs) {
+          // errs can be empty ,but this should still fail
+          unsuccessful = true;
+          failed = failed.concat(errs);
+        }, function (arr) {
+          passed.push(arr);
         });
-      }, Result.value([ ]));
+      });
+
+      // This used to (also) be done in a functional way with folding, but
+      // I was worried about its performance (because this is called a lot)
+      if (unsuccessful) return Result.error(failed);
+      else return Result.value(passed);
     };
 
     return {

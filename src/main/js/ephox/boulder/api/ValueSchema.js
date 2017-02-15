@@ -5,14 +5,16 @@ define(
     'ephox.boulder.core.ChoiceProcessor',
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
+    'ephox.boulder.format.PrettyPrinter',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
-    'ephox.numerosity.api.JSON',
+    'ephox.compass.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'global!Error'
   ],
 
-  function (ChoiceProcessor, SchemaError, ValueProcessor, Arr, Json, Fun, Result, Error) {
+  function (ChoiceProcessor, SchemaError, ValueProcessor, PrettyPrinter, Type, Arr, Obj, Fun, Result, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -26,6 +28,8 @@ define(
     var arrOf = ValueProcessor.arr;
 
     var objOf = ValueProcessor.obj;
+
+    var objOfOnly = ValueProcessor.objOnly;
 
     var setOf = ValueProcessor.setOf;
 
@@ -68,8 +72,8 @@ define(
     };
 
     var formatError = function (errInfo) {
-      return 'Errors: \n' + Arr.map(errInfo.errors, SchemaError.toString).join('\n\n') + 
-        '\n\nInput object: ' + Json.stringify(errInfo.input, null, 2);
+      return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) + 
+        '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
     };
 
     var choose = function (key, branches) {
@@ -87,6 +91,7 @@ define(
       setOf: setOf,
 
       objOf: objOf,
+      objOfOnly: objOfOnly,
 
       asStruct: asStruct,
       asRaw: asRaw,
