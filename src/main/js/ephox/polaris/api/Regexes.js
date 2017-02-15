@@ -61,7 +61,7 @@ define(
        * TBIO calls this method every time space or enter is pressed.
        */
       var linksource = link().source;
-      return new RegExp('(' + linksource + ')[\-_.~*+=!&;:\'%@?^${}(),]*', 'g');
+      return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?^${}(),]*', 'g');
     };
 
     var tokens = function (value, parameters) {
