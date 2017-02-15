@@ -26,6 +26,8 @@ define(
           component.getSystem().triggerFocus(component.element(), component.element());
         },
 
+        // These APIs are going to be interesting because they are not
+        // available for all keying modes
         setGridSize: function (component, keyInfo, numRows, numColumns) {
           if (! Objects.hasKey(keyInfo, 'setGridSize')) {
             console.error('Layout does not support setGridSize');

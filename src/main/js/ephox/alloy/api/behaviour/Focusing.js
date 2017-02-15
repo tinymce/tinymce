@@ -15,11 +15,7 @@ define(
       ActiveFocus,
       FocusApis,
       {
-        // May need this.
-        // isFocused: function (component) {
-        //   // Dupe wth Focusing.
-        //   return Focus.hasFocus(component.element());
-        // }
+
       }
     );
   }

@@ -8,7 +8,6 @@ define(
   ],
 
   function (Behaviour, ComposeApis, ComposeSchema) {
-    // If readability becomes a problem, stop dynamically generating these.
     return Behaviour.create(
       ComposeSchema,
       'composing',

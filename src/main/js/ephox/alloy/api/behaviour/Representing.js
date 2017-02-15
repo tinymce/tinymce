@@ -9,7 +9,7 @@ define(
   ],
 
   function (Behaviour, ActiveRepresenting, RepresentApis, RepresentSchema) {
-    // This is clumsy.
+    // The self-reference is clumsy.
     var self = Behaviour.create(
       RepresentSchema,
       'representing',

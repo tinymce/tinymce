@@ -9,7 +9,6 @@ define(
   ],
 
   function (Behaviour, HighlightApis, HighlightSchema, Array) {
-    // If readability becomes a problem, stop dynamically generating these.
     return Behaviour.create(
       HighlightSchema,
       'highlighting',
