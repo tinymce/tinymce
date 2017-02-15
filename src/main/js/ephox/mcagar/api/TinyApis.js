@@ -12,11 +12,10 @@ define(
     'ephox.mcagar.selection.TinySelections',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html',
-    'global!tinymce.util.JSON'
+    'ephox.sugar.api.properties.Html'
   ],
 
-  function (Assertions, Chain, Cursors, FocusTools, Step, UiFinder, Waiter, TinySelections, Hierarchy, Element, Html, JSON) {
+  function (Assertions, Chain, Cursors, FocusTools, Step, UiFinder, Waiter, TinySelections, Hierarchy, Element, Html) {
     return function (editor) {
       var setContent = function (html) {
         editor.setContent(html);
@@ -80,6 +79,12 @@ define(
         return editor.getContent();
       });
 
+      var sExecCommand = function (command, value) {
+        return Step.sync(function () {
+          editor.execCommand(command, false, value);
+        });
+      };
+
       var sAssertContent = function (expected) {
         return Chain.asStep({}, [
           cGetContent,
@@ -89,7 +94,7 @@ define(
 
       var sAssertContentPresence = function (expected) {
         return Assertions.sAssertPresence(
-          'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.serialize(expected) + '\n',
+          'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
           expected,
           lazyBody()
         );
@@ -112,7 +117,7 @@ define(
         var message = function () {
           var actual = Element.fromDom(actElement);
           var actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-          return 'Expected path: '  + JSON.serialize(expPath) + '.\nActual path: ' + JSON.serialize(actPath);
+          return 'Expected path: '  + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
         };
         Assertions.assertEq('Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
         Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
@@ -158,6 +163,7 @@ define(
         sSetSetting: sSetSetting,
         sSetCursor: sSetCursor,
         sSelect: sSelect,
+        sExecCommand: sExecCommand,
         sAssertSelectionFrom: sAssertSelectionFrom,
         sAssertSelection: sAssertSelection,
         sTryAssertFocus: sTryAssertFocus,

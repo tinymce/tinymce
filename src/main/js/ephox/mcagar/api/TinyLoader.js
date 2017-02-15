@@ -3,19 +3,30 @@ define(
 
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Id',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox/tinymce',
+    'tinymce.core.EditorManager',
     'global!document'
   ],
 
-  function (Fun, Id, Insert, Remove, Element, Attr, tinymce, document) {
+  function (Fun, Obj, Id, Insert, Remove, Element, Attr, EditorManager, document) {
     var createTarget = function (inline) {
       var target = Element.fromTag(inline ? 'div' : 'textarea');
       return target;
+    };
+
+    var extend = function (a, b) {
+      Obj.each(b, function (value, key) {
+        if (b.hasOwnProperty(key)) {
+          a[key] = value;
+        }
+      });
+
+      return a;
     };
 
   	var setup = function (callback, settings, success, failure) {
@@ -26,7 +37,7 @@ define(
       Insert.append(Element.fromDom(document.body), target);
 
       var teardown = function () {
-        tinymce.remove();
+        EditorManager.remove();
         Remove.remove(target);
       };
 
@@ -43,7 +54,7 @@ define(
 
       var settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
-      tinymce.init(tinymce.extend(settings, {
+      EditorManager.init(extend(settings, {
         selector: '#' + randomId,
         setup: function(editor) {
           // Execute the setup called by the test.
@@ -54,7 +65,6 @@ define(
               callback(editor, onSuccess, onFailure);
             }, 0);
           });
-
         }
       }));
     };
