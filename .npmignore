@@ -9,6 +9,7 @@
 /scratch
 /gen
 /dependency
+/npm_output
 /config/bolt/bootstrap*.js
 /inconsistent.dependencies
 /spike.build

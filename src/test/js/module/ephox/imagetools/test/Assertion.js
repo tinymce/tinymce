@@ -1,5 +1,5 @@
 define(
-  'ephox/imagetools/test/Assertion',
+  'ephox.imagetools.test.Assertion',
 
   [
 

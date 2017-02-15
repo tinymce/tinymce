@@ -1,23 +1,12 @@
-/**
- * ImageResizerWebgl.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
- */
-
-/**
- * Resizes image/canvas using canvas and Webgl
- */
-define("ephox/imagetools/transformations/ImageResizerWebgl", [
-    "ephox/imagetools/util/Promise",
-    "ephox/imagetools/util/Conversions",
-    "ephox/imagetools/util/Canvas",
-    "ephox/imagetools/util/ImageSize"
-], function(Promise, Conversions, Canvas, ImageSize) {
-
+define(
+  'ephox.imagetools.transformations.ImageResizerWebgl',
+  [
+    'ephox.imagetools.util.Promise',
+    'ephox.imagetools.util.Conversions',
+    'ephox.imagetools.util.Canvas',
+    'ephox.imagetools.util.ImageSize'
+  ],
+  function (Promise, Conversions, Canvas, ImageSize) {
     /**
      * @method scale
      * @static
@@ -27,28 +16,28 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
      * @returns {Promise}
      */
     function scale(image, dW, dH) {
-        return new Promise(function(resolve, reject) {
-            var sW = ImageSize.getWidth(image);
-            var sH = ImageSize.getHeight(image);
-            var wRatio = dW / sW;
-            var hRatio = dH / sH;
+      return new Promise(function (resolve, reject) {
+        var sW = ImageSize.getWidth(image);
+        var sH = ImageSize.getHeight(image);
+        var wRatio = dW / sW;
+        var hRatio = dH / sH;
 
-            var canvas = Canvas.create(dW, dH);
+        var canvas = Canvas.create(dW, dH);
 
-            try {
-                _drawImage(canvas, image, wRatio, hRatio);
-            } catch(ex) {
-                reject(ex);
-                return;
-            }
+        try {
+          _drawImage(canvas, image, wRatio, hRatio);
+        } catch (ex) {
+          reject(ex);
+          return;
+        }
 
-            resolve(canvas);
-        });
+        resolve(canvas);
+      });
     }
 
     var shaders = {
-        bilinear: {
-            VERTEX_SHADER: '\
+      bilinear: {
+        VERTEX_SHADER: '\
                 attribute vec2 a_dest_xy;\
                 \
                 uniform vec2 u_wh;\
@@ -89,7 +78,7 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
                 }\
             ',
 
-            FRAGMENT_SHADER: '\
+        FRAGMENT_SHADER: '\
                 precision mediump float;\
                 \
                 uniform sampler2D u_image;\
@@ -117,105 +106,105 @@ define("ephox/imagetools/transformations/ImageResizerWebgl", [
                     gl_FragColor = abdc;\
                 }\
             '
-        }
+      }
     };
 
 
     function _drawImage(canvas, image, wRatio, hRatio) {
-        var gl = Canvas.get3dContext(canvas);
-        if (!gl) {
-            throw "Your environment doesn't support WebGL.";
-        }
+      var gl = Canvas.get3dContext(canvas);
+      if (!gl) {
+        throw "Your environment doesn't support WebGL.";
+      }
 
-        var maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-        if (image.width > maxTexSize || image.height > maxTexSize) {
-            throw "Width or/and height of the original image exceed max allowed texture size (of "+maxTexSize+" px).";
-        }
+      var maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+      if (image.width > maxTexSize || image.height > maxTexSize) {
+        throw "Width or/and height of the original image exceed max allowed texture size (of " + maxTexSize + " px).";
+      }
 
-        // we need a gap around the edges to avoid a black frame
-        wRatio = canvas.width / (ImageSize.getWidth(image) + 2);
-        hRatio = canvas.height / (ImageSize.getHeight(image) + 2);
+      // we need a gap around the edges to avoid a black frame
+      wRatio = canvas.width / (ImageSize.getWidth(image) + 2);
+      hRatio = canvas.height / (ImageSize.getHeight(image) + 2);
 
-        var program = _createProgram(gl);
-        gl.useProgram(program);
+      var program = _createProgram(gl);
+      gl.useProgram(program);
 
-        _loadFloatBuffer(gl, program, "a_dest_xy", [
-            0, 0,
-            canvas.width, 0,
-            0, canvas.height,
-            0, canvas.height,
-            canvas.width, 0,
-            canvas.width, canvas.height
-        ]);
+      _loadFloatBuffer(gl, program, "a_dest_xy", [
+        0, 0,
+        canvas.width, 0,
+        0, canvas.height,
+        0, canvas.height,
+        canvas.width, 0,
+        canvas.width, canvas.height
+      ]);
 
-        // load the texture
-        var texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+      // load the texture
+      var texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
 
-        // without this we won't be able to process images of arbitrary dimensions
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      // without this we won't be able to process images of arbitrary dimensions
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-
-        var uResolution = gl.getUniformLocation(program, "u_wh");
-        gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
-
-        var uRatio = gl.getUniformLocation(program, "u_ratio");
-        gl.uniform2f(uRatio, wRatio, hRatio);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
 
-        // lets draw...
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      var uResolution = gl.getUniformLocation(program, "u_wh");
+      gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
+
+      var uRatio = gl.getUniformLocation(program, "u_ratio");
+      gl.uniform2f(uRatio, wRatio, hRatio);
+
+
+      // lets draw...
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
 
     function _loadFloatBuffer(gl, program, attrName, bufferData) {
-        var attr = gl.getAttribLocation(program, attrName);
-        var buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferData), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(attr);
-        gl.vertexAttribPointer(attr, 2, gl.FLOAT, false, 0, 0);
+      var attr = gl.getAttribLocation(program, attrName);
+      var buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferData), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(attr);
+      gl.vertexAttribPointer(attr, 2, gl.FLOAT, false, 0, 0);
     }
 
 
     function _createProgram(gl) {
-        var program = gl.createProgram();
+      var program = gl.createProgram();
 
-        for (var type in shaders.bilinear) {
-            gl.attachShader(program, _loadShader(gl, shaders.bilinear[type], type));
-        }
+      for (var type in shaders.bilinear) {
+        gl.attachShader(program, _loadShader(gl, shaders.bilinear[type], type));
+      }
 
-        gl.linkProgram(program);
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-            var err = gl.getProgramInfoLog(program);
-            gl.deleteProgram(program);
-            throw "Cannot create a program: " + err;
-        }
-        return program;
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        var err = gl.getProgramInfoLog(program);
+        gl.deleteProgram(program);
+        throw "Cannot create a program: " + err;
+      }
+      return program;
     }
 
 
     function _loadShader(gl, source, type) {
-        var shader = gl.createShader(gl[type]);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
+      var shader = gl.createShader(gl[type]);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
 
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            var err = gl.getShaderInfoLog(shader);
-            gl.deleteShader(shader);
-            throw "Cannot compile a " + type + " shader: " + err;
-        }
-        return shader;
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        var err = gl.getShaderInfoLog(shader);
+        gl.deleteShader(shader);
+        throw "Cannot compile a " + type + " shader: " + err;
+      }
+      return shader;
     }
 
 
     return {
-        scale: scale
+      scale: scale
     };
 
-});
+  });

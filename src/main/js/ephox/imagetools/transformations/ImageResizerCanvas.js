@@ -1,23 +1,12 @@
-/**
- * ImageResizerCanvas.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
- */
-
-/**
- * Resizes image/canvas using canvas
- */
-define("ephox/imagetools/transformations/ImageResizerCanvas", [
-    "ephox/imagetools/util/Promise",
-    "ephox/imagetools/util/Conversions",
-    "ephox/imagetools/util/Canvas",
-    "ephox/imagetools/util/ImageSize"
-], function(Promise, Conversions, Canvas, ImageSize) {
-
+define(
+  'ephox.imagetools.transformations.ImageResizerCanvas',
+  [
+    'ephox.imagetools.util.Promise',
+    'ephox.imagetools.util.Conversions',
+    'ephox.imagetools.util.Canvas',
+    'ephox.imagetools.util.ImageSize'
+  ],
+  function (Promise, Conversions, Canvas, ImageSize) {
     /**
      * @method scale
      * @static
@@ -27,46 +16,46 @@ define("ephox/imagetools/transformations/ImageResizerCanvas", [
      * @returns {Promise}
      */
     function scale(image, dW, dH) {
-        var sW = ImageSize.getWidth(image);
-        var sH = ImageSize.getHeight(image);
-        var wRatio = dW / sW;
-        var hRatio = dH / sH;
-        var scaleCapped = false;
+      var sW = ImageSize.getWidth(image);
+      var sH = ImageSize.getHeight(image);
+      var wRatio = dW / sW;
+      var hRatio = dH / sH;
+      var scaleCapped = false;
 
-        if (wRatio < 0.5 || wRatio > 2) {
-            wRatio = wRatio < 0.5 ? 0.5 : 2;
-            scaleCapped = true;
-        }
-        if (hRatio < 0.5 || hRatio > 2) {
-            hRatio = hRatio < 0.5 ? 0.5 : 2;
-            scaleCapped = true;
-        }
+      if (wRatio < 0.5 || wRatio > 2) {
+        wRatio = wRatio < 0.5 ? 0.5 : 2;
+        scaleCapped = true;
+      }
+      if (hRatio < 0.5 || hRatio > 2) {
+        hRatio = hRatio < 0.5 ? 0.5 : 2;
+        scaleCapped = true;
+      }
 
-        var scaled = _scale(image, wRatio, hRatio);
+      var scaled = _scale(image, wRatio, hRatio);
 
-        return !scaleCapped ? scaled : scaled.then(function (tCanvas) {
-            return scale(tCanvas, dW, dH);
-        });
+      return !scaleCapped ? scaled : scaled.then(function (tCanvas) {
+        return scale(tCanvas, dW, dH);
+      });
     }
 
 
     function _scale(image, wRatio, hRatio) {
-        return new Promise(function(resolve) {
-            var sW = ImageSize.getWidth(image);
-            var sH = ImageSize.getHeight(image);
-            var dW = Math.floor(sW * wRatio);
-            var dH = Math.floor(sH * hRatio);
-            var canvas = Canvas.create(dW, dH);
-            var context = Canvas.get2dContext(canvas);
+      return new Promise(function (resolve) {
+        var sW = ImageSize.getWidth(image);
+        var sH = ImageSize.getHeight(image);
+        var dW = Math.floor(sW * wRatio);
+        var dH = Math.floor(sH * hRatio);
+        var canvas = Canvas.create(dW, dH);
+        var context = Canvas.get2dContext(canvas);
 
-            context.drawImage(image, 0, 0, sW, sH, 0, 0, dW, dH);
+        context.drawImage(image, 0, 0, sW, sH, 0, 0, dW, dH);
 
-            resolve(canvas);
-        });
+        resolve(canvas);
+      });
     }
 
     return {
-        scale: scale
+      scale: scale
     };
 
-});
+  });
