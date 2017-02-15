@@ -2,7 +2,7 @@ define(
   'ephox.snooker.operate.MergingOperations',
 
   [
-    
+
   ],
 
   function () {

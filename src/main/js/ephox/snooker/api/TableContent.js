@@ -11,18 +11,23 @@ define(
     'ephox.sugar.api.Node',
     'ephox.sugar.api.PredicateFind',
     'ephox.sugar.api.Remove',
-    'ephox.sugar.api.TextContent',
+    'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove, TextContent, Traverse) {
+  function (
+    Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove,
+    Text, Traverse
+  ) {
     var merge = function (cells) {
       var isBr = function (el) {
         return Node.name(el) === 'br';
       };
 
-      var advancedBr = function (cell) {
-        return TextContent.get(cell).trim() === 0;
+      var advancedBr = function (children) {
+        return Arr.forall(children, function (c) {
+          return isBr(c) || (Node.isText(c) && Text.get(c).trim().length === 0);
+        });
       };
 
       var isListItem = function (el) {
@@ -48,14 +53,12 @@ define(
       };
 
       var markContent = function () {
-        var content = Arr.bind(cells, function (cell, i) {
+        var content = Arr.bind(cells, function (cell) {
           var children = Traverse.children(cell);
-          // When the last element within the cell is an inline element, we mark it by adding a <br> to the end of its children.
-          return children.length > 1 || advancedBr(cell) ? children.concat(markCell(cell)) : [];
+          return advancedBr(children) ? [ ] : children.concat(markCell(cell));
         });
 
         return content.length === 0 ? [ Element.fromTag('br') ] : content;
-
       };
 
       var contents = markContent();
