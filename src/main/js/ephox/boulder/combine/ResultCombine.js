@@ -11,6 +11,9 @@ define(
     var consolidateObj = function (objects, base) {
       // This used to be done in a functional way with folding, but
       // I was worried about its performance (because this is called a lot)
+
+      // Note, we should use katamari's Results.partition (or other) when this is
+      // migrated.
       var passed = [ base ];
       var failed = [ ];
       var unsuccessful = false;
