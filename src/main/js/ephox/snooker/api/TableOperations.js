@@ -19,11 +19,10 @@ define(
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
-    'ephox.sugar.api.Remove',
-    'global!parseInt'
+    'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
