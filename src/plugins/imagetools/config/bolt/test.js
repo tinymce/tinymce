@@ -1,9 +1,6 @@
 configure({
-  configs: [
-    './../../../../core/config/bolt/test.js'
-  ],
   sources: [
-    source('amd', 'ephox/imagetools', '../../../../../node_modules/@ephox/imagetools/src/main/js', mapper.hierarchical),
+    source('amd', 'tinymce.core', '../../../../core/dist/globals', mapper.hierarchical),
     source('amd', 'tinymce.plugins.imagetools.test', '../../src/test/js/module', function (id) {
       return mapper.hierarchical(id).replace(/^tinymce\/plugins\/imagetools\//, '');
     }),

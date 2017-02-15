@@ -115,7 +115,7 @@ define(
           });
 
           return uploader.upload(blobInfos, openNotification).then(aliveGuard(function (result) {
-            result = Arr.map(result, function (uploadInfo, index) {
+            var filteredResult = Arr.map(result, function (uploadInfo, index) {
               var image = imageInfos[index].image;
 
               if (uploadInfo.status && editor.settings.images_replace_blob_uris !== false) {
@@ -131,10 +131,10 @@ define(
             });
 
             if (callback) {
-              callback(result);
+              callback(filteredResult);
             }
 
-            return result;
+            return filteredResult;
           }));
         }));
       }

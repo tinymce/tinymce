@@ -3,7 +3,6 @@ configure({
     './../../../../core/config/bolt/demo.js'
   ],
   sources: [
-    source('amd', 'ephox/imagetools', '../../../../../node_modules/@ephox/imagetools/src/main/js', mapper.hierarchical),
     source('amd', 'tinymce.themes.modern.demo', '../../src/demo/js', function (id) {
       return mapper.hierarchical(id).replace(/^tinymce\/themes\/modern\//, '');
     }),

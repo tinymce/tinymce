@@ -2,7 +2,7 @@
  * Proxy.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -12,11 +12,11 @@
  * Handles loading images though a proxy for working around cors.
  */
 define(
-  'tinymce.plugins.imagetools.Proxy',
+  'tinymce.plugins.imagetools.core.Proxy',
   [
-    "tinymce.core.util.Promise",
-    "tinymce.core.util.Tools",
-    "tinymce.plugins.imagetools.Utils"
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.imagetools.core.Utils'
   ],
   function (Promise, Tools, Utils) {
     var isServiceErrorCode = function (code) {
