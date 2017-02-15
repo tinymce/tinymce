@@ -149,11 +149,76 @@ test(
       assert.eq(false, asserter, 'expected false but was true: ' + cs);
     });
 
-    var autolinks = {
+    var autolinks = {// Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
+      'http://google.com\\': 'http://google.com',
+      // 'http://google.com-': 'http://google.com', // TODO: change Regexes so domain cant end in '-'
+      'http://google.com_': 'http://google.com',
       'http://google.com.': 'http://google.com',
+      'http://google.com~': 'http://google.com',
+      'http://google.com*': 'http://google.com',
+      'http://google.com+': 'http://google.com',
+      'http://google.com=': 'http://google.com',
+      'http://google.com!': 'http://google.com',
+      'http://google.com&': 'http://google.com',
+      'http://google.com;': 'http://google.com',
+      'http://google.com:': 'http://google.com',
+      'http://google.com\'': 'http://google.com',
+      'http://google.com%': 'http://google.com',
+      'http://google.com@': 'http://google.com',
+      'http://google.com?': 'http://google.com',
+      'http://google.com#': 'http://google.com',
+      'http://google.com^': 'http://google.com',
+      'http://google.com$': 'http://google.com',
+      'http://google.com{': 'http://google.com',
+      'http://google.com}': 'http://google.com',
+      'http://google.com(': 'http://google.com',
       'http://google.com)': 'http://google.com',
+      'http://google.com?x=y': 'http://google.com?x=y',
+      'http://google.com#a-b_c': 'http://google.com#a-b_c',
+      'http://google.com?x=y#a-b_c%20': 'http://google.com?x=y#a-b_c%20',
+      'http://google.com?x=y&a=1&c=2#a-b_c%20': 'http://google.com?x=y&a=1&c=2#a-b_c%20',
+      'http://google.com:80/a/path/ok/?x=y#a-b_c%20': 'http://google.com:80/a/path/ok/?x=y#a-b_c%20',
+      'https://mike:pass@google.com:80/a/path/ok/?x=y#a-b_c%20': 'https://mike:pass@google.com:80/a/path/ok/?x=y#a-b_c%20',
+      'http://eg.com?cc=you%40eg.com&x=y': 'http://eg.com?cc=you%40eg.com&x=y',
+      'http://eg.com?m=bob%40eg.com': 'http://eg.com?m=bob%40eg.com',
+      // same again with www.
+      'www.google.com\\': 'www.google.com',
+      // 'www.google.com-': 'www.google.com',  // see above comment for http://
+      'www.google.com_': 'www.google.com',
       'www.google.com.': 'www.google.com',
-      'www.google.com)': 'www.google.com'
+      'www.google.com~': 'www.google.com',
+      'www.google.com*': 'www.google.com',
+      'www.google.com+': 'www.google.com',
+      'www.google.com=': 'www.google.com',
+      'www.google.com!': 'www.google.com',
+      'www.google.com&': 'www.google.com',
+      'www.google.com;': 'www.google.com',
+      'www.google.com:': 'www.google.com',
+      'www.google.com\'': 'www.google.com',
+      'www.google.com%': 'www.google.com',
+      'www.google.com@': 'www.google.com',
+      'www.google.com?': 'www.google.com',
+      'www.google.com#': 'www.google.com',
+      'www.google.com^': 'www.google.com',
+      'www.google.com$': 'www.google.com',
+      'www.google.com{': 'www.google.com',
+      'www.google.com}': 'www.google.com',
+      'www.google.com(': 'www.google.com',
+      'www.google.com)': 'www.google.com',
+      'www.google.com:80/a/path/ok/?x=y#a-b_c%20': 'www.google.com:80/a/path/ok/?x=y#a-b_c%20',
+      // Mailto
+      'mailto:me@eg.com': 'mailto:me@eg.com',
+      'mailto:me@eg.com.': 'mailto:me@eg.com',
+      'mailto:me@eg.com?': 'mailto:me@eg.com',
+      'mailto:me@eg.com)': 'mailto:me@eg.com',
+      'mailto:me@eg.com?cc=you%40eg.com': 'mailto:me@eg.com?cc=you%40eg.com',
+      // 'mailto:me@eg.com,you@eg.com': 'mailto:me@eg.com,you@eg.com', // not supported at the moment
+      'mailto:me@eg.com?cc=you%40eg.com&x=y': 'mailto:me@eg.com?cc=you%40eg.com&x=y',
+      // ftp
+      'ftp://google.com': 'ftp://google.com',
+      'ftp://google.com.': 'ftp://google.com',
+      'ftp://google.com?': 'ftp://google.com',
+      'ftp://google.com/a/b/c/d.e?v=2': 'ftp://google.com/a/b/c/d.e?v=2'
     };
 
     // remember don't inline the module function execution, JS regexes have state!
