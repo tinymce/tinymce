@@ -49,6 +49,16 @@ test(
       Fun.constant({ defaultValue: 10 }),
       Fun.constant({ overriddenValue: 15 })
     );
+
+    var group = PartType.group(
+      { sketch: function (x) { return x + '.group' } },
+      [ ],
+      'group',
+      'member',
+      '<part.group>',
+      Fun.constant({ defaultValue: 10 }),
+      Fun.constant({ overriddenValue: 15 })
+    );
     
 
     // We split up the checking functions like so:
@@ -110,6 +120,13 @@ test(
       { external: { entirety: 'external.schema' } },
       [ external ],
       { external: 'external.schema' }
+    );
+
+     checkSuccess(
+      'sanity: group',
+      { group: { entirety: 'group.schema' } },
+      [ group ],
+      { group: 'group.schema' }
     );
 
     checkSuccessWithNone(
