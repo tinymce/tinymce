@@ -74,9 +74,6 @@ define(
     };
 
     var oneReplace = function (label, replacements) {
-      if (! Objects.hasKey(replacements, 'fold')) {
-        debugger;
-      }
       var called = false;
 
       var used = function () {
@@ -116,7 +113,6 @@ define(
 
       Obj.each(ps, function (p) {
         if (p.used() === false && p.required()) {
-          debugger;
           throw new Error(
             'Placeholder: ' + p.name() + ' was not found in components list\nNamespace: ' + owner.getOr('none') + '\nComponents: ' +
             Json.stringify(detail.components(), null, 2)

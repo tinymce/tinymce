@@ -144,16 +144,6 @@ define(
           // Optional
           function (factory, schema, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(false, function (detail) {
-              if (! detail.parts) {
-                debugger;
-              }
-              if (! detail.parts()[name]) {
-                debugger;
-              }
-
-              if (! factory.sketch) {
-                debugger;
-              }
               return factory.sketch(
                 combine(name, detail, defaults, detail.parts()[name]().getOrDie(
                   'Included optional part: ' + name + ' but has no part information'  
@@ -165,9 +155,6 @@ define(
           // Group
           function (factory, schema, name, unit, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.multiple(true, function (detail) {
-              if (! detail[name]) {
-                debugger;
-              }
               var units = detail[name]();
               return Arr.map(units, function (u) {
                 var munged = detail.members()[unit]().munge()(u);
