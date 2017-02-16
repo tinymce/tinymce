@@ -12,10 +12,14 @@ define(
     'ephox.mcagar.selection.TinySelections',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html'
+    'ephox.sugar.api.properties.Html',
+    'global!JSON'
   ],
 
-  function (Assertions, Chain, Cursors, FocusTools, Step, UiFinder, Waiter, TinySelections, Hierarchy, Element, Html) {
+  function (
+    Assertions, Chain, Cursors, FocusTools, Step, UiFinder, Waiter, TinySelections, Hierarchy,
+    Element, Html, JSON
+  ) {
     return function (editor) {
       var setContent = function (html) {
         editor.setContent(html);

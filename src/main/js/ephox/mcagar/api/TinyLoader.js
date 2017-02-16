@@ -3,30 +3,21 @@ define(
 
   [
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Id',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'tinymce.core.EditorManager',
-    'global!document'
+    'global!document',
+    'tinymce.core.EditorManager'
   ],
 
-  function (Fun, Obj, Id, Insert, Remove, Element, Attr, EditorManager, document) {
+  function (Fun, Id, Merger, Obj, Insert, Remove, Element, Attr, document, EditorManager) {
     var createTarget = function (inline) {
       var target = Element.fromTag(inline ? 'div' : 'textarea');
       return target;
-    };
-
-    var extend = function (a, b) {
-      Obj.each(b, function (value, key) {
-        if (b.hasOwnProperty(key)) {
-          a[key] = value;
-        }
-      });
-
-      return a;
     };
 
   	var setup = function (callback, settings, success, failure) {
@@ -54,7 +45,7 @@ define(
 
       var settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
-      EditorManager.init(extend(settings, {
+      EditorManager.init(Merger.merge(settings, {
         selector: '#' + randomId,
         setup: function(editor) {
           // Execute the setup called by the test.
