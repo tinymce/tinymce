@@ -75,30 +75,24 @@ define(
         if (item == '|') {
           buttonGroup = null;
         } else {
-          if (Factory.has(item)) {
-            item = { type: item };
-            toolbarItems.push(item);
-            buttonGroup = null;
-          } else {
-            if (editor.buttons[item]) {
-              if (!buttonGroup) {
-                buttonGroup = { type: 'buttongroup', items: [] };
-                toolbarItems.push(buttonGroup);
-              }
-
-              itemName = item;
-              item = editor.buttons[itemName];
-
-              if (typeof item == 'function') {
-                item = item();
-              }
-
-              item.type = item.type || 'button';
-
-              item = Factory.create(item);
-              item.on('postRender', bindSelectorChanged(editor, itemName, item));
-              buttonGroup.items.push(item);
+          if (editor.buttons[item]) {
+            if (!buttonGroup) {
+              buttonGroup = { type: 'buttongroup', items: [] };
+              toolbarItems.push(buttonGroup);
             }
+
+            itemName = item;
+            item = editor.buttons[itemName];
+
+            if (typeof item == 'function') {
+              item = item();
+            }
+
+            item.type = item.type || 'button';
+
+            item = Factory.create(item);
+            item.on('postRender', bindSelectorChanged(editor, itemName, item));
+            buttonGroup.items.push(item);
           }
         }
       });

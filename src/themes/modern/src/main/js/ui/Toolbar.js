@@ -47,36 +47,30 @@ define(
         if (item == "|") {
           buttonGroup = null;
         } else {
-          if (Factory.has(item)) {
-            item = { type: item, size: size };
-            toolbarItems.push(item);
-            buttonGroup = null;
-          } else {
-            if (!buttonGroup) {
-              buttonGroup = { type: 'buttongroup', items: [] };
-              toolbarItems.push(buttonGroup);
+          if (!buttonGroup) {
+            buttonGroup = { type: 'buttongroup', items: [] };
+            toolbarItems.push(buttonGroup);
+          }
+
+          if (editor.buttons[item]) {
+            // TODO: Move control creation to some UI class
+            itemName = item;
+            item = editor.buttons[itemName];
+
+            if (typeof item == "function") {
+              item = item();
             }
 
-            if (editor.buttons[item]) {
-              // TODO: Move control creation to some UI class
-              itemName = item;
-              item = editor.buttons[itemName];
+            item.type = item.type || 'button';
+            item.size = size;
 
-              if (typeof item == "function") {
-                item = item();
-              }
+            item = Factory.create(item);
+            buttonGroup.items.push(item);
 
-              item.type = item.type || 'button';
-              item.size = size;
-
-              item = Factory.create(item);
-              buttonGroup.items.push(item);
-
-              if (editor.initialized) {
-                bindSelectorChanged();
-              } else {
-                editor.on('init', bindSelectorChanged);
-              }
+            if (editor.initialized) {
+              bindSelectorChanged();
+            } else {
+              editor.on('init', bindSelectorChanged);
             }
           }
         }
