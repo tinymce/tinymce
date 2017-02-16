@@ -5,13 +5,10 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.highway.Merger'
   ],
 
-  function (PartType, Tagger, SpecSchema, ValueSchema, Type, Merger, Fun) {
+  function (PartType, Tagger, SpecSchema, Merger) {
     var single = function (owner, schema, factory, spec) {
       var specWithUid = supplyUid(spec);
       var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ]);
