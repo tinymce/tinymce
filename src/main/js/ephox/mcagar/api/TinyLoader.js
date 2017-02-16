@@ -4,15 +4,17 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox/tinymce',
-    'global!document'
+    'global!document',
+    'tinymce.core.EditorManager'
   ],
 
-  function (Fun, Id, Insert, Remove, Element, Attr, tinymce, document) {
+  function (Fun, Id, Merger, Obj, Insert, Remove, Element, Attr, document, EditorManager) {
     var createTarget = function (inline) {
       var target = Element.fromTag(inline ? 'div' : 'textarea');
       return target;
@@ -26,7 +28,7 @@ define(
       Insert.append(Element.fromDom(document.body), target);
 
       var teardown = function () {
-        tinymce.remove();
+        EditorManager.remove();
         Remove.remove(target);
       };
 
@@ -43,7 +45,7 @@ define(
 
       var settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
-      tinymce.init(tinymce.extend(settings, {
+      EditorManager.init(Merger.merge(settings, {
         selector: '#' + randomId,
         setup: function(editor) {
           // Execute the setup called by the test.
@@ -54,7 +56,6 @@ define(
               callback(editor, onSuccess, onFailure);
             }, 0);
           });
-
         }
       }));
     };
