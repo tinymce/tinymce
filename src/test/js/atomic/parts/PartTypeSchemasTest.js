@@ -5,15 +5,20 @@ test(
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.ValueSchema',
+    'ephox.peanut.Fun',
     'global!console'
   ],
 
-  function (RawAssertions, PartType, ValueSchema, console) {
-    var alpha = PartType.internal(
+  function (RawAssertions, PartType, ValueSchema, Fun, console) {
+    // { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
+    //   { optional: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
+    //   { group: [ 'factory', 'schema', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
+
+    var internal = PartType.internal(
       { sketch: function (x) { return 'sketch.' + x; } },
       [ ],
-      'alpha',
-      '<part.alpha>',
+      'internal',
+      '<part.internal>',
       function () {
         return {
           value: 10
@@ -26,7 +31,15 @@ test(
       }
     );
 
-    var schemas = PartType.schemas([ alpha ]);
+    var external = PartType.external(
+      { sketch: function (x) { return x + '.external'; } },
+      [ ],
+      'external',
+      Fun.constant({ defaultValue: 10 }),
+      Fun.constant({ overriddenValue: 15 })
+    );
+    
+    var schemas = PartType.schemas([ internal, external ]);
 
       //     { setOf: [ 'validator', 'valueType' ] },
       // { arrOf: [ 'valueType' ] },
@@ -40,15 +53,19 @@ test(
       'Test 1',
       schema,
       {
-        alpha: 'alpha.schema'
+        internal: 'internal.schema',
+        external: 'external.schema'
       }
     );
 
     RawAssertions.assertEq(
       'Checking the value of test1',
       {
-        alpha: {
-          entirety: 'alpha.schema'
+        internal: {
+          entirety: 'internal.schema'
+        },
+        external: {
+          entirety: 'external.schema'
         }
       },
       output
