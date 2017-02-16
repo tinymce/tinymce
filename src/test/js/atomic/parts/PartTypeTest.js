@@ -3,10 +3,11 @@ test(
 
   [
     'ephox.alloy.parts.PartType',
+    'ephox.compass.Arr',
     'ephox.peanut.Fun'
   ],
 
-  function (PartType, Fun) {
+  function (PartType, Arr, Fun) {
     var internal = PartType.internal(
       { sketch: function (x) { return 'sketch.' + x; } },
       [ ],
@@ -23,6 +24,15 @@ test(
         };
       }
     );
+
+    var schemas = PartType.schemas([ internal ]);
+    console.log('schemas', Arr.map(schemas, function (s) {
+      return s.fold(function (field, of, p, value) {
+        return 'field: ' + field + ', value: ' + value.toString();
+      }, function () {
+        return 'state';
+      });
+    }));
 
     var placeholders = PartType.generate('part', [ internal ]);
     var components = PartType.components('part', {
