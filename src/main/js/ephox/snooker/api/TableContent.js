@@ -15,10 +15,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (
-    Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove,
-    Text, Traverse
-  ) {
+  function (Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove, Text, Traverse) {
     var merge = function (cells) {
       var isBr = function (el) {
         return Node.name(el) === 'br';
