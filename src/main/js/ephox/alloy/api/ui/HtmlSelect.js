@@ -54,8 +54,6 @@ define(
                   return opt.value === data.value;
                 });
 
-                console.log('matching', matching);
-
                 // TODO: Update when using katamari
                 return matching !== undefined && matching !== null ? Result.value(matching) : Result.error('Not found');
               },
@@ -71,7 +69,6 @@ define(
               },
 
               onSet: function (comp, data) {
-                console.log('data', data.value);
                 Value.set(comp.element(), data.value);
               },
 

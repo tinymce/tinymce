@@ -233,7 +233,6 @@ define(
             run: function (container, simulatedEvent) {
               if (EventRoot.isSource(container, simulatedEvent)) {
                 setup(container).each(function (primary) {
-                  console.log('primary', primary);
                   Replacing.append(container, GuiFactory.premade(primary));
 
                   if (detail.openImmediately()) {

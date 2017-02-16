@@ -115,7 +115,6 @@ asynctest(
           Chain.binder(function (box) {
             return Css.getRaw(box, 'left').bind(function (left) {
               return Css.getRaw(box, 'top').map(function (top) {
-                console.log('recording', left, top);
                 return Result.value({
                   left: left,
                   top: top

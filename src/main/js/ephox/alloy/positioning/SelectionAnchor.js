@@ -56,10 +56,7 @@ define(
       var win = Traverse.defaultView(anchorInfo.root()).dom();
       var rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
-      console.log('selection.placement');
-
       var selectionBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
-        console.log('sel', sel.start().dom());
         // This represents the *visual* rectangle of the selection.
         var optRect = DomSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).orThunk(function () {
           var x = Element.fromText(Unicode.zeroWidth());
@@ -78,8 +75,6 @@ define(
               Math.max(0, rawRect.top)
             )
           );
-
-          console.log('rawRect', rawRect.height, rawRect.top, rawRect.width, rawRect.height);
 
           return Boxes.pointed(point, rawRect.width, rawRect.height);
         });

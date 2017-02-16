@@ -51,24 +51,12 @@ define(
           },
           onStream: function (component, simulatedEvent) {
 
-            console.log('onStream');
             var sandbox = Coupling.getCoupled(component, 'sandbox');
-
             var focusInInput = Focusing.isFocused(component);
             // You don't want it to change when something else has triggered the change.
-
-
-
             if (focusInInput) {
-              console.log('focusInInput');
-              /* REM:  if (Sandboxing.isShowing(sandbox)) Sandboxing.closeSandbox(sandbox); 
-                This line makes it flicker. I wonder what it was for.
-              */
               if (Value.get(component.element()).length >= detail.minChars()) {
-                console.log('enough chars');
                 detail.previewing().set(true);
-
-                
                 DropdownUtils.open(detail, {
                   anchor: 'hotspot',
                   hotspot: component

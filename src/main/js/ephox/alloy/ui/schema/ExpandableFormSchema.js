@@ -76,11 +76,9 @@ define(
               },
               onShrunk: function (extra) {
                 detail.onShrunk()(extra);
-                console.log('height.slider.shrunk');
               },
               onGrown: function (extra) {
                 detail.onGrown()(extra);
-                console.log('height.slider.grown');
               },
               getAnimationRoot: function (extra) {
                 return extra.getSystem().getByUid(detail.uid()).getOrDie().element();

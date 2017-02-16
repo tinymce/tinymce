@@ -22,16 +22,10 @@ define(
     };
 
     var composite = function (owner, schema,  partTypes, factory, spec) {      
-      if (! Type.isObject(spec)) {
-        debugger;
-      }
-      
       var specWithUid = supplyUid(spec);
 
       var partSchemas = PartType.schemas(partTypes);
 
-      console.log('ss', ValueSchema.objOf(partSchemas).toString());
-      
       var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, partSchemas);
        
       // This is the point where internal parts are created (internal and optional)

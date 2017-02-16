@@ -37,8 +37,6 @@ define(
         return isVisible(cyclicInfo, elem);
       });
 
-      console.log('first', cyclicInfo.firstTabstop());
-
       var visibleOpt = Option.from(visibles[cyclicInfo.firstTabstop()]);
 
       visibleOpt.each(function (target) {
@@ -62,20 +60,6 @@ define(
         return SelectorFind.closest(elem, cyclicInfo.selector());
       });
     };
-
-    var logFailed = function (index, tabstops) {
-      console.log('pressing tab failed');
-    };
-
-    var logSuccess = function (cyclicInfo, index, tabstops, originator, destination) {
-      console.log('*** Cyclic movement: SUCCESS ***');
-      console.log('Original index in tabstops: ' + index);
-      console.log('Tabstops: ', Arr.map(tabstops, AlloyLogger.element));
-      console.log('Originator: ', originator.dom());
-      console.log('Destination: ', destination.dom(), ':visible', isVisible(cyclicInfo, destination), Height.get(destination));
-      console.log('********');
-
-    }
 
     var go = function (component, simulatedEvent, cyclicInfo, cycle) {
       // 1. Find our current tabstop

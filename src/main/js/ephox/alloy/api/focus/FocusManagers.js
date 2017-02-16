@@ -34,7 +34,6 @@ define(
       var set = function (component, element) {
         component.getSystem().getByDom(element).fold(Fun.noop, function (item) {
           Highlighting.highlight(component, item);
-          console.log('aria focus', item.element().dom());
         });          
       };
 

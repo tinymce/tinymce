@@ -57,8 +57,6 @@ asynctest(
         })
       );
 
-      console.log('displayer', displayer.asSpec());
-
       var c = GuiFactory.build(
         SplitDropdown.sketch({
           dom: {

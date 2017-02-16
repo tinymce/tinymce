@@ -34,7 +34,6 @@ define(
     };
 
     var insert = function (component, replaceInfo, insertion, childSpec) {
-      console.log('childSpec', childSpec);
       var child = component.getSystem().build(childSpec);
       component.getSystem().addToWorld(child);
       insertion(component.element(), child.element());

@@ -33,8 +33,6 @@ define(
 
       var detail = SpecSchema.asStructOrDie('form', schema, spec, partSchemas);
 
-      
-      console.log('spec.parts', spec.parts);
       var placeholders = Obj.tupleMap(spec.parts !== undefined ? spec.parts : {}, function (partSpec, partName) {
         return {
           k: '<alloy.field.' + partName + '>',

@@ -79,8 +79,6 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
         }
       })();
 
-      console.log('extra', extra);
-
       return Merger.deepMerge(
         extra.base,
         {

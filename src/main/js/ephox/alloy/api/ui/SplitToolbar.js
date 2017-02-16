@@ -63,15 +63,13 @@ define(
           ]
         }
       ])[0];
-      console.log('overflowGroupSpec', overflowGroupSpec);
       var overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
 
       setStoredGroups(primary, groups.concat([ overflowGroup ]));
 
    
       var total = Width.get(primary.element());
-      console.log('total', total);
-
+      
       var overflows = Overflows.partition(total, groups, function (comp) {
         return Width.get(comp.element());
       }, overflowGroup);

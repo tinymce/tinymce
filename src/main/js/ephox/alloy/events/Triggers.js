@@ -68,15 +68,12 @@ define(
     var doTriggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, source) {
       return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source).fold(function () {
         // stopped.
-        // console.log('Stopped event', eventType);
         return true;
       }, function (parent) {
         // Go again.
-        // console.log('Continuing event', eventType);
         return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source);
       }, function () {
         // completed
-        // console.log('Completed event', eventType);
         return false;
       });
     };
