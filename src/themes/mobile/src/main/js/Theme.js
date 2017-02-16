@@ -11,10 +11,14 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
-    'tinymce.core.ui.Api'
+    'tinymce.core.ui.Api',
+    'tinymce.themes.mobile.ui.IosContainer'
   ],
 
-  function (Fun, Insert, Body, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api) {
+  function (
+    Fun, Insert, Body, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api,
+    IosContainer
+  ) {
     var fail = function (message) {
       throw new Error(message);
     };
@@ -23,17 +27,18 @@ define(
       var renderUI = function (args) {
         var skinUrl = EditorManager.baseURL + editor.settings.skin_url;
         DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
+
+        var container = IosContainer();
         
-        var editorContainer = Element.fromTag('div');
         var iframeContainer = Element.fromTag('div');
 
-        Insert.append(editorContainer, iframeContainer);
+        Insert.append(container.element(), iframeContainer);
 
-        args.targetNode.ownerDocument.body.appendChild(editorContainer.dom());
+        args.targetNode.ownerDocument.body.appendChild(container.element().dom());
 
         return {
           iframeContainer: iframeContainer.dom(),
-          editorContainer: editorContainer.dom()
+          editorContainer: container.element().dom()
         };
 
       };
