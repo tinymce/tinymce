@@ -113,10 +113,18 @@ test(
     );
 
     checkSuccessWithNone(
-      'sanity: just optional',
-      {  },
+      'sanity: just optional and missing',
+      { },
       [ optional ],
-      {  }
+      { }
+    );
+
+    checkSuccessWithSome(
+      'sanity: just optional and present',
+      { },
+      { entirety: 'optional.schema' },
+      [ optional ],
+      { optional: 'optional.schema' }
     );
 
     var qcheck = function (arb, checker) {
