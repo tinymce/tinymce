@@ -21,14 +21,14 @@ define(
           http://blog.mattheworiordan.com/post/13174566389/url-regular-expression-for-links-with-or-without-the
 
         Modified to:
-        - enforce domains to be [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)* so they can't end in a period (TBIO-4809)
-        - colons are only valid when followed directly by // or some text and then @ (TBIO-4867)
-        - allow full stops in email addresses
-        - move allow -_.~*+=!&;:'%@?^${}() in email usernames to the first @ match (TBIO-4809)
         - include port numbers
-        - require [-.~*+=!&;:'%@?^${}(),\w] after an optional query '?'
+        - allow full stops in email addresses
         - require [-.~*+=!&;:'%@?^${}(),\w] after an optional fragment '#'
+        - require [-.~*+=!&;:'%@?^${}(),\w] after an optional query '?'
+        - move allow -_.~*+=!&;:'%@?^${}() in email usernames to the first @ match (TBIO-4809)
+        - enforce domains to be [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)* so they can't end in a period (TBIO-4809)
         - removed a bunch of escaping, made every group non-capturing (during TBIO-4809)
+        - colons are only valid when followed directly by // or some text and then @ (TBIO-4867)
 
       (?:
         (?:[A-Za-z]{3,9}:(?:\/\/))
@@ -47,13 +47,13 @@ define(
       (?:
         \?
         (?:
-          [-.~*+=!&;:'%@?^${}(),\w]*
+          [-.~*+=!&;:'%@?^${}(),\w]+
         )
       )?
       (?:
         #
         (?:
-          [-.~*+=!&;:'%@?^${}(),\/\w]*
+          [-.~*+=!&;:'%@?^${}(),\/\w]+
         )
       )?
 
