@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.invalidating.InvalidateApis',
 
   [
-    'ephox.echo.api.AriaVoice',
+    'ephox.alloy.alien.AriaVoice',
     'ephox.sugar.api.Body',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Html'

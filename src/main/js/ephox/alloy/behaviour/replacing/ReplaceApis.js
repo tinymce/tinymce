@@ -2,14 +2,14 @@ define(
   'ephox.alloy.behaviour.replacing.ReplaceApis',
 
   [
+    'ephox.alloy.alien.AriaFocus',
     'ephox.compass.Arr',
-    'ephox.echo.api.AriaFocus',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, AriaFocus, Compare, Insert, Remove) {
+  function (AriaFocus, Arr, Compare, Insert, Remove) {
     var clearOld = function (component, replaceInfo) {
       var old = contents(component, replaceInfo);
       Arr.each(old, component.getSystem().removeFromWorld);
