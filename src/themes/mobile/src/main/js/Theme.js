@@ -20,7 +20,7 @@ define(
     };
 
     ThemeManager.add('mobile', function (editor) {
-      var renderUI = function () {
+      var renderUI = function (args) {
         var skinUrl = EditorManager.baseURL + editor.settings.skin_url;
         DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
         
@@ -29,7 +29,7 @@ define(
 
         Insert.append(editorContainer, iframeContainer);
 
-        Insert.append(Body.body(), editorContainer);
+        args.targetNode.ownerDocument.body.appendChild(editorContainer.dom());
 
         return {
           iframeContainer: iframeContainer.dom(),
