@@ -20,7 +20,6 @@ define(
     };
 
     ThemeManager.add('mobile', function (editor) {
-      
       var renderUI = function () {
         var skinUrl = EditorManager.baseURL + editor.settings.skin_url;
         DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
@@ -38,40 +37,6 @@ define(
         };
 
       };
-      // renderUI: function (args) {
-
-
-      //       var fireSkinLoaded = function () {
-      //         if (ed.initialized) {
-      //           ed.fire('SkinLoaded');
-      //         } else {
-      //           ed.on('init', function() { 
-      //             ed.fire('SkinLoaded');
-      //           });
-      //         }
-      //       };
-
-      //       ed.on('SkinLoaded', function () {
-      //         // var mode = ViewModes.enter(container.gui().element(), function () {
-      //         //   return Option.from(
-      //         //     Element.fromDom(content.element().dom().querySelector('iframe').contentWindow.document.body)
-      //         //   );
-      //         // });
-      //       });
-
-      //       var container = IosContainer({
-      //         lazySink: lazySink,
-      //         onTap: function () {
-      //           // if (ed.initialized) {
-      //           //   onTap();
-      //           // } else {
-      //           //   ed.on('init', onTap);
-      //           // }
-      //         }
-      //       });
-
-      //       var skinUrl = EditorManager.baseURL + '/skins/' + 'lightgray';
-      //       DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', fireSkinLoaded);
 
       return {
         renderUI: renderUI
