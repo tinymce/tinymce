@@ -1,6 +1,7 @@
 configure({
   configs: [
-    './../../../../core/config/bolt/demo.js'
+    './../../../../core/config/bolt/demo.js',
+    './prod.js'
   ],
   sources: [
     source('amd', 'ephox/imagetools', '../../../../../node_modules/@ephox/imagetools/src/main/js', mapper.hierarchical),

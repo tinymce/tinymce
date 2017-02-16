@@ -23,7 +23,7 @@ define(
       EditorManager.init({
         selector: '.tiny-text',
         theme: 'mobile',
-        plugins: 'image table link anchor paste contextmenu textpattern autolink',
+        plugins: '',
         skin_url: '../../../../../skins/lightgray/dist/lightgray',
         insert_toolbar: 'quickimage quicktable',
         selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
