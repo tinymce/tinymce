@@ -176,6 +176,17 @@ test(
       );
     });
 
+    qcheck(Jsc.string, function (s) {
+      checkSuccess(
+        'just group',
+        {
+          group: { entirety: s }
+        },
+        [ group ],
+        { group: s }
+      );
+    });
+
 
   }
 );
