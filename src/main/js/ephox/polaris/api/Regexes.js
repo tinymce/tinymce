@@ -7,7 +7,19 @@ define(
 
   function (RegExp) {
     var link = function () {
-     /* http://blog.mattheworiordan.com/post/13174566389/url-regular-expression-for-links-with-or-without-the
+     /*
+        The RegEx parses the following components (https://www.rfc-editor.org/rfc/rfc3986.txt):
+
+          scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
+
+               foo://example.com:8042/over/there?name=ferret#nose
+               \_/   \______________/\_________/ \_________/ \__/
+                |           |            |            |        |
+             scheme     authority       path        query   fragment
+
+        Originally from:
+          http://blog.mattheworiordan.com/post/13174566389/url-regular-expression-for-links-with-or-without-the
+
         Modified to:
         - include port numbers
         - allow full stops in email addresses
@@ -17,6 +29,8 @@ define(
         - enforce domains to be [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)* so they can't end in a period (TBIO-4809)
         - removed a bunch of escaping, made every group non-capturing (during TBIO-4809)
         - colons are only valid when followed directly by // or some text and then @ (TBIO-4867)
+        - only include the fragment '#' if it has 1 or more trailing matches
+        - only include the query '?' if it has 1 or more trailing matches
 
       (?:
         (?:[A-Za-z]{3,9}:(?:\/\/))
@@ -35,19 +49,19 @@ define(
       (?:
         \?
         (?:
-          [-.~*+=!&;:'%@?^${}(),\w]*
+          [-.~*+=!&;:'%@?^${}(),\w]+
         )
       )?
       (?:
         #
         (?:
-          [-.~*+=!&;:'%@?^${}(),\/\w]*
+          [-.~*+=!&;:'%@?^${}(),\/\w]+
         )
       )?
 
       */
 
-      return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\w]*))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]*))?/g;
+      return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
     };
 
     var autolink = function () {
@@ -61,7 +75,7 @@ define(
        * TBIO calls this method every time space or enter is pressed.
        */
       var linksource = link().source;
-      return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?^${}(),]*', 'g');
+      return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?#^${}(),]*', 'g');
     };
 
     var tokens = function (value, parameters) {
