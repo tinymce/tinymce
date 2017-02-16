@@ -77,7 +77,7 @@ test(
       // We can't check Optionals with eq
       var narrowed = Objects.narrow(output, [ 'internal', 'external' ]);
       RawAssertions.assertEq('narrowed.' + label, expected, narrowed);
-      RawAssertions.assertEq('checking none.' + label, true, output.optional().isNone());
+      RawAssertions.assertEq('checking none.' + label, true, output.optional.isNone());
     };
 
     var checkSuccessWithSome = function (label, expected, optExpected, parts, input) {
@@ -91,7 +91,7 @@ test(
       // We can't check Optionals with eq
       var narrowed = Objects.narrow(output, [ 'internal', 'external' ]);
       RawAssertions.assertEq('narrowed.' + label, expected, narrowed);
-      RawAssertions.assertEq('checking some' + label, optExpected, output.optional().getOrDie(
+      RawAssertions.assertEq('checking some' + label, optExpected, output.optional.getOrDie(
         'Optional value was not set. Expecting: ' + optExpected
       ));
     };
@@ -110,6 +110,13 @@ test(
       { external: { entirety: 'external.schema' } },
       [ external ],
       { external: 'external.schema' }
+    );
+
+    checkSuccessWithNone(
+      'sanity: just optional',
+      {  },
+      [ optional ],
+      {  }
     );
 
     var qcheck = function (arb, checker) {
