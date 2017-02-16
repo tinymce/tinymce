@@ -5,13 +5,11 @@ define(
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
+    'ephox.alloy.alien.DomSelection',
     'ephox.alloy.positioning.Anchoring',
     'ephox.alloy.positioning.ContainerOffsets',
     'ephox.boulder.api.FieldSchema',
     'ephox.bud.Unicode',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.WindowSelection',
-    'ephox.oath.proximity.Awareness',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.repartee.api.Bubble',
@@ -28,7 +26,11 @@ define(
     'global!Math'
   ],
 
-  function (Boxes, CssPosition, Descend, Anchoring, ContainerOffsets, FieldSchema, Unicode, SelectionRange, WindowSelection, Awareness, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Element, Insert, Node, Remove, Traverse, Math) {
+  function (
+    Boxes, CssPosition, Descend, DomSelection, Anchoring, ContainerOffsets, FieldSchema,
+    Unicode, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Element,
+    Insert, Node, Remove, Traverse, Math
+  ) {
     var point = Struct.immutable('element', 'offset');
 
     // A range from (a, 1) to (body, end) was giving the wrong bounds.
@@ -39,14 +41,14 @@ define(
     var getAnchorSelection = function (win, anchorInfo) {
       var getSelection = anchorInfo.getSelection().getOrThunk(function () {
         return function () {
-          return WindowSelection.get(win);
+          return DomSelection.get(win);
         };
       });
 
       return getSelection().map(function (sel) {
         var modStart = descendOnce(sel.start(), sel.soffset());
         var modFinish = descendOnce(sel.finish(), sel.foffset());
-        return SelectionRange.general(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
+        return DomSelection.range(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
       });
     };
 
@@ -59,11 +61,11 @@ define(
       var selectionBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
         console.log('sel', sel.start().dom());
         // This represents the *visual* rectangle of the selection.
-        var optRect = WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).orThunk(function () {
+        var optRect = DomSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).orThunk(function () {
           var x = Element.fromText(Unicode.zeroWidth());
           Insert.before(sel.start(), x);
           // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
-          return WindowSelection.rectangleAt(win, x, 0, x, 1).map(function (rect) {
+          return DomSelection.rectangleAt(win, x, 0, x, 1).map(function (rect) {
             Remove.remove(x);
             return rect;
           });          

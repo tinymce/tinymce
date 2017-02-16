@@ -6,13 +6,13 @@ asynctest(
     'ephox.agar.api.Cursors',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
+    'ephox.alloy.alien.DomSelection',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.fussy.api.WindowSelection',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.photon.Writer',
@@ -28,7 +28,11 @@ asynctest(
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, WindowSelection, Option, Result, Writer, Css, DomEvent, Element, Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window) {
+  function (
+    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils,
+    GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent, Element,
+    Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -82,14 +86,14 @@ asynctest(
         return Chain.binder(function (win) {
           var body = Element.fromDom(win.document.body);
           var range = Cursors.calculate(body, path);
-           WindowSelection.setExact(
+           DomSelection.setExact(
             win,
             range.start(),
             range.soffset(),
             range.finish(),
             range.foffset()
           );
-          return WindowSelection.get(win).fold(function () {
+          return DomSelection.get(win).fold(function () {
             return Result.error('Could not retrieve the set selection');
           }, Result.value);
         });
