@@ -7,10 +7,11 @@ test(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
+    'ephox.wrap.Jsc',
     'global!console'
   ],
 
-  function (RawAssertions, PartType, Objects, ValueSchema, Fun, console) {
+  function (RawAssertions, PartType, Objects, ValueSchema, Fun, Jsc, console) {
     // { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
     //   { optional: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
     //   { group: [ 'factory', 'schema', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
@@ -96,12 +97,53 @@ test(
     };
 
     checkSuccess(
-      'just internal',
+      'sanity: just internal',
       {
         internal: { entirety: 'internal.schema' }
       },
       [ internal ],
       { internal: 'internal.schema' }
     );
+
+    checkSuccess(
+      'sanity: just external',
+      { external: { entirety: 'external.schema' } },
+      [ external ],
+      { external: 'external.schema' }
+    );
+
+    var qcheck = function (arb, checker) {
+      Jsc.check(
+        Jsc.forall(arb, function (input) {
+          checker(input);
+          return true;
+        })
+      );
+    };
+
+    // MIGRATION: Use wrap-vsverify when migrating
+    qcheck(Jsc.string, function (s) {
+      checkSuccess(
+        'just internal',
+        {
+          internal: { entirety: s }
+        },
+        [ internal ],
+        { internal: s }
+      );
+    });
+
+    qcheck(Jsc.string, function (s) {
+      checkSuccess(
+        'just external',
+        {
+          external: { entirety: s }
+        },
+        [ external ],
+        { external: s }
+      );
+    });
+
+
   }
 );
