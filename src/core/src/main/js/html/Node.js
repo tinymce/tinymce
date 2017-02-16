@@ -34,7 +34,7 @@ define(
     };
 
     // Walks the tree left/right
-    function walk(node, root_node, prev) {
+    function walk(node, rootNode, prev) {
       var sibling, parent, startName = prev ? 'lastChild' : 'firstChild', siblingName = prev ? 'prev' : 'next';
 
       // Walk into nodes if it has a start
@@ -43,7 +43,7 @@ define(
       }
 
       // Return the sibling if it has one
-      if (node !== root_node) {
+      if (node !== rootNode) {
         sibling = node[siblingName];
 
         if (sibling) {
@@ -51,7 +51,7 @@ define(
         }
 
         // Walk up the parents to look for siblings
-        for (parent = node.parent; parent && parent !== root_node; parent = parent.parent) {
+        for (parent = node.parent; parent && parent !== rootNode; parent = parent.parent) {
           sibling = parent[siblingName];
 
           if (sibling) {
@@ -321,39 +321,39 @@ define(
        *
        * @method insert
        * @param {tinymce.html.Node} node Node to insert as a child of the current node.
-       * @param {tinymce.html.Node} ref_node Reference node to set node before/after.
+       * @param {tinymce.html.Node} refNode Reference node to set node before/after.
        * @param {Boolean} before Optional state to insert the node before the reference node.
        * @return {tinymce.html.Node} The node that got inserted.
        */
-      insert: function (node, ref_node, before) {
+      insert: function (node, refNode, before) {
         var parent;
 
         if (node.parent) {
           node.remove();
         }
 
-        parent = ref_node.parent || this;
+        parent = refNode.parent || this;
 
         if (before) {
-          if (ref_node === parent.firstChild) {
+          if (refNode === parent.firstChild) {
             parent.firstChild = node;
           } else {
-            ref_node.prev.next = node;
+            refNode.prev.next = node;
           }
 
-          node.prev = ref_node.prev;
-          node.next = ref_node;
-          ref_node.prev = node;
+          node.prev = refNode.prev;
+          node.next = refNode;
+          refNode.prev = node;
         } else {
-          if (ref_node === parent.lastChild) {
+          if (refNode === parent.lastChild) {
             parent.lastChild = node;
           } else {
-            ref_node.next.prev = node;
+            refNode.next.prev = node;
           }
 
-          node.next = ref_node.next;
-          node.prev = ref_node;
-          ref_node.next = node;
+          node.next = refNode.next;
+          node.prev = refNode;
+          refNode.next = node;
         }
 
         node.parent = parent;

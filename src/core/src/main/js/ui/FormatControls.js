@@ -717,9 +717,9 @@ define(
 
       editor.addButton('fontsizeselect', function () {
         var items = [], defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
-        var fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;
+        var fontsizeFormats = editor.settings.fontsizeFormats || defaultFontsizeFormats;
 
-        each(fontsize_formats.split(' '), function (item) {
+        each(fontsizeFormats.split(' '), function (item) {
           var text = item, value = item;
           // Allow text=value font sizes.
           var values = item.split('=');

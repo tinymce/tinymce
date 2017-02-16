@@ -1,15 +1,18 @@
 asynctest(
   'browser.tinymce.core.InsertContentForcedRootBlockFalseTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.InsertContent'
+    'tinymce.core.InsertContent',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, InsertContent) {
+  function (Pipeline, LegacyUnit, TinyLoader, InsertContent, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var trimBrs = function (string) {
       return string.replace(/<br>/g, '');
@@ -43,7 +46,8 @@ asynctest(
       disable_nodechange: true,
       forced_root_block: false,
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

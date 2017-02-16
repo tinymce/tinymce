@@ -1,16 +1,19 @@
 asynctest(
   'browser.tinymce.core.FormattingCommandsTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.core.FocusManager',
-    'tinymce.core.dom.DOMUtils'
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, FocusManager, DOMUtils) {
+  function (Pipeline, LegacyUnit, TinyLoader, DOMUtils, FocusManager, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     suite.test('isEditorUIElement on valid element', function () {
       var uiElm = DOMUtils.DOM.create('div', { 'class': 'mce-abc' }, null);
@@ -40,7 +43,8 @@ asynctest(
       disable_nodechange: true,
       automatic_uploads: false,
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

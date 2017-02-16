@@ -1,14 +1,17 @@
 asynctest(
   'browser.tinymce.core.FormattingCommandsTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.TinyLoader'
+    'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader) {
+  function (Pipeline, LegacyUnit, TinyLoader, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var ok = function (value, label) {
       return LegacyUnit.equal(value, true, label);
@@ -436,7 +439,8 @@ asynctest(
       valid_styles: {
         '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,' +
           'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

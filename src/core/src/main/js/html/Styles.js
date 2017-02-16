@@ -184,15 +184,15 @@ define(
           }
 
           // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
-          // It will also decode the \" \' if keep_slashes is set to fale or omitted
-          function decode(str, keep_slashes) {
+          // It will also decode the \" \' if keepSlashes is set to fale or omitted
+          function decode(str, keepSlashes) {
             if (isEncoded) {
               str = str.replace(/\uFEFF[0-9]/g, function (str) {
                 return encodingLookup[str];
               });
             }
 
-            if (!keep_slashes) {
+            if (!keepSlashes) {
               str = str.replace(/\\([\'\";:])/g, "$1");
             }
 

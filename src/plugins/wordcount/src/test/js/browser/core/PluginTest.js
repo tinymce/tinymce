@@ -1,26 +1,29 @@
 asynctest(
   'browser.tinymce.plugins.wordcount.PluginTest',
   [
-    'tinymce.plugins.wordcount.Plugin',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyDom',
-    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Waiter',
+    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.Assertions',
-    'ephox/tinymce'
+    'ephox.agar.api.Waiter',
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.plugins.wordcount.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    Plugin, TinyLoader, TinyApis, TinyDom,
-    Pipeline, Keyboard, Keys, GeneralSteps,
-    Waiter, Step, Assertions, Tiny
+    Assertions, GeneralSteps, Keyboard, Keys, Pipeline, Step, Waiter, TinyApis, TinyDom,
+    TinyLoader, DOMUtils, Plugin, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var sReset = function (tinyApis) {
       return GeneralSteps.sequence([
@@ -31,7 +34,7 @@ asynctest(
 
     var sAssertWordcount = function (num) {
       return Step.sync(function () {
-        var countEl = Tiny.DOM.select('.mce-wordcount')[0];
+        var countEl = DOMUtils.DOM.select('.mce-wordcount')[0];
         var value = countEl ? countEl.innerText : '';
         Assertions.assertEq('wordcount', 'Words: ' + num, value);
       });
@@ -101,7 +104,8 @@ asynctest(
         sTestUndoRedo(editor, tinyApis)
       ], onSuccess, onFailure);
     }, {
-      plugins: 'wordcount'
+      plugins: 'wordcount',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

@@ -1,25 +1,28 @@
 asynctest(
   'browser.core.SubmitTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
+    'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Waiter',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Step',
-    'tinymce.plugins.media.test.Utils'
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader,
-    TinyUi, TinyApis, Pipeline, Waiter, Chain, ApproxStructure, GeneralSteps, Step, Utils
+    ApproxStructure, Chain, GeneralSteps, Pipeline, Step, Waiter, TinyApis, TinyLoader,
+    TinyUi, Plugin, Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
       return GeneralSteps.sequence([
@@ -136,8 +139,8 @@ asynctest(
       media_scripts: [
           { filter: 'http://media1.tinymce.com' },
           { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-      ]
+      ],
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
-
   }
 );

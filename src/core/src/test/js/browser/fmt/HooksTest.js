@@ -1,15 +1,18 @@
 asynctest(
   'browser.tinymce.core.fmt.HooksTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.fmt.Hooks'
+    'tinymce.core.fmt.Hooks',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, Hooks) {
+  function (Pipeline, LegacyUnit, TinyLoader, Hooks, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     suite.test('pre - postProcessHook', function (editor) {
       var assertPreHook = function (setupHtml, setupSelection, expected) {
@@ -69,7 +72,8 @@ asynctest(
       add_unload_trigger: false,
       disable_nodechange: true,
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

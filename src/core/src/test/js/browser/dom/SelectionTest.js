@@ -1,18 +1,21 @@
 asynctest(
   'browser.tinymce.core.dom.SelectionTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
     'tinymce.core.caret.CaretContainer',
-    'tinymce.core.text.Zwsp',
     'tinymce.core.Env',
-    'global!document'
+    'tinymce.core.text.Zwsp',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, CaretContainer, Zwsp, Env, document) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, CaretContainer, Env, Zwsp, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     suite.test('getContent', function (editor) {
       var rng, eventObj;
@@ -1088,7 +1091,8 @@ asynctest(
           'margin-top,margin-right,margin-bottom,margin-left,display'
       },
       custom_elements: 'custom1,~custom2',
-      extended_valid_elements: 'custom1,custom2'
+      extended_valid_elements: 'custom1,custom2',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

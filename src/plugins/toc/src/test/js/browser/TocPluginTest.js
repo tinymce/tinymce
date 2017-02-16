@@ -3,15 +3,19 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
-    'tinymce.plugins.toc.Plugin',
     'ephox.mcagar.api.TinyLoader',
-    'global!tinymce.util.Tools',
-    'tinymce.plugins.toc.test.HtmlUtils'
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.toc.Plugin',
+    'tinymce.plugins.toc.test.HtmlUtils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, Tools, HtmlUtils) {
+  function (Pipeline, LegacyUnit, TinyLoader, Tools, Plugin, HtmlUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     var stripAttribs = function ($el, attr) {
       if (Tools.isArray(attr)) {
@@ -185,7 +189,8 @@ asynctest(
       indent: false,
       toc_class: 'tst-toc',
       toc_depth: 2,
-      toc_header: 'h3'
+      toc_header: 'h3',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

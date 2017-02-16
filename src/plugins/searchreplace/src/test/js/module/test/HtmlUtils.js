@@ -1,8 +1,8 @@
 define(
   'tinymce.plugins.searchreplace.test.HtmlUtils',
   [
-    'global!tinymce.html.Writer',
-    'global!tinymce.html.SaxParser'
+    'tinymce.core.html.Writer',
+    'tinymce.core.html.SaxParser'
   ],
   function (Writer, SaxParser) {
     var cleanHtml = function (html) {

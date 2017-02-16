@@ -4,14 +4,18 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'tinymce.core.Env',
     'tinymce.plugins.autolink.Plugin',
     'tinymce.plugins.autolink.test.KeyUtils',
-    'global!tinymce.Env'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, Plugin, KeyUtils, Env) {
+  function (Pipeline, LegacyUnit, TinyLoader, Env, Plugin, KeyUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
+    Plugin();
 
     var typeUrl = function (editor, url) {
       editor.setContent('<p>' + url + '</p>');
@@ -109,7 +113,8 @@ asynctest(
       Pipeline.async({}, steps, onSuccess, onFailure);
     }, {
       plugins: 'autolink',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

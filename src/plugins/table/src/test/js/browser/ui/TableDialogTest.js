@@ -3,13 +3,17 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.table.Plugin',
-    'ephox.mcagar.api.TinyLoader'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader) {
+  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     var getFrontmostWindow = function (editor) {
       return editor.windowManager.windows[editor.windowManager.windows.length - 1];
@@ -266,7 +270,8 @@ asynctest(
       indent: false,
       valid_styles: {
         '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

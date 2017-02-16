@@ -3,14 +3,17 @@ asynctest(
   [
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyApis',
+    'tinymce.themes.inlite.Theme',
     'tinymce.themes.inlite.alien.Unlink',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.GeneralSteps'
   ],
-  function (TinyLoader, TinyApis, Unlink, Pipeline, Step, GeneralSteps) {
+  function (TinyLoader, TinyApis, Theme, Unlink, Pipeline, Step, GeneralSteps) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Theme();
 
     var sUnlinkSelection = function (editor) {
       return Step.sync(function () {
@@ -37,6 +40,9 @@ asynctest(
         sAssertUnlink('<p><a href="#">a</a><p><a href="#">b</a>', [0, 0, 0], 0, [1, 0, 0], 1, '<p>a</p>\n<p>b</p>')
       ], onSuccess, onFailure);
     }, {
+      inline: true,
+      theme: 'inlite',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

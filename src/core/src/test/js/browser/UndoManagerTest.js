@@ -1,17 +1,20 @@
 asynctest(
   'browser.tinymce.core.UndoManager',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.core.Env',
     'tinymce.core.test.HtmlUtils',
-    'tinymce.core.test.KeyUtils'
+    'tinymce.core.test.KeyUtils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, Env, HtmlUtils, KeyUtils) {
+  function (Pipeline, LegacyUnit, TinyLoader, Env, HtmlUtils, KeyUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var ok = function (value, label) {
       return LegacyUnit.equal(value, true, label);
@@ -485,7 +488,8 @@ asynctest(
       add_unload_trigger: false,
       disable_nodechange: true,
       indent: false,
-      entities: 'raw'
+      entities: 'raw',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

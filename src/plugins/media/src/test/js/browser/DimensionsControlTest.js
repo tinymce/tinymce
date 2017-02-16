@@ -1,24 +1,27 @@
 asynctest(
   'browser.tinymce.plugins.media.DimensionsControlTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyDom',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyUi',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.UiFinder',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
-    'tinymce.plugins.media.test.Utils'
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
+    'ephox.mcagar.api.TinyUi',
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
-    TinyUi, Pipeline, UiFinder, Step, Waiter, Utils
+    Pipeline, Step, UiFinder, Waiter, TinyApis, TinyDom, TinyLoader, TinyUi, Plugin,
+    Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var ui = TinyUi(editor);
@@ -36,7 +39,8 @@ asynctest(
     }, {
       plugins: ["media"],
       toolbar: "media",
-      media_dimensions: false
+      media_dimensions: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

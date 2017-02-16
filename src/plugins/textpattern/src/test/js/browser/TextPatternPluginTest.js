@@ -3,13 +3,17 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.textpattern.Plugin',
-    'ephox.mcagar.api.TinyLoader'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader) {
+  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     suite.test('Italic format on single word using space', function (editor) {
       editor.setContent('<p>*abc*\u00a0</p>');
@@ -118,7 +122,8 @@ asynctest(
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'textpattern',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

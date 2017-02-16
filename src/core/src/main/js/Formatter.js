@@ -503,7 +503,7 @@ define(
           return rng;
         }
 
-        function applyRngStyle(rng, bookmark, node_specific) {
+        function applyRngStyle(rng, bookmark, nodeSpecific) {
           var newWrappers = [], wrapName, wrapElm, contentEditable = true;
 
           // Setup wrapper element
@@ -574,7 +574,7 @@ define(
               // Is it valid to wrap this item
               // TODO: Break this if up, too complex
               if (contentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
-                !(!node_specific && node.nodeType === 3 &&
+                !(!nodeSpecific && node.nodeType === 3 &&
                   node.nodeValue.length === 1 &&
                   node.nodeValue.charCodeAt(0) === 65279) &&
                 !isCaretNode(node) &&
@@ -1113,12 +1113,12 @@ define(
       function matchNode(node, name, vars, similar) {
         var formatList = get(name), format, i, classes;
 
-        function matchItems(node, format, item_name) {
-          var key, value, items = format[item_name], i;
+        function matchItems(node, format, itemName) {
+          var key, value, items = format[itemName], i;
 
           // Custom match
           if (format.onmatch) {
-            return format.onmatch(node, format, item_name);
+            return format.onmatch(node, format, itemName);
           }
 
           // Check all items
@@ -1127,7 +1127,7 @@ define(
             if (items.length === undef) {
               for (key in items) {
                 if (items.hasOwnProperty(key)) {
-                  if (item_name === 'attributes') {
+                  if (itemName === 'attributes') {
                     value = dom.getAttrib(node, key);
                   } else {
                     value = getStyle(node, key);
@@ -1145,7 +1145,7 @@ define(
             } else {
               // Only one match needed for indexed arrays
               for (i = 0; i < items.length; i++) {
-                if (item_name === 'attributes' ? dom.getAttrib(node, items[i]) : getStyle(node, items[i])) {
+                if (itemName === 'attributes' ? dom.getAttrib(node, items[i]) : getStyle(node, items[i])) {
                   return format;
                 }
               }
@@ -1739,11 +1739,11 @@ define(
           }
         }
 
-        function findSelectorEndPoint(container, sibling_name) {
+        function findSelectorEndPoint(container, siblingName) {
           var parents, i, y, curFormat;
 
-          if (container.nodeType == 3 && container.nodeValue.length === 0 && container[sibling_name]) {
-            container = container[sibling_name];
+          if (container.nodeType == 3 && container.nodeValue.length === 0 && container[siblingName]) {
+            container = container[siblingName];
           }
 
           parents = getParents(container);
@@ -1765,7 +1765,7 @@ define(
           return container;
         }
 
-        function findBlockEndPoint(container, sibling_name) {
+        function findBlockEndPoint(container, siblingName) {
           var node, root = dom.getRoot();
 
           // Expand to block of similar type
@@ -1790,8 +1790,8 @@ define(
           if (!node) {
             node = container;
 
-            while (node[sibling_name] && !isBlock(node[sibling_name])) {
-              node = node[sibling_name];
+            while (node[siblingName] && !isBlock(node[siblingName])) {
+              node = node[siblingName];
 
               // Break on BR but include it will be removed later on
               // we can't remove it now since we need to check if it can be wrapped
@@ -1934,10 +1934,10 @@ define(
        * @param {Object} format Format object with items to remove from node.
        * @param {Object} vars Name/value object with variables to apply to format.
        * @param {Node} node Node to remove the format styles on.
-       * @param {Node} compare_node Optional compare node, if specified the styles will be compared to that node.
+       * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
        * @return {Boolean} True/false if the node was removed or not.
        */
-      function removeFormat(format, vars, node, compare_node) {
+      function removeFormat(format, vars, node, compareNode) {
         var i, attrs, stylesModified;
 
         // Check if node matches format
@@ -1954,10 +1954,10 @@ define(
             // Indexed array
             if (typeof name === 'number') {
               name = value;
-              compare_node = 0;
+              compareNode = 0;
             }
 
-            if (format.remove_similar || (!compare_node || isEq(getStyle(compare_node, name), value))) {
+            if (format.remove_similar || (!compareNode || isEq(getStyle(compareNode, name), value))) {
               dom.setStyle(node, name, '');
             }
 
@@ -1979,10 +1979,10 @@ define(
             // Indexed array
             if (typeof name === 'number') {
               name = value;
-              compare_node = 0;
+              compareNode = 0;
             }
 
-            if (!compare_node || isEq(dom.getAttrib(compare_node, name), value)) {
+            if (!compareNode || isEq(dom.getAttrib(compareNode, name), value)) {
               // Keep internal classes
               if (name == 'class') {
                 value = dom.getAttrib(node, name);
@@ -2021,7 +2021,7 @@ define(
           each(format.classes, function (value) {
             value = replaceVars(value, vars);
 
-            if (!compare_node || dom.hasClass(compare_node, value)) {
+            if (!compareNode || dom.hasClass(compareNode, value)) {
               dom.removeClass(node, value);
             }
           });
@@ -2143,8 +2143,8 @@ define(
       function mergeSiblings(prev, next) {
         var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
 
-        function findElementSibling(node, sibling_name) {
-          for (sibling = node; sibling; sibling = sibling[sibling_name]) {
+        function findElementSibling(node, siblingName) {
+          for (sibling = node; sibling; sibling = sibling[siblingName]) {
             if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0) {
               return node;
             }
@@ -2274,7 +2274,7 @@ define(
         }
 
         // Removes the caret container for the specified node or all on the current document
-        function removeCaretContainer(node, move_caret) {
+        function removeCaretContainer(node, moveCaret) {
           var child, rng;
 
           if (!node) {
@@ -2289,7 +2289,7 @@ define(
             rng = selection.getRng(true);
 
             if (isCaretContainerEmpty(node)) {
-              if (move_caret !== false) {
+              if (moveCaret !== false) {
                 rng.setStartBefore(node);
                 rng.setEndBefore(node);
               }

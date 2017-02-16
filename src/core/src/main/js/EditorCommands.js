@@ -169,13 +169,13 @@ define(
        * Adds commands to the command collection.
        *
        * @method addCommands
-       * @param {Object} command_list Name/value collection with commands to add, the names can also be comma separated.
+       * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
        * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
        */
-      function addCommands(command_list, type) {
+      function addCommands(commandList, type) {
         type = type || 'exec';
 
-        each(command_list, function (callback, command) {
+        each(commandList, function (callback, command) {
           each(command.toLowerCase().split(','), function (command) {
             commands[type][command] = callback;
           });

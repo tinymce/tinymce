@@ -1,18 +1,20 @@
 asynctest(
   'tinymce.lists.browser.ApplyTest',
   [
-    'tinymce.plugins.lists.Plugin',
+    'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.agar.api.Pipeline',
-    'global!tinymce.Env'
+    'tinymce.core.Env',
+    'tinymce.plugins.lists.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    Plugin, LegacyUnit, TinyLoader, Pipeline, Env
-  ) {
+  function (Pipeline, LegacyUnit, TinyLoader, Env, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     suite.test('Apply UL list to single P', function (editor) {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
@@ -903,7 +905,8 @@ asynctest(
         '*': 'color,font-size,font-family,background-color,font-weight,' +
           'font-style,text-decoration,float,margin,margin-top,margin-right,' +
           'margin-bottom,margin-left,display,position,top,left,list-style-type'
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

@@ -3,14 +3,20 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
-    'tinymce.plugins.fullscreen.Plugin',
     'ephox.mcagar.api.TinyLoader',
-    'global!tinymce.dom.DOMUtils'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.plugins.fullscreen.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, DOMUtils) {
+  function (Pipeline, LegacyUnit, TinyLoader, DOMUtils, LinkPlugin, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    LinkPlugin();
+    Plugin();
+    Theme();
 
     suite.test('Fullscreen class on html and body tag', function (editor) {
       var bodyTag = document.body;
@@ -68,7 +74,8 @@ asynctest(
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
-      plugins: 'fullscreen link'
+      plugins: 'fullscreen link',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

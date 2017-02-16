@@ -36,7 +36,7 @@ define(
      * @param {Object} settings Optional settings object.
      */
     function URI(url, settings) {
-      var self = this, baseUri, base_url;
+      var self = this, baseUri, baseUrl;
 
       url = trim(url);
       settings = self.settings = settings || {};
@@ -58,12 +58,12 @@ define(
 
       // Relative path http:// or protocol relative //path
       if (!/^[\w\-]*:?\/\//.test(url)) {
-        base_url = settings.base_uri ? settings.base_uri.path : new URI(location.href).directory;
+        baseUrl = settings.base_uri ? settings.base_uri.path : new URI(location.href).directory;
         if (settings.base_uri.protocol === "") {
-          url = '//mce_host' + self.toAbsPath(base_url, url);
+          url = '//mce_host' + self.toAbsPath(baseUrl, url);
         } else {
           url = /([^#?]*)([#?]?.*)/.exec(url);
-          url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(base_url, url[1]) + url[2];
+          url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(baseUrl, url[1]) + url[2];
         }
       }
 

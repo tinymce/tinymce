@@ -3,15 +3,18 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
-    'tinymce.plugins.table.Plugin',
     'ephox.mcagar.api.TinyLoader',
-    'global!tinymce.util.Tools'
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.table.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, Tools) {
+  function (Pipeline, LegacyUnit, TinyLoader, Tools, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
 
+    Plugin();
+    Theme();
 
     var cleanTableHtml = function (html) {
       return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
@@ -293,7 +296,8 @@ asynctest(
       indent: false,
       valid_styles: {
         '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

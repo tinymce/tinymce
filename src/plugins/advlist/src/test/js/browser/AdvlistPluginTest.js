@@ -2,16 +2,22 @@ asynctest(
   'browser.tinymce.plugins.lists.AdvlistPluginTest',
   [
     'tinymce.plugins.advlist.Plugin',
+    'tinymce.plugins.lists.Plugin',
+    'tinymce.themes.modern.Theme',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'ephox.agar.api.Pipeline'
   ],
   function (
-    Plugin, LegacyUnit, TinyLoader, Pipeline
+    AdvListPlugin, ListsPlugin, ModernTheme, LegacyUnit, TinyLoader, Pipeline
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    AdvListPlugin();
+    ListsPlugin();
+    ModernTheme();
 
     var listStyleTest = function (title, definition) {
       suite.test(title, function (editor) {
@@ -191,7 +197,8 @@ asynctest(
       valid_styles: {
         '*': 'list-style-type'
       },
-      disable_nodechange: true
+      disable_nodechange: true,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

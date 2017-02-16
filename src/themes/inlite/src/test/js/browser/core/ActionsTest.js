@@ -3,14 +3,17 @@ asynctest(
   [
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyApis',
+    'tinymce.themes.inlite.Theme',
     'tinymce.themes.inlite.core.Actions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.GeneralSteps'
   ],
-  function (TinyLoader, TinyApis, Actions, Pipeline, Step, GeneralSteps) {
+  function (TinyLoader, TinyApis, Theme, Actions, Pipeline, Step, GeneralSteps) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Theme();
 
     var wrap = function (f, args) {
       return function () {
@@ -175,7 +178,9 @@ asynctest(
         sUnlinkTests(editor, tinyApis)
       ], onSuccess, onFailure);
     }, {
-      inline: true
+      inline: true,
+      theme: 'inlite',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

@@ -1,18 +1,21 @@
 asynctest(
   'browser.tinymce.core.EnterKeyCeFalseTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'tinymce.core.Env',
     'tinymce.core.FocusManager',
-    'tinymce.core.util.Tools',
     'tinymce.core.test.HtmlUtils',
-    'tinymce.core.Env'
+    'tinymce.core.util.Tools',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, TinyLoader, FocusManager, Tools, HtmlUtils, Env) {
+  function (Pipeline, LegacyUnit, TinyLoader, Env, FocusManager, HtmlUtils, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var pressEnter = function (editor, evt) {
       var dom = editor.dom, target = editor.selection.getNode();
@@ -117,7 +120,8 @@ asynctest(
       schema: 'html5',
       extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

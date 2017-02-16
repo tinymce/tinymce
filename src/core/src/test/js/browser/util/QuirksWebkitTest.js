@@ -1,17 +1,20 @@
 asynctest(
   'browser.tinymce.util.QuirksWekbitTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.core.Env',
-    'tinymce.core.test.HtmlUtils'
+    'tinymce.core.test.HtmlUtils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, Step, TinyLoader, Env, HtmlUtils) {
+  function (Pipeline, Step, LegacyUnit, TinyLoader, Env, HtmlUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     suite.test('Delete from beginning of P into H1', function (editor) {
       editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
@@ -331,7 +334,8 @@ asynctest(
     }, {
       add_unload_trigger: false,
       indent: false,
-      disable_nodechange: true
+      disable_nodechange: true,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

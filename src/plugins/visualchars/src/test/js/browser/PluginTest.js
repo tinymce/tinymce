@@ -1,17 +1,19 @@
 asynctest(
   'browser.tinymce.plugins.visualchars.PluginTest',
   [
-    'tinymce.plugins.visualchars.Plugin',
+    'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.agar.api.Pipeline'
+    'tinymce.plugins.visualchars.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    Plugin, LegacyUnit, TinyLoader, Pipeline
-  ) {
+  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     suite.test('Visualchar toggle on/off', function (editor) {
 
@@ -49,7 +51,8 @@ asynctest(
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
-      plugins: 'visualchars'
+      plugins: 'visualchars',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

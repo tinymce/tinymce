@@ -351,7 +351,7 @@ define(
       var customElementsMap = {}, specialElements = {};
 
       // Creates an lookup table map object for the specified option or the default value
-      function createLookupTable(option, default_value, extendWith) {
+      function createLookupTable(option, defaultValue, extendWith) {
         var value = settings[option];
 
         if (!value) {
@@ -359,7 +359,7 @@ define(
           value = mapCache[option];
 
           if (!value) {
-            value = makeMap(default_value, ' ', makeMap(default_value.toUpperCase(), ' '));
+            value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
             value = extend(value, extendWith);
 
             mapCache[option] = value;
