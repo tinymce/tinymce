@@ -1,6 +1,6 @@
 {
   "name": "@ephox/mcagar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Tinymce agar wrapper",
   "scripts": {
     "test": "bedrock-auto -b chrome --testdir src/test/js/browser"
