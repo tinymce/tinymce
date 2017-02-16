@@ -2,15 +2,14 @@ define(
   'ephox.alloy.toolbar.Overflows',
 
   [
+    'ephox.alloy.alien.PositionArray',
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.polaris.api.PositionArray',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Fun, Option, PositionArray, Struct) {
-    // TODO: Move atomic test into alloy.
+  function (PositionArray, Arr, Fun, Option, Struct) {
     var output = Struct.immutable('within', 'extra', 'withinWidth');
 
     var apportion = function (units, total, len) {
