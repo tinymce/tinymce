@@ -5,23 +5,17 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
-    'ephox.epithet.Resolve',
     'ephox.highway.Merger',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse',
-    'ephox.violin.Strings',
     'global!Error',
     'global!String'
   ],
 
-  function (Objects, Arr, Obj, Resolve, Merger, Json, Fun, Result, Attr, Element, Html, Node, Text, Traverse, Strings, Error, String) {
+  function (Objects, Arr, Obj, Merger, Result, Element, Node, Text, Traverse, Error, String) {
     var getAttrs = function (elem) {
       var attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
       return Arr.foldl(attributes, function (b, attr) {

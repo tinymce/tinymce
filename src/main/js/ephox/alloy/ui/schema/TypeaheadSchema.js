@@ -2,6 +2,7 @@ define(
   'ephox.alloy.ui.schema.TypeaheadSchema',
 
   [
+    'ephox.alloy.alien.Strings',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
@@ -11,11 +12,13 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.scullion.Cell',
-    'ephox.violin.Strings'
+    'ephox.scullion.Cell'
   ],
 
-  function (Coupling, Representing, Sandboxing, Fields, PartType, InputBase, FieldSchema, Fun, Option, Cell, Strings) {
+  function (
+    Strings, Coupling, Representing, Sandboxing, Fields, PartType, InputBase, FieldSchema,
+    Fun, Option, Cell
+  ) {
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
