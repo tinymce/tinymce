@@ -4,12 +4,13 @@ test(
   [
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.parts.PartType',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.peanut.Fun',
     'global!console'
   ],
 
-  function (RawAssertions, PartType, ValueSchema, Fun, console) {
+  function (RawAssertions, PartType, Objects, ValueSchema, Fun, console) {
     // { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
     //   { optional: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
     //   { group: [ 'factory', 'schema', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
@@ -38,41 +39,69 @@ test(
       Fun.constant({ defaultValue: 10 }),
       Fun.constant({ overriddenValue: 15 })
     );
+
+    var optional = PartType.optional(
+      { sketch: function (x) { return x + '.optional'; } },
+      [ ],
+      'optional',
+      '<part.optional>',
+      Fun.constant({ defaultValue: 10 }),
+      Fun.constant({ overriddenValue: 15 })
+    );
     
-    var schemas = PartType.schemas([ internal, external ]);
 
-      //     { setOf: [ 'validator', 'valueType' ] },
-      // { arrOf: [ 'valueType' ] },
-      // { objOf: [ 'fields' ] },
-      // { itemOf: [ 'validator' ] },
-      // { choiceOf: [ 'key', 'branches' ] }
+    // We split up the checking functions like so:
+    // checkSuccessWithNone, the non-optional parts are expected, and the optional = None
+    // checkSuccessWithSome, the non-optional parts are expected, and the optional is optExpected
 
-    var schema = ValueSchema.objOf(schemas);
+    var checkSuccess = function (label, expected, parts, input) {
+      var schemas = PartType.schemas(parts);
+      var output = ValueSchema.asRawOrDie(
+        label,
+        ValueSchema.objOf(schemas),
+        input
+      );
 
-    var output = ValueSchema.asRawOrDie(
-      'Test 1',
-      schema,
+      RawAssertions.assertEq(label, expected, output);
+    };
+
+    var checkSuccessWithNone = function (label, expected, parts, input) {
+      var schemas = PartType.schemas(parts);
+      var output = ValueSchema.asRawOrDie(
+        label,
+        ValueSchema.objOf(schemas),
+        input
+      );
+
+      // We can't check Optionals with eq
+      var narrowed = Objects.narrow(output, [ 'internal', 'external' ]);
+      RawAssertions.assertEq('narrowed.' + label, expected, narrowed);
+      RawAssertions.assertEq('checking none.' + label, true, output.optional().isNone());
+    };
+
+    var checkSuccessWithSome = function (label, expected, optExpected, parts, input) {
+      var schemas = PartType.schemas(parts);
+      var output = ValueSchema.asRawOrDie(
+        label,
+        ValueSchema.objOf(schemas),
+        input
+      );
+
+      // We can't check Optionals with eq
+      var narrowed = Objects.narrow(output, [ 'internal', 'external' ]);
+      RawAssertions.assertEq('narrowed.' + label, expected, narrowed);
+      RawAssertions.assertEq('checking some' + label, optExpected, output.optional().getOrDie(
+        'Optional value was not set. Expecting: ' + optExpected
+      ));
+    };
+
+    checkSuccess(
+      'just internal',
       {
-        internal: 'internal.schema',
-        external: 'external.schema'
-      }
-    );
-
-    RawAssertions.assertEq(
-      'Checking the value of test1',
-      {
-        internal: {
-          entirety: 'internal.schema'
-        },
-        external: {
-          entirety: 'external.schema'
-        }
+        internal: { entirety: 'internal.schema' }
       },
-      output
+      [ internal ],
+      { internal: 'internal.schema' }
     );
-
-    console.log('schema', output);
-
-
   }
 );
