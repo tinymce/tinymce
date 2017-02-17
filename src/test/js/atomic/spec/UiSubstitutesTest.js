@@ -12,7 +12,7 @@ test(
     Logger.sync(
       'Testing empty components',
       function () {
-        var actual = UiSubstitutes.substitutePlaces(Option.some('detail'), { }, { }, { });
+        var actual = UiSubstitutes.substitutePlaces(Option.some('detail'), { }, [ ], { });
         RawAssertions.assertEq('Components should stay empty', [ ], actual);
       }
     );
