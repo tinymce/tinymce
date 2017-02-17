@@ -15,7 +15,7 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.photon.Writer',
+    'ephox.alloy.frame.Writer',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',

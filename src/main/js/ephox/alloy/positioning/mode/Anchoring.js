@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.positioning.Anchoring',
+  'ephox.alloy.positioning.mode.Anchoring',
 
   [
     'ephox.katamari.api.Contracts'

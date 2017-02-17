@@ -2,12 +2,12 @@ define(
   'ephox.alloy.behaviour.positioning.PositionApis',
 
   [
-    'ephox.alloy.positioning.AnchorSchema',
+    'ephox.alloy.positioning.mode.AnchorSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.repartee.api.Anchor',
-    'ephox.repartee.api.Boxes',
-    'ephox.repartee.api.Origins',
-    'ephox.repartee.api.SimpleLayout',
+    'ephox.alloy.positioning.layout.Anchor',
+    'ephox.alloy.positioning.layout.Boxes',
+    'ephox.alloy.positioning.layout.Origins',
+    'ephox.alloy.positioning.layout.SimpleLayout',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.view.Location',

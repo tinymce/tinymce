@@ -12,7 +12,7 @@ define(
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.photon.Writer',
+    'ephox.alloy.frame.Writer',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.events.DomEvent',

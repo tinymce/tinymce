@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.positioning.ContainerOffsets',
+  'ephox.alloy.positioning.mode.ContainerOffsets',
 
   [
     'ephox.alloy.alien.CssPosition',
