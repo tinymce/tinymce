@@ -183,6 +183,23 @@ test(
         else assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
         return true;
       });
+
+      Jsc.syncProperty(
+        'Testing consolidate with base',
+        [ inputList, Jsc.nestring, Jsc.json ],
+        function (input, baseKey, baseValue) {
+          var actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
+          var hasError = Arr.exists(input.results, function (res) {
+            return res.isError();
+          });
+
+          if (hasError) return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall';
+          else {
+            assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
+            return Jsc.eq(true, actual.getOrDie('Must be value').hasOwnProperty(baseKey)) ? true : 'Missing base key: ' + baseKey;
+          }
+        }
+      );
     };
 
 
