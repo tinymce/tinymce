@@ -4,7 +4,7 @@ test(
   [
     'ephox.alloy.navigation.ArrNavigation',
     'ephox.peanut.Fun',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!Error',
     'global!Math'
   ],

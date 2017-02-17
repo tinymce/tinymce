@@ -5,7 +5,7 @@ test(
     'ephox.alloy.dragging.DragCoord',
     'ephox.compass.Arr',
     'ephox.sugar.alien.Position',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (DragCoord, Arr, Position, Jsc) {

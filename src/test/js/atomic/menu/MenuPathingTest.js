@@ -4,7 +4,7 @@ test(
   [
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.menu.layered.MenuPathing',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (RawAssertions, MenuPathing, Jsc) {

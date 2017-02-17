@@ -5,11 +5,10 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.perhaps.Option',
-    'ephox.wrap.Jsc'
+    'ephox.perhaps.Option'
   ],
 
-  function (Logger, RawAssertions, UiSubstitutes, Option, Jsc) {
+  function (Logger, RawAssertions, UiSubstitutes, Option) {
     Logger.sync(
       'Testing empty components',
       function () {

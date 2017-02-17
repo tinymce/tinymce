@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.alloy.navigation.WrapArrNavigation',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (WrapArrNavigation, Jsc) {
