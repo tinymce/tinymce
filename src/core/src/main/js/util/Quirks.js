@@ -1679,9 +1679,6 @@ define(
        * prevent empty paragraphs from being produced at beginning/end of contents.
        */
       function emptyEditorOnDeleteEverything() {
-        var deepEqual = function (a, b) {
-          return a.getNode() === b.getNode() || a.isEqual(b);
-        };
         function isEverythingSelected(editor) {
           var caretWalker = new CaretWalker(editor.getBody());
           var rng = editor.selection.getRng();
@@ -1691,8 +1688,8 @@ define(
           var next = caretWalker.next(endCaretPos);
 
           return !editor.selection.isCollapsed() &&
-            (!prev || (prev.isAtStart() && deepEqual(startCaretPos, prev) === false)) &&
-            (!next || (next.isAtEnd() && deepEqual(startCaretPos, next) === false));
+            (!prev || (prev.isAtStart() && startCaretPos.isEqual(prev))) &&
+            (!next || (next.isAtEnd() && startCaretPos.isEqual(next)));
         }
 
         // Type over case delete and insert this won't cover typeover with a IME but at least it covers the common case
