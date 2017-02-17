@@ -9,8 +9,8 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option'

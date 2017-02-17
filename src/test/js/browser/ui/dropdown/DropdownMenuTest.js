@@ -23,7 +23,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result'
   ],

@@ -8,8 +8,8 @@ test(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.ResultAssertions',
     'ephox.alloy.test.TestStore',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.peanut.Fun',
     'ephox.scullion.Struct'
   ],

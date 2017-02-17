@@ -6,7 +6,7 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.docs.SchemaView',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (GuiFactory, Container, SchemaView, ValueSchema, Arr) {

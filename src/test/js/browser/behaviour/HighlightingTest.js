@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Class',

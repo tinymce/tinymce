@@ -5,7 +5,7 @@ define(
     'ephox.alloy.alien.TransformFind',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',

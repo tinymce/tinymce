@@ -8,7 +8,7 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarSchema',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -17,7 +17,10 @@ define(
     'global!Error'
   ],
 
-function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Merger, Json, Fun, Result, console, Error) {
+function (
+    Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Merger,
+    Json, Fun, Result, console, Error
+  ) {
     var schema = ToolbarSchema.schema();
 
     // TODO: Dupe with ToolbarSchema

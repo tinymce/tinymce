@@ -5,7 +5,7 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.alien.ObjIndex',
-    'ephox.compass.Obj'
+    'ephox.katamari.api.Obj'
   ],
 
   function (Logger, RawAssertions, ObjIndex, Obj) {

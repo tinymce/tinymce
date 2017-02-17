@@ -11,7 +11,7 @@ define(
     'ephox.alloy.dom.DomRender',
     'ephox.boulder.api.ValueSchema',
     'ephox.classify.Type',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.scullion.Cell',
@@ -19,7 +19,10 @@ define(
     'global!Error'
   ],
 
-  function (NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
+  function (
+    NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification,
+    DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error
+  ) {
     var build = function (spec) { 
        var getSelf = function () {
         return self;

@@ -7,7 +7,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Obj',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Array',
@@ -15,7 +15,10 @@ define(
     'global!console'
   ],
 
-  function (EventRoot, SystemEvents, EventHandler, DomModification, Objects, Obj, Merger, Fun, Array, Error, console) {
+  function (
+    EventRoot, SystemEvents, EventHandler, DomModification, Objects, Obj, Merger, Fun,
+    Array, Error, console
+  ) {
     var executeEvent = function (toggleInfo, executor) {
       return {
         key: SystemEvents.execute(),

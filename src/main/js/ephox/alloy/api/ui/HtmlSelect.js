@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.HtmlSelectSchema',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
@@ -48,12 +48,11 @@ define(
             representing: {
               extractValue: function (comp, data) {
                 // See if there is something that matches value
-                var matching = Arr.find(detail.options(), function (opt) {
+                return Arr.find(detail.options(), function (opt) {
                   return opt.value === data.value;
-                });
-
-                // TODO: Update when using katamari
-                return matching !== undefined && matching !== null ? Result.value(matching) : Result.error('Not found');
+                }).fold(function () {
+                  return Result.error('Not found');
+                }, Result.value);
               },
 
               interactive: {

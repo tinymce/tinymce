@@ -18,7 +18,7 @@ asynctest(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.form.TestForm',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Obj',
     'ephox.peanut.Fun'
   ],
  

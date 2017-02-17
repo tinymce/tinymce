@@ -9,7 +9,7 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Compare',
@@ -61,6 +61,23 @@ define(
       });
     };
 
+    var goFromTabstop = function (component, tabstops, stopIndex, cyclicInfo, cycle) {
+      return cycle(tabstops, stopIndex, function (elem) {
+        return isVisible(cyclicInfo, elem) && cyclicInfo.useTabstopAt(elem);
+      }).fold(function () {
+        // Even if there is only one, still capture the event.
+        // logFailed(index, tabstops);
+        return Option.some(true);
+      }, function (outcome) {
+        // logSuccess(cyclicInfo, index, tabstops, component.element(), outcome);
+        var system = component.getSystem();
+        var originator = component.element();
+        system.triggerFocus(outcome, originator);
+        // Kill the event
+        return Option.some(true);
+      });
+    };
+
     var go = function (component, simulatedEvent, cyclicInfo, cycle) {
       // 1. Find our current tabstop
       // 2. Find the index of that tabstop
@@ -69,23 +86,10 @@ define(
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
-        var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        return index < 0 ? Option.none() : cycle(tabstops, index, function (elem) {
-          return isVisible(cyclicInfo, elem) && cyclicInfo.useTabstopAt(elem);
-        }).fold(function () {
-          // Even if there is only one, still capture the event.
-          // logFailed(index, tabstops);
-          return Option.some(true);
-        }, function (outcome) {
-          // logSuccess(cyclicInfo, index, tabstops, component.element(), outcome);
-          var system = component.getSystem();
-          var originator = component.element();
-          system.triggerFocus(outcome, originator);
+        var optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
 
-
-
-          // Kill the event
-          return Option.some(true);
+        return optStopIndex.bind(function (stopIndex) {
+          return goFromTabstop(component, tabstops, stopIndex, cyclicInfo, cycle);
         });
       });
     };

@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TabSection',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Tabbar, TabSection, Arr) {

@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.docs.SchemaView',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Container, SchemaView, Arr) {

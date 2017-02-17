@@ -28,13 +28,18 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'global!Error'
   ],
 
-  function (Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
+  function (
+    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating,
+    Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming,
+    Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence,
+    FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error
+  ) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
       var bs = getDefaultBehaviours(spec);

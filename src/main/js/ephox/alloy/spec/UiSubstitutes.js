@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',

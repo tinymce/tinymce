@@ -5,8 +5,8 @@ define(
     'ephox.agar.api.Chain',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj'
   ],
 
   function (Chain, Guard, NamedChain, Arr, Obj) {

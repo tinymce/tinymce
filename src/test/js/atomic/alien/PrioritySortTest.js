@@ -5,7 +5,7 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.alien.PrioritySort',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.scullion.Struct'
   ],

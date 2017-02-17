@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.PositionArray',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun'
   ],
 

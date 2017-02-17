@@ -9,13 +9,16 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun'
   ],
 
-  function (GuiFactory, Container, Documentation, DslType, Objects, ValueSchema, Type, Arr, Obj, Json, Fun) {
+  function (
+    GuiFactory, Container, Documentation, DslType, Objects, ValueSchema, Type, Arr, Obj,
+    Json, Fun
+  ) {
     var getDescription = function (key) {
       if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
       else return '<span style="outline: 1px solid red;">' + key + '</span>';

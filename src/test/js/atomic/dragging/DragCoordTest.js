@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.alloy.dragging.DragCoord',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.sugar.alien.Position',
     'ephox.wrap-jsverify.Jsc'
   ],

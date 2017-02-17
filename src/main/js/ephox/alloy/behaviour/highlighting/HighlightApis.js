@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Cycles',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.SelectorFilter',
@@ -70,12 +70,15 @@ define(
 
     var getDelta = function (component, hInfo, delta) {
       var items = SelectorFilter.descendants(component.element(), '.' + hInfo.itemClass());
-      var selected = Arr.findIndex(items, function (item) {
+      var current = Arr.findIndex(items, function (item) {
         return Class.has(item, hInfo.highlightClass());
       });
-      if (selected === -1) return Option.none();
-      var dest = Cycles.cycleBy(selected, delta, 0, items.length - 1);
-      return component.getSystem().getByDom(items[dest]);
+
+      return current.bind(function (selected) {
+        var dest = Cycles.cycleBy(selected, delta, 0, items.length - 1);
+        // INVESTIGATE: Are these consistent return types? (Option vs Result)
+        return component.getSystem().getByDom(items[dest]);
+      });
     };
 
     var getPrevious = function (component, hInfo) {

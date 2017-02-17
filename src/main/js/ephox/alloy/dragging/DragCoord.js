@@ -2,7 +2,7 @@ define(
   'ephox.alloy.dragging.DragCoord',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.scullion.ADT',
     'ephox.sugar.alien.Position',
     'global!Math'

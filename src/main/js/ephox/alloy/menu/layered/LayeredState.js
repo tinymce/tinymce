@@ -4,8 +4,8 @@ define(
   [
     'ephox.alloy.menu.layered.MenuPathing',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell'

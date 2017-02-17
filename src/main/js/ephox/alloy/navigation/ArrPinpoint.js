@@ -2,20 +2,20 @@ define(
   'ephox.alloy.navigation.ArrPinpoint',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
     'ephox.scullion.Struct'
   ],
 
-  function (Arr, Option, Struct) {
+  function (Arr, Struct) {
     var indexInfo = Struct.immutableBag([ 'index', 'candidates' ], [ ]);
 
     var locate = function (candidates, predicate) {
-      var index = Arr.findIndex(candidates, predicate);
-      return index > -1 ? Option.some(indexInfo({
-        index: index,
-        candidates: candidates
-      })) : Option.none();
+      return Arr.findIndex(candidates, predicate).map(function (index) {
+        return indexInfo({
+          index: index,
+          candidates: candidates
+        });
+      });
     };
 
     return {

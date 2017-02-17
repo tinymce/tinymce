@@ -2,14 +2,13 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
-    'ephox.compass.Arr',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Future, Option, Insert, Remove) {
+  function (Future, Option, Insert, Remove) {
     var clear = function (sandbox, sInfo) {
       sInfo.state().get().each(function (data) {
         sandbox.getSystem().removeFromWorld(data);

@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.AriaFocus',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.Remove'
@@ -52,15 +52,15 @@ define(
     var remove = function (component, replaceInfo, removee) {
       var children = contents(component, replaceInfo);
       // TODO: Update for katamari
-      var found = Arr.find(children, function (child) {
+      var foundChild = Arr.find(children, function (child) {
         return Compare.eq(removee.element(), child.element());
       });
 
-      if (found !== undefined && found !== null) {
+      foundChild.each(function (found) {
         component.getSystem().removeFromWorld(found);
         Remove.remove(found.element());
         component.syncComponents();
-      }
+      });
     };
 
     // TODO: Rename

@@ -8,7 +8,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (SystemEvents, Behaviour, DisableApis, EventHandler, DomModification, Objects, Arr) {

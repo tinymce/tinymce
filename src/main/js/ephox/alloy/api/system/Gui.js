@@ -10,7 +10,7 @@ define(
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
     'ephox.sugar.api.Compare',
@@ -22,7 +22,10 @@ define(
     'global!Error'
   ],
 
-  function (GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error) {
+  function (
+    GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger,
+    Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error
+  ) {
     var create = function ( ) {
       var root = GuiFactory.build(
         Container.sketch({

@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.dom.DomDefinition',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Classes',
     'ephox.sugar.api.Css',

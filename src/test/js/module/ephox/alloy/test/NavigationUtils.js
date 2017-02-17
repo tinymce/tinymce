@@ -8,7 +8,7 @@ define(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.sugar.api.Traverse',
     'global!Array'
   ],

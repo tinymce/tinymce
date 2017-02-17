@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Obj'
+    'ephox.katamari.api.Obj'
   ],
 
   function (Objects, Obj) {

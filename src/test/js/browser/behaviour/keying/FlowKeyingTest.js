@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
  
   function (FocusTools, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {

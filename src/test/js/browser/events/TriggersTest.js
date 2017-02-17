@@ -8,7 +8,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.events.Triggers',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr',
     'ephox.sugar.api.Element',

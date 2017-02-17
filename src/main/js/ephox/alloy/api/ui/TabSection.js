@@ -12,12 +12,15 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabSectionSchema',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Attr'
   ],
 
-  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, UiSketcher, EventHandler, PartType, TabSectionSchema, Objects, Arr, Fun, Attr) {
+  function (
+    EventRoot, Highlighting, Replacing, Representing, SystemEvents, UiSketcher, EventHandler,
+    PartType, TabSectionSchema, Objects, Arr, Fun, Attr
+  ) {
     var schema = TabSectionSchema.schema();
     var partTypes = TabSectionSchema.parts();
 
@@ -25,18 +28,18 @@ define(
       var changeTab = function (button) {
         var tabValue = Representing.getValue(button);
         button.getSystem().getByUid(detail.partUids().tabview).each(function (tabview) {
-          var tabData = Arr.find(detail.tabs(), function (t) {
+          var tabWithValue = Arr.find(detail.tabs(), function (t) {
             return t.value === tabValue;
           });
 
-          if (tabData !== undefined && tabData !== null) {
+          tabWithValue.each(function (tabData) {
             var panel = tabData.view();
 
             // Update the tabview to refer to the current tab.
             Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
             Replacing.set(tabview, panel);
             detail.onChangeTab()(tabview, button, panel);
-          }
+          });
         });
       };
 

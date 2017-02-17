@@ -12,7 +12,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.events.EventRegistry',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',

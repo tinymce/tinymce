@@ -6,9 +6,8 @@ define(
     'ephox.alloy.alien.PrioritySort',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
@@ -17,7 +16,10 @@ define(
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, EventHandler, Objects, Type, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (
+    ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result,
+    Array, Error
+  ) {
     /*
      * The process of combining a component's events
      *

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.CssPosition',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun',
     'ephox.scullion.ADT',
     'ephox.sugar.alien.Position'

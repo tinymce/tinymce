@@ -2,15 +2,15 @@ define(
   'ephox.alloy.demo.TypeaheadDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
@@ -20,7 +20,10 @@ define(
     'ephox.sugar.api.Value'
   ],
 
-  function (Gui, Representing, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value) {
+  function (
+    Representing, Gui, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr,
+    Future, Option, Result, Class, Element, Insert, Value
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

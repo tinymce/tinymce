@@ -4,20 +4,20 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.fred.PlatformDetection',
-    'ephox.perhaps.Result',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Traverse',
     'global!setTimeout'
   ],
 
-  function (Keys, SystemEvents, FieldPresence, FieldSchema, ValueSchema, Type, Arr, PlatformDetection, Result, DomEvent, Node, Traverse, setTimeout) {
+  function (
+    Keys, SystemEvents, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node,
+    Traverse, setTimeout
+  ) {
     var isDangerous = function (event) {
       // Will trigger the Back button in the browser
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));

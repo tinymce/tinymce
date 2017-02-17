@@ -13,7 +13,7 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',

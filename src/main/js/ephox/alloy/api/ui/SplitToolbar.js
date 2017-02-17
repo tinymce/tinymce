@@ -12,7 +12,7 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
     'ephox.alloy.ui.schema.SplitToolbarSchema',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.sugar.api.Css',

@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.epithet.Id',
     'ephox.peanut.Fun'
   ],

@@ -5,7 +5,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Obj',
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Result',
     'global!Error'

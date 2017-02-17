@@ -5,7 +5,7 @@ define(
     'ephox.alloy.events.EventSource',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.ADT',

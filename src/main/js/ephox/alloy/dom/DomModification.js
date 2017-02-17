@@ -4,8 +4,8 @@ define(
   [
     'ephox.alloy.dom.DomDefinition',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Result',
