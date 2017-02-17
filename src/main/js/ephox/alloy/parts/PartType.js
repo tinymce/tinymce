@@ -19,47 +19,36 @@ define(
       { group: [ 'factory', 'schema', 'name', 'unit', 'pname', 'defaults', 'overrides' ] }
     ]);
 
+    var original = 'entirety';
+
     // TODO: Make more functional if performance isn't an issue.
 
     var schemas = function (parts) {
-     var r = [ ];
-
-      Arr.each(parts, function (part) {
-        part.fold(
+     
+      return Arr.map(parts, function (part) {
+        return part.fold(
           function (factory, schema, name, pname, defaults, overrides) {
-            r.push(
-              FieldSchema.strictObjOf(name, schema.concat([
-                FieldSchema.state('entirety', Fun.identity)
-              ]))
-            );
+            return FieldSchema.strictObjOf(name, schema.concat([
+              FieldSchema.state(original, Fun.identity)
+            ]));
           },
           function (factory, schema, name, _defaults, _overrides) {
-            r.push(
-              FieldSchema.strictObjOf(name, schema.concat([
-                FieldSchema.state('entirety', Fun.identity)
-              ]))
-            );
+            return FieldSchema.strictObjOf(name, schema.concat([
+              FieldSchema.state(original, Fun.identity)
+            ]));
           },
           function (factory, schema, name, pname, defaults, overrides) {
-            r.push(
-              FieldSchema.optionObjOf(name, schema.concat([
-                FieldSchema.state('entirety', Fun.identity)
-              ]))
-            );
+            return FieldSchema.optionObjOf(name, schema.concat([
+              FieldSchema.state(original, Fun.identity)
+            ]));
           },
           function (factory, schema, name, unit, pname, defaults, overrides) {
-            r.push(
-              FieldSchema.strictObjOf(name, schema.concat([
-                FieldSchema.state('entirety', Fun.identity)
-              ]))
-            );
-            // TODO: Shell support
-            // required.push(name);
+            return FieldSchema.strictObjOf(name, schema.concat([
+              FieldSchema.state(original, Fun.identity)
+            ]));
           }
         );
       });
-
-      return r;
     };
 
     var combine = function (name, detail, defaults, spec, overrides) {
@@ -106,7 +95,7 @@ define(
           },
           function (factory, schema, name, defaults, overrides) {
             ex[name] = Fun.constant(
-              combine(name, detail, defaults, detail.parts()[name]().entirety(), overrides)
+              combine(name, detail, defaults, detail.parts()[name]()[original](), overrides)
             );
             // do nothing ... should not be in components
           },
@@ -131,7 +120,7 @@ define(
           function (factory, schema, name, pname, defaults, overrides) {
             ps[pname] = UiSubstitutes.single(true, function (detail) {
               return factory.sketch(
-                combine(name, detail, defaults, detail.parts()[name]().entirety(), overrides)
+                combine(name, detail, defaults, detail.parts()[name]()[original](), overrides)
               );
             });
           },
@@ -147,7 +136,7 @@ define(
               return factory.sketch(
                 combine(name, detail, defaults, detail.parts()[name]().getOrDie(
                   'Included optional part: ' + name + ' but has no part information'  
-                ).entirety(), overrides)
+                )[original](), overrides)
               );
             });
           },
@@ -191,7 +180,9 @@ define(
       generate: generate,
       components: components,
       externals: externals,
-      placeholders: placeholders
+      placeholders: placeholders,
+
+      original: Fun.constant(original)
     };
   }
 );

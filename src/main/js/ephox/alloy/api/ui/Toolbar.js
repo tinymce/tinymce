@@ -65,10 +65,9 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
       var extra = (function () {
         if (detail.shell()) {
           return {
-            // TODO: Consolidate this "entirety"
             base: Merger.deepMerge(detail.parts().groups().getOrDie(
               'Shell mode specified for toolbar, but no groups part provided'
-            ).entirety(), enhanceGroups(detail)),
+            )[PartType.original()](), enhanceGroups(detail)),
             comps: [ ]
           };
         } else {

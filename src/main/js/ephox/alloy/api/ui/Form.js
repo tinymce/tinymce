@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.parts.PartType',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
@@ -15,7 +16,10 @@ define(
     'ephox.perhaps.Option'
   ],
 
-  function (Composing, Representing, UiSketcher, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
+  function (
+    Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema,
+    Arr, Obj, Merger, Fun, Option
+  ) {
     var schema = [
       
     ];
@@ -26,7 +30,7 @@ define(
         Obj.keys(rawSpec.parts),
         function (p) {
           return FieldSchema.strictObjOf(p, schema.concat([
-            FieldSchema.state('entirety', Fun.identity)
+            FieldSchema.state(PartType.original(), Fun.identity)
           ]));
         }
       );

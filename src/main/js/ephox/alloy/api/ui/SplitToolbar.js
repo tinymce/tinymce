@@ -50,7 +50,7 @@ define(
           items: [
             Button.sketch(
               Merger.deepMerge(
-                detail.parts()['overflow-button']().entirety(),
+                detail.parts()['overflow-button']()[PartType.original()](),
                 {
                   action: function (button) {
                     button.getSystem().getByUid(detail.partUids().overflow).each(function (overflow) {
