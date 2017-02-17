@@ -32,7 +32,7 @@ asynctest(
         Utils.sAssertEditorContent(apis, editor, expected),
         Waiter.sTryUntil('Wait for structure check',
           apis.sAssertContentStructure(struct),
-          10, 500),
+          100, 3000),
         apis.sSetContent('')
       ]);
     };
@@ -49,69 +49,72 @@ asynctest(
         apis.sSetContent('')
       ]);
     };
+    var placeholderStructure = ApproxStructure.build(function (s) {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('img', {})
+            ]
+          }),
+          s.element('div', {}),
+          s.element('div', {}),
+          s.element('div', {}),
+          s.element('div', {})
+        ]
+      });
+    });
+
+    var iframeStructure = ApproxStructure.build(function (s) {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                children: [
+                  s.element('iframe', {}),
+                  s.element('span', {})
+                ]
+              }),
+              s.anything()
+            ]
+          })
+        ]
+      });
+    });
+
+    var scriptStruct = ApproxStructure.build(function (s, str, arr) {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('img', {
+                classes: [
+                  arr.has('mce-object', 'mce-object-script')
+                ],
+                attrs: {
+                  height: str.is('150'),
+                  width: str.is('300')
+                }
+              }),
+              s.element('img', {
+                classes: [
+                  arr.has('mce-object', 'mce-object-script')
+                ],
+                attrs: {
+                  height: str.is('200'),
+                  width: str.is('100')
+                }
+              })
+            ]
+          })
+        ]
+      });
+    });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var ui = TinyUi(editor);
       var apis = TinyApis(editor);
-
-      var placeholderStructure = ApproxStructure.build(function (s) {
-        return s.element('body', {
-          children: [
-            s.element('p', {
-              children: [
-                s.element('img', {})
-              ]
-            }),
-            s.element('div', {}),
-            s.element('div', {}),
-            s.element('div', {}),
-            s.element('div', {})
-          ]
-        });
-      });
-
-      var iframeStructure = ApproxStructure.build(function (s) {
-        return s.element('body', {
-          children: [
-            s.element('p', {
-              children: [
-                s.element('span', {
-                  children: [
-                    s.element('iframe', {}),
-                    s.element('span', {})
-                  ]
-                }),
-                s.anything()
-              ]
-            })
-          ]
-        });
-      });
-
-      var scriptStruct = ApproxStructure.build(function (s, str, arr) {
-        return s.element('body', {
-          children: [
-            s.element('img', {
-              classes: [
-                arr.has('mce-object', 'mce-object-script')
-              ],
-              attrs: {
-                height: str.is('150'),
-                width: str.is('300')
-              }
-            }),
-            s.element('img', {
-              classes: [
-                arr.has('mce-object', 'mce-object-script')
-              ],
-              attrs: {
-                height: str.is('200'),
-                width: str.is('100')
-              }
-            })
-          ]
-        });
-      });
 
       Pipeline.async({}, [
         Utils.sSetSetting(editor.settings, 'media_live_embeds', false),

@@ -9,10 +9,14 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
+    'tinymce.core.Env',
     'tinymce.plugins.media.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Chain, Keyboard, Keys, Pipeline, Step, TinyApis, TinyDom, TinyLoader, Plugin, Theme) {
+  function (
+    Chain, Keyboard, Keys, Pipeline, Step, TinyApis, TinyDom, TinyLoader, Env, Plugin,
+    Theme
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,13 +37,14 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var apis = TinyApis(editor);
-
-      Pipeline.async({}, [
+      var steps = Env.webkit ? [
         sRawSetContent(editor, '<p>a</p><p><br /></p><p><br /></p><p>b</p>'),
         apis.sSetSelection([2], 0, [3, 0], 1),
         sKeydown(TinyDom.fromDom(editor.getBody()), Keys.backspace()),
         apis.sAssertContent('<p>a</p><p>&nbsp;</p><p>&nbsp;</p>')
-      ], onSuccess, onFailure);
+      ] : [];
+
+      Pipeline.async({}, steps, onSuccess, onFailure);
     }, {
       skin_url: '/project/src/skins/lightgray/dist/lightgray',
       indent: false,
