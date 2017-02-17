@@ -2,7 +2,7 @@ define(
   'ephox.boulder.core.ObjWriter',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

@@ -3,14 +3,14 @@ test(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Result',
-    'ephox.wrap.Jsc'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Result',
+    'ephox.sand.api.JSON',
+    'ephox.wrap-jsverify.Jsc'
   ],
 
-  function (Objects, Arr, Obj, Json, Result, Jsc) {
+  function (Objects, Arr, Obj, Result, Json, Jsc) {
     var smallSet = Jsc.nestring;
 
     var check = function (arb, checker) {

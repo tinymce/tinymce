@@ -7,11 +7,11 @@ test(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Result',
+    'ephox.sand.api.JSON'
   ],
 
-  function (Logger, RawAssertions, FieldPresence, FieldSchema, ValueSchema, Json, Result) {
+  function (Logger, RawAssertions, FieldPresence, FieldSchema, ValueSchema, Result, Json) {
     var checkErr = function (label, expectedPart, input, processor) {
       ValueSchema.asRaw(label, processor, input).fold(function (err) {
         var message = ValueSchema.formatError(err);

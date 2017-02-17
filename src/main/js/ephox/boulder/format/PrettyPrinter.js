@@ -2,15 +2,15 @@ define(
   'ephox.boulder.format.PrettyPrinter',
 
   [
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.numerosity.api.JSON'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Type',
+    'ephox.sand.api.JSON'
   ],
 
-  function (Type, Arr, Obj, Json) {
+  function (Arr, Obj, Type, JSON) {
     var formatObj = function (input) {
-      return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : Json.stringify(input, null, 2);
+      return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : JSON.stringify(input, null, 2);
 
     };
 

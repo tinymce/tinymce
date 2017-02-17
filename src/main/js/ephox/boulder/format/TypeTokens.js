@@ -2,7 +2,7 @@ define(
   'ephox.boulder.format.TypeTokens',
 
   [
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt'
   ],
   
   function (Adt) {

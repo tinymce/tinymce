@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boulder.format.PrettyPrinter',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Result'
   ],
 
   function (PrettyPrinter, Result) {

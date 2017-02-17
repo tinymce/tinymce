@@ -8,7 +8,8 @@
     "grunt-cli": "^1.2.0"
   },
   "devDependencies": {
-    "@ephox/agar": "^2.0.2"
+    "@ephox/agar": "^2.0.2",
+    "@ephox/bolt": "^1.8.1"
   },
   "scripts": {
     "test": "bolt test config/bolt/atomic.js src/test/js/atomic/**/**Test.js"

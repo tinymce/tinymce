@@ -2,9 +2,9 @@ define(
   'ephox.boulder.combine.ResultCombine',
 
   [
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Result'
   ],
 
   function (Arr, Merger, Result) {
