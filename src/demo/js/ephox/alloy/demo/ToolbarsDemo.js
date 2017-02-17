@@ -201,7 +201,11 @@ define(
               ]
             })
           ],
-          items: s.items
+          items: s.items,
+
+          parts: {
+            items: { }
+          }
         };
       };
 
@@ -241,7 +245,9 @@ define(
                     display: 'flex'
                   }
                 },
-                parts: { },
+                parts: {
+                  groups: { }
+                },
 
                 members: {
                   group: {
@@ -276,7 +282,9 @@ define(
                   dom: {
                     tag: 'div'
                   },
-                  parts: { },
+                  parts: {
+                    groups: { }
+                  },
 
                   members: {
                     group: {
@@ -292,7 +300,9 @@ define(
                       'flex-wrap': 'wrap'
                     }
                   },
-                  parts: { },
+                  parts: {
+                    groups: { }
+                  },
 
                   members: {
                     group: {

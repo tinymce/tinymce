@@ -4,14 +4,12 @@ define(
   [
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.spec.UiSubstitutes',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun'
   ],
 
-  function (EventHandler, PartType, UiSubstitutes, Merger, Fun) {
+  function (EventHandler, PartType, Fun) {
     return PartType.optional(
-      { build: Fun.identity },
+      { sketch: Fun.identity },
       [ ],
       'sink',
       '<alloy.sink>',
