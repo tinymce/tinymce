@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "Basic javascript object validation",
   "dependencies": {
+    "@ephox/katamari": "^1.0.2",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ephox/agar": "^2.0.2"
+  },
   "scripts": {
     "test": "bolt test config/bolt/atomic.js src/test/js/atomic/**/**Test.js"
   },
