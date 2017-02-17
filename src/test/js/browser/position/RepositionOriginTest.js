@@ -56,10 +56,10 @@ test(
       assert.eq(expected.position(), actual.position());
 
       // Not using an array so the error stack traces are useful
-      assertOption.assert(expected.left(), actual.left());
-      assertOption.assert(expected.top(), actual.top());
-      assertOption.assert(expected.right(), actual.right());
-      assertOption.assert(expected.bottom(), actual.bottom());
+      assertOption(expected.left(), actual.left());
+      assertOption(expected.top(), actual.top());
+      assertOption(expected.right(), actual.right());
+      assertOption(expected.bottom(), actual.bottom());
     };
 
     var makeOnscreen = Fun.curry(makeDecision, 100, 101, 102, 103);
