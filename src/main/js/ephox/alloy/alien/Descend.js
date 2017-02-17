@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.Descend',
 
   [
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Struct',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',
     'ephox.sugar.api.search.Traverse'

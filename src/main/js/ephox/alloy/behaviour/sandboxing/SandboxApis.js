@@ -2,8 +2,8 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove'
   ],

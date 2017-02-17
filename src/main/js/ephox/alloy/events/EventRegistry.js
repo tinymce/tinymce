@@ -7,8 +7,8 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
     'global!console'
   ],
 

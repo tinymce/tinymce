@@ -15,7 +15,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
     'global!Error'

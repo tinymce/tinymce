@@ -8,7 +8,7 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Scroll',
     'ephox.sugar.api.search.Traverse',

@@ -16,8 +16,8 @@ asynctest(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.TextContent'
   ],
  

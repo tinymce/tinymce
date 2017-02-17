@@ -11,7 +11,7 @@ test(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Fun',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Logger, RawAssertions, ComponentEvents, EventHandler, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {

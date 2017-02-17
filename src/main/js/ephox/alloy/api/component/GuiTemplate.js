@@ -6,7 +6,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Merger',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',

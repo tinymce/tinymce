@@ -5,7 +5,7 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Logger, RawAssertions, UiSubstitutes, Option) {

@@ -12,7 +12,7 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',

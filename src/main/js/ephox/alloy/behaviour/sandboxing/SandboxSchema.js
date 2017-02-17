@@ -6,8 +6,8 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell'
   ],
 
   function (Positioning, FieldSchema, ValueSchema, Fun, Option, Cell) {

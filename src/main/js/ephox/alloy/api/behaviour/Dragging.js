@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.dragging.DraggingBranches',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Behaviour, DraggingBranches, Struct) {

@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Focusing, Sandboxing, Fun, Option) {

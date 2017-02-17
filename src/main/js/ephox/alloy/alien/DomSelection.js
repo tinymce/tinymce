@@ -2,8 +2,8 @@ define(
   'ephox.alloy.alien.DomSelection',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.node.Element'

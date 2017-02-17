@@ -12,7 +12,7 @@ define(
     'ephox.dragster.core.Dragging',
     'ephox.dragster.detect.Movement',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.view.Position',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',

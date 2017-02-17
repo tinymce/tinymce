@@ -14,9 +14,9 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.scullion.Cell',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Cell',
     'ephox.sugar.api.node.Element',
     'global!Error'
   ],

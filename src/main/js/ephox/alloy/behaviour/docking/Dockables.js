@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.dragging.DragCoord',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',

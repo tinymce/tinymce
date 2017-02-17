@@ -16,7 +16,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'global!Error'
   ],
 

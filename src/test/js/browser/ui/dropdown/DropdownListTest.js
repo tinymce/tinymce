@@ -23,8 +23,8 @@ asynctest(
     'ephox.alloy.test.TestBroadcasts',
     'ephox.alloy.test.dropdown.DropdownAssertions',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.properties.TextContent',
     'ephox.sugar.api.view.Width'

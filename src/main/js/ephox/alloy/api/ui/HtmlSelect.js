@@ -8,7 +8,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.TextContent',
     'ephox.sugar.api.properties.Value'
   ],

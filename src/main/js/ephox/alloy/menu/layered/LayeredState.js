@@ -7,8 +7,8 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell'
   ],
 
   function (MenuPathing, Objects, Arr, Obj, Fun, Option, Cell) {

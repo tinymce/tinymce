@@ -6,7 +6,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Merger',
-    'ephox.numerosity.api.JSON',
+    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Adt',
     'global!Error'

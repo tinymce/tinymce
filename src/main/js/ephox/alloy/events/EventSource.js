@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Cell'
   ],
 
   function (Objects, Cell) {

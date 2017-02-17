@@ -13,7 +13,7 @@ define(
     'ephox.alloy.ui.schema.DropdownSchema',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Composing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, DropdownSchema, Merger, Fun, Option) {

@@ -8,7 +8,7 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Keys, KeyingType, KeyMatch, KeyRules, FieldSchema, Fun, Option) {

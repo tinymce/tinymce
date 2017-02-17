@@ -10,7 +10,7 @@ define(
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.ui.schema.InlineViewSchema',
     'ephox.katamari.api.Merger',
-    'ephox.knoch.future.Future',
+    'ephox.katamari.api.Future',
     'ephox.katamari.api.Fun'
   ],
 

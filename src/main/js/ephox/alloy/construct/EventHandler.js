@@ -5,9 +5,9 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
+    'ephox.katamari.api.Type',
     'ephox.katamari.api.Arr',
-    'ephox.numerosity.api.JSON',
+    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
     'global!Array',
     'global!Error'

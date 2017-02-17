@@ -9,7 +9,7 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.node.Element',

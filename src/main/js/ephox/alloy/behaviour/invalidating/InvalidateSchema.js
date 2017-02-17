@@ -4,7 +4,7 @@ define(
   [
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (FieldSchema, Fun, Option) {

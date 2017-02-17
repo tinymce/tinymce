@@ -7,7 +7,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.fred.PlatformDetection',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.Traverse',

@@ -6,8 +6,8 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Obj',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Result',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Result',
     'global!Error'
   ],
 

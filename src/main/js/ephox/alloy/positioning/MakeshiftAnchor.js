@@ -5,7 +5,7 @@ define(
     'ephox.alloy.positioning.Anchoring',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.repartee.api.Bounds',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.Layout',

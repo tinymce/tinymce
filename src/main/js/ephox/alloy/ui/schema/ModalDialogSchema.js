@@ -4,9 +4,9 @@ define(
   [
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.numerosity.api.JSON',
+    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.search.SelectorFind',
     'global!Error'
   ],

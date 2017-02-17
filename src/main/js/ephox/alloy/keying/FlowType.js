@@ -12,7 +12,7 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.SelectorFind'
   ],

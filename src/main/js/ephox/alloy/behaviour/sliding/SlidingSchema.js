@@ -5,7 +5,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
-    'ephox.scullion.Cell',
+    'ephox.katamari.api.Cell',
     'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Width'
   ],

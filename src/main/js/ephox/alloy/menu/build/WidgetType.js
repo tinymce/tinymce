@@ -12,7 +12,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (EditableFields, SystemEvents, Focusing, Keying, EventHandler, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {

@@ -7,7 +7,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.LinkedLayout',
     'ephox.repartee.api.MaxHeight',

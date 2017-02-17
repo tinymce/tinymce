@@ -4,7 +4,7 @@ define(
   [
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'global!console'
   ],
 

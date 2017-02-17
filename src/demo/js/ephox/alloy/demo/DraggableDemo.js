@@ -11,7 +11,7 @@ define(
     'ephox.alloy.dragging.DragCoord',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.view.Position',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',

@@ -11,7 +11,7 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (EditableFields, Keys, KeyingType, KeyingTypes, AlloyLogger, KeyMatch, KeyRules, FieldSchema, Fun, Option) {

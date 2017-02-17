@@ -15,8 +15,8 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.typeahead.TestTypeaheadList',
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Value',
     'global!Math'
   ],

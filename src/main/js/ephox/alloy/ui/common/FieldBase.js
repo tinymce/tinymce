@@ -9,7 +9,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Id',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr'
   ],
 

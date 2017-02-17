@@ -13,7 +13,7 @@ define(
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (

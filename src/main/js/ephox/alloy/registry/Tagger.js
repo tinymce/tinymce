@@ -5,7 +5,7 @@ define(
     'ephox.alloy.ephemera.AlloyTags',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.SelectorFind'

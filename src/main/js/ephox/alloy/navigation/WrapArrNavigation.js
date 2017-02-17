@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.Cycles',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'global!Math'
   ],
 

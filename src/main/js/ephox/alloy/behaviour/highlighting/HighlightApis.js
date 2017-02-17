@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.Cycles',
     'ephox.katamari.api.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind'

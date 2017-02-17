@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.AriaFocus',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.PredicateFind',

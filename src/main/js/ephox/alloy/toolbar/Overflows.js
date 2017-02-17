@@ -5,8 +5,8 @@ define(
     'ephox.alloy.alien.PositionArray',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct'
   ],
 
   function (PositionArray, Arr, Fun, Option, Struct) {

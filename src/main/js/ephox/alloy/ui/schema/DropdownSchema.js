@@ -7,7 +7,7 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Fields, InternalSink, PartType, FieldSchema, Fun, Option) {

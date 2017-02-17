@@ -13,10 +13,10 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.katamari.api.Merger',
-    'ephox.knoch.future.Future',
+    'ephox.katamari.api.Future',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.view.Width',
     'global!Error'

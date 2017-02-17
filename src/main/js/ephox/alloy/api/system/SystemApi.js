@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.system.SystemApi',
 
   [
-    'ephox.scullion.Contracts'
+    'ephox.katamari.api.Contracts'
   ],
 
   function (Contracts) {

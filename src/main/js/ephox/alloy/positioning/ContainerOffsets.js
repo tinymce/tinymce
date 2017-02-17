@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.CssPosition',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.view.Location',

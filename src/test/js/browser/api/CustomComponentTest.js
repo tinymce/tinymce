@@ -14,7 +14,7 @@ asynctest(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Cell'
   ],
  
   function (ApproxStructure, Assertions, Step, GuiFactory, Behaviour, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {

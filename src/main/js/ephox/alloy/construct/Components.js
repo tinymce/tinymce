@@ -7,8 +7,8 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Result',
-    'ephox.scullion.Cell',
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Cell',
     'ephox.sugar.api.node.Element'
   ],
 

@@ -11,8 +11,8 @@ define(
     'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell'
   ],
 
   function (

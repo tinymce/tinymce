@@ -7,7 +7,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
-    'ephox.scullion.Cell',
+    'ephox.katamari.api.Cell',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Classes',
     'ephox.sugar.api.properties.Css'

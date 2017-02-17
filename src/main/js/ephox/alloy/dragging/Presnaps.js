@@ -2,7 +2,7 @@ define(
   'ephox.alloy.dragging.Presnaps',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.view.Position',
     'ephox.sugar.api.properties.Attr',
     'global!isNaN',

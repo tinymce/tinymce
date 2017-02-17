@@ -13,8 +13,8 @@ define(
     'ephox.alloy.navigation.WrapArrNavigation',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.SelectorFind'
   ],

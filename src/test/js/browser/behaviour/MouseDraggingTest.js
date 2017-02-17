@@ -15,9 +15,9 @@ asynctest(
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.view.Position',
     'ephox.sugar.api.properties.Css'
   ],

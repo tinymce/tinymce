@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Fun',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Struct',
     'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Width'

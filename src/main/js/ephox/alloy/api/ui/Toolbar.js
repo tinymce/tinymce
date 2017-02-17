@@ -10,9 +10,9 @@ define(
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
-    'ephox.numerosity.api.JSON',
+    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Result',
     'global!console',
     'global!Error'
   ],

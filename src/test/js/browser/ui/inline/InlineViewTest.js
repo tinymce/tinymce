@@ -18,8 +18,8 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.TestBroadcasts',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result'
   ],
  
   function (GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, GuiSetup, Sinks, TestBroadcasts, TestDropdownMenu, Future, Result) {

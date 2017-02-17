@@ -11,7 +11,7 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.view.Height',

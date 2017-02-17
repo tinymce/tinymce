@@ -13,9 +13,9 @@ define(
     'ephox.alloy.ui.schema.ModalDialogSchema',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Merger',
-    'ephox.numerosity.api.JSON',
+    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse',
     'global!Error'

@@ -5,8 +5,8 @@ define(
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.dragging.Presnaps',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'global!Math'
   ],
 

@@ -15,7 +15,7 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Value',
     'global!console',
     'global!document'

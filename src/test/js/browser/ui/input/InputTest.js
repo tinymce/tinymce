@@ -12,7 +12,7 @@ asynctest(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
-    'ephox.fred.PlatformDetection'
+    'ephox.sand.api.PlatformDetection'
   ],
  
   function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Focusing, Representing, Input, GuiSetup, PlatformDetection) {

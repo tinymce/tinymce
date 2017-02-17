@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Id',
-    'ephox.fred.PlatformDetection',
+    'ephox.sand.api.PlatformDetection',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',

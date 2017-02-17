@@ -15,7 +15,7 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind'

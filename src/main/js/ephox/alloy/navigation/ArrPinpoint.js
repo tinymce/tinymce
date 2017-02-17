@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Arr, Struct) {
