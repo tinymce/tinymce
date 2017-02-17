@@ -1,5 +1,5 @@
 define(
-  'ephox.repartee.view.OriginsUI',
+  'ephox.alloy.positioning.view.OriginsUI',
 
   [
     'ephox.alloy.positioning.layout.Bounds',

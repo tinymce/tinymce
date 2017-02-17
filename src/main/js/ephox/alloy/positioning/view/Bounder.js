@@ -1,5 +1,5 @@
 define(
-  'ephox.repartee.view.Bounder',
+  'ephox.alloy.positioning.view.Bounder',
 
   [
     'ephox.alloy.positioning.layout.Direction',

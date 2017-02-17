@@ -7,7 +7,7 @@ define(
 
   function () {
     var resolve = function (rest) {
-      return 'ephox-repartee-' + rest;
+      return 'ephox.alloy.position-' + rest;
     };
 
     return {

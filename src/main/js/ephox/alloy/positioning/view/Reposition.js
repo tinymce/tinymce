@@ -1,5 +1,5 @@
 define(
-  'ephox.repartee.view.Reposition',
+  'ephox.alloy.positioning.view.Reposition',
 
   [
     'ephox.katamari.api.Struct'

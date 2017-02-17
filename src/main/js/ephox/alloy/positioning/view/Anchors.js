@@ -1,5 +1,5 @@
 define(
-  'ephox.repartee.view.Anchors',
+  'ephox.alloy.positioning.view.Anchors',
 
   [
     'ephox.alloy.positioning.layout.Styles',

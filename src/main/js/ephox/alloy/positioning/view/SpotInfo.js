@@ -1,5 +1,5 @@
 define(
-  'ephox.repartee.view.SpotInfo',
+  'ephox.alloy.positioning.view.SpotInfo',
 
   [
     'ephox.katamari.api.Struct'

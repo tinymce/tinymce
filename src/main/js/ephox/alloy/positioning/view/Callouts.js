@@ -1,5 +1,5 @@
 define(
-  'ephox.repartee.view.Callouts',
+  'ephox.alloy.positioning.view.Callouts',
 
   [
     'ephox.alloy.positioning.layout.Origins',
