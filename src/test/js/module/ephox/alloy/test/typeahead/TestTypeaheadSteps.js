@@ -9,7 +9,7 @@ define(
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
-    'ephox.sugar.api.Focus'
+    'ephox.sugar.api.dom.Focus'
   ],
 
   function (Assertions, Chain, FocusTools, Logger, UiControls, UiFinder, Waiter, Focus) {

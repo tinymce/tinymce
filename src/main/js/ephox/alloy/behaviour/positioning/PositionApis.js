@@ -8,10 +8,10 @@ define(
     'ephox.repartee.api.Boxes',
     'ephox.repartee.api.Origins',
     'ephox.repartee.api.SimpleLayout',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Remove'
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.dom.Remove'
   ],
 
   function (AnchorSchema, ValueSchema, Anchor, Boxes, Origins, SimpleLayout, Css, Insert, Location, Remove) {

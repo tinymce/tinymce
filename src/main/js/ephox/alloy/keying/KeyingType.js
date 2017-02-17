@@ -8,7 +8,7 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (SystemEvents, FocusManagers, EventHandler, KeyRules, FieldSchema, Objects, Merger) {

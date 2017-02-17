@@ -10,7 +10,7 @@ test(
     'ephox.alloy.test.TestStore',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.scullion.Struct'
   ],
 

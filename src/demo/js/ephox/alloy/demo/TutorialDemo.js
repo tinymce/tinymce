@@ -27,13 +27,13 @@ define(
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.highway.Merger',
+    'ephox.katamari.api.Merger',
     'ephox.knoch.future.Future',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 

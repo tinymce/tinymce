@@ -4,7 +4,7 @@ define(
   [
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (FieldSchema, ValueSchema, Fun) {

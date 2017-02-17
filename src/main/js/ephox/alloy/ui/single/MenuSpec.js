@@ -14,8 +14,8 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'global!Error'
   ],

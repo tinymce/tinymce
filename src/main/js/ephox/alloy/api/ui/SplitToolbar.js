@@ -13,10 +13,10 @@ define(
     'ephox.alloy.toolbar.Overflows',
     'ephox.alloy.ui.schema.SplitToolbarSchema',
     'ephox.katamari.api.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Width'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (

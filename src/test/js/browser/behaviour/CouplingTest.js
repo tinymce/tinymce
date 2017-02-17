@@ -13,8 +13,8 @@ asynctest(
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.StepUtils',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Node',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Node',
     'global!Error'
   ],
  

@@ -12,7 +12,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (

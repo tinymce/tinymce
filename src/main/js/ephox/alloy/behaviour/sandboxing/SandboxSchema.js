@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Cell'
   ],

@@ -4,8 +4,8 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.PredicateExists'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.PredicateExists'
   ],
 
   function (GuiFactory, Container, Compare, PredicateExists) {

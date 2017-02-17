@@ -2,7 +2,7 @@ define(
   'ephox.alloy.demo.docs.Documentation',
 
   [
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (Merger) {

@@ -17,13 +17,13 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.boulder.api.Objects',
     'ephox.knoch.future.CachedFuture',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Remove'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.dom.Remove'
   ],
  
   function (Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, SystemEvents, Behaviour, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {

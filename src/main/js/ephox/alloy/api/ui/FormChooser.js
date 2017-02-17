@@ -12,9 +12,9 @@ define(
     'ephox.alloy.ui.schema.FormChooserSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter'
   ],
 
   function (

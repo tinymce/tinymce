@@ -10,13 +10,13 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, Height, SelectorFilter, SelectorFind) {

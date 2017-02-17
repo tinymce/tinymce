@@ -2,7 +2,7 @@ define(
   'ephox.alloy.menu.util.MenuEvents',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

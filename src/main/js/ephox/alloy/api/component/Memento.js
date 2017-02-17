@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (Tagger, Objects, Merger) {

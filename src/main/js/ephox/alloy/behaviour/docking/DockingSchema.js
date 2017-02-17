@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.Boxes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.sugar.api.Scroll',
+    'ephox.sugar.api.view.Scroll',
     'global!window'
   ],
 

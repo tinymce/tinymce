@@ -2,7 +2,7 @@ define(
   'ephox.alloy.ephemera.AlloyTags',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

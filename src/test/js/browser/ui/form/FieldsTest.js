@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
  
   function (ApproxStructure, Assertions, Step, GuiFactory, Representing, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {

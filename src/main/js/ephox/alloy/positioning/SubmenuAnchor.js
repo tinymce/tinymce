@@ -6,13 +6,13 @@ define(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.LinkedLayout',
     'ephox.repartee.api.MaxHeight',
     'ephox.repartee.api.Origins',
-    'ephox.sugar.api.Direction'
+    'ephox.sugar.api.properties.Direction'
   ],
 
   function (Anchoring, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Bubble, LinkedLayout, MaxHeight, Origins, Direction) {

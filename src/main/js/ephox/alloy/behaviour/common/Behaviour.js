@@ -8,8 +8,8 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Obj',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'global!Array',
     'global!Error',
     'global!console'

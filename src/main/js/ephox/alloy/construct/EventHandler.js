@@ -8,7 +8,7 @@ define(
     'ephox.classify.Type',
     'ephox.katamari.api.Arr',
     'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'global!Array',
     'global!Error'
   ],

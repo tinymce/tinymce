@@ -6,7 +6,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (SystemEvents, EventHandler, Objects, Arr, Fun) {

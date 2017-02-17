@@ -6,7 +6,7 @@ define(
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option'
   ],
 

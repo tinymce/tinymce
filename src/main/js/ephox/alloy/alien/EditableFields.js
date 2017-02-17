@@ -2,8 +2,8 @@ define(
   'ephox.alloy.alien.EditableFields',
 
   [
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Node'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Node'
   ],
 
   function (Attr, Node) {

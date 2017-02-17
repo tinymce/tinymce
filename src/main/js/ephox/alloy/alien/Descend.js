@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.scullion.Struct',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Text',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Struct, Node, Text, Traverse) {

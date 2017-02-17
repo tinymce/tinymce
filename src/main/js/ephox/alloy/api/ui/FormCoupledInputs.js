@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.FormCoupledInputsSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (UiSketcher, PartType, FormCoupledInputsSchema, Fun) {

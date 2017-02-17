@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.alloy.navigation.ArrNavigation',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.wrap-jsverify.Jsc',
     'global!Error',
     'global!Math'

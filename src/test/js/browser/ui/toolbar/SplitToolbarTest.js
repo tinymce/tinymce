@@ -11,7 +11,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
     'ephox.katamari.api.Arr',
-    'ephox.sugar.api.Css',
+    'ephox.sugar.api.properties.Css',
     'global!navigator'
   ],
  

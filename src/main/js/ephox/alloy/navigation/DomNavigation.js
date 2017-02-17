@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.Cycles',
     'ephox.alloy.navigation.DomPinpoint',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option'
   ],
 

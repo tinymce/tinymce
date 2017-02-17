@@ -8,9 +8,9 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.fred.PlatformDetection',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Traverse',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.Traverse',
     'global!setTimeout'
   ],
 

@@ -4,8 +4,8 @@ define(
   [
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.construct.EventHandler',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Focus'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Focus'
   ],
 
   function (Focusing, EventHandler, Fun, Focus) {

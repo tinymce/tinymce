@@ -18,8 +18,8 @@ asynctest(
     'ephox.numerosity.api.JSON',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.api.properties.Css'
   ],
  
   function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging, Container, DragCoord, GuiSetup, Objects, Json, Option, Result, Position, Css) {

@@ -8,8 +8,8 @@ define(
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.TabButtonSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.epithet.Id',
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Merger'
   ],
 
   function (UiSketcher, Tagger, SpecSchema, ButtonBase, TabButtonSchema, FieldSchema, Id, Merger) {

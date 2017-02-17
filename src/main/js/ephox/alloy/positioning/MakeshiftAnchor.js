@@ -4,12 +4,12 @@ define(
   [
     'ephox.alloy.positioning.Anchoring',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.repartee.api.Bounds',
     'ephox.repartee.api.Bubble',
     'ephox.repartee.api.Layout',
-    'ephox.sugar.api.Direction'
+    'ephox.sugar.api.properties.Direction'
   ],
 
   function (Anchoring, FieldSchema, Fun, Option, Bounds, Bubble, Layout, Direction) {

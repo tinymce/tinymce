@@ -5,7 +5,7 @@ define(
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Throttler'
+    'ephox.katamari.api.Throttler'
   ],
 
   function (FieldPresence, FieldSchema, ValueSchema, Throttler) {
@@ -20,7 +20,7 @@ define(
             FieldSchema.state('streams', function () {
               var setup = function (streamInfo) {
                 var sInfo = streamInfo.stream();
-                var throttler = Throttler(streamInfo.onStream(), sInfo.delay());
+                var throttler = Throttler.last(streamInfo.onStream(), sInfo.delay());
 
                 return function (component, simulatedEvent) {
                   throttler.throttle(component, simulatedEvent);

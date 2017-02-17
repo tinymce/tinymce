@@ -17,7 +17,7 @@ asynctest(
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Value',
+    'ephox.sugar.api.properties.Value',
     'global!Math'
   ],
  

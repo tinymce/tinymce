@@ -9,9 +9,9 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
-    'ephox.highway.Merger',
+    'ephox.katamari.api.Merger',
     'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'global!Error'
   ],
 

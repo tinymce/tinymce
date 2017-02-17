@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.dragging.DragCoord',
     'ephox.alloy.dragging.Presnaps',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
     'global!Math'

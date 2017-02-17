@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.TransformFind',
 
   [
-    'ephox.sugar.api.PredicateFind'
+    'ephox.sugar.api.search.PredicateFind'
   ],
 
   function (PredicateFind) {

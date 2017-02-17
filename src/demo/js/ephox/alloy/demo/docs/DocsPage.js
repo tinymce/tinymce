@@ -49,9 +49,9 @@ define(
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.alloy.ui.schema.TypeaheadSchema',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation, ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema, ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, Fun, Insert, SelectorFind) {

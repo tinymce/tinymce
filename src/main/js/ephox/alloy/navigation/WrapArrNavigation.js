@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Cycles',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'global!Math'
   ],

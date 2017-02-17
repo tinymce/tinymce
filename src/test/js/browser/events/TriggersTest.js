@@ -9,12 +9,12 @@ asynctest(
     'ephox.alloy.events.Triggers',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.SelectorFind',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.search.SelectorFind',
     'global!document'
   ],
  

@@ -4,10 +4,10 @@ define(
   [
     'ephox.alloy.navigation.ArrPinpoint',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.Visibility'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.view.Visibility'
   ],
 
   function (ArrPinpoint, Arr, Fun, Compare, SelectorFilter, Visibility) {

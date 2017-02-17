@@ -4,8 +4,8 @@ define(
   [
     'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove'
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove'
   ],
 
   function (Future, Option, Insert, Remove) {

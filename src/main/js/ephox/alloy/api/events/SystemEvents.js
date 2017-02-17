@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Obj',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Obj, Fun) {

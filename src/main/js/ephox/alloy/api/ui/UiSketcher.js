@@ -5,7 +5,7 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (PartType, Tagger, SpecSchema, Merger) {

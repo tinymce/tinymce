@@ -4,9 +4,9 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
-    'ephox.epithet.Id',
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.TextContent',
+    'ephox.katamari.api.Id',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.properties.TextContent',
     'ephox.wrap.JsBeautify',
     'global!setInterval'
   ],

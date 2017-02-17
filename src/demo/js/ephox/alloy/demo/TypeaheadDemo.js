@@ -14,10 +14,10 @@ define(
     'ephox.knoch.future.Future',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Value'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Value'
   ],
 
   function (

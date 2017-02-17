@@ -13,9 +13,9 @@ define(
     'ephox.classify.Type',
     'ephox.katamari.api.Arr',
     'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Traverse',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 

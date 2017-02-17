@@ -6,10 +6,10 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Result',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Element'
+    'ephox.sugar.api.node.Element'
   ],
 
   function (NoContextApi, Tagger, FieldSchema, ValueSchema, Fun, Result, Cell, Element) {

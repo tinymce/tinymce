@@ -11,8 +11,8 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.SplitDropdownSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option'
   ],
 

@@ -6,7 +6,7 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Obj',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'global!console'

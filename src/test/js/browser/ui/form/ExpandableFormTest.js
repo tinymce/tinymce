@@ -22,8 +22,8 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.form.TestForm',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Focus'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Focus'
   ],
  
   function (FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Fun, Focus) {

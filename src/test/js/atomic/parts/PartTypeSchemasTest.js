@@ -6,7 +6,7 @@ test(
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.wrap-jsverify.Jsc',
     'global!console'
   ],

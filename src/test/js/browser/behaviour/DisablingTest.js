@@ -19,7 +19,7 @@ asynctest(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Focus'
+    'ephox.sugar.api.dom.Focus'
   ],
  
   function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Behaviour, Disabling, Button, Container, EventHandler, GuiSetup, Objects, Focus) {

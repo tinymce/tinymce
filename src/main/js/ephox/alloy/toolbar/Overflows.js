@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.alien.PositionArray',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.scullion.Struct'
   ],

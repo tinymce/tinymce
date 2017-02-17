@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.alloy.alien.AriaVoice',
-    'ephox.sugar.api.Body',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Html'
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Html'
   ],
 
   function (AriaVoice, Body, Class, Html) {

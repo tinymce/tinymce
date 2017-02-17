@@ -11,10 +11,10 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {

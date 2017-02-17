@@ -19,7 +19,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.form.TestForm',
     'ephox.katamari.api.Obj',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
  
   function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, TestForm, Obj, Fun) {

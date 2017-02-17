@@ -7,12 +7,12 @@ define(
     'ephox.agar.api.Step',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.test.TestStore',
-    'ephox.highway.Merger',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
+    'ephox.katamari.api.Merger',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'global!document'
   ],
 

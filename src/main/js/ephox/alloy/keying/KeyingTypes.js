@@ -7,8 +7,8 @@ define(
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option'
   ],
 

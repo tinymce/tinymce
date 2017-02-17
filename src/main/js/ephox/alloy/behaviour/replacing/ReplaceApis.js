@@ -4,9 +4,9 @@ define(
   [
     'ephox.alloy.alien.AriaFocus',
     'ephox.katamari.api.Arr',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove'
   ],
 
   function (AriaFocus, Arr, Compare, Insert, Remove) {

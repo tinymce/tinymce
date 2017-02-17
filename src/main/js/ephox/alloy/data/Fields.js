@@ -5,7 +5,7 @@ define(
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (MenuMarkers, FieldSchema, Arr, Fun) {

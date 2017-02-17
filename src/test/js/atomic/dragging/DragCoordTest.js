@@ -4,7 +4,7 @@ test(
   [
     'ephox.alloy.dragging.DragCoord',
     'ephox.katamari.api.Arr',
-    'ephox.sugar.alien.Position',
+    'ephox.sugar.api.view.Position',
     'ephox.wrap-jsverify.Jsc'
   ],
 

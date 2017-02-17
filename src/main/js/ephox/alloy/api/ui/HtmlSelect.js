@@ -6,11 +6,11 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.HtmlSelectSchema',
     'ephox.katamari.api.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.TextContent',
-    'ephox.sugar.api.Value'
+    'ephox.sugar.api.properties.TextContent',
+    'ephox.sugar.api.properties.Value'
   ],
 
   function (Behaviour, UiSketcher, HtmlSelectSchema, Arr, Merger, Fun, Result, TextContent, Value) {

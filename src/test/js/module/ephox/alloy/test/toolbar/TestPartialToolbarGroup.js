@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun'
   ],
 
   function (ToolbarGroup, Merger, Fun) {

@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.perhaps.Option',
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Attr',
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.api.properties.Attr',
     'global!isNaN',
     'global!parseInt'
   ],

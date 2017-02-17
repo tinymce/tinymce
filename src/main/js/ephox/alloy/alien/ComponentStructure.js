@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.alloy.aria.AriaOwner',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.PredicateExists'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.PredicateExists'
   ],
 
   function (AriaOwner, Fun, Compare, PredicateExists) {

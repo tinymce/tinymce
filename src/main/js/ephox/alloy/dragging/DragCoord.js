@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.scullion.ADT',
-    'ephox.sugar.alien.Position',
+    'ephox.katamari.api.Adt',
+    'ephox.sugar.api.view.Position',
     'global!Math'
   ],
 

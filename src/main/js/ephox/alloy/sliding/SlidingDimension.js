@@ -6,11 +6,11 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Classes',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Classes',
+    'ephox.sugar.api.properties.Css'
   ],
 
   function (EventHandler, DomModification, FieldSchema, Objects, Fun, Cell, Class, Classes, Css) {

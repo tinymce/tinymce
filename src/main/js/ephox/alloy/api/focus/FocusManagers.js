@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Focus'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Focus'
   ],
 
   function (Highlighting, Fun, Focus) {

@@ -4,7 +4,7 @@ test(
   [
     'ephox.alloy.parts.PartType',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (PartType, Arr, Fun) {

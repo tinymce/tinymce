@@ -5,9 +5,9 @@ define(
     'ephox.alloy.alien.Cycles',
     'ephox.katamari.api.Arr',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Cycles, Arr, Option, Class, SelectorFilter, SelectorFind) {

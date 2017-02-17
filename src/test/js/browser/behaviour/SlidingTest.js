@@ -17,11 +17,11 @@ asynctest(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove'
   ],
  
   function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Behaviour, Sliding, Container, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {

@@ -4,10 +4,10 @@ define(
   [
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.scullion.Cell',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Width'
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (FieldSchema, ValueSchema, Fun, Cell, Height, Width) {

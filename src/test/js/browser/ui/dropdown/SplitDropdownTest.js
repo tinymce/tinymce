@@ -18,7 +18,7 @@ asynctest(
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.TextContent'
+    'ephox.sugar.api.properties.TextContent'
   ],
  
   function (ApproxStructure, Assertions, FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {

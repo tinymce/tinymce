@@ -9,11 +9,11 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.DragCoord',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Scroll',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Scroll',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Boxes, OffsetOrigin, SystemEvents, Dockables, EventHandler, DragCoord, Objects, Class, Compare, Css, Scroll, Traverse) {

@@ -9,9 +9,9 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.katamari.api.Arr',
-    'ephox.highway.Merger',
+    'ephox.katamari.api.Merger',
     'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Result',
     'global!console',
     'global!Error'

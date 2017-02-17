@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.EventRoot',
 
   [
-    'ephox.sugar.api.Compare'
+    'ephox.sugar.api.dom.Compare'
   ],
 
   function (Compare) {

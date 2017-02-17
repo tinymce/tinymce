@@ -13,9 +13,9 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
     'global!Error',
     'global!setTimeout',
     'global!window'

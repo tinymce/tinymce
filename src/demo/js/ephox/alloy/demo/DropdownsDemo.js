@@ -17,10 +17,10 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.knoch.future.Future',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 

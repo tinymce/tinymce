@@ -2,7 +2,7 @@ define(
   'ephox.alloy.alien.Keys',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

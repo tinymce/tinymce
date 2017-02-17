@@ -7,7 +7,7 @@ define(
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (SystemEvents, Tabbar, Tabview, PartType, FieldSchema, Fun) {

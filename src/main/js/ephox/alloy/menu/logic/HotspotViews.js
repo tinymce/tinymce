@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option'
   ],
 

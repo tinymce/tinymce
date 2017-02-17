@@ -4,8 +4,8 @@ define(
   [
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.epithet.Id',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Objects, Arr, Id, Fun) {

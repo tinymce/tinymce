@@ -11,8 +11,8 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option'
   ],
 

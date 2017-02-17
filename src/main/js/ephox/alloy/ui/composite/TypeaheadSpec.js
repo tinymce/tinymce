@@ -13,10 +13,10 @@ define(
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.Objects',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Value',
+    'ephox.sugar.api.properties.Value',
     'global!console',
     'global!document'
   ],

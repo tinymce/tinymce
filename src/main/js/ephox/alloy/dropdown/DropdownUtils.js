@@ -12,13 +12,13 @@ define(
     'ephox.alloy.aria.AriaOwner',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
-    'ephox.highway.Merger',
+    'ephox.katamari.api.Merger',
     'ephox.knoch.future.Future',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Result',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Width',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.view.Width',
     'global!Error'
   ],
 

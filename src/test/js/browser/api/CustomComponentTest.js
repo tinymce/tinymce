@@ -13,7 +13,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.scullion.Cell'
   ],
  

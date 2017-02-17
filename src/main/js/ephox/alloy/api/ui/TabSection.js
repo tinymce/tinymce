@@ -13,8 +13,8 @@ define(
     'ephox.alloy.ui.schema.TabSectionSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr'
   ],
 
   function (

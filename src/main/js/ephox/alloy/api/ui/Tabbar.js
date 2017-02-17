@@ -6,7 +6,7 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabbarSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Highlighting, UiSketcher, PartType, TabbarSchema, Fun) {

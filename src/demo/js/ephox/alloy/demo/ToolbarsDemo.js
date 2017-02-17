@@ -9,10 +9,10 @@ define(
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.highway.Merger',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
+    'ephox.katamari.api.Merger',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 
