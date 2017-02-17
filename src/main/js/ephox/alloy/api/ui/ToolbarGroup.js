@@ -34,7 +34,6 @@ define(
               mode: 'flow',
               selector: '.' + detail.markers().itemClass()
             },
-            // fIX: Undefined
             tabstopping: detail.hasTabstop() ? { } : Behaviour.revoke()
           },
 

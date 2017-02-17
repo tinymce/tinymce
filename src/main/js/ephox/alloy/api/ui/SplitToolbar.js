@@ -2,7 +2,6 @@ define(
   'ephox.alloy.api.ui.SplitToolbar',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.component.GuiFactory',
@@ -10,20 +9,20 @@ define(
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
     'ephox.alloy.ui.schema.SplitToolbarSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.compass.Arr',
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.scullion.Cell',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Width'
   ],
 
-  function (Behaviour, Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, Fields, PartType, Overflows, SplitToolbarSchema, FieldSchema, Arr, Merger, Fun, Cell, Css, Width) {
+  function (
+    Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, PartType, Overflows,
+    SplitToolbarSchema, Arr, Merger, Fun, Css, Width
+  ) {
     var schema = SplitToolbarSchema.schema();
     var partTypes = SplitToolbarSchema.parts();
 

@@ -51,10 +51,6 @@ define(
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
 
-      // var baseApis = {
-      //   'alloy.base.apis': CustomDefinition.toApis(info)
-      // };
-
       var events = ComponentEvents.combine(info, behaviours, baseEvents).getOrDie();
 
       var subcomponents = Cell(info.components());
@@ -87,7 +83,6 @@ define(
       };
 
       var config = function (behaviour) {
-        // Rename.
         if (behaviour === GuiTypes.apiConfig()) return info.apis();
         return info.behaviours().bind(function (b) {
           var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            

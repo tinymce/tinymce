@@ -57,19 +57,10 @@ define(
 
         FieldSchema.optionObjOf('behaviours', behaviourSchema),
 
-        // FieldSchema.state('behaviours', function (s) {
-        //   return Objects.hasKey(s, 'behaviours') ? s.behaviours : { };
-        // }),
-        // FieldSchema.defaulted('behaviours', [ ]),
-
-        // TODO: Add behaviours here.
-        //
-
         FieldSchema.defaulted('events', {}),
         FieldSchema.defaulted('apis', Fun.constant({})),
 
         // Use mergeWith in the future when pre-built behaviours conflict
-        FieldSchema.defaulted('apiOrder', {}),
         FieldSchema.field(
           'eventOrder',
           'eventOrder',
