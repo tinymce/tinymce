@@ -6,17 +6,20 @@ asynctest(
     'ephox.agar.api.Cursors',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.alien.DomSelection',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.fussy.api.WindowSelection',
+    'ephox.perhaps.Option',
     'ephox.perhaps.Result',
     'ephox.photon.Writer',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Scroll',
     'ephox.sugar.api.SelectorFind',
     'ephox.sugar.api.Traverse',
@@ -25,7 +28,11 @@ asynctest(
     'global!window'
   ],
  
-  function (Chain, Cursors, Guard, NamedChain, GuiFactory, ChainUtils, GuiSetup, PositionTestUtils, Sinks, WindowSelection, Result, Writer, Css, DomEvent, Element, Scroll, SelectorFind, Traverse, Error, setTimeout, window) {
+  function (
+    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils,
+    GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent, Element,
+    Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -41,27 +48,25 @@ asynctest(
         Writer.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
       });
 
-      var classicEditor = GuiFactory.build({
-        external: {
+      var classicEditor = GuiFactory.build(
+        GuiFactory.external({
           uid: 'classic-editor',
           element: frame
-        }
-      });
+        })
+      );
 
       Css.set(classicEditor.element(), 'margin-top', '300px');
 
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div'
-        },
-        components: [
-          { built: Sinks.fixedSink() },
-          { built: Sinks.relativeSink() },
-          { built: Sinks.popup() },
-          { built: classicEditor }
-        ]
-      });
+      return GuiFactory.build(
+        Container.sketch({
+          components: [
+            GuiFactory.premade(Sinks.fixedSink()),
+            GuiFactory.premade(Sinks.relativeSink()),
+            GuiFactory.premade(Sinks.popup()),
+            GuiFactory.premade(classicEditor)
+          ]
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       var cSetupAnchor = Chain.mapper(function (data) {
@@ -81,14 +86,14 @@ asynctest(
         return Chain.binder(function (win) {
           var body = Element.fromDom(win.document.body);
           var range = Cursors.calculate(body, path);
-           WindowSelection.setExact(
+           DomSelection.setExact(
             win,
             range.start(),
             range.soffset(),
             range.finish(),
             range.foffset()
           );
-          return WindowSelection.get(win).fold(function () {
+          return DomSelection.get(win).fold(function () {
             return Result.error('Could not retrieve the set selection');
           }, Result.value);
         });
@@ -165,11 +170,16 @@ asynctest(
                   finishPath: [ 13 ],
                   foffset: 0
                 }), 'range2'),
-                NamedChain.direct('range2', Chain.mapper(function (range2) {
-                  range2.start().dom().scrollIntoView();
-                  return Scroll.get(
-                    Traverse.owner(range2.start())
-                  );
+                NamedChain.direct('range2', Chain.binder(function (range2) {
+                  var start = range2.start();
+                  // NOTE: Safari likes to select the text node.
+                  var optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
+                  return optElement.map(function (elem) {
+                    elem.dom().scrollIntoView();
+                    return Scroll.get(
+                      Traverse.owner(elem)
+                    );
+                  });
                 }), 'scroll2'),
                 NamedChain.write('anchor', cSetupAnchor)
               ]

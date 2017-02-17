@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -18,15 +19,27 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {
+  function (Keys, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
+      FieldSchema.defaulted('onEscape', Option.none),
+      FieldSchema.defaulted('captureTab', false),
+
+      Fields.initSize(),
       FieldSchema.state('dimensions', function () {
-        return Cell({
-          numColumns: 1,
-          numRows: 1
-        });
+        return Cell(Option.none());
+      }),
+
+      FieldSchema.state('setGridSize', function () {
+        return function (gridInfo, numRows, numColumns) {
+          gridInfo.dimensions().set(
+            Option.some({
+              numRows: Fun.constant(numRows),
+              numColumns: Fun.constant(numColumns)
+            })
+          );
+        };
       })
     ];
 
@@ -37,9 +50,8 @@ define(
     };
 
     var execute = function (component, simulatedEvent, gridInfo) {
-      return Focus.search(component.element(), gridInfo.selector()).map(function (focused) {
-        gridInfo.execute()(component, simulatedEvent, focused);
-        return true;
+      return Focus.search(component.element(), gridInfo.selector()).bind(function (focused) {
+        return gridInfo.execute()(component, simulatedEvent, focused);
       });
     };
 
@@ -49,11 +61,19 @@ define(
           return cycle(
             identified.candidates(),
             identified.index(),
-            info.dimensions().get().numRows,
-            info.dimensions().get().numColumns
+            info.dimensions().get().map(function (d) { return d.numRows(); }).getOr(info.initSize().numRows()),
+            info.dimensions().get().map(function (d) { return d.numColumns(); }).getOr(info.initSize().numColumns())
           );
         });
       };
+    };
+
+    var handleTab = function (component, simulatedEvent, gridInfo) {
+      return gridInfo.captureTab() ? Option.some(true) : Option.none();
+    };
+
+    var doEscape = function (component, simulatedEvent, gridInfo) {
+      return gridInfo.onEscape()(component, simulatedEvent);
     };
 
     var moveLeft = doMove(WrapArrNavigation.cycleLeft);
@@ -67,25 +87,16 @@ define(
       KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
       KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
       KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
+      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
+      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), handleTab),
+      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE() ), doEscape),
+
       KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
     ]);
 
     var getEvents = Fun.constant({ });
 
-    var setGridSize = function (gridInfo, numRows, numColumns) {
-      gridInfo.dimensions().set({
-        numRows: numRows,
-        numColumns: numColumns
-      });
-    };
-
-    var getApis = function (gridInfo) {
-      return {
-        setGridSize: function (component, numRows, numCols) {
-          setGridSize(gridInfo, numRows, numCols);
-        }
-      };
-    };
+    var getApis = {};
 
     return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
   }

@@ -7,12 +7,13 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
+    'ephox.highway.Merger',
     'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result'
   ],
 
-  function (ObjIndex, DomModification, Objects, Arr, Obj, Json, Fun, Result) {
+  function (ObjIndex, DomModification, Objects, Arr, Obj, Merger, Json, Fun, Result) {
     var behaviourDom = function (name, modification) {
       return {
         name: Fun.constant(name),
@@ -52,8 +53,9 @@ define(
         }), null, 2) + '. This is not currently supported.'
       );
     };
-
+    
     var safeMerge = function (chain, aspect) {
+      // return unsafeMerge(chain, aspect);
       var y = Arr.foldl(chain, function (acc, c) {
         var obj = c.modification().getOr({});
         return acc.bind(function (accRest) {
@@ -83,14 +85,15 @@ define(
       value: onlyOne
     };
 
-    var combine = function (info, behaviours, base) {
+    var combine = function (info, baseMod, behaviours, base) {
       // Get the Behaviour DOM modifications
-      var behaviourDoms = { };
-      Arr.each(behaviours, function (behaviour) {
+      var behaviourDoms = Merger.deepMerge({ }, baseMod);
+      Obj.each(behaviours, function (behaviour) {
         behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
       });
 
       var byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
+      // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
 
       var usedAspect = Obj.map(byAspect, function (values, aspect) {
         return Arr.bind(values, function (value) {
@@ -111,6 +114,7 @@ define(
       });
 
       var consolidated = Objects.consolidate(modifications, {});
+
       return consolidated.map(DomModification.nu);
     };
 

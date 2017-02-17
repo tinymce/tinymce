@@ -6,33 +6,40 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
-    'ephox.alloy.api.SystemEvents',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.ui.Container',
+    'ephox.alloy.test.GuiSetup',
+    'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, GuiSetup) {
+  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Behaviour, Toggling, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'custom-component-test'],
-          styles: {
-            background: 'blue',
-            width: '200px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        toggling: {
-          selected: true,
-          toggleClass: 'test-selected'
-        }
-      });
+      return GuiFactory.build(
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'custom-component-test'],
+            styles: {
+              background: 'blue',
+              width: '200px',
+              height: '200px'
+            }
+          },
+          uid: 'custom-uid',
+          behaviours: Behaviour.derive([
+            Toggling.config({
+              selected: true,
+              toggleClass: 'test-selected'           
+            })
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
 
@@ -84,22 +91,22 @@ asynctest(
         return Logger.t(
           'Asserting isSelected()\n' + label,
           Step.sync(function () {
-            var actual = component.apis().isSelected();
+            var actual = Toggling.isSelected(component);
             Assertions.assertEq(label, expected, actual);
           })
         );
       };
 
       var sSelect = Step.sync(function () {
-        component.apis().select();
+        Toggling.select(component);
       });
 
       var sDeselect = Step.sync(function () {
-        component.apis().deselect();
+        Toggling.deselect(component);
       });
 
       var sToggle = Step.sync(function () {
-        component.apis().toggle();
+        Toggling.toggle(component);
       });
 
       return [

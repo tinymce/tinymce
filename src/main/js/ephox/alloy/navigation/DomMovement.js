@@ -2,11 +2,10 @@ define(
   'ephox.alloy.navigation.DomMovement',
 
   [
-    'ephox.sugar.api.Direction',
-    'ephox.sugar.api.Focus'
+    'ephox.sugar.api.Direction'
   ],
 
-  function (Direction, Focus) {
+  function (Direction) {
     // Looks up direction (considering LTR and RTL), finds the focused element,
     // and tries to move. If it succeeds, triggers focus and kills the event.
     var useH = function (movement) {
@@ -33,12 +32,12 @@ define(
     };
 
     var use = function (move, component, simulatedEvent, info) {
-      var outcome = Focus.search(component.element()).bind(function (focused) {
+      var outcome = info.focusManager().get(component).bind(function (focused) {
         return move(component.element(), focused, info);
       });
 
       return outcome.map(function (newFocus) {
-        component.getSystem().triggerFocus(newFocus, component.element());
+        info.focusManager().set(component, newFocus);
         return true;
       });
     };

@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.keying.KeyingType',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.ArrNavigation',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
@@ -13,28 +14,45 @@ define(
     'ephox.perhaps.Option',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Focus',
+    'ephox.sugar.api.Height',
     'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Visibility'
+    'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Keys, KeyingType, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Visibility) {
+  function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, Height, SelectorFilter, SelectorFind) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
-      FieldSchema.option('onEnter')
+      FieldSchema.option('onEnter'),
+      FieldSchema.defaulted('firstTabstop', 0),
+      FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
+      // Maybe later we should just expose isVisible
+      FieldSchema.option('visibilitySelector')
     ];
 
     // Fire an alloy focus on the first visible element that matches the selector
     var focusIn = function (component, cyclicInfo) {
       var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
-      var visible = Arr.find(tabstops, Visibility.isVisible);
-      // TODO: Update when Arr.find changes signature
-      var visibleOpt = visible !== null && visible !== undefined ? Option.some(visible) : Option.none();
+      var visibles = Arr.filter(tabstops, function (elem) {
+        return isVisible(cyclicInfo, elem);
+      });
+
+      var visibleOpt = Option.from(visibles[cyclicInfo.firstTabstop()]);
+
       visibleOpt.each(function (target) {
         var originator = component.element();
         component.getSystem().triggerFocus(target, originator);
       });
+    };
+
+    // TODO: Test this
+    var isVisible = function (cyclicInfo, element) {
+      var target = cyclicInfo.visibilitySelector().bind(function (sel) {
+        return SelectorFind.closest(element, sel);
+      }).getOr(element);
+
+      // NOTE: We can't use Visibility.isVisible, because the toolbar has width when it has closed, just not height.
+      return Height.get(target) > 0;
     };
 
     var findTabstop = function (component, cyclicInfo) {
@@ -52,13 +70,22 @@ define(
       return findTabstop(component, cyclicInfo).bind(function (tabstop) {
         // focused component
         var index = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
-        return index < 0 ? Option.none() : cycle(tabstops, index, Visibility.isVisible).map(function (outcome) {
+        return index < 0 ? Option.none() : cycle(tabstops, index, function (elem) {
+          return isVisible(cyclicInfo, elem) && cyclicInfo.useTabstopAt(elem);
+        }).fold(function () {
+          // Even if there is only one, still capture the event.
+          // logFailed(index, tabstops);
+          return Option.some(true);
+        }, function (outcome) {
+          // logSuccess(cyclicInfo, index, tabstops, component.element(), outcome);
           var system = component.getSystem();
           var originator = component.element();
           system.triggerFocus(outcome, originator);
 
+
+
           // Kill the event
-          return true;
+          return Option.some(true);
         });
       });
     };
@@ -72,16 +99,14 @@ define(
     };
 
     var execute = function (component, simulatedEvent, cyclicInfo) {
-      return cyclicInfo.onEnter().map(function (f) {
-        f(component, simulatedEvent);
-        return true;
+      return cyclicInfo.onEnter().bind(function (f) {
+        return f(component, simulatedEvent);
       });
     };
 
     var exit = function (component, simulatedEvent, cyclicInfo) {
-      return cyclicInfo.onEscape().map(function (f) {
-        f(component, simulatedEvent);
-        return true;
+      return cyclicInfo.onEscape().bind(function (f) {
+        return f(component, simulatedEvent);
       });
     };
 

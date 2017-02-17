@@ -4,18 +4,25 @@ define(
   [
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
+    'ephox.numerosity.api.JSON',
     'ephox.peanut.Fun',
-    'global!Array'
+    'global!Array',
+    'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Array) {
+  function (FieldPresence, FieldSchema, Objects, ValueSchema, Type, Arr, Json, Fun, Array, Error) {
     var nu = function (parts) {
+      if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) throw new Error(
+        'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
+      );
       return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOf([
-        FieldSchema.field('can', 'can', FieldPresence.defaulted(Fun.constant(true)), ValueSchema.anyValue()),
-        FieldSchema.field('abort', 'abort', FieldPresence.defaulted(Fun.constant(false)), ValueSchema.anyValue()),
-        FieldSchema.field('run', 'run', FieldPresence.defaulted(Fun.noop), ValueSchema.anyValue())
+        FieldSchema.defaulted('can', Fun.constant(true)),
+        FieldSchema.defaulted('abort', Fun.constant(false)),
+        FieldSchema.defaulted('run', Fun.noop)
       ]), parts);
     };
 
@@ -35,6 +42,14 @@ define(
           return acc || f(handler).apply(undefined, args);
         }, false);
       };
+    };
+
+    var read = function (handler) {
+      return Type.isFunction(handler) ? {
+        can: Fun.constant(true),
+        abort: Fun.constant(false),
+        run: handler
+      } : handler;
     };
 
     var fuse = function (handlers) {
@@ -62,6 +77,7 @@ define(
     };
 
     return {
+      read: read,
       fuse: fuse,
       nu: nu
     };

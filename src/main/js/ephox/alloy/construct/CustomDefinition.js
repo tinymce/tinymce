@@ -2,13 +2,27 @@ define(
   'ephox.alloy.construct.CustomDefinition',
 
   [
-    'ephox.alloy.behaviour.Focusing',
-    'ephox.alloy.behaviour.Keying',
-    'ephox.alloy.behaviour.Positioning',
-    'ephox.alloy.behaviour.Receiving',
-    'ephox.alloy.behaviour.Tabstopping',
-    'ephox.alloy.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Disabling',
+    'ephox.alloy.api.behaviour.Docking',
+    'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Invalidating',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Receiving',
+    'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.behaviour.Streaming',
+    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.dom.DomDefinition',
+    'ephox.alloy.dom.DomModification',
     'ephox.alloy.ephemera.AlloyTags',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -20,59 +34,59 @@ define(
     'global!Error'
   ],
 
-  function (Focusing, Keying, Positioning, Receiving, Tabstopping, Toggling, DomDefinition, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
-    var domSchema = ValueSchema.objOf([
-      FieldSchema.strict('tag'),
-      FieldSchema.defaulted('styles', {}),
-      FieldSchema.defaulted('classes', []),
-      FieldSchema.defaulted('attributes', {}),
-      FieldSchema.field('value', 'value', FieldPresence.asOption(), ValueSchema.anyValue()),
-      FieldSchema.field('innerHtml', 'innerHtml', FieldPresence.asOption(), ValueSchema.anyValue())
-      // Note, no children.
-    ]);
-
+  function (Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error) {
     var toInfo = function (spec) {
-      var behaviours = Objects.readOr('behaviours', [])(spec);
-      var behaviourSchema = Arr.map(alloyBehaviours.concat(behaviours), function (b) {
+      var behaviours = Objects.readOr('customBehaviours', [])(spec);
+      var bs = getDefaultBehaviours(spec);
+      var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
         return b.schema();
       });
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
-        FieldSchema.field('dom', 'dom', FieldPresence.strict(), domSchema),
+        FieldSchema.strictObjOf('dom', [
+          // Note, no children.
+          FieldSchema.strict('tag'),
+          FieldSchema.defaulted('styles', {}),
+          FieldSchema.defaulted('classes', []),
+          FieldSchema.defaulted('attributes', {}),
+          FieldSchema.option('value'),
+          FieldSchema.option('innerHtml')
+        ]),
         FieldSchema.strict('components'),
-        FieldSchema.defaulted('label', 'Unlabelled'),
-        FieldSchema.option('uid'),
-        FieldSchema.defaulted('behaviours', [ ]),
+        FieldSchema.strict('uid'),
 
-        // TODO: Add behaviours here.
-        //
+        FieldSchema.optionObjOf('behaviours', behaviourSchema),
 
         FieldSchema.defaulted('events', {}),
+        FieldSchema.defaulted('apis', Fun.constant({})),
 
         // Use mergeWith in the future when pre-built behaviours conflict
-        FieldSchema.defaulted('apiOrder', {}),
         FieldSchema.field(
           'eventOrder',
           'eventOrder',
           FieldPresence.mergeWith({
-            'alloy.execute': [ 'alloy.base.behaviour', 'toggling' ],
-            'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ]
+            'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
+            'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ],
+            'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
+            'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ]
           }),
           ValueSchema.anyValue()
         ),
-        FieldSchema.defaulted('domModificationOrder', {}),
+
+        FieldSchema.option('domModification'),
 
         FieldSchema.state('definition.input', Fun.identity),
-        FieldSchema.defaulted('postprocess', Fun.noop)
-      ].concat(behaviourSchema)), spec);
+
+        // Could wrap this up in a behaviour ...but won't for the time being
+        FieldSchema.optionObjOf('delegate', [
+          FieldSchema.strict('get')
+        ]),
+        FieldSchema.state('originalSpec', Fun.identity)
+      ]), spec);
     };
 
     var getUid = function (info) {
-      return info.uid().fold(function () {
-        return { };
-      }, function (uid) {
-        return Objects.wrap(AlloyTags.idAttr(), uid);
-      });
+      return Objects.wrap(AlloyTags.idAttr(), info.uid());
     };
 
     var toDefinition = function (info) {
@@ -93,19 +107,50 @@ define(
       ));
     };
 
+    var toModification = function (info) {
+      return info.domModification().fold(function () {
+        return DomModification.nu({ });
+      }, DomModification.nu);
+    };
+
+    var getDefaultBehaviours = function (spec) {
+      return Arr.filter(alloyBehaviours, function (b) {
+        return Objects.hasKey(spec, 'behaviours') && Objects.hasKey(spec.behaviours, b.name());
+      });
+    };
+
     var alloyBehaviours = [
       Toggling,
-      Keying,
-      Tabstopping,
+      Composing,
+      Coupling,
+      Disabling,
+      Docking,
+      Dragging,
       Focusing,
+      Highlighting,
+      Invalidating,
+      Keying,
+      Positioning,
       Receiving,
-      Positioning
+      Replacing,
+      Representing,
+      Sandboxing,
+      Sliding,
+      Streaming,
+      Tabstopping,
+      Unselecting
     ];
 
     var behaviours = function (info) {
-      // TODO: Check if behaviours are duplicated? Lab used to ...
-      var bs = info.behaviours();
-      return alloyBehaviours.concat(bs);
+      var spec = info.originalSpec();
+      var custom = Objects.readOptFrom(spec, 'customBehaviours').getOr([ ]);
+      var alloy = getDefaultBehaviours(spec);
+      return custom.concat(alloy);
+    };
+
+    // Probably want to pass info to these at some point.
+    var toApis = function (info) {
+      return info.apis();
     };
 
     var toEvents = function (info) {
@@ -115,7 +160,9 @@ define(
     return {
       toInfo: toInfo,
       toDefinition: toDefinition,
+      toModification: toModification,
       behaviours: behaviours,
+      toApis: toApis,
       toEvents: toEvents
     };
   }

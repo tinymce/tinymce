@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.alloy.events.EventRegistry',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
+    'ephox.sugar.api.Body',
     'global!Error'
   ],
 
-  function (EventRegistry, Tagger, Objects, Error) {
+  function (EventRegistry, AlloyLogger, Tagger, Objects, Body, Error) {
     return function () {
       var events = EventRegistry();
       
@@ -18,15 +20,24 @@ define(
         var elem = component.element();
         return Tagger.read(elem).fold(function () {
           // No existing tag, so add one.
-          return Tagger.write(component.label(), component.element());
+          return Tagger.write('uid-', component.element());
         }, function (uid) {
           return uid;
         });
       };
 
+      var failOnDuplicate = function (component, tagId) {
+        var conflict = components[tagId];
+        if (conflict === component) unregister(component);
+        else throw new Error(
+          'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
+            'The conflicting element is' + (Body.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
+        );
+      };
+
       var register = function (component) {
         var tagId = readOrTag(component);
-        if (Objects.hasKey(components, tagId)) throw new Error('The tagId "' + tagId + '" is already in use. Please choose another.');
+        if (Objects.hasKey(components, tagId)) failOnDuplicate(component, tagId);
         events.registerId(component, tagId, component.events());
         components[tagId] = component;
       };
@@ -42,8 +53,8 @@ define(
         return events.filterByType(type);
       };
 
-      var find = function (isRoot, type, target) {
-        return events.find(isRoot, type, target);
+      var find = function (isAboveRoot, type, target) {
+        return events.find(isAboveRoot, type, target);
       };
 
       var getById = function (id) {

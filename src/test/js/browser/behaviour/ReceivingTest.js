@@ -3,46 +3,49 @@ asynctest(
  
   [
     'ephox.agar.api.Step',
-    'ephox.alloy.api.GuiFactory',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Receiving',
+    'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema'
   ],
  
-  function (Step, GuiFactory, GuiSetup, FieldSchema, ValueSchema) {
+  function (Step, GuiFactory, Behaviour, Receiving, Container, GuiSetup, FieldSchema, Objects, ValueSchema) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build({
-        uiType: 'custom',
-        dom: {
-          tag: 'div',
-          classes: [ 'receiving-test'],
-          styles: {
+      return GuiFactory.build(
+        Container.sketch({
+          dom: {
+            classes: [ 'receiving-test']
+          },
+          uid: 'custom-uid',
+          keying: {
+            mode: 'execution'
+          },
+          components: [
             
-          }
-        },
-        uid: 'custom-uid',
-        keying: {
-          mode: 'execution'
-        },
-        components: [
-          
-        ],
-        receiving: {
-          channels: {
-            'test.channel.1': {
-              schema: ValueSchema.objOf([
-                FieldSchema.strict('dummy')
-              ]),
-              onReceive: function (component, data) {
-                store.adder('received: ' + data.dummy())();
+          ],
+          behaviours: Behaviour.derive([
+            Receiving.config({
+              channels: {
+                'test.channel.1': {
+                  schema: ValueSchema.objOf([
+                    FieldSchema.strict('dummy')
+                  ]),
+                  onReceive: function (component, data) {
+                    store.adder('received: ' + data.dummy())();
+                  }
+                }
               }
-            }
-          }
-        }
-      });
+            })
+          ])
+        })
+      );
 
     }, function (doc, body, gui, component, store) {
       return [

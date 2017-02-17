@@ -6,13 +6,13 @@ define(
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
     'ephox.compass.Obj',
-    'ephox.highway.Merger',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.PredicateFind',
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Result',
     'global!console'
   ],
 
-  function (TransformFind, Tagger, Objects, Obj, Merger, Fun, PredicateFind, console) {
+  function (TransformFind, Tagger, Objects, Obj, Fun, Option, Result, console) {
     var eventHandler = function (element, handler) {
       return {
         element: Fun.constant(element),
@@ -28,6 +28,10 @@ define(
     };
 
     return function () {
+      window.haha = function () {
+        return registry;
+      };
+
       var registry = { };
 
       var registerId = function (extraArgs, id, events) {
@@ -39,7 +43,9 @@ define(
       };
 
       var findHandler = function (handlers, elem) {
-        return Tagger.read(elem).bind(function (id) {
+        return Tagger.read(elem).fold(function (err) {
+          return Option.none();
+        }, function (id) {
           var reader = Objects.readOpt(id);
           return handlers.bind(reader).map(function (handler) {
             return eventHandler(elem, handler);
@@ -57,12 +63,12 @@ define(
       };
 
       // Given event type, and element, find the handler.
-      var find = function (isRoot, type, target) {
+      var find = function (isAboveRoot, type, target) {
         var readType = Objects.readOpt(type);
         var handlers = readType(registry);
         return TransformFind.closest(target, function (elem) {
           return findHandler(handlers, elem);
-        }, isRoot);
+        }, isAboveRoot);
       };
 
       var unregisterId = function (id) {

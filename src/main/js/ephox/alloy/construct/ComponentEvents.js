@@ -6,6 +6,7 @@ define(
     'ephox.alloy.alien.PrioritySort',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
+    'ephox.classify.Type',
     'ephox.compass.Arr',
     'ephox.compass.Obj',
     'ephox.highway.Merger',
@@ -16,7 +17,7 @@ define(
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (ObjIndex, PrioritySort, EventHandler, Objects, Type, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     /*
      * The process of combining a component's events
      *
@@ -41,16 +42,14 @@ define(
 
     var nameToHandlers = function (behaviours, info) {
       var r = {};
-      Arr.each(behaviours, function (behaviour) {
+      Obj.each(behaviours, function (behaviour) {
         r[behaviour.name()] = behaviour.handlers(info);        
       });
       return r;
     };
 
     var groupByEvents = function (info, behaviours, base) {
-      // FIX: behaviourEvents['lab.custom.definition.events'] = CustomDefinition.toEvents(info);
       var behaviourEvents = Merger.deepMerge(base, nameToHandlers(behaviours, info));
-      
       // Now, with all of these events, we need to index by event name
       return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
     };
@@ -60,7 +59,8 @@ define(
       return combineGroups(byEventName, info.eventOrder());
     };
 
-    var assemble = function (handler) {
+    var assemble = function (rawHandler) {
+      var handler = EventHandler.read(rawHandler);
       return function (component, simulatedEvent/*, others */) {
         var args = Array.prototype.slice.call(arguments, 0);
         if (handler.abort.apply(undefined, args)) {

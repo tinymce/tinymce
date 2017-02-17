@@ -3,17 +3,19 @@ define(
 
   [
     'ephox.alloy.positioning.HotspotAnchor',
+    'ephox.alloy.positioning.MakeshiftAnchor',
     'ephox.alloy.positioning.SelectionAnchor',
     'ephox.alloy.positioning.SubmenuAnchor',
     'ephox.boulder.api.ValueSchema'
   ],
 
-  function (HotspotAnchor, SelectionAnchor, SubmenuAnchor, ValueSchema) {
+  function (HotspotAnchor, MakeshiftAnchor, SelectionAnchor, SubmenuAnchor, ValueSchema) {
     return ValueSchema.choose(
       'anchor', {
         selection: SelectionAnchor,
         hotspot: HotspotAnchor,
-        submenu: SubmenuAnchor
+        submenu: SubmenuAnchor,
+        makeshift: MakeshiftAnchor
       }
     );
   }

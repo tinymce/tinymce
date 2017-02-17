@@ -11,21 +11,25 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.alloy.api.GuiEvents',
+    'ephox.agar.api.Waiter',
+    'ephox.agar.mouse.Clicks',
+    'ephox.alloy.api.events.GuiEvents',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomRender',
     'ephox.alloy.test.TestStore',
     'ephox.sugar.api.Attr',
+    'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Remove',
     'ephox.sugar.api.Text',
-    'global!document'
+    'global!document',
+    'global!window'
   ],
  
-  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Element, Insert, InsertAll, Node, Remove, Text, document) {
+  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Clicks, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Css, Element, Insert, InsertAll, Node, Remove, Text, document, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -80,6 +84,9 @@ asynctest(
       store.adder({ eventName: eventName, target: targetValue })();
     };
 
+    var broadcastEvent = function (eventName, event) {
+      store.adder({ broadcastEventName: eventName })();
+    };
 
     var sTestFocusInput = GeneralSteps.sequence([
       FocusTools.sSetFocus(
@@ -171,6 +178,42 @@ asynctest(
       store.sClear
     ]);
 
+    var sTestMouseOperation = function (eventName, op) {
+      return GeneralSteps.sequence([
+        Step.sync(function () {
+          // TODO: Add others clicks to agar.
+          op(page);
+        }),
+        store.sAssertEq(
+          'Checking event log after ' + eventName + ' on root',
+          [
+            { eventName: eventName, target: 'gui-events-test-container' }
+          ]
+        ),
+        store.sClear
+      ]);
+    };
+
+    var sTestWindowScroll = GeneralSteps.sequence([
+      store.sClear,
+      Step.sync(function () {
+        Css.set(page, 'margin-top', '2000px');
+        window.scrollTo(0, 1000);
+      }),
+      // Wait for window scroll to come through
+      Waiter.sTryUntil(
+        'Waiting for window scroll event to broadcast',
+        store.sAssertEq('Checking scroll should have fired', [ { broadcastEventName: 'alloy.system.scroll' } ]),
+        100,
+        1000
+      ),
+      Step.sync(function () {
+        Css.remove(page, 'margin-top');
+        window.scrollTo(0, 0);
+      }),
+      store.sClear
+    ]);
+
     var sTestUnbind = GeneralSteps.sequence([
       Step.sync(function () {
         gui.unbind();
@@ -197,10 +240,16 @@ asynctest(
         'After unbinding events, nothing should be listened to any longer',
         [ ]
       )
+
+      // TODO: Any other event triggers here.
     ]);
 
+    var sTestChange = Step.pass;
+    var sTestTransitionEnd = Step.pass;
+
     var gui = GuiEvents.setup(page, {
-      triggerEvent: triggerEvent
+      triggerEvent: triggerEvent,
+      broadcastEvent: broadcastEvent
     });
 
     Pipeline.async({}, [
@@ -211,6 +260,19 @@ asynctest(
       sTestInput,
       sTestMouseover,
       sTestSelectStart,
+
+      // FIX: Add API support to agar.
+      sTestMouseOperation('mousedown', Clicks.mousedown),
+      sTestMouseOperation('mouseup', Clicks.mouseup),
+      sTestMouseOperation('mousemove', function (elem) { Clicks.mousemove(elem, 10, 10); }),
+      sTestMouseOperation('mouseout', function (elem) { Clicks.mouseout(elem, 10, 10); }),
+      sTestMouseOperation('contextmenu', Clicks.contextmenu),
+
+      // FIX: Add API support to agar
+      sTestChange,
+      sTestTransitionEnd,
+
+      sTestWindowScroll,
 
       sTestUnbind
     ], function () { 
