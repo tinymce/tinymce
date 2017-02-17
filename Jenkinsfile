@@ -54,10 +54,7 @@ node("primary") {
   stage "Browser Tests"
   parallel processes
 
-  stage "Publishing"
-  dir("alloy-project") {
-    sh "ent-ci -repo /ephox/repos/buildrepo2"
-  }
+  stage "Skipping publishing ... this will be an npm project"
 }
 
 
