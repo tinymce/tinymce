@@ -54,6 +54,34 @@ asynctest(
       FocusTools.sSetFocus('Focusing div again', docNode, 'div[test-id]'),
       FocusTools.sIsOnSelector('Should be on div again', doc, 'div[test-id]'),
 
+      // Check that try until not is working for sIsOn, sIsOnSelector and sTryOnSelector
+      Step.control(
+        FocusTools.sIsOn('tryUntilNotCheck (sIsOn)', Element.fromTag('span')),
+        Guard.tryUntilNot(
+          'Focus should not be on something that is not in the DOM',
+          100,
+          1000
+        )
+      ),
+
+      Step.control(
+        FocusTools.sIsOnSelector('tryUntilNotCheck (sIsOnSelector)', doc, '.not-really-there'),
+        Guard.tryUntilNot(
+          'Focus should not be on something that is not there',
+          100,
+          1000
+        )
+      ),
+
+      Step.control(
+        FocusTools.sTryOnSelector('tryUntilNotCheck (sTryOnSelector)', doc, '.not-really-there'),
+        Guard.tryUntilNot(
+          'Focus should not be on something that is not there',
+          100,
+          1000
+        )
+      ),
+
       // TODO: Need to get rid of this boilerplate
       Step.stateful(function (value, next, die) {
         Chain.asStep(value.container, [
