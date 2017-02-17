@@ -13,13 +13,8 @@ test(
   function (Objects, Arr, Obj, Result, Json, Jsc) {
     var smallSet = Jsc.nestring;
 
-    var check = function (arb, checker) {
-      Jsc.check(
-        Jsc.forall(arb, function (input) {
-          checker(input);
-          return true;
-        })
-      );
+    var check = function (label, arb, checker) {
+      Jsc.syncProperty(label, [ arb ], checker, { });
     };
 
     var testNarrow = function () {
@@ -35,7 +30,7 @@ test(
         })
       });
 
-      check(narrowGen, function (input) {
+      check('Testing narrow', narrowGen, function (input) {
         var narrowed = Objects.narrow(input.obj, input.fields);
         Obj.each(narrowed, function (_, k) {        
           if (!Arr.contains(input.fields, k)) throw 'Narrowed object contained property: ' + k + ' which was not in fields: [' + input.fields.join(', ') + ']';
@@ -177,7 +172,7 @@ test(
         })
       });
 
-      check(inputList, function (input) {
+      check('Testing consolidate', inputList, function (input) {
         var actual = Objects.consolidate(input.results, input.base);
 
         var hasError = Arr.exists(input.results, function (res) {
@@ -186,6 +181,7 @@ test(
 
         if (hasError) assert.eq(true, actual.isError(), 'Error contained in list, so should be error overall');
         else assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
+        return true;
       });
     };
 
