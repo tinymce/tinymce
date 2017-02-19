@@ -4,15 +4,18 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.properties.TextContent',
-    'ephox.wrap.JsBeautify',
     'global!setInterval'
   ],
 
-  function (GuiFactory, Container, Id, Html, TextContent, JsBeautify, setInterval) {
-
+  function (GuiFactory, Container, Fun, Id, Html, TextContent, setInterval) {
+    var JsBeautify = {
+      html: Fun.identity
+    };
+    
     var section = function (gui, instructions, spec) {
       var information = Container.sketch({
         dom: {

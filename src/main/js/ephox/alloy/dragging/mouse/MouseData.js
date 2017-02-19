@@ -2,12 +2,13 @@ define(
   'ephox.alloy.dragging.mouse.MouseData',
 
   [
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.view.Position'
   ],
 
-  function (Position) {
+  function (Option, Position) {
     var getData = function (event) {
-      return Position(event.x(), event.y());
+      return Option.from(Position(event.x(), event.y()));
     };
 
     // When dragging with the mouse, the delta is simply the difference
