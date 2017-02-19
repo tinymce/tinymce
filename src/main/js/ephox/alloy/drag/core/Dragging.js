@@ -2,15 +2,10 @@ define(
   'ephox.dragster.core.Dragging',
 
   [
-    'ephox.dragster.api.DragApis',
-    'ephox.dragster.detect.Movement',
-    'ephox.peanut.DelayedFunction',
-    'ephox.porkbun.Event',
-    'ephox.porkbun.Events',
     'global!Array'
   ],
 
-  function (DragApis, Movement, DelayedFunction, Event, Events, Array) {
+  function (Array) {
     var setup = function (mutation, mode, settings) {
       var active = false;
 
