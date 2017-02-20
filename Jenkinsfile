@@ -2,26 +2,7 @@
 def runBedrock(String name, String browser, String testDirs, String custom = "") {
   def bedrock = "node_modules/.bin/bedrock-auto -b " + browser + " --testdirs " + testDirs + " --name " + name + " " + custom
 
-  def successfulTests = true
-
-  if (isUnix()) {
-    successfulTests = (sh([script: bedrock, returnStatus: true]) == 0) && successfulTests
-  } else {
-    successfulTests = (bat([script: bedrock, returnStatus: true]) == 0) && successfulTests
-  }
-
-  echo "Writing JUnit results for " + name
-
-  step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
-
-  if (!successfulTests) {
-    echo "Tests failed for " + name + " so passing failure as exit code"
-    if (isUnix()) {
-      sh "exit 1"
-    } else {
-      bat "exit 1"
-    }
-  }
+  
 }
 
 // Script to use for pipeline
@@ -64,7 +45,30 @@ node ("primary") {
         
         echo "Browser Tests for " + permutation.name
         def webdriverTests = permutation.browser == "firefox" ? "" : " src/test/js/webdriver"
-        runBedrock(permutation.name, permutation.browser, "src/test/js/browser" + webdriverTests, permutation.sh)
+
+
+        def bedrock = "node_modules/.bin/bedrock-auto -b " + browser + " --testdirs " + "src/test/js/browser" + webdriverTests
+
+        def successfulTests = true
+
+        if (isUnix()) {
+          successfulTests = (sh([script: bedrock, returnStatus: true]) == 0) && successfulTests
+        } else {
+          successfulTests = (bat([script: bedrock, returnStatus: true]) == 0) && successfulTests
+        }
+
+        echo "Writing JUnit results for " + name
+
+        step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
+
+        if (!successfulTests) {
+          echo "Tests failed for " + name + " so passing failure as exit code"
+          if (isUnix()) {
+            sh "exit 1"
+          } else {
+            bat "exit 1"
+          }
+        }
       }
     }
   }
