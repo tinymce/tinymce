@@ -1,3 +1,29 @@
+// This used to be retrieved from jenkins-plumbing, but call stopped working
+def runBedrock(String name, String browser, String testDirs, String custom = "") {
+  def bedrock = "node_modules/.bin/bedrock-auto -b " + browser + " --testdirs " + testDirs + " --name " + name + " " + custom
+
+  def successfulTests = true
+
+  if (isUnix()) {
+    successfulTests = (sh([script: bedrock, returnStatus: true]) == 0) && successfulTests
+  } else {
+    successfulTests = (bat([script: bedrock, returnStatus: true]) == 0) && successfulTests
+  }
+
+  echo "Writing JUnit results for " + name
+
+  step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
+
+  if (!successfulTests) {
+    echo "Tests failed for " + name + " so passing failure as exit code"
+    if (isUnix()) {
+      sh "exit 1"
+    } else {
+      bat "exit 1"
+    }
+  }
+}
+
 // Script to use for pipeline
 node ("primary") {
   stage "Checkout project"
@@ -12,32 +38,7 @@ node ("primary") {
     sh "node_modules/.bin/bolt test config/bolt/atomic.js \$(find src/test/js/atomic -name *.js)"
   }
 
-  // This used to be retrieved from jenkins-plumbing, but call stopped working
-  def runBedrock(String name, String browser, String testDirs, String custom = "") {
-    def bedrock = "node_modules/.bin/bedrock-auto -b " + browser + " --testdirs " + testDirs + " --name " + name + " " + custom
-
-    def successfulTests = true
-
-    if (isUnix()) {
-      successfulTests = (sh([script: bedrock, returnStatus: true]) == 0) && successfulTests
-    } else {
-      successfulTests = (bat([script: bedrock, returnStatus: true]) == 0) && successfulTests
-    }
-
-    echo "Writing JUnit results for " + name
-
-    step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
-
-    if (!successfulTests) {
-      echo "Tests failed for " + name + " so passing failure as exit code"
-      if (isUnix()) {
-        sh "exit 1"
-      } else {
-        bat "exit 1"
-      }
-    }
-  }
-
+  
 
   def permutations = [
     [ name: "win10Chrome", os: "windows-10", browser: "chrome", sh: false ],
