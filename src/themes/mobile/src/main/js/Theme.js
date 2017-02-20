@@ -29,15 +29,10 @@ define(
         DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
 
         var container = IosContainer();
-        
-        var iframeContainer = Element.fromTag('div');
-
-        Insert.append(container.element(), iframeContainer);
-
         args.targetNode.ownerDocument.body.appendChild(container.element().dom());
 
         return {
-          iframeContainer: iframeContainer.dom(),
+          iframeContainer: container.socket().element().dom(),
           editorContainer: container.element().dom()
         };
 
