@@ -13,15 +13,15 @@ node ("primary") {
     git ([url: "ssh://git@stash:7999/van/agar.git", credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3', branch: "master"])
 
     stage "Fetching Dependencies"
-    sh "dent"   
+    sh "npm install"   
 
     stage "Atomic Tests"
-    sh "bolt test config/bolt/atomic.js \$(find src/test/js/atomic -name *.js)"
+    sh "node_modules/.bin/bolt test config/bolt/atomic.js \$(find src/test/js/atomic -name *.js)"
   }
 
   def permutations = [
     [ name: "win10Chrome", os: "windows-10", browser: "chrome", sh: false ],
-    [ name: "win10FF", os: "windows-10", browser: "firefox", sh: false ],
+    // [ name: "win10FF", os: "windows-10", browser: "firefox", sh: false ],
     [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", sh: false ],
     [ name: "win10IE", os: "windows-10", browser: "ie", sh: false ]
   ]
@@ -36,13 +36,14 @@ node ("primary") {
         
         echo "Fetching Slave Dependencies"
         if (permutation.sh) {
-          sh "dent"
+          sh "npm install"
         } else {
-          bat "dent"
+          bat "npm install"
         }
         
         echo "Browser Tests for " + permutation.name
-        extBedrock(permutation.name, permutation.browser, "src/test/js/browser src/test/js/webdriver", permutation.sh)
+        def webdriverTests = permutation.browser === "firefox" ? "" : " src/test/js/webdriver"
+        extBedrock(permutation.name, permutation.browser, "src/test/js/browser" + webdrivers, permutation.sh)
       }
     }
   }
