@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.dragging.Presnaps',
+  'ephox.alloy.dragging.snap.Presnaps',
 
   [
     'ephox.katamari.api.Option',

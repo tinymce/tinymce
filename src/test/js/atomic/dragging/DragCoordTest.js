@@ -2,7 +2,7 @@ test(
   'DragCoordTest',
 
   [
-    'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.view.Position',
     'ephox.wrap-jsverify.Jsc'

@@ -8,7 +8,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',

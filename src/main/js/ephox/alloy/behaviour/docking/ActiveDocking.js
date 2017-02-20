@@ -7,7 +7,7 @@ define(
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.docking.Dockables',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.boulder.api.Objects',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.dom.Compare',

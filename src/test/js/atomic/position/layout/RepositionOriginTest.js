@@ -1,6 +1,10 @@
 test(
   'OriginRepositionTest',
 
+  {
+    'ephox.alloy.positioning.view.OriginsUI': '../../mock/OriginsUI'
+  },
+
   [
     'ephox.alloy.positioning.layout.Direction',
     'ephox.alloy.positioning.layout.Origins',
@@ -83,6 +87,8 @@ test(
     var fixedRight = Option.some(303);  // 500 - 95 - 102
     var fixedBottom = Option.some(306); // 500 - 91 - 103
     var none = Option.none();
+
+    
 
     check(Reposition.css('fixed', fixedLeft, fixedTop, none, none), fixedOrigin, makeOnscreen(Direction.southeast()));
     check(Reposition.css('fixed', none, fixedTop, fixedRight, none), fixedOrigin, makeOnscreen(Direction.southwest()));

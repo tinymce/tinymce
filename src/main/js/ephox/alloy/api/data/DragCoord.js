@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.dragging.DragCoord',
+  'ephox.alloy.api.data.DragCoord',
 
   [
     'ephox.katamari.api.Arr',

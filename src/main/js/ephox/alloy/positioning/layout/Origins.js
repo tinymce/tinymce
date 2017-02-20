@@ -22,8 +22,8 @@ define(
       }, function (x, y) {
         return Reposition.css('absolute', Option.some(decision.x() - x), Option.some(decision.y() - y), Option.none(), Option.none());
       }, function (x, y, width, height) {
-        var decisionX = decision.x();
-        var decisionY = decision.y();
+        var decisionX = decision.x() - x;
+        var decisionY = decision.y() - y;
         var decisionWidth = decision.width();
         var decisionHeight = decision.height();
         var decisionRight = width - (decisionX + decisionWidth);

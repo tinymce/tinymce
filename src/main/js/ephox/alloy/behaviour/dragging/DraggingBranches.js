@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.dragging.DraggingBranches',
 
   [
-    'ephox.alloy.dragging.MouseDragging'
+    'ephox.alloy.dragging.mouse.MouseDragging'
   ],
 
   function (MouseDragging) {

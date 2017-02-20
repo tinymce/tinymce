@@ -45,7 +45,7 @@ asynctest(
       );
     }, function (doc, body, gui, component, store) {
       return [
-        StepUtils.sAssertFailIs(
+        StepUtils.sAssertFailContains(
           'Testing getCoupled with invalid name: fake',
           'No information found for coupled component: fake',
           function () {

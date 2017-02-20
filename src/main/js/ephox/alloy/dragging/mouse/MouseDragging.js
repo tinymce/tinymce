@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.dragging.MouseDragging',
+  'ephox.alloy.dragging.mouse.MouseDragging',
 
   [
     'ephox.alloy.alien.OffsetOrigin',
@@ -7,10 +7,10 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.common.BlockerUtils',
     'ephox.alloy.dragging.common.DragState',
-    'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.dragging.mouse.BlockerEvents',
     'ephox.alloy.dragging.mouse.MouseData',
-    'ephox.alloy.dragging.Snappables',
+    'ephox.alloy.dragging.snap.Snappables',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.properties.Css',

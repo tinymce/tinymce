@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Boxes',
-    'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
