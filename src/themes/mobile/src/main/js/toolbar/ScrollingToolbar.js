@@ -48,7 +48,7 @@ define(
                       },
 
                       components: [
-                        Container.build({
+                        Container.sketch({
                           components: [
                             ToolbarGroup.parts().items()
                           ]
@@ -63,6 +63,10 @@ define(
                         item: {
                           munge: Fun.identity
                         }
+                      },
+
+                      parts: {
+                        items: { }
                       }
                     }
                   );
@@ -98,6 +102,10 @@ define(
         Toolbar.setGroups(toolbar, gs);
       };
 
+      var createGroups = function (gs) {
+        return Toolbar.createGroups(toolbar, gs);
+      };
+
       var refresh = function () {
         Toolbar.refresh(toolbar);
       };
@@ -113,6 +121,7 @@ define(
       return {
         wrapper: Fun.constant(wrapper),
         toolbar: Fun.constant(toolbar),
+        createGroups: createGroups,
         setGroups: setGroups,
         setContextToolbar: setContextToolbar,
         restoreToolbar: restoreToolbar,
