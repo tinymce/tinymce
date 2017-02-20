@@ -47,7 +47,7 @@ node ("primary") {
         def webdriverTests = permutation.browser == "firefox" ? "" : " src/test/js/webdriver"
 
 
-        def bedrock = "node_modules/.bin/bedrock-auto -b " + browser + " --testdirs " + "src/test/js/browser" + webdriverTests
+        def bedrock = "node_modules/.bin/bedrock-auto -b " + permutation.browser + " --testdirs " + "src/test/js/browser" + webdriverTests
 
         def successfulTests = true
 
