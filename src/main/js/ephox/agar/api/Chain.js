@@ -16,12 +16,13 @@ define(
     var on = function (f) {
       var runChain = Pipe(function (input, next, die) {
         if (! isInput(input)) {
+          console.error('Invalid chain input: ', input);
           die(new Error('Input Value is not a chain: ' + input + '\nfunction: ' + f.toString()));
         }
         else {
           f(input.chain, function (v) {
             if (! isInput(v)) {
-              console.error('Output value: ', v);
+              console.error('Invalid chain output: ', v);
               die(new Error('Output value is not a chain: ' + v));
             }
             else next(v);

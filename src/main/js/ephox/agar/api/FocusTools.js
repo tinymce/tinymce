@@ -38,8 +38,10 @@ define(
       return Chain.asStep(element, [
         cGetOwnerDoc,
         cGetFocused,
-        Chain.op(function (active) {
-          assert.eq(true, Compare.eq(element, active), '\nExpected focus: ' + Truncate.getHtml(element) + '\nActual focus: ' + Truncate.getHtml(active));
+        Chain.binder(function (active) {
+          return Compare.eq(element, active) ? Result.value(active) : Result.error(
+            label + '\nExpected focus: ' + Truncate.getHtml(element) + '\nActual focus: ' + Truncate.getHtml(active)
+          );
         })
       ]);
     };
@@ -47,8 +49,10 @@ define(
     var sIsOnSelector = function (label, doc, selector) {
       return Chain.asStep(doc, [
         cGetFocused,
-        Chain.op(function (active) {
-          assert.eq(true, SizzleFind.matches(active, selector), label + '\nExpected focus $("' + selector + '")]\nActual focus: ' + Truncate.getHtml(active));
+        Chain.binder(function (active) {
+          return SizzleFind.matches(active, selector) ? Result.value(active) :  Result.error(
+            label + '\nExpected focus $("' + selector + '")]\nActual focus: ' + Truncate.getHtml(active)
+          );
         })
       ]);
     };

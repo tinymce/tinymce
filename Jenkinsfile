@@ -50,8 +50,5 @@ node ("primary") {
   stage "Platform Tests"
   parallel processes
 
-  stage "Publishing build"
-  dir ("project") {
-    sh "ent-ci -repo /ephox/repos/buildrepo2"
-  }
+  echo "Build does not publish"
 }
