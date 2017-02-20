@@ -2,16 +2,16 @@ define(
   'tinymce.themes.mobile.ui.IosContainer',
 
   [
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.node.Element'
+    'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Fun, Element) {
+  function (OuterContainer) {
     return function () {
-      var div = Element.fromTag('div');
+      var alloy = OuterContainer();
+      
 
       return {
-        element: Fun.constant(div)
+        element: alloy.element
       };
     };
   }
