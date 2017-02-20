@@ -62,7 +62,7 @@ node ("primary") {
         step([$class: 'JUnitResultArchiver', testResults: 'scratch/TEST-*.xml'])
 
         if (!successfulTests) {
-          echo "Tests failed for " + name + " so passing failure as exit code"
+          echo "Tests failed for " + permutation.name + " so passing failure as exit code"
           if (isUnix()) {
             sh "exit 1"
           } else {
