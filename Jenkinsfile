@@ -42,7 +42,7 @@ node ("primary") {
         }
         
         echo "Browser Tests for " + permutation.name
-        def webdriverTests = permutation.browser === "firefox" ? "" : " src/test/js/webdriver"
+        def webdriverTests = permutation.browser == "firefox" ? "" : " src/test/js/webdriver"
         extBedrock(permutation.name, permutation.browser, "src/test/js/browser" + webdrivers, permutation.sh)
       }
     }
