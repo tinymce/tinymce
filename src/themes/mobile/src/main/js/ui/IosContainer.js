@@ -6,17 +6,13 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.api.ui.Toolbar',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (
-    Replacing, GuiFactory, Button, Container, Toolbar, Objects, Fun, ScrollingToolbar,
-    OuterContainer
-  ) {
+  function (Replacing, GuiFactory, Button, Container, Objects, Fun, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer();
 
