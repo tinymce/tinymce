@@ -36,10 +36,29 @@ define(
       }
     };
 
+    var asLtrRange = function (win, subject) {
+      return subject.match({
+        ltr: function (start, soffset, finish, foffset) {
+          var rng = win.document.createRange();
+          rng.setStart(start.dom(), soffset);
+          rng.setEnd(finish.dom(), foffset);
+          return rng;
+        },
+        rtl: function (start, soffset, finish, foffset) {
+          // NOTE: Reversing start and finish
+          var rng = win.document.createRange();
+          rng.setStart(finish.dom(), foffset);
+          rng.setEnd(start.dom(), soffset);
+          return rng;
+        }
+      });
+    };
+
     return {
       ltr: adt.ltr,
       rtl: adt.rtl,
-      diagnose: diagnose
+      diagnose: diagnose,
+      asLtrRange: asLtrRange
     };
   }
 );

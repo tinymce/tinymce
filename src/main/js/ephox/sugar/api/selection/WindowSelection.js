@@ -7,10 +7,11 @@ define(
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
     'ephox.sugar.selection.core.SelectionDirection',
+    'ephox.sugar.selection.query.Within',
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
-  function (Option, Element, Selection, Situ, SelectionDirection, Prefilter) {
+  function (Option, Element, Selection, Situ, SelectionDirection, Within, Prefilter) {
     var set = function (win, start, soffset, finish, foffset) {
       setRelative(win, Situ.on(start, soffset), Situ.on(finish, foffset));
     };
@@ -22,6 +23,21 @@ define(
       rng.setEnd(finish.dom(), foffset);
       selection.removeAllRanges();
       selection.addRange(rng);
+    };
+
+
+    var findWithinRelative = function (win, relative, selector) {
+      // Note, we don't need the getSelection() model for this.
+      return Within.find(win, relative, selector);
+    };
+
+    var findWithin = function (win, s, so, e, eo, selector) {
+      var relative = Selection.relative(
+        Situ.on(s, so),
+        Situ.on(e, eo)
+      );
+      // Note, we don't need the getSelection() model for this.
+      return findWithinRelative(win, relative, selector);
     };
 
     var setRelative = function (win, startSitu, finishSitu) {
@@ -64,7 +80,11 @@ define(
     return {
       set: set,
       get: get,
-      setRelative: setRelative
+      setRelative: setRelative,
+
+      // TODO: Start testing these.
+      findWithinRelative: findWithinRelative,
+      findWithin: findWithin
     };
   }
 );

@@ -22,8 +22,8 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var p1 = Element.fromHtml('<p>This is the first paragraph</p>');
-    var p2 = Element.fromHtml('<p>This is the second paragraph</p>');
+    var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
+    var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
     var p1text = Hierarchy.follow(p1, [ 0 ]).getOrDie('Looking for text in p1');
     var p2text = Hierarchy.follow(p2, [ 0 ]).getOrDie('Looking for text in p1');
@@ -56,9 +56,9 @@ asynctest(
     setSelection(p1text, 1, p2text, 1);
     assertSelection('(p1text, 1) -> (p2text, 2)', p1text, 1, p2text, 1);
 
-    setTimeout(function () {
-      setSelection(p2text, 2, p1text, 3);
-      assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
-    }, 2000);
+    setSelection(p2text, 2, p1text, 3);
+    assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
+
+    // WindowSelection.
   }
 );
