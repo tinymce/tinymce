@@ -30,12 +30,6 @@ asynctest(
 
     InsertAll.append(Body.body(), [ p1, p2 ]);
 
-    WindowSelection.get(window).fold(function () {
-
-    }, function (sel) {
-      assert.fail('There should not be a selection yet');
-    });
-
     var setSelection = function (start, soffset, finish, foffset) {
       WindowSelection.set(window, start, soffset, finish, foffset);
     };
@@ -57,6 +51,8 @@ asynctest(
       });
     };
 
+    assertNoSelection('There should not be a selection yet');
+
     setSelection(p1text, 1, p2text, 1);
     assertSelection('(p1text, 1) -> (p2text, 2)', p1text, 1, p2text, 1);
 
@@ -64,7 +60,5 @@ asynctest(
       setSelection(p2text, 2, p1text, 3);
       assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
     }, 2000);
-
-
   }
 );
