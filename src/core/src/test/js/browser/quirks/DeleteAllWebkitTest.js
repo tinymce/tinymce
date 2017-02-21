@@ -2,6 +2,7 @@ asynctest(
   'browser.tinymce.core.utils.quirks.DeleteAllWebkitTest',
   [
     'ephox.agar.api.Chain',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Pipeline',
@@ -14,8 +15,8 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    Chain, Keyboard, Keys, Pipeline, Step, TinyApis, TinyDom, TinyLoader, Env, Plugin,
-    Theme
+    Chain, GeneralSteps, Keyboard, Keys, Pipeline, Step, TinyApis, TinyDom, TinyLoader,
+    Env, Plugin, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -35,13 +36,37 @@ asynctest(
       });
     };
 
+    var sAssertDeletion = function (editor, apis, content, selectionPath, expected) {
+      return GeneralSteps.sequence([
+        sRawSetContent(editor, content),
+        apis.sSetSelection.apply(null, selectionPath),
+        sKeydown(TinyDom.fromDom(editor.getBody()), Keys.backspace()),
+        apis.sAssertContent(expected)
+      ]);
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var apis = TinyApis(editor);
       var steps = Env.webkit ? [
-        sRawSetContent(editor, '<p>a</p><p><br /></p><p><br /></p><p>b</p>'),
-        apis.sSetSelection([2], 0, [3, 0], 1),
-        sKeydown(TinyDom.fromDom(editor.getBody()), Keys.backspace()),
-        apis.sAssertContent('<p>a</p><p>&nbsp;</p><p>&nbsp;</p>')
+        sAssertDeletion(
+          editor, apis,
+          '<p>a</p><p><br /></p><p><br /></p><p>b</p>',
+          [[2], 0, [3, 0], 1],
+          '<p>a</p><p>&nbsp;</p><p>&nbsp;</p>'
+        ),
+        apis.sSetContent(''),
+        sAssertDeletion(
+          editor, apis,
+          '<p>a</p><p><br /></p><p><br /></p><p>b</p>',
+          [[0], 0, [2, 0], 0],
+          '<p>&nbsp;</p><p>b</p>'
+        ),
+        sAssertDeletion(
+          editor, apis,
+          '<p>a</p><p><br /></p><p><br /></p><p><br /></p><p><br /></p><p><br /></p><p>b</p>',
+          [[1], 0, [6], 0],
+          '<p>a</p><p>b</p>'
+        )
       ] : [];
 
       Pipeline.async({}, steps, onSuccess, onFailure);
