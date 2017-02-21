@@ -1,0 +1,38 @@
+.mce-container .tinymce-mobile-disabled-mask { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  background: rgba(20, 20, 20, 0.5);
+}
+
+.mce-container .tinymce-mobile-disabled-mask .tinymce-mobile-content-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 200%;
+  padding: .5em;
+  border-radius: .25em;
+  color: white;
+  background: black;
+  font-weight: bold;
+}
+
+
+[dir=ltr] .tinymce-mobile-disabled-mask .tinyme-mobile-mask-tap-icon {
+  padding-right: .5em;
+}
+
+.mce-container .tinymce-mobile-disabled-mask .tinymce-mobile-content-container * {
+  color: white;
+  font-size: 140%;
+}
+
+.tinymce-mobile-disabled-mask .tinymce-mobile-content-container .tinymce-mobile-mask-tap-icon::before {
+  /*font-family: 'Textbox Icons', 'textboxIcons';
+  content: "\e011";*/
+  content: '.'
+}

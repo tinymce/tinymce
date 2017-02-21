@@ -28,7 +28,7 @@ define(
       var tapIcon = Element.fromTag('div');
       Attr.set(tapIcon, 'role', 'presentation');
       Attr.set(tapIcon, 'aria-hidden', 'true');
-      Class.add(tapIcon, Styles.resolve('tap-icon'));
+      Class.add(tapIcon, Styles.resolve('mask-tap-icon'));
       Insert.append(container, tapIcon);
 
       var disclosure = Element.fromTag('div');
