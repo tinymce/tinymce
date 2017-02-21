@@ -25,12 +25,12 @@ define(
       Insert.append(mobile.socket, mobile.editor.getFrame());
 
       Css.set(mobile.container, 'position', 'relative');
-      var mask = TapToEditMask();
-
-      mask.events.fullscreen.bind(function () {
+      var onTap = function () {
         mask.hide();
         mode.enter();
-      });
+      };
+
+      var mask = TapToEditMask(onTap);
 
       Insert.append(mobile.container, mask.element());
       mask.show();

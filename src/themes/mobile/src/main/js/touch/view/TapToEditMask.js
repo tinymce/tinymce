@@ -15,7 +15,7 @@ define(
   ],
 
   function (Arr, Fun, Insert, Remove, DomEvent, Element, Attr, Class, Css, Styles) {
-    return function() {
+    return function (onTap) {
       var element = Element.fromTag('div'); // tap-to-edit button
       Class.add(element, Styles.resolve('disabled-mask'));
 
@@ -40,9 +40,6 @@ define(
 
       Attr.set(element, 'role', 'button');
 
-      var events = Events.create({
-        fullscreen: Event([])
-      });
 
       // Checks that all touches occur within the constraints of the mask
       var touchesInBounds = function (touches){
@@ -76,7 +73,7 @@ define(
       var fullscreen = function (event) {
         // prevent clicks from falling through to the editor & triggering the editor
         event.kill();
-        events.trigger.fullscreen();
+        onTap();
       };
 
       var show = function () {
@@ -99,7 +96,6 @@ define(
 
       return {
         element: Fun.constant(element),
-        events: events.registry,
         destroy: destroy,
         show: show,
         hide: hide
