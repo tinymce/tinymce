@@ -1,4 +1,4 @@
-asynctest(
+test(
   'Browser Test: SetSelectionTest',
 
   [
@@ -16,9 +16,10 @@ asynctest(
     var p1 = Element.fromHtml('<p>This is the first paragraph</p>');
     var p2 = Element.fromHtml('<p>This is the second paragraph</p>');
 
+    InsertAll.append(Body.body(), [ p1, p2 ]);
+
     WindowSelection.set(window, p1, 0, p2, 0);
 
-    InsertAll.append(Body.body(), [ p1, p2 ]);
 
   }
 );

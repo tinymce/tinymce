@@ -18,6 +18,7 @@ define(
       rng.setStart(start.dom(), soffset);
       rng.setEnd(finish.dom(), foffset);
       selection.removeAllRanges();
+      debugger;
       selection.addRange(rng);
     };
 

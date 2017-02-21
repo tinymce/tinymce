@@ -17,7 +17,7 @@ define(
     };
 
     var relativeToNative = function (win, startSitu, finishSitu) {
-      var range = win.document.create();
+      var range = win.document.createRange();
 
       startSitu.fold(function (e) {
         range.setStartBefore(e.dom());
