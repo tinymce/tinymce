@@ -2,12 +2,13 @@ define(
   'ephox.sugar.selection.core.NativeRange',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element'
   ],
 
-  function (Option, Compare, Element) {
+  function (Fun, Option, Compare, Element) {
     var selectNodeContents = function (win, element) {
       var rng = win.document.createRange();
       selectNodeContentsUsing(rng, element);
@@ -81,17 +82,28 @@ define(
       var fragment = rng.cloneContents();
       return Element.fromDom(fragment);
     };
+
+    var toRect = function (rect) {
+      return {
+        left: Fun.constant(rect.left),
+        top: Fun.constant(rect.top),
+        right: Fun.constant(rect.right),
+        bottom: Fun.constant(rect.bottom),
+        width: Fun.constant(rect.width),
+        height: Fun.constant(rect.height)
+      };
+    };
     
     var getFirstRect = function (rng) {
       var rects = rng.getClientRects();
       // ASSUMPTION: The first rectangle is the start of the selection
       var rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
-      return rect.width > 0 || rect.height > 0  ? Option.some(rect) : Option.none();
+      return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none();
     };
 
     var getBounds = function (rng) {
       var rect = rng.getBoundingClientRect();
-      return rect.width > 0 || rect.height > 0  ? Option.some(rect) : Option.none();
+      return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none();
     };
 
     return {

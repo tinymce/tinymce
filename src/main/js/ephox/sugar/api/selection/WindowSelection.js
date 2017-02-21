@@ -81,18 +81,12 @@ define(
 
     var getFirstRect = function (win, selection) {
       var rng = SelectionDirection.asLtrRange(win, selection);
-      return NativeRange.getFirstRect(rng).map(function (rect) {
-        // Probably not best way to structify
-        return Obj.map(rect, Fun.constant);
-      });
+      return NativeRange.getFirstRect(rng);
     };
 
     var getBounds = function (win, selection) {
       var rng = SelectionDirection.asLtrRange(win, selection);
-      return NativeRange.getBounds(rng).map(function (rect) {
-        // Probably not best way to structify
-        return Obj.map(rect, Fun.constant);
-      });
+      return NativeRange.getBounds(rng);
     };
 
     return {
