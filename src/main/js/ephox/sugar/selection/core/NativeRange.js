@@ -66,6 +66,13 @@ define(
       return range;
     };
 
+    var exactToNative = function (win, start, soffset, finish, foffset) {
+      var rng = win.document.createRange();
+      rng.setStart(start.dom(), soffset);
+      rng.setEnd(finish.dom(), foffset);
+      return rng;
+    };
+
     var deleteContents = function (rng) {
       rng.deleteContents();
     };
@@ -94,6 +101,7 @@ define(
       selectNodeContentsUsing: selectNodeContentsUsing,
       isCollapsed: isCollapsed,
       relativeToNative: relativeToNative,
+      exactToNative: exactToNative,
       deleteContents: deleteContents,
       cloneFragment: cloneFragment,
       getFirstRect: getFirstRect,

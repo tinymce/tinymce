@@ -10,15 +10,15 @@ asynctest(
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.node.Text',
     'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection',
     'global!setTimeout',
     'global!window'
   ],
 
   function (
-    Arr, Obj, Compare, Hierarchy, InsertAll, Body, Element, Node, Text, Html, WindowSelection,
+    Arr, Obj, Compare, Hierarchy, InsertAll, Body, Element, Node, Html, Selection, WindowSelection,
     setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
@@ -33,17 +33,17 @@ asynctest(
     InsertAll.append(Body.body(), [ p1, p2 ]);
 
     var setSelection = function (start, soffset, finish, foffset) {
-      WindowSelection.set(window, start, soffset, finish, foffset);
+      WindowSelection.setExact(window, start, soffset, finish, foffset);
     };
 
     var assertNoSelection = function (label) {
-      WindowSelection.get(window).each(function (sel) {
+      WindowSelection.getExact(window).each(function (sel) {
         assert.fail('There should not be a selection yet: ' + label);
       });
     };
 
     var assertSelection = function (label, expStart, expSoffset, expFinish, expFoffset) {
-      WindowSelection.get(window).fold(function () {
+      WindowSelection.getExact(window).fold(function () {
         assert.fail('After setting selection ' + label + ', could not find a selection');
       }, function (sel) {
         assert.eq(true, Compare.eq(sel.start(), expStart), 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label)
@@ -63,12 +63,13 @@ asynctest(
 
     var assertWithin = function (expected, outer) {
       WindowSelection.setToElement(window, outer);
-      WindowSelection.get(window).fold(function () {
+      WindowSelection.getExact(window).fold(function () {
         assert.fail('Selection should be wrapping: ' + Html.getOuter(outer));
       }, function (sel) {
         Obj.each(expected, function (num, tag) {
-          var actual = WindowSelection.findWithin(window,
-            sel.start(), sel.soffset(), sel.finish(), sel.foffset(),
+          var actual = WindowSelection.findWithin(
+            window,
+            Selection.exact(sel.start(), sel.soffset(), sel.finish(), sel.foffset()),
             tag
           );
           assert.eq(
@@ -92,6 +93,7 @@ asynctest(
       em: 1
     }, p2);
 
-    
+    WindowSelection.getFirstRect(window, Selection.exact(p1, 0, p1, 1));
+
   }
 );

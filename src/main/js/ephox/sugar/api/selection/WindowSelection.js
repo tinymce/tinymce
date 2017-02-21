@@ -2,6 +2,8 @@ define(
   'ephox.sugar.api.selection.WindowSelection',
 
   [
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
@@ -12,11 +14,10 @@ define(
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
-  function (Option, Element, Selection, Situ, NativeRange, SelectionDirection, Within, Prefilter) {
-    var set = function (win, start, soffset, finish, foffset) {
-      setRelative(win, Situ.on(start, soffset), Situ.on(finish, foffset));
-    };
-
+  function (
+    Fun, Obj, Option, Element, Selection, Situ, NativeRange, SelectionDirection, Within,
+    Prefilter
+  ) {
     var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
       selection.removeAllRanges();
@@ -24,24 +25,16 @@ define(
     };
 
     var doSetRange = function (win, start, soffset, finish, foffset) {
-      var rng = win.document.createRange();
-      rng.setStart(start.dom(), soffset);
-      rng.setEnd(finish.dom(), foffset);
+      var rng = NativeRange.exactToNative(win, start, soffset, finish, foffset);
       doSetNativeRange(win, rng);
     };
 
-    var findWithinRelative = function (win, relative, selector) {
-      // Note, we don't need the getSelection() model for this.
-      return Within.find(win, relative, selector);
+    var findWithin = function (win, selection, selector) {
+      return Within.find(win, selection, selector);
     };
 
-    var findWithin = function (win, s, so, e, eo, selector) {
-      var relative = Selection.relative(
-        Situ.on(s, so),
-        Situ.on(e, eo)
-      );
-      // Note, we don't need the getSelection() model for this.
-      return findWithinRelative(win, relative, selector);
+    var setExact = function (win, start, soffset, finish, foffset) {
+      setRelative(win, Situ.on(start, soffset), Situ.on(finish, foffset));
     };
 
     var setRelative = function (win, startSitu, finishSitu) {
@@ -64,9 +57,9 @@ define(
       });
     };
 
-    var doGet = function (selection) {
+    var doGetExact = function (selection) {
       return Option.some(
-        Selection.exact(
+        Selection.range(
           Element.fromDom(selection.anchorNode),
           selection.anchorOffset,
           Element.fromDom(selection.focusNode),
@@ -80,20 +73,37 @@ define(
       doSetNativeRange(win, rng);
     };
 
-    var get = function (win) {
+    var getExact = function (win) {
       // We want to retrieve the selection as it is.
       var selection = win.getSelection();
-      return selection.rangeCount > 0 ? doGet(selection) : Option.none();
+      return selection.rangeCount > 0 ? doGetExact(selection) : Option.none();
+    };
+
+    var getFirstRect = function (win, selection) {
+      var rng = SelectionDirection.asLtrRange(win, selection);
+      return NativeRange.getFirstRect(rng).map(function (rect) {
+        // Probably not best way to structify
+        return Obj.map(rect, Fun.constant);
+      });
+    };
+
+    var getBounds = function (win, selection) {
+      var rng = SelectionDirection.asLtrRange(win, selection);
+      return NativeRange.getBounds(rng).map(function (rect) {
+        // Probably not best way to structify
+        return Obj.map(rect, Fun.constant);
+      });
     };
 
     return {
-      set: set,
-      get: get,
+      setExact: setExact,
+      getExact: getExact,
       setRelative: setRelative,
       setToElement: setToElement,
 
-      // TODO: Start testing these.
-      findWithinRelative: findWithinRelative,
+      getFirstRect: getFirstRect,
+      getBounds: getBounds,
+
       findWithin: findWithin
     };
   }

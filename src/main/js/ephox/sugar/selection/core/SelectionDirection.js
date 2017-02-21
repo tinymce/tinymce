@@ -3,11 +3,14 @@ define(
 
   [
     'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Thunk',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.selection.core.NativeRange'
   ],
 
-  function (Adt, Element, NativeRange) {
+  function (Adt, Fun, Option, Thunk, Element, NativeRange) {
     var adt = Adt.generate([
       { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
       { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
@@ -17,27 +20,72 @@ define(
       return type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
     };
 
-    var diagnose = function (win, relative) {
+    var getRanges = function (win, selection) {
+      return selection.match({
+        domRange: function (rng) {
+          return {
+            ltr: Fun.constant(rng),
+            rtl: Option.none
+          };
+        },
+        relative: function (startSitu, finishSitu) {
+          return {
+            ltr: Thunk.cached(function () {
+              return NativeRange.relativeToNative(win, startSitu, finishSitu);
+            }),
+            rtl: Thunk.cached(function () {
+              return Option.some(
+                NativeRange.relativeToNative(win, finishSitu, startSitu)
+              );
+            })
+          };
+        },
+        exact: function (start, soffset, finish, foffset) {
+          return {
+            ltr: Thunk.cached(function () {
+              return NativeRange.exactToNative(win, start, soffset, finish, foffset);
+            }),
+            rtl: Thunk.cached(function () {
+              return Option.some(
+                NativeRange.exactToNative(win, finish, foffset, start, soffset)
+              );
+            })
+          };
+        }
+      });
+    };
+
+    var doDiagnose = function (win, ranges) {
       // If we cannot create a ranged selection from start > finish, it could be RTL
-      var rng = NativeRange.relativeToNative(win, relative.startSitu(), relative.finishSitu());
+      var rng = ranges.ltr();
       if (rng.collapsed) {
         // Let's check if it's RTL ... if it is, then reversing the direction will not be collapsed
-        var reversed = NativeRange.relativeToNative(win, relative.finishSitu(), relative.startSitu());
-        if (reversed.collapsed) return fromRange(win, adt.ltr, rng);
-        // We need to use "reversed" here, because the original only has one point (collapsed)
-        else return adt.rtl(
-          Element.fromDom(reversed.endContainer),
-          reversed.endOffset,
-          Element.fromDom(reversed.startContainer),
-          reversed.startOffset
-        );
+        var reversed = ranges.rtl().filter(function (rev) {
+          return rev.collapsed === false;
+        });
+        
+        return reversed.map(function (rev) {
+          // We need to use "reversed" here, because the original only has one point (collapsed)
+          return adt.rtl(
+            Element.fromDom(rev.endContainer), rev.endOffset,
+            Element.fromDom(rev.startContainer), rev.startOffset  
+          );
+        }).getOrThunk(function () {
+          return fromRange(win, adt.ltr, rng);
+        });
       } else {
         return fromRange(win, adt.ltr, rng);
       }
     };
 
-    var asLtrRange = function (win, subject) {
-      return subject.match({
+    var diagnose = function (win, selection) {
+      var ranges = getRanges(win, selection);
+      return doDiagnose(win, ranges);
+    };
+
+    var asLtrRange = function (win, selection) {
+      var diagnosis = diagnose(win, selection);
+      return diagnosis.match({
         ltr: function (start, soffset, finish, foffset) {
           var rng = win.document.createRange();
           rng.setStart(start.dom(), soffset);

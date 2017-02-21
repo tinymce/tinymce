@@ -23,11 +23,9 @@ define(
       });
     };
 
-    var find = function (win, relative, selector) {
-      var directed = SelectionDirection.diagnose(win, relative);
+    var find = function (win, selection, selector) {
       // Reverse the selection if it is RTL when doing the comparison
-      var outerRange = SelectionDirection.asLtrRange(win, directed);
-      
+      var outerRange = SelectionDirection.asLtrRange(win, selection);
       var ancestor = Element.fromDom(outerRange.commonAncestorContainer);
       // Note, this might need to change when we have to start looking for non elements.
       return Node.isElement(ancestor) ? 
