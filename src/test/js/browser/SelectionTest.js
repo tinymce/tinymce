@@ -2,6 +2,8 @@ asynctest(
   'Browser Test: SelectionTest',
 
   [
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.InsertAll',
@@ -16,8 +18,8 @@ asynctest(
   ],
 
   function (
-    Compare, Hierarchy, InsertAll, Body, Element, Node, Text, Html, WindowSelection, setTimeout,
-    window
+    Arr, Obj, Compare, Hierarchy, InsertAll, Body, Element, Node, Text, Html, WindowSelection,
+    setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -59,6 +61,35 @@ asynctest(
     setSelection(p2text, 2, p1text, 3);
     assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
 
-    // WindowSelection.
+    var assertWithin = function (expected, outer) {
+      WindowSelection.setToElement(window, outer);
+      WindowSelection.get(window).fold(function () {
+        assert.fail('Selection should be wrapping: ' + Html.getOuter(outer));
+      }, function (sel) {
+        Obj.each(expected, function (num, tag) {
+          var actual = WindowSelection.findWithin(window,
+            sel.start(), sel.soffset(), sel.finish(), sel.foffset(),
+            tag
+          );
+          assert.eq(
+            num, actual.length, 'Incorrect number of ' + tag + ' tags.\n' +
+            'Expected: ' + num + ', but was: ' + actual.length
+          );
+          assert.eq(true, Arr.forall(actual, function (a) {
+            return Node.name(a) === tag;
+          }), 'All tags must be: ' + tag);
+        });
+      });
+    };
+
+    assertWithin({
+      strong: 1,
+      em: 0
+    }, p1);
+
+    assertWithin({
+      strong: 0,
+      em: 1
+    }, p2);
   }
 );

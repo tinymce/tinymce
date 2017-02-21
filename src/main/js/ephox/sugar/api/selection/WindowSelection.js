@@ -6,25 +6,29 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
+    'ephox.sugar.selection.core.NativeRange',
     'ephox.sugar.selection.core.SelectionDirection',
     'ephox.sugar.selection.query.Within',
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
-  function (Option, Element, Selection, Situ, SelectionDirection, Within, Prefilter) {
+  function (Option, Element, Selection, Situ, NativeRange, SelectionDirection, Within, Prefilter) {
     var set = function (win, start, soffset, finish, foffset) {
       setRelative(win, Situ.on(start, soffset), Situ.on(finish, foffset));
     };
 
-    var doSetRange = function (win, start, soffset, finish, foffset) {
+    var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
-      var rng = win.document.createRange();
-      rng.setStart(start.dom(), soffset);
-      rng.setEnd(finish.dom(), foffset);
       selection.removeAllRanges();
       selection.addRange(rng);
     };
 
+    var doSetRange = function (win, start, soffset, finish, foffset) {
+      var rng = win.document.createRange();
+      rng.setStart(start.dom(), soffset);
+      rng.setEnd(finish.dom(), foffset);
+      doSetNativeRange(win, rng);
+    };
 
     var findWithinRelative = function (win, relative, selector) {
       // Note, we don't need the getSelection() model for this.
@@ -71,6 +75,11 @@ define(
       );
     };
 
+    var setToElement = function (win, element) {
+      var rng = NativeRange.selectNodeContents(win, element);
+      doSetNativeRange(win, rng);
+    };
+
     var get = function (win) {
       // We want to retrieve the selection as it is.
       var selection = win.getSelection();
@@ -81,6 +90,7 @@ define(
       set: set,
       get: get,
       setRelative: setRelative,
+      setToElement: setToElement,
 
       // TODO: Start testing these.
       findWithinRelative: findWithinRelative,
