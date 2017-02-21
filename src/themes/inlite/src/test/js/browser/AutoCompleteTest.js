@@ -1,29 +1,40 @@
 asynctest(
   'browser.AutoCompleteTest',
   [
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyDom',
-    'tinymce.themes.inlite.test.Toolbar',
-    'tinymce.themes.inlite.Theme',
-    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Mouse',
+    'ephox.agar.api.FocusTools',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
-    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Pipeline',
     'ephox.agar.api.UiControls',
-    'ephox.agar.api.FocusTools'
+    'ephox.agar.api.UiFinder',
+    'ephox.mcagar.api.TinyActions',
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
+    'tinymce.themes.inlite.test.Toolbar',
+    'tinymce.themes.inlite.Theme',
+    'tinymce.plugins.image.Plugin',
+    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.textpattern.Plugin'
   ],
   function (
-    TinyLoader, TinyApis, TinyActions, TinyDom, Toolbar, Theme,
-    Pipeline, Chain, UiFinder, Mouse, Keyboard, Keys, GeneralSteps, UiControls, FocusTools
+    Chain, FocusTools, GeneralSteps, Keyboard, Keys, Pipeline, UiControls, UiFinder, TinyActions,
+    TinyApis, TinyDom, TinyLoader, Toolbar, Theme, ImagePlugin, LinkPlugin, PastePlugin,
+    ContextMenuPlugin, TextpatternPlugin
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    ImagePlugin();
+    LinkPlugin();
+    PastePlugin();
+    ContextMenuPlugin();
+    TextpatternPlugin();
     Theme();
 
     var cKeyStroke = function (keyvalue, modifiers) {

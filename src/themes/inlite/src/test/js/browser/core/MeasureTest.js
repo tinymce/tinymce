@@ -15,12 +15,17 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    var containsXY = function (r, x, y) {
-      return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
+    var containsXY = function (r, x, y, loose) {
+      var x1 = r.x - loose;
+      var y1 = r.y - loose;
+      var x2 = r.x + r.w + loose * 2;
+      var y2 = r.y + r.h + loose * 2;
+
+      return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     };
 
-    var contains = function (a, b) {
-      return containsXY(a, b.x, b.y) && containsXY(a, b.x + b.w, b.y + b.h);
+    var contains = function (a, b, loose) {
+      return containsXY(a, b.x, b.y, loose) && containsXY(a, b.x + b.w, b.y + b.h, loose);
     };
 
     var sAssertRect = function (editor, measure) {
@@ -29,8 +34,8 @@ asynctest(
         var pageAreaRect = Measure.getPageAreaRect(editor);
         var contentAreaRect = Measure.getContentAreaRect(editor);
 
-        Assertions.assertEq('Rect is not in page area rect', contains(pageAreaRect, elementRect), true);
-        Assertions.assertEq('Rect is not in content area rect', contains(contentAreaRect, elementRect), true);
+        Assertions.assertEq('Rect is not in page area rect', contains(pageAreaRect, elementRect, 1), true);
+        Assertions.assertEq('Rect is not in content area rect', contains(contentAreaRect, elementRect, 1), true);
         Assertions.assertEq('Rect should have width', elementRect.w > 0, true);
         Assertions.assertEq('Rect should have height', elementRect.h > 0, true);
       });
