@@ -32,7 +32,6 @@ define(
           doSetRange(win, start, soffset, finish, foffset);
         },
         rtl: function (start, soffset, finish, foffset) {
-          debugger;
           var selection = win.getSelection();
           // If this selection is backwards, then we need to use extend.
           if (selection.extend) {
