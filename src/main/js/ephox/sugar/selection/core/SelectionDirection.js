@@ -23,10 +23,16 @@ define(
       if (rng.collapsed) {
         // Let's check if it's RTL ... if it is, then reversing the direction will not be collapsed
         var reversed = NativeRange.relativeToNative(win, relative.finishSitu(), relative.startSitu());
-        var type = reversed.collapsed === true ? adt.ltr : adt.rtl;
-        return fromRange(win, type, rng);
+        if (reversed.collapsed) return fromRange(win, adt.ltr, rng);
+        // We need to use "reversed" here, because the original only has one point (collapsed)
+        else return adt.rtl(
+          Element.fromDom(reversed.endContainer),
+          reversed.endOffset,
+          Element.fromDom(reversed.startContainer),
+          reversed.startOffset
+        );
       } else {
-        return fromRange(win, adt.rtl, rng);
+        return fromRange(win, adt.ltr, rng);
       }
     };
 

@@ -44,9 +44,9 @@ asynctest(
       WindowSelection.get(window).fold(function () {
         assert.fail('After setting selection ' + label + ', could not find a selection');
       }, function (sel) {
-        assert.eq(true, Compare.eq(sel.start(), p1text), 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label)
+        assert.eq(true, Compare.eq(sel.start(), expStart), 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label)
         assert.eq(expSoffset, sel.soffset());
-        assert.eq(true, Compare.eq(sel.finish(), p2text), 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
+        assert.eq(true, Compare.eq(sel.finish(), expFinish), 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
         assert.eq(expFoffset, sel.foffset());
       });
     };
