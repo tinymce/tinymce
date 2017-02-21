@@ -12,26 +12,26 @@ define(
   ],
 
   function (Arr, Element, Node, SelectorFilter, Selectors, NativeRange, SelectionDirection) {
-    var withinContainer = function (win, ancestor, rng, selector) {
-      var tempRange = win.document.createRange();
+    var withinContainer = function (win, ancestor, outerRange, selector) {
+      var innerRange = NativeRange.create(win);
       var self = Selectors.is(ancestor, selector) ? [ ancestor ] : [];
       var elements = self.concat(SelectorFilter.descendants(ancestor, selector));
       return Arr.filter(elements, function (elem) {
         // Mutate the selection to save creating new ranges each time
-        NativeRange.selectNodeContentsUsing(tempRange, elem);
-        return NativeRange.isWithin(rng, tempRange);
+        NativeRange.selectNodeContentsUsing(innerRange, elem);
+        return NativeRange.isWithin(outerRange, innerRange);
       });
     };
 
     var find = function (win, relative, selector) {
       var directed = SelectionDirection.diagnose(win, relative);
       // Reverse the selection if it is RTL when doing the comparison
-      var rng = SelectionDirection.asLtrRange(win, directed);
+      var outerRange = SelectionDirection.asLtrRange(win, directed);
       
-      var ancestor = Element.fromDom(rng.commonAncestorContainer);
+      var ancestor = Element.fromDom(outerRange.commonAncestorContainer);
       // Note, this might need to change when we have to start looking for non elements.
       return Node.isElement(ancestor) ? 
-        withinContainer(win, ancestor, rng, selector) : [];
+        withinContainer(win, ancestor, outerRange, selector) : [];
     };
 
     return {
