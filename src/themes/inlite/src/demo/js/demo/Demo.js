@@ -13,6 +13,7 @@
 define(
   'tinymce.themes.inlite.demo.Demo',
   [
+    'global!window',
     'tinymce.core.EditorManager',
     'tinymce.plugins.anchor.Plugin',
     'tinymce.plugins.autolink.Plugin',
@@ -25,7 +26,7 @@ define(
     'tinymce.themes.inlite.Theme'
   ],
   function (
-    EditorManager, AnchorPlugin, AutoLinkPlugin, ContextMenuPlugin, ImagePlugin,
+    window, EditorManager, AnchorPlugin, AutoLinkPlugin, ContextMenuPlugin, ImagePlugin,
     LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, InliteTheme
   ) {
     AnchorPlugin();
@@ -57,6 +58,8 @@ define(
       },
       file_picker_callback: function () { }
     });
+
+    window.tinymce = EditorManager;
 
     return function () { };
   }

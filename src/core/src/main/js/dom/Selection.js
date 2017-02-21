@@ -644,18 +644,6 @@ define(
             self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
           }
 
-          // WebKit egde case selecting images works better using setBaseAndExtent
-          if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
-            if (rng.endOffset - rng.startOffset < 2) {
-              if (rng.startContainer.hasChildNodes()) {
-                node = rng.startContainer.childNodes[rng.startOffset];
-                if (node && node.tagName == 'IMG') {
-                  self.getSel().setBaseAndExtent(node, 0, node, 1);
-                }
-              }
-            }
-          }
-
           self.editor.fire('AfterSetSelectionRange', { range: rng });
         } else {
           // Is W3C Range fake range on IE
