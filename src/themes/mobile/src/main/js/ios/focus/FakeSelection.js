@@ -22,6 +22,9 @@ define(
     Styles, Rectangles
   ) {
     return function (win, frame) {
+      // NOTE: This may be required for android also.
+
+
       /*
        * FakeSelection is used to draw rectangles around selection so that when the content loses
        * focus, the selection is still visible. The selections should match the current content
