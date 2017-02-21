@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: SetSelectionTest',
+  'Browser Test: SelectionTest',
 
   [
     'ephox.sugar.api.dom.Compare',
