@@ -4,12 +4,13 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Futures',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.ios.scroll.IosScrolling',
     'tinymce.themes.mobile.ios.view.IosViewport'
   ],
 
-  function (Arr, Future, Css, IosScrolling, IosViewport) {
+  function (Arr, Future, Futures, Css, IosScrolling, IosViewport) {
     var updateFixed = function (element, winY, offsetY) {
       var destination = winY + offsetY;
       Css.set(element, 'top', destination + 'px');
@@ -38,7 +39,7 @@ define(
       var updates = Arr.map(fixtures, function (fixture) {
         return updateFixture(fixture, winY);
       });
-      return Future.par(updates);
+      return Futures.par(updates);
     };
 
     return {

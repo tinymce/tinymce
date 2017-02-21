@@ -127,8 +127,10 @@ define(
         keyboardModel.onToolbarTouch(event);
       };
 
-      var onOrientation = Orientation.onChange();
-      onOrientation.events.ready.bind(structure.refresh);
+      var onOrientation = Orientation.onChange({
+        onChange: Fun.noop,
+        onReady: structure.refresh
+      });
 
       // NOTE: When the window is resizing (probably due to meta tags and viewport definitions), we are not receiving a window resize event.
       // However, it happens shortly after we start Ios mode, so here we just wait for the first window size event that we get. This code

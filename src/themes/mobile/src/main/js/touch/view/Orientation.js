@@ -26,12 +26,7 @@ define(
       };
     };
 
-    var onChange = function () {
-      var events = Events.create({
-        ready: Event(['orientation']),
-        change: Event(['orientation'])
-      });
-
+    var onChange = function (listeners) {
       var win = Element.fromDom(window);
       var poller = null;
 
@@ -40,11 +35,11 @@ define(
         clearInterval(poller);
 
         var orientation = get();
-        events.trigger.change(orientation);
+        listeners.onChange(orientation);
 
         onAdjustment(function () {
           // We don't care about whether there was a resize or not.
-          events.trigger.ready(orientation);
+          listeners.onReady(orientation);
         });
       };
 
@@ -74,7 +69,6 @@ define(
 
       return {
         onAdjustment: onAdjustment,
-        events: events.registry,
         destroy: destroy
       };
     };

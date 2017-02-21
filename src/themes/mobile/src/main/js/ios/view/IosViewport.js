@@ -13,12 +13,13 @@ define(
     'global!window',
     'tinymce.themes.mobile.ios.view.DeviceZones',
     'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.scroll.Scrollable',
     'tinymce.themes.mobile.util.DataAttributes'
   ],
 
   function (
     Adt, Arr, Fun, Attr, Css, SelectorFilter, Height, Scroll, window, DeviceZones, Styles,
-    DataAttributes
+    Scrollable, DataAttributes
   ) {
     var fixture = Adt.generate([
       { 'fixed': [ 'element', 'offsetY' ] },
@@ -70,7 +71,7 @@ define(
     var takeoverViewport = function (toolbarHeight, height, viewport) {
       var oldViewportStyle = Attr.get(viewport, 'style');
 
-      Scroll.register(viewport);
+      Scrollable.register(viewport);
       Css.setAll(viewport, {
         'position': 'absolute',
         // I think there a class that does this overflow scrolling touch part
@@ -83,7 +84,7 @@ define(
       Attr.set(viewport, yScrollingData, 'true');
 
       var restore = function () {
-        Scroll.deregister(viewport);
+        Scrollable.deregister(viewport);
         Attr.set(viewport, 'style', oldViewportStyle || '');
         Attr.remove(viewport, yFixedData);
         Attr.remove(viewport, yScrollingData);

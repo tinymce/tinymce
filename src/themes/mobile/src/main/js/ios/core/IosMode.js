@@ -13,6 +13,7 @@ define(
     'tinymce.themes.mobile.ios.core.IosEvents',
     'tinymce.themes.mobile.ios.core.IosHacks',
     'tinymce.themes.mobile.ios.core.IosSetup',
+    'tinymce.themes.mobile.ios.core.PlatformEditor',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.ios.view.IosKeyboard',
     'tinymce.themes.mobile.ios.view.Thor',
@@ -23,7 +24,7 @@ define(
 
   function (
     Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosHacks,
-    IosSetup, Scrollables, IosKeyboard, Thor, Styles, Scrollable, MetaViewport
+    IosSetup, PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable, MetaViewport
   ) {
     var create = function (platform, mask) {
       var meta = MetaViewport.tag();
