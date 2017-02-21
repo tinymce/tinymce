@@ -6,10 +6,11 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.api.MobileSchema',
+    'tinymce.themes.mobile.ios.core.IosMode',
     'tinymce.themes.mobile.touch.view.TapToEditMask'
   ],
 
-  function (ValueSchema, Insert, Css, MobileSchema, TapToEditMask) {
+  function (ValueSchema, Insert, Css, MobileSchema, IosMode, TapToEditMask) {
     var produce = function (raw) {
       var mobile = ValueSchema.asRawOrDie(
         'Getting IosWebapp schema',

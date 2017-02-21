@@ -2,17 +2,17 @@ define(
   'tinymce.themes.mobile.ios.view.Greenzone',
 
   [
-    'ephox.nomad.api.Cursor',
-    'ephox.nomad.ios.DeviceZones',
-    'ephox.nomad.ios.IosScrolling',
-    'ephox.peanut.Fun',
-    'global!parseInt'
+    'ephox.katamari.api.Fun',
+    'global!parseInt',
+    'tinymce.themes.mobile.ios.scroll.IosScrolling',
+    'tinymce.themes.mobile.ios.view.DeviceZones',
+    'tinymce.themes.mobile.touch.focus.CursorRefresh'
   ],
 
-  function (Cursor, DeviceZones, IosScrolling, Fun, parseInt) {
+  function (Fun, parseInt, IosScrolling, DeviceZones, CursorRefresh) {
     var scrollIntoView = function (cWin, socket, top, bottom) {
       var greenzone = DeviceZones.getGreenzone(socket);
-      var refreshCursor = Fun.curry(Cursor.refresh, cWin);
+      var refreshCursor = Fun.curry(CursorRefresh.refresh, cWin);
 
       if (top > greenzone || bottom > greenzone) {
         IosScrolling.moveOnlyScroll(socket, socket.dom().scrollTop - greenzone + bottom).get(refreshCursor);
