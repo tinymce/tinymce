@@ -47,11 +47,11 @@ define(
       var scrollBounds = function () {
         var rects = Rectangles.getRectangles(cWin);
         return Option.from(rects[0]).bind(function (rect) {
-          var viewTop = rect.top - socket.dom().scrollTop;
+          var viewTop = rect.top() - socket.dom().scrollTop;
           var outside = viewTop > window.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
           return outside ? Option.some({
             top: Fun.constant(viewTop),
-            bottom: Fun.constant(viewTop + rect.height)
+            bottom: Fun.constant(viewTop + rect.height())
           }) : Option.none();
         });
       };
