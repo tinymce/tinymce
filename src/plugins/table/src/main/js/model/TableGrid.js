@@ -825,7 +825,7 @@ define(
         }
 
         each(newRows, function (row) {
-          var i, cellCount = row.cells.length, cell;
+          var i, cellCount = row.cells.length, cell, colCount = 0;
 
           fireNewRow(row);
 
@@ -834,12 +834,12 @@ define(
             cell = row.cells[i];
 
             fireNewCell(cell);
-            setSpanVal(cell, 'colSpan', 1);
+            colCount += getSpanVal(cell, 'colspan');
             setSpanVal(cell, 'rowSpan', 1);
           }
 
           // Needs more cells
-          for (i = cellCount; i < gridWidth; i++) {
+          for (i = colCount; i < gridWidth; i++) {
             row.appendChild(fireNewCell(cloneCell(row.cells[cellCount - 1])));
           }
 
