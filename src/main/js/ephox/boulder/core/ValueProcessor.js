@@ -19,10 +19,7 @@ define(
     'ephox.katamari.api.Type'
   ],
 
-  function (
-    FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens,
-    Adt, Arr, Fun, Merger, Obj, Option, Result, Type
-  ) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Adt, Arr, Fun, Merger, Obj, Option, Result, Type) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
