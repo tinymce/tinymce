@@ -829,7 +829,6 @@ define(
 
           fireNewRow(row);
 
-          // Remove col/rowspans
           for (i = 0; i < cellCount; i++) {
             cell = row.cells[i];
 
@@ -844,8 +843,14 @@ define(
           }
 
           // Needs less cells
-          for (i = gridWidth; i < cellCount; i++) {
-            dom.remove(row.cells[i]);
+          for (i = gridWidth; i < colCount; i++) {
+            cell = row.cells[i];
+            colSpan = getSpanVal(cell, 'colspan');
+            if (colSpan > 1) {
+              setSpanVal(cell, 'colSpan', colSpan - 1);
+            } else {
+              dom.remove(row.cells[i]);
+            }
           }
 
           // Add before/after
