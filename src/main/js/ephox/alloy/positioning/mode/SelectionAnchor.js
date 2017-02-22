@@ -27,9 +27,8 @@ define(
   ],
 
   function (
-    Boxes, CssPosition, Descend, DomSelection, Anchoring, ContainerOffsets, FieldSchema,
-    Unicode, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Element,
-    Insert, Node, Remove, Traverse, Math
+    Boxes, CssPosition, Descend, DomSelection, Anchoring, ContainerOffsets, FieldSchema, Unicode, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction,
+    Element, Insert, Node, Remove, Traverse, Math
   ) {
     var point = Struct.immutable('element', 'offset');
 

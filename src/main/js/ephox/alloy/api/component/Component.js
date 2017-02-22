@@ -19,10 +19,7 @@ define(
     'global!Error'
   ],
 
-  function (
-    NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification,
-    DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error
-  ) {
+  function (NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
     var build = function (spec) { 
        var getSelf = function () {
         return self;

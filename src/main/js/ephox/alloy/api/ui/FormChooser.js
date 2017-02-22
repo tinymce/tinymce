@@ -17,10 +17,7 @@ define(
     'ephox.sugar.api.search.SelectorFilter'
   ],
 
-  function (
-    EventRoot, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, PartType,
-    FormChooserSchema, Objects, Arr, Fun, Attr, SelectorFilter
-  ) {
+  function (EventRoot, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Attr, SelectorFilter) {
     var schema = FormChooserSchema.schema();
     var partTypes = FormChooserSchema.parts();
 

@@ -14,10 +14,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (
-    Keys, SystemEvents, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node,
-    Traverse, setTimeout
-  ) {
+  function (Keys, SystemEvents, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, setTimeout) {
     var isDangerous = function (event) {
       // Will trigger the Back button in the browser
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));

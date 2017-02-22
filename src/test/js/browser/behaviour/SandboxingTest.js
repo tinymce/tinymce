@@ -22,8 +22,8 @@ asynctest(
   ],
  
   function (
-    Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents,
-    Container, Input, GuiSetup, Sinks, Fun, LazyValue, Result, Node
+    Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue, Result,
+    Node
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

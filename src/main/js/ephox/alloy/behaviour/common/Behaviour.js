@@ -15,10 +15,7 @@ define(
     'global!console'
   ],
 
-  function (
-    EventRoot, SystemEvents, EventHandler, DomModification, Objects, Obj, Merger, Fun,
-    Array, Error, console
-  ) {
+  function (EventRoot, SystemEvents, EventHandler, DomModification, Objects, Obj, Merger, Fun, Array, Error, console) {
     var executeEvent = function (toggleInfo, executor) {
       return {
         key: SystemEvents.execute(),

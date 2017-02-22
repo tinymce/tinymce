@@ -15,10 +15,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (
-    GuiFactory, Container, Documentation, DslType, Objects, ValueSchema, Type, Arr, Obj,
-    Json, Fun
-  ) {
+  function (GuiFactory, Container, Documentation, DslType, Objects, ValueSchema, Type, Arr, Obj, Json, Fun) {
     var getDescription = function (key) {
       if (Objects.hasKey(Documentation, key)) return Documentation[key].desc;
       else return '<span style="outline: 1px solid red;">' + key + '</span>';

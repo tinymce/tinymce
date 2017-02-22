@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoMenus',
@@ -20,10 +19,7 @@ define(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (
-    Representing, Gui, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr,
-    Future, Option, Result, Class, Element, Insert, Value
-  ) {
+  function (Representing, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

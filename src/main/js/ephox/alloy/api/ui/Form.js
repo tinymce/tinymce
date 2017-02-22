@@ -16,10 +16,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (
-    Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema,
-    Arr, Obj, Merger, Fun, Option
-  ) {
+  function (Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
     var schema = [
       
     ];

@@ -22,9 +22,8 @@ define(
   ],
 
   function (
-    OffsetOrigin, Container, EventHandler, BlockerUtils, DragState, DragCoord, BlockerEvents,
-    MouseData, Snappables, FieldSchema, Fun, Css, Traverse, Location, Scroll, parseInt,
-    window
+    OffsetOrigin, Container, EventHandler, BlockerUtils, DragState, DragCoord, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, Css, Traverse, Location,
+    Scroll, parseInt, window
   ) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();

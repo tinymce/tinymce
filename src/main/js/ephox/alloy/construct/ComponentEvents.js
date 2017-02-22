@@ -16,10 +16,7 @@ define(
     'global!Error'
   ],
 
-  function (
-    ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result,
-    Array, Error
-  ) {
+  function (ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     /*
      * The process of combining a component's events
      *

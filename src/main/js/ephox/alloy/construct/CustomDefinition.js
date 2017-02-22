@@ -35,10 +35,9 @@ define(
   ],
 
   function (
-    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating,
-    Keying, Positioning, Receiving, Replacing, Representing, Sandboxing, Sliding, Streaming,
-    Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence,
-    FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Error
+    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing,
+    Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr,
+    Merger, Fun, Error
   ) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);

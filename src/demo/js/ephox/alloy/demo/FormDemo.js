@@ -16,7 +16,6 @@ define(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoDataset',
@@ -39,10 +38,9 @@ define(
   ],
 
   function (
-    Behaviour, Keying, Representing, Tabstopping, Gui, Button, Container, ExpandableForm,
-    Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Menu, TieredMenu,
-    Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Merger,
-    Arr, Future, Option, Result, Class, Element, Insert, Value, document, setTimeout
+    Behaviour, Keying, Representing, Tabstopping, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input,
+    TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Merger, Arr, Future, Option, Result, Class, Element, Insert, Value,
+    document, setTimeout
   ) {
     return function () {
       var gui = Gui.create();

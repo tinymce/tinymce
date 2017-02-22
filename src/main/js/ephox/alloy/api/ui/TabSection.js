@@ -17,10 +17,7 @@ define(
     'ephox.sugar.api.properties.Attr'
   ],
 
-  function (
-    EventRoot, Highlighting, Replacing, Representing, SystemEvents, UiSketcher, EventHandler,
-    PartType, TabSectionSchema, Objects, Arr, Fun, Attr
-  ) {
+  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, UiSketcher, EventHandler, PartType, TabSectionSchema, Objects, Arr, Fun, Attr) {
     var schema = TabSectionSchema.schema();
     var partTypes = TabSectionSchema.parts();
 

@@ -19,10 +19,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (
-    Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, PartType, Overflows,
-    SplitToolbarSchema, Arr, Merger, Fun, Css, Width
-  ) {
+  function (Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, PartType, Overflows, SplitToolbarSchema, Arr, Merger, Fun, Css, Width) {
     var schema = SplitToolbarSchema.schema();
     var partTypes = SplitToolbarSchema.parts();
 

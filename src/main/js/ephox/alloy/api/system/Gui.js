@@ -23,8 +23,8 @@ define(
   ],
 
   function (
-    GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger,
-    Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error
+    GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse,
+    Error
   ) {
     var create = function ( ) {
       var root = GuiFactory.build(

@@ -29,9 +29,8 @@ asynctest(
   ],
  
   function (
-    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils,
-    GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent, Element,
-    Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
+    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent,
+    Element, Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

@@ -21,10 +21,7 @@ asynctest(
     'ephox.sugar.api.properties.Css'
   ],
  
-  function (
-    Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging,
-    Container, DragCoord, GuiSetup, Json, Option, Result, Position, Css
-  ) {
+  function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging, Container, DragCoord, GuiSetup, Json, Option, Result, Position, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
