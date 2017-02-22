@@ -840,7 +840,7 @@ define(
 
           // Needs more cells
           for (i = colCount; i < gridWidth; i++) {
-            row.appendChild(fireNewCell(cloneCell(row.cells[cellCount - 1])));
+            row.appendChild(cloneCell(row.cells[cellCount - 1]));
           }
 
           // Needs less cells
