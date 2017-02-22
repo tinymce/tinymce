@@ -21,7 +21,12 @@ define(
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var skinUrl = EditorManager.baseURL + editor.settings.skin_url;
+        var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
+
         DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
+
+        editor.contentCSS.push(contentCssUrl + '/content.css');
+
 
         var ios = IosContainer();
         args.targetNode.ownerDocument.body.appendChild(ios.element().dom());

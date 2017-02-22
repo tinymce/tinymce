@@ -1,0 +1,6 @@
+.tinymce-mobile-unfocused-selections .tinymce-mobile-unfocused-selection {
+  position: absolute;
+  display: inline-block;
+  background-color: green;
+  opacity: 0.5;
+}

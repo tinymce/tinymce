@@ -35,8 +35,8 @@ define(
 
     var getBoundsFrom = function (rect) {
       return {
-        top: Fun.constant(rect.top),
-        bottom: Fun.constant(rect.top + rect.height)
+        top: Fun.constant(rect.top()),
+        bottom: Fun.constant(rect.top() + rect.height())
       };
     };
 

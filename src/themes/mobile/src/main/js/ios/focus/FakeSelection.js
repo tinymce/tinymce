@@ -51,10 +51,10 @@ define(
         var span = Element.fromTag('span');
         Classes.add(span, [ Styles.resolve('layer-editor'), Styles.resolve('unfocused-selection') ]);
         Css.setAll(span, {
-          'left': rectangle.left + 'px' ,
-          'top': rectangle.top + 'px',
-          'width': rectangle.width + 'px',
-          'height': rectangle.height + 'px'
+          'left': rectangle.left() + 'px' ,
+          'top': rectangle.top() + 'px',
+          'width': rectangle.width() + 'px',
+          'height': rectangle.height() + 'px'
         });
         return span;
       };

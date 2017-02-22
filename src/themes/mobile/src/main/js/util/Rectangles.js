@@ -3,31 +3,46 @@ define(
 
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Awareness',
+    'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Arr, Element, Traverse, Awareness, WindowSelection) {
+  function (Arr, Fun, Element, Traverse, Awareness, Selection, WindowSelection) {
     var COLLAPSED_WIDTH = 2;
 
     var collapsedRect = function (rect) {
       return {
         left: rect.left,
         top: rect.top,
-        width: COLLAPSED_WIDTH,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: Fun.constant(COLLAPSED_WIDTH),
         height: rect.height
       };
     };
 
+    var toRect = function (rawRect) {
+      return {
+        left: Fun.constant(rawRect.left),
+        top: Fun.constant(rawRect.top),
+        right: Fun.constant(rawRect.right),
+        bottom: Fun.constant(rawRect.bottom),
+        width: Fun.constant(rawRect.width),
+        height: Fun.constant(rawRect.height),
+      };
+    };
+
     var getRectsFromRange = function (range) {
-      if (! range.collapsed) return range.getClientRects();
+      if (! range.collapsed) return Arr.map(range.getClientRects(), toRect);
       else {
         var start = Element.fromDom(range.startContainer);
         return Traverse.parent(start).bind(function (parent) {
-          var optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, start, range.startOffset, parent, Awareness.getEnd(parent));
-          debugger;
+          var selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
+          var optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, selection);
           return optRect.map(collapsedRect).map(Arr.pure);
         }).getOr([ ]);
       }

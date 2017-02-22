@@ -25,6 +25,7 @@ define(
         theme: 'mobile',
         plugins: '',
         skin_url: '../../../../../skins/lightgray/dist/lightgray',
+        content_css_url: '../../main/css',
         insert_toolbar: 'quickimage quicktable',
         selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
         paste_data_images: true,
