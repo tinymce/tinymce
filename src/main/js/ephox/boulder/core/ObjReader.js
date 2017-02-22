@@ -2,7 +2,7 @@ define(
   'ephox.boulder.core.ObjReader',
 
   [
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Option) {

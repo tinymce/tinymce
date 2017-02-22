@@ -2,7 +2,7 @@ define(
   'ephox.boulder.core.ObjChanger',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

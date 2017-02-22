@@ -6,11 +6,10 @@ define(
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
     'ephox.boulder.format.TypeTokens',
-    'ephox.compass.Obj',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Obj'
   ],
 
-  function (Objects, SchemaError, ValueProcessor, TypeTokens, Obj, Result) {
+  function (Objects, SchemaError, ValueProcessor, TypeTokens, Obj) {
     var chooseFrom = function (path, strength, input, branches, ch) {
       var fields = Objects.readOptFrom(branches, ch);
       return fields.fold(function () {
@@ -38,7 +37,7 @@ define(
 
       var toDsl = function () {
         return TypeTokens.typeAdt.choiceOf(key, branches);
-      }
+      };
 
       return {
         extract: extract,

@@ -3,18 +3,14 @@ define(
 
   [
     'ephox.boulder.core.ChoiceProcessor',
-    'ephox.boulder.core.SchemaError',
     'ephox.boulder.core.ValueProcessor',
     'ephox.boulder.format.PrettyPrinter',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
     'global!Error'
   ],
 
-  function (ChoiceProcessor, SchemaError, ValueProcessor, PrettyPrinter, Type, Arr, Obj, Fun, Result, Error) {
+  function (ChoiceProcessor, ValueProcessor, PrettyPrinter, Fun, Result, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {

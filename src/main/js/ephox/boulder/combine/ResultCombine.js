@@ -2,56 +2,32 @@ define(
   'ephox.boulder.combine.ResultCombine',
 
   [
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Results'
   ],
 
-  function (Arr, Merger, Result) {
-    var consolidateObj = function (objects, base) {
-      // This used to be done in a functional way with folding, but
-      // I was worried about its performance (because this is called a lot)
-
-      // Note, we should use katamari's Results.partition (or other) when this is
-      // migrated.
-      var passed = [ base ];
-      var failed = [ ];
-      var unsuccessful = false;
-      Arr.each(objects, function (obj) {
-        obj.fold(function (errs) {
-          // errs can be empty ,but this should still fail
-          unsuccessful = true;
-          failed = failed.concat(errs);
-        }, function (obj) {
-          passed.push(obj);
-        });
-      });
-
-      if (unsuccessful) return Result.error(failed);
-      else if (passed.length === 0) return Result.value({ });
-      else return Result.value(
-        Merger.deepMerge.apply(undefined, passed)
+  function (Arr, Fun, Merger, Result, Results) {
+    var mergeValues = function (values, base) {
+      return Result.value(
+        Merger.deepMerge.apply(undefined, [ base ].concat(values))
       );
     };
 
-    var consolidateArr = function (objects) {
-      var passed = [ ];
-      var failed = [ ];
-      var unsuccessful = false;
-      Arr.each(objects, function (obj) {
-        obj.fold(function (errs) {
-          // errs can be empty ,but this should still fail
-          unsuccessful = true;
-          failed = failed.concat(errs);
-        }, function (arr) {
-          passed.push(arr);
-        });
-      });
+    var mergeErrors = function (errors) {
+      return Fun.compose(Result.error, Arr.flatten)(errors);
+    };
 
-      // This used to (also) be done in a functional way with folding, but
-      // I was worried about its performance (because this is called a lot)
-      if (unsuccessful) return Result.error(failed);
-      else return Result.value(passed);
+    var consolidateObj = function (objects, base) {
+      var partitions = Results.partition(objects);
+      return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
+    };
+
+    var consolidateArr = function (objects) {
+      var partitions = Results.partition(objects);
+      return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : Result.value(partitions.values);
     };
 
     return {

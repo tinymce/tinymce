@@ -3,23 +3,18 @@ test(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Result',
-    'ephox.wrap.Jsc'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Result',
+    'ephox.sand.api.JSON',
+    'ephox.wrap-jsverify.Jsc'
   ],
 
-  function (Objects, Arr, Obj, Json, Result, Jsc) {
+  function (Objects, Arr, Obj, Result, Json, Jsc) {
     var smallSet = Jsc.nestring;
 
-    var check = function (arb, checker) {
-      Jsc.check(
-        Jsc.forall(arb, function (input) {
-          checker(input);
-          return true;
-        })
-      );
+    var check = function (label, arb, checker) {
+      Jsc.syncProperty(label, [ arb ], checker, { });
     };
 
     var testNarrow = function () {
@@ -35,7 +30,7 @@ test(
         })
       });
 
-      check(narrowGen, function (input) {
+      check('Testing narrow', narrowGen, function (input) {
         var narrowed = Objects.narrow(input.obj, input.fields);
         Obj.each(narrowed, function (_, k) {        
           if (!Arr.contains(input.fields, k)) throw 'Narrowed object contained property: ' + k + ' which was not in fields: [' + input.fields.join(', ') + ']';
@@ -177,7 +172,7 @@ test(
         })
       });
 
-      check(inputList, function (input) {
+      check('Testing consolidate', inputList, function (input) {
         var actual = Objects.consolidate(input.results, input.base);
 
         var hasError = Arr.exists(input.results, function (res) {
@@ -186,7 +181,25 @@ test(
 
         if (hasError) assert.eq(true, actual.isError(), 'Error contained in list, so should be error overall');
         else assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
+        return true;
       });
+
+      Jsc.syncProperty(
+        'Testing consolidate with base',
+        [ inputList, Jsc.nestring, Jsc.json ],
+        function (input, baseKey, baseValue) {
+          var actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
+          var hasError = Arr.exists(input.results, function (res) {
+            return res.isError();
+          });
+
+          if (hasError) return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall';
+          else {
+            assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
+            return Jsc.eq(true, actual.getOrDie('Must be value').hasOwnProperty(baseKey)) ? true : 'Missing base key: ' + baseKey;
+          }
+        }
+      );
     };
 
 

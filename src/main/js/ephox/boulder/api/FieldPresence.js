@@ -2,11 +2,11 @@ define(
   'ephox.boulder.api.FieldPresence',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (Fun, Adt) {
+  function (Adt, Fun) {
     var adt = Adt.generate([
       { strict: [ ] },
       { defaultedThunk: [ 'fallbackThunk' ] },

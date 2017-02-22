@@ -9,17 +9,17 @@ define(
     'ephox.boulder.core.ObjWriter',
     'ephox.boulder.core.SchemaError',
     'ephox.boulder.format.TypeTokens',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Type'
   ],
 
-  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Type, Arr, Obj, Merger, Fun, Option, Result, Adt) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Adt, Arr, Fun, Merger, Obj, Option, Result, Type) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }

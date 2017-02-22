@@ -4,11 +4,11 @@ define(
   [
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.core.ValueProcessor',
-    'ephox.classify.Type',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Type'
   ],
 
-  function (FieldPresence, ValueProcessor, Type, Result) {
+  function (FieldPresence, ValueProcessor, Result, Type) {
     var strict = function (key) {
       return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
     };
