@@ -20,6 +20,15 @@ asynctest(
       return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
     };
 
+    var selectRangeXY = function (editor, start, end) {
+      start = editor.$(start)[0];
+      end = editor.$(end)[0];
+
+      editor.fire('mousedown', { target: start });
+      editor.fire('mouseover', { target: end });
+      editor.fire('mouseup', { target: end });
+    };
+
     suite.test("mceTablePasteRowBefore command", function (editor) {
       editor.setContent(
         '<table>' +
@@ -203,21 +212,22 @@ asynctest(
       editor.setContent(
         '<table>' +
         '<tbody>' +
-        '<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td></tr>' +
+        '<tr><td>1a</td><td colspan="3">2a</td></tr>' +
         '</tbody>' +
         '</table>' +
 
         '<table>' +
         '<tbody>' +
-        '<tr><td>1b</td><td>2b</td></tr>' +
+        '<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
         '</tbody>' +
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'table:nth-child(1) tr:nth-child(1) td', 0);
+      selectRangeXY(editor, 'table:nth-child(1) tr:nth-child(1) td:nth-child(1)', 'table:nth-child(1) tr:nth-child(2) td:nth-child(2)');
       editor.execCommand('mceTableCopyRow');
 
-      LegacyUnit.setSelection(editor, 'table:nth-child(2) td', 0);
+      LegacyUnit.setSelection(editor, 'table:nth-child(2) tr td', 0);
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -225,18 +235,56 @@ asynctest(
 
         '<table>' +
         '<tbody>' +
-        '<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td></tr>' +
+        '<tr><td>1a</td><td colspan="3">2a</td></tr>' +
         '</tbody>' +
         '</table>' +
 
         '<table>' +
         '<tbody>' +
-        '<tr><td>1b</td><td>2b</td></tr>' +
-        '<tr><td>1a</td><td>2a</td></tr>' +
+        '<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
+        '<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
+        '<tr><td>1a</td><td colspan="2">2a</td></tr>' +
         '</tbody>' +
         '</table>'
       );
     });
+
+
+    suite.test("Copy/paste several rows with multiple rowspans", function (editor) {
+      editor.setContent(
+        '<table>' +
+        '<tbody>' +
+        '<tr><td rowspan="2">1</td><td>2</td><td>3</td></tr>' +
+        '<tr><td>2</td><td rowspan="3">3</td></tr>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '</tbody>' +
+        '</table>'
+      );
+
+      selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(3) td:nth-child(2)');
+      editor.execCommand('mceTableCopyRow');
+
+      LegacyUnit.setSelection(editor, 'table tr:nth-child(4) td', 0);
+      editor.execCommand('mceTablePasteRowAfter');
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+        '<table>' +
+        '<tbody>' +
+        '<tr><td rowspan="2">1</td><td>2</td><td>3</td></tr>' +
+        '<tr><td>2</td><td rowspan="3">3</td></tr>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '<tr><td rowspan="2">1</td><td>2</td><td>3</td></tr>' +
+        '<tr><td>2</td><td rowspan="2">3</td></tr>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '</tbody>' +
+        '</table>'
+      );
+    });
+
 
     suite.test("row clipboard api", function (editor) {
       var clipboardRows;
