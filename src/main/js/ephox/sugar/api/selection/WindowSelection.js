@@ -5,6 +5,7 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
@@ -16,8 +17,8 @@ define(
   ],
 
   function (
-    Fun, Obj, Option, Element, Selection, Situ, NativeRange, SelectionDirection, CaretRange,
-    Within, Prefilter
+    Fun, Obj, Option, DocumentPosition, Element, Selection, Situ, NativeRange, SelectionDirection,
+    CaretRange, Within, Prefilter
   ) {
     var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
@@ -58,15 +59,27 @@ define(
       });
     };
 
+    // NOTE: We are still reading the range because it gives subtly different behaviour
+    // than using the anchorNode and focusNode. I'm not sure if this behaviour is any
+    // better or worse; it's just different.
+    var readRange = function (selection) {
+      var rng = Option.from(selection.getRangeAt(0));
+      return rng.map(function (r) {
+        return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
+      });
+    };
+
     var doGetExact = function (selection) {
-      return Option.some(
+      var anchorNode = Element.fromDom(selection.anchorNode);
+      var focusNode = Element.fromDom(selection.focusNode);
+      return DocumentPosition.after(anchorNode, selection.anchorOffset, focusNode, selection.focusOffset) ? Option.some(
         Selection.range(
           Element.fromDom(selection.anchorNode),
           selection.anchorOffset,
           Element.fromDom(selection.focusNode),
           selection.focusOffset
         )
-      );
+      ) : readRange(selection);
     };
 
     var setToElement = function (win, element) {
@@ -94,17 +107,31 @@ define(
       return CaretRange.fromPoint(win, x, y);
     };
 
+    var getAsString = function (win, selection) {
+      var rng = SelectionDirection.asLtrRange(win, selection);
+      return NativeRange.toString(rng);
+    };
+
+    var clearSelection = function (win) {
+      var selection = win.getSelection();
+      selection.removeAllRanges();
+    };
+
     return {
       setExact: setExact,
       getExact: getExact,
       setRelative: setRelative,
       setToElement: setToElement,
+      clearSelection: clearSelection,
+
+      // TODO: Clone and replace
 
       getFirstRect: getFirstRect,
       getBounds: getBounds,
       getAtPoint: getAtPoint,
 
-      findWithin: findWithin
+      findWithin: findWithin,
+      getAsString: getAsString
     };
   }
 );

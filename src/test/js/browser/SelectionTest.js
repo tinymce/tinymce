@@ -1,4 +1,4 @@
-asynctest(
+test(
   'Browser Test: SelectionTest',
 
   [
@@ -8,6 +8,7 @@ asynctest(
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
@@ -19,8 +20,8 @@ asynctest(
   ],
 
   function (
-    Arr, Obj, PlatformDetection, Compare, Hierarchy, InsertAll, Body, Element, Node, Html,
-    Selection, WindowSelection, setTimeout, window
+    Arr, Obj, PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element,
+    Node, Html, Selection, WindowSelection, setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -54,6 +55,7 @@ asynctest(
       });
     };
 
+    WindowSelection.clearSelection(window);
     assertNoSelection('There should not be a selection yet');
 
     setSelection(p1text, 1, p2text, 1);
@@ -134,5 +136,8 @@ asynctest(
       var caret = WindowSelection.getAtPoint(window, i, y).getOrDie('Could not find selection');
       console.log('caret', caret.start().dom(), caret.soffset());
     }
+
+    Remove.remove(p1);
+    Remove.remove(p2);
   }
 );

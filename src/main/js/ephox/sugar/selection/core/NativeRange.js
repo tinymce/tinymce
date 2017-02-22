@@ -106,6 +106,10 @@ define(
       return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none();
     };
 
+    var toString = function (rng) {
+      return rng.toString();
+    };
+
     return {
       create: create,
       replaceWith: replaceWith,
@@ -118,7 +122,8 @@ define(
       cloneFragment: cloneFragment,
       getFirstRect: getFirstRect,
       getBounds: getBounds,
-      isWithin: isWithin
+      isWithin: isWithin,
+      toString: toString
     };
   }
 );
