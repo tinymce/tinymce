@@ -14,7 +14,7 @@ define(
       }).join('');
 
       return {
-        title: 'Keyboard Shortcuts',
+        title: 'Handy Shortcuts',
         type: 'container',
         style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
         items: [
