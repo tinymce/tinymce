@@ -10,13 +10,14 @@ define(
     'ephox.sugar.api.selection.Situ',
     'ephox.sugar.selection.core.NativeRange',
     'ephox.sugar.selection.core.SelectionDirection',
+    'ephox.sugar.selection.query.CaretRange',
     'ephox.sugar.selection.query.Within',
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
   function (
-    Fun, Obj, Option, Element, Selection, Situ, NativeRange, SelectionDirection, Within,
-    Prefilter
+    Fun, Obj, Option, Element, Selection, Situ, NativeRange, SelectionDirection, CaretRange,
+    Within, Prefilter
   ) {
     var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
@@ -89,6 +90,10 @@ define(
       return NativeRange.getBounds(rng);
     };
 
+    var getAtPoint = function (win, x, y) {
+      return CaretRange.fromPoint(win, x, y);
+    };
+
     return {
       setExact: setExact,
       getExact: getExact,
@@ -97,6 +102,7 @@ define(
 
       getFirstRect: getFirstRect,
       getBounds: getBounds,
+      getAtPoint: getAtPoint,
 
       findWithin: findWithin
     };
