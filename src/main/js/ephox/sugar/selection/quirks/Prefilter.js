@@ -27,6 +27,7 @@ define(
     };
 
     return {
+      beforeSpecial: beforeSpecial,
       preprocess: preprocess
     };
   }
