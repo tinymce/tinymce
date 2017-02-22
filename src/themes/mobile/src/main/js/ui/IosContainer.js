@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.Input',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
@@ -15,8 +16,8 @@ define(
   ],
 
   function (
-    Replacing, GuiFactory, Button, Container, Objects, Fun, Singleton, IosWebapp, ScrollingToolbar,
-    OuterContainer
+    Replacing, GuiFactory, Button, Container, Input, Objects, Fun, Singleton, IosWebapp,
+    ScrollingToolbar, OuterContainer
   ) {
     return function () {
       var alloy = OuterContainer();
@@ -54,6 +55,14 @@ define(
               },
               action: function () {
                 alert('Bold');
+              }
+            }),
+            Input.sketch({
+              dom: {
+                styles: {
+                  background: 'white',
+                  border: '1px solid black'
+                }
               }
             })
           ]

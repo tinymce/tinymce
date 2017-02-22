@@ -4,10 +4,12 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Traverse'
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Awareness',
+    'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Arr, Element, Traverse) {
+  function (Arr, Element, Traverse, Awareness, WindowSelection) {
     var COLLAPSED_WIDTH = 2;
 
     var collapsedRect = function (rect) {
@@ -24,7 +26,8 @@ define(
       else {
         var start = Element.fromDom(range.startContainer);
         return Traverse.parent(start).bind(function (parent) {
-          var optRect = WindowSelection.rectangleAt(range.startContainer.ownerDocument.defaultView, start, range.startOffset, parent, Awareness.getEnd(parent));
+          var optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, start, range.startOffset, parent, Awareness.getEnd(parent));
+          debugger;
           return optRect.map(collapsedRect).map(Arr.pure);
         }).getOr([ ]);
       }

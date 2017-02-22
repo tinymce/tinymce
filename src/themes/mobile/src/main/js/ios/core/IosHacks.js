@@ -4,11 +4,12 @@ define(
   [
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.selection.WindowSelection',
     'global!clearInterval',
     'global!setInterval'
   ],
 
-  function (Focus, Css, clearInterval, setInterval) {
+  function (Focus, Css, WindowSelection, clearInterval, setInterval) {
     var stopTouchFlicker = function (editorBody) {
       // TBIO-3691, stop the gray flicker on touch.
       // the content body will flicker grey when touched and there was no selection, this will make it flicker the same color as the background
@@ -30,7 +31,7 @@ define(
       // in this case it wants to scroll down so the text is centered on the screen, we have to live with this until we control
       // selection
       var touch = touchEvent.raw().changedTouches[0];
-      Point.find(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
+      WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
         var sel = WindowSelection.deriveExact(editorApi.win(), raw);
         editorApi.setSelection(sel.start(), sel.soffset(), sel.finish(), sel.foffset());
       });

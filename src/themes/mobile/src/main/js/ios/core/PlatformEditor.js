@@ -5,10 +5,11 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.node.Element'
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Fun, Option, DomEvent, Element) {
+  function (Fun, Option, DomEvent, Element, WindowSelection) {
     var getBodyFromFrame = function (frame) {
       return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
     };
@@ -63,7 +64,7 @@ define(
             var getCursorBox = editor.getCursorBox.getOrThunk(function () {
               return function () {
                 return WindowSelection.get(win).bind(function (sel) {
-                  return WindowSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
+                  return WindowSelection.getFirstRect(win, sel);
                 });
               };
             });
