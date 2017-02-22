@@ -17,7 +17,7 @@ define(
       return Option.from(doc.dom().caretPositionFromPoint(x, y)).bind(function (pos) {
         // It turns out that Firefox can return null for pos.offsetNode
         if (pos.offsetNode === null) return Option.none();
-        var r = doc.createRange();
+        var r = doc.dom().createRange();
         r.setStart(pos.offsetNode, pos.offset);
         r.collapse();
         return Option.some(r);

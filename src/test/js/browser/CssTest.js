@@ -5,19 +5,23 @@ test(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.test.Div',
     'ephox.sugar.test.MathElement'
   ],
 
-  function (Arr, Fun, Option, Attr, Body, Css, Element, Html, Insert, Remove, Traverse, Div, MathElement) {
+  function (
+    Arr, Fun, Option, PlatformDetection, Insert, Remove, Body, Element, Attr, Css, Html,
+    Traverse, Div, MathElement
+  ) {
 
     var runChecks = function (connected) {
       var c = Div();
@@ -44,6 +48,10 @@ test(
       var c2 = Div();
       Css.copy(c, c2);
       Css.copy(m, c2);
+
+      // NOTE: Safari seems to support styles for math ml tags, so the Css.copy(m, c2) clobbers the previous style
+      if (PlatformDetection.detect().browser.isSafari()) Css.copy(c, c2);
+
       Css.get(m, 'display');
       Css.getRaw(m, 'bogus');
 
