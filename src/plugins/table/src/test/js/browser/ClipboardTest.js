@@ -126,7 +126,7 @@ asynctest(
         '<tbody>' +
         '<tr><td colspan="2">1 2</td><td rowspan="2">3</td></tr>' +
         '<tr><td>1</td><td>2</td></tr>' +
-        '<tr><td>1 2</td><td>3</td><td>&nbsp;</td></tr>' +
+        '<tr><td colspan="2">1 2</td><td>3</td></tr>' +
         '</tbody>' +
         '</table>'
       );
@@ -153,7 +153,7 @@ asynctest(
         '<table>' +
         '<tbody>' +
         '<tr><td colspan="2">1 2</td><td>3</td></tr>' +
-        '<tr><td>1 2</td><td>3</td><td>&nbsp;</td></tr>' +
+        '<tr><td colspan="2">1 2</td><td>3</td></tr>' +
         '<tr><td>1</td><td>2</td><td>&nbsp;</td></tr>' +
         '</tbody>' +
         '</table>'
