@@ -93,6 +93,13 @@ define(
       return selection.rangeCount > 0 ? doGetExact(selection) : Option.none();
     };
 
+    // TODO: Test this.
+    var get = function (win) {
+      return getExact(win).map(function (range) {
+        return Selection.exact(range.start(), range.soffset(), range.finish(), range.foffset());
+      });
+    };
+
     var getFirstRect = function (win, selection) {
       var rng = SelectionDirection.asLtrRange(win, selection);
       return NativeRange.getFirstRect(rng);
@@ -120,6 +127,7 @@ define(
     return {
       setExact: setExact,
       getExact: getExact,
+      get: get,
       setRelative: setRelative,
       setToElement: setToElement,
       clearSelection: clearSelection,
