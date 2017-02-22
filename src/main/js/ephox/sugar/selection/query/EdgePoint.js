@@ -25,14 +25,14 @@ define(
     };
 
     var createCollapsedNode = function (doc, target, collapseDirection) {
-      var r = doc.createRange();
+      var r = doc.dom().createRange();
       r.selectNode(target.dom());
       r.collapse(collapseDirection);
       return r;
     };
 
     var locateInElement = function (doc, node, x) {
-      var cursorRange = doc.createRange();
+      var cursorRange = doc.dom().createRange();
       cursorRange.selectNode(node.dom());
       var rect = cursorRange.getBoundingClientRect();
       var collapseDirection = getCollapseDirection(rect, x);
