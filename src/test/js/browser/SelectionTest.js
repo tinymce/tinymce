@@ -4,6 +4,7 @@ asynctest(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.InsertAll',
@@ -18,8 +19,8 @@ asynctest(
   ],
 
   function (
-    Arr, Obj, Compare, Hierarchy, InsertAll, Body, Element, Node, Html, Selection, WindowSelection,
-    setTimeout, window
+    Arr, Obj, PlatformDetection, Compare, Hierarchy, InsertAll, Body, Element, Node, Html,
+    Selection, WindowSelection, setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -59,7 +60,8 @@ asynctest(
     assertSelection('(p1text, 1) -> (p2text, 2)', p1text, 1, p2text, 1);
 
     setSelection(p2text, 2, p1text, 3);
-    assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
+    if (! PlatformDetection.detect().browser.isIE()) assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
+    else assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2);
 
     var assertWithin = function (expected, outer) {
       WindowSelection.setToElement(window, outer);
@@ -122,6 +124,15 @@ asynctest(
       ' was ' + bounds2.top()
     );
 
-    
+    var bounds = p1.dom().getBoundingClientRect();
+    var x = bounds.left;
+    var y = bounds.top + (bounds.height / 2);
+
+    console.log('x', x, 'y', y);
+
+    for (var i = x; i < bounds.right; i += 10) {
+      var caret = WindowSelection.getAtPoint(window, i, y).getOrDie('Could not find selection');
+      console.log('caret', caret.start().dom(), caret.soffset());
+    }
   }
 );

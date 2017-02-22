@@ -24,7 +24,7 @@ define(
      */
 
     var searchInChildren = function (doc, node, x, y) {
-      var r = doc.createRange();
+      var r = doc.dom().createRange();
       var nodes = Traverse.children(node);
       return Options.findMap(nodes, function (n) {
         // slight mutation because we assume creating ranges is expensive
@@ -40,8 +40,8 @@ define(
       return locator(doc, node, x, y);
     };
 
-    var search = function (doc, node, x, y) {
-      var r = doc.createRange();
+    var locate = function (doc, node, x, y) {
+      var r = doc.dom().createRange();
       r.selectNode(node.dom());
       var rect = r.getBoundingClientRect();
       // Clamp x,y at the bounds of the node so that the locate function has SOME chance
@@ -52,7 +52,7 @@ define(
     };
 
     return {
-      search: search
+      locate: locate
     };
   }
 );

@@ -29,7 +29,7 @@ define(
     };
 
     var locate = function (doc, node, x, y) {
-      var r = doc.createRange();
+      var r = doc.dom().createRange();
       r.selectNode(node.dom());
       var rects = r.getClientRects();
       var foundRect = Options.findMap(rects, function (rect) {

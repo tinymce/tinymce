@@ -14,7 +14,7 @@ define(
 
   function (Option, Element, Traverse, Selection, ContainerPoint, EdgePoint, document, Math) {
     var caretPositionFromPoint = function (doc, x, y) {
-      return Option.from(doc.caretPositionFromPoint(x, y)).bind(function (pos) {
+      return Option.from(doc.dom().caretPositionFromPoint(x, y)).bind(function (pos) {
         // It turns out that Firefox can return null for pos.offsetNode
         if (pos.offsetNode === null) return Option.none();
         var r = doc.createRange();
@@ -25,11 +25,11 @@ define(
     };
 
     var caretRangeFromPoint = function (doc, x, y) {
-      return Option.from(doc.caretRangeFromPoint(x, y));
+      return Option.from(doc.dom().caretRangeFromPoint(x, y));
     };
 
     var searchTextNodes = function (doc, node, x, y) {
-      var r = doc.createRange();
+      var r = doc.dom().createRange();
       r.selectNode(node.dom());
       var rect = r.getBoundingClientRect();
       // Clamp x,y at the bounds of the node so that the locate function has SOME chance
@@ -42,7 +42,7 @@ define(
     var searchFromPoint = function (doc, x, y) {
       // elementFromPoint is defined to return null when there is no element at the point
       // This often happens when using IE10 event.y instead of event.clientY
-      return Option.from(doc.elementFromPoint(x, y)).map(Element.fromDom).bind(function (elem) {
+      return Option.from(doc.dom().elementFromPoint(x, y)).map(Element.fromDom).bind(function (elem) {
         // used when the x,y position points to an image, or outside the bounds
         var fallback = function () {
           return EdgePoint.search(doc, elem, x);
@@ -60,8 +60,9 @@ define(
 
 
     var fromPoint = function (win, x, y) {
-      return availableSearch(win.document, x, y).map(function (rng) {
-        return Selection.exact(
+      var doc = Element.fromDom(win.document);
+      return availableSearch(doc, x, y).map(function (rng) {
+        return Selection.range(
           Element.fromDom(rng.startContainer),
           rng.startOffset,
           Element.fromDom(rng.endContainer),
