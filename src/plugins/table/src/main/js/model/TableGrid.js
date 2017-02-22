@@ -866,7 +866,7 @@ define(
 
           // Needs less cells
           for (x = gridWidth; x < colCount; x++) {
-            cell = row.cells[x];
+            cell = row.cells[row.cells.length - 1];
             colSpan = getSpanVal(cell, 'colspan');
             if (colSpan > 1) {
               setSpanVal(cell, 'colSpan', colSpan - 1);
