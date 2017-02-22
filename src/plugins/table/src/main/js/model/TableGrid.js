@@ -807,6 +807,9 @@ define(
       function pasteRows(rows, before) {
         var splitResult, targetRow, newRows;
 
+        // indices of the rows where rowspans expire (a way to handle multiple rowspans in the same row)
+        var rowSpansDueAt = [];
+
         // Nothing to paste
         if (!rows) {
           return;
@@ -820,36 +823,55 @@ define(
           return row.cloneNode(true);
         });
 
-        if (!before) {
-          newRows.reverse();
-        }
-
-        each(newRows, function (row) {
-          var i, cellCount = row.cells.length, cell, colCount = 0;
+        each(newRows, function (row, y, rows) {
+          var x, cellCount = row.cells.length, cell, colCount = 0, rowSpan, colSpan;
 
           fireNewRow(row);
 
-          for (i = 0; i < cellCount; i++) {
-            cell = row.cells[i];
+          for (x = 0; x < cellCount; x++) {
+            cell = row.cells[x];
+
+            colSpan = getSpanVal(cell, 'colspan');
+            rowSpan = getSpanVal(cell, 'rowspan');
+
+            colCount += colSpan;
+
+            if (rowSpan > 1) {
+              colCount--; // decrement for every activated rowspan (count will be adjusted below)
+
+              if (y + rowSpan > rows.length) {
+                // adjust rowspan to the number of available rows
+                rowSpan -= rows.length - y;
+                setSpanVal(cell, 'rowSpan', rowSpan);
+                rowSpansDueAt.push(rows.length - 1);
+              } else {
+                rowSpansDueAt.push(y + rowSpan - 1);
+              }
+            }
 
             fireNewCell(cell);
-            colCount += getSpanVal(cell, 'colspan');
-            setSpanVal(cell, 'rowSpan', 1);
           }
 
+          // take into account currently active rowspans
+          each(rowSpansDueAt, function (dueY) {
+            if (y <= dueY) {
+              colCount++;
+            }
+          });
+
           // Needs more cells
-          for (i = colCount; i < gridWidth; i++) {
+          for (x = colCount; x < gridWidth; x++) {
             row.appendChild(cloneCell(row.cells[cellCount - 1]));
           }
 
           // Needs less cells
-          for (i = gridWidth; i < colCount; i++) {
-            cell = row.cells[i];
+          for (x = gridWidth; x < colCount; x++) {
+            cell = row.cells[x];
             colSpan = getSpanVal(cell, 'colspan');
             if (colSpan > 1) {
               setSpanVal(cell, 'colSpan', colSpan - 1);
             } else {
-              dom.remove(row.cells[i]);
+              dom.remove(cell);
             }
           }
 
@@ -857,7 +879,7 @@ define(
           if (before) {
             targetRow.parentNode.insertBefore(row, targetRow);
           } else {
-            dom.insertAfter(row, targetRow);
+            targetRow = dom.insertAfter(row, targetRow);
           }
         });
 
