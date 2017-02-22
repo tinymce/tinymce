@@ -841,7 +841,7 @@ define(
 
               if (y + rowSpan > rows.length) {
                 // adjust rowspan to the number of available rows
-                rowSpan -= rows.length - y;
+                rowSpan = rows.length - y;
                 setSpanVal(cell, 'rowSpan', rowSpan);
                 rowSpansDueAt.push(rows.length - 1);
               } else {
