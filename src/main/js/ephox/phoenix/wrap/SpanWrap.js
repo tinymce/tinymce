@@ -3,17 +3,15 @@ define(
 
   [
     'ephox.bud.Unicode',
-    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Injection',
     'ephox.phoenix.wrap.Wrapper',
-    'ephox.phoenix.wrap.Wraps',
-    'ephox.scullion.Struct'
+    'ephox.phoenix.wrap.Wraps'
   ],
 
-  function (Unicode, Arr, Fun, Option, Spot, Injection, Wrapper, Wraps, Struct) {
+  function (Unicode, Fun, Option, Spot, Injection, Wrapper, Wraps) {
     var point = function (universe, start, soffset, finish, foffset, exclusions) {
       var scanned = scan(universe, start, soffset, finish, foffset, exclusions);
       var cursor = scanned.cursor();
