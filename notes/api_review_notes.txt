@@ -1,6 +1,0 @@
-* Potentially add support for other compare methods, e.g. using compareDocumentPosition.
-* Add remove to Css.
-* live()/event delegation for Event.
-* Normalize event object for Event.
-* We need a wrap sizzle project. Change various modules to use it directly.
-* Sort out Text - isText? How does Text relate to Node?
