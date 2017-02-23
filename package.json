@@ -4,6 +4,10 @@
   "description": "Ui Framework",
   "main": "index.js",
   "dependencies": {
+    "@ephox/boulder": "git+ssh://git@stash:7999/van/boulder.git",
+    "@ephox/sugar": "git+ssh://git@stash:7999/libs/sugar.git",
+    "@ephox/katamari": "git+ssh://git@stash:7999/van/katamari.git",
+    "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
   },
   "devDependencies": {
     "@ephox/agar": "*"
