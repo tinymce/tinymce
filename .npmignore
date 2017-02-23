@@ -1,0 +1,17 @@
+/scratch
+/dist
+/config
+/src/test
+/src/demo
+.DS_Store
+*~
+*.iws
+*.sublime-*
+/.vscode
+/lib
+/gen
+/dependency
+/config/bolt/bootstrap*.js
+/inconsistent.dependencies
+/*.log
+Jenkinsfile
