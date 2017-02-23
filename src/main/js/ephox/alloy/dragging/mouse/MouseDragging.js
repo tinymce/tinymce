@@ -2,12 +2,13 @@ define(
   'ephox.alloy.dragging.mouse.MouseDragging',
 
   [
+    'ephox.alloy.alien.DelayedFunction',
     'ephox.alloy.alien.OffsetOrigin',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.common.BlockerUtils',
     'ephox.alloy.dragging.common.DragState',
-    'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.dragging.mouse.BlockerEvents',
     'ephox.alloy.dragging.mouse.MouseData',
     'ephox.alloy.dragging.snap.Snappables',
@@ -22,8 +23,8 @@ define(
   ],
 
   function (
-    OffsetOrigin, Container, EventHandler, BlockerUtils, DragState, DragCoord, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, Css, Traverse, Location,
-    Scroll, parseInt, window
+    DelayedFunction, OffsetOrigin, DragCoord, Container, EventHandler, BlockerUtils, DragState, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, Css,
+    Traverse, Location, Scroll, parseInt, window
   ) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
@@ -50,13 +51,14 @@ define(
                 stop();
               },
               delayDrop: function () {
-                stop();
+                delayDrop.schedule();
               },
               forceDrop: function () {
                 stop();
               },
               move: function (event) {
-                // var event = simulatedEvent.event();
+                // Stop any pending drops caused by mouseout
+                delayDrop.cancel();
                 var delta = dragInfo.state().update(MouseData, event);
                 delta.each(dragBy);
               }
@@ -129,6 +131,10 @@ define(
               var target = dragInfo.getTarget()(component.element());
               dragInfo.onDrop()(component, target);
             };
+
+            // If the user has moved something outside the area, and has not come back within
+            // 200 ms, then drop
+            var delayDrop = DelayedFunction(stop, 200);
             
             var start = function () {
               BlockerUtils.instigate(component, blocker);

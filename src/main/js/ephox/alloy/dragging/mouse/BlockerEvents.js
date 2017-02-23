@@ -37,7 +37,7 @@ define(
         // give it a chance to be cancelled.
         mouseout: EventHandler.nu({
           run: function () {
-            // dragApi.delayDrop (give it time to kick back in)
+            dragApi.delayDrop();
           }
         })
       };
