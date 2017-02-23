@@ -56,14 +56,15 @@ define(
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "imagetools code",
         add_unload_trigger: false,
+        automatic_uploads: false,
         //images_replace_blob_uris: false,
+        images_reuse_filename: true,
         paste_data_images: true,
         image_caption: true,
         height: 600,
         toolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons",
         images_upload_handler: function (data, success, failure, progress) {
-          console.log('blob upload [started]', data.id());
-
+          console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());
           progress(0);
 
           setTimeout(function () {

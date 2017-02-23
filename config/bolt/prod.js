@@ -1,6 +1,6 @@
 configure({
   sources: [
-    source('amd', 'ephox/imagetools', '../../node_modules/@ephox/imagetools/src/main/js', mapper.hierarchical),
+    source('amd', 'ephox.imagetools', '../../node_modules/@ephox/imagetools/src/main/js', mapper.hierarchical),
     source('amd', 'ephox', '../../node_modules/@ephox', mapper.repo('js', mapper.flat)),
     source('amd', 'tinymce.core', '../../src/core', function (id) {
       var parts = id.split('.');
