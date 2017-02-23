@@ -31,30 +31,44 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
             '<ul>' + pluginsString + '</ul>';
   };
 
-  var makeTab = function (editor) {
-    var pluginsList = pluginLister(editor);
+  var installedPlugins = function (editor) {
+    return {
+      type: 'container',
+      html: '<div style="margin: 10px; padding: 10px;">' +
+              pluginLister(editor) +
+            '</div>',
+      flex: 1
+    };
+  };
 
+  var availablePlugins = function () {
+    return {
+      type: 'container',
+      html: '<div style="margin: 10px; padding: 10px; background: #e3e7f4; height: 100%;">' +
+              '<p><b>Plugins available:</b></p>' +
+              '<ul>' +
+                '<li>PowerPaste</li>' +
+                '<li>Spell Checker Pro</li>' +
+                '<li>Accessibility Checker</li>' +
+                '<li>Advanced Code Editor</li>' +
+                '<li>Enhanced Media Embed</li>' +
+                '<li>Link Checker</li>' +
+              '</ul><br />' +
+              '<p style="float: right;"><a href="https://www.tinymce.com/pricing/" target="_blank">Learn more...</a></p>' +
+            '</div>',
+      flex: 1
+    };
+  };
+
+  var makeTab = function (editor) {
     return {
       title: 'Plugins',
       type: 'container',
       style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
       layout: 'flex',
-      align: 'stretch',
       items:	[
-        {
-          type: 'container',
-          html: '<div style="margin: 10px;">' +
-                  pluginsList +
-                '</div>',
-          flex: 1
-        },
-        {
-          type: 'container',
-          html: '<div style="margin: 10px; background: blue;">' +
-                  '<p>test</p>' +
-                '</div>',
-          flex: 1
-        }
+        installedPlugins(editor),
+        availablePlugins()
       ]
     };
   };
