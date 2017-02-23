@@ -29,12 +29,6 @@ define(
       });
     };
 
-    var spanCursor = Struct.immutable('span', 'cursor');
-
-    /// TODO this was copied from boss DomUniverse, use that instead
-    var isEmptyTag = function (universe, item) {
-      return Arr.contains([ 'br', 'img', 'hr', 'input' ], universe.property().name(item));
-    };
 
     var temporary = function (universe, start, soffset, finish, foffset) {
       var doc = start.dom().ownerDocument;
@@ -43,15 +37,16 @@ define(
       var cursor = universe.create().text(Unicode.zeroWidth(), doc);
       universe.insert().append(span, cursor);
 
-      /// TODO don't append to empty tags (might be better in Injection.atStartOf)
 
-      /// also need to twiddle the offset
-      var injectAt = isEmptyTag(universe, start) ? universe.property().parent(start) : Option.some(start);
+      var isEmptyTag = function (item) {
+        return universe.property().isEmptyTag(item);
+      };
+
+      var injectAt = isEmptyTag(start) ? universe.property().parent(start) : Option.some(start);
       injectAt.each(function (z) {
         Injection.atStartOf(universe, z, soffset, span);
       });
 
-      // Injection.atStartOf(universe, injectAt, soffset, span);
       return {
         cursor: Fun.constant(Spot.point(cursor, 1)),
         wrappers: Fun.constant([ span ]),
