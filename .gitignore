@@ -13,3 +13,4 @@
 node_modules/
 npm-debug.log
 .idea/
+/npm_output

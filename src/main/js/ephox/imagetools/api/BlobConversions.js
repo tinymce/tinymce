@@ -1,11 +1,9 @@
 define(
-  'ephox/imagetools/api/BlobConversions',
-
+  'ephox.imagetools.api.BlobConversions',
   [
-    'ephox/imagetools/util/Conversions',
-    'ephox/imagetools/util/ImageResult'
+    'ephox.imagetools.util.Conversions',
+    'ephox.imagetools.util.ImageResult'
   ],
-
   function (Conversions, ImageResult) {
     var blobToImage = function (image) {
       return Conversions.blobToImage(image);

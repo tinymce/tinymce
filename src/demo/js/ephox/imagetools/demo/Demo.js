@@ -2,8 +2,8 @@ define(
   'ephox.imagetools.demo.Demo',
 
   [
-    'ephox/imagetools/api/BlobConversions',
-    'ephox/imagetools/api/ImageTransformations'
+    'ephox.imagetools.api.BlobConversions',
+    'ephox.imagetools.api.ImageTransformations'
   ],
 
   function (BlobConversions, ImageTransformations) {
