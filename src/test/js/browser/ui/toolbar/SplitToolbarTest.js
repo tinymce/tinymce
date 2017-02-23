@@ -10,8 +10,8 @@ asynctest(
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
-    'ephox.compass.Arr',
-    'ephox.sugar.api.Css',
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.properties.Css',
     'global!navigator'
   ],
  

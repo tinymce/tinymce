@@ -2,8 +2,8 @@ define(
   'ephox.alloy.api.events.SystemEvents',
 
   [
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Obj, Fun) {

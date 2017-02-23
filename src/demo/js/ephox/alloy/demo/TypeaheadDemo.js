@@ -2,25 +2,24 @@ define(
   'ephox.alloy.demo.TypeaheadDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.ui.Menu',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.compass.Arr',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Value'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Value'
   ],
 
-  function (Gui, Representing, Menu, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value) {
+  function (Representing, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

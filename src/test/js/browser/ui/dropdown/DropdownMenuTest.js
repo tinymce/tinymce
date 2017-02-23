@@ -23,9 +23,9 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
-    'ephox.compass.Arr',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result'
   ],
  
   function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Behaviour, Focusing, Keying, Container, Dropdown, TieredMenu, GuiSetup, NavigationUtils, TestDropdownMenu, Arr, Future, Result) {

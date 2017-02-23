@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.alloy.alien.Cycles',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'global!Math'
   ],
 

@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class'
   ],
 
   function (Objects, Attr, Class) {

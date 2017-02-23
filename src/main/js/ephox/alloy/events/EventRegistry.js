@@ -5,10 +5,10 @@ define(
     'ephox.alloy.alien.TransformFind',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
     'global!console'
   ],
 

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.representing.RepresentApis',
 
   [
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Result'
   ],
 
   function (Result) {

@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.alloy.alien.Boxes',
-    'ephox.alloy.dragging.DragCoord',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Width'
+    'ephox.alloy.api.data.DragCoord',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (Boxes, DragCoord, Option, Attr, Class, Css, Height, Location, Width) {

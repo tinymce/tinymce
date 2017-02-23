@@ -9,9 +9,9 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.sandbox.Dismissal',
     'ephox.alloy.ui.schema.InlineViewSchema',
-    'ephox.highway.Merger',
-    'ephox.knoch.future.Future',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Fun'
   ],
 
   function (ComponentStructure, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, Merger, Future, Fun) {

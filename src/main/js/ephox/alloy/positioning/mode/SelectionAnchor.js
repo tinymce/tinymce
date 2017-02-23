@@ -1,35 +1,34 @@
 define(
-  'ephox.alloy.positioning.SelectionAnchor',
+  'ephox.alloy.positioning.mode.SelectionAnchor',
 
   [
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
     'ephox.alloy.alien.DomSelection',
-    'ephox.alloy.positioning.Anchoring',
-    'ephox.alloy.positioning.ContainerOffsets',
+    'ephox.alloy.positioning.mode.Anchoring',
+    'ephox.alloy.positioning.mode.ContainerOffsets',
     'ephox.boulder.api.FieldSchema',
-    'ephox.bud.Unicode',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.repartee.api.Bubble',
-    'ephox.repartee.api.Layout',
-    'ephox.repartee.api.Origins',
-    'ephox.scullion.Struct',
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Direction',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Unicode',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.alloy.positioning.layout.Bubble',
+    'ephox.alloy.positioning.layout.Layout',
+    'ephox.alloy.positioning.layout.Origins',
+    'ephox.katamari.api.Struct',
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.api.properties.Direction',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.Traverse',
     'global!Math'
   ],
 
   function (
-    Boxes, CssPosition, Descend, DomSelection, Anchoring, ContainerOffsets, FieldSchema,
-    Unicode, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction, Element,
-    Insert, Node, Remove, Traverse, Math
+    Boxes, CssPosition, Descend, DomSelection, Anchoring, ContainerOffsets, FieldSchema, Unicode, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction,
+    Element, Insert, Node, Remove, Traverse, Math
   ) {
     var point = Struct.immutable('element', 'offset');
 

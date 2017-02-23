@@ -12,12 +12,12 @@ define(
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.photon.Writer',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.alloy.frame.Writer',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert'
   ],
 
   function (Gui, GuiFactory, Positioning, Toggling, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {

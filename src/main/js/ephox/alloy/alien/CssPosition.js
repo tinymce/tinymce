@@ -2,10 +2,10 @@ define(
   'ephox.alloy.alien.CssPosition',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.scullion.ADT',
-    'ephox.sugar.alien.Position'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Adt',
+    'ephox.sugar.api.view.Position'
   ],
 
   function (Arr, Fun, Adt, Position) {
@@ -15,6 +15,7 @@ define(
     ]);
 
     var toFixed = function (pos) {
+      // TODO: Use new ADT methods
       return pos.fold(
         Fun.identity,
         function (point, scrollLeft, scrollTop) {

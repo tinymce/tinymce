@@ -8,10 +8,10 @@ test(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.ResultAssertions',
     'ephox.alloy.test.TestStore',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Struct'
   ],
 
   function (Logger, RawAssertions, ComponentEvents, EventHandler, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {

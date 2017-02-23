@@ -6,8 +6,8 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Fields, PartType, ButtonBase, FieldSchema, Fun, Option) {

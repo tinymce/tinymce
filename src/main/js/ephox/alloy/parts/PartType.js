@@ -4,11 +4,11 @@ define(
   [
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Adt'
   ],
 
   function (UiSubstitutes, FieldSchema, Arr, Merger, Fun, Option, Adt) {

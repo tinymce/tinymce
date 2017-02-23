@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.ContainerSchema',
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (UiSketcher, ContainerSchema, Merger) {

@@ -9,9 +9,9 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Focus'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.dom.Focus'
   ],
 
   function (Keying, Sliding, Button, Form, Fields, PartType, FieldSchema, Fun, Class, Focus) {

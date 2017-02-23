@@ -6,18 +6,17 @@ define(
     'ephox.alloy.alien.PrioritySort',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.highway.Merger',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Merger',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
     'global!Array',
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, EventHandler, Objects, Type, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
     /*
      * The process of combining a component's events
      *
@@ -72,11 +71,11 @@ define(
     };
 
     var missingOrderError = function (eventName, tuples) {
-      return new Result.error(
+      return new Result.error([
         'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' + 
         'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
         'can trigger it are: ' + Json.stringify(Arr.map(tuples, function (c) { return c.name(); }), null, 2)
-      );        
+      ]);        
     };
 
     var fuse = function (tuples, eventOrder, eventName) {

@@ -12,7 +12,7 @@ asynctest(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Value'
+    'ephox.sugar.api.properties.Value'
   ],
  
   function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Behaviour, Representing, Container, GuiSetup, Objects, Value) {

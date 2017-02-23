@@ -3,27 +3,21 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.dom.DomModification',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.FormChooserSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.SelectorFilter'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter'
   ],
 
-  function (EventRoot, Behaviour, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, Fields, DomModification, PartType, ButtonBase, FormChooserSchema, FieldSchema, Objects, Arr, Fun, Option, Attr, SelectorFilter) {
+  function (EventRoot, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Attr, SelectorFilter) {
     var schema = FormChooserSchema.schema();
     var partTypes = FormChooserSchema.parts();
 
@@ -38,11 +32,9 @@ define(
           return chooser.getSystem().getByDom(c).getOrDie();
         });
 
-        var chosen = Arr.find(choiceComps, function (c) {
+        return Arr.find(choiceComps, function (c) {
           return Representing.getValue(c) === value;
         });
-
-        return Option.from(chosen);
       };
 
       return {

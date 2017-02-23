@@ -4,15 +4,14 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
-    'ephox.epithet.Id',
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.TextContent',
-    'ephox.wrap.JsBeautify',
+    'ephox.katamari.api.Id',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.properties.TextContent',
+    'global!MutationObserver',
     'global!setInterval'
   ],
 
-  function (GuiFactory, Container, Id, Html, TextContent, JsBeautify, setInterval) {
-
+  function (GuiFactory, Container, Id, Html, TextContent, MutationObserver, setInterval) {
     var section = function (gui, instructions, spec) {
       var information = Container.sketch({
         dom: {
@@ -51,14 +50,14 @@ define(
           classes: [ 'html-display' ]
         },
         components: [
-          GuiFactory.text(JsBeautify.html(htmlDump))
+          GuiFactory.text(htmlDump)
         ]
       });
 
       var updateHtml = function () {
         gui.getByUid(dumpUid).each(function (dumpC) {
           // NOTE: Use Body.body() here for more information.
-          TextContent.set(dumpC.element(), JsBeautify.html(Html.getOuter(component.element())));
+          TextContent.set(dumpC.element(), Html.getOuter(component.element()));
         });
       };
 

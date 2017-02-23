@@ -6,8 +6,8 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Cell'
   ],
 
   function (Toolbar, Fields, PartType, FieldSchema, Fun, Cell) {

@@ -9,8 +9,8 @@ define(
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun'
   ],
 
   function (SystemEvents, Behaviour, Focusing, EventHandler, ItemEvents, FieldSchema, Objects, Merger, Fun) {

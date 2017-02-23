@@ -7,9 +7,9 @@ define(
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (EditableFields, Keys, SystemEvents, KeyMatch, KeyRules, Merger, Fun, Option) {

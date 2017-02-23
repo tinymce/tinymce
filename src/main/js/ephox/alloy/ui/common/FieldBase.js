@@ -8,9 +8,9 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
-    'ephox.epithet.Id',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.properties.Attr'
   ],
 
   function (EventRoot, SystemEvents, Composing, Representing, EventHandler, Objects, Id, Option, Attr) {

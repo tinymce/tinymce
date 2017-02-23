@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.log.AlloyLogger',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'global!Error'
   ],
 

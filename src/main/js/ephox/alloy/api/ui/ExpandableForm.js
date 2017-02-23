@@ -14,10 +14,10 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ExpandableFormSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Focus'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.dom.Focus'
   ],
 
   function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiSketcher, Fields, PartType, ExpandableFormSchema, FieldSchema, Merger, Fun, Class, Focus) {

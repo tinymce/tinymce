@@ -16,7 +16,7 @@ asynctest(
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
-    'ephox.perhaps.Result'
+    'ephox.katamari.api.Result'
   ],
  
   function (ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, GuiFactory, Container, ModalDialog, GuiSetup, Sinks, Result) {

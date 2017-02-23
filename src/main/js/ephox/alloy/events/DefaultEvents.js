@@ -6,7 +6,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.dom.Compare',
     'global!console'
   ],
 

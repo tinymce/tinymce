@@ -5,15 +5,14 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.perhaps.Option',
-    'ephox.wrap.Jsc'
+    'ephox.katamari.api.Option'
   ],
 
-  function (Logger, RawAssertions, UiSubstitutes, Option, Jsc) {
+  function (Logger, RawAssertions, UiSubstitutes, Option) {
     Logger.sync(
       'Testing empty components',
       function () {
-        var actual = UiSubstitutes.substitutePlaces(Option.some('detail'), [ ], { }, { });
+        var actual = UiSubstitutes.substitutePlaces(Option.some('detail'), { }, [ ], { });
         RawAssertions.assertEq('Components should stay empty', [ ], actual);
       }
     );

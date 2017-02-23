@@ -5,7 +5,7 @@ define(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.compass.Obj'
+    'ephox.katamari.api.Obj'
   ],
 
   function (Assertions, Step, Representing, Obj) {

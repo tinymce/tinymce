@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.alloy.navigation.MatrixNavigation',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (MatrixNavigation, Jsc) {

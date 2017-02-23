@@ -5,9 +5,9 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell'
   ],
 
   function (Positioning, FieldSchema, ValueSchema, Fun, Option, Cell) {

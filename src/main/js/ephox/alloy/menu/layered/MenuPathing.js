@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Option'
   ],
 
   function (Objects, Arr, Obj, Option) {

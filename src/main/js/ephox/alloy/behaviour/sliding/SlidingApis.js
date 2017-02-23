@@ -2,9 +2,9 @@ define(
   'ephox.alloy.behaviour.sliding.SlidingApis',
 
   [
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Classes',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Classes',
+    'ephox.sugar.api.properties.Css'
   ],
 
   function (Class, Classes, Css) {

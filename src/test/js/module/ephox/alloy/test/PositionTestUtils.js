@@ -8,10 +8,10 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Scroll',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Scroll',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 

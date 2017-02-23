@@ -14,9 +14,9 @@ asynctest(
     'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Value'
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Value'
   ],
  
   function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Behaviour, Invalidating, Container, GuiSetup, Future, Result, Value) {

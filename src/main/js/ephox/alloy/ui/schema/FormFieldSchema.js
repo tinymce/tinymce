@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (PartType, FieldSchema, Fun) {

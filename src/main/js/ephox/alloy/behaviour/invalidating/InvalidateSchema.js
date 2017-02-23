@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (FieldSchema, Fun, Option) {

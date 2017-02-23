@@ -1,8 +1,8 @@
 define(
-  'ephox.alloy.positioning.Anchoring',
+  'ephox.alloy.positioning.mode.Anchoring',
 
   [
-    'ephox.scullion.Contracts'
+    'ephox.katamari.api.Contracts'
   ],
 
   function (Contracts) {

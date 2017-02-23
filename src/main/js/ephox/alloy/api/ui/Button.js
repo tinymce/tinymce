@@ -6,7 +6,7 @@ define(
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.ButtonSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (UiSketcher, ButtonBase, ButtonSchema, FieldSchema, Merger) {

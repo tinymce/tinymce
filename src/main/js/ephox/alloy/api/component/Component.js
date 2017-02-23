@@ -10,12 +10,12 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.dom.DomRender',
     'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
-    'ephox.scullion.Cell',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Type',
+    'ephox.katamari.api.Arr',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Cell',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 

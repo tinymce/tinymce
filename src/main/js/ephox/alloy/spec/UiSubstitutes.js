@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.highway.Merger',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
-    'ephox.scullion.ADT',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Merger',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Adt',
     'global!Error'
   ],
 

@@ -1,21 +1,18 @@
 define(
-  'ephox.alloy.positioning.SubmenuAnchor',
+  'ephox.alloy.positioning.mode.SubmenuAnchor',
 
   [
-    'ephox.alloy.positioning.Anchoring',
-    'ephox.boulder.api.FieldPresence',
+    'ephox.alloy.positioning.mode.Anchoring',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.repartee.api.Bubble',
-    'ephox.repartee.api.LinkedLayout',
-    'ephox.repartee.api.MaxHeight',
-    'ephox.repartee.api.Origins',
-    'ephox.sugar.api.Direction'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.alloy.positioning.layout.Bubble',
+    'ephox.alloy.positioning.layout.LinkedLayout',
+    'ephox.alloy.positioning.layout.Origins',
+    'ephox.sugar.api.properties.Direction'
   ],
 
-  function (Anchoring, FieldPresence, FieldSchema, ValueSchema, Fun, Option, Bubble, LinkedLayout, MaxHeight, Origins, Direction) {
+  function (Anchoring, FieldSchema, Fun, Option, Bubble, LinkedLayout, Origins, Direction) {
     var placement = function (component, posInfo, submenuInfo, origin) {
       var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 

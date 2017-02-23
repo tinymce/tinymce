@@ -2,13 +2,13 @@ define(
   'ephox.alloy.aria.AriaOwner',
 
   [
-    'ephox.epithet.Id',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.PredicateFind',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.PredicateFind',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Id, Fun, Attr, Node, PredicateFind, SelectorFind, Traverse) {

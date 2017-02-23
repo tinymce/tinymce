@@ -6,7 +6,7 @@ define(
     'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Body',
+    'ephox.sugar.api.node.Body',
     'global!Error'
   ],
 

@@ -2,7 +2,7 @@ define(
   'ephox.alloy.api.messages.Channels',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

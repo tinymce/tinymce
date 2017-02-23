@@ -2,8 +2,8 @@ define(
   'ephox.alloy.alien.PrioritySort',
 
   [
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Result',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Result',
     'global!Error'
   ],
 

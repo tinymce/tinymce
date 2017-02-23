@@ -3,11 +3,10 @@ define(
 
   [
     'ephox.alloy.api.ui.Tabbar',
-    'ephox.alloy.api.ui.TabSection',
-    'ephox.compass.Arr'
+    'ephox.alloy.api.ui.TabSection'
   ],
 
-  function (Tabbar, TabSection, Arr) {
+  function (Tabbar, TabSection) {
     var make = function (tabs) {
       return TabSection.sketch({
         dom: {

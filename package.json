@@ -8,7 +8,9 @@
     "grunt": "^1.0.1",
     "phantom": "^3.2.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ephox/agar": "*"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

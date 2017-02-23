@@ -15,12 +15,12 @@ define(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 

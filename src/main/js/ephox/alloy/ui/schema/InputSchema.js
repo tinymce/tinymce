@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.ui.common.InputBase',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (InputBase, Fun) {

@@ -5,8 +5,8 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Value'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Value'
   ],
 
   function (Behaviour, FieldSchema, Objects, Fun, Value) {

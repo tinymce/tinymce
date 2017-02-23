@@ -7,8 +7,8 @@ define(
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj'
   ],
 
   function (SystemEvents, EventHandler, AlloyLogger, Objects, ValueSchema, Arr, Obj) {

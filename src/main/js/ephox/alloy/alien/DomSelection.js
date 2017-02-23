@@ -2,11 +2,11 @@ define(
   'ephox.alloy.alien.DomSelection',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.DocumentPosition',
-    'ephox.sugar.api.Element'
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.DocumentPosition',
+    'ephox.sugar.api.node.Element'
   ],
 
   function (Option, Struct, Compare, DocumentPosition, Element) {

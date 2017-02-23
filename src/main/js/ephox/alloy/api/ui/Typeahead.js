@@ -6,8 +6,8 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.composite.TypeaheadSpec',
     'ephox.alloy.ui.schema.TypeaheadSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Representing, UiSketcher, TypeaheadSpec, TypeaheadSchema, Merger, Fun) {

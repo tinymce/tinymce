@@ -6,7 +6,7 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.Css'
+    'ephox.sugar.api.properties.Css'
   ],
 
   function (SlidingApis, EventHandler, DomModification, Objects, Css) {

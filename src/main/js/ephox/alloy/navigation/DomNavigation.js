@@ -4,8 +4,8 @@ define(
   [
     'ephox.alloy.alien.Cycles',
     'ephox.alloy.navigation.DomPinpoint',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Cycles, DomPinpoint, Fun, Option) {

@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.highway.Merger',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Text',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.Traverse',
     'global!Error',
     'global!String'
   ],

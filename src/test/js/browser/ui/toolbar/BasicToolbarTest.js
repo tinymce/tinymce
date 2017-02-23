@@ -11,7 +11,7 @@ asynctest(
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
  
   function (ApproxStructure, Assertions, Step, GuiFactory, Button, Container, Toolbar, GuiSetup, TestPartialToolbarGroup, Arr) {

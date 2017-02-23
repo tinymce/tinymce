@@ -1,10 +1,10 @@
 define(
-  'ephox.alloy.dragging.DragCoord',
+  'ephox.alloy.api.data.DragCoord',
 
   [
-    'ephox.compass.Arr',
-    'ephox.scullion.ADT',
-    'ephox.sugar.alien.Position',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Adt',
+    'ephox.sugar.api.view.Position',
     'global!Math'
   ],
 

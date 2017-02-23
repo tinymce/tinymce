@@ -1,11 +1,11 @@
 define(
-  'ephox.alloy.positioning.AnchorSchema',
+  'ephox.alloy.positioning.mode.AnchorSchema',
 
   [
-    'ephox.alloy.positioning.HotspotAnchor',
-    'ephox.alloy.positioning.MakeshiftAnchor',
-    'ephox.alloy.positioning.SelectionAnchor',
-    'ephox.alloy.positioning.SubmenuAnchor',
+    'ephox.alloy.positioning.mode.HotspotAnchor',
+    'ephox.alloy.positioning.mode.MakeshiftAnchor',
+    'ephox.alloy.positioning.mode.SelectionAnchor',
+    'ephox.alloy.positioning.mode.SubmenuAnchor',
     'ephox.boulder.api.ValueSchema'
   ],
 

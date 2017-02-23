@@ -3,8 +3,8 @@ test(
 
   [
     'ephox.alloy.parts.PartType',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun'
   ],
 
   function (PartType, Arr, Fun) {

@@ -9,17 +9,14 @@ define(
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
-  function (
-    Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema,
-    Arr, Obj, Merger, Fun, Option
-  ) {
+  function (Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
     var schema = [
       
     ];

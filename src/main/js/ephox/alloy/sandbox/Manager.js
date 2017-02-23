@@ -2,7 +2,7 @@ define(
   'ephox.alloy.sandbox.Manager',
 
   [
-    'ephox.scullion.Contracts'
+    'ephox.katamari.api.Contracts'
   ],
 
   function (Contracts) {

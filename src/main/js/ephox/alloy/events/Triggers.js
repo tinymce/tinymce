@@ -3,18 +3,15 @@ define(
 
   [
     'ephox.alloy.events.EventSource',
-    'ephox.alloy.log.AlloyLogger',
-    'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.ADT',
-    'ephox.scullion.Cell',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Cell',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (EventSource, AlloyLogger, Objects, Arr, Fun, Option, Adt, Cell, Traverse, Error) {
+  function (EventSource, Arr, Fun, Adt, Cell, Traverse, Error) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },

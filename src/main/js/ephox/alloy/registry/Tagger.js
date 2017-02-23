@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.alloy.ephemera.AlloyTags',
-    'ephox.epithet.Id',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (AlloyTags, Id, Fun, Option, Attr, Node, SelectorFind) {

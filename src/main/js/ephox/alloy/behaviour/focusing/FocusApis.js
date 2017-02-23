@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.focusing.FocusApis',
 
   [
-    'ephox.sugar.api.Focus'
+    'ephox.sugar.api.dom.Focus'
   ],
 
   function (Focus) {

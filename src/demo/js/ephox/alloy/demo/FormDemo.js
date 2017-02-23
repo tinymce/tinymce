@@ -2,11 +2,11 @@ define(
   'ephox.alloy.demo.FormDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ExpandableForm',
@@ -16,7 +16,6 @@ define(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoDataset',
@@ -25,20 +24,24 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.knoch.future.Future',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Value',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Value',
     'global!document',
     'global!setTimeout'
   ],
 
-  function (Gui, Behaviour, Keying, Representing, Tabstopping, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, Menu, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Merger, Future, Option, Result, Class, Element, Insert, Value, document, setTimeout) {
+  function (
+    Behaviour, Keying, Representing, Tabstopping, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input,
+    TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Merger, Arr, Future, Option, Result, Class, Element, Insert, Value,
+    document, setTimeout
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

@@ -12,17 +12,16 @@ asynctest(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.dragging.DragCoord',
+    'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Css'
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.api.properties.Css'
   ],
  
-  function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging, Container, DragCoord, GuiSetup, Objects, Json, Option, Result, Position, Css) {
+  function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging, Container, DragCoord, GuiSetup, Json, Option, Result, Position, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

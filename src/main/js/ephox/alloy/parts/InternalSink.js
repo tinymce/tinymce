@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (EventHandler, PartType, Fun) {

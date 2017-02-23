@@ -9,12 +9,12 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
-    'ephox.numerosity.api.JSON',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFind',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFind',
     'global!document'
   ],
 

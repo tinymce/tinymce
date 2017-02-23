@@ -13,8 +13,8 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.peanut.Fun',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Cell'
   ],
  
   function (ApproxStructure, Assertions, Step, GuiFactory, Behaviour, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {

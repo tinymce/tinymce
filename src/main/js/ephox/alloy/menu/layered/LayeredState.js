@@ -4,11 +4,11 @@ define(
   [
     'ephox.alloy.menu.layered.MenuPathing',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell'
   ],
 
   function (MenuPathing, Objects, Arr, Obj, Fun, Option, Cell) {

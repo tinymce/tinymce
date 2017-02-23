@@ -2,7 +2,7 @@ define(
   'ephox.alloy.ui.schema.TabviewSchema',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

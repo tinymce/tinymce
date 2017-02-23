@@ -3,11 +3,10 @@ define(
 
   [
     'ephox.alloy.navigation.KeyMatch',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr'
   ],
 
-  function (KeyMatch, Arr, Option) {
+  function (KeyMatch, Arr) {
     var basic = function (key, action) {
       return {
         matches: KeyMatch.is(key),
@@ -27,8 +26,8 @@ define(
         return t.matches(event);
       });
 
-      return Option.from(transition).map(function (transition) {
-        return transition.classification;
+      return transition.map(function (t) {
+        return t.classification;
       });
     };
 

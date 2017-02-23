@@ -2,8 +2,8 @@ define(
   'ephox.alloy.dom.DomDefinition',
 
   [
-    'ephox.numerosity.api.JSON',
-    'ephox.scullion.Struct',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Struct',
     'global!String'
   ],
 

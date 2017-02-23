@@ -6,7 +6,7 @@ define(
     'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (ToggleApis, Behaviour, DomModification, Objects, Arr) {

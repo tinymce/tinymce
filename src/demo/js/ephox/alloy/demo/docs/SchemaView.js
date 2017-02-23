@@ -8,11 +8,11 @@ define(
     'ephox.boulder.api.DslType',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Type',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Fun'
   ],
 
   function (GuiFactory, Container, Documentation, DslType, Objects, ValueSchema, Type, Arr, Obj, Json, Fun) {

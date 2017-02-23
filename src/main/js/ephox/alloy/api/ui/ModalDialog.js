@@ -12,12 +12,12 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ModalDialogSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Merger',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 

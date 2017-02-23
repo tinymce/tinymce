@@ -6,8 +6,8 @@ define(
     'ephox.alloy.ui.common.InputBase',
     'ephox.alloy.ui.schema.InputSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun'
   ],
 
   function (UiSketcher, InputBase, InputSchema, FieldSchema, Merger, Fun) {

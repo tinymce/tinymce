@@ -5,8 +5,8 @@ define(
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun'
   ],
 
   function (SystemEvents, EventHandler, Objects, Arr, Fun) {

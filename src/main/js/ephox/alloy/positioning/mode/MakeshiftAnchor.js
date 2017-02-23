@@ -1,15 +1,15 @@
 define(
-  'ephox.alloy.positioning.MakeshiftAnchor',
+  'ephox.alloy.positioning.mode.MakeshiftAnchor',
 
   [
-    'ephox.alloy.positioning.Anchoring',
+    'ephox.alloy.positioning.mode.Anchoring',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.repartee.api.Bounds',
-    'ephox.repartee.api.Bubble',
-    'ephox.repartee.api.Layout',
-    'ephox.sugar.api.Direction'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.alloy.positioning.layout.Bounds',
+    'ephox.alloy.positioning.layout.Bubble',
+    'ephox.alloy.positioning.layout.Layout',
+    'ephox.sugar.api.properties.Direction'
   ],
 
   function (Anchoring, FieldSchema, Fun, Option, Bounds, Bubble, Layout, Direction) {

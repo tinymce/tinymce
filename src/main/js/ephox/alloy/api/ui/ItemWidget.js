@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (UiSubstitutes, Fun) {

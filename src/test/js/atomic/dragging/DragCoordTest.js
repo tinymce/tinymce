@@ -2,10 +2,10 @@ test(
   'DragCoordTest',
 
   [
-    'ephox.alloy.dragging.DragCoord',
-    'ephox.compass.Arr',
-    'ephox.sugar.alien.Position',
-    'ephox.wrap.Jsc'
+    'ephox.alloy.api.data.DragCoord',
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.view.Position',
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (DragCoord, Arr, Position, Jsc) {

@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.alloy.alien.Cycles',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Cycles, Jsc) {

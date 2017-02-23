@@ -5,12 +5,12 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.HtmlSelectSchema',
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.TextContent',
-    'ephox.sugar.api.Value'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.TextContent',
+    'ephox.sugar.api.properties.Value'
   ],
 
   function (Behaviour, UiSketcher, HtmlSelectSchema, Arr, Merger, Fun, Result, TextContent, Value) {
@@ -48,12 +48,9 @@ define(
             representing: {
               extractValue: function (comp, data) {
                 // See if there is something that matches value
-                var matching = Arr.find(detail.options(), function (opt) {
+                return Arr.find(detail.options(), function (opt) {
                   return opt.value === data.value;
-                });
-
-                // TODO: Update when using katamari
-                return matching !== undefined && matching !== null ? Result.value(matching) : Result.error('Not found');
+                }).map(Result.value).getOr(Result.error('Not found'));
               },
 
               interactive: {

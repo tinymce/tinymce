@@ -1,12 +1,12 @@
 define(
-  'ephox.alloy.dragging.Snappables',
+  'ephox.alloy.dragging.snap.Snappables',
 
   [
-    'ephox.alloy.dragging.DragCoord',
-    'ephox.alloy.dragging.Presnaps',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
+    'ephox.alloy.api.data.DragCoord',
+    'ephox.alloy.dragging.snap.Presnaps',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'global!Math'
   ],
 

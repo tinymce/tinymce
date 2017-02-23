@@ -9,7 +9,7 @@ define(
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Behaviour, SystemEvents, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {

@@ -5,9 +5,9 @@ test(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.alien.PrioritySort',
-    'ephox.compass.Arr',
-    'ephox.numerosity.api.JSON',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Arr',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Struct'
   ],
 
   function (Logger, RawAssertions, PrioritySort, Arr, Json, Struct) {

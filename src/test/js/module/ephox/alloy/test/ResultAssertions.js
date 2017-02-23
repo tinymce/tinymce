@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.agar.api.RawAssertions',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (RawAssertions, Arr) {

@@ -6,8 +6,8 @@ define(
     'ephox.agar.api.Chain',
     'ephox.agar.api.Logger',
     'ephox.agar.api.UiFinder',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Width',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Width',
     'global!Math'
   ],
 

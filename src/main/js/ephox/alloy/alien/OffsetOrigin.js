@@ -2,12 +2,12 @@ define(
   'ephox.alloy.alien.OffsetOrigin',
 
   [
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Traverse'
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Position, Element, Insert, Location, Remove, Traverse) {

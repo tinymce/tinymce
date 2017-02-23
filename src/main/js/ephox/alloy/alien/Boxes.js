@@ -2,11 +2,11 @@ define(
   'ephox.alloy.alien.Boxes',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.scullion.Struct',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Width'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Struct',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (Fun, Struct, Height, Location, Width) {

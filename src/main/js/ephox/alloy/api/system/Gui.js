@@ -10,19 +10,22 @@ define(
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse, Error) {
+  function (
+    GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse,
+    Error
+  ) {
     var create = function ( ) {
       var root = GuiFactory.build(
         Container.sketch({

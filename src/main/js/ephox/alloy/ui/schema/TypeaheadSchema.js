@@ -10,9 +10,9 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell'
   ],
 
   function (

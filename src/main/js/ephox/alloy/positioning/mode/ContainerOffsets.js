@@ -1,14 +1,14 @@
 define(
-  'ephox.alloy.positioning.ContainerOffsets',
+  'ephox.alloy.positioning.mode.ContainerOffsets',
 
   [
     'ephox.alloy.alien.CssPosition',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Scroll',
-    'ephox.sugar.api.Traverse'
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Scroll',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (CssPosition, Option, Compare, Element, Location, Scroll, Traverse) {

@@ -5,9 +5,9 @@ define(
     'ephox.alloy.behaviour.representing.RepresentApis',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
-    'ephox.scullion.Cell'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Cell'
   ],
 
   function (RepresentApis, FieldSchema, ValueSchema, Fun, Result, Cell) {

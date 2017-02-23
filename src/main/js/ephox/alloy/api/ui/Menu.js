@@ -6,8 +6,8 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.alloy.ui.schema.MenuSchema',
     'ephox.alloy.ui.single.MenuSpec',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun'
   ],
 
   function (UiSketcher, UiSubstitutes, MenuSchema, MenuSpec, Merger, Fun) {

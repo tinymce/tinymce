@@ -2,7 +2,7 @@ define(
   'ephox.alloy.navigation.DomMovement',
 
   [
-    'ephox.sugar.api.Direction'
+    'ephox.sugar.api.properties.Direction'
   ],
 
   function (Direction) {

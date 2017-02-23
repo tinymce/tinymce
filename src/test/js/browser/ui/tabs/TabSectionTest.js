@@ -10,7 +10,7 @@ asynctest(
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.test.GuiSetup',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
  
   function (ApproxStructure, Assertions, Step, GuiFactory, Container, TabSection, Tabbar, GuiSetup, Fun) {

@@ -2,10 +2,10 @@ define(
   'ephox.alloy.behaviour.disabling.DisableApis',
 
   [
-    'ephox.compass.Arr',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Node'
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Node'
   ],
 
   function (Arr, Attr, Class, Node) {

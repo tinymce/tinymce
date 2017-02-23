@@ -2,8 +2,8 @@ define(
   'ephox.alloy.alien.Truncate',
 
   [
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.Replication'
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.Replication'
   ],
 
   function (Html, Replication) {

@@ -13,25 +13,24 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.photon.Writer',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Scroll',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.alloy.frame.Writer',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.view.Scroll',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
     'global!Error',
     'global!setTimeout',
     'global!window'
   ],
  
   function (
-    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils,
-    GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent, Element,
-    Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
+    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent,
+    Element, Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

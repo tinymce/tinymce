@@ -6,7 +6,7 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (FocusManagers, Fields, FieldSchema, ValueSchema, Fun) {

@@ -3,14 +3,14 @@ define(
 
   [
     'ephox.alloy.dom.DomDefinition',
-    'ephox.compass.Arr',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Classes',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Value',
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Classes',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.properties.Value',
     'global!Error'
   ],
 

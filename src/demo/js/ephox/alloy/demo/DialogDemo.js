@@ -8,11 +8,11 @@ define(
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 

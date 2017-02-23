@@ -2,19 +2,18 @@ define(
   'ephox.alloy.construct.EventHandler',
 
   [
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
-    'ephox.numerosity.api.JSON',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Type',
+    'ephox.katamari.api.Arr',
+    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Fun',
     'global!Array',
     'global!Error'
   ],
 
-  function (FieldPresence, FieldSchema, Objects, ValueSchema, Type, Arr, Json, Fun, Array, Error) {
+  function (FieldSchema, Objects, ValueSchema, Type, Arr, Json, Fun, Array, Error) {
     var nu = function (parts) {
       if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) throw new Error(
         'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'

@@ -17,16 +17,16 @@ define(
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.boulder.api.Objects',
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
-    'ephox.sugar.api.Body',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Classes',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Classes',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (EditableFields, EventRoot, Highlighting, Replacing, Representing, Sandboxing, GuiFactory, SystemEvents, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {

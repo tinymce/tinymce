@@ -3,15 +3,14 @@ define(
 
   [
     'ephox.alloy.navigation.ArrPinpoint',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.Visibility'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.view.Visibility'
   ],
 
-  function (ArrPinpoint, Arr, Fun, Option, Compare, SelectorFilter, Visibility) {
+  function (ArrPinpoint, Arr, Fun, Compare, SelectorFilter, Visibility) {
     var locateVisible = function (container, current, selector) {
       var filter = Visibility.isVisible;
       return locateIn(container, current, selector, filter);
@@ -25,11 +24,9 @@ define(
     };
 
     var findIndex = function (elements, target) {
-      var index = Arr.findIndex(elements, function (elem) {
+      return Arr.findIndex(elements, function (elem) {
         return Compare.eq(target, elem);
       });
-
-      return index > -1 ? Option.some(index) : Option.none();
     };
 
     return {

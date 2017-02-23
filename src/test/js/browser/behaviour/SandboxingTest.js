@@ -8,25 +8,23 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
-    'ephox.boulder.api.Objects',
-    'ephox.knoch.future.CachedFuture',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Remove'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.LazyValue',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.node.Node'
   ],
  
-  function (Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, SystemEvents, Behaviour, Sandboxing, Container, Input, GuiSetup, Sinks, Objects, CachedFuture, Fun, Result, Attr, Element, Insert, Node, Remove) {
+  function (
+    Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue, Result,
+    Node
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -59,7 +57,7 @@ asynctest(
     
       var sOpenWith = function (data) {
         return Step.async(function (next, die) {
-          Sandboxing.open(sandbox, CachedFuture.pure(data)).get(function () {
+          Sandboxing.open(sandbox, LazyValue.pure(data)).get(function () {
             next();
           });
         });

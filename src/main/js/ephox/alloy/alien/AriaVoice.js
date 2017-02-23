@@ -2,15 +2,15 @@ define(
   'ephox.alloy.alien.AriaVoice',
 
   [
-    'ephox.epithet.Id',
-    'ephox.fred.PlatformDetection',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Traverse',
+    'ephox.katamari.api.Id',
+    'ephox.sand.api.PlatformDetection',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.Traverse',
     'global!setTimeout'
   ],
 

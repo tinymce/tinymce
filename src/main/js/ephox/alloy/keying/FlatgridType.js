@@ -12,11 +12,11 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.WrapArrNavigation',
     'ephox.boulder.api.FieldSchema',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Keys, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {

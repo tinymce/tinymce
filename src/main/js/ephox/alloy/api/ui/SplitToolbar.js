@@ -12,17 +12,14 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
     'ephox.alloy.ui.schema.SplitToolbarSchema',
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Width'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Width'
   ],
 
-  function (
-    Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, PartType, Overflows,
-    SplitToolbarSchema, Arr, Merger, Fun, Css, Width
-  ) {
+  function (Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, PartType, Overflows, SplitToolbarSchema, Arr, Merger, Fun, Css, Width) {
     var schema = SplitToolbarSchema.schema();
     var partTypes = SplitToolbarSchema.parts();
 
