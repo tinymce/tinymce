@@ -27,37 +27,33 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
     var count = plugins.length;
     var pluginsString = plugins.join('');
 
-    return '<p>Plugins installed (' + count + '):</p>' +
+    return '<p><b>Plugins installed (' + count + '):</b></p>' +
             '<ul>' + pluginsString + '</ul>';
   };
 
-  var makeTab = function (editor, url) {
-    var version = [tinymce.majorVersion, tinymce.minorVersion].join('.');
-    var releaseDate = tinymce.releaseDate;
+  var makeTab = function (editor) {
     var pluginsList = pluginLister(editor);
 
     return {
       title: 'Plugins',
       type: 'container',
       style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
-      display: 'flex',
+      layout: 'flex',
+      align: 'stretch',
       items:	[
         {
           type: 'container',
           html: '<div style="margin: 10px;">' +
-                  '<img src="' + url + '/img/logo.png" alt="TinyMCE Logo" style="margin: 25px auto; display: block;">' +
-                  '<p><b>Version: </b>' + version + '</p>' +
-                  '<p>' +
-                    '<b>Release date:</b> ' + releaseDate +
-                  '</p>' +
                   pluginsList +
-                '</div>'
+                '</div>',
+          flex: 1
         },
         {
           type: 'container',
-          html: '<div style="margin: 10px;">' +
+          html: '<div style="margin: 10px; background: blue;">' +
                   '<p>test</p>' +
-                '</div>'
+                '</div>',
+          flex: 1
         }
       ]
     };

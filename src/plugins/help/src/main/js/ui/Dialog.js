@@ -1,10 +1,12 @@
 define(
   'tinymce.plugins.help.ui.Dialog',
   [
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.help.ui.KeyboardShortcutsTab',
     'tinymce.plugins.help.ui.PluginsTab',
-    'tinymce.plugins.help.ui.KeyboardShortcutsTab'
+    'tinymce.plugins.help.ui.ButtonsRow'
   ],
-  function (PluginsTab, KeyboardShortcutsTab) {
+  function (EditorManager, KeyboardShortcutsTab, PluginsTab, ButtonsRow) {
     var openDialog = function (editor, url) {
       return function () {
         editor.windowManager.open({
@@ -15,11 +17,10 @@ define(
             KeyboardShortcutsTab.makeTab(),
             PluginsTab.makeTab(editor, url)
           ],
-          buttons: {
-            text: 'Close',
-            onclick: function () {
-              this.parent().parent().close();
-            }
+          buttons: ButtonsRow.makeRow(),
+          onPostRender: function () {
+            var title = this.getEl('title');
+            title.innerHTML = '<img src="' + url + '/img/logo.png" alt="TinyMCE Logo" style="width: 200px">';
           }
         });
       };
