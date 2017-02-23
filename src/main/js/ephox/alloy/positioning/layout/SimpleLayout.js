@@ -35,7 +35,6 @@ define(
       go(anchorBox, element, bubble, options);
     };
 
-    // only one place still needs this, and we'd like to get rid of it.
     var relative = function (anchorBox, element, bubble, _options) {
       var defaults = function (_opts) {
         var opts = _opts !== undefined ? _opts : {};

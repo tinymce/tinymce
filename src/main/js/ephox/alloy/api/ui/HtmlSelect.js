@@ -50,9 +50,7 @@ define(
                 // See if there is something that matches value
                 return Arr.find(detail.options(), function (opt) {
                   return opt.value === data.value;
-                }).fold(function () {
-                  return Result.error('Not found');
-                }, Result.value);
+                }).map(Result.value).getOr(Result.error('Not found'));
               },
 
               interactive: {

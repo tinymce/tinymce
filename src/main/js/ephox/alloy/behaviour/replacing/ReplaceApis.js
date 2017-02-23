@@ -51,7 +51,6 @@ define(
     // NOTE: Removee is going to be a component, not a spec.
     var remove = function (component, replaceInfo, removee) {
       var children = contents(component, replaceInfo);
-      // TODO: Update for katamari
       var foundChild = Arr.find(children, function (child) {
         return Compare.eq(removee.element(), child.element());
       });

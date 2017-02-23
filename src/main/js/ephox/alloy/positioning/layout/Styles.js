@@ -7,7 +7,7 @@ define(
 
   function () {
     var resolve = function (rest) {
-      return 'ephox.alloy.position-' + rest;
+      return 'ephox-alloy-position-' + rest;
     };
 
     return {

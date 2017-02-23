@@ -21,7 +21,6 @@ define(
     var cycleNext = function (values, index, predicate) {
       var before = values.slice(0, index);
       var after = values.slice(index + 1);
-      // TODO: Use katamari once find is fixed
       return Arr.find(after.concat(before), predicate);
     };
 

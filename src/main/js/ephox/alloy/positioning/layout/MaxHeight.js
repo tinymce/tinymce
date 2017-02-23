@@ -9,12 +9,6 @@ define(
   ],
 
   function (Fun, Css, Height, Math) {
-    /*
-     * This replaces the old polish Scrollable hack.
-     *
-     * It's more complicated because widgets in menus never have their height capped at the anchor.
-     */
-
     // applies the max-height as determined by Bounder
     var setMaxHeight = function (element, maxHeight) {
       Height.setMax(element, Math.floor(maxHeight));
