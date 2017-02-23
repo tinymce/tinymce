@@ -212,8 +212,8 @@ asynctest(
       editor.setContent(
         '<table>' +
         '<tbody>' +
-        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td></tr>' +
-        '<tr><td>1a</td><td colspan="3">2a</td></tr>' +
+        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td><td>5a</td></tr>' +
+        '<tr><td>1a</td><td colspan="3">2a</td><td>5a</td></tr>' +
         '</tbody>' +
         '</table>' +
 
@@ -224,7 +224,7 @@ asynctest(
         '</table>'
       );
 
-      selectRangeXY(editor, 'table:nth-child(1) tr:nth-child(1) td:nth-child(1)', 'table:nth-child(1) tr:nth-child(2) td:nth-child(2)');
+      selectRangeXY(editor, 'table:nth-child(1) tr:nth-child(1) td:nth-child(1)', 'table:nth-child(1) tr:nth-child(2) td:nth-child(3)');
       editor.execCommand('mceTableCopyRow');
 
       LegacyUnit.setSelection(editor, 'table:nth-child(2) tr td', 0);
@@ -235,8 +235,8 @@ asynctest(
 
         '<table>' +
         '<tbody>' +
-        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td></tr>' +
-        '<tr><td>1a</td><td colspan="3">2a</td></tr>' +
+        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td><td>5a</td></tr>' +
+        '<tr><td>1a</td><td colspan="3">2a</td><td>5a</td></tr>' +
         '</tbody>' +
         '</table>' +
 
