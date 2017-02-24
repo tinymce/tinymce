@@ -19,6 +19,7 @@
 `node`: handles different types of nodes such as comments, elements, and text nodes
 `properties`: handles reading, writing, and removing style properties, attributes, and values
 `search`: handles searching for DOM nodes based on selectors, predicates, and DOM position
+`selection`: handles browser ranges and selection
 `tag`: handles specialised HTML tags like `option` and `select`
 `view`: handles scrolling, visibility, and measurements
 
