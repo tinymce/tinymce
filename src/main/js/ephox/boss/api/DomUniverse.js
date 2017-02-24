@@ -35,7 +35,7 @@ define(
 
       var isEmptyTag = function (element) {
         if (!Node.isElement(element)) return false;
-        return Arr.contains(['br', 'img', 'hr'], Node.name(element));
+        return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
       };
 
       var comparePosition = function (element, other) {
