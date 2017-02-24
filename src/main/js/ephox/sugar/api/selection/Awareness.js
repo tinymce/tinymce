@@ -10,6 +10,7 @@ define(
 
   function (Arr, Node, Text, Traverse) {
     var getEnd = function (element) {
+      // INVESTIGATE: How many other things should just be 1?
       return Node.name(element) === 'img' ? 1 : Text.getOption(element).fold(function () {
         return Traverse.children(element).length;
       }, function (v) {
