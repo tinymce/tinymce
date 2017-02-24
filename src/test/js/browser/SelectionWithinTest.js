@@ -5,6 +5,7 @@ test(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
@@ -15,7 +16,7 @@ test(
     'global!window'
   ],
 
-  function (Arr, Obj, InsertAll, Body, Element, Node, Html, Selection, WindowSelection, setTimeout, window) {
+  function (Arr, Obj, InsertAll, Remove, Body, Element, Node, Html, Selection, WindowSelection, setTimeout, window) {
     var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
     var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
@@ -52,5 +53,8 @@ test(
       strong: 0,
       em: 1
     }, p2);
+
+    Remove.remove(p1);
+    Remove.remove(p2);
   }
 );

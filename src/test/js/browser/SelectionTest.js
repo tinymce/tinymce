@@ -10,12 +10,14 @@ test(
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection',
     'global!setTimeout',
     'global!window'
   ],
 
-  function (PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element, Html, WindowSelection, setTimeout, window) {
+  function (PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element, Html, Traverse, Selection, WindowSelection, setTimeout, window) {
     var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
     var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
@@ -45,7 +47,7 @@ test(
       });
     };
 
-    WindowSelection.clearSelection(window);
+    WindowSelection.clear(window);
     assertNoSelection('There should not be a selection yet');
 
     setSelection(p1text, 1, p2text, 1);
@@ -54,6 +56,17 @@ test(
     setSelection(p2text, 2, p1text, 3);
     if (! PlatformDetection.detect().browser.isIE()) assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
     else assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2);
+
+
+    var assertFragmentHtml = function (expected, fragment) {
+      var div = Element.fromTag('div');
+      InsertAll.append(div, Traverse.children(fragment));
+      assert.eq(expected, Html.get(div));
+    }
+
+    var p1Selected = WindowSelection.forElement(window, p1);
+    var clone = WindowSelection.clone(window, Selection.exactFromRange(p1Selected));
+    assertFragmentHtml('This is the <strong>first</strong> paragraph', clone);
 
     Remove.remove(p1);
     Remove.remove(p2);

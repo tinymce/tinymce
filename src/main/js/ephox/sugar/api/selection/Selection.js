@@ -21,11 +21,16 @@ define(
       'foffset'
     );
 
+    var exactFromRange = function (simRange) {
+      return type.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
+    };
+
     return {
       domRange: type.domRange,
       relative: type.relative,
       exact: type.exact,
 
+      exactFromRange: exactFromRange,
       range: range
     };
   }

@@ -2,11 +2,10 @@ define(
   'ephox.sugar.api.selection.WindowSelection',
 
   [
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Fragment',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
     'ephox.sugar.selection.core.NativeRange',
@@ -16,10 +15,7 @@ define(
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
-  function (
-    Fun, Obj, Option, DocumentPosition, Element, Selection, Situ, NativeRange, SelectionDirection,
-    CaretRange, Within, Prefilter
-  ) {
+  function (Option, DocumentPosition, Element, Fragment, Selection, Situ, NativeRange, SelectionDirection, CaretRange, Within, Prefilter) {
     var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
       selection.removeAllRanges();
@@ -87,6 +83,14 @@ define(
       doSetNativeRange(win, rng);
     };
 
+    var forElement = function (win, element) {
+      var rng = NativeRange.selectNodeContents(win, element);
+      return Selection.range(
+        Element.fromDom(rng.startContainer), rng.startOffset, 
+        Element.fromDom(rng.endContainer), rng.endOffset
+      );
+    };
+
     var getExact = function (win) {
       // We want to retrieve the selection as it is.
       var selection = win.getSelection();
@@ -119,9 +123,25 @@ define(
       return NativeRange.toString(rng);
     };
 
-    var clearSelection = function (win) {
+    var clear = function (win) {
       var selection = win.getSelection();
       selection.removeAllRanges();
+    };
+
+    var clone = function (win, selection) {
+      var rng = SelectionDirection.asLtrRange(win, selection);
+      return NativeRange.cloneFragment(rng);
+    };
+
+    var replace = function (win, selection, elements) {
+      var rng = SelectionDirection.asLTrRange(win, selection);
+      var fragment = Fragment.fromElements(elements);
+      NativeRange.replaceWith(rng, fragment);
+    };
+
+    var deleteAt = function (win, selection) {
+      var rng = SelectionDirection.asLtrRange(win, selection);
+      NativeRange.deleteContents(rng);
     };
 
     return {
@@ -130,9 +150,13 @@ define(
       get: get,
       setRelative: setRelative,
       setToElement: setToElement,
-      clearSelection: clearSelection,
+      clear: clear,
 
-      // TODO: Clone and replace
+      clone: clone,
+      replace: replace,
+      deleteAt: deleteAt,
+
+      forElement: forElement,
 
       getFirstRect: getFirstRect,
       getBounds: getBounds,
