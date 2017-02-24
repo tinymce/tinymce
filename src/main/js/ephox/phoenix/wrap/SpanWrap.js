@@ -8,11 +8,10 @@ define(
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Injection',
     'ephox.phoenix.wrap.Wrapper',
-    'ephox.phoenix.wrap.Wraps',
-    'ephox.scullion.Struct'
+    'ephox.phoenix.wrap.Wraps'
   ],
 
-  function (Unicode, Fun, Option, Spot, Injection, Wrapper, Wraps, Struct) {
+  function (Unicode, Fun, Option, Spot, Injection, Wrapper, Wraps) {
     var point = function (universe, start, soffset, finish, foffset, exclusions) {
       var scanned = scan(universe, start, soffset, finish, foffset, exclusions);
       var cursor = scanned.cursor();
@@ -28,7 +27,6 @@ define(
       });
     };
 
-    var spanCursor = Struct.immutable('span', 'cursor');
 
     var temporary = function (universe, start, soffset, finish, foffset) {
       var doc = start.dom().ownerDocument;
@@ -37,7 +35,11 @@ define(
       var cursor = universe.create().text(Unicode.zeroWidth(), doc);
       universe.insert().append(span, cursor);
 
-      Injection.atStartOf(universe, start, soffset, span);
+      var injectAt = universe.property().isEmptyTag(start) ? universe.property().parent(start) : Option.some(start);
+      injectAt.each(function (z) {
+        Injection.atStartOf(universe, z, soffset, span);
+      });
+
       return {
         cursor: Fun.constant(Spot.point(cursor, 1)),
         wrappers: Fun.constant([ span ]),
