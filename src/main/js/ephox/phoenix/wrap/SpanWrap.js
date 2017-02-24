@@ -35,12 +35,7 @@ define(
       var cursor = universe.create().text(Unicode.zeroWidth(), doc);
       universe.insert().append(span, cursor);
 
-
-      var isEmptyTag = function (item) {
-        return universe.property().isEmptyTag(item);
-      };
-
-      var injectAt = isEmptyTag(start) ? universe.property().parent(start) : Option.some(start);
+      var injectAt = universe.property().isEmptyTag(start) ? universe.property().parent(start) : Option.some(start);
       injectAt.each(function (z) {
         Injection.atStartOf(universe, z, soffset, span);
       });
