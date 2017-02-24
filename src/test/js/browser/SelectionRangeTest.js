@@ -2,7 +2,6 @@ test(
   'WindowSelectionTest',
 
   [
-    'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Hierarchy',
@@ -19,10 +18,7 @@ test(
     'global!window'
   ],
 
-  function (
-    Option, PlatformDetection, Compare, Hierarchy, Insert, Remove, Body, Element, Attr,
-    Class, Html, Selection, Situ, WindowSelection, window
-  ) {
+  function (PlatformDetection, Compare, Hierarchy, Insert, Remove, Body, Element, Attr, Class, Html, Selection, Situ, WindowSelection, window) {
     var container = Element.fromTag('div');
     Class.add(container, 'window-selection-test');
     Attr.set(container, 'contenteditable', 'true');
