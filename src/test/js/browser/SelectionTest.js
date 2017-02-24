@@ -9,6 +9,7 @@ test(
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
@@ -17,7 +18,7 @@ test(
     'global!window'
   ],
 
-  function (PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element, Html, Traverse, Selection, WindowSelection, setTimeout, window) {
+  function (PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element, Elements, Html, Traverse, Selection, WindowSelection, setTimeout, window) {
     var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
     var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
@@ -67,6 +68,20 @@ test(
     var p1Selected = WindowSelection.forElement(window, p1);
     var clone = WindowSelection.clone(window, Selection.exactFromRange(p1Selected));
     assertFragmentHtml('This is the <strong>first</strong> paragraph', clone);
+
+    WindowSelection.replace(window, Selection.exactFromRange(p1Selected), Elements.fromHtml('<a>link</a><span>word</span>'));
+    assert.eq('<a>link</a><span>word</span>', Html.get(p1));
+
+    WindowSelection.deleteAt(window, 
+      Selection.exact(
+        Hierarchy.follow(p1, [ 0, 0 ]).getOrDie('looking for text in a'),
+        'li'.length,
+        Hierarchy.follow(p1, [ 1, 0 ]).getOrDie('looking for text in span'),
+        'wor'.length
+      )
+    );
+
+    assert.eq('<a>li</a><span>d</span>', Html.get(p1));
 
     Remove.remove(p1);
     Remove.remove(p2);

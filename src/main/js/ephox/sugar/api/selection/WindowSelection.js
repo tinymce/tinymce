@@ -134,7 +134,7 @@ define(
     };
 
     var replace = function (win, selection, elements) {
-      var rng = SelectionDirection.asLTrRange(win, selection);
+      var rng = SelectionDirection.asLtrRange(win, selection);
       var fragment = Fragment.fromElements(elements);
       NativeRange.replaceWith(rng, fragment);
     };
