@@ -205,6 +205,7 @@ define(
         type = buttonCtrl.settings.origin;
 
         function selectColor(value) {
+          removeFormat(buttonCtrl.settings.format);
           buttonCtrl.hidePanel();
           buttonCtrl.color(value);
           applyFormat(buttonCtrl.settings.format, value);
