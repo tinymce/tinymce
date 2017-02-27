@@ -15,10 +15,7 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (
-    Replacing, GuiFactory, Button, Container, Input, Objects, Fun, Singleton, IosWebapp,
-    ScrollingToolbar, OuterContainer
-  ) {
+  function (Replacing, GuiFactory, Button, Container, Input, Objects, Fun, Singleton, IosWebapp, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer();
 
