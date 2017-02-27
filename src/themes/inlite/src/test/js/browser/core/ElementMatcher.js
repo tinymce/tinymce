@@ -5,13 +5,16 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.agar.api.Step',
     'ephox.agar.api.Assertions',
+    'tinymce.themes.inlite.Theme',
     'tinymce.themes.inlite.core.ElementMatcher',
     'tinymce.themes.inlite.core.PredicateId',
     'ephox.agar.api.Pipeline'
   ],
-  function (TinyLoader, TinyApis, Step, Assertions, ElementMatcher, PredicateId, Pipeline) {
+  function (TinyLoader, TinyApis, Step, Assertions, Theme, ElementMatcher, PredicateId, Pipeline) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Theme();
 
     var eq = function (target) {
       return function (elm) {
@@ -67,7 +70,9 @@ asynctest(
         sParentTest(tinyApis, editor, '<div><p><em>a</em></p></div>', 'em')
       ], onSuccess, onFailure);
     }, {
-      inline: true
+      inline: true,
+      theme: 'inlite',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

@@ -1,13 +1,14 @@
 asynctest(
   'browser.alien.EditorSettingsTest',
   [
-    'tinymce.themes.inlite.alien.EditorSettings',
-    'ephox/tinymce',
-    'ephox.agar.api.Step',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Assertions'
+    'ephox.agar.api.Step',
+    'tinymce.core.Editor',
+    'tinymce.core.EditorManager',
+    'tinymce.themes.inlite.alien.EditorSettings'
   ],
-  function (EditorSettings, tinymce, Step, Pipeline, Assertions) {
+  function (Assertions, Pipeline, Step, Editor, EditorManager, EditorSettings) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -18,7 +19,7 @@ asynctest(
     };
 
     var createEditor = function () {
-      var editor = new tinymce.Editor('id', {
+      var editor = new Editor('id', {
         string: 'value',
         bool: true,
         number: 3,
@@ -30,7 +31,7 @@ asynctest(
         toolbar_empty_array: [],
         toolbar_bool_false: false,
         toolbar_array: ['a', 'b']
-      }, tinymce.EditorManager);
+      }, EditorManager);
 
       return editor;
     };

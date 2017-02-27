@@ -1,24 +1,27 @@
 asynctest(
   'browser.core.DataToHtmlTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
-    'ephox.mcagar.api.TinyLoader',
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
-    'ephox.agar.api.Assertions',
+    'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
-    'ephox.agar.api.ApproxStructure',
+    'tinymce.plugins.media.core.DataToHtml',
+    'tinymce.plugins.media.Plugin',
     'tinymce.plugins.media.test.Utils',
-    'tinymce.plugins.media.core.DataToHtml'
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader,
-    Pipeline, Step, Waiter, Assertions, Element, ApproxStructure, Utils, DataToHtml
+    ApproxStructure, Assertions, Pipeline, Step, Waiter, TinyLoader, Element,
+    DataToHtml, Plugin, Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var sTestDataToHtml = function (editor, data, expected) {
       var actual = Element.fromHtml(DataToHtml.dataToHtml(editor, data));
@@ -79,7 +82,8 @@ asynctest(
       ], onSuccess, onFailure);
     }, {
       plugins: ["media"],
-      toolbar: "media"
+      toolbar: "media",
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

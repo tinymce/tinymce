@@ -1,13 +1,12 @@
 asynctest(
   'atomic.core.ConvertTest',
   [
-    'ephox/tinymce',
     'tinymce.themes.inlite.file.Conversions',
     'ephox.agar.api.Step',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Assertions'
   ],
-  function (tinymce, Conversions, Step, Pipeline, Assertions) {
+  function (Conversions, Step, Pipeline, Assertions) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

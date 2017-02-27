@@ -1,15 +1,15 @@
 asynctest(
   'browser.alien.BookmarkTest',
   [
-    'ephox/tinymce',
-    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
-    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.TinyDom',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.themes.inlite.alien.Bookmark'
   ],
-  function (tinymce, Pipeline, Chain, Cursors, Assertions, TinyDom, Bookmark) {
+  function (Assertions, Chain, Cursors, Pipeline, TinyDom, DOMUtils, Bookmark) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -42,7 +42,7 @@ asynctest(
     };
 
     var sTestBookmark = function (html, path) {
-      var dom = tinymce.DOM;
+      var dom = DOMUtils.DOM;
       var elm = TinyDom.fromDom(dom.create('div', {}, html));
 
       return Chain.asStep(elm, [

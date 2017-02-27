@@ -5,12 +5,14 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'tinymce.plugins.image.Plugin',
     'ephox.mcagar.api.TinyLoader',
-    'global!tinymce.Env'
+    'tinymce.core.Env',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, Env) {
+  function (Pipeline, LegacyUnit, Plugin, TinyLoader, Env, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+    Theme();
 
     var teardown = function (editor) {
       delete editor.settings.image_dimensions;
@@ -655,7 +657,8 @@ asynctest(
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'image',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

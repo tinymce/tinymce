@@ -1,34 +1,35 @@
 asynctest(
   'tinymce.lists.browser.BackspaceDeleteInlineTest',
   [
-    'global!document',
-    'ephox/tinymce',
-    'tinymce.plugins.lists.Plugin',
+    'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.agar.api.Pipeline'
+    'global!document',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.EditorManager',
+    'tinymce.plugins.lists.Plugin'
   ],
-  function (
-    document, tinymce, Plugin, LegacyUnit, TinyLoader, Pipeline
-  ) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, DomQuery, EditorManager, Plugin) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
 
     suite.test('Backspace at beginning of LI on body UL', function (editor) {
       editor.focus();
       editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
       editor.plugins.lists.backspaceDelete();
-      LegacyUnit.equal(tinymce.$('#lists ul').length, 3);
-      LegacyUnit.equal(tinymce.$('#lists li').length, 3);
+      LegacyUnit.equal(DomQuery('#lists ul').length, 3);
+      LegacyUnit.equal(DomQuery('#lists li').length, 3);
     });
 
     suite.test('Delete at end of LI on body UL', function (editor) {
       editor.focus();
       editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 1);
       editor.plugins.lists.backspaceDelete(true);
-      LegacyUnit.equal(tinymce.$('#lists ul').length, 3);
-      LegacyUnit.equal(tinymce.$('#lists li').length, 3);
+      LegacyUnit.equal(DomQuery('#lists ul').length, 3);
+      LegacyUnit.equal(DomQuery('#lists li').length, 3);
     });
 
     var teardown = function (editor, div) {
@@ -49,7 +50,7 @@ asynctest(
 
       document.body.appendChild(div);
 
-      tinymce.init({
+      EditorManager.init({
         selector: '#inline',
         inline: true,
         add_unload_trigger: false,

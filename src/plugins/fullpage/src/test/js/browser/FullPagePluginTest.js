@@ -3,13 +3,17 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.fullpage.Plugin',
-    'ephox.mcagar.api.TinyLoader'
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader) {
+  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     var teardown = function (editor) {
       editor.getBody().rtl = '';
@@ -130,7 +134,8 @@ asynctest(
       teardown(editor);
     }, {
       plugins: 'fullpage',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

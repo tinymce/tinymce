@@ -1,25 +1,28 @@
 asynctest(
   'browser.core.SubmitTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
+    'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Waiter',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Step',
-    'tinymce.plugins.media.test.Utils'
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    tinymce, Plugin, TinyLoader,
-    TinyUi, TinyApis, Pipeline, Waiter, Chain, ApproxStructure, GeneralSteps, Step, Utils
+    ApproxStructure, Chain, GeneralSteps, Pipeline, Step, Waiter, TinyApis, TinyLoader,
+    TinyUi, Plugin, Utils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
       return GeneralSteps.sequence([
@@ -29,7 +32,7 @@ asynctest(
         Utils.sAssertEditorContent(apis, editor, expected),
         Waiter.sTryUntil('Wait for structure check',
           apis.sAssertContentStructure(struct),
-          10, 500),
+          100, 3000),
         apis.sSetContent('')
       ]);
     };
@@ -46,69 +49,72 @@ asynctest(
         apis.sSetContent('')
       ]);
     };
+    var placeholderStructure = ApproxStructure.build(function (s) {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('img', {})
+            ]
+          }),
+          s.element('div', {}),
+          s.element('div', {}),
+          s.element('div', {}),
+          s.element('div', {})
+        ]
+      });
+    });
+
+    var iframeStructure = ApproxStructure.build(function (s) {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                children: [
+                  s.element('iframe', {}),
+                  s.element('span', {})
+                ]
+              }),
+              s.anything()
+            ]
+          })
+        ]
+      });
+    });
+
+    var scriptStruct = ApproxStructure.build(function (s, str, arr) {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('img', {
+                classes: [
+                  arr.has('mce-object', 'mce-object-script')
+                ],
+                attrs: {
+                  height: str.is('150'),
+                  width: str.is('300')
+                }
+              }),
+              s.element('img', {
+                classes: [
+                  arr.has('mce-object', 'mce-object-script')
+                ],
+                attrs: {
+                  height: str.is('200'),
+                  width: str.is('100')
+                }
+              })
+            ]
+          })
+        ]
+      });
+    });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var ui = TinyUi(editor);
       var apis = TinyApis(editor);
-
-      var placeholderStructure = ApproxStructure.build(function (s) {
-        return s.element('body', {
-          children: [
-            s.element('p', {
-              children: [
-                s.element('img', {})
-              ]
-            }),
-            s.element('div', {}),
-            s.element('div', {}),
-            s.element('div', {}),
-            s.element('div', {})
-          ]
-        });
-      });
-
-      var iframeStructure = ApproxStructure.build(function (s) {
-        return s.element('body', {
-          children: [
-            s.element('p', {
-              children: [
-                s.element('span', {
-                  children: [
-                    s.element('iframe', {}),
-                    s.element('span', {})
-                  ]
-                }),
-                s.anything()
-              ]
-            })
-          ]
-        });
-      });
-
-      var scriptStruct = ApproxStructure.build(function (s, str, arr) {
-        return s.element('body', {
-          children: [
-            s.element('img', {
-              classes: [
-                arr.has('mce-object', 'mce-object-script')
-              ],
-              attrs: {
-                height: str.is('150'),
-                width: str.is('300')
-              }
-            }),
-            s.element('img', {
-              classes: [
-                arr.has('mce-object', 'mce-object-script')
-              ],
-              attrs: {
-                height: str.is('200'),
-                width: str.is('100')
-              }
-            })
-          ]
-        });
-      });
 
       Pipeline.async({}, [
         Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
@@ -136,8 +142,8 @@ asynctest(
       media_scripts: [
           { filter: 'http://media1.tinymce.com' },
           { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-      ]
+      ],
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
-
   }
 );

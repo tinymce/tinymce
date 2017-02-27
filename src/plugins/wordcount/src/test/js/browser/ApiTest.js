@@ -1,17 +1,19 @@
 asynctest(
   'browser.tinymce.plugins.wordcount.ApiTest',
   [
-    'tinymce.plugins.wordcount.Plugin',
+    'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.agar.api.Pipeline'
+    'tinymce.plugins.wordcount.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    Plugin, LegacyUnit, TinyLoader, Pipeline
-  ) {
+  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     suite.test("Blank document has 0 words", function (editor) {
       editor.setContent('');
@@ -64,7 +66,8 @@ asynctest(
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
-      plugins: 'wordcount'
+      plugins: 'wordcount',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

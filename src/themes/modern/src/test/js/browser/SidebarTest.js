@@ -112,14 +112,18 @@ asynctest(
       ]);
     };
 
+    var normalizeUrlString = function (urlString) {
+      return urlString.replace(/\"/g, '');
+    };
+
     var sAssertButtonIconImage = function (tooltip, expectedIconUrl) {
       return Chain.asStep({}, [
         cWaitForToolbar,
         cFindButton(tooltip),
         UiFinder.cFindIn('i'),
         Chain.op(function (iconElm) {
-          var actualUrl = iconElm.dom().style.backgroundImage;
-          Assertions.assertEq('Needs to have correct icon url', 'url("' + expectedIconUrl + '")', actualUrl);
+          var actualUrl = normalizeUrlString(iconElm.dom().style.backgroundImage);
+          Assertions.assertEq('Needs to have correct icon url', 'url(' + expectedIconUrl + ')', actualUrl);
         })
       ]);
     };
@@ -164,7 +168,8 @@ asynctest(
           onshow: storeEvent('mysidebar3:show'),
           onhide: storeEvent('mysidebar3:hide')
         });
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

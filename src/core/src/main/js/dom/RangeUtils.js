@@ -129,13 +129,13 @@ define(
          * @private
          * @param {Node} node Node to collect siblings from.
          * @param {String} name Name of the sibling to check for.
-         * @param {Node} end_node
+         * @param {Node} endNode
          * @return {Array} Array of collected siblings.
          */
-        function collectSiblings(node, name, end_node) {
+        function collectSiblings(node, name, endNode) {
           var siblings = [];
 
-          for (; node && node != end_node; node = node[name]) {
+          for (; node && node != endNode; node = node[name]) {
             siblings.push(node);
           }
 
@@ -160,12 +160,12 @@ define(
           } while (node);
         }
 
-        function walkBoundary(start_node, end_node, next) {
+        function walkBoundary(startNode, endNode, next) {
           var siblingName = next ? 'nextSibling' : 'previousSibling';
 
-          for (node = start_node, parent = node.parentNode; node && node != end_node; node = parent) {
+          for (node = startNode, parent = node.parentNode; node && node != endNode; node = parent) {
             parent = node.parentNode;
-            siblings = collectSiblings(node == start_node ? node : node[siblingName], siblingName);
+            siblings = collectSiblings(node == startNode ? node : node[siblingName], siblingName);
 
             if (siblings.length) {
               if (!next) {

@@ -74,7 +74,9 @@ asynctest(
         sEmptyTextBlockTests(tinyApis, editor)
       ], onSuccess, onFailure);
     }, {
-      inline: true
+      inline: true,
+      theme: 'inlite',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

@@ -1,23 +1,29 @@
 asynctest(
   'browser.tinymce.core.SelectionOverridesTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
-    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Keyboard',
-    'ephox.mcagar.api.TinyLoader',
+    'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyDom',
-    'tinymce.core.caret.CaretPosition',
+    'ephox.mcagar.api.TinyLoader',
     'tinymce.core.caret.CaretContainer',
-    'tinymce.core.util.VK',
-    'tinymce.core.text.Zwsp',
+    'tinymce.core.caret.CaretPosition',
     'tinymce.core.Env',
     'tinymce.core.test.HtmlUtils',
-    'tinymce.core.test.KeyUtils'
+    'tinymce.core.test.KeyUtils',
+    'tinymce.core.text.Zwsp',
+    'tinymce.core.util.VK',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, Keyboard, TinyLoader, TinyDom, CaretPosition, CaretContainer, VK, Zwsp, Env, HtmlUtils, KeyUtils) {
+  function (
+    Keyboard, Pipeline, LegacyUnit, TinyDom, TinyLoader, CaretContainer, CaretPosition,
+    Env, HtmlUtils, KeyUtils, Zwsp, VK, Theme
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var pressKey = function (key) {
       return function (editor) {
@@ -365,7 +371,8 @@ asynctest(
       add_unload_trigger: false,
       disable_nodechange: true,
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

@@ -1,20 +1,20 @@
 asynctest(
   'browser.core.MediaEmbedTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
+    'ephox.agar.api.Pipeline',
+    'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.agar.api.Pipeline',
-    'tinymce.plugins.media.test.Utils'
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    tinymce, Plugin, TinyLoader,
-    TinyUi, TinyApis, Pipeline, Utils
-  ) {
+  function (Pipeline, TinyApis, TinyLoader, TinyUi, Plugin, Utils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var ui = TinyUi(editor);
@@ -44,7 +44,8 @@ asynctest(
           html: '<video width="300" height="150" ' +
             'controls="controls">\n<source src="' + data.url + '" />\n</video>'
         });
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

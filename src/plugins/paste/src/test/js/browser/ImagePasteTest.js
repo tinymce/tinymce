@@ -1,25 +1,29 @@
 asynctest(
   'tinymce.plugins.paste.browser.ImagePasteTest',
   [
-    'global!tinymce.util.Delay',
-    'global!tinymce.util.Promise',
-    'global!atob',
-    'global!Blob',
-    'tinymce.plugins.paste.Plugin',
-    'tinymce.plugins.paste.core.Clipboard',
-    'ephox.mcagar.api.LegacyUnit',
-    'ephox.mcagar.api.TinyLoader',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.katamari.api.Arr'
+    'ephox.katamari.api.Arr',
+    'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
+    'global!atob',
+    'global!Blob',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Promise',
+    'tinymce.plugins.paste.core.Clipboard',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
   function (
-    Delay, Promise, atob, Blob, Plugin, Clipboard, LegacyUnit,
-    TinyLoader, Pipeline, Step, Arr
+    Pipeline, Step, Arr, LegacyUnit, TinyLoader, atob, Blob, Delay, Promise, Clipboard,
+    Plugin, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     var base64ImgSrc = [
       'R0lGODdhZABkAHcAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQECgAAACwAAAAAZABkAIEAAAD78jY/',
@@ -30,7 +34,6 @@ asynctest(
       '71/P759AePwADBxY8KDAhAr9MWyY7yFEgPYmRgxokWK7jEYa2XGcJ/HjgJAfSXI0mRGlRZUTWUJ0',
       '2RCmQpkHaSLEKPKdzYU4c+78VzCo0KFEixo9ijSp0qVMmzp9CjWq1KlUq1q9eqEAADs='
     ].join('');
-
 
     var sTeardown = function (editor) {
       return Step.sync(function () {
@@ -190,7 +193,8 @@ asynctest(
       entities: 'raw',
       indent: false,
       automatic_uploads: false,
-      plugins: "paste"
+      plugins: "paste",
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

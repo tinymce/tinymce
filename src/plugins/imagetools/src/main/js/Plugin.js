@@ -2,35 +2,31 @@
  * Plugin.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- *
- * Settings:
- *  imagetools_cors_hosts - Array of remote domains that has CORS setup.
- *  imagetools_proxy - Url to proxy that streams images from remote host to local host.
- *  imagetools_toolbar - Toolbar items to render when an editable image is selected.
- */
 define(
   'tinymce.plugins.imagetools.Plugin',
   [
-    "tinymce.core.PluginManager",
-    "tinymce.core.Env",
-    "tinymce.core.util.Promise",
-    "tinymce.core.util.URI",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Delay",
-    "ephox/imagetools/api/ImageTransformations",
-    "ephox/imagetools/api/BlobConversions",
-    "tinymce.plugins.imagetools.Dialog",
-    "tinymce.plugins.imagetools.ImageSize",
-    "tinymce.plugins.imagetools.Proxy"
+    'ephox.imagetools.api.BlobConversions',
+    'ephox.imagetools.api.ImageTransformations',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.URI',
+    'tinymce.plugins.imagetools.core.ImageSize',
+    'tinymce.plugins.imagetools.core.Proxy',
+    'tinymce.plugins.imagetools.ui.Dialog'
   ],
-  function (PluginManager, Env, Promise, URI, Tools, Delay, ImageTransformations, BlobConversions, Dialog, ImageSize, Proxy) {
+  function (
+    BlobConversions, ImageTransformations, Env, PluginManager, Delay, Promise, Tools,
+    URI, ImageSize, Proxy, Dialog
+  ) {
     var plugin = function (editor) {
       var count = 0, imageUploadTimer, lastSelectedImage;
 
@@ -113,14 +109,14 @@ define(
         clearTimeout(imageUploadTimer);
       }
 
-      function updateSelectedImage(blob, uploadImmediately) {
-        return BlobConversions.blobToDataUri(blob).then(function (dataUri) {
+      function updateSelectedImage(ir, uploadImmediately) {
+        return ir.toBlob().then(function (blob) {
           var id, filename, base64, blobCache, blobInfo, selectedImage;
 
           selectedImage = getSelectedImage();
           blobCache = editor.editorUpload.blobCache;
           blobInfo = blobCache.getByUri(selectedImage.src);
-          base64 = URI.parseDataUri(dataUri).data;
+          base64 = ir.toBase64();
           id = createId();
           if (editor.settings.images_reuse_filename) {
             filename = blobInfo ? blobInfo.filename() : extractFilename(selectedImage.src);
@@ -154,13 +150,17 @@ define(
 
       function selectedImageOperation(fn) {
         return function () {
-          return editor._scanForImages().then(findSelectedBlob).then(fn).then(updateSelectedImage, displayError);
+          return editor._scanForImages().
+            then(findSelectedBlob).
+            then(BlobConversions.blobToImageResult).
+            then(fn).
+            then(updateSelectedImage, displayError);
         };
       }
 
       function rotate(angle) {
         return function () {
-          return selectedImageOperation(function (blob) {
+          return selectedImageOperation(function (imageResult) {
             var size = ImageSize.getImageSize(getSelectedImage());
 
             if (size) {
@@ -170,15 +170,15 @@ define(
               });
             }
 
-            return ImageTransformations.rotate(blob, angle);
+            return ImageTransformations.rotate(imageResult, angle);
           })();
         };
       }
 
       function flip(axis) {
         return function () {
-          return selectedImageOperation(function (blob) {
-            return ImageTransformations.flip(blob, axis);
+          return selectedImageOperation(function (imageResult) {
+            return ImageTransformations.flip(imageResult, axis);
           })();
         };
       }
@@ -187,31 +187,34 @@ define(
         var img = getSelectedImage(), originalSize = ImageSize.getNaturalImageSize(img);
         var handleDialogBlob = function (blob) {
           return new Promise(function (resolve) {
-            BlobConversions.blobToImage(blob).then(function (newImage) {
-              var newSize = ImageSize.getNaturalImageSize(newImage);
+            BlobConversions.blobToImage(blob).
+              then(function (newImage) {
+                var newSize = ImageSize.getNaturalImageSize(newImage);
 
-              if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
-                if (ImageSize.getImageSize(img)) {
-                  ImageSize.setImageSize(img, newSize);
+                if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
+                  if (ImageSize.getImageSize(img)) {
+                    ImageSize.setImageSize(img, newSize);
+                  }
                 }
-              }
 
-              URL.revokeObjectURL(newImage.src);
-              resolve(blob);
-            });
+                URL.revokeObjectURL(newImage.src);
+                resolve(blob);
+              });
           });
         };
 
         var openDialog = function (blob) {
-          return Dialog.edit(blob).then(handleDialogBlob).then(function (blob) {
-            updateSelectedImage(blob, true);
-          }, function () {
-            // Close dialog
-          });
+          return Dialog.edit(blob).then(handleDialogBlob).
+            then(BlobConversions.blobToImageResult).
+            then(function (imageResult) {
+              updateSelectedImage(imageResult, true);
+            }, function () {
+              // Close dialog
+            });
         };
 
         if (img) {
-          imageToBlob(img).then(openDialog, displayError);
+          BlobConversions.imageToImageResult(img).then(openDialog, displayError);
         }
       }
 
@@ -257,16 +260,16 @@ define(
 
       function addEvents() {
         editor.on('NodeChange', function (e) {
-          //If the last node we selected was an image
-          //And had a source that doesn't match the current blob url
-          //We need to attempt to upload it
+          // If the last node we selected was an image
+          // And had a source that doesn't match the current blob url
+          // We need to attempt to upload it
           if (lastSelectedImage && lastSelectedImage.src != e.element.src) {
             cancelTimedUpload();
             editor.editorUpload.uploadImagesAuto();
             lastSelectedImage = undefined;
           }
 
-          //Set up the lastSelectedImage
+          // Set up the lastSelectedImage
           if (isEditableImage(e.element)) {
             lastSelectedImage = e.element;
           }

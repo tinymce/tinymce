@@ -1,9 +1,8 @@
 test(
   'browser/core/LayoutTest', [
-    'ephox/tinymce',
     'tinymce.themes.inlite.core.Layout'
   ],
-  function (tinymce, Layout) {
+  function (Layout) {
     // TODO: Move this to atomic test when we can require parts of tinymce core using bolt
 
     var rect = function (x, y, w, h) {

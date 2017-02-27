@@ -13,7 +13,7 @@
   },
 
   "rules": {
-    "camelcase": 0,
+    "camelcase": [2, {"properties": "never"}],
     "strict": 0,
     "eqeqeq": 0,
     "no-underscore-dangle": 0,

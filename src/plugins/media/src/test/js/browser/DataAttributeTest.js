@@ -1,21 +1,21 @@
 asynctest(
   'browser.core.DataAttributeTest',
   [
-    'global!tinymce',
-    'tinymce.plugins.media.Plugin',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyApis',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Pipeline',
-    'tinymce.plugins.media.test.Utils'
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyLoader',
+    'ephox.mcagar.api.TinyUi',
+    'tinymce.plugins.media.Plugin',
+    'tinymce.plugins.media.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    tinymce, Plugin, TinyLoader,
-    TinyUi, TinyApis, GeneralSteps, Pipeline, Utils
-  ) {
+  function (GeneralSteps, Pipeline, TinyApis, TinyLoader, TinyUi, Plugin, Utils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    Plugin();
+    Theme();
 
     var sTestEmbedContentFromUrlWithAttribute = function (ui, url, content) {
       return GeneralSteps.sequence([
@@ -67,7 +67,8 @@ asynctest(
       toolbar: "media",
       media_url_resolver: function (data, resolve) {
         resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
-      }
+      },
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

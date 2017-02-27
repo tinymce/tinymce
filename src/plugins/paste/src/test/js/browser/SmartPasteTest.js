@@ -1,19 +1,20 @@
 asynctest(
   'tinymce.plugins.paste.browser.ImagePasteTest',
   [
-    'tinymce.plugins.paste.Plugin',
-    'tinymce.plugins.paste.core.SmartPaste',
+    'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.agar.api.Pipeline'
+    'tinymce.plugins.paste.core.SmartPaste',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (
-    Plugin, SmartPaste, LegacyUnit,
-    TinyLoader, Pipeline
-  ) {
+  function (Pipeline, LegacyUnit, TinyLoader, SmartPaste, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Plugin();
+    Theme();
 
     suite.test('isAbsoluteUrl', function () {
       LegacyUnit.equal(SmartPaste.isAbsoluteUrl('http://www.site.com'), true);
@@ -83,7 +84,8 @@ asynctest(
     }, {
       add_unload_trigger: false,
       indent: false,
-      plugins: 'paste'
+      plugins: 'paste',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

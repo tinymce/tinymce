@@ -1,21 +1,27 @@
 asynctest(
   'browser.tinymce.core.EditorUploadTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyLoader',
     'ephox.katamari.api.Arr',
-    'tinymce.core.file.Conversions',
-    'tinymce.core.Env',
-    'tinymce.core.dom.DOMUtils',
+    'ephox.mcagar.api.LegacyUnit',
+    'ephox.mcagar.api.TinyLoader',
     'global!document',
-    'global!setTimeout'
+    'global!setTimeout',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.file.Conversions',
+    'tinymce.themes.modern.Theme'
   ],
-  function (LegacyUnit, Pipeline, Step, TinyLoader, Arr, Conversions, Env, DOMUtils, document, setTimeout) {
+  function (
+    Pipeline, Step, Arr, LegacyUnit, TinyLoader, document, setTimeout, DOMUtils, Env, Conversions,
+    Theme
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
+    Theme();
 
     var testBlobDataUri;
 
@@ -339,7 +345,8 @@ asynctest(
       disable_nodechange: true,
       automatic_uploads: false,
       entities: 'raw',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

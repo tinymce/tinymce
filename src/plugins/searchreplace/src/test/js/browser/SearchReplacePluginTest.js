@@ -5,12 +5,14 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'tinymce.plugins.searchreplace.Plugin',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.searchreplace.test.HtmlUtils'
+    'tinymce.plugins.searchreplace.test.HtmlUtils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, HtmlUtils) {
+  function (Pipeline, LegacyUnit, Plugin, TinyLoader, HtmlUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+    Theme();
 
     suite.test('Find no match', function (editor) {
       editor.getBody().innerHTML = 'a';
@@ -117,7 +119,8 @@ asynctest(
     }, {
       plugins: 'searchreplace',
       valid_elements: 'b,i',
-      indent: false
+      indent: false,
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );
