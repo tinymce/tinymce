@@ -80,17 +80,18 @@ define(
       var wrapper = GuiFactory.build(
         Container.sketch({
           dom: {
-            // Use tinymce classes.
-            classes: [ 'ephox-chameleon-toolstrip', 'ephox-polish-layer-above-editor', 'ephox-polish-mobile-show' ],
-            attributes: {
-              'role': 'region'
-            },
-            styles: {
-              'overflow-x': 'auto'
-            }
+            classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
           },
           components: [
-            GuiFactory.premade(toolbar)
+            Container.sketch({
+              dom: {
+                tag: 'div',
+                classes: [ 'mce-container-body', 'mce-stack-layout' ]
+              },
+              components: [
+                GuiFactory.premade(toolbar)
+              ]
+            })
           ]
         })
       );

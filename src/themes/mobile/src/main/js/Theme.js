@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'global!Error',
     'global!window',
@@ -15,10 +13,7 @@ define(
     'tinymce.themes.mobile.ui.IosContainer'
   ],
 
-  function (
-    Fun, Insert, Body, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api,
-    IosContainer
-  ) {
+  function (Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, IosContainer) {
     var fail = function (message) {
       throw new Error(message);
     };
@@ -26,16 +21,40 @@ define(
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var skinUrl = EditorManager.baseURL + editor.settings.skin_url;
+        var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
+
         DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
 
-        var container = IosContainer();
-        args.targetNode.ownerDocument.body.appendChild(container.element().dom());
+        editor.contentCSS.push(contentCssUrl + '/content.css');
+
+
+        var ios = IosContainer();
+        args.targetNode.ownerDocument.body.appendChild(ios.element().dom());
+
+        editor.on('init', function () {
+          ios.init({
+            editor: {
+              getFrame: function () {
+                return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
+              },
+
+              onDomChanged: function () {
+                return {
+                  unbind: Fun.noop
+                };
+              }
+            },
+            container: Element.fromDom(editor.editorContainer),
+            socket: Element.fromDom(editor.contentAreaContainer),
+            toolstrip: Element.fromDom(editor.editorContainer.querySelector('.mce-toolbar-grp')),
+            toolbar: Element.fromDom(editor.editorContainer.querySelector('.mce-toolbar'))
+          });
+        });
 
         return {
-          iframeContainer: container.socket().element().dom(),
-          editorContainer: container.element().dom()
+          iframeContainer: ios.socket().element().dom(),
+          editorContainer: ios.element().dom()
         };
-
       };
 
       return {
