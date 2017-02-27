@@ -17,10 +17,7 @@ define(
     'tinymce.themes.mobile.util.Rectangles'
   ],
 
-  function (
-    Arr, Insert, InsertAll, Remove, DomEvent, Element, Class, Classes, Css, Traverse, ResumeEditing,
-    Styles, Rectangles
-  ) {
+  function (Arr, Insert, InsertAll, Remove, DomEvent, Element, Class, Classes, Css, Traverse, ResumeEditing, Styles, Rectangles) {
     return function (win, frame) {
       // NOTE: This may be required for android also.
 

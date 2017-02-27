@@ -9,7 +9,6 @@ define(
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Scroll',
     'global!window',
     'tinymce.themes.mobile.ios.view.DeviceZones',
     'tinymce.themes.mobile.style.Styles',
@@ -17,10 +16,7 @@ define(
     'tinymce.themes.mobile.util.DataAttributes'
   ],
 
-  function (
-    Adt, Arr, Fun, Attr, Css, SelectorFilter, Height, Scroll, window, DeviceZones, Styles,
-    Scrollable, DataAttributes
-  ) {
+  function (Adt, Arr, Fun, Attr, Css, SelectorFilter, Height, window, DeviceZones, Styles, Scrollable, DataAttributes) {
     var fixture = Adt.generate([
       { 'fixed': [ 'element', 'offsetY' ] },
       { 'scroller' :[ 'element', 'offsetY' ] }

@@ -23,8 +23,8 @@ define(
   ],
 
   function (
-    Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosHacks,
-    IosSetup, PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable, MetaViewport
+    Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosHacks, IosSetup, PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable,
+    MetaViewport
   ) {
     var create = function (platform, mask) {
       var meta = MetaViewport.tag();

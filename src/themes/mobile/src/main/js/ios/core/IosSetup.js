@@ -30,9 +30,8 @@ define(
   ],
 
   function (
-    Fun, Option, Throttler, Focus, DomEvent, Body, Element, Css, clearInterval, clearTimeout,
-    console, Math, parseInt, setInterval, setTimeout, window, FakeSelection, IosScrolling,
-    BackgroundActivity, Greenzone, IosUpdates, IosViewport, Orientation, CaptureBin, Rectangles
+    Fun, Option, Throttler, Focus, DomEvent, Body, Element, Css, clearInterval, clearTimeout, console, Math, parseInt, setInterval, setTimeout, window, FakeSelection,
+    IosScrolling, BackgroundActivity, Greenzone, IosUpdates, IosViewport, Orientation, CaptureBin, Rectangles
   ) {
     var VIEW_MARGIN = 5;
 

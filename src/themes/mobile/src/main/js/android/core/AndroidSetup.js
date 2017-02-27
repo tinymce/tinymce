@@ -15,10 +15,7 @@ define(
     'tinymce.themes.mobile.util.Rectangles'
   ],
 
-  function (
-    Fun, Option, DomEvent, Element, Attr, Math, window, ResumeEditing, Styles, DataAttributes,
-    Rectangles
-  ) {
+  function (Fun, Option, DomEvent, Element, Attr, Math, window, ResumeEditing, Styles, DataAttributes, Rectangles) {
     // This amount is added to the minimum scrolling distance when calculating how much to scroll
     // because the soft keyboard has appeared.
     var EXTRA_SPACING = 50;
