@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.foreign.ForeignCache',
     'ephox.alloy.registry.Tagger',
@@ -18,7 +17,7 @@ define(
     'ephox.sugar.api.events.DomEvent'
   ],
 
-  function (GuiFactory, SystemEvents, Gui, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Options, Insert, DomEvent) {
+  function (GuiFactory, Gui, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Options, Insert, DomEvent) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('root'),
       FieldSchema.strictArrayOfObj('dispatchers', [
@@ -73,7 +72,7 @@ define(
 
     var getProxy = function (event, target) {
       // Setup the component wrapping for the target element
-      var proxy = GuiFactory.build(
+      var component = GuiFactory.build(
         GuiFactory.external({ element: target })
       );
 
@@ -81,7 +80,7 @@ define(
       var simulatedEvent = createEvent(event, target);
       
       return {
-        proxy: Fun.constant(proxy),
+        component: Fun.constant(component),
         simulatedEvent: Fun.constant(simulatedEvent)
       };
     };
@@ -115,10 +114,11 @@ define(
           var events = data.evts();
           if (Objects.hasKey(events, type)) {
             var proxy = getProxy(event, target);
-            gui.addToWorld(proxy.proxy());
-            events[type](proxy.proxy(), proxy.simulatedEvent());
-            gui.removeFromWorld(proxy.proxy());
-            Tagger.revoke(proxy.proxy().element());
+            var component = proxy.component();
+            gui.addToWorld(component);
+            events[type](component, proxy.simulatedEvent());
+            gui.removeFromWorld(component);
+            Tagger.revoke(component.element());
           }
         });
       };
