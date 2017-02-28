@@ -39,7 +39,7 @@ define(
     var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
     var isIE = Env.ie;
     var simpleSelectorRe = /^([a-z0-9],?)+$/i;
-    var whiteSpaceRegExp = /^[ \t\r\n\uFEFF]*$/;
+    var whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
     function setupAttrHooks(domUtils, settings) {
       var attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;
