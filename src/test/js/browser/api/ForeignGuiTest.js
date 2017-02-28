@@ -116,8 +116,6 @@ asynctest(
         root
       ),
 
-      Step.wait(100000000),
-
       Step.sync(function () {
         connection.dissolve();
         Remove.remove(root);
