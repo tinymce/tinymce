@@ -10,7 +10,7 @@
     "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
   },
   "devDependencies": {
-    "@ephox/agar": "*"
+    "@ephox/agar": "git+ssh://git@stash:7999/van/agar.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

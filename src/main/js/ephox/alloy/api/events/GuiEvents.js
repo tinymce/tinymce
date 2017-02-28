@@ -50,51 +50,41 @@ define(
     var setup = function (container, rawSettings) {
       var settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
-      var onClick = DomEvent.bind(container, 'click', function (event) {
-        var stopped = settings.triggerEvent('click', event);
-        if (stopped) event.kill();
+      // These events are just passed through ... not additional processing
+      var simpleEvents = Arr.map([
+        'click',
+        'selectstart',
+        'mousedown',
+        'mouseup',
+        'mouseover',
+        'mousemove',
+        'mouseout',
+        'focusin',
+        'input',
+        'contextmenu',
+        'change',
+        'transitionend',
+        // Test
+        'dragstart',
+        'dragover',
+        'drop',
+
+        'touchstart',
+        'touchend',
+        'touchmove',
+        'gesturestart'
+      ], function (type) {
+        return DomEvent.bind(container, type, function (event) {
+          var stopped = settings.triggerEvent(type, event);
+          if (stopped) event.kill();
+        });
       });
 
-      var onSelectStart = DomEvent.bind(container, 'selectstart', function (event) {
-        var stopped = settings.triggerEvent('selectstart', event);
-        if (stopped) event.kill();
-      });
-      
       var onKeydown = DomEvent.bind(container, 'keydown', function (event) {
         // Prevent default of backspace when not in input fields.
         var stopped = settings.triggerEvent('keydown', event);
         if (stopped) event.kill();
         else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
-      });
-
-      var onMousedown = DomEvent.bind(container, 'mousedown', function (event) {
-        var stopped = settings.triggerEvent('mousedown', event);
-        if (stopped) event.kill();
-      });
-
-      var onMouseup = DomEvent.bind(container, 'mouseup', function (event) {
-        var stopped = settings.triggerEvent('mouseup', event);
-        if (stopped) event.kill();
-      });
-
-      var onMouseover = DomEvent.bind(container, 'mouseover', function (event) {
-        var stopped = settings.triggerEvent('mouseover', event);
-        if (stopped) event.kill();
-      });
-
-      var onMousemove = DomEvent.bind(container, 'mousemove', function (event) {
-        var stopped = settings.triggerEvent('mousemove', event);
-        if (stopped) event.kill();
-      });
-
-      var onMouseout = DomEvent.bind(container, 'mouseout', function (event) {
-        var stopped = settings.triggerEvent('mouseout', event);
-        if (stopped) event.kill();
-      });
-
-      var onFocusIn = bindFocus(container, function (event) {
-        var stopped = settings.triggerEvent('focusin', event);
-        if (stopped) event.kill();
       });
 
       var onFocusOut = bindBlur(container, function (event) {
@@ -109,43 +99,6 @@ define(
         }, 0);
       });
 
-      var onInput = DomEvent.bind(container, 'input', function (event) {
-        var stopped = settings.triggerEvent('input', event);
-        if (stopped) event.kill();
-      });
-
-      var onContextmenu = DomEvent.bind(container, 'contextmenu', function (event) {
-        var stopped = settings.triggerEvent('contextmenu', event);
-        if (stopped) event.kill();
-      });
-
-
-      var onChange = DomEvent.bind(container, 'change', function (event) {
-        var stopped = settings.triggerEvent('change', event);
-        if (stopped) event.kill();
-      });
-
-      var onTransitionEnd = DomEvent.bind(container, 'transitionend', function (event) {
-        var stopped = settings.triggerEvent('transitionend', event);
-        if (stopped) event.kill();
-      });
-
-      // TODO: Test
-      var onDragStart = DomEvent.bind(container, 'dragstart', function (event) {
-        var stopped = settings.triggerEvent('dragstart', event);
-        if (stopped) event.kill();
-      });
-
-      var onDragover = DomEvent.bind(container, 'dragover', function (event) {
-        var stopped = settings.triggerEvent('dragover', event);
-        if (stopped) event.kill();
-      });
-
-      var onDrop = DomEvent.bind(container, 'drop', function (event) {
-        var stopped = settings.triggerEvent('drop', event);
-        if (stopped) event.kill();
-      });
-
       var defaultView = Traverse.defaultView(container);
       var onWindowScroll = DomEvent.bind(defaultView, 'scroll', function (event) {
         var stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
@@ -153,23 +106,11 @@ define(
       });
 
       var unbind = function () {
-        onClick.unbind();
-        onSelectStart.unbind();
+        Arr.each(simpleEvents, function (e) {
+          e.unbind();
+        });
         onKeydown.unbind();
-        onMouseover.unbind();
-        onMousedown.unbind();
-        onMouseup.unbind();
-        onMousemove.unbind();
-        onMouseout.unbind();
-        onFocusIn.unbind();
         onFocusOut.unbind();
-        onInput.unbind();
-        onChange.unbind();
-        onContextmenu.unbind();
-        onTransitionEnd.unbind();
-        onDragStart.unbind();
-        onDragover.unbind();
-        onDrop.unbind();
         onWindowScroll.unbind();
       };
 
