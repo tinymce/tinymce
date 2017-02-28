@@ -100,7 +100,7 @@ define(
                     mode: 'touch',
                     snaps: snapData
                   } : {
-                    mode: 'mouse', // If switc
+                    mode: 'mouse',
                     blockerClass: [ 'blocker' ],
                     snaps: snapData
                   }
