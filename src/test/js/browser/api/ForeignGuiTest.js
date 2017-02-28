@@ -13,13 +13,18 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Html',
     'global!document'
   ],
 
-  function (ApproxStructure, Assertions, Mouse, Pipeline, Step, SystemEvents, ForeignGui, EventHandler, GuiSetup, Option, Insert, Body, Element, Html, document) {
+  function (
+    ApproxStructure, Assertions, Mouse, Pipeline, Step, SystemEvents, ForeignGui, EventHandler, GuiSetup, Option, Insert, Remove, Body, Element, Node, Html,
+    document
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -35,7 +40,7 @@ asynctest(
       },
       dynamics: [
         {
-          getTarget: function (elem) { return Option.some(elem); },
+          getTarget: function (elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
           config: {
             behaviours: {
               toggling: {
@@ -45,7 +50,7 @@ asynctest(
             events: {
               click: EventHandler.nu({
                 run: function (component, simulatedEvent) {
-                  // We have to remove the proxy first, because we are during a proxied event
+                  // We have to remove the proxy first, because we are during a proxied event (click)
                   connection.unproxy(component);
                   connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
                 }
@@ -65,9 +70,13 @@ asynctest(
         ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
             children: [
-              s.element('span', { }),
+              s.element('span', {
+                classes: [ arr.not('selected') ]
+              }),
               s.text( str.is(' and ')),
-              s.element('span', { }),
+              s.element('span', {
+                classes: [ arr.not('selected') ]
+              }),
               s.element('div', {
                 attrs: {
                   'data-alloy-id': str.startsWith('uid_')
@@ -80,7 +89,39 @@ asynctest(
       ),
       Mouse.sClickOn(root, 'span.clicker:first'),
 
-      Step.debugging
+
+      Assertions.sAssertStructure(
+        'Checking struture after the first span is clicked',
+        ApproxStructure.build(function (s, str, arr) {
+          return s.element('div', {
+            children: [
+              s.element('span', {
+                attrs: {
+                  'data-alloy-id': str.none()
+                },
+                classes: [ arr.has('selected') ]
+              }),
+              s.text( str.is(' and ')),
+              s.element('span', {
+                classes: [ arr.not('selected') ]
+              }),
+              s.element('div', {
+                attrs: {
+                  'data-alloy-id': str.startsWith('uid_')
+                }
+              })
+            ]
+          }); 
+        }),
+        root
+      ),
+
+      Step.wait(100000000),
+
+      Step.sync(function () {
+        connection.dissolve();
+        Remove.remove(root);
+      })
     ], function () { success(); }, failure);
   }
 );
