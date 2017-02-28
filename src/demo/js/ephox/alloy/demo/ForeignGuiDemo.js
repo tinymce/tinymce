@@ -100,11 +100,6 @@ define(
         return connection;
       };
 
-      addAsForeign(inlineContainer, function (gui) {
-        Insert.after(inlineContainer, gui.element());
-      });
-
-
       InsertAll.append(ephoxUi, 
         Elements.fromHtml(
           '<p>This is a demo for alloy delegation. The iframe and the div editor are not alloy components' +
@@ -117,6 +112,11 @@ define(
       Insert.append(ephoxUi, frame);
       Insert.append(ephoxUi, Element.fromHtml('<h3>Div Editor</h3>'));
       Insert.append(ephoxUi, inlineContainer);
+
+
+      addAsForeign(inlineContainer, function (gui) {
+        Insert.after(inlineContainer, gui.element());
+      });
     };
   }
 );
