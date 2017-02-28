@@ -2,30 +2,30 @@
  * Dialog.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * ...
- */
 define(
-  'tinymce.plugins.imagetools.Dialog',
+  'tinymce.plugins.imagetools.ui.Dialog',
   [
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Promise",
-    "tinymce.core.ui.Factory",
-    "tinymce.core.ui.Form",
-    "tinymce.core.ui.Container",
-    "tinymce.plugins.imagetools.ImagePanel",
-    "ephox/imagetools/api/ImageTransformations",
-    "ephox/imagetools/api/BlobConversions",
-    "tinymce.plugins.imagetools.UndoStack"
+    'ephox.imagetools.api.BlobConversions',
+    'ephox.imagetools.api.ImageTransformations',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.ui.Container',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.ui.Form',
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.imagetools.ui.ImagePanel',
+    'tinymce.plugins.imagetools.core.UndoStack'
   ],
-  function (DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTransformations, BlobConversions, UndoStack) {
+  function (
+    BlobConversions, ImageTransformations, DOMUtils, Container, Factory, Form, Promise,
+    Tools, ImagePanel, UndoStack
+  ) {
     function createState(blob) {
       return {
         blob: blob,
@@ -124,10 +124,15 @@ define(
       function crop() {
         var rect = imagePanel.selection();
 
-        ImageTransformations.crop(currentState.blob, rect.x, rect.y, rect.w, rect.h).then(function (blob) {
-          addBlobState(blob);
-          cancel();
-        });
+        BlobConversions.blobToImageResult(currentState.blob).
+          then(function (ir) {
+            ImageTransformations.crop(ir, rect.x, rect.y, rect.w, rect.h).
+              then(imageResultToBlob).
+              then(function (blob) {
+                addBlobState(blob);
+                cancel();
+              });
+          });
       }
 
       function tempAction(fn) {
@@ -136,7 +141,10 @@ define(
         return function () {
           var state = tempState || currentState;
 
-          fn.apply(this, [state.blob].concat(args)).then(addTempState);
+          BlobConversions.blobToImageResult(state.blob).
+            then(function (ir) {
+              fn.apply(this, [ir].concat(args)).then(imageResultToBlob).then(addTempState);
+            });
         };
       }
 
@@ -144,7 +152,10 @@ define(
         var args = [].slice.call(arguments, 1);
 
         return function () {
-          fn.apply(this, [currentState.blob].concat(args)).then(addBlobState);
+          BlobConversions.blobToImageResult(currentState.blob).
+            then(function (ir) {
+              fn.apply(this, [ir].concat(args)).then(imageResultToBlob).then(addBlobState);
+            });
         };
       }
 
@@ -219,6 +230,10 @@ define(
         });
       }
 
+      var imageResultToBlob = function (ir) {
+        return ir.toBlob();
+      };
+
       function createFilterPanel(title, filter) {
         return createPanel([
           { text: 'Back', onclick: cancel },
@@ -227,24 +242,34 @@ define(
         ]).hide().on('show', function () {
           disableUndoRedo();
 
-          filter(currentState.blob).then(function (blob) {
-            var newTempState = createState(blob);
+          BlobConversions.blobToImageResult(currentState.blob).
+            then(function (ir) {
+              return filter(ir);
+            }).
+            then(imageResultToBlob).
+            then(function (blob) {
+              var newTempState = createState(blob);
 
-            displayState(newTempState);
-            destroyState(tempState);
-            tempState = newTempState;
-          });
+              displayState(newTempState);
+              destroyState(tempState);
+              tempState = newTempState;
+            });
         });
       }
 
       function createVariableFilterPanel(title, filter, value, min, max) {
         function update(value) {
-          filter(currentState.blob, value).then(function (blob) {
-            var newTempState = createState(blob);
-            displayState(newTempState);
-            destroyState(tempState);
-            tempState = newTempState;
-          });
+          BlobConversions.blobToImageResult(currentState.blob).
+            then(function (ir) {
+              return filter(ir, value);
+            }).
+            then(imageResultToBlob).
+            then(function (blob) {
+              var newTempState = createState(blob);
+              displayState(newTempState);
+              destroyState(tempState);
+              tempState = newTempState;
+            });
         }
 
         return createPanel([
@@ -477,9 +502,11 @@ define(
       imagePanel.on('crop', crop);
     }
 
-    function edit(blob) {
+    function edit(imageResult) {
       return new Promise(function (resolve, reject) {
-        open(createState(blob), resolve, reject);
+        return imageResult.toBlob().then(function (blob) {
+          open(createState(blob), resolve, reject);
+        });
       });
     }
 

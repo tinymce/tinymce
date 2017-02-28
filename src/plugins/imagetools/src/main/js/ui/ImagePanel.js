@@ -2,28 +2,23 @@
  * ImagePanel.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * ...
- *
- * @-x-less ImagePanel.less
- */
 define(
-  'tinymce.plugins.imagetools.ImagePanel',
+  'tinymce.plugins.imagetools.ui.ImagePanel',
   [
-    "tinymce.core.ui.Control",
-    "tinymce.core.ui.DragHelper",
-    "tinymce.core.geom.Rect",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Promise",
-    "tinymce.plugins.imagetools.CropRect"
+    'tinymce.core.geom.Rect',
+    'tinymce.core.ui.Control',
+    'tinymce.core.ui.DragHelper',
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.imagetools.ui.CropRect'
   ],
-  function (Control, DragHelper, Rect, Tools, Promise, CropRect) {
+  function (Rect, Control, DragHelper, Promise, Tools, CropRect) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {

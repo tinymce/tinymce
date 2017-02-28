@@ -651,5 +651,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('@ephox/bolt');
 
   grunt.registerTask("test", ["qunit"]);
-  grunt.registerTask("default", ["subgrunt", "copy", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["subgrunt", "copy", "test", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
