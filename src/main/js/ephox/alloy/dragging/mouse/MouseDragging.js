@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.common.BlockerUtils',
+    'ephox.alloy.dragging.common.DragMovement',
     'ephox.alloy.dragging.common.DragState',
     'ephox.alloy.dragging.mouse.BlockerEvents',
     'ephox.alloy.dragging.mouse.MouseData',
@@ -23,8 +24,8 @@ define(
   ],
 
   function (
-    DelayedFunction, OffsetOrigin, DragCoord, Container, EventHandler, BlockerUtils, DragState, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, Css,
-    Traverse, Location, Scroll, parseInt, window
+    DelayedFunction, OffsetOrigin, DragCoord, Container, EventHandler, BlockerUtils, DragMovement, DragState, BlockerEvents, MouseData, Snappables, FieldSchema,
+    Fun, Css, Traverse, Location, Scroll, parseInt, window
   ) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
@@ -84,43 +85,7 @@ define(
             );
 
             var dragBy = function (delta) {
-              var doc = Traverse.owner(component.element());
-              var scroll = Scroll.get(doc);
-              
-              var target = dragInfo.getTarget()(component.element());
-              var origin = OffsetOrigin.getOrigin(target, scroll);
-              
-              var currentCoord = Css.getRaw(target, 'left').bind(function (left) {
-                return Css.getRaw(target, 'top').bind(function (top) {
-                  return Css.getRaw(target, 'position').map(function (position) {
-                    var nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
-                    return nu(
-                      parseInt(left, 10), 
-                      parseInt(top, 10)
-                    );
-                  });
-                });
-              }).getOrThunk(function () {
-                var location = Location.absolute(target);
-                return DragCoord.absolute(location.left(), location.top());
-              });
-
-              var newCoord = dragInfo.snaps().fold(function () {
-                // When not docking, use fixed coordinates.
-                var translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
-                var fixedCoord = DragCoord.asFixed(translated, scroll, origin);
-                return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
-              }, function (snapInfo) {
-                var snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
-                snapping.extra.each(function (extra) {
-                  snapInfo.onSensor()(component, extra);
-                });
-                return snapping.coord;
-
-              });
-
-              var styles = DragCoord.toStyles(newCoord, scroll, origin);
-              Css.setAll(target, styles);
+              DragMovement.dragBy(component, dragInfo, delta);
             };
 
             var stop = function () {
