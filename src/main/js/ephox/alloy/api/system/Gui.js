@@ -186,6 +186,9 @@ define(
         remove: remove,
         getByUid: getByUid,
 
+        addToWorld: addToWorld,
+        removeFromWorld: removeFromWorld,
+
         broadcast: broadcast,
         broadcastOn: broadcastOn
       };

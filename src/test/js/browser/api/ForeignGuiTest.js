@@ -25,13 +25,13 @@ asynctest(
     Insert.append(Body.body(), root);
 
     var connection = ForeignGui.imbue({
-      element: root,
-      insertion: function (system) {
-        Insert.append(root, system.element());
+      root: root,
+      insertion: function (parent, system) {
+        Insert.append(parent, system.element());
       },
       dynamics: [
         {
-          getTarget: function () { return Option.none(); },
+          getTarget: function (elem) { return Option.some(elem); },
           config: {
             behaviours: {
               toggling: {
@@ -41,7 +41,9 @@ asynctest(
             events: {
               click: EventHandler.nu({
                 run: function (component, simulatedEvent) {
-                  component.getSystem().triggerEvent(SystemEvents.execute(), simulatedEvent.event().target(), simulatedEvent.event());
+                  // We have to remove the proxy first, because we are during a proxied event
+                  connection.unproxy(component);
+                  connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
                 }
               })
             }
