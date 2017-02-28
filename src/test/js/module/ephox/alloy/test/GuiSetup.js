@@ -72,10 +72,10 @@ define(
       });
     };
 
-    var mRemoveStyles = function (value, next, die) {
+    var mRemoveStyles = Step.stateful(function (value, next, die) {
       Remove.remove(value.style);
       next(value);
-    };
+    });
 
     return {
       setup: setup,
