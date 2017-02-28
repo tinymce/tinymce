@@ -36,7 +36,12 @@ define(
       var box = GuiFactory.build({
         dom: {
           tag: 'div',
-          classes: [ 'demo-pinch-box' ]
+          classes: [ 'demo-pinch-box' ],
+          styles: {
+            width: '200px',
+            height: '200px',
+            background: 'black'
+          }
         },
         behaviours: {
           pinching: {
