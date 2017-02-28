@@ -2,13 +2,15 @@ asynctest(
   'Browser Test: behaviour.PinchingTest',
 
   [
+    'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, Pinching, GuiFactory, GuiSetup) {
+  function (Step, Behaviour, Pinching, GuiFactory, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -34,7 +36,70 @@ asynctest(
         ])
       });
     }, function (doc, body, gui, component, store) {
-      return [ ];
+
+      var sSendTouchmove = function (touches) {
+        return Step.sync(function () {
+          component.getSystem().triggerEvent('touchmove', component.element(), {
+            raw: Fun.constant({
+              touches: touches
+            })
+          });
+        });
+      };
+
+      return [
+        store.sAssertEq('Initially empty', [ ]),
+
+        sSendTouchmove([
+          { clientX: 10, clientY: 100 }
+        ]),
+
+        sSendTouchmove([
+          { clientX: 10, clientY: 100 }
+        ]),
+
+        sSendTouchmove([
+          { clientX: 10, clientY: 100 }
+        ]),
+
+        store.sAssertEq('Should still be empty because there was only one touch point ', [ ]),
+
+        sSendTouchmove([
+          { clientX: 10, clientY: 100 },
+          { clientX: 15, clientY: 150 }
+        ]),
+
+        store.sAssertEq('Should still be empty because two valid events are required to start pinching ', [ ]),
+
+        sSendTouchmove([
+          { clientX: 10, clientY: 100 },
+          { clientX: 15, clientY: 150 }
+        ]),
+
+        store.sAssertEq('Values should be 0, 0 because the delta is zero', [
+          { method: 'pinch', dx: 0, dy: 0 }
+        ]),
+        store.sClear,
+
+        sSendTouchmove([
+          { clientX: 5, clientY: 50 },
+          { clientX: 20, clientY: 200 }
+        ]),
+
+        store.sAssertEq('Should have increased in size (delta of differences)', [
+          { method: 'punch', dx: (20 - 5) - (15 - 10), dy: (200 - 50) - (150 - 100) }
+        ]),
+        store.sClear,
+
+        sSendTouchmove([
+          { clientX: 8, clientY: 80 },
+          { clientX: 16, clientY: 160 }
+        ]),
+
+        store.sAssertEq('Should have decreased in size (delta of differences)', [
+          { method: 'pinch', dx: (16 - 8) - (20 - 5), dy: (160 - 80) - (200 - 50) }
+        ])
+      ];
     }, function () { success(); }, failure);
 
 
