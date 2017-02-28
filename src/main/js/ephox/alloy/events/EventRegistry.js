@@ -28,10 +28,6 @@ define(
     };
 
     return function () {
-      window.haha = function () {
-        return registry;
-      };
-
       var registry = { };
 
       var registerId = function (extraArgs, id, events) {
