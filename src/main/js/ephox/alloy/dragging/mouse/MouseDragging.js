@@ -3,43 +3,25 @@ define(
 
   [
     'ephox.alloy.alien.DelayedFunction',
-    'ephox.alloy.alien.OffsetOrigin',
-    'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dragging.common.BlockerUtils',
     'ephox.alloy.dragging.common.DragMovement',
     'ephox.alloy.dragging.common.DragState',
+    'ephox.alloy.dragging.common.SnapSchema',
     'ephox.alloy.dragging.mouse.BlockerEvents',
     'ephox.alloy.dragging.mouse.MouseData',
     'ephox.alloy.dragging.snap.Snappables',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.search.Traverse',
-    'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.view.Scroll',
     'global!parseInt',
     'global!window'
   ],
 
   function (
-    DelayedFunction, OffsetOrigin, DragCoord, Container, EventHandler, BlockerUtils, DragMovement, DragState, BlockerEvents, MouseData, Snappables, FieldSchema,
-    Fun, Css, Traverse, Location, Scroll, parseInt, window
+    DelayedFunction, Container, EventHandler, BlockerUtils, DragMovement, DragState, SnapSchema, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, parseInt,
+    window
   ) {
-    var defaultLazyViewport = function () {
-      var scroll = Scroll.get();
-
-      return {
-        x: scroll.left,
-        y: scroll.top,
-        w: Fun.constant(window.innerWidth),
-        h: Fun.constant(window.innerHeight),
-        fx: Fun.constant(0),
-        fy: Fun.constant(0)
-      };
-    };
-
     var handlers = function (dragInfo) {
       return {
         'mousedown': EventHandler.nu({
@@ -122,14 +104,7 @@ define(
       FieldSchema.strict('blockerClass'),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.defaulted('onDrop', Fun.noop),
-      FieldSchema.optionObjOf('snaps', [
-        FieldSchema.strict('getSnapPoints'),
-        FieldSchema.defaulted('onSensor', Fun.noop),
-        FieldSchema.strict('leftAttr'),
-        FieldSchema.strict('topAttr'),
-        FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
-      ]),
-
+      SnapSchema,
       FieldSchema.state('state', DragState),
       FieldSchema.state('dragger', instance)
     ];
