@@ -31,8 +31,7 @@ define(
     ]);
 
     var supportedEvents = [
-      'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart',
-      SystemEvents.execute()
+      'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart'
     ];
 
     // Find the dynamic information for the target if available. Note, the 
