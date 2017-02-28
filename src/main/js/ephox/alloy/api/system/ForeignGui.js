@@ -21,9 +21,9 @@ define(
   function (GuiFactory, SystemEvents, Gui, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Options, Insert, DomEvent) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('root'),
-      FieldSchema.strictArrayOfObj('dynamics', [
+      FieldSchema.strictArrayOfObj('dispatchers', [
         FieldSchema.strict('getTarget'),
-        FieldSchema.strict('config')
+        FieldSchema.strict('alloyConfig')
       ]),
       FieldSchema.defaulted('insertion', function (root, system) {
         Insert.append(root, system.element());
@@ -34,14 +34,14 @@ define(
       'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart'
     ];
 
-    // Find the dynamic information for the target if available. Note, the 
-    // dynamic may also change the target.
-    var findDynamic = function (dynamics, target) {
-      return Options.findMap(dynamics, function (dyn) {
-        return dyn.getTarget()(target).map(function (newTarget) {
+    // Find the dispatcher information for the target if available. Note, the 
+    // dispatcher may also change the target.
+    var findDispatcher = function (dispatchers, target) {
+      return Options.findMap(dispatchers, function (dispatcher) {
+        return dispatcher.getTarget()(target).map(function (newTarget) {
           return {
             target: Fun.constant(newTarget),
-            dynamic: Fun.constant(dyn)
+            dispatcher: Fun.constant(dispatcher)
           };
         });
       });
@@ -108,11 +108,13 @@ define(
         // already being handled.
         if (gui.element().dom().contains(event.target().dom())) return;
 
-        findDynamic(detail.dynamics(), event.target()).each(function (dynTuple) {
-          var data = cache.getEvents(dynTuple.target(), dynTuple.dynamic().config());
+        findDispatcher(detail.dispatchers(), event.target()).each(function (dispatchData) {
+          var target = dispatchData.target();
+          var dispatcher = dispatchData.dispatcher();
+          var data = cache.getEvents(target, dispatcher.alloyConfig());
           var events = data.evts();
           if (Objects.hasKey(events, type)) {
-            var proxy = getProxy(event, dynTuple.target());
+            var proxy = getProxy(event, target);
             gui.addToWorld(proxy.proxy());
             events[type](proxy.proxy(), proxy.simulatedEvent());
             gui.removeFromWorld(proxy.proxy());

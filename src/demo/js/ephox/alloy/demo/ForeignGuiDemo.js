@@ -62,10 +62,10 @@ define(
       var addAsForeign = function (root, doInsert) {
         var connection =  ForeignGui.engage({
           root: root,
-          dynamics: [
+          dispatchers: [
             {
               getTarget: onNode('code'),
-              config: {
+              alloyConfig: {
                 behaviours: {
                   toggling: {
                     toggleClass: 'selected'
@@ -85,7 +85,7 @@ define(
             },
             {
               getTarget: onNode('strong'),
-              config: {
+              alloyConfig: {
                 behaviours: {
                   dragging: {
                     mode: 'mouse',

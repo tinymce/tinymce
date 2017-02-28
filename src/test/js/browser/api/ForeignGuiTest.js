@@ -38,10 +38,10 @@ asynctest(
       insertion: function (parent, system) {
         Insert.append(parent, system.element());
       },
-      dynamics: [
+      dispatchers: [
         {
           getTarget: function (elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
-          config: {
+          alloyConfig: {
             behaviours: {
               toggling: {
                 toggleClass: 'selected'
