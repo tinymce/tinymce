@@ -60,7 +60,7 @@ define(
       );
 
       var addAsForeign = function (root, doInsert) {
-        var connection =  ForeignGui.imbue({
+        var connection =  ForeignGui.engage({
           root: root,
           dynamics: [
             {

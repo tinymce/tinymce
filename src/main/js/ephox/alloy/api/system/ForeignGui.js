@@ -86,7 +86,7 @@ define(
       };
     };
 
-    var imbue = function (spec) {
+    var engage = function (spec) {
       var detail = ValueSchema.asStructOrDie('ForeignGui', schema, spec);
 
       // Creates an inner GUI and inserts it appropriately. This will be used
@@ -121,12 +121,13 @@ define(
         });
       };
 
+      // Remove any traces of the foreign component from the internal alloy system.
       var unproxy = function (component) {
         gui.removeFromWorld(component);
         Tagger.revoke(component.element());
       };
 
-      var dissolve = function () {
+      var disengage = function () {
         Arr.each(domEvents, function (e) {
           e.unbind();
         });
@@ -135,12 +136,12 @@ define(
       return {
         dispatchTo: dispatchTo,
         unproxy: unproxy,
-        dissolve: dissolve
+        disengage: disengage
       };
     };
 
     return {
-      imbue: imbue
+      engage: engage
     };
   }
 );

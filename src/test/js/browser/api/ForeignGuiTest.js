@@ -33,7 +33,7 @@ asynctest(
 
     Insert.append(Body.body(), root);
 
-    var connection = ForeignGui.imbue({
+    var connection = ForeignGui.engage({
       root: root,
       insertion: function (parent, system) {
         Insert.append(parent, system.element());
@@ -117,7 +117,7 @@ asynctest(
       ),
 
       Step.sync(function () {
-        connection.dissolve();
+        connection.disengage();
         Remove.remove(root);
       })
     ], function () { success(); }, failure);
