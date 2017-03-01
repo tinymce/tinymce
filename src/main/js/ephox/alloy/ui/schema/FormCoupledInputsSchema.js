@@ -17,7 +17,7 @@ define(
 
   function (Composing, Toggling, Button, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
     var schema = [
-      FieldSchema.strict('onLockedChange'),
+      Fields.onStrictHandler('onLockedChange'),
       Fields.markers([ 'lockClass' ])
     ];
 

@@ -18,7 +18,7 @@ define(
       FieldSchema.option('dragBlockClass'),
 
       Fields.onKeyboardHandler('onExecute'),
-      FieldSchema.strict('onEscape')
+      Fields.onStrictKeyboardHandler('onEscape')
     ];
 
     var basic = { sketch: Fun.identity };

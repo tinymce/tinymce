@@ -9,11 +9,11 @@ define(
 
   function (Fields, FieldSchema, Fun) {
     var schema = [
-      FieldSchema.strict('onExecute'),
-      FieldSchema.strict('onEscape'),
+      Fields.onStrictKeyboardHandler('onExecute'),
+      Fields.onStrictKeyboardHandler('onEscape'),
 
-      FieldSchema.strict('onOpenMenu'),
-      FieldSchema.strict('onOpenSubmenu'),
+      Fields.onStrictHandler('onOpenMenu'),
+      Fields.onStrictHandler('onOpenSubmenu'),
 
       FieldSchema.defaulted('openImmediately', true),
 

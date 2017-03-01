@@ -2,13 +2,14 @@ define(
   'ephox.alloy.behaviour.streaming.StreamingSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Throttler'
   ],
 
-  function (FieldPresence, FieldSchema, ValueSchema, Throttler) {
+  function (Fields, FieldPresence, FieldSchema, ValueSchema, Throttler) {
     return [
       // TODO: Use improved boulder.
       FieldSchema.field('stream', 'stream', FieldPresence.strict(), ValueSchema.choose(
@@ -36,7 +37,7 @@ define(
         }
       )),
       FieldSchema.defaulted('event', 'input'),
-      FieldSchema.strict('onStream')
+      Fields.onStrictHandler('onStream')
     ];
   }
 );

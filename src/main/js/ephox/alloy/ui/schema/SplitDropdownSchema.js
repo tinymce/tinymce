@@ -16,7 +16,8 @@ define(
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
-      FieldSchema.strict('onExecute'),
+
+      Fields.onStrictHandler('onExecute'),
       FieldSchema.option('lazySink'),
       FieldSchema.strict('dom'),
       Fields.onHandler('onOpen'),

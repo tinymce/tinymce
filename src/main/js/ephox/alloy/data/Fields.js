@@ -46,13 +46,13 @@ define(
       return FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
     };
 
-    var onDefaultedHandler = function (label, fieldName, defaulted) {
+    var onPresenceHandler = function (label, fieldName, presence) {
       // We care about where the handler was declared (in terms of which schema)
       var trace = StackTrace.get();
       return FieldSchema.field(
         fieldName,
         fieldName,
-        FieldPresence.defaulted(defaulted),
+        presence,
         // Apply some wrapping to their supplied function
         ValueSchema.valueOf(function (f) {
           return Result.value(function () {
@@ -62,15 +62,23 @@ define(
           });
         })
       );
-    }
+    };
 
     var onHandler = function (fieldName) {
-      return onDefaultedHandler('onHandler', fieldName, Fun.noop);
+      return onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
     };
 
     var onKeyboardHandler = function (fieldName) {
-      return onDefaultedHandler('onKeyHandler', fieldName, Option.none);
+      return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Option.none));
     };
+
+    var onStrictHandler = function (fieldName) {
+      return onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
+    };
+
+    var onStrictKeyboardHandler = function (fieldName) {
+      return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
+    }
 
     return {
       initSize: Fun.constant(initSize),
@@ -81,7 +89,9 @@ define(
       markers: markers,
 
       onHandler: onHandler,
-      onKeyboardHandler: onKeyboardHandler
+      onKeyboardHandler: onKeyboardHandler,
+      onStrictHandler: onStrictHandler,
+      onStrictKeyboardHandler: onStrictKeyboardHandler
     };
   }
 );
