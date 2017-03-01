@@ -21,9 +21,10 @@ define(
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.keyboard.CaretFinder',
-    'tinymce.core.keyboard.LazyEvaluator'
+    'tinymce.core.keyboard.LazyEvaluator',
+    'tinymce.core.text.Bidi'
   ],
-  function (Adt, Arr, Fun, Option, CaretContainer, CaretPosition, CaretUtils, CaretWalker, DOMUtils, CaretFinder, LazyEvaluator) {
+  function (Adt, Arr, Fun, Option, CaretContainer, CaretPosition, CaretUtils, CaretWalker, DOMUtils, CaretFinder, LazyEvaluator, Bidi) {
     var DOM = DOMUtils.DOM;
     var operation = Adt.generate([
       { prepend: [ 'container' ] },
@@ -36,12 +37,22 @@ define(
       return DOM.is(elm, 'a[href],code');
     };
 
+    var hasRtlDirection = function (pos) {
+      var elm = CaretPosition.isTextPosition(pos) ? pos.container().parentNode : pos.container();
+      return DOM.getStyle(elm, 'direction', true) === 'rtl';
+    };
+
+    var isInRtlText = function (pos) {
+      var inBidiText = CaretPosition.isTextPosition(pos) ? Bidi.hasStrongRtl(pos.container().data) : false;
+      return inBidiText || hasRtlDirection(pos);
+    };
+
     var isPlainTextPosition = function (rootNode, pos) {
-      return CaretPosition.isTextPosition(pos) && isInInline(rootNode, pos) === false;
+      return CaretPosition.isTextPosition(pos) && isInInline(rootNode, pos) === false && isInRtlText(pos) === false;
     };
 
     var isInlineTextPosition = function (rootNode, pos) {
-      return CaretPosition.isTextPosition(pos) && isInInline(rootNode, pos);
+      return CaretPosition.isTextPosition(pos) && isInInline(rootNode, pos) && isInRtlText(pos) === false;
     };
 
     var findInline = function (rootNode, pos) {

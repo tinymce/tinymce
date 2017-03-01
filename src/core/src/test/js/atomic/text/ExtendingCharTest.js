@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.text.ExtendingCharTest',
+  'atomic.tinymce.core.text.ExtendingCharTest',
   [
     'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
