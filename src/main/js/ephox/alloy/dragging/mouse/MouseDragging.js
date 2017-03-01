@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.dragging.common.BlockerUtils',
     'ephox.alloy.dragging.common.DragState',
     'ephox.alloy.dragging.mouse.BlockerEvents',
@@ -23,8 +24,8 @@ define(
   ],
 
   function (
-    DelayedFunction, OffsetOrigin, DragCoord, Container, EventHandler, BlockerUtils, DragState, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, Css,
-    Traverse, Location, Scroll, parseInt, window
+    DelayedFunction, OffsetOrigin, DragCoord, Container, EventHandler, Fields, BlockerUtils, DragState, BlockerEvents, MouseData, Snappables, FieldSchema, Fun,
+    Css, Traverse, Location, Scroll, parseInt, window
   ) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
@@ -156,10 +157,10 @@ define(
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.strict('blockerClass'),
       FieldSchema.defaulted('getTarget', Fun.identity),
-      FieldSchema.defaulted('onDrop', Fun.noop),
+      Fields.onHandler('onDrop'),
       FieldSchema.optionObjOf('snaps', [
         FieldSchema.strict('getSnapPoints'),
-        FieldSchema.defaulted('onSensor', Fun.noop),
+        Fields.onHandler('onSensor'),
         FieldSchema.strict('leftAttr'),
         FieldSchema.strict('topAttr'),
         FieldSchema.defaulted('lazyViewport', defaultLazyViewport)

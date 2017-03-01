@@ -13,7 +13,7 @@ define(
   function (Fields, InternalSink, PartType, FieldSchema, Fun, Option) {
     var schema = [
       FieldSchema.strict('fetch'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
+      Fields.onHandler('onOpen'),
       FieldSchema.defaulted('onExecute', Option.none),
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('dom'),

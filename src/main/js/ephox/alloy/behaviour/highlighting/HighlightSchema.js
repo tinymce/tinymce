@@ -2,17 +2,17 @@ define(
   'ephox.alloy.behaviour.highlighting.HighlightSchema',
 
   [
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.data.Fields',
+    'ephox.boulder.api.FieldSchema'
   ],
 
-  function (FieldSchema, Fun) {
+  function (Fields, FieldSchema) {
     return [
       FieldSchema.strict('highlightClass'),
       FieldSchema.strict('itemClass'),
 
-      FieldSchema.defaulted('onHighlight', Fun.noop),
-      FieldSchema.defaulted('onDehighlight', Fun.noop)
+      Fields.onHandler('onHighlight'),
+      Fields.onHandler('onDehighlight')
     ];
   }
 );

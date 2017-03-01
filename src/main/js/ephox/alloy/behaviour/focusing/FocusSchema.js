@@ -2,14 +2,14 @@ define(
   'ephox.alloy.behaviour.focusing.FocusSchema',
 
   [
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.data.Fields',
+    'ephox.boulder.api.FieldSchema'
   ],
 
-  function (FieldSchema, Fun) {
+  function (Fields, FieldSchema) {
     return [
       // TODO: Work out when we want to  call this. Only when it is has changed?
-      FieldSchema.defaulted('onFocus', Fun.noop),
+      Fields.onHandler('onFocus'),
       FieldSchema.defaulted('ignore', false)
     ];
   }

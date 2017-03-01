@@ -5,16 +5,17 @@ define(
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (SystemEvents, Tabbar, Tabview, PartType, FieldSchema, Fun) {
+  function (SystemEvents, Tabbar, Tabview, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
-      FieldSchema.defaulted('onChangeTab', Fun.noop),
-      FieldSchema.defaulted('onDismissTab', Fun.noop),
+      Fields.onHandler('onChangeTab'),
+      Fields.onHandler('onDismissTab'),
       FieldSchema.defaulted('tabs', [ ])
     ];
 

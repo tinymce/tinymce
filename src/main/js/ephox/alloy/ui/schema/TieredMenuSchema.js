@@ -24,8 +24,8 @@ define(
       ]),
     
       FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.defaulted('onHighlight', Fun.noop),
-      FieldSchema.defaulted('onHover', Fun.noop),
+      Fields.onHandler('onHighlight'),
+      Fields.onHandler('onHover'),
       Fields.tieredMenuMarkers(),
       Fields.members([ 'menu', 'item' ])
     ];

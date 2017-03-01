@@ -19,8 +19,8 @@ define(
       FieldSchema.strict('onExecute'),
       FieldSchema.option('lazySink'),
       FieldSchema.strict('dom'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      // FieldSchema.defaulted('onClose', Fun.noop),
+      Fields.onHandler('onOpen'),
+      // Fields.onHandler('onClose'),
 
       FieldSchema.defaulted('matchWidth', false)
     ];
