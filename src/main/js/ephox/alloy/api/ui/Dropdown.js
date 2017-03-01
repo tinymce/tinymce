@@ -45,7 +45,8 @@ define(
             toggling: {
               toggleClass: detail.toggleClass(),
               aria: {
-                'aria-expanded-attr': 'aria-expanded'
+                mode: 'pressed',
+                syncWithExpanded: true
               }
             },
             coupling: {

@@ -11,11 +11,10 @@ asynctest(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects'
+    'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Behaviour, Toggling, Container, GuiSetup, Objects) {
+  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Behaviour, Toggling, Container, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -35,7 +34,7 @@ asynctest(
           behaviours: Behaviour.derive([
             Toggling.config({
               selected: true,
-              toggleClass: 'test-selected'           
+              toggleClass: 'test-selected'
             })
           ])
         })

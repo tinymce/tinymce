@@ -2,20 +2,32 @@ define(
   'ephox.alloy.behaviour.toggling.ToggleSchema',
 
   [
-    'ephox.boulder.api.FieldSchema'
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
+    'ephox.sugar.api.properties.Attr'
   ],
 
-  function (FieldSchema) {
+  function (FieldSchema, ValueSchema, Attr) {
     return [
       FieldSchema.defaulted('selected', false),
       FieldSchema.strict('toggleClass'),
       FieldSchema.defaulted('toggleOnExecute', true),
 
-      FieldSchema.defaultedObjOf('aria', { }, [
-        FieldSchema.defaulted('aria-pressed-attr', 'aria-pressed'),
-        // TODO: Do this based on presence of aria-haspopup ?
-        FieldSchema.option('aria-expanded-attr')
-      ])
+      FieldSchema.defaultedOf('aria', {
+        mode: 'pressed'
+       }, ValueSchema.choose(
+        'mode', {
+          'pressed': [
+            FieldSchema.defaulted('syncWithExpanded', false),
+            FieldSchema.state('update', function () {
+              return function (component, ariaInfo, status) {
+                Attr.set(component.element(), 'aria-pressed', status);
+                if (ariaInfo.syncWithExpanded()) Attr.set(component.element(), 'aria-expanded', status);
+              };
+            })
+          ]
+        }
+      ))
     ];
   }
 );

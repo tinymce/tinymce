@@ -96,7 +96,8 @@ define(
         toggling: {
           toggleClass: detail.markers().openClass(),
           aria: {
-            'aria-expanded-attr': 'aria-expanded'
+            mode: 'pressed',
+            syncWithExpanded: true
           }
         },
 
