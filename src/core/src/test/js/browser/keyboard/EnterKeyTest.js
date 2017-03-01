@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.EnterKey',
+  'browser.tinymce.core.keyboard.EnterKey',
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',

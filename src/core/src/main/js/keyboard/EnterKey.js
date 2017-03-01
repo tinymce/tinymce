@@ -10,12 +10,9 @@
 
 /**
  * Contains logic for handling the enter key to split/generate block elements.
- *
- * @private
- * @class tinymce.EnterKey
  */
 define(
-  'tinymce.core.EnterKey',
+  'tinymce.core.keyboard.EnterKey',
   [
     "tinymce.core.dom.TreeWalker",
     "tinymce.core.dom.RangeUtils",
@@ -25,7 +22,7 @@ define(
   function (TreeWalker, RangeUtils, CaretContainer, Env) {
     var isIE = Env.ie && Env.ie < 11;
 
-    return function (editor) {
+    var setup = function (editor) {
       var dom = editor.dom, selection = editor.selection, settings = editor.settings;
       var undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements(),
         moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
@@ -688,6 +685,10 @@ define(
           }
         }
       });
+    };
+
+    return {
+      setup: setup
     };
   }
 );

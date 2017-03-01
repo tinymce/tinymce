@@ -53,7 +53,7 @@ define(
     "tinymce.core.dom.Selection",
     "tinymce.core.Formatter",
     "tinymce.core.UndoManager",
-    "tinymce.core.EnterKey",
+    "tinymce.core.keyboard.KeyboardOverrides",
     "tinymce.core.ForceBlocks",
     "tinymce.core.EditorCommands",
     "tinymce.core.util.URI",
@@ -78,7 +78,7 @@ define(
   ],
   function (
     DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
-    Selection, Formatter, UndoManager, EnterKey, ForceBlocks, EditorCommands,
+    Selection, Formatter, UndoManager, KeyboardOverrides, ForceBlocks, EditorCommands,
     URI, ScriptLoader, EventUtils, WindowManager, NotificationManager,
     Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Mode, Shortcuts, EditorUpload,
     SelectionOverrides, Uuid, Sidebar, ErrorReporter
@@ -968,7 +968,7 @@ define(
         self.undoManager = new UndoManager(self);
 
         self.forceBlocks = new ForceBlocks(self);
-        self.enterKey = new EnterKey(self);
+        KeyboardOverrides.setup(self);
         self._nodeChangeDispatcher = new NodeChange(self);
         self._selectionOverrides = new SelectionOverrides(self);
 

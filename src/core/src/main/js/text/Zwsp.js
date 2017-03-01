@@ -26,7 +26,7 @@ define(
     var ZWSP = '\uFEFF';
 
     function isZwsp(chr) {
-      return chr == ZWSP;
+      return chr === ZWSP;
     }
 
     function trim(str) {
