@@ -2,7 +2,7 @@ define(
   'ephox.alloy.data.Fields',
 
   [
-    'ephox.alloy.debugging.StackTrace',
+    'ephox.alloy.debugging.Debugging',
     'ephox.alloy.menu.util.MenuMarkers',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
@@ -14,7 +14,7 @@ define(
     'global!console'
   ],
 
-  function (StackTrace, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Result, console) {
+  function (Debugging, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Result, console) {
     var initSize = FieldSchema.strictObjOf('initSize', [
       FieldSchema.strict('numColumns'),
       FieldSchema.strict('numRows')
@@ -48,7 +48,7 @@ define(
 
     var onPresenceHandler = function (label, fieldName, presence) {
       // We care about where the handler was declared (in terms of which schema)
-      var trace = StackTrace.get();
+      var trace = Debugging.getTrace();
       return FieldSchema.field(
         fieldName,
         fieldName,
@@ -56,8 +56,10 @@ define(
         // Apply some wrapping to their supplied function
         ValueSchema.valueOf(function (f) {
           return Result.value(function () {
-            // Uncomment this line for debugging
-            console.log(label + ' [' + fieldName + ']', trace);
+            /*
+             * This line is just for debugging information 
+             */
+            Debugging.logHandler(label, fieldName, trace);
             return f.apply(undefined, arguments);
           });
         })
