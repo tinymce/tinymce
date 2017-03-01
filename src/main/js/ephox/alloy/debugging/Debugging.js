@@ -72,7 +72,7 @@ define(
               event: eventName,
               target: initialTarget.dom(),
               sequence: Arr.map(sequence, function (s) {
-                if (s.outcome !== 'response') return s.outcome;
+                if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) return s.outcome;
                 else return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')';
               })
             });

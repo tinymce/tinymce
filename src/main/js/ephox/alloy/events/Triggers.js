@@ -51,12 +51,12 @@ define(
 
         // Now, check if the event was stopped.
         if (stopper.get() === true) {
-          logger.logEventStopped(eventType, target);
+          logger.logEventStopped(eventType, handlerInfo.element());
           return adt.stopped();
         }
         // Now, check if the event was cut
         else if (cutter.get() === true) {
-          logger.logEventCut(eventType, target);
+          logger.logEventCut(eventType, handlerInfo.element());
           return adt.complete();
         }
         else return Traverse.parent(handlerInfo.element()).fold(function () {
