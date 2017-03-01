@@ -76,7 +76,10 @@ define(
 
           behaviours: {
             toggling: {
-              toggleClass: 'demo-selected'
+              toggleClass: 'demo-selected',
+              aria: {
+                mode: 'pressed'
+              }
             }
           }
         })

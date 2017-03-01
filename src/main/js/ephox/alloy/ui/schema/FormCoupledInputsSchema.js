@@ -83,7 +83,10 @@ define(
           return {
             behaviours: {
               toggling: {
-                toggleClass: detail.markers().lockClass()
+                toggleClass: detail.markers().lockClass(),
+                aria: {
+                  mode: 'pressed'
+                }
               }
             }
           };

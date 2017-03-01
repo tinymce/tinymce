@@ -34,7 +34,10 @@ asynctest(
           behaviours: Behaviour.derive([
             Toggling.config({
               selected: true,
-              toggleClass: 'test-selected'
+              toggleClass: 'test-selected',
+              aria: {
+                mode: 'pressed'
+              }
             })
           ])
         })
