@@ -2,15 +2,15 @@ define(
   'ephox.alloy.behaviour.sliding.SlidingSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Cell',
     'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (FieldSchema, ValueSchema, Fun, Cell, Height, Width) {
+  function (Fields, FieldSchema, ValueSchema, Cell, Height, Width) {
     return [
       FieldSchema.strict('closedClass'),
       FieldSchema.strict('openClass'),
@@ -20,10 +20,10 @@ define(
       // Element which shrinking and growing animations
       FieldSchema.option('getAnimationRoot'),
 
-      FieldSchema.defaulted('onShrunk', function () { }),
-      FieldSchema.defaulted('onStartShrink', function () { }),
-      FieldSchema.defaulted('onGrown', function () { }),
-      FieldSchema.defaulted('onStartGrow', function () { }),
+      Fields.onHandler('onShrunk'),
+      Fields.onHandler('onStartShrink'),
+      Fields.onHandler('onGrown'),
+      Fields.onHandler('onStartGrow'),
       FieldSchema.defaulted('expanded', false),
 
       FieldSchema.state('state', function (spec) { return Cell(spec.expanded); }),
