@@ -3,7 +3,6 @@ test(
 
   [
     'ephox.agar.api.Logger',
-    'ephox.agar.api.RawAssertions',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.ResultAssertions',
@@ -14,7 +13,7 @@ test(
     'ephox.katamari.api.Struct'
   ],
 
-  function (Logger, RawAssertions, ComponentEvents, EventHandler, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {
+  function (Logger, ComponentEvents, EventHandler, ResultAssertions, TestStore, Arr, Obj, Fun, Struct) {
     var behaviour = Struct.immutable('name', 'handlers');
 
     var store = TestStore();
@@ -47,7 +46,7 @@ test(
         function (value) {
           var events = Obj.keys(value).sort();
           Arr.each(events, function (eventName) {
-            value[eventName]('component', {
+            value[eventName].handler('component', {
               stop: store.adder(eventName + '.stop')
             });
           });
