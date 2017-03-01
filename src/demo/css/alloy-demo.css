@@ -27,6 +27,8 @@
 .demo-alloy-menu li {
   padding: 0px;
   margin: 2px;
+  color: black;
+  background: white;
 }
 
 :focus {

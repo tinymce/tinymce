@@ -105,7 +105,7 @@ define(
         },
         Fun.constant({ })
       ),
-      InternalSink
+      InternalSink.partType()
     ];
 
     return {
