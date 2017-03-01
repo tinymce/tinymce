@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.system.SystemApi',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.events.GuiEvents',
+    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.debugging.Debugging',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
@@ -16,15 +17,15 @@ define(
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
   function (
-    GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse,
-    Error
+    GuiFactory, GuiEvents, SystemEvents, SystemApi, Container, Debugging, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Remove, Node,
+    Traverse, Error
   ) {
     var create = function ( ) {
       var root = GuiFactory.build(
@@ -56,7 +57,9 @@ define(
 
       var domEvents = GuiEvents.setup(root.element(), {
         triggerEvent: function (eventName, event) {
-          return Triggers.triggerUntilStopped(lookup, eventName, event);
+          return Debugging.monitorEvent(eventName, event.target(), function (logger) {
+            return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
+          });
         },
 
         // This doesn't follow usual DOM bubbling. It will just dispatch on all
@@ -73,20 +76,24 @@ define(
         // This is a real system
         debugInfo: Fun.constant('real'),
         triggerEvent: function (customType, target, data) {
-          // The return value is not used because this is a fake event.
-          Triggers.triggerOnUntilStopped(lookup, customType, data, target);
+          Debugging.monitorEvent(customType, target, function (logger) {
+            // The return value is not used because this is a fake event.
+            Triggers.triggerOnUntilStopped(lookup, customType, data, target, logger);
+          });
         },
         triggerFocus: function (target, originator) {
           Tagger.read(target).fold(function () {
             // When the target is not within the alloy system, dispatch a normal focus event.
             Focus.focus(target);
           }, function (_alloyId) {
-            Triggers.triggerHandler(lookup, SystemEvents.focus(), {
-              // originator is used by the default events to ensure that focus doesn't
-              // get called infinitely
-              originator: Fun.constant(originator),
-              target: Fun.constant(target)
-            }, target);
+            Debugging.monitorEvent(SystemEvents.focus(), target, function (logger) {
+              Triggers.triggerHandler(lookup, SystemEvents.focus(), {
+                // originator is used by the default events to ensure that focus doesn't
+                // get called infinitely
+                originator: Fun.constant(originator),
+                target: Fun.constant(target)
+              }, target, logger);
+            });
           });
         },
 
