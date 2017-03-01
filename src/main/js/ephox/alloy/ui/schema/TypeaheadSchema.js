@@ -21,7 +21,8 @@ define(
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('minChars', 5),
       Fields.onHandler('onOpen'),
-      FieldSchema.defaulted('onExecute', Option.none),
+
+      Fields.onKeyboardHandler('onExecute'),
       FieldSchema.defaulted('matchWidth', true),
       Fields.markers([ 'openClass' ]),
 

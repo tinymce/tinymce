@@ -9,11 +9,12 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
     'global!console'
   ],
 
-  function (StackTrace, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Result, console) {
+  function (StackTrace, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Result, console) {
     var initSize = FieldSchema.strictObjOf('initSize', [
       FieldSchema.strict('numColumns'),
       FieldSchema.strict('numRows')
@@ -45,22 +46,30 @@ define(
       return FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
     };
 
-    var onHandler = function (fieldName) {
+    var onDefaultedHandler = function (label, fieldName, defaulted) {
       // We care about where the handler was declared (in terms of which schema)
       var trace = StackTrace.get();
       return FieldSchema.field(
         fieldName,
         fieldName,
-        FieldPresence.defaulted(Fun.noop),
+        FieldPresence.defaulted(defaulted),
         // Apply some wrapping to their supplied function
         ValueSchema.valueOf(function (f) {
           return Result.value(function () {
             // Uncomment this line for debugging
-            console.log('onHandler [' + fieldName + ']', trace);
+            console.log(label + ' [' + fieldName + ']', trace);
             return f.apply(undefined, arguments);
           });
         })
       );
+    }
+
+    var onHandler = function (fieldName) {
+      return onDefaultedHandler('onHandler', fieldName, Fun.noop);
+    };
+
+    var onKeyboardHandler = function (fieldName) {
+      return onDefaultedHandler('onKeyHandler', fieldName, Option.none);
     };
 
     return {
@@ -71,7 +80,8 @@ define(
       tieredMenuMarkers: tieredMenuMarkers,
       markers: markers,
 
-      onHandler: onHandler
+      onHandler: onHandler,
+      onKeyboardHandler: onKeyboardHandler
     };
   }
 );
