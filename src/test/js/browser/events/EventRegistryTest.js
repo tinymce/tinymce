@@ -11,20 +11,24 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.events.EventRegistry',
     'ephox.katamari.api.Arr',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Attr',
+    'ephox.sand.api.JSON',
     'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Html',
     'global!document'
   ],
  
-  function (Truncate, Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder, EventRegistry, Arr, Json, Fun, Result, Attr, Compare, Element, Html, Insert, document) {
+  function (
+    Truncate, Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder, DescribedHandler, EventRegistry, Arr, Fun, Result, Json, Compare,
+    Insert, Element, Attr, Html, document
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -51,25 +55,34 @@ asynctest(
     var events = EventRegistry();
 
     events.registerId([ 'extra-args' ], 'comp-1', {
-      'event.alpha': function (extra) {
-        return 'event.alpha.1(' + extra + ')';
-      },
-      'event.only': function (extra) {
-        return 'event.only(' + extra + ')';
-      }
+      'event.alpha': DescribedHandler.nu(
+        function (extra) {
+          return 'event.alpha.1(' + extra + ')';
+        },
+        'event.alpha.1.handler'
+      ),
+      'event.only': DescribedHandler.nu(
+        function (extra) {
+          return 'event.only(' + extra + ')';
+        },
+        'event.only.handler'
+      )
     });
 
     events.registerId([ 'extra-args' ], 'comp-4', {
-      'event.alpha': function (extra) {
-        return 'event.alpha.4(' + extra + ')';
-      }
+      'event.alpha': DescribedHandler.nu(
+        function (extra) {
+          return 'event.alpha.4(' + extra + ')';
+        },
+        'event.alpha.4.handler'
+      )
     });
  
     var sAssertFilterByType = function (expected, type) {
       return Step.sync(function () {
         var filtered = events.filterByType(type);
         var raw = Arr.map(filtered, function (f) {
-          return { handler: f.handler(), id: f.id() };
+          return { handler: f.descHandler().handler(), purpose: f.descHandler().purpose(), id: f.id() };
         }).sort(function (f, g) {
           if (f.id < g.id) return -1;
           else if (f.id > g.id) return +1;
@@ -120,15 +133,16 @@ asynctest(
               NamedChain.bundle(Result.value)
             ]),
             Chain.op(function (actual) {
+              var section = actual.handler;
               Assertions.assertEq(
                 'find(' + type + ', ' + id + ') = true', 
                 expected.target,
-                Attr.get(actual.handler.element(), 'data-alloy-id')
+                Attr.get(section.element(), 'data-alloy-id')
               );
               Assertions.assertEq(
                 'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),
                 expected.handler,
-                actual.handler.handler()
+                section.descHandler().handler()
               );
             })
           ])
@@ -139,12 +153,15 @@ asynctest(
     Pipeline.async({}, [
       sAssertFilterByType([ ], 'event.none'),
       sAssertFilterByType([
-        { handler: 'event.alpha.1(extra-args)', id: 'comp-1' },
-        { handler: 'event.alpha.4(extra-args)', id: 'comp-4' }
+        { handler: 'event.alpha.1(extra-args)', id: 'comp-1', purpose: 'event.alpha.1.handler' },
+        { handler: 'event.alpha.4(extra-args)', id: 'comp-4', purpose: 'event.alpha.4.handler' }
       ], 'event.alpha' ),
 
 
-      sAssertFind('comp-1!', { handler: 'event.alpha.1(extra-args)', target: 'comp-1' }, 'event.alpha', 'comp-1'),
+      sAssertFind('comp-1!', 
+        { handler: 'event.alpha.1(extra-args)', target: 'comp-1', purpose: 'event.alpha.1.handler' },
+        'event.alpha', 'comp-1'
+      ),
 
       sAssertFind('comp-2 > comp-1', { handler: 'event.alpha.1(extra-args)', target: 'comp-1' }, 'event.alpha', 'comp-2'),
 

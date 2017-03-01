@@ -2,16 +2,17 @@ define(
   'ephox.alloy.events.Triggers',
 
   [
+    'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.events.EventSource',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (EventSource, Arr, Fun, Adt, Cell, Traverse, Error) {
+  function (DescribedHandler, EventSource, Adt, Arr, Cell, Fun, Traverse, Error) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },
@@ -47,24 +48,26 @@ define(
         logger.logEventNoHandlers(eventType, target);
         return adt.complete();
       }, function (handlerInfo) {
-        handlerInfo.handler(simulatedEvent);
+        var descHandler = handlerInfo.descHandler();
+        var eventHandler = DescribedHandler.getHandler(descHandler);
+        eventHandler(simulatedEvent);
 
         // Now, check if the event was stopped.
         if (stopper.get() === true) {
-          logger.logEventStopped(eventType, handlerInfo.element());
+          logger.logEventStopped(eventType, handlerInfo.element(), descHandler.purpose());
           return adt.stopped();
         }
         // Now, check if the event was cut
         else if (cutter.get() === true) {
-          logger.logEventCut(eventType, handlerInfo.element());
+          logger.logEventCut(eventType, handlerInfo.element(), descHandler.purpose());
           return adt.complete();
         }
         else return Traverse.parent(handlerInfo.element()).fold(function () {
-          logger.logNoParent(eventType, handlerInfo.element());
+          logger.logNoParent(eventType, handlerInfo.element(), descHandler.purpose());
           // No parent, so complete.
           return adt.complete();
         }, function (parent) {
-          logger.logEventResponse(eventType, handlerInfo.element());
+          logger.logEventResponse(eventType, handlerInfo.element(), descHandler.purpose());
           // Resume at parent
           return adt.resume(parent);
         });
@@ -111,7 +114,9 @@ define(
       };
 
       Arr.each(listeners, function (listener) {
-        listener.handler(simulatedEvent);
+        var descHandler = listener.descHandler();
+        var handler = DescribedHandler.getHandler(descHandler);
+        handler(simulatedEvent);
       });
 
       return stopper.get() === true;

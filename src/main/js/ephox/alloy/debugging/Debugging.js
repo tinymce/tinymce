@@ -14,6 +14,8 @@ define(
     var unknown = 'unknown';
     var debugging = true;
 
+    var eventsMonitored = [ 'keydown', 'keyup' ];
+
     // Ignore these files in the error stack
     var path = [
       'alloy/data/Fields',
@@ -34,7 +36,7 @@ define(
     };
 
     var logHandler = function (label, handlerName, trace) {
-      if (debugging) console.log(label + ' [' + handlerName + ']', trace);
+      if (debugging && false) console.log(label + ' [' + handlerName + ']', trace);
     };
 
     var ignoreEvent = {
@@ -44,21 +46,21 @@ define(
       logEventNoHandlers: Fun.noop,
       logEventResponse: Fun.noop,
       write: Fun.noop
-    }
+    };
 
     var monitorEvent = function (eventName, initialTarget, f) {
-      var logger = debugging && eventName === 'keydown' ? (function () {
+      var logger = debugging && Arr.contains(eventsMonitored, eventName) ? (function () {
         var sequence = [ ];
         
         return {
-          logEventCut: function (name, target) {
-            sequence.push({ outcome: 'cut', target: target });
+          logEventCut: function (name, target, purpose) {
+            sequence.push({ outcome: 'cut', target: target, purpose: purpose });
           },
-          logEventStopped: function (name, target) {
-            sequence.push({ outcome: 'stopped', target: target });
+          logEventStopped: function (name, target, purpose) {
+            sequence.push({ outcome: 'stopped', target: target, purpose: purpose });
           },
-          logNoParent: function (name, target) {
-            sequence.push({ outcome: 'no-parent', target: target });
+          logNoParent: function (name, target, purpose) {
+            sequence.push({ outcome: 'no-parent', target: target, purpose: purpose });
           },
           logEventNoHandlers: function (name, target) {
             sequence.push({ outcome: 'no-handlers-left', target: target });
@@ -87,6 +89,7 @@ define(
 
     return {
       logHandler: logHandler,
+      noLogger: Fun.constant(ignoreEvent),
       getTrace: getTrace,
       monitorEvent: monitorEvent,
       isDebugging: Fun.constant(debugging)

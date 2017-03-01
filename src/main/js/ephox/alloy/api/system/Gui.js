@@ -8,6 +8,7 @@ define(
     'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.debugging.Debugging',
+    'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
@@ -24,8 +25,8 @@ define(
   ],
 
   function (
-    GuiFactory, GuiEvents, SystemEvents, SystemApi, Container, Debugging, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Remove, Node,
-    Traverse, Error
+    GuiFactory, GuiEvents, SystemEvents, SystemApi, Container, Debugging, DescribedHandler, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert,
+    Remove, Node, Traverse, Error
   ) {
     var create = function ( ) {
       var root = GuiFactory.build(
@@ -157,7 +158,9 @@ define(
       var broadcastData = function (data) {
         var receivers = registry.filter(SystemEvents.receive());
         Arr.each(receivers, function (receiver) {
-          receiver.handler(data);
+          var descHandler = receiver.descHandler();
+          var handler = DescribedHandler.getHandler(descHandler);
+          handler(data);
         });
       };
 

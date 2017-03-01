@@ -5,18 +5,19 @@ define(
     'ephox.alloy.alien.ObjIndex',
     'ephox.alloy.alien.PrioritySort',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.events.DescribedHandler',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Merger',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Result',
+    'ephox.sand.api.JSON',
     'global!Array',
     'global!Error'
   ],
 
-  function (ObjIndex, PrioritySort, EventHandler, Objects, Arr, Obj, Merger, Json, Fun, Result, Array, Error) {
+  function (ObjIndex, PrioritySort, EventHandler, DescribedHandler, Objects, Arr, Fun, Merger, Obj, Result, Json, Array, Error) {
     /*
      * The process of combining a component's events
      *
@@ -93,7 +94,10 @@ define(
         var combined = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse(tuples, eventOrder, eventName);
         return combined.map(function (handler) {
           var assembled = assemble(handler);
-          return Objects.wrap(eventName, assembled);
+          var purpose = tuples.length > 1 ? Arr.filter(eventOrder, function (o) {
+            return Arr.contains(tuples, function (t) { return t.name() === o; });
+          }).join(' > ') : tuples[0].name();
+          return Objects.wrap(eventName, DescribedHandler.nu(assembled, purpose));
         });
       });
 
