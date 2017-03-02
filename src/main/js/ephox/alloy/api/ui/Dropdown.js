@@ -56,8 +56,8 @@ define(
                     anchor: 'hotspot',
                     hotspot: hotspot
                   }, hotspot, {
-                    onOpen: function () { Toggling.select(hotspot); },
-                    onClose: function () { Toggling.deselect(hotspot); }
+                    onOpen: function () { Toggling.on(hotspot); },
+                    onClose: function () { Toggling.off(hotspot); }
                   });
                 }
               }

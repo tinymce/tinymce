@@ -53,10 +53,10 @@ define(
                   var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
                   var extras = {
                     onOpen: function () {
-                      Toggling.select(arrow);
+                      Toggling.on(arrow);
                     },
                     onClose: function () {
-                      Toggling.deselect(arrow);
+                      Toggling.off(arrow);
                     }
                   };
 

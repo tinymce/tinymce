@@ -93,18 +93,18 @@ asynctest(
         return Logger.t(
           'Asserting isSelected()\n' + label,
           Step.sync(function () {
-            var actual = Toggling.isSelected(component);
+            var actual = Toggling.isOn(component);
             Assertions.assertEq(label, expected, actual);
           })
         );
       };
 
       var sSelect = Step.sync(function () {
-        Toggling.select(component);
+        Toggling.on(component);
       });
 
       var sDeselect = Step.sync(function () {
-        Toggling.deselect(component);
+        Toggling.off(component);
       });
 
       var sToggle = Step.sync(function () {

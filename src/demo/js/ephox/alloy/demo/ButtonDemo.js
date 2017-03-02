@@ -105,7 +105,7 @@ define(
 
       button2.logSpec();
 
-      Toggling.select(button2);
+      Toggling.on(button2);
 
 
 
