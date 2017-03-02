@@ -13,9 +13,7 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger',
-    'tinymce.core.caret.CaretPosition',
-    'tinymce.core.keyboard.CaretFinder'
+    'ephox.katamari.api.Merger'
   ],
   function (Arr, Fun, Merger) {
     var defaultPatterns = function (patterns) {
@@ -25,6 +23,7 @@ define(
           altKey: false,
           ctrlKey: false,
           metaKey: false,
+          keyCode: 0,
           action: Fun.noop
         }, pattern);
       });
@@ -43,7 +42,9 @@ define(
     };
 
     var match = function (patterns, evt) {
-      return Arr.find(defaultPatterns(patterns), matchesEvent(evt));
+      return Arr.find(defaultPatterns(patterns), matchesEvent(evt)).map(function (match) {
+        return match.action;
+      });
     };
 
     return {

@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.keyboard.LazyEvaluator',
+  'tinymce.core.util.LazyEvaluator',
   [
     'ephox.katamari.api.Option'
   ],
