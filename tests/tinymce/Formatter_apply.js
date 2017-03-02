@@ -1738,7 +1738,7 @@ test("Wrapper with fontSize should retain priority within a branch of nested inl
 	editor.formatter.apply('underline');
 	editor.formatter.apply('forecolor', {value: '#ff0000'});
 
-	equal(getContent(), '<p><span style="color: #ff0000; font-size: 18px;"><span style="text-decoration: underline;"><strong>abc</strong></span></span></p>');
+    equal(getContent(), '<p><span style="color: #ff0000; font-size: 18px; text-decoration: underline;"><strong>abc</strong></span></p>');
 });
 
 test("Child wrapper having the same format as the immediate parent, shouldn't be removed if it also has other formats merged", function() {
@@ -1776,6 +1776,20 @@ test("TINY-671: Background color on nested font size bug", function() {
 test("TINY-865: Font size removed when changing background color", function() {
 	editor.getBody().innerHTML = '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>';
 	Utils.setSelection('span span:nth-child(2)', 0, 'span span:nth-child(2)', 1);
-	editor.formatter.apply('hilitecolor', {value: '#ffff00'});
-	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt; background-color: #ffff00;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
+	editor.formatter.apply('hilitecolor', {value: '#ff0000'});
+    equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt; background-color: #ff0000;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
+});
+
+test("TINY-935: Text color, then size, then change color wraps span doesn't change color", function() {
+    editor.getBody().innerHTML = '<p><span style="color: #00ff00; font-size: 14pt;">text</span></p>';
+    Utils.setSelection('span', 0, 'span', 4);
+    editor.formatter.apply('forecolor', {value: '#ff0000'});
+    equal(getContent(), '<p><span style="color: #ff0000; font-size: 14pt;">text</span></p>');
+});
+
+test("GH-3519: Font family selection does not work after changing font size", function() {
+    editor.getBody().innerHTML = '<p><span style="font-size: 14pt; font-family: \'comic sans ms\', sans-serif;">text</span></p>';
+    Utils.setSelection('span', 0, 'span', 4);
+    editor.formatter.apply('fontname', {value: "verdana"});
+    equal(getContent(), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
 });
