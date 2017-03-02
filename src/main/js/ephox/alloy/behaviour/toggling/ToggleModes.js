@@ -57,7 +57,7 @@ define(
 
     var updateAuto = function (component, ariaInfo, status) {
       // Role has priority
-      var attributes = detectFromRole(component).getOrThunk(function () {
+      var attributes = detectFromRole(component).orThunk(function () {
         return detectFromTag(component);
       }).getOr([ ]);
       Arr.each(attributes, function (attr) {
