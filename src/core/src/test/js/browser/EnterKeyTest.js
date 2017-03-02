@@ -523,10 +523,19 @@ asynctest(
 
     suite.test('Enter at end of text in a span inside a P and keep_styles: false', function (editor) {
       editor.settings.keep_styles = false;
-      editor.getBody().innerHTML = '<p class="red" style="color: #ff0000;"><em><span style="font-size: 13px;">X</span></em></p>';
+      editor.getBody().innerHTML = '<p><em><span style="font-size: 13px;">X</span></em></p>';
       LegacyUnit.setSelection(editor, 'span', 1);
       pressEnter(editor);
-      LegacyUnit.equal(editor.getContent(), '<p class="red" style="color: #ff0000;"><em><span style="font-size: 13px;">X</span></em></p><p>\u00a0</p>');
+      LegacyUnit.equal(editor.getContent(), '<p><em><span style="font-size: 13px;">X</span></em></p><p>\u00a0</p>');
+      delete editor.settings.keep_styles;
+    });
+
+    suite.test("keep_styles=false: P should not pass its styles and classes to the new P that is cloned from it when enter is pressed", function (editor) {
+      editor.settings.keep_styles = false;
+      editor.getBody().innerHTML = '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p>';
+      LegacyUnit.setSelection(editor, 'span', 1);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p><p>\u00a0</p>');
       delete editor.settings.keep_styles;
     });
 
