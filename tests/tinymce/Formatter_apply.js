@@ -1780,6 +1780,13 @@ test("TINY-865: Font size removed when changing background color", function() {
 	equal(getContent(), '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span style="font-size: 36pt; background-color: #ffff00;">b</span> <span style="font-size: 8pt;">c</span></span></p>');
 });
 
+test("TINY-935: Text color, then size, then change color wraps span doesn't change color", function() {
+    editor.getBody().innerHTML = '<p><span style="color: #00ff00; font-size: 14pt;">text</span></p>';
+    Utils.setSelection('span', 0, 'span', 4);
+    editor.formatter.apply('forecolor', {value: '#ff0000'});
+    equal(getContent(), '<p><span style="color: #ff0000; font-size: 14pt;">text</span></p>');
+});
+
 test("GH-3519: Font family selection does not work after changing font size", function() {
     editor.getBody().innerHTML = '<p><span style="font-size: 14pt; font-family: \'comic sans ms\', sans-serif;">text</span></p>';
     Utils.setSelection('span', 0, 'span', 4);
