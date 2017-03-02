@@ -689,15 +689,6 @@ define("tinymce/Formatter", [
 						return;
 					}
 
-					// fontSize defines the line height for the whole branch of nested style wrappers,
-					// therefore it should be set on the outermost wrapper
-					if (!isBlock(node) && !getStyle(node, 'fontSize')) {
-						var styleNode = matchNestedWrapper(node, hasStyle('fontSize'));
-						if (styleNode) {
-							apply('fontsize', {value: getStyle(styleNode, 'fontSize')}, node);
-						}
-					}
-
 					if (format.inline || format.wrapper) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
 						if (!format.exact && childCount === 1) {
@@ -735,6 +726,15 @@ define("tinymce/Formatter", [
 									return TRUE;
 								}
 							});
+						}
+
+						// fontSize defines the line height for the whole branch of nested style wrappers,
+						// therefore it should be set on the outermost wrapper
+						if (!isBlock(node) && !getStyle(node, 'fontSize')) {
+							var styleNode = matchNestedWrapper(node, hasStyle('fontSize'));
+							if (styleNode) {
+								apply('fontsize', {value: getStyle(styleNode, 'fontSize')}, node);
+							}
 						}
 
 						// Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
