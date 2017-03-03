@@ -216,8 +216,11 @@ define(
 
           caretNode = block;
 
-          // Clone any parent styles
-          if (settings.keep_styles !== false) {
+          if (settings.keep_styles === false) {
+            dom.setAttrib(block, 'style', null); // wipe out any styles that came over with the block
+            dom.setAttrib(block, 'class', null);
+          } else {
+            // Clone any parent styles
             do {
               if (textInlineElements[node.nodeName]) {
                 // Never clone a caret containers
