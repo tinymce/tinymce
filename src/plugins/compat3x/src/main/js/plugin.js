@@ -34,6 +34,7 @@
 
   function Dispatcher(target, newEventName, argsMap, defaultScope) {
     target = target || this;
+    var cbs = [];
 
     if (!newEventName) {
       this.add = this.addToTop = this.remove = this.dispatch = noop;
@@ -77,6 +78,12 @@
 
       target.on(newEventName, patchedEventCallback, prepend);
 
+      var handlers = {
+        original: callback,
+        patched: patchedEventCallback
+      };
+
+      cbs.push(handlers);
       return patchedEventCallback;
     };
 
@@ -85,12 +92,18 @@
     };
 
     this.remove = function (callback) {
+      cbs.forEach(function (item, i) {
+        if (item.original === callback) {
+          cbs.splice(i, 1);
+          return target.off(newEventName, item.patched);
+        }
+      });
+
       return target.off(newEventName, callback);
     };
 
     this.dispatch = function () {
       target.fire(newEventName);
-
       return true;
     };
   }
