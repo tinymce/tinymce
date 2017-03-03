@@ -34,7 +34,7 @@ define(
         BoundaryOperations.fromInsideInlineToOutsideInline
       ];
 
-      return LazyEvaluator.evaluate(operations, [editor.getBody(), from, to, forward]);
+      return LazyEvaluator.evaluateUntil(operations, [editor.getBody(), from, to, forward]);
     };
 
     var staticOperation = function (editor, forward, from) {

@@ -14,7 +14,7 @@ define(
     'ephox.katamari.api.Option'
   ],
   function (Option) {
-    var evaluate = function (fns, args) {
+    var evaluateUntil = function (fns, args) {
       for (var i = 0; i < fns.length; i++) {
         var result = fns[i].apply(null, args);
         if (result.isSome()) {
@@ -26,7 +26,7 @@ define(
     };
 
     return {
-      evaluate: evaluate
+      evaluateUntil: evaluateUntil
     };
   }
 );
