@@ -23,53 +23,7 @@ asynctest(
 
     Theme();
 
-    var singleAnchor = function (expectedText) {
-      return ApproxStructure.build(function (s, str/*, arr*/) {
-        return s.element('p', {
-          children: [
-            s.element('a', {
-              attrs: {
-                'data-mce-selected': str.is('1'),
-                'data-mce-href': str.is('#'),
-                'href': str.is('#')
-              },
-              children: [
-                s.text(str.is(expectedText))
-              ]
-            })
-          ]
-        });
-      });
-    };
-
-    var singleAnchorInside = function (start) {
-      return singleAnchor(start ? Zwsp.ZWSP + 'b' : 'b' + Zwsp.ZWSP);
-    };
-
-    var singleAnchorOutside = function (before) {
-      return ApproxStructure.build(function (s, str/*, arr*/) {
-        return s.element('p', {
-          children: Arr.flatten([
-            before ? [ s.text(str.is(Zwsp.ZWSP)) ] : [ ],
-            [
-              s.element('a', {
-                attrs: {
-                  'data-mce-selected': str.is('1'),
-                  'data-mce-href': str.is('#'),
-                  'href': str.is('#')
-                },
-                children: [
-                  s.text(str.is('b'))
-                ]
-              })
-            ],
-            before === false ? [ s.text(str.is(Zwsp.ZWSP)) ] : [ ]
-          ])
-        });
-      });
-    };
-
-    var singleAnchorSurroundedWithText = function (expectedText) {
+    var anchorSurroundedWithText = function (expectedText) {
       return ApproxStructure.build(function (s, str/*, arr*/) {
         return s.element('p', {
           children: [
@@ -90,18 +44,18 @@ asynctest(
       });
     };
 
-    var singleAnchorSurroundedWithTextInside = function (start) {
-      return singleAnchorSurroundedWithText(start ? Zwsp.ZWSP + 'b' : 'b' + Zwsp.ZWSP);
+    var anchorSurroundedWithZwspInside = function (start) {
+      return anchorSurroundedWithText(start ? Zwsp.ZWSP + 'b' : 'b' + Zwsp.ZWSP);
     };
 
-    var singleAnchorSurroundedWithTextOutside = function (before) {
+    var anchorSurroundedWithZwspOutside = function (before) {
       return ApproxStructure.build(function (s, str/*, arr*/) {
         return s.element('p', {
           children: [
             s.text(str.is('a' + (before ? Zwsp.ZWSP : ''))),
             s.element('a', {
               attrs: {
-                'data-mce-selected': str.is('1'),
+                'data-mce-selected': str.none('1'),
                 'data-mce-href': str.is('#'),
                 'href': str.is('#')
               },
@@ -115,6 +69,86 @@ asynctest(
       });
     };
 
+    var anchors = function (texts, index) {
+      return ApproxStructure.build(function (s, str/*, arr*/) {
+        var children = Arr.map(texts, function (text, i) {
+          return s.element(
+            'a',
+            {
+              attrs: {
+                'data-mce-selected': i === index ? str.is('1') : str.none('1'),
+                'data-mce-href': str.is('#'),
+                'href': str.is('#')
+              },
+              children: [
+                s.text(str.is(text))
+              ]
+            }
+          );
+        });
+
+        return s.element('p', {
+          children: children
+        });
+      });
+    };
+
+    var anchorsZwspOutside = function (texts, before, index) {
+      return ApproxStructure.build(function (s, str/*, arr*/) {
+        var children = Arr.map(texts, function (text, i) {
+          return Arr.flatten([
+            index === i && before ? [ s.text(str.is(Zwsp.ZWSP)) ] : [ ],
+            [
+              s.element(
+                'a',
+                {
+                  attrs: {
+                    'data-mce-selected': str.none('1'),
+                    'data-mce-href': str.is('#'),
+                    'href': str.is('#')
+                  },
+                  children: [
+                    s.text(str.is(text))
+                  ]
+                }
+              )
+            ],
+            index === i && before === false ? [ s.text(str.is(Zwsp.ZWSP)) ] : [ ]
+          ]);
+        });
+
+        return s.element('p', {
+          children: Arr.flatten(children)
+        });
+      });
+    };
+
+    var anchorsZwspInside = function (texts, start, index) {
+      return ApproxStructure.build(function (s, str/*, arr*/) {
+        var children = Arr.map(texts, function (text, i) {
+          var zwspText = start ? Zwsp.ZWSP + text : text + Zwsp.ZWSP;
+
+          return s.element(
+            'a',
+            {
+              attrs: {
+                'data-mce-selected': i === index ? str.is('1') : str.none('1'),
+                'data-mce-href': str.is('#'),
+                'href': str.is('#')
+              },
+              children: [
+                s.text(str.is(i === index ? zwspText : text))
+              ]
+            }
+          );
+        });
+
+        return s.element('p', {
+          children: children
+        });
+      });
+    };
+
     var sAssertContentStructure = function (editor, expected) {
       return Step.sync(function () {
         var actual = Element.fromHtml(editor.getBody().innerHTML);
@@ -122,41 +156,111 @@ asynctest(
       });
     };
 
+    var sAssertCursor = function (tinyApis, elementPath, offset) {
+      return tinyApis.sAssertSelection(elementPath, offset, elementPath, offset);
+    };
+
     var sTestArrowsSingleAnchor = function (tinyApis, tinyActions, editor) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent('<p><a href="#">b</a></p>'),
         tinyApis.sSetCursor([0, 0, 0], 0),
         tinyApis.sNodeChanged,
-        sAssertContentStructure(editor, singleAnchor('b')),
-        tinyActions.sContentKeydown(Keys.left()),
-        sAssertContentStructure(editor, singleAnchorOutside(BEFORE)),
-        tinyActions.sContentKeydown(Keys.left()),
-        sAssertContentStructure(editor, singleAnchorOutside(BEFORE)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorInside(START)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorInside(END)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorOutside(AFTER)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorOutside(AFTER))
+        sAssertContentStructure(editor, anchors(['b'], 0)),
+
+        tinyActions.sContentKeystroke(Keys.left(), { }),
+        sAssertCursor(tinyApis, [0, 0], 1),
+        sAssertContentStructure(editor, anchorsZwspOutside(['b'], BEFORE, 0)),
+
+        tinyActions.sContentKeystroke(Keys.left(), { }),
+        sAssertCursor(tinyApis, [0, 0], 1),
+        sAssertContentStructure(editor, anchorsZwspOutside(['b'], BEFORE, 0)),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertCursor(tinyApis, [0, 0, 0], 1),
+        sAssertContentStructure(editor, anchorsZwspInside(['b'], START, 0)),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertCursor(tinyApis, [0, 0, 0], 1),
+        sAssertContentStructure(editor, anchorsZwspInside(['b'], END, 0)),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertCursor(tinyApis, [0, 1], 1),
+        sAssertContentStructure(editor, anchorsZwspOutside(['b'], AFTER, 0)),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertCursor(tinyApis, [0, 1], 1),
+        sAssertContentStructure(editor, anchorsZwspOutside(['b'], AFTER, 0))
       ]);
     };
 
-    var sTestArrowAnchorSurroundedByText = function (tinyApis, tinyActions, editor) {
+    var sTestArrowsAnchorSurroundedByText = function (tinyApis, tinyActions, editor) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a<a href="#">b</a>c</p>'),
         tinyApis.sSetCursor([0, 1, 0], 0),
         tinyApis.sNodeChanged,
-        sAssertContentStructure(editor, singleAnchorSurroundedWithText('b')),
-        tinyActions.sContentKeydown(Keys.left()),
-        sAssertContentStructure(editor, singleAnchorSurroundedWithTextOutside(BEFORE)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorSurroundedWithTextInside(START)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorSurroundedWithTextInside(END)),
-        tinyActions.sContentKeydown(Keys.right()),
-        sAssertContentStructure(editor, singleAnchorSurroundedWithTextOutside(AFTER))
+
+        sAssertContentStructure(editor, anchorSurroundedWithText('b')),
+
+        tinyActions.sContentKeystroke(Keys.left(), { }),
+        sAssertContentStructure(editor, anchorSurroundedWithZwspOutside(BEFORE)),
+        sAssertCursor(tinyApis, [0, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorSurroundedWithZwspInside(START)),
+        sAssertCursor(tinyApis, [0, 1, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorSurroundedWithZwspInside(END)),
+        sAssertCursor(tinyApis, [0, 1, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorSurroundedWithZwspOutside(AFTER)),
+        sAssertCursor(tinyApis, [0, 2], 1)
+      ]);
+    };
+
+    var sTestArrowsMultipleAnchors = function (tinyApis, tinyActions, editor) {
+      return GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><a href="#">a</a><a href="#">b</a></p>'),
+        tinyApis.sSetCursor([0, 0, 0], 0),
+        tinyApis.sNodeChanged,
+        sAssertContentStructure(editor, anchors(['a', 'b'], 0)),
+
+        tinyActions.sContentKeystroke(Keys.left(), { }),
+        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], BEFORE, 0)),
+        sAssertCursor(tinyApis, [0, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.left(), { }),
+        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], BEFORE, 0)),
+        sAssertCursor(tinyApis, [0, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspInside(['a', 'b'], START, 0)),
+        sAssertCursor(tinyApis, [0, 0, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspInside(['a', 'b'], END, 0)),
+        sAssertCursor(tinyApis, [0, 0, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], AFTER, 0)),
+        sAssertCursor(tinyApis, [0, 1], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspInside(['a', 'b'], START, 1)),
+        sAssertCursor(tinyApis, [0, 1, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspInside(['a', 'b'], END, 1)),
+        sAssertCursor(tinyApis, [0, 1, 0], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], AFTER, 1)),
+        sAssertCursor(tinyApis, [0, 2], 1),
+
+        tinyActions.sContentKeystroke(Keys.right(), { }),
+        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], AFTER, 1)),
+        sAssertCursor(tinyApis, [0, 2], 1)
       ]);
     };
 
@@ -167,7 +271,8 @@ asynctest(
       Pipeline.async({}, [
         tinyApis.sFocus,
         sTestArrowsSingleAnchor(tinyApis, tinyActions, editor),
-        sTestArrowAnchorSurroundedByText(tinyApis, tinyActions, editor)
+        sTestArrowsAnchorSurroundedByText(tinyApis, tinyActions, editor),
+        sTestArrowsMultipleAnchors(tinyApis, tinyActions, editor)
       ], onSuccess, onFailure);
     }, {
       add_unload_trigger: false,
