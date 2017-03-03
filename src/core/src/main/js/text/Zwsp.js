@@ -23,6 +23,7 @@ define(
   [
   ],
   function () {
+    // This is technically not a ZWSP but a ZWNBSP or a BYTE ORDER MARK it used to be a ZWSP
     var ZWSP = '\uFEFF';
 
     function isZwsp(chr) {

@@ -12,13 +12,14 @@ define(
   'tinymce.core.keyboard.BoundaryOperations',
   [
     'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Adt, Fun, Option, CaretContainer, CaretPosition, InlineUtils) {
+  function (Adt, Arr, Fun, Option, CaretContainer, CaretPosition, InlineUtils) {
     var operation = Adt.generate([
       { prepend: [ 'container' ] },
       { append: [ 'container' ] },
@@ -106,6 +107,24 @@ define(
       }
     };
 
+    var getOperationFromPosition = function (elms, pos) {
+      if (CaretPosition.isTextPosition(pos) && InlineUtils.isAtZwsp(pos) === false) {
+        return Arr.find(elms, InlineUtils.isInlineTarget).bind(function (inline) {
+          return InlineUtils.findCaretPosition(inline, false, pos).fold(function () {
+            return Option.some(operation.prepend(pos.container()));
+          }, function () {
+            return InlineUtils.findCaretPosition(inline, true, pos).fold(function () {
+              return Option.some(operation.append(pos.container()));
+            }, function () {
+              return Option.none();
+            });
+          });
+        });
+      } else {
+        return Option.none();
+      }
+    };
+
     var applyOperation = function (caret, operation) {
       return operation.fold(
         function (container) { // Prepend
@@ -124,7 +143,7 @@ define(
           CaretContainer.remove(caret.get());
           var text = CaretContainer.insertInline(container, true);
           caret.set(text);
-          return new CaretPosition(text, 1);
+          return new CaretPosition(text, 0);
         },
         function (container) { // After
           CaretContainer.remove(caret.get());
@@ -141,6 +160,7 @@ define(
       fromOutsideInlineToInsideInline: fromOutsideInlineToInsideInline,
       fromInsideInlineToOutsideInline: fromInsideInlineToOutsideInline,
       staticOperation: staticOperation,
+      getOperationFromPosition: getOperationFromPosition,
       applyOperation: applyOperation
     };
   }

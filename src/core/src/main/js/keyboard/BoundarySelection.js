@@ -13,12 +13,13 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryOperations',
     'tinymce.core.keyboard.InlineUtils',
     'tinymce.core.util.LazyEvaluator'
   ],
-  function (Arr, Fun, CaretPosition, BoundaryOperations, InlineUtils, LazyEvaluator) {
+  function (Arr, Fun, CaretContainer, CaretPosition, BoundaryOperations, InlineUtils, LazyEvaluator) {
     var setCaretPosition = function (editor, pos) {
       var rng = editor.dom.createRng();
       rng.setStart(pos.container(), pos.offset());
@@ -78,10 +79,37 @@ define(
       };
     };
 
-    var setupSelectedState = function (editor) {
+    var unselectInlines = function (editor) {
+      Arr.each(editor.dom.select('a[href][data-mce-selected],code[data-mce-selected]'), Fun.curry(setSelected, false));
+    };
+
+    var selectInlines = function (elms) {
+      Arr.find(elms, InlineUtils.isInlineTarget).bind(Fun.curry(setSelected, true));
+    };
+
+    var safeRemoveCaretContainer = function (selection, caret) {
+      if (selection.isCollapsed()) {
+        var pos = CaretPosition.fromRangeStart(selection.getRng());
+        if (CaretPosition.isTextPosition(pos) && pos.container() !== caret.get()) {
+          CaretContainer.remove(caret.get());
+          caret.set(null);
+        }
+      }
+    };
+
+    var setupSelectedState = function (editor, caret) {
       editor.on('NodeChange', function (e) {
-        Arr.each(editor.dom.select('a[href][data-mce-selected],code[data-mce-selected]'), Fun.curry(setSelected, false));
-        Arr.find(e.parents, InlineUtils.isInlineTarget).bind(Fun.curry(setSelected, true));
+        var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+
+        unselectInlines(editor);
+        selectInlines(e.parents);
+        safeRemoveCaretContainer(editor.selection, caret);
+
+        if (editor.selection.isCollapsed()) {
+          BoundaryOperations.getOperationFromPosition(e.parents, pos).map(function (operation) {
+            setCaretPosition(editor, BoundaryOperations.applyOperation(caret, operation));
+          });
+        }
       });
     };
 
