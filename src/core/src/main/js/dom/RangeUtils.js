@@ -62,6 +62,12 @@ define(
       return findParent(node, rootNode, predicate) !== null;
     }
 
+    function hasParentWithName(node, rootNode, name) {
+      return hasParent(node, rootNode, function (node) {
+        return node.nodeName === name;
+      });
+    }
+
     function isFormatterCaret(node) {
       return node.id === '_mce_caret';
     }
@@ -301,7 +307,7 @@ define(
        * @return {Boolean} True/false if the specified range was normalized or not.
        */
       this.normalize = function (rng) {
-        var normalized, collapsed;
+        var normalized = false, collapsed;
 
         function normalizeEndPoint(start) {
           var container, offset, walker, body = dom.getRoot(), node, nonEmptyElementsMap;
@@ -364,9 +370,12 @@ define(
 
               // Found text node that has a length
               if (node.nodeType === 3 && node.nodeValue.length > 0) {
-                container = node;
-                offset = left ? node.nodeValue.length : 0;
-                normalized = true;
+                if (hasParentWithName(node, body, 'A') === false) {
+                  container = node;
+                  offset = left ? node.nodeValue.length : 0;
+                  normalized = true;
+                }
+
                 return;
               }
 

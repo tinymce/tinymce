@@ -187,6 +187,23 @@ asynctest(
       LegacyUnit.equal(new CaretPosition(getRoot(), 3).getNode(true), getRoot().childNodes[2]);
     });
 
+    suite.test('isAtStart/isAtEnd/isTextPosition', function () {
+      setupHtml('<b>abc</b><p><input></p>');
+
+      LegacyUnit.equal(CaretPosition.isAtStart(new CaretPosition(getRoot().firstChild.firstChild, 0)), true);
+      LegacyUnit.equal(CaretPosition.isAtStart(new CaretPosition(getRoot().firstChild.firstChild, 1)), false);
+      LegacyUnit.equal(CaretPosition.isAtStart(new CaretPosition(getRoot().firstChild.firstChild, 3)), false);
+      LegacyUnit.equal(CaretPosition.isAtStart(new CaretPosition(getRoot().lastChild, 0)), true);
+      LegacyUnit.equal(CaretPosition.isAtStart(new CaretPosition(getRoot().lastChild, 1)), false);
+      LegacyUnit.equal(CaretPosition.isAtEnd(new CaretPosition(getRoot().firstChild.firstChild, 3)), true);
+      LegacyUnit.equal(CaretPosition.isAtEnd(new CaretPosition(getRoot().firstChild.firstChild, 1)), false);
+      LegacyUnit.equal(CaretPosition.isAtEnd(new CaretPosition(getRoot().firstChild.firstChild, 0)), false);
+      LegacyUnit.equal(CaretPosition.isAtEnd(new CaretPosition(getRoot().lastChild, 1)), true);
+      LegacyUnit.equal(CaretPosition.isAtEnd(new CaretPosition(getRoot().lastChild, 0)), false);
+      LegacyUnit.equal(CaretPosition.isTextPosition(new CaretPosition(getRoot().firstChild.firstChild, 0)), true);
+      LegacyUnit.equal(CaretPosition.isTextPosition(new CaretPosition(getRoot().lastChild, 0)), false);
+    });
+
     viewBlock.attach();
     Pipeline.async({}, suite.toSteps({}), function () {
       viewBlock.detach();

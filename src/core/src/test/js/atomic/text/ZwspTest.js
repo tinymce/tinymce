@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.text.ZwspTest',
+  'atomic.tinymce.core.text.ZwspTest',
   [
     'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',

@@ -108,6 +108,38 @@ define(
       return textNode;
     }
 
+    var prependInline = function (node) {
+      if (NodeType.isText(node)) {
+        var data = node.data;
+        if (data.length > 0 && data.charAt(0) !== Zwsp.ZWSP) {
+          node.insertData(0, Zwsp.ZWSP);
+        }
+        return node;
+      } else {
+        return null;
+      }
+    };
+
+    var appendInline = function (node) {
+      if (NodeType.isText(node)) {
+        var data = node.data;
+        if (data.length > 0 && data.charAt(data.length - 1) !== Zwsp.ZWSP) {
+          node.insertData(data.length, Zwsp.ZWSP);
+        }
+        return node;
+      } else {
+        return null;
+      }
+    };
+
+    var isBeforeInline = function (pos) {
+      return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset()) === Zwsp.ZWSP;
+    };
+
+    var isAfterInline = function (pos) {
+      return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
+    };
+
     function createBogusBr() {
       var br = document.createElement('br');
       br.setAttribute('data-mce-bogus', '1');
@@ -191,6 +223,10 @@ define(
       isCaretContainerInline: isCaretContainerInline,
       showCaretContainerBlock: showCaretContainerBlock,
       insertInline: insertInline,
+      prependInline: prependInline,
+      appendInline: appendInline,
+      isBeforeInline: isBeforeInline,
+      isAfterInline: isAfterInline,
       insertBlock: insertBlock,
       hasContent: hasContent,
       remove: remove,

@@ -10,7 +10,7 @@ asynctest(
     'tinymce.core.test.CaretAsserts',
     'tinymce.core.test.ViewBlock'
   ],
-  function (LegacyUnit, Pipeline, Env, CaretWalker, CaretPosition, $, CaretAsserts, ViewBlock) {
+  function (LegacyUnit, Pipeline, Env, CaretWalker, CaretPosition, DomQuery, CaretAsserts, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -29,15 +29,15 @@ asynctest(
     };
 
     var findElm = function (selector) {
-      return $(selector, getRoot())[0];
+      return DomQuery(selector, getRoot())[0];
     };
 
     var findElmPos = function (selector, offset) {
-      return CaretPosition($(selector, getRoot())[0], offset);
+      return CaretPosition(DomQuery(selector, getRoot())[0], offset);
     };
 
     var findTextPos = function (selector, offset) {
-      return CaretPosition($(selector, getRoot())[0].firstChild, offset);
+      return CaretPosition(DomQuery(selector, getRoot())[0].firstChild, offset);
     };
 
     var logicalCaret = new CaretWalker(getRoot());
@@ -285,6 +285,16 @@ asynctest(
 
       CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:first', 1)), findElmPos('p:last', 0));
       CaretAsserts.assertCaretPosition(logicalCaret.prev(findElmPos('p:last', 0)), findElmPos('p:first', 1));
+    });
+
+    suite.test('from before/after root', function () {
+      setupHtml(
+        '<p>a</p>' +
+        '<p>b</p>'
+      );
+
+      CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition.before(getRoot())), findTextPos('p:first', 0));
+      CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), findTextPos('p:last', 1));
     });
 
     suite.test('never into caret containers', function () {
