@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.GuiEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.debugging.Debugging',
     'ephox.alloy.events.DescribedHandler',
+    'ephox.alloy.events.GuiEvents',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
@@ -25,7 +25,7 @@ define(
   ],
 
   function (
-    GuiFactory, GuiEvents, SystemEvents, SystemApi, Container, Debugging, DescribedHandler, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert,
+    GuiFactory, SystemEvents, SystemApi, Container, Debugging, DescribedHandler, GuiEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert,
     Remove, Node, Traverse, Error
   ) {
     var create = function ( ) {

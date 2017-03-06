@@ -56,7 +56,7 @@ define(
                 run: function (self) {
                   getField(self, detail, otherName).each(function (other) {
                     getPart(self, detail, 'lock').each(function (lock) {
-                      if (Toggling.isSelected(lock)) detail.onLockedChange()(self, other, lock);
+                      if (Toggling.isOn(lock)) detail.onLockedChange()(self, other, lock);
                     });
                   });
                 }
@@ -83,7 +83,10 @@ define(
           return {
             behaviours: {
               toggling: {
-                toggleClass: detail.markers().lockClass()
+                toggleClass: detail.markers().lockClass(),
+                aria: {
+                  mode: 'pressed'
+                }
               }
             }
           };

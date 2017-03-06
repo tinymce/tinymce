@@ -55,7 +55,10 @@ define(
           behaviours: {
             toggling: {
               toggleOnExecute: false,
-              toggleClass: detail.toggleClass()
+              toggleClass: detail.toggleClass(),
+              aria: {
+                mode: 'pressed'
+              }
             }
           }
         };

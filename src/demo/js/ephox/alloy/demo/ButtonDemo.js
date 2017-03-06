@@ -8,14 +8,13 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
-    'ephox.boulder.api.Objects',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 
-  function (Behaviour, Toggling, Gui, Button, HtmlDisplay, DomModification, Objects, Class, Element, Insert, document) {
+  function (Behaviour, Toggling, Gui, Button, HtmlDisplay, DomModification, Class, Element, Insert, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -95,7 +94,10 @@ define(
           },
           behaviours: Behaviour.derive([
             Toggling.config({
-              toggleClass: 'demo-selected'
+              toggleClass: 'demo-selected',
+              aria: {
+                mode: 'pressed'
+              }
             })
           ])
         })
@@ -103,7 +105,7 @@ define(
 
       button2.logSpec();
 
-      Toggling.select(button2);
+      Toggling.on(button2);
 
 
 
