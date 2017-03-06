@@ -38,7 +38,9 @@ define(
       var register = function (component) {
         var tagId = readOrTag(component);
         if (Objects.hasKey(components, tagId)) failOnDuplicate(component, tagId);
-        events.registerId(component, tagId, component.events());
+        // Component is passed through an an extra argument to all events
+        var extraArgs = [ component ];
+        events.registerId(extraArgs, tagId, component.events());
         components[tagId] = component;
       };
 

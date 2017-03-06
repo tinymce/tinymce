@@ -2,25 +2,26 @@ define(
   'ephox.alloy.demo.DraggableDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.data.DragCoord',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.alloy.api.data.DragCoord',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.view.Position',
+    'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.view.Position',
     'global!document'
   ],
 
-  function (Gui, Behaviour, Dragging, Button, Container, HtmlDisplay, DragCoord, Objects, Fun, Option, Position, Class, Css, Element, Insert, document) {
+  function (Behaviour, Dragging, DragCoord, Gui, Button, Container, HtmlDisplay, Objects, Fun, Option, PlatformDetection, Insert, Element, Class, Css, Position, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -29,6 +30,27 @@ define(
 
       Insert.append(body, gui.element());
       Css.set(body, 'margin-bottom', '2000px');
+
+
+      var snapData = {
+        getSnapPoints: function () {
+          return [
+            Dragging.snap({
+              sensor: DragCoord.fixed(300, 10),
+              range: Position(1000, 30),
+              output: DragCoord.fixed(Option.none(), Option.some(10))
+            }),
+
+            Dragging.snap({
+              sensor: DragCoord.offset(300, 500),
+              range: Position(40, 40),
+              output: DragCoord.absolute(Option.some(300), Option.some(500))
+            })
+          ];
+        },
+        leftAttr: 'data-drag-left',
+        topAttr: 'data-drag-top'
+      };
 
       var button1 = HtmlDisplay.section(
         gui,
@@ -73,29 +95,16 @@ define(
               },
 
               behaviours: Behaviour.derive([
-                Dragging.config({
-                  mode: 'mouse',
-                  blockerClass: [ 'blocker' ],
-                  snaps: {
-                    getSnapPoints: function () {
-                      return [
-                        Dragging.snap({
-                          sensor: DragCoord.fixed(300, 10),
-                          range: Position(1000, 30),
-                          output: DragCoord.fixed(Option.none(), Option.some(10))
-                        }),
-
-                        Dragging.snap({
-                          sensor: DragCoord.offset(300, 500),
-                          range: Position(40, 40),
-                          output: DragCoord.absolute(Option.some(300), Option.some(500))
-                        })
-                      ];
-                    },
-                    leftAttr: 'data-drag-left',
-                    topAttr: 'data-drag-top'
+                Dragging.config(
+                  PlatformDetection.detect().deviceType.isTouch() ? {
+                    mode: 'touch',
+                    snaps: snapData
+                  } : {
+                    mode: 'mouse',
+                    blockerClass: [ 'blocker' ],
+                    snaps: snapData
                   }
-                })
+                )
               ]),
               eventOrder: {
                 // Because this is a button, allow dragging. It will stop clicking.
