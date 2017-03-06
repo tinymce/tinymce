@@ -2,13 +2,14 @@ define(
   'ephox.alloy.dragging.common.SnapSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.view.Scroll',
     'global!window'
   ],
 
-  function (FieldSchema, Fun, Scroll, window) {
+  function (Fields, FieldSchema, Fun, Scroll, window) {
     var defaultLazyViewport = function () {
       var scroll = Scroll.get();
 
@@ -24,7 +25,7 @@ define(
     
     return FieldSchema.optionObjOf('snaps', [
       FieldSchema.strict('getSnapPoints'),
-      FieldSchema.defaulted('onSensor', Fun.noop),
+      Fields.onHandler('onSensor'),
       FieldSchema.strict('leftAttr'),
       FieldSchema.strict('topAttr'),
       FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
