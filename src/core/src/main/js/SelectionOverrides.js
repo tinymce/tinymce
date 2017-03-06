@@ -722,12 +722,15 @@ define(
         });
 
         function paddEmptyContentEditableArea() {
-          var br, ceRoot = getContentEditableRoot(editor.selection.getNode());
+          var content, ceRoot = getContentEditableRoot(editor.selection.getNode());
 
           if (isContentEditableTrue(ceRoot) && isBlock(ceRoot) && editor.dom.isEmpty(ceRoot)) {
-            br = editor.dom.create('br', { "data-mce-bogus": "1" });
-            editor.$(ceRoot).empty().append(br);
-            editor.selection.setRng(CaretPosition.before(br).toRange());
+            content = editor.dom.create('br', { "data-mce-bogus": "1" });
+            if (editor.settings.forced_root_block) {
+              content = editor.dom.create(editor.settings.forced_root_block, editor.settings.forced_root_block_attrs, content);
+            }
+            editor.$(ceRoot).empty().append(content);
+            editor.selection.setRng(CaretPosition.before(content).toRange());
           }
         }
 
