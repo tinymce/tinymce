@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.events.GuiEvents',
+  'ephox.alloy.events.GuiEvents',
 
   [
     'ephox.alloy.alien.Keys',
@@ -50,7 +50,7 @@ define(
     var setup = function (container, rawSettings) {
       var settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
-      // These events are just passed through ... not additional processing
+      // These events are just passed through ... no additional processing
       var simpleEvents = Arr.map([
         'click',
         'selectstart',
@@ -64,7 +64,7 @@ define(
         'contextmenu',
         'change',
         'transitionend',
-        // Test
+        // Test the drag events
         'dragstart',
         'dragover',
         'drop',

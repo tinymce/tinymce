@@ -43,7 +43,7 @@ define(
       return {
         // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
         // Note: in testing, it didn't seem to cause problems on Android. Check.
-        'gesturestart': EventHandler.nu({
+        gesturestart: EventHandler.nu({
           run: function (component, simulatedEvent) {
             // Only prevent default ... do not stop the event bubbling.
             simulatedEvent.event().prevent();

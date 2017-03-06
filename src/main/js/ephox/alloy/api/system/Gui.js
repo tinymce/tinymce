@@ -3,10 +3,10 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.events.GuiEvents',
+    'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.events.GuiEvents',
     'ephox.alloy.events.Triggers',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
@@ -16,14 +16,14 @@ define(
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
   function (
-    GuiFactory, SystemApi, SystemEvents, GuiEvents, Container, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Node, Remove, Traverse,
+    GuiFactory, SystemEvents, SystemApi, Container, GuiEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert, Remove, Node, Traverse,
     Error
   ) {
     var create = function ( ) {

@@ -12,14 +12,8 @@ define(
   ],
 
   function (OffsetOrigin, DragCoord, Snappables, Css, Traverse, Location, Scroll) {
-    var dragBy = function (component, dragInfo, delta) {
-      var doc = Traverse.owner(component.element());
-      var scroll = Scroll.get(doc);
-      
-      var target = dragInfo.getTarget()(component.element());
-      var origin = OffsetOrigin.getOrigin(target, scroll);
-      
-      var currentCoord = Css.getRaw(target, 'left').bind(function (left) {
+    var getCurrentCoord = function (target) {
+      return Css.getRaw(target, 'left').bind(function (left) {
         return Css.getRaw(target, 'top').bind(function (top) {
           return Css.getRaw(target, 'position').map(function (position) {
             var nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
@@ -33,8 +27,10 @@ define(
         var location = Location.absolute(target);
         return DragCoord.absolute(location.left(), location.top());
       });
+    };
 
-      var newCoord = dragInfo.snaps().fold(function () {
+    var calcNewCoord = function (component, optSnaps, currentCoord, scroll, origin, delta) {
+      return optSnaps.fold(function () {
         // When not docking, use fixed coordinates.
         var translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
         var fixedCoord = DragCoord.asFixed(translated, scroll, origin);
@@ -46,7 +42,18 @@ define(
         });
         return snapping.coord;
       });
+    };
 
+    var dragBy = function (component, dragInfo, delta) {
+      var doc = Traverse.owner(component.element());
+      var scroll = Scroll.get(doc);
+      
+      var target = dragInfo.getTarget()(component.element());
+      var origin = OffsetOrigin.getOrigin(target, scroll);
+      
+      var currentCoord = getCurrentCoord(target);
+
+      var newCoord = calcNewCoord(component, dragInfo.snaps(), currentCoord, scroll, origin, delta);
       var styles = DragCoord.toStyles(newCoord, scroll, origin);
       Css.setAll(target, styles);
     };
