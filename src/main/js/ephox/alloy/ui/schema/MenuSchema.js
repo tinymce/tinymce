@@ -62,7 +62,7 @@ define(
 
       FieldSchema.defaulted('fakeFocus', false),
       FieldSchema.defaulted('focusManager', FocusManagers.dom()),
-      FieldSchema.defaulted('onHighlight', Fun.noop)
+      Fields.onHandler('onHighlight')
     ];
 
     return {

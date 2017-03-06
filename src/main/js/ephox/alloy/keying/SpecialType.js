@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
@@ -11,16 +12,16 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (Keys, KeyingType, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
+  function (Keys, Fields, KeyingType, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
     var schema = [
-      FieldSchema.defaulted('onSpace', Option.none),
-      FieldSchema.defaulted('onEnter', Option.none),
-      FieldSchema.defaulted('onShiftEnter', Option.none),
-      FieldSchema.defaulted('onLeft', Option.none),
-      FieldSchema.defaulted('onRight', Option.none),
-      FieldSchema.defaulted('onUp', Option.none),
-      FieldSchema.defaulted('onDown', Option.none),
-      FieldSchema.defaulted('onEscape', Option.none),
+      Fields.onKeyboardHandler('onSpace'),
+      Fields.onKeyboardHandler('onEnter'),
+      Fields.onKeyboardHandler('onShiftEnter'),
+      Fields.onKeyboardHandler('onLeft'),
+      Fields.onKeyboardHandler('onRight'),
+      Fields.onKeyboardHandler('onUp'),
+      Fields.onKeyboardHandler('onDown'),
+      Fields.onKeyboardHandler('onEscape'),
       FieldSchema.option('focusIn')
     ];
     

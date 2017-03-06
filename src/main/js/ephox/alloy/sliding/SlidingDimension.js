@@ -3,17 +3,18 @@ define(
 
   [
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Classes',
     'ephox.sugar.api.properties.Css'
   ],
 
-  function (EventHandler, DomModification, FieldSchema, Objects, Fun, Cell, Class, Classes, Css) {
+  function (EventHandler, Fields, DomModification, FieldSchema, Objects, Cell, Fun, Class, Classes, Css) {
     return function (dimensionProperty, getDimension) {
 
        var schema = [
@@ -25,10 +26,10 @@ define(
         // Element which shrinking and growing animations
         FieldSchema.option('getAnimationRoot'),
 
-        FieldSchema.defaulted('onShrunk', function () { }),
-        FieldSchema.defaulted('onStartShrink', function () { }),
-        FieldSchema.defaulted('onGrown', function () { }),
-        FieldSchema.defaulted('onStartGrow', function () { }),
+        Fields.onHandler('onShrunk'),
+        Fields.onHandler('onStartShrink'),
+        Fields.onHandler('onGrown'),
+        Fields.onHandler('onStartGrow'),
         FieldSchema.defaulted('expanded', false),
         FieldSchema.state('state', function (spec) {
           return Cell(spec.expanded === true);

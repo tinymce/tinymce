@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.DelayedFunction',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.dragging.common.BlockerUtils',
     'ephox.alloy.dragging.common.DragMovement',
     'ephox.alloy.dragging.common.DragState',
@@ -19,8 +20,8 @@ define(
   ],
 
   function (
-    DelayedFunction, Container, EventHandler, BlockerUtils, DragMovement, DragState, SnapSchema, BlockerEvents, MouseData, Snappables, FieldSchema, Fun, parseInt,
-    window
+    DelayedFunction, Container, EventHandler, Fields, BlockerUtils, DragMovement, DragState, SnapSchema, BlockerEvents, MouseData, Snappables, FieldSchema, Fun,
+    parseInt, window
   ) {
     var handlers = function (dragInfo) {
       return {
@@ -103,7 +104,7 @@ define(
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.strict('blockerClass'),
       FieldSchema.defaulted('getTarget', Fun.identity),
-      FieldSchema.defaulted('onDrop', Fun.noop),
+      Fields.onHandler('onDrop'),
       SnapSchema,
       FieldSchema.state('state', DragState),
       FieldSchema.state('dragger', instance)

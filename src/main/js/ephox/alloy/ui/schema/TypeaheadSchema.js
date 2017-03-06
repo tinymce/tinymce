@@ -15,16 +15,14 @@ define(
     'ephox.katamari.api.Cell'
   ],
 
-  function (
-    Strings, Coupling, Representing, Sandboxing, Fields, PartType, InputBase, FieldSchema,
-    Fun, Option, Cell
-  ) {
+  function (Strings, Coupling, Representing, Sandboxing, Fields, PartType, InputBase, FieldSchema, Fun, Option, Cell) {
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
       FieldSchema.defaulted('minChars', 5),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      FieldSchema.defaulted('onExecute', Option.none),
+      Fields.onHandler('onOpen'),
+
+      Fields.onKeyboardHandler('onExecute'),
       FieldSchema.defaulted('matchWidth', true),
       Fields.markers([ 'openClass' ]),
 

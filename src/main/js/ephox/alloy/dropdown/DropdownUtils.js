@@ -10,11 +10,12 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.aria.AriaOwner',
+    'ephox.alloy.parts.InternalSink',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.sandbox.Dismissal',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Future',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Remove',
@@ -22,7 +23,10 @@ define(
     'global!Error'
   ],
 
-  function (ComponentStructure, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, Tagger, Dismissal, Merger, Future, Fun, Option, Result, Remove, Width, Error) {
+  function (
+    ComponentStructure, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, InternalSink, Tagger, Dismissal, Fun, Future, Merger,
+    Option, Result, Remove, Width, Error
+  ) {
     
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
@@ -98,7 +102,7 @@ define(
     };
 
     var getSink = function (anyInSystem, detail) {
-      return anyInSystem.getSystem().getByUid(detail.uid() + '-internal-sink').map(function (internalSink) {
+      return anyInSystem.getSystem().getByUid(detail.uid() + '-' + InternalSink.suffix()).map(function (internalSink) {
         return Fun.constant(
           Result.value(internalSink)
         );

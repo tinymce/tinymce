@@ -2,23 +2,24 @@ define(
   'ephox.alloy.events.Triggers',
 
   [
+    'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.events.EventSource',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (EventSource, Arr, Fun, Adt, Cell, Traverse, Error) {
+  function (DescribedHandler, EventSource, Adt, Arr, Cell, Fun, Traverse, Error) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },
       { complete: [ ] }
     ]);
 
-    var doTriggerHandler = function (lookup, eventType, rawEvent, target, source) {
+    var doTriggerHandler = function (lookup, eventType, rawEvent, target, source, logger) {
       var handler = lookup(eventType, target);
 
       var stopper = Cell(false);
@@ -44,43 +45,54 @@ define(
 
       return handler.fold(function () {
         // No handler, so complete.
+        logger.logEventNoHandlers(eventType, target);
         return adt.complete();
       }, function (handlerInfo) {
-        handlerInfo.handler(simulatedEvent);
+        var descHandler = handlerInfo.descHandler();
+        var eventHandler = DescribedHandler.getHandler(descHandler);
+        eventHandler(simulatedEvent);
 
         // Now, check if the event was stopped.
-        if (stopper.get() === true) return adt.stopped();
+        if (stopper.get() === true) {
+          logger.logEventStopped(eventType, handlerInfo.element(), descHandler.purpose());
+          return adt.stopped();
+        }
         // Now, check if the event was cut
-        else if (cutter.get() === true) return adt.complete();
+        else if (cutter.get() === true) {
+          logger.logEventCut(eventType, handlerInfo.element(), descHandler.purpose());
+          return adt.complete();
+        }
         else return Traverse.parent(handlerInfo.element()).fold(function () {
+          logger.logNoParent(eventType, handlerInfo.element(), descHandler.purpose());
           // No parent, so complete.
           return adt.complete();
         }, function (parent) {
+          logger.logEventResponse(eventType, handlerInfo.element(), descHandler.purpose());
           // Resume at parent
           return adt.resume(parent);
         });
       });
     };
 
-    var doTriggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, source) {
-      return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source).fold(function () {
+    var doTriggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, source, logger) {
+      return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(function () {
         // stopped.
         return true;
       }, function (parent) {
         // Go again.
-        return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source);
+        return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger);
       }, function () {
         // completed
         return false;
       });
     };
 
-    var triggerHandler = function (lookup, eventType, rawEvent, target) {
+    var triggerHandler = function (lookup, eventType, rawEvent, target, logger) {
       var source = EventSource.derive(rawEvent, target);
-      return doTriggerHandler(lookup, eventType, rawEvent, target, source);
+      return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
     };
 
-    var broadcast = function (listeners, rawEvent) {
+    var broadcast = function (listeners, rawEvent, logger) {
       /* TODO: Remove dupe */
       var stopper = Cell(false);
 
@@ -102,20 +114,22 @@ define(
       };
 
       Arr.each(listeners, function (listener) {
-        listener.handler(simulatedEvent);
+        var descHandler = listener.descHandler();
+        var handler = DescribedHandler.getHandler(descHandler);
+        handler(simulatedEvent);
       });
 
       return stopper.get() === true;
     };
 
-    var triggerUntilStopped = function (lookup, eventType, rawEvent) {
+    var triggerUntilStopped = function (lookup, eventType, rawEvent, logger) {
       var rawTarget = rawEvent.target();
-      return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget);
+      return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, logger);
     };
 
-    var triggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget) {
+    var triggerOnUntilStopped = function (lookup, eventType, rawEvent, rawTarget, logger) {
       var source = EventSource.derive(rawEvent, rawTarget);
-      return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source);
+      return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source, logger);
     };
 
     return {

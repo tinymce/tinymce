@@ -2,22 +2,23 @@ define(
   'ephox.alloy.ui.schema.ModalDialogSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.JSON',
     'ephox.sugar.api.search.SelectorFind',
     'global!Error'
   ],
 
-  function (PartType, FieldSchema, Json, Fun, Option, SelectorFind, Error) {
+  function (Fields, PartType, FieldSchema, Fun, Option, Json, SelectorFind, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
 
-      FieldSchema.defaulted('onExecute', Option.none),
-      FieldSchema.strict('onEscape')
+      Fields.onKeyboardHandler('onExecute'),
+      Fields.onStrictKeyboardHandler('onEscape')
     ];
 
     var basic = { sketch: Fun.identity };

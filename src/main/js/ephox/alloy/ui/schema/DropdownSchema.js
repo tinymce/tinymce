@@ -6,15 +6,14 @@ define(
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Fun'
   ],
 
-  function (Fields, InternalSink, PartType, FieldSchema, Fun, Option) {
+  function (Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('fetch'),
-      FieldSchema.defaulted('onOpen', Fun.noop),
-      FieldSchema.defaulted('onExecute', Option.none),
+      Fields.onHandler('onOpen'),
+      Fields.onKeyboardHandler('onExecute'),
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('dom'),
       FieldSchema.defaulted('displayer', Fun.identity),
@@ -38,7 +37,7 @@ define(
         },
         Fun.constant({ })
       ),
-      InternalSink
+      InternalSink.partType()
     ];
 
     return {

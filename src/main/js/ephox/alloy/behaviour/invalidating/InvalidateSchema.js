@@ -2,12 +2,12 @@ define(
   'ephox.alloy.behaviour.invalidating.InvalidateSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option'
   ],
 
-  function (FieldSchema, Fun, Option) {
+  function (Fields, FieldSchema, Option) {
     return [
       FieldSchema.strict('invalidClass'),
       
@@ -16,9 +16,9 @@ define(
         // Maybe we should use something else.
         FieldSchema.defaulted('getContainer', Option.none),
         FieldSchema.defaulted('validHtml', ''),
-        FieldSchema.defaulted('onValid', Fun.noop),
-        FieldSchema.defaulted('onInvalid', Fun.noop),
-        FieldSchema.defaulted('onValidate', Fun.noop)
+        Fields.onHandler('onValid'),
+        Fields.onHandler('onInvalid'),
+        Fields.onHandler('onValidate')
       ]),
 
       FieldSchema.optionObjOf('validator', [

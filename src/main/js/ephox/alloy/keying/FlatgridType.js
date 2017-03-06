@@ -23,7 +23,7 @@ define(
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
-      FieldSchema.defaulted('onEscape', Option.none),
+      Fields.onKeyboardHandler('onEscape'),
       FieldSchema.defaulted('captureTab', false),
 
       Fields.initSize(),

@@ -2,14 +2,19 @@ define(
   'ephox.alloy.data.Fields',
 
   [
+    'ephox.alloy.debugging.Debugging',
     'ephox.alloy.menu.util.MenuMarkers',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'global!console'
   ],
 
-  function (MenuMarkers, FieldSchema, Arr, Fun) {
-
+  function (Debugging, MenuMarkers, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Result, console) {
     var initSize = FieldSchema.strictObjOf('initSize', [
       FieldSchema.strict('numColumns'),
       FieldSchema.strict('numRows')
@@ -41,13 +46,54 @@ define(
       return FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
     };
 
+    var onPresenceHandler = function (label, fieldName, presence) {
+      // We care about where the handler was declared (in terms of which schema)
+      var trace = Debugging.getTrace();
+      return FieldSchema.field(
+        fieldName,
+        fieldName,
+        presence,
+        // Apply some wrapping to their supplied function
+        ValueSchema.valueOf(function (f) {
+          return Result.value(function () {
+            /*
+             * This line is just for debugging information 
+             */
+            Debugging.logHandler(label, fieldName, trace);
+            return f.apply(undefined, arguments);
+          });
+        })
+      );
+    };
+
+    var onHandler = function (fieldName) {
+      return onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
+    };
+
+    var onKeyboardHandler = function (fieldName) {
+      return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Option.none));
+    };
+
+    var onStrictHandler = function (fieldName) {
+      return onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
+    };
+
+    var onStrictKeyboardHandler = function (fieldName) {
+      return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
+    }
+
     return {
       initSize: Fun.constant(initSize),
       members: members,
       itemMarkers: itemMarkers,
       menuMarkers: menuMarkers,
       tieredMenuMarkers: tieredMenuMarkers,
-      markers: markers
+      markers: markers,
+
+      onHandler: onHandler,
+      onKeyboardHandler: onKeyboardHandler,
+      onStrictHandler: onStrictHandler,
+      onStrictKeyboardHandler: onStrictKeyboardHandler
     };
   }
 );
