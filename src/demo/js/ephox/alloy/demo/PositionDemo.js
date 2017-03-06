@@ -63,7 +63,7 @@ define(
             'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
           },
           action: function (comp) {
-            if (Toggling.isSelected(comp)) {
+            if (Toggling.isOn(comp)) {
               Positioning.addContainer(sink, popup);
               Positioning.position(sink, {
                 anchor: 'hotspot',
@@ -76,7 +76,10 @@ define(
 
           behaviours: {
             toggling: {
-              toggleClass: 'demo-selected'
+              toggleClass: 'demo-selected',
+              aria: {
+                mode: 'pressed'
+              }
             }
           }
         })

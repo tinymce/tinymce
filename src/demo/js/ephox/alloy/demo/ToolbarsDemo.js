@@ -132,7 +132,10 @@ define(
 
           behaviours: {
             toggling: {
-              toggleClass: 'mce-active'
+              toggleClass: 'mce-active',
+              aria: {
+                mode: 'pressed'
+              }
             }
           }
         }) : Button.sketch({
