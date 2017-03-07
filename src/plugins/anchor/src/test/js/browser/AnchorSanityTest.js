@@ -48,7 +48,7 @@ asynctest(
                   children: [
                     s.anything(),
                     s.element('a', {
-                      attribs: {
+                      attrs: {
                         id: str.is('abc')
                       }
                     }),

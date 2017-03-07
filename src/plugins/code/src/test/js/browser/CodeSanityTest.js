@@ -35,7 +35,6 @@ asynctest(
         tinyUi.sClickOnToolbar('click code button', 'div[aria-label="Source code"] button'),
         tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"]'),
         sAssertTextareaContent('<p><strong>a</strong></p>')
-
       ], onSuccess, onFailure);
     }, {
       plugins: 'code',
