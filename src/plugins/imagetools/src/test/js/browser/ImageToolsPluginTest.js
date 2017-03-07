@@ -8,15 +8,17 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.imagetools.Plugin',
+    'tinymce.themes.modern.Theme',
     'tinymce.plugins.imagetools.test.ImageUtils'
   ],
-  function (GeneralSteps, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ImageUtils) {
+  function (GeneralSteps, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ModernTheme, ImageUtils) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var uploadHandlerState = ImageUtils.createStateContainer();
     var sourceImageUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
 
     Plugin();
+    ModernTheme();
 
     var sAssertUploadFilename = function (expected) {
       return Step.sync(function () {
@@ -63,7 +65,8 @@ asynctest(
     }, {
       plugins: 'imagetools',
       automatic_uploads: false,
-      images_upload_handler: uploadHandlerState.handler(sourceImageUrl)
+      images_upload_handler: uploadHandlerState.handler(sourceImageUrl),
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );
