@@ -27,7 +27,7 @@ asynctest(
     var sAssertEditorHeight = function (editor, minHeight) {
       return Step.sync(function () {
         var editorHeight = editor.getContainer().scrollHeight;
-        RawAssertions.assertEq('should be over 5000', editorHeight >= minHeight, true);
+        RawAssertions.assertEq('should be over 5000', true, editorHeight >= minHeight);
       });
     };
 
