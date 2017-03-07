@@ -3,14 +3,10 @@ asynctest(
 
   [
     'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
-    'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.anchor.Plugin',
@@ -18,8 +14,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Keyboard, Keys, Pipeline, Step, Waiter, TinyActions, TinyApis, TinyDom,
-    TinyLoader, TinyUi, AchorPlugin, ModernTheme
+    ApproxStructure, Pipeline, Step, Waiter, TinyApis, TinyLoader, TinyUi, AchorPlugin,
+    ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -36,7 +32,6 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyUi = TinyUi(editor);
-      var tinyActions = TinyActions(editor);
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
