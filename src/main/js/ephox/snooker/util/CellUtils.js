@@ -14,7 +14,7 @@ define(
     };
 
     var hasColspan = function (cell) {
-      return getSpan(cell, 'cellspan');
+      return getSpan(cell, 'colspan');
     };
 
     var hasRowspan = function (cell) {

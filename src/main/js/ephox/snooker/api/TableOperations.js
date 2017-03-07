@@ -19,11 +19,10 @@ define(
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
-    'ephox.sugar.api.Remove',
-    'global!parseInt'
+    'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, parseInt) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -95,15 +94,33 @@ define(
       return bundle(newGrid, detail.row(), detail.column());
     };
 
-    var eraseColumn = function (grid, detail, comparator, _genWrappers) {
-      var newGrid = ModificationOperations.deleteColumnAt(grid, detail.column());
-      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+    var splitCellIntoColumns = function (grid, detail, comparator, genWrappers) {
+      var newGrid = ModificationOperations.splitCellIntoColumns(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
+      return bundle(newGrid, detail.row(), detail.column());
+    };
+
+    var splitCellIntoRows = function (grid, detail, comparator, genWrappers) {
+      var newGrid = ModificationOperations.splitCellIntoRows(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
+      return bundle(newGrid, detail.row(), detail.column());
+    };
+
+    var eraseColumns = function (grid, details, comparator, _genWrappers) {
+      var uniqueColumns = Arr.foldl(details, function (rest, detail) {
+          return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
+      }, []).sort();
+
+      var newGrid = ModificationOperations.deleteColumnsAt(grid, uniqueColumns[0], uniqueColumns[uniqueColumns.length - 1]);
+      var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
 
-    var eraseRow = function (grid, detail, comparator, _genWrappers) {
-      var newGrid = ModificationOperations.deleteRowAt(grid, detail.row());
-      var cursor = elementFromGrid(newGrid, detail.row(), detail.column());
+    var eraseRows = function (grid, details, comparator, _genWrappers) {
+      var uniqueRows = Arr.foldl(details, function (rest, detail) {
+          return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
+      }, []).sort();
+
+      var newGrid = ModificationOperations.deleteRowsAt(grid, uniqueRows[0], uniqueRows[uniqueRows.length - 1]);
+      var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
 
@@ -146,8 +163,10 @@ define(
       insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
-      eraseColumn:  RunOperation.run(eraseColumn, RunOperation.onCell, resize, prune, Generators.modification),
-      eraseRow:  RunOperation.run(eraseRow, RunOperation.onCell, Fun.noop, prune, Generators.modification),
+      splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
+      splitCellIntoRows:  RunOperation.run(splitCellIntoRows, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
+      eraseColumns:  RunOperation.run(eraseColumns, RunOperation.onCells, resize, prune, Generators.modification),
+      eraseRows:  RunOperation.run(eraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification),
       makeColumnHeader:  RunOperation.run(makeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th')),
       unmakeColumnHeader:  RunOperation.run(unmakeColumnHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
       makeRowHeader:  RunOperation.run(makeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th')),
