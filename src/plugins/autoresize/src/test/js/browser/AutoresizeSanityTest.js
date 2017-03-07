@@ -9,14 +9,13 @@ asynctest(
     'ephox.agar.api.Waiter',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.autoresize.Plugin',
     'tinymce.themes.modern.Theme'
   ],
 
   function (
-    ApproxStructure, Pipeline, RawAssertions, Step, Waiter, TinyApis, TinyLoader, TinyUi,
-    AutoresizePlugin, ModernTheme
+    ApproxStructure, Pipeline, RawAssertions, Step, Waiter, TinyApis, TinyLoader, AutoresizePlugin,
+    ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
