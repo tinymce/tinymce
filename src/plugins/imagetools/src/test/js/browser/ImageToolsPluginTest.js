@@ -63,7 +63,8 @@ asynctest(
     }, {
       plugins: 'imagetools',
       automatic_uploads: false,
-      images_upload_handler: uploadHandlerState.handler(sourceImageUrl)
+      images_upload_handler: uploadHandlerState.handler(sourceImageUrl),
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
 );

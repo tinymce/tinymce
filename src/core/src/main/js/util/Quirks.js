@@ -1236,11 +1236,13 @@ define(
           });
         }
 
-        editor.on('SetContent ExecCommand', function (e) {
-          if (e.type == "setcontent" || e.command === 'mceInsertLink') {
-            fixLinks();
-          }
-        });
+        if (editor.settings.inline_boundaries === false) {
+          editor.on('SetContent ExecCommand', function (e) {
+            if (e.type == "setcontent" || e.command === 'mceInsertLink') {
+              fixLinks();
+            }
+          });
+        }
       }
 
       /**
