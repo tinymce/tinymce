@@ -20,17 +20,18 @@
 define(
   'tinymce.core.dom.Selection',
   [
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.TridentSelection",
-    "tinymce.core.dom.ControlSelection",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.BookmarkManager",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.caret.CaretPosition"
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.ControlSelection',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.dom.TridentSelection',
+    'tinymce.core.Env',
+    'tinymce.core.text.Zwsp',
+    'tinymce.core.util.Tools'
   ],
-  function (TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, NodeType, Env, Tools, CaretPosition) {
+  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, TreeWalker, TridentSelection, Env, Zwsp, Tools) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
 
@@ -107,8 +108,8 @@ define(
         args.selection = true;
         self.editor.fire('BeforeGetContent', args);
 
-        if (args.format == 'text') {
-          return self.isCollapsed() ? '' : (rng.text || (se.toString ? se.toString() : ''));
+        if (args.format === 'text') {
+          return self.isCollapsed() ? '' : Zwsp.trim(rng.text || (se.toString ? se.toString() : ''));
         }
 
         if (rng.cloneContents) {

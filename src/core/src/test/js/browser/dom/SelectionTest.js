@@ -54,6 +54,16 @@ asynctest(
       editor.off('GetContent', handler);
     });
 
+    suite.test('getContent of zwsp', function (editor) {
+      editor.setContent('<p>a' + Zwsp.ZWSP + 'b</p>');
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.selection.getContent(), '<p>ab</p>', 'Get selected contents');
+      LegacyUnit.equal(editor.selection.getContent({ format: 'text' }), 'ab', 'Get selected contents');
+    });
+
     suite.test('setContent', function (editor) {
       var rng, eventObj;
 
