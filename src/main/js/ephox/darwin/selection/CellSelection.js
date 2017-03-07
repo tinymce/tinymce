@@ -29,17 +29,17 @@ define(
       Arr.each(cells, addSelectionClass);
     };
 
-    var lookupTable = function (container) {
+    var lookupTable = function (container, isRoot) {
       return SelectorFind.ancestor(container, 'table');
     };
 
-    var identify = function (start, finish) {
+    var identify = function (start, finish, isRoot) {
       // Optimisation: If the cells are equal, it's a single cell array
       if (Compare.eq(start, finish)) {
         return Option.some([ start ]);
       } else {
-        return lookupTable(start).bind(function (startTable) {
-          return lookupTable(finish).bind(function (finishTable) {
+        return lookupTable(start, isRoot).bind(function (startTable) {
+          return lookupTable(finish, isRoot).bind(function (finishTable) {
             if (Compare.eq(startTable, finishTable)) { // Selecting from within the same table.
               return TablePositions.intercepts(startTable, start, finish);
             } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
@@ -48,7 +48,7 @@ define(
               return TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable);
             } else { // Selecting from a nested table to a different nested table.
               return DomParent.ancestors(start, finish).shared().bind(function (lca) {
-                return SelectorFind.closest(lca, 'table').bind(function (lcaTable) {
+                return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
                   return TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable);
                 });
               });

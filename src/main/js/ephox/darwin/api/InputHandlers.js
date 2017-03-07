@@ -20,10 +20,10 @@ define(
   function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Situ, Fun, Option, Options, Struct) {
     var rc = Struct.immutable('rows', 'cols');
 
-    var mouse = function (win, container) {
+    var mouse = function (win, container, isRoot) {
       var bridge = WindowBridge(win);
 
-      var handlers = MouseSelection(bridge, container);
+      var handlers = MouseSelection(bridge, container, isRoot);
 
       return {
         mousedown: handlers.mousedown,
