@@ -193,7 +193,7 @@ define(
 
           if (!blobInfo) {
             blobInfo = Arr.reduce(editor.editorManager.editors, function (result, editor) {
-              return result || editor.editorUpload.blobCache.getByUri(blobUri);
+              return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
             }, null);
           }
 
