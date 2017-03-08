@@ -21,19 +21,32 @@ define(
   ],
   function (Promise) {
     function blobUriToBlob(url) {
-      return new Promise(function (resolve) {
-        var xhr = new XMLHttpRequest();
+      return new Promise(function (resolve, reject) {
 
-        xhr.open('GET', url, true);
-        xhr.responseType = 'blob';
-
-        xhr.onload = function () {
-          if (this.status == 200) {
-            resolve(this.response);
-          }
+        var rejectWithError = function () {
+          reject("Cannot convert " + url + " to Blob. Resource might not exist or is inaccessible.");
         };
 
-        xhr.send();
+        try {
+          var xhr = new XMLHttpRequest();
+
+          xhr.open('GET', url, true);
+          xhr.responseType = 'blob';
+
+          xhr.onload = function () {
+            if (this.status == 200) {
+              resolve(this.response);
+            }
+          };
+
+          // Chrome fires an error event instead of the exception
+          // Also there seems to be no way to intercept the message that is logged to the console
+          xhr.onerror = rejectWithError;
+
+          xhr.send();
+        } catch (ex) {
+          rejectWithError();
+        }
       });
     }
 
