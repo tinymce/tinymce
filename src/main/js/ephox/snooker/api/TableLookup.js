@@ -18,17 +18,16 @@ define(
 
   function (Arr, Fun, Option, Structs, LayerSelector, Attr, Node, SelectorFilter, SelectorFind, Selectors, Traverse, parseInt) {
     // lookup inside this table
-    var lookup = function (tags, element, isRoot) {
+    var lookup = function (tags, element, _isRoot) {
+      var isRoot = _isRoot !== undefined ? _isRoot : Fun.constant(false);
+      // If the element we're inspecting is the root, we definitely don't want it.
+      if (isRoot(element)) return Option.none();
       // This looks a lot like SelectorFind.closest, with one big exception - the isRoot check.
       // The code here will look for parents if passed a table, SelectorFind.closest with that specific isRoot check won't.
       if (Arr.contains(tags, Node.name(element))) return Option.some(element);
 
       var isRootOrUpperTable = function (element) {
-        return isRoot.fold(function () {
-          return Selectors.is(element, 'table');  
-        }, function (isRoot) {
-          return Selectors.is(element, 'table') || isRoot(element);
-        });
+        return Selectors.is(element, 'table') || isRoot(element);
       };
 
       return SelectorFind.ancestor(element, tags.join(','), isRootOrUpperTable);
@@ -38,7 +37,7 @@ define(
      * Identify the optional cell that element represents.
      */
     var cell = function (element, isRoot) {
-      return lookup([ 'td', 'th' ], element, Option.from(isRoot));
+      return lookup([ 'td', 'th' ], element, isRoot);
     };
 
     var cells = function (ancestor) {
@@ -46,7 +45,7 @@ define(
     };
 
     var notCell = function (element, isRoot) {
-      return lookup([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, Option.from(isRoot));
+      return lookup([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
     };
 
     var neighbours = function (selector, element) {
@@ -63,11 +62,11 @@ define(
     };
 
     var table = function (element, isRoot) {
-      return SelectorFind.closest(element, 'table', Option.from(isRoot));
+      return SelectorFind.closest(element, 'table', isRoot);
     };
 
     var row = function (element, isRoot) {
-       return lookup([ 'tr' ], element, Option.from(isRoot));
+       return lookup([ 'tr' ], element, isRoot);
     };
 
     var rows = function (ancestor) {
