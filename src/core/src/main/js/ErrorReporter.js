@@ -67,7 +67,8 @@ define(
 
     return {
       pluginLoadError: pluginLoadError,
-      uploadError: uploadError
+      uploadError: uploadError,
+      displayError: displayError
     };
   }
 );
