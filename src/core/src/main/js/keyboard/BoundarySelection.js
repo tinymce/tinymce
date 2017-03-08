@@ -14,12 +14,13 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretContainerRemove',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryOperations',
     'tinymce.core.keyboard.InlineUtils',
     'tinymce.core.util.LazyEvaluator'
   ],
-  function (Arr, Fun, CaretContainer, CaretPosition, BoundaryOperations, InlineUtils, LazyEvaluator) {
+  function (Arr, Fun, CaretContainer, CaretContainerRemove, CaretPosition, BoundaryOperations, InlineUtils, LazyEvaluator) {
     var setCaretPosition = function (editor, pos) {
       var rng = editor.dom.createRng();
       rng.setStart(pos.container(), pos.offset());
@@ -87,11 +88,11 @@ define(
       Arr.find(elms, InlineUtils.isInlineTarget).bind(Fun.curry(setSelected, true));
     };
 
-    var safeRemoveCaretContainer = function (selection, caret) {
-      if (selection.isCollapsed()) {
-        var pos = CaretPosition.fromRangeStart(selection.getRng());
-        if (CaretPosition.isTextPosition(pos) && pos.container() !== caret.get()) {
-          CaretContainer.remove(caret.get());
+    var safeRemoveCaretContainer = function (editor, caret) {
+      if (editor.selection.isCollapsed()) {
+        var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+        if (CaretPosition.isTextPosition(pos) && InlineUtils.isAtZwsp(pos) === false) {
+          setCaretPosition(editor, CaretContainerRemove.removeAndReposition(caret.get(), pos));
           caret.set(null);
         }
       }
@@ -103,7 +104,7 @@ define(
 
         unselectInlines(editor);
         selectInlines(e.parents);
-        safeRemoveCaretContainer(editor.selection, caret);
+        safeRemoveCaretContainer(editor, caret);
 
         if (editor.selection.isCollapsed()) {
           BoundaryOperations.getOperationFromPosition(e.parents, pos).map(function (operation) {

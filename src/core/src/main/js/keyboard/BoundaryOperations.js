@@ -16,10 +16,11 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretContainerRemove',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Adt, Arr, Fun, Option, CaretContainer, CaretPosition, InlineUtils) {
+  function (Adt, Arr, Fun, Option, CaretContainer, CaretContainerRemove, CaretPosition, InlineUtils) {
     var operation = Adt.generate([
       { prepend: [ 'container' ] },
       { append: [ 'container' ] },
@@ -128,25 +129,25 @@ define(
     var applyOperation = function (caret, operation) {
       return operation.fold(
         function (container) { // Prepend
-          CaretContainer.remove(caret.get());
+          CaretContainerRemove.remove(caret.get());
           var text = CaretContainer.prependInline(container);
           caret.set(text);
           return new CaretPosition(text, 1);
         },
         function (container) { // Append
-          CaretContainer.remove(caret.get());
+          CaretContainerRemove.remove(caret.get());
           var text = CaretContainer.appendInline(container);
           caret.set(text);
           return new CaretPosition(text, text.length - 1);
         },
         function (container) { // Before
-          CaretContainer.remove(caret.get());
+          CaretContainerRemove.remove(caret.get());
           var text = CaretContainer.insertInline(container, true);
           caret.set(text);
           return new CaretPosition(text, 0);
         },
         function (container) { // After
-          CaretContainer.remove(caret.get());
+          CaretContainerRemove.remove(caret.get());
           var text = CaretContainer.insertInline(container, false);
           caret.set(text);
           return new CaretPosition(text, text.length);

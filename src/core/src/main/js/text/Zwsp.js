@@ -26,13 +26,13 @@ define(
     // This is technically not a ZWSP but a ZWNBSP or a BYTE ORDER MARK it used to be a ZWSP
     var ZWSP = '\uFEFF';
 
-    function isZwsp(chr) {
+    var isZwsp = function (chr) {
       return chr === ZWSP;
-    }
+    };
 
-    function trim(str) {
-      return str.replace(new RegExp(ZWSP, 'g'), '');
-    }
+    var trim = function (text) {
+      return text.replace(new RegExp(ZWSP, 'g'), '');
+    };
 
     return {
       isZwsp: isZwsp,
