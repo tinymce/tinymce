@@ -64,6 +64,9 @@ define(
         'contextmenu',
         'change',
         'transitionend',
+
+        // Used for attaching.
+        'animationstart',
         // Test the drag events
         'dragstart',
         'dragover',
