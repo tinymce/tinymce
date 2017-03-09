@@ -2,29 +2,28 @@ define(
   'ephox.alloy.demo.DockableDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Docking',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 
-  function (Gui, Behaviour, Docking, Dragging, Container, HtmlDisplay, Objects, Option, Class, Css, Element, Insert, document) {
+  function (Behaviour, Docking, Dragging, Attachment, Gui, Container, HtmlDisplay, Option, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       // Css.set(gui.element(), 'direction', 'rtl');
 
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
       // Css.set(body, 'margin-top', '2000px');
       Css.set(body, 'margin-bottom', '2000px');
 

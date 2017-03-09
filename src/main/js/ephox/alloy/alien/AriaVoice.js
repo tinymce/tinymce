@@ -26,6 +26,7 @@ define(
       return 'span[id^="ephox-alloy-aria-voice"]';
     };
 
+    // FIX: Aria is special for insertion. Think about it more.
     var create = function (doc, text) {
       var span = Element.fromTag('span', doc.dom());
       Attr.set(span, 'role', 'presentation');

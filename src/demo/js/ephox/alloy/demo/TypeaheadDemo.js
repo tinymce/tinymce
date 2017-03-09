@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
@@ -13,18 +14,18 @@ define(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Representing, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Class, Element, Insert, Value) {
+  function (Representing, Attachment, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Insert, Element, Class, Value) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
 

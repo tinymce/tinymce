@@ -2,19 +2,18 @@ define(
   'ephox.alloy.behaviour.positioning.PositionApis',
 
   [
-    'ephox.alloy.positioning.mode.AnchorSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.alloy.positioning.layout.Anchor',
     'ephox.alloy.positioning.layout.Boxes',
     'ephox.alloy.positioning.layout.Origins',
     'ephox.alloy.positioning.layout.SimpleLayout',
+    'ephox.alloy.positioning.mode.AnchorSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.dom.Remove'
+    'global!window'
   ],
 
-  function (AnchorSchema, ValueSchema, Anchor, Boxes, Origins, SimpleLayout, Css, Insert, Location, Remove) {
+  function (Anchor, Boxes, Origins, SimpleLayout, AnchorSchema, ValueSchema, Css, Location, window) {
     var getFixedOrigin = function () {
       return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
     };
@@ -86,17 +85,7 @@ define(
       ) Css.remove(placee.element(), 'position');
     };
 
-    var addContainer = function (component, posInfo, sandbox) {
-      Insert.append(component.element(), sandbox.element());
-    };
-
-    var removeContainer = function (component, posInfo, sandbox) {
-      Remove.remove(sandbox.element());
-    };
-
     return {
-      addContainer: addContainer,
-      removeContainer: removeContainer,
       position: position
     };
   }

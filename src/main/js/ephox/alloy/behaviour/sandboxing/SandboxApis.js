@@ -2,38 +2,21 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
+    'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Remove'
+    'ephox.katamari.api.Option'
   ],
 
-  function (Future, Option, Insert, Remove) {
-    var clear = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (data) {
-        sandbox.getSystem().removeFromWorld(data);
-        sInfo.bucket().glue().remove(sandbox, sInfo.bucket());
-      });
-    };
-
-    var empty = function (sandbox) {
-      Remove.empty(sandbox.element());
-      sandbox.syncComponents();
-    };
-
+  function (Attachment, Future, Option) {
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sInfo, data) {
-      clear(sandbox, sInfo);
-      empty(sandbox);
-
-      sInfo.bucket().glue().add(sandbox, sInfo.bucket());
       var built = sandbox.getSystem().build(data);
 
-      Insert.append(sandbox.element(), built.element());
-      sandbox.getSystem().addToWorld(built);
-      sandbox.syncComponents();
-
+      Attachment.detachChildren(sandbox);
+      var point = sInfo.getAttachPoint()();
+      Attachment.attach(point, sandbox);
+      Attachment.attach(sandbox, built);
       sInfo.state().set(
         Option.some(built)
       );
@@ -62,10 +45,7 @@ define(
 
     var close = function (sandbox, sInfo) {
       sInfo.state().get().each(function (data) {
-        sandbox.getSystem().removeFromWorld(data);
-        empty(sandbox);
-
-        sInfo.bucket().glue().remove(sandbox, sInfo.bucket());
+        Attachment.detach(sandbox);
         sInfo.onClose()(sandbox, data);
         sInfo.state().set(Option.none());
       });

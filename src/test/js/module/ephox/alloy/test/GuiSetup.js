@@ -5,18 +5,19 @@ define(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.test.TestStore',
     'ephox.katamari.api.Merger',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Remove',
     'global!document'
   ],
 
-  function (Assertions, Pipeline, Step, Gui, TestStore, Merger, DomEvent, Element, Html, Insert, Remove, document) {
+  function (Assertions, Pipeline, Step, Attachment, Gui, TestStore, Merger, Insert, Remove, DomEvent, Element, Html, document) {
     var setup = function (createComponent, f, success, failure) {
       var store = TestStore();
 
@@ -25,13 +26,13 @@ define(
       var doc = Element.fromDom(document);
       var body = Element.fromDom(document.body);
 
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var component = createComponent(store, doc, body);
       gui.add(component);
 
       Pipeline.async({}, f(doc, body, gui, component, store), function () {
-        Remove.remove(gui.element());
+        Attachment.detachSystem(gui);
         success();
       }, failure);
     };

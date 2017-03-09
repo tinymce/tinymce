@@ -5,12 +5,12 @@ define(
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
-    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Html',
@@ -18,12 +18,12 @@ define(
     'global!setTimeout'
   ],
 
-  function (EventRoot, GuiFactory, SystemEvents, Gui, Container, EventHandler, HtmlDisplay, Objects, Insert, Element, Class, Html, document, setTimeout) {
+  function (EventRoot, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, HtmlDisplay, Objects, Element, Class, Html, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var label =  HtmlDisplay.section(
         gui,

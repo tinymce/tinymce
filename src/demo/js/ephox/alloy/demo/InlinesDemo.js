@@ -2,9 +2,10 @@ define(
   'ephox.alloy.demo.InlinesDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.InlineView',
@@ -13,24 +14,26 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.katamari.api.Future',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Positioning, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Future, Fun, Option, Result, Class, DomEvent, Element, Insert, Value, document) {
+  function (
+    Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Future, Option, Result,
+    DomEvent, Element, Class, Value, document
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.addSystem(body, gui);
 
       var sink = DemoSink.make();
 

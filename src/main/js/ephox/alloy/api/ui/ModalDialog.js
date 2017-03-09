@@ -6,22 +6,26 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ModalDialogSchema',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Merger',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.JSON',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (Behaviour, Keying, Positioning, GuiFactory, Container, GuiTypes, UiSketcher, PartType, ModalDialogSchema, FieldSchema, Merger, Json, Fun, Option, SelectorFind, Traverse, Error) {
+  function (
+    Behaviour, Keying, Positioning, GuiFactory, Attachment, Container, GuiTypes, UiSketcher, PartType, ModalDialogSchema, FieldSchema, Fun, Merger, Option, Json,
+    SelectorFind, Traverse, Error
+  ) {
     var schema = ModalDialogSchema.schema();
     var partTypes = ModalDialogSchema.parts();
         
@@ -39,8 +43,7 @@ define(
           )
         );
 
-        sink.getSystem().addToWorld(blocker);
-        Positioning.addContainer(sink, blocker);
+        Attachment.attach(sink, blocker);
         Keying.focusIn(dialog);
       };
 
@@ -48,7 +51,7 @@ define(
         var sink = detail.lazySink()().getOrDie();
         Traverse.parent(dialog.element()).each(function (blockerDom) {
           dialog.getSystem().getByDom(blockerDom).each(function (blocker) {
-            Positioning.removeContainer(sink, blocker);
+            Attachment.detach(sink, blocker);
             sink.getSystem().removeFromWorld(blocker);
           });
         });

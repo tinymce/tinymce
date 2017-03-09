@@ -3,41 +3,31 @@ define(
 
   [
     'ephox.alloy.alien.AriaFocus',
+    'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Remove'
+    'ephox.sugar.api.dom.Insert'
   ],
 
-  function (AriaFocus, Arr, Compare, Insert, Remove) {
-    var clearOld = function (component, replaceInfo) {
-      var old = contents(component, replaceInfo);
-      Arr.each(old, component.getSystem().removeFromWorld);
-    };
-
+  function (AriaFocus, Attachment, Arr, Compare, Insert) {
     var set = function (component, replaceInfo, data) {
-      clearOld(component, replaceInfo);
+      Attachment.detachChildren(component);
 
       // NOTE: we may want to create a behaviour which allows you to switch
       // between predefined layouts, which would make a noop detection easier.
       // Until then, we'll just use AriaFocus like redesigning does.
       AriaFocus.preserve(function () {
         var children = Arr.map(data, component.getSystem().build);
-        Remove.empty(component.element());
+        
         Arr.each(children, function (l) {
-          component.getSystem().addToWorld(l);
-          Insert.append(component.element(), l.element());
+          Attachment.attach(component, l);
         });
       }, component.element());
-
-      component.syncComponents();
     };
 
     var insert = function (component, replaceInfo, insertion, childSpec) {
       var child = component.getSystem().build(childSpec);
-      component.getSystem().addToWorld(child);
-      insertion(component.element(), child.element());
-      component.syncComponents();
+      Attachment.attachWith(component.element(), child.element(), insertion);
     };
 
     var append = function (component, replaceInfo, appendee) {
@@ -55,11 +45,7 @@ define(
         return Compare.eq(removee.element(), child.element());
       });
 
-      foundChild.each(function (found) {
-        component.getSystem().removeFromWorld(found);
-        Remove.remove(found.element());
-        component.syncComponents();
-      });
+      foundChild.each(Attachment.detach);
     };
 
     // TODO: Rename

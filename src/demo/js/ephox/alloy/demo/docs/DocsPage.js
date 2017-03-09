@@ -23,6 +23,7 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.demo.docs.BehaviourDocumentation',
     'ephox.alloy.demo.docs.DocSidetabs',
@@ -57,9 +58,9 @@ define(
 
   function (
     Attaching, Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing,
-    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation, ButtonSchema,
-    ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema,
-    MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Attachment, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation,
+    ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema,
+    InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
     ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, Fun, Insert, SelectorFind
   ) {
     return function () {
@@ -152,7 +153,7 @@ define(
       ]);
 
 
-      Insert.append(ephoxUi, root.element());
+      Attachment.attachSystem(ephoxUi, root);
 
       var built = GuiFactory.build(topTabs);
       root.add(built);

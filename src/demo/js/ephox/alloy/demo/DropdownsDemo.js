@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -17,21 +18,23 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (Behaviour, Representing, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future, Result, Class, DomEvent, Element, Insert, document) {
+  function (
+    Behaviour, Representing, Attachment, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future,
+    Result, DomEvent, Element, Class, document
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       // Css.set(gui.element(), 'direction', 'rtl');
 
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
 
       var sink = DemoSink.make();
