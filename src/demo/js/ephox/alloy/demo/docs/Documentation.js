@@ -71,7 +71,16 @@ define(
       }
     };
 
+    var attaching = {
+      'attaching': {
+        desc: '<p>The <em>attaching</em> behaviour is used for components that need to know when ' +
+          'they have been added to the DOM. It will fire a SystemEvents.attachedToDom() event once ' +
+          'it has happened. It uses some CSS trickery that may be need to be improved in future.</p>'
+      }
+    };
+
     return Merger.deepMerge(
+      attaching,
       toggling,
       button,
       container,
