@@ -14,24 +14,18 @@ define(
 
   function (SystemEvents, Arr, Fun, Option, Insert, Remove, Body, Traverse) {
     var fireDetaching = function (component) {
-      // if (Body.inBody(component.element())) {
-        component.getSystem().triggerEvent('component.detached', component.element(), {
-          target: Fun.constant(component.element())
-        });  
-        var children = component.components();
-        Arr.each(children, fireDetaching);
-      // }
+      component.getSystem().triggerEvent(SystemEvents.detachedFromDom(), component.element(), {
+        target: Fun.constant(component.element())
+      });  
+
+      var children = component.components();
+      Arr.each(children, fireDetaching);
     };
 
     var fireAttaching = function (component) {
-      // debugger;
-      // if (Body.inBody(component.element())) {
-      //   component.getSystem().triggerEvent('component.moved', component.element(), { });  
-      // } else {
-        component.getSystem().triggerEvent(SystemEvents.attachedToDom(), component.element(), {
-          target: Fun.constant(component.element())
-        });
-      // }
+      component.getSystem().triggerEvent(SystemEvents.attachedToDom(), component.element(), {
+        target: Fun.constant(component.element())
+      });
 
       var children = component.components();
       Arr.each(children, fireAttaching);
@@ -69,6 +63,7 @@ define(
       // This will not detach the component, but will detach its children and sync at the end.
       var subs = component.components();
       Arr.each(subs, doDetach);
+      // Clear the component also.
       Remove.empty(component.element());
       component.syncComponents();
     };
@@ -85,7 +80,7 @@ define(
     var detachSystem = function (guiSystem) {
       var children = Traverse.children(guiSystem.element());
       Arr.each(children, function (child) {
-        guiSystem.getByDom(child).each(fireAttaching);
+        guiSystem.getByDom(child).each(fireDetaching);
       });
       Remove.remove(guiSystem.element());
     };

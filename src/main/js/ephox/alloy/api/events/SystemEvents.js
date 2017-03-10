@@ -41,7 +41,8 @@ define(
       // Fired when the window scrolls
       windowScroll: Fun.constant('alloy.system.scroll'),
 
-      attachedToDom: Fun.constant('alloy.system.attached.to.dom'),
+      attachedToDom: Fun.constant('alloy.system.attached'),
+      detachedFromDom: Fun.constant('alloy.system.detached'),
 
       changeTab: Fun.constant('alloy.change.tab'),
       dismissTab: Fun.constant('alloy.dismiss.tab')

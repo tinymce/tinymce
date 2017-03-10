@@ -56,8 +56,21 @@ asynctest(
                     var parent = Traverse.parent(comp.element()).getOrDie(
                       'At attachedToDom, a DOM parent must exist'
                     );
-                    console.log(parent.dom());
                     store.adder('attached-to:' + Attr.get(parent, 'class'))();
+                  }
+                }
+              })
+            },
+            {
+              key: SystemEvents.detachedFromDom(),
+              value: EventHandler.nu({
+                run: function (comp, simulatedEvent) {
+                  if (EventRoot.isSource(comp, simulatedEvent)) {
+                    simulatedEvent.stop();
+                    var parent = Traverse.parent(comp.element()).getOrDie(
+                      'At detachedFromDom, a DOM parent must exist'
+                    );
+                    store.adder('detached-from:' + Attr.get(parent, 'class'))();
                   }
                 }
               })
@@ -121,10 +134,13 @@ asynctest(
       }),
 
       store.sAssertEq('After adding to the DOM, should have fired attached', [ 'attached-to:main-container' ]),
+      store.sClear,
 
       Step.sync(function () {
         Attachment.detachSystem(gui);
-      })
+      }),
+
+      store.sAssertEq('After detaching from the DOM, should have fired detached', [ 'detached-from:main-container' ])
     ], function () { success(); }, failure);
   }
 );
