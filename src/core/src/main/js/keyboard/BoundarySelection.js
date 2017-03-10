@@ -80,12 +80,11 @@ define(
       };
     };
 
-    var unselectInlines = function (editor) {
-      Arr.each(editor.dom.select('a[href][data-mce-selected],code[data-mce-selected]'), Fun.curry(setSelected, false));
-    };
-
-    var selectInlines = function (elms) {
-      Arr.find(elms, InlineUtils.isInlineTarget).bind(Fun.curry(setSelected, true));
+    var toggleInlines = function (dom, elms) {
+      var selectedInlines = dom.select('a[href][data-mce-selected],code[data-mce-selected]');
+      var targetInlines = Arr.filter(elms, InlineUtils.isInlineTarget);
+      Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));
+      Arr.each(Arr.difference(targetInlines, selectedInlines), Fun.curry(setSelected, true));
     };
 
     var safeRemoveCaretContainer = function (editor, caret) {
@@ -102,8 +101,7 @@ define(
       editor.on('NodeChange', function (e) {
         var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
 
-        unselectInlines(editor);
-        selectInlines(e.parents);
+        toggleInlines(editor.dom, e.parents);
         safeRemoveCaretContainer(editor, caret);
 
         if (editor.selection.isCollapsed()) {
