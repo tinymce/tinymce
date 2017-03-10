@@ -27,7 +27,7 @@ define(
 
     var insert = function (component, replaceInfo, insertion, childSpec) {
       var child = component.getSystem().build(childSpec);
-      Attachment.attachWith(component.element(), child.element(), insertion);
+      Attachment.attachWith(component, child, insertion);
     };
 
     var append = function (component, replaceInfo, appendee) {

@@ -39,11 +39,8 @@ asynctest(
           uid: 'no-duplicates',
           behaviours: Behaviour.derive([
             Sandboxing.config({
-              bucket: {
-                mode: 'sink',
-                lazySink: function () {
-                  return Result.value(sink);
-                }
+              getAttachPoint: function () {
+                return sink;
               },
 
               onOpen: store.adder('onOpen'),

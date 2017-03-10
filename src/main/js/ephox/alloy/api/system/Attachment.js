@@ -43,7 +43,7 @@ define(
 
     var doDetach = function (component) {
       fireDetaching(component);
-      Remove.remove(component);
+      Remove.remove(component.element());
       component.getSystem().removeFromWorld(component);
     };
 
@@ -62,6 +62,7 @@ define(
       // This will not detach the component, but will detach its children and sync at the end.
       var subs = component.components();
       Arr.each(subs, doDetach);
+      Remove.empty(component.element());
       component.syncComponents();
     };
 

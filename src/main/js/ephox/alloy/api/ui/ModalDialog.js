@@ -51,8 +51,7 @@ define(
         var sink = detail.lazySink()().getOrDie();
         Traverse.parent(dialog.element()).each(function (blockerDom) {
           dialog.getSystem().getByDom(blockerDom).each(function (blocker) {
-            Attachment.detach(sink, blocker);
-            sink.getSystem().removeFromWorld(blocker);
+            Attachment.detach(blocker);
           });
         });
       };

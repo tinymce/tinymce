@@ -147,9 +147,8 @@ define(
             isPartOf: function (container, data, queryElem) {
               return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
             },
-            bucket: {
-              mode: 'sink',
-              lazySink: lazySink
+            getAttachPoint: function () {
+              return lazySink().getOrDie();
             }
           },
           composing: {

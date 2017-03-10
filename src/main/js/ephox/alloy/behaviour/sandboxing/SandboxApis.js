@@ -11,11 +11,17 @@ define(
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sInfo, data) {
-      var built = sandbox.getSystem().build(data);
-
-      Attachment.detachChildren(sandbox);
+      sInfo.state().get().each(function (data) {
+        // If currently has data, so it hasn't been removed yet. It is 
+        // being "re-opened"
+        Attachment.detachChildren(sandbox);
+      });
+      
       var point = sInfo.getAttachPoint()();
       Attachment.attach(point, sandbox);
+
+      // Must be after the sandbox is in the system
+      var built = sandbox.getSystem().build(data);
       Attachment.attach(sandbox, built);
       sInfo.state().set(
         Option.some(built)
@@ -45,6 +51,7 @@ define(
 
     var close = function (sandbox, sInfo) {
       sInfo.state().get().each(function (data) {
+        Attachment.detachChildren(sandbox);
         Attachment.detach(sandbox);
         sInfo.onClose()(sandbox, data);
         sInfo.state().set(Option.none());

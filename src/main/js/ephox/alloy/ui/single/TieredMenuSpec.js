@@ -86,7 +86,7 @@ define(
       };
 
       var addToWorld = function (container, componentMap) {
-        Arr.each(componentMap, container.getSystem().addToWorld);
+        // Arr.each(componentMap, container.getSystem().addToWorld);
       };
 
       var setActiveMenu = function (container, menu) {

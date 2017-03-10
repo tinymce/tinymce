@@ -7,9 +7,11 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.ItemWidget',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
@@ -18,7 +20,7 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (Assertions, Chain, Keyboard, Keys, Step, GuiFactory, SystemEvents, Keying, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup, Objects) {
+  function (Assertions, Chain, Keyboard, Keys, Step, Keying, GuiFactory, SystemEvents, Container, ItemWidget, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -27,10 +29,6 @@ asynctest(
         TieredMenu.sketch({
           uid: 'uid-test-menu-1',
           value: 'test-menu-1',
-          items: [
-            { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
-            { type: 'item', data: { value: 'beta', text: 'Beta' } }
-          ],
           dom: {
             tag: 'div',
             classes: [ 'test-menu' ]
@@ -49,7 +47,7 @@ asynctest(
           members: { 
             item: {
               munge: function (itemSpec) {
-                return {
+                return itemSpec.type === 'widget' ? itemSpec : {
                   dom: {
                     tag: 'div',
                     attributes: {
@@ -86,7 +84,29 @@ asynctest(
                 items: [
                   { type: 'item', data: { value: 'a-alpha', text: 'a-Alpha' }},
                   { type: 'item', data: { value: 'a-beta', text: 'a-Beta' }},
-                  { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }}
+                  { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }},
+
+                  {
+                    type: 'widget',
+                    data: {
+                      value: 'a-widget',
+                      text: 'a-Widget'
+                    },
+                    dom: {
+                      tag: 'div',
+                      classes: [ 'item-widget' ]
+                    },
+                    components: [
+                      ItemWidget.parts().widget()
+                    ],
+
+                    widget: {
+                      dom: {
+                        tag: 'div',
+                        innerHtml: 'Widget'
+                      }
+                    }
+                  }
                 ]
               },
               'menu-b': {
