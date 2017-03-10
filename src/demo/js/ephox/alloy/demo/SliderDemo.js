@@ -2,7 +2,6 @@ define(
   'ephox.alloy.demo.SliderDemo',
 
   [
-    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
@@ -16,7 +15,7 @@ define(
     'global!document'
   ],
 
-  function (Focusing, Keying, Gui, Container, Slider, HtmlDisplay, Insert, DomEvent, Element, Class, Css, document) {
+  function (Keying, Gui, Container, Slider, HtmlDisplay, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -25,14 +24,14 @@ define(
 
       var slider1 = HtmlDisplay.section(
         gui,
-        'This is a basic slider (touch based)',
+        'This is a basic slider from [20, 100] with snapping to grid at 10',
         Slider.sketch({
           dom: {
             tag: 'div'
           },
-          min: 80,
+          min: 20,
           max: 100,
-          initialValue: 95,
+          initialValue: 80,
           stepSize: 10,
           snapToGrid: true,
           parts: {
@@ -69,7 +68,7 @@ define(
 
       var hueSlider = HtmlDisplay.section(
         gui,
-        'This is a basic color slider (touch based) with a sliding thumb',
+        'This is a basic color slider with a sliding thumb and edges',
         Slider.sketch({
           dom: {
             tag: 'div',
