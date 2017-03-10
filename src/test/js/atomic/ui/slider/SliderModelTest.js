@@ -95,9 +95,9 @@ test(
       ],
       function (data, bounds, xValue) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true);
-        var f = Math.abs((newValue.value - data.min) / data.stepSize);
-        RawAssertions.assertEq('Checking factors correctly: ' + newValue.value, true, 
-          Math.floor(f) === f || newValue.value === data.min - 1 || newValue.value === data.max + 1
+        var f = Math.abs((newValue - data.min) / data.stepSize);
+        RawAssertions.assertEq('Checking factors correctly: ' + newValue, true, 
+          Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
         );
         return true;
       },
@@ -105,7 +105,7 @@ test(
     );
 
     Jsc.syncProperty(
-      'Finding value of any x value always fits in the [min - 1, max + 1] range',
+      'Finding value of any value always fits in the [min - 1, max + 1] range',
       [
         arbData,
         arbBounds,
@@ -114,27 +114,8 @@ test(
       function (data, bounds, xValue) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid);
         RawAssertions.assertEq(
-          'Assert within range: ' + newValue.value, true, 
-          newValue.value >= data.min - 1 && newValue.value <= data.max + 1
-        );
-        return true;
-      }
-    );
-
-    Jsc.syncProperty(
-      'Finding value of any x coord always fits within bounds if not snapping grid',
-      [
-        arbData,
-        arbBounds,
-        Jsc.nat
-      ],
-      function (data, bounds, xValue) {
-        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, false);
-        RawAssertions.assertEq(
-          'Assert within bounds: ' + newValue.xValue, true, 
-          (newValue.xValue >= 0 && newValue.xValue <= bounds.width + 1) ||
-            (newValue.value === (data.max + 1) && newValue.xValue === xValue - bounds.left) ||
-            (newValue.value === (data.min - 1) && newValue.xValue === xValue - bounds.left)
+          'Assert within range: ' + newValue, true, 
+          newValue >= data.min - 1 && newValue <= data.max + 1
         );
         return true;
       }

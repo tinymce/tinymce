@@ -5,21 +5,33 @@ define(
     'ephox.alloy.ui.slider.SliderModel',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'global!Math'
   ],
 
-  function (SliderModel, Fun, Option, Math) {
+  function (SliderModel, Fun, Option, PlatformDetection, Math) {
     var changeEvent = 'slider.change.value';
 
-    var getEventX = function (simulatedEvent) {
-      var touches = simulatedEvent.event().raw().touches;
-      return touches.length === 1 ? Option.some(touches[0].clientX) : Option.none();
+    var isTouch = PlatformDetection.detect().deviceType.isTouch();
+
+    var getEventSource = function (simulatedEvent) {
+      var evt = simulatedEvent.event().raw();
+      if (isTouch && evt.touches !== undefined && evt.touches.length === 1) return Option.some(evt.touches[0]);
+      else if (isTouch && evt.touches !== undefined) return Option.none();
+      else if (! isTouch && evt.clientX !== undefined) return Option.some(evt);
+      else return Option.none();
     };
 
-    var fireChange = function (component, value, xPos) {
+    var getEventX = function (simulatedEvent) {
+      var spot = getEventSource(simulatedEvent);
+      return spot.map(function (s) {
+        return s.clientX;
+      });
+    };
+
+    var fireChange = function (component, value) {
       component.getSystem().triggerEvent(changeEvent, component.element(), {
-        value: value,
-        xPos: xPos
+        value: Fun.constant(value)
       });
     }
 
@@ -40,12 +52,12 @@ define(
     };
 
     var setToX = function (spectrum, spectrumBounds, detail, xValue) {
-      var values = SliderModel.findValueOfX(
+      var value = SliderModel.findValueOfX(
         spectrumBounds, detail.min(), detail.max(),
         xValue, detail.stepSize(), detail.snapToGrid()
       );
 
-      fireChange(spectrum, values.value, Option.some(values.xValue));
+      fireChange(spectrum, value);
     };
 
     var setXFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {

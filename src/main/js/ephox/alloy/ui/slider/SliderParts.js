@@ -5,11 +5,17 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.slider.SliderActions',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection'
   ],
 
-  function (EventHandler, PartType, SliderActions, Fun, Option) {
+  function (EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
+    var platform = PlatformDetection.detect();
+    var isTouch = platform.deviceType.isTouch();
+
     var noSketch = { sketch: Fun.identity };
 
     var edgePart = function (name, action) {
@@ -17,14 +23,30 @@ define(
         noSketch, [ ], '' + name + '-edge', '<alloy.slider.' + name + '-edge>',
         Fun.constant({ }),
         function (detail) {
-          return {
-            events: {
-              touchstart: EventHandler.nu({
-                run: function (l) {
+          var uiEvents = isTouch ? {
+            touchstart: EventHandler.nu({
+              run: function (l) {
+                action(l, detail);
+              }
+            })
+          } : {
+            mousedown: EventHandler.nu({
+              run: function (l) {
+                action(l, detail);
+              }
+            }),
+
+            'mousemove': EventHandler.nu({
+              run: function (l, simulatedEvent) {
+                if (detail.mouseIsDown().get()) {
                   action(l, detail);
                 }
-              })
-            }
+              }
+            })
+          };
+
+          return {
+            events: uiEvents
           };
         }
       );
@@ -48,9 +70,36 @@ define(
     );
 
     var spectrumPart = PartType.internal(
-      noSketch, [ ], 'spectrum', '<alloy.slider.spectrum>',
+      noSketch, [
+        FieldSchema.state('mouseIsDown', function () { return Cell(false); })
+      ], 'spectrum', '<alloy.slider.spectrum>',
       Fun.constant({ }),
       function (detail) {
+
+        var moveToX = function (spectrum, simulatedEvent) {
+          var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+          SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+        };
+
+        var uiEvents = PlatformDetection.detect().deviceType.isTouch() ? {
+          touchstart: EventHandler.nu({
+            run: moveToX
+          }),
+          touchmove: EventHandler.nu({
+            run: moveToX
+          })
+        } : {
+          'mousedown': EventHandler.nu({
+            run: moveToX
+          }),
+
+          'mousemove': EventHandler.nu({
+            run: function (spectrum, simulatedEvent) {
+              if (detail.mouseIsDown().get()) moveToX(spectrum, simulatedEvent);
+            }
+          })
+        };
+
         return {
           behaviours: {
             // Move left and right along the spectrum
@@ -69,14 +118,7 @@ define(
             focusing: true
           },
 
-          events: {
-            touchstart: EventHandler.nu({
-              run: function (spectrum, simulatedEvent) {
-                var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-                SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
-              }
-            })
-          }
+          events: uiEvents
         };
       }
     );

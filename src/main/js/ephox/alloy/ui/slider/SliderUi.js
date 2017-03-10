@@ -9,11 +9,14 @@ define(
     'ephox.alloy.ui.slider.SliderActions',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (EventRoot, Keying, SystemEvents, EventHandler, SliderActions, Objects, Option, Css, Width) {
+  function (EventRoot, Keying, SystemEvents, EventHandler, SliderActions, Objects, Option, PlatformDetection, Css, Width) {
+    var isTouch = PlatformDetection.detect().deviceType.isTouch();
+
     var sketch = function (detail, components, spec, externals) {
       var range = detail.max() - detail.min();
 
@@ -25,11 +28,18 @@ define(
       var getXOffset = function (slider, spectrumBounds, detail) {
         var v = detail.value().get();
         if (v < detail.min()) {
-          // position at left edge
-          return getXCentre(slider.getSystem().getByUid(detail.partUids()['left-edge']).getOrDie()) - spectrumBounds.left;
+          return slider.getSystem().getByUid(detail.partUids()['left-edge']).fold(function () {
+            return 0;
+          }, function (ledge) {
+            return getXCentre(ledge) - spectrumBounds.left;
+          });
         } else if (v > detail.max()) {
           // position at right edge
-          return getXCentre(slider.getSystem().getByUid(detail.partUids()['right-edge']).getOrDie()) - spectrumBounds.left;
+          return slider.getSystem().getByUid(detail.partUids()['right-edge']).fold(function () {
+            return spectrumBounds.width;
+          }, function (redge) {
+            return getXCentre(redge) - spectrumBounds.left;
+          });
         } else {
           // position along the slider
           return (detail.value().get() - detail.min())/range * spectrumBounds.width;
@@ -75,6 +85,25 @@ define(
         changeValue(slider, detail.max(), Option.none());
       };
 
+      var uiEventsArr = isTouch ? [ ] : [
+        {
+          key: 'mousedown',
+          value: EventHandler.nu({
+            run: function (spectrum, simulatedEvent) {
+              detail.mouseIsDown().set(true);
+            }
+          })
+        },
+        {
+          key: 'mouseup',
+          value: EventHandler.nu({
+            run: function (spectrum, simulatedEvent) {
+              detail.mouseIsDown().set(false);
+            }
+          })
+        }
+      ];
+
       return {
         uid: detail.uid(),
         dom: detail.dom(),
@@ -104,7 +133,7 @@ define(
             key: SliderActions.changeEvent(),
             value: EventHandler.nu({
               run: function (slider, simulatedEvent) {
-                changeValue(slider, simulatedEvent.event().value);
+                changeValue(slider, simulatedEvent.event().value());
               }
             })
           },
@@ -118,7 +147,7 @@ define(
               }
             })
           }
-        ]),
+        ].concat(uiEventsArr)),
 
         apis: {
           resetToMin: resetToMin,
