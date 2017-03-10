@@ -1,0 +1,143 @@
+test(
+  'Atomic Test: ui.slider.SliderModelTest',
+
+  [
+    'ephox.agar.api.RawAssertions',
+    'ephox.alloy.ui.slider.SliderModel',
+    'ephox.wrap-jsverify.Jsc',
+    'global!Math'
+  ],
+
+  function (RawAssertions, SliderModel, Jsc, Math) {
+    var arb1Up = Jsc.nat.smap(function (num) { return num + 1; }, function (num) { return num - 1; });
+
+    var arbRanged = Jsc.bless({
+      generator: Jsc.nat.generator.flatMap(function (min) {
+        return arb1Up.generator.flatMap(function (width) {
+          var max = min + width;
+          return Jsc.number(min - 1, max + 1).generator.map(function (value) {
+            var v = Math.round(value);
+            
+            return {
+              min: min,
+              max: max,
+              value: v
+            };
+          });
+        });
+      })
+    });
+
+    var arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool]).smap(
+      function (arr) {
+        return {
+          min: arr[0].min,
+          max: arr[0].max,
+          value: arr[0].value,
+          stepSize: arr[1],
+          snapToGrid: arr[2]
+        };
+      },
+      function (r) {
+        return [
+          { min: r.min, max: r.max, value: r.value },
+          r.stepSize,
+          r.snapToGrid
+        ];
+      }
+    );
+
+    var arbBounds = Jsc.bless({
+      generator: Jsc.nat.generator.flatMap(function (min) {
+        return arb1Up.generator.map(function (width) {
+          return {
+            left: min,
+            width: width,
+            right: min + width
+          };
+        });
+      })
+    });
+
+
+    Jsc.syncProperty(
+      'Reducing never goes beyond min-1',
+      [
+        arbData
+      ], function (data) {
+        // console.log('min', data.min, 'max', data.max, 'value', data.value, 'step', data.stepSize, 'snap', data.snapToGrid);
+        var newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
+        RawAssertions.assertEq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
+        return true;
+      },
+      {  }
+    );
+
+    Jsc.syncProperty(
+      'Increasing never goes beyond max+1',
+      [
+        arbData
+      ], function (data) {
+        // console.log('min', data.min, 'max', data.max, 'value', data.value, 'step', data.stepSize, 'snap', data.snapToGrid);
+        var newValue = SliderModel.increaseBy(data.value, data.min, data.max, data.stepSize);
+        RawAssertions.assertEq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
+        return true;
+      },
+      { }
+    );
+
+    Jsc.syncProperty(
+      'Finding value of snapped always results in a factorable value',
+      [
+        arbData,
+        arbBounds,
+        Jsc.nat
+      ],
+      function (data, bounds, xValue) {
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true);
+        var f = Math.abs((newValue.value - data.min) / data.stepSize);
+        RawAssertions.assertEq('Checking factors correctly: ' + newValue.value, true, 
+          Math.floor(f) === f || newValue.value === data.min - 1 || newValue.value === data.max + 1
+        );
+        return true;
+      },
+      { }
+    );
+
+    Jsc.syncProperty(
+      'Finding value of any x value always fits in the [min - 1, max + 1] range',
+      [
+        arbData,
+        arbBounds,
+        Jsc.nat
+      ],
+      function (data, bounds, xValue) {
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid);
+        RawAssertions.assertEq(
+          'Assert within range: ' + newValue.value, true, 
+          newValue.value >= data.min - 1 && newValue.value <= data.max + 1
+        );
+        return true;
+      }
+    );
+
+    Jsc.syncProperty(
+      'Finding value of any x coord always fits within bounds if not snapping grid',
+      [
+        arbData,
+        arbBounds,
+        Jsc.nat
+      ],
+      function (data, bounds, xValue) {
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, false);
+        RawAssertions.assertEq(
+          'Assert within bounds: ' + newValue.xValue, true, 
+          (newValue.xValue >= 0 && newValue.xValue <= bounds.width + 1) ||
+            (newValue.value === (data.max + 1) && newValue.xValue === xValue - bounds.left) ||
+            (newValue.value === (data.min - 1) && newValue.xValue === xValue - bounds.left)
+        );
+        return true;
+      }
+    );
+  }
+);
