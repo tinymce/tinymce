@@ -3,7 +3,6 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
@@ -11,7 +10,7 @@ asynctest(
     'tinymce.plugins.textcolor.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (ApproxStructure, Pipeline, Step, TinyApis, TinyLoader, TinyUi, Env, TextcolorPlugin, ModernTheme) {
+  function (ApproxStructure, Pipeline, TinyApis, TinyLoader, TinyUi, Env, TextcolorPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
