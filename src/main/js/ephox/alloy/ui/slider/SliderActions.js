@@ -33,7 +33,7 @@ define(
       component.getSystem().triggerEvent(changeEvent, component.element(), {
         value: Fun.constant(value)
       });
-    }
+    };
 
     var moveRightFromLedge = function (ledge, detail) {
       fireChange(ledge, detail.min(), Option.none());
