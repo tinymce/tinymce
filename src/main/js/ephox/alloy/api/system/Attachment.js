@@ -69,7 +69,6 @@ define(
     };
 
     var attachSystem = function (element, guiSystem) {
-      // TODO: Events for the system element.
       Insert.append(element, guiSystem.element());
       var children = Traverse.children(guiSystem.element());
       Arr.each(children, function (child) {

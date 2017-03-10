@@ -47,7 +47,7 @@ asynctest(
           members: { 
             item: {
               munge: function (itemSpec) {
-                return itemSpec.type === 'widget' ? itemSpec : {
+                return {
                   dom: {
                     tag: 'div',
                     attributes: {
@@ -84,29 +84,7 @@ asynctest(
                 items: [
                   { type: 'item', data: { value: 'a-alpha', text: 'a-Alpha' }},
                   { type: 'item', data: { value: 'a-beta', text: 'a-Beta' }},
-                  { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }},
-
-                  {
-                    type: 'widget',
-                    data: {
-                      value: 'a-widget',
-                      text: 'a-Widget'
-                    },
-                    dom: {
-                      tag: 'div',
-                      classes: [ 'item-widget' ]
-                    },
-                    components: [
-                      ItemWidget.parts().widget()
-                    ],
-
-                    widget: {
-                      dom: {
-                        tag: 'div',
-                        innerHtml: 'Widget'
-                      }
-                    }
-                  }
+                  { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }}
                 ]
               },
               'menu-b': {

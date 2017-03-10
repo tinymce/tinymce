@@ -28,7 +28,6 @@ define(
 
       var failOnDuplicate = function (component, tagId) {
         var conflict = components[tagId];
-        console.log('duplicate but eq', conflict===component);
         if (conflict === component) unregister(component);
         else throw new Error(
           'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +

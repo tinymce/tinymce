@@ -125,8 +125,6 @@ define(
       });
 
       var addToWorld = function (component) {
-        console.log('adding', AlloyLogger.element(component.element()));
-
         component.connect(systemApi);
         if (! Node.isText(component.element())) {
           registry.register(component);
@@ -136,10 +134,8 @@ define(
       };
 
       var removeFromWorld = function (component) {
-        console.log('removing', AlloyLogger.element(component.element()));
         if (! Node.isText(component.element())) {
           Arr.each(component.components(), removeFromWorld);
-          // Hmm... wonder if I should disconnect here.
           registry.unregister(component);
         }
         component.disconnect();
