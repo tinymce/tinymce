@@ -50,6 +50,8 @@ define(
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.alloy.ui.schema.TypeaheadSchema',
+    'ephox.alloy.ui.slider.SliderParts',
+    'ephox.alloy.ui.slider.SliderSchema',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.SelectorFind'
   ],
@@ -59,7 +61,7 @@ define(
     Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Attachment, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation, ButtonSchema,
     ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema,
     MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
-    ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, Fun, SelectorFind
+    ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, SliderParts, SliderSchema, Fun, SelectorFind
   ) {
     return function () {
       var root = Gui.create();
@@ -85,6 +87,11 @@ define(
         // ItemWidget (just has parts),
         MenuSchema,
         ModalDialogSchema,
+        {
+          name: Fun.constant('Slider'),
+          schema: Fun.constant(SliderSchema),
+          parts: Fun.constant(SliderParts)
+        },
         SplitDropdownSchema,
         SplitToolbarSchema,
         TabbarSchema,

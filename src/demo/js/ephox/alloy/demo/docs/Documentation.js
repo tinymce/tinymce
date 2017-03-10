@@ -2,10 +2,11 @@ define(
   'ephox.alloy.demo.docs.Documentation',
 
   [
+    'ephox.alloy.api.ui.Slider',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Merger) {
+  function (Slider, Merger) {
     var toggling = {
       'toggling': {
         desc: 'The <em>toggling</em> behaviour is used to allow a component to switch ' +
@@ -71,7 +72,128 @@ define(
       }
     };
 
+    var slider = {
+      'Slider': {
+        desc: 'A component which allows the user to choose a value with a range from [min, max]. It ' +
+          'can have discrete steps (using snapToGrid) or be continuous. Optionally, you can specify a ' +
+          'left and/or right edge which represents one value below or more than the max. It is a separate ' +
+          'part, so it can be styled differently. A use case for edges is in colour gradients, where hue cannot ' + 
+          'represent black and white.',
+
+        example: [
+          Slider.sketch({
+            dom: {
+              tag: 'div',
+              attributes: {
+                title: 'slider'
+              },
+              styles: {
+                background: 'blue',
+                display: 'flex',
+                height: '50px',
+                outline: '2px solid black',
+                padding: '10px'
+              }
+            },
+            components: [
+              Slider.parts()['left-edge'](),
+              Slider.parts().spectrum(),
+              Slider.parts()['right-edge'](),
+              Slider.parts().thumb()
+            ],
+            min: 0,
+            max: 100,
+            initialValue: 10,
+            parts: {
+              'left-edge': {
+                dom: {
+                  tag: 'div',
+                  innerHtml: 'L',
+                  attributes: {
+                    title: 'left-edge'
+                  },
+                  styles: {
+                    background: 'black',
+                    color: 'white',
+                    width: '80px',
+                    height: '80%',
+                    display: 'flex',
+                    'margin-top': '5px',
+                    'justify-content': 'center',
+                    'align-items': 'center'
+                  }
+                }
+              },
+              'right-edge': {
+                dom: {
+                  tag: 'div',
+                  innerHtml: 'R',
+                  attributes: {
+                    title: 'right-edge'
+                  },
+                  styles: {
+                    background: 'white',
+                    color: 'black',
+                    width: '80px',
+                    'margin-top': '5px',
+                    height: '40px',
+                    display: 'flex',
+                    'justify-content': 'center',
+                    'align-items': 'center'
+                  }
+                }
+              },
+              spectrum: {
+                dom: {
+                  tag: 'div',
+                  innerHtml: 'Spectrum',
+                  attributes: {
+                    title: 'spectrum'
+                  },
+                  styles: {
+                    display: 'flex',
+                    'font-weight': 'bold',
+                    background: '#cadbee',
+                    'justify-content': 'center',
+                    'align-items': 'center',
+                    'flex-grow': '1'
+                  }
+                }
+              },
+              thumb: {
+                dom: {
+                  tag: 'div',
+                  innerHtml: 'Thumb',
+                  attributes: {
+                    title: 'thumb'
+                  },
+                  styles: {
+                    background: '#e493e4',
+                    height: '60px',
+                    width: '60px',
+                    'margin-top': '-5px',
+                    'border-radius': '50px',
+                    border: '1px solid black',
+                    display: 'flex',
+                    'justify-content': 'center',
+                    'align-items': 'center'
+                  }
+                }
+              }
+            }
+          })
+        ]
+      },
+      'Slider > min': { desc: 'The minimum value the slider can have before it reaches the optional left edge' },
+      'Slider > max': { desc: 'The maximum value the slider can have before it reaches the optional right edge' },
+      'Slider > stepSize': { desc: 'The amount to change the value by when snapping to grid or using arrow keys' },
+      'Slider > onChange': { desc: 'A handler that is called when the slider value changes' },
+      'Slider > snapToGrid': { desc: 'Whether or not to use the stepSize as discrete positions on the slider' },
+      'Slider > initialValue': { desc: 'The initial value for the slider when it first appears' }
+    };
+
     return Merger.deepMerge(
+      slider,
       toggling,
       button,
       container,
