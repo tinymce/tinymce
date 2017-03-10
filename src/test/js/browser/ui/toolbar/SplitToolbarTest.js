@@ -22,7 +22,7 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
-    // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
+    // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
     // viewed as an invalid value.
     if (navigator.userAgent.indexOf('PhantomJS') > -1) return success();
 
