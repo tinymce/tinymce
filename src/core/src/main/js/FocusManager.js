@@ -38,6 +38,14 @@ define(
       return parent !== null;
     };
 
+    var isInlineEditor = function (editor) {
+      return editor.inline === true;
+    };
+
+    var isElementOursideInlineEditor = function (editor, target) {
+      return isInlineEditor(editor) === false || editor.dom.isChildOf(target, editor.getBody()) === false;
+    };
+
     /**
      * Constructs a new focus manager instance.
      *
@@ -207,15 +215,15 @@ define(
 
             target = e.target;
 
-            if (activeEditor && target.ownerDocument == document) {
+            if (activeEditor && target.ownerDocument === document) {
               // Check to make sure we have a valid selection don't update the bookmark if it's
               // a focusin to the body of the editor see #7025
-              if (activeEditor.selection && target != activeEditor.getBody()) {
+              if (activeEditor.selection && target !== activeEditor.getBody() && isElementOursideInlineEditor(editor, target)) {
                 activeEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);
               }
 
               // Fire a blur event if the element isn't a UI element
-              if (target != document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor == activeEditor) {
+              if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
                 activeEditor.fire('blur', { focusedEditor: null });
                 editorManager.focusedEditor = null;
               }

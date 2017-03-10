@@ -491,6 +491,8 @@ define(
           node = getSelectedNode(range);
           if (isContentEditableFalse(node)) {
             return renderRangeCaret(deleteContentEditableNode(node));
+          } else {
+            return null;
           }
         }
 
