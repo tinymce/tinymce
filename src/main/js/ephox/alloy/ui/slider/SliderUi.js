@@ -90,6 +90,7 @@ define(
           key: 'mousedown',
           value: EventHandler.nu({
             run: function (spectrum, simulatedEvent) {
+              simulatedEvent.stop();
               detail.mouseIsDown().set(true);
             }
           })
