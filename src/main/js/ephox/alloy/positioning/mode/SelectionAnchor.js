@@ -62,7 +62,7 @@ define(
           var x = Element.fromText(Unicode.zeroWidth());
           Insert.before(sel.start(), x);
           // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
-          return WindowSelection.getFirstRect(win, Selection.range(x, 0, x, 1)).map(function (rect) {
+          return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map(function (rect) {
             Remove.remove(x);
             return rect;
           });          

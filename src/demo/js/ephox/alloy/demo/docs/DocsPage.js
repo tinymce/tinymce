@@ -2,7 +2,6 @@ define(
   'ephox.alloy.demo.docs.DocsPage',
 
   [
-    'ephox.alloy.api.behaviour.Attaching',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Disabling',
@@ -52,16 +51,15 @@ define(
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.alloy.ui.schema.TypeaheadSchema',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (
-    Attaching, Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing,
-    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Attachment, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation,
-    ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema,
-    InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
-    ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, Fun, Insert, SelectorFind
+    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing,
+    Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Attachment, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation, ButtonSchema,
+    ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema,
+    MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
+    ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, Fun, SelectorFind
   ) {
     return function () {
       var root = Gui.create();
@@ -102,7 +100,6 @@ define(
       var behaviours = [
         // First while developing
         // Toggling,
-        Attaching,
         Composing,
         Coupling,
         Disabling,

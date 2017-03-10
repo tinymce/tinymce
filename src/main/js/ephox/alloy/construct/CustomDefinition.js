@@ -2,7 +2,6 @@ define(
   'ephox.alloy.construct.CustomDefinition',
 
   [
-    'ephox.alloy.api.behaviour.Attaching',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Disabling',
@@ -37,9 +36,9 @@ define(
   ],
 
   function (
-    Attaching, Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing,
-    Representing, Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema,
-    Objects, ValueSchema, Arr, Fun, Merger, Error
+    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema,
+    Arr, Fun, Merger, Error
   ) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
@@ -126,7 +125,6 @@ define(
     };
 
     var alloyBehaviours = [
-      Attaching,
       Toggling,
       Composing,
       Coupling,
