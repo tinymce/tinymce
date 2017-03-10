@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .ui.slider.SliderTest',
+  'Browser Test: ui.slider.SliderTest',
 
   [
     'ephox.agar.api.Chain',
