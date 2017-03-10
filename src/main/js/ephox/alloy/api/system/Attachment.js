@@ -16,7 +16,7 @@ define(
     var fireDetaching = function (component) {
       component.getSystem().triggerEvent(SystemEvents.detachedFromDom(), component.element(), {
         target: Fun.constant(component.element())
-      });  
+      });
 
       var children = component.components();
       Arr.each(children, fireDetaching);
