@@ -2,7 +2,9 @@ define(
   'ephox.alloy.api.system.Attachment',
 
   [
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
@@ -10,21 +12,26 @@ define(
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Arr, Option, Insert, Remove, Body, Traverse) {
+  function (SystemEvents, Arr, Fun, Option, Insert, Remove, Body, Traverse) {
     var fireDetaching = function (component) {
-      if (Body.inBody(component.element())) {
-        component.getSystem().triggerEvent('component.detached', component.element(), { });  
+      // if (Body.inBody(component.element())) {
+        component.getSystem().triggerEvent('component.detached', component.element(), {
+          target: Fun.constant(component.element())
+        });  
         var children = component.components();
         Arr.each(children, fireDetaching);
-      }
+      // }
     };
 
     var fireAttaching = function (component) {
-      if (Body.inBody(component.element())) {
-        component.getSystem().triggerEvent('component.moved', component.element(), { });  
-      } else {
-        component.getSystem().triggerEvent('component.attached', component.element(), { });
-      }
+      // debugger;
+      // if (Body.inBody(component.element())) {
+      //   component.getSystem().triggerEvent('component.moved', component.element(), { });  
+      // } else {
+        component.getSystem().triggerEvent(SystemEvents.attachedToDom(), component.element(), {
+          target: Fun.constant(component.element())
+        });
+      // }
 
       var children = component.components();
       Arr.each(children, fireAttaching);
