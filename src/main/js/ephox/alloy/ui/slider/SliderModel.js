@@ -27,6 +27,7 @@ define(
       );
     };
 
+    // NOTE: One of the calculations here isn't quite right with unusual(?) bounds & steps
     var snapValueOfX = function (bounds, value, min, max, step) {
       // We are snapping by the step size. Therefore, find the nearest multiple of
       // the step
