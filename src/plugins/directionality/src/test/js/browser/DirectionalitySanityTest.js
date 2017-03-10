@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .DirectionalitySanityTest',
+  'browser.tinymce.plugins.directionality.DirectionalitySanityTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',

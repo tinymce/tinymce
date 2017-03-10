@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .ContextMenuSanityTest',
+  'browser.tinymce.plugins.contextmenu.ContextMenuSanityTest',
 
   [
     'ephox.agar.api.ApproxStructure',

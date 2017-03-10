@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .HrSanitytest',
+  'browser.tinymce.plugins.fullscreen.HrSanitytest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',

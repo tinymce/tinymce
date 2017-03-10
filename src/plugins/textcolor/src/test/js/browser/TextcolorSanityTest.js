@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .TextcolorSanityTest.js',
+  'browser.tinymce.plugins.textcolor.TextcolorSanityTest.js',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',

@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .EmoticonSanityTest',
+  'browser.tinymce.plugins.emoticons.EmoticonSanityTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',

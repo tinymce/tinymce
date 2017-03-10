@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .AutoresizeSanityTest',
+  'browser.tinymce.plugins.autoresize.AutoresizeSanityTest',
 
   [
     'ephox.agar.api.ApproxStructure',

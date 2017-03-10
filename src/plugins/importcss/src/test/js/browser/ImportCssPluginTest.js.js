@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .ImportCssPluginTest.js',
+  'browser.tinymce.plugins.importcss.ImportCssPluginTest.js',
   [
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',

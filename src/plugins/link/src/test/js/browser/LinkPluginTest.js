@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .LinkPluginTest',
+  'browser.tinymce.plugins.link.LinkPluginTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',

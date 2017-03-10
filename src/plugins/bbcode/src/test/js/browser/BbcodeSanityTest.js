@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .BbcodeSanityTest',
+  'browser.tinymce.plugins.bbcode.BbcodeSanityTest',
 
   [
     'ephox.agar.api.ApproxStructure',

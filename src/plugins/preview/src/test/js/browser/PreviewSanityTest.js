@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .PreviewSanityTest',
+  'browser.tinymce.plugins.preview.PreviewSanityTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.TinyApis',

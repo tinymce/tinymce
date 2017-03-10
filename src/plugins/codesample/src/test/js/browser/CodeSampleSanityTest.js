@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .CodeSampleSanityTest',
+  'browser.tinymce.plugins.codesample.CodeSampleSanityTest',
 
   [
     'ephox.agar.api.ApproxStructure',

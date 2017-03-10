@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .TabfocusSanityTest',
+  'browser.tinymce.plugins.tabfocus.TabfocusSanityTest',
   [
     'ephox.agar.api.Keys',
     'ephox.agar.api.Pipeline',

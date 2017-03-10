@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .ColoPickerSanityTest',
+  'browser.tinymce.plugins.colorpicker.ColorPickerSanityTest',
 
   [
     'ephox.agar.api.Pipeline',

@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .InsertDatetimeSanityTest',
+  'browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',

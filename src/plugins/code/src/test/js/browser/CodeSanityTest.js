@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .CodeSanityTest',
+  'browser.tinymce.plugins.code.CodeSanityTest',
 
   [
     'ephox.agar.api.Pipeline',

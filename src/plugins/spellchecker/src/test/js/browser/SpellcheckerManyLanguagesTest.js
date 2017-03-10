@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .SpellcheckerTest',
+  'browser.tinymce.plugins.spellchecker.SpellcheckerTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',

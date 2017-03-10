@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .VisualBlocksSanityTest',
+  'browser.tinymce.plugins.visualblocks.VisualBlocksSanityTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',
