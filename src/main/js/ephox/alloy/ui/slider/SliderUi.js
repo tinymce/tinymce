@@ -22,29 +22,27 @@ define(
         return (rect.left + rect.right) / 2;
       };
 
+      var getXOffset = function (slider, spectrumBounds, detail) {
+        var v = detail.value().get();
+        if (v < detail.min()) {
+          // position at left edge
+          return getXCentre(slider.getSystem().getByUid(detail.partUids()['left-edge']).getOrDie()) - spectrumBounds.left;
+        } else if (v > detail.max()) {
+          // position at right edge
+          return getXCentre(slider.getSystem().getByUid(detail.partUids()['right-edge']).getOrDie()) - spectrumBounds.left;
+        } else {
+          // position along the slider
+          return (detail.value().get() - detail.min())/range * spectrumBounds.width;
+        }
+      };
+
       var getXPos = function (slider) {
         var spectrum = slider.getSystem().getByUid(detail.partUids().spectrum).getOrDie();
         var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
         var sliderBounds = slider.element().dom().getBoundingClientRect();
 
-        var xInsideSpectrum = (function () {
-          var v = detail.value().get();
-          console.log('v', v);
-          if (v < detail.min()) {
-            return getXCentre(slider.getSystem().getByUid(detail.partUids()['left-edge']).getOrDie()) - spectrumBounds.left;
-            // position at left edge
-          } else if (v > detail.max()) {
-            // position at right edge
-            return getXCentre(slider.getSystem().getByUid(detail.partUids()['right-edge']).getOrDie()) - spectrumBounds.left;
-          } else {
-            console.log('here');
-            return (detail.value().get() - detail.min())/range * spectrumBounds.width;
-          }
-        })();
-
-        console.log('xInsideSpectrum', xInsideSpectrum);
-
-        return (spectrumBounds.left - sliderBounds.left) + xInsideSpectrum;
+        var xOffset = getXOffset(slider, spectrumBounds, detail);
+        return (spectrumBounds.left - sliderBounds.left) + xOffset;
       };
 
       var refresh = function (component) {
