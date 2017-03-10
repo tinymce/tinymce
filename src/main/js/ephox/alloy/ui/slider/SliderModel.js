@@ -27,7 +27,6 @@ define(
       );
     };
 
-    // NOTE: One of the calculations here isn't quite right with unusual(?) bounds & steps
     var snapValueOfX = function (bounds, value, min, max, step) {
       // We are snapping by the step size. Therefore, find the nearest multiple of
       // the step
@@ -38,13 +37,10 @@ define(
 
     var findValueOfX = function (bounds, min, max, xValue, step, snapToGrid) {
       var range = max - min;
-
       if (xValue < bounds.left) return min - 1;
       else if (xValue > bounds.right) return max + 1;
       else {
-
         var xOffset = Math.min(bounds.right, Math.max(xValue, bounds.left)) - bounds.left;
-        
         var newValue = capValue(Math.round((xOffset / bounds.width) * range) + min, min - 1, max + 1);
         return snapToGrid && newValue >= min && newValue <= max ? snapValueOfX(bounds, newValue, min, max, step) : newValue;
       }

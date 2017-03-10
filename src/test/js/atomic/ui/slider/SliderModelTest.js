@@ -78,7 +78,6 @@ test(
       [
         arbData
       ], function (data) {
-        // console.log('min', data.min, 'max', data.max, 'value', data.value, 'step', data.stepSize, 'snap', data.snapToGrid);
         var newValue = SliderModel.increaseBy(data.value, data.min, data.max, data.stepSize);
         RawAssertions.assertEq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
         return true;
