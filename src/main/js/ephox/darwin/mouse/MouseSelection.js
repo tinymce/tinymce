@@ -10,11 +10,11 @@ define(
   ],
 
   function (CellSelection, Fun, Option, Compare, SelectorFind) {
-    var findCell = function (target) {
-      return SelectorFind.closest(target, 'td,th');
+    var findCell = function (target, isRoot) {
+      return SelectorFind.closest(target, 'td,th', isRoot);
     };
 
-    return function (bridge, container) {
+    return function (bridge, container, isRoot) {
       var cursor = Option.none();
       var clearState = function () {
         cursor = Option.none();
@@ -23,15 +23,15 @@ define(
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
         CellSelection.clear(container);
-        cursor = findCell(event.target());
+        cursor = findCell(event.target(), isRoot);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
         cursor.each(function (start) {
           CellSelection.clear(container);
-          findCell(event.target()).each(function (finish) {
-            var boxes = CellSelection.identify(start, finish).getOr([]);
+          findCell(event.target(), isRoot).each(function (finish) {
+            var boxes = CellSelection.identify(start, finish, isRoot).getOr([]);
             // Wait until we have more than one, otherwise you can't do text selection inside a cell.
             // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
             // we can assume that the user is trying to make a one cell selection in two different tables which should be possible.

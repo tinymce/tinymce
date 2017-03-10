@@ -24,10 +24,10 @@ define(
       return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
     };
 
-    var verify = function (bridge, before, beforeOffset, after, afterOffset, failure) {
+    var verify = function (bridge, before, beforeOffset, after, afterOffset, failure, isRoot) {
       // Identify the cells that the before and after are in.
-      return SelectorFind.closest(after, 'td,th').bind(function (afterCell) {
-        return SelectorFind.closest(before, 'td,th').map(function (beforeCell) {
+      return SelectorFind.closest(after, 'td,th', isRoot).bind(function (afterCell) {
+        return SelectorFind.closest(before, 'td,th', isRoot).map(function (beforeCell) {
           // If they are not in the same cell
           if (! Compare.eq(afterCell, beforeCell)) {
             return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(function () {

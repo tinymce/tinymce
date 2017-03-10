@@ -17,8 +17,8 @@ define(
     // Based on a start and finish, select the appropriate box of cells
     var sync = function (container, isRoot, start, soffset, finish, foffset) {
       if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
-        return SelectorFind.closest(start, 'td,th').bind(function (s) {
-          return SelectorFind.closest(finish, 'td,th').bind(function (f) {
+        return SelectorFind.closest(start, 'td,th', isRoot).bind(function (s) {
+          return SelectorFind.closest(finish, 'td,th', isRoot).bind(function (f) {
             return detect(container, isRoot, s, f);
           });
         });
@@ -30,7 +30,7 @@ define(
     // If the cells are different, and there is a rectangle to connect them, select the cells.
     var detect = function (container, isRoot, start, finish) {
       if (! Compare.eq(start, finish)) {
-        var boxes = CellSelection.identify(start, finish).getOr([]);
+        var boxes = CellSelection.identify(start, finish, isRoot).getOr([]);
         if (boxes.length > 0) {
           CellSelection.selectRange(container, boxes, start, finish);
           return Option.some(Responses.response(
