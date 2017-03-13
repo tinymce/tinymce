@@ -650,22 +650,19 @@ asynctest(
       });
 
       suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
-        editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-        LegacyUnit.setSelection(editor, 'em', 0);
-        editor.selection.normalize();
-
-        var rng = editor.selection.getRng(true);
-
         if (Env.ie && Env.ie < 12) {
-          // IE automatically normalizes
-          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
-        } else {
-          LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
-        }
+          editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
+          LegacyUnit.setSelection(editor, 'em', 0);
+          editor.selection.normalize();
 
-        // Excluding assert on IE since it's a minor issue
-        if (Env.ie) {
-          LegacyUnit.equal(rng.startOffset, 1);
+          var rng = editor.selection.getRng(true);
+
+          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
+
+          // Excluding assert on IE since it's a minor issue
+          if (Env.ie) {
+            LegacyUnit.equal(rng.startOffset, 1);
+          }
         }
       });
 
