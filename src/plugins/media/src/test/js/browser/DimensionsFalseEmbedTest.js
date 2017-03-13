@@ -21,7 +21,7 @@ asynctest(
     Plugin();
     Theme();
 
-    var struct = ApproxStructure.build(function (s, str, arr) {
+    var struct = ApproxStructure.build(function (s, str) {
       return s.element('body', {
         children: [
           s.element('p', {
@@ -33,22 +33,14 @@ asynctest(
                 children: [
                   s.element('iframe', {
                     attrs: {
-                      width: str.is('560'),
-                      height: str.is('315')
+                      width: str.is('200'),
+                      height: str.is('100')
                     }
                   }),
-                  s.element('span', {
-                    classes: [
-                      arr.has('mce-shim')
-                    ]
-                  })
+                  s.anything()
                 ]
               }),
-              s.element('span', {
-                classes: [
-                  arr.has('mce-shim')
-                ]
-              })
+              s.anything()
             ]
           })
         ]
@@ -63,7 +55,7 @@ asynctest(
         Utils.sOpenDialog(tinyUi),
         Utils.sPasteTextareaValue(
           tinyUi,
-          '<iframe width="560" height="315" src="https://www.youtube.com/embed/1YhJQVutNA8" ' +
+          '<iframe width="200" height="100" src="a" ' +
           ' frameborder="0" allowfullscreen></iframe>'
         ),
         Utils.sSubmitDialog(tinyUi),
