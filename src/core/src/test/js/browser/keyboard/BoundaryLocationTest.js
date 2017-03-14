@@ -140,7 +140,7 @@ asynctest(
     ]));
 
     var sTestPrevLocationsBetweenInlines = Logger.t('sTestPrevLocationsBetweenInlines', GeneralSteps.sequence([
-      sTestPrevLocation('<p><a href="a">a</a><a href="a">b</a></p>', [0, 1, 0], 0, 'after', 'a:nth-child(1)')
+      sTestPrevLocation('<p><a href="a">a</a><a href="b">b</a></p>', [0, 1, 0], 0, 'after', 'a:nth-child(1)')
     ]));
 
     var sTestPrevLocationsBetweenBlocks = Logger.t('sTestPrevLocationsBetweenBlocks', GeneralSteps.sequence([
@@ -165,8 +165,8 @@ asynctest(
       sTestNextLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'after', 'a')
     ]));
 
-    var sTestNextLocationsBetweenInlines = Logger.t('sTestPrevLocationsBetweenInlines', GeneralSteps.sequence([
-      sTestNextLocation('<p><a href="a">a</a><a href="a">b</a></p>', [0, 0, 0], 1, 'before', 'a:nth-child(2)')
+    var sTestNextLocationsBetweenInlines = Logger.t('sTestNextLocationsBetweenInlines', GeneralSteps.sequence([
+      sTestNextLocation('<p><a href="a">a</a><a href="a">b</a></p>', [0, 0, 0], 1, 'after', 'a:nth-child(1)')
     ]));
 
     var sTestNextLocationsBetweenBlocks = Logger.t('sTestNextLocationsBetweenBlocks', GeneralSteps.sequence([

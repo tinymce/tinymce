@@ -234,8 +234,8 @@ asynctest(
         sAssertContentStructure(editor, anchorsZwspInside(['a', 'b'], END, 0)),
 
         tinyActions.sContentKeystroke(Keys.right(), { }),
-        sAssertCursor(tinyApis, [0, 1], 0),
-        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], AFTER, 0)),
+        sAssertCursor(tinyApis, [0, 1], 1),
+        sAssertContentStructure(editor, anchorsZwspOutside(['a', 'b'], BEFORE, 1)),
 
         tinyActions.sContentKeystroke(Keys.right(), { }),
         sAssertCursor(tinyApis, [0, 1, 0], 1),

@@ -85,37 +85,47 @@ define(
 
     var getElement = function (location) {
       return location.fold(
-        Fun.identity,
-        Fun.identity,
-        Fun.identity,
-        Fun.identity
+        Fun.identity, // Before
+        Fun.identity, // Start
+        Fun.identity, // End
+        Fun.identity  // After
       );
     };
 
     var outside = function (location) {
       return location.fold(
-        Location.before,
-        Location.before,
-        Location.after,
-        Location.after
+        Location.before, // Before
+        Location.before, // Start
+        Location.after,  // End
+        Location.after   // After
       );
     };
 
     var isInside = function (location) {
       return location.fold(
-        Fun.constant(false),
-        Fun.constant(true),
-        Fun.constant(true),
-        Fun.constant(false)
+        Fun.constant(false), // Before
+        Fun.constant(true),  // Start
+        Fun.constant(true),  // End
+        Fun.constant(false)  // After
       );
     };
 
-    var betweenInlines = function (rootNode, from, to, location) {
+    var hasSameParentBlock = function (rootNode, node1, node2) {
+      var block1 = CaretUtils.getParentBlock(node1, rootNode);
+      var block2 = CaretUtils.getParentBlock(node2, rootNode);
+      return block1 && block1 === block2;
+    };
+
+    var betweenInlines = function (forward, rootNode, from, to, location) {
       return Options.liftN([
         InlineUtils.findInline(rootNode, from),
         InlineUtils.findInline(rootNode, to)
       ], function (fromInline, toInline) {
-        return fromInline !== toInline ? outside(location, fromInline) : location;
+        if (fromInline !== toInline && hasSameParentBlock(rootNode, fromInline, toInline)) {
+          return Location.after(forward ? fromInline : toInline);
+        } else {
+          return location;
+        }
       }).getOr(location);
     };
 
@@ -175,7 +185,7 @@ define(
         function (to) {
           return readLocation(rootNode, to)
             .bind(Fun.curry(betweenBlocks, forward, rootNode, from, to))
-            .map(Fun.curry(betweenInlines, rootNode, from, to));
+            .map(Fun.curry(betweenInlines, forward, rootNode, from, to));
         }
       );
     };
