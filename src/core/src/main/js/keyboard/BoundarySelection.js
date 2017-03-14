@@ -13,34 +13,18 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretContainerRemove',
     'tinymce.core.caret.CaretPosition',
-    'tinymce.core.keyboard.BoundaryOperations',
-    'tinymce.core.keyboard.InlineUtils',
-    'tinymce.core.util.LazyEvaluator'
+    'tinymce.core.keyboard.BoundaryLocation',
+    'tinymce.core.keyboard.BoundaryCaret',
+    'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Arr, Fun, CaretContainer, CaretContainerRemove, CaretPosition, BoundaryOperations, InlineUtils, LazyEvaluator) {
+  function (Arr, Fun, CaretContainerRemove, CaretPosition, BoundaryLocation, BoundaryCaret, InlineUtils) {
     var setCaretPosition = function (editor, pos) {
       var rng = editor.dom.createRng();
       rng.setStart(pos.container(), pos.offset());
       rng.setEnd(pos.container(), pos.offset());
       editor.selection.setRng(rng);
-    };
-
-    var moveOperation = function (editor, forward, from, to) {
-      var operations = [
-        BoundaryOperations.fromTextToOutsideInline,
-        BoundaryOperations.fromTextInsideInlineToInlineEndPoint,
-        BoundaryOperations.fromOutsideInlineToInsideInline,
-        BoundaryOperations.fromInsideInlineToOutsideInline
-      ];
-
-      return LazyEvaluator.evaluateUntil(operations, [editor.getBody(), from, to, forward]);
-    };
-
-    var staticOperation = function (editor, forward, from) {
-      return BoundaryOperations.staticOperation(editor, forward, from);
     };
 
     var setSelected = function (state, elm) {
@@ -51,32 +35,16 @@ define(
       }
     };
 
-    var getNormalizedFromPosition = function (editor, forward) {
-      return InlineUtils.normalize(forward, CaretPosition.fromRangeStart(editor.selection.getRng()));
-    };
-
-    var getNormalizedToPosition = function (editor, forward, from) {
-      return InlineUtils.findCaretPosition(editor.getBody(), forward, from).bind(Fun.curry(InlineUtils.normalize, forward));
-    };
-
-    var getOperationFromSelection = function (editor, forward) {
-      return getNormalizedFromPosition(editor, forward).bind(function (from) {
-        return getNormalizedToPosition(editor, forward, from).fold(function () {
-          return staticOperation(editor.getBody(), forward, from);
-        }, function (to) {
-          return moveOperation(editor, forward, from, to);
-        });
-      });
-    };
-
     var move = function (editor, caret, forward) {
       return function () {
-        return getOperationFromSelection(editor, forward)
-          .map(Fun.curry(BoundaryOperations.applyOperation, caret))
-          .map(function (pos) {
-            setCaretPosition(editor, pos);
-            return pos;
-          }).isSome();
+        var rootNode = editor.getBody();
+        var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+        var location = forward ? BoundaryLocation.nextLocation(rootNode, from) : BoundaryLocation.prevLocation(rootNode, from);
+
+        return location.map(function (location) {
+          setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
+          return location;
+        }).isSome();
       };
     };
 
@@ -97,18 +65,24 @@ define(
       }
     };
 
+    var renderInsideInlineCaret = function (editor, caret, elms) {
+      if (editor.selection.isCollapsed()) {
+        var inlines = Arr.filter(elms, InlineUtils.isInlineTarget);
+        Arr.each(inlines, function (inline) {
+          var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+          BoundaryLocation.readLocation(editor.getBody(), pos).map(function (location) {
+            setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
+            return location;
+          });
+        });
+      }
+    };
+
     var setupSelectedState = function (editor, caret) {
       editor.on('NodeChange', function (e) {
-        var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-
         toggleInlines(editor.dom, e.parents);
         safeRemoveCaretContainer(editor, caret);
-
-        if (editor.selection.isCollapsed()) {
-          BoundaryOperations.getOperationFromPosition(e.parents, pos).map(function (operation) {
-            setCaretPosition(editor, BoundaryOperations.applyOperation(caret, operation));
-          });
-        }
+        renderInsideInlineCaret(editor, caret, e.parents);
       });
     };
 

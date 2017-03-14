@@ -13,16 +13,25 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
+    'tinymce.core.Env',
     'tinymce.core.text.Zwsp',
     'tinymce.themes.modern.Theme'
   ],
-  function (ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Arr, TinyActions, TinyApis, TinyLoader, Element, Zwsp, Theme) {
+  function (ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Arr, TinyActions, TinyApis, TinyLoader, Element, Env, Zwsp, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var BEFORE = true, AFTER = false;
     var START = true, END = false;
 
     Theme();
+
+    var addGeckoBr = function (s, str, children) {
+      if (Env.gecko) {
+        return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is("1") } }));
+      } else {
+        return children;
+      }
+    };
 
     var anchorSurroundedWithText = function (expectedText) {
       return ApproxStructure.build(function (s, str/*, arr*/) {
@@ -95,7 +104,7 @@ asynctest(
         });
 
         return s.element('p', {
-          children: Arr.flatten(children)
+          children: addGeckoBr(s, str, Arr.flatten(children))
         });
       });
     };
@@ -121,7 +130,7 @@ asynctest(
         });
 
         return s.element('p', {
-          children: children
+          children: addGeckoBr(s, str, children)
         });
       });
     };

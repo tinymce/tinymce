@@ -75,7 +75,7 @@ asynctest(
               });
             })
           ),
-          tinyApis.sAssertSelection([1, 0, 0], 0, [1, 0, 0], 0)
+          tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1)
         ])
       );
     };
@@ -160,7 +160,7 @@ asynctest(
               });
             })
           ),
-          tinyApis.sAssertSelection([1, 0, 0], 0, [1, 0, 0], 0)
+          tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1)
         ])
       );
     };

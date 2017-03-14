@@ -11,6 +11,7 @@
 define(
   'tinymce.core.keyboard.InlineUtils',
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'tinymce.core.caret.CaretContainer',
@@ -20,7 +21,7 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.text.Bidi'
   ],
-  function (Option, Options, CaretContainer, CaretPosition, CaretUtils, CaretWalker, DOMUtils, Bidi) {
+  function (Fun, Option, Options, CaretContainer, CaretPosition, CaretUtils, CaretWalker, DOMUtils, Bidi) {
     var isInlineTarget = function (elm) {
       return DOMUtils.DOM.is(elm, 'a[href],code');
     };
@@ -35,42 +36,18 @@ define(
       return inBidiText || hasRtlDirection(pos);
     };
 
-    var isPlainTextPosition = function (rootNode, pos) {
-      return CaretPosition.isTextPosition(pos) && isInInline(rootNode, pos) === false && isInRtlText(pos) === false;
-    };
-
-    var isInlineTextPosition = function (rootNode, pos) {
-      return CaretPosition.isTextPosition(pos) && isInInline(rootNode, pos) && isInRtlText(pos) === false;
-    };
-
     var findInline = function (rootNode, pos) {
       return Option.from(DOMUtils.DOM.getParent(pos.container(), isInlineTarget, rootNode));
-    };
-
-    var findSiblingInline = function (forward, container) {
-      return Option.from(container).bind(function () {
-        return Option.from(forward ? container.previousSibling : container.nextSibling);
-      });
     };
 
     var isInInline = function (rootNode, pos) {
       return pos ? findInline(rootNode, pos).isSome() : false;
     };
 
-    var betweenInlines = function (rootNode, from, to) {
-      return Options.liftN([findInline(rootNode, from), findInline(rootNode, to)], function (inline1, inline2) {
-        return inline1 !== inline2;
-      }).getOr(false);
-    };
-
     var isAtInlineEndPoint = function (rootNode, pos) {
       return findInline(rootNode, pos).map(function (inline) {
         return findCaretPosition(inline, false, pos).isNone() || findCaretPosition(inline, true, pos).isNone();
       }).getOr(false);
-    };
-
-    var isBetweenBlocks = function (rootNode, from, to) {
-      return CaretUtils.isInSameBlock(from, to, rootNode) === false;
     };
 
     var isAtZwsp = function (pos) {
@@ -88,32 +65,31 @@ define(
       return Option.from(forward ? caretWalker.next(from) : caretWalker.prev(from));
     };
 
-    var normalize = function (forward, pos) {
-      return Option.from(pos).map(function (pos) {
-        var container = pos.container(), offset = pos.offset();
+    var normalizePosition = function (forward, pos) {
+      var container = pos.container(), offset = pos.offset();
 
-        if (forward) {
-          return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
-        } else {
-          return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
-        }
-      });
+      if (forward) {
+        return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
+      } else {
+        return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
+      }
     };
+
+    var normalizeForwards = Fun.curry(normalizePosition, true);
+    var normalizeBackwards = Fun.curry(normalizePosition, false);
 
     return {
       isInlineTarget: isInlineTarget,
       findInline: findInline,
       isInInline: isInInline,
-      isPlainTextPosition: isPlainTextPosition,
-      isInlineTextPosition: isInlineTextPosition,
-      findSiblingInline: findSiblingInline,
-      betweenInlines: betweenInlines,
+      isInRtlText: isInRtlText,
       isAtInlineEndPoint: isAtInlineEndPoint,
-      isBetweenBlocks: isBetweenBlocks,
       isAtZwsp: isAtZwsp,
       findCaretPositionIn: findCaretPositionIn,
       findCaretPosition: findCaretPosition,
-      normalize: normalize
+      normalizePosition: normalizePosition,
+      normalizeForwards: normalizeForwards,
+      normalizeBackwards: normalizeBackwards
     };
   }
 );
