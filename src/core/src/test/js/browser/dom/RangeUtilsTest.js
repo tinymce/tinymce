@@ -24,17 +24,10 @@ asynctest(
     };
 
     var assertRange = function (expected, actual) {
-      Assertions.assertEq('Ranges should be equal', {
-        startContainer: expected.startContainer,
-        startOffset: expected.startOffset,
-        endContainer: expected.endContainer,
-        endOffset: expected.endOffset
-      }, {
-        startContainer: actual.startContainer,
-        startOffset: actual.startOffset,
-        endContainer: actual.endContainer,
-        endOffset: actual.endOffset
-      });
+      Assertions.assertEq('startContainers should be equal', true, expected.startContainer === actual.startContainer);
+      Assertions.assertEq('startOffset should be equal', true, expected.startOffset === actual.startOffset);
+      Assertions.assertEq('endContainer should be equal', true, expected.endContainer === actual.endContainer);
+      Assertions.assertEq('endOffset should be equal', true, expected.endOffset === actual.endOffset);
     };
 
     var sTestDontNormalizeAtAnchors = Logger.t('Don\'t normalize at anchors', Step.sync(function () {

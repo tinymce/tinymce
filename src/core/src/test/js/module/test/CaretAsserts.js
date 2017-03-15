@@ -1,10 +1,11 @@
 define(
   'tinymce.core.test.CaretAsserts',
   [
+    'ephox.agar.api.Assertions',
     'ephox.mcagar.api.LegacyUnit',
     'tinymce.core.dom.DOMUtils'
   ],
-  function (LegacyUnit, DOMUtils) {
+  function (Assertions, LegacyUnit, DOMUtils) {
     var assertCaretPosition = function (actual, expected, message) {
       if (expected === null) {
         LegacyUnit.strictEqual(actual, expected, message || 'Expected null.');
@@ -16,27 +17,14 @@ define(
         return;
       }
 
-      LegacyUnit.deepEqual({
-        container: actual.container(),
-        offset: actual.offset()
-      }, {
-        container: expected.container(),
-        offset: expected.offset()
-      }, message);
+      Assertions.assertEq(message, true, expected.isEqual(actual));
     };
 
-    var assertRange = function (actual, expected) {
-      LegacyUnit.deepEqual({
-        startContainer: actual.startContainer,
-        startOffset: actual.startOffset,
-        endContainer: actual.endContainer,
-        endOffset: actual.endOffset
-      }, {
-        startContainer: expected.startContainer,
-        startOffset: expected.startOffset,
-        endContainer: expected.endContainer,
-        endOffset: expected.endOffset
-      });
+    var assertRange = function (expected, actual) {
+      Assertions.assertEq('startContainers should be equal', true, expected.startContainer === actual.startContainer);
+      Assertions.assertEq('startOffset should be equal', true, expected.startOffset === actual.startOffset);
+      Assertions.assertEq('endContainer should be equal', true, expected.endContainer === actual.endContainer);
+      Assertions.assertEq('endOffset should be equal', true, expected.endOffset === actual.endOffset);
     };
 
     var createRange = function (startContainer, startOffset, endContainer, endOffset) {
