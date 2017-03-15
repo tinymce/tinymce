@@ -27,6 +27,10 @@ define(
       editor.selection.setRng(rng);
     };
 
+    var isFeatureEnabled = function (editor) {
+      return editor.settings.inline_boundaries !== false;
+    };
+
     var setSelected = function (state, elm) {
       if (state) {
         elm.setAttribute('data-mce-selected', '1');
@@ -35,17 +39,14 @@ define(
       }
     };
 
-    var move = function (editor, caret, forward) {
-      return function () {
-        var rootNode = editor.getBody();
-        var from = CaretPosition.fromRangeStart(editor.selection.getRng());
-        var location = forward ? BoundaryLocation.nextLocation(rootNode, from) : BoundaryLocation.prevLocation(rootNode, from);
-
-        return location.map(function (location) {
-          setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
-          return location;
-        }).isSome();
-      };
+    var findLocation = function (editor, caret, forward) {
+      var rootNode = editor.getBody();
+      var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+      var location = forward ? BoundaryLocation.nextLocation(rootNode, from) : BoundaryLocation.prevLocation(rootNode, from);
+      return location.map(function (location) {
+        setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
+        return location;
+      });
     };
 
     var toggleInlines = function (dom, elms) {
@@ -78,11 +79,19 @@ define(
       }
     };
 
+    var move = function (editor, caret, forward) {
+      return function () {
+        return isFeatureEnabled(editor) ? findLocation(editor, caret, forward).isSome() : false;
+      };
+    };
+
     var setupSelectedState = function (editor, caret) {
       editor.on('NodeChange', function (e) {
-        toggleInlines(editor.dom, e.parents);
-        safeRemoveCaretContainer(editor, caret);
-        renderInsideInlineCaret(editor, caret, e.parents);
+        if (isFeatureEnabled(editor)) {
+          toggleInlines(editor.dom, e.parents);
+          safeRemoveCaretContainer(editor, caret);
+          renderInsideInlineCaret(editor, caret, e.parents);
+        }
       });
     };
 
