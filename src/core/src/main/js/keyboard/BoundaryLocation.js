@@ -1,5 +1,5 @@
 /**
- * BoundaryLocations.js
+ * BoundaryLocation.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -74,13 +74,19 @@ define(
       );
     };
 
+    var isValidLocation = function (location) {
+      return InlineUtils.isRtl(getElement(location)) === false;
+    };
+
     var readLocation = function (rootNode, pos) {
-      return LazyEvaluator.evaluateUntil([
+      var location = LazyEvaluator.evaluateUntil([
         before,
         start,
         end,
         after
       ], [rootNode, pos]);
+
+      return location.filter(isValidLocation);
     };
 
     var getElement = function (location) {
@@ -110,18 +116,13 @@ define(
       );
     };
 
-    var hasSameParentBlock = function (rootNode, node1, node2) {
-      var block1 = CaretUtils.getParentBlock(node1, rootNode);
-      var block2 = CaretUtils.getParentBlock(node2, rootNode);
-      return block1 && block1 === block2;
-    };
-
     var betweenInlines = function (forward, rootNode, from, to, location) {
       return Options.liftN([
         InlineUtils.findInline(rootNode, from),
         InlineUtils.findInline(rootNode, to)
       ], function (fromInline, toInline) {
-        if (fromInline !== toInline && hasSameParentBlock(rootNode, fromInline, toInline)) {
+        if (fromInline !== toInline && InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)) {
+          // Force after since some browsers normalize and lean left into the closest inline
           return Location.after(forward ? fromInline : toInline);
         } else {
           return location;
@@ -129,11 +130,11 @@ define(
       }).getOr(location);
     };
 
-    var isFirstPosition = function (rootBlock, pos) {
+    var isFirstPositionInBlock = function (rootBlock, pos) {
       return InlineUtils.findCaretPosition(rootBlock, false, pos).isNone();
     };
 
-    var isLastPosition = function (rootBlock, pos) {
+    var isLastPositionInBlock = function (rootBlock, pos) {
       return InlineUtils.findCaretPosition(rootBlock, true, pos).bind(function (nextPos) {
         if (NodeType.isBr(nextPos.getNode())) {
           return InlineUtils.findCaretPosition(rootBlock, true, CaretPosition.after(nextPos.getNode()));
@@ -143,33 +144,35 @@ define(
       }).isNone();
     };
 
-    var isEndPosition = function (forward, rootBlock, pos) {
-      return forward ? isLastPosition(rootBlock, pos) : isFirstPosition(rootBlock, pos);
+    var isEndPositionInBlock = function (forward, rootBlock, pos) {
+      return forward ? isLastPositionInBlock(rootBlock, pos) : isFirstPositionInBlock(rootBlock, pos);
+    };
+
+    var onlyOutside = function (location) {
+      if (isInside(location)) {
+        return Option.some(outside(location));
+      } else {
+        return Option.none();
+      }
+    };
+
+    var findFirstOrLastLocationInBlock = function (rootNode, forward, toBlock) {
+      return InlineUtils.findCaretPositionIn(toBlock, forward).bind(function (lastPosition) {
+        return readLocation(toBlock, lastPosition).map(outside);
+      });
     };
 
     var betweenBlocks = function (forward, rootNode, from, to, location) {
       var fromBlock = CaretUtils.getParentBlock(from.container(), rootNode);
-      if (isEndPosition(forward, fromBlock, to) && isInside(location) === false) {
-        return readLocation(rootNode, from).bind(function (fromLocation) {
-          if (isInside(fromLocation)) {
-            return Option.some(outside(fromLocation));
-          } else {
-            return Option.none();
-          }
-        });
-      } else if (isEndPosition(forward, fromBlock, from)) {
-        return readLocation(rootNode, from).bind(function (fromLocation) {
-          if (isInside(fromLocation)) {
-            return Option.some(outside(fromLocation));
-          } else {
-            return Option.none();
-          }
-        }).orThunk(function () {
-          var toBlock = CaretUtils.getParentBlock(to.container(), rootNode);
-          return InlineUtils.findCaretPositionIn(toBlock, forward).bind(function (lastPosition) {
-            return readLocation(toBlock, lastPosition).map(outside);
+      if (isEndPositionInBlock(forward, fromBlock, to) && isInside(location) === false) {
+        return readLocation(rootNode, from).bind(onlyOutside);
+      } else if (isEndPositionInBlock(forward, fromBlock, from)) {
+        return readLocation(rootNode, from)
+          .bind(onlyOutside)
+          .orThunk(function () {
+            var toBlock = CaretUtils.getParentBlock(to.container(), rootNode);
+            return findFirstOrLastLocationInBlock(rootNode, forward, toBlock);
           });
-        });
       } else {
         return Option.some(location);
       }
@@ -178,7 +181,7 @@ define(
     var findLocation = function (forward, rootNode, pos) {
       var from = InlineUtils.normalizePosition(forward, pos);
       var to = InlineUtils.findCaretPosition(rootNode, forward, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
-      return to.fold(
+      var location = to.fold(
         function () {
           return readLocation(rootNode, from).map(outside);
         },
@@ -188,6 +191,8 @@ define(
             .map(Fun.curry(betweenInlines, forward, rootNode, from, to));
         }
       );
+
+      return location.filter(isValidLocation);
     };
 
     return {

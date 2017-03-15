@@ -97,7 +97,7 @@ asynctest(
     var sTestPrevLocation = Fun.curry(sTestFindLocation, false);
     var sTestNextLocation = Fun.curry(sTestFindLocation, true);
     var sTestPrevLocationInvalid = Fun.curry(sTestFindLocationInvalid, false);
-    //var sTestNextLocationInvalid = Fun.curry(sTestFindLocationInvalid, true);
+    var sTestNextLocationInvalid = Fun.curry(sTestFindLocationInvalid, true);
 
     var sTestValidLocations = Logger.t('sTestValidLocations', GeneralSteps.sequence([
       sTestValidLocation('<p><a href="a">a</a></p>', [0], 0, 'before', 'a'),
@@ -129,7 +129,9 @@ asynctest(
       sTestInvalidLocation('<p>a<a href="a">a</a>b</p>', [0, 2], 1),
       sTestInvalidLocation('<p><img src="a"><a href="a">a</a></p>', [0], 0),
       sTestInvalidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 2),
-      sTestInvalidLocation('<p><a href="a"><img src="a"><img src="a"></a><img src="a"></p>', [0, 0], 1)
+      sTestInvalidLocation('<p><a href="a"><img src="a"><img src="a"></a><img src="a"></p>', [0, 0], 1),
+      sTestInvalidLocation('<p dir="rtl"><a href="a">a</a></p>', [0, 0, 0], 0),
+      sTestInvalidLocation('<p><a href="a">\u05D4</a></p>', [0, 0, 0], 0)
     ]));
 
     var sTestPrevLocations = Logger.t('sTestPrevLocations', GeneralSteps.sequence([
@@ -147,6 +149,7 @@ asynctest(
       sTestPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1], 0, 'after', 'p:nth-child(1) a'),
       sTestPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1, 0, 0], 0, 'before', 'p:nth-child(2) a'),
       sTestPrevLocation('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [1, 0, 0], 0, 'before', 'p:nth-child(2) a'),
+      sTestPrevLocation('<p><a href="a">a</a><br /></p><p><a href="c">c</a></p>', [1], 0, 'after', 'p:nth-child(1) a'),
       sTestPrevLocationInvalid('<p><a href="a">a</a></p><p>b<a href="c">c</a></p>', [1, 0], 1),
       sTestPrevLocationInvalid('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [1], 0)
     ]));
@@ -171,7 +174,9 @@ asynctest(
 
     var sTestNextLocationsBetweenBlocks = Logger.t('sTestNextLocationsBetweenBlocks', GeneralSteps.sequence([
       sTestNextLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0], 1, 'before', 'p:nth-child(2) a'),
-      sTestNextLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0, 0, 0], 1, 'after', 'p:nth-child(1) a')
+      sTestNextLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0, 0, 0], 1, 'after', 'p:nth-child(1) a'),
+      sTestNextLocationInvalid('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [0, 1], 0),
+      sTestNextLocationInvalid('<p><a href="a">a</a></p><p>b<a href="c">c</a></p>', [0], 1)
     ]));
 
     var sTestNextZwspLocations = Logger.t('sTestNextZwspLocations', GeneralSteps.sequence([

@@ -26,18 +26,18 @@ define(
       return DOMUtils.DOM.is(elm, 'a[href],code');
     };
 
-    var hasRtlDirection = function (pos) {
-      var elm = CaretPosition.isTextPosition(pos) ? pos.container().parentNode : pos.container();
-      return DOMUtils.DOM.getStyle(elm, 'direction', true) === 'rtl';
-    };
-
-    var isInRtlText = function (pos) {
-      var inBidiText = CaretPosition.isTextPosition(pos) ? Bidi.hasStrongRtl(pos.container().data) : false;
-      return inBidiText || hasRtlDirection(pos);
+    var isRtl = function (element) {
+      return DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
     };
 
     var findInline = function (rootNode, pos) {
       return Option.from(DOMUtils.DOM.getParent(pos.container(), isInlineTarget, rootNode));
+    };
+
+    var hasSameParentBlock = function (rootNode, node1, node2) {
+      var block1 = CaretUtils.getParentBlock(node1, rootNode);
+      var block2 = CaretUtils.getParentBlock(node2, rootNode);
+      return block1 && block1 === block2;
     };
 
     var isInInline = function (rootNode, pos) {
@@ -82,14 +82,15 @@ define(
       isInlineTarget: isInlineTarget,
       findInline: findInline,
       isInInline: isInInline,
-      isInRtlText: isInRtlText,
+      isRtl: isRtl,
       isAtInlineEndPoint: isAtInlineEndPoint,
       isAtZwsp: isAtZwsp,
       findCaretPositionIn: findCaretPositionIn,
       findCaretPosition: findCaretPosition,
       normalizePosition: normalizePosition,
       normalizeForwards: normalizeForwards,
-      normalizeBackwards: normalizeBackwards
+      normalizeBackwards: normalizeBackwards,
+      hasSameParentBlock: hasSameParentBlock
     };
   }
 );
