@@ -15,7 +15,7 @@
     "node": ">=0.10.26"
   },
   "scripts": {
-    "test": "grunt bedrock"
+    "test": "grunt bedrock:manual"
   },
   "devDependencies": {
     "@ephox/bolt": "^1.6.0",

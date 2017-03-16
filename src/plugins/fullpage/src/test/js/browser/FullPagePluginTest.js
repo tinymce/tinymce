@@ -1,13 +1,18 @@
 asynctest(
   'browser.tinymce.plugins.fullpage.FullPagePluginTest',
   [
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
+    'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.fullpage.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
+  function (Assertions, GeneralSteps, Pipeline, Step, Waiter, Arr, LegacyUnit, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -51,9 +56,6 @@ asynctest(
 
       editor.setContent('<html><body dir="rtl"><p>Test</p></body></html>');
       LegacyUnit.equal(editor.getBody().dir, 'rtl', 'Dir added to body');
-
-      editor.setContent('<html><head><style>p {text-align:right}</style></head><body dir="rtl"><p>Test</p></body></html>');
-      LegacyUnit.equal(editor.dom.getStyle(editor.getBody().firstChild, 'text-align', true), 'right', 'Styles added to iframe document');
 
       editor.setContent('<html><body><p>Test</p></body></html>');
       LegacyUnit.equal(editor.getBody().style.color, '', 'No color on body.');
@@ -129,8 +131,28 @@ asynctest(
       LegacyUnit.equal(hasLink("c.css"), false);
     });
 
+    var sParseStyles = function (editor) {
+      return GeneralSteps.sequence([
+        Step.sync(function () {
+          editor.setContent('<html><head><style>p {text-align:right}</style></head><body dir="rtl"><p>Test</p></body></html>');
+        }),
+        Waiter.sTryUntil(
+          'Expected styles where not added',
+          Step.sync(function () {
+            Assertions.assertEq('Styles added to iframe document', 'right', editor.dom.getStyle(editor.getBody().firstChild, 'text-align', true));
+          }
+        ), 10, 3000)
+      ]);
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+      Pipeline.async({}, Arr.flatten([
+        [
+          sParseStyles(editor)
+        ],
+        suite.toSteps(editor)
+      ]), onSuccess, onFailure);
+
       teardown(editor);
     }, {
       plugins: 'fullpage',

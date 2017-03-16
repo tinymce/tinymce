@@ -13,16 +13,29 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.UiControls',
-    'ephox.agar.api.FocusTools'
+    'ephox.agar.api.FocusTools',
+    'tinymce.plugins.image.Plugin',
+    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.textpattern.Plugin'
   ], function (
     TinyLoader, TinyApis, TinyActions, TinyDom, Toolbar, InliteTheme,
-    Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools
+    Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools, ImagePlugin,
+    TablePlugin, LinkPlugin, PastePlugin, ContextMenuPlugin, TextPatternPlugin
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var dialogRoot = TinyDom.fromDom(document.body);
 
     InliteTheme();
+    ImagePlugin();
+    TablePlugin();
+    LinkPlugin();
+    PastePlugin();
+    ContextMenuPlugin();
+    TextPatternPlugin();
 
     var sClickFocusedButton = Chain.asStep(TinyDom.fromDom(document), [
       FocusTools.cGetFocused,
@@ -168,6 +181,7 @@ asynctest(
       var tinyApis = TinyApis(editor), tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         sBoldTests(tinyApis),
         sH2Tests(tinyApis),
         sLinkTests(tinyApis),

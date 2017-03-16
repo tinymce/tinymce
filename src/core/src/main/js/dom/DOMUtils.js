@@ -478,6 +478,10 @@ define(
       is: function (elm, selector) {
         var i;
 
+        if (!elm) {
+          return false;
+        }
+
         // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
         if (elm.length === undefined) {
           // Simple all selector
