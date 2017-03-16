@@ -44,7 +44,7 @@ asynctest(
         var blobInfo = result[0].blobInfo;
         LegacyUnit.equal(result.length, 2);
         LegacyUnit.equal('data:image/gif;base64,' + blobInfo.base64(), base64Src);
-        LegacyUnit.strictEqual(result[0].image, viewBlock.get().firstChild);
+        LegacyUnit.equalDom(result[0].image, viewBlock.get().firstChild);
       });
     });
 
@@ -64,7 +64,7 @@ asynctest(
         done();
         LegacyUnit.equal(result.length, 1);
         LegacyUnit.equal('data:image/gif;base64,' + result[0].blobInfo.base64(), base64Src);
-        LegacyUnit.strictEqual(result[0].image, viewBlock.get().firstChild);
+        LegacyUnit.equalDom(result[0].image, viewBlock.get().firstChild);
       });
     });
 

@@ -30,9 +30,9 @@ asynctest(
 
     suite.test('Constructor', function () {
       setupHtml('abc');
-      LegacyUnit.strictEqual(new CaretPosition(getRoot(), 0).container(), getRoot());
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 0).container(), getRoot());
       LegacyUnit.strictEqual(new CaretPosition(getRoot(), 1).offset(), 1);
-      LegacyUnit.strictEqual(new CaretPosition(getRoot().firstChild, 0).container(), getRoot().firstChild);
+      LegacyUnit.equalDom(new CaretPosition(getRoot().firstChild, 0).container(), getRoot().firstChild);
       LegacyUnit.strictEqual(new CaretPosition(getRoot().firstChild, 1).offset(), 1);
     });
 
@@ -172,19 +172,19 @@ asynctest(
     suite.test('getNode', function () {
       setupHtml('<b>abc</b><input><input>');
 
-      LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(), getRoot().firstChild.firstChild);
-      LegacyUnit.equal(new CaretPosition(getRoot(), 1).getNode(), getRoot().childNodes[1]);
-      LegacyUnit.equal(new CaretPosition(getRoot(), 2).getNode(), getRoot().childNodes[2]);
-      LegacyUnit.equal(new CaretPosition(getRoot(), 3).getNode(), getRoot().childNodes[2]);
+      LegacyUnit.equalDom(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(), getRoot().firstChild.firstChild);
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 1).getNode(), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 2).getNode(), getRoot().childNodes[2]);
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 3).getNode(), getRoot().childNodes[2]);
     });
 
     suite.test('getNode (before)', function () {
       setupHtml('<b>abc</b><input><input>');
 
-      LegacyUnit.equal(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(true), getRoot().firstChild.firstChild);
-      LegacyUnit.equal(new CaretPosition(getRoot(), 1).getNode(true), getRoot().childNodes[0]);
-      LegacyUnit.equal(new CaretPosition(getRoot(), 2).getNode(true), getRoot().childNodes[1]);
-      LegacyUnit.equal(new CaretPosition(getRoot(), 3).getNode(true), getRoot().childNodes[2]);
+      LegacyUnit.equalDom(new CaretPosition(getRoot().firstChild.firstChild, 0).getNode(true), getRoot().firstChild.firstChild);
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 1).getNode(true), getRoot().childNodes[0]);
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 2).getNode(true), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(new CaretPosition(getRoot(), 3).getNode(true), getRoot().childNodes[2]);
     });
 
     suite.test('isAtStart/isAtEnd/isTextPosition', function () {

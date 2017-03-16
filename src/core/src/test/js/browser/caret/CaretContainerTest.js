@@ -55,51 +55,51 @@ asynctest(
 
     suite.test('insertInline before element', function () {
       setupHtml('<span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertInline(getRoot().firstChild, true), getRoot().firstChild);
+      LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, true), getRoot().firstChild);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
     });
 
     suite.test('insertInline after element', function () {
       setupHtml('<span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().lastChild);
+      LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().lastChild);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), true);
     });
 
     suite.test('insertInline between elements', function () {
       setupHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertBlock('p', getRoot().lastChild, true), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().lastChild, true), getRoot().childNodes[1]);
       LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), true);
     });
 
     suite.test('insertInline before element with ZWSP', function () {
       setupHtml('abc' + Zwsp.ZWSP + '<span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
     });
 
     suite.test('insertInline after element with ZWSP', function () {
       setupHtml('<span contentEditable="false">1</span>' + Zwsp.ZWSP + 'abc');
-      LegacyUnit.equal(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().childNodes[1]);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), false);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
     });
 
     suite.test('insertBlock before element', function () {
       setupHtml('<span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertBlock('p', getRoot().firstChild, true), getRoot().firstChild);
+      LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild, true), getRoot().firstChild);
       LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().firstChild), true);
     });
 
     suite.test('insertBlock after element', function () {
       setupHtml('<span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertBlock('p', getRoot().firstChild, false), getRoot().lastChild);
+      LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild, false), getRoot().lastChild);
       LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().lastChild), true);
     });
 
     suite.test('insertBlock between elements', function () {
       setupHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
-      LegacyUnit.equal(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
     });
 

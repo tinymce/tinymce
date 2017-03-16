@@ -203,7 +203,7 @@ asynctest(
         }
 
         LegacyUnit.equal(editor.getContent(), '<p><img src="myimage.png" /></p>');
-        LegacyUnit.equal(result[0].element, editor.$('img')[0]);
+        LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
         LegacyUnit.equal(result[0].status, true);
       };
 
@@ -233,7 +233,7 @@ asynctest(
           LegacyUnit.equal(uploadCount >= 1, true, 'Should at least be one.');
         }
 
-        LegacyUnit.equal(result[0].element, editor.$('img')[0]);
+        LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
         LegacyUnit.equal(result[0].status, false);
       };
 
