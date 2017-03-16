@@ -26,11 +26,11 @@ asynctest(
         tinyUi.sClickOnToolbar('click forecolor arrow', 'div[aria-label="Text color"] button.mce-open'),
         tinyUi.sClickOnUi('click on custom btn', 'button:contains("Custom...")'),
         tinyUi.sWaitForPopup('wait for popup', 'div[role="dialog"][aria-label="Color"]'),
-        tinyUi.sClickOnUi('click cancen button', 'button:contains("Cancel")'),
+        tinyUi.sClickOnUi('could not find cancel button', 'button:contains("Cancel")'),
         tinyUi.sClickOnToolbar('click backcolor arrow', 'div[aria-label="Background color"] button.mce-open'),
         tinyUi.sClickOnUi('click on custom btn', 'button:contains("Custom...")'),
         tinyUi.sWaitForPopup('wait for popup', 'div[role="dialog"][aria-label="Color"]'),
-        tinyUi.sClickOnUi('click cancen button', 'button:contains("Cancel")')
+        tinyUi.sClickOnUi('could not find cancel button', 'button:contains("Cancel")')
       ], onSuccess, onFailure);
     }, {
       plugins: 'colorpicker textcolor',
