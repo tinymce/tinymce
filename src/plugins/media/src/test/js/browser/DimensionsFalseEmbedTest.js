@@ -60,7 +60,7 @@ asynctest(
         ),
         Utils.sSubmitDialog(tinyUi),
         Waiter.sTryUntil(
-          'wait for correct structure',
+          'content was not expected structure',
           tinyApis.sAssertContentStructure(struct),
           100,
           4000
