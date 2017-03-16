@@ -2,7 +2,6 @@ asynctest(
   'browser.tinymce.plugins.anchor.AnchorSanityTest.js',
 
   [
-    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
@@ -13,10 +12,7 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
 
-  function (
-    ApproxStructure, Pipeline, Step, Waiter, TinyApis, TinyLoader, TinyUi, AchorPlugin,
-    ModernTheme
-  ) {
+  function (Pipeline, Step, Waiter, TinyApis, TinyLoader, TinyUi, AchorPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,29 +32,15 @@ asynctest(
 
       Pipeline.async({}, [
         tinyApis.sSetContent('abc'),
+        tinyApis.sFocus,
         tinyUi.sClickOnToolbar('click anchor button', 'div[aria-label="Anchor"] button'),
         tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].mce-floatpanel  input'),
         sType('abc'),
         tinyUi.sClickOnUi('click on OK btn', 'div.mce-primary > button'),
         Waiter.sTryUntil('wait for anchor',
-          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.anything(),
-                    s.element('a', {
-                      attrs: {
-                        id: str.is('abc')
-                      }
-                    }),
-                    s.anything(),
-                    s.anything()
-                  ]
-                })
-              ]
-            });
-          })), 100, 4000
+          tinyApis.sAssertContentPresence(
+            { 'a.mce-item-anchor': 1 }
+          ), 100, 4000
         )
       ], onSuccess, onFailure);
     }, {
