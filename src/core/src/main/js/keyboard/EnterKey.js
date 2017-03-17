@@ -14,13 +14,110 @@
 define(
   'tinymce.core.keyboard.EnterKey',
   [
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.caret.CaretContainer",
-    "tinymce.core.Env"
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.text.Zwsp',
+    'tinymce.core.util.Tools'
   ],
-  function (TreeWalker, RangeUtils, CaretContainer, Env) {
+  function (CaretContainer, NodeType, RangeUtils, TreeWalker, Env, Zwsp, Tools) {
     var isIE = Env.ie && Env.ie < 11;
+
+    var isEmptyAnchor = function (elm) {
+      return elm && elm.nodeName === "A" && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
+    };
+
+    var isTableCell = function (node) {
+      return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
+    };
+
+    var emptyBlock = function (elm) {
+      // BR is needed in empty blocks on non IE browsers
+      elm.innerHTML = !isIE ? '<br data-mce-bogus="1">' : '';
+    };
+
+    // Returns true if the block can be split into two blocks or not
+    var canSplitBlock = function (dom, node) {
+      return node &&
+        dom.isBlock(node) &&
+        !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
+        !/^(fixed|absolute)/i.test(node.style.position) &&
+        dom.getContentEditable(node) !== "true";
+    };
+
+    // Renders empty block on IE
+    var renderBlockOnIE = function (dom, selection, block) {
+      var oldRng;
+
+      if (dom.isBlock(block)) {
+        oldRng = selection.getRng();
+        block.appendChild(dom.create('span', null, '\u00a0'));
+        selection.select(block);
+        block.lastChild.outerHTML = '';
+        selection.setRng(oldRng);
+      }
+    };
+
+    // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
+    var trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, block) {
+      var node = block, firstChilds = [], i;
+
+      if (!node) {
+        return;
+      }
+
+      // Find inner most first child ex: <p><i><b>*</b></i></p>
+      while ((node = node.firstChild)) {
+        if (dom.isBlock(node)) {
+          return;
+        }
+
+        if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+          firstChilds.push(node);
+        }
+      }
+
+      i = firstChilds.length;
+      while (i--) {
+        node = firstChilds[i];
+        if (!node.hasChildNodes() || (node.firstChild == node.lastChild && node.firstChild.nodeValue === '')) {
+          dom.remove(node);
+        } else {
+          if (isEmptyAnchor(node)) {
+            dom.remove(node);
+          }
+        }
+      }
+    };
+
+    var normalizeZwspOffset = function (start, container, offset) {
+      if (NodeType.isText(container) === false) {
+        return offset;
+      } if (start) {
+        return offset === 1 && container.data.charAt(offset - 1) === Zwsp.ZWSP ? 0 : offset;
+      } else {
+        return offset === container.data.length - 1 && container.data.charAt(offset) === Zwsp.ZWSP ? container.data.length : offset;
+      }
+    };
+
+    var includeZwspInRange = function (rng) {
+      var newRng = rng.cloneRange();
+      newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
+      newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
+      return newRng;
+    };
+
+    var firstNonWhiteSpaceNodeSibling = function (node) {
+      while (node) {
+        if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
+          return node;
+        }
+
+        node = node.nextSibling;
+      }
+    };
 
     var setup = function (editor) {
       var dom = editor.dom, selection = editor.selection, settings = editor.settings;
@@ -31,78 +128,10 @@ define(
         var rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,
           newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
 
-        // Returns true if the block can be split into two blocks or not
-        function canSplitBlock(node) {
-          return node &&
-            dom.isBlock(node) &&
-            !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
-            !/^(fixed|absolute)/i.test(node.style.position) &&
-            dom.getContentEditable(node) !== "true";
-        }
-
-        function isTableCell(node) {
-          return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
-        }
-
-        // Renders empty block on IE
-        function renderBlockOnIE(block) {
-          var oldRng;
-
-          if (dom.isBlock(block)) {
-            oldRng = selection.getRng();
-            block.appendChild(dom.create('span', null, '\u00a0'));
-            selection.select(block);
-            block.lastChild.outerHTML = '';
-            selection.setRng(oldRng);
-          }
-        }
-
-        // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
-        function trimInlineElementsOnLeftSideOfBlock(block) {
-          var node = block, firstChilds = [], i;
-
-          if (!node) {
-            return;
-          }
-
-          // Find inner most first child ex: <p><i><b>*</b></i></p>
-          while ((node = node.firstChild)) {
-            if (dom.isBlock(node)) {
-              return;
-            }
-
-            if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
-              firstChilds.push(node);
-            }
-          }
-
-          i = firstChilds.length;
-          while (i--) {
-            node = firstChilds[i];
-            if (!node.hasChildNodes() || (node.firstChild == node.lastChild && node.firstChild.nodeValue === '')) {
-              dom.remove(node);
-            } else {
-              // Remove <a> </a> see #5381
-              if (node.nodeName == "A" && (node.innerText || node.textContent) === ' ') {
-                dom.remove(node);
-              }
-            }
-          }
-        }
-
         // Moves the caret to a suitable position within the root for example in the first non
         // pure whitespace text node or before an image
         function moveToCaretPosition(root) {
           var walker, node, rng, lastNode = root, tempElm;
-          function firstNonWhiteSpaceNodeSibling(node) {
-            while (node) {
-              if (node.nodeType == 1 || (node.nodeType == 3 && node.data && /[\r\n\s]/.test(node.data))) {
-                return node;
-              }
-
-              node = node.nextSibling;
-            }
-          }
 
           if (!root) {
             return;
@@ -194,11 +223,6 @@ define(
           }
         }
 
-        function emptyBlock(elm) {
-          // BR is needed in empty blocks on non IE browsers
-          elm.innerHTML = !isIE ? '<br data-mce-bogus="1">' : '';
-        }
-
         // Creates a new block element by cloning the current one or creating a new one if the name is specified
         // This function will also copy any text formatting from the parent block and add it to the new one
         function createNewBlock(name) {
@@ -249,10 +273,12 @@ define(
 
         // Returns true/false if the caret is at the start/end of the parent block element
         function isCaretAtStartOrEndOfBlock(start) {
-          var walker, node, name;
+          var walker, node, name, normalizedOffset;
+
+          normalizedOffset = normalizeZwspOffset(start, container, offset);
 
           // Caret is in the middle of a text node like "a|b"
-          if (container.nodeType == 3 && (start ? offset > 0 : offset < container.nodeValue.length)) {
+          if (container.nodeType == 3 && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
             return false;
           }
 
@@ -276,9 +302,9 @@ define(
 
           // If caret is in beginning or end of a text block then jump to the next/previous node
           if (container.nodeType == 3) {
-            if (start && offset === 0) {
+            if (start && normalizedOffset === 0) {
               walker.prev();
-            } else if (!start && offset == container.nodeValue.length) {
+            } else if (!start && normalizedOffset == container.nodeValue.length) {
               walker.next();
             }
           }
@@ -313,7 +339,7 @@ define(
 
           // Not in a block element or in a table cell or caption
           parentBlock = dom.getParent(container, dom.isBlock);
-          if (!parentBlock || !canSplitBlock(parentBlock)) {
+          if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
             parentBlock = parentBlock || editableRoot;
 
             if (parentBlock == editor.getBody() || isTableCell(parentBlock)) {
@@ -425,7 +451,7 @@ define(
           } else if (isFirstOrLastLi()) {
             // Last LI in list then remove LI and add text block after list
             dom.insertAfter(newBlock, getContainerBlock());
-            renderBlockOnIE(newBlock);
+            renderBlockOnIE(dom, selection, newBlock);
           } else {
             // Middle LI in list the split the list and insert a text block in the middle
             // Extract after fragment and insert it after the current block
@@ -507,7 +533,7 @@ define(
           }
 
           // Split the current container block element if enter is pressed inside an empty inner block element
-          if (settings.end_container_on_empty_block && canSplitBlock(containerBlock) && dom.isEmpty(parentBlock)) {
+          if (settings.end_container_on_empty_block && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
             // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
             newBlock = dom.split(containerBlock, parentBlock);
           } else {
@@ -644,17 +670,17 @@ define(
         } else if (isCaretAtStartOrEndOfBlock(true)) {
           // Insert new block before
           newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
-          renderBlockOnIE(newBlock);
+          renderBlockOnIE(dom, selection, newBlock);
           moveToCaretPosition(parentBlock);
         } else {
           // Extract after fragment and insert it after the current block
-          tmpRng = rng.cloneRange();
+          tmpRng = includeZwspInRange(rng).cloneRange();
           tmpRng.setEndAfter(parentBlock);
           fragment = tmpRng.extractContents();
           trimLeadingLineBreaks(fragment);
           newBlock = fragment.firstChild;
           dom.insertAfter(fragment, parentBlock);
-          trimInlineElementsOnLeftSideOfBlock(newBlock);
+          trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
           addBrToBlockIfNeeded(parentBlock);
 
           if (dom.isEmpty(parentBlock)) {

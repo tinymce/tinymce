@@ -54,6 +54,16 @@ asynctest(
       editor.off('GetContent', handler);
     });
 
+    suite.test('getContent of zwsp', function (editor) {
+      editor.setContent('<p>a' + Zwsp.ZWSP + 'b</p>');
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.selection.getContent(), '<p>ab</p>', 'Get selected contents');
+      LegacyUnit.equal(editor.selection.getContent({ format: 'text' }), 'ab', 'Get selected contents');
+    });
+
     suite.test('setContent', function (editor) {
       var rng, eventObj;
 
@@ -640,22 +650,19 @@ asynctest(
       });
 
       suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
-        editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-        LegacyUnit.setSelection(editor, 'em', 0);
-        editor.selection.normalize();
-
-        var rng = editor.selection.getRng(true);
-
         if (Env.ie && Env.ie < 12) {
-          // IE automatically normalizes
-          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
-        } else {
-          LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
-        }
+          editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
+          LegacyUnit.setSelection(editor, 'em', 0);
+          editor.selection.normalize();
 
-        // Excluding assert on IE since it's a minor issue
-        if (Env.ie) {
-          LegacyUnit.equal(rng.startOffset, 1);
+          var rng = editor.selection.getRng(true);
+
+          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
+
+          // Excluding assert on IE since it's a minor issue
+          if (Env.ie) {
+            LegacyUnit.equal(rng.startOffset, 1);
+          }
         }
       });
 

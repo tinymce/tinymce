@@ -13,13 +13,13 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretContainerRemove',
     'tinymce.core.caret.CaretPosition',
-    'tinymce.core.keyboard.BoundaryOperations',
-    'tinymce.core.keyboard.InlineUtils',
-    'tinymce.core.util.LazyEvaluator'
+    'tinymce.core.keyboard.BoundaryLocation',
+    'tinymce.core.keyboard.BoundaryCaret',
+    'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Arr, Fun, CaretContainer, CaretPosition, BoundaryOperations, InlineUtils, LazyEvaluator) {
+  function (Arr, Fun, CaretContainerRemove, CaretPosition, BoundaryLocation, BoundaryCaret, InlineUtils) {
     var setCaretPosition = function (editor, pos) {
       var rng = editor.dom.createRng();
       rng.setStart(pos.container(), pos.offset());
@@ -27,19 +27,8 @@ define(
       editor.selection.setRng(rng);
     };
 
-    var moveOperation = function (editor, forward, from, to) {
-      var operations = [
-        BoundaryOperations.fromTextToOutsideInline,
-        BoundaryOperations.fromTextInsideInlineToInlineEndPoint,
-        BoundaryOperations.fromOutsideInlineToInsideInline,
-        BoundaryOperations.fromInsideInlineToOutsideInline
-      ];
-
-      return LazyEvaluator.evaluateUntil(operations, [editor.getBody(), from, to, forward]);
-    };
-
-    var staticOperation = function (editor, forward, from) {
-      return BoundaryOperations.staticOperation(editor, forward, from);
+    var isFeatureEnabled = function (editor) {
+      return editor.settings.inline_boundaries !== false;
     };
 
     var setSelected = function (state, elm) {
@@ -50,65 +39,58 @@ define(
       }
     };
 
-    var getNormalizedFromPosition = function (editor, forward) {
-      return InlineUtils.normalize(forward, CaretPosition.fromRangeStart(editor.selection.getRng()));
-    };
-
-    var getNormalizedToPosition = function (editor, forward, from) {
-      return InlineUtils.findCaretPosition(editor.getBody(), forward, from).bind(Fun.curry(InlineUtils.normalize, forward));
-    };
-
-    var getOperationFromSelection = function (editor, forward) {
-      return getNormalizedFromPosition(editor, forward).bind(function (from) {
-        return getNormalizedToPosition(editor, forward, from).fold(function () {
-          return staticOperation(editor.getBody(), forward, from);
-        }, function (to) {
-          return moveOperation(editor, forward, from, to);
-        });
+    var findLocation = function (editor, caret, forward) {
+      var rootNode = editor.getBody();
+      var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+      var location = forward ? BoundaryLocation.nextLocation(rootNode, from) : BoundaryLocation.prevLocation(rootNode, from);
+      return location.map(function (location) {
+        setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
+        return location;
       });
     };
 
-    var move = function (editor, caret, forward) {
-      return function () {
-        return getOperationFromSelection(editor, forward)
-          .map(Fun.curry(BoundaryOperations.applyOperation, caret))
-          .map(function (pos) {
-            setCaretPosition(editor, pos);
-            return pos;
-          }).isSome();
-      };
+    var toggleInlines = function (dom, elms) {
+      var selectedInlines = dom.select('a[href][data-mce-selected],code[data-mce-selected]');
+      var targetInlines = Arr.filter(elms, InlineUtils.isInlineTarget);
+      Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));
+      Arr.each(Arr.difference(targetInlines, selectedInlines), Fun.curry(setSelected, true));
     };
 
-    var unselectInlines = function (editor) {
-      Arr.each(editor.dom.select('a[href][data-mce-selected],code[data-mce-selected]'), Fun.curry(setSelected, false));
-    };
-
-    var selectInlines = function (elms) {
-      Arr.find(elms, InlineUtils.isInlineTarget).bind(Fun.curry(setSelected, true));
-    };
-
-    var safeRemoveCaretContainer = function (selection, caret) {
-      if (selection.isCollapsed()) {
-        var pos = CaretPosition.fromRangeStart(selection.getRng());
-        if (CaretPosition.isTextPosition(pos) && pos.container() !== caret.get()) {
-          CaretContainer.remove(caret.get());
+    var safeRemoveCaretContainer = function (editor, caret) {
+      if (editor.selection.isCollapsed() && editor.composing !== true) {
+        var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+        if (CaretPosition.isTextPosition(pos) && InlineUtils.isAtZwsp(pos) === false) {
+          setCaretPosition(editor, CaretContainerRemove.removeAndReposition(caret.get(), pos));
           caret.set(null);
         }
       }
     };
 
+    var renderInsideInlineCaret = function (editor, caret, elms) {
+      if (editor.selection.isCollapsed()) {
+        var inlines = Arr.filter(elms, InlineUtils.isInlineTarget);
+        Arr.each(inlines, function (inline) {
+          var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+          BoundaryLocation.readLocation(editor.getBody(), pos).map(function (location) {
+            setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
+            return location;
+          });
+        });
+      }
+    };
+
+    var move = function (editor, caret, forward) {
+      return function () {
+        return isFeatureEnabled(editor) ? findLocation(editor, caret, forward).isSome() : false;
+      };
+    };
+
     var setupSelectedState = function (editor, caret) {
       editor.on('NodeChange', function (e) {
-        var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-
-        unselectInlines(editor);
-        selectInlines(e.parents);
-        safeRemoveCaretContainer(editor.selection, caret);
-
-        if (editor.selection.isCollapsed()) {
-          BoundaryOperations.getOperationFromPosition(e.parents, pos).map(function (operation) {
-            setCaretPosition(editor, BoundaryOperations.applyOperation(caret, operation));
-          });
+        if (isFeatureEnabled(editor)) {
+          toggleInlines(editor.dom, e.parents);
+          safeRemoveCaretContainer(editor, caret);
+          renderInsideInlineCaret(editor, caret, e.parents);
         }
       });
     };

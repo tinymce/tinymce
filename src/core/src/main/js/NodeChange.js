@@ -135,16 +135,11 @@ define(
         if (editor.initialized && selection && !editor.settings.disable_nodechange && !editor.readonly) {
           // Get start node
           root = editor.getBody();
-          node = selection.getStart() || root;
+          node = selection.getStart(true) || root;
 
           // Make sure the node is within the editor root or is the editor root
           if (node.ownerDocument != editor.getDoc() || !editor.dom.isChildOf(node, root)) {
             node = root;
-          }
-
-          // Edge case for <p>|<img></p>
-          if (node.nodeName == 'IMG' && selection.isCollapsed()) {
-            node = node.parentNode;
           }
 
           // Get parents and add them to object

@@ -41,29 +41,9 @@ define(
       return isCaretContainerBlock(node) || isCaretContainerInline(node);
     }
 
-    function removeNode(node) {
-      var parentNode = node.parentNode;
-      if (parentNode) {
-        parentNode.removeChild(node);
-      }
-    }
-
-    function getNodeValue(node) {
-      try {
-        return node.nodeValue;
-      } catch (ex) {
-        // IE sometimes produces "Invalid argument" on nodes
-        return "";
-      }
-    }
-
-    function setNodeValue(node, text) {
-      if (text.length === 0) {
-        removeNode(node);
-      } else {
-        node.nodeValue = text;
-      }
-    }
+    var hasContent = function (node) {
+      return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
+    };
 
     function insertInline(node, before) {
       var doc, sibling, textNode, parentNode;
@@ -169,25 +149,6 @@ define(
       return blockNode;
     }
 
-    function hasContent(node) {
-      return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
-    }
-
-    function remove(caretContainerNode) {
-      if (isElement(caretContainerNode) && isCaretContainer(caretContainerNode)) {
-        if (hasContent(caretContainerNode)) {
-          caretContainerNode.removeAttribute('data-mce-caret');
-        } else {
-          removeNode(caretContainerNode);
-        }
-      }
-
-      if (isText(caretContainerNode)) {
-        var text = Zwsp.trim(getNodeValue(caretContainerNode));
-        setNodeValue(caretContainerNode, text);
-      }
-    }
-
     function startsWithCaretContainer(node) {
       return isText(node) && node.data[0] == Zwsp.ZWSP;
     }
@@ -229,7 +190,6 @@ define(
       isAfterInline: isAfterInline,
       insertBlock: insertBlock,
       hasContent: hasContent,
-      remove: remove,
       startsWithCaretContainer: startsWithCaretContainer,
       endsWithCaretContainer: endsWithCaretContainer
     };

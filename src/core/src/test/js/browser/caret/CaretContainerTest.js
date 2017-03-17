@@ -103,16 +103,6 @@ asynctest(
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
     });
 
-    suite.test('remove', function () {
-      setupHtml('<span contentEditable="false">1</span>');
-
-      CaretContainer.insertInline(getRoot().firstChild, true);
-      LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
-
-      CaretContainer.remove(getRoot().firstChild);
-      LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
-    });
-
     suite.test('startsWithCaretContainer', function () {
       setupHtml(Zwsp.ZWSP + 'abc');
       LegacyUnit.equal(CaretContainer.startsWithCaretContainer(getRoot().firstChild), true);
