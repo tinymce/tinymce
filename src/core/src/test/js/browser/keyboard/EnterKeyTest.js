@@ -530,14 +530,15 @@ asynctest(
       delete editor.settings.keep_styles;
     });
 
-    suite.test("keep_styles=false: P should not pass its styles and classes to the new P that is cloned from it when enter is pressed", function (editor) {
-      editor.settings.keep_styles = false;
-      editor.getBody().innerHTML = '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p>';
-      LegacyUnit.setSelection(editor, 'span', 1);
-      pressEnter(editor);
-      LegacyUnit.equal(editor.getContent(), '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p><p>\u00a0</p>');
-      delete editor.settings.keep_styles;
-    });
+    suite.test(
+      "keep_styles=false: P should not pass its styles and classes to the new P that is cloned from it when enter is pressed", function (editor) {
+        editor.settings.keep_styles = false;
+        editor.getBody().innerHTML = '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p>';
+        LegacyUnit.setSelection(editor, 'span', 1);
+        pressEnter(editor);
+        LegacyUnit.equal(editor.getContent(), '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p><p>\u00a0</p>');
+        delete editor.settings.keep_styles;
+      });
 
     suite.test('Enter when forced_root_block: false and force_p_newlines: true', function (editor) {
       editor.settings.forced_root_block = false;

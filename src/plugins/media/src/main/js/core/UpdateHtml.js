@@ -91,10 +91,12 @@ define(
             case "embed":
             case "img":
             case "iframe":
-              setAttributes(attrs, {
-                width: data.width,
-                height: data.height
-              });
+              if (data.height !== undefined && data.width !== undefined) {
+                setAttributes(attrs, {
+                  width: data.width,
+                  height: data.height
+                });
+              }
               break;
           }
 
