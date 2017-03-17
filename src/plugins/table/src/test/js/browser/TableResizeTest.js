@@ -15,7 +15,11 @@ asynctest(
     Plugin();
     Theme();
 
-    var testResizeTable1 = '<table style="width: 426px"><tbody>' +
+    var getWidth = function (table) {
+      return table.offsetWidth;
+    };
+
+    var testResizeTable1 = '<table style="width: 426px" class="mce-item-table"><tbody>' +
       '<tr><td style="height: 20px; width: 200px;" colspan="2" data-mce-style="height: 20px; width: 200px;">' +
       'A1</td><td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A2</td>' +
       '<td style="height: 20px; width: 100px;" data-mce-style="height: 20px; width: 100px;">A3</td></tr>' +
@@ -217,7 +221,7 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       var table = editor.dom.select('table')[0];
-      var beforeWidth1 = table.clientWidth;
+      var beforeWidth1 = getWidth(table);
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 0);
 
@@ -248,7 +252,7 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       table = editor.dom.select('table')[0];
-      var beforeWidth2 = table.clientWidth;
+      var beforeWidth2 = getWidth(table);
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 1);
 
@@ -279,7 +283,7 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       table = editor.dom.select('table')[0];
-      var beforeWidth3 = table.clientWidth;
+      var beforeWidth3 = getWidth(table);
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 2);
 
@@ -310,7 +314,7 @@ asynctest(
       editor.setContent(testResizeTable1);
 
       table = editor.dom.select('table')[0];
-      var beforeWidth4 = table.clientWidth;
+      var beforeWidth4 = getWidth(table);
 
       editor.plugins.table.resizeBars.adjustWidth(table, 50, 3);
 
@@ -443,6 +447,7 @@ asynctest(
     }, {
       plugins: 'table',
       indent: false,
+      content_style: 'body .mce-item-table { border: 0 }',
       valid_styles: {
         '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
       },

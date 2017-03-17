@@ -109,7 +109,8 @@ asynctest(
     });
 
     suite.test('endsWithCaretContainer', function () {
-      setupHtml('abc' + Zwsp.ZWSP);
+      setupHtml('abc');
+      viewBlock.get().firstChild.appendData(Zwsp.ZWSP);
       LegacyUnit.equal(CaretContainer.endsWithCaretContainer(getRoot().firstChild), true);
     });
 

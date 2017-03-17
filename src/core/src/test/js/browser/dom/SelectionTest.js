@@ -658,11 +658,7 @@ asynctest(
           var rng = editor.selection.getRng(true);
 
           LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
-
-          // Excluding assert on IE since it's a minor issue
-          if (Env.ie) {
-            LegacyUnit.equal(rng.startOffset, 1);
-          }
+          LegacyUnit.equal(rng.startOffset, 0);
         }
       });
 

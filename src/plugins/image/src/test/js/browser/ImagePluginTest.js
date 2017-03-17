@@ -248,7 +248,12 @@ asynctest(
       editor.settings.image_advtab = true;
       editor.settings.image_dimensions = false;
 
-      editor.setContent('');
+      editor.setContent('<p>a</p>');
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+      rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+      editor.selection.setRng(rng);
+
       editor.execCommand('mceImage', true);
 
       LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
@@ -268,7 +273,7 @@ asynctest(
 
       LegacyUnit.equal(
         cleanHtml(editor.getContent()),
-        '<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
+        '<p>a<img style="border-width: 10px;" src="src" alt="alt" /></p>'
       );
     });
 

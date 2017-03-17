@@ -31,7 +31,7 @@ asynctest(
         return GeneralSteps.sequence([
           tinyApis.sSetContent(''),
           sInsertTable(cols, rows),
-          /*tinyApis.sAssertContent(expectedHtml, message)*/
+          tinyApis.sAssertContent(expectedHtml, message)
         ]);
       };
 
@@ -172,10 +172,10 @@ asynctest(
 
       Pipeline.async({}, [
         sInsertTableTests(editor, tinyApis),
-        //sFormatBlockTests(editor, tinyApis),
-        //sInsertBlobTests(editor, tinyApis),
-        //sCreateLinkTests(editor, tinyApis),
-        //sUnlinkTests(editor, tinyApis)
+        sFormatBlockTests(editor, tinyApis),
+        sInsertBlobTests(editor, tinyApis),
+        sCreateLinkTests(editor, tinyApis),
+        sUnlinkTests(editor, tinyApis)
       ], onSuccess, onFailure);
     }, {
       inline: true,

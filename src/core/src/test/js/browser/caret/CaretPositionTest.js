@@ -151,7 +151,8 @@ asynctest(
     });
 
     suite.test('getClientRects at extending character', function () {
-      setupHtml('a\u0301b');
+      setupHtml('a');
+      getRoot().firstChild.appendData('\u0301b');
 
       LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 0).getClientRects().length, 1);
       LegacyUnit.equal(new CaretPosition(getRoot().firstChild, 1).getClientRects().length, 0);
