@@ -456,6 +456,42 @@ module.exports = function (grunt) {
           config: 'config/bolt/browser.js',
           testdirs: ["**/src/test/js"]
         }
+      },
+
+      chrome: {
+        options: {
+          browser: "chrome",
+          mode: "auto",
+          config: 'config/bolt/browser.js',
+          testdirs: ["**/src/test/js"]
+        }
+      },
+
+      firefox: {
+        options: {
+          browser: "firefox",
+          mode: "auto",
+          config: 'config/bolt/browser.js',
+          testdirs: ["**/src/test/js"]
+        }
+      },
+
+      MicrosoftEdge: {
+        options: {
+          browser: "MicrosoftEdge",
+          mode: "auto",
+          config: 'config/bolt/browser.js',
+          testdirs: ["**/src/test/js"]
+        }
+      },
+
+      ie: {
+        options: {
+          browser: "ie",
+          mode: "auto",
+          config: 'config/bolt/browser.js',
+          testdirs: ["**/src/test/js"]
+        }
       }
     },
 
