@@ -13,6 +13,7 @@ module.exports = function (grunt) {
     if (options.mode === "manual") {
       shell("bedrock " + [
         '-c ' + options.config,
+        '--totalTimeout 300000',
         '--testdirs ' + testdirs.join(' ')
       ].join(' '));
     } else {
