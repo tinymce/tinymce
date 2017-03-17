@@ -34,7 +34,8 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
   var installedPlugins = function (editor) {
     return {
       type: 'container',
-      html: '<div style="margin: 10px; padding: 10px;">' +
+      style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
+      html: '<div style="margin: 10px; padding: 10px;" data-mce-tabstop="1" tabindex="-1">' +
               pluginLister(editor) +
             '</div>',
       flex: 1
@@ -44,7 +45,7 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
   var availablePlugins = function () {
     return {
       type: 'container',
-      html: '<div style="margin: 10px; padding: 10px; background: #e3e7f4; height: 100%;">' +
+      html: '<div style="margin: 10px; padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
               '<p><b>Plugins available:</b></p>' +
               '<ul>' +
                 '<li>PowerPaste</li>' +

@@ -15,7 +15,7 @@ define(
         items: [
           {
             type: 'container',
-            html: '<div style="margin: 10px;">' +
+            html: '<div style="margin: 10px;" data-mce-tabstop="1" tabindex="-1">' +
                     '<p style="padding-bottom: 5px;">Find more info about TinyMCE and Ephox here:</p>' +
                     '<ul>' +
                       linkStringer('https://www.tinymce.com', 'TinyMCE.com') +

@@ -4,7 +4,7 @@ define(
     'tinymce.core.Env'
   ],
   function (Env) {
-    var meta = Env.mac ? 'Cmd' : 'Ctrl';
+    var meta = Env.mac ? '\u2318' : 'Ctrl';
     var access = Env.mac ? 'Ctrl + Alt' : 'Shift + Alt';
 
     var shortcuts = [
@@ -12,7 +12,7 @@ define(
       { shortcut: meta + ' + I', action: 'Italic' },
       { shortcut: meta + ' + U', action: 'Underline' },
       { shortcut: meta + ' + A', action: 'Select All' },
-      { shortcut: meta + ' + Y / ' + meta + ' + Shift + Z', action: 'Redo' },
+      { shortcut: meta + ' + Y or ' + meta + ' + Shift + Z', action: 'Redo' },
       { shortcut: meta + ' + Z', action: 'Undo' },
       { shortcut: access + ' + 1', action: 'Header 1' },
       { shortcut: access + ' + 2', action: 'Header 2' },
