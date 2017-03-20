@@ -1094,5 +1094,48 @@ ModuleLoader.require([
 
 		editor.selection.win = win;
 	});
+
+	test('image selection webkit bug', function() {
+		var testImageSelection = function (inputHtml, expectedContainerName, expectedOffset) {
+			editor.setContent(inputHtml);
+			editor.selection.select(editor.dom.select('img')[0]);
+
+			var rng = editor.selection.getRng(true);
+			equal(rng.startContainer.nodeName, 'P');
+			equal(rng.startOffset, expectedOffset);
+			equal(rng.startContainer.nodeName, 'P');
+			equal(rng.endOffset, expectedOffset + 1);
+			equal(editor.selection.getNode().nodeName, 'IMG');
+			equal(editor.selection.getStart().nodeName, 'IMG');
+			equal(editor.selection.getEnd().nodeName, 'IMG');
+
+			var nativeRng = editor.selection.getSel().getRangeAt(0);
+			equal(nativeRng.startContainer.nodeName, 'P');
+			equal(nativeRng.startOffset, expectedOffset);
+			equal(nativeRng.startContainer.nodeName, 'P');
+			equal(nativeRng.endOffset, expectedOffset + 1);
+		};
+
+		testImageSelection('<p><img src="#"></p>', 'P', 0);
+		testImageSelection('<p><img src="#">abc</p>', 'P', 0);
+		testImageSelection('<p>abc<img src="#"></p>', 'P', 1);
+		testImageSelection('<p>abc<img src="#">def</p>', 'P', 1);
+		testImageSelection('<p><img style="float: right;" src="#"></p>', 'P', 0);
+		testImageSelection('<p><img style="float: right;" src="#">abc</p>', 'P', 0);
+		testImageSelection('<p>abc<img style="float: right;" src="#"></p>', 'P', 1);
+		testImageSelection('<p>abc<img style="float: right;" src="#">def</p>', 'P', 1);
+		testImageSelection('<p><img style="float: left;" src="#"></p>', 'P', 0);
+		testImageSelection('<p><img style="float: left;" src="#">abc</p>', 'P', 0);
+		testImageSelection('<p>abc<img style="float: left;" src="#"></p>', 'P', 1);
+		testImageSelection('<p>abc<img style="float: left;" src="#">def</p>', 'P', 1);
+		testImageSelection('<p dir="rtl"><img style="float: right;" src="#"></p>', 'P', 0);
+		testImageSelection('<p dir="rtl"><img style="float: right;" src="#">abc</p>', 'P', 0);
+		testImageSelection('<p dir="rtl">abc<img style="float: right;" src="#"></p>', 'P', 1);
+		testImageSelection('<p dir="rtl">abc<img style="float: right;" src="#">def</p>', 'P', 1);
+		testImageSelection('<p dir="rtl"><img style="float: left;" src="#"></p>', 'P', 0);
+		testImageSelection('<p dir="rtl"><img style="float: left;" src="#">abc</p>', 'P', 0);
+		testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#"></p>', 'P', 1);
+		testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#">def</p>', 'P', 1);
+	});
 });
 
