@@ -5,15 +5,13 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.data.DragCoord',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
-    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
@@ -21,14 +19,14 @@ define(
     'global!document'
   ],
 
-  function (Behaviour, Dragging, DragCoord, Gui, Button, Container, HtmlDisplay, Objects, Fun, Option, PlatformDetection, Insert, Element, Class, Css, Position, document) {
+  function (Behaviour, Dragging, DragCoord, Attachment, Gui, Button, Container, HtmlDisplay, Option, PlatformDetection, Element, Class, Css, Position, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       // Css.set(gui.element(), 'direction', 'rtl');
 
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
       Css.set(body, 'margin-bottom', '2000px');
 
 

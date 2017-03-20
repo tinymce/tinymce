@@ -2,26 +2,26 @@ define(
   'ephox.alloy.demo.DialogDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Class, Element, Insert, document) {
+  function (GuiFactory, Attachment, Gui, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
 

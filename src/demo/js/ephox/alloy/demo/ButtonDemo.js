@@ -4,22 +4,22 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.dom.DomModification',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (Behaviour, Toggling, Gui, Button, HtmlDisplay, DomModification, Class, Element, Insert, document) {
+  function (Behaviour, Toggling, Attachment, Gui, Button, HtmlDisplay, DomModification, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
    
 

@@ -6,31 +6,31 @@ asynctest(
     'ephox.agar.api.Cursors',
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
-    'ephox.alloy.alien.DomSelection',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.frame.Writer',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PositionTestUtils',
     'ephox.alloy.test.Sinks',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.alloy.frame.Writer',
-    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.view.Scroll',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.WindowSelection',
+    'ephox.sugar.api.view.Scroll',
     'global!Error',
     'global!setTimeout',
     'global!window'
   ],
  
   function (
-    Chain, Cursors, Guard, NamedChain, DomSelection, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Writer, Css, DomEvent,
-    Element, Node, Scroll, SelectorFind, Traverse, Error, setTimeout, window
+    Chain, Cursors, Guard, NamedChain, GuiFactory, Container, Writer, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, DomEvent, Element, Node,
+    Css, SelectorFind, Traverse, WindowSelection, Scroll, Error, setTimeout, window
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -85,14 +85,14 @@ asynctest(
         return Chain.binder(function (win) {
           var body = Element.fromDom(win.document.body);
           var range = Cursors.calculate(body, path);
-           DomSelection.setExact(
+           WindowSelection.setExact(
             win,
             range.start(),
             range.soffset(),
             range.finish(),
             range.foffset()
           );
-          return DomSelection.get(win).fold(function () {
+          return WindowSelection.getExact(win).fold(function () {
             return Result.error('Could not retrieve the set selection');
           }, Result.value);
         });

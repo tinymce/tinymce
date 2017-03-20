@@ -82,8 +82,6 @@ define(
 
     var close = function (detail, anchor, component, sandbox) {
       Sandboxing.close(sandbox);
-      // INVESTIGATE: Not sure if this is needed. 
-      Remove.remove(sandbox.element());
       return Future.pure(sandbox);
     };
 
@@ -149,9 +147,8 @@ define(
             isPartOf: function (container, data, queryElem) {
               return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
             },
-            bucket: {
-              mode: 'sink',
-              lazySink: lazySink
+            getAttachPoint: function () {
+              return lazySink().getOrDie();
             }
           },
           composing: {

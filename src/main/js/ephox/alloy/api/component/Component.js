@@ -102,7 +102,6 @@ define(
         disconnect: disconnect,
         element: Fun.constant(item),
         syncComponents: syncComponents,
-        // Note: this is only the original components.
         components: subcomponents.get,
         item: Fun.constant(item),
         events: Fun.constant(events),

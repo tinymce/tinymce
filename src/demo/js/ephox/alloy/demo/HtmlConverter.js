@@ -2,23 +2,25 @@ define(
   'ephox.alloy.demo.HtmlConverter',
 
   [
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.GuiTemplate',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Element',
+    'ephox.sand.api.JSON',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.SelectorFind',
     'global!document'
   ],
 
-  function (Representing, GuiFactory, GuiTemplate, Gui, Button, Container, Input, Json, Option, Element, Insert, Remove, SelectorFind, document) {
+  function (Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Option, Json, Insert, Remove, Element, SelectorFind, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -62,8 +64,7 @@ define(
               var display = button.getSystem().getByUid('pre-output').getOrDie();
               var prettyprint = Json.stringify(output, null, 2);
 
-              Remove.empty(display.element());
-              Insert.append(display.element(), Element.fromText(prettyprint));
+              Replacing.set(display, [ GuiFactory.text(prettyprint) ])
             }
           }),
 
@@ -71,6 +72,9 @@ define(
             uid: 'pre-output',
             dom: {
               tag: 'pre'
+            },
+            behaviours: {
+              replacing: { }
             }
           })
         ]
@@ -79,7 +83,7 @@ define(
       var root = GuiFactory.build(page);
       var gui = Gui.takeover(root);
 
-      Insert.append(ephoxUi, gui.element());
+      Attachment.attachSystem(ephoxUi, gui);
       
     };
   }

@@ -69,8 +69,10 @@ define(
             onExecute: function (menu, item) {
               return menu.getSystem().getByUid(detail.uid()).bind(function (typeahead) {
                 var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+                var system = item.getSystem();
+                // Closing the sandbox takes the item out of the system, so keep a reference.
                 Sandboxing.close(sandbox);
-                return item.getSystem().getByUid(detail.uid()).bind(function (input) {
+                return system.getByUid(detail.uid()).bind(function (input) {
                   Representing.setValueFrom(input, item);
                   var currentValue = Representing.getValue(input);
                   input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);

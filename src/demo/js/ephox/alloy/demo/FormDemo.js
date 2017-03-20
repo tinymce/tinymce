@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -24,29 +25,28 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value',
     'global!document',
     'global!setTimeout'
   ],
 
   function (
-    Behaviour, Keying, Representing, Tabstopping, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input,
-    TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Merger, Arr, Future, Option, Result, Class, Element, Insert, Value,
+    Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect,
+    Input, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Future, Merger, Option, Result, Element, Class, Value,
     document, setTimeout
   ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
        var sink = DemoSink.make();
 

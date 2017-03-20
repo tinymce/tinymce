@@ -2,25 +2,25 @@ define(
   'ephox.alloy.demo.TabSectionDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabbar',
+    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Merger',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (Gui, GuiFactory, Container, TabSection, Tabbar, HtmlDisplay, Merger, Class, Element, Insert, document) {
+  function (GuiFactory, Attachment, Gui, Container, Tabbar, TabSection, HtmlDisplay, Merger, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
 
       var subject = HtmlDisplay.section(

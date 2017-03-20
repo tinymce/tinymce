@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -27,22 +28,25 @@ define(
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Future',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (GuiFactory, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown, SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, DemoSink, HtmlDisplay, Merger, Future, Fun, Result, Class, Element, Insert, document) {
+  function (
+    GuiFactory, Attachment, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown,
+    SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, DemoSink, HtmlDisplay, Fun, Future, Merger, Result, Element,
+    Class, document
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
 

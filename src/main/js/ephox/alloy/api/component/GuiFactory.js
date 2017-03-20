@@ -47,26 +47,9 @@ define(
     var text = function (textContent) {
       var element = Element.fromText(textContent);
 
-      var made = {
-        getSystem: Fun.die('Cannot call getSystem on text node'),
-        debugSystem: Fun.noop,
-        config: Option.none,
-        connect: Fun.noop,
-        disconnect: Fun.noop,
-        element: Fun.constant(element),
-        syncComponents: Fun.noop,
-        components: Fun.constant([ ]),
-        events: Fun.constant({ }),
-
-        logSpec: function () {
-          console.log('debugging :: text spec', textContent);
-        },
-        logInfo: function () {
-          console.log('debugging :: text spec has no info');
-        }
-      };
-
-      return GuiTypes.premade(made);
+      return external({
+        element: element
+      });
     };
 
     var external = function (spec) {

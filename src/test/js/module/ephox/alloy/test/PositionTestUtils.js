@@ -6,20 +6,21 @@ define(
     'ephox.agar.api.Guard',
     'ephox.agar.api.NamedChain',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.ChainUtils',
     'ephox.alloy.test.Sinks',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.view.Scroll',
     'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.view.Scroll',
     'global!Error'
   ],
 
-  function (Chain, Guard, NamedChain, Positioning, ChainUtils, Sinks, Result, Css, Scroll, Traverse, Error) {
+  function (Chain, Guard, NamedChain, Positioning, Attachment, ChainUtils, Sinks, Result, Css, Traverse, Scroll, Error) {
     var cAddPopupToSink = function (sinkName) {
       return NamedChain.bundle(function (data) {
         var sink = data[sinkName];
-        Positioning.addContainer(sink, data.popup);
+        Attachment.attach(sink, data.popup);
         Positioning.position(sink, data.anchor, data.popup);
         return Result.value(data);
       });

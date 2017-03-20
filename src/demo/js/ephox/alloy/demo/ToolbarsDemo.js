@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.ToolbarsDemo',
 
   [
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -10,18 +11,17 @@ define(
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Merger',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Class, Element, Insert, document) {
+  function (Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var groups = function () {
         return [

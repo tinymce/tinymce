@@ -21,6 +21,21 @@ define(
       else return '<span style="outline: 1px solid red;">' + key + '</span>';
     };
 
+    var getExample = function (key) {
+      if (Objects.hasKey(Documentation, key) && Objects.hasKey(Documentation[key], 'example')) return Documentation[key].example;
+      else return [
+        Container.sketch({
+          dom: {
+            tag: 'span',
+            innerHtml: 'No example for ' + key,
+            styles: {
+              outline: '1px solid red'
+            }
+          }
+        }) 
+      ];
+    };
+
     var buildSet = function (path, _sValidator, sType) {
       return Container.sketch({
         dom: {
@@ -202,6 +217,7 @@ define(
 
     return {
       getDescription: getDescription,
+      getExample: getExample,
       build: build
     };
  
