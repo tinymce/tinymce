@@ -15,10 +15,32 @@ define(
     'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.search.SelectorFind'
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Width'
   ],
 
-  function (SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, Insert, InsertAll, DomEvent, Element, Elements, Node, Css, SelectorFind) {
+  function (SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, Insert, InsertAll, DomEvent, Element, Elements, Node, Css, SelectorFind, Height, Width) {
+
+    var resize = function (element, changeX, changeY) {
+      document.querySelector('h2').innerHTML = 'resizing';
+      var width = Css.getRaw(element, 'width').map(function (w) {
+        return parseInt(w, 10);
+      }).getOrThunk(function () {
+        return Width.get(element);
+      });
+
+      var height = Css.getRaw(element, 'height').map(function (h) {
+        return parseInt(h, 10);
+      }).getOrThunk(function () {
+        return Height.get(element);
+      });
+
+
+      Css.set(element, 'width', (width + changeX) + 'px');
+      Css.set(element, 'height', (height + changeY) + 'px');
+    };
+
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -28,7 +50,8 @@ define(
         };
       };
 
-      var contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> and <code>click2</code></div>';
+      var contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
+        'and <code>click2</code> and <img style="width: 140px; height: 130px;" /></div>';
 
       var frame = Element.fromTag('iframe');
       Css.set(frame, 'min-width', '80%');
@@ -59,6 +82,8 @@ define(
         contents
       );
 
+      
+
       var addAsForeign = function (root, doInsert) {
         var connection =  ForeignGui.engage({
           root: root,
@@ -88,8 +113,20 @@ define(
               alloyConfig: {
                 behaviours: {
                   dragging: {
-                    mode: 'mouse',
-                    blockerClass: 'blocker'
+                    mode: 'touch',
+                    // blockerClass: 'blocker'
+                  }
+                }
+              }
+            },
+
+            {
+              getTarget: onNode('img'),
+              alloyConfig: {
+                behaviours: {
+                  pinching: {
+                    onPinch: resize,
+                    onPunch: resize
                   }
                 }
               }

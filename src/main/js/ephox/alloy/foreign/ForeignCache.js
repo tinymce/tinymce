@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.DomState',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.boulder.api.FieldSchema',
@@ -11,7 +12,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (DomState, Dragging, Toggling, ComponentEvents, FieldSchema, ValueSchema, Fun) {
+  function (DomState, Dragging, Pinching, Toggling, ComponentEvents, FieldSchema, ValueSchema, Fun) {
     return function () { 
       var getEvents = function (elem, spec) {
         var evts = DomState.getOrCreate(elem, function () {
@@ -21,7 +22,8 @@ define(
             FieldSchema.defaulted('events', { }),
             FieldSchema.optionObjOf('behaviours', [
               Toggling.schema(),
-              Dragging.schema()
+              Dragging.schema(),
+              Pinching.schema()
             ]),
             FieldSchema.defaulted('eventOrder', {})
 
@@ -31,7 +33,7 @@ define(
             'alloy.base.behaviour': info.events()
           };
 
-          return ComponentEvents.combine(info, [ Toggling, Dragging ], baseEvents).getOrDie();
+          return ComponentEvents.combine(info, [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
         });
 
         return {

@@ -13,12 +13,14 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.events.DomEvent'
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Node'
   ],
 
-  function (GuiFactory, Gui, DescribedHandler, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Options, Insert, DomEvent) {
+  function (GuiFactory, Gui, DescribedHandler, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Obj, Options, Insert, DomEvent, Node) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('root'),
       FieldSchema.strictArrayOfObj('dispatchers', [
@@ -31,7 +33,7 @@ define(
     ]);
 
     var supportedEvents = [
-      'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart'
+      'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart', 'touchmove'
     ];
 
     // Find the dispatcher information for the target if available. Note, the 
@@ -122,13 +124,16 @@ define(
         if (gui.element().dom().contains(event.target().dom())) return;
 
         // Find if the target has an assigned dispatcher
+        console.log('Not found: ' + Node.name(event.target()));
         findDispatcher(detail.dispatchers(), event.target()).each(function (dispatchData) {
+          
           var target = dispatchData.target();
           var dispatcher = dispatchData.dispatcher();
 
           // get any info for this current element, creating it if necessary
           var data = cache.getEvents(target, dispatcher.alloyConfig());
           var events = data.evts();
+        console.log(' Found: ' + Node.name(dispatchData.target()) + ', ' + Obj.keys(events).join(','));
 
           // if this dispatcher defines this event, proxy it and fire the handler\
           if (Objects.hasKey(events, type)) proxyFor(event, target, events[type]);
