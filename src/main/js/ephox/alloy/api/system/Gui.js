@@ -4,12 +4,14 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.SystemApi',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.debugging.Debugging',
     'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.events.GuiEvents',
     'ephox.alloy.events.Triggers',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.registry.Registry',
     'ephox.alloy.registry.Tagger',
     'ephox.katamari.api.Arr',
@@ -20,13 +22,14 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
   function (
-    GuiFactory, SystemEvents, SystemApi, Container, Debugging, DescribedHandler, GuiEvents, Triggers, Registry, Tagger, Arr, Fun, Result, Compare, Focus, Insert,
-    Remove, Node, Traverse, Error
+    GuiFactory, SystemEvents, Attachment, SystemApi, Container, Debugging, DescribedHandler, GuiEvents, Triggers, AlloyLogger, Registry, Tagger, Arr, Fun, Result,
+    Compare, Focus, Insert, Remove, Node, Class, Traverse, Error
   ) {
     var create = function ( ) {
       var root = GuiFactory.build(
@@ -106,7 +109,7 @@ define(
           return getByUid(uid);
         },
         getByDom: function (elem) {
-          return Tagger.read(elem).bind(getByUid);
+          return getByDom(elem);
         },
         build: GuiFactory.build,
         addToGui: function (c) { add(c); },
@@ -122,9 +125,9 @@ define(
       });
 
       var addToWorld = function (component) {
+        component.connect(systemApi);
         if (! Node.isText(component.element())) {
           registry.register(component);
-          component.connect(systemApi);
           Arr.each(component.components(), addToWorld);
           systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant( component.element() ) });
         }
@@ -133,20 +136,17 @@ define(
       var removeFromWorld = function (component) {
         if (! Node.isText(component.element())) {
           Arr.each(component.components(), removeFromWorld);
-          // Hmm... wonder if I should disconnect here.
           registry.unregister(component);
         }
+        component.disconnect();
       };
 
       var add = function (component) {
-        addToWorld(component);
-        Insert.append(root.element(), component.element());
+        Attachment.attach(root, component);
       };
 
       var remove = function (component) {
-        registry.unregister(component);
-        component.disconnect();
-        Remove.remove(component.element());
+        Attachment.detach(component);
       };
 
       var destroy = function () {
@@ -187,6 +187,10 @@ define(
         }, Result.value);
       };
 
+      var getByDom = function (elem) {
+        return Tagger.read(elem).bind(getByUid);
+      };
+
       addToWorld(root);
 
       return {
@@ -195,6 +199,7 @@ define(
         add: add,
         remove: remove,
         getByUid: getByUid,
+        getByDom: getByDom,
 
         addToWorld: addToWorld,
         removeFromWorld: removeFromWorld,

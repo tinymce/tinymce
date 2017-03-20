@@ -2,25 +2,24 @@ define(
   'ephox.alloy.demo.SlidingDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.boulder.api.Objects',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (Gui, Behaviour, Sliding, Button, Container, HtmlDisplay, Objects, Class, Element, Insert, document) {
+  function (Behaviour, Sliding, Attachment, Gui, Button, Container, HtmlDisplay, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       HtmlDisplay.section(
         gui,

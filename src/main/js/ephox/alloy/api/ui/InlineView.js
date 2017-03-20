@@ -28,11 +28,9 @@ define(
               isPartOf: function (container, data, queryElem) {
                 return ComponentStructure.isPartOf(data, queryElem);
               },
-              bucket: {
-                mode: 'sink',
-                lazySink: detail.lazySink()
+              getAttachPoint: function () {
+                return detail.lazySink()().getOrDie();
               }
-
             },
             receiving: Dismissal.receiving({
               isExtraPart: Fun.constant(false)

@@ -2,10 +2,11 @@ define(
   'ephox.alloy.demo.PositionDemo',
 
   [
-    'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
@@ -13,20 +14,22 @@ define(
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.frame.Writer',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css'
   ],
 
-  function (Gui, GuiFactory, Positioning, Toggling, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, Class, Css, DomEvent, Element, Insert) {
+  function (
+    Positioning, Toggling, GuiFactory, Attachment, Gui, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, DomEvent, Element, Class,
+    Css
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Css.set(gui.element(), 'direction', 'rtl');
       Class.add(gui.element(), 'gui-root-demo-container');
-      Insert.append(body, gui.element());
+      Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
 
@@ -64,13 +67,13 @@ define(
           },
           action: function (comp) {
             if (Toggling.isOn(comp)) {
-              Positioning.addContainer(sink, popup);
+              Attachment.attach(sink, popup);
               Positioning.position(sink, {
                 anchor: 'hotspot',
                 hotspot: comp
               }, popup);
             } else {
-              Positioning.removeContainer(sink, popup);
+              Attachment.detach(popup);
             }
           },
 
@@ -108,7 +111,7 @@ define(
               events: {
                 mouseover: EventHandler.nu({
                   run: function (item) {
-                    Positioning.addContainer(sink, popup);
+                    Attachment.attach(sink, popup);
                     Positioning.position(sink, {
                       anchor: 'submenu',
                       item: item
@@ -151,7 +154,7 @@ define(
                 innerHtml: 'Show popup at cursor'
               },
               action: function (button) {
-                Positioning.addContainer(sink, popup);
+                Attachment.attach(sink, popup);
                 Positioning.position(sink, {
                   anchor: 'selection',
                   root: button.getSystem().getByUid('text-editor').getOrDie(
@@ -188,7 +191,7 @@ define(
                 innerHtml: 'Show popup at cursor'
               },
               action: function (button) {
-                Positioning.addContainer(sink, popup);
+                Attachment.attach(sink, popup);
                 Positioning.position(sink, {
                   anchor: 'selection',
                   root: Element.fromDom(frame.dom().contentWindow.document.body)

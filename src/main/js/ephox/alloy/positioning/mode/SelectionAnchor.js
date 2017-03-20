@@ -5,30 +5,31 @@ define(
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
-    'ephox.alloy.alien.DomSelection',
-    'ephox.alloy.positioning.mode.Anchoring',
-    'ephox.alloy.positioning.mode.ContainerOffsets',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Unicode',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
     'ephox.alloy.positioning.layout.Bubble',
     'ephox.alloy.positioning.layout.Layout',
     'ephox.alloy.positioning.layout.Origins',
+    'ephox.alloy.positioning.mode.Anchoring',
+    'ephox.alloy.positioning.mode.ContainerOffsets',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Struct',
-    'ephox.sugar.api.view.Position',
-    'ephox.sugar.api.properties.Direction',
-    'ephox.sugar.api.node.Element',
+    'ephox.katamari.api.Unicode',
     'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.properties.Direction',
     'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.api.selection.WindowSelection',
+    'ephox.sugar.api.view.Position',
     'global!Math'
   ],
 
   function (
-    Boxes, CssPosition, Descend, DomSelection, Anchoring, ContainerOffsets, FieldSchema, Unicode, Fun, Option, Bubble, Layout, Origins, Struct, Position, Direction,
-    Element, Insert, Node, Remove, Traverse, Math
+    Boxes, CssPosition, Descend, Bubble, Layout, Origins, Anchoring, ContainerOffsets, FieldSchema, Fun, Option, Struct, Unicode, Insert, Remove, Element, Node,
+    Direction, Traverse, Selection, WindowSelection, Position, Math
   ) {
     var point = Struct.immutable('element', 'offset');
 
@@ -40,14 +41,14 @@ define(
     var getAnchorSelection = function (win, anchorInfo) {
       var getSelection = anchorInfo.getSelection().getOrThunk(function () {
         return function () {
-          return DomSelection.get(win);
+          return WindowSelection.getExact(win);
         };
       });
 
       return getSelection().map(function (sel) {
         var modStart = descendOnce(sel.start(), sel.soffset());
         var modFinish = descendOnce(sel.finish(), sel.foffset());
-        return DomSelection.range(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
+        return Selection.range(modStart.element(), modStart.offset(), modFinish.element(), modFinish.offset());
       });
     };
 
@@ -57,11 +58,11 @@ define(
 
       var selectionBox = getAnchorSelection(win, anchorInfo).bind(function (sel) {
         // This represents the *visual* rectangle of the selection.
-        var optRect = DomSelection.rectangleAt(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).orThunk(function () {
+        var optRect = WindowSelection.getFirstRect(win, Selection.exactFromRange(sel)).orThunk(function () {
           var x = Element.fromText(Unicode.zeroWidth());
           Insert.before(sel.start(), x);
           // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
-          return DomSelection.rectangleAt(win, x, 0, x, 1).map(function (rect) {
+          return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map(function (rect) {
             Remove.remove(x);
             return rect;
           });          

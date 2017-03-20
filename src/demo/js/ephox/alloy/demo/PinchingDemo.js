@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.properties.Css',
@@ -11,7 +12,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (GuiFactory, Gui, Insert, Css, SelectorFind, Height, Width) {
+  function (GuiFactory, Attachment, Gui, Insert, Css, SelectorFind, Height, Width) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -58,7 +59,7 @@ define(
       var gui = Gui.create();
       gui.add(box);
 
-      Insert.append(ephoxUi, gui.element());
+      Attachment.addSystem(ephoxUi, gui);
     };
   }
 );

@@ -35,24 +35,6 @@ asynctest(
       '.test-sliding-width-shrinking { transition: opacity 0.9s ease, width 0.6s linear 0.3s, visibility 0s linear 0.9s }'
     ];
 
-    var mAddStyles = function (doc, styles) {
-      return Step.stateful(function (value, next, die) {
-        var style = Element.fromTag('style');
-        var head = Element.fromDom(doc.dom().head);
-        Insert.append(head, style);
-        Html.set(style, styles.join('\n'));
-
-        next({
-          style: style
-        });
-      });
-    };
-
-    var mRemoveStyles = function (value, next, die) {
-      Remove.remove(value.style);
-      next(value);
-    };
-
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         Container.sketch({
@@ -178,7 +160,7 @@ asynctest(
       };
 
       return [
-        mAddStyles(doc, slidingStyles),
+        GuiSetup.mAddStyles(doc, slidingStyles),
 
         Assertions.sAssertStructure(
           'Checking initial structure',
@@ -252,7 +234,7 @@ asynctest(
           Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
         }),
 
-        mRemoveStyles
+        GuiSetup.mRemoveStyles
       ];
     }, function () { success(); }, failure);
 
