@@ -4,12 +4,13 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.Slider',
     'ephox.alloy.demo.docs.SchemaView',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr'
   ],
 
-  function (GuiFactory, Container, SchemaView, ValueSchema, Arr) {
+  function (GuiFactory, Container, Slider, SchemaView, ValueSchema, Arr) {
     var make = function (uis) {
       var extractParts = function (partTypes) {
         return Arr.map(partTypes, function (pt) {
@@ -110,6 +111,16 @@ define(
           }
         });
 
+        var example = Container.sketch({
+          dom: {
+            tag: 'div',
+            styles: {
+              margin: '30px'
+            }
+          },
+          components: SchemaView.getExample(s.name())
+        });
+
         var schema = SchemaView.build([ s.name() ],  ValueSchema.objOf(s.schema()).toDsl());
 
         var wrapper = Container.sketch({
@@ -120,6 +131,7 @@ define(
             heading,
             description,
             schema,
+            example,
             makeParts(s.parts())
           ]
         });
