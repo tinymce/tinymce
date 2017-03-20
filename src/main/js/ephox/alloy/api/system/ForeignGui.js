@@ -102,24 +102,34 @@ define(
         });
       });
 
+      var proxyFor = function (event, target, handler) {
+        // create a simple alloy wrapping around the element, and add it to the world
+        var proxy = getProxy(event, target);
+        var component = proxy.component();
+        gui.addToWorld(component);
+        // fire the event
+        handler(component, proxy.simulatedEvent());
+
+        // now remove from the world and 
+        unproxy(component);
+      };
+
       var dispatchTo = function (type, event) {
         // Do not delegate anything that happened within the internal system. It is
         // already being handled.
         if (gui.element().dom().contains(event.target().dom())) return;
 
+        // Find if the target has an assigned dispatcher
         findDispatcher(detail.dispatchers(), event.target()).each(function (dispatchData) {
           var target = dispatchData.target();
           var dispatcher = dispatchData.dispatcher();
+
+          // get any info for this current element, creating it if necessary
           var data = cache.getEvents(target, dispatcher.alloyConfig());
           var events = data.evts();
-          if (Objects.hasKey(events, type)) {
-            var proxy = getProxy(event, target);
-            var component = proxy.component();
-            gui.addToWorld(component);
-            events[type](component, proxy.simulatedEvent());
-            gui.removeFromWorld(component);
-            Tagger.revoke(component.element());
-          }
+
+          // if this dispatcher defines this event, proxy it and fire the handler
+          if (Objects.hasKey(events, type)) proxyFor(event, target, events[type].handler);
         });
       };
 
