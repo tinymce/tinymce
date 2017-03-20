@@ -107,11 +107,11 @@ define('ephox.mcagar.api.LegacyUnit', [
   };
 
   var equalDom = function (actual, expected, message) {
-    Assertions.assertDomEq(message ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
+    Assertions.assertDomEq(typeof message !== "undefined" ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
   };
 
   var equal = function (actual, expected, message) {
-    Assertions.assertEq(message ? message : 'No message specified', expected, actual);
+    Assertions.assertEq(typeof message !== "undefined" ? message : 'No message specified', expected, actual);
   };
 
   return {
