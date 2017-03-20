@@ -112,7 +112,7 @@ define(
         var handler = DescribedHandler.getHandler(descHandler);
         handler(component, proxy.simulatedEvent());
 
-        // now remove from the world and 
+        // now remove from the world and revoke any alloy ids
         unproxy(component);
       };
 
