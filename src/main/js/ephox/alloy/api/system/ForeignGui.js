@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
+    'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.foreign.ForeignCache',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.FieldSchema',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.events.DomEvent'
   ],
 
-  function (GuiFactory, Gui, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Options, Insert, DomEvent) {
+  function (GuiFactory, Gui, DescribedHandler, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Options, Insert, DomEvent) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('root'),
       FieldSchema.strictArrayOfObj('dispatchers', [
@@ -102,12 +103,13 @@ define(
         });
       });
 
-      var proxyFor = function (event, target, handler) {
+      var proxyFor = function (event, target, descHandler) {
         // create a simple alloy wrapping around the element, and add it to the world
         var proxy = getProxy(event, target);
         var component = proxy.component();
         gui.addToWorld(component);
         // fire the event
+        var handler = DescribedHandler.getHandler(descHandler);
         handler(component, proxy.simulatedEvent());
 
         // now remove from the world and 
@@ -128,8 +130,8 @@ define(
           var data = cache.getEvents(target, dispatcher.alloyConfig());
           var events = data.evts();
 
-          // if this dispatcher defines this event, proxy it and fire the handler
-          if (Objects.hasKey(events, type)) proxyFor(event, target, events[type].handler);
+          // if this dispatcher defines this event, proxy it and fire the handler\
+          if (Objects.hasKey(events, type)) proxyFor(event, target, events[type]);
         });
       };
 
