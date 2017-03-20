@@ -2,8 +2,9 @@ define('ephox.mcagar.api.LegacyUnit', [
   'global!window',
   'ephox.agar.api.Step',
   'ephox.agar.api.Logger',
-  'ephox.agar.api.Assertions'
-], function (window, Step, Logger, Assertions) {
+  'ephox.agar.api.Assertions',
+  'ephox.mcagar.api.TinyDom'
+], function (window, Step, Logger, Assertions, TinyDom) {
   var test = function (message, fn) {
     return function (editor) {
       return Logger.t(
@@ -105,8 +106,12 @@ define('ephox.mcagar.api.LegacyUnit', [
     return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
   };
 
+  var equalDom = function (actual, expected, message) {
+    Assertions.assertDomEq(typeof message !== "undefined" ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
+  };
+
   var equal = function (actual, expected, message) {
-    Assertions.assertEq(message ? message : 'No message specified', expected, actual);
+    Assertions.assertEq(typeof message !== "undefined" ? message : 'No message specified', expected, actual);
   };
 
   return {
@@ -120,6 +125,7 @@ define('ephox.mcagar.api.LegacyUnit', [
     trimBrs: trimBrs,
 
     equal: equal,
+    equalDom: equalDom,
     strictEqual: equal,
     deepEqual: equal
   };
