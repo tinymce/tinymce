@@ -6,19 +6,20 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.alloy.debugging.Debugging',
     'ephox.alloy.events.Triggers',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.SelectorFind',
     'global!document'
   ],
  
-  function (Assertions, Logger, Pipeline, Step, Triggers, Objects, Arr, Fun, Attr, Element, Html, Insert, SelectorFind, document) {
+  function (Assertions, Logger, Pipeline, Step, Debugging, Triggers, Objects, Arr, Fun, Insert, Element, Attr, Html, SelectorFind, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -75,12 +76,17 @@ asynctest(
       }
     };
 
+    var logger = Debugging.noLogger();
+
     var lookup = function (eventType, target) {
       var targetId = Attr.get(target, 'data-event-id');
 
       return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map(function (h) {
         return {
-          handler: h,
+          descHandler: Fun.constant({
+            handler: h,
+            purpose: Fun.constant('purpose')
+          }),
           element: Fun.constant(target)
         };
       });
@@ -93,7 +99,7 @@ asynctest(
       return Logger.t(label, Step.sync(function () {
         Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
         var targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
-        Triggers.triggerOnUntilStopped(lookup, eventType, { }, targetEl);
+        Triggers.triggerOnUntilStopped(lookup, eventType, { }, targetEl, logger);
         Assertions.assertEq(label, expected, log.slice(0));
         log = [ ];
       }));

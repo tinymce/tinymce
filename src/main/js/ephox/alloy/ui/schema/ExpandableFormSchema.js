@@ -26,8 +26,9 @@ define(
         'expandedClass',
         'collapsedClass'
       ]),
-      FieldSchema.defaulted('onShrunk', Fun.identity),
-      FieldSchema.defaulted('onGrown', Fun.identity)
+
+      Fields.onHandler('onShrunk'),
+      Fields.onHandler('onGrown')
     ];
 
     // TODO: Remove dupe with ExpandableForm

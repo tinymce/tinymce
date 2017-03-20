@@ -3,41 +3,33 @@ define(
 
   [
     'ephox.alloy.alien.TransformFind',
+    'ephox.alloy.events.DescribedHandler',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
-    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Struct',
     'global!console'
   ],
 
-  function (TransformFind, Tagger, Objects, Obj, Fun, Option, Result, console) {
-    var eventHandler = function (element, handler) {
-      return {
-        element: Fun.constant(element),
-        handler: handler
-      };
-    };
+  function (TransformFind, DescribedHandler, Tagger, Objects, Fun, Obj, Option, Struct, console) {
+    var eventHandler = Struct.immutable('element', 'descHandler');
 
     var messageHandler = function (id, handler) {
       return {
         id: Fun.constant(id),
-        handler: handler
+        descHandler: Fun.constant(handler)
       };
     };
 
     return function () {
-      window.haha = function () {
-        return registry;
-      };
-
       var registry = { };
 
       var registerId = function (extraArgs, id, events) {
         Obj.each(events, function (v, k) {
           var handlers = registry[k] !== undefined ? registry[k] : { };
-          handlers[id] = Fun.curry.apply(undefined, [ v ].concat(extraArgs));
+          handlers[id] = DescribedHandler.curryArgs(v, extraArgs);
           registry[k] = handlers;
         });
       };
@@ -47,8 +39,8 @@ define(
           return Option.none();
         }, function (id) {
           var reader = Objects.readOpt(id);
-          return handlers.bind(reader).map(function (handler) {
-            return eventHandler(elem, handler);
+          return handlers.bind(reader).map(function (descHandler) {
+            return eventHandler(elem, descHandler);
           });
         });
       };

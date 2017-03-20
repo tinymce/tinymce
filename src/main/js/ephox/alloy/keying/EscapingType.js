@@ -3,17 +3,17 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
-    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option'
   ],
 
-  function (Keys, KeyingType, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
+  function (Keys, Fields, KeyingType, KeyMatch, KeyRules, Fun, Option) {
     var schema = [
-      FieldSchema.strict('onEscape')
+      Fields.onStrictKeyboardHandler('onEscape')
     ];
 
     var doEscape = function (component, simulatedEvent, escapeInfo) {

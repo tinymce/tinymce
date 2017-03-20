@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Replacing',
@@ -29,15 +30,15 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'global!Error'
   ],
 
   function (
-    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing,
-    Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr,
-    Merger, Fun, Error
+    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema,
+    Arr, Fun, Merger, Error
   ) {
     var toInfo = function (spec) {
       var behaviours = Objects.readOr('customBehaviours', [])(spec);
@@ -134,6 +135,7 @@ define(
       Highlighting,
       Invalidating,
       Keying,
+      Pinching,
       Positioning,
       Receiving,
       Replacing,

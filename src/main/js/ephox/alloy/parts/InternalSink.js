@@ -8,10 +8,11 @@ define(
   ],
 
   function (EventHandler, PartType, Fun) {
-    return PartType.optional(
+    var suffix = 'sink';
+    var partType =  PartType.optional(
       { sketch: Fun.identity },
       [ ],
-      'sink',
+      suffix,
       '<alloy.sink>',
       Fun.constant({ }),
       Fun.constant({
@@ -47,5 +48,10 @@ define(
         }
       })
     );
+
+    return {
+      partType: Fun.constant(partType),
+      suffix: Fun.constant(suffix)
+    }
   }
 );

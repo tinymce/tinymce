@@ -3,17 +3,16 @@ define(
 
   [
     'ephox.alloy.behaviour.representing.RepresentApis',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
-    'ephox.katamari.api.Cell'
+    'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (RepresentApis, FieldSchema, ValueSchema, Fun, Result, Cell) {
+  function (RepresentApis, Fields, FieldSchema, ValueSchema, Cell, Fun) {
     return [
-      FieldSchema.defaulted('onSet', Fun.identity),
-      
+      Fields.onHandler('onSet'),
 
       FieldSchema.defaultedOf('store', { mode: 'memory' }, ValueSchema.choose('mode', {
         memory: [

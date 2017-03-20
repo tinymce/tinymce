@@ -13,23 +13,26 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.agar.mouse.Clicks',
-    'ephox.alloy.api.events.GuiEvents',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomRender',
+    'ephox.alloy.events.GuiEvents',
     'ephox.alloy.test.TestStore',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.InsertAll',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
     'global!document',
     'global!window'
   ],
  
-  function (Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Clicks, GuiEvents, DomDefinition, DomRender, TestStore, Attr, Css, Element, Insert, InsertAll, Node, Remove, Text, document, window) {
+  function (
+    Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Clicks, DomDefinition, DomRender, GuiEvents, TestStore, Insert,
+    InsertAll, Remove, Element, Node, Text, Attr, Css, document, window
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

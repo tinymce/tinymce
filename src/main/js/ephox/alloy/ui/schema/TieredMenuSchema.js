@@ -9,11 +9,11 @@ define(
 
   function (Fields, FieldSchema, Fun) {
     var schema = [
-      FieldSchema.strict('onExecute'),
-      FieldSchema.strict('onEscape'),
+      Fields.onStrictKeyboardHandler('onExecute'),
+      Fields.onStrictKeyboardHandler('onEscape'),
 
-      FieldSchema.strict('onOpenMenu'),
-      FieldSchema.strict('onOpenSubmenu'),
+      Fields.onStrictHandler('onOpenMenu'),
+      Fields.onStrictHandler('onOpenSubmenu'),
 
       FieldSchema.defaulted('openImmediately', true),
 
@@ -24,8 +24,8 @@ define(
       ]),
     
       FieldSchema.defaulted('fakeFocus', false),
-      FieldSchema.defaulted('onHighlight', Fun.noop),
-      FieldSchema.defaulted('onHover', Fun.noop),
+      Fields.onHandler('onHighlight'),
+      Fields.onHandler('onHover'),
       Fields.tieredMenuMarkers(),
       Fields.members([ 'menu', 'item' ])
     ];
