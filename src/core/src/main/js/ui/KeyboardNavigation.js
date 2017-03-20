@@ -20,6 +20,10 @@ define(
   function () {
     "use strict";
 
+    var hasTabstopData = function (elm) {
+      return elm.getAttribute('data-mce-tabstop') ? true : false;
+    };
+
     /**
      * This class handles all keyboard navigation for WAI-ARIA support. Each root container
      * gets an instance of this class.
@@ -117,6 +121,10 @@ define(
        */
       function canFocus(elm) {
         if (isTextInputElement(elm) && !elm.hidden) {
+          return true;
+        }
+
+        if (hasTabstopData(elm)) {
           return true;
         }
 
@@ -349,7 +357,7 @@ define(
       root.on('keydown', function (e) {
         function handleNonTabOrEscEvent(e, handler) {
           // Ignore non tab keys for text elements
-          if (isTextInputElement(focusedElement)) {
+          if (isTextInputElement(focusedElement) || hasTabstopData(focusedElement)) {
             return;
           }
 
