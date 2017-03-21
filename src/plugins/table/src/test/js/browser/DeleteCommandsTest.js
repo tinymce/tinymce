@@ -41,7 +41,7 @@ asynctest(
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, []/*suite.toSteps(editor)*/, onSuccess, onFailure);
+      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'table',
       indent: false,
