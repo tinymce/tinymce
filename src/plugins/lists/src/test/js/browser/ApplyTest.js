@@ -899,8 +899,8 @@ asynctest(
       indent: false,
       entities: 'raw',
       valid_elements:
-        'li[style|class|data-custom],ol[style|class|data-custom],' +
-        'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
+        'li[style|class|data-custom|data-custom1|data-custom2],ol[style|class|data-custom|data-custom1|data-custom2],' +
+        'ul[style|class|data-custom|data-custom1|data-custom2],dl,dt,dd,em,strong,span,#p,div,br',
       valid_styles: {
         '*': 'color,font-size,font-family,background-color,font-weight,' +
           'font-style,text-decoration,float,margin,margin-top,margin-right,' +
