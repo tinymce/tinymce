@@ -15,7 +15,7 @@
     "node": ">=0.10.26"
   },
   "scripts": {
-    "test": "grunt bedrock:manual"
+    "test": "grunt bedrock-manual"
   },
   "dependencies": {
     "@ephox/katamari": "^1.1.0",
