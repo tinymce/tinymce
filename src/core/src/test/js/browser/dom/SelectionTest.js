@@ -1087,6 +1087,49 @@ asynctest(
       editor.selection.win = win;
     });
 
+    suite.test('image selection webkit bug', function (editor) {
+      var testImageSelection = function (inputHtml, expectedContainerName, expectedOffset) {
+        editor.setContent(inputHtml);
+        editor.selection.select(editor.dom.select('img')[0]);
+
+        var rng = editor.selection.getRng(true);
+        LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(rng.startOffset, expectedOffset);
+        LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(rng.endOffset, expectedOffset + 1);
+        LegacyUnit.equal(editor.selection.getNode().nodeName, 'IMG');
+        LegacyUnit.equal(editor.selection.getStart().nodeName, 'IMG');
+        LegacyUnit.equal(editor.selection.getEnd().nodeName, 'IMG');
+
+        var nativeRng = editor.selection.getSel().getRangeAt(0);
+        LegacyUnit.equal(nativeRng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(nativeRng.startOffset, expectedOffset);
+        LegacyUnit.equal(nativeRng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(nativeRng.endOffset, expectedOffset + 1);
+      };
+
+      testImageSelection('<p><img src="#"></p>', 'P', 0);
+      testImageSelection('<p><img src="#">abc</p>', 'P', 0);
+      testImageSelection('<p>abc<img src="#"></p>', 'P', 1);
+      testImageSelection('<p>abc<img src="#">def</p>', 'P', 1);
+      testImageSelection('<p><img style="float: right;" src="#"></p>', 'P', 0);
+      testImageSelection('<p><img style="float: right;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p>abc<img style="float: right;" src="#"></p>', 'P', 1);
+      testImageSelection('<p>abc<img style="float: right;" src="#">def</p>', 'P', 1);
+      testImageSelection('<p><img style="float: left;" src="#"></p>', 'P', 0);
+      testImageSelection('<p><img style="float: left;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p>abc<img style="float: left;" src="#"></p>', 'P', 1);
+      testImageSelection('<p>abc<img style="float: left;" src="#">def</p>', 'P', 1);
+      testImageSelection('<p dir="rtl"><img style="float: right;" src="#"></p>', 'P', 0);
+      testImageSelection('<p dir="rtl"><img style="float: right;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p dir="rtl">abc<img style="float: right;" src="#"></p>', 'P', 1);
+      testImageSelection('<p dir="rtl">abc<img style="float: right;" src="#">def</p>', 'P', 1);
+      testImageSelection('<p dir="rtl"><img style="float: left;" src="#"></p>', 'P', 0);
+      testImageSelection('<p dir="rtl"><img style="float: left;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#"></p>', 'P', 1);
+      testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#">def</p>', 'P', 1);
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
