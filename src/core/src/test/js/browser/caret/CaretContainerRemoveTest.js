@@ -5,6 +5,7 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.sugar.api.node.Element',
     'global!document',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretContainerRemove',
@@ -12,7 +13,7 @@ asynctest(
     'tinymce.core.Env',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, Logger, Pipeline, Step, document, CaretContainer, CaretContainerRemove, CaretPosition, Env, ViewBlock) {
+  function (Assertions, Logger, Pipeline, Step, Element, document, CaretContainer, CaretContainerRemove, CaretPosition, Env, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = new ViewBlock();
@@ -52,7 +53,7 @@ asynctest(
 
         var pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, new CaretPosition(getRoot(), 0));
         Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
-        Assertions.assertEq('Should be unchanged container', getRoot(), pos.container());
+        Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
         Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().firstChild));
       })
     );
@@ -67,7 +68,7 @@ asynctest(
 
         var pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], new CaretPosition(getRoot(), 0));
         Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
-        Assertions.assertEq('Should be unchanged container', getRoot(), pos.container());
+        Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
         Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
       })
     );
@@ -82,7 +83,7 @@ asynctest(
 
         var pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], new CaretPosition(getRoot(), 3));
         Assertions.assertEq('Should be changed offset', 2, pos.offset(), 2);
-        Assertions.assertEq('Should be unchanged container', getRoot(), pos.container());
+        Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
         Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
       })
     );
