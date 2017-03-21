@@ -459,43 +459,48 @@ module.exports = function (grunt) {
 
     'bedrock-auto': {
       phantomjs: {
-        browser: "phantomjs",
+        browser: 'phantomjs',
         config: 'config/bolt/browser.js',
-        testfiles: ["**/src/test/js/**/*Test.js"],
+        testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
-        singleTimeout: 300000
+        singleTimeout: 300000,
+        name: 'phantomjs'
       },
 
       chrome: {
-        browser: "chrome",
+        browser: 'chrome',
         config: 'config/bolt/browser.js',
-        testfiles: ["**/src/test/js/**/*Test.js"],
+        testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
-        singleTimeout: 300000
+        singleTimeout: 300000,
+        name: 'chrome'
       },
 
       firefox: {
-        browser: "firefox",
+        browser: 'firefox',
         config: 'config/bolt/browser.js',
-        testfiles: ["**/src/test/js/**/*Test.js"],
+        testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
-        singleTimeout: 300000
+        singleTimeout: 300000,
+        name: 'firefox'
       },
 
       MicrosoftEdge: {
-        browser: "MicrosoftEdge",
+        browser: 'MicrosoftEdge',
         config: 'config/bolt/browser.js',
-        testfiles: ["**/src/test/js/**/*Test.js"],
+        testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
-        singleTimeout: 300000
+        singleTimeout: 300000,
+        name: 'MicrosoftEdge'
       },
 
       ie: {
-        browser: "ie",
+        browser: 'ie',
         config: 'config/bolt/browser.js',
-        testfiles: ["**/src/test/js/**/*Test.js"],
+        testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
-        singleTimeout: 300000
+        singleTimeout: 300000,
+        name: 'ie'
       }
     },
 
