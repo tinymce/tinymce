@@ -1,7 +1,7 @@
 var child_process = require('child_process');
 
 var shell = function (cmd, args, callback) {
-  var child = child_process.spawn(cmd, args, { stdio: [process.stdin, process.stdout, 'ignore'] });
+  var child = child_process.exec([cmd].concat(args).join(' '));
   child.on('close', function (code) {
     callback();
   });
