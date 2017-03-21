@@ -449,49 +449,53 @@ module.exports = function (grunt) {
       ]
     },
 
-    bedrock: {
-      manual: {
-        options: {
-          mode: "manual",
-          config: 'config/bolt/browser.js',
-          testdirs: ["**/src/test/js"]
-        }
+    'bedrock-manual': {
+      core: {
+        config: 'config/bolt/browser.js',
+        projectdir: '.',
+        testfiles: ["**/src/test/js/**/*Test.js"]
+      }
+    },
+
+    'bedrock-auto': {
+      phantomjs: {
+        browser: "phantomjs",
+        config: 'config/bolt/browser.js',
+        testfiles: ["**/src/test/js/**/*Test.js"],
+        overallTimeout: 600000,
+        singleTimeout: 300000
       },
 
       chrome: {
-        options: {
-          browser: "chrome",
-          mode: "auto",
-          config: 'config/bolt/browser.js',
-          testdirs: ["**/src/test/js"]
-        }
+        browser: "chrome",
+        config: 'config/bolt/browser.js',
+        testfiles: ["**/src/test/js/**/*Test.js"],
+        overallTimeout: 600000,
+        singleTimeout: 300000
       },
 
       firefox: {
-        options: {
-          browser: "firefox",
-          mode: "auto",
-          config: 'config/bolt/browser.js',
-          testdirs: ["**/src/test/js"]
-        }
+        browser: "firefox",
+        config: 'config/bolt/browser.js',
+        testfiles: ["**/src/test/js/**/*Test.js"],
+        overallTimeout: 600000,
+        singleTimeout: 300000
       },
 
       MicrosoftEdge: {
-        options: {
-          browser: "MicrosoftEdge",
-          mode: "auto",
-          config: 'config/bolt/browser.js',
-          testdirs: ["**/src/test/js"]
-        }
+        browser: "MicrosoftEdge",
+        config: 'config/bolt/browser.js',
+        testfiles: ["**/src/test/js/**/*Test.js"],
+        overallTimeout: 600000,
+        singleTimeout: 300000
       },
 
       ie: {
-        options: {
-          browser: "ie",
-          mode: "auto",
-          config: 'config/bolt/browser.js',
-          testdirs: ["**/src/test/js"]
-        }
+        browser: "ie",
+        config: 'config/bolt/browser.js',
+        testfiles: ["**/src/test/js/**/*Test.js"],
+        overallTimeout: 600000,
+        singleTimeout: 300000
       }
     },
 
