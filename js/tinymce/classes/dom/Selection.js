@@ -658,7 +658,7 @@ define("tinymce/dom/Selection", [
 								// need to detect if it's doing the wrong thing and falling back to the
 								// crazy incorrect behavior api call since that seems to be the only way
 								// to get it to work on Safari WebKit as of 2017-02-23
-								if (sel.anchorNode !== rng.startContainer) {
+								if (sel.anchorNode !== rng.startContainer || sel.focusNode !== rng.endContainer) {
 									sel.setBaseAndExtent(node, 0, node, 1);
 								}
 							}
