@@ -1,14 +1,18 @@
 asynctest(
   'browser.tinymce.core.fmt.PreviewTest',
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
+    'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.core.fmt.Preview',
     'tinymce.core.test.HtmlUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, Preview, HtmlUtils, Theme) {
+  function (Assertions, Pipeline, Step, Waiter, Arr, LegacyUnit, TinyLoader, Preview, HtmlUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -17,6 +21,22 @@ asynctest(
 
     var ok = function (value, label) {
       return LegacyUnit.equal(value, true, label);
+    };
+
+    var previewStyles = function () {
+      return (
+        'table .preview {' +
+          'color: rgb(0, 255, 0);' + // green
+        '}' +
+
+        'ol .preview {' +
+          'color: rgb(0, 0, 255);' + // blue
+        '}' +
+
+        '.preview {' +
+          'color: rgb(255, 0, 0);' + // red
+        '}'
+      );
     };
 
     suite.test('Get preview css text for formats', function (editor) {
@@ -35,20 +55,6 @@ asynctest(
 
       ok(/color\:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'custom', styles: { color: '#ff0000' } })),
         'Test preview of a custom element.');
-
-      editor.dom.addStyle(
-        'table .preview {' +
-        'color: rgb(0, 255, 0);' + // green
-        '}' +
-
-        'ol .preview {' +
-        'color: rgb(0, 0, 255);' + // blue
-        '}' +
-
-        '.preview {' +
-        'color: rgb(255, 0, 0);' + // red
-        '}'
-      );
 
       ok(/color\:rgb\(0, 255, 0\)/.test(getCssText({ selector: 'tr', classes: ['preview'] })),
         'Style is properly inherited in preview for partial element (like TR).');
@@ -233,7 +239,21 @@ asynctest(
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+      Pipeline.async({}, Arr.flatten([
+        [
+          Step.sync(function () {
+            editor.setContent('<p class="preview">x</p>');
+          }),
+          Waiter.sTryUntil(
+            'Expected styles where not loaded',
+            Step.sync(function () {
+              var color = editor.dom.getStyle(editor.dom.select('p'), 'color', true);
+              Assertions.assertEq('Did not get a color value of 255', true, color.indexOf('255') !== -1);
+            }
+          ), 10, 3000)
+        ],
+        suite.toSteps(editor)
+      ]), onSuccess, onFailure);
     }, {
       selector: "textarea",
       add_unload_trigger: false,
@@ -242,6 +262,7 @@ asynctest(
       extended_valid_elements: 'custom',
       entities: 'raw',
       indent: false,
+      content_style: previewStyles(),
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }

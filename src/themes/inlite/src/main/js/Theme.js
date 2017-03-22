@@ -101,9 +101,9 @@ define(
       };
     };
 
-    var ignoreWhenFormIsVisible = function (panel, f) {
+    var ignoreWhenFormIsVisible = function (editor, panel, f) {
       return function () {
-        if (!panel.inForm()) {
+        if (!editor.removed && !panel.inForm()) {
           f();
         }
       };
@@ -111,7 +111,7 @@ define(
 
     var bindContextualToolbarsEvents = function (editor, panel) {
       var throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
-      var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(panel, togglePanel(editor, panel)), 0);
+      var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(editor, panel, togglePanel(editor, panel)), 0);
 
       editor.on('blur hide ObjectResizeStart', panel.hide);
       editor.on('click', throttledTogglePanel);

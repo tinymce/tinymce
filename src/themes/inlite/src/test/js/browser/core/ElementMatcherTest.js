@@ -38,8 +38,8 @@ asynctest(
           PredicateId.create('b', eq(target))
         ])(editor);
 
-        Assertions.assertEq(result.id, 'b', 'Should be matching B');
-        Assertions.assertEq(result.rect.w > 0, true, 'Should be have width');
+        Assertions.assertEq('Should be matching B', 'b', result.id);
+        Assertions.assertEq('Should be have width', true, result.rect.w > 0, true);
       });
     };
 
@@ -57,8 +57,8 @@ asynctest(
           PredicateId.create('c', eq(parents[0]))
         ])(editor);
 
-        Assertions.assertEq(result.id, 'c', 'Should be matching C the closest one');
-        Assertions.assertEq(result.rect.w > 0, true, 'Should be have width');
+        Assertions.assertEq('Should be matching C the closest one', 'c', result.id);
+        Assertions.assertEq('Should be have width', true, result.rect.w > 0);
       });
     };
 

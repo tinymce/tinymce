@@ -1,33 +1,56 @@
 asynctest(
   'browser.core.ThemeTest',
   [
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyDom',
-    'tinymce.themes.inlite.test.Toolbar',
-    'tinymce.themes.inlite.Theme',
-    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Mouse',
+    'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Mouse',
+    'ephox.agar.api.Pipeline',
     'ephox.agar.api.UiControls',
-    'ephox.agar.api.FocusTools'
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
+    'ephox.mcagar.api.TinyActions',
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.image.Plugin',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.textpattern.Plugin',
+    'tinymce.themes.inlite.test.Toolbar',
+    'tinymce.themes.inlite.Theme'
   ], function (
-    TinyLoader, TinyApis, TinyActions, TinyDom, Toolbar, InliteTheme,
-    Pipeline, Chain, UiFinder, Mouse, GeneralSteps, UiControls, FocusTools
+    Chain, FocusTools, GeneralSteps, Mouse, Pipeline, UiControls, UiFinder, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, ContextMenuPlugin, ImagePlugin,
+    LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, Toolbar, InliteTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var dialogRoot = TinyDom.fromDom(document.body);
 
     InliteTheme();
+    ImagePlugin();
+    TablePlugin();
+    LinkPlugin();
+    PastePlugin();
+    ContextMenuPlugin();
+    TextPatternPlugin();
 
-    var sClickFocusedButton = Chain.asStep(TinyDom.fromDom(document), [
-      FocusTools.cGetFocused,
-      Mouse.cTrueClick
-    ]);
+    var sClickFocusedButton = function (selector) {
+      return GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Focus was not moved to the expected element',
+          FocusTools.sIsOnSelector('Is not on the right element', TinyDom.fromDom(document), selector),
+          10,
+          1000
+        ),
+        Chain.asStep(TinyDom.fromDom(document), [
+          FocusTools.cGetFocused,
+          Mouse.cTrueClick
+        ])
+      ]);
+    };
 
     var sBoldTests = function (tinyApis) {
       return GeneralSteps.sequence([
@@ -159,7 +182,7 @@ asynctest(
         tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
         Toolbar.sWaitForToolbar(),
         tinyActions.sContentKeydown(121, { alt: true }),
-        sClickFocusedButton,
+        sClickFocusedButton('*[aria-label="Bold"]'),
         tinyApis.sAssertContent('<p><strong>a</strong></p>')
       ]);
     };
@@ -168,6 +191,7 @@ asynctest(
       var tinyApis = TinyApis(editor), tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         sBoldTests(tinyApis),
         sH2Tests(tinyApis),
         sLinkTests(tinyApis),

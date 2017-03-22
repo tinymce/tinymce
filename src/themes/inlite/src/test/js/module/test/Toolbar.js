@@ -10,7 +10,7 @@ define(
     var dialogRoot = TinyDom.fromDom(document.body);
 
     var cWaitForToolbar = Chain.fromChainsWith(dialogRoot, [
-      UiFinder.cWaitForState('label', '.mce-tinymce-inline', function (elm) {
+      UiFinder.cWaitForState('Did not find inline toolbar', '.mce-tinymce-inline', function (elm) {
         return elm.dom().style.display === "";
       })
     ]);

@@ -52,7 +52,7 @@ asynctest(
       LegacyUnit.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
       rng = normalizeRng(editor.selection.getRng(true));
       ok(rng.collapsed);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().lastChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
       LegacyUnit.equal(rng.startContainer.nodeName, 'P');
       LegacyUnit.equal(rng.startOffset, 0);
       LegacyUnit.equal(rng.endContainer.nodeName, 'P');

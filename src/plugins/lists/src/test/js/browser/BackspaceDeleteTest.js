@@ -681,7 +681,7 @@ asynctest(
     });
 
     if (Env.ie === 11) {
-      test('Backspace merge li elements on IE 11', function (editor) {
+      suite.test('Backspace merge li elements on IE 11', function (editor) {
         // IE allows you to place the caret inside a LI without children
         editor.getBody().innerHTML = LegacyUnit.trimBrs(
           '<ul>' +

@@ -21,6 +21,8 @@ asynctest(
     var dialogRoot = TinyDom.fromDom(document.body);
     var state = [];
 
+    Theme();
+
     var storeEvent = function (name) {
       return function (api) {
         state.push({

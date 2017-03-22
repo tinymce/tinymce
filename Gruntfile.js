@@ -422,6 +422,7 @@ module.exports = function (grunt) {
     },
 
     clean: {
+      scratch: ["scratch"],
       release: ["tmp"],
 
       core: [
@@ -449,59 +450,58 @@ module.exports = function (grunt) {
       ]
     },
 
-    bedrock: {
-      all: {
-        options: {
-          config: 'config/bolt/browser.js',
-          testdirs: [
-            'src/core/src/test',
-            'src/plugins/advlist/src/test',
-            'src/plugins/anchor/src/test',
-            'src/plugins/autolink/src/test',
-            'src/plugins/autoresize/src/test',
-            'src/plugins/autosave/src/test',
-            'src/plugins/bbcode/src/test',
-            'src/plugins/charmap/src/test',
-            'src/plugins/code/src/test',
-            'src/plugins/codesample/src/test',
-            'src/plugins/colorpicker/src/test',
-            'src/plugins/contextmenu/src/test',
-            'src/plugins/directionality/src/test',
-            'src/plugins/emoticons/src/test',
-            'src/plugins/help/src/test',
-            'src/plugins/fullpage/src/test',
-            'src/plugins/fullscreen/src/test',
-            'src/plugins/hr/src/test',
-            'src/plugins/image/src/test',
-            'src/plugins/imagetools/src/test',
-            'src/plugins/importcss/src/test',
-            'src/plugins/insertdatetime/src/test',
-            'src/plugins/legacyoutput/src/test',
-            'src/plugins/link/src/test',
-            'src/plugins/lists/src/test',
-            'src/plugins/media/src/test',
-            'src/plugins/nonbreaking/src/test',
-            'src/plugins/noneditable/src/test',
-            'src/plugins/pagebreak/src/test',
-            'src/plugins/paste/src/test',
-            'src/plugins/preview/src/test',
-            'src/plugins/print/src/test',
-            'src/plugins/save/src/test',
-            'src/plugins/searchreplace/src/test',
-            'src/plugins/spellchecker/src/test',
-            'src/plugins/tabfocus/src/test',
-            'src/plugins/table/src/test',
-            'src/plugins/template/src/test',
-            'src/plugins/textcolor/src/test',
-            'src/plugins/textpattern/src/test',
-            'src/plugins/toc/src/test',
-            'src/plugins/visualblocks/src/test',
-            'src/plugins/visualchars/src/test',
-            'src/plugins/wordcount/src/test',
-            'src/themes/inlite/src/test',
-            'src/themes/modern/src/test'
-          ]
-        }
+    'bedrock-manual': {
+      core: {
+        config: 'config/bolt/browser.js',
+        projectdir: '.',
+        testfiles: ["**/src/test/js/**/*Test.js"]
+      }
+    },
+
+    'bedrock-auto': {
+      phantomjs: {
+        browser: 'phantomjs',
+        config: 'config/bolt/browser.js',
+        testfiles: ['**/src/test/js/**/*Test.js'],
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        name: 'phantomjs'
+      },
+
+      chrome: {
+        browser: 'chrome',
+        config: 'config/bolt/browser.js',
+        testfiles: ['**/src/test/js/**/*Test.js'],
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        name: 'chrome'
+      },
+
+      firefox: {
+        browser: 'firefox',
+        config: 'config/bolt/browser.js',
+        testfiles: ['**/src/test/js/**/*Test.js'],
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        name: 'firefox'
+      },
+
+      MicrosoftEdge: {
+        browser: 'MicrosoftEdge',
+        config: 'config/bolt/browser.js',
+        testfiles: ['**/src/test/js/**/*Test.js'],
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        name: 'MicrosoftEdge'
+      },
+
+      ie: {
+        browser: 'ie',
+        config: 'config/bolt/browser.js',
+        testfiles: ['**/src/test/js/**/*Test.js'],
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        name: 'ie'
       }
     },
 
@@ -651,5 +651,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('@ephox/bolt');
 
   grunt.registerTask("test", ["qunit"]);
-  grunt.registerTask("default", ["subgrunt", "copy", "test", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "test", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 };

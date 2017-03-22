@@ -1,18 +1,21 @@
 asynctest(
   'browser.core.SelectionMatcherTest',
   [
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.agar.api.Step',
     'ephox.agar.api.Assertions',
-    'tinymce.themes.inlite.core.SelectionMatcher',
-    'tinymce.themes.inlite.core.PredicateId',
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Pipeline'
+    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyLoader',
+    'tinymce.themes.inlite.core.PredicateId',
+    'tinymce.themes.inlite.core.SelectionMatcher',
+    'tinymce.themes.inlite.Theme'
   ],
-  function (TinyLoader, TinyApis, Step, Assertions, SelectionMatcher, PredicateId, GeneralSteps, Pipeline) {
+  function (Assertions, GeneralSteps, Pipeline, Step, TinyApis, TinyLoader, PredicateId, SelectionMatcher, InliteTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    InliteTheme();
 
     var assertResult = function (expectedResultState, result) {
       Assertions.assertEq('Should not be null', result !== null, expectedResultState);
@@ -70,6 +73,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         sTextSelectionTests(tinyApis, editor),
         sEmptyTextBlockTests(tinyApis, editor)
       ], onSuccess, onFailure);

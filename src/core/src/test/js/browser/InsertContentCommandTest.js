@@ -80,7 +80,7 @@ asynctest(
       editor.setContent('<h1>abc</h1>');
       LegacyUnit.setSelection(editor, 'h1', 3);
       editor.execCommand('mceInsertContent', false, '<hr>');
-      LegacyUnit.equal(editor.selection.getNode(), editor.getBody().lastChild);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
       LegacyUnit.equal(getContent(editor), '<h1>abc</h1><hr /><h1>\u00a0</h1>');
     });
@@ -89,7 +89,7 @@ asynctest(
       editor.setContent('<h1>abc</h1><p>def</p>');
       LegacyUnit.setSelection(editor, 'h1', 3);
       editor.execCommand('mceInsertContent', false, '<hr>');
-      LegacyUnit.equal(editor.selection.getNode(), editor.getBody().lastChild);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
       LegacyUnit.equal(getContent(editor), '<h1>abc</h1><hr /><p>def</p>');
     });
@@ -98,7 +98,7 @@ asynctest(
       editor.setContent('<h1><strong>abc</strong></h1><p>def</p>');
       LegacyUnit.setSelection(editor, 'strong', 3);
       editor.execCommand('mceInsertContent', false, '<hr>');
-      LegacyUnit.equal(editor.selection.getNode(), editor.getBody().lastChild);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
       LegacyUnit.equal(getContent(editor), '<h1><strong>abc</strong></h1><hr /><p>def</p>');
     });
@@ -107,7 +107,7 @@ asynctest(
       editor.setContent('<h1>abc</h1>');
       LegacyUnit.setSelection(editor, 'h1', 1);
       editor.execCommand('mceInsertContent', false, '<p></p>');
-      LegacyUnit.equal(editor.selection.getNode(), editor.getBody().childNodes[1]);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().childNodes[1]);
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
       LegacyUnit.equal(getContent(editor), '<h1>a</h1><p>\u00a0</p><h1>bc</h1>');
     });
@@ -295,7 +295,7 @@ asynctest(
       LegacyUnit.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
       rng = normalizeRng(editor.selection.getRng(true));
       ok(rng.collapsed);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().lastChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
       LegacyUnit.equal(rng.startContainer.nodeName, 'P');
       LegacyUnit.equal(rng.startOffset, 0);
       LegacyUnit.equal(rng.endContainer.nodeName, 'P');

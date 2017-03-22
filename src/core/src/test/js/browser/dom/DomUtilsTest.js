@@ -247,6 +247,7 @@ asynctest(
       LegacyUnit.equal(DOM.is(DOM.get('textX'), 'div'), true);
       LegacyUnit.equal(DOM.is(DOM.get('textX'), 'div#textX.test'), true);
       LegacyUnit.equal(DOM.is(DOM.get('textX'), 'div#textX2'), false);
+      LegacyUnit.equal(DOM.is(null, 'div#textX2'), false);
 
       DOM.remove('test');
     });
