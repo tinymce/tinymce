@@ -57,7 +57,7 @@ define(
     };
 
     var safeRemoveCaretContainer = function (editor, caret) {
-      if (editor.selection.isCollapsed() && editor.composing !== true) {
+      if (editor.selection.isCollapsed() && editor.composing !== true && caret.get()) {
         var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
         if (CaretPosition.isTextPosition(pos) && InlineUtils.isAtZwsp(pos) === false) {
           setCaretPosition(editor, CaretContainerRemove.removeAndReposition(caret.get(), pos));
