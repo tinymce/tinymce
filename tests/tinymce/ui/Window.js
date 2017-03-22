@@ -36,7 +36,16 @@
 	});
 
 	test("title, no buttonbar, autoResize, title is widest", function() {
-		var win = createWindow({
+		var win1 = createWindow({
+			x: 100,
+			y: 120,
+			title: "XXXXXXXXXXXXXXXXXXX",
+			items: [
+				{type: 'spacer', classes: 'red', flex: 1}
+			]
+		});
+
+		var win2 = createWindow({
 			x: 100,
 			y: 120,
 			title: "XXXXXXXXXXXXXXXXXXXXXX",
@@ -45,8 +54,8 @@
 			]
 		});
 
-		Utils.nearlyEqualRects(Utils.size(win), [326, 61], 60);
-		Utils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [324, 20], 60);
+		equal(Utils.size(win2)[0] > Utils.size(win1)[0], true, 'Window 2 should be wider since the title spaces out the window');
+		equal(Utils.size(win2.find("spacer")[0]) > Utils.size(win1.find("spacer")[0]), true, 'Window 2 spacer should be widger than window 1');
 	});
 
 	test("buttonbar, autoResize, buttonbar is widest", function() {

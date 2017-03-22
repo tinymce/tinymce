@@ -1,5 +1,0 @@
-configure({
-  configs: [
-    './prod.js'
-  ]
-});

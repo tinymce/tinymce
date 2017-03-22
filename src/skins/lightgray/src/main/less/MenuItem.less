@@ -1,0 +1,176 @@
+// MenuItem
+
+.@{prefix}-menu-item {
+  display: block;
+  padding: 6px 15px 6px 12px;
+  clear: both;
+  font-weight: normal;
+  line-height: 20px;
+  color: @menuitem-text;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: normal;
+  border-left: 4px solid transparent;
+  margin-bottom: 1px;
+}
+
+.@{prefix}-menu-item .@{prefix}-ico, .@{prefix}-menu-item .@{prefix}-text {
+  color: @menuitem-text;
+}
+
+.@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-ico {
+  color: mix(@menuitem-text, @menu-bg, 40%);
+}
+
+.@{prefix}-menu-item:hover .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-text, .@{prefix}-menu-item:focus .@{prefix}-text {
+  color: @menuitem-text-inverse;
+}
+
+.@{prefix}-menu-item:hover .@{prefix}-ico, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-ico, .@{prefix}-menu-item:focus .@{prefix}-ico {
+  color: @menuitem-text-inverse;
+}
+
+.@{prefix}-menu-item.@{prefix}-disabled:hover {
+  background: @menuitem-bg-disabled;
+}
+
+.@{prefix}-menu-shortcut {
+  display: inline-block;
+  color: mix(@menuitem-text, @menu-bg, 40%);
+}
+
+.@{prefix}-menu-shortcut {
+  .inline-block();
+  padding: 0 15px 0 20px;
+}
+
+.@{prefix}-menu-item:hover .@{prefix}-menu-shortcut, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-menu-shortcut, .@{prefix}-menu-item:focus .@{prefix}-menu-shortcut {
+  color: @menuitem-text-inverse;
+}
+
+.@{prefix}-menu-item .@{prefix}-caret {
+  margin-top: 4px;
+  *margin-top: 3px;
+  margin-right: 6px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid @menuitem-caret;
+}
+
+.@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-menu-item:hover .@{prefix}-caret {
+  border-left-color: @menuitem-caret-selected;
+}
+
+.@{prefix}-menu-align .@{prefix}-menu-shortcut {
+  *margin-top: -2px;
+}
+
+.@{prefix}-menu-align .@{prefix}-menu-shortcut, .@{prefix}-menu-align .@{prefix}-caret {
+  position: absolute;
+  right: 0;
+}
+
+.@{prefix}-menu-item.@{prefix}-active i {
+  visibility: visible;
+}
+
+.@{prefix}-menu-item-normal.@{prefix}-active {
+  background-color: @menuitem-bg-active;
+}
+
+.@{prefix}-menu-item-preview.@{prefix}-active {
+  border-left: 5px solid @menuitem-preview-border-active;
+}
+
+.@{prefix}-menu-item-normal.@{prefix}-active .@{prefix}-text {
+  color: @menuitem-text-active;
+}
+
+.@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-ico {
+  color: @menuitem-text-inverse;
+}
+
+.@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-ico {
+  color: @menuitem-text-inverse;
+}
+
+.@{prefix}-menu-item:hover, .@{prefix}-menu-item.@{prefix}-selected, .@{prefix}-menu-item:focus {
+  text-decoration: none;
+  color: @menuitem-text-inverse;
+  .vertical-gradient(@menuitem-bg-selected, @menuitem-bg-selected-hlight);
+}
+
+.@{prefix}-menu-item-link {
+  color: #093;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  b {
+    color: #093;
+  }
+}
+
+.@{prefix}-menu-item-ellipsis {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.@{prefix}-menu-item:hover *, .@{prefix}-menu-item.@{prefix}-selected *, .@{prefix}-menu-item:focus * {
+  color: @menuitem-text-inverse;
+}
+
+div.@{prefix}-menu .@{prefix}-menu-item-sep, .@{prefix}-menu-item-sep:hover {
+  border: 0;
+  padding: 0;
+  height: 1px;
+  margin: 9px 1px;
+  overflow: hidden;
+  background: @menuitem-separator-top;
+  border-bottom: 1px solid @menuitem-separator-bottom;
+  cursor: default;
+  filter: none;
+}
+
+div.@{prefix}-menu .@{prefix}-menu-item b {
+  font-weight: bold;
+}
+
+.@{prefix}-menu-item-indent-1 { padding-left: 20px; }
+.@{prefix}-menu-item-indent-2 { padding-left: 35px; }
+.@{prefix}-menu-item-indent-2 { padding-left: 35px; }
+.@{prefix}-menu-item-indent-3 { padding-left: 40px; }
+.@{prefix}-menu-item-indent-4 { padding-left: 45px; }
+.@{prefix}-menu-item-indent-5 { padding-left: 50px; }
+.@{prefix}-menu-item-indent-6 { padding-left: 55px; }
+
+// RTL
+
+.@{prefix}-menu.@{prefix}-rtl {
+  direction: rtl;
+}
+
+.@{prefix}-rtl .@{prefix}-menu-item {
+  text-align: right;
+  direction: rtl;
+  padding: 6px 12px 6px 15px;
+}
+
+.@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-menu-shortcut, .@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-caret {
+  right: auto;
+  left: 0;
+}
+
+.@{prefix}-rtl .@{prefix}-menu-item .@{prefix}-caret {
+  margin-left: 6px;
+  margin-right: 0;
+  border-right: 4px solid @menuitem-caret;
+  border-left: 0;
+}
+
+.@{prefix}-rtl .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:hover .@{prefix}-caret {
+  border-left-color: transparent;
+  border-right-color: @menuitem-caret-selected;
+}

@@ -9,16 +9,13 @@
 <link rel="stylesheet/less" type="text/css" href="../../js/tinymce/skins/lightgray/skin.dev.less">
 <script src="../../node_modules/less/dist/less-1.4.2.min.js"></script>
 -->
-<script src="../../js/tinymce/tinymce.dev.js"></script>
-<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
-<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
-<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script src="../../js/tinymce/tinymce.js"></script>
 <script>
 	tinymce.init({
 		selector: "textarea#elm1",
 		theme: "modern",
 		plugins: [
-			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
 			"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
 		],
@@ -28,7 +25,7 @@
 		content_css: "css/development.css",
 		add_unload_trigger: false,
 
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
+		toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
 
 		image_advtab: true,
 		image_caption: true,

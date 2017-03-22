@@ -1,0 +1,62 @@
+// CropRect
+
+.@{prefix}-croprect-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.@{prefix}-croprect-handle {
+  position: absolute;
+  top: 0; left: 0;
+  width: 20px; height: 20px;
+  border: 2px solid white;
+}
+
+.@{prefix}-croprect-handle-nw {
+  border-width: 2px 0 0 2px;
+  margin: -2px 0 0 -2px;
+  cursor: nw-resize;
+  top: 100px; left: 100px;
+}
+
+.@{prefix}-croprect-handle-ne {
+  border-width: 2px 2px 0 0;
+  margin: -2px 0 0 -20px;
+  cursor: ne-resize;
+  top: 100px; left: 200px;
+}
+
+.@{prefix}-croprect-handle-sw {
+  border-width: 0 0 2px 2px;
+  margin: -20px 2px 0 -2px;
+  cursor: sw-resize;
+  top: 200px; left: 100px;
+}
+
+.@{prefix}-croprect-handle-se {
+  border-width: 0 2px 2px 0;
+  margin: -20px 0 0 -20px;
+  cursor: se-resize;
+  top: 200px; left: 200px;
+}
+
+.@{prefix}-croprect-handle-move {
+  position: absolute;
+  cursor: move;
+  border: 0;
+}
+
+.@{prefix}-croprect-block {
+  .opacity(@window-modalblock-opacity);
+  position: absolute;
+  background: black;
+}
+
+.@{prefix}-croprect-handle:focus {
+  border-color: @textbox-border-focus;
+}
+
+.@{prefix}-croprect-handle-move:focus {
+  outline: 1px solid @textbox-border-focus;
+}

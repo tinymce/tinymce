@@ -1,157 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8" />
-	<title>TinyMCE QUnit tests</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
-	<link rel="stylesheet" href="js/qunit/qunit.css" type="text/css" />
-	<link rel="stylesheet" href="../js/tinymce/skins/lightgray/skin.min.css" type="text/css" />
-	<link rel="stylesheet" href="tinymce/ui/css/ui-overrides.css" type="text/css" />
-	<style>
-		#qunit-modulefilter-container { float: none; }
-	</style>
+  <meta charset="UTF-8" />
+  <title>TinyMCE QUnit tests</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+  <link rel="stylesheet" href="js/qunit/qunit.css" type="text/css" />
+  <link rel="stylesheet" href="../src/skins/lightgray/dist/lightgray/skin.min.css" type="text/css" />
+  <link rel="stylesheet" href="tinymce/ui/css/ui-overrides.css" type="text/css" />
+  <style>
+    #qunit-modulefilter-container { float: none; }
+  </style>
 </head>
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <div id="view" style="position: absolute; right: 0; top: 0"></div>
 
-	<script src="../node_modules/jquery/dist/jquery.min.js"></script>
-	<script src="js/module_loader.js"></script>
-	<script src="js/qunit/qunit.js"></script>
-	<script src="js/tinymce_loader.js"></script>
-	<script src="../js/tinymce/classes/jquery.tinymce.js"></script>
-	<script src="../js/tinymce/plugins/paste/plugin.js"></script>
-	<script src="js/utils.js"></script>
-	<script src="js/init.js"></script>
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="js/module_loader.js"></script>
+  <script src="js/qunit/qunit.js"></script>
+  <script src="js/tinymce_loader.js"></script>
+  <script src="../src/core/dist/tinymce/jquery.tinymce.min.js"></script>
+  <script src="../js/tinymce/plugins/paste/plugin.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/init.js"></script>
 
-	<!-- tinymce.data.* -->
-	<script src="tinymce/data/ObservableObject.js"></script>
+  <script src="tinymce/dom/DomQuery.js"></script>
+  <script src="tinymce/dom/EventUtils.js"></script>
+  <script src="tinymce/dom/Serializer.js"></script>
+  <script src="tinymce/dom/TridentSelection.js"></script>
+  <script src="tinymce/dom/TreeWalker.js"></script>
 
-	<!-- tinymce.caret.* -->
-	<script src="tinymce/caret/CaretBookmark.js"></script>
-	<script src="tinymce/caret/CaretCandidate.js"></script>
-	<script src="tinymce/caret/CaretContainer.js"></script>
-	<script src="tinymce/caret/CaretPosition.js"></script>
-	<script src="tinymce/caret/CaretUtils.js"></script>
-	<script src="tinymce/caret/CaretWalker.js"></script>
-	<script src="tinymce/caret/FakeCaret.js"></script>
-	<script src="tinymce/caret/LineUtils.js"></script>
-	<script src="tinymce/caret/LineWalker.js"></script>
+  <script src="tinymce/ui/AbsoluteLayout.js"></script>
+  <script src="tinymce/ui/Button.js"></script>
+  <script src="tinymce/ui/Collection.js"></script>
+  <script src="tinymce/ui/ColorButton.js"></script>
+  <script src="tinymce/ui/Control.js"></script>
+  <script src="tinymce/ui/FilePicker.js"></script>
+  <script src="tinymce/ui/FitLayout.js"></script>
+  <script src="tinymce/ui/FlexLayout.js"></script>
+  <script src="tinymce/ui/GridLayout.js"></script>
+  <script src="tinymce/ui/MenuButton.js"></script>
+  <script src="tinymce/ui/Panel.js"></script>
+  <script src="tinymce/ui/Selector.js"></script>
+  <script src="tinymce/ui/SplitButton.js"></script>
+  <script src="tinymce/ui/TabPanel.js"></script>
+  <script src="tinymce/ui/TextBox.js"></script>
+  <script src="tinymce/ui/Window.js"></script>
 
-	<!-- tinymce.geom.* -->
-	<script src="tinymce/geom/Rect.js"></script>
-	<script src="tinymce/geom/ClientRect.js"></script>
+  <script src="tinymce/util/JSONRequest.js"></script>
+  <script src="tinymce/util/XHR.js"></script>
 
-	<!-- tinymce.file.* -->
-	<script src="tinymce/file/Conversions.js"></script>
-	<script src="tinymce/file/ImageScanner.js"></script>
-	<script src="tinymce/file/UploadStatus.js"></script>
+  <script src="tinymce/AddOnManager.js"></script>
+  <script src="tinymce/options.js"></script>
+  <script src="tinymce/Editor.js"></script>
+  <script src="tinymce/Editor_rtl.js"></script>
+  <script src="tinymce/EditorCustomTheme.js"></script>
+  <script src="tinymce/EditorManager.js"></script>
+  <script src="tinymce/ForceBlocks.js"></script>
+  <script src="tinymce/Formatter_apply.js"></script>
+  <script src="tinymce/Formatter_check.js"></script>
+  <script src="tinymce/Formatter_remove.js"></script>
+  <script src="tinymce/WindowManager.js"></script>
+  <script src="tinymce/NotificationManager.js"></script>
 
-	<!-- tinymce.fmt.* -->
-	<script src="tinymce/fmt/Hooks.js"></script>
-
-	<!-- tinymce.text.* -->
-	<script src="tinymce/text/ExtendingChar.js"></script>
-	<script src="tinymce/text/Zwsp.js"></script>
-
-	<!-- tinymce.dom.* -->
-	<script src="tinymce/dom/NodeType.js"></script>
-	<script src="tinymce/dom/DomQuery.js"></script>
-	<script src="tinymce/dom/DOMUtils.js"></script>
-	<script src="tinymce/dom/Dimensions.js"></script>
-	<script src="tinymce/dom/EventUtils.js"></script>
-	<script src="tinymce/dom/Range.js"></script>
-	<script src="tinymce/dom/Selection.js"></script>
-	<script src="tinymce/dom/Serializer.js"></script>
-	<script src="tinymce/dom/TridentSelection.js"></script>
-	<script src="tinymce/dom/NodePath.js"></script>
-	<script src="tinymce/dom/TreeWalker.js"></script>
-
-	<!-- tinymce.html.* -->
-	<script src="tinymce/html/DomParser.js"></script>
-	<script src="tinymce/html/Entities.js"></script>
-	<script src="tinymce/html/Node.js"></script>
-	<script src="tinymce/html/SaxParser.js"></script>
-	<script src="tinymce/html/Schema.js"></script>
-	<script src="tinymce/html/Styles.js"></script>
-	<script src="tinymce/html/Writer.js"></script>
-	<script src="tinymce/html/Serializer.js"></script>
-
-	<!-- tnymce.ui.* -->
-	<script src="tinymce/ui/AbsoluteLayout.js"></script>
-	<script src="tinymce/ui/Button.js"></script>
-	<script src="tinymce/ui/Collection.js"></script>
-	<script src="tinymce/ui/ColorButton.js"></script>
-	<script src="tinymce/ui/Control.js"></script>
-	<script src="tinymce/ui/FitLayout.js"></script>
-	<script src="tinymce/ui/FlexLayout.js"></script>
-	<script src="tinymce/ui/GridLayout.js"></script>
-	<script src="tinymce/ui/MenuButton.js"></script>
-	<script src="tinymce/ui/Panel.js"></script>
-	<script src="tinymce/ui/Selector.js"></script>
-	<script src="tinymce/ui/SplitButton.js"></script>
-	<script src="tinymce/ui/TabPanel.js"></script>
-	<script src="tinymce/ui/TextBox.js"></script>
-	<script src="tinymce/ui/Window.js"></script>
-
-	<!-- tinymce.util.* -->
-	<script src="tinymce/util/Color.js"></script>
-	<script src="tinymce/util/EventDispatcher.js"></script>
-	<script src="tinymce/util/JSON.js"></script>
-	<script src="tinymce/util/JSONRequest.js"></script>
-	<script src="tinymce/util/LocalStorage.js"></script>
-	<script src="tinymce/util/Observable.js"></script>
-	<script src="tinymce/util/Quirks_webkit.js"></script>
-	<script src="tinymce/util/URI.js"></script>
-	<script src="tinymce/util/XHR.js"></script>
-	<script src="tinymce/util/I18n.js"></script>
-	<script src="tinymce/util/Fun.js"></script>
-	<script src="tinymce/util/Delay.js"></script>
-	<script src="tinymce/util/Promise.js"></script>
-	<script src="tinymce/util/Tools.js"></script>
-
-	<!-- tinymce.* -->
-	<script src="tinymce/AddOnManager.js"></script>
-	<script src="tinymce/Editor.js"></script>
-	<script src="tinymce/Editor_rtl.js"></script>
-	<script src="tinymce/EditorUpload.js"></script>
-	<script src="tinymce/EditorCommands.js"></script>
-	<script src="tinymce/EditorManager.js"></script>
-	<script src="tinymce/EnterKey.js"></script>
-	<script src="tinymce/ForceBlocks.js"></script>
-	<script src="tinymce/Formatter_apply.js"></script>
-	<script src="tinymce/Formatter_check.js"></script>
-	<script src="tinymce/Formatter_remove.js"></script>
-	<script src="tinymce/Shortcuts.js"></script>
-	<script src="tinymce/UndoManager.js"></script>
-	<script src="tinymce/SelectionOverrides.js"></script>
-	<script src="tinymce/WindowManager.js"></script>
-	<script src="tinymce/InsertContent.js"></script>
-	<script src="tinymce/InsertList.js"></script>
-
-	<!-- tinymce.plugins.* -->
-	<script src="plugins/autolink.js"></script>
-	<script src="plugins/charmap.js"></script>
-	<script src="plugins/autosave.js"></script>
-	<script src="plugins/fullpage.js"></script>
-	<script src="plugins/image.js"></script>
-	<script src="plugins/importcss.js"></script>
-	<script src="plugins/jquery_plugin.js"></script>
-	<script src="plugins/jquery_initialization.js"></script>
-	<script src="plugins/legacyoutput.js"></script>
-	<script src="plugins/link.js"></script>
-	<script src="plugins/lists.js"></script>
-	<script src="plugins/media.js"></script>
-	<script src="plugins/noneditable.js"></script>
-	<script src="plugins/paste.js"></script>
-	<script src="plugins/paste_images.js"></script>
-	<script src="plugins/paste_smart.js"></script>
-	<script src="plugins/searchreplace.js"></script>
-	<script src="plugins/spellchecker.js"></script>
-	<script src="plugins/table.js"></script>
-	<script src="plugins/textpattern.js"></script>
-	<script src="plugins/wordcount.js"></script>
+  <script src="plugins/imagetools.js"></script>
+  <script src="plugins/importcss.js"></script>
+  <script src="plugins/jquery_plugin.js"></script>
+  <script src="plugins/jquery_initialization.js"></script>
+  <script src="plugins/link.js"></script>
+  <script src="plugins/media.js"></script>
+  <script src="plugins/spellchecker.js"></script>
 </body>
 </html>

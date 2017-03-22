@@ -492,7 +492,36 @@ test('translate', function() {
 	equal(editor.translate('input i18n'), 'output i18n');
 });
 
+test('Treat some paragraphs as empty contents', function() {
+	editor.setContent('<p><br /></p>');
+	equal(editor.getContent(), '');
+
+	editor.setContent('<p>\u00a0</p>');
+	equal(editor.getContent(), '');
+});
+
 test('kamer word bounderies', function() {
 	editor.setContent('<p>!\u200b!\u200b!</p>');
 	equal(editor.getContent(), '<p>!\u200b!\u200b!</p>');
+});
+
+test('Padd empty elements with br', function() {
+	editor.settings.padd_empty_with_br = true;
+	editor.setContent('<p>a</p><p></p>');
+	equal(editor.getContent(), '<p>a</p><p><br /></p>');
+	delete editor.settings.padd_empty_with_br;
+});
+
+test('Padd empty elements with br on insert at caret', function() {
+	editor.settings.padd_empty_with_br = true;
+	editor.setContent('<p>a</p>');
+	Utils.setSelection('p', 1);
+	editor.insertContent('<p>b</p><p></p>');
+	equal(editor.getContent(), '<p>a</p><p>b</p><p><br /></p>');
+	delete editor.settings.padd_empty_with_br;
+});
+
+test('Preserve whitespace pre elements', function() {
+	editor.setContent('<pre> </pre>');
+	equal(editor.getContent(), '<pre> </pre>');
 });
