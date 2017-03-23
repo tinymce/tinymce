@@ -87,6 +87,11 @@ asynctest(
       LegacyUnit.strictEqual(NodeType.isBogus(null), false);
     });
 
+    suite.test('hasAttribute', function () {
+      LegacyUnit.strictEqual(NodeType.hasAttribute('x')($('<div x="1"></div>')[0]), true);
+      LegacyUnit.strictEqual(NodeType.hasAttribute('y')($('<div></div>')[0]), false);
+    });
+
     Pipeline.async({}, suite.toSteps({}), function () {
       success();
     }, failure);
