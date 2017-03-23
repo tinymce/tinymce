@@ -43,45 +43,44 @@
 define(
   'tinymce.core.Editor',
   [
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.core.AddOnManager",
-    "tinymce.core.NodeChange",
-    "tinymce.core.html.Node",
-    "tinymce.core.dom.Serializer",
-    "tinymce.core.html.Serializer",
-    "tinymce.core.dom.Selection",
-    "tinymce.core.Formatter",
-    "tinymce.core.UndoManager",
-    "tinymce.core.keyboard.KeyboardOverrides",
-    "tinymce.core.ForceBlocks",
-    "tinymce.core.EditorCommands",
-    "tinymce.core.util.URI",
-    "tinymce.core.dom.ScriptLoader",
-    "tinymce.core.dom.EventUtils",
-    "tinymce.core.WindowManager",
-    "tinymce.core.NotificationManager",
-    "tinymce.core.html.Schema",
-    "tinymce.core.html.DomParser",
-    "tinymce.core.util.Quirks",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Delay",
-    "tinymce.core.EditorObservable",
-    "tinymce.core.Mode",
-    "tinymce.core.Shortcuts",
-    "tinymce.core.EditorUpload",
-    "tinymce.core.SelectionOverrides",
-    "tinymce.core.util.Uuid",
-    "tinymce.core.ui.Sidebar",
-    "tinymce.core.ErrorReporter"
+    'tinymce.core.AddOnManager',
+    'tinymce.core.blocks.api.Blocks',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.EventUtils',
+    'tinymce.core.dom.ScriptLoader',
+    'tinymce.core.dom.Selection',
+    'tinymce.core.dom.Serializer',
+    'tinymce.core.EditorCommands',
+    'tinymce.core.EditorObservable',
+    'tinymce.core.EditorUpload',
+    'tinymce.core.Env',
+    'tinymce.core.ErrorReporter',
+    'tinymce.core.ForceBlocks',
+    'tinymce.core.Formatter',
+    'tinymce.core.html.DomParser',
+    'tinymce.core.html.Node',
+    'tinymce.core.html.Schema',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.keyboard.KeyboardOverrides',
+    'tinymce.core.Mode',
+    'tinymce.core.NodeChange',
+    'tinymce.core.NotificationManager',
+    'tinymce.core.SelectionOverrides',
+    'tinymce.core.Shortcuts',
+    'tinymce.core.ui.Sidebar',
+    'tinymce.core.UndoManager',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Quirks',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.URI',
+    'tinymce.core.util.Uuid',
+    'tinymce.core.WindowManager'
   ],
   function (
-    DOMUtils, DomQuery, AddOnManager, NodeChange, Node, DomSerializer, Serializer,
-    Selection, Formatter, UndoManager, KeyboardOverrides, ForceBlocks, EditorCommands,
-    URI, ScriptLoader, EventUtils, WindowManager, NotificationManager,
-    Schema, DomParser, Quirks, Env, Tools, Delay, EditorObservable, Mode, Shortcuts, EditorUpload,
-    SelectionOverrides, Uuid, Sidebar, ErrorReporter
+    AddOnManager, Blocks, DomQuery, DOMUtils, EventUtils, ScriptLoader, Selection, DomSerializer, EditorCommands, EditorObservable, EditorUpload,
+    Env, ErrorReporter, ForceBlocks, Formatter, DomParser, Node, Schema, Serializer, KeyboardOverrides, Mode, NodeChange, NotificationManager,
+    SelectionOverrides, Shortcuts, Sidebar, UndoManager, Delay, Quirks, Tools, URI, Uuid, WindowManager
   ) {
     // Shorten these names
     var DOM = DOMUtils.DOM, ThemeManager = AddOnManager.ThemeManager, PluginManager = AddOnManager.PluginManager;
@@ -247,6 +246,7 @@ define(
 
       // Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
       self.shortcuts = new Shortcuts(self);
+      self.blocks = new Blocks(self);
       self.loadedCSS = {};
       self.editorCommands = new EditorCommands(self);
       self.suffix = editorManager.suffix;
