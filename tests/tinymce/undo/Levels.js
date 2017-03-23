@@ -65,6 +65,36 @@ ModuleLoader.require([
 		});
 	});
 
+	test('createFromEditor removes bogus=al', function() {
+		editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span>';
+
+		deepEqual(Levels.createFromEditor(editor), {
+			'beforeBookmark': null,
+			'bookmark': null,
+			'content': ' <span>b</span>',
+			'fragments': null,
+			'type': 'complete'
+		});
+	});
+
+	test('createFromEditor removes bogus=all', function() {
+		editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span>';
+
+		deepEqual(Levels.createFromEditor(editor), {
+			'beforeBookmark': null,
+			'bookmark': null,
+			'content': '',
+			'fragments':[
+				"<iframe src=\"about:blank\"></iframe>",
+				" ",
+				"",
+				" ",
+				"<span>b</span>"
+			],
+			'type': 'fragmented'
+		});
+	});
+
 	test('applyToEditor to equal content with complete level', function() {
 		var level = Levels.createCompleteLevel('<p>a</p>');
 		level.bookmark = {start: [1, 0, 0]};

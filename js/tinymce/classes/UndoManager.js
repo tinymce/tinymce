@@ -16,9 +16,8 @@
 define("tinymce/UndoManager", [
 	"tinymce/util/VK",
 	"tinymce/util/Tools",
-	"tinymce/undo/Levels",
-	"tinymce/Env"
-], function(VK, Tools, Levels, Env) {
+	"tinymce/undo/Levels"
+], function(VK, Tools, Levels) {
 	return function(editor) {
 		var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
@@ -83,7 +82,7 @@ define("tinymce/UndoManager", [
 				editor.nodeChanged();
 			}
 
-			if (keyCode === 46 || keyCode === 8 || (Env.mac && (keyCode === 91 || keyCode === 93))) {
+			if (keyCode === 46 || keyCode === 8) {
 				editor.nodeChanged();
 			}
 

@@ -960,10 +960,9 @@ define("tinymce/util/Quirks", [
 
 				// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 				// WebKit can't even do simple things like selecting an image
-				// Needs to be the setBaseAndExtend or it will fail to select floated images
 				if (/^(IMG|HR)$/.test(target.nodeName) && dom.getContentEditableParent(target) !== "false") {
 					e.preventDefault();
-					selection.getSel().setBaseAndExtent(target, 0, target, 1);
+					selection.select(target);
 					editor.nodeChanged();
 				}
 
@@ -1684,8 +1683,8 @@ define("tinymce/util/Quirks", [
 				var next = caretWalker.next(endCaretPos);
 
 				return !editor.selection.isCollapsed() &&
-					(!prev || prev.isAtStart()) &&
-					(!next || (next.isAtEnd() && startCaretPos.getNode() !== next.getNode()));
+					(!prev || (prev.isAtStart() && startCaretPos.isEqual(prev))) &&
+					(!next || (next.isAtEnd() && startCaretPos.isEqual(next)));
 			}
 
 			// Type over case delete and insert this won't cover typeover with a IME but at least it covers the common case

@@ -6,18 +6,11 @@ asynctest('browser.core.PluginTest', [
 	'ephox.mcagar.api.TinyApis',
 	'ephox.mcagar.api.TinyUi',
 	'ephox.agar.api.Pipeline',
-	'ephox.agar.api.GeneralSteps',
-	'ephox.agar.api.Waiter',
-	'ephox.agar.api.Step',
-	'ephox.agar.api.Chain',
-	'ephox.agar.api.UiFinder',
-	'ephox.agar.api.UiControls',
 	'ephox.agar.api.Assertions',
 	'tinymce.media.test.Utils'
 ], function (
 	tinymce, Plugin, TinyLoader, TinyDom, TinyApis,
-	TinyUi, Pipeline, GeneralSteps,	Waiter,
-	Step, Chain, UiFinder, UiControls, Assertions, Utils
+	TinyUi, Pipeline, Assertions, Utils
 ) {
 	var success = arguments[arguments.length - 2];
 	var failure = arguments[arguments.length - 1];

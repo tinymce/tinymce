@@ -106,7 +106,7 @@ define("tinymce/dom/Serializer", [
 				bogusAllRegExp.lastIndex = index - matchLength;
 			}
 
-			return trim(content);
+			return content;
 		}
 
 		/**
@@ -294,24 +294,6 @@ define("tinymce/dom/Serializer", [
 				}
 			}
 		});
-
-		// Fix list elements, TODO: Replace this later
-		if (settings.fix_list_elements) {
-			htmlParser.addNodeFilter('ul,ol', function(nodes) {
-				var i = nodes.length, node, parentNode;
-
-				while (i--) {
-					node = nodes[i];
-					parentNode = node.parent;
-
-					if (parentNode.name === 'ul' || parentNode.name === 'ol') {
-						if (node.prev && node.prev.name === 'li') {
-							node.prev.append(node);
-						}
-					}
-				}
-			});
-		}
 
 		// Remove internal data attributes
 		htmlParser.addAttributeFilter(

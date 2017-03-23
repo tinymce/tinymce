@@ -1,3 +1,27 @@
+Version 4.5.5 (2017-03-07)
+  Fixed text formatting bug with fontsize could not be changed after changing the text color.
+Version 4.5.4 (2017-02-23)
+	Fixed bug where setBaseAndExtend would throw exceptions on Chrome 58 when selecting images.
+	Fixed bug where deleting partially selected contents could remove all contents in some edge cases on WebKit.
+Version 4.5.3 (2017-02-01)
+	Added keyboard navigation for menu buttons when the menu is in focus.
+	Added api to the list plugin for setting custom classes/attributes on lists.
+	Added validation for the anchor plugin input field according to W3C id naming specifications.
+	Fixed bug where media placeholders were removed after resize with the forced_root_block setting set to false.
+	Fixed bug where deleting selections with similar sibling nodes sometimes deleted the whole document.
+	Fixed bug with inlite theme where several toolbars would appear scrolling when more than one instance of the editor was in use.
+	Fixed bug where the editor would throw error with the fontselect plugin on hidden editor instances in Firefox.
+	Fixed bug where the background color would not stretch to the font size.
+	Fixed bug where font size would be removed when changing background color.
+	Fixed bug where the undomanager trimmed away whitespace between nodes on undo/redo.
+	Fixed bug where media_dimensions=false in media plugin caused the editor to throw an error.
+	Fixed bug where IE was producing font/u elements within links on paste.
+	Fixed bug where some button tooltips were broken when compat3x was in use.
+	Fixed bug where backspace/delete/typeover would remove the caption element.
+	Fixed bug where powerspell failed to function when compat3x was enabled.
+	Fixed bug where it wasn't possible to apply sub/sup on text with large font size.
+	Fixed bug where pre tags with spaces weren't treated as content.
+	Fixed bug where Meta+A would select the entire document instead of all contents in nested ce=true elements.
 Version 4.5.2 (2017-01-04)
 	Added missing keyboard shortcut description for the underline menu item in the format menu.
 	Fixed bug where external blob urls wasn't properly handled by editor upload logic. Patch contributed by David Oviedo.
@@ -85,7 +109,7 @@ Version 4.5.0 (2016-11-23)
 	Fixed various api documentation issues and typos.
 	Removed layer plugin since it wasn't really ported from 3.x and there doesn't seem to be much use for it.
 	Removed moxieplayer.swf from the media plugin since it wasn't used by the media plugin.
-	Removed format state from the advlist plugin to be more consistent with common word processors.  
+	Removed format state from the advlist plugin to be more consistent with common word processors.
 Version 4.4.3 (2016-09-01)
 	Fixed bug where copy would produce an exception on Chrome.
 	Fixed bug where deleting lists on IE 11 would merge in correct text nodes.

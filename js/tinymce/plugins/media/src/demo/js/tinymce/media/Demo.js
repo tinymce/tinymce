@@ -21,6 +21,7 @@ define("tinymce.media.Demo", [
 			theme: "modern",
 			plugins: "media code preview",
 			toolbar: "media code preview",
+			media_dimensions: false,
 			// media_live_embeds: false,
 			// media_url_resolver: function (data, resolve) {
 			// 	resolve({

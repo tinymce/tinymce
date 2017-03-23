@@ -357,6 +357,14 @@ test('Script whitespace in beginning/end and cdata', 1, function() {
 	equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
 });
 
+test('Whitespace preserve in pre', function() {
+	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
+	ser.setRules('pre');
+
+	DOM.setHTML('test', '<pre>  </pre>');
+	equal(ser.serialize(DOM.get('test')), '<pre>  </pre>');
+});
+
 test('Script with src attr', 1, function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true});
 	ser.setRules('script[type|language|src]');

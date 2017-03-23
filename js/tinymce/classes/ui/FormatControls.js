@@ -391,10 +391,9 @@ define("tinymce/ui/FormatControls", [
 			return function() {
 				var self = this;
 
-				type = type == 'redo' ? 'hasRedo' : 'hasUndo';
-
 				function checkState() {
-					return editor.undoManager ? editor.undoManager[type]() : false;
+					var typeFn = type == 'redo' ? 'hasRedo' : 'hasUndo';
+					return editor.undoManager ? editor.undoManager[typeFn]() : false;
 				}
 
 				self.disabled(!checkState());
