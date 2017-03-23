@@ -911,7 +911,7 @@ define("tinymce/Editor", [
 				while (i--) {
 					node = nodes[i];
 
-					if (node.isEmpty(nonEmptyElements)) {
+					if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
 						node.append(new Node('br', 1)).shortEnded = true;
 					}
 				}
@@ -1843,7 +1843,7 @@ define("tinymce/Editor", [
 
 			// Get raw contents or by default the cleaned contents
 			if (args.format == 'raw') {
-				content = self.serializer.getTrimmedContent();
+				content = Tools.trim(self.serializer.getTrimmedContent());
 			} else if (args.format == 'text') {
 				content = body.innerText || body.textContent;
 			} else {

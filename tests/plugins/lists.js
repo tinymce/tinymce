@@ -35,7 +35,7 @@ ModuleLoader.require([
 				indent: false,
 				schema: 'html5',
 				entities: 'raw',
-				valid_elements: 'li[style],ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
+				valid_elements: 'li[style|class|data-custom],ol[style|class|data-custom],ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
 				},
@@ -546,6 +546,33 @@ ModuleLoader.require([
 			'</ol>' +
 			'<ol style="list-style-type: lower-roman;">' +
 				'<li>b</li>' +
+				'<li>c</li>' +
+			'</ol>'
+		);
+		equal(editor.selection.getStart().nodeName, 'LI');
+	});
+
+	test('Apply OL to UL and DO not merge with adjacent lists because classes are different', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol class="a">' +
+				'<li>a</li>' +
+			'</ol>' +
+			'<ul><li>b</li></ul>' +
+			'<ol class="b">' +
+				'<li>c</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ul li', 1);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getContent(),
+			'<ol class="a">' +
+				'<li>a</li>' +
+			'</ol>' +
+			'<ol><li>b</li></ol>' +
+			'<ol class="b">' +
 				'<li>c</li>' +
 			'</ol>'
 		);
@@ -2583,6 +2610,41 @@ ModuleLoader.require([
 		execCommand('InsertUnorderedList', false, {'list-style-type': null});
 
 		equal(editor.getContent(), '<ul><li>a</li><li>b</li><li>c</li></ul>');
+	});
+
+	test('Apply UL with custom attributes', function() {
+		editor.getBody().innerHTML = trimBrs('<p>a</p>');
+
+		editor.focus();
+		Utils.setSelection('p', 0);
+		execCommand('InsertUnorderedList', false, {
+			'list-attributes': {
+				'class': 'a',
+				'data-custom': 'c1'
+			}
+		});
+
+		equal(editor.getContent(), '<ul class="a" data-custom="c1"><li>a</li></ul>');
+	});
+
+	test('Apply UL and LI with custom attributes', function() {
+		editor.getBody().innerHTML = trimBrs('<p>a</p>');
+
+		editor.focus();
+		Utils.setSelection('p', 0);
+		execCommand('InsertUnorderedList', false, {
+			'list-attributes': {
+				'class': 'a',
+				'data-custom': 'c1'
+			},
+
+			'list-item-attributes': {
+				'class': 'b',
+				'data-custom': 'c2'
+			}
+		});
+
+		equal(editor.getContent(), '<ul class="a" data-custom="c1"><li class="b" data-custom="c2">a</li></ul>');
 	});
 
 	if (tinymce.Env.ie === 11) {

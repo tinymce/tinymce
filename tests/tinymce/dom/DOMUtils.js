@@ -664,6 +664,11 @@
 		equal(false, DOM.isEmpty(elm, {img: true}));
 	});
 
+	test('isEmpty on pre', function() {
+		var elm = DOM.create('pre', null, '  ');
+		equal(false, DOM.isEmpty(elm));
+	});
+
 	test('isEmpty with list of elements considered non-empty without schema', function() {
 		var domWithoutSchema = new tinymce.dom.DOMUtils(document, {keep_values: true});
 
