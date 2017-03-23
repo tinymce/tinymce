@@ -17,6 +17,7 @@ define(
       FieldSchema.defaulted('stepSize', 1),
       FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.defaulted('snapToGrid', false),
+      FieldSchema.defaulted('snapOffset', 0),
       FieldSchema.strict('initialValue'),
       
       FieldSchema.state('value', function (spec) { return Cell(spec.initialValue); }),
