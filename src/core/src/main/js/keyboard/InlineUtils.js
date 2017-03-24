@@ -15,13 +15,14 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.text.Bidi'
   ],
-  function (Fun, Option, Options, CaretContainer, CaretPosition, CaretUtils, CaretWalker, DOMUtils, Bidi) {
+  function (Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, Bidi) {
     var isInlineTarget = function (elm) {
       return DOMUtils.DOM.is(elm, 'a[href],code');
     };
@@ -55,14 +56,11 @@ define(
     };
 
     var findCaretPositionIn = function (node, forward) {
-      var caretWalker = new CaretWalker(node);
-      var startPos = forward ? CaretPosition.before(node) : CaretPosition.after(node);
-      return Option.from(forward ? caretWalker.next(startPos) : caretWalker.prev(startPos));
+      return CaretFinder.positionIn(forward, node);
     };
 
     var findCaretPosition = function (rootNode, forward, from) {
-      var caretWalker = new CaretWalker(rootNode);
-      return Option.from(forward ? caretWalker.next(from) : caretWalker.prev(from));
+      return CaretFinder.fromPosition(forward, rootNode, from);
     };
 
     var normalizePosition = function (forward, pos) {
