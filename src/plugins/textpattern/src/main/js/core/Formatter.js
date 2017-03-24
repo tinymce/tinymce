@@ -11,7 +11,6 @@ define(
     var splitContainer = function (container, pattern, offset, startOffset, delta) {
 
       // Split text node and remove start/end from text node
-      // debugger;
       container = startOffset > 0 ? container.splitText(startOffset) : container;
       container.splitText(offset - startOffset - delta);
       container.deleteData(0, pattern.start.length);

@@ -38,6 +38,10 @@ define(
       return textEnd === pattern.end;
     };
 
+    var hasContent = function (offset, delta, pattern) {
+      return (offset - delta - pattern.end.length - pattern.start.length) > 0;
+    };
+
     // Finds the best matching end pattern
     var findEndPattern = function (patterns, text, offset, delta) {
       var pattern, i;
@@ -46,7 +50,7 @@ define(
       // Find best matching end
       for (i = 0; i < sortedPatterns.length; i++) {
         pattern = sortedPatterns[i];
-        if (pattern.end !== undefined && isMatchingPattern(pattern, text, offset, delta)) {
+        if (pattern.end !== undefined && isMatchingPattern(pattern, text, offset, delta) && hasContent(offset, delta, pattern)) {
           return pattern;
         }
       }
