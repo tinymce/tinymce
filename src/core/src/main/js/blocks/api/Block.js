@@ -13,53 +13,77 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
-    'tinymce.core.caret.CaretPosition',
-    'tinymce.core.caret.CaretWalker'
+    'tinymce.core.blocks.BlockSelection',
+    'tinymce.core.blocks.BlockUtils',
+    'tinymce.core.EditorSelection'
   ],
-  function (Fun, Option, Element, Selectors, CaretPosition, CaretWalker) {
-    return function (editor, guid) {
-      var findByGuid = function () {
-        return Selectors.one('[data-mce-block-id="' + guid + '"]', Element.fromDom(editor.getBody()));
-      };
+  function (Fun, Option, Remove, Element, BlockSelection, BlockUtils, EditorSelection) {
+    var getRootElement = function (editor) {
+      return Option.from(editor.getBody()).map(Element.fromDom);
+    };
 
-      var dom = function () {
-        return findByGuid().getOr(null);
+    var dom = function (editor, uuid, spec) {
+      return function () {
+        return getRootElement(editor).bind(function (rootElement) {
+          return BlockUtils.findByGuid(rootElement, uuid);
+        }).map(function (element) {
+          return element.dom();
+        }).getOr(null);
       };
+    };
 
-      var select = function () {
-        findByGuid().map(function (element) {
-          editor.selection.select(element.dom());
+    var select = function (editor, uuid, spec) {
+      return function () {
+        getRootElement(editor).bind(function (rootElement) {
+          BlockSelection.select(rootElement, uuid).map(function (element) {
+            EditorSelection.select(editor, element);
+          });
         });
       };
+    };
 
-      var findPosition = function (rootElement, forward) {
-        var walker = new CaretWalker(editor.getBody());
-        var caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
-        return Option.from(forward ? walker.next(caretPosition) : walker.prev(caretPosition));
+    var unselect = function (editor, uuid, spec) {
+      return function (forward) {
+        return getRootElement(editor).bind(function (rootElement) {
+          return EditorSelection.getSelectedElement(editor).bind(function (selectedElement) {
+            return BlockSelection.unselect(rootElement, selectedElement, forward).map(function (range) {
+              EditorSelection.setRawRange(editor, range);
+              return range;
+            });
+          });
+        }).isSome();
       };
+    };
 
-      var unselect = function (forward) {
-        findPosition(editor.getBody(), forward).fold(
-          function () {
-            return findPosition(editor.getBody(), !forward);
-          },
-          Option.some
-        ).map(function (pos) {
-          editor.selection.setRng(pos.toRange());
+    var remove = function (editor, uuid, spec) {
+      return function () {
+        return getRootElement(editor).bind(function (rootElement) {
+          BlockUtils.findByGuid(rootElement, uuid).map(function (element) {
+            spec.remove(nu(editor, uuid, spec));
+
+            if (unselect(false)) {
+              Remove.remove(element);
+            } else {
+              editor.setContent('');
+            }
+          });
         });
       };
+    };
 
-      var remove = function () {
-      };
-
+    var nu = function (editor, uuid, spec) {
       return {
-        dom: dom,
-        select: select,
-        unselect: unselect,
-        remove: remove
+        dom: dom(editor, uuid, spec),
+        select: select(editor, uuid, spec),
+        unselect: unselect(editor, uuid, spec),
+        remove: remove(editor, uuid, spec)
       };
+    };
+
+    return {
+      nu: nu
     };
   }
 );

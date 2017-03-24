@@ -25,9 +25,10 @@ define(
     'tinymce.core.blocks.api.Block',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretWalker',
-    'tinymce.core.dom.Empty'
+    'tinymce.core.dom.Empty',
+    'tinymce.core.EditorSelection'
   ],
-  function (Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, Traverse, Block, CaretPosition, CaretWalker, Empty) {
+  function (Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, Traverse, Block, CaretPosition, CaretWalker, Empty, EditorSelection) {
     var isJustBeforeRoot = function (rootElement) {
       return function (element) {
         return Traverse.parent(element).map(function (parent) {
@@ -137,13 +138,14 @@ define(
     var createFromSpec = function (editor, spec) {
       return Future.nu(function (resolve) {
         var uuid = Id.generate('block');
-        var api = Block(editor, uuid);
+        var api = Block.nu(editor, uuid, spec);
         var insert = spec.insert();
 
         insert(api, function (element) {
           var sugarElement = Element.fromDom(element);
           Attr.setAll(sugarElement, {
             contenteditable: 'false',
+            'data-mce-block-type': spec.id(),
             'data-mce-block-id': uuid
           });
           resolve(sugarElement);
@@ -152,7 +154,9 @@ define(
     };
 
     var getValidRange = function (editor) {
-      return validateRange(Element.fromDom(editor.getBody()), editor.selection.getRng());
+      return EditorSelection.getRawRng().bind(function (rawRange) {
+        return validateRange(Element.fromDom(editor.getBody()), rawRange);
+      });
     };
 
     var insert = function (editor, spec) {
@@ -161,14 +165,14 @@ define(
           var rootElement = Element.fromDom(editor.getBody());
           insertBlockAtCaret(rootElement, element, range)
             .map(function (element) {
-              editor.selection.select(element.dom());
+              EditorSelection.select(editor, element);
             });
         });
       });
     };
 
     var canInsert = function (editor) {
-      return getValidRange(editor.selection.getRng()).isSome();
+      return getValidRange(editor).isSome();
     };
 
     return {

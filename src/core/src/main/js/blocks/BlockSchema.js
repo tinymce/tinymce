@@ -25,6 +25,7 @@ define(
     };
 
     var blockSchema = [
+      FieldSchema.strictOf('id', ofType('string')),
       FieldSchema.defaulted('type', 'simple'),
       FieldSchema.strictOf('title', ofType('string')),
       FieldSchema.strictOf('icon', ofType('string')),

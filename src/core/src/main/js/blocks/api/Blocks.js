@@ -12,16 +12,17 @@ define(
   'tinymce.core.blocks.api.Blocks',
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'tinymce.core.blocks.BlockSchema',
     'tinymce.core.blocks.InsertBlock'
   ],
-  function (Fun, Option, BlockSchema, InsertBlock) {
+  function (Fun, Merger, Option, BlockSchema, InsertBlock) {
     return function (editor) {
       var blocks = { };
 
       var register = function (id, spec) {
-        blocks[id] = BlockSchema.asStruct(spec);
+        blocks[id] = BlockSchema.asStruct(Merger.merge({ id: id }, spec));
       };
 
       var insert = function (id) {
