@@ -9,8 +9,10 @@ define(
 
   function (TreeWalker, Tools, Patterns) {
     var splitContainer = function (container, pattern, offset, startOffset, delta) {
+
       // Split text node and remove start/end from text node
-      container = container.splitText(startOffset);
+      // debugger;
+      container = startOffset > 0 ? container.splitText(startOffset) : container;
       container.splitText(offset - startOffset - delta);
       container.deleteData(0, pattern.start.length);
       container.deleteData(container.data.length - pattern.end.length, pattern.end.length);
@@ -21,7 +23,6 @@ define(
     // Handles inline formats like *abc* and **abc**
     var applyInlineFormat = function (editor, patterns, space) {
       var selection, dom, rng, container, offset, startOffset, text, patternRng, pattern, delta, format;
-
 
       selection = editor.selection;
       dom = editor.dom;
@@ -72,8 +73,11 @@ define(
 
       format = editor.formatter.get(pattern.format);
       if (format && format[0].inline) {
-        container = splitContainer(container, pattern, offset, startOffset, delta);
-        editor.formatter.apply(pattern.format, {}, container);
+        editor.undoManager.transact(function () {
+          container = splitContainer(container, pattern, offset, startOffset, delta);
+          editor.formatter.apply(pattern.format, {}, container);
+        });
+
         return container;
       }
     };

@@ -2,10 +2,11 @@ define(
   'tinymce.plugins.textpattern.core.KeyHandler',
 
   [
+    'tinymce.core.util.VK',
     'tinymce.plugins.textpattern.core.Formatter'
   ],
 
-  function (Formatter) {
+  function (VK, Formatter) {
     function handleEnter(editor, patterns) {
       var rng, wrappedTextNode;
 
@@ -20,7 +21,7 @@ define(
       Formatter.applyBlockFormat(editor, patterns);
     }
 
-    function handleSpace(editor, patterns) {
+    function handleInlineKey(editor, patterns) {
       var wrappedTextNode, lastChar, lastCharNode, rng, dom;
 
       wrappedTextNode = Formatter.applyInlineFormat(editor, patterns, true);
@@ -47,9 +48,43 @@ define(
       }
     }
 
+    var checkKeyEvent = function (codes, event, predicate) {
+      for (var i = 0; i < codes.length; i++) {
+        if (predicate(codes[i], event)) {
+          return true;
+        }
+      }
+    };
+
+    var checkKeyCode = function (codes, event) {
+      return checkKeyEvent(codes, event, function (code, event) {
+        return code === event.keyCode && VK.modifierPressed(event) === false;
+      });
+    };
+
+    var checkCharCode = function (chars, event) {
+      return checkKeyEvent(chars, event, function (chr, event) {
+        return chr.charCodeAt(0) === event.charCode;
+      });
+    };
+
+    var shouldTrigger = function (event) {
+
+
+      // for (var i = 0; i < triggers.length; i++) {
+      //   if (event.key.charCodeAt(0) === triggers[i].charCodeAt(0)) {
+      //     return true;
+      //   }
+      // }
+      // return false;
+    };
+
     return {
       handleEnter: handleEnter,
-      handleSpace: handleSpace
+      handleInlineKey: handleInlineKey,
+      shouldTrigger: shouldTrigger,
+      checkCharCode: checkCharCode,
+      checkKeyCode: checkKeyCode
     };
   }
 );

@@ -18,24 +18,35 @@ define(
   'tinymce.plugins.textpattern.Plugin',
   [
     'tinymce.core.PluginManager',
+    'tinymce.core.util.Delay',
     'tinymce.core.util.VK',
-    'tinymce.plugins.textpattern.core.Settings',
+    'tinymce.plugins.textpattern.core.Formatter',
     'tinymce.plugins.textpattern.core.KeyHandler',
-    'tinymce.plugins.textpattern.core.Formatter'
+    'tinymce.plugins.textpattern.core.Settings'
   ],
-  function (PluginManager, VK, Settings, KeyHandler, Formatter) {
+  function (PluginManager, Delay, VK, Formatter, KeyHandler, Settings) {
     PluginManager.add('textpattern', function (editor) {
       var patterns = Settings.getPatterns(editor.settings);
+      var charCodes = [',', '.', ';', ':', '!', '?'];
+      var keyCodes = [32];
 
       editor.on('keydown', function (e) {
-        if (e.keyCode == 13 && !VK.modifierPressed(e)) {
+        if (e.keyCode === 13 && !VK.modifierPressed(e)) {
           KeyHandler.handleEnter(editor, patterns);
         }
       }, true);
 
       editor.on('keyup', function (e) {
-        if (e.keyCode == 32 && !VK.modifierPressed(e)) {
-          KeyHandler.handleSpace(editor, patterns);
+        if (KeyHandler.checkKeyCode(keyCodes, e)) {
+          KeyHandler.handleInlineKey(editor, patterns);
+        }
+      });
+
+      editor.on('keypress', function (e) {
+        if (KeyHandler.checkCharCode(charCodes, e)) {
+          Delay.setEditorTimeout(editor, function () {
+            KeyHandler.handleInlineKey(editor, patterns);
+          });
         }
       });
 

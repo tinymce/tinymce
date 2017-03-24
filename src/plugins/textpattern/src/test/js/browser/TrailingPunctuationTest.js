@@ -2,47 +2,82 @@ asynctest(
   'browser.tinymce.plugins.textpattern.TrailingPunctuationTest',
   [
     'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
     'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.textpattern.Plugin',
-    'tinymce.themes.modern.Theme',
-    'tinymce.plugins.textpattern.test.Utils'
+    'tinymce.plugins.textpattern.test.Utils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (ApproxStructure, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyDom, TinyLoader, TinyUi, TextpatternPlugin, ModernTheme, Utils) {
+  function (ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, Step, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, TinyUi, TextpatternPlugin, Utils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TextpatternPlugin();
 
+    var sTypeChar = function (editor, character) {
+      return Step.sync(function () {
+        var charCode = character.charCodeAt(0);
+        editor.fire('keypress', { charCode: charCode });
+      });
+    };
+
+    var sTypeAndTrigger = function (tinyApis, editor) {
+      return function (label, patternText, trigger, tag, rawText) {
+        return Logger.t(label, GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
+          tinyApis.sFocus,
+          tinyApis.sSetCursor([0, 0], patternText.length + 1),
+          sTypeChar(editor, trigger),
+          Waiter.sTryUntil(
+            'wait for format',
+            tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.element(tag, {
+                        children: [
+                          s.text(str.is(rawText))
+                        ]
+                      }),
+                      s.text(str.is(trigger))
+                    ]
+                  })
+                ]
+              });
+            })), 100, 4000
+          )
+        ]));
+      };
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyUi = TinyUi(editor);
       var tinyApis = TinyApis(editor);
-      var tinyActions = TinyActions(editor);
+      var tnt = sTypeAndTrigger(tinyApis, editor);
 
       Pipeline.async({}, [
-        Step.wait(100),
-        Utils.sSetContentAndPressKey(tinyApis, tinyActions, '*test*.', Keys.space()),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.element('em', {}),
-                  s.text(str.is('.'))
-                ]
-              })
-            ]
-          });
-        })),
-        Step.wait(50000)
+        tnt('em with ,', '*a*', ',', 'em', 'a'),
+        tnt('strong with ,', '**a**', ',', 'strong', 'a'),
+        tnt('em with .', '*a*', '.', 'em', 'a'),
+        tnt('strong with .', '**a**', '.', 'strong', 'a'),
+        tnt('em with ;', '*a*', ';', 'em', 'a'),
+        tnt('strong with ;', '**a**', ';', 'strong', 'a'),
+        tnt('em with :', '*a*', ':', 'em', 'a'),
+        tnt('strong with :', '**a**', ':', 'strong', 'a'),
+        tnt('em with !', '*a*', '!', 'em', 'a'),
+        tnt('strong with !', '**a**', '!', 'strong', 'a'),
+        tnt('em with ?', '*a*', '?', 'em', 'a'),
+        tnt('strong with ?', '**a**', '?', 'strong', 'a')
       ], onSuccess, onFailure);
     }, {
       plugins: 'textpattern',

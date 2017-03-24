@@ -25,12 +25,17 @@ define(
           continue;
         }
 
-        if (patterns[i].end && text.lastIndexOf(patterns[i].end) != text.length - patterns[i].end.length) {
+        if (patterns[i].end && text.lastIndexOf(patterns[i].end) !== (text.length - patterns[i].end.length)) {
           continue;
         }
 
         return patterns[i];
       }
+    };
+
+    var isMatchingPattern = function (pattern, text, offset, delta) {
+      var textEnd = text.substr(offset - pattern.end.length - delta, pattern.end.length);
+      return textEnd === pattern.end;
     };
 
     // Finds the best matching end pattern
@@ -41,7 +46,7 @@ define(
       // Find best matching end
       for (i = 0; i < sortedPatterns.length; i++) {
         pattern = sortedPatterns[i];
-        if (pattern.end && text.substr(offset - pattern.end.length - delta, pattern.end.length) === pattern.end) {
+        if (pattern.end !== undefined && isMatchingPattern(pattern, text, offset, delta)) {
           return pattern;
         }
       }
