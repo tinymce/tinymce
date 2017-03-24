@@ -63,11 +63,13 @@ define(
           BlockUtils.findByGuid(rootElement, uuid).map(function (element) {
             spec.remove(nu(editor, uuid, spec));
 
-            if (unselect(false)) {
+            if (unselect(editor, uuid, spec)(false)) {
               Remove.remove(element);
             } else {
               editor.setContent('');
             }
+
+            editor.nodeChanged();
           });
         });
       };

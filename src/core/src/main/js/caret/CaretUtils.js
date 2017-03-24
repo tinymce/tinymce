@@ -32,7 +32,8 @@ define(
       isCaretContainerBlock = CaretContainer.isCaretContainerBlock,
       curry = Fun.curry,
       isElement = NodeType.isElement,
-      isCaretCandidate = CaretCandidate.isCaretCandidate;
+      isCaretCandidate = CaretCandidate.isCaretCandidate,
+      isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
     function isForwards(direction) {
       return direction > 0;
@@ -58,7 +59,7 @@ define(
       var walker = new TreeWalker(node, rootNode);
 
       if (isBackwards(direction)) {
-        if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+        if (isContentEditableFalse(node) || isCaretContainerBlock(node) || isBogusAll(node)) {
           node = skipCaretContainers(walker.prev, true);
           if (predicateFn(node)) {
             return node;
@@ -73,7 +74,7 @@ define(
       }
 
       if (isForwards(direction)) {
-        if (isContentEditableFalse(node) || isCaretContainerBlock(node)) {
+        if (isContentEditableFalse(node) || isCaretContainerBlock(node) || isBogusAll(node)) {
           node = skipCaretContainers(walker.next, true);
           if (predicateFn(node)) {
             return node;

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Blocks Demo Page</title>
+<script src="../../../config/bolt/bootstrap-demo.js"></script>
+<script>
+ephox.bolt.module.api.main('tinymce.core.demo.BlocksDemo');
+</script>
+<style>
+blockquote {
+  border-left: 3px solid rgba(0,0,0,.8);
+  padding-left: 20px;
+  margin: 0;
+}
+
+.mce-edit-focus {
+  outline: 1px solid blue;
+}
+
+.tinymce {
+  margin: 10px;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid gray;
+}
+
+table, td {
+  border: 1px dashed gray;
+}
+</style>
+</head>
+
+<body>
+<h2>Blocks Demo Page</h2>
+<div id="ephox-ui">
+  <div class="tinymce" style="width: 900px; min-height: 100px">
+      <h2>Lorem ipsum dolor sit amet</h2>
+      <p>
+        <img src="https://www.tinymce.com/images/glyph-tinymce@2x.png" style="width: 100px; float: right">
+        Lorem ipsum <b>lorem ipsum</b> dolor sit amet, consectetur adipiscing elit. Morbi ultricies posuere felis sed interdum. Quisque nec diam
+        nec purus gravida dapibus
+      </p>
+      <h3>Fusce aliquet tincidunt</h3>
+      <p>
+        <a name="anchor"></a>eget non <a href="http://www.tinymce.com">nulla</a>. Ut eu vestibulum libero. Vestibulum pretium est vitae metus auctor, quis fermentum mi
+        luctus. Fusce aliquet tincidunt massa vitae scelerisque. Vivamus in tellus risus. Mauris auctor metus ut gravida feugiat.
+        Nunc consequat urna eu augue commodo, eget malesuada odio fringilla. Morbi vitae turpis in elit laoreet malesuada a nec massa.
+      </p>
+    <table>
+      <tbody>
+        <tr>
+          <td>Lorem ipsum dolor sit amet</td>
+          <td>Lorem ipsum dolor sit amet</td>
+        </tr>
+        <tr>
+          <td>Vivamus in tellus risus</td>
+          <td>Vivamus in tellus risus</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

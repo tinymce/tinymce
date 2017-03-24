@@ -13,11 +13,15 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.blocks.api.Block',
     'tinymce.core.blocks.BlockSchema',
+    'tinymce.core.blocks.BlockUtils',
     'tinymce.core.blocks.InsertBlock'
   ],
-  function (Fun, Merger, Option, BlockSchema, InsertBlock) {
+  function (Fun, Merger, Obj, Option, Element, Block, BlockSchema, BlockUtils, InsertBlock) {
     return function (editor) {
       var blocks = { };
 
@@ -38,14 +42,23 @@ define(
       };
 
       var getAll = function () {
-        return blocks;
+        return Obj.mapToArray(blocks, function (spec, key) {
+          return spec;
+        });
+      };
+
+      var createApi = function (element, spec) {
+        return Option.from(element).map(function (element) {
+          return Block.nu(editor, BlockUtils.getUuid(Element.fromDom(element)), spec);
+        }).getOr(null);
       };
 
       return {
         register: register,
         insert: insert,
         canInsert: canInsert,
-        getAll: getAll
+        getAll: getAll,
+        createApi: createApi
       };
     };
   }

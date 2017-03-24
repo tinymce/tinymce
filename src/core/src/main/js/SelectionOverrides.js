@@ -855,7 +855,7 @@ define(
         styles.push(fakeCaret.getCss());
         styles.push(
           rootClass + ' .mce-offscreen-selection {' +
-          'position: absolute;' +
+          'position: fixed;' +
           'left: -9999999999px;' +
           'max-width: 1000000px;' +
           '}' +

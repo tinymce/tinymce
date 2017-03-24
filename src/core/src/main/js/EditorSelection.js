@@ -31,7 +31,7 @@ define(
     };
 
     var getRawRange = function (editor, range) {
-      return Option.from(editor.selection.getRng()).map(Element.fromDom);
+      return Option.from(editor.selection.getRng());
     };
 
     var getSelectedElement = function (editor) {

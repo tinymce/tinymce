@@ -25,6 +25,10 @@ define(
       return Attr.has(element, 'data-mce-block-type');
     };
 
+    var getUuid = function (element) {
+      return Attr.get(element, 'data-mce-block-id');
+    };
+
     var isRoot = function (rootElm) {
       return function (elm) {
         return Compare.eq(elm, rootElm);
@@ -36,7 +40,9 @@ define(
     };
 
     return {
+      isRoot: isRoot,
       findByGuid: findByGuid,
+      getUuid: getUuid,
       isContentBlock: isContentBlock,
       findParentBlock: findParentBlock
     };

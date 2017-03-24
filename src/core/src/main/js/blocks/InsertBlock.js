@@ -21,14 +21,19 @@ define(
     'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.node.Fragment',
     'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.PredicateFind',
     'ephox.sugar.api.search.Traverse',
     'tinymce.core.blocks.api.Block',
+    'tinymce.core.blocks.BlockUtils',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.Empty',
     'tinymce.core.EditorSelection'
   ],
-  function (Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, Traverse, Block, CaretPosition, CaretWalker, Empty, EditorSelection) {
+  function (
+    Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, PredicateFind, Traverse, Block, BlockUtils, CaretPosition, CaretWalker, Empty,
+    EditorSelection
+  ) {
     var isJustBeforeRoot = function (rootElement) {
       return function (element) {
         return Traverse.parent(element).map(function (parent) {
@@ -37,12 +42,8 @@ define(
       };
     };
 
-    var last = function (xs) {
-      return xs.length > 0 ? Option.some(xs[xs.length - 1]) : Option.none();
-    };
-
-    var findSplitBlock = function (rootElement, node) {
-      return last(Traverse.parents(node, isJustBeforeRoot(rootElement)));
+    var findSplitBlock = function (rootElement, element) {
+      return PredicateFind.closest(element, isJustBeforeRoot(rootElement), BlockUtils.isRoot(rootElement));
     };
 
     var getBeforeFragmentNodes = function (rootElement, range) {
@@ -154,7 +155,7 @@ define(
     };
 
     var getValidRange = function (editor) {
-      return EditorSelection.getRawRng().bind(function (rawRange) {
+      return EditorSelection.getRawRange(editor).bind(function (rawRange) {
         return validateRange(Element.fromDom(editor.getBody()), rawRange);
       });
     };
