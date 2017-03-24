@@ -8,7 +8,7 @@ define(
       return typeof editorSettings.link_assume_external_targets === 'boolean' ? editorSettings.link_assume_external_targets : false;
     };
 
-    var contextToolbar = function (editorSettings) {
+    var hasContextToolbar = function (editorSettings) {
       return typeof editorSettings.link_context_toolbar === 'boolean' ? editorSettings.link_context_toolbar : false;
     };
 
@@ -62,7 +62,7 @@ define(
 
     return {
       assumeExternalTargets: assumeExternalTargets,
-      contextToolbar: contextToolbar,
+      hasContextToolbar: hasContextToolbar,
       getLinkList: getLinkList,
       hasDefaultLinkTarget: hasDefaultLinkTarget,
       getDefaultLinkTarget: getDefaultLinkTarget,

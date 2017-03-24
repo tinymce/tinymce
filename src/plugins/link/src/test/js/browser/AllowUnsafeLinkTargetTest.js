@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .AllowUnsafeLinkTargetTest',
+  'browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',

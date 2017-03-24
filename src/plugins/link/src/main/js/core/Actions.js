@@ -70,7 +70,7 @@ define(
     var leftClickedOnAHref = function (editor) {
       return function (elm) {
         var sel, rng, node;
-        if (Settings.contextToolbar(editor.settings) && !isContextMenuVisible(editor) && Utils.isLink(elm)) {
+        if (Settings.hasContextToolbar(editor.settings) && !isContextMenuVisible(editor) && Utils.isLink(elm)) {
           sel = editor.selection;
           rng = sel.getRng();
           node = rng.startContainer;
