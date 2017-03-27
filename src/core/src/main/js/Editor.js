@@ -566,7 +566,7 @@ define(
           self.orgDisplay = elm.style.display;
 
           if (typeof settings.theme != "function") {
-            w = settings.width || DOM.getStyle(elm, 'width') || elm.offsetWidth;
+            w = settings.width || DOM.getStyle(elm, 'width') || '100%';
             h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
             minHeight = settings.min_height || 100;
             re = /^[0-9\.]+(|px)$/i;
