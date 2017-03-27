@@ -18,6 +18,7 @@
     "test": "grunt bedrock-manual"
   },
   "dependencies": {
+    "@ephox/boulder": "git+ssh://git@stash:7999/van/boulder.git",
     "@ephox/katamari": "^1.1.0",
     "@ephox/sugar": "^3.1.0"
   },
