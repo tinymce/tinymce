@@ -166,21 +166,37 @@ define(
           return api.dom();
         }
       });
+
+      editor.blocks.register('hr', {
+        title: 'Hr',
+        icon: 'hr',
+        toolbar: [
+          {
+            icon: 'remove',
+            tooltip: 'Remove block',
+            action: function (api) {
+              api.remove();
+            }
+          }
+        ],
+
+        insert: function (api, callback) {
+          callback(createHtml(function (h) {
+            return h('hr');
+          }));
+        }
+      });
     };
 
     var registerButtons = function (editor) {
-      editor.addButton('insert-blockquote', {
-        text: 'Insert blockquote',
-        onclick: function () {
-          editor.blocks.insert('blockquote');
-        }
-      });
-
-      editor.addButton('insert-figure', {
-        text: 'Insert figure',
-        onclick: function () {
-          editor.blocks.insert('figure');
-        }
+      Arr.each(editor.blocks.getAll(), function (spec) {
+        editor.addButton('insert-' + spec.id(), {
+          tooltip: spec.title(),
+          icon: spec.icon(),
+          onclick: function () {
+            editor.blocks.insert(spec.id());
+          }
+        });
       });
     };
 
@@ -221,8 +237,8 @@ define(
       theme: 'inlite',
       plugins: 'image table link anchor paste contextmenu textpattern autolink',
       skin_url: '../../../../skins/lightgray/dist/lightgray',
-      insert_toolbar: 'insert-blockquote insert-figure quickimage quicktable',
-      selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+      insert_toolbar: 'insert-blockquote insert-figure insert-hr',
+      selection_toolbar: 'bold italic | quicklink',
       inline: true,
       paste_data_images: true,
       setup: function (editor) {
