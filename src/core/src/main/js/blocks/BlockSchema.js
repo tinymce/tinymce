@@ -33,12 +33,13 @@ define(
         FieldSchema.defaulted('type', 'button'),
         FieldSchema.strictOf('icon', ofType('string')),
         FieldSchema.strictOf('tooltip', ofType('string')),
+        FieldSchema.defaulted('selectorSelected', ''),
         FieldSchema.strictOf('action', ofType('function'))
       ])),
       FieldSchema.strictOf('insert', ofType('function')),
-      FieldSchema.defaulted('remove', Fun.noop),
-      FieldSchema.defaulted('load', Fun.noop),
-      FieldSchema.defaulted('save', Fun.noop)
+      FieldSchema.strictOf('remove', ofType('function')),
+      FieldSchema.strictOf('load', ofType('function')),
+      FieldSchema.strictOf('save', ofType('function'))
     ];
 
     var asStruct = function (obj) {

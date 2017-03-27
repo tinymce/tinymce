@@ -11,16 +11,16 @@
 define(
   'tinymce.core.blocks.BlockSelection',
   [
-    'tinymce.core.blocks.BlockUtils',
+    'tinymce.core.blocks.BlockDom',
     'tinymce.core.caret.CaretFinder'
   ],
-  function (BlockUtils, CaretFinder) {
+  function (BlockDom, CaretFinder) {
     var select = function (rootElement, uuid) {
-      return BlockUtils.findByGuid(rootElement, uuid);
+      return BlockDom.findByGuid(rootElement, uuid);
     };
 
     var unselect = function (rootElement, selectedElement, forward) {
-      return BlockUtils.findParentBlock(rootElement, selectedElement)
+      return BlockDom.findParentBlock(rootElement, selectedElement)
         .bind(function (blockElement) {
           return CaretFinder.fromElementOrReverse(forward, rootElement.dom(), blockElement.dom());
         }).map(function (pos) {

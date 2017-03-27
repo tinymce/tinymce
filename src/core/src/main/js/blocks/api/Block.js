@@ -16,10 +16,10 @@ define(
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'tinymce.core.blocks.BlockSelection',
-    'tinymce.core.blocks.BlockUtils',
+    'tinymce.core.blocks.BlockDom',
     'tinymce.core.EditorSelection'
   ],
-  function (Fun, Option, Remove, Element, BlockSelection, BlockUtils, EditorSelection) {
+  function (Fun, Option, Remove, Element, BlockSelection, BlockDom, EditorSelection) {
     var getRootElement = function (editor) {
       return Option.from(editor.getBody()).map(Element.fromDom);
     };
@@ -27,7 +27,7 @@ define(
     var dom = function (editor, uuid, spec) {
       return function () {
         return getRootElement(editor).bind(function (rootElement) {
-          return BlockUtils.findByGuid(rootElement, uuid);
+          return BlockDom.findByGuid(rootElement, uuid);
         }).map(function (element) {
           return element.dom();
         }).getOr(null);
@@ -60,7 +60,7 @@ define(
     var remove = function (editor, uuid, spec) {
       return function () {
         return getRootElement(editor).bind(function (rootElement) {
-          BlockUtils.findByGuid(rootElement, uuid).map(function (element) {
+          BlockDom.findByGuid(rootElement, uuid).map(function (element) {
             spec.remove(nu(editor, uuid, spec));
 
             if (unselect(editor, uuid, spec)(false)) {

@@ -27,6 +27,78 @@ blockquote {
 table, td {
   border: 1px dashed gray;
 }
+
+.mce-content-body blockquote {
+	margin: 2em;
+}
+
+.mce-content-body  blockquote footer {
+	color: #86909b;
+	font-size: 0.9em;
+	font-style: normal;
+	margin-left: 1.3em;
+	position: relative;
+}
+
+.mce-content-body  blockquote footer:after {
+	content: '\2014';
+	position: absolute;
+	left: -1.3em;
+	top: 0;
+}
+
+*[data-mce-block-placeholder] {
+	position: relative;
+}
+
+*[data-mce-block-placeholder]:before {
+	content: attr(data-mce-block-placeholder);
+	position: absolute;
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+*[data-mce-block-focus] {
+  outline: 2px solid #2d8ac7;
+}
+
+figure {
+  clear: both;
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+figure img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+figure.alignleft, figure.alignright {
+  clear: none;
+}
+
+figure.alignleft {
+  float: left;
+  margin: 0.5em 1em 0.5em 0;
+  width: 50%;
+}
+
+figure.alignright {
+  float: right;
+  margin: 0.5em 0 0.5em 1em;
+  width: 50%;
+}
+
+figcaption {
+  margin-top: 0.5em;
+  color: #86909b;
+  font-size: 0.9em;
+  font-style: italic;
+}
 </style>
 </head>
 
@@ -41,6 +113,17 @@ table, td {
         nec purus gravida dapibus
       </p>
       <h3>Fusce aliquet tincidunt</h3>
+
+      <blockquote data-mce-block-type="blockquote">
+        <p>abc</p>
+        <footer>123</footer>
+      </blockquote>
+
+      <figure data-mce-block-type="figure">
+        <img src="https://cldup.com/Bc9YxmqFnJ.jpg">
+        <figcaption>Some kind of figcaption</figcaption>
+      </figure>
+
       <p>
         <a name="anchor"></a>eget non <a href="http://www.tinymce.com">nulla</a>. Ut eu vestibulum libero. Vestibulum pretium est vitae metus auctor, quis fermentum mi
         luctus. Fusce aliquet tincidunt massa vitae scelerisque. Vivamus in tellus risus. Mauris auctor metus ut gravida feugiat.

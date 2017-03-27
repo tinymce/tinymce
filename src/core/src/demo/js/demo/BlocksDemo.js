@@ -41,10 +41,35 @@ define(
     TextPatternPlugin();
     InliteTheme();
 
+    var html = function (name, attrs, child) {
+      var children = Array.prototype.slice.call(arguments, 2);
+      var elm = document.createElement(name);
+
+      for (var key in attrs) {
+        if (attrs.hasOwnProperty(key)) {
+          elm.setAttribute(key, attrs[key]);
+        }
+      }
+
+      children.forEach(function (child) {
+        elm.appendChild(child);
+      });
+
+      return elm;
+    };
+
+    var createHtml = function (f) {
+      return f(html);
+    };
+
+    var editable = function (elm, selector) {
+      elm.querySelector(selector).setAttribute('contenteditable', 'true');
+    };
+
     var registerBlocks = function (editor) {
-      editor.blocks.register('my-block', {
-        title: 'My block',
-        icon: 'my-icon',
+      editor.blocks.register('blockquote', {
+        title: 'Block quote',
+        icon: 'blockquote',
         toolbar: [
           {
             icon: 'remove',
@@ -62,19 +87,99 @@ define(
             }
           }
         ],
+
         insert: function (api, callback) {
-          var element = document.createElement('div');
-          element.innerHTML = 'My fancy block';
-          callback(element);
+          callback(createHtml(function (h) {
+            return h('blockquote', { },
+              h('p', { contenteditable: 'true', 'data-mce-block-placeholder': 'Write quote\u2026' }),
+              h('footer', { contenteditable: 'true', 'data-mce-block-placeholder': 'Write citation\u2026' })
+            );
+          }));
+        },
+
+        load: function (api) {
+          editable(api.dom(), 'p');
+          editable(api.dom(), 'footer');
+          return api.dom();
+        }
+      });
+
+      editor.blocks.register('figure', {
+        title: 'Figure',
+        icon: 'image',
+        toolbar: [
+          {
+            icon: 'remove',
+            tooltip: 'Remove figure',
+            action: function (api) {
+              api.remove();
+            }
+          },
+
+          {
+            icon: 'settings',
+            tooltip: 'Unselect figure',
+            action: function (api) {
+              api.unselect();
+            }
+          },
+
+          {
+            icon: 'alignleft',
+            tooltip: 'Align left',
+            selectorSelected: '.alignleft',
+            action: function (api) {
+              api.dom().className = 'alignleft';
+            }
+          },
+
+          {
+            icon: 'aligncenter',
+            tooltip: 'Align center',
+            selectorSelected: '*:not(.alignleft):not(.alignright)',
+            action: function (api) {
+              api.dom().className = '';
+            }
+          },
+
+          {
+            icon: 'alignright',
+            tooltip: 'Align right',
+            selectorSelected: '.alignright',
+            action: function (api) {
+              api.dom().className = 'alignright';
+            }
+          }
+        ],
+
+        insert: function (api, callback) {
+          callback(createHtml(function (h) {
+            return h('figure', { },
+              h('img', { src: 'https://cldup.com/Bc9YxmqFnJ.jpg' }),
+              h('figcaption', { contenteditable: 'true', 'data-mce-block-placeholder': 'Write caption\u2026' })
+            );
+          }));
+        },
+
+        load: function (api) {
+          editable(api.dom(), 'figcaption');
+          return api.dom();
         }
       });
     };
 
     var registerButtons = function (editor) {
-      editor.addButton('my-block', {
-        text: 'Block 1',
+      editor.addButton('insert-blockquote', {
+        text: 'Insert blockquote',
         onclick: function () {
-          editor.blocks.insert('my-block');
+          editor.blocks.insert('blockquote');
+        }
+      });
+
+      editor.addButton('insert-figure', {
+        text: 'Insert figure',
+        onclick: function () {
+          editor.blocks.insert('figure');
         }
       });
     };
@@ -87,9 +192,20 @@ define(
           editor.addButton(uuid, {
             icon: item.icon(),
             tooltip: item.tooltip(),
+            onPostrender: function (e) {
+              var selector = item.selectorSelected();
+              var control = e.control;
+
+              if (selector) {
+                editor.selection.selectorChanged('*[data-mce-block-type]' + selector, function (state) {
+                  control.active(state);
+                });
+              }
+            },
             onclick: function () {
               var action = item.action();
               action(editor.blocks.createApi(editor.selection.getNode(), spec));
+              editor.nodeChanged();
             }
           });
 
@@ -105,7 +221,7 @@ define(
       theme: 'inlite',
       plugins: 'image table link anchor paste contextmenu textpattern autolink',
       skin_url: '../../../../skins/lightgray/dist/lightgray',
-      insert_toolbar: 'my-block quickimage quicktable',
+      insert_toolbar: 'insert-blockquote insert-figure quickimage quicktable',
       selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
       inline: true,
       paste_data_images: true,

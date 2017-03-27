@@ -24,14 +24,14 @@ define(
     'ephox.sugar.api.search.PredicateFind',
     'ephox.sugar.api.search.Traverse',
     'tinymce.core.blocks.api.Block',
-    'tinymce.core.blocks.BlockUtils',
+    'tinymce.core.blocks.BlockDom',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.Empty',
     'tinymce.core.EditorSelection'
   ],
   function (
-    Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, PredicateFind, Traverse, Block, BlockUtils, CaretPosition, CaretWalker, Empty,
+    Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, PredicateFind, Traverse, Block, BlockDom, CaretPosition, CaretWalker, Empty,
     EditorSelection
   ) {
     var isJustBeforeRoot = function (rootElement) {
@@ -43,7 +43,7 @@ define(
     };
 
     var findSplitBlock = function (rootElement, element) {
-      return PredicateFind.closest(element, isJustBeforeRoot(rootElement), BlockUtils.isRoot(rootElement));
+      return PredicateFind.closest(element, isJustBeforeRoot(rootElement), BlockDom.isRoot(rootElement));
     };
 
     var getBeforeFragmentNodes = function (rootElement, range) {
@@ -161,13 +161,16 @@ define(
     };
 
     var insert = function (editor, spec) {
+      var rootElement = Element.fromDom(editor.getBody());
+
       createFromSpec(editor, spec).get(function (element) {
         getValidRange(editor).map(function (range) {
-          var rootElement = Element.fromDom(editor.getBody());
-          insertBlockAtCaret(rootElement, element, range)
-            .map(function (element) {
-              EditorSelection.select(editor, element);
-            });
+          editor.undoManager.transact(function () {
+            insertBlockAtCaret(rootElement, element, range)
+              .map(function (element) {
+                EditorSelection.select(editor, element);
+              });
+          });
         });
       });
     };
