@@ -474,6 +474,23 @@ define("tinymce/tableplugin/TableGrid", [
 			return rows;
 		}
 
+		function countSelectedCols() {
+			var cols = 0;
+
+			each(grid, function(row) {
+				each(row, function(cell) {
+					if (isCellSelected(cell)) {
+						cols++;
+					}
+				});
+				if (cols) {
+					return false;
+				}
+			});
+
+			return cols;
+		}
+
 		function deleteTable() {
 			var rng = dom.createRng();
 
@@ -676,7 +693,11 @@ define("tinymce/tableplugin/TableGrid", [
 		function reduceRowSpans(grid, startX, startY, endX, endY) {
 			var count = 0;
 
-			for (var y = startY; y <= endY; y++) {
+			if (endY - startY < 1) {
+				return 0;
+			}
+
+			for (var y = startY + 1; y <= endY; y++) {
 				var allCells = findItemsOutsideOfRange(getRow(grid, y), startX, endX);
 				var fakeCells = getFakeCells(allCells);
 
@@ -695,7 +716,11 @@ define("tinymce/tableplugin/TableGrid", [
 		function reduceColSpans(grid, startX, startY, endX, endY) {
 			var count = 0;
 
-			for (var x = startX; x <= endX; x++) {
+			if (endX - startX < 1) {
+				return 0;
+			}
+
+			for (var x = startX + 1; x <= endX; x++) {
 				var allCells = findItemsOutsideOfRange(getColumn(grid, x), startY, endY);
 				var fakeCells = getFakeCells(allCells);
 
@@ -836,7 +861,7 @@ define("tinymce/tableplugin/TableGrid", [
 				});
 
 				if (before) {
-					return !posY;
+					return posY === undefined;
 				}
 			});
 
@@ -892,6 +917,13 @@ define("tinymce/tableplugin/TableGrid", [
 			}
 		}
 
+		function insertRows(before, num) {
+			num = num || getSelectedRows().length || 1;
+			for (var i = 0; i < num; i++) {
+				insertRow(before);
+			}
+		}
+
 		function insertCol(before) {
 			var posX, lastCell;
 
@@ -908,7 +940,7 @@ define("tinymce/tableplugin/TableGrid", [
 				});
 
 				if (before) {
-					return !posX;
+					return posX === undefined;
 				}
 			});
 
@@ -939,6 +971,13 @@ define("tinymce/tableplugin/TableGrid", [
 					lastCell = cell;
 				}
 			});
+		}
+
+		function insertCols(before, num) {
+			num = num || countSelectedCols() || 1;
+			for (var i = 0; i < num; i++) {
+				insertCol(before);
+			}
 		}
 
 		function getSelectedCells(grid) {
@@ -1319,7 +1358,9 @@ define("tinymce/tableplugin/TableGrid", [
 			split: split,
 			merge: merge,
 			insertRow: insertRow,
+			insertRows: insertRows,
 			insertCol: insertCol,
+			insertCols: insertCols,
 			splitCols: splitCols,
 			deleteCols: deleteCols,
 			deleteRows: deleteRows,
@@ -1719,7 +1760,115 @@ define("tinymce/tableplugin/Quirks", [
 			});
 		}
 
+		/**
+		 * When caption is empty and we continue to delete, caption gets deleted along with the contents.
+		 * So, we take over delete operation (both forward and backward) and once caption is empty, we do
+		 * prevent it from disappearing.
+		 */
+		function handleDeleteInCaption() {
+			var isTableCaptionNode = function(node) {
+				return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
+			};
+
+			var restoreCaretPlaceholder = function(node, insertCaret) {
+				var rng = editor.selection.getRng();
+				var caretNode = node.ownerDocument.createTextNode('\u00a0');
+
+				// we could always append it, but caretNode somehow gets appended before caret,
+				// rather then after it, effectively preventing backspace deletion
+				if (rng.startOffset) {
+					node.insertBefore(caretNode, node.firstChild);
+				} else {
+					node.appendChild(caretNode);
+				}
+
+				if (insertCaret) {
+					// put the caret into the placeholder
+					editor.selection.select(caretNode, true);
+					editor.selection.collapse(true);
+				}
+			};
+
+			var deleteBtnPressed = function(e) {
+				return (e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented();
+			};
+
+			var getSingleChildNode = function(node) {
+				return node.firstChild === node.lastChild && node.firstChild;
+			};
+
+			var isTextNode = function(node) {
+				return node && node.nodeType === 3;
+			};
+
+			var getSingleChr = function(node) {
+				var childNode = getSingleChildNode(node);
+				return isTextNode(childNode) && childNode.data.length === 1 ? childNode.data : null;
+			};
+
+			var hasNoCaretPlaceholder = function(node) {
+				var childNode = getSingleChildNode(node);
+				var chr = getSingleChr(node);
+				return childNode && !isTextNode(childNode) || chr && !isNBSP(chr);
+			};
+
+			var isEmptyNode = function(node) {
+				return editor.dom.isEmpty(node) || isNBSP(getSingleChr(node));
+			};
+
+			var isNBSP = function(chr) {
+				return chr === '\u00a0';
+			};
+
+			editor.on('keydown', function(e) {
+				if (!deleteBtnPressed(e)) {
+					return;
+				}
+
+				var container = editor.dom.getParent(editor.selection.getStart(), 'caption');
+				if (!isTableCaptionNode(container)) {
+					return;
+				}
+
+				// in IE caption collapses if caret placeholder is deleted (and it is very much possible)
+				if (Env.ie) {
+					if (!editor.selection.isCollapsed()) {
+						// if the whole contents are selected, caret placeholder will be deleted too
+						// and we take over delete operation here to restore it if this happens
+						editor.undoManager.transact(function () {
+							editor.execCommand('Delete');
+
+							if (isEmptyNode(container)) {
+								// caret springs off from the caption (to the first td), we need to bring it back as well
+								restoreCaretPlaceholder(container, true);
+							}
+						});
+
+						e.preventDefault();
+					} else if (hasNoCaretPlaceholder(container)) {
+						// if caret placeholder got accidentally deleted and caption will collapse
+						// after this operation, we need to put placeholder back
+						restoreCaretPlaceholder(container);
+					}
+				}
+
+				// TODO:
+				// 1. in Chrome it is easily possible to select beyond the boundaries of the caption,
+				// currently this results in removal of the contents with the whole caption as well;
+				// 2. we could take over delete operation to address this, but then we will need to adjust
+				// the selection, otherwise delete operation will remove first row of the table too;
+				// 3. current behaviour is logical, so it has sense to leave it like that, until a better
+				// solution
+
+				if (isEmptyNode(container)) {
+					e.preventDefault();
+				}
+			});
+		}
+
+
 		deleteTable();
+		handleDeleteInCaption();
 
 		if (Env.webkit) {
 			moveWebKitSelection();
@@ -2409,36 +2558,47 @@ define("tinymce/tableplugin/Dialogs", [
 		self.cell = function() {
 			var dom = editor.dom, cellElm, data, classListCtrl, cells = [];
 
+			function setAttrib(elm, name, value) {
+				if (cells.length === 1 || value) {
+					dom.setAttrib(elm, name, value);
+				}
+			}
+
+			function setStyle(elm, name, value) {
+				if (cells.length === 1 || value) {
+					dom.setStyle(elm, name, value);
+				}
+			}
+
 			function onSubmitCellForm() {
 				updateStyle(dom, this);
 				data = Tools.extend(data, this.toJSON());
 
 				editor.undoManager.transact(function() {
 					each(cells, function(cellElm) {
-						editor.dom.setAttribs(cellElm, {
-							scope: data.scope,
-							style: data.style,
-							'class': data['class']
-						});
-
-						editor.dom.setStyles(cellElm, {
-							width: addSizeSuffix(data.width),
-							height: addSizeSuffix(data.height)
-						});
+						setAttrib(cellElm, 'scope', data.scope);
+						setAttrib(cellElm, 'style', data.style);
+						setAttrib(cellElm, 'class', data['class']);
+						setStyle(cellElm, 'width', addSizeSuffix(data.width));
+						setStyle(cellElm, 'height', addSizeSuffix(data.height));
 
 						// Switch cell type
-						if (data.type && cellElm.nodeName.toLowerCase() != data.type) {
+						if (data.type && cellElm.nodeName.toLowerCase() !== data.type) {
 							cellElm = dom.rename(cellElm, data.type);
 						}
 
-						// Apply/remove alignment
-						unApplyAlign(cellElm);
+						// Remove alignment
+						if (cells.length === 1) {
+							unApplyAlign(cellElm);
+							unApplyVAlign(cellElm);
+						}
+
+						// Apply alignment
 						if (data.align) {
 							editor.formatter.apply('align' + data.align, {}, cellElm);
 						}
 
-						// Apply/remove vertical alignment
-						unApplyVAlign(cellElm);
+						// Apply vertical alignment
 						if (data.valign) {
 							editor.formatter.apply('valign' + data.valign, {}, cellElm);
 						}
@@ -2462,26 +2622,40 @@ define("tinymce/tableplugin/Dialogs", [
 				return;
 			}
 
-			data = {
-				width: removePxSuffix(dom.getStyle(cellElm, 'width') || dom.getAttrib(cellElm, 'width')),
-				height: removePxSuffix(dom.getStyle(cellElm, 'height') || dom.getAttrib(cellElm, 'height')),
-				scope: dom.getAttrib(cellElm, 'scope'),
-				'class': dom.getAttrib(cellElm, 'class')
-			};
+			if (cells.length > 1) {
+				data = {
+					width: '',
+					height: '',
+					scope: '',
+					'class': '',
+					align: '',
+					style: '',
+					type: cellElm.nodeName.toLowerCase()
+				};
+			} else {
+				data = {
+					width: removePxSuffix(dom.getStyle(cellElm, 'width') || dom.getAttrib(cellElm, 'width')),
+					height: removePxSuffix(dom.getStyle(cellElm, 'height') || dom.getAttrib(cellElm, 'height')),
+					scope: dom.getAttrib(cellElm, 'scope'),
+					'class': dom.getAttrib(cellElm, 'class')
+				};
 
-			data.type = cellElm.nodeName.toLowerCase();
+				data.type = cellElm.nodeName.toLowerCase();
 
-			each('left center right'.split(' '), function(name) {
-				if (editor.formatter.matchNode(cellElm, 'align' + name)) {
-					data.align = name;
-				}
-			});
+				each('left center right'.split(' '), function(name) {
+					if (editor.formatter.matchNode(cellElm, 'align' + name)) {
+						data.align = name;
+					}
+				});
 
-			each('top middle bottom'.split(' '), function(name) {
-				if (editor.formatter.matchNode(cellElm, 'valign' + name)) {
-					data.valign = name;
-				}
-			});
+				each('top middle bottom'.split(' '), function(name) {
+					if (editor.formatter.matchNode(cellElm, 'valign' + name)) {
+						data.valign = name;
+					}
+				});
+
+				appendStylesToData(dom, data, cellElm);
+			}
 
 			if (editor.settings.table_cell_class_list) {
 				classListCtrl = {
@@ -2584,8 +2758,6 @@ define("tinymce/tableplugin/Dialogs", [
 			};
 
 			if (editor.settings.table_cell_advtab !== false) {
-				appendStylesToData(dom, data, cellElm);
-
 				editor.windowManager.open({
 					title: "Cell properties",
 					bodyType: 'tabpanel',
@@ -2615,6 +2787,18 @@ define("tinymce/tableplugin/Dialogs", [
 		self.row = function() {
 			var dom = editor.dom, tableElm, cellElm, rowElm, classListCtrl, data, rows = [], generalRowForm;
 
+			function setAttrib(elm, name, value) {
+				if (rows.length === 1 || value) {
+					dom.setAttrib(elm, name, value);
+				}
+			}
+
+			function setStyle(elm, name, value) {
+				if (rows.length === 1 || value) {
+					dom.setStyle(elm, name, value);
+				}
+			}
+
 			function onSubmitRowForm() {
 				var tableElm, oldParentElm, parentElm;
 
@@ -2625,17 +2809,12 @@ define("tinymce/tableplugin/Dialogs", [
 					var toType = data.type;
 
 					each(rows, function(rowElm) {
-						editor.dom.setAttribs(rowElm, {
-							scope: data.scope,
-							style: data.style,
-							'class': data['class']
-						});
+						setAttrib(rowElm, 'scope', data.scope);
+						setAttrib(rowElm, 'style', data.style);
+						setAttrib(rowElm, 'class', data['class']);
+						setStyle(rowElm, 'height', addSizeSuffix(data.height));
 
-						editor.dom.setStyles(rowElm, {
-							height: addSizeSuffix(data.height)
-						});
-
-						if (toType != rowElm.parentNode.nodeName.toLowerCase()) {
+						if (toType !== rowElm.parentNode.nodeName.toLowerCase()) {
 							tableElm = dom.getParent(rowElm, 'table');
 
 							oldParentElm = rowElm.parentNode;
@@ -2657,7 +2836,10 @@ define("tinymce/tableplugin/Dialogs", [
 						}
 
 						// Apply/remove alignment
-						unApplyAlign(rowElm);
+						if (rows.length === 1) {
+							unApplyAlign(rowElm);
+						}
+
 						if (data.align) {
 							editor.formatter.apply('align' + data.align, {}, rowElm);
 						}
@@ -2685,19 +2867,31 @@ define("tinymce/tableplugin/Dialogs", [
 				return;
 			}
 
-			data = {
-				height: removePxSuffix(dom.getStyle(rowElm, 'height') || dom.getAttrib(rowElm, 'height')),
-				scope: dom.getAttrib(rowElm, 'scope'),
-				'class': dom.getAttrib(rowElm, 'class')
-			};
+			if (rows.length > 1) {
+				data = {
+					height: '',
+					scope: '',
+					'class': '',
+					align: '',
+					type: rowElm.parentNode.nodeName.toLowerCase()
+				};
+			} else {
+				data = {
+					height: removePxSuffix(dom.getStyle(rowElm, 'height') || dom.getAttrib(rowElm, 'height')),
+					scope: dom.getAttrib(rowElm, 'scope'),
+					'class': dom.getAttrib(rowElm, 'class')
+				};
 
-			data.type = rowElm.parentNode.nodeName.toLowerCase();
+				data.type = rowElm.parentNode.nodeName.toLowerCase();
 
-			each('left center right'.split(' '), function(name) {
-				if (editor.formatter.matchNode(rowElm, 'align' + name)) {
-					data.align = name;
-				}
-			});
+				each('left center right'.split(' '), function(name) {
+					if (editor.formatter.matchNode(rowElm, 'align' + name)) {
+						data.align = name;
+					}
+				});
+
+				appendStylesToData(dom, data, rowElm);
+			}
 
 			if (editor.settings.table_row_class_list) {
 				classListCtrl = {
@@ -2729,7 +2923,7 @@ define("tinymce/tableplugin/Dialogs", [
 						type: 'listbox',
 						name: 'type',
 						label: 'Row type',
-						text: 'None',
+						text: 'Header',
 						maxWidth: null,
 						values: [
 							{text: 'Header', value: 'thead'},
@@ -2756,8 +2950,6 @@ define("tinymce/tableplugin/Dialogs", [
 			};
 
 			if (editor.settings.table_row_advtab !== false) {
-				appendStylesToData(dom, data, rowElm);
-
 				editor.windowManager.open({
 					title: "Row properties",
 					data: data,
@@ -3619,13 +3811,17 @@ define("tinymce/tableplugin/ResizeBars", [
 					var newLeft = editor.dom.getPos(dragBar).x;
 					index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_COL_DATA_ATTRIBUTE), 10);
 					delta = isRtl() ? initialLeft - newLeft : newLeft - initialLeft;
-					adjustWidth(hoverTable, delta, index);
+					if (Math.abs(delta) >= 1) {			// simple click with no real resize (<1px) must not add CSS properties
+						adjustWidth(hoverTable, delta, index);
+					}
 				} else if (isRow(dragBar)) {
 					var initialTop = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_ROW_DATA_INITIAL_TOP_ATTRIBUTE), 10);
 					var newTop = editor.dom.getPos(dragBar).y;
 					index = parseInt(editor.dom.getAttrib(dragBar, RESIZE_BAR_ROW_DATA_ATTRIBUTE), 10);
 					delta = newTop - initialTop;
-					adjustHeight(hoverTable, delta, index);
+					if (Math.abs(delta) >= 1) {			// simple click with no real resize (<1px) must not add CSS properties
+						adjustHeight(hoverTable, delta, index);
+					}
 				}
 				refreshBars(hoverTable);
 				editor.nodeChanged();
@@ -3967,14 +4163,14 @@ define("tinymce/tableplugin/Plugin", [
 
 		if (editor.settings.table_grid === false) {
 			editor.addMenuItem('inserttable', {
-				text: 'Insert table',
+				text: 'Table',
 				icon: 'table',
 				context: 'table',
 				onclick: dialogs.table
 			});
 		} else {
 			editor.addMenuItem('inserttable', {
-				text: 'Insert table',
+				text: 'Table',
 				icon: 'table',
 				context: 'table',
 				ariaHideMenu: true,
@@ -4124,7 +4320,7 @@ define("tinymce/tableplugin/Plugin", [
 
 		editor.on('Init', function() {
 			self.cellSelection = new CellSelection(editor, function (selecting) {
-				if (selecting) {
+				if (selecting && resizeBars) {
 					resizeBars.clearBars();
 				}
 			});
@@ -4164,19 +4360,19 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableInsertRowBefore: function(grid) {
-				grid.insertRow(true);
+				grid.insertRows(true);
 			},
 
 			mceTableInsertRowAfter: function(grid) {
-				grid.insertRow();
+				grid.insertRows();
 			},
 
 			mceTableInsertColBefore: function(grid) {
-				grid.insertCol(true);
+				grid.insertCols(true);
 			},
 
 			mceTableInsertColAfter: function(grid) {
-				grid.insertCol();
+				grid.insertCols();
 			},
 
 			mceTableDeleteCol: function(grid) {
@@ -4397,4 +4593,4 @@ define("tinymce/tableplugin/Plugin", [
 
 	PluginManager.add('table', Plugin);
 });
-})(this);
+})(window);
