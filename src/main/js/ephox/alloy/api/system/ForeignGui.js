@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.events.DescribedHandler',
+    'ephox.alloy.events.SimulatedEvent',
     'ephox.alloy.foreign.ForeignCache',
     'ephox.alloy.registry.Tagger',
     'ephox.boulder.api.FieldSchema',
@@ -20,11 +21,16 @@ define(
     'ephox.sugar.api.node.Node'
   ],
 
-  function (GuiFactory, Gui, DescribedHandler, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Obj, Options, Insert, DomEvent, Node) {
+  function (
+    GuiFactory, Gui, DescribedHandler, SimulatedEvent, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Obj, Options, Insert, DomEvent,
+    Node
+  ) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('root'),
       FieldSchema.strictArrayOfObj('dispatchers', [
+        // Given the initial target, what is the target of this particular behaviour?
         FieldSchema.strict('getTarget'),
+        // The configuration for the behaviours
         FieldSchema.strict('alloyConfig')
       ]),
       FieldSchema.defaulted('insertion', function (root, system) {
@@ -49,38 +55,13 @@ define(
       });
     };
 
-    var createEvent = function (event, target) {
-      var source = Cell(target);
-
-      var stopper = Cell(false);
-
-      var cutter = Cell(false);
-
-      var stop = function () {
-        stopper.set(true);
-      };
-
-      var cut = function () {
-        cutter.set(true);
-      };
-
-      return {
-        stop: stop,
-        cut: cut,
-        event: Fun.constant(event),
-        setSource: source.set,
-        getSource: source.get
-      };
-    };
-
     var getProxy = function (event, target) {
       // Setup the component wrapping for the target element
       var component = GuiFactory.build(
         GuiFactory.external({ element: target })
       );
 
-      // Create a simulated event
-      var simulatedEvent = createEvent(event, target);
+      var simulatedEvent = SimulatedEvent.fromTarget(event, target);
       
       return {
         component: Fun.constant(component),
