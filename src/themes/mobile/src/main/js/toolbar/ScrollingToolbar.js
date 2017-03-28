@@ -60,13 +60,10 @@ define(
                     {
                       dom: {
                         tag: 'div',
-                        classes: [ Styles.resolve('toolbar-group') ].concat(gSpec.extraClass !== undefined ? [ gSpec.extraClass ] : [ ]),
+                        classes: [ Styles.resolve('toolbar-group') ].concat(gSpec.scrollable === true ? Styles.resolve([ 'toolbar-scrollable-group' ]) : [ ]),
                         attributes: {
-                          'aria-label': gSpec.label !== undefined ? gSpec.label : 'Untranslated'
-                        },
-                        styles: gSpec.scrollable === true ? {
-                          'flex-grow': '1'
-                        } : { }
+                          'aria-label': gSpec.label
+                        }
                       },
 
                       events: gSpec.scrollable === true ? Objects.wrap(

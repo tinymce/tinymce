@@ -58,6 +58,12 @@
   height: 100%;
 }
 
+.tinymce-mobile-toolbar-group.tinymce-mobile-toolbar-scrollable-group {
+  /* Allow the scrollable group to fill all the space between the edge groups */
+  flex-grow: 1;
+}
+
+
 .tinymce-mobile-toolbar-group > div {
   display: flex;
   flex: 1;
