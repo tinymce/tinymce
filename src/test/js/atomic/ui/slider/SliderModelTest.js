@@ -4,12 +4,11 @@ test(
   [
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.ui.slider.SliderModel',
-    'ephox.katamari.api.Option',
     'ephox.wrap-jsverify.Jsc',
     'global!Math'
   ],
 
-  function (RawAssertions, SliderModel, Option, Jsc, Math) {
+  function (RawAssertions, SliderModel, Jsc, Math) {
     var arb1Up = Jsc.nat.smap(function (num) { return num + 1; }, function (num) { return num - 1; });
 
     var arbRanged = Jsc.bless({
@@ -94,7 +93,7 @@ test(
         Jsc.nat
       ],
       function (data, bounds, xValue) {
-        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none());
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true);
         var f = Math.abs((newValue - data.min) / data.stepSize);
         RawAssertions.assertEq('Checking factors correctly: ' + newValue, true, 
           Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -112,7 +111,7 @@ test(
         Jsc.nat
       ],
       function (data, bounds, xValue) {
-        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none());
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid);
         RawAssertions.assertEq(
           'Assert within range: ' + newValue, true, 
           newValue >= data.min - 1 && newValue <= data.max + 1
