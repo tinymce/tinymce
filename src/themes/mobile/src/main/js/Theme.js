@@ -63,7 +63,6 @@ define(
               label: 'the action group',
               scrollable: true,
               items: [
-                // NOTE: This are not toggle buttons. They do no show the current state
                 Buttons.forToolbarCommand(editor, 'undo', { }, { }),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic')
