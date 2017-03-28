@@ -15,10 +15,11 @@ define(
     'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
-    'tinymce.themes.mobile.ui.IosContainer'
+    'tinymce.themes.mobile.ui.IosContainer',
+    'tinymce.themes.mobile.ui.LinkButton'
   ],
 
-  function (GuiFactory, Cell, Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, TinyChannels, Styles, Buttons, IosContainer) {
+  function (GuiFactory, Cell, Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, TinyChannels, Styles, Buttons, IosContainer, LinkButton) {
     var fail = function (message) {
       throw new Error(message);
     };
@@ -76,7 +77,8 @@ define(
                 // NOTE: This are not toggle buttons. They do no show the current state
                 Buttons.forToolbarCommand(editor, 'undo', { }),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
-                Buttons.forToolbarStateCommand(editor, 'italic')
+                Buttons.forToolbarStateCommand(editor, 'italic'),
+                LinkButton.sketch(ios, editor),
               ]
             },
             {

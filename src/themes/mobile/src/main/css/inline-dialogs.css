@@ -1,0 +1,64 @@
+.tinymce-mobile-serialised-dialog {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  min-height: 1.5em;
+}
+
+.tinymce-mobile-serialised-dialog-chain {
+  transition: left linear 0.15s;
+  display: flex;
+  width: 100%;
+}
+
+.tinymce-mobile-serialised-dialog-screen {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between
+}
+
+.tinymce-mobile-serialised-dialog.tinymce-mobile-toolbar-group-item {
+  padding-left: 0em;
+  padding-right: 0em;
+}
+
+@keyframes opacityFade {
+  from { opacity: 1 }
+  to { opacity: 0 }
+}
+
+.tinymce-mobile-toolbar-previous, .tinymce-mobile-toolbar-next {
+  display: flex;
+  align-items: center;
+}
+
+.tinymce-mobile-serialised-dialog-hint .tinymce-mobile-toolbar-previous,
+.tinymce-mobile-serialised-dialog-hint .tinymce-mobile-toolbar-next {
+  animation: opacityFade 0.8s 3 alternate;
+}
+
+:not(.tinymce-mobile-serialised-dialog-hint) .tinymce-mobile-toolbar-previous,
+:not(.tinymce-mobile-serialised-dialog-hint) .tinymce-mobile-toolbar-next {
+  opacity: 0;
+}
+
+.tinymce-mobile-toolbar-previous.tinymce-mobile-toolbar-navigation-disabled:before,
+.tinymce-mobile-toolbar-next.tinymce-mobile-toolbar-navigation-disabled:before {
+  visibility: hidden;
+}
+
+.tinymce-mobile-toolbar-previous:before,
+.tinymce-mobile-toolbar-next:before
+ {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  /*color: yellow;*/
+  font-family: Arial;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #5a5959;
+  font-weight: bold;
+}
