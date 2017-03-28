@@ -7,13 +7,11 @@ define(
     'ephox.alloy.events.SimulatedEvent',
     'ephox.katamari.api.Adt',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Cell',
-    'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (DescribedHandler, EventSource, SimulatedEvent, Adt, Arr, Cell, Fun, Traverse, Error) {
+  function (DescribedHandler, EventSource, SimulatedEvent, Adt, Arr, Traverse, Error) {
     var adt = Adt.generate([
       { stopped: [ ] },
       { resume: [ 'element' ] },
@@ -75,25 +73,7 @@ define(
     };
 
     var broadcast = function (listeners, rawEvent, logger) {
-      /* TODO: Remove dupe */
-      var stopper = Cell(false);
-
-      var stop = function () {
-        stopper.set(true);
-      };
-
-      var simulatedEvent = {
-        stop: stop,
-        cut: Fun.noop, // cutting has no meaning for a broadcasted event
-        event: Fun.constant(rawEvent),
-        // Nor do targets really
-        setTarget: Fun.die(
-          new Error('Cannot set target of a broadcasted event')
-        ),
-        getTarget: Fun.die(
-          new Error('Cannot get target of a broadcasted event')
-        )
-      };
+      var simulatedEvent = SimulatedEvent.fromExternal(rawEvent);
 
       Arr.each(listeners, function (listener) {
         var descHandler = listener.descHandler();
@@ -101,7 +81,7 @@ define(
         handler(simulatedEvent);
       });
 
-      return stopper.get() === true;
+      return simulatedEvent.isStopped();
     };
 
     var triggerUntilStopped = function (lookup, eventType, rawEvent, logger) {
