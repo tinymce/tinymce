@@ -61,6 +61,8 @@
 .tinymce-mobile-toolbar-group > div {
   display: flex;
   flex: 1;
+  height: 100%;
+  align-items: center;
 }
 
 .tinymce-mobile-context-toolbar label {
@@ -114,9 +116,13 @@ input {
   flex-grow: 1;
 }
 
-.tinymce-mobile-slider.tinymce-mobile-toolbar-group-item {
-  padding-left: 0em;
-  padding-right: 0em;
+
+.tinymce-mobile-toolbar-group-item.tinymce-mobile-toolbar-button {
+  display: flex;
+  align-items: center;
+  height: 80%;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 

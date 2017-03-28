@@ -12,12 +12,13 @@ define(
     'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
+    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.IosContainer'
   ],
 
-  function (GuiFactory, Cell, Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, Styles, Buttons, IosContainer) {
+  function (GuiFactory, Cell, Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, TinyChannels, Styles, Buttons, IosContainer) {
     var fail = function (message) {
       throw new Error(message);
     };
@@ -45,6 +46,10 @@ define(
               useFixed: true
             }
           }
+        });
+
+        editor.on('nodeChange', function () {
+          ios.system().broadcastOn([ TinyChannels.refreshUi() ], { });
         });
 
         editor.on('init', function () {
@@ -83,9 +88,10 @@ define(
               label: 'the action group',
               scrollable: true,
               items: [
-                Buttons.forToolbarCommand(editor, 'undo'),
-                Buttons.forToolbarCommand(editor, 'bold'),
-                Buttons.forToolbarCommand(editor, 'italic')
+                // NOTE: This are not toggle buttons. They do no show the current state
+                Buttons.forToolbarCommand(editor, 'undo', { }),
+                Buttons.forToolbarStateCommand(editor, 'bold'),
+                Buttons.forToolbarStateCommand(editor, 'italic')
               ]
             },
             {
