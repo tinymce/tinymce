@@ -33,21 +33,6 @@ define(
         var ios = IosContainer();
         args.targetNode.ownerDocument.body.appendChild(ios.element().dom());
 
-        var sink = GuiFactory.build({
-          dom: {
-            tag: 'div',
-            classes: [ Styles.resolve('floating-layouts') ],
-            styles: {
-              'z-index': '100'
-            }
-          },
-          behaviours: {
-            positioning: {
-              useFixed: true
-            }
-          }
-        });
-
         editor.on('nodeChange', function () {
           ios.system().broadcastOn([ TinyChannels.refreshUi() ], { });
         });
@@ -104,7 +89,6 @@ define(
           ]);
 
           ios.setToolbarGroups(mainGroups.get());
-          ios.system().add(sink);
         });
 
         return {
