@@ -43,7 +43,6 @@ define(
                     editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text.text)));
                   });
                 });
-                
                   
                 ios.restoreToolbar();
                 editor.focus();
