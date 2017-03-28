@@ -66,7 +66,7 @@ asynctest(
         '.selected { color: white; background: black; }'
       ]),
       Assertions.sAssertStructure(
-        'Checking initial struture ... nothing is selected',
+        'Checking initial structure ... nothing is selected',
         ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
             children: [
@@ -91,7 +91,7 @@ asynctest(
 
 
       Assertions.sAssertStructure(
-        'Checking struture after the first span is clicked',
+        'Checking structure after the first span is clicked',
         ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
             children: [
