@@ -46,7 +46,6 @@ define(
     };
 
     var complete = function (model, snaps) {
-      console.log('model', JSON.stringify(model.points));
       if (model.points.length === 0) return SWIPING_NONE;
       // Preserving original intention
       var firstDirection = model.points[0].direction;
