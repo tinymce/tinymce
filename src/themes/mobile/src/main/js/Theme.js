@@ -2,28 +2,20 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
-    'global!Error',
     'global!window',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
-    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.IosContainer',
     'tinymce.themes.mobile.ui.LinkButton'
   ],
 
-  function (GuiFactory, Cell, Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, TinyChannels, Styles, Buttons, IosContainer, LinkButton) {
-    var fail = function (message) {
-      throw new Error(message);
-    };
-
+  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, IosContainer, LinkButton) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
@@ -33,10 +25,6 @@ define(
 
         var ios = IosContainer();
         args.targetNode.ownerDocument.body.appendChild(ios.element().dom());
-
-        editor.on('nodeChange', function () {
-          ios.system().broadcastOn([ TinyChannels.refreshUi() ], { });
-        });
 
         editor.on('init', function () {
           ios.init({
@@ -68,17 +56,18 @@ define(
               items: [
                 Buttons.forToolbar('back', function (btn) {
                   ios.exit();
-                })              ]
+                }, { }, { })
+              ]
             },
             {
               label: 'the action group',
               scrollable: true,
               items: [
                 // NOTE: This are not toggle buttons. They do no show the current state
-                Buttons.forToolbarCommand(editor, 'undo', { }),
+                Buttons.forToolbarCommand(editor, 'undo', { }, { }),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic'),
-                LinkButton.sketch(ios, editor),
+                LinkButton.sketch(ios, editor)
               ]
             },
             {
