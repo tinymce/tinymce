@@ -27,6 +27,8 @@ define(
 
         FieldSchema.strict('onDomChanged'),
 
+        FieldSchema.defaulted('onTapContent', Fun.noop),
+
 
         FieldSchema.defaulted('onScrollToCursor', function () { return { unbind: Fun.noop }; }),
         FieldSchema.defaulted('onScrollToElement', function () { return { unbind: Fun.noop }; }),

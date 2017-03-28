@@ -1,4 +1,4 @@
-.mce-container .tinymce-mobile-disabled-mask { 
+.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask {  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,7 +9,7 @@
   background: rgba(20, 20, 20, 0.5);
 }
 
-.mce-container .tinymce-mobile-disabled-mask .tinymce-mobile-content-container {
+.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask .tinymce-mobile-content-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -26,13 +26,11 @@
   padding-right: .5em;
 }
 
-.mce-container .tinymce-mobile-disabled-mask .tinymce-mobile-content-container * {
+.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask .tinymce-mobile-content-container * {
   color: white;
   font-size: 140%;
 }
 
 .tinymce-mobile-disabled-mask .tinymce-mobile-content-container .tinymce-mobile-mask-tap-icon::before {
-  /*font-family: 'Textbox Icons', 'textboxIcons';
-  content: "\e011";*/
   content: '.'
 }

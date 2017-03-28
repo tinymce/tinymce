@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.boulder.api.ValueSchema',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.api.MobileSchema',
@@ -10,7 +11,7 @@ define(
     'tinymce.themes.mobile.touch.view.TapToEditMask'
   ],
 
-  function (ValueSchema, Insert, Css, MobileSchema, IosMode, TapToEditMask) {
+  function (ValueSchema, Fun, Insert, Css, MobileSchema, IosMode, TapToEditMask) {
     var produce = function (raw) {
       var mobile = ValueSchema.asRawOrDie(
         'Getting IosWebapp schema',
@@ -18,12 +19,9 @@ define(
         raw
       );
 
-      /* Make the toolbar scrollable */
+      /* Make the toolbar */
       Css.set(mobile.toolstrip, 'width', '100%');
-      Css.set(mobile.toolbar, 'overflow-x', 'auto');
       
-      Insert.append(mobile.socket, mobile.editor.getFrame());
-
       Css.set(mobile.container, 'position', 'relative');
       var onTap = function () {
         mask.hide();
@@ -39,7 +37,8 @@ define(
 
       return {
         enter: mode.enter,
-        exit: mode.exit
+        exit: mode.exit,
+        destroy: Fun.noop
       };
     };
 

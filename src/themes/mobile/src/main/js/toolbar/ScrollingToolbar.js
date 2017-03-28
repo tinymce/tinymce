@@ -2,23 +2,36 @@ define(
   'tinymce.themes.mobile.toolbar.ScrollingToolbar',
 
   [
+    'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.alloy.construct.EventHandler',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger'
+    'ephox.katamari.api.Merger',
+    'ephox.sugar.api.properties.Css',
+    'tinymce.themes.mobile.ios.scroll.Scrollables',
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.scroll.Scrollable'
   ],
 
-  function (GuiFactory, Container, Toolbar, ToolbarGroup, Cell, Fun, Merger) {
+  function (
+    EventRoot, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger, Css, Scrollables, Styles,
+    Scrollable
+  ) {
     return function () {
       var toolbar = GuiFactory.build(
         Toolbar.sketch(
           {
             dom: {
               tag: 'div',
-              classes: [ 'mce-container', 'mce-toolbar', 'mce-stack-layout-item' ]
+              classes: [ Styles.resolve('toolbar') ]
             },
             components: [
               Toolbar.parts().groups()
@@ -28,8 +41,14 @@ define(
             },
             behaviours: {
               toggling: {
-                toggleClass: 'showing-inline-form',
-                toggleOnExecute: false
+                toggleClass: Styles.resolve('context-toolbar'),
+                toggleOnExecute: false,
+                aria: {
+                  mode: 'none'
+                }
+              },
+              keying: {
+                mode: 'cyclic'
               }
             },
             shell: true,
@@ -41,11 +60,27 @@ define(
                     {
                       dom: {
                         tag: 'div',
-                        classes: [ 'mce-container', 'mce-flow-layout-item', 'mce-btn-group' ].concat(gSpec.extraClass !== undefined ? [ gSpec.extraClass ] : [ ]),
+                        classes: [ Styles.resolve('toolbar-group') ].concat(gSpec.extraClass !== undefined ? [ gSpec.extraClass ] : [ ]),
                         attributes: {
                           'aria-label': gSpec.label !== undefined ? gSpec.label : 'Untranslated'
-                        }
+                        },
+                        styles: gSpec.scrollable === true ? {
+                          'flex-grow': '1'
+                        } : { }
                       },
+
+                      events: gSpec.scrollable === true ? Objects.wrap(
+                        SystemEvents.systemInit(),
+                        EventHandler.nu({
+                          run: function (component, simulatedEvent) {
+                            if (EventRoot.isSource(component, simulatedEvent)) {
+                              Css.set(component.element(), 'overflow-x', 'auto');
+                              Scrollables.markAsHorizontal(component.element());
+                              Scrollable.register(component.element());
+                            }
+                          }
+                        })
+                      ) : { },
 
                       components: [
                         Container.sketch({
@@ -55,8 +90,7 @@ define(
                         })
                       ],
                       markers: {
-                        // FIX: Use a tinymce class.
-                        itemClass: 'ephox-chameleon-toolbar-top-item'
+                        itemClass: Styles.resolve('toolbar-group-item')
                       },
 
                       members: {
@@ -80,27 +114,25 @@ define(
       var wrapper = GuiFactory.build(
         Container.sketch({
           dom: {
-            classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
+            classes: [ Styles.resolve('toolstrip') ]
           },
           components: [
-            Container.sketch({
-              dom: {
-                tag: 'div',
-                classes: [ 'mce-container-body', 'mce-stack-layout' ]
-              },
-              components: [
-                GuiFactory.premade(toolbar)
-              ]
-            })
+            GuiFactory.premade(toolbar)
           ]
         })
       );
+
+      var resetGroups = function () {
+        Toolbar.setGroups(toolbar, initGroups.get());
+        Toggling.off(toolbar);
+      };
+
 
       var initGroups = Cell([ ]);
 
       var setGroups = function (gs) {
         initGroups.set(gs);
-        Toolbar.setGroups(toolbar, gs);
+        resetGroups();
       };
 
       var createGroups = function (gs) {
@@ -113,10 +145,15 @@ define(
 
       var setContextToolbar = function (gs) {
         Toolbar.setGroups(toolbar, gs);
+        Toggling.on(toolbar);
       };
 
       var restoreToolbar = function () {
-        Toolbar.setGroups(toolbar, initGroups.get());
+        if (Toggling.isOn(toolbar)) resetGroups();
+      };
+
+      var focus = function () {
+        Keying.focusIn(toolbar);
       };
 
       return {
@@ -126,7 +163,8 @@ define(
         setGroups: setGroups,
         setContextToolbar: setContextToolbar,
         restoreToolbar: restoreToolbar,
-        refresh: refresh
+        refresh: refresh,
+        focus: focus
       };
     };
 

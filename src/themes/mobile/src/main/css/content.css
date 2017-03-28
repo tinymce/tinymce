@@ -4,3 +4,11 @@
   background-color: green;
   opacity: 0.5;
 }
+
+body img {
+  max-width: 98vw;
+}
+
+body table img {
+  max-width: 95%;
+}
