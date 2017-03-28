@@ -27,34 +27,22 @@ define(
       );
     };
 
-    var snapValueOfX = function (bounds, value, min, max, step, snapStart) {
+    var snapValueOfX = function (bounds, value, min, max, step) {
       // We are snapping by the step size. Therefore, find the nearest multiple of
       // the step
-      console.log('passed in value', value);
-      return snapStart.fold(function () {
-        var initValue = value - min;
-        var extraValue = Math.round(initValue / step) * step;
-        return capValue(min + extraValue, min - 1, max + 1);
-      }, function (start) {
-        // Then calculate how far we are from a snap positions
-        var remainder = (value - start) % step;
-        var adjustment = Math.round( remainder / step);
-        
-        var snaps = Math.floor((value - start) / step);
-        var r = start + ((snaps + adjustment) * step);
-        return Math.max(start, r);
-      });
+      var initValue = value - min;
+      var extraValue = Math.round(initValue / step) * step;
+      return capValue(min + extraValue, min - 1, max + 1);
     };
 
-    var findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
+    var findValueOfX = function (bounds, min, max, xValue, step, snapToGrid) {
       var range = max - min;
       if (xValue < bounds.left) return min - 1;
       else if (xValue > bounds.right) return max + 1;
       else {
         var xOffset = Math.min(bounds.right, Math.max(xValue, bounds.left)) - bounds.left;
-        var newValue = capValue(((xOffset / bounds.width) * range) + min, min - 1, max + 1);
-        var roundedValue = Math.round(newValue);
-        return snapToGrid && newValue >= min && newValue <= max ? snapValueOfX(bounds, newValue, min, max, step, snapStart) : roundedValue;
+        var newValue = capValue(Math.round((xOffset / bounds.width) * range) + min, min - 1, max + 1);
+        return snapToGrid && newValue >= min && newValue <= max ? snapValueOfX(bounds, newValue, min, max, step) : newValue;
       }
     };
 

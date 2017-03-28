@@ -54,7 +54,7 @@ define(
     var setToX = function (spectrum, spectrumBounds, detail, xValue) {
       var value = SliderModel.findValueOfX(
         spectrumBounds, detail.min(), detail.max(),
-        xValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
+        xValue, detail.stepSize(), detail.snapToGrid()
       );
 
       fireChange(spectrum, value);
