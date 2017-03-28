@@ -12,19 +12,13 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.node.Node'
+    'ephox.sugar.api.events.DomEvent'
   ],
 
-  function (
-    GuiFactory, Gui, DescribedHandler, SimulatedEvent, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Obj, Options, Insert, DomEvent,
-    Node
-  ) {
+  function (GuiFactory, Gui, DescribedHandler, SimulatedEvent, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Fun, Options, Insert, DomEvent) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('root'),
       FieldSchema.strictArrayOfObj('dispatchers', [
@@ -38,6 +32,40 @@ define(
       })
     ]);
 
+    /*
+     * ForeignGui is an experimental concept
+     * 
+     * Essentially, the basic idea is that we want to be able to use alloy behaviours and events
+     * on elements that were not created by alloy. The common example of this is the contents inside
+     * an iframe of an editor. We did not create the content (it is also volatile), but we still
+     * want to be able to pinch it, drag it, toggle it etc. However, we don't have Component 
+     * instances for any of these things inside the alloy root ... they are completely separate.
+     * 
+     * Most behaviours (probably not all) require configuration and a connection to an alloy
+     * root to exist for a small amount of time to execute their actions. For this reason, we 
+     * create an internal alloy root for this foreign object (and insert it using insertion, so 
+     * for iframes, it would often be inserted at the document level so that it wasn't in the content), 
+     * and connect and disconnect the external elements to that. The elements themselves store their
+     * configuration so that we get garbage collecting benefits (a previous version stored them in 
+     * a separate map), and that configuration can be retrieved from the element. If it isn't there,
+     * it is recreated (and any state with it). The configuration is maintained on the DOM object
+     * itself (through DomState), and the connection to the internal alloy root (/system) is removed after
+     * execution of the action.
+     * 
+     * The connection to the internal alloy root can be required if the behaviour needs to create additional
+     * components (e.g. blockers for dragging). However, because these components are already within 
+     * the internal alloy root, they don't need to be handled in this way (they are just maintained 
+     * like normal alloy components having been built by alloy). Therefore, we exit dispatching if the
+     * target is within our internal system.
+     * 
+     * A ForeignGui is setup with a list of dispatchers. Dispatchers tell alloy which things should have
+     * alloy like behaviour. Note, that each dispatcher has a getTarget, which returns an option of element.
+     * The purpose of this is it means that you may choose to add the behaviour to an *ancestor* of the target
+     * element (e.g. table) rather than the target element itself (td). The alloyConfig lists the behaviours and
+     * events to proxy for this dispatcher.
+     */
+
+    // Not all events are supported at the moment
     var supportedEvents = [
       'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart', 'touchmove'
     ];
@@ -100,12 +128,22 @@ define(
       };
 
       var dispatchTo = function (type, event) {
-        // Do not delegate anything that happened within the internal system. It is
-        // already being handled.
+        /* 
+         * 1. Check that the event did not originate in our internal alloy root. If it did,
+         * we don't need to handle it here. The alloy root will handle it as usual.
+         * 2. Find the dispatcher based on the target element. It will find the first dispatcher
+         * that matches
+         * 3. Retrieve the configuration for this external element from its DOM state or create 
+         * it if it doesn't already exist
+         * 4. If the event is supported:
+         * a) create a thin proxy wrapping for the DOM element to have component like APIs
+         * b) add it to the internal system
+         * c) execute the event handler
+         * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
+         */
         if (gui.element().dom().contains(event.target().dom())) return;
 
         // Find if the target has an assigned dispatcher
-        console.log('Not found: ' + Node.name(event.target()));
         findDispatcher(detail.dispatchers(), event.target()).each(function (dispatchData) {
           
           var target = dispatchData.target();
@@ -114,9 +152,8 @@ define(
           // get any info for this current element, creating it if necessary
           var data = cache.getEvents(target, dispatcher.alloyConfig());
           var events = data.evts();
-        console.log(' Found: ' + Node.name(dispatchData.target()) + ', ' + Obj.keys(events).join(','));
 
-          // if this dispatcher defines this event, proxy it and fire the handler\
+          // if this dispatcher defines this event, proxy it and fire the handler
           if (Objects.hasKey(events, type)) proxyFor(event, target, events[type]);
         });
       };
@@ -127,6 +164,7 @@ define(
         Tagger.revoke(component.element());
       };
 
+      // Disconnect the foreign GUI
       var disengage = function () {
         Arr.each(domEvents, function (e) {
           e.unbind();

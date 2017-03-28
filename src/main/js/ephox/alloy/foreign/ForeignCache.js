@@ -21,6 +21,7 @@ define(
           var info = ValueSchema.asStructOrDie('foreign.cache.configuration', ValueSchema.objOf([
             FieldSchema.defaulted('events', { }),
             FieldSchema.optionObjOf('behaviours', [
+              // NOTE: Note all behaviours are supported at the moment
               Toggling.schema(),
               Dragging.schema(),
               Pinching.schema()
