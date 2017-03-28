@@ -2,7 +2,6 @@ define(
   'tinymce.themes.mobile.ui.SerialisedDialog',
 
   [
-    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Form',
@@ -13,7 +12,6 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Singleton',
-    'ephox.katamari.api.Unicode',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
@@ -23,8 +21,8 @@ define(
   ],
 
   function (
-    Toggling, SystemEvents, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Singleton, Unicode, Css, SelectorFilter, SelectorFind,
-    Width, SwipingModel, Styles
+    SystemEvents, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel,
+    Styles
   ) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('fields'),
@@ -68,12 +66,6 @@ define(
           classes: [ Styles.resolve('serialised-dialog') ]
         },
         components: [
-          {
-            dom: {
-              tag: 'span',
-              innerHtml: Unicode.zeroWidth()
-            }
-          },
           Container.sketch({
             dom: {
               tag: 'div',
@@ -93,39 +85,8 @@ define(
                   [ prevButton(i > 0) ],
                   [ Form.parts(field.name) ],
                   [ nextButton(i < spec.fields.length - 1) ]
-                ]),
-
-                behaviours: {
-                  toggling: {
-                    toggleClass: Styles.resolve('serialised-dialog-hint'),
-                    aria: {
-                      mode: 'none'
-                    }
-                  },
-                  streaming: {
-                    stream: {
-                      mode: 'throttle',
-                      delay: 1000
-                    },
-                    onStream: function (screen) {
-                      // A reflow is required to restart the animation.
-                      Toggling.off(screen);
-                      Css.reflow(screen.element());
-                      Toggling.on(screen);
-                    }
-                  }
-                },
-
-                // Transition end not quite working.
-                events: {
-                  // TODO: Add to alloy
-                  animationend: EventHandler.nu({
-                    run: function (input, simulatedEvent) {
-                      Toggling.off(input);
-                    }
-                  })
-                } 
-              })        
+                ])
+              });
             })
           })
         ],
