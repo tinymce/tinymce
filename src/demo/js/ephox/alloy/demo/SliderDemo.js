@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Slider',
@@ -15,7 +17,7 @@ define(
     'global!document'
   ],
 
-  function (Keying, Gui, Container, Slider, HtmlDisplay, Insert, DomEvent, Element, Class, Css, document) {
+  function (Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -64,6 +66,58 @@ define(
             Slider.parts().thumb()
           ]
         })        
+      );
+
+      var slider2 = HtmlDisplay.section(
+        gui,
+        'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
+        Slider.sketch({
+          dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
+
+          min: 0,
+          max: 100,
+          initialValue: 35,
+          stepSize: 40,
+          snapStart: 35,
+          snapToGrid: true,
+          parts: {
+            thumb: {
+              dom: {
+                tag: 'div',
+                styles: {
+                  'border-radius': '20px',
+                  width: '25px',
+                  height: '25px',
+                  'border': '1px solid green',
+                  background: 'transparent',
+                   display: 'flex', 'align-items': 'center', 'justify-content': 'center'
+                }
+              },
+              behaviours: {
+                replacing: { }
+              }
+            },
+            spectrum: {
+              dom: {
+                tag: 'div',
+                styles: {
+                  width: '300px', background: 'green', height: '20px'
+                }
+              }
+            }
+          },
+
+          onChange: function (slider, thumb, value) {
+            Replacing.set(thumb, [
+              GuiFactory.text(value)
+            ])
+          },
+
+          components: [
+            Slider.parts().spectrum(),
+            Slider.parts().thumb()
+          ]
+        })
       );
 
       var hueSlider = HtmlDisplay.section(
