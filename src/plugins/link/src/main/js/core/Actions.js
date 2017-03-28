@@ -14,9 +14,10 @@ define(
     'tinymce.core.util.VK',
     'tinymce.plugins.link.ui.Dialog',
     'tinymce.plugins.link.core.OpenUrl',
-    'tinymce.plugins.link.core.Utils'
+    'tinymce.plugins.link.core.Utils',
+    'tinymce.plugins.link.core.Settings'
   ],
-  function (VK, Dialog, OpenUrl, Utils) {
+  function (VK, Dialog, OpenUrl, Utils, Settings) {
     var getLink = function (editor, elm) {
       return editor.dom.getParent(elm, 'a[href]');
     };
@@ -69,7 +70,7 @@ define(
     var leftClickedOnAHref = function (editor) {
       return function (elm) {
         var sel, rng, node;
-        if (editor.settings.link_context_toolbar && !isContextMenuVisible(editor) && Utils.isLink(elm)) {
+        if (Settings.hasContextToolbar(editor.settings) && !isContextMenuVisible(editor) && Utils.isLink(elm)) {
           sel = editor.selection;
           rng = sel.getRng();
           node = rng.startContainer;

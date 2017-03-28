@@ -14,13 +14,14 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
-    'tinymce.plugins.link.core.Utils'
+    'tinymce.plugins.link.core.Utils',
+    'tinymce.plugins.link.core.Settings'
   ],
-  function (Delay, Tools, XHR, Utils) {
+  function (Delay, Tools, XHR, Utils, Settings) {
     var attachState = {};
 
     var createLinkList = function (editor, callback) {
-      var linkList = editor.settings.link_list;
+      var linkList = Settings.getLinkList(editor.settings);
 
       if (typeof linkList == "string") {
         XHR.send({
@@ -188,8 +189,8 @@ define(
 
       if (anchorElm) {
         data.target = dom.getAttrib(anchorElm, 'target');
-      } else if (editor.settings.default_link_target) {
-        data.target = editor.settings.default_link_target;
+      } else if (Settings.hasDefaultLinkTarget(editor.settings)) {
+        data.target = Settings.getDefaultLinkTarget(editor.settings);
       }
 
       if ((value = dom.getAttrib(anchorElm, 'rel'))) {
@@ -236,38 +237,38 @@ define(
         };
       }
 
-      if (editor.settings.target_list !== false) {
-        if (!editor.settings.target_list) {
-          editor.settings.target_list = [
+      if (Settings.shouldShowTargetList(editor.settings)) {
+        if (Settings.getTargetList(editor.settings) === undefined) {
+          Settings.setTargetList(editor, [
             { text: 'None', value: '' },
             { text: 'New window', value: '_blank' }
-          ];
+          ]);
         }
 
         targetListCtrl = {
           name: 'target',
           type: 'listbox',
           label: 'Target',
-          values: buildListItems(editor.settings.target_list)
+          values: buildListItems(Settings.getTargetList(editor.settings))
         };
       }
 
-      if (editor.settings.rel_list) {
+      if (Settings.hasRelList(editor.settings)) {
         relListCtrl = {
           name: 'rel',
           type: 'listbox',
           label: 'Rel',
-          values: buildListItems(editor.settings.rel_list)
+          values: buildListItems(Settings.getRelList(editor.settings))
         };
       }
 
-      if (editor.settings.link_class_list) {
+      if (Settings.hasLinkClassList(editor.settings)) {
         classListCtrl = {
           name: 'class',
           type: 'listbox',
           label: 'Class',
           values: buildListItems(
-            editor.settings.link_class_list,
+            Settings.getLinkClassList(editor.settings),
             function (item) {
               if (item.value) {
                 item.textStyle = function () {
@@ -279,7 +280,7 @@ define(
         };
       }
 
-      if (editor.settings.link_title !== false) {
+      if (Settings.shouldShowLinkTitle(editor.settings)) {
         linkTitleCtrl = {
           name: 'title',
           type: 'textbox',
@@ -327,7 +328,7 @@ define(
               title: data.title ? data.title : null
             };
 
-            if (!editor.settings.allow_unsafe_link_target) {
+            if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
               linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
             }
 
@@ -386,9 +387,11 @@ define(
             return;
           }
 
+          var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
+
           // Is not protocol prefixed
-          if ((editor.settings.link_assume_external_targets && !/^\w+:/i.test(href)) ||
-            (!editor.settings.link_assume_external_targets && /^\s*www[\.|\d\.]/i.test(href))) {
+          if ((assumeExternalTargets === true && !/^\w+:/i.test(href)) ||
+            (assumeExternalTargets === false && /^\s*www[\.|\d\.]/i.test(href))) {
             delayedConfirm(
               editor,
               'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
