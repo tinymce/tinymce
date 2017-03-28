@@ -8,6 +8,7 @@ define(
     'ephox.alloy.frame.Reader',
     'ephox.alloy.frame.Writer',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.InsertAll',
     'ephox.sugar.api.events.DomEvent',
@@ -20,7 +21,10 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, Insert, InsertAll, DomEvent, Element, Elements, Node, Css, SelectorFind, Height, Width) {
+  function (
+    SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, PlatformDetection, Insert, InsertAll, DomEvent, Element, Elements, Node, Css, SelectorFind,
+    Height, Width
+  ) {
 
     var resize = function (element, changeX, changeY) {
       document.querySelector('h2').innerHTML = 'resizing';
@@ -43,6 +47,7 @@ define(
 
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+      var platform = PlatformDetection.detect();
 
       var onNode = function (name) {
         return function (elem) {
@@ -112,9 +117,11 @@ define(
               getTarget: onNode('strong'),
               alloyConfig: {
                 behaviours: {
-                  dragging: {
-                    mode: 'touch',
-                    // blockerClass: 'blocker'
+                  dragging: platform.deviceType.isTouch() ? {
+                    mode: 'touch'
+                  } : {
+                    mode: 'mouse',
+                    blockerClass: 'blocker'
                   }
                 }
               }
