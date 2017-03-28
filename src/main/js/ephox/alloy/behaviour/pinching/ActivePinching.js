@@ -53,8 +53,6 @@ define(
         touchmove: EventHandler.nu({
           run: function (component, simulatedEvent) {
             simulatedEvent.stop();
-
-            console.log('touchmove.run');
           
             var delta = pinchInfo.state().update(mode, simulatedEvent.event());
             delta.each(function (dlt) {

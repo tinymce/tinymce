@@ -14,7 +14,7 @@ define(
     var unknown = 'unknown';
     var debugging = true;
 
-    var eventsMonitored = [ 'keydown', 'keyup', 'click' ];
+    var eventsMonitored = [ 'keydown', 'keyup' ];
 
     // Ignore these files in the error stack
     var path = [
