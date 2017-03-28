@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Replacing',
@@ -57,10 +58,10 @@ define(
   ],
 
   function (
-    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Positioning, Receiving, Replacing, Representing, Sandboxing,
-    Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Attachment, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation, ButtonSchema,
-    ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema, InputSchema,
-    MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
+    Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, GuiFactory, Attachment, Gui, BehaviourDocumentation, DocSidetabs, DocToptabs, UiDocumentation,
+    ButtonSchema, ContainerSchema, DropdownSchema, ExpandableFormSchema, FormChooserSchema, FormCoupledInputsSchema, FormFieldSchema, HtmlSelectSchema, InlineViewSchema,
+    InputSchema, MenuSchema, ModalDialogSchema, SplitDropdownSchema, SplitToolbarSchema, TabbarSchema, TabButtonSchema, TabSectionSchema, TabviewSchema, TieredMenuSchema,
     ToolbarGroupSchema, ToolbarSchema, TypeaheadSchema, SliderParts, SliderSchema, Fun, SelectorFind
   ) {
     return function () {
@@ -116,6 +117,7 @@ define(
         Highlighting,
         Invalidating,
         Keying,
+        Pinching,
         Positioning,
         Receiving,
         Replacing,

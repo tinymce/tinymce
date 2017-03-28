@@ -38,7 +38,12 @@ define(
       return Id.generate(prefix);
     };
 
+    var revoke = function (elem) {
+      Attr.remove(elem, idAttr);
+    };
+
     return {
+      revoke: revoke,
       write: write,
       writeOnly: writeOnly,
       read: read,

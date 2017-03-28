@@ -201,6 +201,9 @@ define(
         getByUid: getByUid,
         getByDom: getByDom,
 
+        addToWorld: addToWorld,
+        removeFromWorld: removeFromWorld,
+
         broadcast: broadcast,
         broadcastOn: broadcastOn
       };

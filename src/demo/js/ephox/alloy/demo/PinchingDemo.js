@@ -59,7 +59,7 @@ define(
       var gui = Gui.create();
       gui.add(box);
 
-      Attachment.addSystem(ephoxUi, gui);
+      Attachment.attachSystem(ephoxUi, gui);
     };
   }
 );
