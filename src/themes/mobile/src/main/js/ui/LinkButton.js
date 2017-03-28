@@ -10,6 +10,10 @@ define(
   ],
 
   function (Representing, Thunk, Buttons, Inputs, SerialisedDialog) {
+    var isNotEmpty = function (val) {
+      return val.text.length > 0;
+    };
+
     var getGroups = Thunk.cached(function (ios, editor) {
       return [
         {
@@ -25,17 +29,21 @@ define(
               onExecute: function (dialog, simulatedEvent) {
                 var values = Representing.getValue(dialog);
 
-                var attrs = { };
-                values.url.each(function (url) { attrs.href = url.text; });
-                values.title.each(function (title) { attrs.title = title.text; });
-                values.target.each(function (target) { attrs.target = target.text; });
+                // Must have a URL to insert a link
+                values.url.filter(isNotEmpty).each(function (url) {
+                  var attrs = { };
+                  attrs.href = url.text;
 
-                values.text.fold(function () {
-                  editor.execCommand('mceInsertLink', false, attrs);
-                }, function (text) {
-                  editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text.text)));
+                  values.title.filter(isNotEmpty).each(function (title) { attrs.title = title.text; });
+                  values.target.filter(isNotEmpty).each(function (target) { attrs.target = target.text; });
+
+                  values.text.filter(isNotEmpty).fold(function () {
+                    editor.execCommand('mceInsertLink', false, attrs);
+                  }, function (text) {
+                    editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text.text)));
+                  });
                 });
-                  
+                
                   
                 ios.restoreToolbar();
                 editor.focus();
