@@ -19,6 +19,8 @@ define(
       Fields.onKeyboardHandler('onShiftEnter'),
       Fields.onKeyboardHandler('onLeft'),
       Fields.onKeyboardHandler('onRight'),
+      Fields.onKeyboardHandler('onTab'),
+      Fields.onKeyboardHandler('onShiftTab'),
       Fields.onKeyboardHandler('onUp'),
       Fields.onKeyboardHandler('onDown'),
       Fields.onKeyboardHandler('onEscape'),
@@ -34,6 +36,13 @@ define(
         KeyRules.rule(
           KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet( Keys.ENTER()) ]), executeInfo.onShiftEnter()
         ),
+        KeyRules.rule(
+          KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet( Keys.TAB()) ]), executeInfo.onShiftTab()
+        ),
+        KeyRules.rule(
+          KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), executeInfo.onTab()
+        ),
+
         KeyRules.rule( KeyMatch.inSet(Keys.UP()), executeInfo.onUp()),
         KeyRules.rule( KeyMatch.inSet(Keys.DOWN()), executeInfo.onDown()),
         KeyRules.rule( KeyMatch.inSet(Keys.LEFT()), executeInfo.onLeft()),
