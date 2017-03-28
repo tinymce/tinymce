@@ -104,6 +104,25 @@ test(
     );
 
     Jsc.syncProperty(
+      'Finding value of snapped always results in a factorable value with a snap start',
+      [
+        arbData,
+        arbBounds,
+        Jsc.nat,
+        Jsc.nat
+      ],
+      function (data, bounds, xValue, snapOffset) {
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min));
+        var f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
+        RawAssertions.assertEq('Checking factors correctly: ' + newValue, true, 
+          Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
+        );
+        return true;
+      },
+      { }
+    );
+
+    Jsc.syncProperty(
       'Finding value of any value always fits in the [min - 1, max + 1] range',
       [
         arbData,
@@ -112,6 +131,24 @@ test(
       ],
       function (data, bounds, xValue) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none());
+        RawAssertions.assertEq(
+          'Assert within range: ' + newValue, true, 
+          newValue >= data.min - 1 && newValue <= data.max + 1
+        );
+        return true;
+      }
+    );
+
+    Jsc.syncProperty(
+      'Finding value of any value always fits in the [min - 1, max + 1] range with a snap start',
+      [
+        arbData,
+        arbBounds,
+        Jsc.nat,
+        Jsc.nat
+      ],
+      function (data, bounds, xValue, snapOffset) {
+        var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max));
         RawAssertions.assertEq(
           'Assert within range: ' + newValue, true, 
           newValue >= data.min - 1 && newValue <= data.max + 1

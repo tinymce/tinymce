@@ -41,8 +41,12 @@ define(
         var remainder = (value - start) % step;
         var adjustment = Math.round( remainder / step);
         
-        var snaps = Math.floor((value - start) / step);
-        var r = start + ((snaps + adjustment) * step);
+
+        var rawSteps = Math.floor((value - start) / step);
+        var maxSteps = Math.floor((max - start) / step);
+
+        var numSteps = Math.min(maxSteps, rawSteps + adjustment);
+        var r = start + (numSteps * step);
         return Math.max(start, r);
       });
     };
