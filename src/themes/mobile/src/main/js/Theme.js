@@ -92,7 +92,7 @@ define(
               label: 'The extra group',
               scrollable: false,
               items: [
-                
+                // This is where the "add button" button goes.
               ]
             }
           ]);

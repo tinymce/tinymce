@@ -55,15 +55,6 @@ define(
         toolbar.restoreToolbar();
       };
 
-      var toReading = function () {
-        // FIX: Do this in a not IOS specific way
-        webapp.run(function (w) {
-          w.onIos(function (iosApi) {
-            iosApi.toReading();
-          });
-        });
-      };
-
       var init = function (spec) {
         webapp.set(
           IosWebapp.produce(spec)
@@ -82,7 +73,6 @@ define(
         init: init,
         exit: exit,
         setToolbarGroups: setToolbarGroups,
-        toReading: toReading,
         setContextToolbar: setContextToolbar,
         restoreToolbar: restoreToolbar,
         socket: Fun.constant(socket)
