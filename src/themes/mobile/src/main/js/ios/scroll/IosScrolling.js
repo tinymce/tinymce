@@ -9,11 +9,12 @@ define(
     'global!Math',
     'global!window',
     'tinymce.themes.mobile.ios.smooth.SmoothAnimation',
+    'tinymce.themes.mobile.ios.view.IosViewport',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.DataAttributes'
   ],
 
-  function (Fun, Future, Attr, Css, Math, window, SmoothAnimation, Styles, DataAttributes) {
+  function (Fun, Future, Attr, Css, Math, window, SmoothAnimation, IosViewport, Styles, DataAttributes) {
     var animator = SmoothAnimation.create();
 
     var ANIMATION_STEP = 15;
@@ -99,7 +100,7 @@ define(
     };
 
     var updateTop = function (element, amount) {
-      var newTop =  (amount + MobileViewport.getYFixedData(element)) + 'px';
+      var newTop =  (amount + IosViewport.getYFixedData(element)) + 'px';
       Css.set(element, 'top', newTop);
     };
 

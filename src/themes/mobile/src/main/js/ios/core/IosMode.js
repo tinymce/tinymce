@@ -58,10 +58,7 @@ define(
           Thor.clobberStyles(platform.container, editorApi.body());
           meta.maximize();
 
-          /* Make the toolbar scrollable */
-          Css.set(platform.toolbar, 'overflow-x', 'auto');
-          Scrollables.markAsHorizontal(platform.toolbar);
-          Scrollable.register(platform.toolbar);
+          /* NOTE: Making the toolbar scrollable is now done when the middle group is created */
 
           Css.set(platform.socket, 'overflow', 'scroll');
           Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
@@ -99,9 +96,6 @@ define(
           );
 
           IosHacks.stopTouchFlicker(editorApi.body());
-          // updateOrientation();
-
-          // syncHeight();
           iosApi.run(function (api) {
             api.syncHeight();
           });
@@ -120,15 +114,14 @@ define(
 
         mask.show();
 
-        priorState.get().each(function (s) {
+        priorState.on(function (s) {
           s.socketHeight.each(function (h) { Css.set(platform.socket, 'height', h); });
           s.iframeHeight.each(function (h) { Css.set(platform.editor.getFrame(), 'height', h); });
           document.body.scrollTop = s.scrollTop;
         });
         priorState.clear();
 
-        scrollEvents.get().each(function (s) {
-          s.socket.destroy();
+        scrollEvents.on(function (s) {
           s.exclusives.unbind();
         });
         scrollEvents.clear();

@@ -11,11 +11,12 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
     'tinymce.themes.mobile.api.IosWebapp',
+    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Replacing, GuiFactory, Button, Container, Input, Objects, Fun, Singleton, IosWebapp, ScrollingToolbar, OuterContainer) {
+  function (Replacing, GuiFactory, Button, Container, Input, Objects, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer();
 
@@ -26,8 +27,7 @@ define(
       var socket = GuiFactory.build(
         Container.sketch({
           dom: {
-            // FIX: Change the classes.
-            classes: [ 'ephox-polish-socket' ]
+            classes: [ Styles.resolve('editor-socket') ]
           },
           components: [ ],
 
@@ -40,33 +40,20 @@ define(
       alloy.add(toolbar.wrapper());
       alloy.add(socket);
 
+      var setToolbarGroups = function (rawGroups) {
+        var groups = toolbar.createGroups(rawGroups);
+        toolbar.setGroups(groups);
+      };
 
-      var initGroups = toolbar.createGroups([
-        {
-          label: 'The first group',
-          items: [
-            Button.sketch({
-              dom: {
-                tag: 'button',
-                innerHtml: 'B'
-              },
-              action: function () {
-                alert('Bold');
-              }
-            }),
-            Input.sketch({
-              dom: {
-                styles: {
-                  background: 'white',
-                  border: '1px solid black'
-                }
-              }
-            })
-          ]
-        }
-      ]);
+      var setContextToolbar = function (rawGroups) {
+        var groups = toolbar.createGroups(rawGroups);
+        toolbar.setContextToolbar(groups);
+        toolbar.focus();
+      };
 
-      toolbar.setGroups(initGroups);
+      var restoreToolbar = function () {
+        toolbar.restoreToolbar();
+      };
 
       var init = function (spec) {
         webapp.set(
@@ -78,13 +65,16 @@ define(
         webapp.run(function (w) {
           w.exit();
         });
-        webapp.clear();
       };
       
       return {
+        system: Fun.constant(alloy),
         element: alloy.element,
         init: init,
         exit: exit,
+        setToolbarGroups: setToolbarGroups,
+        setContextToolbar: setContextToolbar,
+        restoreToolbar: restoreToolbar,
         socket: Fun.constant(socket)
       };
     };

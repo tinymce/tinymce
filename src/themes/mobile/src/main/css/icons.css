@@ -1,0 +1,129 @@
+.tinymce-mobile-toolbar-previous:before {
+  content: '<';
+}
+
+.tinymce-mobile-toolbar-next:before {
+  content: '>';
+}
+
+.tinymce-mobile-toolbar-button-align-left:before {
+  content: "\e90d";
+}
+
+.tinymce-mobile-toolbar-button-align-right:before {
+  content: "\e90f";
+}
+
+.tinymce-mobile-toolbar-button-align-center:before {
+  content: "\e90e";
+}
+
+.tinymce-mobile-toolbar-button-align-justify:before {
+  content: "\e910";
+}
+
+.tinymce-mobile-toolbar-button-insert-char:before {
+  content: "\e90b";
+}
+
+.tinymce-mobile-toolbar-button-insert-hr:before {
+  content: "\e90c";
+}
+
+.tinymce-mobile-toolbar-button-ordered-list:before {
+  content: "\e912";
+}
+
+.tinymce-mobile-toolbar-button-unordered-list:before {
+  content: "\e911";
+}
+
+.tinymce-mobile-toolbar-button-insert-hr:before {
+  content: "\e90c";
+}
+
+.tinymce-mobile-toolbar-button-outdent:before {
+  content: "\e914";
+}
+
+.tinymce-mobile-toolbar-button-indent:before {
+  content: "\e913";
+}
+
+.tinymce-mobile-toolbar-button-redo:before {
+  content: "\e909";
+}
+
+.tinymce-mobile-toolbar-button-underline:before {
+  content: "\e90a";
+}
+
+.tinymce-mobile-toolbar-button-quote:before {
+  content: "\e915";
+}
+.tinymce-mobile-toolbar-button-remove-formatting:before {
+  content: "\e916";
+}
+.tinymce-mobile-toolbar-button-subscript:before {
+  content: "\e917";
+}
+.tinymce-mobile-toolbar-button-superscript:before {
+  content: "\e918";
+}
+.tinymce-mobile-toolbar-button-strikethrough:before {
+  content: "\e919";
+}
+
+.tinymce-mobile-toolbar-button-small-font:before {
+  content: "\e906";
+}
+
+.tinymce-mobile-toolbar-button-large-font:before {
+  content: "\e907";
+}
+
+
+.tinymce-mobile-toolbar-button-back:before {
+  content: 'Back';
+
+}
+
+.tinymce-mobile-toolbar-button-undo:before {
+  content: "\e900";
+}
+
+.tinymce-mobile-toolbar-button-bold:before {
+  content: "\e901";
+}
+
+.tinymce-mobile-toolbar-button-italic:before {
+  content: "\e902";
+}
+
+.tinymce-mobile-toolbar-button-link:before {
+  content: "\e903";
+}
+
+.tinymce-mobile-toolbar-button-image:before {
+  content: "\e904";
+}
+
+.tinymce-mobile-toolbar-button-font-size:before {
+  content: "\e905";
+}
+
+.tinymce-mobile-toolbar-button-headings:before {
+  content: "H";
+}
+
+.tinymce-mobile-toolbar-button-watson:before {
+  content: "W";
+}
+
+.tinymce-mobile-toolbar-button-color:before {
+  content: "\e908";
+}
+
+.tinymce-mobile-toolbar-button-add-button:before {
+  content: "\e91a";
+}

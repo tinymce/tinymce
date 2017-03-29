@@ -2,28 +2,23 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'global!Error',
     'global!window',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.IosContainer'
   ],
 
-  function (Fun, Element, Error, window, DOMUtils, EditorManager, ThemeManager, Api, IosContainer) {
-    var fail = function (message) {
-      throw new Error(message);
-    };
-
+  function (Cell, Fun, Element, Error, window, EditorManager, ThemeManager, Api, Styles, Buttons, IosContainer) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
-        var skinUrl = EditorManager.baseURL + editor.settings.skin_url;
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
-
-        DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', Fun.noop);
 
         editor.contentCSS.push(contentCssUrl + '/content.css');
 
@@ -42,13 +37,47 @@ define(
                 return {
                   unbind: Fun.noop
                 };
+              },
+
+              onTapContent: function () {
+                ios.restoreToolbar();
               }
             },
             container: Element.fromDom(editor.editorContainer),
             socket: Element.fromDom(editor.contentAreaContainer),
-            toolstrip: Element.fromDom(editor.editorContainer.querySelector('.mce-toolbar-grp')),
-            toolbar: Element.fromDom(editor.editorContainer.querySelector('.mce-toolbar'))
+            toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
+            toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')))
           });
+
+          var mainGroups = Cell([
+            {
+              label: 'The first group',
+              scrollable: false,
+              items: [
+                Buttons.forToolbar('back', function (btn) {
+                  ios.exit();
+                }, { }, { })
+              ]
+            },
+            {
+              label: 'the action group',
+              scrollable: true,
+              items: [
+                Buttons.forToolbarCommand(editor, 'undo', { }, { }),
+                Buttons.forToolbarStateCommand(editor, 'bold'),
+                Buttons.forToolbarStateCommand(editor, 'italic')
+              ]
+            },
+            {
+              label: 'The extra group',
+              scrollable: false,
+              items: [
+                // This is where the "add button" button goes.
+              ]
+            }
+          ]);
+
+          ios.setToolbarGroups(mainGroups.get());
         });
 
         return {

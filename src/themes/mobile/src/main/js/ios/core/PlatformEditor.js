@@ -23,8 +23,8 @@ define(
     };
 
     var getSelectionFromFrame = function (frame) {
-      var win = getWinFromFrame(frame);
-      return WindowSelection.get(win);
+      var optWin = getWinFromFrame(frame);
+      return optWin.bind(WindowSelection.getExact);
     };
 
     var getFrame = function (editor) {
@@ -77,7 +77,7 @@ define(
 
             var clearSelection = editor.clearSelection.getOrThunk(function () {
               return function () {
-                WindowSelection.clearAll(win);
+                WindowSelection.clear(win);
               };
             });
 
@@ -101,6 +101,7 @@ define(
               onToEditing: editor.onToEditing,
 
               onToolbarScrollStart: editor.onToolbarScrollStart,
+              onTapContent: editor.onTapContent,
 
               getCursorBox: getCursorBox
             };

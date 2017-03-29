@@ -149,7 +149,10 @@ define(
         }),
 
         // When the user clicks back into the content, clear any fake selections
-        DomEvent.bind(editorApi.body(), 'touchstart', clearSelection),
+        DomEvent.bind(editorApi.body(), 'touchstart', function () {
+          clearSelection();
+          editorApi.onTapContent();
+        }),
 
         // Stop any "clicks" being processed in the body at alls
         DomEvent.bind(editorApi.body(), 'click', function (event) {

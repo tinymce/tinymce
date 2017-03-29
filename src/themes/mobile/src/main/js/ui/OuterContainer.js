@@ -4,15 +4,16 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.ui.Container'
+    'ephox.alloy.api.ui.Container',
+    'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (GuiFactory, Gui, Container) {
+  function (GuiFactory, Gui, Container, Styles) {
     return function () {
       var root = GuiFactory.build(
         Container.sketch({
           dom: {
-            classes: [ 'mce-tinymce', 'mce-container', 'mce-panel' ]
+            classes: [ Styles.resolve('outer-container') ]
           }
         })
       );
