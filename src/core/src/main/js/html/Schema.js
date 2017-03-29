@@ -922,9 +922,9 @@ define(
        * @return {Boolean} True/false if the element is a valid child of the specified parent.
        */
       self.isValidChild = function (name, child) {
-        var parent = children[name];
+        var parent = children[name.toLowerCase()];
 
-        return !!(parent && parent[child]);
+        return !!(parent && parent[child.toLowerCase()]);
       };
 
       /**

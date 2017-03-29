@@ -306,7 +306,9 @@ asynctest(
 
       schema = new Schema();
       ok(schema.isValidChild('body', 'p'));
+      ok(schema.isValidChild('ul', 'LI'));
       ok(schema.isValidChild('p', 'img'));
+      ok(schema.isValidChild('STRONG', 'span'));
       ok(!schema.isValidChild('body', 'body'));
       ok(!schema.isValidChild('p', 'body'));
     });
