@@ -57,7 +57,7 @@ define(
       return Buttons.forToolbar('link', function () {
         var groups = getGroups(ios, editor);
         ios.setContextToolbar(groups);
-      });
+      }, { }, { });
     };
 
     return {
