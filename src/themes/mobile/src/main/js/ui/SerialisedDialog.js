@@ -138,6 +138,7 @@ define(
           keying: {
             mode: 'special',
             focusIn: function (dialog, specialInfo) {
+              spec.state.currentScreen.set(0);
               focusInput(dialog);
             },
             onTab: function (dialog, specialInfo) {
