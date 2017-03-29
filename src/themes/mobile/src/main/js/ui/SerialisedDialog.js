@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -24,12 +25,13 @@ define(
   ],
 
   function (
-    Focusing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind,
-    Width, SwipingModel, Styles
+    Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter,
+    SelectorFind, Width, SwipingModel, Styles
   ) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('fields'),
       FieldSchema.strict('onExecute'),
+      FieldSchema.strict('getInitialValue'),
       FieldSchema.state('state', function () {
         return {
           dialogSwipeState: Singleton.value(),
@@ -153,6 +155,16 @@ define(
         },
 
         events: Objects.wrapAll([
+          {
+            key: SystemEvents.attachedToDom(),
+            value: EventHandler.nu({
+              run: function (dialog, simulatedEvent) {
+                spec.getInitialValue(dialog).each(function (v) {
+                  Representing.setValue(dialog, v);
+                });
+              }
+            })
+          },
           {
             key: SystemEvents.execute(),
             value: EventHandler.nu({
