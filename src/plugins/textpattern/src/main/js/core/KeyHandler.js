@@ -68,21 +68,9 @@ define(
       });
     };
 
-    var shouldTrigger = function (event) {
-
-
-      // for (var i = 0; i < triggers.length; i++) {
-      //   if (event.key.charCodeAt(0) === triggers[i].charCodeAt(0)) {
-      //     return true;
-      //   }
-      // }
-      // return false;
-    };
-
     return {
       handleEnter: handleEnter,
       handleInlineKey: handleInlineKey,
-      shouldTrigger: shouldTrigger,
       checkCharCode: checkCharCode,
       checkKeyCode: checkKeyCode
     };

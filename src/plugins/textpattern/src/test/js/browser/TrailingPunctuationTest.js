@@ -39,7 +39,7 @@ asynctest(
           tinyApis.sSetCursor([0, 0], patternText.length + 1),
           sTypeChar(editor, trigger),
           Waiter.sTryUntil(
-            'wait for format',
+            'did not get expected format',
             tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
               return s.element('body', {
                 children: [
