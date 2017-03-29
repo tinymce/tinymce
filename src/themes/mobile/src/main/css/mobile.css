@@ -94,21 +94,10 @@
   color: white;
 }
 
+/* TODO: Potentially setup autoprefixer for different browser prefixes */
 .tinymce-mobile-context-toolbar input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    white;
+  color:white;
 }
-.tinymce-mobile-context-toolbar input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    white;
-   opacity:  1;
-}
-.tinymce-mobile-context-toolbar input::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    white;
-   opacity:  1;
-}
-.tinymce-mobile-context-toolbar input:-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color:    white;
-}
-
 
 .tinymce-mobile-toolbar-group-item {
   padding-left: 0.5em;
