@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.ui.SerialisedDialog',
 
   [
+    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
@@ -25,8 +26,8 @@ define(
   ],
 
   function (
-    Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter,
-    SelectorFind, Width, SwipingModel, Styles
+    EventRoot, Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton,
+    Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('fields'),
@@ -97,6 +98,11 @@ define(
         });
       };
 
+      var resetState = function () {
+        spec.state.currentScreen.set(0);
+        spec.state.dialogSwipeState.clear();
+      };
+
       return Form.sketch({
         dom: {
           tag: 'div',
@@ -140,7 +146,6 @@ define(
           keying: {
             mode: 'special',
             focusIn: function (dialog, specialInfo) {
-              spec.state.currentScreen.set(0);
               focusInput(dialog);
             },
             onTab: function (dialog, specialInfo) {
@@ -159,9 +164,13 @@ define(
             key: SystemEvents.attachedToDom(),
             value: EventHandler.nu({
               run: function (dialog, simulatedEvent) {
-                spec.getInitialValue(dialog).each(function (v) {
-                  Representing.setValue(dialog, v);
-                });
+                if (EventRoot.isSource(dialog, simulatedEvent)) {
+                  // Reset state to first screen.
+                  resetState();
+                  spec.getInitialValue(dialog).each(function (v) {
+                    Representing.setValue(dialog, v);
+                  });
+                }
               }
             })
           },
