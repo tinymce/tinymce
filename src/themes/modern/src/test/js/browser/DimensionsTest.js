@@ -28,6 +28,7 @@ asynctest(
 
         EditorManager.init(Merger.merge(settings, {
           selector: '#' + randomId,
+          skin_url: '/project/src/skins/lightgray/dist/lightgray',
           setup: function (editor) {
             editor.on('SkinLoaded', function () {
               setTimeout(function () {
