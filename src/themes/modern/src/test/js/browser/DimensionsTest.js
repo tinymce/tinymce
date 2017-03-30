@@ -25,7 +25,6 @@ asynctest(
 
         viewBlock.update(html);
         viewBlock.get().firstChild.id = randomId;
-        viewBlock.attach(true);
 
         EditorManager.init(Merger.merge(settings, {
           selector: '#' + randomId,
@@ -79,6 +78,8 @@ asynctest(
 
     Theme();
 
+    viewBlock.attach();
+
     Pipeline.async({}, [
       Chain.asStep(viewBlock, [
         cCreateEditorFromSettings({ width: 400, height: 300 }),
@@ -101,6 +102,7 @@ asynctest(
         cRemoveEditor()
       ])
     ], function () {
+      viewBlock.detach();
       success();
     }, failure);
   }
