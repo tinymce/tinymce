@@ -1,5 +1,7 @@
+Version 4.5.6 (2017-03-30)
+	Fixed bug where it wasn't possible to select floated images in some cases.
 Version 4.5.5 (2017-03-07)
-  Fixed text formatting bug with fontsize could not be changed after changing the text color.
+	Fixed text formatting bug with fontsize could not be changed after changing the text color.
 Version 4.5.4 (2017-02-23)
 	Fixed bug where setBaseAndExtend would throw exceptions on Chrome 58 when selecting images.
 	Fixed bug where deleting partially selected contents could remove all contents in some edge cases on WebKit.
