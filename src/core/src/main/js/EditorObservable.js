@@ -17,12 +17,22 @@
 define(
   'tinymce.core.EditorObservable',
   [
-    "tinymce.core.util.Observable",
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.util.Tools"
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.blocks.BlockDom',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.Observable',
+    'tinymce.core.util.Tools'
   ],
-  function (Observable, DOMUtils, Tools) {
+  function (Element, BlockDom, DOMUtils, Observable, Tools) {
     var DOM = DOMUtils.DOM, customEventRootDelegates;
+
+    var isListening = function (editor) {
+      return !editor.hidden && !editor.readonly;
+    };
+
+    var inUnmanagedBlock = function (editor, element) {
+      return BlockDom.inUnmanagedBlock(editor, Element.fromDom(element));
+    };
 
     /**
      * Returns the event target so for the specified event. Some events fire
@@ -68,10 +78,6 @@ define(
     function bindEventDelegate(editor, eventName) {
       var eventRootElm = getEventTarget(editor, eventName), delegate;
 
-      function isListening(editor) {
-        return !editor.hidden && !editor.readonly;
-      }
-
       if (!editor.delegates) {
         editor.delegates = {};
       }
@@ -109,7 +115,7 @@ define(
             var body = editors[i].getBody();
 
             if (body === target || DOM.isChildOf(target, body)) {
-              if (isListening(editors[i])) {
+              if (isListening(editors[i]) && inUnmanagedBlock(editor, target) === false) {
                 editors[i].fire(eventName, e);
               }
             }
@@ -120,7 +126,7 @@ define(
         DOM.bind(eventRootElm, eventName, delegate);
       } else {
         delegate = function (e) {
-          if (isListening(editor)) {
+          if (isListening(editor) && inUnmanagedBlock(editor, e.target) === false) {
             editor.fire(eventName, e);
           }
         };

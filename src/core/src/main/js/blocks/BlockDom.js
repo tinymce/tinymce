@@ -14,13 +14,14 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.PredicateFind',
     'ephox.sugar.api.search.Selectors',
     'tinymce.core.dom.Empty'
   ],
-  function (Arr, Option, Compare, Attr, Html, PredicateFind, Selectors, Empty) {
+  function (Arr, Option, Compare, Element, Attr, Html, PredicateFind, Selectors, Empty) {
     var findBlocks = function (rootElement) {
       return Selectors.all('*[data-mce-block-type]', rootElement);
     };
@@ -73,6 +74,20 @@ define(
       return Option.from(editor.blocks.get(getBlockType(element)));
     };
 
+    var findClosestElementSpec = function (editor, element) {
+      return findParentBlock(Element.fromDom(editor.getBody()), element)
+        .bind(function (blockElement) {
+          return getSpec(editor, blockElement);
+        });
+    };
+
+    var inUnmanagedBlock = function (editor, element) {
+      return findClosestElementSpec(editor, element)
+        .map(function (spec) {
+          return spec.type() === 'unmanaged';
+        }).getOr(false);
+    };
+
     return {
       findBlocks: findBlocks,
       findByGuid: findByGuid,
@@ -83,7 +98,9 @@ define(
       findParentBlock: findParentBlock,
       paddContentEditables: paddContentEditables,
       removeInternalAttrs: removeInternalAttrs,
-      getSpec: getSpec
+      getSpec: getSpec,
+      findClosestElementSpec: findClosestElementSpec,
+      inUnmanagedBlock: inUnmanagedBlock
     };
   }
 );
