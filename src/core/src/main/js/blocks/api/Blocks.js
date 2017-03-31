@@ -20,10 +20,11 @@ define(
     'tinymce.core.blocks.BlockDom',
     'tinymce.core.blocks.BlockPlaceholders',
     'tinymce.core.blocks.BlockSchema',
+    'tinymce.core.blocks.BlockSelection',
     'tinymce.core.blocks.BlockStorage',
     'tinymce.core.blocks.InsertBlock'
   ],
-  function (Fun, Merger, Obj, Option, Element, Block, BlockDom, BlockPlaceholders, BlockSchema, BlockStorage, InsertBlock) {
+  function (Fun, Merger, Obj, Option, Element, Block, BlockDom, BlockPlaceholders, BlockSchema, BlockSelection, BlockStorage, InsertBlock) {
     return function (editor) {
       var blocks = { };
 
@@ -75,6 +76,7 @@ define(
       var setup = function (editor) {
         BlockStorage.setup(editor);
         BlockPlaceholders.setup(editor);
+        BlockSelection.setup(editor);
       };
 
       setup(editor);

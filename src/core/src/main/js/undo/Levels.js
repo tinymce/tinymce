@@ -21,8 +21,8 @@ define(
     "tinymce.core.undo.Fragments"
   ],
   function (Arr, Fragments) {
-    var hasIframes = function (html) {
-      return html.indexOf('</iframe>') !== -1;
+    var shouldFragment = function (html) {
+      return html.indexOf('</iframe>') !== -1 || html.indexOf('data-mce-block-type') !== -1;
     };
 
     var createFragmentedLevel = function (fragments) {
@@ -54,7 +54,7 @@ define(
       });
       content = trimmedFragments.join('');
 
-      return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
+      return shouldFragment(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
     };
 
     var applyToEditor = function (editor, level, before) {

@@ -17,6 +17,8 @@ define(
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.node.Fragment',
@@ -31,8 +33,8 @@ define(
     'tinymce.core.EditorSelection'
   ],
   function (
-    Arr, Fun, Future, Id, Option, Compare, Element, Elements, Fragment, Attr, PredicateFind, Traverse, Block, BlockDom, CaretPosition, CaretWalker, Empty,
-    EditorSelection
+    Arr, Fun, Future, Id, Option, Compare, Insert, Remove, Element, Elements, Fragment, Attr, PredicateFind, Traverse, Block, BlockDom, CaretPosition, CaretWalker,
+    Empty, EditorSelection
   ) {
     var isJustBeforeRoot = function (rootElement) {
       return function (element) {
@@ -167,8 +169,18 @@ define(
         getValidRange(editor).map(function (range) {
           editor.undoManager.transact(function () {
             insertBlockAtCaret(rootElement, element, range)
-              .map(function (element) {
-                EditorSelection.select(editor, element);
+              .map(function (block) {
+                var uuid = BlockDom.getUuid(block);
+                var api = Block.nu(editor, uuid, spec);
+                var load = spec.load();
+                var loadedBlock = Element.fromDom(load(api).cloneNode(true));
+                Attr.set(loadedBlock, 'data-mce-block-id', uuid);
+                Attr.set(loadedBlock, 'data-mce-block-type', spec.id());
+                Attr.set(loadedBlock, 'contenteditable', 'false');
+                BlockDom.paddContentEditables(loadedBlock);
+                Insert.before(block, loadedBlock);
+                Remove.remove(block);
+                EditorSelection.select(editor, loadedBlock);
               });
           });
         });

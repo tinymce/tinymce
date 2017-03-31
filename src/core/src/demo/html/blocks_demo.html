@@ -2,6 +2,10 @@
 <html>
 <head>
 <title>Blocks Demo Page</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.24.2/codemirror.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.24.2/mode/javascript/javascript.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.24.2/codemirror.min.css" rel="stylesheet" type="text/css" media="all">
+<link href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.24.2/theme/dracula.min.css" rel="stylesheet" type="text/css" media="all">
 <script src="../../../config/bolt/bootstrap-demo.js"></script>
 <script>
 ephox.bolt.module.api.main('tinymce.core.demo.BlocksDemo');
@@ -83,13 +87,13 @@ figure.alignleft, figure.alignright {
 
 figure.alignleft {
   float: left;
-  margin: 0.5em 1em 0.5em 0;
+  margin: 0 1em 0.5em 0;
   width: 50%;
 }
 
 figure.alignright {
   float: right;
-  margin: 0.5em 0 0.5em 1em;
+  margin: 0 0 0.5em 1em;
   width: 50%;
 }
 
@@ -98,6 +102,23 @@ figcaption {
   color: #86909b;
   font-size: 0.9em;
   font-style: italic;
+}
+
+.CodeMirror {
+  height: auto;
+}
+
+*[data-mce-block-type="code"] {
+  display: flex;
+}
+
+*[data-mce-block-type="code"] > * {
+  flex-grow: 1;
+}
+
+.mce-content-body p, .mce-content-body div, .mce-content-body h1, .mce-content-body h2, .mce-content-body h3,
+.mce-content-body h4, .mce-content-body h5, .mce-content-body h6 {
+  line-height: 100%;
 }
 </style>
 </head>
@@ -119,10 +140,12 @@ figcaption {
         <footer>123</footer>
       </blockquote>
 
-      <figure data-mce-block-type="figure">
+      <figure data-mce-block-type="figure" class="alignright">
         <img src="https://cldup.com/Bc9YxmqFnJ.jpg">
         <figcaption>Some kind of figcaption</figcaption>
       </figure>
+
+      <pre data-mce-block-type="code">// How to init tinymce<br>tinymce.init({selector: 'textarea'});</pre>
 
       <p>
         <a name="anchor"></a>eget non <a href="http://www.tinymce.com">nulla</a>. Ut eu vestibulum libero. Vestibulum pretium est vitae metus auctor, quis fermentum mi

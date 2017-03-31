@@ -36,6 +36,7 @@ define(
             })
             .map(function (element) {
               Attr.set(element, 'data-mce-block-id', uuid);
+              Attr.set(element, 'data-mce-block-type', spec.id());
               Attr.set(element, 'contenteditable', 'false');
               BlockDom.paddContentEditables(element);
               Insert.before(block, element);
@@ -56,6 +57,7 @@ define(
             })
             .map(function (element) {
               BlockDom.removeInternalAttrs(element);
+              Attr.set(element, 'data-mce-block-type', spec.id());
               Insert.before(block, element);
               Remove.remove(block);
             });

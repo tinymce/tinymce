@@ -14,6 +14,7 @@ define(
   'tinymce.core.demo.BlocksDemo',
   [
     'ephox.katamari.api.Arr',
+    'global!CodeMirror',
     'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.util.Uuid',
@@ -28,8 +29,8 @@ define(
     'tinymce.themes.inlite.Theme'
   ],
   function (
-    Arr, window, EditorManager, Uuid, AnchorPlugin, AutoLinkPlugin, ContextMenuPlugin, ImagePlugin, LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin,
-    InliteTheme
+    Arr, CodeMirror, window, EditorManager, Uuid, AnchorPlugin, AutoLinkPlugin, ContextMenuPlugin, ImagePlugin, LinkPlugin, PastePlugin, TablePlugin,
+    TextPatternPlugin, InliteTheme
   ) {
     AnchorPlugin();
     AutoLinkPlugin();
@@ -41,6 +42,22 @@ define(
     TextPatternPlugin();
     InliteTheme();
 
+    var appendChildren = function (elm, children) {
+      children.forEach(function (child) {
+        if (Array.isArray(child)) {
+          appendChildren(elm, child);
+        } else if (typeof child === 'string') {
+          elm.appendChild(document.createTextNode(child));
+        } else {
+          elm.appendChild(child);
+        }
+      });
+    };
+
+    var getText = function (elm) {
+      return elm.innerHTML.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '');
+    };
+
     var html = function (name, attrs, child) {
       var children = Array.prototype.slice.call(arguments, 2);
       var elm = document.createElement(name);
@@ -51,15 +68,19 @@ define(
         }
       }
 
-      children.forEach(function (child) {
-        elm.appendChild(child);
-      });
+      appendChildren(elm, children);
 
       return elm;
     };
 
     var createHtml = function (f) {
       return f(html);
+    };
+
+    var toLines = function (h, text) {
+      return Arr.bind(text.split('\n'), function (line) {
+        return [document.createTextNode(line), document.createElement('br')];
+      });
     };
 
     var editable = function (elm, selector) {
@@ -186,6 +207,63 @@ define(
           }));
         }
       });
+
+      var codeMirrorInstances = { };
+
+      editor.blocks.register('code', {
+        title: 'Code',
+        icon: 'code',
+        type: 'unmanaged',
+
+        insert: function (api, callback) {
+          var uuid = Uuid.uuid('cm');
+
+          callback(createHtml(function (h) {
+            return h('pre', {
+              'data-cm-uuid': uuid
+            }, '');
+          }));
+        },
+
+        load: function (api) {
+          return createHtml(function (h) {
+            var uuid = Uuid.uuid('cm');
+            var code = getText(api.dom());
+
+            setTimeout(function () {
+              var target = editor.dom.select('pre[data-cm-uuid="' + uuid + '"]')[0];
+              target.innerHTML = '';
+
+              var cm = CodeMirror(target, {
+                value: code,
+                theme: 'dracula',
+                mode: 'javascript',
+                lineNumbers: true,
+                autofocus: false
+              });
+
+              cm.on("focus", function () {
+                api.select();
+              });
+
+              codeMirrorInstances[uuid] = cm;
+            }, 0);
+
+            return h('pre', {
+              'data-cm-uuid': uuid
+            }, 'Loading codemirror.');
+          });
+        },
+
+        save: function (api) {
+          var uuid = api.dom().getAttribute('data-cm-uuid');
+          var editor = codeMirrorInstances[uuid];
+
+          return createHtml(function (h) {
+            return h('pre', { }, toLines(h, editor.getValue()));
+          });
+        }
+      });
     };
 
     var registerButtons = function (editor) {
@@ -237,7 +315,7 @@ define(
       theme: 'inlite',
       plugins: 'image table link anchor paste contextmenu textpattern autolink',
       skin_url: '../../../../skins/lightgray/dist/lightgray',
-      insert_toolbar: 'insert-blockquote insert-figure insert-hr',
+      insert_toolbar: 'insert-blockquote insert-figure insert-hr insert-code',
       selection_toolbar: 'bold italic | quicklink',
       inline: true,
       paste_data_images: true,
