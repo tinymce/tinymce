@@ -1,7 +1,7 @@
 @import "mask.css";
 @import "icons.css";
 @import "slider.css";
-
+@import "inline-dialogs.css";
 
 :root {
   --toolstrip-background-color: #333;
@@ -78,9 +78,12 @@
 }
 
 .tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group-item {
-  height: 100%;
   display: flex;
   align-items: center;
+}
+
+.tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group-item:not(.tinymce-mobile-serialised-dialog) {
+  height: 100%;
 }
 
 .tinymce-mobile-context-toolbar input {

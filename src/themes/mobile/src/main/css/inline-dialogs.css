@@ -1,0 +1,49 @@
+.tinymce-mobile-serialised-dialog {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  min-height: 1.5em;
+}
+
+.tinymce-mobile-serialised-dialog-chain {
+  transition: left linear 0.15s;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.tinymce-mobile-serialised-dialog-screen {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between
+}
+
+.tinymce-mobile-serialised-dialog.tinymce-mobile-toolbar-group-item {
+  padding-left: 0em;
+  padding-right: 0em;
+}
+
+.tinymce-mobile-toolbar-previous, .tinymce-mobile-toolbar-next {
+  display: flex;
+  align-items: center;
+}
+
+.tinymce-mobile-toolbar-previous.tinymce-mobile-toolbar-navigation-disabled:before,
+.tinymce-mobile-toolbar-next.tinymce-mobile-toolbar-navigation-disabled:before {
+  visibility: hidden;
+}
+
+.tinymce-mobile-toolbar-previous:before,
+.tinymce-mobile-toolbar-next:before
+ {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  font-family: Arial;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+}
