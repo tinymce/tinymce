@@ -5,7 +5,6 @@ define(
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
-    'global!Error',
     'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
@@ -13,10 +12,11 @@ define(
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ImagePicker',
-    'tinymce.themes.mobile.ui.IosContainer'
+    'tinymce.themes.mobile.ui.IosContainer',
+    'tinymce.themes.mobile.ui.LinkButton'
   ],
 
-  function (Cell, Fun, Element, Error, window, EditorManager, ThemeManager, Api, Styles, Buttons, ImagePicker, IosContainer) {
+  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, ImagePicker, IosContainer, LinkButton) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
@@ -67,7 +67,8 @@ define(
                 Buttons.forToolbarCommand(editor, 'undo', { }, { }),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic'),
-                ImagePicker.sketch(editor)
+                ImagePicker.sketch(editor),
+                LinkButton.sketch(ios, editor)
               ]
             },
             {
