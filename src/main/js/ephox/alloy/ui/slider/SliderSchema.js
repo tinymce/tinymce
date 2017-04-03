@@ -18,9 +18,9 @@ define(
       FieldSchema.defaulted('onChange', Fun.noop),
       FieldSchema.defaulted('snapToGrid', false),
       FieldSchema.option('snapStart'),
-      FieldSchema.strict('initialValue'),
+      FieldSchema.strict('getInitialValue'),
       
-      FieldSchema.state('value', function (spec) { return Cell(spec.initialValue); }),
+      FieldSchema.state('value', function (spec) { return Cell(spec.min); })
     ].concat(! isTouch ? [
       // Only add if not on a touch device
       FieldSchema.state('mouseIsDown', function () { return Cell(false); })

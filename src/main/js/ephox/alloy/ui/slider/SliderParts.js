@@ -114,7 +114,7 @@ define(
                 return Option.some(true);
               }
             },
-            // Allow the spectrum to get keyboard focus
+            // TODO: Do not allow keyboard focus on mobile (TM-25)
             focusing: true
           },
 

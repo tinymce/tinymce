@@ -17,12 +17,13 @@ asynctest(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Slider',
     'ephox.alloy.test.GuiSetup',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
     'global!navigator'
   ],
 
   function (
-    Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter, Keying, Representing, GuiFactory, Slider, GuiSetup, Result,
+    Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter, Keying, Representing, GuiFactory, Slider, GuiSetup, Fun, Result,
     navigator
   ) {
     var success = arguments[arguments.length - 2];
@@ -41,7 +42,7 @@ asynctest(
           },
 
           min: 50,
-          initialValue: 200,
+          getInitialValue: Fun.constant(200),
           max: 200,
           stepSize: 10,
           snapToGrid: true,
