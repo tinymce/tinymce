@@ -67,30 +67,35 @@ define(
       });
     };
 
+    var makeItems = function (editor) {
+      return [
+        {
+          dom: {
+            tag: 'span',
+            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-small-font') ]
+          }
+        },
+        makeSlider({
+          onChange: function (slider, thumb, value) {
+            editor.execCommand('fontSize', false, value);
+          }
+        }),
+        {
+          dom: {
+            tag: 'span',
+            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-large-font') ]
+          }
+        }
+      ];
+    };
+
     var sketch = function (ios, editor) {
       return Buttons.forToolbar('font-size', function () {
+        var items = makeItems(editor);
         ios.setContextToolbar([
           {
             label: 'font-size',
-            items: [
-              {
-                dom: {
-                  tag: 'span',
-                  classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-small-font') ]
-                }
-              },
-              makeSlider({
-                onChange: function (slider, thumb, value) {
-                  editor.execCommand('fontSize', false, value);
-                }
-              }),
-              {
-                dom: {
-                  tag: 'span',
-                  classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-large-font') ]
-                }
-              }
-            ]
+            items: items
           }
         ]);
       }, { }, { });
@@ -98,6 +103,7 @@ define(
     };
 
     return {
+      makeItems: makeItems,
       sketch: sketch
     };
   }
