@@ -18,8 +18,10 @@ define(
           else return 'hsl(' + hue + ', 100%, 50%)';
         };
 
+        var color = getColor(value);
         // TODO: Find a way to do this in alloy.
-        Css.set(thumb.element(), 'background', getColor(value));
+        Css.set(thumb.element(), 'background', color);
+        spec.onChange(slider, thumb, color);
       };
 
       return Slider.sketch({
