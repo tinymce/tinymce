@@ -11,12 +11,15 @@ define(
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
+    'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosContainer',
-    'tinymce.themes.mobile.ui.LinkButton'
+    'tinymce.themes.mobile.ui.LinkButton',
+    'tinymce.themes.mobile.util.FormatChangers'
   ],
 
-  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, ImagePicker, IosContainer, LinkButton) {
+
+  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, FontSizeSlider, ImagePicker, IosContainer, LinkButton, FormatChangers) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
@@ -67,8 +70,9 @@ define(
                 Buttons.forToolbarCommand(editor, 'undo', { }, { }),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic'),
+                LinkButton.sketch(ios, editor),
                 ImagePicker.sketch(editor),
-                LinkButton.sketch(ios, editor)
+                FontSizeSlider.sketch(ios, editor)
               ]
             },
             {
@@ -81,6 +85,9 @@ define(
           ]);
 
           ios.setToolbarGroups(mainGroups.get());
+
+          // Investigate ways to keep in sync with the ui
+          FormatChangers.init(ios, editor);
         });
 
         return {

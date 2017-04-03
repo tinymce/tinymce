@@ -1,7 +1,7 @@
 @import "mask.css";
 @import "icons.css";
+@import "slider.css";
 @import "inline-dialogs.css";
-
 
 :root {
   --toolstrip-background-color: #333;

@@ -141,8 +141,8 @@ define(
       };
 
       var setContextToolbar = function (gs) {
-        Toolbar.setGroups(toolbar, gs);
         Toggling.on(toolbar);
+        Toolbar.setGroups(toolbar, gs);        
       };
 
       var restoreToolbar = function () {
