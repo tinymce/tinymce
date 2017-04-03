@@ -1,0 +1,45 @@
+.tinymce-mobile-slider {
+  display: flex;
+  flex: 1;
+  position: relative;
+  height: 1em;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.tinymce-mobile-slider.tinymce-mobile-slider-font-size-container {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+
+.tinymce-mobile-slider .tinymce-mobile-slider-font-size {
+  display: flex;
+  flex: 1;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  background: gray;
+  height: 0.4em;
+}
+
+.tinymce-mobile-toolbar-button-small-font:before {
+  content: "\e906";
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.tinymce-mobile-toolbar-button-large-font:before {
+  content: "\e907";
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.tinymce-mobile-slider .tinymce-mobile-slider-thumb {
+  position: absolute;
+  height: 0.8em;
+  width: 1em;
+  background: black;
+  left: -10px;
+  border: 0.1em solid black;
+  border-radius: 3em;
+}
