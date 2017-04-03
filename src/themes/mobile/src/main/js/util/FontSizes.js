@@ -25,6 +25,7 @@ define(
     };
 
     var getSize = function (editor) {
+      // This was taken from the tinymce approach (FontInfo is unlikely to be global)
       var node = editor.selection.getStart();
       var px = FontInfo.getFontSize(editor.getBody(), node);
       var pt = FontInfo.toPt(px);
