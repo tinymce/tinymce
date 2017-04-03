@@ -7,11 +7,11 @@
   margin-right: 10%;
 }
 
-.tinymce-mobile-slider.tinymce-mobile-slider-font-size-container {
+.tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group-item.tinymce-mobile-slider-font-size-container {
   margin-left: 0px;
   margin-right: 0px;
+  height: auto;
 }
-
 
 .tinymce-mobile-slider .tinymce-mobile-slider-font-size {
   display: flex;
