@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
@@ -10,13 +11,14 @@ define(
     'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
+    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.IosContainer'
   ],
 
-  function (Cell, Fun, Element, Error, window, EditorManager, ThemeManager, Api, Styles, Buttons, FontSizeSlider, IosContainer) {
+  function (Arr, Cell, Fun, Element, Error, window, EditorManager, ThemeManager, Api, TinyChannels, Styles, Buttons, FontSizeSlider, IosContainer) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
@@ -80,7 +82,20 @@ define(
           ]);
 
           ios.setToolbarGroups(mainGroups.get());
+
+           // Investigate ways to keep in sync with the ui
+          Arr.each([ 'bold', 'italic' ], function (command) {
+            editor.formatter.formatChanged(command, function (state) {
+              ios.system().broadcastOn([ TinyChannels.formatChanged() ], {
+                command: command,
+                state: state
+              });
+            });
+          });
+
         });
+
+       
 
         return {
           iframeContainer: ios.socket().element().dom(),
