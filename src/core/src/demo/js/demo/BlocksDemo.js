@@ -215,6 +215,16 @@ define(
         icon: 'code',
         type: 'unmanaged',
 
+        toolbar: [
+          {
+            icon: 'remove',
+            tooltip: 'Remove block',
+            action: function (api) {
+              api.remove();
+            }
+          }
+        ],
+
         insert: function (api, callback) {
           var uuid = Uuid.uuid('cm');
 
@@ -244,6 +254,7 @@ define(
 
               cm.on("focus", function () {
                 api.select();
+                editor.nodeChanged();
               });
 
               codeMirrorInstances[uuid] = cm;
