@@ -143,6 +143,7 @@ define(
             value: EventHandler.nu({
               run: function (slider, simulatedEvent) {
                 if (EventRoot.isSource(slider, simulatedEvent)) {
+                  detail.value().set(detail.getInitialValue()());
                   changeValue(slider, detail.value().get());
                 }
               }

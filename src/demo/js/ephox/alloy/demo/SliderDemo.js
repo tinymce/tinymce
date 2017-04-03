@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Slider',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
@@ -17,7 +18,7 @@ define(
     'global!document'
   ],
 
-  function (Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Insert, DomEvent, Element, Class, Css, document) {
+  function (Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -33,7 +34,7 @@ define(
           },
           min: 20,
           max: 100,
-          initialValue: 80,
+          getInitialValue: Fun.constant(80),
           stepSize: 10,
           snapToGrid: true,
           parts: {
@@ -76,7 +77,7 @@ define(
 
           min: 0,
           max: 100,
-          initialValue: 35,
+          getInitialValue: Fun.constant(35),
           stepSize: 40,
           snapStart: 35,
           snapToGrid: true,
@@ -132,7 +133,7 @@ define(
           },
           min: 0,
           max: 360,
-          initialValue: 120,
+          getInitialValue: Fun.constant(120),
           stepSize: 10,
           parts: {
             thumb: {

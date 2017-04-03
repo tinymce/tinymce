@@ -53,6 +53,7 @@ define(
 
     var findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
       var range = max - min;
+      // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
       if (xValue < bounds.left) return min - 1;
       else if (xValue > bounds.right) return max + 1;
       else {
