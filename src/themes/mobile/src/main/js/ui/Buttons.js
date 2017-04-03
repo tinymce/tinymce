@@ -2,17 +2,14 @@ define(
   'tinymce.themes.mobile.ui.Buttons',
 
   [
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.ui.FormattingChanged'
   ],
 
-  function (EventRoot, Toggling, SystemEvents, Button, EventHandler, Objects, Merger, Styles) {
+  function (Toggling, Button, Merger, Styles, FormattingChanged) {
     var forToolbarCommand = function (editor, command) {
       return forToolbar(command, function () {
         editor.execCommand(command);
@@ -30,27 +27,12 @@ define(
         }
       };
 
-      var extraEvents = Objects.wrap(
-        SystemEvents.attachedToDom(),
-        EventHandler.nu({
-          run: function (button, simulatedEvent) {
-            var toggle = function (state) {
-              var f = state === true ? Toggling.on : Toggling.off;
-              f(button);
-            };
-            if (EventRoot.isSource(button, simulatedEvent)) {
-              // FIX (from original tiny source [FormatControls] with fix tag)
-              if (editor.formatter) {
-                editor.formatter.formatChanged(command, toggle);
-              } else {
-                editor.on('init', function () {
-                  editor.formatter.formatChanged(command, toggle);
-                });
-              }
-            }
-          }
-        })
-      );
+      var doToggle = function (button, state) {
+        var f = state === true ? Toggling.on : Toggling.off;
+        f(button);
+      };
+
+      var extraEvents = FormattingChanged.onAttached(editor, command, doToggle);
    
       return forToolbar(command, function () {
         editor.execCommand(command);

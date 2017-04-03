@@ -4,19 +4,18 @@ define(
   [
     'ephox.alloy.api.ui.Slider',
     'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Obj',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons'
   ],
 
-  function (Slider, Objects, Styles, Buttons) {
+  function (Slider, Objects, Obj, Styles, Buttons) {
     var sizes = {
-      '0': '8pt',
-      '1': '10pt',
-      '2': '12pt',
-      '3': '14pt',
-      '4': '18pt',
-      '5': '24pt',
-      '6': '36pt'
+      '0': 'x-small',
+      '1': 'small',
+      '2': 'medium',
+      '3': 'large',
+      '4': 'x-large'
     };
 
     var makeSlider = function (spec) {
@@ -40,7 +39,7 @@ define(
         },
         onChange: onChange,
         min: 0,
-        max: 6,
+        max: Obj.keys(sizes).length - 1,
         stepSize: 1,
         initialValue: 2,
         snapToGrid: true,
