@@ -2,17 +2,14 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'global!Error',
     'global!window',
     'tinymce.core.EditorManager',
-    'tinymce.core.fmt.FontInfo',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
-    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.FontSizeSlider',
@@ -20,7 +17,7 @@ define(
     'tinymce.themes.mobile.util.FormatChangers'
   ],
 
-  function (Arr, Cell, Fun, Element, Error, window, EditorManager, FontInfo, ThemeManager, Api, TinyChannels, Styles, Buttons, FontSizeSlider, IosContainer, FormatChangers) {
+  function (Cell, Fun, Element, Error, window, EditorManager, ThemeManager, Api, Styles, Buttons, FontSizeSlider, IosContainer, FormatChangers) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
