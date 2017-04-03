@@ -6,10 +6,10 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.katamari.api.Merger',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.FormattingChanged'
+    'tinymce.themes.mobile.ui.FormattingBehaviour'
   ],
 
-  function (Toggling, Button, Merger, Styles, FormattingChanged) {
+  function (Toggling, Button, Merger, Styles, FormattingBehaviour) {
     var forToolbarCommand = function (editor, command) {
       return forToolbar(command, function () {
         editor.execCommand(command);
@@ -24,23 +24,27 @@ define(
           aria: {
             mode: 'pressed'
           }
+        },
+        'tiny-formatting': {
+          editor: editor,
+          command: command,
+          update: function (button, state) {
+            var f = state === true ? Toggling.on : Toggling.off;
+            f(button);
+          }
         }
       };
-
-      var doToggle = function (button, state) {
-        var f = state === true ? Toggling.on : Toggling.off;
-        f(button);
-      };
-
-      var extraEvents = FormattingChanged.onAttached(editor, command, doToggle);
    
       return forToolbar(command, function () {
         editor.execCommand(command);
-      }, extraBehaviours, extraEvents);
+      }, extraBehaviours, { }, [
+        FormattingBehaviour  
+      ]);
     }
 
 
-    var forToolbar = function (clazz, action, extraBehaviours, extraEvents) {
+    var forToolbar = function (clazz, action, extraBehaviours, extraEvents, _customBehaviours) {
+      var customBehaviours = _customBehaviours !== undefined ? _customBehaviours : [ ];
       return Button.sketch({
         dom: {
           tag: 'span',
@@ -55,7 +59,8 @@ define(
           extraBehaviours
         ),
 
-        events: extraEvents
+        events: extraEvents,
+        customBehaviours: customBehaviours
       });
     };
 

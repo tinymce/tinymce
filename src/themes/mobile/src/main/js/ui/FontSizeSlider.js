@@ -47,7 +47,7 @@ define(
         components: [
           Slider.parts().spectrum(),
           Slider.parts().thumb()
-        ],  
+        ],
 
         parts: {
           spectrum: {
