@@ -29,10 +29,12 @@ asynctest(
     suite.asyncTest("uriToBlob", function (world, done) {
       Conversions.uriToBlob(invalidBlobUriSrc).then(function () {
         LegacyUnit.equal(true, false, "Conversion should fail.");
+        done();
       })['catch'](function (error) {
         LegacyUnit.equal(typeof error, 'string');
         LegacyUnit.equal(error.indexOf(invalidBlobUriSrc) !== -1, true);
-      }).then(done);
+        done();
+      });
     });
 
     Pipeline.async({}, suite.toSteps({}), function () {

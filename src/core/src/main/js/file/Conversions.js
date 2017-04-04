@@ -36,6 +36,9 @@ define(
           xhr.onload = function () {
             if (this.status == 200) {
               resolve(this.response);
+            } else {
+              // IE11 makes it into onload but responds with status 500
+              rejectWithError();
             }
           };
 
