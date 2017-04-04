@@ -52,6 +52,7 @@ define(
                   return Value.get(select.element());
                 },
                 setValue: function (select, newValue) {
+                  // This is probably generically useful ... may become a part of Representing.
                   var found = Arr.find(detail.options(), function (opt) {
                     return opt.value === newValue;
                   });
