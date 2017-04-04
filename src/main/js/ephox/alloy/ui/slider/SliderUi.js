@@ -144,7 +144,8 @@ define(
               run: function (slider, simulatedEvent) {
                 if (EventRoot.isSource(slider, simulatedEvent)) {
                   detail.value().set(detail.getInitialValue()());
-                  changeValue(slider, detail.value().get());
+                  // Only refresh with the initial value, do not call onChange
+                  refresh(slider);
                 }
               }
             })
