@@ -25,6 +25,10 @@ define(
         return (rect.left + rect.right) / 2;
       };
 
+      var getThumb = function (component) {
+        return component.getSystem().getByUid(detail.partUids().thumb).getOrDie();
+      };
+
       var getXOffset = function (slider, spectrumBounds, detail) {
         var v = detail.value().get();
         if (v < detail.min()) {
@@ -57,15 +61,14 @@ define(
 
       var refresh = function (component) {
         var pos = getXPos(component);
-        var thumb = component.getSystem().getByUid(detail.partUids().thumb).getOrDie();
+        var thumb = getThumb(component);
         var thumbRadius = Width.get(thumb.element()) / 2;
         Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
       };
 
       var changeValue = function (component, newValue) {
         var oldValue = detail.value().get();
-        // TODO: Reuse this concept.
-        var thumb = component.getSystem().getByUid(detail.partUids().thumb).getOrDie();
+        var thumb = getThumb(component);
         // The left check is used so that the first click calls refresh
         if (oldValue !== newValue || Css.getRaw(thumb.element(), 'left').isNone()) {
           detail.value().set(newValue);
@@ -144,7 +147,10 @@ define(
               run: function (slider, simulatedEvent) {
                 if (EventRoot.isSource(slider, simulatedEvent)) {
                   detail.value().set(detail.getInitialValue()());
-                  changeValue(slider, detail.value().get());
+                  var thumb = getThumb(slider);
+                  // Call onInit instead of onChange for the first value.
+                  refresh(slider);
+                  detail.onInit()(slider, thumb, detail.value().get());
                 }
               }
             })

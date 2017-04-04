@@ -16,6 +16,7 @@ define(
       FieldSchema.strict('max'),
       FieldSchema.defaulted('stepSize', 1),
       FieldSchema.defaulted('onChange', Fun.noop),
+      FieldSchema.defaulted('onInit', Fun.noop),
       FieldSchema.defaulted('snapToGrid', false),
       FieldSchema.option('snapStart'),
       FieldSchema.strict('getInitialValue'),

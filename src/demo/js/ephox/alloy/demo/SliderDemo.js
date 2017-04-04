@@ -108,10 +108,16 @@ define(
             }
           },
 
+          onInit: function (slider, thumb, value) {
+            Replacing.set(thumb, [
+              GuiFactory.text(value)
+            ]);
+          },
+
           onChange: function (slider, thumb, value) {
             Replacing.set(thumb, [
               GuiFactory.text(value)
-            ])
+            ]);
           },
 
           components: [
