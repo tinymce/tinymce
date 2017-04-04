@@ -357,9 +357,9 @@ define(
       );
 
       Representing.setValue(form, {
-        alpha: { value: 'doggy', text : 'doggy' },
-        beta: { value: 'bottle', text: 'bottle' },
-        gamma: { value: 'cad', text: 'cad' }
+        alpha: 'doggy',
+        beta: 'bottle',
+        gamma: 'cad'
       });
 
       var expform = HtmlDisplay.section(

@@ -167,8 +167,8 @@ define(
               key: SystemEvents.postBlur(),
               value: EventHandler.nu({
                 run: function (typeahead) {
-                  // var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-                  // Sandboxing.close(sandbox);
+                  var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+                  Sandboxing.close(sandbox);
                 }
               })
             }
