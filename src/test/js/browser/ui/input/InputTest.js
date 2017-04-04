@@ -29,10 +29,7 @@ asynctest(
               placeholder: 'placeholder-text'    
             }
           },          
-          data: {
-            value: 'initial-value',
-            text: 'Initial Value'
-          },
+          data: 'initial-value',
           uid: 'test-input-id'
         })
       );
@@ -48,7 +45,7 @@ asynctest(
                 'data-alloy-id': str.is('test-input-id'),
                 placeholder: str.is('placeholder-text')
               },
-              value: str.is('Initial Value')
+              value: str.is('initial-value')
             });
           }),
           component.element()
@@ -79,7 +76,7 @@ asynctest(
           Step.sync(function () {
             Focusing.focus(component);
           }),
-          sCheckInputSelection('after focus', { start: 0, end: 'Initial Value'.length })
+          sCheckInputSelection('after focus', { start: 0, end: 'initial Value'.length })
 
         ])
       );
@@ -88,10 +85,10 @@ asynctest(
         'Checking that representing is working',
         Step.sync(function () {
           var data = Representing.getValue(component);
-          Assertions.assertEq('Checking getValue', { value: 'initial-value', text: 'Initial Value' }, data);
-          Representing.setValue(component, { value: 'v', text: 'V' });
+          Assertions.assertEq('Checking getValue', 'initial-value', data);
+          Representing.setValue(component, 'v');
           var newData = Representing.getValue(component);
-          Assertions.assertEq('Checking getValue after setValue', { value: 'v', text: 'V' }, newData);
+          Assertions.assertEq('Checking getValue after setValue', 'v', newData);
           Assertions.assertStructure(
             'Checking new structure of input',
             ApproxStructure.build(function (s, str, arr) {
@@ -101,7 +98,7 @@ asynctest(
                   'data-alloy-id': str.is('test-input-id'),
                   placeholder: str.is('placeholder-text')
                 },
-                value: str.is('V')
+                value: str.is('v')
               });
             }),
             component.element()
