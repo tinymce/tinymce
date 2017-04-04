@@ -52,10 +52,7 @@ asynctest(
             ],
             parts: {
               field: {
-                data: {
-                  value: 'init',
-                  text: 'Init'
-                },
+                data: 'init',
                 behaviours: {
                   tabstopping: true
                 }
@@ -188,38 +185,20 @@ asynctest(
           '.expandable-shrinking .extra-form { transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s; }'
         ]),
         helper.sAssertRep({
-          'form.ant': {
-            value: 'init',
-            text: 'Init'
-          },
-          'form.bull': {
-            value: 'select-b-init',
-            text: 'Select-b-init'
-          }
+          'form.ant': 'init',
+          'form.bull': 'select-b-init'
         }),
 
         helper.sSetRep({
-          'form.ant': {
-            value: 'first.set',
-            text: 'First.set'
-          },
-          'form.bull': {
-            value: 'select-b-set',
-            text: 'Select-b-set'
-          }
+          'form.ant': 'first.set',
+          'form.bull': 'select-b-set'
         }),
 
         Logger.t(
           'Checking form after set',
           helper.sAssertRep({
-            'form.ant': {
-              value: 'first.set',
-              text: 'First.set'
-            },
-            'form.bull': {
-              value: 'select-b-set',
-              text: 'Select-b-set'
-            }
+            'form.ant': 'first.set',
+            'form.bull': 'select-b-set'
           })
         ),
 
@@ -251,14 +230,8 @@ asynctest(
         Logger.t(
           'Checking the representing value is still the same when collapsed',
           helper.sAssertRep({
-            'form.ant': {
-              value: 'first.set',
-              text: 'First.set'
-            },
-            'form.bull': {
-              value: 'select-b-set',
-              text: 'Select-b-set'
-            }
+            'form.ant': 'first.set',
+            'form.bull': 'select-b-set'
           })
         ),
 
