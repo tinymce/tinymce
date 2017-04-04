@@ -11,7 +11,8 @@ define(
         var items = makeItems();
         ios.setContextToolbar([
           {
-            label: 'font-color',
+            // FIX: I18n
+            label: clazz + ' group',
             items: items
           }
         ]);
