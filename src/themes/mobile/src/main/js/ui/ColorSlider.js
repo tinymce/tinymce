@@ -3,18 +3,12 @@ define(
 
   [
     'ephox.alloy.api.ui.Slider',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.search.TransformFind',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.Buttons',
-    'tinymce.themes.mobile.util.FontColor'
+    'tinymce.themes.mobile.ui.Buttons'
   ],
 
-  function (Slider, Arr, Fun, Option, Element, Css, TransformFind, Styles, Buttons, FontColor) {
+  function (Slider, Css, Styles, Buttons) {
     var BLACK = -1;
     
     var makeSlider = function (spec) {
