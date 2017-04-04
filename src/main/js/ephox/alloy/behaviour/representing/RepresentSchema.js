@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun'
   ],
 
-  function (FieldSchema, ValueSchema, Cell, Fun) {
+  function (FieldSchema, Objects, ValueSchema, Cell, Fun) {
     return [
       FieldSchema.defaultedOf('store', { mode: 'memory' }, ValueSchema.choose('mode', {
         memory: [
@@ -57,6 +58,42 @@ define(
             var onLoad = function (component, repInfo) {
               repInfo.store().initialValue().each(function (data) {
                 repInfo.store().setValue()(component, data);
+              });
+            };
+
+            return {
+              setValue: setValue,
+              getValue: getValue,
+              onLoad: onLoad
+            };
+          })
+        ],
+
+        dataset: [
+          FieldSchema.state('dataset', Fun.constant(Cell({ }))),
+          FieldSchema.option('initialValue'),
+          FieldSchema.strict('getFallbackEntry'),
+          FieldSchema.strict('getDataKey'),
+          FieldSchema.strict('setData'),
+          FieldSchema.state('manager', function () {
+            var setValue = function (component, repInfo, data) {
+              repInfo.store().dataset().set({ });
+              repInfo.store().setData()(component, data);
+            };
+
+            var getValue = function (component, repInfo) {
+              var key = repInfo.store().getDataKey()(component);
+              var dataset = repInfo.store().dataset().get();
+              return Objects.readOptFrom(dataset, key).fold(function () {
+                return repInfo.store().getFallbackEntry()(key);
+              }, function (data) {
+                return data;
+              });
+            };
+
+            var onLoad = function (component, repInfo) {
+              repInfo.store().initialValue().each(function (data) {
+                setValue(component, repInfo, data);
               });
             };
 

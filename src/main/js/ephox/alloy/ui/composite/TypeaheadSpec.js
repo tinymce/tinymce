@@ -40,10 +40,35 @@ define(
         } 
       };
 
-
+      // Due to the fact that typeahead probably need to separate value from text, they can't reuse
+      // (easily) the same representing logic as input fields. Therefore, there is a little bit of dupe
+      // here with InputBase.
+      var inputBehaviours = InputBase.behaviours(detail);
       
       
+      // Defining typeaheads representing here. ///////
+      ///////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////////
       var behaviours = {
+        tabstopping: inputBehaviours.tabstopping,
+        focusing: true,
+        representing: {
+          store: {
+            mode: 'dataset',
+            getDataKey: function (typeahead) {
+              return Value.get(typeahead.element());
+            },
+            getFallbackEntry: function (key) {
+              return { value: key, text: key };
+            },
+            // getData: function (typeahead, data) {
+            //   return { value: data.key, text: data.key }
+            // },
+            setData: function (typeahead, data) {
+              Value.set(typeahead.element(), data.text);
+            }
+          }
+        },
         streaming: {
           stream: {
             mode: 'throttle',
@@ -103,8 +128,6 @@ define(
           }
         },
 
-        focusing: true,
-        tabstopping: true,
         coupling: {
           others: {
             sandbox: function (hotspot) {
@@ -144,8 +167,8 @@ define(
               key: SystemEvents.postBlur(),
               value: EventHandler.nu({
                 run: function (typeahead) {
-                  var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-                  Sandboxing.close(sandbox);
+                  // var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+                  // Sandboxing.close(sandbox);
                 }
               })
             }
