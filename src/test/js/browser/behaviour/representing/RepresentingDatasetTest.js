@@ -1,5 +1,5 @@
 asynctest(
-  'RepresentingTest',
+  'RepresentingTest (mode: dataset)',
  
   [
     'ephox.agar.api.ApproxStructure',
@@ -11,11 +11,10 @@ asynctest(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects',
     'ephox.sugar.api.properties.Value'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Behaviour, Representing, Container, GuiSetup, Objects, Value) {
+  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Behaviour, Representing, Container, GuiSetup, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -28,23 +27,19 @@ asynctest(
           behaviours: Behaviour.derive([
             Representing.config({
               store: {
-                mode: 'memory',
+                mode: 'dataset',
                 initialValue: {
                   value: 'dog',
                   text: 'Dog'
-                }
-              },
-              onSet: function (input, value) {
-                Value.set(input.element(), value.text);
-              },
-              interactive: {
-                event: 'input',
-                process: function (input) {
-                  var v = Value.get(input.element());
-                  return {
-                    value: v.toLowerCase(),
-                    text: v
-                  };
+                },
+                setData: function (component, data) {
+                  Value.set(component.element(), data.text);
+                },
+                getDataKey: function (component) {
+                  return Value.get(component.element());
+                },
+                getFallbackEntry: function (key) {
+                  return { value: key.toLowerCase(), text: key };
                 }
               }
             })
@@ -78,7 +73,6 @@ asynctest(
         Step.sync(function () {
           component.getSystem().triggerEvent('input', component.element(), { });
         }),
-        // Because sSetActiveValue does not fir
 
         sAssertValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),
 
