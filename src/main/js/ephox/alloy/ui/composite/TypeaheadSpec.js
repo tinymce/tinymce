@@ -41,14 +41,9 @@ define(
       };
 
       // Due to the fact that typeahead probably need to separate value from text, they can't reuse
-      // (easily) the same representing logic as input fields. Therefore, there is a little bit of dupe
-      // here with InputBase.
+      // (easily) the same representing logic as input fields.
       var inputBehaviours = InputBase.behaviours(detail);
       
-      
-      // Defining typeaheads representing here. ///////
-      ///////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////////////////////////
       var behaviours = {
         tabstopping: inputBehaviours.tabstopping,
         focusing: true,
@@ -61,9 +56,6 @@ define(
             getFallbackEntry: function (key) {
               return { value: key, text: key };
             },
-            // getData: function (typeahead, data) {
-            //   return { value: data.key, text: data.key }
-            // },
             setData: function (typeahead, data) {
               Value.set(typeahead.element(), data.text);
             }
@@ -113,7 +105,6 @@ define(
             if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
             detail.onExecute()(sandbox, comp);
             var currentValue = Representing.getValue(comp);
-            // FIX: Need to get typeahead working again.
             comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
             return Option.some(true);
           }
