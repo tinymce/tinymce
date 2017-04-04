@@ -4,11 +4,11 @@ define(
   [
     'ephox.alloy.api.ui.Slider',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.Buttons',
+    'tinymce.themes.mobile.ui.ToolbarWidgets',
     'tinymce.themes.mobile.util.FontSizes'
   ],
 
-  function (Slider, Styles, Buttons, FontSizes) {
+  function (Slider, Styles, ToolbarWidgets, FontSizes) {
     var sizes = FontSizes.candidates();
 
     var makeSlider = function (spec) {
@@ -77,17 +77,11 @@ define(
         getInitialValue: function (slider) {
           return FontSizes.get(editor);
         }
-      }
-      return Buttons.forToolbar('font-size', function () {
-        var items = makeItems(spec);
-        ios.setContextToolbar([
-          {
-            label: 'font-size',
-            items: items
-          }
-        ]);
-      }, { }, { });
+      };
 
+      return ToolbarWidgets.button(ios, 'font-size', function () {
+        return makeItems(spec);
+      });
     };
 
     return {
