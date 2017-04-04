@@ -15,20 +15,16 @@ define(
 
   function (Representing, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog) {
     var isNotEmpty = function (val) {
-      return val.text.length > 0;
-    };
-
-    var valueAndText = function (rawValue) {
-      var value = rawValue !== undefined ? rawValue : '';
-      return {
-        value: value,
-        text: value
-      };
+      return val.length > 0;
     };
 
     var findLink = function (editor) {
       var start = Element.fromDom(editor.selection.getStart());
       return SelectorFind.closest(start, 'a');
+    };
+
+    var defaultToEmpty = function (str) {
+      return str === undefined || str === null ? '' : str;
     };
 
     var getGroups = Thunk.cached(function (ios, editor) {
@@ -51,10 +47,10 @@ define(
                   var title = Attr.get(link, 'title');
                   var target = Attr.get(link, 'target');
                   return {
-                    url: valueAndText(url),
-                    text: valueAndText(text),
-                    title: valueAndText(title),
-                    target: valueAndText(target)
+                    url: defaultToEmpty(url),
+                    text: defaultToEmpty(text),
+                    title: defaultToEmpty(title),
+                    target: defaultToEmpty(target)
                   };
                 });
               },
@@ -65,15 +61,15 @@ define(
                 // Must have a URL to insert a link
                 values.url.filter(isNotEmpty).each(function (url) {
                   var attrs = { };
-                  attrs.href = url.text;
+                  attrs.href = url;
 
-                  values.title.filter(isNotEmpty).each(function (title) { attrs.title = title.text; });
-                  values.target.filter(isNotEmpty).each(function (target) { attrs.target = target.text; });
+                  values.title.filter(isNotEmpty).each(function (title) { attrs.title = title; });
+                  values.target.filter(isNotEmpty).each(function (target) { attrs.target = target; });
 
                   values.text.filter(isNotEmpty).fold(function () {
                     editor.execCommand('mceInsertLink', false, attrs);
                   }, function (text) {
-                    editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text.text)));
+                    editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
                   });
                 });
                   
