@@ -33,10 +33,8 @@ define(
             var onLoad = function (component, repInfo) {
               var current = repInfo.store().state().get();
               var data = current !== null ? current : repInfo.store().initialValue();
-              RepresentApis.extractValue(component, repInfo, data).each(function (newData) {
-                repInfo.store().state().set(newData);
-                repInfo.onSet()(component, newData);
-              });
+              repInfo.store().state().set(data);
+              repInfo.onSet()(component, data);
             };
 
             return {
@@ -66,8 +64,7 @@ define(
       FieldSchema.optionObjOf('interactive', [
         FieldSchema.strict('event'),
         FieldSchema.strict('process')
-      ]),
-      FieldSchema.option('extractValue')
+      ])
     ];
   }
 );
