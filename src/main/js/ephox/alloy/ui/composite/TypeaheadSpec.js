@@ -88,6 +88,7 @@ define(
             if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
             detail.onExecute()(sandbox, comp);
             var currentValue = Representing.getValue(comp);
+            // FIX: Need to get typeahead working again.
             comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
             return Option.some(true);
           }

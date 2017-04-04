@@ -18,6 +18,7 @@ define(
       var specWithFetch = Merger.deepMerge(spec, {
         fetch: function (input) {
           var val = Representing.getValue(input);
+          // FIX: Need to get typeahead working again.
           return spec.fetch(input, val.text);
         }
       });

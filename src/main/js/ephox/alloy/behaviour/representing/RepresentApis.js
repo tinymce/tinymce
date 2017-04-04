@@ -12,7 +12,6 @@ define(
 
     var setValue = function (component, repInfo, data) {
       repInfo.store().manager().setValue(component, repInfo, data);
-      repInfo.onSet()(component, data);
     };
 
     var getValue = function (component, repInfo) {

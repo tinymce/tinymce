@@ -2,23 +2,19 @@ define(
   'ephox.alloy.behaviour.representing.RepresentSchema',
 
   [
-    'ephox.alloy.behaviour.representing.RepresentApis',
-    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun'
   ],
 
-  function (RepresentApis, Fields, FieldSchema, ValueSchema, Cell, Fun) {
+  function (FieldSchema, ValueSchema, Cell, Fun) {
     return [
-      Fields.onHandler('onSet'),
-
       FieldSchema.defaultedOf('store', { mode: 'memory' }, ValueSchema.choose('mode', {
         memory: [
           // TODO: Find a better way of storing this.
           FieldSchema.state('state', function () { return Cell(null); }),
-          FieldSchema.defaulted('initialValue', { }),
+          FieldSchema.option('initialValue'),
           
           FieldSchema.state('manager', function () {
 
@@ -32,9 +28,9 @@ define(
 
             var onLoad = function (component, repInfo) {
               var current = repInfo.store().state().get();
-              var data = current !== null ? current : repInfo.store().initialValue();
-              repInfo.store().state().set(data);
-              repInfo.onSet()(component, data);
+              repInfo.store().initialValue().each(function (initVal) {
+                if (current === null) repInfo.store().state().set(initVal);
+              });
             };
 
             return {
@@ -48,23 +44,30 @@ define(
         manual: [
           FieldSchema.strict('getValue'),
           FieldSchema.defaulted('setValue', Fun.noop),
+          FieldSchema.option('initialValue', { }),
           FieldSchema.state('manager', function () {
-            return {
-              setValue: function (component, repInfo, data) {
+            var getValue = function (component, repInfo) {
+              return repInfo.store().getValue()(component);
+            };
+
+            var setValue = function (component, repInfo, data) {
+              repInfo.store().setValue()(component, data);
+            };
+
+            var onLoad = function (component, repInfo) {
+              repInfo.store().initialValue().each(function (data) {
                 repInfo.store().setValue()(component, data);
-              },
-              getValue: function (component, repInfo) {
-                return repInfo.store().getValue()(component);  
-              },
-              onLoad: Fun.noop
+              });
+            };
+
+            return {
+              setValue: setValue,
+              getValue: getValue,
+              onLoad: onLoad
             };
           })
         ]
-      })),
-      FieldSchema.optionObjOf('interactive', [
-        FieldSchema.strict('event'),
-        FieldSchema.strict('process')
-      ])
+      }))
     ];
   }
 );
