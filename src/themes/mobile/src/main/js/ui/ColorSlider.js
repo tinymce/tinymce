@@ -3,12 +3,20 @@ define(
 
   [
     'ephox.alloy.api.ui.Slider',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.search.TransformFind',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.Buttons'
+    'tinymce.themes.mobile.ui.Buttons',
+    'tinymce.themes.mobile.util.FontColor'
   ],
 
-  function (Slider, Css, Styles, Buttons) {
+  function (Slider, Arr, Fun, Option, Element, Css, TransformFind, Styles, Buttons, FontColor) {
+    var BLACK = -1;
+    
     var makeSlider = function (spec) {
       var onChange = function (slider, thumb, value) {
         var getColor = function (hue) {
@@ -40,9 +48,7 @@ define(
         stepSizes: 10,
         min: 0,
         max: 360,
-        getInitialValue: function () {
-          return -1;
-        },
+        getInitialValue: spec.getInitialValue,
 
         parts: {
           spectrum: {
@@ -81,6 +87,10 @@ define(
               editor.formatter.apply('forecolor', { value: color });
               editor.nodeChanged();
             });
+          },
+          getInitialValue: function (slider) {
+            // Return black
+            return BLACK;
           }
         })
       ];
