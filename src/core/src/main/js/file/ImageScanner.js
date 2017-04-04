@@ -36,7 +36,7 @@ define(
       function findAll(elm, predicate) {
         var images, promises;
 
-        function imageToBlobInfo(img, resolve) {
+        function imageToBlobInfo(img, resolve, reject) {
           var base64, blobInfo;
 
           if (img.src.indexOf('blob:') === 0) {
@@ -59,6 +59,8 @@ define(
                     blobInfo: blobInfo
                   });
                 });
+              }, function (err) {
+                reject(err);
               });
             }
 
@@ -84,6 +86,8 @@ define(
                 image: img,
                 blobInfo: blobInfo
               });
+            }, function (err) {
+              reject(err);
             });
           }
         }
@@ -130,6 +134,9 @@ define(
             // We need to wrap it and resolve with the actual image
             return new Promise(function (resolve) {
               cachedPromises[img.src].then(function (imageInfo) {
+                if (typeof imageInfo === 'string') { // error apparently
+                  return imageInfo;
+                }
                 resolve({
                   image: img,
                   blobInfo: imageInfo.blobInfo
@@ -138,8 +145,8 @@ define(
             });
           }
 
-          newPromise = new Promise(function (resolve) {
-            imageToBlobInfo(img, resolve);
+          newPromise = new Promise(function (resolve, reject) {
+            imageToBlobInfo(img, resolve, reject);
           }).then(function (result) {
             delete cachedPromises[result.image.src];
             return result;

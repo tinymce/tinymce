@@ -23,6 +23,7 @@ asynctest(
 
     var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
     var blobUriSrc;
+    var invalidBlobUriSrc = "blob:70BE8432-BA4D-4787-9AB9-86563351FBF7";
 
     Conversions.uriToBlob(base64Src).then(function (blob) {
       blobUriSrc = URL.createObjectURL(blob);
@@ -36,13 +37,15 @@ asynctest(
         '<img src="' + blobUriSrc + '">' +
         '<img src="' + Env.transparentSrc + '">' +
         '<img src="' + base64Src + '" data-mce-bogus="1">' +
-        '<img src="' + base64Src + '" data-mce-placeholder="1">'
+        '<img src="' + base64Src + '" data-mce-placeholder="1">' +
+        '<img src="' + invalidBlobUriSrc + '">'
       );
 
       imageScanner.findAll(viewBlock.get()).then(function (result) {
         done();
         var blobInfo = result[0].blobInfo;
-        LegacyUnit.equal(result.length, 2);
+        LegacyUnit.equal(result.length, 3);
+        LegacyUnit.equal(typeof result[result.length - 1], 'string', "Last item is not the image, but error message.");
         LegacyUnit.equal('data:image/gif;base64,' + blobInfo.base64(), base64Src);
         LegacyUnit.equalDom(result[0].image, viewBlock.get().firstChild);
       });
