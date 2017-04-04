@@ -73,27 +73,29 @@ define(
       });
     };
 
-    var makeItems = function (editor) {
+    var makeItems = function (spec) {
       return [
-        makeSlider({
-          onChange: function (slider, thumb, color) {
-            editor.undoManager.transact(function () {
-              editor.formatter.apply('forecolor', { value: color });
-              editor.nodeChanged();
-            });
-          },
-          getInitialValue: function (slider) {
-            // Return black
-            return BLACK;
-          }
-        })
+        makeSlider(spec)
       ];
     };
 
     var sketch = function (ios, editor) {
+      var spec = {
+        onChange: function (slider, thumb, color) {
+          editor.undoManager.transact(function () {
+            editor.formatter.apply('forecolor', { value: color });
+            editor.nodeChanged();
+          });
+        },
+        getInitialValue: function (slider) {
+          // Return black
+          return BLACK;
+        }
+      };
+
       // Dupe with Font Size Slider
       return Buttons.forToolbar('color', function () {
-        var items = makeItems(editor);
+        var items = makeItems(spec);
         ios.setContextToolbar([
           {
             label: 'font-color',
@@ -104,6 +106,7 @@ define(
     };
 
     return {
+      makeItems: makeItems,
       sketch: sketch
     };
   }

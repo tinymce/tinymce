@@ -9,10 +9,11 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.SelectorFind',
     'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider'
   ],
 
-  function (GuiFactory, Attachment, Gui, Container, Fun, SelectorFind, Styles, FontSizeSlider) {
+  function (GuiFactory, Attachment, Gui, Container, Fun, SelectorFind, Styles, ColorSlider, FontSizeSlider) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -24,7 +25,21 @@ define(
             classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
           },
           components: FontSizeSlider.makeItems({
-            execCommand: Fun.noop
+            onChange: Fun.noop,
+            getInitialValue: function () { return 2; }
+          })
+        })
+      );
+
+      var colorSlider = GuiFactory.build(
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
+          },
+          components: ColorSlider.makeItems({
+            onChange: Fun.noop,
+            getInitialValue: function () { return -1; }
           })
         })
       );
@@ -33,6 +48,7 @@ define(
       Attachment.attachSystem(ephoxUi, gui);
 
       gui.add(fontSlider);
+      gui.add(colorSlider);
     };
   }
 );

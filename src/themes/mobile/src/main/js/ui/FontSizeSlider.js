@@ -51,7 +51,7 @@ define(
       });
     };
 
-    var makeItems = function (editor) {
+    var makeItems = function (spec) {
       return [
         {
           dom: {
@@ -59,14 +59,7 @@ define(
             classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-small-font') ]
           }
         },
-        makeSlider({
-          onChange: function (slider, value) {
-            FontSizes.apply(editor, value);
-          },
-          getInitialValue: function (slider) {
-            return FontSizes.get(editor);
-          }
-        }),
+        makeSlider(spec),
         {
           dom: {
             tag: 'span',
@@ -77,8 +70,16 @@ define(
     };
 
     var sketch = function (ios, editor) {
+      var spec = {
+        onChange: function (slider, value) {
+          FontSizes.apply(editor, value);
+        },
+        getInitialValue: function (slider) {
+          return FontSizes.get(editor);
+        }
+      }
       return Buttons.forToolbar('font-size', function () {
-        var items = makeItems(editor);
+        var items = makeItems(spec);
         ios.setContextToolbar([
           {
             label: 'font-size',
