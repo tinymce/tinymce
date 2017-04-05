@@ -74,7 +74,7 @@ define(
         onChange: function (slider, value) {
           FontSizes.apply(editor, value);
         },
-        getInitialValue: function (slider) {
+        getInitialValue: function (/* slider */) {
           return FontSizes.get(editor);
         }
       };
