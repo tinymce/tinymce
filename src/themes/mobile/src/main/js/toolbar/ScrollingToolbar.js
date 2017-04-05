@@ -60,7 +60,9 @@ define(
                     {
                       dom: {
                         tag: 'div',
-                        classes: [ Styles.resolve('toolbar-group') ].concat(gSpec.scrollable === true ? Styles.resolve([ 'toolbar-scrollable-group' ]) : [ ]),
+                        classes: [ Styles.resolve('toolbar-group') ].concat(
+                          gSpec.scrollable === true ? Styles.resolve([ 'toolbar-scrollable-group' ]) : [ ]
+                        ),
                         attributes: {
                           'aria-label': gSpec.label
                         }
@@ -142,11 +144,13 @@ define(
 
       var setContextToolbar = function (gs) {
         Toggling.on(toolbar);
-        Toolbar.setGroups(toolbar, gs);        
+        Toolbar.setGroups(toolbar, gs);
       };
 
       var restoreToolbar = function () {
-        if (Toggling.isOn(toolbar)) resetGroups();
+        if (Toggling.isOn(toolbar)) {
+          resetGroups();
+        }
       };
 
       var focus = function () {
