@@ -10,14 +10,18 @@ define(
 
   function (Slider, Css, Styles, ToolbarWidgets) {
     var BLACK = -1;
-    
+
     var makeSlider = function (spec) {
       var onChange = function (slider, thumb, value) {
         var getColor = function (hue) {
           // Handle edges.
-          if (hue < 0) return 'black';
-          else if (hue > 360) return 'white';
-          else return 'hsl(' + hue + ', 100%, 50%)';
+          if (hue < 0) {
+            return 'black';
+          } else if (hue > 360) {
+            return 'white';
+          } else {
+            return 'hsl(' + hue + ', 100%, 50%)';
+          }
         };
 
         var color = getColor(value);
@@ -87,7 +91,7 @@ define(
             editor.nodeChanged();
           });
         },
-        getInitialValue: function (slider) {
+        getInitialValue: function (/* slider */) {
           // Return black
           return BLACK;
         }
