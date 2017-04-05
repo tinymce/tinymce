@@ -40,6 +40,12 @@
   width: 1em;
   background: black;
   left: -10px;
+
+  /* vertically centering trick (margin: auto, top: 0, bottom: 0) */
+  margin: auto;
+  top: 0;
+  bottom: 0;
+
   border: 0.1em solid black;
   border-radius: 3em;
 }
