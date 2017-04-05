@@ -107,6 +107,15 @@ define(
       );
     };
 
+    var inside = function (location) {
+      return location.fold(
+        Location.start, // Before
+        Location.start, // Start
+        Location.end,   // End
+        Location.end    // After
+      );
+    };
+
     var isInside = function (location) {
       return location.fold(
         Fun.constant(false), // Before
@@ -200,7 +209,8 @@ define(
       prevLocation: Fun.curry(findLocation, false),
       nextLocation: Fun.curry(findLocation, true),
       getElement: getElement,
-      outside: outside
+      outside: outside,
+      inside: inside
     };
   }
 );

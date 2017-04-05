@@ -12,13 +12,16 @@ define(
   'tinymce.core.keyboard.KeyboardOverrides',
   [
     'tinymce.core.keyboard.ArrowKeys',
+    'tinymce.core.keyboard.BoundarySelection',
     'tinymce.core.keyboard.DeleteBackspaceKeys',
     'tinymce.core.keyboard.EnterKey'
   ],
-  function (ArrowKeys, DeleteBackspaceKeys, EnterKey) {
+  function (ArrowKeys, BoundarySelection, DeleteBackspaceKeys, EnterKey) {
     var setup = function (editor) {
-      ArrowKeys.setup(editor);
-      DeleteBackspaceKeys.setup(editor);
+      var caret = BoundarySelection.setupSelectedState(editor);
+
+      ArrowKeys.setup(editor, caret);
+      DeleteBackspaceKeys.setup(editor, caret);
       EnterKey.setup(editor);
     };
 

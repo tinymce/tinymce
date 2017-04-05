@@ -12,56 +12,108 @@ define(
   'tinymce.core.keyboard.BoundaryDelete',
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
+    'tinymce.core.keyboard.BoundaryCaret',
+    'tinymce.core.keyboard.BoundaryLocation',
+    'tinymce.core.keyboard.BoundarySelection',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Fun, Options, CaretContainer, CaretPosition, InlineUtils) {
+  function (Fun, Option, Options, CaretContainer, CaretPosition, BoundaryCaret, BoundaryLocation, BoundarySelection, InlineUtils) {
     var selectAndDelete = function (editor, elm) {
-      editor.selection.select(elm);
-      editor.execCommand('Delete');
+      editor.undoManager.ignore(function () {
+        editor.selection.select(elm);
+        editor.execCommand('Delete');
+      });
     };
 
-    var isLastPosition = function (rootNode, forward, pos) {
-      return InlineUtils.findCaretPosition(rootNode, forward, pos).map(function (newPos) {
-        return InlineUtils.isAtInlineEndPoint(rootNode, newPos);
-      }).getOr(false);
+    var rangeFromPositions = function (from, to) {
+      var range = document.createRange();
+
+      range.setStart(from.container(), from.offset());
+      range.setEnd(to.container(), to.offset());
+
+      return range;
     };
 
-    var deleteCollapsed = function (editor, from) {
+    var setCaretLocation = function (editor, caret) {
+      return function (location) {
+        return BoundaryCaret.renderCaret(caret, location).map(function (pos) {
+          BoundarySelection.setCaretPosition(editor, pos);
+          return true;
+        }).getOr(false);
+      };
+    };
+
+    var deleteFromTo = function (editor, caret, from, to) {
       var rootNode = editor.getBody();
-      if (InlineUtils.isInInline(rootNode, from) && CaretContainer.isAfterInline(from)) {
-        if (isLastPosition(editor.getBody(), true, from)) {
+
+      editor.undoManager.ignore(function () {
+        editor.selection.setRng(rangeFromPositions(from, to));
+        editor.execCommand('Delete');
+
+        BoundaryLocation.readLocation(rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
+          .map(BoundaryLocation.inside)
+          .map(setCaretLocation(editor, caret));
+      });
+
+      editor.nodeChanged();
+    };
+
+    var backspaceDeleteCollapsed = function (editor, caret, forward, from) {
+      var rootNode = editor.getBody();
+      var fromLocation = BoundaryLocation.readLocation(rootNode, from);
+
+      return fromLocation.bind(function (location) {
+        if (forward) {
+          return location.fold(
+            Fun.constant(Option.some(BoundaryLocation.inside(location))), // Before
+            Option.none, // Start
+            Fun.constant(Option.some(BoundaryLocation.outside(location))), // End
+            Option.none  // After
+          );
+        } else {
+          return location.fold(
+            Option.none, // Before
+            Fun.constant(Option.some(BoundaryLocation.outside(location))), // Start
+            Option.none, // End
+            Fun.constant(Option.some(BoundaryLocation.inside(location)))  // After
+          );
+        }
+      })
+      .map(setCaretLocation(editor, caret))
+      .getOrThunk(function () {
+        var toPosition = InlineUtils.findCaretPosition(rootNode, forward, from);
+        var toLocation = toPosition.bind(function (pos) {
+          return BoundaryLocation.readLocation(rootNode, pos);
+        });
+
+        if (fromLocation.isSome() && toLocation.isSome()) {
           InlineUtils.findInline(rootNode, from).bind(Fun.curry(selectAndDelete, editor));
           return true;
+        } else {
+          return toLocation.map(function (_) {
+            toPosition.map(function (to) {
+              if (forward) {
+                deleteFromTo(editor, caret, from, to);
+              } else {
+                deleteFromTo(editor, caret, to, from);
+              }
+            });
+
+            return true;
+          }).getOr(false);
         }
-      }
-
-      return false;
+      });
     };
 
-    var backspaceCollapsed = function (editor, from) {
-      var rootNode = editor.getBody();
-      if (InlineUtils.isInInline(rootNode, from) && CaretContainer.isBeforeInline(from)) {
-        if (isLastPosition(editor.getBody(), false, from)) {
-          InlineUtils.findInline(rootNode, from).bind(Fun.curry(selectAndDelete, editor));
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    var backspaceDeleteCollapsed = function (editor, forward) {
-      var from = CaretPosition.fromRangeStart(editor.selection.getRng());
-      return forward ? deleteCollapsed(editor, from) : backspaceCollapsed(editor, from);
-    };
-
-    var backspaceDelete = function (editor, forward) {
+    var backspaceDelete = function (editor, caret, forward) {
       return function () {
         if (editor.selection.isCollapsed()) {
-          return backspaceDeleteCollapsed(editor, forward);
+          var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+          return backspaceDeleteCollapsed(editor, caret, forward, from);
         }
 
         return false;

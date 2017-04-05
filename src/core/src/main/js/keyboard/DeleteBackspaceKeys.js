@@ -16,11 +16,11 @@ define(
     'tinymce.core.util.VK'
   ],
   function (BoundaryDelete, MatchKeys, VK) {
-    var setup = function (editor) {
+    var setup = function (editor, caret) {
       editor.on('keydown', function (evt) {
         MatchKeys.match([
-          { keyCode: VK.BACKSPACE, action: BoundaryDelete.backspaceDelete(editor, false) },
-          { keyCode: VK.DELETE, action: BoundaryDelete.backspaceDelete(editor, true) }
+          { keyCode: VK.BACKSPACE, action: BoundaryDelete.backspaceDelete(editor, caret, false) },
+          { keyCode: VK.DELETE, action: BoundaryDelete.backspaceDelete(editor, caret, true) }
         ], evt).map(function (action) {
           if (action()) {
             evt.preventDefault();

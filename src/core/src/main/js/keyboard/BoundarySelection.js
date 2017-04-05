@@ -12,14 +12,15 @@ define(
   'tinymce.core.keyboard.BoundarySelection',
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'tinymce.core.caret.CaretContainerRemove',
     'tinymce.core.caret.CaretPosition',
-    'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.keyboard.BoundaryCaret',
+    'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Arr, Fun, CaretContainerRemove, CaretPosition, BoundaryLocation, BoundaryCaret, InlineUtils) {
+  function (Arr, Cell, Fun, CaretContainerRemove, CaretPosition, BoundaryCaret, BoundaryLocation, InlineUtils) {
     var setCaretPosition = function (editor, pos) {
       var rng = editor.dom.createRng();
       rng.setStart(pos.container(), pos.offset());
@@ -39,13 +40,19 @@ define(
       }
     };
 
+    var renderCaretLocation = function (editor, caret, location) {
+      return BoundaryCaret.renderCaret(caret, location).map(function (pos) {
+        setCaretPosition(editor, pos);
+        return location;
+      });
+    };
+
     var findLocation = function (editor, caret, forward) {
       var rootNode = editor.getBody();
       var from = CaretPosition.fromRangeStart(editor.selection.getRng());
       var location = forward ? BoundaryLocation.nextLocation(rootNode, from) : BoundaryLocation.prevLocation(rootNode, from);
-      return location.map(function (location) {
-        setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
-        return location;
+      return location.bind(function (location) {
+        return renderCaretLocation(editor, caret, location);
       });
     };
 
@@ -71,9 +78,8 @@ define(
         var inlines = Arr.filter(elms, InlineUtils.isInlineTarget);
         Arr.each(inlines, function (inline) {
           var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-          BoundaryLocation.readLocation(editor.getBody(), pos).map(function (location) {
-            setCaretPosition(editor, BoundaryCaret.renderCaret(caret, location));
-            return location;
+          BoundaryLocation.readLocation(editor.getBody(), pos).bind(function (location) {
+            return renderCaretLocation(editor, caret, location);
           });
         });
       }
@@ -85,7 +91,9 @@ define(
       };
     };
 
-    var setupSelectedState = function (editor, caret) {
+    var setupSelectedState = function (editor) {
+      var caret = new Cell(null);
+
       editor.on('NodeChange', function (e) {
         if (isFeatureEnabled(editor)) {
           toggleInlines(editor.dom, e.parents);
@@ -93,11 +101,14 @@ define(
           renderInsideInlineCaret(editor, caret, e.parents);
         }
       });
+
+      return caret;
     };
 
     return {
       move: move,
-      setupSelectedState: setupSelectedState
+      setupSelectedState: setupSelectedState,
+      setCaretPosition: setCaretPosition
     };
   }
 );
