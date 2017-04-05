@@ -44,7 +44,7 @@ define(
                 Inputs.field('target', 'Link target')
               ],
 
-              getInitialValue: function (dialog) {
+              getInitialValue: function (/* dialog */) {
                 return findLink(editor).map(function (link) {
                   var text = TextContent.get(link);
                   var url = Attr.get(link, 'href');
@@ -58,8 +58,8 @@ define(
                   };
                 });
               },
-              
-              onExecute: function (dialog, simulatedEvent) {
+
+              onExecute: function (dialog/*, simulatedEvent */) {
                 var values = Representing.getValue(dialog);
 
                 // Must have a URL to insert a link
@@ -67,8 +67,12 @@ define(
                   var attrs = { };
                   attrs.href = url.text;
 
-                  values.title.filter(isNotEmpty).each(function (title) { attrs.title = title.text; });
-                  values.target.filter(isNotEmpty).each(function (target) { attrs.target = target.text; });
+                  values.title.filter(isNotEmpty).each(function (title) {
+                    attrs.title = title.text;
+                  });
+                  values.target.filter(isNotEmpty).each(function (target) {
+                    attrs.target = target.text;
+                  });
 
                   values.text.filter(isNotEmpty).fold(function () {
                     editor.execCommand('mceInsertLink', false, attrs);
@@ -76,7 +80,7 @@ define(
                     editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text.text)));
                   });
                 });
-                  
+
                 ios.restoreToolbar();
                 editor.focus();
               }
