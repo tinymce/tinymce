@@ -26,13 +26,14 @@ define(
       var element = SelectorFind.first('meta[name="viewport"]').getOrThunk(nu);
       var backup = Attr.get(element, 'content');
 
-      var maximize = function() {
+      var maximize = function () {
         Attr.set(element, 'content', 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0');
       };
 
-      var restore = function() {
-        if (backup !== undefined && backup !== null && backup.length > 0) Attr.set(element, 'content', backup);
-        else {
+      var restore = function () {
+        if (backup !== undefined && backup !== null && backup.length > 0) {
+          Attr.set(element, 'content', backup);
+        } else {
           // TODO: user-scalable is left as disabled when the editor closes
           Attr.remove(element, 'content');
         }
