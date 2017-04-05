@@ -42,10 +42,10 @@ define(
 
 
       // Checks that all touches occur within the constraints of the mask
-      var touchesInBounds = function (touches){
+      var touchesInBounds = function (touches) {
         var containerBounds = element.dom().getClientRects()[0];
 
-        return Arr.forall(touches, function(touch) {
+        return Arr.forall(touches, function (touch) {
           return touch.pageY >= containerBounds.top &&
                  touch.pageY <= (containerBounds.top + containerBounds.height) &&
                  touch.pageX >= containerBounds.left &&
@@ -54,18 +54,19 @@ define(
       };
 
       var binders = [
-        DomEvent.bind(element, 'touchmove', function(event) {
+        DomEvent.bind(element, 'touchmove', function (/* event */) {
           hasScrolled = true;
         }),
-        DomEvent.bind(element, 'touchend', function(event) {
+        DomEvent.bind(element, 'touchend', function (event) {
           var touches = event.raw().changedTouches;
-          if(touchesInBounds(touches) && !hasScrolled)
+          if (touchesInBounds(touches) && !hasScrolled) {
             fullscreen(event);
+          }
         }),
-        DomEvent.bind(element, 'touchstart', function(event)  {
+        DomEvent.bind(element, 'touchstart', function (/* event */) {
           hasScrolled = false;
         }),
-        DomEvent.bind(element, 'click', function(event) {
+        DomEvent.bind(element, 'click', function (event) {
           fullscreen(event);
         })
       ];
