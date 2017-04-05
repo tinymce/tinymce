@@ -59,7 +59,7 @@ define(
               label: 'The first group',
               scrollable: false,
               items: [
-                Buttons.forToolbar('back', function (btn) {
+                Buttons.forToolbar('back', function (/* btn */) {
                   ios.exit();
                 }, { }, { })
               ]
