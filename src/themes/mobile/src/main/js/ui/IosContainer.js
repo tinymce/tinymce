@@ -66,7 +66,7 @@ define(
           w.exit();
         });
       };
-      
+
       return {
         system: Fun.constant(alloy),
         element: alloy.element,
