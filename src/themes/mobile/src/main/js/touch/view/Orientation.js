@@ -18,7 +18,7 @@ define(
     var INSURANCE = 1000 / INTERVAL;
 
     var get = function () {
-      // We need to use this because the window shrinks due to an app keyboard, 
+      // We need to use this because the window shrinks due to an app keyboard,
       // width > height is no longer reliable.
       var isPortrait = window.matchMedia('(orientation: portrait)').matches;
       return {
