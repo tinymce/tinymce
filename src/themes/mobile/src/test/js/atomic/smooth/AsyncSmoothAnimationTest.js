@@ -4,12 +4,12 @@ asynctest(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
+    'global!assert',
     'tinymce.themes.mobile.ios.smooth.SmoothAnimation'
   ],
 
-  function (Fun, Future, SmoothAnimation) {
+  function (Fun, Future, assert, SmoothAnimation) {
     var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
 
     var animator = SmoothAnimation.create();
 
@@ -19,8 +19,9 @@ asynctest(
         var values = [ current ];
 
         var add = function (val, abort) {
-          if (val > 100) abort('abort');
-          else {
+          if (val > 100) {
+            abort('abort');
+          } else {
             current = val;
             values = values.concat([ val ]);
           }
@@ -42,8 +43,16 @@ asynctest(
     };
 
     var assertInfo = function (label, expected, info) {
-      assert.eq(expected.current, info.current, 'Test: ' + label + '. Expected current: ' + expected.current + ', but was: ' + info.current);
-      assert.eq(expected.values, info.values, 'Test: ' + label + '. Expected values: ' + expected.values + ', but was: ' + info.values);
+      assert.eq(
+        expected.current,
+        info.current,
+        'Test: ' + label + '. Expected current: ' + expected.current + ', but was: ' + info.current
+      );
+      assert.eq(
+        expected.values,
+        info.values,
+        'Test: ' + label + '. Expected values: ' + expected.values + ', but was: ' + info.values
+      );
     };
 
     check('Test 1', 2, 10, 3).get(function (data1) {
