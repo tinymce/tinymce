@@ -11,7 +11,8 @@ define(
   function (Arr, Attr, Css, SelectorFilter) {
     var attr = 'data-ephox-mobile-fullscreen-style';
     var siblingStyles = 'display:none!important;';
-    var ancestorStyles = 'position:absolute!important;top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;';
+    var ancestorStyles = 'position:absolute!important;top:0!important;left:0!important;margin:0' +
+      '!important;padding:0!important;width:100%!important;';
     var bgFallback = 'background-color:rgb(255,255,255)!important;';
 
     var matchColor = function (editorBody) {
@@ -33,9 +34,12 @@ define(
           var styles = Attr.get(element, 'style');
           var backup = styles === undefined ? 'no-styles' : styles.trim();
 
-          if(backup === clobberStyle) return;
-          Attr.set(element, attr, backup);
-          Attr.set(element, 'style', clobberStyle);
+          if (backup === clobberStyle) {
+            return;
+          } else {
+            Attr.set(element, attr, backup);
+            Attr.set(element, 'style', clobberStyle);
+          }
         };
       };
 
@@ -49,11 +53,14 @@ define(
     };
 
     var restoreStyles = function () {
-      var clobberedEls = SelectorFilter.all('['+ attr + ']');
+      var clobberedEls = SelectorFilter.all('[' + attr + ']');
       Arr.each(clobberedEls, function (element) {
         var restore = Attr.get(element, attr);
-        if(restore !== 'no-styles') Attr.set(element, 'style', restore);
-          else Attr.remove(element, 'style');
+        if (restore !== 'no-styles') {
+          Attr.set(element, 'style', restore);
+        } else {
+          Attr.remove(element, 'style');
+        }
         Attr.remove(element, attr);
       });
     };
