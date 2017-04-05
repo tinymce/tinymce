@@ -304,6 +304,26 @@ asynctest(
       LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
     });
 
+    suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text with zwsp (normalized)', function (editor) {
+      var rng, bookmark;
+
+      // Get non intrusive bookmark multiple elements text selection fragmented
+      editor.setContent('<p>text</p><p>text</p>');
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode(Zwsp.ZWSP));
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode(Zwsp.ZWSP));
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('text'));
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody().firstChild.lastChild, 1);
+      rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+      editor.selection.setRng(rng);
+      bookmark = editor.selection.getBookmark(2, true);
+      editor.setContent(editor.getContent());
+      LegacyUnit.equal(editor.getContent(), '<p>textatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
+      editor.selection.moveToBookmark(bookmark);
+      LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+    });
+
     suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function (editor) {
       var rng, bookmark;
 
