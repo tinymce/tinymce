@@ -24,18 +24,28 @@ define(
     return function (editor) {
       var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
+      var isUnlocked = function () {
+        return locks === 0;
+      };
+
+      var setTyping = function (typing) {
+        if (isUnlocked()) {
+          self.typing = typing;
+        }
+      };
+
       function setDirty(state) {
         editor.setDirty(state);
       }
 
       function addNonTypingUndoLevel(e) {
-        self.typing = false;
+        setTyping(false);
         self.add({}, e);
       }
 
       function endTyping() {
         if (self.typing) {
-          self.typing = false;
+          setTyping(false);
           self.add();
         }
       }
@@ -129,7 +139,7 @@ define(
         var modKey = (e.ctrlKey && !e.altKey) || e.metaKey;
         if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !self.typing && !modKey) {
           self.beforeChange();
-          self.typing = true;
+          setTyping(true);
           self.add({}, e);
           isFirstTypedCharacter = true;
         }
@@ -171,7 +181,7 @@ define(
          * @method beforeChange
          */
         beforeChange: function () {
-          if (!locks) {
+          if (isUnlocked()) {
             beforeBookmark = editor.selection.getBookmark(2, true);
           }
         },
@@ -191,7 +201,7 @@ define(
           level = level || {};
           level = Tools.extend(level, currentLevel);
 
-          if (locks || editor.removed) {
+          if (isUnlocked() === false || editor.removed) {
             return null;
           }
 
@@ -257,6 +267,7 @@ define(
           if (self.typing) {
             self.add();
             self.typing = false;
+            setTyping(false);
           }
 
           if (index > 0) {
@@ -335,14 +346,7 @@ define(
         transact: function (callback) {
           endTyping();
           self.beforeChange();
-
-          try {
-            locks++;
-            callback();
-          } finally {
-            locks--;
-          }
-
+          self.ignore(callback);
           return self.add();
         },
 
@@ -366,6 +370,22 @@ define(
             if (self.transact(callback2)) {
               data[index - 1].beforeBookmark = bookmark;
             }
+          }
+        },
+
+        /**
+         * Makes sure that anything within the callback transaction doesn't get added as an undo level. An undo level
+         * would still be produced once the user moves the caret inside the editor for example.
+         *
+         * @method ignore
+         * @param {function} callback Function that doesn't cause any undo levels to be added.
+         */
+        ignore: function (callback) {
+          try {
+            locks++;
+            callback();
+          } finally {
+            locks--;
           }
         }
       };
