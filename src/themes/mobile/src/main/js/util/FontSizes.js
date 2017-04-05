@@ -35,7 +35,7 @@ define(
       return inline.getOrThunk(function () {
         return Css.get(start, 'font-size');
       });
-    }
+    };
 
     var getSize = function (editor) {
       // This was taken from the tinymce approach (FontInfo is unlikely to be global)
@@ -48,9 +48,8 @@ define(
       };
 
       var elemSize = getRawOrComputed(isRoot, elem);
-      
       return Arr.find(candidates, function (size) {
-        return elemSize === size; //px === size || pt === size;
+        return elemSize === size;
       }).getOr(defaultSize);
     };
 
