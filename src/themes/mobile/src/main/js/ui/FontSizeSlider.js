@@ -38,8 +38,16 @@ define(
           spectrum: {
             dom: {
               tag: 'div',
-              classes: [ Styles.resolve('slider-font-size') ]
-            }
+              classes: [ Styles.resolve('slider-font-size-container') ]
+            },
+            components: [
+              { 
+                dom: {
+                  tag: 'div',
+                  classes: [ Styles.resolve('slider-font-size') ]
+                }
+              }
+            ]
           },
           thumb: {
             dom: {

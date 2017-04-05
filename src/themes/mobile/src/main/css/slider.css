@@ -13,6 +13,15 @@
   height: auto;
 }
 
+.tinymce-mobile-slider .tinymce-mobile-slider-font-size-container,
+.tinymce-mobile-slider .tinymce-mobile-slider-gradient-container 
+ {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  align-items: center;
+}
+
 .tinymce-mobile-slider .tinymce-mobile-slider-font-size {
   display: flex;
   flex: 1;

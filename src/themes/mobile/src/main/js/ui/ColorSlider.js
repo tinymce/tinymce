@@ -52,8 +52,16 @@ define(
           spectrum: {
             dom: {
               tag: 'div',
-              classes: [ Styles.resolve('slider-gradient') ]
-            }
+              classes: [ Styles.resolve('slider-gradient-container') ]
+            },
+            components: [
+              {
+                dom: {
+                  tag: 'div',
+                  classes: [ Styles.resolve('slider-gradient') ]
+                }
+              }
+            ]
           },
           thumb: {
             dom: {
