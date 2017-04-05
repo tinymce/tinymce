@@ -28,8 +28,8 @@ module.exports = function (grunt) {
       "theme": {
         files: [
           {
-            src: "scratch/mobile/theme.raw.js",
-            dest: "dist/mobile/theme.js"
+            src: "scratch/inline/theme.raw.js",
+            dest: "dist/inline/theme.js"
           }
         ]
       }
@@ -60,8 +60,8 @@ module.exports = function (grunt) {
       "theme": {
         files: [
           {
-            src: "scratch/mobile/theme.js",
-            dest: "dist/mobile/theme.min.js"
+            src: "scratch/inline/theme.js",
+            dest: "dist/inline/theme.min.js"
           }
         ]
       }
