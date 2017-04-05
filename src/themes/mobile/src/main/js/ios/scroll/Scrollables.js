@@ -11,7 +11,7 @@ define(
 
   function (Fun, DomEvent, Attr, SelectorFind, Styles) {
     var dataHorizontal = 'data-' + Styles.resolve('horizontal-scroll');
-    
+
     var canScrollVertically = function (container) {
       container.dom().scrollTop = 1;
       var result = container.dom().scrollTop !== 0;

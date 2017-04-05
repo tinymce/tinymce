@@ -41,7 +41,7 @@ define(
           Css.set(element, 'top', (getTop(element) + ANIMATION_STEP) + 'px');
         };
 
-        var finish = function (_dest) {
+        var finish = function (/* dest */) {
           element.dom().scrollTop = destination;
           Css.set(element, 'top', finalTop + 'px');
           callback(destination);
@@ -60,14 +60,15 @@ define(
           var previous = DataAttributes.safeParse(element, lastScroll);
           // As soon as we detect a scroll value that we didn't set, assume the user
           // is scrolling, and abort the scrolling.
-          if (previous !== element.dom().scrollTop) abort(element.dom().scrollTop);
-          else {
+          if (previous !== element.dom().scrollTop) {
+            abort(element.dom().scrollTop);
+          } else {
             element.dom().scrollTop = newScroll;
             Attr.set(element, lastScroll, newScroll);
           }
         };
 
-        var finish = function (_dest) {
+        var finish = function (/* dest */) {
           element.dom().scrollTop = destination;
           Attr.set(element, lastScroll, destination);
           callback(destination);
@@ -88,7 +89,7 @@ define(
           Css.set(element, 'top', newTop + 'px');
         };
 
-        var finish = function (_dest) {
+        var finish = function (/* dest */) {
           update(destination);
           callback(destination);
         };
@@ -100,7 +101,7 @@ define(
     };
 
     var updateTop = function (element, amount) {
-      var newTop =  (amount + IosViewport.getYFixedData(element)) + 'px';
+      var newTop = (amount + IosViewport.getYFixedData(element)) + 'px';
       Css.set(element, 'top', newTop);
     };
 

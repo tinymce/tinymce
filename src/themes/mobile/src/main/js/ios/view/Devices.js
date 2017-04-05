@@ -63,7 +63,7 @@ define(
         return deviceWidth <= device.width && deviceHeight <= device.height ?
             Option.some(device.keyboard) :
             Option.none();
-      }).getOr({ portrait: deviceHeight/5, landscape: deviceWidth/4});
+      }).getOr({ portrait: deviceHeight / 5, landscape: deviceWidth / 4 });
     };
 
     return {
