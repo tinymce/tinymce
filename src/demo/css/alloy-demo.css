@@ -31,6 +31,10 @@
   background: white;
 }
 
+.demo-alloy-menu li.alloy-selected-item {
+  background: #cadbee;
+}
+
 :focus {
   outline: 2px solid green;
 }

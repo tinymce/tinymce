@@ -71,12 +71,12 @@ define(
           // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
           var point = CssPosition.screen(
             Position(
-              Math.max(0, rawRect.left),
-              Math.max(0, rawRect.top)
+              Math.max(0, rawRect.left()),
+              Math.max(0, rawRect.top())
             )
           );
 
-          return Boxes.pointed(point, rawRect.width, rawRect.height);
+          return Boxes.pointed(point, rawRect.width(), rawRect.height());
         });
       });
 

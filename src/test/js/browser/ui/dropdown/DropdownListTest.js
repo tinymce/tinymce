@@ -4,7 +4,6 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
@@ -16,7 +15,6 @@ asynctest(
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
-    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
@@ -25,12 +23,13 @@ asynctest(
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.properties.TextContent',
-    'ephox.sugar.api.view.Width'
+    'ephox.sugar.api.properties.TextContent'
   ],
  
-  function (ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, Menu, TieredMenu, GuiSetup, NavigationUtils, TestBroadcasts, DropdownAssertions, TestDropdownMenu, Future, Result, Css, TextContent, Width) {
+  function (
+    ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, TieredMenu, GuiSetup,
+    NavigationUtils, TestBroadcasts, DropdownAssertions, TestDropdownMenu, Future, Result, TextContent
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -45,27 +44,6 @@ asynctest(
     );
 
     GuiSetup.setup(function (store, doc, body) {
-
-
-      var displayer = Memento.record(
-        Container.sketch({
-          dom: {
-            tag: 'span'
-          },
-          behaviours: {
-            representing: {
-              store: {
-                mode: 'memory',
-                initialValue: 'hi'
-              },
-              onSet: function (button, val) {
-                TextContent.set(button.element(), val);
-              }
-            }
-          }
-        })
-      );
-
       var c = GuiFactory.build(
         Dropdown.sketch({
           dom: {
@@ -73,7 +51,12 @@ asynctest(
           },
 
           components: [
-            displayer.asSpec()
+            {
+              dom: {
+                tag: 'span',
+                innerHtml: 'hi'
+              }  
+            }
           ],
 
           lazySink: function () {

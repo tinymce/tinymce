@@ -22,25 +22,18 @@ define(
       return {
         representing: {
           store: {
-            mode: 'memory',
-            initialValue: detail.data().getOr({ value: '', text: '' })
-          },
-
-          interactive: {
-            event: 'input',
-            process: function (input) {
-              var v = Value.get(input.element());
-              return {
-                value: v.toLowerCase(),
-                text: v
-              };
-            }
-          },
-
-          onSet: function (input, data) {
-            // Only set it if it has changed ... otherwise the cursor goes to the end.
-            if (Value.get(input.element()) !== data.text) {
-              Value.set(input.element(), data.text);
+            mode: 'manual',
+            // Propagating its Option
+            initialValue: detail.data().getOr(undefined),
+            getValue: function (input) {
+              return Value.get(input.element());
+            },
+            setValue: function (input, data) {
+              var current = Value.get(input.element());
+              // Only set it if it has changed ... otherwise the cursor goes to the end.
+              if (current !== data) {
+                Value.set(input.element(), data);
+              }
             }
           }
         },

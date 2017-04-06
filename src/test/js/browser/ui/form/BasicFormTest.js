@@ -5,24 +5,19 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.form.TestForm',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Fun'
   ],
  
-  function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, GuiFactory, Representing, Form, FormField, HtmlSelect, Input, EventHandler, GuiSetup, TestForm, Obj, Fun) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -44,10 +39,7 @@ asynctest(
               ],
               parts: {
                 field: {
-                  data: {
-                    value: 'init',
-                    text: 'Init'
-                  }
+                  data: 'Init'
                 },
                 label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
               }
@@ -120,26 +112,26 @@ asynctest(
           'Initial values',
           GeneralSteps.sequence([
             helper.sAssertRep({
-              'form.ant': { value: 'init', text: 'Init' },
-              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+              'form.ant': 'Init',
+              'form.bull': 'select-b-init'
             }),
             sAssertDisplay('Init', 'select-b-init')
           ])
         ),
 
         Logger.t(
-          'Setting "form.ant" to (ant-value, Ant-value)',
+          'Setting "form.ant" to ant-value',
           GeneralSteps.sequence([
             helper.sSetRep({
-              'form.ant': { value: 'ant-value', text: 'Ant-value' }
+              'form.ant': 'ant-value'
             }),
 
             helper.sAssertRep({
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-init'
             }),
 
-            sAssertDisplay('Ant-value', 'select-b-init')
+            sAssertDisplay('ant-value', 'select-b-init')
           ])
         ),
 
@@ -147,16 +139,16 @@ asynctest(
           'Setting multiple values but the select value is invalid',
           GeneralSteps.sequence([
             helper.sSetRep({
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-not-there', text: 'Select-b-not-there' }
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-not-there'
             }),
 
             helper.sAssertRep({
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-init', text: 'Select-b-init' }
+              'form.ant': 'ant-value',
+              'form.bull':'select-b-init'
             }),
 
-            sAssertDisplay('Ant-value', 'select-b-init')
+            sAssertDisplay('ant-value', 'select-b-init')
           ])
         ),
 
@@ -164,16 +156,16 @@ asynctest(
           'Setting "form.ant" and "form.bull" to valid values',
           GeneralSteps.sequence([
             helper.sSetRep({
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-other', text: 'missing..' }
+              'form.ant': 'ant-value',
+              'form.bull':'select-b-other'
             }),
 
             helper.sAssertRep({
-              'form.ant': { value: 'ant-value', text: 'Ant-value' },
-              'form.bull': { value: 'select-b-other', text: 'Select-b-other' }
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-other'
             }),
 
-            sAssertDisplay('Ant-value', 'select-b-other')
+            sAssertDisplay('ant-value', 'select-b-other')
           ])
         )
       ];

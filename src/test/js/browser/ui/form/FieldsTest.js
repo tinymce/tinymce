@@ -5,19 +5,23 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.FormChooser',
     'ephox.alloy.api.ui.FormCoupledInputs',
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.test.behaviour.RepresentPipes',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Representing, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, GuiSetup, Fun) {
+  function (
+    ApproxStructure, Assertions, Step, Representing, GuiFactory, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, RepresentPipes, GuiSetup,
+    Fun
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -42,10 +46,7 @@ asynctest(
         ],
         parts: {
           field: {
-            data: {
-              value: 'init',
-              text: 'Init'
-            }
+            data: 'init'
           },
           label: labelSpec
         }
@@ -180,11 +181,8 @@ asynctest(
         GuiSetup.mAddStyles(doc, [
           '.test-selected-choice, .coupled-lock { background: #cadbee }'
         ]),
-        Step.sync(function () {
-          var val = Representing.getValue(inputA);
-          Assertions.assertEq('Checking input-a value', 'init', val.value);
-          Assertions.assertEq('Checking input-a text', 'Init', val.text);
-        }),
+
+        RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
         Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
@@ -215,11 +213,7 @@ asynctest(
           });
         }), chooserC.element()),
 
-        Step.sync(function () {
-          var val = Representing.getValue(selectB);
-          Assertions.assertEq('Checking select-b value', 'select-b-init', val.value);
-          Assertions.assertEq('Checking select-b text', 'Select-b-init', val.text);
-        }),
+        RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
         Step.sync(function () {
           var val = Representing.getValue(chooserC).getOrDie();

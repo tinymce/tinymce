@@ -33,7 +33,7 @@ define(
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
-      Attachment.addSystem(body, gui);
+      Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
 

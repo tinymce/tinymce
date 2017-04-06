@@ -6,7 +6,6 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Mouse',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.component.GuiFactory',
@@ -17,11 +16,13 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.TextContent'
+    'ephox.katamari.api.Result'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu, Future, Result, TextContent) {
+  function (
+    ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu,
+    Future, Result
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,27 +37,6 @@ asynctest(
     );
 
     GuiSetup.setup(function (store, doc, body) {
-
-
-      var displayer = Memento.record(
-        Container.sketch({
-          dom: {
-            tag: 'span'
-          },
-          behaviours: {
-            representing: {
-              store: {
-                mode: 'memory',
-                initialValue: 'hi'
-              },            
-              onSet: function (button, val) {
-                TextContent.set(button.element(), val);
-              }
-            }
-          }
-        })
-      );
-
       var c = GuiFactory.build(
         SplitDropdown.sketch({
           dom: {
@@ -90,7 +70,12 @@ asynctest(
                 classes: [ 'test-split-button-action' ]
               },
               components: [
-                displayer.asSpec()
+                {
+                  dom: {
+                    tag: 'div',
+                    innerHtml: 'hi'
+                  }
+                }
               ]
             }
           },
