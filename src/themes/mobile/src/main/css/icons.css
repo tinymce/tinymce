@@ -128,3 +128,7 @@
   content: "\e91a";
 }
 
+.tinymce-mobile-toolbar-button-h1:before {
+  content: "H1";
+}
+

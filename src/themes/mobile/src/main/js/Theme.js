@@ -71,6 +71,9 @@ define(
                 Buttons.forToolbarCommand(editor, 'undo'),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic'),
+                Buttons.forToolbarStateAction(editor, 'h1', function () {
+                  editor.execCommand('FormatBlock', null, 'h1');
+                }),
                 LinkButton.sketch(ios, editor),
                 ImagePicker.sketch(editor),
                 FontSizeSlider.sketch(ios, editor),
