@@ -199,6 +199,17 @@ define(
             Css.set(thumb.element(), 'background', getColor(value));
           },
 
+          // TODO: Remove duplication in demo.
+          onInit: function (slider, thumb, value) {
+            var getColor = function (hue) {
+              if (hue < 0) return 'black';
+              else if (hue > 360) return 'white';
+              else return 'hsl(' + hue + ', 100%, 50%)';
+            };
+
+            Css.set(thumb.element(), 'background', getColor(value));
+          },
+
           components: [
             Container.sketch({
               dom: {
