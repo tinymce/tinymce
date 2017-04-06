@@ -9,7 +9,7 @@ define(
   ],
 
   function (UiSketcher, PartType, FieldBase, FormFieldSchema) {
-    var schema = FormFieldSchema.schema()
+    var schema = FormFieldSchema.schema();
 
     var sketch = function (factory, spec) {
       var partTypes = FormFieldSchema.makeParts(factory);
@@ -24,7 +24,8 @@ define(
         },
         components: components,
         behaviours: FieldBase.behaviours(detail),
-        events: FieldBase.events(detail)
+        events: FieldBase.events(detail),
+        customBehaviours: detail.customBehaviours()
       };
     };
 

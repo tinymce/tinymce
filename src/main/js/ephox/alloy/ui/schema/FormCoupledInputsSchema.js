@@ -52,6 +52,9 @@ define(
         Fun.constant({ }),
         function (detail) {
           return {
+            fieldBehaviours: {
+              'coupled-input-behaviour': { enabled: true }
+            },
             customBehaviours: [
               AdhocBehaviour.events('coupled-input-behaviour', {
                 'input': EventHandler.nu({
