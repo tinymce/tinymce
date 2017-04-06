@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
@@ -26,8 +27,8 @@ define(
   ],
 
   function (
-    EventRoot, Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton,
-    Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option,
+    Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('fields'),
@@ -141,7 +142,7 @@ define(
           return r;
         })(),
 
-        behaviours: {
+        formBehaviours: {
           keying: {
             mode: 'special',
             focusIn: function (dialog/*, specialInfo */) {
@@ -155,89 +156,95 @@ define(
               navigate(dialog, -1);
               return Option.some(true);
             }
-          }
+          },
+          'adhoc-serialised-dialog-events': { enabled: true }
         },
 
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.attachedToDom(),
-            value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
-                if (EventRoot.isSource(dialog, simulatedEvent)) {
-                  // Reset state to first screen.
-                  resetState();
-                  spec.getInitialValue(dialog).each(function (v) {
-                    Representing.setValue(dialog, v);
-                  });
-                }
-              }
-            })
-          },
-          {
-            key: SystemEvents.execute(),
-            value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
-                spec.onExecute(dialog, simulatedEvent);
-              }
-            })
-          },
-          {
-            key: 'touchstart',
-            value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
-                spec.state.dialogSwipeState.set(
-                  SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
-                );
-              }
-            })
-          },
-          {
-            key: 'touchmove',
-            value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
-                spec.state.dialogSwipeState.on(function (state) {
-                  simulatedEvent.event().prevent();
-                  spec.state.dialogSwipeState.set(
-                    SwipingModel.move(state, simulatedEvent.event().raw().touches[0].clientX)
-                  );
-                });
-              }
-            })
-          },
-          {
-            key: 'touchend',
-            value: EventHandler.nu({
-              run: function (dialog/*, simulatedEvent */) {
-                spec.state.dialogSwipeState.on(function (state) {
-                  // Confusing
-                  var direction = -1 * SwipingModel.complete(state);
-                  navigate(dialog, direction);
-                });
-              }
-            })
-          },
+        customBehaviours: [
+          AdhocBehaviour.events(
+            'adhoc-serialised-dialog-events',
+            Objects.wrapAll([
+              {
+                key: SystemEvents.attachedToDom(),
+                value: EventHandler.nu({
+                  run: function (dialog, simulatedEvent) {
+                    if (EventRoot.isSource(dialog, simulatedEvent)) {
+                      // Reset state to first screen.
+                      resetState();
+                      spec.getInitialValue(dialog).each(function (v) {
+                        Representing.setValue(dialog, v);
+                      });
+                    }
+                  }
+                })
+              },
+              {
+                key: SystemEvents.execute(),
+                value: EventHandler.nu({
+                  run: function (dialog, simulatedEvent) {
+                    spec.onExecute(dialog, simulatedEvent);
+                  }
+                })
+              },
+              {
+                key: 'touchstart',
+                value: EventHandler.nu({
+                  run: function (dialog, simulatedEvent) {
+                    spec.state.dialogSwipeState.set(
+                      SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
+                    );
+                  }
+                })
+              },
+              {
+                key: 'touchmove',
+                value: EventHandler.nu({
+                  run: function (dialog, simulatedEvent) {
+                    spec.state.dialogSwipeState.on(function (state) {
+                      simulatedEvent.event().prevent();
+                      spec.state.dialogSwipeState.set(
+                        SwipingModel.move(state, simulatedEvent.event().raw().touches[0].clientX)
+                      );
+                    });
+                  }
+                })
+              },
+              {
+                key: 'touchend',
+                value: EventHandler.nu({
+                  run: function (dialog/*, simulatedEvent */) {
+                    spec.state.dialogSwipeState.on(function (state) {
+                      // Confusing
+                      var direction = -1 * SwipingModel.complete(state);
+                      navigate(dialog, direction);
+                    });
+                  }
+                })
+              },
 
-          {
-            key: 'transitionend',
-            value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
-                if (simulatedEvent.event().raw().propertyName === 'left') {
-                  focusInput(dialog);
-                }
-              }
-            })
-          },
+              {
+                key: 'transitionend',
+                value: EventHandler.nu({
+                  run: function (dialog, simulatedEvent) {
+                    if (simulatedEvent.event().raw().propertyName === 'left') {
+                      focusInput(dialog);
+                    }
+                  }
+                })
+              },
 
-          {
-            key: navigateEvent,
-            value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
-                var direction = simulatedEvent.event().direction();
-                navigate(dialog, direction);
+              {
+                key: navigateEvent,
+                value: EventHandler.nu({
+                  run: function (dialog, simulatedEvent) {
+                    var direction = simulatedEvent.event().direction();
+                    navigate(dialog, direction);
+                  }
+                })
               }
-            })
-          }
-        ])
+            ])
+          )
+        ]
       });
     };
 

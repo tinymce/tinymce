@@ -16,7 +16,7 @@ define(
               placeholder: placeholder
             }
           },
-          behaviours: {
+          inputBehaviours: {
             composing: { find: Option.some }
           }
         })
