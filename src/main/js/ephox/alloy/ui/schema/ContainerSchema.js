@@ -9,7 +9,14 @@ define(
   function (FieldSchema, Fun) {
     return {
       name: Fun.constant('Container'),
-      schema: Fun.constant([ ]),
+      schema: Fun.constant([
+        FieldSchema.defaulted('components', [ ]),
+        FieldSchema.defaulted('containerBehaviours', { }),
+        FieldSchema.defaulted('events', { }),
+        FieldSchema.defaulted('domModification', { }),
+        FieldSchema.defaulted('eventOrder', { }),
+        FieldSchema.defaulted('customBehaviours', [ ])
+      ]),
       parts: Fun.constant([ ])
     };
   }

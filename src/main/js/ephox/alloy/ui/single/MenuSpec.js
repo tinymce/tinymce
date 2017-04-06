@@ -57,7 +57,6 @@ define(
       var components = detail.shell() ? builtItems : UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
 
       return Merger.deepMerge(
-        spec,
         {
           dom: Merger.deepMerge(
             detail.dom(),
@@ -69,26 +68,30 @@ define(
           ),
           uid: detail.uid(),
 
-          behaviours: {
-            highlighting: {
-              // Highlighting for a menu is selecting items inside the menu
-              highlightClass: detail.markers().selectedItem(),
-              itemClass: detail.markers().item(),
-              onHighlight: detail.onHighlight()
-            },
-            representing: {
-              store: {
-                mode: 'memory',
-                initialValue: detail.value()
-              }
-            },
+          behaviours: Merger.deepMerge(
+            {
+              highlighting: {
+                // Highlighting for a menu is selecting items inside the menu
+                highlightClass: detail.markers().selectedItem(),
+                itemClass: detail.markers().item(),
+                onHighlight: detail.onHighlight()
+              },
+              representing: {
+                store: {
+                  mode: 'memory',
+                  initialValue: detail.value()
+                }
+              },
 
-            composing: {
-              find: Fun.identity
-            },
+              composing: {
+                find: Fun.identity
+              },
 
-            keying: detail.movement().config()(detail, detail.movement())
-          },
+              keying: detail.movement().config()(detail, detail.movement())
+            },
+            detail.menuBehaviours()
+          ),
+          customBehaviours: detail.customBehaviours(),
           events: Objects.wrapAll([
             { 
               // This is dispatched from a menu to tell an item to be highlighted.

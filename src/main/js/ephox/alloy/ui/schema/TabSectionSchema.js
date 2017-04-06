@@ -40,12 +40,6 @@ define(
       '<alloy.tab-section.tabbar>',
       function (detail) {
         return {
-          onChange: function (tabbar, button) {
-            tabbar.getSystem().triggerEvent(SystemEvents.changeTab(), tabbar.element(), {
-              tabbar: Fun.constant(tabbar),
-              button: Fun.constant(button)
-            });
-          },
           tabs: detail.tabs()
         };
       },

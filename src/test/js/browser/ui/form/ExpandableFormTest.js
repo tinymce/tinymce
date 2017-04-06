@@ -53,7 +53,7 @@ asynctest(
             parts: {
               field: {
                 data: 'init',
-                behaviours: {
+                inputBehaviours: {
                   tabstopping: true
                 }
               },
@@ -84,19 +84,14 @@ asynctest(
             ],
             parts: {
               field: {
-                behaviours: {
+                selectBehaviours: {
                   tabstopping: true
                 },                
                 options: [
                   { value: 'select-b-init', text: 'Select-b-init' },
                   { value: 'select-b-set', text: 'Select-b-set' },
                   { value: 'select-b-other', text: 'Select-b-other' }
-                ],
-                members: {
-                  option: {
-                    munge: Fun.identity
-                  }
-                }
+                ]
               },
               label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
             }
@@ -120,7 +115,7 @@ asynctest(
                 classes: [ 'test-expander-button' ]
               },
               components: [ ],
-              behaviours: {
+              buttonBehaviours: {
                 tabstopping: true
               }
             },
@@ -145,7 +140,7 @@ asynctest(
               action: function (button) {
                 ExpandableForm.collapseFormImmediately(self);
               },
-              behaviours: {
+              buttonBehaviours: {
                 tabstopping: true
               }
             }),
@@ -153,7 +148,7 @@ asynctest(
             ExpandableForm.parts().controls()
           ],
 
-          behaviours: {
+          expandableBehaviours: {
             keying: {
               mode: 'cyclic',
               visibilitySelector: '.form-section'

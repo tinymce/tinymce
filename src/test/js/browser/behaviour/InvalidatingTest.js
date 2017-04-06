@@ -29,7 +29,7 @@ asynctest(
           dom: {
             tag: 'input'
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Invalidating.config({
               invalidClass: 'test-invalid',
               validator: {

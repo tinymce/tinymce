@@ -11,11 +11,12 @@ define(
 
   function (Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
+      FieldSchema.strict('dom'),
       FieldSchema.strict('fetch'),
       Fields.onHandler('onOpen'),
       Fields.onKeyboardHandler('onExecute'),
+      FieldSchema.defaulted('dropdownBehaviours', { }),
       FieldSchema.strict('toggleClass'),
-      FieldSchema.strict('dom'),
       FieldSchema.defaulted('displayer', Fun.identity),
       FieldSchema.option('lazySink'),
       FieldSchema.defaulted('matchWidth', false),

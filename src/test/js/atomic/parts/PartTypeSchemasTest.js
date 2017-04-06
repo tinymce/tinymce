@@ -69,7 +69,7 @@ test(
       var schemas = PartType.schemas(parts);
       var output = ValueSchema.asRawOrDie(
         label,
-        ValueSchema.objOf(schemas),
+        ValueSchema.objOfOnly(schemas),
         input
       );
 
@@ -80,7 +80,7 @@ test(
       var schemas = PartType.schemas(parts);
       var output = ValueSchema.asRawOrDie(
         label,
-        ValueSchema.objOf(schemas),
+        ValueSchema.objOfOnly(schemas),
         input
       );
 
@@ -94,7 +94,7 @@ test(
       var schemas = PartType.schemas(parts);
       var output = ValueSchema.asRawOrDie(
         label,
-        ValueSchema.objOf(schemas),
+        ValueSchema.objOfOnly(schemas),
         input
       );
 

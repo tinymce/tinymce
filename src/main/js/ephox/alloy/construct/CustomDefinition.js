@@ -47,7 +47,7 @@ define(
         return b.schema();
       });
 
-      return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
+      return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
         FieldSchema.strictObjOf('dom', [
           // Note, no children.
           FieldSchema.strict('tag'),
@@ -80,13 +80,12 @@ define(
 
         FieldSchema.option('domModification'),
 
-        FieldSchema.state('definition.input', Fun.identity),
+        FieldSchema.state('originalSpec', Fun.identity),
 
-        // Could wrap this up in a behaviour ...but won't for the time being
-        FieldSchema.optionObjOf('delegate', [
-          FieldSchema.strict('get')
-        ]),
-        FieldSchema.state('originalSpec', Fun.identity)
+        // Need to have this initially
+        FieldSchema.defaulted('customBehaviours', [ ]),
+
+        FieldSchema.defaulted('debug.sketcher', 'unknown')
       ]), spec);
     };
 

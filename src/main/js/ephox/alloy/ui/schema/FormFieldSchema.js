@@ -9,7 +9,8 @@ define(
 
   function (PartType, FieldSchema, Fun) {
     var schema = [
-      FieldSchema.defaulted('prefix', 'form-field')
+      FieldSchema.defaulted('prefix', 'form-field'),
+      FieldSchema.defaulted('customBehaviours', [ ])
     ];
 
     // Different because it needs a factory

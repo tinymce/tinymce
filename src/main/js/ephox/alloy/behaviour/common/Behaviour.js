@@ -56,7 +56,6 @@ define(
               name: Fun.constant(name)
             }).fold(
               function () {
-                component.logSpec();
                 throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
               },
               function (info) {

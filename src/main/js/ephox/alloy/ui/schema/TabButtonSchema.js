@@ -11,7 +11,11 @@ define(
       FieldSchema.strict('value'),
       FieldSchema.strict('dom'),
       FieldSchema.option('action'),
-      FieldSchema.option('role')
+      FieldSchema.option('role'),
+      FieldSchema.defaulted('domModification', { }),
+
+      // TODO: Move view out of the resultant object.
+      FieldSchema.strict('view')
     ];
 
     return {

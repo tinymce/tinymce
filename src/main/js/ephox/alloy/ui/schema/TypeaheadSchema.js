@@ -37,7 +37,7 @@ define(
       PartType.external(
         { sketch: Fun.identity },
         [
-          Fields.menuMarkers(),
+          Fields.tieredMenuMarkers(),
           Fields.members([ 'menu', 'item' ])
         ],
         'menu',

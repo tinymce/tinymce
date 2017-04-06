@@ -39,7 +39,7 @@ define(
               {
                 value: name,
                 items: spec.items,
-                markers: rawUiSpec.markers,
+                markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
                 members: {
                   item: Obj.map(detail.members().item(), Fun.apply)
                 },
@@ -246,30 +246,35 @@ define(
           tag: 'div',
           classes: [ 'main-menu' ]
         },
-        behaviours: {
-          keying: {
-            mode: 'special',
-            onRight: keyOnItem(onRight),
-            onLeft: keyOnItem(onLeft),
-            onEscape: keyOnItem(onEscape),
-            focusIn: function (container, keyInfo) {
-              state.getPrimary().each(function (primary) {
-                container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
-              });
-            }
+        behaviours: Merger.deepMerge(
+          {
+            keying: {
+              mode: 'special',
+              onRight: keyOnItem(onRight),
+              onLeft: keyOnItem(onLeft),
+              onEscape: keyOnItem(onEscape),
+              focusIn: function (container, keyInfo) {
+                state.getPrimary().each(function (primary) {
+                  container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
+                });
+              }
+            },
+            // Highlighting is used for highlighting the active menu
+            highlighting: {
+              highlightClass: detail.markers().selectedMenu(),
+              itemClass: detail.markers().menu()
+            },
+            composing: {
+              find: function (container) {
+                return Highlighting.getHighlighted(container);
+              }
+            },
+            replacing: { }
           },
-          // Highlighting is used for highlighting the active menu
-          highlighting: {
-            highlightClass: detail.markers().selectedMenu(),
-            itemClass: detail.markers().menu()
-          },
-          composing: {
-            find: function (container) {
-              return Highlighting.getHighlighted(container);
-            }
-          },
-          replacing: { }
-        },
+          detail.tmenuBehaviours()
+        ),
+        customBehaviours: detail.customBehaviours(),
+        eventOrder: detail.eventOrder(),
         events: events
       };
     };

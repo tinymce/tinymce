@@ -34,7 +34,7 @@ asynctest(
 
     var sink = Memento.record(
       Container.sketch({
-        behaviours: {
+        containerBehaviours: {
           positioning: {
             useFixed: true
           }
@@ -50,14 +50,14 @@ asynctest(
             innerHtml: ' ' + v + ' ',
             classes: [ v ]
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({ })
           ])
         });
       };
 
       var widget = Container.sketch({
-        behaviours: Behaviour.derive([
+        containerBehaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',
             selector: 'span'  
@@ -133,7 +133,7 @@ asynctest(
 
           toggleClass: 'alloy-selected',
 
-          behaviours: Behaviour.derive([
+          dropdownBehaviours: Behaviour.derive([
             Focusing.config({ })
           ]),
 

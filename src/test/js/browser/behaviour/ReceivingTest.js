@@ -3,17 +3,17 @@ asynctest(
  
   [
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Receiving',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema'
   ],
  
-  function (Step, GuiFactory, Behaviour, Receiving, Container, GuiSetup, FieldSchema, Objects, ValueSchema) {
+  function (Step, Behaviour, Keying, Receiving, GuiFactory, Container, GuiSetup, FieldSchema, ValueSchema) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -24,17 +24,14 @@ asynctest(
             classes: [ 'receiving-test']
           },
           uid: 'custom-uid',
-          keying: {
-            mode: 'execution'
-          },
-          components: [
-            
-          ],
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
+            Keying.config({
+              mode: 'execution'
+            }),
             Receiving.config({
               channels: {
                 'test.channel.1': {
-                  schema: ValueSchema.objOf([
+                  schema: ValueSchema.objOfOnly([
                     FieldSchema.strict('dummy')
                   ]),
                   onReceive: function (component, data) {
@@ -43,7 +40,10 @@ asynctest(
                 }
               }
             })
-          ])
+          ]),
+          components: [
+            
+          ]
         })
       );
 

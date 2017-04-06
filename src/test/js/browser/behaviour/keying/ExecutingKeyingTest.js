@@ -33,7 +33,7 @@ asynctest(
           components: [
             
           ],
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({ }),
             Keying.config({
               mode: 'execution'

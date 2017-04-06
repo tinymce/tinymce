@@ -31,7 +31,7 @@ asynctest(
             }
           },
           uid: 'custom-uid',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Toggling.config({
               selected: true,
               toggleClass: 'test-selected',

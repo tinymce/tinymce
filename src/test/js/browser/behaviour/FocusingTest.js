@@ -30,7 +30,7 @@ asynctest(
               background: 'blue'
             }
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({
               onFocus: store.adder('onFocus')
             })

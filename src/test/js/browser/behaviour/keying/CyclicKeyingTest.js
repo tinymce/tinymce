@@ -25,7 +25,7 @@ asynctest(
         return Button.sketch({
           dom: { tag: 'button', innerHtml: t },
           action: store.adder(v + '.clicked'),
-          behaviours: {
+          buttonBehaviours: {
             tabstopping: true
           }
         });
@@ -43,7 +43,7 @@ asynctest(
             }
           },
           uid: 'custom-uid',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Keying.config({
               mode: 'cyclic'
             })
@@ -63,7 +63,7 @@ asynctest(
                   height: '20px'
                 }
               },
-              behaviours: Objects.wrapAll([
+              containerBehaviours: Objects.wrapAll([
                 Tabstopping.config({ }),
                 Focusing.config({ })
               ])

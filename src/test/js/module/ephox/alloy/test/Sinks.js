@@ -18,7 +18,7 @@ define(
             }
           },
           uid: 'fixed-sink',
-          behaviours: {
+          containerBehaviours: {
             positioning: {
               useFixed: true
             }
@@ -37,7 +37,7 @@ define(
             }
           },
           uid: 'relative-sink',
-          behaviours: {
+          containerBehaviours: {
             positioning: {
               useFixed: false
             }

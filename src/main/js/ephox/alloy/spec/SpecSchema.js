@@ -94,7 +94,8 @@ define(
         FieldSchema.strict('uid'),
         FieldSchema.defaulted('dom', { }), // Maybe get rid of.
         FieldSchema.defaulted('components', [ ]),
-        FieldSchema.state('originalSpec', Fun.identity)
+        FieldSchema.state('originalSpec', Fun.identity),
+        FieldSchema.defaulted('debug.sketcher', { })
       ]);
     };
 
@@ -102,12 +103,12 @@ define(
     var asRawOrDie = function (label, schema, spec, partSchemas) {
 
       var baseS = base(label, partSchemas, spec);
-      return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
+      return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
     };
 
     var asStructOrDie = function (label, schema, spec, partSchemas) {
       var baseS = base(label, partSchemas, spec);
-      return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOf(baseS.concat(schema)), spec);
+      return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
     };
 
     var extend = function (builder, original, nu) {

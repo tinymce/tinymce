@@ -34,7 +34,7 @@ asynctest(
             border: '1px solid green'
           }
         },
-        behaviours: Behaviour.derive([
+        containerBehaviours: Behaviour.derive([
           Dragging.config({
             mode: 'mouse',
             blockerClass: 'test-blocker',

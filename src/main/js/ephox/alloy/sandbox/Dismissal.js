@@ -11,7 +11,7 @@ define(
   ],
 
   function (Sandboxing, Channels, FieldSchema, Objects, ValueSchema, Fun) {
-    var schema = ValueSchema.objOf([
+    var schema = ValueSchema.objOfOnly([
       FieldSchema.defaulted('isExtraPart', Fun.constant(false))
     ]);
 
@@ -21,7 +21,7 @@ define(
         channels: Objects.wrap(
           Channels.dismissPopups(),
           {
-            schema: ValueSchema.objOf([
+            schema: ValueSchema.objOfOnly([
               FieldSchema.strict('target')
             ]),
             onReceive: function (sandbox, data) {

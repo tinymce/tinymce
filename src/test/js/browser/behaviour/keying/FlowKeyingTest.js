@@ -40,7 +40,7 @@ asynctest(
               run: store.adder('item.execute: ' + name)
             })
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({ })
           ])
         });
@@ -57,7 +57,7 @@ asynctest(
             }
           },
           uid: 'custom-uid',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Keying.config({
               mode: 'flow',
               selector: '.stay'

@@ -4,14 +4,15 @@ define(
   [
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Adt',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.katamari.api.Adt'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option'
   ],
 
-  function (UiSubstitutes, FieldSchema, Arr, Merger, Fun, Option, Adt) {
+  function (UiSubstitutes, FieldSchema, Objects, Adt, Arr, Fun, Merger, Option) {
     var adt = Adt.generate([
       { internal: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
       { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
@@ -56,7 +57,10 @@ define(
         defaults(detail, spec),
         spec,
         { uid: detail.partUids()[name] },
-        overrides(detail, spec)
+        overrides(detail, spec),
+        {
+          'debug.sketcher': Objects.wrap('part-' + name, spec)
+        }
       );
     };
 

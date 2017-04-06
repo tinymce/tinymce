@@ -8,9 +8,13 @@ define(
 
   function (FieldSchema, Fun) {
     var schema = [
+      FieldSchema.defaulted('uid', undefined),
       FieldSchema.strict('dom'),
+      FieldSchema.defaulted('components', [ ]),
+      FieldSchema.defaulted('buttonBehaviours', { }),
       FieldSchema.option('action'),
-      FieldSchema.option('role')
+      FieldSchema.option('role'),
+      FieldSchema.defaulted('customBehaviours', [ ])
     ];
 
     return {

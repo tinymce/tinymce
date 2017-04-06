@@ -66,12 +66,7 @@ asynctest(
           field: {
             options: [
               { value: 'select-b-init', text: 'Select-b-init' }
-            ],
-            members: {
-              option: {
-                munge: Fun.identity
-              }
-            }
+            ]
           },
           label: labelSpec
         }

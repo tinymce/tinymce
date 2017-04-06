@@ -37,7 +37,7 @@ asynctest(
             classes: [ 'test-sandbox' ]
           },
           uid: 'no-duplicates',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Sandboxing.config({
               getAttachPoint: function () {
                 return sink;
@@ -111,10 +111,8 @@ asynctest(
       var makeData = function (rawData) {
         return Input.sketch({
           uid: rawData,
-          dom: {
-            attributes: {
-              'data-test-input': rawData
-            }
+          inputAttributes: {
+            'data-test-input': rawData
           }
         });
       };

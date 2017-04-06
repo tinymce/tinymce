@@ -13,13 +13,13 @@ define(
       FieldSchema.strict('items'),
       Fields.members([ 'item' ]),
       Fields.markers([ 'itemClass' ]),
-      FieldSchema.defaulted('hasTabstop', true)
+      FieldSchema.defaulted('hasTabstop', true),
+      FieldSchema.defaulted('tgroupBehaviours', { })
     ];
 
     var partTypes = [
       PartType.group({ sketch: Fun.identity }, [ ], 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
         return {
-          'debug.label': 'ToolbarGroup.item',
           domModification: {
             classes: [ detail.markers().itemClass() ]
           }

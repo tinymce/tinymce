@@ -18,11 +18,11 @@ define(
       FieldSchema.strict('selectedItem')
     ];
 
-    var schema = ValueSchema.objOf(
+    var schema = ValueSchema.objOfOnly(
       itemFields.concat(menuFields)
     );
 
-    var itemSchema = ValueSchema.objOf(itemFields);
+    var itemSchema = ValueSchema.objOfOnly(itemFields);
 
     return {
       menuFields: Fun.constant(menuFields),

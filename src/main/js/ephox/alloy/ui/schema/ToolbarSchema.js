@@ -11,7 +11,8 @@ define(
   function (Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('shell', true),
-      Fields.members([ 'group' ])
+      Fields.members([ 'group' ]),
+      FieldSchema.defaulted('toolbarBehaviours', { })
     ];
 
     // TODO: Dupe with Toolbar
@@ -24,6 +25,7 @@ define(
     };
 
     var partTypes = [
+      // Note, is the container for putting all the groups in, not a group itself.
       PartType.optional({ sketch: Fun.identity }, [ ], 'groups', '<alloy.toolbar.groups>', Fun.constant({ }), enhanceGroups)
     ];
 

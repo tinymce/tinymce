@@ -40,7 +40,7 @@ define(
               role: 'button'
             }
           },
-          behaviours: {
+          buttonBehaviours: {
             tabstopping: Behaviour.revoke(),
             focusing: Behaviour.revoke()
           }
@@ -52,7 +52,7 @@ define(
             var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
             hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
           },
-          behaviours: {
+          buttonBehaviours: {
             toggling: {
               toggleOnExecute: false,
               toggleClass: detail.toggleClass(),
@@ -79,7 +79,7 @@ define(
               role: 'button'
             }
           },
-          behaviours: {
+          buttonBehaviours: {
             focusing: Behaviour.revoke()
           }
         };

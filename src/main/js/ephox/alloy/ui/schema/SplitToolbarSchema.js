@@ -35,7 +35,7 @@ define(
       PartType.internal(Toolbar, toolbarSchema, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
       PartType.internal(Toolbar, toolbarSchema, 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
         return {
-          behaviours: {
+          toolbarBehaviours: {
             sliding: {
               dimension: {
                 property: 'height'

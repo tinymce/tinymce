@@ -41,11 +41,16 @@ define(
             { uid: widgetUid },
             info.widget(),
             {
-              representing: {
-                query: function (component) {
-                  return info.data();
-                },
-                set: function () { }
+              behaviours: {
+                representing: {
+                  store: {
+                    mode: 'manual',
+                    getValue: function (component) {
+                      return info.data();
+                    },
+                    setValue: function () { }
+                  }
+                }
               }
             }
           );
