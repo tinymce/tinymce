@@ -14,7 +14,8 @@ define(
       Fields.members([ 'item' ]),
       Fields.markers([ 'itemClass' ]),
       FieldSchema.defaulted('hasTabstop', true),
-      FieldSchema.defaulted('tgroupBehaviours', { })
+      FieldSchema.defaulted('tgroupBehaviours', { }),
+      FieldSchema.defaulted('customBehaviours', [ ])
     ];
 
     var partTypes = [

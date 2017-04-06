@@ -40,7 +40,8 @@ define(
             detail.tgroupBehaviours()
           ),
 
-          'debug.sketcher': spec['debug.sketcher']
+          'debug.sketcher': spec['debug.sketcher'],
+          customBehaviours: detail.customBehaviours()
         }
       );
     };
