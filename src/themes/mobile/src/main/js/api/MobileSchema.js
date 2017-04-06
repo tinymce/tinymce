@@ -30,11 +30,10 @@ define(
         FieldSchema.defaulted('onTapContent', Fun.noop),
 
 
-        FieldSchema.defaulted('onScrollToCursor', function () { return { unbind: Fun.noop }; }),
-        FieldSchema.defaulted('onScrollToElement', function () { return { unbind: Fun.noop }; }),
-        FieldSchema.defaulted('onToEditing', function () { return { unbind: Fun.noop }; }),
-        FieldSchema.defaulted('onToReading', function () { return { unbind: Fun.noop }; }),
-
+        FieldSchema.defaulted('onScrollToCursor', Fun.constant({ unbind: Fun.noop })),
+        FieldSchema.defaulted('onScrollToElement', Fun.constant({ unbind: Fun.noop })),
+        FieldSchema.defaulted('onToEditing', Fun.constant({ unbind: Fun.noop })),
+        FieldSchema.defaulted('onToReading', Fun.constant({ unbind: Fun.noop })),
         FieldSchema.defaulted('onToolbarScrollStart', Fun.identity)
       ]),
 

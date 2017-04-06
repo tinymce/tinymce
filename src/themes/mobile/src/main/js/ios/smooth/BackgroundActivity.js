@@ -17,7 +17,7 @@ define(
         var future = LazyValue.nu(function (callback) {
           return doAction(value).get(callback);
         });
-        
+
         // Note: LazyValue kicks off immediately
         action.set(future);
       };

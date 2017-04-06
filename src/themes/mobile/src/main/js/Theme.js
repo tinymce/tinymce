@@ -11,6 +11,7 @@ define(
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
+    'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosContainer',
@@ -19,7 +20,7 @@ define(
   ],
 
 
-  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, FontSizeSlider, ImagePicker, IosContainer, LinkButton, FormatChangers) {
+  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, ColorSlider, FontSizeSlider, ImagePicker, IosContainer, LinkButton, FormatChangers) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
@@ -58,7 +59,7 @@ define(
               label: 'The first group',
               scrollable: false,
               items: [
-                Buttons.forToolbar('back', function (btn) {
+                Buttons.forToolbar('back', function (/* btn */) {
                   ios.exit();
                 }, { }, { })
               ]
@@ -72,7 +73,8 @@ define(
                 Buttons.forToolbarStateCommand(editor, 'italic'),
                 LinkButton.sketch(ios, editor),
                 ImagePicker.sketch(editor),
-                FontSizeSlider.sketch(ios, editor)
+                FontSizeSlider.sketch(ios, editor),
+                ColorSlider.sketch(ios, editor)
               ]
             },
             {

@@ -13,6 +13,15 @@
   height: auto;
 }
 
+.tinymce-mobile-slider .tinymce-mobile-slider-font-size-container,
+.tinymce-mobile-slider .tinymce-mobile-slider-gradient-container 
+ {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  align-items: center;
+}
+
 .tinymce-mobile-slider .tinymce-mobile-slider-font-size {
   display: flex;
   flex: 1;
@@ -40,6 +49,44 @@
   width: 1em;
   background: black;
   left: -10px;
+
+  /* vertically centering trick (margin: auto, top: 0, bottom: 0) */
+  margin: auto;
+  top: 0;
+  bottom: 0;
+
   border: 0.1em solid black;
   border-radius: 3em;
+}
+
+
+/* Color pickers */
+.tinymce-mobile-hue-slider-container.tinymce-mobile-slider {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.tinymce-mobile-hue-slider-black {
+  background: black;
+  width: 1.2em;
+  height: 0.4em;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+.tinymce-mobile-hue-slider-white {
+  background: white;
+  width: 1.2em;
+  height: 0.4em;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+.tinymce-mobile-slider .tinymce-mobile-slider-gradient {
+  display: flex;
+  flex: 1;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  background: linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%);
+  height: 0.4em;
 }

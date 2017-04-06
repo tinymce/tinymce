@@ -13,7 +13,9 @@ define(
           TinyChannels.formatChanged(),
           {
             onReceive: function (button, data) {
-              if (data.command === command) update(button, data.state);
+              if (data.command === command) {
+                update(button, data.state);
+              }
             }
           }
         )

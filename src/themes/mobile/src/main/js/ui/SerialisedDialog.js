@@ -37,7 +37,7 @@ define(
         return {
           dialogSwipeState: Singleton.value(),
           currentScreen: Cell(0)
-        }
+        };
       })
     ]);
 
@@ -82,7 +82,6 @@ define(
               var currentLeft = parseInt(left, 10);
               var w = Width.get(screens[0]);
               Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
-              
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
           }
@@ -145,14 +144,14 @@ define(
         behaviours: {
           keying: {
             mode: 'special',
-            focusIn: function (dialog, specialInfo) {
+            focusIn: function (dialog/*, specialInfo */) {
               focusInput(dialog);
             },
-            onTab: function (dialog, specialInfo) {
+            onTab: function (dialog/*, specialInfo */) {
               navigate(dialog, +1);
               return Option.some(true);
             },
-            onShiftTab: function (dialog, specialInfo) {
+            onShiftTab: function (dialog/*, specialInfo */) {
               navigate(dialog, -1);
               return Option.some(true);
             }
@@ -208,7 +207,7 @@ define(
           {
             key: 'touchend',
             value: EventHandler.nu({
-              run: function (dialog, simulatedEvent) {
+              run: function (dialog/*, simulatedEvent */) {
                 spec.state.dialogSwipeState.on(function (state) {
                   // Confusing
                   var direction = -1 * SwipingModel.complete(state);

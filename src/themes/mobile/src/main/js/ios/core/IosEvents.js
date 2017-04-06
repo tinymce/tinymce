@@ -132,7 +132,9 @@ define(
 
         // Listen to the toolstrip growing animation so that we can update the position of the socket once it is done.
         DomEvent.bind(toolstrip, 'transitionend', function (transitionEvent) {
-          if (transitionEvent.raw().propertyName === 'height') reposition();
+          if (transitionEvent.raw().propertyName === 'height') {
+            reposition();
+          }
         }),
 
         // Capture the start of interacting with a toolstrip. It is most likely going to lose the selection, so we save it
@@ -160,7 +162,7 @@ define(
         }),
 
         // Close any menus when scrolling the toolstrip
-        DomEvent.bind(toolstrip, 'touchmove', function (event) {
+        DomEvent.bind(toolstrip, 'touchmove', function (/* event */) {
           editorApi.onToolbarScrollStart();
         })
       ];

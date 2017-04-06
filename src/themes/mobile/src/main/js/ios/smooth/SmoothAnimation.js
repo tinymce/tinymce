@@ -10,9 +10,13 @@ define(
 
   function (Option, clearInterval, Math, setInterval) {
     var adjust = function (value, destination, amount) {
-      if (Math.abs(value - destination) <= amount) return Option.none();
-      else if (value < destination) return Option.some(value + amount);
-      else return Option.some(value - amount);
+      if (Math.abs(value - destination) <= amount) {
+        return Option.none();
+      } else if (value < destination) {
+        return Option.some(value + amount);
+      } else {
+        return Option.some(value - amount);
+      }
     };
 
     var create = function () {
