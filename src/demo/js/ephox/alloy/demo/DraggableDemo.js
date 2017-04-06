@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.data.DragCoord',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (Behaviour, Dragging, DragCoord, Attachment, Gui, Button, Container, HtmlDisplay, Option, PlatformDetection, Element, Class, Css, Position, document) {
+  function (Behaviour, Dragging, Unselecting, DragCoord, Attachment, Gui, Button, Container, HtmlDisplay, Option, PlatformDetection, Element, Class, Css, Position, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -102,13 +103,13 @@ define(
                     blockerClass: [ 'blocker' ],
                     snaps: snapData
                   }
-                )
+                ),
+                Unselecting.config(true)
               ]),
               eventOrder: {
                 // Because this is a button, allow dragging. It will stop clicking.
                 mousedown: [ 'dragging', 'alloy.base.behaviour' ]
-              },
-              unselecting: true
+              }
             })
           ]
         })

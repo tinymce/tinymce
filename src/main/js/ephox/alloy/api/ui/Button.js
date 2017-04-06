@@ -34,7 +34,8 @@ define(
             role: detail.role().getOr('button')
           }
         },
-        customBehaviours: detail.customBehaviours()
+        customBehaviours: detail.customBehaviours(),
+        eventOrder: detail.eventOrder()
       };
     };
 

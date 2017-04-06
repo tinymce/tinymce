@@ -14,7 +14,8 @@ define(
       FieldSchema.defaulted('buttonBehaviours', { }),
       FieldSchema.option('action'),
       FieldSchema.option('role'),
-      FieldSchema.defaulted('customBehaviours', [ ])
+      FieldSchema.defaulted('customBehaviours', [ ]),
+      FieldSchema.defaulted('eventOrder', { })
     ];
 
     return {
