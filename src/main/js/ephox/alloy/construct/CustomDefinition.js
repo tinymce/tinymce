@@ -48,7 +48,7 @@ define(
       });
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
-        FieldSchema.strictObjOf('dom', [
+        FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
           // Note, no children.
           FieldSchema.strict('tag'),
           FieldSchema.defaulted('styles', {}),
@@ -56,11 +56,11 @@ define(
           FieldSchema.defaulted('attributes', {}),
           FieldSchema.option('value'),
           FieldSchema.option('innerHtml')
-        ]),
+        ])),
         FieldSchema.strict('components'),
         FieldSchema.strict('uid'),
 
-        FieldSchema.optionObjOf('behaviours', behaviourSchema),
+        FieldSchema.field('behaviours', 'behaviours', FieldPresence.asOption(), ValueSchema.objOfOnly(behaviourSchema)),
 
         FieldSchema.defaulted('events', {}),
         FieldSchema.defaulted('apis', Fun.constant({})),
