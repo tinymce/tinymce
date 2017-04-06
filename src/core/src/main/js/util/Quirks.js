@@ -621,6 +621,10 @@ define(
           if (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE)) {
             var rng = editor.selection.getRng(), container = rng.startContainer, offset = rng.startOffset;
 
+            if (editor.settings.forced_root_block === false) {
+              return;
+            }
+
             // Shift+Delete is cut
             if (isForward && e.shiftKey) {
               return;
@@ -652,6 +656,10 @@ define(
         editor.on('keypress', function (e) {
           if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode > 31 && !VK.metaKeyPressed(e)) {
             var rng, currentFormatNodes, fragmentNode, blockParent, caretNode, charText;
+
+            if (editor.settings.forced_root_block === false) {
+              return;
+            }
 
             rng = editor.selection.getRng();
             charText = String.fromCharCode(e.charCode);
