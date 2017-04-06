@@ -5,12 +5,11 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.InputBase',
     'ephox.alloy.ui.schema.InputSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun'
   ],
 
-  function (UiSketcher, InputBase, InputSchema, FieldSchema, Merger, Fun) {
+  function (UiSketcher, InputBase, InputSchema, Merger, Fun) {
     var schema = InputSchema.schema();
 
     var sketch = function (spec) {
@@ -18,13 +17,17 @@ define(
     };
 
     var make = function (detail, spec) {
-      return Merger.deepMerge(spec, {
+      return {
         uid: detail.uid(),
         dom: InputBase.dom(detail),
         // No children.
         components: [ ],
-        behaviours: InputBase.behaviours(detail)
-      });
+        behaviours: Merger.deepMerge(
+          InputBase.behaviours(detail),
+          detail.inputBehaviours()
+        ),
+        customBehaviours: detail.customBehaviours()
+      };
     };
 
     return {

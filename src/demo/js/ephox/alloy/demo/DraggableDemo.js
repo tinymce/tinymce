@@ -92,7 +92,7 @@ define(
                 }
               },
 
-              behaviours: Behaviour.derive([
+              buttonBehaviours: Behaviour.derive([
                 Dragging.config(
                   PlatformDetection.detect().deviceType.isTouch() ? {
                     mode: 'touch',

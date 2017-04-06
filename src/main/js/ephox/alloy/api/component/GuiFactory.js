@@ -53,7 +53,7 @@ define(
     };
 
     var external = function (spec) {
-      var extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOf([
+      var extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
         FieldSchema.strict('element'),
         FieldSchema.option('uid')
       ]), spec);

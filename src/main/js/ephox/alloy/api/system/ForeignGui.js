@@ -19,7 +19,7 @@ define(
   ],
 
   function (GuiFactory, Gui, DescribedHandler, SimulatedEvent, ForeignCache, Tagger, FieldSchema, Objects, ValueSchema, Arr, Fun, Options, Insert, DomEvent) {
-    var schema = ValueSchema.objOf([
+    var schema = ValueSchema.objOfOnly([
       FieldSchema.strict('root'),
       FieldSchema.strictArrayOfObj('dispatchers', [
         // Given the initial target, what is the target of this particular behaviour?

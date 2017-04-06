@@ -29,7 +29,7 @@ define(
             Container.sketch({
               uid: 'height-slider',
 
-              behaviours: Behaviour.derive([
+              containerBehaviours: Behaviour.derive([
                 Sliding.config({
                   dimension: {
                     property: 'height'
@@ -78,7 +78,7 @@ define(
             Container.sketch({
               uid: 'width-slider',
 
-              behaviours: Behaviour.derive([
+              containerBehaviours: Behaviour.derive([
                 Sliding.config({
                   dimension: {
                     property: 'width'

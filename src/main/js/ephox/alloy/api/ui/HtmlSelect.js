@@ -14,7 +14,7 @@ define(
   ],
 
   function (Behaviour, UiSketcher, HtmlSelectSchema, Arr, Merger, Fun, Result, TextContent, Value) {
-    var schema = HtmlSelectSchema.schema()
+    var schema = HtmlSelectSchema.schema();
 
     // Dupe with Tiered Menu
     var sketch = function (spec) {
@@ -23,46 +23,44 @@ define(
 
     var make = function (detail, spec) {
       var options = Arr.map(detail.options(), function (option) {
-        return Merger.deepMerge(
-          detail.members().option().munge()(option),
-          {
-            dom: {
-              tag: 'option',
-              value: option.value,
-              innerHtml: option.text
-            }
+        return {
+          dom: {
+            tag: 'option',
+            value: option.value,
+            innerHtml: option.text
           }
-        );
+        };
       });
 
-
       return Merger.deepMerge(
-        spec,
         {
+          uid: detail.uid(),
           dom: {
             tag: 'select'
           },
           components: options,
-          behaviours: {
-            focusing: true,
-            representing: {
-              store: {
-                mode: 'manual'      ,
-                getValue: function (select) {
-                  return Value.get(select.element());
-                },
-                setValue: function (select, newValue) {
-                  // This is probably generically useful ... may become a part of Representing.
-                  var found = Arr.find(detail.options(), function (opt) {
-                    return opt.value === newValue;
-                  });
-                  if (found.isSome()) Value.set(select.element(), newValue);
-                }   
-              }
+          behaviours: Merger.deepMerge(
+            {
+              focusing: true,
+              representing: {
+                store: {
+                  mode: 'manual'      ,
+                  getValue: function (select) {
+                    return Value.get(select.element());
+                  },
+                  setValue: function (select, newValue) {
+                    // This is probably generically useful ... may become a part of Representing.
+                    var found = Arr.find(detail.options(), function (opt) {
+                      return opt.value === newValue;
+                    });
+                    if (found.isSome()) Value.set(select.element(), newValue);
+                  }   
+                }
+              },
+              tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
             },
-
-            tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
-          }
+            detail.selectBehaviours()
+          )
         }
       );
     };

@@ -10,7 +10,7 @@ define(
     var make = function () {
       return GuiFactory.build(
         Container.sketch({
-          behaviours: {
+          containerBehaviours: {
             positioning: {
               useFixed: true
             }

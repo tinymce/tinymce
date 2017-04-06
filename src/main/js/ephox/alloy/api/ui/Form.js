@@ -18,7 +18,7 @@ define(
 
   function (Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
     var schema = [
-      
+      FieldSchema.defaulted('formBehaviours', { })
     ];
 
     var sketch = function (rawSpec) {
@@ -63,36 +63,40 @@ define(
 
     var make = function (detail, components, spec) {
       return Merger.deepMerge(
-        spec,
         {
-          'debug.sketcher': 'Form',
+          'debug.sketcher': {
+            'Form': spec
+          },
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,
 
-          behaviours: {
-            representing: {
-              store: {
-                mode: 'manual',
-                getValue: function (form) {
-                  var partUids = detail.partUids();
-                  return Obj.map(partUids, function (pUid, pName) {
-                    return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
-                  });
-                },
-                setValue: function (form, values) {
-                  Obj.each(values, function (newValue, key) {
-                    // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
-                    // This should ignore things that it cannot find which helps with dynamic forms but may be undesirable
-                    var part = form.getSystem().getByUid(detail.partUids()[key]).fold(Option.none, Option.some).bind(Composing.getCurrent);
-                    part.each(function (current) {
-                      Representing.setValue(current, newValue);
+          behaviours: Merger.deepMerge(
+            {
+              representing: {
+                store: {
+                  mode: 'manual',
+                  getValue: function (form) {
+                    var partUids = detail.partUids();
+                    return Obj.map(partUids, function (pUid, pName) {
+                      return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
                     });
-                  });
+                  },
+                  setValue: function (form, values) {
+                    Obj.each(values, function (newValue, key) {
+                      // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
+                      // This should ignore things that it cannot find which helps with dynamic forms but may be undesirable
+                      var part = form.getSystem().getByUid(detail.partUids()[key]).fold(Option.none, Option.some).bind(Composing.getCurrent);
+                      part.each(function (current) {
+                        Representing.setValue(current, newValue);
+                      });
+                    });
+                  }
                 }
               }
-            }
-          }
+            },
+            detail.formBehaviours()
+          )
         }
       );
 

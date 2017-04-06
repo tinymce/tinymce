@@ -8,15 +8,25 @@ define(
   ],
 
   function (UiSketcher, ContainerSchema, Merger) {
-    var make = function (_detail, spec) {
-      return Merger.deepMerge({
-        dom: {
-          tag: 'div',
-          attributes: {
-            role: 'presentation'
-          }
-        }
-      }, spec);
+    var make = function (detail, spec) {
+      return {
+        uid: detail.uid(),
+        dom: Merger.deepMerge(
+          {
+            tag: 'div',
+            attributes: {
+              role: 'presentation'
+            }
+          },
+          detail.dom()
+        ),
+        components: detail.components(),
+        behaviours: detail.containerBehaviours(),
+        events: detail.events(),
+        domModification: detail.domModification(),
+        customBehaviours: detail.customBehaviours(),
+        eventOrder: detail.eventOrder()
+      };
     };
 
     var sketch = function (spec) {

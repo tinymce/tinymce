@@ -5,16 +5,17 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger'
   ],
 
-  function (PartType, Tagger, SpecSchema, Merger) {
+  function (PartType, Tagger, SpecSchema, Objects, Merger) {
     var single = function (owner, schema, factory, spec) {
       var specWithUid = supplyUid(spec);
       var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ]);
       return Merger.deepMerge(
         factory(detail, specWithUid),
-        { 'debug.sketcher': owner }
+        { 'debug.sketcher': Objects.wrap(owner, spec) }
       );
     };
 
@@ -30,14 +31,14 @@ define(
       var externals = PartType.externals(owner, detail, partTypes);
 
       return Merger.deepMerge(
-        spec,
         factory(detail, components, specWithUid, externals),
-        { 'debug.sketcher': owner }
+        { 'debug.sketcher': Objects.wrap(owner, spec) }
       );
     };
 
     var supplyUid = function (spec) {
-      return Merger.deepMerge({
+      return Merger.deepMerge(
+      {
         uid: Tagger.generate('uid')
       }, spec);
     };

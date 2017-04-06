@@ -40,7 +40,6 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
           console.error(Json.stringify(spec, null, 2));
           throw new Error(err);
         }, function (container) {
-          container.logSpec();
           Replacing.set(container, groups);
         });
       };
@@ -92,6 +91,7 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
           dom: detail.dom(),
           components: extra.comps,
 
+          behaviours: detail.toolbarBehaviours(),
           apis: {
             createGroups: createGroups,
             setGroups: setGroups

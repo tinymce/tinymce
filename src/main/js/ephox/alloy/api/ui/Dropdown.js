@@ -41,33 +41,36 @@ define(
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,
-          behaviours: {
-            toggling: {
-              toggleClass: detail.toggleClass(),
-              aria: {
-                mode: 'pressed',
-                syncWithExpanded: true
-              }
-            },
-            coupling: {
-              others: {
-                sandbox: function (hotspot) {
-                  return DropdownUtils.makeSandbox(detail, {
-                    anchor: 'hotspot',
-                    hotspot: hotspot
-                  }, hotspot, {
-                    onOpen: function () { Toggling.on(hotspot); },
-                    onClose: function () { Toggling.off(hotspot); }
-                  });
+          behaviours: Merger.deepMerge(
+            {
+              toggling: {
+                toggleClass: detail.toggleClass(),
+                aria: {
+                  mode: 'pressed',
+                  syncWithExpanded: true
                 }
-              }
+              },
+              coupling: {
+                others: {
+                  sandbox: function (hotspot) {
+                    return DropdownUtils.makeSandbox(detail, {
+                      anchor: 'hotspot',
+                      hotspot: hotspot
+                    }, hotspot, {
+                      onOpen: function () { Toggling.on(hotspot); },
+                      onClose: function () { Toggling.off(hotspot); }
+                    });
+                  }
+                }
+              },
+              keying: {
+                mode: 'execution',
+                useSpace: true
+              },
+              focusing: true
             },
-            keying: {
-              mode: 'execution',
-              useSpace: true
-            },
-            focusing: true
-          },
+            detail.dropdownBehaviours()
+          ),
 
           eventOrder: {
             // Order, the button state is toggled first, so assumed !selected means close.

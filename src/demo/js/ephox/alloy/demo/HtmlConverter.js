@@ -73,7 +73,7 @@ define(
             dom: {
               tag: 'pre'
             },
-            behaviours: {
+            containerBehaviours: {
               replacing: { }
             }
           })

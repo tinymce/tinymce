@@ -77,7 +77,7 @@ define(
             }
           },
 
-          behaviours: {
+          buttonBehaviours: {
             toggling: {
               toggleClass: 'demo-selected',
               aria: {

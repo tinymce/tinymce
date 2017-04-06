@@ -130,7 +130,7 @@ define(
             console.log('clicked on button', s);
           },
 
-          behaviours: {
+          buttonBehaviours: {
             toggling: {
               toggleClass: 'mce-active',
               aria: {

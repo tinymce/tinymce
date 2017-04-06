@@ -209,7 +209,7 @@ define(
                 dom: {
                   classes: [ 'my-widget' ]
                 },
-                behaviours: {
+                containerBehaviours: {
                   keying: { mode: 'cyclic' }
                 },
                 components: [
@@ -277,7 +277,7 @@ define(
                 dom: {
                   classes: [ 'my-widget' ]
                 },
-                behaviours: {
+                containerBehaviours: {
                   keying: { mode: 'cyclic' }
                 },
                 components: [
@@ -437,7 +437,7 @@ define(
                                   tag: 'button',
                                   innerHtml: '-'
                                 },
-                                behaviours: {
+                                buttonBehaviours: {
                                   tabstopping: Behaviour.revoke()
                                 }
                               }),
@@ -447,12 +447,12 @@ define(
                                   tag: 'button',
                                   innerHtml: '+'
                                 },
-                                behaviours: {
+                                buttonBehaviours: {
                                   tabstopping: Behaviour.revoke()
                                 }
                               })
                             ],
-                            behaviours: {
+                            containerBehaviours: {
                               tabstopping: true,
                               keying: {
                                 mode: 'flow',
@@ -461,7 +461,7 @@ define(
                             }
                           })
                         ],
-                        behaviours: {
+                        containerBehaviours: {
                           keying: {
                             mode: 'cyclic'
                           }

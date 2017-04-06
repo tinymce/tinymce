@@ -18,6 +18,7 @@ define(
 
     var make = function (detail, components, spec, externals) {
       return {
+        uid: detail.uid(),
         dom: {
           tag: 'div'
         },

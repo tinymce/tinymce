@@ -29,13 +29,16 @@ define(
           dom: detail.dom(),
           components: components,
 
-          behaviours: {
-            keying: {
-              mode: 'flow',
-              selector: '.' + detail.markers().itemClass()
+          behaviours: Merger.deepMerge(
+            {
+              keying: {
+                mode: 'flow',
+                selector: '.' + detail.markers().itemClass()
+              },
+              tabstopping: detail.hasTabstop() ? { } : Behaviour.revoke()
             },
-            tabstopping: detail.hasTabstop() ? { } : Behaviour.revoke()
-          },
+            detail.tgroupBehaviours()
+          ),
 
           'debug.sketcher': spec['debug.sketcher']
         }

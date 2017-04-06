@@ -42,32 +42,35 @@ define(
         dom: detail.dom(),
         components: components,
 
-        behaviours: {
-          representing: {
-            store: {
-              mode: 'manual',
-              getValue: function (form) {
-                var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
-                var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
+        behaviours: Merger.deepMerge(
+          {
+            representing: {
+              store: {
+                mode: 'manual',
+                getValue: function (form) {
+                  var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
+                  var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
 
-                var minimalValues = Representing.getValue(minimal);
-                var extraValues = Representing.getValue(extra);
-                return Merger.deepMerge(
-                  minimalValues,
-                  extraValues
-                );
-              },
-              setValue: function (form, values) {
-                var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
-                var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
+                  var minimalValues = Representing.getValue(minimal);
+                  var extraValues = Representing.getValue(extra);
+                  return Merger.deepMerge(
+                    minimalValues,
+                    extraValues
+                  );
+                },
+                setValue: function (form, values) {
+                  var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
+                  var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
 
-                // ASSUMPTION: Form ignore values that it does not have.
-                Representing.setValue(minimal, values);
-                Representing.setValue(extra, values);
+                  // ASSUMPTION: Form ignore values that it does not have.
+                  Representing.setValue(minimal, values);
+                  Representing.setValue(extra, values);
+                }
               }
             }
-          }
-        },
+          },
+          detail.expandableBehaviours()
+        ),
 
         apis: {
           toggleForm: runOnExtra(detail, Sliding.toggleGrow),

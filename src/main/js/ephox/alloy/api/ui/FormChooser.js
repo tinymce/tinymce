@@ -13,11 +13,12 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter'
   ],
 
-  function (EventRoot, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Attr, SelectorFilter) {
+  function (EventRoot, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Merger, Attr, SelectorFilter) {
     var schema = FormChooserSchema.schema();
     var partTypes = FormChooserSchema.parts();
 
@@ -42,49 +43,52 @@ define(
         dom: detail.dom(),
         components: components,
 
-        behaviours: {
-          keying: {
-            mode: 'flow',
-            selector: '.' + detail.markers().choiceClass(),
-            executeOnMove: true,
-            getInitial: function (chooser) {
-              return Highlighting.getHighlighted(chooser).map(function (choice) {
-                return choice.element();
-              });
-            },
-            execute: function (chooser, simulatedEvent, focused) {
-              return chooser.getSystem().getByDom(focused).map(function (choice) {
-                Highlighting.highlight(chooser, choice);
-                return true;
-              });
-            }
-          },
-
-          highlighting: {
-            itemClass: detail.markers().choiceClass(),
-            highlightClass: detail.markers().selectedClass(),
-            onHighlight: function (chooser, choice) {
-              Attr.set(choice.element(), 'aria-checked', 'true');
-            },
-            onDehighlight: function (chooser, choice) {
-              Attr.set(choice.element(), 'aria-checked', 'false');
-            }
-          },
-
-          representing: {
-            store: {
-              mode: 'manual',
-              setValue: function (chooser, value) {
-                findByValue(chooser, value).each(function (choiceWithValue) {
-                  Highlighting.highlight(chooser, choiceWithValue);
+        behaviours: Merger.deepMerge(
+          {
+            keying: {
+              mode: 'flow',
+              selector: '.' + detail.markers().choiceClass(),
+              executeOnMove: true,
+              getInitial: function (chooser) {
+                return Highlighting.getHighlighted(chooser).map(function (choice) {
+                  return choice.element();
                 });
               },
-              getValue: function (chooser) {
-                return Highlighting.getHighlighted(chooser).map(Representing.getValue);
+              execute: function (chooser, simulatedEvent, focused) {
+                return chooser.getSystem().getByDom(focused).map(function (choice) {
+                  Highlighting.highlight(chooser, choice);
+                  return true;
+                });
+              }
+            },
+
+            highlighting: {
+              itemClass: detail.markers().choiceClass(),
+              highlightClass: detail.markers().selectedClass(),
+              onHighlight: function (chooser, choice) {
+                Attr.set(choice.element(), 'aria-checked', 'true');
+              },
+              onDehighlight: function (chooser, choice) {
+                Attr.set(choice.element(), 'aria-checked', 'false');
+              }
+            },
+
+            representing: {
+              store: {
+                mode: 'manual',
+                setValue: function (chooser, value) {
+                  findByValue(chooser, value).each(function (choiceWithValue) {
+                    Highlighting.highlight(chooser, choiceWithValue);
+                  });
+                },
+                getValue: function (chooser) {
+                  return Highlighting.getHighlighted(chooser).map(Representing.getValue);
+                }
               }
             }
-          }
-        },
+          },
+          detail.chooserBehaviours()
+        ),
 
         events: Objects.wrapAll([
           {
