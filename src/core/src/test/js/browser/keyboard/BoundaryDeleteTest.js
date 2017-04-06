@@ -5,6 +5,7 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.katamari.api.Fun',
@@ -16,7 +17,10 @@ asynctest(
     'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.themes.modern.Theme'
   ],
-  function (ApproxStructure, Assertions, GeneralSteps, Keys, Pipeline, Step, Fun, TinyActions, TinyApis, TinyLoader, Element, CaretPosition, BoundaryLocation, Theme) {
+  function (
+    ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Fun, TinyActions, TinyApis, TinyLoader, Element, CaretPosition, BoundaryLocation,
+    Theme
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -77,16 +81,22 @@ asynctest(
 
       Pipeline.async({}, [
         tinyApis.sFocus,
-        sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 2], 0, '<p>a<a href="#">b</a>c</p>', 'end', [0, 1, 0], 1),
-        sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>a<a href="#">b</a>c</p>', 'before', [0, 0], 1),
-        sTestBackspace('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">c</a>d</p>', 'start', [0, 1, 0], 1),
-        sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 0], 1, '<p>a<a href="#">b</a>c</p>', 'start', [0, 1, 0], 1),
-        sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>c</p>', 'after', [0, 2], 1),
-        sTestDelete('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>d</p>', 'end', [0, 1, 0], 1),
-        sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1),
-        tinyApis.sAssertContentStructure(paragraphWithText('ac')),
-        sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>ac</p>', 'none', [0, 0], 1),
-        tinyApis.sAssertContentStructure(paragraphWithText('ac'))
+        Logger.t('Backspace key', GeneralSteps.sequence([
+          sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 2], 0, '<p>a<a href="#">b</a>c</p>', 'end', [0, 1, 0], 1),
+          sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>a<a href="#">b</a>c</p>', 'before', [0, 0], 1),
+          sTestBackspace('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">c</a>d</p>', 'start', [0, 1, 0], 1)
+        ])),
+        Logger.t('Delete key', GeneralSteps.sequence([
+          sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 0], 1, '<p>a<a href="#">b</a>c</p>', 'start', [0, 1, 0], 1),
+          sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>c</p>', 'after', [0, 2], 1),
+          sTestDelete('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>d</p>', 'end', [0, 1, 0], 1),
+          sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1)
+        ])),
+        Logger.t('Backspace/delete last character', GeneralSteps.sequence([
+          tinyApis.sAssertContentStructure(paragraphWithText('ac')),
+          sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>ac</p>', 'none', [0, 0], 1),
+          tinyApis.sAssertContentStructure(paragraphWithText('ac'))
+        ]))
       ], onSuccess, onFailure);
     }, {
       skin_url: '/project/src/skins/lightgray/dist/lightgray'

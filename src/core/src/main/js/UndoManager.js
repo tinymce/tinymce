@@ -336,7 +336,7 @@ define(
         /**
          * Executes the specified mutator function as an undo transaction. The selection
          * before the modification will be stored to the undo stack and if the DOM changes
-         * it will add a new undo level. Any methods within the translation that adds undo levels will
+         * it will add a new undo level. Any logic within the translation that adds undo levels will
          * be ignored. So a translation can include calls to execCommand or editor.insertContent.
          *
          * @method transact
@@ -346,8 +346,26 @@ define(
         transact: function (callback) {
           endTyping();
           self.beforeChange();
-          self.ignore(callback);
+          self.transactIgnore(callback);
           return self.add();
+        },
+
+        /**
+         * Executes the specified mutator function as an undo transaction. But without adding an undo level.
+         * Any logic within the translation that adds undo levels will be ignored. So a translation can
+         * include calls to execCommand or editor.insertContent.
+         *
+         * @method transactIgnore
+         * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+         * @return {Object} Undo level that got added or null it a level wasn't needed.
+         */
+        transactIgnore: function (callback) {
+          try {
+            locks++;
+            callback();
+          } finally {
+            locks--;
+          }
         },
 
         /**
@@ -370,22 +388,6 @@ define(
             if (self.transact(callback2)) {
               data[index - 1].beforeBookmark = bookmark;
             }
-          }
-        },
-
-        /**
-         * Makes sure that anything within the callback transaction doesn't get added as an undo level. An undo level
-         * would still be produced once the user moves the caret inside the editor for example.
-         *
-         * @method ignore
-         * @param {function} callback Function that doesn't cause any undo levels to be added.
-         */
-        ignore: function (callback) {
-          try {
-            locks++;
-            callback();
-          } finally {
-            locks--;
           }
         }
       };

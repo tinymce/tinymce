@@ -482,14 +482,14 @@ asynctest(
       LegacyUnit.equal(editor.undoManager.data[2].content, '<p>aBC</p>');
     });
 
-    suite.test('ignore transaction', function (editor) {
+    suite.test('transactIgnore does a transaction but no levels', function (editor) {
       editor.undoManager.clear();
       editor.setDirty(false);
       editor.setContent('<p>a</p>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
       editor.undoManager.typing = true;
 
-      editor.undoManager.ignore(function () {
+      editor.undoManager.transactIgnore(function () {
         editor.execCommand('bold');
         editor.execCommand('italic');
       });

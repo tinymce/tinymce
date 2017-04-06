@@ -23,7 +23,7 @@ define(
   ],
   function (Fun, Option, Options, CaretContainer, CaretPosition, BoundaryCaret, BoundaryLocation, BoundarySelection, InlineUtils) {
     var selectAndDelete = function (editor, elm) {
-      editor.undoManager.ignore(function () {
+      editor.undoManager.transactIgnore(function () {
         editor.selection.select(elm);
         editor.execCommand('Delete');
       });
@@ -50,7 +50,7 @@ define(
     var deleteFromTo = function (editor, caret, from, to) {
       var rootNode = editor.getBody();
 
-      editor.undoManager.ignore(function () {
+      editor.undoManager.transactIgnore(function () {
         editor.selection.setRng(rangeFromPositions(from, to));
         editor.execCommand('Delete');
 
