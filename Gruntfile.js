@@ -649,6 +649,7 @@ module.exports = function (grunt) {
   require("load-grunt-tasks")(grunt);
   grunt.loadTasks("tools/tasks");
   grunt.loadNpmTasks('@ephox/bolt');
+  grunt.loadNpmTasks('@ephox/bedrock');
 
   grunt.registerTask("test", ["qunit"]);
   grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "test", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
