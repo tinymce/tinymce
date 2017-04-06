@@ -95,7 +95,7 @@ define(
         findLink(editor).each(function (link) {
           editor.selection.select(link.dom());
         });
-      }, { }, { });
+      }, { });
     };
 
     return {

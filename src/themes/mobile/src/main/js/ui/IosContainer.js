@@ -31,7 +31,7 @@ define(
           },
           components: [ ],
 
-          behaviours: Objects.wrapAll([
+          containerBehaviours: Objects.wrapAll([
             Replacing.config({ })
           ])
         })

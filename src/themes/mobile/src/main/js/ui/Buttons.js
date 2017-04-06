@@ -13,7 +13,7 @@ define(
     var forToolbarCommand = function (editor, command) {
       return forToolbar(command, function () {
         editor.execCommand(command);
-      }, { }, { });
+      }, { });
     };
 
     var forToolbarStateCommand = function (editor, command) {
@@ -33,10 +33,10 @@ define(
 
       return forToolbar(command, function () {
         editor.execCommand(command);
-      }, extraBehaviours, { });
+      }, extraBehaviours);
     };
 
-    var forToolbar = function (clazz, action, extraBehaviours, extraEvents) {
+    var forToolbar = function (clazz, action, extraBehaviours) {
       return Button.sketch({
         dom: {
           tag: 'span',
@@ -44,14 +44,12 @@ define(
         },
         action: action,
 
-        behaviours: Merger.deepMerge(
+        buttonBehaviours: Merger.deepMerge(
           {
             unselecting: true
           },
           extraBehaviours
-        ),
-
-        events: extraEvents
+        )
       });
     };
 

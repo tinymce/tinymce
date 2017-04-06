@@ -61,14 +61,14 @@ define(
               items: [
                 Buttons.forToolbar('back', function (/* btn */) {
                   ios.exit();
-                }, { }, { })
+                }, { })
               ]
             },
             {
               label: 'the action group',
               scrollable: true,
               items: [
-                Buttons.forToolbarCommand(editor, 'undo', { }, { }),
+                Buttons.forToolbarCommand(editor, 'undo'),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic'),
                 LinkButton.sketch(ios, editor),
