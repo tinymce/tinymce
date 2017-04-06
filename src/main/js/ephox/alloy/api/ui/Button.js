@@ -33,7 +33,8 @@ define(
             type: 'button',
             role: detail.role().getOr('button')
           }
-        }
+        },
+        customBehaviours: detail.customBehaviours()
       };
     };
 

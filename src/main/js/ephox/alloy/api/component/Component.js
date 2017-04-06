@@ -97,6 +97,7 @@ define(
         debugSystem: debugSystem,
 
         config: config,
+        spec: Fun.constant(spec),
 
         connect: connect,
         disconnect: disconnect,

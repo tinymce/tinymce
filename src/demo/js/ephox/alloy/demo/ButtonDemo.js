@@ -21,7 +21,7 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
 
-   
+   window.MAGIC_ALLOY = gui;
 
       var redBehaviour = Behaviour.create([ ], 'red.behaviour', {
         exhibit: function (base, info) {
