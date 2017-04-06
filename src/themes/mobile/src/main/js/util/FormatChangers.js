@@ -18,9 +18,8 @@ define(
     };
 
     var init = function (ios, editor) {
-      Arr.each([ 'bold', 'italic', 'h1' ], function (command) {
+      Arr.each([ 'bold', 'italic', 'h1', 'h2', 'h3' ], function (command) {
         editor.formatter.formatChanged(command, function (state) {
-          console.log('changing', command, state);
           fireChange(ios, command, state);
         });
       });
