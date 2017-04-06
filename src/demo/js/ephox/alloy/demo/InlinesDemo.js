@@ -60,12 +60,6 @@ define(
           tag: 'div'
         },
 
-        fetch: function () {
-          return Future.pure(
-            Container.sketch({ })
-          );
-        },
-
         onEscape: function () {
           console.log('inline.menu.escape');
           return Option.some(true);
@@ -74,9 +68,6 @@ define(
         onExecute: function () {
           console.log('inline.menu.execute')
         },
-
-        lazySink: lazySink,
-
         members: { 
           item: {
             munge: function (itemSpec) {
@@ -225,7 +216,7 @@ define(
                 }
               },
               customBehaviours: [
-                AdhocBehaviour('adhoc-show-popup', {
+                AdhocBehaviour.events('adhoc-show-popup', {
                   focusin: EventHandler.nu({
                     run: function (input) {
                       var emptyAnchor = {
