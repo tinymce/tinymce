@@ -13,7 +13,6 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
-
     var eventUtils = EventUtils.Event;
 
     suite.test("unbind all", function () {
@@ -452,6 +451,19 @@ asynctest(
         evt = e;
       });
       LegacyUnit.equal(evt.type, "ready");
+    });
+
+    suite.test("isDefaultPrevented", function () {
+      var testObj = {};
+      var testCallback = function () {
+        return 'hello';
+      };
+      testObj.isDefaultPrevented = testCallback;
+      eventUtils.fire(window, 'testEvent', testObj);
+
+      LegacyUnit.equal(testObj.isDefaultPrevented !== testCallback, true, 'Is overwritten by our isDefaultPrevented');
+      LegacyUnit.equal(typeof testObj.isPropagationStopped, 'function', 'Has our isPropagationStopped');
+      LegacyUnit.equal(typeof testObj.isImmediatePropagationStopped, 'function', 'Has our isImmediatePropagationStopped');
     });
 
     var sAddTestDiv = Step.sync(function () {
