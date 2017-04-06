@@ -103,7 +103,7 @@ define(
       }
 
       // Attributes present on all elements
-      globalAttributes = "id accesskey class dir lang style tabindex title";
+      globalAttributes = "id accesskey class dir lang style tabindex title role";
 
       // Event attributes can be opt-in/opt-out
       /*eventAttributes = split("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +

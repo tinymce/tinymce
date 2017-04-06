@@ -60,6 +60,10 @@ define(
   function (Schema, Entities, Tools) {
     var each = Tools.each;
 
+    var isValidPrefixAttrName = function (name) {
+      return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
+    };
+
     /**
      * Returns the index of the end tag for a specific start tag. This can be
      * used to skip all children of a parent element from being processed.
@@ -177,7 +181,7 @@ define(
           value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
           // Validate name and value pass through all data- attributes
-          if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
+          if (validate && !isInternalElement && isValidPrefixAttrName(name) === false) {
             attrRule = validAttributesMap[name];
 
             // Find rule by pattern matching
