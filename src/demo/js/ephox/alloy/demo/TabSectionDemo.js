@@ -22,7 +22,6 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
 
-
       var subject = HtmlDisplay.section(
         gui,
         'A basic tab view (refactoring)',
@@ -54,9 +53,6 @@ define(
               }
             }
           ],
-          defaultView: function () {
-            return Container.sketch({ });
-          },
           parts: {
             tabbar: {
               dom: {
@@ -71,7 +67,9 @@ define(
               members: {
                 tab: {
                   munge: function (tabSpec) {
-                    return Merger.deepMerge(tabSpec, {
+                    return {
+                      view: tabSpec.view,
+                      value: tabSpec.value,
                       dom: {
                         tag: 'button',
                         attributes: {
@@ -81,7 +79,7 @@ define(
                       components: [
                         GuiFactory.text(tabSpec.text)
                       ]
-                    });
+                    };
                   }
                 }
               },

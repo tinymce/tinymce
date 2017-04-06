@@ -27,6 +27,7 @@ define(
             }
           }
         ),
+        components: detail.components(),
         events: events,
         behaviours: {
           focusing: true,
