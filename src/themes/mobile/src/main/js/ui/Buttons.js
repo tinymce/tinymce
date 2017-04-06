@@ -30,12 +30,11 @@ define(
           toggle(button);
         })
       };
-   
+
       return forToolbar(command, function () {
         editor.execCommand(command);
       }, extraBehaviours, { });
-    }
-
+    };
 
     var forToolbar = function (clazz, action, extraBehaviours, extraEvents) {
       return Button.sketch({

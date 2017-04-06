@@ -26,7 +26,7 @@ define(
           },
           components: FontSizeSlider.makeItems({
             onChange: Fun.noop,
-            getInitialValue: function () { return 2; }
+            getInitialValue: Fun.constant(2)
           })
         })
       );
@@ -39,7 +39,7 @@ define(
           },
           components: ColorSlider.makeItems({
             onChange: Fun.noop,
-            getInitialValue: function () { return -1; }
+            getInitialValue: Fun.constant(-1)
           })
         })
       );

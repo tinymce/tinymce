@@ -50,13 +50,13 @@ define(
 
     var calculate = function (cWin, bounds, delta) {
       // The goal here is to shift as little as required.
-      if (bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight) return Math.min(delta, bounds.bottom() - cWin.innerHeight + EXTRA_SPACING);
-      return 0;
+      var isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
+      return isOutside ? Math.min(delta, bounds.bottom() - cWin.innerHeight + EXTRA_SPACING) : 0;
     };
 
     var setup = function (outerWindow, cWin) {
       var cBody = Element.fromDom(cWin.document.body);
-      
+
       var toEditing = function () {
         // TBIO-3816 throttling the resume was causing keyboard hide/show issues with undo/redo
         // throttling was introduced to work around a different keyboard hide/show issue, where
@@ -70,7 +70,9 @@ define(
           getBounds(cWin).each(function (bounds) {
             // If the top is offscreen, scroll it into view.
             var cScrollBy = calculate(cWin, bounds, delta);
-            if (cScrollBy !== 0) cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
+            if (cScrollBy !== 0) {
+              cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
+            }
           });
         });
         setLastHeight(cBody, window.innerHeight);

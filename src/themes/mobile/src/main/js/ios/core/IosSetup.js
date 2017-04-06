@@ -60,7 +60,7 @@ define(
          * As soon as the window is back to 0 (idle), scroll the toolbar and socket back into place on scroll.
          */
         scroller.idle(function () {
-          IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (_) {
+          IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (/* _ */) {
             var extraScroll = scrollBounds();
             extraScroll.each(function (extra) {
               // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
@@ -73,23 +73,32 @@ define(
       }, 1000);
 
       var onScroll = DomEvent.bind(Element.fromDom(outerWindow), 'scroll', function () {
-        if (outerWindow.pageYOffset < 0) return;
-        // We've experimented with trying to set the socket scroll (hidden vs. scroll) based on whether the outer body has scrolled.
-        // When the window starts scrolling, we would lock the socket scroll, and we would unlock it when the window stopped scrolling.
-        // This would give a nice rubber-band effect at the end of the content, but would break the code that tried to position
-        // the text in the viewable area (more details below). Also, as soon as you flicked to outer scroll, if you started scrolling up again,
-        // you would drag the whole window down, because you would still be in outerscroll mode. That's hardly much of a problem, but it is a
-        // minor issue. It also didn't play nicely with keeping the toolbar on the screen.
-        //
-        // The big problem was that this was incompatible with the toolbar and scrolling code. We need a padding inside the socket so that the
-        // bottom of the content can be scrolled into the viewable greenzone. If it doesn't have padding, then unless we move the socket top to some
-        // negative value as well, then we can't get a scrollTop high enough to get the selection into the viewable greenzone. This is the purpose
-        // of the padding at the bottom of the iframe. Without it, the scroll consistently jumps back to its max scroll value, and
-        // you can't keep the last line on screen when the keyboard is up.
+        if (outerWindow.pageYOffset < 0) {
+          return;
+        }
 
-        // However, if the padding is too large, then the content can be 'effectively' scrolled off the screen (the iframe anyway), and the
-        // user can get lost about where they are. Our short-term fix is just to make the padding at the end the height - the greenzone height
-        // so that content should always be visible on the screen, even if they've scrolled to the end.
+        /*
+        We've experimented with trying to set the socket scroll (hidden vs. scroll) based on whether the outer body
+        has scrolled. When the window starts scrolling, we would lock the socket scroll, and we would
+        unlock it when the window stopped scrolling. This would give a nice rubber-band effect at the end
+        of the content, but would break the code that tried to position the text in the viewable area
+        (more details below). Also, as soon as you flicked to outer scroll, if you started scrolling up again,
+        you would drag the whole window down, because you would still be in outerscroll mode. That's hardly
+        much of a problem, but it is a minor issue. It also didn't play nicely with keeping the toolbar on the screen.
+
+        The big problem was that this was incompatible with the toolbar and scrolling code. We need a padding inside
+        the socket so that the bottom of the content can be scrolled into the viewable greenzone. If it doesn't
+        have padding, then unless we move the socket top to some negative value as well, then we can't get
+        a scrollTop high enough to get the selection into the viewable greenzone. This is the purpose of the
+        padding at the bottom of the iframe. Without it, the scroll consistently jumps back to its
+        max scroll value, and you can't keep the last line on screen when the keyboard is up.
+
+        However, if the padding is too large, then the content can be 'effectively' scrolled off the screen
+        (the iframe anyway), and the user can get lost about where they are. Our short-term fix is just to
+        make the padding at the end the height - the greenzone height so that content should always be
+        visible on the screen, even if they've scrolled to the end.
+        */
+
         scrollThrottle.throttle();
       });
 
@@ -107,8 +116,8 @@ define(
       var toolstrip = bag.toolstrip();
       var toolbar = bag.toolbar();
       var contentElement = bag.contentElement();
-      var keyboardType= bag.keyboardType();
-      
+      var keyboardType = bag.keyboardType();
+
       var structure = IosViewport.takeover(socket, ceBody, toolstrip);
       var keyboardModel = keyboardType(cWin, Body.body(), contentElement, toolstrip, toolbar);
 
@@ -139,7 +148,9 @@ define(
       });
 
       var onResize = DomEvent.bind(Element.fromDom(window), 'resize', function () {
-        if (structure.isExpanding()) structure.refresh();
+        if (structure.isExpanding()) {
+          structure.refresh();
+        }
       });
 
       var onScroll = register(toolstrip, socket, Body.body(), window, structure, cWin);
@@ -147,7 +158,9 @@ define(
       var unfocusedSelection = FakeSelection(cWin, contentElement);
 
       var refreshSelection = function () {
-        if (unfocusedSelection.isActive()) unfocusedSelection.update();
+        if (unfocusedSelection.isActive()) {
+          unfocusedSelection.update();
+        }
       };
 
       var highlightSelection = function () {

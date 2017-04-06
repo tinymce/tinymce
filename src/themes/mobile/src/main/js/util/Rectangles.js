@@ -32,13 +32,14 @@ define(
         right: Fun.constant(rawRect.right),
         bottom: Fun.constant(rawRect.bottom),
         width: Fun.constant(rawRect.width),
-        height: Fun.constant(rawRect.height),
+        height: Fun.constant(rawRect.height)
       };
     };
 
     var getRectsFromRange = function (range) {
-      if (! range.collapsed) return Arr.map(range.getClientRects(), toRect);
-      else {
+      if (! range.collapsed) {
+        return Arr.map(range.getClientRects(), toRect);
+      } else {
         var start = Element.fromDom(range.startContainer);
         return Traverse.parent(start).bind(function (parent) {
           var selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));

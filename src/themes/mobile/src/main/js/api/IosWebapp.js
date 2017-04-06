@@ -21,7 +21,7 @@ define(
 
       /* Make the toolbar */
       Css.set(mobile.toolstrip, 'width', '100%');
-      
+
       Css.set(mobile.container, 'position', 'relative');
       var onTap = function () {
         mask.hide();

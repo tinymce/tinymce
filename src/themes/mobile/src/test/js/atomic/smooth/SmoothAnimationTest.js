@@ -2,10 +2,11 @@ test(
   'Smooth Animation AdjustTest',
 
   [
+    'global!assert',
     'tinymce.themes.mobile.ios.smooth.SmoothAnimation'
   ],
 
-  function (SmoothAnimation) {
+  function (assert, SmoothAnimation) {
     var checkNone = function (label, value, destination, amount) {
       var actual = SmoothAnimation.adjust(value, destination, amount);
       assert.eq(true, actual.isNone(), 'Test: ' + label + '. Expected none but was: ' + actual.toString());

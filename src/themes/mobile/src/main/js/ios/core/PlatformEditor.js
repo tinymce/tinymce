@@ -17,7 +17,7 @@ define(
     var getDocFromFrame = function (frame) {
       return Option.some(Element.fromDom(frame.dom().contentWindow.document));
     };
-    
+
     var getWinFromFrame = function (frame) {
       return Option.from(frame.dom().contentWindow);
     };

@@ -28,13 +28,13 @@ define(
   ) {
     var create = function (platform, mask) {
       var meta = MetaViewport.tag();
-           
+
       var priorState = Singleton.value();
       var scrollEvents = Singleton.value();
 
       var iosApi = Singleton.api();
       var iosEvents = Singleton.api();
-      
+
       var enter = function () {
         mask.hide();
         var doc = Element.fromDom(document);
@@ -54,7 +54,7 @@ define(
             exclusives: Scrollables.exclusive(doc, '.' + Scrollable.scrollable())
           });
 
-          Class.add(platform.container, Styles.resolve('fullscreen-maximized') );
+          Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
           Thor.clobberStyles(platform.container, editorApi.body());
           meta.maximize();
 
@@ -115,8 +115,12 @@ define(
         mask.show();
 
         priorState.on(function (s) {
-          s.socketHeight.each(function (h) { Css.set(platform.socket, 'height', h); });
-          s.iframeHeight.each(function (h) { Css.set(platform.editor.getFrame(), 'height', h); });
+          s.socketHeight.each(function (h) {
+            Css.set(platform.socket, 'height', h);
+          });
+          s.iframeHeight.each(function (h) {
+            Css.set(platform.editor.getFrame(), 'height', h);
+          });
           document.body.scrollTop = s.scrollTop;
         });
         priorState.clear();
@@ -126,7 +130,7 @@ define(
         });
         scrollEvents.clear();
 
-        Class.remove(platform.container, Styles.resolve('fullscreen-maximized') );
+        Class.remove(platform.container, Styles.resolve('fullscreen-maximized'));
         Thor.restoreStyles();
         Scrollable.deregister(platform.toolbar);
 
@@ -136,8 +140,6 @@ define(
         // Hide the keyboard and remove the selection so there isn't a blue cursor in the content
         // still even once exited.
         Focus.blur(platform.editor.getFrame());
-
-
 
         PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
           editorApi.clearSelection();

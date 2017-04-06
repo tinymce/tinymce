@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         main: "tinymce.themes.mobile.Theme",
         filename: "theme",
 
-        generate_mobile: true,
+        generate_inline: true,
         minimise_module_names: true,
 
         files: {
@@ -28,9 +28,41 @@ module.exports = function (grunt) {
       "theme": {
         files: [
           {
-            src: "scratch/mobile/theme.raw.js",
-            dest: "dist/mobile/theme.js"
+            src: "scratch/inline/theme.raw.js",
+            dest: "dist/inline/theme.js"
           }
+        ]
+      },
+
+      "standalone": {
+        files: [
+          {
+            expand: true,
+            flatten: true,
+            src: ['src/main/css/**'],
+            dest: 'deploy-local/css',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['src/main/icons/**'],
+            dest: 'deploy-local/icons',
+            filter: 'isFile'
+          },
+          {
+            src: "../../../js/tinymce/tinymce.min.js",
+            dest: "deploy-local/js/tinymce.min.js"
+          },
+          {
+            src: "scratch/inline/theme.js",
+            dest: "deploy-local/js/mobile_theme.js"
+          },
+          {
+            src: "index.html",
+            dest: "deploy-local/index.html"
+          }
+          
         ]
       }
     },
@@ -57,11 +89,20 @@ module.exports = function (grunt) {
         }
       },
 
+      "standalone": {
+        files: [
+          {
+            src: "deploy-local/js/mobile_theme.js",
+            dest: "deploy-local/js/mobile_theme.min.js"
+          }
+        ]
+      },
+
       "theme": {
         files: [
           {
-            src: "scratch/mobile/theme.js",
-            dest: "dist/mobile/theme.min.js"
+            src: "scratch/inline/theme.js",
+            dest: "dist/inline/theme.min.js"
           }
         ]
       }
@@ -73,5 +114,6 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
 
-  grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
+  grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
+  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
 };
