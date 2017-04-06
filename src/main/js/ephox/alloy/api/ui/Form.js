@@ -18,7 +18,8 @@ define(
 
   function (Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
     var schema = [
-      FieldSchema.defaulted('formBehaviours', { })
+      FieldSchema.defaulted('formBehaviours', { }),
+      FieldSchema.defaulted('customBehaviours', [ ])
     ];
 
     var sketch = function (rawSpec) {
@@ -96,7 +97,8 @@ define(
               }
             },
             detail.formBehaviours()
-          )
+          ),
+          customBehaviours: detail.customBehaviours()
         }
       );
 
