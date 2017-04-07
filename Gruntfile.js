@@ -11,16 +11,6 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: packageData,
 
-    qunit: {
-      core: {
-        options: {
-          urls: [
-            "tests/index.html"
-          ]
-        }
-      }
-    },
-
     moxiezip: {
       production: {
         options: {
@@ -268,7 +258,7 @@ module.exports = function (grunt) {
 
             zip.addFile(
               "jquery.tinymce.js",
-              "src/core/src/main/js/jquery.tinymce.js"
+              "src/core/src/main/js/JqueryIntegration.js"
             );
 
             var getDirs = zipUtils.getDirectories(grunt, this.excludes);
@@ -454,7 +444,8 @@ module.exports = function (grunt) {
       core: {
         config: 'config/bolt/browser.js',
         projectdir: '.',
-        testfiles: ["**/src/test/js/**/*Test.js"]
+        testfiles: ["**/src/test/js/**/*Test.js"],
+        customRoutes: 'src/core/src/test/json/routes.json'
       }
     },
 
@@ -465,6 +456,7 @@ module.exports = function (grunt) {
         testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
+        customRoutes: 'src/core/src/test/json/routes.json',
         name: 'phantomjs'
       },
 
@@ -474,6 +466,7 @@ module.exports = function (grunt) {
         testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
+        customRoutes: 'src/core/src/test/json/routes.json',
         name: 'chrome'
       },
 
@@ -483,6 +476,7 @@ module.exports = function (grunt) {
         testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
+        customRoutes: 'src/core/src/test/json/routes.json',
         name: 'firefox'
       },
 
@@ -492,6 +486,7 @@ module.exports = function (grunt) {
         testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
+        customRoutes: 'src/core/src/test/json/routes.json',
         name: 'MicrosoftEdge'
       },
 
@@ -501,6 +496,7 @@ module.exports = function (grunt) {
         testfiles: ['**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
+        customRoutes: 'src/core/src/test/json/routes.json',
         name: 'ie'
       }
     },
@@ -650,6 +646,5 @@ module.exports = function (grunt) {
   grunt.loadTasks("tools/tasks");
   grunt.loadNpmTasks('@ephox/bolt');
 
-  grunt.registerTask("test", ["qunit"]);
-  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "test", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 };

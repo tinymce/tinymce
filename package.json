@@ -30,7 +30,6 @@
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-less": "~1.4.0",
-    "grunt-contrib-qunit": "~1.2.0",
     "grunt-contrib-uglify": "~2.0.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-eslint": "~19.0.0",
