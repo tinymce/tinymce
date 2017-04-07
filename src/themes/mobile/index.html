@@ -10,7 +10,8 @@
     tinymce.init({
       selector: 'textarea',
       theme_url: 'js/mobile_theme.min.js',
-      plugins: '',
+      // Required for list functionality (commands)
+      plugins: 'advlist lists',
       theme: 'mobile',
       content_css_url: '/../css',
       skin_url: '../../../../../skins/lightgray/dist/lightgray'

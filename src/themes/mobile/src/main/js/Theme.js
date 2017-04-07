@@ -80,6 +80,10 @@ define(
                 createHeadingButton('h1'),
                 createHeadingButton('h2'),
                 createHeadingButton('h3'),
+                // NOTE: Requires advlist plugin
+                Buttons.forToolbarStateAction(editor, 'ul', function () {
+                  editor.execCommand('ApplyUnorderedListStyle', null, { });
+                }),
                 LinkButton.sketch(ios, editor),
                 ImagePicker.sketch(editor),
                 FontSizeSlider.sketch(ios, editor),
