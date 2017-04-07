@@ -26,7 +26,6 @@ define(
         selector: '.tiny-text',
         theme: 'mobile',
         plugins: 'lists',
-        plugins_url: '../../../../../js/plugins/',
         content_css_url: '../../main/css',
         skin_url: '../../../../../skins/lightgray/dist/lightgray'
       });
