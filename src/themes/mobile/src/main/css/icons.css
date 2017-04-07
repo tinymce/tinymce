@@ -128,3 +128,14 @@
   content: "\e91a";
 }
 
+.tinymce-mobile-toolbar-button-h1:before {
+  content: "H1";
+}
+
+.tinymce-mobile-toolbar-button-h2:before {
+  content: "H2";
+}
+
+.tinymce-mobile-toolbar-button-h3:before {
+  content: "H3";
+}

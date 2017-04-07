@@ -16,24 +16,36 @@ define(
       }, { });
     };
 
-    var forToolbarStateCommand = function (editor, command) {
-      var extraBehaviours = {
-        toggling: {
-          toggleClass: Styles.resolve('toolbar-button-selected'),
-          toggleOnExecute: false,
-          aria: {
-            mode: 'pressed'
-          }
-        },
+    var toggling = {
+      toggleClass: Styles.resolve('toolbar-button-selected'),
+      toggleOnExecute: false,
+      aria: {
+        mode: 'pressed'
+      }
+    };
+
+    var getToggleBehaviours = function (command) {
+      return {
+        toggling: toggling,
         receiving: FormatReceiver.setup(command, function (button, status) {
           var toggle = status ? Toggling.on : Toggling.off;
           toggle(button);
         })
       };
+    }
+
+    var forToolbarStateCommand = function (editor, command) {
+      var extraBehaviours = getToggleBehaviours(command);
 
       return forToolbar(command, function () {
         editor.execCommand(command);
       }, extraBehaviours);
+    };
+
+    // The action is not just executing the same command
+    var forToolbarStateAction = function (editor, command, action) {
+      var extraBehaviours = getToggleBehaviours(command);
+      return forToolbar(command, action, extraBehaviours);
     };
 
     var forToolbar = function (clazz, action, extraBehaviours) {
@@ -56,6 +68,7 @@ define(
     return {
       forToolbar: forToolbar,
       forToolbarCommand: forToolbarCommand,
+      forToolbarStateAction: forToolbarStateAction,
       forToolbarStateCommand: forToolbarStateCommand
     };
   }
