@@ -16,7 +16,7 @@ define(
             items: items
           }
         ]);
-      }, { }, { });
+      }, { });
     };
 
     return {

@@ -54,6 +54,12 @@ define(
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')))
           });
 
+          var createHeadingButton = function (level) {
+            return Buttons.forToolbarStateAction(editor, level, function () {
+              editor.execCommand('FormatBlock', null, level);
+            });
+          };
+
           var mainGroups = Cell([
             {
               label: 'The first group',
@@ -61,16 +67,19 @@ define(
               items: [
                 Buttons.forToolbar('back', function (/* btn */) {
                   ios.exit();
-                }, { }, { })
+                }, { })
               ]
             },
             {
               label: 'the action group',
               scrollable: true,
               items: [
-                Buttons.forToolbarCommand(editor, 'undo', { }, { }),
+                Buttons.forToolbarCommand(editor, 'undo'),
                 Buttons.forToolbarStateCommand(editor, 'bold'),
                 Buttons.forToolbarStateCommand(editor, 'italic'),
+                createHeadingButton('h1'),
+                createHeadingButton('h2'),
+                createHeadingButton('h3'),
                 LinkButton.sketch(ios, editor),
                 ImagePicker.sketch(editor),
                 FontSizeSlider.sketch(ios, editor),

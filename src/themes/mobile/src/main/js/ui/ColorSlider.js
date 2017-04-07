@@ -43,7 +43,7 @@ define(
         ],
 
         onChange: onChange,
-        stepSizes: 10,
+        stepSize: 10,
         min: 0,
         max: 360,
         getInitialValue: spec.getInitialValue,

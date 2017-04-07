@@ -18,7 +18,7 @@ define(
     };
 
     var init = function (ios, editor) {
-      Arr.each([ 'bold', 'italic' ], function (command) {
+      Arr.each([ 'bold', 'italic', 'h1', 'h2', 'h3' ], function (command) {
         editor.formatter.formatChanged(command, function (state) {
           fireChange(ios, command, state);
         });

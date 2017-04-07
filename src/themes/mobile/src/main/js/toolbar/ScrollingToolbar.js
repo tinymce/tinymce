@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
@@ -22,8 +23,8 @@ define(
   ],
 
   function (
-    EventRoot, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger, Css, Scrollables, Styles,
-    Scrollable
+    EventRoot, AdhocBehaviour, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger, Css, Scrollables,
+    Styles, Scrollable
   ) {
     return function () {
       var toolbar = GuiFactory.build(
@@ -39,7 +40,7 @@ define(
             parts: {
               groups: { }
             },
-            behaviours: {
+            toolbarBehaviours: {
               toggling: {
                 toggleClass: Styles.resolve('context-toolbar'),
                 toggleOnExecute: false,
@@ -56,7 +57,6 @@ define(
               group: {
                 munge: function (gSpec) {
                   return Merger.deepMerge(
-                    gSpec,
                     {
                       dom: {
                         tag: 'div',
@@ -68,18 +68,23 @@ define(
                         }
                       },
 
-                      events: gSpec.scrollable === true ? Objects.wrap(
-                        SystemEvents.systemInit(),
-                        EventHandler.nu({
-                          run: function (component, simulatedEvent) {
-                            if (EventRoot.isSource(component, simulatedEvent)) {
-                              Css.set(component.element(), 'overflow-x', 'auto');
-                              Scrollables.markAsHorizontal(component.element());
-                              Scrollable.register(component.element());
+                      tgroupBehaviours: {
+                        'adhoc-scrollable-toolbar': { enabled: true }
+                      },
+                      customBehaviours: [
+                        AdhocBehaviour.events('adhoc-scrollable-toolbar', gSpec.scrollable === true ? Objects.wrap(
+                          SystemEvents.systemInit(),
+                          EventHandler.nu({
+                            run: function (component, simulatedEvent) {
+                              if (EventRoot.isSource(component, simulatedEvent)) {
+                                Css.set(component.element(), 'overflow-x', 'auto');
+                                Scrollables.markAsHorizontal(component.element());
+                                Scrollable.register(component.element());
+                              }
                             }
-                          }
-                        })
-                      ) : { },
+                          })
+                        ) : { })
+                      ],
 
                       components: [
                         Container.sketch({
@@ -100,7 +105,9 @@ define(
 
                       parts: {
                         items: { }
-                      }
+                      },
+
+                      items: gSpec.items
                     }
                   );
                 }
