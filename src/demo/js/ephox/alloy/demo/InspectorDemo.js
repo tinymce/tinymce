@@ -23,7 +23,8 @@ define(
       Debugging.registerInspector('inspector-demo', gui);
 
       HtmlDisplay.section(gui, 
-      'Inspect away! "Alloy Inspector" will appear in the elements panel in Chrome Developer Tools',
+        '<p>Inspect away! "Alloy" will appear in the elements panel in Chrome Developer Tools</p>' +
+        '<p>Get the inspector from: <a href="http://stash/projects/VAN/repos/alloy-inspector/browse">alloy-inspector</a></p>',
         {
           dom: {
             tag: 'div'
