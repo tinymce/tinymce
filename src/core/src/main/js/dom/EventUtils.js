@@ -32,6 +32,21 @@ define(
       webkitMovementX: 1, webkitMovementY: 1, keyIdentifier: 1
     };
 
+    // Checks if it is our own isDefaultPrevented function
+    var hasIsDefaultPrevented = function (event) {
+      return event.isDefaultPrevented === returnTrue || event.isDefaultPrevented === returnFalse;
+    };
+
+    // Dummy function that gets replaced on the delegation state functions
+    var returnFalse = function () {
+      return false;
+    };
+
+    // Dummy function that gets replaced on the delegation state functions
+    var returnTrue = function () {
+      return true;
+    };
+
     /**
      * Binds a native event to a callback on the speified target.
      */
@@ -85,16 +100,6 @@ define(
      */
     function fix(originalEvent, data) {
       var name, event = data || {}, undef;
-
-      // Dummy function that gets replaced on the delegation state functions
-      function returnFalse() {
-        return false;
-      }
-
-      // Dummy function that gets replaced on the delegation state functions
-      function returnTrue() {
-        return true;
-      }
 
       // Copy all properties from the original event
       for (name in originalEvent) {
@@ -162,7 +167,7 @@ define(
       };
 
       // Add event delegation states
-      if (!event.isDefaultPrevented) {
+      if (hasIsDefaultPrevented(event) === false) {
         event.isDefaultPrevented = returnFalse;
         event.isPropagationStopped = returnFalse;
         event.isImmediatePropagationStopped = returnFalse;
