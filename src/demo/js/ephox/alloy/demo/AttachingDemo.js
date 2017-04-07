@@ -10,11 +10,8 @@ define(
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.debugging.Debugging',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'global!Date',
@@ -22,17 +19,12 @@ define(
     'global!setTimeout'
   ],
 
-  function (
-    EventRoot, Replacing, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, Debugging, HtmlDisplay, Objects, Arr, Merger, Element, Class, Date,
-    document, setTimeout
-  ) {
+  function (EventRoot, Replacing, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, HtmlDisplay, Objects, Element, Class, Date, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
-
-      Debugging.registerInspector('attach-demo-root', gui);
 
       var list =  HtmlDisplay.section(
         gui,
