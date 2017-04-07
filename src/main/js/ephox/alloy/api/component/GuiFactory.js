@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.component.Component',
+    'ephox.alloy.api.component.ComponentApi',
     'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.events.DefaultEvents',
@@ -12,16 +13,19 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.katamari.api.Cell',
     'ephox.sugar.api.node.Element',
     'global!Error'
   ],
 
-  function (Component, NoContextApi, GuiTypes, DefaultEvents, Tagger, CustomSpec, FieldSchema, Objects, ValueSchema, Arr, Merger, Fun, Option, Result, Cell, Element, Error) {
+  function (
+    Component, ComponentApi, NoContextApi, GuiTypes, DefaultEvents, Tagger, CustomSpec, FieldSchema, Objects, ValueSchema, Arr, Cell, Fun, Merger, Option, Result,
+    Element, Error
+  ) {
     var buildSubcomponents = function (spec) {
       var components = Objects.readOr('components', [ ])(spec);
       return Arr.map(components, build);
@@ -70,35 +74,23 @@ define(
         }));
       };
 
-      var debugSystem = function () {
-        return systemApi.get().debugLabel();
-      };
-
       extSpec.uid().each(function (uid) {
         Tagger.writeOnly(extSpec.element(), uid);
       });
 
-      var self = {
+      var self = ComponentApi({
         getSystem: systemApi.get,
-        debugSystem: debugSystem,
         config: Option.none,
         connect: connect,
         disconnect: disconnect,
         element: Fun.constant(extSpec.element()),
+        spec: Fun.constant(spec),
         syncComponents: Fun.noop,
         components: Fun.constant([ ]),
-        events: Fun.constant({ }),
-
-        logSpec: function () {
-          console.log('debugging :: external spec', spec);
-        },
-        logInfo: function () {
-          console.log('debugging :: external spec has no info');
-        }
-      };
+        events: Fun.constant({ })
+      });
 
       return GuiTypes.premade(self);
-
     };
 
     // INVESTIGATE: A better way to provide 'meta-specs'
