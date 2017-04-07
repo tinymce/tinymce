@@ -37,7 +37,10 @@ define(
               tag: 'ul',
               styles: {
                 'list-style-type': 'none',
-                'margin-right': '10px'
+                'margin-right': '10px',
+                'margin-left': '0px',
+                'padding-left': '0px',
+                'margin-top': '0px'
               }
             },
             components: [
@@ -47,6 +50,7 @@ define(
               tab: {
                 munge: function (tSpec) {
                   return {
+                    view: tSpec.view,
                     value: tSpec.value,
                     dom: {
                       tag: 'li',

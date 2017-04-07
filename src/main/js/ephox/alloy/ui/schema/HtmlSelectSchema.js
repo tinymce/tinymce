@@ -2,15 +2,14 @@ define(
   'ephox.alloy.ui.schema.HtmlSelectSchema',
 
   [
-    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Fields, FieldSchema, Fun) {
+  function (FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('options'),
-      Fields.members([ 'option' ]),
+      FieldSchema.defaulted('selectBehaviours', { }),
       FieldSchema.option('data'),
       FieldSchema.defaulted('hasTabstop', true)
     ];

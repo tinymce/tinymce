@@ -35,7 +35,7 @@ asynctest(
 
     var sink = Memento.record(
       Container.sketch({
-        behaviours: {
+        containerBehaviours: {
           positioning: {
             useFixed: true
           }

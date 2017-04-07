@@ -90,6 +90,7 @@ define(
       };
 
       var itemMunge = function (s) {
+        if (s.action === undefined) return s;
         return s.behaviours === undefined ? Button.sketch({
           'dom': {
             'tag': 'div',
@@ -130,7 +131,7 @@ define(
             console.log('clicked on button', s);
           },
 
-          behaviours: {
+          buttonBehaviours: {
             toggling: {
               toggleClass: 'mce-active',
               aria: {
@@ -320,8 +321,6 @@ define(
                   }
                 }
               },
-              initGroups: groups,
-
               components: [
                 SplitToolbar.parts().primary(),
                 SplitToolbar.parts().overflow()

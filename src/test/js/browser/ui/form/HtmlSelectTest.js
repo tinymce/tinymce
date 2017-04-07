@@ -26,12 +26,7 @@ asynctest(
             { value: 'alpha', text: 'Alpha' },
             { value: 'beta', text: 'Beta' },
             { value: 'gamma', text: 'Gamma' }
-          ],
-          members: {
-            option: {
-              munge: Fun.identity
-            }
-          }
+          ]
         })
       );
     }, function (doc, body, gui, component, store) {

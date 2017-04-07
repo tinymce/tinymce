@@ -29,7 +29,7 @@ asynctest(
             background: 'blue'
           }
         },
-        behaviours: Behaviour.derive([
+        containerBehaviours: Behaviour.derive([
           Docking.config({
             leftAttr: 'data-dock-left',
             topAttr: 'data-dock-top'

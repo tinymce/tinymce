@@ -32,7 +32,7 @@ asynctest(
           tag: 'button',
           innerHtml: 'button'
         },
-        behaviours: Behaviour.derive([
+        buttonBehaviours: Behaviour.derive([
           Disabling.config({
             disabled: true
           })

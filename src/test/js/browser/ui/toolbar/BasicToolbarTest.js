@@ -124,8 +124,6 @@ asynctest(
         Step.sync(function () {
           var groups = Toolbar.createGroups(t1, [
             {
-              value: 'a',
-              text: 'A',
               items: Arr.map([ { text: 'a1' }, { text: 'a2' } ], makeButton)
             }
           ]);
@@ -172,8 +170,6 @@ asynctest(
         Step.sync(function () {
           var groups = Toolbar.createGroups(t2, [
             {
-              value: 'b',
-              text: 'b',
               items: Arr.map([ { text: 'b1' }, { text: 'b2' } ], makeButton)
             }
           ]);

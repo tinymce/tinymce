@@ -11,16 +11,12 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
-    'ephox.katamari.api.Option',
     'ephox.sand.api.JSON',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Remove',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.SelectorFind',
     'global!document'
   ],
 
-  function (Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Option, Json, Insert, Remove, Element, SelectorFind, document) {
+  function (Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Json, SelectorFind, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -43,10 +39,7 @@ define(
                 display: 'block'
               }
             },
-            data: {
-              value: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>',
-              text: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>'
-            },
+            data: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>',
             uid: 'textarea-input'
           }),
           Button.sketch({
@@ -56,7 +49,7 @@ define(
             },
             action: function (button) {
               var textarea = button.getSystem().getByUid('textarea-input').getOrDie();
-              var value = Representing.getValue(textarea).value;
+              var value = Representing.getValue(textarea);
 
               var output = GuiTemplate.readHtml(value).getOrDie();
 
@@ -73,7 +66,7 @@ define(
             dom: {
               tag: 'pre'
             },
-            behaviours: {
+            containerBehaviours: {
               replacing: { }
             }
           })

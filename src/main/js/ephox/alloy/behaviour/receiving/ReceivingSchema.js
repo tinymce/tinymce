@@ -13,7 +13,7 @@ define(
       FieldSchema.strictOf('channels', ValueSchema.setOf(
         // Allow any keys.
         Result.value,
-        ValueSchema.objOf([
+        ValueSchema.objOfOnly([
           Fields.onStrictHandler('onReceive'),
           FieldSchema.defaulted('schema', ValueSchema.anyValue())
         ])

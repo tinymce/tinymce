@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.alloy.api.ui.Slider',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Slider, Merger) {
+  function (Slider, Fun, Merger) {
     var toggling = {
       'toggling': {
         desc: 'The <em>toggling</em> behaviour is used to allow a component to switch ' +
@@ -103,7 +104,7 @@ define(
             ],
             min: 0,
             max: 100,
-            initialValue: 10,
+            getInitialValue: Fun.constant(10),
             parts: {
               'left-edge': {
                 dom: {

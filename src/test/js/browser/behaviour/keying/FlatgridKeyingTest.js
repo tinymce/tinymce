@@ -48,7 +48,7 @@ asynctest(
               run: store.adder('item.execute: ' + classes.join(','))
             })
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({ })
           ])
         });
@@ -66,7 +66,7 @@ asynctest(
             }
           },
           uid: 'custom-uid',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Keying.config({
               mode: 'flatgrid',
               selector: '.square',

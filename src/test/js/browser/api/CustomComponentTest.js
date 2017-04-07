@@ -80,7 +80,7 @@ asynctest(
             behaviourA,
             behaviourB
           ],
-          behaviours: {
+          containerBehaviours: {
             'behaviourA': { },
             'behaviourB': {
               attr: 'exhibition'

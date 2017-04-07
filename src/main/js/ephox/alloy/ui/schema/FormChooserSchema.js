@@ -14,6 +14,7 @@ define(
     var schema = [
       Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),
+      FieldSchema.defaulted('chooserBehaviours'),
       Fields.markers([ 'choiceClass', 'selectedClass' ])
     ];
 

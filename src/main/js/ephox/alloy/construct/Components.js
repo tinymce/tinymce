@@ -7,13 +7,12 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
     'ephox.katamari.api.Cell',
     'ephox.sugar.api.node.Element'
   ],
 
-  function (NoContextApi, Tagger, FieldSchema, ValueSchema, Fun, Result, Cell, Element) {
-    var externalSpec = ValueSchema.objOf([
+  function (NoContextApi, Tagger, FieldSchema, ValueSchema, Fun, Cell, Element) {
+    var externalSpec = ValueSchema.objOfOnly([
       FieldSchema.defaulted('label', 'unlabelled'),
       FieldSchema.strict('element'),
       FieldSchema.option('uid')

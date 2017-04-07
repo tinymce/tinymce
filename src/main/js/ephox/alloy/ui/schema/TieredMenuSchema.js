@@ -27,7 +27,11 @@ define(
       Fields.onHandler('onHighlight'),
       Fields.onHandler('onHover'),
       Fields.tieredMenuMarkers(),
-      Fields.members([ 'menu', 'item' ])
+      Fields.members([ 'menu', 'item' ]),
+
+      FieldSchema.defaulted('customBehaviours', [ ]),
+      FieldSchema.defaulted('tmenuBehaviours', { }),
+      FieldSchema.defaulted('eventOrder', { })
     ];
 
     return {

@@ -22,7 +22,7 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         Container.sketch({
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Replacing.config({ })
           ]),
           components: [

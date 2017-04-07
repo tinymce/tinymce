@@ -24,11 +24,7 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         Input.sketch({
-          dom: {
-            attributes: {
-              placeholder: 'placeholder-text'    
-            }
-          },          
+          placeholder: 'placeholder-text',
           data: 'initial-value',
           uid: 'test-input-id'
         })

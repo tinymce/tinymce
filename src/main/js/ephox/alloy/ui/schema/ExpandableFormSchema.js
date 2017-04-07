@@ -28,7 +28,8 @@ define(
       ]),
 
       Fields.onHandler('onShrunk'),
-      Fields.onHandler('onGrown')
+      Fields.onHandler('onGrown'),
+      FieldSchema.defaulted('expandableBehaviours', { })
     ];
 
     // TODO: Remove dupe with ExpandableForm
@@ -47,7 +48,7 @@ define(
         FieldSchema.strict('dom')
       ], 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
         return {
-          behaviours: {
+          formBehaviours: {
             sliding: {
               dimension: {
                 property: 'height'

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.ui.schema.FormCoupledInputsSchema',
 
   [
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
@@ -15,7 +16,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (Composing, Toggling, Button, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
+  function (AdhocBehaviour, Composing, Toggling, Button, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
     var schema = [
       Fields.onStrictHandler('onLockedChange'),
       Fields.markers([ 'lockClass' ])
@@ -51,17 +52,22 @@ define(
         Fun.constant({ }),
         function (detail) {
           return {
-            events: {
-              'input': EventHandler.nu({
-                run: function (self) {
-                  getField(self, detail, otherName).each(function (other) {
-                    getPart(self, detail, 'lock').each(function (lock) {
-                      if (Toggling.isOn(lock)) detail.onLockedChange()(self, other, lock);
+            fieldBehaviours: {
+              'coupled-input-behaviour': { enabled: true }
+            },
+            customBehaviours: [
+              AdhocBehaviour.events('coupled-input-behaviour', {
+                'input': EventHandler.nu({
+                  run: function (self) {
+                    getField(self, detail, otherName).each(function (other) {
+                      getPart(self, detail, 'lock').each(function (lock) {
+                        if (Toggling.isOn(lock)) detail.onLockedChange()(self, other, lock);
+                      });
                     });
-                  });
-                }
+                  }
+                })
               })
-            }
+            ]
           };
         }
       );
@@ -81,7 +87,7 @@ define(
         Fun.constant({ }),
         function (detail) {
           return {
-            behaviours: {
+            buttonBehaviours: {
               toggling: {
                 toggleClass: detail.markers().lockClass(),
                 aria: {

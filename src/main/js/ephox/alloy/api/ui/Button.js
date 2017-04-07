@@ -5,41 +5,38 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.ButtonSchema',
-    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Merger'
   ],
 
-  function (UiSketcher, ButtonBase, ButtonSchema, FieldSchema, Merger) {
+  function (UiSketcher, ButtonBase, ButtonSchema, Merger) {
     var make = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
-      return Merger.deepMerge(
-        {
-          events: events
-        },
-
-        {
-          behaviours: {
+      return {
+        uid: detail.uid(),
+        dom: detail.dom(),
+        components: detail.components(),
+        events: events,
+        behaviours: Merger.deepMerge(
+          {
             focusing: true,
             keying: {
               mode: 'execution',
               useSpace: true,
               useEnter: true
             }
+          },
+          detail.buttonBehaviours()
+        ),
+        domModification: {
+          attributes: {
+            type: 'button',
+            role: detail.role().getOr('button')
           }
         },
-
-        spec,
-
-        {
-          dom: {
-            attributes: {
-              type: 'button',
-              role: detail.role().getOr('button')
-            }
-          }
-        }
-      );
+        customBehaviours: detail.customBehaviours(),
+        eventOrder: detail.eventOrder()
+      };
     };
 
     // Dupe with Tiered Menu

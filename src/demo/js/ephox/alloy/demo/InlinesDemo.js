@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.InlinesDemo',
 
   [
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Attachment',
@@ -26,8 +27,8 @@ define(
   ],
 
   function (
-    Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Future, Option, Result,
-    DomEvent, Element, Class, Value, document
+    AdhocBehaviour, Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Future,
+    Option, Result, DomEvent, Element, Class, Value, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -59,12 +60,6 @@ define(
           tag: 'div'
         },
 
-        fetch: function () {
-          return Future.pure(
-            Container.sketch({ })
-          );
-        },
-
         onEscape: function () {
           console.log('inline.menu.escape');
           return Option.some(true);
@@ -73,9 +68,6 @@ define(
         onExecute: function () {
           console.log('inline.menu.execute')
         },
-
-        lazySink: lazySink,
-
         members: { 
           item: {
             munge: function (itemSpec) {
@@ -201,7 +193,7 @@ define(
         'how when you focus an empty input, it will attach at the end of the field, and ' +
         'when you focus a non-empty input, it will attach below',
         Container.sketch({
-          behaviours: {
+          containerBehaviours: {
             keying: {
               mode: 'cyclic',
               selector: 'input'
@@ -218,55 +210,62 @@ define(
                 styles: { display: 'block' }
               },
 
-              events: {
-                focusin: EventHandler.nu({
-                  run: function (input) {
-                    var emptyAnchor = {
-                      anchor: 'submenu',
-                      item: input
-                    };
+              inputBehaviours: {
+                'adhoc-show-popup': {
+                  enabled: true
+                }
+              },
+              customBehaviours: [
+                AdhocBehaviour.events('adhoc-show-popup', {
+                  focusin: EventHandler.nu({
+                    run: function (input) {
+                      var emptyAnchor = {
+                        anchor: 'submenu',
+                        item: input
+                      };
 
-                    var nonEmptyAnchor = {
-                      anchor: 'selection',
-                      root: gui.element()
-                    };
+                      var nonEmptyAnchor = {
+                        anchor: 'selection',
+                        root: gui.element()
+                      };
 
-                    var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                    InlineView.showAt(inlineComp, anchor, Container.sketch({
-                      behaviours: {
-                        keying: {
-                          mode: 'flow',
-                          selector: 'button'
-                        }
-                      },
-                      components: [
-                        Button.sketch({
-                          dom: {
-                            tag: 'button',
-                            innerHtml: 'B'
-                          },
-                          action: function () { console.log('inline bold'); }
-                        }),
-                        Button.sketch({
-                          dom: {
-                            tag: 'button',
-                            innerHtml: 'I'
-                          },
-                          action: function () { console.log('inline italic'); }
-                        }),
-                        Button.sketch({
-                          dom: {
-                            tag: 'button',
-                            innerHtml: 'U'
-                          },
-                          action: function () { console.log('inline underline'); }
-                        })
-                      ]
+                      var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
+                      InlineView.showAt(inlineComp, anchor, Container.sketch({
+                        containerBehaviours: {
+                          keying: {
+                            mode: 'flow',
+                            selector: 'button'
+                          }
+                        },
+                        components: [
+                          Button.sketch({
+                            dom: {
+                              tag: 'button',
+                              innerHtml: 'B'
+                            },
+                            action: function () { console.log('inline bold'); }
+                          }),
+                          Button.sketch({
+                            dom: {
+                              tag: 'button',
+                              innerHtml: 'I'
+                            },
+                            action: function () { console.log('inline italic'); }
+                          }),
+                          Button.sketch({
+                            dom: {
+                              tag: 'button',
+                              innerHtml: 'U'
+                            },
+                            action: function () { console.log('inline underline'); }
+                          })
+                        ]
 
-                    }));
-                  }
+                      }));
+                    }
+                  })
                 })
-              }
+              ]
             })
           ]
         })

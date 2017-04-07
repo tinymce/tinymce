@@ -40,7 +40,6 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
           console.error(Json.stringify(spec, null, 2));
           throw new Error(err);
         }, function (container) {
-          container.logSpec();
           Replacing.set(container, groups);
         });
       };
@@ -54,10 +53,7 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
       var createGroups = function (toolbar, gspecs) {
         return Arr.map(gspecs, function (grp) {
           return ToolbarGroup.sketch(
-            Merger.deepMerge(
-              grp,
-              detail.members().group().munge()(grp)
-            )
+            detail.members().group().munge()(grp)
           );
         });
       };
@@ -92,6 +88,7 @@ function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema
           dom: detail.dom(),
           components: extra.comps,
 
+          behaviours: detail.toolbarBehaviours(),
           apis: {
             createGroups: createGroups,
             setGroups: setGroups

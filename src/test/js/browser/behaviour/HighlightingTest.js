@@ -46,7 +46,7 @@ asynctest(
 
       return GuiFactory.build(
         Container.sketch({
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Highlighting.config({
               highlightClass: 'test-selected',
               itemClass: 'test-item'

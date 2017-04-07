@@ -40,7 +40,7 @@ asynctest(
                     innerHtml: itemSpec.data.text
                   },
 
-                  behaviours: {
+                  containerBehaviours: {
                     focusing: true
                   }
                 });

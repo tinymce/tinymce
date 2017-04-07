@@ -21,8 +21,7 @@ define(
       });
 
       var component = GuiFactory.build(spec);
-      component.logSpec();
-    
+
       var display = GuiFactory.build(
         Container.sketch({
           dom: {

@@ -42,7 +42,7 @@ define(
             }
           ],
 
-          behaviours: {
+          containerBehaviours: {
             replacing: { }
           }
         })

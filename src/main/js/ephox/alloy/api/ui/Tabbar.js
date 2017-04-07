@@ -6,22 +6,26 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabbarSchema',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger'
   ],
 
-  function (Highlighting, UiSketcher, PartType, TabbarSchema, Fun) {
+  function (Highlighting, UiSketcher, PartType, TabbarSchema, Fun, Merger) {
     var schema = TabbarSchema.schema();
     var partTypes = TabbarSchema.parts();
 
     var make = function (detail, components, spec, externals) {
       return {
         uid: detail.uid(),
-        dom: {
-          tag: 'div',
-          attributes: {
-            role: 'tablist'
-          }
-        },
+        dom: Merger.deepMerge(
+          {
+            tag: 'div',
+            attributes: {
+              role: 'tablist'
+            }
+          },
+          detail.dom()
+        ),
         components: components,
         'debug.sketcher': 'Tabbar',
 

@@ -18,7 +18,7 @@ define(
       if (! Objects.hasKey(parts, 'can') && !Objects.hasKey(parts, 'abort') && !Objects.hasKey(parts, 'run')) throw new Error(
         'EventHandler defined by: ' + Json.stringify(parts, null, 2) + ' does not have can, abort, or run!'
       );
-      return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOf([
+      return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOfOnly([
         FieldSchema.defaulted('can', Fun.constant(true)),
         FieldSchema.defaulted('abort', Fun.constant(false)),
         FieldSchema.defaulted('run', Fun.noop)

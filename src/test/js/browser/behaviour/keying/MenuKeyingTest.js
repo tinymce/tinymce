@@ -27,7 +27,7 @@ asynctest(
             classes: [ 'test-item', name ],
             innerHtml: name
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({ })
           ])
         });
@@ -43,7 +43,7 @@ asynctest(
             }
           },
           uid: 'custom-uid',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Keying.config({
               mode: 'menu',
               selector: '.test-item',

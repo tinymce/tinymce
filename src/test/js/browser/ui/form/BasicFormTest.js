@@ -59,12 +59,7 @@ asynctest(
                   options: [
                     { value: 'select-b-init', text: 'Select-b-init' },
                     { value: 'select-b-other', text: 'Select-b-other' }
-                  ],
-                  members: {
-                    option: {
-                      munge: Fun.identity
-                    }
-                  }
+                  ]
                 },
                 label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
               }
@@ -108,6 +103,7 @@ asynctest(
       };
 
       return [
+        Step.debugging,
         Logger.t(
           'Initial values',
           GeneralSteps.sequence([

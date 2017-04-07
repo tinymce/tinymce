@@ -21,8 +21,6 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
 
-   
-
       var redBehaviour = Behaviour.create([ ], 'red.behaviour', {
         exhibit: function (base, info) {
           return DomModification.nu({
@@ -92,7 +90,7 @@ define(
           action: function () {
             console.log('*** Font ButtonDemo click ***');
           },
-          behaviours: Behaviour.derive([
+          buttonBehaviours: Behaviour.derive([
             Toggling.config({
               toggleClass: 'demo-selected',
               aria: {
@@ -103,11 +101,7 @@ define(
         })
       );
 
-      button2.logSpec();
-
       Toggling.on(button2);
-
-
 
       var customButton = HtmlDisplay.section(
         gui,
@@ -122,7 +116,7 @@ define(
             console.log('*** ButtonDemo click ***');
           },
 
-          behaviours: {
+          buttonBehaviours: {
             'red.behaviour': { },
             'cat.behaviour': { }
           },

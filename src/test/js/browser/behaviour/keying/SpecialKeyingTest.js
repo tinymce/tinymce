@@ -25,7 +25,7 @@ asynctest(
           dom: {
             classes: 'special-keying'
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Focusing.config({ }),
             Keying.config({
               mode: 'special',

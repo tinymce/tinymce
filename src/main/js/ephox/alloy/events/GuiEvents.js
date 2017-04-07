@@ -22,7 +22,7 @@ define(
 
     var isFirefox = PlatformDetection.detect().browser.isFirefox();
 
-    var settingsSchema = ValueSchema.objOf([
+    var settingsSchema = ValueSchema.objOfOnly([
       // triggerEvent(eventName, event)
       FieldSchema.strictFunction('triggerEvent'),
       FieldSchema.strictFunction('broadcastEvent'),

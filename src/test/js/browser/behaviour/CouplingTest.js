@@ -26,7 +26,7 @@ asynctest(
       return GuiFactory.build(
         Container.sketch({
           uid: 'primary',
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Coupling.config({
               others: {
                 'secondary-1': function (primary) { 
@@ -34,8 +34,7 @@ asynctest(
                     dom: {
                       tag: 'button'
                     },
-                    action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute())),
-                    text: 'Click me'
+                    action: store.adder('clicked on coupled button of: ' + Attr.get(primary.element(), Tagger.attribute()))
                   });
                 }
               }

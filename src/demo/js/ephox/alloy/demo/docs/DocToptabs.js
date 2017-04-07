@@ -41,6 +41,7 @@ define(
               tab: {
                 munge: function (tSpec) {
                   return {
+                    view: tSpec.view,
                     value: tSpec.value,
                     dom: {
                       tag: 'span',

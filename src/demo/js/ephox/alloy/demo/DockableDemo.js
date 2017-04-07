@@ -55,7 +55,7 @@ define(
                   'z-index': '100'
                 }
               },
-              behaviours: Behaviour.derive([
+              containerBehaviours: Behaviour.derive([
                 Dragging.config({
                   mode: 'mouse',
                   blockerClass: [ 'blocker' ]

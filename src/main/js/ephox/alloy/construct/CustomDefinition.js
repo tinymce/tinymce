@@ -47,8 +47,8 @@ define(
         return b.schema();
       });
 
-      return ValueSchema.asStruct('custom.definition', ValueSchema.objOf([
-        FieldSchema.strictObjOf('dom', [
+      return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
+        FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
           // Note, no children.
           FieldSchema.strict('tag'),
           FieldSchema.defaulted('styles', {}),
@@ -56,11 +56,11 @@ define(
           FieldSchema.defaulted('attributes', {}),
           FieldSchema.option('value'),
           FieldSchema.option('innerHtml')
-        ]),
+        ])),
         FieldSchema.strict('components'),
         FieldSchema.strict('uid'),
 
-        FieldSchema.optionObjOf('behaviours', behaviourSchema),
+        FieldSchema.field('behaviours', 'behaviours', FieldPresence.asOption(), ValueSchema.objOfOnly(behaviourSchema)),
 
         FieldSchema.defaulted('events', {}),
         FieldSchema.defaulted('apis', Fun.constant({})),
@@ -80,13 +80,12 @@ define(
 
         FieldSchema.option('domModification'),
 
-        FieldSchema.state('definition.input', Fun.identity),
+        FieldSchema.state('originalSpec', Fun.identity),
 
-        // Could wrap this up in a behaviour ...but won't for the time being
-        FieldSchema.optionObjOf('delegate', [
-          FieldSchema.strict('get')
-        ]),
-        FieldSchema.state('originalSpec', Fun.identity)
+        // Need to have this initially
+        FieldSchema.defaulted('customBehaviours', [ ]),
+
+        FieldSchema.defaulted('debug.sketcher', 'unknown')
       ]), spec);
     };
 

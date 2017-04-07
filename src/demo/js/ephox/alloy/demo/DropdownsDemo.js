@@ -209,7 +209,7 @@ define(
                 dom: {
                   classes: [ 'my-widget' ]
                 },
-                behaviours: {
+                containerBehaviours: {
                   keying: { mode: 'cyclic' }
                 },
                 components: [
@@ -277,7 +277,7 @@ define(
                 dom: {
                   classes: [ 'my-widget' ]
                 },
-                behaviours: {
+                containerBehaviours: {
                   keying: { mode: 'cyclic' }
                 },
                 components: [
@@ -298,7 +298,6 @@ define(
         gui,
         'This grid dropdown button is a grid of 2 x 2',
         Dropdown.sketch({
-          text: 'Dropdown',
           dom: {
             tag: 'div',
             innerHtml: 'here'
@@ -308,8 +307,6 @@ define(
           ],
 
           toggleClass: 'demo-selected',
-
-          name: 'grid-demo',
 
           parts: {
             menu: gridMenu
@@ -427,7 +424,7 @@ define(
                                 width: '50px'
                               }
                             },
-                            useTabstop: true
+                            hasTabstop: true
                           }),
                           Container.sketch({
                             components: [
@@ -437,7 +434,7 @@ define(
                                   tag: 'button',
                                   innerHtml: '-'
                                 },
-                                behaviours: {
+                                buttonBehaviours: {
                                   tabstopping: Behaviour.revoke()
                                 }
                               }),
@@ -447,12 +444,12 @@ define(
                                   tag: 'button',
                                   innerHtml: '+'
                                 },
-                                behaviours: {
+                                buttonBehaviours: {
                                   tabstopping: Behaviour.revoke()
                                 }
                               })
                             ],
-                            behaviours: {
+                            containerBehaviours: {
                               tabstopping: true,
                               keying: {
                                 mode: 'flow',
@@ -461,7 +458,7 @@ define(
                             }
                           })
                         ],
-                        behaviours: {
+                        containerBehaviours: {
                           keying: {
                             mode: 'cyclic'
                           }

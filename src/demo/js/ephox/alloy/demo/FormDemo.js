@@ -58,32 +58,34 @@ define(
 
       var textMunger = function (spec) {
         var invalidUid = Tagger.generate('demo-invalid-uid');
-        return Merger.deepMerge(spec, {
+        return {
           dom: {
             tag: 'div'
           },
           parts: {
             field: {
-              invalidating: {
-                invalidClass: 'invalid-input',
-                notify: {
-                  getContainer: function (input) {
-                    return input.getSystem().getByUid(invalidUid).fold(Option.none, function (c) {
-                      return Option.some(c.element());
-                    });
-                  }
-                },
-                validator: {
-                  validate: function (input) {
-                    var v = Representing.getValue(input);
-                    return Future.nu(function (callback) {
-                      setTimeout(function () {
-                        var res = v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
-                        callback(res);
-                      }, 1000);  
-                    });
+              inputBehaviours: {
+                invalidating: {
+                  invalidClass: 'invalid-input',
+                  notify: {
+                    getContainer: function (input) {
+                      return input.getSystem().getByUid(invalidUid).fold(Option.none, function (c) {
+                        return Option.some(c.element());
+                      });
+                    }
                   },
-                  onEvent: 'input'
+                  validator: {
+                    validate: function (input) {
+                      var v = Representing.getValue(input);
+                      return Future.nu(function (callback) {
+                        setTimeout(function () {
+                          var res = v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
+                          callback(res);
+                        }, 1000);  
+                      });
+                    },
+                    onEvent: 'input'
+                  }
                 }
               }
             },
@@ -96,18 +98,23 @@ define(
             Container.sketch({ uid: invalidUid }),
             FormField.parts(Input).field()
           ]
-        });
+        };
       };
 
       var coupledTextMunger = function (spec) {
-        return Merger.deepMerge(spec, {
+        return {
           dom: {
             tag: 'div'
           },
           parts: {
             'field1': spec.field1,
             'field2': spec.field2,
-            lock: { dom: { tag: 'button', innerHtml: 'x' }, tabstopping: true }
+            lock: {
+              dom: { tag: 'button', innerHtml: 'x' },
+              buttonBehaviours: {
+                tabstopping: true
+              }
+            }
           },
           markers: {
             lockClass: 'demo-selected'
@@ -122,11 +129,11 @@ define(
             FormCoupledInputs.parts().field2(),
             FormCoupledInputs.parts().lock()
           ]
-        });
+        };
       };
 
       var selectMunger = function (spec) {
-        return Merger.deepMerge(spec, {
+        return {
           dom: {
             tag: 'div',
             styles: {
@@ -150,27 +157,15 @@ define(
               dom: {
                 classes: [ 'ephox-select-wrapper' ]
               },
-              tabstopping: true,
-              focusing: true,
-              options: spec.options,
-              members: {
-                option: {
-                  munge: function (spec) {
-                    return Container.sketch({
-                      dom: {
-                        attributes: {
-                          value: spec.value
-                        },
-                        innerHtml: spec.text
-                      }
-                    });
-                  }
-                }
-              }
+              selectBehaviours: {
+                tabstopping: true,
+                focusing: true
+              },
+              options: spec.options
             },
             label: { dom: { tag: 'label', innerHtml: spec.label } }
           }
-        });
+        };
       };
 
       var fieldParts = function () {
@@ -208,13 +203,13 @@ define(
               FormChooser.parts().legend(),
               FormChooser.parts().choices()
             ],
-            behaviours: Behaviour.derive([
+            chooserBehaviours: Behaviour.derive([
               Tabstopping.config(true)
             ]),
             members: {
               choice: {
                 munge: function (data) {
-                  return Container.sketch({
+                  return {
                     dom: {
                       tag: 'span',
                       classes: [ 'ephox-pastry-independent-button' ],
@@ -224,31 +219,11 @@ define(
                       styles: {
                         display: 'flex'
                       }
-                    },
-
-  // <span class="ephox-pastry-independent-button ephox-pastry-button ephox-polish-dialog-float-container ephox-polish-dialog-float-selected" unselectable="on" tabindex="-1" data-float-value="none" 
-  //   title="Align None" aria-label="Align None" role="radio" aria-checked="true" style="-webkit-user-select: none;">
-  //                 <div role="presentation" aria-hidden="true" class="ephox-polish-dialog-float-icon">
-  //                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-left"></div>
-  //                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-center"></div>
-  //                   <div role="presentation" class="ephox-polish-dialog-float-icon-inner-right"></div>
-  //                 </div>
-  //               </span>
-
-
-                    label: 'Alignment',
-                    parts: {
-                      legend: { },
-                      fields: { }
-                    },
-                    markers: {
-                      radioSelector: 'input[type="radio"]'
                     }
-                  });
+                  };
                 }
               }
             },
-            name: 'rho',
             choices: [
               { value: 'left', text: 'Left' },
               { value: 'middle', text: 'Middle' },
@@ -348,7 +323,7 @@ define(
 
           ],
 
-          behaviours: {
+          formBehaviours: {
             keying: {
               mode: 'cyclic'
             }
@@ -411,19 +386,23 @@ define(
                 tag: 'button',
                 innerHtml: 'v'
               },
-              keying: {
-                mode: 'execution'
-              },
-              tabstopping: true
+              buttonBehaviours: {
+                keying: {
+                  mode: 'execution'
+                },
+                tabstopping: true
+              }
             },
             'controls': {
               dom: {
                 tag: 'div'
               },
-              tabstopping: true,
-              keying: {
-                mode: 'flow',
-                selector: 'button'
+              behaviours: {
+                tabstopping: true,
+                keying: {
+                  mode: 'flow',
+                  selector: 'button'
+                }
               },
               components: [
                 Button.sketch({ dom: { tag: 'button', innerHtml: 'OK' } })
@@ -437,7 +416,7 @@ define(
             ExpandableForm.parts().expander(),
             ExpandableForm.parts().controls()
           ],
-          behaviours: Behaviour.derive([
+          expandableBehaviours: Behaviour.derive([
             Keying.config({
               mode: 'cyclic',
               visibilitySelector: '.form-section'

@@ -15,6 +15,8 @@ define(
       FieldSchema.strict('items'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
+      FieldSchema.defaulted('menuBehaviours', { }),
+      FieldSchema.defaulted('customBehaviours', [ ]),
 
 
       FieldSchema.defaultedOf('movement', {

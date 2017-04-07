@@ -46,7 +46,7 @@ asynctest(
               height: '20px'
             }
           },
-          behaviours: Behaviour.derive([ 
+          containerBehaviours: Behaviour.derive([ 
             Sliding.config({
               closedClass: 'test-sliding-closed',
               openClass: 'test-sliding-open',

@@ -24,7 +24,7 @@ asynctest(
           dom: {
             tag: 'input'
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Representing.config({
               store: {
                 mode: 'dataset',

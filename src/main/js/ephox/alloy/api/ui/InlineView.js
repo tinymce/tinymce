@@ -19,7 +19,6 @@ define(
 
     var make = function (detail, spec) {
       return Merger.deepMerge(
-        spec,
         {
           uid: detail.uid(),
           dom: detail.dom(),

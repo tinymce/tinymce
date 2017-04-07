@@ -28,7 +28,7 @@ asynctest(
 
     var sink = Memento.record(
       Container.sketch({
-        behaviours: {
+        containerBehaviours: {
           positioning: {
             useFixed: true
           }
@@ -96,8 +96,6 @@ asynctest(
       return c;
 
     }, function (doc, body, gui, component, store) {
-      component.logSpec();
-
       gui.add(
         GuiFactory.build(sink.asSpec())
       );

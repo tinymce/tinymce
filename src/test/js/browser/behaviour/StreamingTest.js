@@ -23,7 +23,7 @@ asynctest(
           dom: {
             tag: 'input'
           },
-          behaviours: Behaviour.derive([
+          containerBehaviours: Behaviour.derive([
             Streaming.config({
                stream: {
                 mode: 'throttle',

@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
@@ -20,7 +21,10 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (Assertions, Chain, Keyboard, Keys, Step, Keying, GuiFactory, SystemEvents, Container, ItemWidget, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup, Objects) {
+  function (
+    Assertions, Chain, Keyboard, Keys, Step, AdhocBehaviour, Keying, GuiFactory, SystemEvents, Container, ItemWidget, Menu, TieredMenu, EventHandler, MenuEvents,
+    GuiSetup, Objects
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -28,7 +32,6 @@ asynctest(
       return GuiFactory.build(
         TieredMenu.sketch({
           uid: 'uid-test-menu-1',
-          value: 'test-menu-1',
           dom: {
             tag: 'div',
             classes: [ 'test-menu' ]
@@ -99,12 +102,28 @@ asynctest(
             }
           },
 
-          events: Objects.wrap(
-            MenuEvents.focus(),
-            EventHandler.nu({
-              run: store.adder('menu.events.focus')
-            })
-          ),
+          tmenuBehaviours: {
+            'tiered-menu-test': { enabled: true }
+          },
+
+          eventOrder: Objects.wrapAll([
+            {
+              key: MenuEvents.focus(),
+              value: [ 'alloy.base.behaviour', 'tiered-menu-test' ]
+            }
+          ]),
+
+          customBehaviours: [
+            AdhocBehaviour.events(
+              'tiered-menu-test', 
+              Objects.wrap(
+                MenuEvents.focus(),
+                EventHandler.nu({
+                  run: store.adder('menu.events.focus')
+                })
+              )
+            )
+          ],
 
           onExecute: store.adderH('onExecute'),
           onEscape: store.adderH('onEscape'),
@@ -138,6 +157,10 @@ asynctest(
         Step.sync(function () {
           Keying.focusIn(component);
         }),
+        store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
+          'menu.events.focus',
+          'onOpenMenu'
+        ]),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         Keyboard.sKeydown(doc, Keys.right(), { })
 
