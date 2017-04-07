@@ -24,8 +24,7 @@ define(
         selector: '.tiny-text',
         theme: 'mobile',
         plugins: '',
-        content_css_url: '../../main/css',
-        skin_url: '../../../../../skins/lightgray/dist/lightgray'
+        mobile_skin_url: '../../main/css'
       });
     };
   }
