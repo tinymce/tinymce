@@ -101,6 +101,8 @@ define(
         return Merger.deepMerge(
           cSpec,
           { 
+            '(dom.ref)': c.element().dom(),
+            '(element)': AlloyLogger.element(c.element()),
             '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
             components: Arr.map(c.components(), go)
           }
