@@ -123,7 +123,6 @@ define(
             var connections = Obj.keys(systems);
             return Options.findMap(connections, function (conn) {
               var connGui = systems[conn];
-              console.log('connGui', connGui, systems, conn);
               return connGui.getByUid(uid).toOption().map(function (comp) {
                 return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
               });
