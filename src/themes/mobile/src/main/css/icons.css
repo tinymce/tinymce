@@ -139,3 +139,7 @@
 .tinymce-mobile-toolbar-button-h3:before {
   content: "H3";
 }
+
+.tinymce-mobile-toolbar-button-ul:before {
+  content: "ul";
+}

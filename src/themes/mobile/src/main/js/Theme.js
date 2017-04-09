@@ -85,6 +85,10 @@ define(
                 createHeadingButton('h1'),
                 createHeadingButton('h2'),
                 createHeadingButton('h3'),
+                // NOTE: Requires "lists" plugin.
+                Buttons.forToolbarStateAction(editor, 'ul', function () {
+                  editor.execCommand('InsertUnorderedList', null, false);
+                }),
                 LinkButton.sketch(ios, editor),
                 ImagePicker.sketch(editor),
                 FontSizeSlider.sketch(ios, editor),

@@ -4,10 +4,13 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.themes.mobile.channels.TinyChannels'
   ],
 
-  function (Arr, Fun, TinyChannels) {
+  function (Arr, Fun, Element, Node, SelectorFind, TinyChannels) {
     var fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
     var fireChange = function (ios, command, state) {
@@ -21,6 +24,21 @@ define(
       Arr.each([ 'bold', 'italic', 'h1', 'h2', 'h3' ], function (command) {
         editor.formatter.formatChanged(command, function (state) {
           fireChange(ios, command, state);
+        });
+      });
+
+      editor.selection.selectorChanged('ol,ul', function (state, data) {
+        var elem = Element.fromDom(data.node);
+        var messages = state === false ? [
+          { command: 'ol', state: false },
+          { command: 'ul', state: false }
+        ] : [
+          { command: 'ol', state: Node.name(elem) === 'ol' },
+          { command: 'ul', state: Node.name(elem) === 'ul' }
+        ];
+
+        Arr.each(messages, function (message) {
+          ios.system().broadcastOn([ TinyChannels.formatChanged() ], message);
         });
       });
     };

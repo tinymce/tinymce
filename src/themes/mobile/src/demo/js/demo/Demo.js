@@ -14,16 +14,18 @@ define(
   'tinymce.themes.mobile.demo.Demo',
   [
     'tinymce.core.EditorManager',
+    'tinymce.plugins.lists.Plugin',
     'tinymce.themes.mobile.Theme'
   ],
-  function (EditorManager, Theme) {
+  function (EditorManager, ListsPlugin, Theme) {
     return function () {
       Theme();
+      ListsPlugin;
 
       EditorManager.init({
         selector: '.tiny-text',
         theme: 'mobile',
-        plugins: '',
+        plugins: 'lists',
         mobile_skin_url: '../../main/css'
       });
     };
