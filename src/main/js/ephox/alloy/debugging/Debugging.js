@@ -4,15 +4,22 @@ define(
   [
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.log.AlloyLogger',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Options',
     'global!console',
-    'global!Error'
+    'global!Error',
+    'global!window'
   ],
 
-  function (SystemEvents, AlloyLogger, Arr, Fun, console, Error) {
+  function (SystemEvents, AlloyLogger, Objects, Arr, Fun, Merger, Obj, Options, console, Error, window) {
     var unknown = 'unknown';
     var debugging = true;
+
+    var CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
     var eventsMonitored = [ SystemEvents.execute() ];
 
@@ -87,12 +94,59 @@ define(
       return output;
     };
 
+    var inspectorInfo = function (comp) {
+      var go = function (c) {
+        var cSpec = c.spec();
+      
+        return Merger.deepMerge(
+          cSpec,
+          { 
+            '(dom.ref)': c.element().dom(),
+            '(element)': AlloyLogger.element(c.element()),
+            '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
+            components: Arr.map(c.components(), go)
+          }
+        );
+      };
+
+      return go(comp);
+    };
+
+    var getOrInitConnection = function () {
+      // The format of the global is going to be:
+      // lookup(uid) -> Option { name => data }
+      // systems: Set AlloyRoots
+      if (window[CHROME_INSPECTOR_GLOBAL] !== undefined) return window[CHROME_INSPECTOR_GLOBAL];
+      else {
+        window[CHROME_INSPECTOR_GLOBAL] = {
+          systems: { },
+          lookup: function (uid) {
+            var systems = window[CHROME_INSPECTOR_GLOBAL].systems;
+            var connections = Obj.keys(systems);
+            return Options.findMap(connections, function (conn) {
+              var connGui = systems[conn];
+              return connGui.getByUid(uid).toOption().map(function (comp) {
+                return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
+              });
+            });
+          }
+        };
+        return window[CHROME_INSPECTOR_GLOBAL];
+      }
+    };
+
+    var registerInspector = function (name, gui) {
+      var connection = getOrInitConnection();
+      connection.systems[name] = gui;
+    };
+
     return {
       logHandler: logHandler,
       noLogger: Fun.constant(ignoreEvent),
       getTrace: getTrace,
       monitorEvent: monitorEvent,
-      isDebugging: Fun.constant(debugging)
+      isDebugging: Fun.constant(debugging),
+      registerInspector: registerInspector
     };
   }
 );

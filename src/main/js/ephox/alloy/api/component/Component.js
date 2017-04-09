@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.component.Component',
 
   [
+    'ephox.alloy.api.component.ComponentApi',
     'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.construct.ComponentDom',
@@ -10,16 +11,19 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.dom.DomRender',
     'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Type',
     'ephox.katamari.api.Arr',
-    'ephox.sand.api.JSON',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Type',
+    'ephox.sand.api.JSON',
     'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Type, Arr, Json, Fun, Cell, Traverse, Error) {
+  function (
+    ComponentApi, NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Arr, Cell, Fun, Type, Json,
+    Traverse, Error
+  ) {
     var build = function (spec) { 
        var getSelf = function () {
         return self;
@@ -63,10 +67,6 @@ define(
         systemApi.set(NoContextApi(getSelf));
       };
 
-      var debugSystem = function () {
-        return systemApi.get().debugLabel();
-      };
-
       var syncComponents = function () {
         // Update the component list with the current children
         var children = Traverse.children(item);
@@ -92,10 +92,8 @@ define(
         });
       };
 
-      var self = {
+      var self = ComponentApi({
         getSystem: systemApi.get,
-        debugSystem: debugSystem,
-
         config: config,
         spec: Fun.constant(spec),
 
@@ -104,17 +102,8 @@ define(
         element: Fun.constant(item),
         syncComponents: syncComponents,
         components: subcomponents.get,
-        item: Fun.constant(item),
-        events: Fun.constant(events),
-        // apis: Fun.constant(apis),
-
-        logSpec: function () {
-          console.log('debugging :: component spec', spec);
-        },
-        logInfo: function () {
-          console.log('debugging :: component.info', info);
-        }
-      };
+        events: Fun.constant(events)
+      });
 
       return self;
     };
