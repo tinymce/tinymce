@@ -3,18 +3,15 @@
 
 <head>
 <script src="js/tinymce.min.js"></script>
-<link href="css/mobile.css" rel="Stylesheet">
 
 <script>
   var run = function () {
     tinymce.init({
       selector: 'textarea',
-      theme_url: 'js/mobile_theme.min.js',
-      // Required for list functionality (commands)
-      plugins: 'lists',
-      theme: 'mobile',
-      content_css_url: '/../css',
-      skin_url: '../../../../../skins/lightgray/dist/lightgray'
+      theme_url: 'js/autochooser_theme.min.js',
+      autochooser_modern_skin_url: 'modern/css',
+      autochooser_mobile_skin_url: 'mobile/css',
+      theme: 'autochooser'
     })
   };
 </script>

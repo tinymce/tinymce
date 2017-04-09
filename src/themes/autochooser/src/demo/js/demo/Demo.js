@@ -11,22 +11,23 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.themes.mobile.demo.Demo',
+  'tinymce.themes.autochooser.demo.Demo',
   [
     'tinymce.core.EditorManager',
-    'tinymce.plugins.lists.Plugin',
-    'tinymce.themes.mobile.Theme'
+    'tinymce.plugins.code.Plugin',
+    'tinymce.themes.autochooser.Theme'
   ],
-  function (EditorManager, ListsPlugin, Theme) {
+  function (EditorManager, CodePlugin, Theme) {
     return function () {
       Theme();
-      ListsPlugin;
+      CodePlugin();
 
       EditorManager.init({
         selector: '.tiny-text',
-        theme: 'mobile',
-        plugins: 'lists',
-        mobile_skin_url: '../../main/css'
+        theme: 'autochooser',
+        plugins: 'code',
+        autochooser_mobile_skin_url: '../../../../mobile/src/main/css',
+        autochooser_modern_skin_url: '../../../../../skins/lightgray/dist/lightgray'
       });
     };
   }
