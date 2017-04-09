@@ -15,11 +15,18 @@ define(
 
     var platform = PlatformDetection.detect();
 
+    // Warning: mutation. We could merge here, but I'm worried that "this" might be used on settings somewhere.
+    var extendSettings = function (settings, theme) {
+      Obj.each(theme.settings, function (v, k) {
+        settings[k] = v;
+      });
+    };
+
     ThemeManager.add('autochooser', function (editor, themeUrl) {
       var theme = (function () {
         if (platform.deviceType.isTouch()) {
           return {
-            instance: ThemeManager.lookup.mobile.instance,
+            instance: ThemeManager.get('mobile'),
             settings: {
               mobile_skin_url: editor.settings.autochooser_mobile_skin_url !== undefined ?
                 editor.settings.autochooser_mobile_skin_url : (themeUrl + '/css')
@@ -27,7 +34,7 @@ define(
           };
         } else {
           return {
-            instance: ThemeManager.lookup.modern.instance,
+            instance: ThemeManager.get('modern'),
             settings: {
               skin_url: editor.settings.autochooser_modern_skin_url !== undefined ?
                 editor.settings.autochooser_modern_skin_url : undefined
@@ -36,10 +43,7 @@ define(
         }
       })();
 
-      // Warning: mutation. We could merge here, but I'm worried that "this" might be used on settings somewhere.
-      Obj.each(theme.settings, function (v, k) {
-        editor.settings[k] = v;
-      });
+      extendSettings(editor.settings, theme);
       return theme.instance(editor);
     });
 
