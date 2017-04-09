@@ -27,19 +27,15 @@ define(
         });
       });
 
-      editor.on('nodeChange', function (e) {
-        var elem = Element.fromDom(e.element);
-        var messages = SelectorFind.closest(elem, 'ol,ul').fold(function () {
-          return [
-            { command: 'ol', state: false },
-            { command: 'ul', state: false }
-          ];
-        }, function (list) {
-          return [
-            { command: 'ol', state: Node.name(list) === 'ol' },
-            { command: 'ul', state: Node.name(list) === 'ul' }
-          ];
-        });
+      editor.selection.selectorChanged('ol,ul', function (state, data) {
+        var elem = Element.fromDom(data.node);
+        var messages = state === false ? [
+          { command: 'ol', state: false },
+          { command: 'ul', state: false }
+        ] : [
+          { command: 'ol', state: Node.name(elem) === 'ol' },
+          { command: 'ul', state: Node.name(elem) === 'ul' }
+        ];
 
         Arr.each(messages, function (message) {
           ios.system().broadcastOn([ TinyChannels.formatChanged() ], message);
