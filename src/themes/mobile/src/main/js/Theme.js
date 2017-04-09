@@ -6,7 +6,7 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'global!window',
-    'tinymce.core.EditorManager',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
@@ -16,17 +16,22 @@ define(
     'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosContainer',
     'tinymce.themes.mobile.ui.LinkButton',
-    'tinymce.themes.mobile.util.FormatChangers'
+    'tinymce.themes.mobile.util.CssUrls',
+    'tinymce.themes.mobile.util.FormatChangers',
+    'tinymce.themes.mobile.util.SkinLoaded'
   ],
 
 
-  function (Cell, Fun, Element, window, EditorManager, ThemeManager, Api, Styles, Buttons, ColorSlider, FontSizeSlider, ImagePicker, IosContainer, LinkButton, FormatChangers) {
+  function (
+    Cell, Fun, Element, window, DOMUtils, ThemeManager, Api, Styles, Buttons, ColorSlider, FontSizeSlider, ImagePicker, IosContainer, LinkButton, CssUrls, FormatChangers,
+    SkinLoaded
+  ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
-        var contentCssUrl = EditorManager.baseURL + editor.settings.content_css_url;
+        var cssUrls = CssUrls.derive(editor);
 
-        editor.contentCSS.push(contentCssUrl + '/content.css');
-
+        editor.contentCSS.push(cssUrls.content);
+        DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
         var ios = IosContainer();
         args.targetNode.ownerDocument.body.appendChild(ios.element().dom());
