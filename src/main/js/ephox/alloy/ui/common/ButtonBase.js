@@ -41,7 +41,7 @@ define(
       });
 
       var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
-        { key: 'touchstart', value: clickHandler }
+        { key: 'tap', value: clickHandler }
       ] : [
         { key: 'click', value: clickHandler },
         { key: 'mousedown', value: mousedownHandler }

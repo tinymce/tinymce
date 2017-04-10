@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.events.TapEvent',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
@@ -11,10 +12,11 @@ define(
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.Traverse',
+    'global!Date',
     'global!setTimeout'
   ],
 
-  function (Keys, SystemEvents, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, setTimeout) {
+  function (Keys, SystemEvents, TapEvent, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, Date, setTimeout) {
     var isDangerous = function (event) {
       // Will trigger the Back button in the browser
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
@@ -64,6 +66,8 @@ define(
         'click'
       ];
 
+      var tapEvent = TapEvent.monitor(settings);
+
       // These events are just passed through ... no additional processing
       var simpleEvents = Arr.map(
         pointerEvents.concat([
@@ -80,6 +84,10 @@ define(
         ]),
         function (type) {
           return DomEvent.bind(container, type, function (event) {
+            tapEvent.fireIfReady(event, type).each(function (tapStopped) {
+              if (tapStopped) event.kill();
+            });
+
             var stopped = settings.triggerEvent(type, event);
             if (stopped) event.kill();
           });
