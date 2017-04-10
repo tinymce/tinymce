@@ -14,21 +14,16 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
+    'tinymce.core.delete.DeleteElement',
     'tinymce.core.keyboard.BoundaryCaret',
     'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.keyboard.BoundarySelection',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Fun, Option, Options, CaretContainer, CaretPosition, BoundaryCaret, BoundaryLocation, BoundarySelection, InlineUtils) {
-    var selectAndDelete = function (editor, elm) {
-      editor.undoManager.transactIgnore(function () {
-        editor.selection.select(elm);
-        editor.execCommand('Delete');
-      });
-    };
-
+  function (Fun, Option, Options, Element, CaretContainer, CaretPosition, DeleteElement, BoundaryCaret, BoundaryLocation, BoundarySelection, InlineUtils) {
     var rangeFromPositions = function (from, to) {
       var range = document.createRange();
 
@@ -91,7 +86,9 @@ define(
         });
 
         if (fromLocation.isSome() && toLocation.isSome()) {
-          InlineUtils.findInline(rootNode, from).bind(Fun.curry(selectAndDelete, editor));
+          InlineUtils.findInline(rootNode, from).bind(function (elm) {
+            return DeleteElement.deleteElement(editor, Element.fromDom(elm));
+          });
           return true;
         } else {
           return toLocation.map(function (_) {
