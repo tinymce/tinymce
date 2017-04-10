@@ -19,6 +19,7 @@ define(
       FieldSchema.defaulted('tag', 'input'),
       FieldSchema.defaulted('styles', { }),
       FieldSchema.option('placeholder'),
+      FieldSchema.defaulted('eventOrder', { }),
       FieldSchema.defaulted('hasTabstop', true),
       FieldSchema.defaulted('inputBehaviours', { }),
       FieldSchema.defaulted('customBehaviours', [ ])
