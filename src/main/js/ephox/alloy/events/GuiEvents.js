@@ -50,35 +50,41 @@ define(
     var setup = function (container, rawSettings) {
       var settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
-      // These events are just passed through ... no additional processing
-      var simpleEvents = Arr.map([
-        'click',
-        'selectstart',
+      var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
+        'touchstart',
+        'touchmove',
+        'touchend',
+        'gesturestart'
+      ] : [
         'mousedown',
         'mouseup',
         'mouseover',
         'mousemove',
         'mouseout',
-        'focusin',
-        'input',
-        'contextmenu',
-        'change',
-        'transitionend',
-        // Test the drag events
-        'dragstart',
-        'dragover',
-        'drop',
+        'click'
+      ];
 
-        'touchstart',
-        'touchend',
-        'touchmove',
-        'gesturestart'
-      ], function (type) {
-        return DomEvent.bind(container, type, function (event) {
-          var stopped = settings.triggerEvent(type, event);
-          if (stopped) event.kill();
-        });
-      });
+      // These events are just passed through ... no additional processing
+      var simpleEvents = Arr.map(
+        pointerEvents.concat([
+          'selectstart',
+          'focusin',
+          'input',
+          'contextmenu',
+          'change',
+          'transitionend',
+          // Test the drag events
+          'dragstart',
+          'dragover',
+          'drop'
+        ]),
+        function (type) {
+          return DomEvent.bind(container, type, function (event) {
+            var stopped = settings.triggerEvent(type, event);
+            if (stopped) event.kill();
+          });
+        }
+      );
 
       var onKeydown = DomEvent.bind(container, 'keydown', function (event) {
         // Prevent default of backspace when not in input fields.
