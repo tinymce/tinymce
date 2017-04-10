@@ -1,0 +1,34 @@
+/* Hardcodes sizes since fonts vary on platforms */
+
+.ui-overrides .mce-spacer {
+  width: 20px;
+  height: 20px;
+  visibility: visible;
+  border: 0 solid black;
+}
+
+.ui-overrides .mce-head .mce-title {
+  width: 100px;
+  height: 20px;
+  display: inline-block;
+}
+
+.ui-overrides .mce-btn .mce-txt {
+  display: inline-block;
+  width: 10px;
+}
+
+/* Colors used for debugging */
+
+.ui-overrides .mce-red {background-color: red;}
+.ui-overrides .mce-green {background-color: green;}
+.ui-overrides .mce-blue {background-color: blue;}
+.ui-overrides .mce-yellow {background-color: yellow;}
+.ui-overrides .mce-magenta {background-color: magenta;}
+.ui-overrides .mce-cyan {background-color: cyan;}
+.ui-overrides .mce-dotted {background-image: url(data:image/gif;base64,R0lGODlhCwALAIABAAAAAP///yH5BAEAAAEALAAAAAALAAsAAAIPjI+py+CuHkwSRHkf23wXADs=);}
+.ui-overrides .mce-i-test {background: red;}
+
+body .ui-overrides .mce-window, body .ui-overrides .mce-notification {
+  transform: none;
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/json_rpc_ok"
+    },
+
+    "response": {
+      "json": {
+        "result": "Hello JSON-RPC",
+        "error": null,
+        "id": 1
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/json_rpc_fail"
+    },
+
+    "response": {
+      "json": {
+        "result": null,
+        "error": {
+          "message": "General failure",
+          "code": 42
+        },
+        "id": 1
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/404"
+    },
+
+    "response": {
+      "status": 404,
+      "json": {}
+    }
+  }
+]
