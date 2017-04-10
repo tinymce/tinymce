@@ -31,6 +31,10 @@ define(
       // part of the widget etc.
       focusItem: Fun.constant('alloy.focus.item'),
 
+      // This event represents a touchstart and touchend on the same location, and fires on
+      // the touchend
+      tap: Fun.constant('alloy.tap'),
+
 
       // Fire by a child element to tell the outer element to close
       sandboxClose: Fun.constant('alloy.sandbox.close'),

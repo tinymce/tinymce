@@ -2,12 +2,13 @@ define(
   'ephox.alloy.events.TapEvent',
 
   [
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare'
   ],
 
-  function (Cell, Option, Compare) {
+  function (SystemEvents, Cell, Option, Compare) {
     // TODO: If required, we can make an abstraction for this later.module.label
 
     var monitor = function (settings) {
@@ -30,7 +31,7 @@ define(
           return state.get().filter(function (tgt) {
             return Compare.eq(tgt, event.target());
           }).map(function (tgt) {
-            return settings.triggerEvent('tap', event);
+            return settings.triggerEvent(SystemEvents.tap(), event);
           });
         } else {
           return Option.none();
