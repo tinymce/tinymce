@@ -11,6 +11,11 @@
   flex-direction: column;
 }
 
+/* Use position relative for the mask, but nothing else */
+.tinymce-mobile-outer-container:not(.tinymce-mobile-android-maximized) {
+  position: relative;
+}
+
 .tinymce-mobile-android-maximized .tinymce-mobile-editor-socket {
   display: flex;
   flex-grow: 1;
