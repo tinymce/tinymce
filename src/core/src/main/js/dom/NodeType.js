@@ -55,7 +55,7 @@ define(
 
         if (isElement(node)) {
           for (i = 0; i < values.length; i++) {
-            cssValue = getComputedStyle(node, null).getPropertyValue(name);
+            cssValue = node.ownerDocument.defaultView.getComputedStyle(node, null).getPropertyValue(name);
             if (cssValue === values[i]) {
               return true;
             }

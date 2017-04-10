@@ -15,9 +15,10 @@
 define(
   'tinymce.core.util.URI',
   [
-    "tinymce.core.util.Tools"
+    'global!document',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools) {
+  function (document, Tools) {
     var each = Tools.each, trim = Tools.trim;
     var queryParts = "source protocol authority userInfo user password host port relative path directory file query anchor".split(' ');
     var DEFAULT_PORTS = {
@@ -58,7 +59,7 @@ define(
 
       // Relative path http:// or protocol relative //path
       if (!/^[\w\-]*:?\/\//.test(url)) {
-        baseUrl = settings.base_uri ? settings.base_uri.path : new URI(location.href).directory;
+        baseUrl = settings.base_uri ? settings.base_uri.path : new URI(document.location.href).directory;
         if (settings.base_uri.protocol === "") {
           url = '//mce_host' + self.toAbsPath(baseUrl, url);
         } else {

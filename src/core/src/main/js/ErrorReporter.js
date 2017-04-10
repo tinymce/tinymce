@@ -65,10 +65,15 @@ define(
       displayError(editor, pluginUrlToMessage(editor, url));
     };
 
+    var contentCssError = function (editor, urls) {
+      displayError(editor, 'Failed to load content css: ' + urls[0]);
+    };
+
     return {
       pluginLoadError: pluginLoadError,
       uploadError: uploadError,
-      displayError: displayError
+      displayError: displayError,
+      contentCssError: contentCssError
     };
   }
 );
