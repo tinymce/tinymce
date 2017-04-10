@@ -48,6 +48,10 @@ define(
       var setContextToolbar = function (rawGroups) {
         var groups = toolbar.createGroups(rawGroups);
         toolbar.setContextToolbar(groups);
+      };
+
+      // You do not always want to do this.
+      var focusToolbar = function () {
         toolbar.focus();
       };
 
@@ -74,6 +78,7 @@ define(
         exit: exit,
         setToolbarGroups: setToolbarGroups,
         setContextToolbar: setContextToolbar,
+        focusToolbar: focusToolbar,
         restoreToolbar: restoreToolbar,
         socket: Fun.constant(socket)
       };

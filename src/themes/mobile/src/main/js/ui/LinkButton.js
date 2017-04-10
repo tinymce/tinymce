@@ -92,6 +92,8 @@ define(
       return Buttons.forToolbar('link', function () {
         var groups = getGroups(ios, editor);
         ios.setContextToolbar(groups);
+        // Focus inside
+        ios.focusToolbar();
         findLink(editor).each(function (link) {
           editor.selection.select(link.dom());
         });
