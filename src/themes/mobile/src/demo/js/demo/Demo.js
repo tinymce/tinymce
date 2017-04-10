@@ -19,6 +19,13 @@ define(
   ],
   function (EditorManager, ListsPlugin, Theme) {
     return function () {
+      // var time = new Date().getTime();
+      // var header = document.createElement('p');
+      // header.innerHTML = time;
+
+      // document.body.insertBefore(header, document.body.childNodes[0]);
+
+
       Theme();
       ListsPlugin;
 

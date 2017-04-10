@@ -27,8 +27,8 @@ define(
         // Thor.clobberStyles(platform.container, editorApi.body());
         meta.maximize();
 
-        Css.set(platform.socket, 'overflow', 'scroll');
-        Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
+        // Css.set(platform.socket, 'overflow', 'scroll');
+        // Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
 
 console.log('platform', platform);
         androidApi.set(
@@ -42,8 +42,8 @@ console.log('platform', platform);
         Class.remove(platform.container, Styles.resolve('fullscreen-maximized'));
         Class.remove(platform.container, Styles.resolve('android-maximized'));
 
-        Css.remove(platform.socket, 'overflow'/*, 'scroll'*/);
-        Css.remove(platform.socket, '-webkit-overflow-scrolling'/*, 'touch'*/);
+        // Css.remove(platform.socket, 'overflow'/*, 'scroll'*/);
+        // Css.remove(platform.socket, '-webkit-overflow-scrolling'/*, 'touch'*/);
 
         androidApi.clear();
       };
