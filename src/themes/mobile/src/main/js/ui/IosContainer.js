@@ -18,7 +18,9 @@ define(
 
   function (Replacing, GuiFactory, Button, Container, Input, Objects, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
-      var alloy = OuterContainer();
+      var alloy = OuterContainer({
+        classes: [ Styles.resolve('ios-container') ]
+      });
 
       var toolbar = ScrollingToolbar();
 

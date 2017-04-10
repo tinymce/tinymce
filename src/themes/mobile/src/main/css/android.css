@@ -1,4 +1,4 @@
-.tinymce-mobile-android-maximized {
+.tinymce-mobile-android-container.tinymce-mobile-android-maximized {
   min-height: 100vh;
   position: fixed;
   top: 0;
@@ -12,16 +12,16 @@
 }
 
 /* Use position relative for the mask, but nothing else */
-.tinymce-mobile-outer-container:not(.tinymce-mobile-android-maximized) {
+.tinymce-mobile-android-container.tinymce-mobile-outer-container:not(.tinymce-mobile-android-maximized) {
   position: relative;
 }
 
-.tinymce-mobile-android-maximized .tinymce-mobile-editor-socket {
+.tinymce-mobile-android-container.tinymce-mobile-android-maximized .tinymce-mobile-editor-socket {
   display: flex;
   flex-grow: 1;
 }
 
-.tinymce-mobile-android-maximized .tinymce-mobile-editor-socket iframe {
+.tinymce-mobile-android-container.tinymce-mobile-android-maximized .tinymce-mobile-editor-socket iframe {
   display: flex !important;
   height: auto !important;
   flex-grow: 1;

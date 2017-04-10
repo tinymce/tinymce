@@ -4,6 +4,7 @@ define(
   [
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.node.Element',
     'global!window',
     'tinymce.core.dom.DOMUtils',
@@ -15,6 +16,7 @@ define(
     'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
+    'tinymce.themes.mobile.ui.IosContainer',
     'tinymce.themes.mobile.ui.LinkButton',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
@@ -23,8 +25,8 @@ define(
 
 
   function (
-    Cell, Fun, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidContainer, Buttons, ColorSlider, FontSizeSlider, ImagePicker, LinkButton, CssUrls,
-    FormatChangers, SkinLoaded
+    Cell, Fun, PlatformDetection, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidContainer, Buttons, ColorSlider, FontSizeSlider, ImagePicker,
+    IosContainer, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -33,7 +35,7 @@ define(
         editor.contentCSS.push(cssUrls.content);
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
-        var realm = AndroidContainer();//IosContainer();
+        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidContainer() : IosContainer();
         args.targetNode.ownerDocument.body.appendChild(realm.element().dom());
 
         editor.on('init', function () {

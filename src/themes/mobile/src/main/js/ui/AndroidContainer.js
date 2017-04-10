@@ -16,7 +16,9 @@ define(
 
   function (Replacing, GuiFactory, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
-      var alloy = OuterContainer();
+      var alloy = OuterContainer({
+        classes: [ Styles.resolve('android-container') ]
+      });
 
       var toolbar = ScrollingToolbar();
 
