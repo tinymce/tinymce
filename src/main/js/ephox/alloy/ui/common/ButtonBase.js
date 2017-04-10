@@ -6,10 +6,11 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.sand.api.PlatformDetection'
   ],
 
-  function (SystemEvents, EventHandler, Objects, Arr, Fun) {
+  function (SystemEvents, EventHandler, Objects, Arr, Fun, PlatformDetection) {
     // TODO: Move
     var events = function (optAction) {
       var executeHandler = EventHandler.nu({
@@ -39,11 +40,17 @@ define(
         }
       });
 
+      var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
+        { key: 'touchstart', value: clickHandler }
+      ] : [
+        { key: 'click', value: clickHandler },
+        { key: 'mousedown', value: mousedownHandler }
+      ];
+
       return Objects.wrapAll(
         Arr.flatten([
           optAction.isSome() ? [ { key: SystemEvents.execute(), value: executeHandler } ] : [ ],
-          [ { key: 'click', value: clickHandler } ],
-          [ { key: 'mousedown', value: mousedownHandler } ]
+          pointerEvents
         ])
       );
     };
