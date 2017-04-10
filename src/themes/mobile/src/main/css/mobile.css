@@ -2,6 +2,7 @@
 @import "icons.css";
 @import "slider.css";
 @import "inline-dialogs.css";
+@import "android.css";
 
 :root {
   --toolstrip-background-color: #333;
@@ -137,3 +138,4 @@ input[type="file"]::-webkit-file-upload-button {
 .tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected {
   background: #aaa;
 }
+

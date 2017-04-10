@@ -10,11 +10,11 @@ define(
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.ui.AndroidContainer',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
-    'tinymce.themes.mobile.ui.IosContainer',
     'tinymce.themes.mobile.ui.LinkButton',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
@@ -23,8 +23,8 @@ define(
 
 
   function (
-    Cell, Fun, Element, window, DOMUtils, ThemeManager, Api, Styles, Buttons, ColorSlider, FontSizeSlider, ImagePicker, IosContainer, LinkButton, CssUrls, FormatChangers,
-    SkinLoaded
+    Cell, Fun, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidContainer, Buttons, ColorSlider, FontSizeSlider, ImagePicker, LinkButton, CssUrls,
+    FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -33,11 +33,11 @@ define(
         editor.contentCSS.push(cssUrls.content);
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
-        var ios = IosContainer();
-        args.targetNode.ownerDocument.body.appendChild(ios.element().dom());
+        var realm = AndroidContainer();//IosContainer();
+        args.targetNode.ownerDocument.body.appendChild(realm.element().dom());
 
         editor.on('init', function () {
-          ios.init({
+          realm.init({
             editor: {
               getFrame: function () {
                 return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
@@ -50,7 +50,7 @@ define(
               },
 
               onTapContent: function () {
-                ios.restoreToolbar();
+                realm.restoreToolbar();
               }
             },
             container: Element.fromDom(editor.editorContainer),
@@ -71,7 +71,7 @@ define(
               scrollable: false,
               items: [
                 Buttons.forToolbar('back', function (/* btn */) {
-                  ios.exit();
+                  realm.exit();
                 }, { })
               ]
             },
@@ -89,10 +89,10 @@ define(
                 Buttons.forToolbarStateAction(editor, 'ul', function () {
                   editor.execCommand('InsertUnorderedList', null, false);
                 }),
-                LinkButton.sketch(ios, editor),
+                LinkButton.sketch(realm, editor),
                 ImagePicker.sketch(editor),
-                FontSizeSlider.sketch(ios, editor),
-                ColorSlider.sketch(ios, editor)
+                FontSizeSlider.sketch(realm, editor),
+                ColorSlider.sketch(realm, editor)
               ]
             },
             {
@@ -104,15 +104,15 @@ define(
             }
           ]);
 
-          ios.setToolbarGroups(mainGroups.get());
+          realm.setToolbarGroups(mainGroups.get());
 
           // Investigate ways to keep in sync with the ui
-          FormatChangers.init(ios, editor);
+          FormatChangers.init(realm, editor);
         });
 
         return {
-          iframeContainer: ios.socket().element().dom(),
-          editorContainer: ios.element().dom()
+          iframeContainer: realm.socket().element().dom(),
+          editorContainer: realm.element().dom()
         };
       };
 
