@@ -6,10 +6,10 @@ define(
   ],
 
   function (Buttons) {
-    var button = function (ios, clazz, makeItems) {
+    var button = function (realm, clazz, makeItems) {
       return Buttons.forToolbar(clazz, function () {
         var items = makeItems();
-        ios.setContextToolbar([
+        realm.setContextToolbar([
           {
             // FIX: I18n
             label: clazz + ' group',

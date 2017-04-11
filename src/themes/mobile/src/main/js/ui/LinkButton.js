@@ -10,10 +10,11 @@ define(
     'ephox.sugar.api.search.SelectorFind',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.Inputs',
-    'tinymce.themes.mobile.ui.SerialisedDialog'
+    'tinymce.themes.mobile.ui.SerialisedDialog',
+    'tinymce.themes.mobile.util.RangePreserver'
   ],
 
-  function (Representing, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog) {
+  function (Representing, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog, RangePreserver) {
     var isNotEmpty = function (val) {
       return val.length > 0;
     };
@@ -27,7 +28,7 @@ define(
       return str === undefined || str === null ? '' : str;
     };
 
-    var getGroups = Thunk.cached(function (ios, editor) {
+    var getGroups = Thunk.cached(function (realm, editor) {
       return [
         {
           label: 'the link group',
@@ -79,7 +80,7 @@ define(
                   });
                 });
 
-                ios.restoreToolbar();
+                realm.restoreToolbar();
                 editor.focus();
               }
             })
@@ -88,10 +89,21 @@ define(
       ];
     });
 
-    var sketch = function (ios, editor) {
+    var sketch = function (realm, editor) {
       return Buttons.forToolbar('link', function () {
-        var groups = getGroups(ios, editor);
-        ios.setContextToolbar(groups);
+        var groups = getGroups(realm, editor);
+        
+        realm.setContextToolbar(groups);
+        // Focus inside
+        // On Android, there is a bug where if you position the cursor (collapsed) within a
+        // word, and you blur the editor (by focusing an input), the selection moves to the
+        // end of the word (http://fiddle.tinymce.com/xNfaab/3 or 4). This is actually dependent
+        // on your keyboard (Google Keyboard) and is probably considered a feature. It does
+        // not happen on Samsung (for example).
+        RangePreserver.forAndroid(editor, function () {
+          realm.focusToolbar();
+        });
+
         findLink(editor).each(function (link) {
           editor.selection.select(link.dom());
         });
