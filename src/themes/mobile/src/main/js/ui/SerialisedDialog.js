@@ -94,7 +94,9 @@ define(
         var inputs = SelectorFilter.descendants(dialog.element(), 'input');
         var optInput = Option.from(inputs[spec.state.currentScreen.get()]);
         optInput.each(function (input) {
-          dialog.getSystem().getByDom(input).each(Focusing.focus);
+          dialog.getSystem().getByDom(input).each(function (inputComp) {
+            inputComp.getSystem().triggerFocus(inputComp.element(), dialog.element());
+          });
         });
       };
 
