@@ -28,7 +28,7 @@ define(
       return str === undefined || str === null ? '' : str;
     };
 
-    var getGroups = Thunk.cached(function (ios, editor) {
+    var getGroups = Thunk.cached(function (realm, editor) {
       return [
         {
           label: 'the link group',
@@ -80,7 +80,7 @@ define(
                   });
                 });
 
-                ios.restoreToolbar();
+                realm.restoreToolbar();
                 editor.focus();
               }
             })
@@ -89,11 +89,11 @@ define(
       ];
     });
 
-    var sketch = function (ios, editor) {
+    var sketch = function (realm, editor) {
       return Buttons.forToolbar('link', function () {
-        var groups = getGroups(ios, editor);
+        var groups = getGroups(realm, editor);
         
-        ios.setContextToolbar(groups);
+        realm.setContextToolbar(groups);
         // Focus inside
         // On Android, there is a bug where if you position the cursor (collapsed) within a
         // word, and you blur the editor (by focusing an input), the selection moves to the
@@ -101,7 +101,7 @@ define(
         // on your keyboard (Google Keyboard) and is probably considered a feature. It does
         // not happen on Samsung (for example).
         RangePreserver.forAndroid(editor, function () {
-          ios.focusToolbar();
+          realm.focusToolbar();
         });
 
         findLink(editor).each(function (link) {

@@ -13,17 +13,17 @@ define(
   function (Arr, Fun, Element, Node, SelectorFind, TinyChannels) {
     var fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
-    var fireChange = function (ios, command, state) {
-      ios.system().broadcastOn([ TinyChannels.formatChanged() ], {
+    var fireChange = function (realm, command, state) {
+      realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
         command: command,
         state: state
       });
     };
 
-    var init = function (ios, editor) {
+    var init = function (realm, editor) {
       Arr.each([ 'bold', 'italic', 'h1', 'h2', 'h3' ], function (command) {
         editor.formatter.formatChanged(command, function (state) {
-          fireChange(ios, command, state);
+          fireChange(realm, command, state);
         });
       });
 
@@ -38,7 +38,7 @@ define(
         ];
 
         Arr.each(messages, function (message) {
-          ios.system().broadcastOn([ TinyChannels.formatChanged() ], message);
+          realm.system().broadcastOn([ TinyChannels.formatChanged() ], message);
         });
       });
     };

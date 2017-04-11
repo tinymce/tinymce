@@ -77,7 +77,7 @@ define(
       ];
     };
 
-    var sketch = function (ios, editor) {
+    var sketch = function (realm, editor) {
       var spec = {
         onChange: function (slider, value) {
           FontSizes.apply(editor, value);
@@ -87,7 +87,7 @@ define(
         }
       };
 
-      return ToolbarWidgets.button(ios, 'font-size', function () {
+      return ToolbarWidgets.button(realm, 'font-size', function () {
         return makeItems(spec);
       });
     };

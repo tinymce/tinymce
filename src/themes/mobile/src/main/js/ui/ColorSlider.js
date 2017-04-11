@@ -91,7 +91,7 @@ define(
       ];
     };
 
-    var sketch = function (ios, editor) {
+    var sketch = function (realm, editor) {
       var spec = {
         onChange: function (slider, thumb, color) {
           editor.undoManager.transact(function () {
@@ -105,7 +105,7 @@ define(
         }
       };
 
-      return ToolbarWidgets.button(ios, 'color', function () {
+      return ToolbarWidgets.button(realm, 'color', function () {
         return makeItems(spec);
       });
     };
