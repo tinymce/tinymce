@@ -43,9 +43,9 @@ define(
     };
 
     // The action is not just executing the same command
-    var forToolbarStateAction = function (editor, command, action) {
+    var forToolbarStateAction = function (editor, clazz, command, action) {
       var extraBehaviours = getToggleBehaviours(command);
-      return forToolbar(command, action, extraBehaviours);
+      return forToolbar(clazz, action, extraBehaviours);
     };
 
     var forToolbar = function (clazz, action, extraBehaviours) {

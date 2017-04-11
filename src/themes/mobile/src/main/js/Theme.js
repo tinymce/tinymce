@@ -62,7 +62,7 @@ define(
           });
 
           var createHeadingButton = function (level) {
-            return Buttons.forToolbarStateAction(editor, level, function () {
+            return Buttons.forToolbarStateAction(editor, level, level, function () {
               editor.execCommand('FormatBlock', null, level);
             });
           };
@@ -88,7 +88,7 @@ define(
                 createHeadingButton('h2'),
                 createHeadingButton('h3'),
                 // NOTE: Requires "lists" plugin.
-                Buttons.forToolbarStateAction(editor, 'ul', function () {
+                Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                   editor.execCommand('InsertUnorderedList', null, false);
                 }),
                 LinkButton.sketch(realm, editor),
