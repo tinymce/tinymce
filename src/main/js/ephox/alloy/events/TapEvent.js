@@ -22,15 +22,29 @@ define(
 
       var fireIfReady = function (event, type) {
         if (type === 'touchstart') {
-          state.set(Option.some(event.target()));
+          if (event.raw().touches === undefined || event.raw().touches.length !== 1) return Option.none();
+          var touch = event.raw().touches[0];
+          state.set(Option.some({
+            target: event.target(),
+            x: touch.clientX,
+            y: touch.clientY
+          }));
           return Option.none();
         } else if (type === 'touchmove') {
-          state.set(Option.none());
+          if (event.raw().touches === undefined || event.raw().touches.length !== 1) return Option.none();
+          var touch = event.raw().touches[0];
+          state.get().each(function (data) {
+            var distX = Math.abs(touch.clientX - data.x);
+            var distY = Math.abs(touch.clientY - data.y);
+            if (distX > 5 || distY > 5) {
+              state.set(Option.none());
+            }
+          });
           return Option.none();
         } else if (type === 'touchend') {
-          return state.get().filter(function (tgt) {
-            return Compare.eq(tgt, event.target());
-          }).map(function (tgt) {
+          return state.get().filter(function (data) {
+            return Compare.eq(data.target, event.target());
+          }).map(function (data) {
             return settings.triggerEvent(SystemEvents.tap(), event);
           });
         } else {
