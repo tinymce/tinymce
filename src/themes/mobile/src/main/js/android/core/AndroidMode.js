@@ -8,13 +8,14 @@ define(
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
     'global!window',
+    'tinymce.themes.mobile.android.core.AndroidEvents',
     'tinymce.themes.mobile.android.core.AndroidSetup',
     'tinymce.themes.mobile.ios.core.PlatformEditor',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.MetaViewport'
   ],
 
-  function (Singleton, DomEvent, Element, Class, Css, window, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
+  function (Singleton, DomEvent, Element, Class, Css, window, AndroidEvents, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
     var create = function (platform, mask) {
 
       var meta = MetaViewport.tag();
@@ -39,9 +40,7 @@ define(
 
         PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
           androidEvents.set(
-            DomEvent.bind(editorApi.body(), 'touchstart', function () {
-              editorApi.onTapContent();
-            })
+            AndroidEvents.initEvents(editorApi, platform.toolstrip)
           );
         });
       };
