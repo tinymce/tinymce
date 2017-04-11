@@ -3,10 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Singleton',
-    'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Css',
     'global!window',
     'tinymce.themes.mobile.android.core.AndroidEvents',
     'tinymce.themes.mobile.android.core.AndroidSetup',
@@ -15,7 +12,7 @@ define(
     'tinymce.themes.mobile.touch.view.MetaViewport'
   ],
 
-  function (Singleton, DomEvent, Element, Class, Css, window, AndroidEvents, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
+  function (Singleton, Class, window, AndroidEvents, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
     var create = function (platform, mask) {
 
       var meta = MetaViewport.tag();
@@ -28,11 +25,7 @@ define(
 
         Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
         Class.add(platform.container, Styles.resolve('android-maximized'));
-        // Thor.clobberStyles(platform.container, editorApi.body());
         meta.maximize();
-
-        // Css.set(platform.socket, 'overflow', 'scroll');
-        // Css.set(platform.socket, '-webkit-overflow-scrolling', 'touch');
 
         androidApi.set(
           AndroidSetup.setup(window, PlatformEditor.getWin(platform.editor).getOrDie('no'))
@@ -52,9 +45,6 @@ define(
         Class.remove(platform.container, Styles.resolve('android-maximized'));
 
         androidEvents.clear();
-
-        // Css.remove(platform.socket, 'overflow'/*, 'scroll'*/);
-        // Css.remove(platform.socket, '-webkit-overflow-scrolling'/*, 'touch'*/);
 
         androidApi.clear();
       };
