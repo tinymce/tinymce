@@ -11,12 +11,12 @@ define(
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.AndroidContainer',
+    'tinymce.themes.mobile.ui.AndroidRealm',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
-    'tinymce.themes.mobile.ui.IosContainer',
+    'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.ui.LinkButton',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
@@ -25,8 +25,8 @@ define(
 
 
   function (
-    Cell, Fun, PlatformDetection, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidContainer, Buttons, ColorSlider, FontSizeSlider, ImagePicker,
-    IosContainer, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    Cell, Fun, PlatformDetection, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, ImagePicker, IosRealm,
+    LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -35,7 +35,7 @@ define(
         editor.contentCSS.push(cssUrls.content);
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
-        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidContainer() : IosContainer();
+        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm() : IosRealm();
         args.targetNode.ownerDocument.body.appendChild(realm.element().dom());
 
         editor.on('init', function () {

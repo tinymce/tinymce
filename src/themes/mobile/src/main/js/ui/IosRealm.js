@@ -1,5 +1,5 @@
 define(
-  'tinymce.themes.mobile.ui.AndroidContainer',
+  'tinymce.themes.mobile.ui.IosRealm',
 
   [
     'ephox.alloy.api.behaviour.Replacing',
@@ -8,16 +8,16 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
-    'tinymce.themes.mobile.api.AndroidWebapp',
+    'tinymce.themes.mobile.api.IosWebapp',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Replacing, GuiFactory, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
+  function (Replacing, GuiFactory, Container, Objects, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
-        classes: [ Styles.resolve('android-container') ]
+        classes: [ Styles.resolve('ios-container') ]
       });
 
       var toolbar = ScrollingToolbar();
@@ -50,7 +50,6 @@ define(
         toolbar.setContextToolbar(groups);
       };
 
-      // You do not always want to do this.
       var focusToolbar = function () {
         toolbar.focus();
       };
@@ -61,7 +60,7 @@ define(
 
       var init = function (spec) {
         webapp.set(
-          AndroidWebapp.produce(spec)
+          IosWebapp.produce(spec)
         );
       };
 
