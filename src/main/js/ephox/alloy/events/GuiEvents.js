@@ -72,7 +72,6 @@ define(
       var simpleEvents = Arr.map(
         pointerEvents.concat([
           'selectstart',
-          'focusin',
           'input',
           'contextmenu',
           'change',
@@ -101,6 +100,11 @@ define(
         else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
       });
 
+      var onFocusIn = bindFocus(container, function (event) {
+        var stopped = settings.triggerEvent('focusin', event);
+        if (stopped) event.kill();
+      });
+
       var onFocusOut = bindBlur(container, function (event) {
         var stopped = settings.triggerEvent('focusout', event);
         if (stopped) event.kill();
@@ -124,6 +128,7 @@ define(
           e.unbind();
         });
         onKeydown.unbind();
+        onFocusIn.bind();
         onFocusOut.unbind();
         onWindowScroll.unbind();
       };
