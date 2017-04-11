@@ -26,7 +26,8 @@ define(
           InputBase.behaviours(detail),
           detail.inputBehaviours()
         ),
-        customBehaviours: detail.customBehaviours()
+        customBehaviours: detail.customBehaviours(),
+        eventOrder: detail.eventOrder()
       };
     };
 

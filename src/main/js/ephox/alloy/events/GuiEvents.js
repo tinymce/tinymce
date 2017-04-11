@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.events.TapEvent',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
@@ -14,7 +15,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (Keys, SystemEvents, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, setTimeout) {
+  function (Keys, SystemEvents, TapEvent, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, setTimeout) {
     var isDangerous = function (event) {
       // Will trigger the Back button in the browser
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
@@ -50,41 +51,57 @@ define(
     var setup = function (container, rawSettings) {
       var settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
-      // These events are just passed through ... no additional processing
-      var simpleEvents = Arr.map([
-        'click',
-        'selectstart',
+      var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
+        'touchstart',
+        'touchmove',
+        'touchend',
+        'gesturestart'
+      ] : [
         'mousedown',
         'mouseup',
         'mouseover',
         'mousemove',
         'mouseout',
-        'focusin',
-        'input',
-        'contextmenu',
-        'change',
-        'transitionend',
-        // Test the drag events
-        'dragstart',
-        'dragover',
-        'drop',
+        'click'
+      ];
 
-        'touchstart',
-        'touchend',
-        'touchmove',
-        'gesturestart'
-      ], function (type) {
-        return DomEvent.bind(container, type, function (event) {
-          var stopped = settings.triggerEvent(type, event);
-          if (stopped) event.kill();
-        });
-      });
+      var tapEvent = TapEvent.monitor(settings);
+
+      // These events are just passed through ... no additional processing
+      var simpleEvents = Arr.map(
+        pointerEvents.concat([
+          'selectstart',
+          'input',
+          'contextmenu',
+          'change',
+          'transitionend',
+          // Test the drag events
+          'dragstart',
+          'dragover',
+          'drop'
+        ]),
+        function (type) {
+          return DomEvent.bind(container, type, function (event) {
+            tapEvent.fireIfReady(event, type).each(function (tapStopped) {
+              if (tapStopped) event.kill();
+            });
+
+            var stopped = settings.triggerEvent(type, event);
+            if (stopped) event.kill();
+          });
+        }
+      );
 
       var onKeydown = DomEvent.bind(container, 'keydown', function (event) {
         // Prevent default of backspace when not in input fields.
         var stopped = settings.triggerEvent('keydown', event);
         if (stopped) event.kill();
         else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
+      });
+
+      var onFocusIn = bindFocus(container, function (event) {
+        var stopped = settings.triggerEvent('focusin', event);
+        if (stopped) event.kill();
       });
 
       var onFocusOut = bindBlur(container, function (event) {
@@ -110,6 +127,7 @@ define(
           e.unbind();
         });
         onKeydown.unbind();
+        onFocusIn.bind();
         onFocusOut.unbind();
         onWindowScroll.unbind();
       };
