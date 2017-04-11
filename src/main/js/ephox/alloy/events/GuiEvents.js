@@ -12,11 +12,10 @@ define(
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.Traverse',
-    'global!Date',
     'global!setTimeout'
   ],
 
-  function (Keys, SystemEvents, TapEvent, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, Date, setTimeout) {
+  function (Keys, SystemEvents, TapEvent, FieldSchema, ValueSchema, Arr, PlatformDetection, DomEvent, Node, Traverse, setTimeout) {
     var isDangerous = function (event) {
       // Will trigger the Back button in the browser
       return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
