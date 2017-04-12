@@ -45,7 +45,7 @@ define(
     var deleteFromTo = function (editor, caret, from, to) {
       var rootNode = editor.getBody();
 
-      editor.undoManager.transactIgnore(function () {
+      editor.undoManager.ignore(function () {
         editor.selection.setRng(rangeFromPositions(from, to));
         editor.execCommand('Delete');
 

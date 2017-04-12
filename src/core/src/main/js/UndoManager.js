@@ -346,7 +346,7 @@ define(
         transact: function (callback) {
           endTyping();
           self.beforeChange();
-          self.transactIgnore(callback);
+          self.ignore(callback);
           return self.add();
         },
 
@@ -355,11 +355,11 @@ define(
          * Any logic within the translation that adds undo levels will be ignored. So a translation can
          * include calls to execCommand or editor.insertContent.
          *
-         * @method transactIgnore
+         * @method ignore
          * @param {function} callback Function that gets executed and has dom manipulation logic in it.
          * @return {Object} Undo level that got added or null it a level wasn't needed.
          */
-        transactIgnore: function (callback) {
+        ignore: function (callback) {
           try {
             locks++;
             callback();

@@ -58,7 +58,7 @@ define(
     };
 
     var deleteElement = function (editor, elm) {
-      editor.undoManager.transactIgnore(function () {
+      editor.undoManager.ignore(function () {
         var pos = findCaretPosOutsideElmAfterDelete(editor.getBody(), elm.dom());
         Remove.remove(elm);
         setSelection(editor, pos);
