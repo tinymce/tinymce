@@ -11,20 +11,24 @@
 define(
   'tinymce.core.keyboard.DeleteBackspaceKeys',
   [
+    'ephox.katamari.api.Arr',
     'tinymce.core.keyboard.BoundaryDelete',
+    'tinymce.core.keyboard.CefDelete',
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (BoundaryDelete, MatchKeys, VK) {
-    var setup = function (editor, caret) {
+  function (Arr, BoundaryDelete, CefDelete, MatchKeys, VK) {
+    var setup = function (editor) {
       editor.on('keydown', function (evt) {
-        MatchKeys.match([
-          { keyCode: VK.BACKSPACE, action: BoundaryDelete.backspaceDelete(editor, caret, false) },
-          { keyCode: VK.DELETE, action: BoundaryDelete.backspaceDelete(editor, caret, true) }
-        ], evt).map(function (action) {
-          if (action()) {
-            evt.preventDefault();
-          }
+        var matches = MatchKeys.match([
+          { keyCode: VK.BACKSPACE, action: BoundaryDelete.backspaceDelete(editor, false) },
+          { keyCode: VK.DELETE, action: BoundaryDelete.backspaceDelete(editor, true) }
+        ], evt);
+
+        Arr.find(matches, function (pattern) {
+          return pattern.action();
+        }).each(function (_) {
+          evt.preventDefault();
         });
       });
     };

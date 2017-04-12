@@ -49,7 +49,6 @@ define(
     var curry = Fun.curry,
       isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
-      isElement = NodeType.isElement,
       isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse,
       isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse,
       getSelectedNode = RangeUtils.getSelectedNode;
@@ -70,7 +69,7 @@ define(
       var getPrevVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.prev),
         fakeCaret = new FakeCaret(editor.getBody(), isBlock),
         realSelectionId = 'sel-' + editor.dom.uniqueId(),
-        selectedContentEditableNode, $ = editor.$;
+        selectedContentEditableNode;
 
       function isFakeSelectionElement(elm) {
         return editor.dom.hasClass(elm, 'mce-offscreen-selection');
@@ -329,10 +328,6 @@ define(
         return null;
       }
 
-      function getBlockCaretContainer() {
-        return $('*[data-mce-caret]')[0];
-      }
-
       function showBlockCaretContainer(blockCaretContainer) {
         if (blockCaretContainer.hasAttribute('data-mce-caret')) {
           CaretContainer.showCaretContainerBlock(blockCaretContainer);
@@ -379,150 +374,9 @@ define(
         return range;
       }
 
-      function deleteContentEditableNode(node) {
-        var nextCaretPosition, prevCaretPosition, prevCeFalseElm, nextElement;
-
-        if (!isContentEditableFalse(node)) {
-          return null;
-        }
-
-        if (isContentEditableFalse(node.previousSibling)) {
-          prevCeFalseElm = node.previousSibling;
-        }
-
-        prevCaretPosition = getPrevVisualCaretPosition(CaretPosition.before(node));
-        if (!prevCaretPosition) {
-          nextCaretPosition = getNextVisualCaretPosition(CaretPosition.after(node));
-        }
-
-        if (nextCaretPosition && isElement(nextCaretPosition.getNode())) {
-          nextElement = nextCaretPosition.getNode();
-        }
-
-        CaretContainerRemove.remove(node.previousSibling);
-        CaretContainerRemove.remove(node.nextSibling);
-        editor.dom.remove(node);
-
-        if (editor.dom.isEmpty(editor.getBody())) {
-          editor.setContent('');
-          editor.focus();
-          return;
-        }
-
-        if (prevCeFalseElm) {
-          return CaretPosition.after(prevCeFalseElm).toRange();
-        }
-
-        if (nextElement) {
-          return CaretPosition.before(nextElement).toRange();
-        }
-
-        if (prevCaretPosition) {
-          return prevCaretPosition.toRange();
-        }
-
-        if (nextCaretPosition) {
-          return nextCaretPosition.toRange();
-        }
-
-        return null;
-      }
-
-      function isTextBlock(node) {
-        var textBlocks = editor.schema.getTextBlockElements();
-        return node.nodeName in textBlocks;
-      }
-
-      function isEmpty(elm) {
-        return editor.dom.isEmpty(elm);
-      }
-
-      function mergeTextBlocks(direction, fromCaretPosition, toCaretPosition) {
-        var dom = editor.dom, fromBlock, toBlock, node, ceTarget;
-
-        fromBlock = dom.getParent(fromCaretPosition.getNode(), dom.isBlock);
-        toBlock = dom.getParent(toCaretPosition.getNode(), dom.isBlock);
-
-        if (direction === -1) {
-          ceTarget = toCaretPosition.getNode(true);
-          if (isAfterContentEditableFalse(toCaretPosition) && isBlock(ceTarget)) {
-            if (isTextBlock(fromBlock)) {
-              if (isEmpty(fromBlock)) {
-                dom.remove(fromBlock);
-              }
-
-              return CaretPosition.after(ceTarget).toRange();
-            }
-
-            return deleteContentEditableNode(toCaretPosition.getNode(true));
-          }
-        } else {
-          ceTarget = fromCaretPosition.getNode();
-          if (isBeforeContentEditableFalse(fromCaretPosition) && isBlock(ceTarget)) {
-            if (isTextBlock(toBlock)) {
-              if (isEmpty(toBlock)) {
-                dom.remove(toBlock);
-              }
-
-              return CaretPosition.before(ceTarget).toRange();
-            }
-
-            return deleteContentEditableNode(fromCaretPosition.getNode());
-          }
-        }
-
-        // Verify that both blocks are text blocks
-        if (fromBlock === toBlock || !isTextBlock(fromBlock) || !isTextBlock(toBlock)) {
-          return null;
-        }
-
-        while ((node = fromBlock.firstChild)) {
-          toBlock.appendChild(node);
-        }
-
-        editor.dom.remove(fromBlock);
-
-        return toCaretPosition.toRange();
-      }
-
-      function backspaceDelete(direction, beforeFn, afterFn, range) {
-        var node, caretPosition, peekCaretPosition, newCaretPosition;
-
-        if (!range.collapsed) {
-          node = getSelectedNode(range);
-          if (isContentEditableFalse(node)) {
-            return renderRangeCaret(deleteContentEditableNode(node));
-          } else {
-            return null;
-          }
-        }
-
-        caretPosition = getNormalizedRangeEndPoint(direction, range);
-
-        if (afterFn(caretPosition) && CaretContainer.isCaretContainerBlock(range.startContainer)) {
-          newCaretPosition = direction == -1 ? caretWalker.prev(caretPosition) : caretWalker.next(caretPosition);
-          return newCaretPosition ? renderRangeCaret(newCaretPosition.toRange()) : range;
-        }
-
-        if (beforeFn(caretPosition)) {
-          return renderRangeCaret(deleteContentEditableNode(caretPosition.getNode(direction == -1)));
-        }
-
-        peekCaretPosition = direction == -1 ? caretWalker.prev(caretPosition) : caretWalker.next(caretPosition);
-        if (beforeFn(peekCaretPosition)) {
-          if (direction === -1) {
-            return mergeTextBlocks(direction, caretPosition, peekCaretPosition);
-          }
-
-          return mergeTextBlocks(direction, peekCaretPosition, caretPosition);
-        }
-      }
-
       function registerEvents() {
         var right = curry(moveH, 1, getNextVisualCaretPosition, isBeforeContentEditableFalse);
         var left = curry(moveH, -1, getPrevVisualCaretPosition, isAfterContentEditableFalse);
-        var deleteForward = curry(backspaceDelete, 1, isBeforeContentEditableFalse, isAfterContentEditableFalse);
-        var backspace = curry(backspaceDelete, -1, isAfterContentEditableFalse, isBeforeContentEditableFalse);
         var up = curry(moveV, -1, LineWalker.upUntil);
         var down = curry(moveV, 1, LineWalker.downUntil);
 
@@ -708,82 +562,11 @@ define(
               override(e, up);
               break;
 
-            case VK.DELETE:
-              override(e, deleteForward);
-              break;
-
-            case VK.BACKSPACE:
-              override(e, backspace);
-              break;
-
             default:
               if (isContentEditableFalse(editor.selection.getNode()) && isContentKey(e)) {
                 e.preventDefault();
               }
               break;
-          }
-        });
-
-        function paddEmptyContentEditableArea() {
-          var br, ceRoot = getContentEditableRoot(editor.selection.getNode());
-
-          if (isContentEditableTrue(ceRoot) && isBlock(ceRoot) && editor.dom.isEmpty(ceRoot)) {
-            br = editor.dom.create('br', { "data-mce-bogus": "1" });
-            editor.$(ceRoot).empty().append(br);
-            editor.selection.setRng(CaretPosition.before(br).toRange());
-          }
-        }
-
-        function handleBlockContainer(e) {
-          var blockCaretContainer = getBlockCaretContainer();
-
-          if (!blockCaretContainer) {
-            return;
-          }
-
-          if (e.type == 'compositionstart') {
-            e.preventDefault();
-            e.stopPropagation();
-            showBlockCaretContainer(blockCaretContainer);
-            return;
-          }
-
-          if (CaretContainer.hasContent(blockCaretContainer)) {
-            showBlockCaretContainer(blockCaretContainer);
-          }
-        }
-
-        function handleEmptyBackspaceDelete(e) {
-          var prevent;
-
-          switch (e.keyCode) {
-            case VK.DELETE:
-              prevent = paddEmptyContentEditableArea();
-              break;
-
-            case VK.BACKSPACE:
-              prevent = paddEmptyContentEditableArea();
-              break;
-          }
-
-          if (prevent) {
-            e.preventDefault();
-          }
-        }
-
-        // Must be added to "top" since undoManager needs to be executed after
-        editor.on('keyup compositionstart', function (e) {
-          handleBlockContainer(e);
-          handleEmptyBackspaceDelete(e);
-        }, true);
-
-        editor.on('cut', function () {
-          var node = editor.selection.getNode();
-
-          if (isContentEditableFalse(node)) {
-            Delay.setEditorTimeout(editor, function () {
-              setRange(renderRangeCaret(deleteContentEditableNode(node)));
-            });
           }
         });
 
