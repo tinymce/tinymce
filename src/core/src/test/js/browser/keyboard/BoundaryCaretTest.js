@@ -36,7 +36,7 @@ asynctest(
 
         Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
 
-        var pos = BoundaryCaret.renderCaret(caret, location.getOrDie());
+        var pos = BoundaryCaret.renderCaret(caret, location.getOrDie()).getOrDie();
         Assertions.assertHtml('Should be equal html', expectedHtml, elm.dom().innerHTML);
 
         var container = Hierarchy.follow(elm, expectedPath);

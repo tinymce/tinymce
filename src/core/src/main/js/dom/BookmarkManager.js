@@ -16,16 +16,28 @@
 define(
   'tinymce.core.dom.BookmarkManager',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.caret.CaretContainer",
-    "tinymce.core.caret.CaretBookmark",
-    "tinymce.core.caret.CaretPosition",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.RangeUtils"
+    'tinymce.core.caret.CaretBookmark',
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.Env',
+    'tinymce.core.text.Zwsp',
+    'tinymce.core.util.Tools'
   ],
-  function (Env, Tools, CaretContainer, CaretBookmark, CaretPosition, NodeType, RangeUtils) {
+  function (CaretBookmark, CaretContainer, CaretPosition, NodeType, RangeUtils, Env, Zwsp, Tools) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
+
+    var getNormalizedTextOffset = function (container, offset) {
+      var node, trimmedOffset;
+
+      trimmedOffset = Zwsp.trim(container.data.slice(0, offset)).length;
+      for (node = container.previousSibling; node && node.nodeType === 3; node = node.previousSibling) {
+        trimmedOffset += Zwsp.trim(node.data).length;
+      }
+
+      return trimmedOffset;
+    };
 
     /**
      * Constructs a new BookmarkManager instance for a specific selection instance.
@@ -103,16 +115,10 @@ define(
 
           function getPoint(rng, start) {
             var container = rng[start ? 'startContainer' : 'endContainer'],
-              offset = rng[start ? 'startOffset' : 'endOffset'], point = [], node, childNodes, after = 0;
+              offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
 
-            if (container.nodeType == 3) {
-              if (normalized) {
-                for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling) {
-                  offset += node.nodeValue.length;
-                }
-              }
-
-              point.push(offset);
+            if (container.nodeType === 3) {
+              point.push(normalized ? getNormalizedTextOffset(container, offset) : offset);
             } else {
               childNodes = container.childNodes;
 

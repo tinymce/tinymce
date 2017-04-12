@@ -11,15 +11,12 @@
 define(
   'tinymce.core.keyboard.ArrowKeys',
   [
-    'ephox.katamari.api.Cell',
     'tinymce.core.keyboard.BoundarySelection',
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (Cell, BoundarySelection, MatchKeys, VK) {
-    var setup = function (editor) {
-      var caret = Cell(null);
-
+  function (BoundarySelection, MatchKeys, VK) {
+    var setup = function (editor, caret) {
       editor.on('keydown', function (evt) {
         MatchKeys.match([
           { keyCode: VK.RIGHT, action: BoundarySelection.move(editor, caret, true) },

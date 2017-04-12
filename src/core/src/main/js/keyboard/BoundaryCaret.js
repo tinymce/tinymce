@@ -11,6 +11,7 @@
 define(
   'tinymce.core.keyboard.BoundaryCaret',
   [
+    'ephox.katamari.api.Option',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretContainerInline',
     'tinymce.core.caret.CaretContainerRemove',
@@ -18,7 +19,7 @@ define(
     'tinymce.core.dom.NodeType',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (CaretContainer, CaretContainerInline, CaretContainerRemove, CaretPosition, NodeType, InlineUtils) {
+  function (Option, CaretContainer, CaretContainerInline, CaretContainerRemove, CaretPosition, NodeType, InlineUtils) {
     var insertInlinePos = function (pos, before) {
       if (NodeType.isText(pos.container())) {
         return CaretContainerInline.insertInline(before, pos.container());
@@ -33,27 +34,29 @@ define(
           CaretContainerRemove.remove(caret.get());
           var text = CaretContainerInline.insertInlineBefore(element);
           caret.set(text);
-          return new CaretPosition(text, text.length - 1);
+          return Option.some(new CaretPosition(text, text.length - 1));
         },
         function (element) { // Start
-          CaretContainerRemove.remove(caret.get());
-          var pos = InlineUtils.findCaretPositionIn(element, true).getOrDie();
-          var text = insertInlinePos(pos, true);
-          caret.set(text);
-          return new CaretPosition(text, 1);
+          return InlineUtils.findCaretPositionIn(element, true).map(function (pos) {
+            CaretContainerRemove.remove(caret.get());
+            var text = insertInlinePos(pos, true);
+            caret.set(text);
+            return new CaretPosition(text, 1);
+          });
         },
         function (element) { // End
-          CaretContainerRemove.remove(caret.get());
-          var pos = InlineUtils.findCaretPositionIn(element, false).getOrDie();
-          var text = insertInlinePos(pos, false);
-          caret.set(text);
-          return new CaretPosition(text, text.length - 1);
+          return InlineUtils.findCaretPositionIn(element, false).map(function (pos) {
+            CaretContainerRemove.remove(caret.get());
+            var text = insertInlinePos(pos, false);
+            caret.set(text);
+            return new CaretPosition(text, text.length - 1);
+          });
         },
         function (element) { // After
           CaretContainerRemove.remove(caret.get());
           var text = CaretContainerInline.insertInlineAfter(element);
           caret.set(text);
-          return new CaretPosition(text, 1);
+          return Option.some(new CaretPosition(text, 1));
         }
       );
     };

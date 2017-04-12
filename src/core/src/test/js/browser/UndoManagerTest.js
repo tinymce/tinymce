@@ -482,6 +482,23 @@ asynctest(
       LegacyUnit.equal(editor.undoManager.data[2].content, '<p>aBC</p>');
     });
 
+    suite.test('ignore does a transaction but no levels', function (editor) {
+      editor.undoManager.clear();
+      editor.setDirty(false);
+      editor.setContent('<p>a</p>');
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+      editor.undoManager.typing = true;
+
+      editor.undoManager.ignore(function () {
+        editor.execCommand('bold');
+        editor.execCommand('italic');
+      });
+
+      LegacyUnit.equal(editor.undoManager.typing, true);
+      LegacyUnit.equal(editor.undoManager.data.length, 0);
+      LegacyUnit.equal(editor.getContent(), '<p><em><strong>a</strong></em></p>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
