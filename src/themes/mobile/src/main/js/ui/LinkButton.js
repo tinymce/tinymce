@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Thunk',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
@@ -14,7 +16,7 @@ define(
     'tinymce.themes.mobile.util.RangePreserver'
   ],
 
-  function (Representing, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog, RangePreserver) {
+  function (Representing, Fun, Option, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog, RangePreserver) {
     var isNotEmpty = function (val) {
       return val.length > 0;
     };
@@ -38,45 +40,54 @@ define(
                 Inputs.field('url', 'Type or paste URL'),
                 Inputs.field('text', 'Link text'),
                 Inputs.field('title', 'Link title'),
-                Inputs.field('target', 'Link target')
+                Inputs.field('target', 'Link target'),
+                Inputs.hidden('link')
               ],
 
               getInitialValue: function (/* dialog */) {
-                return findLink(editor).map(function (link) {
+                return findLink(editor).fold(function () {
+                  // TODO: Improve with more of tiny's link logic?
+                  var text = editor.selection.getContent();
+                  return Option.some({
+                    text: text,
+                    link: Option.none()
+                  });
+                }, function (link) {
                   var text = TextContent.get(link);
                   var url = Attr.get(link, 'href');
                   var title = Attr.get(link, 'title');
                   var target = Attr.get(link, 'target');
-                  return {
+                  return Option.some({
                     url: defaultToEmpty(url),
                     text: defaultToEmpty(text),
                     title: defaultToEmpty(title),
-                    target: defaultToEmpty(target)
-                  };
+                    target: defaultToEmpty(target),
+                    link: Option.some(link)
+                  });
                 });
               },
 
               onExecute: function (dialog/*, simulatedEvent */) {
                 var values = Representing.getValue(dialog);
 
-                // Must have a URL to insert a link
+                // We must have a non-empty URL to insert a link
                 values.url.filter(isNotEmpty).each(function (url) {
                   var attrs = { };
                   attrs.href = url;
-
-                  values.title.filter(isNotEmpty).each(function (title) { attrs.title = title; });
-                  values.target.filter(isNotEmpty).each(function (target) { attrs.target = target; });
+                  var text = values.text.filter(isNotEmpty).getOr(url);
                   values.title.filter(isNotEmpty).each(function (title) {
                     attrs.title = title.text;
                   });
                   values.target.filter(isNotEmpty).each(function (target) {
                     attrs.target = target.text;
                   });
-
-                  values.text.filter(isNotEmpty).fold(function () {
-                    editor.execCommand('mceInsertLink', false, attrs);
-                  }, function (text) {
+                  
+                  var activeLink = values.link.bind(Fun.identity);
+                  activeLink.fold(function () {
                     editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
+                  }, function (link) {
+                    Attr.setAll(link, attrs);
+                    TextContent.set(link, text);
                   });
                 });
 
