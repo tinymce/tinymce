@@ -1,6 +1,6 @@
 {
   "env": {
-    "browser": true,
+    "browser": false,
     "amd": true
   },
 
@@ -9,7 +9,24 @@
     "unescape": true,
     "Uint8Array": true,
     "asynctest": true,
-    "test": true
+    "test": true,
+    "document": true,
+    "window": true,
+    "setTimeout": true,
+    "clearTimeout": true,
+    "navigator": true,
+    "FormData": true,
+    "Blob": true,
+    "URL": true,
+    "clearInterval": true,
+    "setInterval": true,
+    "XMLHttpRequest": true,
+    "matchMedia": true,
+    "atob": true,
+    "FileReader": true,
+    "localStorage": true,
+    "console": true,
+    "Image": true
   },
 
   "rules": {
