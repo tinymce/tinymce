@@ -16,10 +16,12 @@ define(
     'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.util.Tools',
-    'tinymce.themes.modern.Theme'
+    'tinymce.themes.modern.Theme',
+    'tinymce.plugins.paste.Plugin'
   ],
-  function (window, EditorManager, Tools, ModernTheme) {
+  function (window, EditorManager, Tools, ModernTheme, PastePlugin) {
     ModernTheme();
+    PastePlugin();
 
     var paintClientRect = function (rect, color, id) {
       var editor = EditorManager.activeEditor,
@@ -81,6 +83,7 @@ define(
       add_unload_trigger: false,
       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify" +
       " | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
+      plugins: ['paste'],
       content_css: '../css/content_editable.css',
       height: 400
     });
@@ -92,6 +95,7 @@ define(
       add_unload_trigger: false,
       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify" +
       " | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
+      plugins: ['paste'],
       content_css: '../css/content_editable.css'
     });
 

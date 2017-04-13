@@ -47,19 +47,12 @@ asynctest(
       };
     };
 
-    var assertCaretInCaretBlockContainer = function (editor) {
-      var beforeRng = editor.selection.getRng();
-      LegacyUnit.equal(CaretContainer.isCaretContainerBlock(beforeRng.startContainer), true, 'Not in caret block container.');
-    };
-
     var ok = function (a, label) {
       LegacyUnit.equal(a, true, label);
     };
 
     var leftArrow = pressKey(VK.LEFT);
     var rightArrow = pressKey(VK.RIGHT);
-    var backspace = pressKey(VK.BACKSPACE);
-    var forwardDelete = pressKey(VK.DELETE);
     var upArrow = pressKey(VK.UP);
     var downArrow = pressKey(VK.DOWN);
 
@@ -133,174 +126,6 @@ asynctest(
 
       downArrow(editor);
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.$('p:last')[0].lastChild), true);
-    });
-
-    suite.test('backspace on selected cE=false block', function (editor) {
-      editor.setContent('<p contenteditable="false">1</p>');
-      editor.selection.select(editor.$('p')[0]);
-
-      backspace(editor);
-      LegacyUnit.equal(editor.getContent(), '');
-      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0]);
-    });
-
-    suite.test('backspace after cE=false block', function (editor) {
-      editor.setContent('<p contenteditable="false">1</p>');
-      editor.selection.select(editor.$('p')[0]);
-
-      rightArrow(editor);
-      backspace(editor);
-      LegacyUnit.equal(editor.getContent(), '');
-      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0]);
-    });
-
-    suite.test('delete on selected cE=false block', function (editor) {
-      editor.setContent('<p contenteditable="false">1</p>');
-      editor.selection.select(editor.$('p')[0]);
-
-      forwardDelete(editor);
-      LegacyUnit.equal(editor.getContent(), '');
-      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0]);
-    });
-
-    suite.test('delete inside nested cE=true block element', function (editor) {
-      editor.setContent('<div contenteditable="false">1<div contenteditable="true">2</div>3</div>');
-      LegacyUnit.setSelection(editor, 'div div', 1);
-
-      KeyUtils.type(editor, '\b');
-      LegacyUnit.equal(
-        HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<div contenteditable="false">1<div contenteditable="true"><br data-mce-bogus="1"></div>3</div>'
-      );
-      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('div div')[0]);
-    });
-
-    suite.test('backspace from block to after cE=false inline', function (editor) {
-      editor.setContent('<p>1<span contenteditable="false">2</span></p><p>3</p>');
-      LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0);
-
-      backspace(editor);
-      LegacyUnit.equal(editor.getContent(), '<p>1<span contenteditable="false">2</span>3</p>');
-      ok(Zwsp.isZwsp(editor.selection.getRng().startContainer.data));
-      LegacyUnit.equal(editor.selection.getRng().startContainer.previousSibling.nodeName, 'SPAN');
-    });
-
-    suite.test('delete from block to before cE=false inline', function (editor) {
-      editor.setContent('<p>1</p><p><span contenteditable="false">2</span>3</p>');
-      LegacyUnit.setSelection(editor, 'p:nth-child(1)', 1);
-
-      forwardDelete(editor);
-      LegacyUnit.equal(editor.getContent(), '<p>1<span contenteditable="false">2</span>3</p>');
-      ok(Zwsp.isZwsp(editor.selection.getRng().startContainer.data));
-      LegacyUnit.equal(editor.selection.getRng().startContainer.nextSibling.nodeName, 'SPAN');
-    });
-
-    suite.test('backspace from before cE=false block to text', function (editor) {
-      editor.setContent('<p>1</p><p contenteditable="false">2</p><p>3</p>');
-      editor.selection.select(editor.dom.select('p')[1]);
-      editor.selection.collapse(true);
-      assertCaretInCaretBlockContainer(editor);
-
-      backspace(editor);
-      var rng = editor.selection.getRng();
-
-      LegacyUnit.equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p><p>3</p>');
-      LegacyUnit.equalDom(rng.startContainer, editor.dom.select('p')[0].firstChild);
-      LegacyUnit.equal(rng.startOffset, 1);
-      LegacyUnit.equal(rng.collapsed, true);
-    });
-
-    suite.test('backspace from before first cE=false block', function (editor) {
-      editor.setContent('<p contenteditable="false">1</p><p>2</p>');
-      editor.selection.select(editor.dom.select('p')[0]);
-      editor.selection.collapse(true);
-      assertCaretInCaretBlockContainer(editor);
-
-      backspace(editor);
-
-      LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p><p>2</p>');
-      assertCaretInCaretBlockContainer(editor);
-    });
-
-    suite.test('backspace from before cE=false block to after cE=false block', function (editor) {
-      editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
-      editor.selection.select(editor.dom.select('p')[1]);
-      editor.selection.collapse(true);
-      assertCaretInCaretBlockContainer(editor);
-
-      backspace(editor);
-      var rng = editor.selection.getRng();
-
-      LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
-      assertCaretInCaretBlockContainer(editor);
-      LegacyUnit.equalDom(rng.startContainer.previousSibling, editor.dom.select('p')[0]);
-    });
-
-    suite.test('delete from after cE=false block to text', function (editor) {
-      editor.setContent('<p>1</p><p contenteditable="false">2</p><p>3</p>');
-      editor.selection.select(editor.dom.select('p')[1]);
-      editor.selection.collapse(false);
-      assertCaretInCaretBlockContainer(editor);
-
-      forwardDelete(editor);
-      var rng = editor.selection.getRng();
-
-      LegacyUnit.equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p><p>3</p>');
-      LegacyUnit.equalDom(rng.startContainer, editor.dom.select('p')[2].firstChild);
-      LegacyUnit.equal(rng.startOffset, 0);
-      LegacyUnit.equal(rng.collapsed, true);
-    });
-
-    suite.test('delete from after last cE=false block', function (editor) {
-      editor.setContent('<p>1</p><p contenteditable="false">2</p>');
-      editor.selection.select(editor.dom.select('p')[1]);
-      editor.selection.collapse(false);
-      assertCaretInCaretBlockContainer(editor);
-      forwardDelete(editor);
-      LegacyUnit.equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p>');
-      assertCaretInCaretBlockContainer(editor);
-    });
-
-    suite.test('delete from after cE=false block to before cE=false block', function (editor) {
-      editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
-      editor.selection.select(editor.dom.select('p')[0]);
-      rightArrow(editor);
-      assertCaretInCaretBlockContainer(editor);
-
-      forwardDelete(editor);
-      var rng = editor.selection.getRng();
-
-      LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
-      assertCaretInCaretBlockContainer(editor);
-      LegacyUnit.equalDom(rng.startContainer.nextSibling, editor.dom.select('p')[2]);
-    });
-
-    suite.test('delete from block to before cE=false inline', function (editor) {
-      editor.setContent('<p>1</p><p><span contenteditable="false">2</span>3</p>');
-      LegacyUnit.setSelection(editor, 'p:nth-child(1)', 1);
-
-      forwardDelete(editor);
-      LegacyUnit.equal(editor.getContent(), '<p>1<span contenteditable="false">2</span>3</p>');
-      ok(Zwsp.isZwsp(editor.selection.getRng().startContainer.data));
-      LegacyUnit.equal(editor.selection.getRng().startContainer.nextSibling.nodeName, 'SPAN');
-    });
-
-    suite.test('backspace from empty block to after cE=false', function (editor) {
-      editor.getBody().innerHTML = '<p contenteditable="false">1</p><p><br></p>';
-      LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0);
-
-      backspace(editor);
-      LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
-      assertCaretInCaretBlockContainer(editor);
-    });
-
-    suite.test('delete from empty block to before cE=false', function (editor) {
-      editor.getBody().innerHTML = '<p><br></p><p contenteditable="false">2</p>';
-      LegacyUnit.setSelection(editor, 'p:nth-child(1)', 0);
-
-      forwardDelete(editor);
-      LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">2</p>');
-      assertCaretInCaretBlockContainer(editor);
     });
 
     suite.test('exit pre block (up)', exitPreTest(upArrow, 0, '<p>\u00a0</p><pre>abc</pre>'));

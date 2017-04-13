@@ -30,17 +30,11 @@ asynctest(
       });
     };
 
-    var sKeydown = function (doc, keyvalue) {
-      return Step.sync(function () {
-        Keyboard.keydown(keyvalue, {}, doc);
-      });
-    };
-
     var sAssertDeletion = function (editor, apis, content, selectionPath, expected) {
       return GeneralSteps.sequence([
         sRawSetContent(editor, content),
         apis.sSetSelection.apply(null, selectionPath),
-        sKeydown(TinyDom.fromDom(editor.getBody()), Keys.backspace()),
+        apis.sExecCommand('Delete'),
         apis.sAssertContent(expected)
       ]);
     };

@@ -22,7 +22,7 @@ asynctest(
         tinyApis.sSetCursor(setupPath, setupOffset),
         Step.sync(function () {
           var elm = Element.fromDom(editor.dom.select(selector)[0]);
-          DeleteElement.deleteElement(editor, elm);
+          DeleteElement.deleteElement(editor, false, elm);
         }),
         tinyApis.sAssertContent(expectedHtml),
         tinyApis.sAssertSelection(expectedPath, expectedOffet, expectedPath, expectedOffet)
@@ -35,7 +35,7 @@ asynctest(
       Pipeline.async({}, [
         tinyApis.sFocus,
         sDeleteElement(tinyApis, editor, 'img', '<p><img src="#"></p>', [0], 1, '', [0], 0),
-        sDeleteElement(tinyApis, editor, 'img:nth-child(1)', '<p><img src="#"><img src="#"></p>', [0], 2, '<p><img src="#" /></p>', [0], 1),
+        sDeleteElement(tinyApis, editor, 'img:nth-child(1)', '<p><img src="#"><img src="#"></p>', [0], 2, '<p><img src="#" /></p>', [0], 0),
         sDeleteElement(tinyApis, editor, 'img:nth-child(2)', '<p><img src="#"><img src="#"></p>', [0], 2, '<p><img src="#" /></p>', [0], 1)
       ], onSuccess, onFailure);
     }, {

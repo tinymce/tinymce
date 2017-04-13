@@ -18,9 +18,7 @@ define(
     'tinymce.core.util.VK'
   ],
   function (Arr, Cell, BoundarySelection, MatchKeys, VK) {
-    var setup = function (editor) {
-      var caret = Cell(null);
-
+    var setup = function (editor, caret) {
       editor.on('keydown', function (evt) {
         var matches = MatchKeys.match([
           { keyCode: VK.RIGHT, action: BoundarySelection.move(editor, caret, true) },
@@ -33,8 +31,6 @@ define(
           evt.preventDefault();
         });
       });
-
-      BoundarySelection.setupSelectedState(editor, caret);
     };
 
     return {
