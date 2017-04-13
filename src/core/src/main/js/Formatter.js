@@ -438,6 +438,11 @@ define(
               dom.setAttrib(elm, name, replaceVars(value, vars));
             });
 
+            // Added feature to clear classnames when we want to change to
+            // an exact style definition.
+            if (fmt.exact) {
+              elm.removeAttribute('class');
+            }
             each(fmt.classes, function (value) {
               value = replaceVars(value, vars);
 
