@@ -985,6 +985,36 @@ test('Apply format on top of existing selector element', function() {
 	equal(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
 });
 
+
+test('Apply format with no classes using exact should remove classes', function() {
+	editor.formatter.register('format', {
+		selector: 'p',
+		exact: true
+	});
+	editor.getBody().innerHTML = '<p class=\"c d\" title=\"test\">1234</p>';
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equal(getContent(), '<p title="test">1234</p>', 'Apply format with no classes using exact should remove classes');
+});
+
+test('Apply format with new classes using exact should replace classes', function() {
+	editor.formatter.register('format', {
+		selector: 'p',
+		classes: 'a b',
+		exact: true
+	});
+	editor.getBody().innerHTML = '<p class=\"c d\" title=\"test\">1234</p>';
+	var rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equal(getContent(), '<p class="a b" title="test">1234</p>', 'Apply format with new classes using exact should replace classes');
+});
+
 test('Format on single li that matches a selector', function() {
 	editor.formatter.register('format', {
 		inline: 'span',
@@ -1794,4 +1824,3 @@ test("GH-3519: Font family selection does not work after changing font size", fu
 	editor.formatter.apply('fontname', {value: "verdana"});
 	equal(getContent(), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
 });
-
