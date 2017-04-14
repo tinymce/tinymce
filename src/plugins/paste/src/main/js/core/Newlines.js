@@ -67,12 +67,20 @@ define(
     };
 
 
-    var toBlockElements = function (html, rootTag, rootAttrs) {
-      var pieces = html.split(/\r?\n/);
+    var toBlockElements = function (text, rootTag, rootAttrs) {
+      var pieces = text.split(/\r?\n/);
       var i = 0, len = pieces.length;
       var result = '';
       var stack = [];
+      var blocks = [];
+      var tagOpen = openContainer(rootTag, rootAttrs);
+      var tagClose = '</' + rootTag + '>';
       var isLast, newlineFollows, isSingleNewline;
+
+      // if single-line text then nothing to do
+      if (pieces.length === 1) {
+        return text;
+      }
 
       for (; i < len; i++) {
         isLast = i === len - 1;
@@ -82,7 +90,7 @@ define(
         stack.push(pieces[i] ? pieces[i] : '&nbsp;');
 
         if (isLast || newlineFollows || isSingleNewline) {
-          result += openContainer(rootTag, rootAttrs) + stack.join('<br>') + '</' + rootTag + '>';
+          blocks.push(stack.join('<br>'));
           stack = [];
         }
 
@@ -91,7 +99,9 @@ define(
         }
       }
 
-      return result;
+      result = blocks.join(tagClose + tagOpen);
+
+      return blocks.length === 1 ? result : tagOpen + result + tagClose;
     };
 
 
