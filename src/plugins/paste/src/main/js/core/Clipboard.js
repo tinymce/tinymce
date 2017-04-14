@@ -470,7 +470,7 @@ define(
         });
 
         function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-          var content;
+          var content, isPlainTextHtml;
 
           // Grab HTML from Clipboard API or paste bin as a fallback
           if (hasContentType(clipboardContent, 'text/html')) {
@@ -495,16 +495,21 @@ define(
 
           removePasteBin();
 
-          // If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
-          if (!content.length) {
+          isPlainTextHtml = Newlines.isPlainText(content);
+
+          // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
+          // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
+          if (!content.length || isPlainTextHtml) {
             plainTextMode = true;
           }
+
+
 
           // Grab plain text from Clipboard API or convert existing HTML to plain text
           if (plainTextMode) {
             // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
             // we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
-            if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+            if (hasContentType(clipboardContent, 'text/plain') && isPlainTextHtml) {
               content = clipboardContent['text/plain'];
             } else {
               content = Utils.innerText(content);
