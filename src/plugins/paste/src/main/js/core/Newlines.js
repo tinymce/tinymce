@@ -16,25 +16,10 @@
  */
 define(
   'tinymce.plugins.paste.core.Newlines',
-  [],
-  function () {
-
-    var encodeEntities = function (text) {
-      // from: tinymce.core.html.Entities
-      var baseEntities = {
-        '\"': '&quot;', // Needs to be escaped since the YUI compressor would otherwise break the code
-        "'": '&#39;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '&': '&amp;',
-        '\u0060': '&#96;'
-      };
-
-      return text.replace(/[<>&\"\']/g, function ($0) {
-        return baseEntities[$0] || $0;
-      });
-    };
-
+  [
+    'tinymce.core.html.Entities'
+  ],
+  function (Entities) {
 
     var isPlainText = function (text) {
       // so basically any tag that is not one of the "p, div, br", or is one of them, but is followed
@@ -55,7 +40,7 @@ define(
       if (typeof rootAttrs === 'object') {
         for (key in rootAttrs) {
           if (rootAttrs.hasOwnProperty(key)) {
-            attrs.push(key + '="' + encodeEntities(rootAttrs[key]) + '"');
+            attrs.push(key + '="' + Entities.encodeAllRaw(rootAttrs[key]) + '"');
           }
         }
 
@@ -70,7 +55,6 @@ define(
     var toBlockElements = function (text, rootTag, rootAttrs) {
       var pieces = text.split(/\r?\n/);
       var i = 0, len = pieces.length;
-      var result = '';
       var stack = [];
       var blocks = [];
       var tagOpen = openContainer(rootTag, rootAttrs);
@@ -99,9 +83,7 @@ define(
         }
       }
 
-      result = blocks.join(tagClose + tagOpen);
-
-      return blocks.length === 1 ? result : tagOpen + result + tagClose;
+      return blocks.length === 1 ? blocks[0] : tagOpen + blocks.join(tagClose + tagOpen) + tagClose;
     };
 
 
