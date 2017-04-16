@@ -403,6 +403,21 @@ define(
           return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
         };
 
+        var isTheHeirOf = function (heir, ancestor) {
+          var node = ancestor.firstChild;
+          do {
+            if (node === heir) {
+              return true;
+            }
+          } while ((node = node.firstChild));
+          return false;
+        };
+
+        var caretIsAtTheRightEdgeOf = function (node) {
+          var rng = editor.selection.getRng();
+          return rng.startOffset && !rng.startContainer.previousSibling && isTheHeirOf(rng.startContainer, node);
+        };
+
         var restoreCaretPlaceholder = function (container, insertCaret) {
           var lastChild = container.lastChild;
           var rng = editor.selection.getRng();
@@ -458,7 +473,7 @@ define(
             // 3. current behaviour is logical, so it has sense to leave it like that, until a better
             // solution
 
-            if (isEmptyNode(container)) {
+            if (isEmptyNode(container) || e.keyCode === VK.BACKSPACE && caretIsAtTheRightEdgeOf(container)) { // see TINY-979
               e.preventDefault();
             }
           }
