@@ -21,9 +21,12 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.Env',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.table.util.Utils'
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.plugins.table.util.Utils',
+    "tinymce.core.text.Zwsp"
   ],
-  function (VK, Delay, Env, Tools, Utils) {
+  function (VK, Delay, Env, Tools, NodeType, CaretContainer, Utils, Zwsp) {
     var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
     return function (editor) {
@@ -389,62 +392,44 @@ define(
        * prevent it from disappearing.
        */
       function handleDeleteInCaption() {
+
+        var isEmptyNode = function (node) {
+          return editor.dom.isEmpty(node) || node.firstChild === node.lastChild && CaretContainer.isCaretContainer(node.firstChild);
+        };
+
+        var isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption');
+
         var isTableCaptionNode = function (node) {
           return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
         };
 
-        var restoreCaretPlaceholder = function (node, insertCaret) {
+        var restoreCaretPlaceholder = function (container, insertCaret) {
+          var lastChild = container.lastChild;
           var rng = editor.selection.getRng();
-          var caretNode = node.ownerDocument.createTextNode('\u00a0');
+          var caretContainer = rng.startContainer;
+          var caretOffset = rng.startOffset;
 
-          // we could always append it, but caretNode somehow gets appended before caret,
-          // rather then after it, effectively preventing backspace deletion
-          if (rng.startOffset) {
-            node.insertBefore(caretNode, node.firstChild);
-          } else {
-            node.appendChild(caretNode);
+          // if container contains only debris, we replace its contents with inline caret placeholder, to avoid
+          // vertical stretching of the caption
+          if (isEmptyNode(container)) {
+            container.innerHTML = Zwsp.ZWSP;
+            // in IE caret springs off from the caption (to the first td), we need to bring it back
+            caretContainer = container.lastChild;
+            caretOffset = 0;
+          } else if (!CaretContainer.isCaretContainer(lastChild)) {
+            if (isBlockLike(lastChild)) {
+              CaretContainer.insertBlock('p', lastChild);
+            } else {
+              CaretContainer.insertInline(lastChild);
+            }
           }
 
-          if (insertCaret) {
-            // put the caret into the placeholder
-            editor.selection.select(caretNode, true);
-            editor.selection.collapse(true);
-          }
+          editor.selection.setCursorLocation(caretContainer, caretOffset);
         };
 
-        var deleteBtnPressed = function (e) {
-          return (e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented();
-        };
-
-        var getSingleChildNode = function (node) {
-          return node.firstChild === node.lastChild && node.firstChild;
-        };
-
-        var isTextNode = function (node) {
-          return node && node.nodeType === 3;
-        };
-
-        var getSingleChr = function (node) {
-          var childNode = getSingleChildNode(node);
-          return isTextNode(childNode) && childNode.data.length === 1 ? childNode.data : null;
-        };
-
-        var hasNoCaretPlaceholder = function (node) {
-          var childNode = getSingleChildNode(node);
-          var chr = getSingleChr(node);
-          return childNode && !isTextNode(childNode) || chr && !isNBSP(chr);
-        };
-
-        var isEmptyNode = function (node) {
-          return editor.dom.isEmpty(node) || isNBSP(getSingleChr(node));
-        };
-
-        var isNBSP = function (chr) {
-          return chr === '\u00a0';
-        };
 
         editor.on('keydown', function (e) {
-          if (!deleteBtnPressed(e)) {
+          if (e.keyCode !== VK.DELETE && e.keyCode !== VK.BACKSPACE || e.isDefaultPrevented()) {
             return;
           }
 
@@ -454,37 +439,28 @@ define(
           }
 
           // in IE caption collapses if caret placeholder is deleted (and it is very much possible)
-          if (Env.ie) {
-            if (!editor.selection.isCollapsed()) {
-              // if the whole contents are selected, caret placeholder will be deleted too
-              // and we take over delete operation here to restore it if this happens
-              editor.undoManager.transact(function () {
-                editor.execCommand('Delete');
-
-                if (isEmptyNode(container)) {
-                  // caret springs off from the caption (to the first td), we need to bring it back as well
-                  restoreCaretPlaceholder(container, true);
-                }
-              });
-
-              e.preventDefault();
-            } else if (hasNoCaretPlaceholder(container)) {
-              // if caret placeholder got accidentally deleted and caption will collapse
-              // after this operation, we need to put placeholder back
+          if (Env.ie && !editor.selection.isCollapsed()) {
+            // if the whole contents are selected, caret placeholder will be deleted too and we take
+            // over delete operation here to it manually and restore the placeholder if required
+            editor.undoManager.transact(function () {
+              editor.execCommand('Delete');
               restoreCaretPlaceholder(container);
-            }
-          }
-
-          // TODO:
-          // 1. in Chrome it is easily possible to select beyond the boundaries of the caption,
-          // currently this results in removal of the contents with the whole caption as well;
-          // 2. we could take over delete operation to address this, but then we will need to adjust
-          // the selection, otherwise delete operation will remove first row of the table too;
-          // 3. current behaviour is logical, so it has sense to leave it like that, until a better
-          // solution
-
-          if (isEmptyNode(container)) {
+            });
             e.preventDefault();
+          } else {
+            restoreCaretPlaceholder(container);
+
+            // TODO:
+            // 1. in Chrome it is easily possible to select beyond the boundaries of the caption,
+            // currently this results in removal of the contents with the whole caption as well;
+            // 2. we could take over delete operation to address this, but then we will need to adjust
+            // the selection, otherwise delete operation will remove first row of the table too;
+            // 3. current behaviour is logical, so it has sense to leave it like that, until a better
+            // solution
+
+            if (isEmptyNode(container)) {
+              e.preventDefault();
+            }
           }
         });
       }
