@@ -67,7 +67,7 @@ asynctest(
         sAssertContent(tableWith('<caption></caption>')),
 
         // test for cursor springing off in IE
-        api.sSetCursor([0, 0, 0], 0),
+        api.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0),
 
         // test deletion at the left edge (chrome)
         api.sSetContent(tableWith('<caption>one</caption>')),
