@@ -415,7 +415,7 @@ define(
 
         var caretIsAtTheLeftEdgeOf = function (node) {
           var rng = editor.selection.getRng();
-          return rng.startOffset && !rng.startContainer.previousSibling && isTheHeirOf(rng.startContainer, node);
+          return !rng.startOffset && !rng.startContainer.previousSibling && isTheHeirOf(rng.startContainer, node);
         };
 
         var restoreCaretPlaceholder = function (container, insertCaret) {
@@ -426,7 +426,7 @@ define(
           var caretContainer = rng.startContainer;
           var caretOffset = rng.startOffset;
 
-          // if container contains only debris, we replace its contents with inline caret placeholder, to avoid
+          // if container contains only debris, we replace the contents with inline caret placeholder, to avoid
           // vertical stretching of the caption
           if (isEmptyNode(container)) {
             container.innerHTML = Zwsp.ZWSP;
