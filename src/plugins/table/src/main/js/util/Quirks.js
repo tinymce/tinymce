@@ -413,7 +413,7 @@ define(
           return false;
         };
 
-        var caretIsAtTheRightEdgeOf = function (node) {
+        var caretIsAtTheLeftEdgeOf = function (node) {
           var rng = editor.selection.getRng();
           return rng.startOffset && !rng.startContainer.previousSibling && isTheHeirOf(rng.startContainer, node);
         };
@@ -473,7 +473,7 @@ define(
             // 3. current behaviour is logical, so it has sense to leave it like that, until a better
             // solution
 
-            if (isEmptyNode(container) || e.keyCode === VK.BACKSPACE && caretIsAtTheRightEdgeOf(container)) { // see TINY-979
+            if (isEmptyNode(container) || e.keyCode === VK.BACKSPACE && caretIsAtTheLeftEdgeOf(container)) { // see TINY-979
               e.preventDefault();
             }
           }
