@@ -18,7 +18,7 @@ asynctest(
       var node = editor.$(selector)[0];
       var rng = editor.selection.getRng();
 
-      LegacyUnit.equal(rng.startContainer, node.firstChild);
+      LegacyUnit.equalDom(rng.startContainer, node.firstChild);
       LegacyUnit.equal(rng.startOffset, offset);
       LegacyUnit.equal(rng.collapsed, true);
     };

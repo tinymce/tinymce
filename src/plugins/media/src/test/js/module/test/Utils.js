@@ -13,7 +13,10 @@ define(
   ],
   function (Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter, TinyDom, DOMUtils) {
     var sOpenDialog = function (ui) {
-      return ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit media"] > button');
+      return GeneralSteps.sequence([
+        ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit media"] > button'),
+        ui.sWaitForPopup('wait for popup', 'div[role="dialog"]')
+      ]);
     };
 
     var cFindInDialog = function (mapper) {
@@ -201,6 +204,14 @@ define(
       ]);
     };
 
+    var sPasteTextareaValue = function (ui, value) {
+      return Chain.asStep({}, [
+        cFindTextarea(ui, 'Paste your embed code below:'),
+        UiControls.cSetValue(value),
+        cFakeEvent('paste')
+      ]);
+    };
+
     var sAssertEmbedContent = function (ui, content) {
       return Waiter.sTryUntil('Textarea should have a proper value',
         Chain.asStep({}, [
@@ -271,7 +282,8 @@ define(
       sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained,
       sAssertEmbedContent: sAssertEmbedContent,
       sAssertSourceValue: sAssertSourceValue,
-      sChangeWidthValue: sChangeWidthValue
+      sChangeWidthValue: sChangeWidthValue,
+      sPasteTextareaValue: sPasteTextareaValue
     };
   }
 );

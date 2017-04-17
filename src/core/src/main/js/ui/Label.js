@@ -106,6 +106,7 @@ define(
        */
       renderHtml: function () {
         var self = this, targetCtrl, forName, forId = self.settings.forId;
+        var text = self.settings.html ? self.settings.html : self.encode(self.state.get('text'));
 
         if (!forId && (forName = self.settings.forName)) {
           targetCtrl = self.getRoot().find('#' + forName)[0];
@@ -118,14 +119,14 @@ define(
         if (forId) {
           return (
             '<label id="' + self._id + '" class="' + self.classes + '"' + (forId ? ' for="' + forId + '"' : '') + '>' +
-            self.encode(self.state.get('text')) +
+            text +
             '</label>'
           );
         }
 
         return (
           '<span id="' + self._id + '" class="' + self.classes + '">' +
-          self.encode(self.state.get('text')) +
+          text +
           '</span>'
         );
       },

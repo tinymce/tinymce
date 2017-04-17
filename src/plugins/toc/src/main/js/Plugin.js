@@ -44,7 +44,7 @@ define(
 
 
       function isValidTag(tagName) {
-        return editor.schema.isValidChild('div', tagName);
+        return tagName ? editor.schema.isValidChild('div', tagName) : false;
       }
 
 

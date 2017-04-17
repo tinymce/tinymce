@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.plugins.autolink.CharMapPluginTest',
+  'browser.tinymce.plugins.charmap.CharMapPluginTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',

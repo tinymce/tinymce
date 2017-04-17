@@ -79,6 +79,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         sSetupLinkableContent(tinyApis),
         sSelectAutoCompleteLink(tinyApis, 'a'),
         tinyApis.sAssertContent(

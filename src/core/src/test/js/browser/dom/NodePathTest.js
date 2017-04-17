@@ -31,12 +31,12 @@ asynctest(
     suite.test("resolve", function () {
       setupHtml('<p>a<b>12<input></b></p>');
 
-      LegacyUnit.deepEqual(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
-      LegacyUnit.deepEqual(
+      LegacyUnit.equalDom(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
+      LegacyUnit.equalDom(
         NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.firstChild)),
         getRoot().firstChild.firstChild
       );
-      LegacyUnit.deepEqual(
+      LegacyUnit.equalDom(
         NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild)),
         getRoot().firstChild.lastChild.lastChild
       );

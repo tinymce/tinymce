@@ -7,14 +7,16 @@ asynctest(
     'global!document',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.EditorManager',
-    'tinymce.plugins.lists.Plugin'
+    'tinymce.plugins.lists.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, document, DomQuery, EditorManager, Plugin) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, DomQuery, EditorManager, Plugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
 
     Plugin();
+    ModernTheme();
 
     suite.test('Backspace at beginning of LI on body UL', function (editor) {
       editor.focus();

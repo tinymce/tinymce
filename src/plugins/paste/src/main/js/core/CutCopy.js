@@ -11,15 +11,22 @@
 define(
   'tinymce.plugins.paste.core.CutCopy',
   [
+    'tinymce.core.Env',
     'tinymce.plugins.paste.core.InternalHtml'
   ],
-  function (InternalHtml) {
+  function (Env, InternalHtml) {
     var noop = function () {
     };
 
+    var hasWorkingClipboardApi = function (clipboardData) {
+      // iOS supports the clipboardData API but it doesn't do anything for cut operations
+      return Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function';
+    };
+
     var setHtml5Clipboard = function (clipboardData, html, text) {
-      if (clipboardData !== undefined && typeof clipboardData.setData === 'function') {
+      if (hasWorkingClipboardApi(clipboardData)) {
         try {
+          clipboardData.clearData();
           clipboardData.setData('text/html', html);
           clipboardData.setData('text/plain', text);
           clipboardData.setData(InternalHtml.internalHtmlMime(), html);
@@ -44,22 +51,26 @@ define(
     var fallback = function (editor) {
       return function (html, done) {
         var markedHtml = InternalHtml.mark(html);
-        var div = editor.dom.create('div', {}, markedHtml);
-        editor.dom.setStyles(div, {
+        var outer = editor.dom.create('div', { contenteditable: "false" });
+        var inner = editor.dom.create('div', { contenteditable: "true" }, markedHtml);
+        editor.dom.setStyles(outer, {
           position: 'fixed',
           left: '-3000px',
           width: '1000px',
           overflow: 'hidden'
         });
-        editor.dom.add(editor.getBody(), div);
+        outer.appendChild(inner);
+        editor.dom.add(editor.getBody(), outer);
 
         var range = editor.selection.getRng();
+        inner.focus();
+
         var offscreenRange = editor.dom.createRng();
-        offscreenRange.selectNodeContents(div);
+        offscreenRange.selectNodeContents(inner);
         editor.selection.setRng(offscreenRange);
 
         setTimeout(function () {
-          div.parentNode.removeChild(div);
+          outer.parentNode.removeChild(outer);
           editor.selection.setRng(range);
           done();
         }, 0);

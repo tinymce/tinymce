@@ -10,7 +10,10 @@ define(
         style: 'position: absolute; right: 10px; top: 10px;'
       });
 
-      var attach = function () {
+      var attach = function (preventDuplicates) {
+        if (preventDuplicates && domElm.parentNode === document.body) {
+          detach();
+        }
         document.body.appendChild(domElm);
       };
 

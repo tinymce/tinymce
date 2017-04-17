@@ -386,6 +386,18 @@ define(
       return new CaretPosition(node.parentNode, nodeIndex(node));
     };
 
+    CaretPosition.isAtStart = function (pos) {
+      return pos ? pos.isAtStart() : false;
+    };
+
+    CaretPosition.isAtEnd = function (pos) {
+      return pos ? pos.isAtEnd() : false;
+    };
+
+    CaretPosition.isTextPosition = function (pos) {
+      return pos ? NodeType.isText(pos.container()) : false;
+    };
+
     return CaretPosition;
   }
 );

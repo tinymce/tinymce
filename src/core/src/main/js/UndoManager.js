@@ -24,18 +24,28 @@ define(
     return function (editor) {
       var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
+      var isUnlocked = function () {
+        return locks === 0;
+      };
+
+      var setTyping = function (typing) {
+        if (isUnlocked()) {
+          self.typing = typing;
+        }
+      };
+
       function setDirty(state) {
         editor.setDirty(state);
       }
 
       function addNonTypingUndoLevel(e) {
-        self.typing = false;
+        setTyping(false);
         self.add({}, e);
       }
 
       function endTyping() {
         if (self.typing) {
-          self.typing = false;
+          setTyping(false);
           self.add();
         }
       }
@@ -129,7 +139,7 @@ define(
         var modKey = (e.ctrlKey && !e.altKey) || e.metaKey;
         if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !self.typing && !modKey) {
           self.beforeChange();
-          self.typing = true;
+          setTyping(true);
           self.add({}, e);
           isFirstTypedCharacter = true;
         }
@@ -171,7 +181,7 @@ define(
          * @method beforeChange
          */
         beforeChange: function () {
-          if (!locks) {
+          if (isUnlocked()) {
             beforeBookmark = editor.selection.getBookmark(2, true);
           }
         },
@@ -191,7 +201,7 @@ define(
           level = level || {};
           level = Tools.extend(level, currentLevel);
 
-          if (locks || editor.removed) {
+          if (isUnlocked() === false || editor.removed) {
             return null;
           }
 
@@ -257,6 +267,7 @@ define(
           if (self.typing) {
             self.add();
             self.typing = false;
+            setTyping(false);
           }
 
           if (index > 0) {
@@ -325,7 +336,7 @@ define(
         /**
          * Executes the specified mutator function as an undo transaction. The selection
          * before the modification will be stored to the undo stack and if the DOM changes
-         * it will add a new undo level. Any methods within the translation that adds undo levels will
+         * it will add a new undo level. Any logic within the translation that adds undo levels will
          * be ignored. So a translation can include calls to execCommand or editor.insertContent.
          *
          * @method transact
@@ -335,15 +346,26 @@ define(
         transact: function (callback) {
           endTyping();
           self.beforeChange();
+          self.ignore(callback);
+          return self.add();
+        },
 
+        /**
+         * Executes the specified mutator function as an undo transaction. But without adding an undo level.
+         * Any logic within the translation that adds undo levels will be ignored. So a translation can
+         * include calls to execCommand or editor.insertContent.
+         *
+         * @method ignore
+         * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+         * @return {Object} Undo level that got added or null it a level wasn't needed.
+         */
+        ignore: function (callback) {
           try {
             locks++;
             callback();
           } finally {
             locks--;
           }
-
-          return self.add();
         },
 
         /**

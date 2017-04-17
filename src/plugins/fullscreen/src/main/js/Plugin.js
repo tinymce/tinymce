@@ -60,7 +60,7 @@ define(
       }
 
       function setScrollPos(pos) {
-        scrollTo(pos.x, pos.y);
+        window.scrollTo(pos.x, pos.y);
       }
 
       function toggleFullscreen() {

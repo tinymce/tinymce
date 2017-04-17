@@ -18,7 +18,7 @@ asynctest(
       LegacyUnit.equal(args.isDefaultPrevented(), false);
       LegacyUnit.equal(args.isPropagationStopped(), false);
       LegacyUnit.equal(args.isImmediatePropagationStopped(), false);
-      LegacyUnit.strictEqual(args.target, dispatcher);
+      LegacyUnit.equal(args.target, dispatcher);
 
       args = dispatcher.fire('click');
       LegacyUnit.equal(args.isDefaultPrevented(), false);
@@ -57,10 +57,10 @@ asynctest(
     suite.test("on", function () {
       var dispatcher = new EventDispatcher(), data = '';
 
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'a';
       }), dispatcher);
-      LegacyUnit.strictEqual(dispatcher.on('click keydown', function () {
+      LegacyUnit.equal(dispatcher.on('click keydown', function () {
         data += 'b';
       }), dispatcher);
 
@@ -74,10 +74,10 @@ asynctest(
     suite.test("on (prepend)", function () {
       var dispatcher = new EventDispatcher(), data = '';
 
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'a';
       }), dispatcher);
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'b';
       }, true), dispatcher);
 
@@ -88,13 +88,13 @@ asynctest(
     suite.test("once", function () {
       var dispatcher = new EventDispatcher(), data = '';
 
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'a';
       }), dispatcher);
-      LegacyUnit.strictEqual(dispatcher.once('click', function () {
+      LegacyUnit.equal(dispatcher.once('click', function () {
         data += 'b';
       }), dispatcher);
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'c';
       }), dispatcher);
 
@@ -108,13 +108,13 @@ asynctest(
     suite.test("once (prepend)", function () {
       var dispatcher = new EventDispatcher(), data = '';
 
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'a';
       }), dispatcher);
-      LegacyUnit.strictEqual(dispatcher.once('click', function () {
+      LegacyUnit.equal(dispatcher.once('click', function () {
         data += 'b';
       }, true), dispatcher);
-      LegacyUnit.strictEqual(dispatcher.on('click', function () {
+      LegacyUnit.equal(dispatcher.on('click', function () {
         data += 'c';
       }), dispatcher);
 
@@ -241,7 +241,7 @@ asynctest(
         // eslint-disable-next-line consistent-this
         lastScope = this;
       }).fire('click');
-      LegacyUnit.strictEqual(dispatcher, lastScope);
+      LegacyUnit.equal(dispatcher, lastScope);
 
       var scope = { test: 1 };
       dispatcher = new EventDispatcher({ scope: scope });
@@ -250,8 +250,8 @@ asynctest(
         lastScope = this;
         lastEvent = e;
       }).fire('click');
-      LegacyUnit.strictEqual(scope, lastScope);
-      LegacyUnit.strictEqual(lastEvent.target, lastScope);
+      LegacyUnit.equal(scope, lastScope);
+      LegacyUnit.equal(lastEvent.target, lastScope);
     });
 
     suite.test("beforeFire setting", function () {
@@ -264,7 +264,7 @@ asynctest(
       });
 
       args = dispatcher.fire('click');
-      LegacyUnit.strictEqual(lastArgs, args);
+      LegacyUnit.equal(lastArgs === args, true);
     });
 
     suite.test("beforeFire setting (stopImmediatePropagation)", function () {
@@ -283,8 +283,8 @@ asynctest(
 
       dispatcher.on('click', listenerA);
       args = dispatcher.fire('click');
-      LegacyUnit.strictEqual(lastArgs, args);
-      LegacyUnit.strictEqual(data, '');
+      LegacyUnit.equal(lastArgs === args, true);
+      LegacyUnit.equal(data, '');
     });
 
     suite.test("toggleEvent setting", function () {
@@ -303,21 +303,21 @@ asynctest(
       };
 
       dispatcher.on('click', listenerA);
-      LegacyUnit.strictEqual(lastName, 'click');
-      LegacyUnit.strictEqual(lastState, true);
+      LegacyUnit.equal(lastName, 'click');
+      LegacyUnit.equal(lastState, true);
 
       lastName = lastState = null;
       dispatcher.on('click', listenerB);
-      LegacyUnit.strictEqual(lastName, null);
-      LegacyUnit.strictEqual(lastState, null);
+      LegacyUnit.equal(lastName, null);
+      LegacyUnit.equal(lastState, null);
 
       dispatcher.off('click', listenerA);
-      LegacyUnit.strictEqual(lastName, null);
-      LegacyUnit.strictEqual(lastState, null);
+      LegacyUnit.equal(lastName, null);
+      LegacyUnit.equal(lastState, null);
 
       dispatcher.off('click', listenerB);
-      LegacyUnit.strictEqual(lastName, 'click');
-      LegacyUnit.strictEqual(lastState, false);
+      LegacyUnit.equal(lastName, 'click');
+      LegacyUnit.equal(lastState, false);
     });
 
     Pipeline.async({}, suite.toSteps({}), function () {

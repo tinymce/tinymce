@@ -621,6 +621,10 @@ define(
           if (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE)) {
             var rng = editor.selection.getRng(), container = rng.startContainer, offset = rng.startOffset;
 
+            if (editor.settings.forced_root_block === false) {
+              return;
+            }
+
             // Shift+Delete is cut
             if (isForward && e.shiftKey) {
               return;
@@ -652,6 +656,10 @@ define(
         editor.on('keypress', function (e) {
           if (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode > 31 && !VK.metaKeyPressed(e)) {
             var rng, currentFormatNodes, fragmentNode, blockParent, caretNode, charText;
+
+            if (editor.settings.forced_root_block === false) {
+              return;
+            }
 
             rng = editor.selection.getRng();
             charText = String.fromCharCode(e.charCode);
@@ -748,22 +756,6 @@ define(
                 insertClipboardContents(internalContent.html, true);
               });
             }
-          }
-        });
-
-        editor.on('cut', function (e) {
-          if (!isDefaultPrevented(e) && e.clipboardData && !editor.selection.isCollapsed()) {
-            e.preventDefault();
-            e.clipboardData.clearData();
-            e.clipboardData.setData('text/html', editor.selection.getContent());
-            e.clipboardData.setData('text/plain', editor.selection.getContent({ format: 'text' }));
-
-            // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
-            // Nested delete/forwardDelete not allowed on execCommand("cut")
-            // This is ugly but not sure how to work around it otherwise
-            Delay.setEditorTimeout(editor, function () {
-              transactCustomDelete(true);
-            });
           }
         });
       }

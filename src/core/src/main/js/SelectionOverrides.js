@@ -28,6 +28,7 @@ define(
     "tinymce.core.caret.CaretWalker",
     "tinymce.core.caret.CaretPosition",
     "tinymce.core.caret.CaretContainer",
+    "tinymce.core.caret.CaretContainerRemove",
     "tinymce.core.caret.CaretUtils",
     "tinymce.core.caret.FakeCaret",
     "tinymce.core.caret.LineWalker",
@@ -42,9 +43,9 @@ define(
     "tinymce.core.DragDropOverrides"
   ],
   function (
-    Env, CaretWalker, CaretPosition, CaretContainer, CaretUtils, FakeCaret, LineWalker,
+    Env, CaretWalker, CaretPosition, CaretContainer, CaretContainerRemove, CaretUtils, FakeCaret, LineWalker,
     LineUtils, NodeType, RangeUtils, ClientRect, VK, Fun, Arr, Delay, DragDropOverrides
-  ) {
+) {
     var curry = Fun.curry,
       isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -398,8 +399,8 @@ define(
           nextElement = nextCaretPosition.getNode();
         }
 
-        CaretContainer.remove(node.previousSibling);
-        CaretContainer.remove(node.nextSibling);
+        CaretContainerRemove.remove(node.previousSibling);
+        CaretContainerRemove.remove(node.nextSibling);
         editor.dom.remove(node);
 
         if (editor.dom.isEmpty(editor.getBody())) {
@@ -491,6 +492,8 @@ define(
           node = getSelectedNode(range);
           if (isContentEditableFalse(node)) {
             return renderRangeCaret(deleteContentEditableNode(node));
+          } else {
+            return null;
           }
         }
 

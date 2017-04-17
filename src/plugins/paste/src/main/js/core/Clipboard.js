@@ -584,7 +584,7 @@ define(
           }
 
           // Try IE only method if paste isn't a keyboard paste
-          if (Env.ie && (!isKeyBoardPaste || e.ieFake)) {
+          if (Env.ie && (!isKeyBoardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
             createPasteBin();
 
             editor.dom.bind(pasteBinElm, 'paste', function (e) {

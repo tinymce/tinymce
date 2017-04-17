@@ -118,7 +118,12 @@ define(
         return null;
       }
 
-      caretPosition = startCaretPosition;
+      if (startCaretPosition.isEqual(CaretPosition.after(rootNode)) && rootNode.lastChild) {
+        caretPosition = CaretPosition.after(rootNode.lastChild);
+      } else {
+        caretPosition = startCaretPosition;
+      }
+
       container = caretPosition.container();
       offset = caretPosition.offset();
 

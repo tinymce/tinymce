@@ -776,6 +776,19 @@ asynctest(
       );
     });
 
+    suite.test('aria attributes', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(Tools.extend({ validate: true }, counter), schema);
+      writer.reset();
+      parser.parse('<span aria-label="test" role="myrole" unsupportedattr="2">a</span>');
+      LegacyUnit.equal(
+        writer.getContent(),
+        '<span aria-label="test" role="myrole">a</span>'
+      );
+    });
+
     Pipeline.async({}, suite.toSteps({}), function () {
       success();
     }, failure);

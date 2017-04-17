@@ -13,6 +13,7 @@
 define(
   'tinymce.core.demo.FullDemo',
   [
+    'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.PluginManager',
     'tinymce.plugins.advlist.Plugin',
@@ -60,14 +61,11 @@ define(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    EditorManager, PluginManager, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin,
-    AutoSavePlugin, BbCodePlugin, CharMapPlugin, CodePlugin, CodeSamplePlugin, ColorPickerPlugin,
-    ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin,
-    HrPlugin, ImagePlugin, ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin,
-    LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin,
-    PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin,
-    TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin, TocPlugin,
-    VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+    window, EditorManager, PluginManager, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin, CharMapPlugin, CodePlugin,
+    CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin, ImageToolsPlugin,
+    ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin, PastePlugin,
+    PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin,
+    TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
   ) {
     AdvListPlugin();
     AnchorPlugin();
@@ -119,6 +117,7 @@ define(
       EditorManager.init({
         skin_url: '../../../../skins/lightgray/dist/lightgray',
         codesample_content_css: '../../../../plugins/codesample/dist/codesample/css/prism.css',
+        content_css: 'x',
         selector: "textarea",
         theme: "modern",
         plugins: [
@@ -130,6 +129,8 @@ define(
         toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
         "bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code"
       });
+
+      window.tinymce = EditorManager;
     };
   }
 );
