@@ -399,7 +399,7 @@ define(
 
         var isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption');
 
-        var isTableCaptionNode = function (node) {
+        var isTableCaption = function (node) {
           return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
         };
 
@@ -421,6 +421,8 @@ define(
         var restoreCaretPlaceholder = function (container, insertCaret) {
           var lastChild = container.lastChild;
           var rng = editor.selection.getRng();
+
+          // save the current position of the caret to restore it later (IE requires this)
           var caretContainer = rng.startContainer;
           var caretOffset = rng.startOffset;
 
@@ -439,9 +441,16 @@ define(
             }
           }
 
+          // in IE caret is off after restoration
           editor.selection.setCursorLocation(caretContainer, caretOffset);
         };
 
+        var contractSelectionTo = function (caption) {
+          var rng = editor.selection.getRng();
+          if (rng.commonAncestorContainer === caption.parentNode && isTheHeirOf(rng.startContainer, caption)) { // ignore backward selections
+            rng.selectNodeContents(caption);
+          }
+        };
 
         editor.on('keydown', function (e) {
           if (e.keyCode !== VK.DELETE && e.keyCode !== VK.BACKSPACE || e.isDefaultPrevented()) {
@@ -449,14 +458,19 @@ define(
           }
 
           var container = editor.dom.getParent(editor.selection.getStart(), 'caption');
-          if (!isTableCaptionNode(container)) {
+          if (!isTableCaption(container)) {
             return;
           }
 
           // in IE caption collapses if caret placeholder is deleted (and it is very much possible)
-          if (Env.ie && !editor.selection.isCollapsed()) {
+          if (!editor.selection.isCollapsed()) {
+
+            // in Chrome triple click selects beyond the boundaries of the caption, if then delete is pressed,
+            // contents are being removed with the whole caption, so make sure we stay in caption
+            contractSelectionTo(container);
+
             // if the whole contents are selected, caret placeholder will be deleted too and we take
-            // over delete operation here to it manually and restore the placeholder if required
+            // over delete operation here to do it manually and restore the placeholder if required
             editor.undoManager.transact(function () {
               editor.execCommand('Delete');
               restoreCaretPlaceholder(container);
@@ -464,14 +478,6 @@ define(
             e.preventDefault();
           } else {
             restoreCaretPlaceholder(container);
-
-            // TODO:
-            // 1. in Chrome it is easily possible to select beyond the boundaries of the caption,
-            // currently this results in removal of the contents with the whole caption as well;
-            // 2. we could take over delete operation to address this, but then we will need to adjust
-            // the selection, otherwise delete operation will remove first row of the table too;
-            // 3. current behaviour is logical, so it has sense to leave it like that, until a better
-            // solution
 
             if (isEmptyNode(container) || e.keyCode === VK.BACKSPACE && caretIsAtTheLeftEdgeOf(container)) { // see TINY-979
               e.preventDefault();
