@@ -118,8 +118,8 @@ define(
         editor.setMode('readonly');
       }
 
-      if (settings.width) {
-        DOM.setStyle(panel.getEl(), 'width', settings.width);
+      if (args.width) {
+        DOM.setStyle(panel.getEl(), 'width', args.width);
       }
 
       // Remove the panel when the editor is removed

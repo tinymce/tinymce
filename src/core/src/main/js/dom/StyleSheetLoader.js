@@ -17,10 +17,15 @@
 define(
   'tinymce.core.dom.StyleSheetLoader',
   [
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Delay"
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Futures',
+    'ephox.katamari.api.Result',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools, Delay) {
+  function (Arr, Fun, Future, Futures, Result, Delay, Tools) {
     "use strict";
 
     return function (document, settings) {
@@ -188,7 +193,38 @@ define(
         link.href = url;
       }
 
-      this.load = load;
+      var loadF = function (url) {
+        return Future.nu(function (resolve) {
+          load(
+            url,
+            Fun.compose(resolve, Fun.constant(Result.value(url))),
+            Fun.compose(resolve, Fun.constant(Result.error(url)))
+          );
+        });
+      };
+
+      var unbox = function (result) {
+        return result.fold(Fun.identity, Fun.identity);
+      };
+
+      var loadAll = function (urls, success, failure) {
+        Futures.par(Arr.map(urls, loadF)).get(function (result) {
+          var parts = Arr.partition(result, function (r) {
+            return r.isValue();
+          });
+
+          if (parts.fail.length > 0) {
+            failure(parts.fail.map(unbox));
+          } else {
+            success(parts.pass.map(unbox));
+          }
+        });
+      };
+
+      return {
+        load: load,
+        loadAll: loadAll
+      };
     };
   }
 );

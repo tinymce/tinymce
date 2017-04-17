@@ -141,7 +141,7 @@ define(
         icon = icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
         return (
-          '<div id="' + id + '" class="' + self.classes + '" tabindex="-1" aria-labelledby="' + id + '">' +
+          '<div id="' + id + '" class="' + self.classes + '" tabindex="-1">' +
           '<button role="presentation" type="button" tabindex="-1">' +
           (icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
           textHtml +

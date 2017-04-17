@@ -54,6 +54,16 @@ asynctest(
       editor.off('GetContent', handler);
     });
 
+    suite.test('getContent of zwsp', function (editor) {
+      editor.setContent('<p>a' + Zwsp.ZWSP + 'b</p>');
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.selection.getContent(), '<p>ab</p>', 'Get selected contents');
+      LegacyUnit.equal(editor.selection.getContent({ format: 'text' }), 'ab', 'Get selected contents');
+    });
+
     suite.test('setContent', function (editor) {
       var rng, eventObj;
 
@@ -87,15 +97,15 @@ asynctest(
       // Check the caret is left in the correct position.
       rng = editor.selection.getRng(true);
       if (document.createRange) {
-        LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
+        LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
         LegacyUnit.equal(rng.startOffset, 2, 'Selection start offset');
-        LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
+        LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
         LegacyUnit.equal(rng.endOffset, 2, 'Selection end offset');
       } else {
         // TridentSelection resolves indexed text nodes
-        LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
+        LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
         LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-        LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
+        LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
         LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
       }
 
@@ -109,14 +119,14 @@ asynctest(
       rng = editor.selection.getRng(true);
       if (!document.createRange) {
         // The old IE selection can only be positioned in text nodes
-        LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
+        LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
         LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-        LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
+        LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
         LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
       } else {
-        LegacyUnit.equal(rng.startContainer, editor.getBody(), 'Selection start container');
+        LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
         LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-        LegacyUnit.equal(rng.endContainer, editor.getBody(), 'Selection end container');
+        LegacyUnit.equalDom(rng.endContainer, editor.getBody(), 'Selection end container');
         LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
       }
 
@@ -294,6 +304,26 @@ asynctest(
       LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
     });
 
+    suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text with zwsp (normalized)', function (editor) {
+      var rng, bookmark;
+
+      // Get non intrusive bookmark multiple elements text selection fragmented
+      editor.setContent('<p>text</p><p>text</p>');
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode(Zwsp.ZWSP));
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode(Zwsp.ZWSP));
+      editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('text'));
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody().firstChild.lastChild, 1);
+      rng.setEnd(editor.getBody().lastChild.firstChild, 3);
+      editor.selection.setRng(rng);
+      bookmark = editor.selection.getBookmark(2, true);
+      editor.setContent(editor.getContent());
+      LegacyUnit.equal(editor.getContent(), '<p>textatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
+      editor.selection.moveToBookmark(bookmark);
+      LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+    });
+
     suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function (editor) {
       var rng, bookmark;
 
@@ -306,9 +336,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.startOffset, 0);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.endOffset, 0);
     });
 
@@ -324,9 +354,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.startOffset, 0);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.endOffset, 1);
     });
 
@@ -342,9 +372,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.startOffset, 1);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.endOffset, 1);
     });
 
@@ -360,9 +390,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.startOffset, 0);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.endOffset, 2);
     });
 
@@ -379,9 +409,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().lastChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
       LegacyUnit.equal(rng.startOffset, 1);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().lastChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().lastChild);
       LegacyUnit.equal(rng.endOffset, 2);
     });
 
@@ -397,9 +427,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().childNodes[1].firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().childNodes[1].firstChild);
       LegacyUnit.equal(rng.startOffset, 1);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().childNodes[1].firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().childNodes[1].firstChild);
       LegacyUnit.equal(rng.endOffset, 2);
     });
 
@@ -415,9 +445,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.startOffset, 1);
-      LegacyUnit.equal(rng.endContainer, editor.getBody().firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild);
       LegacyUnit.equal(rng.endOffset, 2);
     });
 
@@ -431,9 +461,9 @@ asynctest(
       editor.getBody().innerHTML = editor.getBody().innerHTML;
       editor.selection.moveToBookmark(bookmark);
       rng = editor.selection.getRng(true);
-      LegacyUnit.equal(rng.startContainer, editor.dom.select('td')[0].firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.dom.select('td')[0].firstChild);
       LegacyUnit.equal(rng.startOffset, 1);
-      LegacyUnit.equal(rng.endContainer, editor.dom.select('td')[0].firstChild);
+      LegacyUnit.equalDom(rng.endContainer, editor.dom.select('td')[0].firstChild);
       LegacyUnit.equal(rng.endOffset, 2);
     });
 
@@ -445,7 +475,7 @@ asynctest(
       bookmark = editor.selection.getBookmark(2);
       editor.setContent('text<span contentEditable="false">1</span>');
       editor.selection.moveToBookmark(bookmark);
-      LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
     });
 
     suite.test('getBookmark/setBookmark before cE=false', function (editor) {
@@ -460,7 +490,7 @@ asynctest(
       bookmark = editor.selection.getBookmark(2);
       editor.setContent('<p><input><span contentEditable="false">1</span></p>');
       editor.selection.moveToBookmark(bookmark);
-      LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
     });
 
     suite.test('getBookmark/setBookmark before cE=false block', function (editor) {
@@ -475,7 +505,7 @@ asynctest(
       bookmark = editor.selection.getBookmark(2);
       editor.setContent('<p contentEditable="false">1</p>');
       editor.selection.moveToBookmark(bookmark);
-      LegacyUnit.equal(editor.selection.getNode(), editor.$('p')[0]);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p')[0]);
     });
 
     suite.test('select empty TD', function (editor) {
@@ -524,7 +554,7 @@ asynctest(
       rng.setStart(editor.dom.get('s1').firstChild, 0);
       rng.setEnd(editor.dom.get('s1').nextSibling, 0);
       editor.selection.setRng(rng);
-      LegacyUnit.deepEqual(
+      LegacyUnit.equalDom(
         editor.selection.getNode(),
         editor.dom.get('s1'),
         'Detect selection ends immediately after node at start of paragraph.'
@@ -534,7 +564,7 @@ asynctest(
       rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
       rng.setEnd(editor.dom.get('s2').nextSibling, 0);
       editor.selection.setRng(rng);
-      LegacyUnit.deepEqual(
+      LegacyUnit.equalDom(
         editor.selection.getNode(),
         editor.dom.get('s2'),
         'Detect selection immediately surrounds node in middle of paragraph.'
@@ -544,7 +574,7 @@ asynctest(
       rng.setStart(editor.dom.get('s3').previousSibling, editor.dom.get('s3').previousSibling.length);
       rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
       editor.selection.setRng(rng);
-      LegacyUnit.deepEqual(
+      LegacyUnit.equalDom(
         editor.selection.getNode(),
         editor.dom.get('s3'),
         'Detect selection starts immediately before node at end of paragraph.'
@@ -554,7 +584,7 @@ asynctest(
       rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
       rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
       editor.selection.setRng(rng);
-      LegacyUnit.deepEqual(
+      LegacyUnit.equalDom(
         editor.selection.getNode(),
         editor.dom.get('p1'),
         'Detect selection wrapping multiple nodes does not collapse.'
@@ -640,22 +670,15 @@ asynctest(
       });
 
       suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
-        editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-        LegacyUnit.setSelection(editor, 'em', 0);
-        editor.selection.normalize();
-
-        var rng = editor.selection.getRng(true);
-
         if (Env.ie && Env.ie < 12) {
-          // IE automatically normalizes
-          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
-        } else {
-          LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
-        }
+          editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
+          LegacyUnit.setSelection(editor, 'em', 0);
+          editor.selection.normalize();
 
-        // Excluding assert on IE since it's a minor issue
-        if (Env.ie) {
-          LegacyUnit.equal(rng.startOffset, 1);
+          var rng = editor.selection.getRng(true);
+
+          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
+          LegacyUnit.equal(rng.startOffset, 0);
         }
       });
 
@@ -961,7 +984,7 @@ asynctest(
         editor.selection.normalize();
 
         rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.endContainer, editor.getBody());
+        LegacyUnit.equalDom(rng.endContainer, editor.getBody());
         LegacyUnit.equal(rng.endOffset, 1);
       });
 
@@ -1029,14 +1052,14 @@ asynctest(
 
       LegacyUnit.equal(newState, true);
       LegacyUnit.equal(newArgs.selector, 'a[href]');
-      LegacyUnit.equal(newArgs.node, editor.getBody().firstChild.firstChild);
+      LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
       LegacyUnit.equal(newArgs.parents.length, 2);
 
       editor.getBody().innerHTML = '<p>text</p>';
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
       editor.nodeChanged();
       LegacyUnit.equal(newArgs.selector, 'a[href]');
-      LegacyUnit.equal(newArgs.node, editor.getBody().firstChild);
+      LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
       LegacyUnit.equal(newArgs.parents.length, 1);
     });
 
@@ -1078,6 +1101,49 @@ asynctest(
       LegacyUnit.equal(rng, null);
 
       editor.selection.win = win;
+    });
+
+    suite.test('image selection webkit bug', function (editor) {
+      var testImageSelection = function (inputHtml, expectedContainerName, expectedOffset) {
+        editor.setContent(inputHtml);
+        editor.selection.select(editor.dom.select('img')[0]);
+
+        var rng = editor.selection.getRng(true);
+        LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(rng.startOffset, expectedOffset);
+        LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(rng.endOffset, expectedOffset + 1);
+        LegacyUnit.equal(editor.selection.getNode().nodeName, 'IMG');
+        LegacyUnit.equal(editor.selection.getStart().nodeName, 'IMG');
+        LegacyUnit.equal(editor.selection.getEnd().nodeName, 'IMG');
+
+        var nativeRng = editor.selection.getSel().getRangeAt(0);
+        LegacyUnit.equal(nativeRng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(nativeRng.startOffset, expectedOffset);
+        LegacyUnit.equal(nativeRng.startContainer.nodeName, 'P');
+        LegacyUnit.equal(nativeRng.endOffset, expectedOffset + 1);
+      };
+
+      testImageSelection('<p><img src="#"></p>', 'P', 0);
+      testImageSelection('<p><img src="#">abc</p>', 'P', 0);
+      testImageSelection('<p>abc<img src="#"></p>', 'P', 1);
+      testImageSelection('<p>abc<img src="#">def</p>', 'P', 1);
+      testImageSelection('<p><img style="float: right;" src="#"></p>', 'P', 0);
+      testImageSelection('<p><img style="float: right;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p>abc<img style="float: right;" src="#"></p>', 'P', 1);
+      testImageSelection('<p>abc<img style="float: right;" src="#">def</p>', 'P', 1);
+      testImageSelection('<p><img style="float: left;" src="#"></p>', 'P', 0);
+      testImageSelection('<p><img style="float: left;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p>abc<img style="float: left;" src="#"></p>', 'P', 1);
+      testImageSelection('<p>abc<img style="float: left;" src="#">def</p>', 'P', 1);
+      testImageSelection('<p dir="rtl"><img style="float: right;" src="#"></p>', 'P', 0);
+      testImageSelection('<p dir="rtl"><img style="float: right;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p dir="rtl">abc<img style="float: right;" src="#"></p>', 'P', 1);
+      testImageSelection('<p dir="rtl">abc<img style="float: right;" src="#">def</p>', 'P', 1);
+      testImageSelection('<p dir="rtl"><img style="float: left;" src="#"></p>', 'P', 0);
+      testImageSelection('<p dir="rtl"><img style="float: left;" src="#">abc</p>', 'P', 0);
+      testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#"></p>', 'P', 1);
+      testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#">def</p>', 'P', 1);
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

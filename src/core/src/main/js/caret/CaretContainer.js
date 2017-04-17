@@ -41,29 +41,9 @@ define(
       return isCaretContainerBlock(node) || isCaretContainerInline(node);
     }
 
-    function removeNode(node) {
-      var parentNode = node.parentNode;
-      if (parentNode) {
-        parentNode.removeChild(node);
-      }
-    }
-
-    function getNodeValue(node) {
-      try {
-        return node.nodeValue;
-      } catch (ex) {
-        // IE sometimes produces "Invalid argument" on nodes
-        return "";
-      }
-    }
-
-    function setNodeValue(node, text) {
-      if (text.length === 0) {
-        removeNode(node);
-      } else {
-        node.nodeValue = text;
-      }
-    }
+    var hasContent = function (node) {
+      return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
+    };
 
     function insertInline(node, before) {
       var doc, sibling, textNode, parentNode;
@@ -108,6 +88,38 @@ define(
       return textNode;
     }
 
+    var prependInline = function (node) {
+      if (NodeType.isText(node)) {
+        var data = node.data;
+        if (data.length > 0 && data.charAt(0) !== Zwsp.ZWSP) {
+          node.insertData(0, Zwsp.ZWSP);
+        }
+        return node;
+      } else {
+        return null;
+      }
+    };
+
+    var appendInline = function (node) {
+      if (NodeType.isText(node)) {
+        var data = node.data;
+        if (data.length > 0 && data.charAt(data.length - 1) !== Zwsp.ZWSP) {
+          node.insertData(data.length, Zwsp.ZWSP);
+        }
+        return node;
+      } else {
+        return null;
+      }
+    };
+
+    var isBeforeInline = function (pos) {
+      return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset()) === Zwsp.ZWSP;
+    };
+
+    var isAfterInline = function (pos) {
+      return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
+    };
+
     function createBogusBr() {
       var br = document.createElement('br');
       br.setAttribute('data-mce-bogus', '1');
@@ -135,25 +147,6 @@ define(
       }
 
       return blockNode;
-    }
-
-    function hasContent(node) {
-      return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
-    }
-
-    function remove(caretContainerNode) {
-      if (isElement(caretContainerNode) && isCaretContainer(caretContainerNode)) {
-        if (hasContent(caretContainerNode)) {
-          caretContainerNode.removeAttribute('data-mce-caret');
-        } else {
-          removeNode(caretContainerNode);
-        }
-      }
-
-      if (isText(caretContainerNode)) {
-        var text = Zwsp.trim(getNodeValue(caretContainerNode));
-        setNodeValue(caretContainerNode, text);
-      }
     }
 
     function startsWithCaretContainer(node) {
@@ -191,9 +184,12 @@ define(
       isCaretContainerInline: isCaretContainerInline,
       showCaretContainerBlock: showCaretContainerBlock,
       insertInline: insertInline,
+      prependInline: prependInline,
+      appendInline: appendInline,
+      isBeforeInline: isBeforeInline,
+      isAfterInline: isAfterInline,
       insertBlock: insertBlock,
       hasContent: hasContent,
-      remove: remove,
       startsWithCaretContainer: startsWithCaretContainer,
       endsWithCaretContainer: endsWithCaretContainer
     };

@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "4.5.3",
+  "version": "4.6.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -15,17 +15,21 @@
     "node": ">=0.10.26"
   },
   "scripts": {
-    "test": "grunt bedrock"
+    "test": "grunt bedrock-manual"
+  },
+  "dependencies": {
+    "@ephox/katamari": "^1.1.0",
+    "@ephox/sugar": "^3.1.0"
   },
   "devDependencies": {
     "@ephox/bolt": "^1.6.0",
     "@ephox/imagetools": "2.0.0",
-    "@ephox/mcagar": "^1.0.1",
+    "@ephox/mcagar": "^1.1.1",
+    "@ephox/bedrock": "^1.5.0",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-less": "~1.4.0",
-    "grunt-contrib-qunit": "~1.2.0",
     "grunt-contrib-uglify": "~2.0.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-eslint": "~19.0.0",

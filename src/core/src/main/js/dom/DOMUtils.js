@@ -22,18 +22,19 @@
 define(
   'tinymce.core.dom.DOMUtils',
   [
-    "tinymce.core.dom.Sizzle",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.core.html.Styles",
-    "tinymce.core.dom.EventUtils",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.Range",
-    "tinymce.core.html.Entities",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.dom.StyleSheetLoader"
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.dom.EventUtils',
+    'tinymce.core.dom.Range',
+    'tinymce.core.dom.Sizzle',
+    'tinymce.core.dom.StyleSheetLoader',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.html.Entities',
+    'tinymce.core.html.Schema',
+    'tinymce.core.html.Styles',
+    'tinymce.core.util.Tools'
   ],
-  function (Sizzle, $, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {
+  function (DomQuery, EventUtils, Range, Sizzle, StyleSheetLoader, TreeWalker, Env, Entities, Schema, Styles, Tools) {
     // Shorten names
     var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
     var isIE = Env.ie;
@@ -142,7 +143,7 @@ define(
       self.styleSheetLoader = new StyleSheetLoader(doc);
       self.boundEvents = [];
       self.settings = settings = settings || {};
-      self.schema = settings.schema;
+      self.schema = settings.schema ? settings.schema : new Schema({});
       self.styles = new Styles({
         url_converter: settings.url_converter,
         url_converter_scope: settings.url_converter_scope
@@ -152,7 +153,7 @@ define(
       self.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
       self.attrHooks = setupAttrHooks(self, settings);
       blockElementsMap = settings.schema ? settings.schema.getBlockElements() : {};
-      self.$ = $.overrideDefaults(function () {
+      self.$ = DomQuery.overrideDefaults(function () {
         return {
           context: doc,
           element: self.getRoot()
@@ -476,6 +477,10 @@ define(
        */
       is: function (elm, selector) {
         var i;
+
+        if (!elm) {
+          return false;
+        }
 
         // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
         if (elm.length === undefined) {
@@ -861,7 +866,7 @@ define(
         if (elm) {
           // Use getBoundingClientRect if it exists since it's faster than looping offset nodes
           // Fallback to offsetParent calculations if the body isn't static better since it stops at the body root
-          if (rootElm === body && elm.getBoundingClientRect && $(body).css('position') === 'static') {
+          if (rootElm === body && elm.getBoundingClientRect && DomQuery(body).css('position') === 'static') {
             pos = elm.getBoundingClientRect();
             rootElm = self.boxModel ? doc.documentElement : body;
 
@@ -1083,7 +1088,7 @@ define(
       toggleClass: function (elm, cls, state) {
         this.$$(elm).toggleClass(cls, state).each(function () {
           if (this.className === '') {
-            $(this).attr('class', null);
+            DomQuery(this).attr('class', null);
           }
         });
       },
@@ -1169,7 +1174,7 @@ define(
               target.removeChild(target.firstChild);
             } catch (ex) {
               // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
-              $('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
+              DomQuery('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
             }
 
             return html;
@@ -1193,7 +1198,7 @@ define(
         elm = this.get(elm);
 
         // Older FF doesn't have outerHTML 3.6 is still used by some orgaizations
-        return elm.nodeType == 1 && "outerHTML" in elm ? elm.outerHTML : $('<div></div>').append($(elm).clone()).html();
+        return elm.nodeType == 1 && "outerHTML" in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
       },
 
       /**
@@ -1224,7 +1229,7 @@ define(
           }
 
           // OuterHTML for IE it sometimes produces an "unknown runtime error"
-          self.remove($(this).html(html), true);
+          self.remove(DomQuery(this).html(html), true);
         });
       },
 

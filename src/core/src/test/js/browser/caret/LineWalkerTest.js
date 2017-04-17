@@ -34,18 +34,18 @@ asynctest(
       $(getRoot()).html('<span contentEditable="false">a</span><span>b</span>');
       result = LineWalker.positionsUntil(1, getRoot(), predicate, getRoot().firstChild);
       LegacyUnit.equal(result.length, 3);
-      LegacyUnit.equal(result[0].position.getNode(), getRoot().lastChild);
-      LegacyUnit.equal(result[1].position.getNode(), getRoot().lastChild.firstChild);
-      LegacyUnit.equal(result[2].position.getNode(), getRoot().lastChild.firstChild);
+      LegacyUnit.equalDom(result[0].position.getNode(), getRoot().lastChild);
+      LegacyUnit.equalDom(result[1].position.getNode(), getRoot().lastChild.firstChild);
+      LegacyUnit.equalDom(result[2].position.getNode(), getRoot().lastChild.firstChild);
       LegacyUnit.equal(predicateCallCount, 3);
 
       predicateCallCount = 0;
       $(getRoot()).html('<span>a</span><span contentEditable="false">b</span>');
       result = LineWalker.positionsUntil(-1, getRoot(), predicate, getRoot().lastChild);
       LegacyUnit.equal(result.length, 3);
-      LegacyUnit.equal(result[0].position.getNode(), getRoot().lastChild);
-      LegacyUnit.equal(result[1].position.getNode(), getRoot().firstChild.firstChild);
-      LegacyUnit.equal(result[2].position.getNode(), getRoot().firstChild.firstChild);
+      LegacyUnit.equalDom(result[0].position.getNode(), getRoot().lastChild);
+      LegacyUnit.equalDom(result[1].position.getNode(), getRoot().firstChild.firstChild);
+      LegacyUnit.equalDom(result[2].position.getNode(), getRoot().firstChild.firstChild);
       LegacyUnit.equal(predicateCallCount, 3);
     });
 

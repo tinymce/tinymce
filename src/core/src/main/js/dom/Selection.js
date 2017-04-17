@@ -20,17 +20,18 @@
 define(
   'tinymce.core.dom.Selection',
   [
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.TridentSelection",
-    "tinymce.core.dom.ControlSelection",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.BookmarkManager",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.caret.CaretPosition"
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.ControlSelection',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.dom.TridentSelection',
+    'tinymce.core.Env',
+    'tinymce.core.text.Zwsp',
+    'tinymce.core.util.Tools'
   ],
-  function (TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, NodeType, Env, Tools, CaretPosition) {
+  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, TreeWalker, TridentSelection, Env, Zwsp, Tools) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
 
@@ -107,8 +108,8 @@ define(
         args.selection = true;
         self.editor.fire('BeforeGetContent', args);
 
-        if (args.format == 'text') {
-          return self.isCollapsed() ? '' : (rng.text || (se.toString ? se.toString() : ''));
+        if (args.format === 'text') {
+          return self.isCollapsed() ? '' : Zwsp.trim(rng.text || (se.toString ? se.toString() : ''));
         }
 
         if (rng.cloneContents) {
@@ -645,11 +646,11 @@ define(
           }
 
           // WebKit egde case selecting images works better using setBaseAndExtent when the image is floated
-          if (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
+          if (!rng.collapsed && rng.startContainer === rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
             if (rng.endOffset - rng.startOffset < 2) {
               if (rng.startContainer.hasChildNodes()) {
                 node = rng.startContainer.childNodes[rng.startOffset];
-                if (node && node.tagName == 'IMG') {
+                if (node && node.tagName === 'IMG') {
                   sel.setBaseAndExtent(
                     rng.startContainer,
                     rng.startOffset,
@@ -661,7 +662,7 @@ define(
                   // need to detect if it's doing the wrong thing and falling back to the
                   // crazy incorrect behavior api call since that seems to be the only way
                   // to get it to work on Safari WebKit as of 2017-02-23
-                  if (sel.anchorNode !== rng.startContainer) {
+                  if (sel.anchorNode !== rng.startContainer || sel.focusNode !== rng.endContainer) {
                     sel.setBaseAndExtent(node, 0, node, 1);
                   }
                 }

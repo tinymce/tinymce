@@ -42,6 +42,7 @@ asynctest(
         apis.sSetContent(
           '<script src="http://media1.tinymce.com/123456"></script>' +
           '<script src="http://media2.tinymce.com/123456"></script>'),
+        apis.sNodeChanged,
         Waiter.sTryUntil('Wait for structure check',
           apis.sAssertContentStructure(struct),
           10, 500),

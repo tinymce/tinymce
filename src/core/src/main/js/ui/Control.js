@@ -1049,7 +1049,7 @@ define(
         ReflowQueue.remove(this);
 
         var parent = this.parent();
-        if (parent._layout && !parent._layout.isNative()) {
+        if (parent && parent._layout && !parent._layout.isNative()) {
           parent.reflow();
         }
 

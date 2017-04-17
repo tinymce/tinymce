@@ -70,16 +70,16 @@ asynctest(
       leftArrow(editor);
       LegacyUnit.equal(editor.getContent(), '<p><span contenteditable="false">1</span></p>');
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.selection.getRng().startContainer), true);
-      LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('p')[0].firstChild);
+      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0].firstChild);
 
       rightArrow(editor);
       LegacyUnit.equal(editor.getContent(), '<p><span contenteditable="false">1</span></p>');
-      LegacyUnit.equal(editor.selection.getNode(), editor.$('span')[0]);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
 
       rightArrow(editor);
       LegacyUnit.equal(editor.getContent(), '<p><span contenteditable="false">1</span></p>');
       LegacyUnit.equal(CaretContainer.isCaretContainerInline(editor.selection.getRng().startContainer), true);
-      LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('p')[0].lastChild);
+      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0].lastChild);
     });
 
     suite.test('left/right over cE=false block', function (editor) {
@@ -92,7 +92,7 @@ asynctest(
 
       rightArrow(editor);
       LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
-      LegacyUnit.equal(editor.selection.getNode(), editor.$('p')[0]);
+      LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p')[0]);
 
       rightArrow(editor);
       LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
@@ -141,7 +141,7 @@ asynctest(
 
       backspace(editor);
       LegacyUnit.equal(editor.getContent(), '');
-      LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
+      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0]);
     });
 
     suite.test('backspace after cE=false block', function (editor) {
@@ -151,7 +151,7 @@ asynctest(
       rightArrow(editor);
       backspace(editor);
       LegacyUnit.equal(editor.getContent(), '');
-      LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
+      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0]);
     });
 
     suite.test('delete on selected cE=false block', function (editor) {
@@ -160,7 +160,7 @@ asynctest(
 
       forwardDelete(editor);
       LegacyUnit.equal(editor.getContent(), '');
-      LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('p')[0]);
+      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('p')[0]);
     });
 
     suite.test('delete inside nested cE=true block element', function (editor) {
@@ -172,7 +172,7 @@ asynctest(
         HtmlUtils.cleanHtml(editor.getBody().innerHTML),
         '<div contenteditable="false">1<div contenteditable="true"><br data-mce-bogus="1"></div>3</div>'
       );
-      LegacyUnit.equal(editor.selection.getRng().startContainer, editor.$('div div')[0]);
+      LegacyUnit.equalDom(editor.selection.getRng().startContainer, editor.$('div div')[0]);
     });
 
     suite.test('backspace from block to after cE=false inline', function (editor) {
@@ -205,7 +205,7 @@ asynctest(
       var rng = editor.selection.getRng();
 
       LegacyUnit.equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p><p>3</p>');
-      LegacyUnit.equal(rng.startContainer, editor.dom.select('p')[0].firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.dom.select('p')[0].firstChild);
       LegacyUnit.equal(rng.startOffset, 1);
       LegacyUnit.equal(rng.collapsed, true);
     });
@@ -233,7 +233,7 @@ asynctest(
 
       LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
       assertCaretInCaretBlockContainer(editor);
-      LegacyUnit.equal(rng.startContainer.previousSibling, editor.dom.select('p')[0]);
+      LegacyUnit.equalDom(rng.startContainer.previousSibling, editor.dom.select('p')[0]);
     });
 
     suite.test('delete from after cE=false block to text', function (editor) {
@@ -246,7 +246,7 @@ asynctest(
       var rng = editor.selection.getRng();
 
       LegacyUnit.equal(editor.getContent(), '<p>1</p><p contenteditable="false">2</p><p>3</p>');
-      LegacyUnit.equal(rng.startContainer, editor.dom.select('p')[2].firstChild);
+      LegacyUnit.equalDom(rng.startContainer, editor.dom.select('p')[2].firstChild);
       LegacyUnit.equal(rng.startOffset, 0);
       LegacyUnit.equal(rng.collapsed, true);
     });
@@ -272,7 +272,7 @@ asynctest(
 
       LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p><p contenteditable="false">2</p>');
       assertCaretInCaretBlockContainer(editor);
-      LegacyUnit.equal(rng.startContainer.nextSibling, editor.dom.select('p')[2]);
+      LegacyUnit.equalDom(rng.startContainer.nextSibling, editor.dom.select('p')[2]);
     });
 
     suite.test('delete from block to before cE=false inline', function (editor) {

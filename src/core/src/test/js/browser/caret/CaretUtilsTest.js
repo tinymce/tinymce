@@ -81,29 +81,29 @@ asynctest('browser.tinymce.core.CaretUtilTest',
         return node.nodeType === 3;
       };
 
-      LegacyUnit.equal(CaretUtils.findNode(getRoot(), 1, isBold, getRoot()), getRoot().firstChild);
-      LegacyUnit.equal(CaretUtils.findNode(getRoot(), 1, isText, getRoot()), getRoot().firstChild.firstChild);
-      LegacyUnit.equal(CaretUtils.findNode(getRoot().childNodes[1], 1, isBold, getRoot().childNodes[1]), null);
+      LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), 1, isBold, getRoot()), getRoot().firstChild);
+      LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), 1, isText, getRoot()), getRoot().firstChild.firstChild);
+      LegacyUnit.equal(CaretUtils.findNode(getRoot().childNodes[1], 1, isBold, getRoot().childNodes[1]) === null, true);
       LegacyUnit.equal(CaretUtils.findNode(getRoot().childNodes[1], 1, isText, getRoot().childNodes[1]).nodeName, '#text');
-      LegacyUnit.equal(CaretUtils.findNode(getRoot(), -1, isBold, getRoot()), getRoot().childNodes[1]);
-      LegacyUnit.equal(CaretUtils.findNode(getRoot(), -1, isText, getRoot()), getRoot().lastChild);
+      LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), -1, isBold, getRoot()), getRoot().childNodes[1]);
+      LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), -1, isText, getRoot()), getRoot().lastChild);
     });
 
     suite.test('getEditingHost', function () {
       setupHtml('<span contentEditable="true"><span contentEditable="false"></span></span>');
 
-      LegacyUnit.equal(CaretUtils.getEditingHost(getRoot(), getRoot()), getRoot());
-      LegacyUnit.equal(CaretUtils.getEditingHost(getRoot().firstChild, getRoot()), getRoot());
-      LegacyUnit.equal(CaretUtils.getEditingHost(getRoot().firstChild.firstChild, getRoot()), getRoot().firstChild);
+      LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot(), getRoot()), getRoot());
+      LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot().firstChild, getRoot()), getRoot());
+      LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot().firstChild.firstChild, getRoot()), getRoot().firstChild);
     });
 
     suite.test('getParentBlock', function () {
       setupHtml('<p>abc</p><div><p><table><tr><td>X</td></tr></p></div>');
 
-      LegacyUnit.strictEqual(CaretUtils.getParentBlock(findElm('p:first')), findElm('p:first'));
-      LegacyUnit.strictEqual(CaretUtils.getParentBlock(findElm('td:first').firstChild), findElm('td:first'));
-      LegacyUnit.strictEqual(CaretUtils.getParentBlock(findElm('td:first')), findElm('td:first'));
-      LegacyUnit.strictEqual(CaretUtils.getParentBlock(findElm('table')), findElm('table'));
+      LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('p:first')), findElm('p:first'));
+      LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('td:first').firstChild), findElm('td:first'));
+      LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('td:first')), findElm('td:first'));
+      LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('table')), findElm('table'));
     });
 
     suite.test('isInSameBlock', function () {

@@ -34,9 +34,9 @@ asynctest(
 
     var cAssertRangeEq = function (expected) {
       return Chain.op(function (actual) {
-        Assertions.assertEq('Not equal startContainer', expected.start().dom(), actual.startContainer);
+        Assertions.assertDomEq('Not equal startContainer', expected.start(), TinyDom.fromDom(actual.startContainer));
         Assertions.assertEq('Not equal startOffset', expected.soffset(), actual.startOffset);
-        Assertions.assertEq('Not equal endContainer', expected.finish().dom(), actual.endContainer);
+        Assertions.assertDomEq('Not equal endContainer', expected.finish(), TinyDom.fromDom(actual.endContainer));
         Assertions.assertEq('Not equal endOffset', expected.foffset(), actual.endOffset);
       });
     };

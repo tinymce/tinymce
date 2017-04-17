@@ -28,7 +28,7 @@ asynctest(
         var expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
 
         LegacyUnit.equal(editor.getContent(), definition.expectedContent, 'Editor content should be equal');
-        LegacyUnit.equal(rng.startContainer.parentNode, expectedElm, 'Selection elements should be equal');
+        LegacyUnit.equalDom(rng.startContainer.parentNode, expectedElm, 'Selection elements should be equal');
         LegacyUnit.equal(rng.startOffset, definition.expectedSelection[1], 'Selection offset should be equal');
       });
     };

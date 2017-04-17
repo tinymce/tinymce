@@ -17,15 +17,16 @@
 define(
   'tinymce.core.caret.FakeCaret',
   [
-    "tinymce.core.caret.CaretContainer",
-    "tinymce.core.caret.CaretPosition",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.core.geom.ClientRect",
-    "tinymce.core.util.Delay"
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretContainerRemove',
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.geom.ClientRect',
+    'tinymce.core.util.Delay'
   ],
-  function (CaretContainer, CaretPosition, NodeType, RangeUtils, $, ClientRect, Delay) {
+  function (CaretContainer, CaretContainerRemove, CaretPosition, DomQuery, NodeType, RangeUtils, ClientRect, Delay) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
 
     return function (rootNode, isBlock) {
@@ -68,7 +69,7 @@ define(
       function trimInlineCaretContainers() {
         var contentEditableFalseNodes, node, sibling, i, data;
 
-        contentEditableFalseNodes = $('*[contentEditable=false]', rootNode);
+        contentEditableFalseNodes = DomQuery('*[contentEditable=false]', rootNode);
         for (i = 0; i < contentEditableFalseNodes.length; i++) {
           node = contentEditableFalseNodes[i];
 
@@ -106,9 +107,9 @@ define(
         if (isBlock(node)) {
           caretContainerNode = CaretContainer.insertBlock('p', node, before);
           clientRect = getAbsoluteClientRect(node, before);
-          $(caretContainerNode).css('top', clientRect.top);
+          DomQuery(caretContainerNode).css('top', clientRect.top);
 
-          $lastVisualCaret = $('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(rootNode);
+          $lastVisualCaret = DomQuery('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(rootNode);
 
           if (before) {
             $lastVisualCaret.addClass('mce-visual-caret-before');
@@ -141,7 +142,7 @@ define(
         trimInlineCaretContainers();
 
         if (caretContainerNode) {
-          CaretContainer.remove(caretContainerNode);
+          CaretContainerRemove.remove(caretContainerNode);
           caretContainerNode = null;
         }
 
@@ -155,7 +156,7 @@ define(
 
       function startBlink() {
         cursorInterval = Delay.setInterval(function () {
-          $('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
+          DomQuery('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
         }, 500);
       }
 

@@ -21,6 +21,20 @@ module.exports = function (grunt) {
         files: {
           src: ["src/main/js/api/Main.js"]
         }
+      },
+
+      "jquery-plugin": {
+        config_js: "config/bolt/prod.js",
+        output_dir: "scratch",
+        main: "tinymce.core.JqueryIntegration",
+        filename: "jquery.tinymce",
+
+        generate_inline: true,
+        minimise_module_names: true,
+
+        files: {
+          src: ["src/main/js/JqueryIntegration.js"]
+        }
       }
     },
 
@@ -70,7 +84,7 @@ module.exports = function (grunt) {
           },
 
           {
-            src: "src/main/js/jquery.tinymce.js",
+            src: "scratch/inline/jquery.tinymce.js",
             dest: "dist/tinymce/jquery.tinymce.min.js"
           }
         ]

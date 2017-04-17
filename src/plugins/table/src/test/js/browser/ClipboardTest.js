@@ -27,6 +27,8 @@ asynctest(
       editor.fire('mousedown', { target: start });
       editor.fire('mouseover', { target: end });
       editor.fire('mouseup', { target: end });
+
+      LegacyUnit.setSelection(editor, end, 0);
     };
 
     suite.test("mceTablePasteRowBefore command", function (editor) {
