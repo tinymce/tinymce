@@ -447,8 +447,18 @@ define(
 
         var contractSelectionTo = function (caption) {
           var rng = editor.selection.getRng();
+          var newRng = editor.dom.createRng();
+          var firstChild = caption.firstChild;
+
           if (rng.commonAncestorContainer === caption.parentNode && isTheHeirOf(rng.startContainer, caption)) { // ignore backward selections
-            rng.selectNodeContents(caption);
+            // rng.selectNodeContents() didn't work in IE
+            newRng.setStart(caption, 0);
+            if (firstChild.nodeType === 1) {
+              newRng.setEnd(caption, caption.childNodes.length);
+            } else {
+              newRng.setEnd(firstChild, firstChild.nodeValue.length);
+            }
+            editor.selection.setRng(newRng);
           }
         };
 
