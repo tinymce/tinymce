@@ -51,9 +51,6 @@ asynctest(
 
     var doc = Traverse.owner(body);
 
-    var text = Element.fromText('just-text');
-    var link = Element.fromHtml('<a href="http://link">Link</a>');
-
     var styles = document.createElement('link');
     styles.setAttribute('rel', 'Stylesheet');
     styles.setAttribute('href', '/project/src/themes/mobile/src/main/css/mobile.css');
@@ -238,7 +235,7 @@ asynctest(
       var scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
         FieldSchema.strict('label'),
         FieldSchema.defaulted('content', ''),
-        FieldSchema.strict('node'),
+        FieldSchema.defaulted('node', Element.fromText(rawScenario.content !== undefined ? rawScenario.content : '')),
         FieldSchema.strictObjOf('fields', [
           FieldSchema.option('url'),
           FieldSchema.option('text'),
@@ -293,7 +290,7 @@ asynctest(
         8000
       ),
 
-      sPrepareState(text, 'link-text'),
+      sPrepareState(Element.fromText('hi'), 'link-text'),
 
       // sTriggerEvent
       sClickLink,
@@ -308,7 +305,6 @@ asynctest(
 
       sTestScenario({
         label: 'Testing hitting ENTER after just setting URL',
-        node: text,
         fields: {
           url: 'http://fake-url'
         },
@@ -328,7 +324,6 @@ asynctest(
    
       sTestScenario({
         label: 'Testing hitting ENTER after filling in URL and text',
-        node: text,
         fields: {
           url: 'http://fake-url',
           text: 'LinkText'
@@ -349,7 +344,6 @@ asynctest(
 
       sTestScenario({
         label: 'Testing hitting ENTER after filling in URL and title (not text)',
-        node: text,
         fields: {
           url: 'http://fake-url',
           title: 'Title'
@@ -371,7 +365,6 @@ asynctest(
 
       sTestScenario({
         label: 'Testing hitting ENTER after filling in URL, text, and title',
-        node: text,
         fields: {
           url: 'http://fake-url',
           text: 'LinkText',
@@ -394,7 +387,6 @@ asynctest(
 
       sTestScenario({
         label: 'Testing hitting ENTER after filling in URL, text, title, and target',
-        node: text,
         fields: {
           url: 'http://fake-url',
           text: 'LinkText',
@@ -419,7 +411,6 @@ asynctest(
 
       sTestScenario({
         label: 'Testing hitting ENTER after filling in URL with initial text selection',
-        node: text,
         content: 'Initial text selection',
         fields: {
           url: 'http://fake-url'
@@ -436,6 +427,13 @@ asynctest(
             }
           }
         ])
+      }),
+
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in nothing with an existing link with url',
+        node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
+        fields: { },
+        expected: Fun.constant([ ])
       }),
 
 
