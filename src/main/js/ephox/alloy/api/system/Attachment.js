@@ -23,12 +23,11 @@ define(
     };
 
     var fireAttaching = function (component) {
+      var children = component.components();
+      Arr.each(children, fireAttaching);
       component.getSystem().triggerEvent(SystemEvents.attachedToDom(), component.element(), {
         target: Fun.constant(component.element())
       });
-
-      var children = component.components();
-      Arr.each(children, fireAttaching);
     }
 
     var attach = function (parent, child) {
