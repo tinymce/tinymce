@@ -161,40 +161,41 @@ div.@{prefix}-tinymce-inline {
 // Styles for inline dialog elements
 
 .@{prefix}-container b {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .@{prefix}-container p {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .@{prefix}-container a {
-	color: @text-link;
-	&:hover {
-		text-decoration: underline;
-	}
+  cursor: pointer;
+  color: @text-link;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .@{prefix}-container ul {
-	margin-left: 15px;
+  margin-left: 15px;
 }
 
 .@{prefix}-container .@{prefix}-table-striped {
-	border-collapse: collapse;
-	margin: 10px;
-	thead > tr {
-		background-color: @table-row-even;
-		th {
-			font-weight: bold;
-		}
-	}
-	td, th {
-		padding: 5px;
-	}
-	tr:nth-child(even) {
-		background-color: @table-row-even;
-	}
-	tbody > tr:hover {
-		background-color: @table-row-hover;
-	}
+  border-collapse: collapse;
+  margin: 10px;
+  thead > tr {
+    background-color: @table-row-even;
+    th {
+      font-weight: bold;
+    }
+  }
+  td, th {
+    padding: 5px;
+  }
+  tr:nth-child(even) {
+    background-color: @table-row-even;
+  }
+  tbody > tr:hover {
+    background-color: @table-row-hover;
+  }
 }
