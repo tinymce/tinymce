@@ -3,31 +3,16 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Thunk',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.TextContent',
-    'ephox.sugar.api.search.SelectorFind',
+    'tinymce.themes.mobile.bridge.LinkBridge',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.Inputs',
     'tinymce.themes.mobile.ui.SerialisedDialog',
     'tinymce.themes.mobile.util.RangePreserver'
   ],
 
-  function (Representing, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog, RangePreserver) {
-    var isNotEmpty = function (val) {
-      return val.length > 0;
-    };
-
-    var findLink = function (editor) {
-      var start = Element.fromDom(editor.selection.getStart());
-      return SelectorFind.closest(start, 'a');
-    };
-
-    var defaultToEmpty = function (str) {
-      return str === undefined || str === null ? '' : str;
-    };
-
+  function (Representing, Option, Thunk, LinkBridge, Buttons, Inputs, SerialisedDialog, RangePreserver) {
     var getGroups = Thunk.cached(function (realm, editor) {
       return [
         {
@@ -38,48 +23,21 @@ define(
                 Inputs.field('url', 'Type or paste URL'),
                 Inputs.field('text', 'Link text'),
                 Inputs.field('title', 'Link title'),
-                Inputs.field('target', 'Link target')
+                Inputs.field('target', 'Link target'),
+                Inputs.hidden('link')
               ],
 
+              // Do not include link
+              maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
               getInitialValue: function (/* dialog */) {
-                return findLink(editor).map(function (link) {
-                  var text = TextContent.get(link);
-                  var url = Attr.get(link, 'href');
-                  var title = Attr.get(link, 'title');
-                  var target = Attr.get(link, 'target');
-                  return {
-                    url: defaultToEmpty(url),
-                    text: defaultToEmpty(text),
-                    title: defaultToEmpty(title),
-                    target: defaultToEmpty(target)
-                  };
-                });
+                return Option.some(
+                  LinkBridge.getInfo(editor)
+                );
               },
 
               onExecute: function (dialog/*, simulatedEvent */) {
-                var values = Representing.getValue(dialog);
-
-                // Must have a URL to insert a link
-                values.url.filter(isNotEmpty).each(function (url) {
-                  var attrs = { };
-                  attrs.href = url;
-
-                  values.title.filter(isNotEmpty).each(function (title) { attrs.title = title; });
-                  values.target.filter(isNotEmpty).each(function (target) { attrs.target = target; });
-                  values.title.filter(isNotEmpty).each(function (title) {
-                    attrs.title = title.text;
-                  });
-                  values.target.filter(isNotEmpty).each(function (target) {
-                    attrs.target = target.text;
-                  });
-
-                  values.text.filter(isNotEmpty).fold(function () {
-                    editor.execCommand('mceInsertLink', false, attrs);
-                  }, function (text) {
-                    editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
-                  });
-                });
-
+                var info = Representing.getValue(dialog);
+                LinkBridge.applyInfo(editor, info);
                 realm.restoreToolbar();
                 editor.focus();
               }
@@ -104,7 +62,7 @@ define(
           realm.focusToolbar();
         });
 
-        findLink(editor).each(function (link) {
+        LinkBridge.query(editor).each(function (link) {
           editor.selection.select(link.dom());
         });
       }, { });

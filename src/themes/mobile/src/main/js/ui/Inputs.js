@@ -2,20 +2,17 @@ define(
   'tinymce.themes.mobile.ui.Inputs',
 
   [
+    'ephox.alloy.api.ui.DataField',
     'ephox.alloy.api.ui.Input',
     'ephox.katamari.api.Option'
   ],
 
-  function (Input, Option) {
+  function (DataField, Input, Option) {
     var field = function (name, placeholder) {
       return {
         name: name,
         spec: Input.sketch({
-          dom: {
-            attributes: {
-              placeholder: placeholder
-            }
-          },
+          placeholder: placeholder,
           inputBehaviours: {
             composing: { find: Option.some }
           }
@@ -23,8 +20,26 @@ define(
       };
     };
 
+    var hidden = function (name) {
+      return {
+        name: name,
+        spec: DataField.sketch({
+          dom: {
+            tag: 'span',
+            styles: {
+              display: 'none'
+            }
+          },
+          getInitialValue: function () {
+            return Option.none();
+          }
+        })
+      };
+    };
+
     return {
-      field: field
+      field: field,
+      hidden: hidden
     };
   }
 );
