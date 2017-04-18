@@ -292,5 +292,52 @@ test(
         }), elem);
       }
     });
+
+    checkApply({
+      label: 'Applying to complex link (http://foo), Foo with url',
+      info: {
+        url: 'hi',
+        text: '',
+        title: '',
+        target: '',
+        link: Option.some(
+          Element.fromHtml('<a href="http://foo">Foo</a>')
+        )
+      },
+      mutations: function (elem) {
+        Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
+          return s.element('a', {
+            attrs: {
+              href: str.is('hi')
+            },
+            html: str.is('Foo')
+          });
+        }), elem);
+      }
+    });
+
+    checkApply({
+      label: 'Applying to complex link (http://foo), Foo with url, text, and title',
+      info: {
+        url: 'hi',
+        text: 'new-text',
+        title: 'new-title',
+        target: '',
+        link: Option.some(
+          Element.fromHtml('<a href="http://foo">Foo</a>')
+        )
+      },
+      mutations: function (elem) {
+        Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
+          return s.element('a', {
+            attrs: {
+              href: str.is('hi'),
+              title: str.is('new-title')
+            },
+            html: str.is('new-text')
+          });
+        }), elem);
+      }
+    });
   }
 );
