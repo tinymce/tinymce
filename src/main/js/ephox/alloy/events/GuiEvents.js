@@ -127,7 +127,7 @@ define(
           e.unbind();
         });
         onKeydown.unbind();
-        onFocusIn.bind();
+        onFocusIn.unbind();
         onFocusOut.unbind();
         onWindowScroll.unbind();
       };

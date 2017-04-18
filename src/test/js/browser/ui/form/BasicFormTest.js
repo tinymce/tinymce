@@ -103,7 +103,6 @@ asynctest(
       };
 
       return [
-        Step.debugging,
         Logger.t(
           'Initial values',
           GeneralSteps.sequence([
