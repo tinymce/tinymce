@@ -43,8 +43,7 @@ define(
 
       var scrollToCursor = function () {
         editorApi.getCursorBox().each(function (box) {
-          // document.title=box.top + ', ' + box.height;
-          scrollToY(box.top, box.height);
+          scrollToY(box.top(), box.height());
         });
       };
 

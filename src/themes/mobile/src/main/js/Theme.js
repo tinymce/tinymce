@@ -51,6 +51,21 @@ define(
                 };
               },
 
+              onScrollToCursor: function (handler) {
+                editor.on('scrollIntoView', function (evt) {
+                  handler(evt);
+                  evt.preventDefault();
+                });
+
+                var unbind = function () {
+                  editor.off('scrollIntoView');
+                };
+
+                return {
+                  unbind: unbind
+                };
+              },
+
               onTapContent: function () {
                 realm.restoreToolbar();
               }

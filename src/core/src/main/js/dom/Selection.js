@@ -923,6 +923,13 @@ define(
       },
 
       scrollIntoView: function (elm, alignToTop) {
+        var scrollEvent = { elm: elm, alignToTop: alignToTop };
+        this.editor.fire('scrollIntoView', scrollEvent);
+        if (scrollEvent.isDefaultPrevented()) {
+          return;
+        }
+
+
         var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH, offsetY = 0;
 
         function getPos(elm) {
