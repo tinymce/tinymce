@@ -195,12 +195,17 @@ asynctest(
       sAssertTitleFocused,
       Keyboard.sKeydown(doc, Keys.tab(), { }),
       sAssertTargetFocused,
+      Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+      sAssertTitleFocused,
+      Keyboard.sKeydown(doc, Keys.tab(), { shift: false }),
+      sAssertTargetFocused,
       Keyboard.sKeydown(doc, Keys.tab(), { }),
+
       Step.wait(1000),
       Logger.t('Checking pressing tab at the end should not move focus', sAssertTargetFocused),
 
       sClickPrev,
-      sAssertTitleFocused,      
+      sAssertTitleFocused,
       sClickNext,
       sAssertTargetFocused,
       sClickPrev,
