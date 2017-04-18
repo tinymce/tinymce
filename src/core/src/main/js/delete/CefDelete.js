@@ -9,30 +9,50 @@
  */
 
 define(
-  'tinymce.core.keyboard.CefDelete',
+  'tinymce.core.delete.CefDelete',
   [
     'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.delete.BlockBoundary',
+    'tinymce.core.delete.CefDeleteAction',
     'tinymce.core.delete.DeleteElement',
     'tinymce.core.delete.MergeBlocks',
     'tinymce.core.dom.NodeType'
   ],
-  function (Element, CaretPosition, CaretUtils, BlockBoundary, DeleteElement, MergeBlocks, NodeType) {
-    var backspaceDeleteCaret = function (editor, forward) {
-      var normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, editor.getBody(), editor.selection.getRng());
-      var from = CaretPosition.fromRangeStart(normalizedRange);
+  function (Element, CaretPosition, CaretUtils, BlockBoundary, CefDeleteAction, DeleteElement, MergeBlocks, NodeType) {
+    var deleteElement = function (editor, forward) {
+      return function (element) {
+        DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
+        return true;
+      };
+    };
 
-      if (forward === false && CaretUtils.isAfterContentEditableFalse(from)) {
-        DeleteElement.deleteElement(editor, forward, Element.fromDom(from.getNode(true)));
+    var moveToElement = function (editor, forward) {
+      return function (element) {
+        var pos = forward ? CaretPosition.before(element) : CaretPosition.after(element);
+        editor.selection.setRng(pos.toRange());
         return true;
-      } else if (forward && CaretUtils.isBeforeContentEditableFalse(from)) {
-        DeleteElement.deleteElement(editor, forward, Element.fromDom(from.getNode()));
+      };
+    };
+
+    var moveToPosition = function (editor) {
+      return function (pos) {
+        editor.selection.setRng(pos.toRange());
         return true;
-      } else {
-        return false;
-      }
+      };
+    };
+
+    var backspaceDeleteCaret = function (editor, forward) {
+      var result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
+        return deleteAction.fold(
+          deleteElement(editor, forward),
+          moveToElement(editor, forward),
+          moveToPosition(editor)
+        );
+      });
+
+      return result.getOr(false);
     };
 
     var backspaceDeleteRange = function (editor, forward) {

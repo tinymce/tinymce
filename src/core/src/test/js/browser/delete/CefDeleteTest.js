@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.keyboard.CefDeleteTest',
+  'browser.tinymce.core.delete.CefDeleteTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.GeneralSteps',

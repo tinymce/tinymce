@@ -12,8 +12,8 @@ define(
   'tinymce.core.delete.DeleteCommands',
   [
     'tinymce.core.delete.BlockBoundaryDelete',
-    'tinymce.core.keyboard.BoundaryDelete',
-    'tinymce.core.keyboard.CefDelete'
+    'tinymce.core.delete.InlineBoundaryDelete',
+    'tinymce.core.delete.CefDelete'
   ],
   function (BlockBoundaryDelete, BoundaryDelete, CefDelete) {
     var nativeCommand = function (editor, command) {
@@ -57,7 +57,7 @@ define(
         return;
       } else if (BoundaryDelete.backspaceDelete(editor, true)) {
         return;
-      } else if (BlockBoundaryDelete.backspaceDelete(editor, false)) {
+      } else if (BlockBoundaryDelete.backspaceDelete(editor, true)) {
         return;
       } else {
         nativeCommand(editor, 'ForwardDelete');

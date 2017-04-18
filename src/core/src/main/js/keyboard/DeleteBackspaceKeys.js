@@ -13,8 +13,8 @@ define(
   [
     'ephox.katamari.api.Arr',
     'tinymce.core.delete.BlockBoundaryDelete',
-    'tinymce.core.keyboard.BoundaryDelete',
-    'tinymce.core.keyboard.CefDelete',
+    'tinymce.core.delete.InlineBoundaryDelete',
+    'tinymce.core.delete.CefDelete',
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],

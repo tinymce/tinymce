@@ -1,5 +1,5 @@
 /**
- * BoundaryDelete.js
+ * InlineBoundaryDelete.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.keyboard.BoundaryDelete',
+  'tinymce.core.delete.InlineBoundaryDelete',
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
