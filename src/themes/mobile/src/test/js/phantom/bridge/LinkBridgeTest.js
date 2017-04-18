@@ -61,6 +61,25 @@ test(
       });
     };
 
+    var checkGetALink = function (rawScenario) {
+      var schema = ValueSchema.objOfOnly([
+        FieldSchema.strict('label'),
+        FieldSchema.defaulted('linkHtml', ''),
+        FieldSchema.defaulted('selection', ''),
+        FieldSchema.strict('expected')
+      ]);
+
+      var scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+
+      Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, function () {
+        editorState.start.set(Element.fromHtml(scenario.linkHtml).dom());
+        editorState.content.set(scenario.selection);
+        var info = LinkBridge.getInfo(editor);
+        RawAssertions.assertEq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
+        RawAssertions.assertEq('Checking link is set', true, info.link.isSome());
+      });
+    };
+
     checkGetNoLink({
       label: 'Basic text node with no text',
       expected: ''
@@ -78,7 +97,53 @@ test(
       selection: 'sel',
       expected: 'sel'
     });
-    
 
+    checkGetALink({
+      label: 'Link with href',
+      linkHtml: '<a href="http://foo">Foo</a>',
+      selection: 'sel',
+      expected: {
+        url: 'http://foo',
+        text: 'Foo',
+        title: '',
+        target: ''
+      }
+    });
+
+    checkGetALink({
+      label: 'Link with href and target',
+      linkHtml: '<a href="http://foo" target="_blank">Foo</a>',
+      selection: 'sel',
+      expected: {
+        url: 'http://foo',
+        text: 'Foo',
+        title: '',
+        target: '_blank'
+      }
+    });
+
+    checkGetALink({
+      label: 'Link with href and target and title',
+      linkHtml: '<a href="http://foo" target="_blank" title="wow">Foo</a>',
+      selection: 'sel',
+      expected: {
+        url: 'http://foo',
+        text: 'Foo',
+        title: 'wow',
+        target: '_blank'
+      }
+    });
+
+    checkGetALink({
+      label: 'Link with href and matching text (should ignore text)',
+      linkHtml: '<a href="http://foo">http://foo</a>',
+      selection: 'sel',
+      expected: {
+        url: 'http://foo',
+        text: '',
+        title: '',
+        target: ''
+      }
+    });
   }
 );
