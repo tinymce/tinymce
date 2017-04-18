@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.construct.EventHandler',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -27,23 +28,25 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option,
-    Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema,
+    Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
-    var schema = ValueSchema.objOf([
-      FieldSchema.strict('fields'),
-      FieldSchema.strict('onExecute'),
-      FieldSchema.strict('getInitialValue'),
-      FieldSchema.state('state', function () {
-        return {
-          dialogSwipeState: Singleton.value(),
-          currentScreen: Cell(0)
-        };
-      })
-    ]);
-
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
+
+      var schema = ValueSchema.objOf([
+        FieldSchema.strict('fields'),
+        // Used for when datafields are present.
+        FieldSchema.defaulted('maxFieldIndex', rawSpec.fields.length - 1),
+        FieldSchema.strict('onExecute'),
+        FieldSchema.strict('getInitialValue'),
+        FieldSchema.state('state', function () {
+          return {
+            dialogSwipeState: Singleton.value(),
+            currentScreen: Cell(0)
+          };
+        })
+      ]);
 
       var spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
 
@@ -121,7 +124,7 @@ define(
               }
             },
             components: Arr.map(spec.fields, function (field, i) {
-              return Container.sketch({
+              return i <= spec.maxFieldIndex ? Container.sketch({
                 dom: {
                   tag: 'div',
                   classes: [ Styles.resolve('serialised-dialog-screen') ]
@@ -129,9 +132,9 @@ define(
                 components: Arr.flatten([
                   [ prevButton(i > 0) ],
                   [ Form.parts(field.name) ],
-                  [ nextButton(i < spec.fields.length - 1) ]
+                  [ nextButton(i < spec.maxFieldIndex) ]
                 ])
-              });
+              }) : Form.parts(field.name);
             })
           })
         ],

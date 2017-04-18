@@ -179,6 +179,6 @@ asynctest(
       sAssertNavigation('Checking navigation for link target', true, false),
       
       function () { }
-    ], function () { doucment.head.removeChild(styles); success(); }, failure);
+    ], function () { document.head.removeChild(styles); success(); }, failure);
   }
 );

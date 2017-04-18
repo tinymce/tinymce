@@ -44,6 +44,8 @@ define(
                 Inputs.hidden('link')
               ],
 
+              // Do not include link
+              maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
               getInitialValue: function (/* dialog */) {
                 console.log('getInitialValue');
                 return findLink(editor).fold(function () {
