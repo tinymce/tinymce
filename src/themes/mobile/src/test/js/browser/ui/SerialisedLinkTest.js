@@ -330,8 +330,8 @@ asynctest(
         label: 'Testing hitting ENTER after filling in URL and text',
         node: text,
         fields: {
-          url: 'http://fake-url-2',
-          text: 'LinkText-2'
+          url: 'http://fake-url',
+          text: 'LinkText'
         },
         expected: Fun.constant([
           {
@@ -339,9 +339,9 @@ asynctest(
             data: {
               tag: 'a',
               attributes: {
-                href: 'http://fake-url-2'
+                href: 'http://fake-url'
               },
-              innerText: 'LinkText-2'
+              innerText: 'LinkText'
             }
           }
         ])
@@ -351,8 +351,8 @@ asynctest(
         label: 'Testing hitting ENTER after filling in URL and title (not text)',
         node: text,
         fields: {
-          url: 'http://fake-url-3',
-          title: 'Title-3'
+          url: 'http://fake-url',
+          title: 'Title'
         },
         expected: Fun.constant([
           {
@@ -360,10 +360,10 @@ asynctest(
             data: {
               tag: 'a',
               attributes: {
-                href: 'http://fake-url-3',
-                title: 'Title-3'
+                href: 'http://fake-url',
+                title: 'Title'
               },
-              innerText: 'http://fake-url-3'
+              innerText: 'http://fake-url'
             }
           }
         ])
@@ -373,9 +373,9 @@ asynctest(
         label: 'Testing hitting ENTER after filling in URL, text, and title',
         node: text,
         fields: {
-          url: 'http://fake-url-4',
-          text: 'LinkText-4',
-          title: 'Title-4'
+          url: 'http://fake-url',
+          text: 'LinkText',
+          title: 'Title'
         },
         expected: Fun.constant([
           {
@@ -383,10 +383,10 @@ asynctest(
             data: {
               tag: 'a',
               attributes: {
-                href: 'http://fake-url-4',
-                title: 'Title-4'
+                href: 'http://fake-url',
+                title: 'Title'
               },
-              innerText: 'LinkText-4'
+              innerText: 'LinkText'
             }
           }
         ])
@@ -396,10 +396,10 @@ asynctest(
         label: 'Testing hitting ENTER after filling in URL, text, title, and target',
         node: text,
         fields: {
-          url: 'http://fake-url-5',
-          text: 'LinkText-5',
-          title: 'Title-5',
-          target: 'Target-5'
+          url: 'http://fake-url',
+          text: 'LinkText',
+          title: 'Title',
+          target: 'Target'
         },
         expected: Fun.constant([
           {
@@ -407,11 +407,32 @@ asynctest(
             data: {
               tag: 'a',
               attributes: {
-                href: 'http://fake-url-5',
-                title: 'Title-5',
-                target: 'Target-5'
+                href: 'http://fake-url',
+                title: 'Title',
+                target: 'Target'
               },
-              innerText: 'LinkText-5'
+              innerText: 'LinkText'
+            }
+          }
+        ])
+      }),
+
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL with initial text selection',
+        node: text,
+        content: 'Initial text selection',
+        fields: {
+          url: 'http://fake-url'
+        },
+        expected: Fun.constant([
+          {
+            method: 'insertContent',
+            data: {
+              tag: 'a',
+              attributes: {
+                href: 'http://fake-url'
+              },
+              innerText: 'Initial text selection'
             }
           }
         ])
