@@ -3,33 +3,16 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Thunk',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.TextContent',
-    'ephox.sugar.api.search.SelectorFind',
+    'tinymce.themes.mobile.bridge.LinkBridge',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.Inputs',
     'tinymce.themes.mobile.ui.SerialisedDialog',
     'tinymce.themes.mobile.util.RangePreserver'
   ],
 
-  function (Representing, Fun, Option, Thunk, Element, Attr, TextContent, SelectorFind, Buttons, Inputs, SerialisedDialog, RangePreserver) {
-    var isNotEmpty = function (val) {
-      return val.length > 0;
-    };
-
-    var findLink = function (editor) {
-      var start = Element.fromDom(editor.selection.getStart());
-      return SelectorFind.closest(start, 'a');
-    };
-
-    var defaultToEmpty = function (str) {
-      return str === undefined || str === null ? '' : str;
-    };
-
+  function (Representing, Option, Thunk, LinkBridge, Buttons, Inputs, SerialisedDialog, RangePreserver) {
     var getGroups = Thunk.cached(function (realm, editor) {
       return [
         {
@@ -47,74 +30,14 @@ define(
               // Do not include link
               maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
               getInitialValue: function (/* dialog */) {
-                console.log('getInitialValue');
-                return findLink(editor).fold(function () {
-                  console.log('no link for ', editor.selection.getStart());
-                  // TODO: Improve with more of tiny's link logic?
-                  var text = editor.selection.getContent();
-                  return Option.some({
-                    text: text,
-                    link: Option.none()
-                  });
-                }, function (link) {
-                  console.log('link', link.dom());
-                  var text = TextContent.get(link);
-                  var url = Attr.get(link, 'href');
-                  var title = Attr.get(link, 'title');
-                  var target = Attr.get(link, 'target');
-                  return Option.some({
-                    url: defaultToEmpty(url),
-                    text: text !== url ? defaultToEmpty(text) : '',
-                    title: defaultToEmpty(title),
-                    target: defaultToEmpty(target),
-                    link: Option.some(link)
-                  });
-                });
+                return Option.some(
+                  LinkBridge.getInfo(editor)
+                );
               },
 
               onExecute: function (dialog/*, simulatedEvent */) {
-                var values = Representing.getValue(dialog);
-
-                // We must have a non-empty URL to insert a link
-                values.url.filter(isNotEmpty).each(function (url) {
-                  var attrs = { };
-                  attrs.href = url;
-                  
-                  values.title.filter(isNotEmpty).each(function (title) {
-                    attrs.title = title;
-                  });
-                  values.target.filter(isNotEmpty).each(function (target) {
-                    attrs.target = target;
-                  });
-                  
-                  var activeLink = values.link.bind(Fun.identity);
-                  activeLink.fold(function () {
-                    var text = values.text.filter(isNotEmpty).getOr(url);
-                    editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
-                  }, function (link) {
-                    var prevHref = Attr.get(link, 'href');
-                    var prevText = TextContent.get(link);
-                    var wasSimple = prevHref === prevText;
-
-                    Attr.setAll(link, attrs);
-                    values.text.filter(isNotEmpty).fold(function () {
-                      // No text specified, so use the URL if it was a simple link
-                      if (wasSimple) TextContent.set(link, url);
-                    }, function (newText) {
-                      // TextContent.set()
-                    });
-                    if (wasSimple) {
-                      var text = values.text.filter(isNotEmpty).getOr(url);
-                      TextContent.set(link, text);
-                    } else {
-                      // 
-                    }
-                    // The Text rules are a little more complicated here. Use the href backup
-                    // only if the original href matched the text content.
-                    
-                  });
-                });
-
+                var info = Representing.getValue(dialog);
+                LinkBridge.applyInfo(editor, info);
                 realm.restoreToolbar();
                 editor.focus();
               }
@@ -139,7 +62,7 @@ define(
           realm.focusToolbar();
         });
 
-        findLink(editor).each(function (link) {
+        LinkBridge.query(editor).each(function (link) {
           editor.selection.select(link.dom());
         });
       }, { });

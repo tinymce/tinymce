@@ -494,6 +494,26 @@ asynctest(
         }
       }),
 
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL and text with an existing link with url',
+        node: Element.fromHtml('<a href="http://prepared-url">any text</a>'),
+        fields: {
+          url: 'http://new-url',
+          text: 'new-text'
+        },
+        expected: [ ],
+        mutations: function (node) {
+          return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+            return s.element('a', {
+              attrs: {
+                href: str.is('http://new-url')
+              },
+              html: str.is('new-text')
+            });
+          }), node);
+        }
+      }),
+
 
       // sTestEnterOnUrl
       function () { }
