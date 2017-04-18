@@ -99,25 +99,12 @@ asynctest(
         ]
       }
     ]);
-    
 
     var sPrepareState = function (node, content) {
       return Step.sync(function () {
         editorState.start.set(node);
         editorState.content.set(content);
       });
-    };
-
-    var root = realm.system().getByDom(realm.element()).getOrDie();
-
-    var sTriggerEvent = function (event, selector, data) {
-      return Chain.asStep({ }, [
-        Chain.inject(realm.element()),
-        UiFinder.cFindIn(selector),
-        Chain.op(function (target) {
-          root.getSystem().triggerEvent(event, target, data(target));
-        })
-      ]);
     };
 
     var sAssertNavigation = function (label, prevEnabled, nextEnabled) {
@@ -271,12 +258,12 @@ asynctest(
           sClickNext,
           sAssertTargetFocused,
           sSetFieldOptValue(scenario.fields.target),
-          // sClickPrev,
-          // sAssertTitleFocused,
-          // sClickPrev,
-          // sAssertTextFocused,
-          // sClickPrev,
-          // sAssertUrlFocused,
+          sClickPrev,
+          sAssertTitleFocused,
+          sClickPrev,
+          sAssertTextFocused,
+          sClickPrev,
+          sAssertUrlFocused,
           scenario.beforeExecute,
           Keyboard.sKeydown(doc, Keys.enter(), { }),
           store.sAssertEq('Checking insert content', scenario.expected),
@@ -308,13 +295,11 @@ asynctest(
 
       sPrepareState(Element.fromText('hi'), 'link-text'),
 
-      // sTriggerEvent
       sClickLink,
-
       FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
       sAssertNavigation('Checking initial navigation on text node', false, true),
 
-      // sTestNavigation,
+      sTestNavigation,
       Step.sync(function () {
         realm.restoreToolbar();
       }),
