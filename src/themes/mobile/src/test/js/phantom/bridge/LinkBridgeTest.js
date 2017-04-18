@@ -2,6 +2,8 @@ test(
   'Test: phantom.bridge.LinkBridgeTest',
 
   [
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.alloy.test.TestStore',
@@ -10,11 +12,12 @@ test(
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.node.Element',
     'tinymce.themes.mobile.bridge.LinkBridge'
   ],
 
-  function (Logger, RawAssertions, TestStore, FieldSchema, Objects, ValueSchema, Cell, Fun, Element, LinkBridge) {
+  function (ApproxStructure, Assertions, Logger, RawAssertions, TestStore, FieldSchema, Objects, ValueSchema, Cell, Fun, Option, Element, LinkBridge) {
     var store = TestStore();
 
     var editorState = {
@@ -77,6 +80,30 @@ test(
         var info = LinkBridge.getInfo(editor);
         RawAssertions.assertEq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
         RawAssertions.assertEq('Checking link is set', true, info.link.isSome());
+      });
+    };
+
+    var checkApply = function (rawScenario) {
+      var schema = ValueSchema.objOfOnly([
+        FieldSchema.strict('label'),
+        FieldSchema.strictObjOf('info', [
+          FieldSchema.option('url'),
+          FieldSchema.option('text'),
+          FieldSchema.option('title'),
+          FieldSchema.option('target'),
+          FieldSchema.option('link')
+        ]),
+        FieldSchema.defaulted('mutations', Fun.noop),
+        FieldSchema.defaulted('expected', [ ])
+      ]);
+
+      var scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+      Logger.sync('setInfo ... ' + scenario.label, function () {
+        store.clear();
+        LinkBridge.applyInfo(editor, scenario.info);
+        store.assertEq('Checking store', scenario.expected);
+        var link = scenario.info.link.bind(Fun.identity);
+        link.each(scenario.mutations);
       });
     };
 
@@ -143,6 +170,126 @@ test(
         text: '',
         title: '',
         target: ''
+      }
+    });
+
+    checkApply({
+      label: 'Applying to empty text',
+      info: {
+        url: 'hi'
+      },
+      mutations: function (elem) {
+
+      },
+      expected: [
+        {
+          method: 'insertContent',
+          data: {
+            tag: 'a',
+            attributes: {
+              href: 'hi'
+            },
+            innerText: 'hi'
+          }
+        }
+      ]
+    });
+
+    checkApply({
+      label: 'Applying to empty text with [ text ]',
+      info: {
+        url: 'hi',
+        text: 'hello'
+      },
+      mutations: function (elem) {
+
+      },
+      expected: [
+        {
+          method: 'insertContent',
+          data: {
+            tag: 'a',
+            attributes: {
+              href: 'hi'
+            },
+            innerText: 'hello'
+          }
+        }
+      ]
+    });
+
+    checkApply({
+      label: 'Applying to empty text with [ text, title ]',
+      info: {
+        url: 'hi',
+        text: 'hello',
+        title: 'Title'
+      },
+      mutations: function (elem) {
+
+      },
+      expected: [
+        {
+          method: 'insertContent',
+          data: {
+            tag: 'a',
+            attributes: {
+              href: 'hi',
+              title: 'Title'
+            },
+            innerText: 'hello'
+          }
+        }
+      ]
+    });
+
+    checkApply({
+      label: 'Applying to empty text with [ text, title, target ]',
+      info: {
+        url: 'hi',
+        text: 'hello',
+        title: 'Title',
+        target: 'new'
+      },
+      mutations: function (elem) {
+
+      },
+      expected: [
+        {
+          method: 'insertContent',
+          data: {
+            tag: 'a',
+            attributes: {
+              href: 'hi',
+              title: 'Title',
+              target: 'new'
+            },
+            innerText: 'hello'
+          }
+        }
+      ]
+    });
+
+    checkApply({
+      label: 'Applying to simple link (http://foo) with url',
+      info: {
+        url: 'hi',
+        text: '',
+        title: '',
+        target: '',
+        link: Option.some(
+          Element.fromHtml('<a href="http://foo">http://foo</a>')
+        )
+      },
+      mutations: function (elem) {
+        Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
+          return s.element('a', {
+            attrs: {
+              href: str.is('hi')
+            },
+            html: str.is('hi')
+          });
+        }), elem);
       }
     });
   }

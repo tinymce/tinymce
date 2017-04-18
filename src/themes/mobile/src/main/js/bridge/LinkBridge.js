@@ -83,8 +83,8 @@ define(
           var text = info.text.filter(isNotEmpty).getOr(url);
           editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
         }, function (link) {
-          Attr.setAll(link, attrs);
           var text = getTextToApply(link, url, info);
+          Attr.setAll(link, attrs);
           text.each(function (newText) {
             TextContent.set(link, newText);
           });
