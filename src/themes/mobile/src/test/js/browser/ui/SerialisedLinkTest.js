@@ -13,6 +13,7 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.system.Attachment',
@@ -35,8 +36,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Attachment, AlloyLogger, GuiSetup,
-    TestStore, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
+    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, Attachment, AlloyLogger,
+    GuiSetup, TestStore, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -216,6 +217,15 @@ asynctest(
       sAssertUrlFocused
     ]);
 
+    var sClickLink = Mouse.sClickOn(realm.element(), '.tinymce-mobile-toolbar-button-link');
+
+    var sSetFieldValue = function (value) {
+      return Chain.asStep({ }, [
+        cGetFocused,
+        UiControls.cSetValue(value)
+      ]);
+    };
+
     Pipeline.async({}, [
       GuiSetup.mAddStyles(doc, [
         '.tinymce-mobile-toolbar-button-link:before { content: "LINK"; background: black; color: white; }'
@@ -236,7 +246,7 @@ asynctest(
       sPrepareState(text, 'link-text'),
 
       // sTriggerEvent
-      Mouse.sClickOn(realm.element(), '.tinymce-mobile-toolbar-button-link'),
+      sClickLink,
 
       FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
       sAssertNavigation('Checking initial navigation on text node', false, true),
@@ -246,6 +256,66 @@ asynctest(
         realm.restoreToolbar();
       }),
 
+      sPrepareState(text, ''),
+      sClickLink,
+      sAssertUrlFocused,
+      sSetFieldValue('http://fake-url'),
+      Keyboard.sKeydown(doc, Keys.enter(), { }),
+      store.sAssertEq('Pressing enter after just setting URL', [{
+        method: 'insertContent',
+        data: {
+          tag: 'a',
+          attributes: {
+            href: 'http://fake-url'
+          },
+          innerText: 'http://fake-url'
+        }
+      }]),
+      store.sClear,
+
+      sClickLink,
+      sAssertUrlFocused,
+      sSetFieldValue('http://fake-url-2'),
+      sClickNext,
+      sAssertTextFocused,
+      sSetFieldValue('My Link Text 2'),
+      Keyboard.sKeydown(doc, Keys.enter(), { }),
+      store.sAssertEq('Pressing enter after just setting URL and text', [{
+        method: 'insertContent',
+        data: {
+          tag: 'a',
+          attributes: {
+            href: 'http://fake-url-2'
+          },
+          innerText: 'My Link Text 2'
+        }
+      }]),
+      store.sClear,
+
+
+
+      sClickLink,
+      sAssertUrlFocused,
+      sSetFieldValue('http://fake-url-3'),
+      sClickNext,
+      sAssertTextFocused,
+      sSetFieldValue('My Link Text 3'),
+      sClickNext,
+      sAssertTitleFocused,
+      sSetFieldValue('Title-3'),
+      Step.debugging,
+      Keyboard.sKeydown(doc, Keys.enter(), { }),
+      store.sAssertEq('Pressing enter after setting URL, text, and title', [{
+        method: 'insertContent',
+        data: {
+          tag: 'a',
+          attributes: {
+            href: 'http://fake-url-3',
+            title: 'Title-3'
+          },
+          innerText: 'My Link Text 3'
+        }
+      }]),
 
       // sTestEnterOnUrl
       function () { }

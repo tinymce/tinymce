@@ -4,14 +4,12 @@ define(
   [
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
-    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
@@ -28,8 +26,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Focusing, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldPresence, FieldSchema, Objects, ValueSchema,
-    Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton,
+    Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';

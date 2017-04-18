@@ -79,10 +79,10 @@ define(
                   attrs.href = url;
                   var text = values.text.filter(isNotEmpty).getOr(url);
                   values.title.filter(isNotEmpty).each(function (title) {
-                    attrs.title = title.text;
+                    attrs.title = title;
                   });
                   values.target.filter(isNotEmpty).each(function (target) {
-                    attrs.target = target.text;
+                    attrs.target = target;
                   });
                   
                   var activeLink = values.link.bind(Fun.identity);
