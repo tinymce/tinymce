@@ -34,14 +34,15 @@ asynctest(
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.properties.TextContent',
     'ephox.sugar.api.search.Traverse',
+    'global!navigator',
     'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.ui.LinkButton'
   ],
 
   function (
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, Attachment, AlloyLogger,
-    GuiSetup, TestStore, FieldPresence, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm,
-    LinkButton
+    GuiSetup, TestStore, FieldPresence, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, navigator,
+    IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -58,6 +59,11 @@ asynctest(
     styles.setAttribute('href', '/project/src/themes/mobile/src/main/css/mobile.css');
     styles.setAttribute('type', 'text/css');
     document.head.appendChild(styles);
+
+    var unload = function () {
+      document.head.removeChild(styles);
+      Attachment.detachSystem(realm.system());
+    };
 
 
     var store = TestStore();
@@ -291,7 +297,9 @@ asynctest(
         Chain.asStep(realm.element(), [
           UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
           Chain.op(function (toolstrip) {
-            Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
+            if (navigator.userAgent.indexOf('PhantomJS') === -1) {
+              Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
+            }
           })
         ]),
         100,
@@ -516,7 +524,7 @@ asynctest(
 
 
       // sTestEnterOnUrl
-      function () { }
-    ], function () { document.head.removeChild(styles); success(); }, failure);
+      // function () { }
+    ], function () { unload(); success(); }, failure);
   }
 );
