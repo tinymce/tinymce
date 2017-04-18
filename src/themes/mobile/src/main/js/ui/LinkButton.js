@@ -45,6 +45,7 @@ define(
               ],
 
               getInitialValue: function (/* dialog */) {
+                console.log('getInitialValue');
                 return findLink(editor).fold(function () {
                   // TODO: Improve with more of tiny's link logic?
                   var text = editor.selection.getContent();

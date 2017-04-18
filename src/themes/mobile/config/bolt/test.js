@@ -10,6 +10,7 @@ configure({
       return mapper.hierarchical(id).replace(/^tinymce\/themes\/mobile\//, '');
     }),
     source('amd', 'ephox/tinymce', '', mapper.constant('../../../../../../js/tinymce/tinymce')),
+    source('amd', 'ephox.alloy.test', '../../../../../node_modules/@ephox', mapper.repo('src/test/js/module', mapper.hierarchical)),
     source('amd', 'ephox', '../../../../../node_modules/@ephox', mapper.repo('src/main/js', mapper.hierarchical))
   ]
 });
