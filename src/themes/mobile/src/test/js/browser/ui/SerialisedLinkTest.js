@@ -253,7 +253,7 @@ asynctest(
         ]),
         FieldSchema.strict('expected'),
         FieldSchema.defaulted('beforeExecute', Step.pass),
-        FieldSchema.defaulted('mutations', Step.pass)
+        FieldSchema.defaulted('mutations', Fun.constant(Step.pass))
       ]), rawScenario);
 
       return Logger.t(
@@ -318,8 +318,7 @@ asynctest(
       Step.sync(function () {
         realm.restoreToolbar();
       }),
-      /*
-
+      
       sTestScenario({
         label: 'Testing hitting ENTER after just setting URL',
         fields: {
@@ -445,7 +444,6 @@ asynctest(
           }
         ]
       }),
-      */
 
       sTestScenario({
         label: 'Testing hitting ENTER after filling in nothing with an existing link with url',
@@ -520,11 +518,9 @@ asynctest(
             });
           }), node);
         }
-      }),
-
-
-      // sTestEnterOnUrl
-      // function () { }
-    ], function () { unload(); success(); }, failure);
+      })
+    ], function () {
+      unload(); success();
+    }, failure);
   }
 );
