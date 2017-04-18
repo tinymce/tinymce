@@ -241,7 +241,13 @@ asynctest(
       FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
       sAssertNavigation('Checking initial navigation on text node', false, true),
 
-      sTestNavigation,
+      // sTestNavigation,
+      Step.sync(function () {
+        realm.restoreToolbar();
+      }),
+
+
+      // sTestEnterOnUrl
       function () { }
     ], function () { document.head.removeChild(styles); success(); }, failure);
   }
