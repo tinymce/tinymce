@@ -20,6 +20,8 @@ asynctest(
     'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.TestStore',
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
@@ -37,7 +39,7 @@ asynctest(
 
   function (
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, Attachment, AlloyLogger,
-    GuiSetup, TestStore, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
+    GuiSetup, TestStore, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -226,6 +228,54 @@ asynctest(
       ]);
     };
 
+    var sSetFieldOptValue = function (optVal) {
+      return optVal.fold(function () {
+        return Step.pass;
+      }, sSetFieldValue);
+    };
+
+    var sTestScenario = function (rawScenario) {
+      var scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
+        FieldSchema.strict('label'),
+        FieldSchema.defaulted('content', ''),
+        FieldSchema.strict('node'),
+        FieldSchema.strictObjOf('fields', [
+          FieldSchema.option('url'),
+          FieldSchema.option('text'),
+          FieldSchema.option('title'),
+          FieldSchema.option('target')
+        ]),
+        FieldSchema.strict('expected')
+      ]), rawScenario);
+
+      return Logger.t(
+        scenario.label,
+        GeneralSteps.sequence([
+          sPrepareState(scenario.node, scenario.content),
+          sClickLink,
+          sSetFieldOptValue(scenario.fields.url),
+          sClickNext,
+          sAssertTextFocused,
+          sSetFieldOptValue(scenario.fields.text),
+          sClickNext,
+          sAssertTitleFocused,
+          sSetFieldOptValue(scenario.fields.title),
+          sClickNext,
+          sAssertTargetFocused,
+          sSetFieldOptValue(scenario.fields.target),
+          // sClickPrev,
+          // sAssertTitleFocused,
+          // sClickPrev,
+          // sAssertTextFocused,
+          // sClickPrev,
+          // sAssertUrlFocused,
+          Keyboard.sKeydown(doc, Keys.enter(), { }),
+          store.sAssertEq('Checking insert content', scenario.expected(scenario.node)),
+          store.sClear
+        ])
+      );
+    };
+
     Pipeline.async({}, [
       GuiSetup.mAddStyles(doc, [
         '.tinymce-mobile-toolbar-button-link:before { content: "LINK"; background: black; color: white; }'
@@ -256,66 +306,117 @@ asynctest(
         realm.restoreToolbar();
       }),
 
-      sPrepareState(text, ''),
-      sClickLink,
-      sAssertUrlFocused,
-      sSetFieldValue('http://fake-url'),
-      Keyboard.sKeydown(doc, Keys.enter(), { }),
-      store.sAssertEq('Pressing enter after just setting URL', [{
-        method: 'insertContent',
-        data: {
-          tag: 'a',
-          attributes: {
-            href: 'http://fake-url'
-          },
-          innerText: 'http://fake-url'
-        }
-      }]),
-      store.sClear,
+      sTestScenario({
+        label: 'Testing hitting ENTER after just setting URL',
+        node: text,
+        fields: {
+          url: 'http://fake-url'
+        },
+        expected: Fun.constant([
+          {
+            method: 'insertContent',
+            data: {
+              tag: 'a',
+              attributes: {
+                href: 'http://fake-url'
+              },
+              innerText: 'http://fake-url'
+            }
+          }
+        ])
+      }),
+   
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL and text',
+        node: text,
+        fields: {
+          url: 'http://fake-url-2',
+          text: 'LinkText-2'
+        },
+        expected: Fun.constant([
+          {
+            method: 'insertContent',
+            data: {
+              tag: 'a',
+              attributes: {
+                href: 'http://fake-url-2'
+              },
+              innerText: 'LinkText-2'
+            }
+          }
+        ])
+      }),
 
-      sClickLink,
-      sAssertUrlFocused,
-      sSetFieldValue('http://fake-url-2'),
-      sClickNext,
-      sAssertTextFocused,
-      sSetFieldValue('My Link Text 2'),
-      Keyboard.sKeydown(doc, Keys.enter(), { }),
-      store.sAssertEq('Pressing enter after just setting URL and text', [{
-        method: 'insertContent',
-        data: {
-          tag: 'a',
-          attributes: {
-            href: 'http://fake-url-2'
-          },
-          innerText: 'My Link Text 2'
-        }
-      }]),
-      store.sClear,
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL and title (not text)',
+        node: text,
+        fields: {
+          url: 'http://fake-url-3',
+          title: 'Title-3'
+        },
+        expected: Fun.constant([
+          {
+            method: 'insertContent',
+            data: {
+              tag: 'a',
+              attributes: {
+                href: 'http://fake-url-3',
+                title: 'Title-3'
+              },
+              innerText: 'http://fake-url-3'
+            }
+          }
+        ])
+      }),
 
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL, text, and title',
+        node: text,
+        fields: {
+          url: 'http://fake-url-4',
+          text: 'LinkText-4',
+          title: 'Title-4'
+        },
+        expected: Fun.constant([
+          {
+            method: 'insertContent',
+            data: {
+              tag: 'a',
+              attributes: {
+                href: 'http://fake-url-4',
+                title: 'Title-4'
+              },
+              innerText: 'LinkText-4'
+            }
+          }
+        ])
+      }),
 
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL, text, title, and target',
+        node: text,
+        fields: {
+          url: 'http://fake-url-5',
+          text: 'LinkText-5',
+          title: 'Title-5',
+          target: 'Target-5'
+        },
+        expected: Fun.constant([
+          {
+            method: 'insertContent',
+            data: {
+              tag: 'a',
+              attributes: {
+                href: 'http://fake-url-5',
+                title: 'Title-5',
+                target: 'Target-5'
+              },
+              innerText: 'LinkText-5'
+            }
+          }
+        ])
+      }),
 
-      sClickLink,
-      sAssertUrlFocused,
-      sSetFieldValue('http://fake-url-3'),
-      sClickNext,
-      sAssertTextFocused,
-      sSetFieldValue('My Link Text 3'),
-      sClickNext,
-      sAssertTitleFocused,
-      sSetFieldValue('Title-3'),
-      Step.debugging,
-      Keyboard.sKeydown(doc, Keys.enter(), { }),
-      store.sAssertEq('Pressing enter after setting URL, text, and title', [{
-        method: 'insertContent',
-        data: {
-          tag: 'a',
-          attributes: {
-            href: 'http://fake-url-3',
-            title: 'Title-3'
-          },
-          innerText: 'My Link Text 3'
-        }
-      }]),
 
       // sTestEnterOnUrl
       function () { }
