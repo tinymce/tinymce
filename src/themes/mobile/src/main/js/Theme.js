@@ -52,9 +52,8 @@ define(
               },
 
               onScrollToCursor: function (handler) {
-                editor.on('scrollIntoView', function (evt) {
-                  handler(evt);
-                  evt.preventDefault();
+                editor.on('scrollIntoView', function (tinyEvent) {
+                  handler(tinyEvent);
                 });
 
                 var unbind = function () {
