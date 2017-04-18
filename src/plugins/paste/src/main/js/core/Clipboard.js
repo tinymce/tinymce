@@ -37,9 +37,10 @@ define(
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.SmartPaste',
-    'tinymce.plugins.paste.core.Utils'
+    'tinymce.plugins.paste.core.Utils',
+    'tinymce.plugins.paste.core.Newlines'
   ],
-  function (RangeUtils, Env, Delay, VK, CutCopy, InternalHtml, SmartPaste, Utils) {
+  function (RangeUtils, Env, Delay, VK, CutCopy, InternalHtml, SmartPaste, Utils, Newlines) {
     return function (editor) {
       var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
       var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
@@ -90,32 +91,7 @@ define(
        */
       function pasteText(text) {
         text = editor.dom.encode(text).replace(/\r\n/g, '\n');
-
-        var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
-
-        // Create start block html for example <p attr="value">
-        var forcedRootBlockName = editor.settings.forced_root_block;
-        var forcedRootBlockStartHtml;
-        if (forcedRootBlockName) {
-          forcedRootBlockStartHtml = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs);
-          forcedRootBlockStartHtml = forcedRootBlockStartHtml.substr(0, forcedRootBlockStartHtml.length - 3) + '>';
-        }
-
-        if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !forcedRootBlockName) {
-          text = Utils.filter(text, [
-            [/\n/g, "<br>"]
-          ]);
-        } else {
-          text = Utils.filter(text, [
-            [/\n\n/g, "</p>" + forcedRootBlockStartHtml],
-            [/^(.*<\/p>)(<p>)$/, forcedRootBlockStartHtml + '$1'],
-            [/\n/g, "<br />"]
-          ]);
-
-          if (text.indexOf('<p>') != -1) {
-            text = forcedRootBlockStartHtml + text;
-          }
-        }
+        text = Newlines.convert(text, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
 
         pasteHtml(text, false);
       }
@@ -494,7 +470,7 @@ define(
         });
 
         function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-          var content;
+          var content, isPlainTextHtml;
 
           // Grab HTML from Clipboard API or paste bin as a fallback
           if (hasContentType(clipboardContent, 'text/html')) {
@@ -519,16 +495,21 @@ define(
 
           removePasteBin();
 
-          // If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
-          if (!content.length) {
+          isPlainTextHtml = Newlines.isPlainText(content);
+
+          // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
+          // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
+          if (!content.length || isPlainTextHtml) {
             plainTextMode = true;
           }
+
+
 
           // Grab plain text from Clipboard API or convert existing HTML to plain text
           if (plainTextMode) {
             // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
             // we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
-            if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+            if (hasContentType(clipboardContent, 'text/plain') && isPlainTextHtml) {
               content = clipboardContent['text/plain'];
             } else {
               content = Utils.innerText(content);

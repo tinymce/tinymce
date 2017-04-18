@@ -534,9 +534,9 @@ asynctest(
       rng.setStart(editor.dom.select('p')[0].firstChild, 1);
       rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
       editor.selection.setRng(rng);
-      editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc\n' });
+      editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
 
-      LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c<br />xt</p>');
+      LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c xt</p>');
     });
 
     suite.test('paste plain text with double linefeeds', function (editor) {
