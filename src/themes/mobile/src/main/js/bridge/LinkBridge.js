@@ -22,7 +22,10 @@ define(
     var noLink = function (editor) {
       var text = editor.selection.getContent();
       return {
+        url: '',
         text: text,
+        title: '',
+        target: '',
         link: Option.none()
       };
     };

@@ -58,7 +58,10 @@ test(
         editorState.content.set(scenario.selection);
         var info = LinkBridge.getInfo(editor);
         RawAssertions.assertEq('Checking getInfo (no link)', {
-          text: scenario.expected
+          url: '',
+          text: scenario.expected,
+          title: '',
+          target: ''
         }, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
         RawAssertions.assertEq('Checking link is not set', true, info.link.isNone());
       });
