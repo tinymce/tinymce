@@ -20,6 +20,7 @@ asynctest(
     'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.TestStore',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Cell',
@@ -39,7 +40,8 @@ asynctest(
 
   function (
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, Attachment, AlloyLogger,
-    GuiSetup, TestStore, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
+    GuiSetup, TestStore, FieldPresence, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm,
+    LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -68,7 +70,8 @@ asynctest(
     var editor = {
       selection: {
         getStart: editorState.start.get,
-        getContent: editorState.content.get
+        getContent: editorState.content.get,
+        select: Fun.noop
       },
       insertContent: function (data) {
         store.adder({ method: 'insertContent', data: data })();
@@ -235,20 +238,22 @@ asynctest(
       var scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
         FieldSchema.strict('label'),
         FieldSchema.defaulted('content', ''),
-        FieldSchema.defaulted('node', Element.fromText(rawScenario.content !== undefined ? rawScenario.content : '')),
+        FieldSchema.defaulted('node', Element.fromText('')),
         FieldSchema.strictObjOf('fields', [
           FieldSchema.option('url'),
           FieldSchema.option('text'),
           FieldSchema.option('title'),
           FieldSchema.option('target')
         ]),
-        FieldSchema.strict('expected')
+        FieldSchema.strict('expected'),
+        FieldSchema.defaulted('beforeExecute', Step.pass),
+        FieldSchema.defaulted('mutations', Step.pass)
       ]), rawScenario);
 
       return Logger.t(
         scenario.label,
         GeneralSteps.sequence([
-          sPrepareState(scenario.node, scenario.content),
+          sPrepareState(scenario.node.dom(), scenario.content),
           sClickLink,
           sSetFieldOptValue(scenario.fields.url),
           sClickNext,
@@ -266,9 +271,12 @@ asynctest(
           // sAssertTextFocused,
           // sClickPrev,
           // sAssertUrlFocused,
+          scenario.beforeExecute,
           Keyboard.sKeydown(doc, Keys.enter(), { }),
-          store.sAssertEq('Checking insert content', scenario.expected(scenario.node)),
+          store.sAssertEq('Checking insert content', scenario.expected),
+          scenario.mutations(scenario.node),
           store.sClear
+
         ])
       );
     };
@@ -302,13 +310,14 @@ asynctest(
       Step.sync(function () {
         realm.restoreToolbar();
       }),
+      /*
 
       sTestScenario({
         label: 'Testing hitting ENTER after just setting URL',
         fields: {
           url: 'http://fake-url'
         },
-        expected: Fun.constant([
+        expected: [
           {
             method: 'insertContent',
             data: {
@@ -319,7 +328,7 @@ asynctest(
               innerText: 'http://fake-url'
             }
           }
-        ])
+        ]
       }),
    
       sTestScenario({
@@ -328,7 +337,7 @@ asynctest(
           url: 'http://fake-url',
           text: 'LinkText'
         },
-        expected: Fun.constant([
+        expected: [
           {
             method: 'insertContent',
             data: {
@@ -339,7 +348,7 @@ asynctest(
               innerText: 'LinkText'
             }
           }
-        ])
+        ]
       }),
 
       sTestScenario({
@@ -348,7 +357,7 @@ asynctest(
           url: 'http://fake-url',
           title: 'Title'
         },
-        expected: Fun.constant([
+        expected: [
           {
             method: 'insertContent',
             data: {
@@ -360,7 +369,7 @@ asynctest(
               innerText: 'http://fake-url'
             }
           }
-        ])
+        ]
       }),
 
       sTestScenario({
@@ -370,7 +379,7 @@ asynctest(
           text: 'LinkText',
           title: 'Title'
         },
-        expected: Fun.constant([
+        expected: [
           {
             method: 'insertContent',
             data: {
@@ -382,7 +391,7 @@ asynctest(
               innerText: 'LinkText'
             }
           }
-        ])
+        ]
       }),
 
       sTestScenario({
@@ -393,7 +402,7 @@ asynctest(
           title: 'Title',
           target: 'Target'
         },
-        expected: Fun.constant([
+        expected: [
           {
             method: 'insertContent',
             data: {
@@ -406,7 +415,7 @@ asynctest(
               innerText: 'LinkText'
             }
           }
-        ])
+        ]
       }),
 
       sTestScenario({
@@ -415,7 +424,7 @@ asynctest(
         fields: {
           url: 'http://fake-url'
         },
-        expected: Fun.constant([
+        expected: [
           {
             method: 'insertContent',
             data: {
@@ -426,14 +435,63 @@ asynctest(
               innerText: 'Initial text selection'
             }
           }
-        ])
+        ]
       }),
+      */
 
       sTestScenario({
         label: 'Testing hitting ENTER after filling in nothing with an existing link with url',
         node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
         fields: { },
-        expected: Fun.constant([ ])
+        expected: [ ],
+        mutations: function (node) {
+          return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+            return s.element('a', {
+              attrs: {
+                href: str.is('http://prepared-url')
+              },
+              html: str.is('Prepared')
+            });
+          }), node);
+        }
+      }),
+
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL with an existing link with url (and text content did not match URL previously)',
+        node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
+        fields: {
+          url: 'http://new-url'
+        },
+        expected: [ ],
+        mutations: function (node) {
+          return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+            return s.element('a', {
+              attrs: {
+                href: str.is('http://new-url')
+              },
+              html: str.is('Prepared')
+            });
+          }), node);
+        }
+      }),
+
+      sTestScenario({
+        label: 'Testing hitting ENTER after filling in URL with an existing link with url (and text content matched URL previously)',
+        node: Element.fromHtml('<a href="http://prepared-url">http://prepared-url</a>'),
+        fields: {
+          url: 'http://new-url'
+        },
+        expected: [ ],
+        mutations: function (node) {
+          return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+            return s.element('a', {
+              attrs: {
+                href: str.is('http://new-url')
+              },
+              html: str.is('http://new-url')
+            });
+          }), node);
+        }
       }),
 
 

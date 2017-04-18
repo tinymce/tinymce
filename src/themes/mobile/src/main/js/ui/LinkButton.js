@@ -49,6 +49,7 @@ define(
               getInitialValue: function (/* dialog */) {
                 console.log('getInitialValue');
                 return findLink(editor).fold(function () {
+                  console.log('no link for ', editor.selection.getStart());
                   // TODO: Improve with more of tiny's link logic?
                   var text = editor.selection.getContent();
                   return Option.some({
@@ -56,13 +57,14 @@ define(
                     link: Option.none()
                   });
                 }, function (link) {
+                  console.log('link', link.dom());
                   var text = TextContent.get(link);
                   var url = Attr.get(link, 'href');
                   var title = Attr.get(link, 'title');
                   var target = Attr.get(link, 'target');
                   return Option.some({
                     url: defaultToEmpty(url),
-                    text: defaultToEmpty(text),
+                    text: text !== url ? defaultToEmpty(text) : '',
                     title: defaultToEmpty(title),
                     target: defaultToEmpty(target),
                     link: Option.some(link)
@@ -77,7 +79,7 @@ define(
                 values.url.filter(isNotEmpty).each(function (url) {
                   var attrs = { };
                   attrs.href = url;
-                  var text = values.text.filter(isNotEmpty).getOr(url);
+                  
                   values.title.filter(isNotEmpty).each(function (title) {
                     attrs.title = title;
                   });
@@ -87,10 +89,29 @@ define(
                   
                   var activeLink = values.link.bind(Fun.identity);
                   activeLink.fold(function () {
+                    var text = values.text.filter(isNotEmpty).getOr(url);
                     editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
                   }, function (link) {
+                    var prevHref = Attr.get(link, 'href');
+                    var prevText = TextContent.get(link);
+                    var wasSimple = prevHref === prevText;
+
                     Attr.setAll(link, attrs);
-                    TextContent.set(link, text);
+                    values.text.filter(isNotEmpty).fold(function () {
+                      // No text specified, so use the URL if it was a simple link
+                      if (wasSimple) TextContent.set(link, url);
+                    }, function (newText) {
+                      // TextContent.set()
+                    });
+                    if (wasSimple) {
+                      var text = values.text.filter(isNotEmpty).getOr(url);
+                      TextContent.set(link, text);
+                    } else {
+                      // 
+                    }
+                    // The Text rules are a little more complicated here. Use the href backup
+                    // only if the original href matched the text content.
+                    
                   });
                 });
 

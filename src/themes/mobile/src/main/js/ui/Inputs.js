@@ -30,7 +30,9 @@ define(
               display: 'none'
             }
           },
-          getInitialValue: Option.none
+          getInitialValue: function () {
+            return Option.none();
+          }
         })
       };
     };
