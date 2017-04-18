@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
@@ -15,10 +16,12 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.TestStore',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
@@ -32,8 +35,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Attachment, GuiSetup, TestStore, Cell, Fun,
-    Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
+    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Attachment, AlloyLogger, GuiSetup,
+    TestStore, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -140,6 +143,74 @@ asynctest(
       );
     };
 
+    var cGetFocused = Chain.binder(function () {
+      return Focus.active().fold(function () {
+        return Result.error('Could not find focused element');
+      }, Result.value);
+    });
+
+    var cGetParent = Chain.binder(function (elem) {
+      return Traverse.parent(elem).fold(function () {
+        return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
+      }, Result.value);
+    });
+
+    var sClickNavigation = function (selector) {
+      return Chain.asStep({ }, [
+        cGetFocused,
+        cGetParent,
+        UiFinder.cFindIn(selector),
+        Mouse.cClick
+      ]);
+    };
+
+    var sClickPrev = sClickNavigation('.tinymce-mobile-toolbar-previous');
+    var sClickNext = sClickNavigation('.tinymce-mobile-toolbar-next');
+
+
+    var sAssertUrlFocused = GeneralSteps.sequence([
+      FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
+      sAssertNavigation('Checking initial navigation on text node', false, true)
+    ]);
+
+    var sAssertTextFocused = GeneralSteps.sequence([
+      FocusTools.sTryOnSelector('Focus should be on input with link text', doc, 'input[placeholder="Link text"]'),
+      sAssertNavigation('Checking navigation for link text', true, true)
+    ]);
+
+    var sAssertTitleFocused = GeneralSteps.sequence([
+      FocusTools.sTryOnSelector('Focus should be on input with link title', doc, 'input[placeholder="Link title"]'),
+      sAssertNavigation('Checking navigation for link text', true, true)
+    ]);
+
+    var sAssertTargetFocused = GeneralSteps.sequence([
+      FocusTools.sTryOnSelector('Focus should be on input with link target', doc, 'input[placeholder="Link target"]'),
+      sAssertNavigation('Checking navigation for link target', true, false)
+    ]);
+
+    var sTestNavigation = GeneralSteps.sequence([
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      sAssertTextFocused,
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      sAssertTitleFocused,
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      sAssertTargetFocused,
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      Step.wait(1000),
+      Logger.t('Checking pressing tab at the end should not move focus', sAssertTargetFocused),
+
+      sClickPrev,
+      sAssertTitleFocused,      
+      sClickNext,
+      sAssertTargetFocused,
+      sClickPrev,
+      sAssertTitleFocused,
+      sClickPrev,
+      sAssertTextFocused,
+      sClickPrev,
+      sAssertUrlFocused
+    ]);
+
     Pipeline.async({}, [
       GuiSetup.mAddStyles(doc, [
         '.tinymce-mobile-toolbar-button-link:before { content: "LINK"; background: black; color: white; }'
@@ -165,19 +236,7 @@ asynctest(
       FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
       sAssertNavigation('Checking initial navigation on text node', false, true),
 
-      Keyboard.sKeydown(doc, Keys.tab(), { }),
-
-      FocusTools.sTryOnSelector('Focus should be on input with link text', doc, 'input[placeholder="Link text"]'),
-      sAssertNavigation('Checking navigation for link text', true, true),
-
-      Keyboard.sKeydown(doc, Keys.tab(), { }),
-      FocusTools.sTryOnSelector('Focus should be on input with link title', doc, 'input[placeholder="Link title"]'),
-      sAssertNavigation('Checking navigation for link text', true, true),
-
-      Keyboard.sKeydown(doc, Keys.tab(), { }),
-      FocusTools.sTryOnSelector('Focus should be on input with link target', doc, 'input[placeholder="Link target"]'),
-      sAssertNavigation('Checking navigation for link target', true, false),
-      
+      sTestNavigation,
       function () { }
     ], function () { document.head.removeChild(styles); success(); }, failure);
   }
