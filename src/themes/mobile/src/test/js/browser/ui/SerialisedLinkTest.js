@@ -5,10 +5,15 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
+    'ephox.agar.api.FocusTools',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Keys',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.TestStore',
@@ -18,6 +23,7 @@ asynctest(
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.properties.TextContent',
     'ephox.sugar.api.search.Traverse',
@@ -26,8 +32,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, Mouse, Pipeline, Step, UiFinder, Attachment, GuiSetup, TestStore, Cell, Fun, Focus, Body, Element, Attr, Html, TextContent,
-    Traverse, IosRealm, LinkButton
+    ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Attachment, GuiSetup, TestStore, Cell, Fun,
+    Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -103,26 +109,35 @@ asynctest(
     };
 
     var sAssertNavigation = function (label, prevEnabled, nextEnabled) {
-      return Step.sync(function () {
-        var active = Focus.active().getOrDie();
-        // The buttons are next and previous siblings
-        var prev = Traverse.prevSibling(active).getOrDie('Could not find button to left');
-        var next = Traverse.nextSibling(active).getOrDie('Could not find button to right');
-        Assertions.assertStructure(
-          'Checking previous button should be enabled = ' + prevEnabled,
-          ApproxStructure.build(function (s, str, arr) {
-            return s.element('span', {
-              attr: {
-                role: str.is('button')
-              },
-              classes: [
-                (prevEnabled ? arr.not : arr.has)('tinymce-mobile-toolbar-navigation-disabled')
-              ]
-            });
-          }),
-          prev
-        );
-      });
+      return Logger.t(
+        label,
+        Step.sync(function () {
+          var active = Focus.active().getOrDie();
+          // The buttons are next and previous siblings
+          var prev = Traverse.prevSibling(active).getOrDie('Could not find button to left');
+          var next = Traverse.nextSibling(active).getOrDie('Could not find button to right');
+
+          var assertNavButton = function (buttonLabel, expected, button) {
+            Assertions.assertStructure(
+              'Checking ' + buttonLabel + ' button should be enabled = ' + expected,
+              ApproxStructure.build(function (s, str, arr) {
+                return s.element('span', {
+                  attr: {
+                    role: str.is('button')
+                  },
+                  classes: [
+                    (expected ? arr.not : arr.has)('tinymce-mobile-toolbar-navigation-disabled')
+                  ]
+                });
+              }),
+              button
+            );
+          };
+
+          assertNavButton('previous', prevEnabled, prev);
+          assertNavButton('next', nextEnabled, next);
+        })
+      );
     };
 
     Pipeline.async({}, [
@@ -130,13 +145,38 @@ asynctest(
         '.tinymce-mobile-toolbar-button-link:before { content: "LINK"; background: black; color: white; }'
       ]),
 
+      Waiter.sTryUntil(
+        'Waiting until CSS has loaded',
+        Chain.asStep(realm.element(), [
+          UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
+          Chain.op(function (toolstrip) {
+            Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
+          })
+        ]),
+        100,
+        8000
+      ),
+
       sPrepareState(text, 'link-text'),
 
-      
-      
       // sTriggerEvent
       Mouse.sClickOn(realm.element(), '.tinymce-mobile-toolbar-button-link'),
+
+      FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
       sAssertNavigation('Checking initial navigation on text node', false, true),
+
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+
+      FocusTools.sTryOnSelector('Focus should be on input with link text', doc, 'input[placeholder="Link text"]'),
+      sAssertNavigation('Checking navigation for link text', true, true),
+
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      FocusTools.sTryOnSelector('Focus should be on input with link title', doc, 'input[placeholder="Link title"]'),
+      sAssertNavigation('Checking navigation for link text', true, true),
+
+      Keyboard.sKeydown(doc, Keys.tab(), { }),
+      FocusTools.sTryOnSelector('Focus should be on input with link target', doc, 'input[placeholder="Link target"]'),
+      sAssertNavigation('Checking navigation for link target', true, false),
       
       function () { }
     ], function () { doucment.head.removeChild(styles); success(); }, failure);
