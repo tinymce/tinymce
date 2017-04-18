@@ -21,12 +21,9 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.Env',
     'tinymce.core.util.Tools',
-    'tinymce.core.dom.NodeType',
-    'tinymce.core.caret.CaretContainer',
-    'tinymce.plugins.table.util.Utils',
-    "tinymce.core.text.Zwsp"
+    'tinymce.plugins.table.util.Utils'
   ],
-  function (VK, Delay, Env, Tools, NodeType, CaretContainer, Utils, Zwsp) {
+  function (VK, Delay, Env, Tools, Utils) {
     var each = Tools.each, getSpanVal = Utils.getSpanVal;
 
     return function (editor) {
@@ -392,12 +389,11 @@ define(
        * prevent it from disappearing.
        */
       function handleDeleteInCaption() {
+        var ZWSP = '\uFEFF';
 
         var isEmptyNode = function (node) {
-          return editor.dom.isEmpty(node) || node.firstChild === node.lastChild && CaretContainer.isCaretContainer(node.firstChild);
+          return editor.dom.isEmpty(node) || node.firstChild === node.lastChild && isCaretContainer(node.firstChild);
         };
-
-        var isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption');
 
         var isTableCaption = function (node) {
           return node && node.nodeName == 'CAPTION' && node.parentNode.nodeName == 'TABLE';
@@ -413,9 +409,33 @@ define(
           return false;
         };
 
+        var isCaretContainer = function (node) {
+          if (node.nodeType === 3) {
+            if (node.data === ZWSP) {
+              return true;
+            }
+            node = node.parentNode;
+          }
+          return node.nodeType === 1 && node.hasAttribute('data-mce-caret');
+        };
+
         var caretIsAtTheLeftEdgeOf = function (node) {
           var rng = editor.selection.getRng();
           return !rng.startOffset && !rng.startContainer.previousSibling && isTheHeirOf(rng.startContainer, node);
+        };
+
+        var appendCaretContainer = function (node, isBlock) {
+          var caretNode;
+          if (!isBlock) {
+            caretNode = node.ownerDocument.createTextNode(ZWSP);
+          } else {
+            caretNode = editor.dom.create('p', {
+              'data-mce-caret': 'after',
+              'data-mce-bogus': 'all'
+            },
+            '<br data-mce-bogus="1">');
+          }
+          node.appendChild(caretNode);
         };
 
         var restoreCaretPlaceholder = function (container, insertCaret) {
@@ -429,16 +449,12 @@ define(
           // if container contains only debris, we replace the contents with inline caret placeholder, to avoid
           // vertical stretching of the caption
           if (isEmptyNode(container)) {
-            container.innerHTML = Zwsp.ZWSP;
+            container.innerHTML = ZWSP;
             // in IE caret springs off from the caption (to the first td), we need to bring it back
             caretContainer = container.lastChild;
             caretOffset = 0;
-          } else if (!CaretContainer.isCaretContainer(lastChild)) {
-            if (isBlockLike(lastChild)) {
-              CaretContainer.insertBlock('p', lastChild);
-            } else {
-              CaretContainer.insertInline(lastChild);
-            }
+          } else if (!isCaretContainer(lastChild)) {
+            appendCaretContainer(container, editor.dom.isBlock(lastChild));
           }
 
           // in IE caret is off after restoration
