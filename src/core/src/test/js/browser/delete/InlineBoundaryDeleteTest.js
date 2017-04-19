@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.delete.BoundaryDeleteTest',
+  'browser.tinymce.core.delete.InlineBoundaryDeleteTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',

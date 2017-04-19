@@ -36,7 +36,7 @@ define(
 
     var isRoot = function (rootNode) {
       return function (elm) {
-        return Compare.eq(rootNode, elm);
+        return Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
       };
     };
 

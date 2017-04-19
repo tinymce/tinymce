@@ -71,7 +71,7 @@ define(
       }
     };
 
-    var read = function (rootNode, forward, rng) {
+    var readFromRange = function (rootNode, forward, rng) {
       var fromBlockPos = getBlockPosition(rootNode, CaretPosition.fromRangeStart(rng));
       var toBlockPos = fromBlockPos.bind(function (blockPos) {
         return CaretFinder.fromPosition(forward, rootNode, blockPos.position()).bind(function (to) {
@@ -84,6 +84,10 @@ define(
       return Options.liftN([fromBlockPos, toBlockPos], BlockBoundary).filter(function (blockBoundary) {
         return isDifferentBlocks(blockBoundary) && hasSameParent(blockBoundary) && isEditable(blockBoundary);
       });
+    };
+
+    var read = function (rootNode, forward, rng) {
+      return rng.collapsed ? readFromRange(rootNode, forward, rng) : Option.none();
     };
 
     return {

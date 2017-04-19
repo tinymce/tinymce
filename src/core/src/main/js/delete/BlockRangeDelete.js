@@ -18,14 +18,20 @@ define(
     'tinymce.core.delete.MergeBlocks'
   ],
   function (Options, Compare, Element, DeleteUtils, MergeBlocks) {
-    var deleteRange = function (rootNode, rng) {
+    var deleteRange = function (rootNode, selection) {
+      var rng = selection.getRng();
+
       return Options.liftN([
         DeleteUtils.getParentTextBlock(rootNode, Element.fromDom(rng.startContainer)),
         DeleteUtils.getParentTextBlock(rootNode, Element.fromDom(rng.endContainer))
       ], function (block1, block2) {
         if (Compare.eq(block1, block2) === false) {
           rng.deleteContents();
-          MergeBlocks.mergeBlocks(true, block1, block2);
+
+          MergeBlocks.mergeBlocks(true, block1, block2).each(function (pos) {
+            selection.setRng(pos.toRange());
+          });
+
           return true;
         } else {
           return false;
@@ -37,7 +43,7 @@ define(
       var rootNode = Element.fromDom(editor.getBody());
 
       if (editor.selection.isCollapsed() === false) {
-        return deleteRange(rootNode, editor.selection.getRng());
+        return deleteRange(rootNode, editor.selection);
       } else {
         return false;
       }
