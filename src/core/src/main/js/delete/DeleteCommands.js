@@ -12,10 +12,11 @@ define(
   'tinymce.core.delete.DeleteCommands',
   [
     'tinymce.core.delete.BlockBoundaryDelete',
-    'tinymce.core.delete.InlineBoundaryDelete',
-    'tinymce.core.delete.CefDelete'
+    'tinymce.core.delete.BlockRangeDelete',
+    'tinymce.core.delete.CefDelete',
+    'tinymce.core.delete.InlineBoundaryDelete'
   ],
-  function (BlockBoundaryDelete, BoundaryDelete, CefDelete) {
+  function (BlockBoundaryDelete, BlockRangeDelete, CefDelete, BoundaryDelete) {
     var nativeCommand = function (editor, command) {
       editor.getDoc().execCommand(command, false, null);
     };
@@ -46,6 +47,8 @@ define(
         return;
       } else if (BlockBoundaryDelete.backspaceDelete(editor, false)) {
         return;
+      } else if (BlockRangeDelete.backspaceDelete(editor, false)) {
+        return;
       } else {
         nativeCommand(editor, 'Delete');
         paddEmptyBody(editor);
@@ -58,6 +61,8 @@ define(
       } else if (BoundaryDelete.backspaceDelete(editor, true)) {
         return;
       } else if (BlockBoundaryDelete.backspaceDelete(editor, true)) {
+        return;
+      } else if (BlockRangeDelete.backspaceDelete(editor, true)) {
         return;
       } else {
         nativeCommand(editor, 'ForwardDelete');

@@ -31,7 +31,7 @@ asynctest(
       LegacyUnit.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p><p>b</p>');
       LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
     });
-/*
+
     suite.test('Delete range from middle of H1 to middle of span in P', function (editor) {
       editor.getBody().innerHTML = '<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
       LegacyUnit.setSelection(editor, 'h1', 1, 'span', 1);
@@ -42,7 +42,7 @@ asynctest(
       );
       LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
     });
-*/
+
     suite.test('Delete from beginning of P with style span inside into H1 with inline block', function (editor) {
       editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
       LegacyUnit.setSelection(editor, 'p', 0);
@@ -194,6 +194,10 @@ asynctest(
       LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
     });
 /*
+    // These used to be supported in the Quirks branch however not sure if
+    // we need to deal with this very uncommon operations. If we do we need
+    // to re-introduce them in the new Backspace/Delete logic
+
     suite.test('Backspace previous word', function (editor) {
       editor.getBody().innerHTML = '<p>abc 123</p>';
       LegacyUnit.setSelection(editor, 'p', 7);

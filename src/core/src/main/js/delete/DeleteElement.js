@@ -95,21 +95,19 @@ define(
     };
 
     var deleteElement = function (editor, forward, elm) {
-      editor.undoManager.ignore(function () {
-        var afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
-        var parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
+      var afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
+      var parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
 
-        Remove.remove(elm);
+      Remove.remove(elm);
 
-        parentBlock.bind(paddEmptyBlock).fold(
-          function () {
-            setSelection(editor, afterDeletePos);
-          },
-          function (paddPos) {
-            setSelection(editor, Option.some(paddPos));
-          }
-        );
-      });
+      parentBlock.bind(paddEmptyBlock).fold(
+        function () {
+          setSelection(editor, afterDeletePos);
+        },
+        function (paddPos) {
+          setSelection(editor, Option.some(paddPos));
+        }
+      );
     };
 
     return {

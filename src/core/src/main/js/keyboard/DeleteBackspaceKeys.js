@@ -13,12 +13,13 @@ define(
   [
     'ephox.katamari.api.Arr',
     'tinymce.core.delete.BlockBoundaryDelete',
-    'tinymce.core.delete.InlineBoundaryDelete',
+    'tinymce.core.delete.BlockRangeDelete',
     'tinymce.core.delete.CefDelete',
+    'tinymce.core.delete.InlineBoundaryDelete',
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (Arr, BlockBoundaryDelete, BoundaryDelete, CefDelete, MatchKeys, VK) {
+  function (Arr, BlockBoundaryDelete, BlockRangeDelete, CefDelete, BoundaryDelete, MatchKeys, VK) {
     var action = function (f) {
       var args = Array.prototype.slice.call(arguments, 1);
       return function () {
@@ -33,6 +34,8 @@ define(
           { keyCode: VK.DELETE, action: action(BoundaryDelete.backspaceDelete, editor, caret, true) },
           { keyCode: VK.BACKSPACE, action: action(CefDelete.backspaceDelete, editor, false) },
           { keyCode: VK.DELETE, action: action(CefDelete.backspaceDelete, editor, true) },
+          { keyCode: VK.BACKSPACE, action: action(BlockRangeDelete.backspaceDelete, editor, false) },
+          { keyCode: VK.DELETE, action: action(BlockRangeDelete.backspaceDelete, editor, true) },
           { keyCode: VK.BACKSPACE, action: action(BlockBoundaryDelete.backspaceDelete, editor, false) },
           { keyCode: VK.DELETE, action: action(BlockBoundaryDelete.backspaceDelete, editor, true) }
         ], evt);

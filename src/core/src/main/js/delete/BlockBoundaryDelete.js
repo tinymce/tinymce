@@ -18,14 +18,12 @@ define(
     var backspaceDelete = function (editor, forward) {
       var position;
 
-      editor.undoManager.transact(function () {
-        position = BlockBoundary.read(editor.getBody(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
-          return MergeBlocks.mergeBlocks(forward, blockBoundary.from().block(), blockBoundary.to().block());
-        });
+      position = BlockBoundary.read(editor.getBody(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
+        return MergeBlocks.mergeBlocks(forward, blockBoundary.from().block(), blockBoundary.to().block());
+      });
 
-        position.each(function (pos) {
-          editor.selection.setRng(pos.toRange());
-        });
+      position.each(function (pos) {
+        editor.selection.setRng(pos.toRange());
       });
 
       return position.isSome();

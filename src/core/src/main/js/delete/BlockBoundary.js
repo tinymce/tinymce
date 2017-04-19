@@ -23,41 +23,18 @@ define(
     'ephox.sugar.api.search.Traverse',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
+    'tinymce.core.delete.DeleteUtils',
     'tinymce.core.dom.Empty',
     'tinymce.core.dom.NodeType'
   ],
-  function (Arr, Fun, Option, Options, Struct, Compare, Element, Node, PredicateFind, Traverse, CaretFinder, CaretPosition, Empty, NodeType) {
+  function (Arr, Fun, Option, Options, Struct, Compare, Element, Node, PredicateFind, Traverse, CaretFinder, CaretPosition, DeleteUtils, Empty, NodeType) {
     var BlockPosition = Struct.immutable('block', 'position');
     var BlockBoundary = Struct.immutable('from', 'to');
 
-    var toLookup = function (names) {
-      var lookup = Arr.foldl(names, function (acc, name) {
-        acc[name] = true;
-        return acc;
-      }, { });
-
-      return function (elm) {
-        return lookup[Node.name(elm)] === true;
-      };
-    };
-
-    var isTextBlock = toLookup([
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'address', 'pre', 'form', 'blockquote', 'center',
-      'dir', 'fieldset', 'header', 'footer', 'article', 'section', 'hgroup', 'aside', 'nav', 'figure'
-    ]);
-
-    var isRoot = function (rootNode) {
-      return function (elm) {
-        return Compare.eq(Element.fromDom(rootNode), elm);
-      };
-    };
-
-    var getParentTextBlock = function (rootNode, elm) {
-      return PredicateFind.closest(Element.fromDom(elm), isTextBlock, isRoot(rootNode));
-    };
-
     var getBlockPosition = function (rootNode, pos) {
-      return getParentTextBlock(rootNode, pos.container()).map(function (block) {
+      var rootElm = Element.fromDom(rootNode);
+      var containerElm = Element.fromDom(pos.container());
+      return DeleteUtils.getParentTextBlock(rootElm, containerElm).map(function (block) {
         return BlockPosition(block, pos);
       });
     };
