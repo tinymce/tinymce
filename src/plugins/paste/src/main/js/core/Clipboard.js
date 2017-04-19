@@ -495,7 +495,7 @@ define(
 
           removePasteBin();
 
-          isPlainTextHtml = Newlines.isPlainText(content);
+          isPlainTextHtml = internal === false && Newlines.isPlainText(content);
 
           // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
           // some BRs, Ps or DIVs as newlines) then we fallback to plain/text

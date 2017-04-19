@@ -165,8 +165,15 @@ asynctest(
         Logger.t('Paste external content', GeneralSteps.sequence([
           sPaste(editor, tinyApis, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [0, 0], 0, [0, 0], 3),
           sWaitForProcessEvents,
-          sAssertLastPreProcessEvent({ internal: false, content: '<p>X</p>' }),
-          sAssertLastPostProcessEvent({ internal: false, content: '<p>X</p>' })
+          sAssertLastPreProcessEvent({ internal: false, content: 'X' }),
+          sAssertLastPostProcessEvent({ internal: false, content: 'X' })
+        ])),
+
+        Logger.t('Paste external content treated as plain text', GeneralSteps.sequence([
+          sPaste(editor, tinyApis, '<p>abc</p>', { 'text/html': '<p>X</p>' }, [0, 0], 0, [0, 0], 3),
+          sWaitForProcessEvents,
+          sAssertLastPreProcessEvent({ internal: false, content: 'X' }),
+          sAssertLastPostProcessEvent({ internal: false, content: 'X' })
         ])),
 
         Logger.t('Paste internal content with mark', GeneralSteps.sequence([
