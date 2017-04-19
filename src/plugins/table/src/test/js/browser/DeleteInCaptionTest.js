@@ -4,15 +4,16 @@ asynctest(
     'ephox.sugar.api.node.Element',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
+    'ephox.agar.api.GeneralSteps',
     'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Element, Assertions, Pipeline, Keyboard, Step, TinyActions, TinyApis, TinyLoader, Plugin, Theme) {
+  function (Element, Assertions, Pipeline, Logger, Step, GeneralSteps, TinyActions, TinyApis, TinyLoader, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -60,38 +61,44 @@ asynctest(
       };
 
       Pipeline.async({}, [
-        // simulate result of the triple click (selection beyond caption)
-        api.sSetContent(tableWith('<caption>one two three</caption>')),
-        api.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 0),
-        act.sContentKeystroke(DELETE, {}),
-        sAssertContent(tableWith('<caption></caption>')),
+        Logger.t('simulate result of the triple click (selection beyond caption)', GeneralSteps.sequence([
+          api.sSetContent(tableWith('<caption>one two three</caption>')),
+          api.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 0),
+          act.sContentKeystroke(DELETE, {}),
+          sAssertContent(tableWith('<caption></caption>'))
+        ])),
 
-        // test for cursor springing off in IE
-        api.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0),
+        Logger.t('test for cursor springing off in IE', GeneralSteps.sequence([
+          api.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
+        ])),
 
-        // test deletion at the left edge (chrome)
-        api.sSetContent(tableWith('<caption>one</caption>')),
-        api.sSetCursor([0, 0, 0], 0),
-        sAssertDefaultPreventedAfter(BACKSPACE),
-        sAssertContent(tableWith('<caption>one</caption>')),
+        Logger.t('test deletion at the left edge (chrome)', GeneralSteps.sequence([
+          api.sSetContent(tableWith('<caption>one</caption>')),
+          api.sSetCursor([0, 0, 0], 0),
+          sAssertDefaultPreventedAfter(BACKSPACE),
+          sAssertContent(tableWith('<caption>one</caption>'))
+        ])),
 
-        // test deletion at the right edge
-        api.sSetContent(tableWith('<caption>one</caption>')),
-        api.sSetCursor([0, 0, 0], 3),
-        act.sContentKeystroke(DELETE, {}),
-        sAssertContent(tableWith('<caption>one</caption>')),
+        Logger.t('test deletion at the right edge', GeneralSteps.sequence([
+          api.sSetContent(tableWith('<caption>one</caption>')),
+          api.sSetCursor([0, 0, 0], 3),
+          act.sContentKeystroke(DELETE, {}),
+          sAssertContent(tableWith('<caption>one</caption>'))
+        ])),
 
-        // test for caret in caption with blocks
-        api.sSetContent(tableWith('<caption><p>one</p></caption>')),
-        api.sSetCursor([0, 0, 0, 0], 1),
-        act.sContentKeystroke(DELETE, {}),
-        Assertions.sAssertPresence("Detect block caret container", { 'caption > p[data-mce-caret="after"]': 1 }, Element.fromDom(editor.getBody())),
+        Logger.t('test for caret in caption with blocks', GeneralSteps.sequence([
+          api.sSetContent(tableWith('<caption><p>one</p></caption>')),
+          api.sSetCursor([0, 0, 0, 0], 1),
+          act.sContentKeystroke(DELETE, {}),
+          Assertions.sAssertPresence("Detect block caret container", { 'caption > p[data-mce-caret="after"]': 1 }, Element.fromDom(editor.getBody()))
+        ])),
 
-        // debris like empty nodes and brs constitute an empty caption
-        api.sSetContent(tableWith('<caption><p><br></p><p data-mce-caret="after" data-mce-bogus="all"><br data-mce-bogus="1"></p></caption>')),
-        api.sSetCursor([0, 0], 0),
-        act.sContentKeystroke(DELETE, {}),
-        sAssertContent(tableWith('<caption></caption>'))
+        Logger.t('debris like empty nodes and brs constitute an empty caption', GeneralSteps.sequence([
+          api.sSetContent(tableWith('<caption><p><br></p><p data-mce-caret="after" data-mce-bogus="all"><br data-mce-bogus="1"></p></caption>')),
+          api.sSetCursor([0, 0], 0),
+          act.sContentKeystroke(DELETE, {}),
+          sAssertContent(tableWith('<caption></caption>'))
+        ]))
       ], onSuccess, onFailure);
 
     }, {
