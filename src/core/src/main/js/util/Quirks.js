@@ -437,7 +437,7 @@ define(
             container, offset, br, currentFormatNodes;
 
           function cloneTextBlockWithFormats(blockElm, node) {
-            currentFormatNodes = $(node).parents().filter(function (idx, node) {
+            currentFormatNodes = $(node).parentsUtil(editor.getBody()).filter(function (idx, node) {
               return !!editor.schema.getTextInlineElements()[node.nodeName];
             });
 
@@ -666,7 +666,7 @@ define(
             e.preventDefault();
 
             // Keep track of current format nodes
-            currentFormatNodes = $(rng.startContainer).parents().filter(function (idx, node) {
+            currentFormatNodes = $(rng.startContainer).parentsUtil(editor.getBody()).filter(function (idx, node) {
               return !!editor.schema.getTextInlineElements()[node.nodeName];
             });
 
