@@ -56,40 +56,23 @@
       font-family: 'tinymce-mobile';
       color: @toolstrip-foreground-color;
 
+      display: flex;
+      align-items: center;
+      height: 80%;
+      margin-left: 2px;
+      margin-right: 2px;
+
       &.tinymce-mobile-toolbar-button-selected {
         background: @toolstrip-button-selected-background-color;
       }
     }
 
     &:not(.tinymce-mobile-context-toolbar) {
-      .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
-        background: @toolstrip-dark-background-color;
-      }
-
-      .tinymce-mobile-toolbar-group {
-        .mixin-flex-bar;
-        flex-shrink: 1;
-        /*
-
-         Doesn't seem to be required any more.
-
-        &.tinymce-mobile-toolbar-scrollable-group {
-          // Allow the scrollable group to fill all the space between the edge groups
-          flex-grow: 1;
-        }
-
-        */
-      }
+      @import "main-toolbar.less";
     }
 
     &.tinymce-mobile-context-toolbar {
-
       @import "context-toolbar.less";
-
-
-
-
-      
     }
   }
 }
@@ -99,25 +82,10 @@
   flex: 1;
 }
 
-
-// /* TODO: Potentially setup autoprefixer for different browser prefixes */
-// .tinymce-mobile-context-toolbar input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-//   color:@toolstrip-input-placeholder-foreground-color;
-// }
-
 .tinymce-mobile-toolbar-group-item {
   padding-left: 0.5em;
   padding-right: 0.5em;
 }
-
-.tinymce-mobile-toolbar-group-item.tinymce-mobile-toolbar-button {
-  display: flex;
-  align-items: center;
-  height: 80%;
-  margin-left: 2px;
-  margin-right: 2px;
-}
-
 
 input[type="file"]::-webkit-file-upload-button {
   display: none;
