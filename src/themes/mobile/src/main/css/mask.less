@@ -1,0 +1,37 @@
+.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask {  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  background: rgba(20, 20, 20, 0.5);
+
+  /* Include RTL vs LTR difference */
+  // [dir=ltr] .tinymce-mobile-disabled-mask .tinyme-mobile-mask-tap-icon {
+  //   padding-right: .5em;
+  // }
+
+  .tinymce-mobile-content-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 200%;
+    padding: .5em;
+    border-radius: .25em;
+    color: white;
+    background: black;
+    font-weight: bold;
+
+    .tinyme-mobile-mask-tap-icon {
+      padding-right: .5em;
+      color: white;
+      font-size: 140%;
+
+      &:before {
+        content: '.'
+      }
+    }
+  }
+}
