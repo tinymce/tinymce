@@ -52,6 +52,15 @@
     height: 2.5em;
     align-items: center;
 
+    .tinymce-mobile-toolbar-button {
+      font-family: 'tinymce-mobile';
+      color: @toolstrip-foreground-color;
+
+      &.tinymce-mobile-toolbar-button-selected {
+        background: @toolstrip-button-selected-background-color;
+      }
+    }
+
     &:not(.tinymce-mobile-context-toolbar) {
       .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
         background: @toolstrip-dark-background-color;
@@ -141,12 +150,7 @@ input[type="file"]::-webkit-file-upload-button {
   display: none;
 }
 
-.tinymce-mobile-toolbar-button {
-  font-family: 'tinymce-mobile';
-  color: @toolstrip-foreground-color;
-}
-
-.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected {
-  background: @toolstrip-button-selected-background-color;
-}
+// .tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected {
+//   background: @toolstrip-button-selected-background-color;
+// }
 
