@@ -1,0 +1,29 @@
+.tinymce-mobile-android-container {
+  &.tinymce-mobile-android-maximized {
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: none;
+    background: rgba(255, 255, 255, 1.0);
+    display: flex;
+    flex-direction: column;
+  }
+
+  &:not(.tinymce-mobile-android-maximized) {
+    position: relative;
+  }
+
+  .tinymce-mobile-editor-socket {
+    display: flex;
+    flex-grow: 1;
+
+    iframe {
+      display: flex !important;
+      height: auto !important;
+      flex-grow: 1;
+    }
+  }
+}
