@@ -147,29 +147,49 @@ asynctest(
           cSetHtml('<p contenteditable="false">b</p><p><em>a</em></p>'),
           cReadAction(false, [1, 0, 0], 0),
           cAssertMoveToElementAction([0])
+        ])),
+        Logger.t('Should be moveToElement since it is delete after ce=false before another ce=false', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="after"><br></p><p contenteditable="false">b</p>'),
+          cReadAction(true, [1], 0),
+          cAssertMoveToElementAction([2])
+        ])),
+        Logger.t('Should be moveToElement since it is backspace before a ce=false element before a ce=false', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>'),
+          cReadAction(false, [1], 0),
+          cAssertMoveToElementAction([0])
         ]))
       ])),
 
       Logger.t('RemoveElement actions where caret is near a cef element', GeneralSteps.sequence([
-        Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
+        Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
           cReadAction(true, [], 0),
           cAssertRemoveElementAction([0])
         ])),
-        Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
+        Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
           cReadAction(true, [], 1),
           cAssertRemoveElementAction([1])
         ])),
-        Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
+        Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
           cReadAction(false, [], 2),
           cAssertRemoveElementAction([1])
         ])),
-        Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
+        Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
           cReadAction(false, [], 1),
           cAssertRemoveElementAction([0])
+        ])),
+        Logger.t('Should be removeElement since it is backspace after a ce=false', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="after"><br></p><p contenteditable="false">b</p>'),
+          cReadAction(false, [1], 0),
+          cAssertRemoveElementAction([0])
+        ])),
+        Logger.t('Should be removeElement since it is delete before a ce=false', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>'),
+          cReadAction(true, [1], 0),
+          cAssertRemoveElementAction([2])
         ]))
       ]))
     ], function () {
