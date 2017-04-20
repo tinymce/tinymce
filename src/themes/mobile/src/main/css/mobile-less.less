@@ -8,6 +8,7 @@
 
 @toolstrip-background-color: #333;
 @toolstrip-foreground-color: #eee;
+@toolstrip-dark-background-color: green;
 
 @font-face {
   font-family: 'tinymce-mobile';
@@ -40,11 +41,14 @@
   width: 100%;
   height: 2.5em;
   align-items: center;
-}
 
-.tinymce-mobile-toolbar:not(.tinymce-mobile-context-toolbar) .tinymce-mobile-toolbar-group:first-of-type,
-.tinymce-mobile-toolbar:not(.tinymce-mobile-context-toolbar) .tinymce-mobile-toolbar-group:last-of-type {
-  background: black;
+  &:not(.tinymce-mobile-context-toolbar) {
+    .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
+      background: @toolstrip-dark-background-color;
+    }
+  }
+
+  
 }
 
 .tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group {
