@@ -8,7 +8,10 @@
 
 @toolstrip-background-color: #333;
 @toolstrip-foreground-color: #eee;
-@toolstrip-dark-background-color: green;
+@toolstrip-dark-background-color: green; /*black*/
+@toolstrip-input-background-color: magenta; /*#5a5959*/
+@toolstrip-input-foreground-color: yellow; /*white*/
+@toolstrip-input-placeholder-foreground-color: blue; /*white*/
 
 @font-face {
   font-family: 'tinymce-mobile';
@@ -100,15 +103,15 @@
   padding-left: 5px;
   font-size: 1em;
 
-  background: #5a5959;
+  background: @toolstrip-input-background-color;
   border: none;
   border-radius: 0px;
-  color: white;
+  color: @toolstrip-input-foreground-color;
 }
 
 /* TODO: Potentially setup autoprefixer for different browser prefixes */
 .tinymce-mobile-context-toolbar input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-  color:white;
+  color:@toolstrip-input-placeholder-foreground-color;
 }
 
 .tinymce-mobile-toolbar-group-item {
