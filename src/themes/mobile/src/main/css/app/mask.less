@@ -17,28 +17,33 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 200%;
     padding: .5em;
     border-radius: .25em;
     background: @toolstrip-background-color;
     font-weight: bold;
     flex-direction: column;
 
+    .tinymce-mobile-content-tap-section {
+      display: flex;
+
+      .tinymce-mobile-mask-tap-icon {
+        color: @toolstrip-foreground-color;
+        padding-right: 0.5em;
+
+        &:before {
+          content: url(../icons/tinymce-logo.svg);
+        }
+      }
+    }
+
     .tinymce-mobile-disclosure {
+      display: flex;
       color: @toolstrip-foreground-color;
+      font-style: italic;
+      margin-top: 0.5em;
+      font-size: 50%;
     }
 
-    .tinymce-mobile-mask-tap-icon {
-      color: @toolstrip-foreground-color;
-      width: 3em;
-
-      svg polygon {
-        fill: color !important;
-      }
-
-      &:before {
-        content: url(../icons/tinymce-logo.svg);
-      }
-    }
+   
   }
 }

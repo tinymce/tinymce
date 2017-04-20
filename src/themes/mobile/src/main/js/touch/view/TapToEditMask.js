@@ -23,17 +23,32 @@ define(
             components: [
               Container.sketch({
                 dom: {
-                  attributes: {
-                    'aria-hidden': 'true'
-                  },
-                  classes: [ Styles.resolve('mask-tap-icon') ]
-                }
+                  classes: [ Styles.resolve('content-tap-section') ]
+                },
+                components: [
+                  Container.sketch({
+                    dom: {
+                      attributes: {
+                        'aria-hidden': 'true'
+                      },
+                      classes: [ Styles.resolve('mask-tap-icon') ]
+                    }
+                  }),
+                  Container.sketch({
+                    dom: {
+                      // FIX: i18n
+                      innerHtml: 'Tap to Edit'
+                    }
+                  })
+                ]
               }),
+
               Container.sketch({
                 dom: {
+                  tag: 'div',
                   classes: [ Styles.resolve('disclosure') ],
                   // FIX: i18n
-                  innerHtml: 'Tap to Edit'
+                  innerHtml: 'Powered by TinyMCE'
                 }
               })
             ]
