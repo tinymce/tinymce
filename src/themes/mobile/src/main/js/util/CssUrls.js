@@ -16,7 +16,7 @@ define(
 
       return {
         content: base + '/content.css',
-        ui: base + '/mobile-less.css'
+        ui: base + '/mobile.css'
       };
     };
 

@@ -120,7 +120,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          "src/main/css/mobile-less.css": "src/main/css/app/mobile-less.less" // destination file and source file
+          "src/main/css/mobile.css": "src/main/css/app/mobile-less.less" // destination file and source file
         }
       }
     },
