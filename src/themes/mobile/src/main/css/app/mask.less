@@ -22,6 +22,7 @@
     border-radius: .25em;
     background: @toolstrip-background-color;
     font-weight: bold;
+    flex-direction: column;
 
     .tinymce-mobile-disclosure {
       color: @toolstrip-foreground-color;
@@ -29,9 +30,14 @@
 
     .tinymce-mobile-mask-tap-icon {
       color: @toolstrip-foreground-color;
+      width: 3em;
+
+      svg polygon {
+        fill: color !important;
+      }
 
       &:before {
-        content: '.'
+        content: url(../icons/tinymce-logo.svg);
       }
     }
   }

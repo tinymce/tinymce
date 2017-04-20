@@ -29,13 +29,15 @@ define(
       Attr.set(tapIcon, 'role', 'presentation');
       Attr.set(tapIcon, 'aria-hidden', 'true');
       Class.add(tapIcon, Styles.resolve('mask-tap-icon'));
-      Insert.append(container, tapIcon);
+      
 
       var disclosure = Element.fromTag('div');
       Attr.set(disclosure, 'role', 'presentation');
       Class.add(disclosure, Styles.resolve('disclosure'));
-      Insert.append(disclosure, Element.fromText('** { tap to edit } **'));
+      // FIX: I18n
+      Insert.append(disclosure, Element.fromText('Tap to edit'));
       Insert.append(container, disclosure);
+      Insert.append(container, tapIcon);
       Insert.append(element, container);
 
       Attr.set(element, 'role', 'button');
