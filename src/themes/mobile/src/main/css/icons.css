@@ -114,6 +114,7 @@
 
 .tinymce-mobile-toolbar-button-headings:before {
   content: "H";
+  font-weight: bold;
 }
 
 .tinymce-mobile-toolbar-button-watson:before {
@@ -130,14 +131,17 @@
 
 .tinymce-mobile-toolbar-button-h1:before {
   content: "H1";
+  font-weight: bold;
 }
 
 .tinymce-mobile-toolbar-button-h2:before {
   content: "H2";
+  font-weight: bold;
 }
 
 .tinymce-mobile-toolbar-button-h3:before {
   content: "H3";
+  font-weight: bold;
 }
 
 .tinymce-mobile-toolbar-button-ul:before {
