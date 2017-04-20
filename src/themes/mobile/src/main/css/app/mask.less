@@ -1,0 +1,49 @@
+.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask {  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  background: fadeout(@editor-mask-background-color, 50%);
+
+  /* Include RTL vs LTR difference */
+  // [dir=ltr] .tinymce-mobile-disabled-mask .tinyme-mobile-mask-tap-icon {
+  //   padding-right: .5em;
+  // }
+
+  .tinymce-mobile-content-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5em;
+    border-radius: .25em;
+    background: @toolstrip-background-color;
+    font-weight: bold;
+    flex-direction: column;
+
+    .tinymce-mobile-content-tap-section {
+      display: flex;
+
+      .tinymce-mobile-mask-tap-icon {
+        color: @toolstrip-foreground-color;
+        padding-right: 0.5em;
+
+        &:before {
+          content: url(../icons/tinymce-logo.svg);
+        }
+      }
+    }
+
+    .tinymce-mobile-disclosure {
+      display: flex;
+      color: @toolstrip-foreground-color;
+      font-style: italic;
+      margin-top: 0.5em;
+      font-size: 50%;
+    }
+
+   
+  }
+}

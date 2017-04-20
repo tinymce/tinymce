@@ -52,7 +52,7 @@ define(
       return Button.sketch({
         dom: {
           tag: 'span',
-          classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-' + clazz) ]
+          classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-' + clazz) ]
         },
         action: action,
 

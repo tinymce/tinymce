@@ -58,7 +58,8 @@ define(
             container: Element.fromDom(editor.editorContainer),
             socket: Element.fromDom(editor.contentAreaContainer),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
-            toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')))
+            toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
+            alloy: realm.system()
           });
 
           var createHeadingButton = function (level) {

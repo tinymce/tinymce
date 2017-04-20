@@ -64,14 +64,14 @@ define(
         {
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-small-font') ]
+            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-small-font') ]
           }
         },
         makeSlider(spec),
         {
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('toolbar-button-large-font') ]
+            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-large-font') ]
           }
         }
       ];
