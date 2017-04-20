@@ -29,6 +29,13 @@
   }
 }
 
+
+.mixin-toolbar-group {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
 .tinymce-mobile-toolstrip {
   background:@toolstrip-background-color;
   display: flex;
@@ -47,40 +54,31 @@
       }
 
       .tinymce-mobile-toolbar-group {
-        display: flex;
+        .mixin-toolbar-group;
         flex-shrink: 1;
-        align-items: center;
-        height: 100%;
+        /*
+
+         Doesn't seem to be required any more.
+
+        &.tinymce-mobile-toolbar-scrollable-group {
+          // Allow the scrollable group to fill all the space between the edge groups
+          flex-grow: 1;
+        }
+
+        */
       }
     }
 
     &.tinymce-mobile-context-toolbar {
       .tinymce-mobile-toolbar-group {
-        display: flex;
+        .mixin-toolbar-group;
         flex: 1;
-        align-items: center;
-        height: 100%;
         padding-top: 0.4em;
         padding-bottom: 0.4em;
       }
     }
   }
 }
-
-
-
-// .tinymce-mobile-toolbar-group {
-//   display: flex;
-//   flex-shrink: 1;
-//   align-items: center;
-//   height: 100%;
-// }
-
-.tinymce-mobile-toolbar-group.tinymce-mobile-toolbar-scrollable-group {
-  /* Allow the scrollable group to fill all the space between the edge groups */
-  flex-grow: 1;
-}
-
 
 .tinymce-mobile-toolbar-group > div {
   display: flex;
