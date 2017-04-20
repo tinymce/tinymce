@@ -30,7 +30,7 @@
 }
 
 
-.mixin-toolbar-group {
+.mixin-flex-bar {
   display: flex;
   align-items: center;
   height: 100%;
@@ -54,7 +54,7 @@
       }
 
       .tinymce-mobile-toolbar-group {
-        .mixin-toolbar-group;
+        .mixin-flex-bar;
         flex-shrink: 1;
         /*
 
@@ -71,7 +71,7 @@
 
     &.tinymce-mobile-context-toolbar {
       .tinymce-mobile-toolbar-group {
-        .mixin-toolbar-group;
+        .mixin-flex-bar;
         flex: 1;
         padding-top: 0.4em;
         padding-bottom: 0.4em;
@@ -81,10 +81,8 @@
 }
 
 .tinymce-mobile-toolbar-group > div {
-  display: flex;
+  .mixin-flex-bar;
   flex: 1;
-  height: 100%;
-  align-items: center;
 }
 
 .tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group-item {
