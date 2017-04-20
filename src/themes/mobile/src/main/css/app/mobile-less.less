@@ -45,3 +45,11 @@
     height: 300px;
   }
 }
+
+/*
+  Note, that if you don't include this (::-webkit-file-upload-button), the toolbar width gets 
+  increased and the whole body becomes scrollable. It's important!
+ */
+input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
