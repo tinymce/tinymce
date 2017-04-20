@@ -12,6 +12,7 @@
 @toolstrip-input-background-color: magenta; /*#5a5959*/
 @toolstrip-input-foreground-color: yellow; /*white*/
 @toolstrip-input-placeholder-foreground-color: blue; /*white*/
+@toolstrip-button-selected-background-color: red; /*aaa*/
 
 @font-face {
   font-family: 'tinymce-mobile';
@@ -146,6 +147,6 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 .tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected {
-  background: #aaa;
+  background: @toolstrip-button-selected-background-color;
 }
 
