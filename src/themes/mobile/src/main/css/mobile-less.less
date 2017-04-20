@@ -5,10 +5,9 @@
 @import "inline-dialogs.css";
 @import "android.css";
 
-:root {
-  --toolstrip-background-color: #333;
-  --toolstrip-foreground-color: #eee;
-}
+
+@toolstrip-background-color: #333;
+@toolstrip-foreground-color: #eee;
 
 @font-face {
   font-family: 'tinymce-mobile';
@@ -30,7 +29,7 @@
 }
 
 .tinymce-mobile-toolstrip {
-  background: var(--toolstrip-background-color);
+  background:@toolstrip-background-color;
   display: flex;
 }
 
@@ -133,7 +132,7 @@ input[type="file"]::-webkit-file-upload-button {
 
 .tinymce-mobile-toolbar-button {
   font-family: 'tinymce-mobile';
-  color: var(--toolstrip-foreground-color);
+  color: @toolstrip-foreground-color;
 }
 
 .tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected {
