@@ -68,26 +68,28 @@ define(
     var getActiveApi = function (editor) {
       var frame = getFrame(editor);
 
+      // Empty paragraphs can have no rectangle size, so let's just use the start container
+      // if it is collapsed;
+      var tryFallbackBox = function (win) {
+        return WindowSelection.getExact(win).bind(function (sel) {
+          if (Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset()) {
+            var rect = sel.start().dom().getBoundingClientRect();
+            return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none();
+          } else {
+            return Option.none();
+          }
+        });
+      };
+
       return getBodyFromFrame(frame).bind(function (body) {
         return getDocFromFrame(frame).bind(function (doc) {
           return getWinFromFrame(frame).map(function (win) {
-
             var html = Element.fromDom(doc.dom().documentElement);
-
             var getCursorBox = editor.getCursorBox.getOrThunk(function () {
               return function () {
                 return WindowSelection.get(win).bind(function (sel) {
                   return WindowSelection.getFirstRect(win, sel).orThunk(function () {
-                    // Empty paragraphs can have no rectangle size, so let's just use the start container
-                    // if it is collapsed;
-                    return WindowSelection.getExact(win).bind(function (sel) {
-                      if (Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset()) {
-                        var rect = sel.start().dom().getBoundingClientRect();
-                        return rect.width > 0 || rect.height > 0 ? Option.some(toRect(rect)) : Option.none();
-                      } else {
-                        return Option.none();
-                      }
-                    });
+                    return tryFallbackBox(win);
                   });
                 });
               };
