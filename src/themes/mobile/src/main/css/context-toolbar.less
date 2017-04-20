@@ -1,5 +1,11 @@
 /* Note, this file is imported inside .tinymce-mobile-context-toolbar, so that prefix is on everything here. */
 .tinymce-mobile-toolbar-group {
+
+  & > div {
+  .mixin-flex-bar;
+  flex: 1;
+  }
+
   .mixin-flex-bar;
   flex: 1;
   padding-top: 0.4em;
@@ -8,6 +14,17 @@
   .tinymce-mobile-toolbar-button {
     font-family: 'tinymce-mobile';
     color: @toolstrip-foreground-color;
+  }
+
+  /* For widgets like the colour picker, use the whole height */
+  .tinymce-mobile-toolbar-group-item:not(.tinymce-mobile-serialised-dialog) {
+    height: 100%;
+  }
+
+  /* Make any buttons appearing on the left and right display in the centre (e.g. color edges) */
+  .tinymce-mobile-toolbar-group-item {
+    display: flex;
+    align-items: center;
   }
 
   input {
