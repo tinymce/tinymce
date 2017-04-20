@@ -114,6 +114,7 @@ module.exports = function (grunt) {
     less: {
       development: {
         options: {
+          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions" ]}) ],
           compress: true,
           yuicompress: true,
           optimization: 2
