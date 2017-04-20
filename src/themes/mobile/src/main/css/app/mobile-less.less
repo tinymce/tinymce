@@ -1,10 +1,13 @@
-@toolstrip-background-color: #333;
-@toolstrip-foreground-color: #eee;
-@toolstrip-dark-background-color: green; /*black*/
-@toolstrip-input-background-color: magenta; /*#5a5959*/
-@toolstrip-input-foreground-color: yellow; /*white*/
-@toolstrip-input-placeholder-foreground-color: blue; /*white*/
-@toolstrip-button-selected-background-color: red; /*aaa*/
+@toolstrip-background-color: rgb(240,240,240);
+@toolstrip-foreground-color: rgb(51,51,51);
+@toolstrip-dark-background-color: darken(@toolstrip-background-color, 20%);
+@toolstrip-input-background-color: lighten(@toolstrip-background-color, 20%);
+@toolstrip-input-foreground-color: @toolstrip-foreground-color;
+@toolstrip-input-placeholder-foreground-color: darken(@toolstrip-input-foreground-color, 10%);
+@toolstrip-button-selected-background-color: rgb(219,219,219);
+
+@editor-mask-background-color: #333;
+@editor-mask-foreground-color: #eee;
 
 @import "icons.css";
 @import "mask.less";
