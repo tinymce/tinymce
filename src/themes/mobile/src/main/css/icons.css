@@ -1,149 +1,149 @@
-.tinymce-mobile-toolbar-previous:before {
+.tinymce-mobile-icon-previous:before {
   content: '<';
 }
 
-.tinymce-mobile-toolbar-next:before {
+.tinymce-mobile-icon-next:before {
   content: '>';
 }
 
-.tinymce-mobile-toolbar-button-align-left:before {
+.tinymce-mobile-icon-align-left:before {
   content: "\e90d";
 }
 
-.tinymce-mobile-toolbar-button-align-right:before {
+.tinymce-mobile-icon-align-right:before {
   content: "\e90f";
 }
 
-.tinymce-mobile-toolbar-button-align-center:before {
+.tinymce-mobile-icon-align-center:before {
   content: "\e90e";
 }
 
-.tinymce-mobile-toolbar-button-align-justify:before {
+.tinymce-mobile-icon-align-justify:before {
   content: "\e910";
 }
 
-.tinymce-mobile-toolbar-button-insert-char:before {
+.tinymce-mobile-icon-insert-char:before {
   content: "\e90b";
 }
 
-.tinymce-mobile-toolbar-button-insert-hr:before {
+.tinymce-mobile-icon-insert-hr:before {
   content: "\e90c";
 }
 
-.tinymce-mobile-toolbar-button-ordered-list:before {
+.tinymce-mobile-icon-ordered-list:before {
   content: "\e912";
 }
 
-.tinymce-mobile-toolbar-button-unordered-list:before {
+.tinymce-mobile-icon-unordered-list:before {
   content: "\e911";
 }
 
-.tinymce-mobile-toolbar-button-insert-hr:before {
+.tinymce-mobile-icon-insert-hr:before {
   content: "\e90c";
 }
 
-.tinymce-mobile-toolbar-button-outdent:before {
+.tinymce-mobile-icon-outdent:before {
   content: "\e914";
 }
 
-.tinymce-mobile-toolbar-button-indent:before {
+.tinymce-mobile-icon-indent:before {
   content: "\e913";
 }
 
-.tinymce-mobile-toolbar-button-redo:before {
+.tinymce-mobile-icon-redo:before {
   content: "\e909";
 }
 
-.tinymce-mobile-toolbar-button-underline:before {
+.tinymce-mobile-icon-underline:before {
   content: "\e90a";
 }
 
-.tinymce-mobile-toolbar-button-quote:before {
+.tinymce-mobile-icon-quote:before {
   content: "\e915";
 }
-.tinymce-mobile-toolbar-button-remove-formatting:before {
+.tinymce-mobile-icon-remove-formatting:before {
   content: "\e916";
 }
-.tinymce-mobile-toolbar-button-subscript:before {
+.tinymce-mobile-icon-subscript:before {
   content: "\e917";
 }
-.tinymce-mobile-toolbar-button-superscript:before {
+.tinymce-mobile-icon-superscript:before {
   content: "\e918";
 }
-.tinymce-mobile-toolbar-button-strikethrough:before {
+.tinymce-mobile-icon-strikethrough:before {
   content: "\e919";
 }
 
-.tinymce-mobile-toolbar-button-small-font:before {
+.tinymce-mobile-icon-small-font:before {
   content: "\e906";
 }
 
-.tinymce-mobile-toolbar-button-large-font:before {
+.tinymce-mobile-icon-large-font:before {
   content: "\e907";
 }
 
 
-.tinymce-mobile-toolbar-button-back:before {
+.tinymce-mobile-icon-back:before {
   content: 'Back';
 
 }
 
-.tinymce-mobile-toolbar-button-undo:before {
+.tinymce-mobile-icon-undo:before {
   content: "\e900";
 }
 
-.tinymce-mobile-toolbar-button-bold:before {
+.tinymce-mobile-icon-bold:before {
   content: "\e901";
 }
 
-.tinymce-mobile-toolbar-button-italic:before {
+.tinymce-mobile-icon-italic:before {
   content: "\e902";
 }
 
-.tinymce-mobile-toolbar-button-link:before {
+.tinymce-mobile-icon-link:before {
   content: "\e903";
 }
 
-.tinymce-mobile-toolbar-button-image:before {
+.tinymce-mobile-icon-image:before {
   content: "\e904";
 }
 
-.tinymce-mobile-toolbar-button-font-size:before {
+.tinymce-mobile-icon-font-size:before {
   content: "\e905";
 }
 
-.tinymce-mobile-toolbar-button-headings:before {
+.tinymce-mobile-icon-headings:before {
   content: "H";
   font-weight: bold;
 }
 
-.tinymce-mobile-toolbar-button-watson:before {
+.tinymce-mobile-icon-watson:before {
   content: "W";
 }
 
-.tinymce-mobile-toolbar-button-color:before {
+.tinymce-mobile-icon-color:before {
   content: "\e908";
 }
 
-.tinymce-mobile-toolbar-button-add-button:before {
+.tinymce-mobile-icon-add-button:before {
   content: "\e91a";
 }
 
-.tinymce-mobile-toolbar-button-h1:before {
+.tinymce-mobile-icon-h1:before {
   content: "H1";
   font-weight: bold;
 }
 
-.tinymce-mobile-toolbar-button-h2:before {
+.tinymce-mobile-icon-h2:before {
   content: "H2";
   font-weight: bold;
 }
 
-.tinymce-mobile-toolbar-button-h3:before {
+.tinymce-mobile-icon-h3:before {
   content: "H3";
   font-weight: bold;
 }
 
-.tinymce-mobile-toolbar-button-ul:before {
+.tinymce-mobile-icon-ul:before {
   content: "ul";
 }
