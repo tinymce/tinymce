@@ -16,5 +16,10 @@
     border: none;
     border-radius: 0px;
     color: @toolstrip-input-foreground-color;
+
+    /* TODO: Potentially setup autoprefixer for different browser prefixes */
+    &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      color:@toolstrip-input-placeholder-foreground-color;
+    }
   }
 }
