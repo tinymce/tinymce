@@ -106,7 +106,10 @@ define(
 
       var viewportSetup = takeoverViewport(toolbarHeight, viewportHeight, viewport);
 
+      var isActive = true;
+
       var restore = function () {
+        isActive = false;
         toolbarSetup.restore();
         viewportSetup.restore();
       };
@@ -118,11 +121,13 @@ define(
       };
 
       var refresh = function () {
-        var newToolbarHeight = Height.get(toolbar);
-        var newHeight = deriveViewportHeight(viewport, newToolbarHeight);
-        Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
-        Css.set(viewport, 'height', newHeight + 'px');
-        DeviceZones.updatePadding(contentBody, viewport);
+        if (isActive) {
+          var newToolbarHeight = Height.get(toolbar);
+          var newHeight = deriveViewportHeight(viewport, newToolbarHeight);
+          Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
+          Css.set(viewport, 'height', newHeight + 'px');
+          DeviceZones.updatePadding(contentBody, viewport);
+        }
       };
 
       var setViewportOffset = function (newYOffset) {

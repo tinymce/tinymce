@@ -1,0 +1,46 @@
+@toolstrip-button-horizontal-padding: 0.5em; /* 0.5em; */
+
+.tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
+  background: @toolstrip-dark-background-color;
+}
+
+.tinymce-mobile-toolbar-group {
+  .mixin-flex-bar;
+  flex-shrink: 1;
+
+  & > div {
+    .mixin-flex-bar;
+    flex: 1;
+  }
+
+  .tinymce-mobile-toolbar-group-item {
+    padding-left: @toolstrip-button-horizontal-padding;
+    padding-right: @toolstrip-button-horizontal-padding;
+
+
+    &.tinymce-mobile-toolbar-button {
+      font-family: 'tinymce-mobile';
+      color: @toolstrip-foreground-color;
+
+      display: flex;
+      align-items: center;
+      height: 80%;
+      margin-left: 2px;
+      margin-right: 2px;
+
+      &.tinymce-mobile-toolbar-button-selected {
+        background: @toolstrip-button-selected-background-color;
+      }
+    }
+  }
+}
+  /*
+
+    Doesn't seem to be required any more.
+
+  &.tinymce-mobile-toolbar-scrollable-group {
+    // Allow the scrollable group to fill all the space between the edge groups
+    flex-grow: 1;
+  }
+
+  */

@@ -12,20 +12,25 @@ define(
     var BLACK = -1;
 
     var makeSlider = function (spec) {
-      var onChange = function (slider, thumb, value) {
-        var getColor = function (hue) {
-          // Handle edges.
-          if (hue < 0) {
-            return 'black';
-          } else if (hue > 360) {
-            return 'white';
-          } else {
-            return 'hsl(' + hue + ', 100%, 50%)';
-          }
-        };
+      var getColor = function (hue) {
+        // Handle edges.
+        if (hue < 0) {
+          return 'black';
+        } else if (hue > 360) {
+          return 'white';
+        } else {
+          return 'hsl(' + hue + ', 100%, 50%)';
+        }
+      };
 
+      // Does not fire change intentionally.
+      var onInit = function (slider, thumb, value) {
         var color = getColor(value);
-        // TODO: Find a way to do this in alloy.
+        Css.set(thumb.element(), 'background', color);
+      };
+
+      var onChange = function (slider, thumb, value) {
+        var color = getColor(value);
         Css.set(thumb.element(), 'background', color);
         spec.onChange(slider, thumb, color);
       };
@@ -43,6 +48,7 @@ define(
         ],
 
         onChange: onChange,
+        onInit: onInit,
         stepSize: 10,
         min: 0,
         max: 360,

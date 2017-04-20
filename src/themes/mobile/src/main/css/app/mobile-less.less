@@ -1,0 +1,59 @@
+@toolstrip-background-color: rgb(240,240,240);
+@toolstrip-foreground-color: rgb(51,51,51);
+@toolstrip-dark-background-color: darken(@toolstrip-background-color, 20%);
+@toolstrip-input-background-color: lighten(@toolstrip-background-color, 20%);
+@toolstrip-slider-background-color: darken(@toolstrip-background-color, 20%);
+@toolstrip-input-foreground-color: @toolstrip-foreground-color;
+@toolstrip-input-placeholder-foreground-color: darken(@toolstrip-input-foreground-color, 10%);
+@toolstrip-button-selected-background-color: rgb(219,219,219);
+@toolstrip-thumb-background-color: @toolstrip-foreground-color;
+
+@android-background-color: rgba(255, 255, 255, 1.0);
+
+@editor-mask-background-color: #333;
+@editor-mask-foreground-color: #eee;
+
+@import "icons.css";
+@import "mask.less";
+@import "android.less";
+@import "../toolstrip/toolstrip.less";
+
+@font-face {
+  font-family: 'tinymce-mobile';
+  src: url('../icons/tinymce-mobile.woff?8x92w3') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media (min-width: 700px) {
+  .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 700x) {
+  .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
+    font-size: 18px;
+  }
+}
+
+.mixin-flex-bar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.tinymce-mobile-outer-container:not(.tinymce-mobile-fullscreen-maximized) {
+  .tinymce-mobile-editor-socket {
+    overflow: hidden;
+    height: 300px;
+  }
+}
+
+/*
+  Note, that if you don't include this (::-webkit-file-upload-button), the toolbar width gets 
+  increased and the whole body becomes scrollable. It's important!
+ */
+input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}

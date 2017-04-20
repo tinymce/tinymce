@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.api.AndroidWebapp',
 
   [
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Insert',
@@ -11,7 +12,8 @@ define(
     'tinymce.themes.mobile.touch.view.TapToEditMask'
   ],
 
-  function (ValueSchema, Fun, Insert, Css, AndroidMode, MobileSchema, TapToEditMask) {
+  function (GuiFactory, ValueSchema, Fun, Insert, Css, AndroidMode, MobileSchema, TapToEditMask) {
+    // TODO: Remove dupe with IosWebapp
     var produce = function (raw) {
       var mobile = ValueSchema.asRawOrDie(
         'Getting AndroidWebapp schema',
@@ -24,16 +26,26 @@ define(
 
       // We do not make the Android container relative, because we aren't positioning the toolbar absolutely.
       var onTap = function () {
-        mask.hide();
         mode.enter();
       };
 
-      var mask = TapToEditMask(onTap);
+      var mask = GuiFactory.build(
+        TapToEditMask.sketch(onTap)
+      );
+
+      mobile.alloy.add(mask);
+      var maskApi = {
+        show: function () {
+          mobile.alloy.add(mask);
+        },
+        hide: function () {
+          mobile.alloy.remove(mask);
+        }
+      };
 
       Insert.append(mobile.container, mask.element());
-      mask.show();
-
-      var mode = AndroidMode.create(mobile, mask);
+      
+      var mode = AndroidMode.create(mobile, maskApi);
 
       return {
         enter: mode.enter,
