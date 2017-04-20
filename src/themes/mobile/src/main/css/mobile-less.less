@@ -1,0 +1,142 @@
+
+@import "mask.css";
+@import "icons.css";
+@import "slider.css";
+@import "inline-dialogs.css";
+@import "android.css";
+
+:root {
+  --toolstrip-background-color: #333;
+  --toolstrip-foreground-color: #eee;
+}
+
+@font-face {
+  font-family: 'tinymce-mobile';
+  src: url('../icons/tinymce-mobile.woff?8x92w3') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media (min-width: 700px) {
+  body, body input {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 700x) {
+  body, body input {
+    font-size: 18px;
+  }
+}
+
+.tinymce-mobile-toolstrip {
+  background: var(--toolstrip-background-color);
+  display: flex;
+}
+
+.tinymce-mobile-toolbar {
+  display: flex;
+  flex: 1;
+  /* Make it no larger than the toolstrip, so that it needs to scroll */
+  width: 100%;
+  height: 2.5em;
+  align-items: center;
+}
+
+.tinymce-mobile-toolbar:not(.tinymce-mobile-context-toolbar) .tinymce-mobile-toolbar-group:first-of-type,
+.tinymce-mobile-toolbar:not(.tinymce-mobile-context-toolbar) .tinymce-mobile-toolbar-group:last-of-type {
+  background: black;
+}
+
+.tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group {
+  flex: 1;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+}
+
+.tinymce-mobile-toolbar-group {
+  display: flex;
+  flex-shrink: 1;
+  align-items: center;
+  height: 100%;
+}
+
+.tinymce-mobile-toolbar-group.tinymce-mobile-toolbar-scrollable-group {
+  /* Allow the scrollable group to fill all the space between the edge groups */
+  flex-grow: 1;
+}
+
+
+.tinymce-mobile-toolbar-group > div {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  align-items: center;
+}
+
+.tinymce-mobile-context-toolbar label {
+  display: flex;
+  align-items: center;
+}
+
+.tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group-item {
+  display: flex;
+  align-items: center;
+}
+
+.tinymce-mobile-context-toolbar .tinymce-mobile-toolbar-group-item:not(.tinymce-mobile-serialised-dialog) {
+  height: 100%;
+}
+
+.tinymce-mobile-context-toolbar input {
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+  padding-left: 5px;
+  font-size: 1em;
+
+  background: #5a5959;
+  border: none;
+  border-radius: 0px;
+  color: white;
+}
+
+/* TODO: Potentially setup autoprefixer for different browser prefixes */
+.tinymce-mobile-context-toolbar input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color:white;
+}
+
+.tinymce-mobile-toolbar-group-item {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+
+input {
+  background: white;
+  display: flex;
+  flex-grow: 1;
+}
+
+
+.tinymce-mobile-toolbar-group-item.tinymce-mobile-toolbar-button {
+  display: flex;
+  align-items: center;
+  height: 80%;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+
+input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
+
+.tinymce-mobile-toolbar-button {
+  font-family: 'tinymce-mobile';
+  color: var(--toolstrip-foreground-color);
+}
+
+.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected {
+  background: #aaa;
+}
+

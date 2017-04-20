@@ -110,6 +110,27 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+    less: {
+      development: {
+        options: {
+          compress: true,
+          yuicompress: true,
+          optimization: 2
+        },
+        files: {
+          "src/main/css/mobile-less.css": "src/main/css/mobile-less.less" // destination file and source file
+        }
+      }
+    },
+    watch: {
+      styles: {
+        files: ['src/main/css/**/*.less'], // which files to watch
+        tasks: ['less'],
+        options: {
+          nospawn: true
+        }
+      }
     }
   });
 
@@ -117,6 +138,8 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-contrib-less/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
   grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
