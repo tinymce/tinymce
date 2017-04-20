@@ -45,13 +45,21 @@
       .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
         background: @toolstrip-dark-background-color;
       }
+
+      .tinymce-mobile-toolbar-group {
+        display: flex;
+        flex-shrink: 1;
+        align-items: center;
+        height: 100%;
+      }
     }
 
     &.tinymce-mobile-context-toolbar {
-
-
       .tinymce-mobile-toolbar-group {
+        display: flex;
         flex: 1;
+        align-items: center;
+        height: 100%;
         padding-top: 0.4em;
         padding-bottom: 0.4em;
       }
@@ -61,12 +69,12 @@
 
 
 
-.tinymce-mobile-toolbar-group {
-  display: flex;
-  flex-shrink: 1;
-  align-items: center;
-  height: 100%;
-}
+// .tinymce-mobile-toolbar-group {
+//   display: flex;
+//   flex-shrink: 1;
+//   align-items: center;
+//   height: 100%;
+// }
 
 .tinymce-mobile-toolbar-group.tinymce-mobile-toolbar-scrollable-group {
   /* Allow the scrollable group to fill all the space between the edge groups */
