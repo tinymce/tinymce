@@ -32,34 +32,34 @@
 .tinymce-mobile-toolstrip {
   background:@toolstrip-background-color;
   display: flex;
-}
 
-.tinymce-mobile-toolbar {
-  display: flex;
-  flex: 1;
-  /* Make it no larger than the toolstrip, so that it needs to scroll */
-  width: 100%;
-  height: 2.5em;
-  align-items: center;
+  .tinymce-mobile-toolbar {
+    display: flex;
+    flex: 1;
+    /* Make it no larger than the toolstrip, so that it needs to scroll */
+    width: 100%;
+    height: 2.5em;
+    align-items: center;
 
-  &:not(.tinymce-mobile-context-toolbar) {
-    .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
-      background: @toolstrip-dark-background-color;
+    &:not(.tinymce-mobile-context-toolbar) {
+      .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
+        background: @toolstrip-dark-background-color;
+      }
+    }
+
+    &.tinymce-mobile-context-toolbar {
+
+
+      .tinymce-mobile-toolbar-group {
+        flex: 1;
+        padding-top: 0.4em;
+        padding-bottom: 0.4em;
+      }
     }
   }
-
-  &.tinymce-mobile-context-toolbar {
-
-
-    .tinymce-mobile-toolbar-group {
-      flex: 1;
-      padding-top: 0.4em;
-      padding-bottom: 0.4em;
-    }
-  }
-
-
 }
+
+
 
 .tinymce-mobile-toolbar-group {
   display: flex;
