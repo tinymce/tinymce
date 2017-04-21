@@ -44,8 +44,7 @@ define(
         Button.sketch({
           dom: {
             tag: 'button',
-            classes: [ Styles.resolve('input-container-x') ],
-            innerHtml: 'x'
+            classes: [ Styles.resolve('input-container-x'), Styles.resolve('icon-cancel-circle'), Styles.resolve('icon') ]
           },
           action: function (button) {
             var input = inputSpec.get(button);

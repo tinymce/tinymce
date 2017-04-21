@@ -52,7 +52,7 @@ define(
         return Button.sketch({
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('icon-previous') ].concat(
+            classes: [ Styles.resolve('icon-previous'), Styles.resolve('icon') ].concat(
               enabled ? [ ] : [ Styles.resolve('toolbar-navigation-disabled') ]
             )
           },
@@ -66,7 +66,7 @@ define(
         return Button.sketch({
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('icon-next') ].concat(
+            classes: [ Styles.resolve('icon-next'), Styles.resolve('icon') ].concat(
               enabled ? [ ] : [ Styles.resolve('toolbar-navigation-disabled') ]
             )
           },
