@@ -71,14 +71,16 @@ define(
       // Empty paragraphs can have no rectangle size, so let's just use the start container
       // if it is collapsed;
       var tryFallbackBox = function (win) {
-        return WindowSelection.getExact(win).bind(function (sel) {
-          if (Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset()) {
-            var rect = sel.start().dom().getBoundingClientRect();
-            return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none();
-          } else {
-            return Option.none();
-          }
-        });
+        var isCollapsed = function (sel) {
+          return Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset();
+        };
+
+        var toStartRect = function (sel) {
+          var rect = sel.start().dom().getBoundingClientRect();
+          return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none();
+        };
+
+        return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);
       };
 
       return getBodyFromFrame(frame).bind(function (body) {
