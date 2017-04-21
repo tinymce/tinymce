@@ -43,8 +43,7 @@ define(
 
       var scrollToCursor = function () {
         editorApi.getCursorBox().each(function (box) {
-          // document.title=box.top + ', ' + box.height;
-          scrollToY(box.top, box.height);
+          scrollToY(box.top(), box.height());
         });
       };
 
@@ -109,7 +108,10 @@ define(
         editorApi.onDomChanged(refreshIosSelection),
 
         // Scroll to cursor and update the iframe height
-        editorApi.onScrollToCursor(refreshThrottle.throttle),
+        editorApi.onScrollToCursor(function (tinyEvent) {
+          tinyEvent.preventDefault();
+          refreshThrottle.throttle();
+        }),
 
         // Scroll to element
         editorApi.onScrollToElement(function (event) {

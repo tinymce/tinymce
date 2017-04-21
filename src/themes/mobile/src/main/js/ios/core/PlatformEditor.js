@@ -3,13 +3,15 @@ define(
 
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Fun, Option, DomEvent, Element, WindowSelection) {
+  function (Fun, Obj, Option, Compare, DomEvent, Element, WindowSelection) {
     var getBodyFromFrame = function (frame) {
       return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
     };
@@ -52,19 +54,45 @@ define(
       });
     };
 
+    var toRect = function (rect) {
+      return {
+        left: Fun.constant(rect.left),
+        top: Fun.constant(rect.top),
+        right: Fun.constant(rect.right),
+        bottom: Fun.constant(rect.bottom),
+        width: Fun.constant(rect.width),
+        height: Fun.constant(rect.height)
+      };
+    };
+
     var getActiveApi = function (editor) {
       var frame = getFrame(editor);
+
+      // Empty paragraphs can have no rectangle size, so let's just use the start container
+      // if it is collapsed;
+      var tryFallbackBox = function (win) {
+        var isCollapsed = function (sel) {
+          return Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset();
+        };
+
+        var toStartRect = function (sel) {
+          var rect = sel.start().dom().getBoundingClientRect();
+          return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none();
+        };
+
+        return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);
+      };
 
       return getBodyFromFrame(frame).bind(function (body) {
         return getDocFromFrame(frame).bind(function (doc) {
           return getWinFromFrame(frame).map(function (win) {
-
             var html = Element.fromDom(doc.dom().documentElement);
-
             var getCursorBox = editor.getCursorBox.getOrThunk(function () {
               return function () {
                 return WindowSelection.get(win).bind(function (sel) {
-                  return WindowSelection.getFirstRect(win, sel);
+                  return WindowSelection.getFirstRect(win, sel).orThunk(function () {
+                    return tryFallbackBox(win);
+                  });
                 });
               };
             });
