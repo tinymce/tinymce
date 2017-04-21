@@ -19,6 +19,29 @@
       display: flex;
       justify-content: space-between;
 
+      .tinymce-mobile-input-container {
+        display: flex;
+        flex-grow: 1;
+        position: relative;
+
+        .tinymce-mobile-input-container-x {
+          position: absolute;
+          right: 0px;
+          color: rgba(0, 0, 200, 0.5);
+          font-size: 1em;
+          font-weight: bold;
+          background: inherit;
+          font-family: monospace;
+          border-radius: 50%;
+          border: none;
+          align-self: center;
+        }
+
+        &.tinymce-mobile-input-container-empty .tinymce-mobile-input-container-x {
+          display: none;
+        }
+      }
+
       .tinymce-mobile-icon-previous, .tinymce-mobile-icon-next {
         display: flex;
         align-items: center;
