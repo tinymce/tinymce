@@ -2,32 +2,26 @@ define(
   'tinymce.themes.mobile.ui.Inputs',
 
   [
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.DataField',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (
-    EventRoot, AdhocBehaviour, Behaviour, Composing, Representing, Toggling, Memento, SystemEvents, Button, Container, DataField, Input, EventHandler, Objects,
-    Fun, Merger, Option, Styles
-  ) {
+  function (AdhocBehaviour, Behaviour, Composing, Representing, Toggling, Memento, Button, Container, DataField, Input, EventHandler, Fun, Option, Styles) {
+    var clearInputEvent = 'input-clearing';
+
     var field = function (name, placeholder) {
-      // TODO: simplify the adhoc thing (inputEvents ?)
       var inputSpec = Memento.record(Input.sketch({
         placeholder: placeholder,
         onSetValue: function (input, data) {
@@ -44,7 +38,11 @@ define(
         Button.sketch({
           dom: {
             tag: 'button',
-            classes: [ Styles.resolve('input-container-x'), Styles.resolve('icon-cancel-circle'), Styles.resolve('icon') ]
+            classes: [
+              Styles.resolve('input-container-x'),
+              Styles.resolve('icon-cancel-circle'),
+              Styles.resolve('icon')
+            ]
           },
           action: function (button) {
             var input = inputSpec.get(button);
@@ -73,25 +71,21 @@ define(
               }
             }),
             {
-              key: 'input-clearing',
+              key: clearInputEvent,
               value: { enabled: true }
             }
           ]),
           customBehaviours: [
-            AdhocBehaviour.events('input-clearing', 
-              Merger.deepMerge(
-                {
-                  input: EventHandler.nu({
-                    run: function (iContainer) {
-                      var input = inputSpec.get(iContainer);
-                      var val = Representing.getValue(input);
-                      if (val.length > 0) Toggling.off(iContainer);
-                      else Toggling.on(iContainer);
-                    }
-                  })
+            AdhocBehaviour.events(clearInputEvent, {
+              input: EventHandler.nu({
+                run: function (iContainer) {
+                  var input = inputSpec.get(iContainer);
+                  var val = Representing.getValue(input);
+                  var f = val.length > 0 ? Toggling.off : Toggling.on;
+                  f(iContainer);
                 }
-              )
-            )
+              })
+            })
           ]
         })
       };
