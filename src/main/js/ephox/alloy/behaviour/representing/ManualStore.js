@@ -18,6 +18,7 @@ define(
 
         var setValue = function (component, repInfo, data) {
           repInfo.store().setValue()(component, data);
+          repInfo.onSetValue()(component, data);
         };
 
         var onLoad = function (component, repInfo) {
