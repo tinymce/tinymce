@@ -2,9 +2,11 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Element',
     'global!window',
     'tinymce.core.dom.DOMUtils',
@@ -25,8 +27,8 @@ define(
 
 
   function (
-    Cell, Fun, PlatformDetection, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, ImagePicker, IosRealm,
-    LinkButton, CssUrls, FormatChangers, SkinLoaded
+    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider,
+    ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -37,6 +39,12 @@ define(
 
         var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm() : IosRealm();
         args.targetNode.ownerDocument.body.appendChild(realm.element().dom());
+
+        var findFocusIn = function (elem) {
+          return Focus.search(elem).bind(function (focused) {
+            return realm.system().getByDom(focused).toOption();
+          });
+        };
 
         editor.on('init', function () {
           realm.init({
@@ -66,6 +74,14 @@ define(
               },
 
               onTapContent: function () {
+                var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
+                // If something in the toolbar had focus, fire an execute on it (execute on tap away)
+                // Perhaps it will be clearer later what is a better way of doing this.
+                findFocusIn(toolbar).each(function (input) {
+                  input.getSystem().triggerEvent(SystemEvents.execute(), input.element(), {
+                    target: Fun.constant(input.element())
+                  });
+                });
                 realm.restoreToolbar();
               }
             },
