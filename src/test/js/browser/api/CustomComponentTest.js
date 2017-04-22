@@ -8,7 +8,6 @@ asynctest(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
@@ -18,7 +17,7 @@ asynctest(
     'ephox.katamari.api.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, Container, NoState, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
+  function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -43,7 +42,7 @@ asynctest(
         behaveA: function (comp) {
           store.adder('behaveA')();
         }
-      }, { }, NoState);
+      }, { }/*, NoState */);
 
       bA.set(behaviourA);
 
@@ -66,7 +65,7 @@ asynctest(
             }
           })
         })
-      }, { }, { }, NoState);
+      }, { }, { }/*, NoState */);
 
       bB.set(behaviourB);
 

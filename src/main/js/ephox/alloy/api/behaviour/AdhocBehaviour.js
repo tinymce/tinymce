@@ -17,8 +17,16 @@ define(
       }, { }, { });
     };
 
+    var config = function (name) {
+      return {
+        key: name,
+        value: { enabled: true }
+      }
+    };
+
     return {
-      events: events
+      events: events,
+      config: config
     };
   }
 );

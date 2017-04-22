@@ -6,12 +6,12 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'global!Error'
   ],
 
-  function (Behaviour, UiSketcher, PartType, ToolbarGroupSchema, Merger, Fun, Error) {
+  function (Behaviour, UiSketcher, PartType, ToolbarGroupSchema, Fun, Merger, Error) {
     var schema = ToolbarGroupSchema.schema();
     var partTypes = ToolbarGroupSchema.parts();
 
