@@ -10,7 +10,14 @@
     "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
   },
   "devDependencies": {
-    "@ephox/agar": "git+ssh://git@stash:7999/van/agar.git"
+    "@ephox/agar": "git+ssh://git@stash:7999/van/agar.git",
+    "@ephox/bedrock": "^1.5.0",
+    "@ephox/bolt": "^1.8.1",
+    "grunt": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^2.0.0",
+    "grunt-parallel": "^0.5.1",
+    "load-grunt-tasks": "^3.5.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -8,6 +8,7 @@ asynctest(
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Menu',
@@ -17,7 +18,10 @@ asynctest(
     'ephox.boulder.api.Objects'
   ],
  
-  function (ApproxStructure, Assertions, Chain, NamedChain, UiFinder, AdhocBehaviour, GuiFactory, SystemEvents, Menu, EventHandler, MenuEvents, GuiSetup, Objects) {
+  function (
+    ApproxStructure, Assertions, Chain, NamedChain, UiFinder, AdhocBehaviour, Behaviour, GuiFactory, SystemEvents, Menu, EventHandler, MenuEvents, GuiSetup,
+    Objects
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -59,9 +63,9 @@ asynctest(
             }
           },
 
-          menuBehaviours: {
-            'menu-test-behaviour': { enabled: true }
-          },
+          menuBehaviours: Behaviour.derive([
+            AdhocBehaviour.config('menu-test-behaviour')
+          ]),
 
           customBehaviours: [
             AdhocBehaviour.events('menu-test-behaviour', 

@@ -5,19 +5,20 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Cell'
+    'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Behaviour, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
+  function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, Container, NoState, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -42,7 +43,7 @@ asynctest(
         behaveA: function (comp) {
           store.adder('behaveA')();
         }
-      }, { });
+      }, { }, NoState);
 
       bA.set(behaviourA);
 
@@ -65,7 +66,7 @@ asynctest(
             }
           })
         })
-      }, { }, { });
+      }, { }, { }, NoState);
 
       bB.set(behaviourB);
 
@@ -80,12 +81,12 @@ asynctest(
             behaviourA,
             behaviourB
           ],
-          containerBehaviours: {
-            'behaviourA': { },
-            'behaviourB': {
+          containerBehaviours: Behaviour.derive([
+            behaviourA.config(true),
+            behaviourB.config({
               attr: 'exhibition'
-            }
-          },
+            })
+          ]),
 
           domModification: {
             classes: [ 'base-dom-modification' ]

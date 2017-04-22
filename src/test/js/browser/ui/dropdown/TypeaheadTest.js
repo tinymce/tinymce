@@ -11,11 +11,11 @@ asynctest(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
+    'ephox.alloy.test.dropdown.DropdownAssertions',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.TestBroadcasts',
-    'ephox.alloy.test.dropdown.DropdownAssertions',
     'ephox.alloy.test.typeahead.TestTypeaheadList',
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.katamari.api.Future',
@@ -24,7 +24,10 @@ asynctest(
     'global!Math'
   ],
  
-  function (FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, DropdownAssertions, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
+  function (
+    FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, DropdownAssertions, GuiSetup, NavigationUtils, Sinks, TestBroadcasts,
+    TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -79,7 +82,7 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
-
+      
       var item = function (key) {
         return {
           selector: '.test-typeahead-selected-item[data-value="' + key + '"]',

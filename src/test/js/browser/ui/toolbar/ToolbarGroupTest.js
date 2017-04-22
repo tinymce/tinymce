@@ -8,14 +8,16 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.test.GuiSetup'
   ],
  
-  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, GuiFactory, Keying, Container, ToolbarGroup, GuiSetup) {
+  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, Container, ToolbarGroup, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -40,9 +42,9 @@ asynctest(
                     innerHtml: itemSpec.data.text
                   },
 
-                  containerBehaviours: {
-                    focusing: true
-                  }
+                  containerBehaviours: Behaviour.derive([
+                    Focusing.config(true)
+                  ])
                 });
               }
             }
