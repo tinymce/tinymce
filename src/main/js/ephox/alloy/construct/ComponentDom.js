@@ -88,7 +88,7 @@ define(
     var combine = function (info, baseMod, behaviours, base) {
       // Get the Behaviour DOM modifications
       var behaviourDoms = Merger.deepMerge({ }, baseMod);
-      Obj.each(behaviours, function (behaviour) {
+      Arr.each(behaviours, function (behaviour) {
         behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
       });
 

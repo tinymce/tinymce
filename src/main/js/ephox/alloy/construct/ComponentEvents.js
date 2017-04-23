@@ -42,7 +42,7 @@ define(
 
     var nameToHandlers = function (behaviours, info) {
       var r = {};
-      Obj.each(behaviours, function (behaviour) {
+      Arr.each(behaviours, function (behaviour) {
         r[behaviour.name()] = behaviour.handlers(info);        
       });
       return r;
