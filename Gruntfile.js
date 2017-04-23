@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       
       watching: {
         config: 'config/bolt/browser.js',
-        testfiles: 'src/test/js/browser/' + grunt.option('my-dir') + '/**/**Test.js',
+        testfiles: 'src/test/js/browser/**/**Test.js',
         browser: driver,
         options: {
           stopOnFailure: true
