@@ -2,12 +2,14 @@ define(
   'ephox.alloy.api.ui.Tabview',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.TabviewSchema',
     'ephox.katamari.api.Merger'
   ],
 
-  function (UiSketcher, TabviewSchema, Merger) {
+  function (Behaviour, Replacing, UiSketcher, TabviewSchema, Merger) {
     var schema = TabviewSchema.schema();
     var partTypes = TabviewSchema.parts();
 
@@ -24,9 +26,9 @@ define(
           detail.dom()
         ),
 
-        behaviours: {
-          replacing: { }
-        }
+        behaviours: Behaviour.derive([
+          Replacing.config(true)
+        ])
       };
     };
 

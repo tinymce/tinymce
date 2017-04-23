@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
@@ -11,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, UiSketcher, PartType, ToolbarGroupSchema, Fun, Merger, Error) {
+  function (Behaviour, Keying, Tabstopping, UiSketcher, PartType, ToolbarGroupSchema, Fun, Merger, Error) {
     var schema = ToolbarGroupSchema.schema();
     var partTypes = ToolbarGroupSchema.parts();
 
@@ -30,13 +32,13 @@ define(
           components: components,
 
           behaviours: Merger.deepMerge(
-            {
-              keying: {
+            Behaviour.derive([
+              Keying.config({
                 mode: 'flow',
                 selector: '.' + detail.markers().itemClass()
-              },
-              tabstopping: detail.hasTabstop() ? { } : Behaviour.revoke()
-            },
+              }),
+              detail.hasTabstop() ? Tabstopping.config(true) : Tabstopping.revoke()
+            ]),
             detail.tgroupBehaviours()
           ),
 

@@ -2,7 +2,10 @@ define(
   'ephox.alloy.api.ui.SplitDropdown',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
@@ -11,12 +14,15 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.SplitDropdownSchema',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (Composing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, SplitDropdownSchema, Merger, Fun, Option) {
+  function (
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, SplitDropdownSchema, Fun, Merger,
+    Option
+  ) {
     var schema = SplitDropdownSchema.schema();
     var partTypes = SplitDropdownSchema.parts();
 
@@ -46,8 +52,8 @@ define(
 
           events: buttonEvents,
 
-          behaviours: {
-            coupling: {
+          behaviours: Behaviour.derive([
+            Coupling.config({
               others: {
                 sandbox: function (hotspot) {
                   var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
@@ -66,13 +72,13 @@ define(
                   }, hotspot, extras);
                 }
               }
-            },
-            keying: {
+            }),
+            Keying.config({
               mode: 'execution',
               useSpace: true
-            },
-            focusing: true
-          }
+            }),
+            Focusing.config(true)
+          ])
         },
         {
           dom: {

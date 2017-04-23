@@ -3,24 +3,17 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
-    'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ExpandableFormSchema',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.dom.Focus'
+    'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Keying, Representing, Sliding, Button, Form, GuiTypes, UiSketcher, Fields, PartType, ExpandableFormSchema, FieldSchema, Merger, Fun, Class, Focus) {
+  function (Behaviour, Representing, Sliding, GuiTypes, UiSketcher, PartType, ExpandableFormSchema, Fun, Merger) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
         var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
@@ -43,8 +36,8 @@ define(
         components: components,
 
         behaviours: Merger.deepMerge(
-          {
-            representing: {
+          Behaviour.derive([
+            Representing.config({
               store: {
                 mode: 'manual',
                 getValue: function (form) {
@@ -67,8 +60,8 @@ define(
                   Representing.setValue(extra, values);
                 }
               }
-            }
-          },
+            })
+          ]),
           detail.expandableBehaviours()
         ),
 

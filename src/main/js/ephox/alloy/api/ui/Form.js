@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.Form',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.UiSketcher',
@@ -10,13 +11,13 @@ define(
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option'
   ],
 
-  function (Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Obj, Merger, Fun, Option) {
+  function (Behaviour, Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Fun, Merger, Obj, Option) {
     var schema = [
       FieldSchema.defaulted('formBehaviours', { }),
       FieldSchema.defaulted('customBehaviours', [ ])
@@ -73,8 +74,8 @@ define(
           components: components,
 
           behaviours: Merger.deepMerge(
-            {
-              representing: {
+            Behaviour.derive([
+              Representing.config({
                 store: {
                   mode: 'manual',
                   getValue: function (form) {
@@ -94,8 +95,8 @@ define(
                     });
                   }
                 }
-              }
-            },
+              })
+            ]),
             detail.formBehaviours()
           ),
           customBehaviours: detail.customBehaviours()

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.sandbox.Dismissal',
 
   [
+    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.messages.Channels',
     'ephox.boulder.api.FieldSchema',
@@ -10,10 +11,15 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Sandboxing, Channels, FieldSchema, Objects, ValueSchema, Fun) {
+  function (Receiving, Sandboxing, Channels, FieldSchema, Objects, ValueSchema, Fun) {
     var schema = ValueSchema.objOfOnly([
       FieldSchema.defaulted('isExtraPart', Fun.constant(false))
     ]);
+
+    var receivingConfig = function (rawSpec) {
+      var c = receiving(rawSpec);
+      return Receiving.config(c);
+    };
 
     var receiving = function (rawSpec) {
       var spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
@@ -36,7 +42,8 @@ define(
     };
 
     return {
-      receiving: receiving
+      receiving: receiving,
+      receivingConfig: receivingConfig
     };
   }
 );

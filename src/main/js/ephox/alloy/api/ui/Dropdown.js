@@ -2,7 +2,10 @@ define(
   'ephox.alloy.api.ui.Dropdown',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
@@ -11,12 +14,12 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.DropdownSchema',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (Composing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, DropdownSchema, Merger, Fun, Option) {
+  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, DropdownSchema, Fun, Merger, Option) {
     var schema = DropdownSchema.schema();
     var partTypes = DropdownSchema.parts();
 
@@ -42,15 +45,15 @@ define(
           dom: detail.dom(),
           components: components,
           behaviours: Merger.deepMerge(
-            {
-              toggling: {
+            Behaviour.derive([
+              Toggling.config({
                 toggleClass: detail.toggleClass(),
                 aria: {
                   mode: 'pressed',
                   syncWithExpanded: true
                 }
-              },
-              coupling: {
+              }),
+              Coupling.config({
                 others: {
                   sandbox: function (hotspot) {
                     return DropdownUtils.makeSandbox(detail, {
@@ -62,13 +65,13 @@ define(
                     });
                   }
                 }
-              },
-              keying: {
+              }),
+              Keying.config({
                 mode: 'execution',
                 useSpace: true
-              },
-              focusing: true
-            },
+              }),
+              Focusing.config(true)
+            ]),
             detail.dropdownBehaviours()
           ),
 
