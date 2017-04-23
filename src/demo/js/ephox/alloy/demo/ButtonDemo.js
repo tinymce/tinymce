@@ -116,10 +116,10 @@ define(
             console.log('*** ButtonDemo click ***');
           },
 
-          buttonBehaviours: {
-            'red.behaviour': { },
-            'cat.behaviour': { }
-          },
+          buttonBehaviours: Behaviour.derive([
+            catBehaviour.config({ }),
+            redBehaviour.config({ })
+          ]),
           customBehaviours: [
             catBehaviour,
             redBehaviour            

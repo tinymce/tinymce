@@ -73,6 +73,13 @@ define(
             };
           },
 
+          revoke: function () {
+            return {
+              key: name,
+              value: undefined
+            };
+          },
+
           schema: function () {
             return schema;
             // return FieldSchema.optionObjOf(name, schema);

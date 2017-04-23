@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Attachment',
@@ -16,7 +18,6 @@ define(
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.events.DomEvent',
@@ -27,8 +28,8 @@ define(
   ],
 
   function (
-    AdhocBehaviour, Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Future,
-    Option, Result, DomEvent, Element, Class, Value, document
+    AdhocBehaviour, Behaviour, Keying, Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay,
+    Fun, Option, Result, DomEvent, Element, Class, Value, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -193,12 +194,12 @@ define(
         'how when you focus an empty input, it will attach at the end of the field, and ' +
         'when you focus a non-empty input, it will attach below',
         Container.sketch({
-          containerBehaviours: {
-            keying: {
+          containerBehaviours: Behaviour.derive([
+            Keying.config({
               mode: 'cyclic',
               selector: 'input'
-            }
-          },
+            })
+          ]),
           components: [
             Input.sketch({
               dom: {
@@ -210,11 +211,9 @@ define(
                 styles: { display: 'block' }
               },
 
-              inputBehaviours: {
-                'adhoc-show-popup': {
-                  enabled: true
-                }
-              },
+              inputBehaviours: Behaviour.derive([
+                AdhocBehaviour.config('adhoc-show-popup')
+              ]),
               customBehaviours: [
                 AdhocBehaviour.events('adhoc-show-popup', {
                   focusin: EventHandler.nu({
@@ -231,12 +230,12 @@ define(
 
                       var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
                       InlineView.showAt(inlineComp, anchor, Container.sketch({
-                        containerBehaviours: {
-                          keying: {
+                        containerBehaviours: Behaviour.derive([
+                          Keying.config({
                             mode: 'flow',
                             selector: 'button'
-                          }
-                        },
+                          })
+                        ]),
                         components: [
                           Button.sketch({
                             dom: {

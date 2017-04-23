@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.PositionDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
@@ -21,8 +22,8 @@ define(
   ],
 
   function (
-    Positioning, Toggling, GuiFactory, Attachment, Gui, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, DomEvent, Element, Class,
-    Css
+    Behaviour, Positioning, Toggling, GuiFactory, Attachment, Gui, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, DomEvent, Element,
+    Class, Css
   ) {
     return function () {
       var gui = Gui.create();
@@ -77,14 +78,14 @@ define(
             }
           },
 
-          buttonBehaviours: {
-            toggling: {
+          buttonBehaviours: Behaviour.derive([
+            Toggling.config({
               toggleClass: 'demo-selected',
               aria: {
                 mode: 'pressed'
               }
-            }
-          }
+            })
+          ])
         })
       );
 

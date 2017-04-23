@@ -2,6 +2,8 @@ define(
   'ephox.alloy.demo.ToolbarsDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
@@ -16,7 +18,7 @@ define(
     'global!document'
   ],
 
-  function (Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Element, Class, document) {
+  function (Behaviour, Toggling, Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -131,14 +133,14 @@ define(
             console.log('clicked on button', s);
           },
 
-          buttonBehaviours: {
-            toggling: {
+          buttonBehaviours: Behaviour.derive([
+            Toggling.config({
               toggleClass: 'mce-active',
               aria: {
                 mode: 'pressed'
               }
-            }
-          }
+            })
+          ])
         }) : Button.sketch({
           'dom': {
             'tag': 'div',

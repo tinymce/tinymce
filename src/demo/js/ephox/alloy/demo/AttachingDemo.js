@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
@@ -19,7 +20,10 @@ define(
     'global!setTimeout'
   ],
 
-  function (EventRoot, Replacing, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, HtmlDisplay, Objects, Element, Class, Date, document, setTimeout) {
+  function (
+    EventRoot, Behaviour, Replacing, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, HtmlDisplay, Objects, Element, Class, Date, document,
+    setTimeout
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -42,9 +46,9 @@ define(
             }
           ],
 
-          containerBehaviours: {
-            replacing: { }
-          }
+          containerBehaviours: Behaviour.derive([
+            Replacing.config(true)
+          ])
         })
       );
 

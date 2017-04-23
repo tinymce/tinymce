@@ -2,6 +2,8 @@ define(
   'ephox.alloy.demo.PinchingDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
@@ -12,7 +14,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (GuiFactory, Attachment, Gui, Insert, Css, SelectorFind, Height, Width) {
+  function (Behaviour, Pinching, GuiFactory, Attachment, Gui, Insert, Css, SelectorFind, Height, Width) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -44,16 +46,16 @@ define(
             background: 'black'
           }
         },
-        behaviours: {
-          pinching: {
+        behaviours: Behaviour.derive([
+          Pinching.config({
             onPinch: function (span, changeX, changeY) {
               resize(span, changeX, changeY);
             },
             onPunch: function (span, changeX, changeY) {
               resize(span, changeX, changeY);
             }
-          }
-        }
+          })
+        ])
       });
 
       var gui = Gui.create();

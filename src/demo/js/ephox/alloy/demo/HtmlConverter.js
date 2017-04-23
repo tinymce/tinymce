@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.HtmlConverter',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.GuiFactory',
@@ -16,7 +17,7 @@ define(
     'global!document'
   ],
 
-  function (Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Json, SelectorFind, document) {
+  function (Behaviour, Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Json, SelectorFind, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -66,9 +67,9 @@ define(
             dom: {
               tag: 'pre'
             },
-            containerBehaviours: {
-              replacing: { }
-            }
+            containerBehaviours: Behaviour.derive([
+              Replacing.config({ })
+            ])
           })
         ]
       });

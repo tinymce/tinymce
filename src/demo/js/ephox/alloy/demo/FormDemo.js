@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
@@ -38,9 +40,9 @@ define(
   ],
 
   function (
-    Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, HtmlSelect,
-    Input, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Future, Merger, Option, Result, Element, Class, Value,
-    document, setTimeout
+    Behaviour, Focusing, Invalidating, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs,
+    FormField, HtmlSelect, Input, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Future, Merger, Option, Result,
+    Element, Class, Value, document, setTimeout
   ) {
     return function () {
       var gui = Gui.create();
@@ -64,8 +66,8 @@ define(
           },
           parts: {
             field: {
-              inputBehaviours: {
-                invalidating: {
+              inputBehaviours: Behaviour.derive([
+                Invalidating.config({
                   invalidClass: 'invalid-input',
                   notify: {
                     getContainer: function (input) {
@@ -86,8 +88,8 @@ define(
                     },
                     onEvent: 'input'
                   }
-                }
-              }
+                })
+              ])
             },
             label: {
               dom: { tag: 'label', innerHtml: spec.label }
@@ -111,9 +113,9 @@ define(
             'field2': spec.field2,
             lock: {
               dom: { tag: 'button', innerHtml: 'x' },
-              buttonBehaviours: {
-                tabstopping: true
-              }
+              buttonBehaviours: Behaviour.derive([
+                Tabstopping.config(true)
+              ])
             }
           },
           markers: {
@@ -157,10 +159,10 @@ define(
               dom: {
                 classes: [ 'ephox-select-wrapper' ]
               },
-              selectBehaviours: {
-                tabstopping: true,
-                focusing: true
-              },
+              selectBehaviours: Behaviour.derive([
+                Tabstopping.config(true),
+                Focusing.config(true)
+              ]),
               options: spec.options
             },
             label: { dom: { tag: 'label', innerHtml: spec.label } }
@@ -323,11 +325,11 @@ define(
 
           ],
 
-          formBehaviours: {
-            keying: {
+          formBehaviours: Behaviour.derive([
+            Keying.config({
               mode: 'cyclic'
-            }
-          }
+            })
+          ])
         })
       );
 
@@ -386,24 +388,24 @@ define(
                 tag: 'button',
                 innerHtml: 'v'
               },
-              buttonBehaviours: {
-                keying: {
+              buttonBehaviours: Behaviour.derive([
+                Keying.config({
                   mode: 'execution'
-                },
-                tabstopping: true
-              }
+                }),
+                Tabstopping.config(true)
+              ])
             },
             'controls': {
               dom: {
                 tag: 'div'
               },
-              behaviours: {
-                tabstopping: true,
-                keying: {
+              behaviours: Behaviour.derive([
+                Tabstopping.config(true),
+                Keying.config({
                   mode: 'flow',
                   selector: 'button'
-                }
-              },
+                })
+              ]),
               components: [
                 Button.sketch({ dom: { tag: 'button', innerHtml: 'OK' } })
               ]
