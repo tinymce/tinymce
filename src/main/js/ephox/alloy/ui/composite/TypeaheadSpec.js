@@ -2,26 +2,33 @@ define(
   'ephox.alloy.ui.composite.TypeaheadSpec',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Streaming',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Value',
     'global!console',
     'global!document'
   ],
 
-  function (Composing, Coupling, Focusing, Highlighting, Representing, Sandboxing, SystemEvents, EventHandler, DropdownUtils, InputBase, Objects, Merger, Fun, Option, Value, console, document) {
+  function (
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, SystemEvents, EventHandler, DropdownUtils,
+    InputBase, Objects, Fun, Merger, Option, Value, console, document
+  ) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
         var sandbox = Coupling.getCoupled(comp, 'sandbox');
@@ -44,15 +51,16 @@ define(
       // (easily) the same representing logic as input fields.
       var inputBehaviours = InputBase.behaviours(detail);
       
-      var behaviours = {
-        tabstopping: inputBehaviours.tabstopping,
-        focusing: true,
-        representing: {
+      var behaviours = Behaviour.derive([
+        inputBehaviours.tabstopping,
+        Focusing.config(true),
+        Representing.config({
           store: {
             mode: 'dataset',
             getDataKey: function (typeahead) {
               return Value.get(typeahead.element());
             },
+            initialValue: detail.data().getOr(undefined),
             getFallbackEntry: function (key) {
               return { value: key, text: key };
             },
@@ -60,8 +68,8 @@ define(
               Value.set(typeahead.element(), data.text);
             }
           }
-        },
-        streaming: {
+        }),
+        Streaming.config({
           stream: {
             mode: 'throttle',
             delay: 1000
@@ -83,9 +91,9 @@ define(
               }
             }
           }
-        },
+        }),
 
-        keying: {
+        Keying.config({
           mode: 'special',
           onDown: function (comp, simulatedEvent) {
             navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
@@ -108,18 +116,18 @@ define(
             comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
             return Option.some(true);
           }
-        },
+        }),
 
-        toggling: {
+        Toggling.config({
           toggleClass: detail.markers().openClass(),
           aria: {
             // TODO: Maybe this should just be expanded?
             mode: 'pressed',
             syncWithExpanded: true
           }
-        },
+        }),
 
-        coupling: {
+        Coupling.config({
           others: {
             sandbox: function (hotspot) {
               return DropdownUtils.makeSandbox(detail, {
@@ -131,8 +139,8 @@ define(
               });
             }
           }
-        }
-      };
+        })
+      ]);
 
       return Merger.deepMerge(
         {

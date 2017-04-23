@@ -2,13 +2,15 @@ define(
   'ephox.alloy.ui.schema.ToolbarSchema',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Fields, PartType, FieldSchema, Fun) {
+  function (Behaviour, Replacing, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('shell', true),
       Fields.members([ 'group' ]),
@@ -18,9 +20,9 @@ define(
     // TODO: Dupe with Toolbar
     var enhanceGroups = function (detail) {
       return {
-        behaviours: {
-          replacing: { }
-        }
+        behaviours: Behaviour.derive([
+          Replacing.config(true)
+        ])
       };
     };
 

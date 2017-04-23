@@ -2,6 +2,9 @@ define(
   'ephox.alloy.ui.schema.FormChooserSchema',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
@@ -10,7 +13,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (Fields, PartType, ButtonBase, FieldSchema, Fun, Option) {
+  function (Behaviour, Focusing, Representing, Fields, PartType, ButtonBase, FieldSchema, Fun, Option) {
     var schema = [
       Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),
@@ -49,16 +52,15 @@ define(
                 role: 'radio'
               }
             },
-            behaviours: {
-              representing: {
+            behaviours: Behaviour.derive([
+              Representing.config({
                 store: {
                   mode: 'memory',
                   initialValue: choiceSpec.value
                 }
-              },
-              focusing: { }
-              
-            },
+              }),
+              Focusing.config(true)
+            ]),
 
             domModification: {
               classes: [ detail.markers().choiceClass() ]

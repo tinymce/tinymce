@@ -2,6 +2,8 @@ define(
   'ephox.alloy.ui.schema.ModalDialogSchema',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -12,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (Fields, PartType, FieldSchema, Fun, Option, Json, SelectorFind, Error) {
+  function (Behaviour, Dragging, Fields, PartType, FieldSchema, Fun, Option, Json, SelectorFind, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
@@ -27,8 +29,8 @@ define(
       PartType.optional(basic, [ ], 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
         function (detail, spec) {
           return {
-            behaviours: {
-              dragging: {
+            behaviours: Behaviour.derive([
+              Dragging.config({
                 mode: 'mouse',
                 getTarget: function (handle) {
                   return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
@@ -39,8 +41,8 @@ define(
                     Json.stringify(spec, null, 2)
                   )
                 )
-              }
-            }
+              })
+            ])
           };
         }
       ),

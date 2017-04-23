@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Button',
@@ -16,7 +17,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (AdhocBehaviour, Composing, Toggling, Button, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
+  function (AdhocBehaviour, Behaviour, Composing, Toggling, Button, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
     var schema = [
       Fields.onStrictHandler('onLockedChange'),
       Fields.markers([ 'lockClass' ])
@@ -52,9 +53,9 @@ define(
         Fun.constant({ }),
         function (detail) {
           return {
-            fieldBehaviours: {
-              'coupled-input-behaviour': { enabled: true }
-            },
+            fieldBehaviours: Behaviour.derive([
+              AdhocBehaviour.config('coupled-input-behaviour')
+            ]),
             customBehaviours: [
               AdhocBehaviour.events('coupled-input-behaviour', {
                 'input': EventHandler.nu({
@@ -87,14 +88,14 @@ define(
         Fun.constant({ }),
         function (detail) {
           return {
-            buttonBehaviours: {
-              toggling: {
+            buttonBehaviours: Behaviour.derive([
+              Toggling.config({
                 toggleClass: detail.markers().lockClass(),
                 aria: {
                   mode: 'pressed'
                 }
-              }
-            }
+              })
+            ])
           };
         }
       )

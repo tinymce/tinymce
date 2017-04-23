@@ -2,6 +2,9 @@ define(
   'ephox.alloy.ui.slider.SliderParts',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.slider.SliderActions',
@@ -12,7 +15,7 @@ define(
     'ephox.sand.api.PlatformDetection'
   ],
 
-  function (EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
+  function (Behaviour, Focusing, Keying, EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
     var platform = PlatformDetection.detect();
     var isTouch = platform.deviceType.isTouch();
 
@@ -101,9 +104,9 @@ define(
         };
 
         return {
-          behaviours: {
+          behaviours: Behaviour.derive([
             // Move left and right along the spectrum
-            keying: {
+            Keying.config({
               mode: 'special',
               onLeft: function (spectrum) {
                 SliderActions.moveLeft(spectrum, detail);
@@ -113,10 +116,10 @@ define(
                 SliderActions.moveRight(spectrum, detail);
                 return Option.some(true);
               }
-            },
+            }),
             // TODO: Do not allow keyboard focus on mobile (TM-25)
-            focusing: true
-          },
+            Focusing.config(true)
+          ]),
 
           events: uiEvents
         };

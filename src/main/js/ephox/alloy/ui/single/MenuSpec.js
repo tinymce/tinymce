@@ -2,7 +2,11 @@ define(
   'ephox.alloy.ui.single.MenuSpec',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.build.ItemType',
     'ephox.alloy.menu.build.SeparatorType',
@@ -14,13 +18,16 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'global!Error'
   ],
 
-  function (Highlighting, EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, Tagger, UiSubstitutes, Objects, ValueSchema, Arr, Merger, Fun, Option, Error) {
+  function (
+    Behaviour, Composing, Highlighting, Keying, Representing, EventHandler, ItemType, SeparatorType, WidgetType, ItemEvents, MenuEvents, Tagger, UiSubstitutes,
+    Objects, ValueSchema, Arr, Fun, Merger, Option, Error
+  ) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -69,26 +76,24 @@ define(
           uid: detail.uid(),
 
           behaviours: Merger.deepMerge(
-            {
-              highlighting: {
+            Behaviour.derive([
+              Highlighting.config({
                 // Highlighting for a menu is selecting items inside the menu
                 highlightClass: detail.markers().selectedItem(),
                 itemClass: detail.markers().item(),
                 onHighlight: detail.onHighlight()
-              },
-              representing: {
+              }),
+              Representing.config({
                 store: {
                   mode: 'memory',
                   initialValue: detail.value()
                 }
-              },
-
-              composing: {
+              }),
+              Composing.config({
                 find: Fun.identity
-              },
-
-              keying: detail.movement().config()(detail, detail.movement())
-            },
+              }),
+              Keying.config(detail.movement().config()(detail, detail.movement()))
+            ]),
             detail.menuBehaviours()
           ),
           customBehaviours: detail.customBehaviours(),

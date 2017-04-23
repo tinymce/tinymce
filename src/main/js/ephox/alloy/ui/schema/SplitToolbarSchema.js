@@ -2,15 +2,17 @@ define(
   'ephox.alloy.ui.schema.SplitToolbarSchema',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Cell'
+    'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (Toolbar, Fields, PartType, FieldSchema, Fun, Cell) {
+  function (Behaviour, Sliding, Toolbar, Fields, PartType, FieldSchema, Cell, Fun) {
     var schema = [
       Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
       FieldSchema.state('builtGroups', function () {
@@ -35,8 +37,8 @@ define(
       PartType.internal(Toolbar, toolbarSchema, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
       PartType.internal(Toolbar, toolbarSchema, 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
         return {
-          toolbarBehaviours: {
-            sliding: {
+          toolbarBehaviours: Behaviour.derive([
+            Sliding.config({
               dimension: {
                 property: 'height'
               },
@@ -44,8 +46,8 @@ define(
               openClass: detail.markers().openClass(),
               shrinkingClass: detail.markers().shrinkingClass(),
               growingClass: detail.markers().growingClass()
-            }
-          }
+            })
+          ])
         };
       }),
       PartType.external({ built: Fun.identity }, [ ], 'overflow-button', Fun.constant({ }), Fun.constant({ }))

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.ui.schema.ExpandableFormSchema',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.ui.Button',
@@ -10,11 +11,11 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.dom.Focus'
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.properties.Class'
   ],
 
-  function (Keying, Sliding, Button, Form, Fields, PartType, FieldSchema, Fun, Class, Focus) {
+  function (Behaviour, Keying, Sliding, Button, Form, Fields, PartType, FieldSchema, Fun, Focus, Class) {
     var schema = [
       Fields.markers([
         'closedClass',
@@ -48,8 +49,8 @@ define(
         FieldSchema.strict('dom')
       ], 'extra', '<alloy.expandable-form.extra>', Fun.constant({ }), function (detail) {
         return {
-          formBehaviours: {
-            sliding: {
+          formBehaviours: Behaviour.derive([
+            Sliding.config({
               dimension: {
                 property: 'height'
               },
@@ -85,8 +86,8 @@ define(
               getAnimationRoot: function (extra) {
                 return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
               }
-            }
-          }
+            })
+          ])
         };
       }),
       PartType.internal(Button, [

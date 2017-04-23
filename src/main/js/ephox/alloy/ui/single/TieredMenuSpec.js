@@ -4,7 +4,10 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
@@ -18,9 +21,9 @@ define(
     'ephox.alloy.menu.util.MenuEvents',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'ephox.sugar.api.node.Body',
@@ -29,7 +32,10 @@ define(
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (EditableFields, EventRoot, Highlighting, Replacing, Representing, Sandboxing, GuiFactory, SystemEvents, FocusManagers, Menu, EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Obj, Merger, Fun, Option, Options, Body, Class, Classes, SelectorFind) {
+  function (
+    EditableFields, EventRoot, Behaviour, Composing, Highlighting, Keying, Replacing, Representing, Sandboxing, GuiFactory, SystemEvents, FocusManagers, Menu,
+    EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Fun, Merger, Obj, Option, Options, Body, Class, Classes, SelectorFind
+  ) {
     var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
@@ -247,8 +253,8 @@ define(
           classes: [ 'main-menu' ]
         },
         behaviours: Merger.deepMerge(
-          {
-            keying: {
+          Behaviour.derive([
+            Keying.config({
               mode: 'special',
               onRight: keyOnItem(onRight),
               onLeft: keyOnItem(onLeft),
@@ -258,19 +264,19 @@ define(
                   container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
                 });
               }
-            },
+            }),
             // Highlighting is used for highlighting the active menu
-            highlighting: {
+            Highlighting.config({
               highlightClass: detail.markers().selectedMenu(),
               itemClass: detail.markers().menu()
-            },
-            composing: {
+            }),
+            Composing.config({
               find: function (container) {
                 return Highlighting.getHighlighted(container);
               }
-            },
-            replacing: { }
-          },
+            }),
+            Replacing.config({ })
+          ]),
           detail.tmenuBehaviours()
         ),
         customBehaviours: detail.customBehaviours(),

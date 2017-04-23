@@ -3,6 +3,9 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
@@ -10,7 +13,7 @@ define(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, FieldSchema, Objects, Fun, Merger, Value) {
+  function (Behaviour, Focusing, Representing, Tabstopping, FieldSchema, Objects, Fun, Merger, Value) {
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('inputAttributes', { }),
@@ -27,8 +30,8 @@ define(
 
     var behaviours = function (detail) {
       return Merger.deepMerge(
-        {
-          representing: {
+        Behaviour.derive([
+          Representing.config({
             store: {
               mode: 'manual',
               // Propagating its Option
@@ -44,17 +47,16 @@ define(
                 }
               }
             }
-          },
-
-          focusing: {
+          }),
+          Focusing.config({
             onFocus: function (component) {
               var input = component.element();
               var value = Value.get(input);
               input.dom().setSelectionRange(0, value.length);
             }
-          },
-          tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
-        },
+          }),
+          detail.hasTabstop() ? Tabstopping.config(true) : Tabstopping.revoke()
+        ]),
         detail.inputBehaviours()
       );
     };

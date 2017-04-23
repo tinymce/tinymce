@@ -3,7 +3,9 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.ui.slider.SliderActions',
@@ -14,7 +16,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (EventRoot, Keying, SystemEvents, EventHandler, SliderActions, Objects, Option, PlatformDetection, Css, Width) {
+  function (EventRoot, Behaviour, Keying, Representing, SystemEvents, EventHandler, SliderActions, Objects, Option, PlatformDetection, Css, Width) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
 
     var sketch = function (detail, components, spec, externals) {
@@ -113,24 +115,24 @@ define(
         dom: detail.dom(),
         components: components,
 
-        behaviours: {
-          keying: {
+        behaviours: Behaviour.derive([
+          Keying.config({
             mode: 'special',
             focusIn: function (slider) {
               var spectrum = slider.getSystem().getByUid(detail.partUids().spectrum).getOrDie();
               Keying.focusIn(spectrum);
               return Option.some(true);
             }
-          },
-          representing: {
+          }),
+          Representing.config({
             store: {
               mode: 'manual',
               getValue: function (_) {
                 return detail.value().get();
               }
             }
-          }
-        },
+          })
+        ]),
 
         events: Objects.wrapAll([
           {

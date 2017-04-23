@@ -3,6 +3,9 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.data.Fields',
@@ -12,7 +15,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, SystemEvents, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
+  function (Behaviour, Focusing, Tabstopping, Toggling, SystemEvents, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -40,10 +43,10 @@ define(
               role: 'button'
             }
           },
-          buttonBehaviours: {
-            tabstopping: Behaviour.revoke(),
-            focusing: Behaviour.revoke()
-          }
+          buttonBehaviours: Behaviour.derive([
+            Tabstopping.revoke(),
+            Focusing.revoke()
+          ])
         };
       },
       function (detail) {
@@ -52,15 +55,15 @@ define(
             var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
             hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
           },
-          buttonBehaviours: {
-            toggling: {
+          buttonBehaviours: Behaviour.derive([
+            Toggling.config({
               toggleOnExecute: false,
               toggleClass: detail.toggleClass(),
               aria: {
                 mode: 'pressed'
               }
-            }
-          }
+            })
+          ])
         };
       }
     );
@@ -79,9 +82,9 @@ define(
               role: 'button'
             }
           },
-          buttonBehaviours: {
-            focusing: Behaviour.revoke()
-          }
+          buttonBehaviours: Behaviour.derive([
+            Focusing.revoke()
+          ])
         };
       },
       function (detail) {
