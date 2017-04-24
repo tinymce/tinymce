@@ -19,6 +19,7 @@ define(
         var setValue = function (component, repInfo, data) {
           repInfo.store().dataset().set({ });
           repInfo.store().setData()(component, data);
+          repInfo.onSetValue()(component, data);
         };
 
         var getValue = function (component, repInfo) {
@@ -33,7 +34,8 @@ define(
 
         var onLoad = function (component, repInfo) {
           repInfo.store().initialValue().each(function (data) {
-            setValue(component, repInfo, data);
+            repInfo.store().dataset().set({ });
+            repInfo.store().setData()(component, data);
           });
         };
 

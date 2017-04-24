@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
@@ -10,13 +11,14 @@ define(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, FieldSchema, Objects, Fun, Merger, Value) {
+  function (Behaviour, Fields, FieldSchema, Objects, Fun, Merger, Value) {
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('inputAttributes', { }),
       FieldSchema.defaulted('inputStyles', { }),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
+      Fields.onHandler('onSetValue'),
       FieldSchema.defaulted('styles', { }),
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('eventOrder', { }),
@@ -43,7 +45,8 @@ define(
                   Value.set(input.element(), data);
                 }
               }
-            }
+            },
+            onSetValue: detail.onSetValue()
           },
 
           focusing: {

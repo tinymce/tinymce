@@ -15,6 +15,7 @@ define(
     var manager = function () {
       var setValue = function (component, repInfo, data) {
         repInfo.store().state().set(data);
+        repInfo.onSetValue()(component, data);
       };
 
       var getValue = function (component, repInfo) {
@@ -24,6 +25,7 @@ define(
       var onLoad = function (component, repInfo) {
         var current = repInfo.store().state().get();
         repInfo.store().initialValue().each(function (initVal) {
+          // TODO: Maybe should call onSetValue here?
           if (current === null) repInfo.store().state().set(initVal);
         });
       };

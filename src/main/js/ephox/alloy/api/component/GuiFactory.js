@@ -55,7 +55,7 @@ define(
         element: element
       });
     };
-
+ 
     var external = function (spec) {
       var extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
         FieldSchema.strict('element'),
