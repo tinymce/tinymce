@@ -1,5 +1,6 @@
 Version 4.5.7 (2017-04-25)
 	Fixed bug with selection around inline contenteditable false would get collapsed incorrectly.
+	Fixed bug where pasting on Microsoft Edge 40+ would produce clipboard fragment headers.
 Version 4.5.6 (2017-03-30)
 	Fixed bug where it wasn't possible to select floated images in some cases.
 Version 4.5.5 (2017-03-07)
