@@ -120,6 +120,24 @@ define(
         });
 
         return self._super();
+      },
+
+      /**
+       * Override default value function
+       *
+       * @method value
+       * @return {String} option selected.
+       */
+      value: function() {
+        var self = this;
+
+        var list = self.$el.context.children;
+        for (var i = 0; i < list.length; i++) {
+          var option = list[i];
+          if (option.selected === true) {
+            return option.value;
+          }
+        }
       }
     });
   }
