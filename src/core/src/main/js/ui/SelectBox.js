@@ -9,7 +9,7 @@
  */
 
 /**
- * Creates a new select box control.
+ * Creates a new select box.
  *
  * @-x-less SelectBox.less
  * @class tinymce.ui.SelectBox
@@ -128,7 +128,7 @@ define(
        * @method value
        * @return {String} option selected.
        */
-      value: function() {
+      value: function () {
         var self = this;
 
         var list = self.$el.context.children;
