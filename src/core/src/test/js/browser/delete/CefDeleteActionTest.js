@@ -52,6 +52,16 @@ asynctest(
       });
     };
 
+    var cAssertMoveToPositionAction = function (elementPath, offset) {
+      return Chain.op(function (actionOption) {
+        var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+        var action = actionOption.getOrDie();
+        Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
+        Assertions.assertDomEq('Should be expected container', container, Element.fromDom(actionValue(action).container()));
+        Assertions.assertEq('Should be expected offset', offset, actionValue(action).offset());
+      });
+    };
+
     var cAssertActionNone = Chain.op(function (actionOption) {
       Assertions.assertEq('Action value should be none', true, actionOption.isNone());
     });
@@ -190,6 +200,19 @@ asynctest(
           cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>'),
           cReadAction(true, [1], 0),
           cAssertRemoveElementAction([2])
+        ]))
+      ])),
+
+      Logger.t('moveToPosition actions where caret is to be moved from cef to normal content', GeneralSteps.sequence([
+        Logger.t('Should be moveToPosition action since we are after a ce=false and moving forwards to normal content', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">a</p><p>b</p>'),
+          cReadAction(true, [], 1),
+          cAssertMoveToPositionAction([1, 0], 0)
+        ])),
+        Logger.t('Should be moveToPosition action since we are before a ce=false and moving backwards to normal content', Chain.asStep(viewBlock, [
+          cSetHtml('<p>a</p><p contenteditable="false">b</p>'),
+          cReadAction(false, [], 1),
+          cAssertMoveToPositionAction([0, 0], 1)
         ]))
       ]))
     ], function () {
