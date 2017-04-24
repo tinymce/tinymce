@@ -34,7 +34,8 @@ define(
 
         var onLoad = function (component, repInfo) {
           repInfo.store().initialValue().each(function (data) {
-            setValue(component, repInfo, data);
+            repInfo.store().dataset().set({ });
+            repInfo.store().setData()(component, data);
           });
         };
 
