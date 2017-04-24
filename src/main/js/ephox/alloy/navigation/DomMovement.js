@@ -9,9 +9,9 @@ define(
     // Looks up direction (considering LTR and RTL), finds the focused element,
     // and tries to move. If it succeeds, triggers focus and kills the event.
     var useH = function (movement) {
-      return function (component, simulatedEvent, info) {
+      return function (component, simulatedEvent, config, state) {
         var move = movement(component.element());
-        return use(move, component, simulatedEvent, info);
+        return use(move, component, simulatedEvent, config, state);
       };
     };
 
@@ -26,18 +26,18 @@ define(
     };
 
     var useV = function (move) {
-      return function (component, simulatedEvent, info) {
-        return use(move, component, simulatedEvent, info);
+      return function (component, simulatedEvent, config, state) {
+        return use(move, component, simulatedEvent, config, state);
       };
     };
 
-    var use = function (move, component, simulatedEvent, info) {
-      var outcome = info.focusManager().get(component).bind(function (focused) {
-        return move(component.element(), focused, info);
+    var use = function (move, component, simulatedEvent, config, state) {
+      var outcome = config.focusManager().get(component).bind(function (focused) {
+        return move(component.element(), focused, config, state);
       });
 
       return outcome.map(function (newFocus) {
-        info.focusManager().set(component, newFocus);
+        config.focusManager().set(component, newFocus);
         return true;
       });
     };
