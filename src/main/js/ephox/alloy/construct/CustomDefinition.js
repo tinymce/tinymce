@@ -32,20 +32,23 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Result',
     'global!Error'
   ],
 
   function (
     Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
     Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema,
-    Arr, Fun, Merger, Error
+    Arr, Fun, Merger, Result, Error
   ) {
+
     var toInfo = function (spec) {
-      var behaviours = Objects.readOr('customBehaviours', [])(spec);
-      var bs = getDefaultBehaviours(spec);
-      var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
-        return b.schema();
-      });
+      // var behaviours = Objects.readOr('customBehaviours', [])(spec);
+      // var bs = getDefaultBehaviours(spec);
+      // var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
+      //   return FieldSchema.option(b.name());
+      // });
+      // console.log('behaviourSchema', ValueSchema.objOf(behaviourSchema).toString());
 
       return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
         FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
@@ -60,7 +63,7 @@ define(
         FieldSchema.strict('components'),
         FieldSchema.strict('uid'),
 
-        FieldSchema.field('behaviours', 'behaviours', FieldPresence.asOption(), ValueSchema.objOfOnly(behaviourSchema)),
+        // FieldSchema.field('behaviours', 'behaviours', FieldPresence.asOption(), ValueSchema.objOfOnly(behaviourSchema)),
 
         FieldSchema.defaulted('events', {}),
         FieldSchema.defaulted('apis', Fun.constant({})),
@@ -117,41 +120,20 @@ define(
       }, DomModification.nu);
     };
 
-    var getDefaultBehaviours = function (spec) {
-      return Arr.filter(alloyBehaviours, function (b) {
-        return Objects.hasKey(spec, 'behaviours') && Objects.hasKey(spec.behaviours, b.name());
-      });
-    };
+    // var getDefaultBehaviours = function (spec) {
+    //   return Arr.filter(alloyBehaviours, function (b) {
+    //     return Objects.hasKey(spec, 'behaviours') && Objects.hasKey(spec.behaviours, b.name());
+    //   });
+    // };
 
-    var alloyBehaviours = [
-      Toggling,
-      Composing,
-      Coupling,
-      Disabling,
-      Docking,
-      Dragging,
-      Focusing,
-      Highlighting,
-      Invalidating,
-      Keying,
-      Pinching,
-      Positioning,
-      Receiving,
-      Replacing,
-      Representing,
-      Sandboxing,
-      Sliding,
-      Streaming,
-      Tabstopping,
-      Unselecting
-    ];
+  
 
-    var behaviours = function (info) {
-      var spec = info.originalSpec();
-      var custom = Objects.readOptFrom(spec, 'customBehaviours').getOr([ ]);
-      var alloy = getDefaultBehaviours(spec);
-      return custom.concat(alloy);
-    };
+    // var behaviours = function (info) {
+    //   var spec = info.originalSpec();
+    //   var custom = Objects.readOptFrom(spec, 'customBehaviours').getOr([ ]);
+    //   var alloy = getDefaultBehaviours(spec);
+    //   return custom.concat(alloy);
+    // };
 
     // Probably want to pass info to these at some point.
     var toApis = function (info) {
@@ -166,7 +148,7 @@ define(
       toInfo: toInfo,
       toDefinition: toDefinition,
       toModification: toModification,
-      behaviours: behaviours,
+      // behaviours: behaviours,
       toApis: toApis,
       toEvents: toEvents
     };

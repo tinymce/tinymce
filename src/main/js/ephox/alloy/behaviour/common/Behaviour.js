@@ -4,47 +4,67 @@ define(
   [
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
+    'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Merger',
+    'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Thunk',
     'global!Array',
-    'global!Error',
-    'global!console'
+    'global!console',
+    'global!Error'
   ],
 
-  function (EventRoot, SystemEvents, EventHandler, DomModification, Objects, Obj, Merger, Fun, Array, Error, console) {
-    var executeEvent = function (toggleInfo, executor) {
+  function (EventRoot, SystemEvents, NoState, EventHandler, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console, Error) {
+    var executeEvent = function (bConfig, bState, executor) {
       return {
         key: SystemEvents.execute(),
         value: EventHandler.nu({
           run: function (component) {
-            executor(component, toggleInfo);
+            executor(component, bConfig, bState);
           }
         })
       };
     };
 
-    var loadEvent = function (toggleInfo, f) {
+    var loadEvent = function (bConfig, bState, f) {
       return {
         key: SystemEvents.systemInit(),
         value: EventHandler.nu({
           run: function (component, simulatedEvent) {
             if (EventRoot.isSource(component, simulatedEvent)) {
-              f(component, toggleInfo);
+              f(component, bConfig, bState);
             }
           }
         })
       };
     };
 
-    var create = function (schema, name, active, apis, extra) {
+    var create = function (schema, name, active, apis, extra, _state) {
+      var configSchema = ValueSchema.objOf(schema);
+      var schemaSchema = FieldSchema.optionObjOf(name, [
+        FieldSchema.optionObjOfOnly('config', schema)
+      ]);
+      return doCreate(configSchema, schemaSchema, name, active, apis, extra, _state);
+    };
+
+    var createModes = function (modes, name, active, apis, extra, _state) {
+      var configSchema = modes;
+      var schemaSchema = FieldSchema.optionObjOf(name, [
+        FieldSchema.optionOf('config', modes)
+      ]);
+      return doCreate(configSchema, schemaSchema, name, active, apis, extra, _state);
+    };
+
+    var doCreate = function (configSchema, schemaSchema, name, active, apis, extra, _state) {
+      var state = _state !== undefined ? _state : NoState;
       var getConfig = function (info) {
-        return info.behaviours().bind(function (bs) {
-          return bs[name]();
-        });
+        return Objects.hasKey(info, name) ? info[name]() : Option.none();
       };
 
       return Merger.deepMerge(
@@ -60,19 +80,22 @@ define(
               },
               function (info) {
                 var rest = Array.prototype.slice.call(args, 1);
-                return apiF.apply(undefined, [ component, info ].concat(rest));
+                return apiF.apply(undefined, [ component, info.config, info.state ].concat(rest));
               }
             );
           };
         }),
         {
-          config: function (spec) {
-            return {
-              key: name,
-              value: spec
-            };
-          },
-
+          delegation: function (component, cConfig, cState) {
+            return Obj.map(apis, function (apiF, apiName) {
+              return function (/* */) {
+                var rest = Array.prototype.slice.call(arguments, 1);
+                return apiF.apply(undefined, [ component, cConfig, cState ].concat(rest));
+              };
+            });
+          }
+        },
+        {
           revoke: function () {
             return {
               key: name,
@@ -80,15 +103,35 @@ define(
             };
           },
 
+          config: function (spec) {
+            if (spec === undefined) return { key: name, value: undefined };
+
+            var prepared = ValueSchema.asStructOrDie(name + '-config', configSchema, spec);
+            
+            return {
+              key: name,
+              value: {
+                config: prepared,
+                configAsRaw: Thunk.cached(function () {
+                  return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
+                }),
+                state: state
+              }
+            };
+            // return {
+            //   key: name,
+            //   value: spec
+            // };
+          },
+
           schema: function () {
-            return schema;
-            // return FieldSchema.optionObjOf(name, schema);
+            return schemaSchema;
           },
 
           exhibit: function (info, base) {
             return getConfig(info).bind(function (behaviourInfo) {
               return Objects.readOptFrom(active, 'exhibit').map(function (exhibitor) {
-                return exhibitor(base, behaviourInfo);
+                return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
               });
             }).getOr(DomModification.nu({ }));
           },
@@ -98,9 +141,10 @@ define(
           },
 
           handlers: function (info) {
+            console.log(name, 'handlers', info);
             return getConfig(info).bind(function (behaviourInfo) {
               return Objects.readOptFrom(active, 'events').map(function (events) {
-                return events(behaviourInfo);
+                return events(behaviourInfo.config, behaviourInfo.state);
               });
             }).getOr({ });
           }
@@ -111,7 +155,8 @@ define(
     return {
       executeEvent: executeEvent,
       loadEvent: loadEvent,
-      create: create
+      create: create,
+      createModes: createModes
     };
   }
 );

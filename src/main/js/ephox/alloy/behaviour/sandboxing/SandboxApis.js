@@ -10,29 +10,27 @@ define(
   function (Attachment, Future, Option) {
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
-    var rebuild = function (sandbox, sInfo, data) {
-      sInfo.state().get().each(function (data) {
+    var rebuild = function (sandbox, sConfig, sState, data) {
+      sState.get().each(function (data) {
         // If currently has data, so it hasn't been removed yet. It is 
         // being "re-opened"
         Attachment.detachChildren(sandbox);
       });
       
-      var point = sInfo.getAttachPoint()();
+      var point = sConfig.getAttachPoint()();
       Attachment.attach(point, sandbox);
 
       // Must be after the sandbox is in the system
       var built = sandbox.getSystem().build(data);
       Attachment.attach(sandbox, built);
-      sInfo.state().set(
-        Option.some(built)
-      );
+      sState.set(built);
       return built;
     };
 
     // Handling async. Will probably get rid of. Just means that the
     // rebuilding and showing can happen more quickly for sync.
-    var processData = function (sandbox, sInfo, data, f) {
-      if (sInfo.async()) {
+    var processData = function (sandbox, sConfig, sState, data, f) {
+      if (sConfig.async()) {
         return data.map(f);
       } else {
         var r = f(data);
@@ -41,35 +39,35 @@ define(
     };
 
     // Open sandbox transfers focus to the opened menu
-    var open = function (sandbox, sInfo, data) {
-      return processData(sandbox, sInfo, data, function (data) {
-        var state = rebuild(sandbox, sInfo, data);
-        sInfo.onOpen()(sandbox, state);
+    var open = function (sandbox, sConfig, sState, data) {
+      return processData(sandbox, sConfig, sState, data, function (data) {
+        var state = rebuild(sandbox, sConfig, sState, data);
+        sConfig.onOpen()(sandbox, state);
         return state;
       });
     };
 
-    var close = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (data) {
+    var close = function (sandbox, sConfig, sState) {
+      sState.get().each(function (data) {
         Attachment.detachChildren(sandbox);
         Attachment.detach(sandbox);
-        sInfo.onClose()(sandbox, data);
-        sInfo.state().set(Option.none());
+        sConfig.onClose()(sandbox, data);
+        sState.clear();
       });
     };
 
-    var isOpen = function (sandbox, sInfo) {
-      return sInfo.state().get().isSome();
+    var isOpen = function (sandbox, sConfig, sState) {
+      return sState.isOpen();
     };
 
-    var isPartOf = function (sandbox, sInfo, queryElem) {
-      return isOpen(sandbox, sInfo) && sInfo.state().get().exists(function (data) {
-        return sInfo.isPartOf()(sandbox, data, queryElem);
+    var isPartOf = function (sandbox, sConfig, sState, queryElem) {
+      return isOpen(sandbox, sConfig, sState) && sState.get().exists(function (data) {
+        return sConfig.isPartOf()(sandbox, data, queryElem);
       });
     };
 
-    var getState = function (sandbox, sInfo) {
-      return sInfo.state().get();
+    var getState = function (sandbox, sConfig, sState) {
+      return sState.get();
     };
 
     return {

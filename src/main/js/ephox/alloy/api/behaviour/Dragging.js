@@ -4,18 +4,19 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.dragging.DraggingBranches',
+    'ephox.alloy.dragging.common.DragState',
     'ephox.katamari.api.Struct'
   ],
 
-  function (Behaviour, DraggingBranches, Struct) {
+  function (Behaviour, DraggingBranches, DragState, Struct) {
     return Behaviour.createModes(
       'mode',
       DraggingBranches,
       'dragging',
       {
-        events: function (dragInfo) {
-          var dragger = dragInfo.dragger();
-          return dragger.handlers(dragInfo);
+        events: function (dragConfig, dragState) {
+          var dragger = dragConfig.dragger();
+          return dragger.handlers(dragConfig, dragState);
         }
       },
       { },
@@ -23,7 +24,8 @@ define(
         // Extra. Does not need component as input.
         snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ 'extra' ])
 
-      }
+      },
+      DragState
     );
   }
 );

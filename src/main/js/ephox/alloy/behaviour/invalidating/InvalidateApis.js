@@ -9,9 +9,9 @@ define(
   ],
 
   function (AriaVoice, Body, Class, Html) {
-    var markValid = function (component, invalidInfo) {
-      Class.remove(component.element(), invalidInfo.invalidClass());
-      invalidInfo.notify().bind(function (notifyInfo) {
+    var markValid = function (component, invalidConfig/*, invalidState */) {
+      Class.remove(component.element(), invalidConfig.invalidClass());
+      invalidConfig.notify().bind(function (notifyInfo) {
         notifyInfo.getContainer()(component).each(function (container) {
           Html.set(container, notifyInfo.validHtml());
         });
@@ -20,9 +20,9 @@ define(
       });
     };
 
-    var markInvalid = function (component, invalidInfo, text) {
-      Class.add(component.element(), invalidInfo.invalidClass());
-      invalidInfo.notify().each(function (notifyInfo) {
+    var markInvalid = function (component, invalidConfig, invalidState, text) {
+      Class.add(component.element(), invalidConfig.invalidClass());
+      invalidConfig.notify().each(function (notifyInfo) {
         // Probably want to make "Body" configurable as well.
         AriaVoice.shout(Body.body(), text);
         notifyInfo.getContainer()(component).each(function (container) {

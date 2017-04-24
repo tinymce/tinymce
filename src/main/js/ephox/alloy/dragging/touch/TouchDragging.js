@@ -15,9 +15,7 @@ define(
   ],
 
   function (EventHandler, DragMovement, DragState, SnapSchema, Snappables, TouchData, FieldSchema, Fun, parseInt, window) {
-    
-
-    var handlers = function (dragInfo) {
+    var handlers = function (dragConfig, dragState) {
       
       return {
         'touchstart': EventHandler.nu({
@@ -30,22 +28,22 @@ define(
           run: function (component, simulatedEvent) {
             simulatedEvent.stop();
           
-            var delta = dragInfo.state().update(TouchData, simulatedEvent.event());
+            var delta = dragState.update(TouchData, simulatedEvent.event());
             delta.each(function (dlt) {
-              DragMovement.dragBy(component, dragInfo, dlt);
+              DragMovement.dragBy(component, dragConfig, dlt);
             });
           }
         }),
 
         'touchend': EventHandler.nu({
           run: function (component, simulatedEvent) {
-            dragInfo.snaps().each(function (snapInfo) {
+            dragConfig.snaps().each(function (snapInfo) {
               Snappables.stopDrag(component, snapInfo);
             });
-            var target = dragInfo.getTarget()(component.element());
+            var target = dragConfig.getTarget()(component.element());
             // INVESTIGATE: Should this be in the MouseDragging?
-            dragInfo.state().reset();
-            dragInfo.onDrop()(component, target);
+            dragState.reset();
+            dragConfig.onDrop()(component, target);
           }
         })
       };
@@ -58,11 +56,11 @@ define(
     };
 
     var schema = [
+      // Is this used?
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.defaulted('onDrop', Fun.noop),
       SnapSchema,
-      FieldSchema.state('state', DragState),
       FieldSchema.state('dragger', instance)
     ];
 

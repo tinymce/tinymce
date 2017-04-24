@@ -3,17 +3,19 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.unselecting.ActiveUnselecting'
   ],
 
-  function (Behaviour, ActiveUnselecting) {
+  function (Behaviour, NoState, ActiveUnselecting) {
     return Behaviour.create(
       // No schema for unselecting
       [ ],
       'unselecting',
       ActiveUnselecting,
       { },
-      { }
+      { },
+      NoState
     );
   }
 );

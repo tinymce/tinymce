@@ -24,14 +24,14 @@ define(
       return Origins.relative(position.left(), position.top());
     };
 
-    var placeFixed = function (_component, origin, anchoring, posInfo, placee) {
+    var placeFixed = function (_component, origin, anchoring, posConfig, placee) {
       var anchor = Anchor.box(anchoring.anchorBox());
       // TODO: Overrides for expanding panel
       SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
     };
 
-    var placeRelative = function (component, origin, anchoring, posInfo, placee) {
-      var bounds = posInfo.bounds().getOr(Boxes.view());
+    var placeRelative = function (component, origin, anchoring, posConfig, placee) {
+      var bounds = posConfig.bounds().getOr(Boxes.view());
 
       SimpleLayout.relative(
         anchoring.anchorBox(),
@@ -46,14 +46,14 @@ define(
       );
     };
 
-    var place = function (component, origin, anchoring, posInfo, placee) {
-      var f = posInfo.useFixed() ? placeFixed : placeRelative;
-      f(component, origin, anchoring, posInfo, placee);
+    var place = function (component, origin, anchoring, posConfig, placee) {
+      var f = posConfig.useFixed() ? placeFixed : placeRelative;
+      f(component, origin, anchoring, posConfig, placee);
     };
 
-    var position = function (component, posInfo, anchor, placee) {
+    var position = function (component, posConfig, posState, anchor, placee) {
       var anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
-      var origin = posInfo.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+      var origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
       // We set it to be fixed, so that it doesn't interfere with the layout of anything
       // when calculating anchors
@@ -64,9 +64,9 @@ define(
       Css.set(placee.element(), 'visibility', 'hidden');
 
       var placer = anchorage.placement();
-      placer(component, posInfo, anchorage, origin).each(function (anchoring) {
+      placer(component, posConfig, anchorage, origin).each(function (anchoring) {
         var doPlace = anchoring.placer().getOr(place);
-        doPlace(component, origin, anchoring, posInfo, placee);
+        doPlace(component, origin, anchoring, posConfig, placee);
       });
 
       oldVisibility.fold(function () {

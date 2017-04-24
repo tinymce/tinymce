@@ -2,41 +2,36 @@ define(
   'ephox.alloy.behaviour.representing.MemoryStore',
 
   [
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Cell'
+    'ephox.alloy.behaviour.representing.RepresentState',
+    'ephox.boulder.api.FieldSchema'
   ],
 
-  function (FieldSchema, Cell) {
-    // Find a better way of storing this.
-    var state = function () {
-      return Cell(null);
-    };
-
+  function (RepresentState, FieldSchema) {
     var manager = function () {
-      var setValue = function (component, repInfo, data) {
-        repInfo.store().state().set(data);
+      var setValue = function (component, repConfig, repState, data) {
+        repState.set(data);
+        repConfig.onSetValue()(component, data);
       };
 
-      var getValue = function (component, repInfo) {
-        return repInfo.store().state().get();
+      var getValue = function (component, repConfig, repState) {
+        return repState.get();
       };
 
-      var onLoad = function (component, repInfo) {
-        var current = repInfo.store().state().get();
-        repInfo.store().initialValue().each(function (initVal) {
-          if (current === null) repInfo.store().state().set(initVal);
+      var onLoad = function (component, repConfig, repState) {
+        repConfig.store().initialValue().each(function (initVal) {
+          if (repState.isNotSet()) repState.set(initVal);
         });
       };
 
       return {
         setValue: setValue,
         getValue: getValue,
-        onLoad: onLoad
+        onLoad: onLoad,
+        state: RepresentState.memory
       };
     };
 
     return [
-      FieldSchema.state('state', state),
       FieldSchema.option('initialValue'),      
       FieldSchema.state('manager', manager)
     ];

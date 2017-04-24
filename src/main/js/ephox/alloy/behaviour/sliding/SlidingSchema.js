@@ -25,9 +25,6 @@ define(
       Fields.onHandler('onGrown'),
       Fields.onHandler('onStartGrow'),
       FieldSchema.defaulted('expanded', false),
-
-      FieldSchema.state('state', function (spec) { return Cell(spec.expanded); }),
-
       FieldSchema.strictOf('dimension', ValueSchema.choose(
         'property', {
           width: [

@@ -5,10 +5,11 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.representing.ActiveRepresenting',
     'ephox.alloy.behaviour.representing.RepresentApis',
-    'ephox.alloy.behaviour.representing.RepresentSchema'
+    'ephox.alloy.behaviour.representing.RepresentSchema',
+    'ephox.alloy.behaviour.representing.RepresentState'
   ],
 
-  function (Behaviour, ActiveRepresenting, RepresentApis, RepresentSchema) {
+  function (Behaviour, ActiveRepresenting, RepresentApis, RepresentSchema, RepresentState) {
     // The self-reference is clumsy.
     var self = Behaviour.create(
       RepresentSchema,
@@ -20,7 +21,8 @@ define(
           var value = self.getValue(source);
           self.setValue(component, value);
         }
-      }
+      },
+      RepresentState
     );
 
     return self;

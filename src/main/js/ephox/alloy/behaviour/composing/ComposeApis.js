@@ -6,8 +6,8 @@ define(
   ],
 
   function () {
-    var getCurrent = function (component, composeInfo) {
-      return composeInfo.find()(component);
+    var getCurrent = function (component, composeConfig, composeState) {
+      return composeConfig.find()(component);
     };
 
     return {

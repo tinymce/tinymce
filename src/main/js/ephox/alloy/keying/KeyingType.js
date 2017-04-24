@@ -8,37 +8,39 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (SystemEvents, FocusManagers, EventHandler, KeyRules, FieldSchema, Objects, Merger) {
-    var typical = function (infoSchema, getRules, getEvents, getApis, optFocusIn) {
+  function (SystemEvents, FocusManagers, EventHandler, KeyRules, FieldSchema, Objects, Fun, Merger) {
+    var typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
           FieldSchema.defaulted('focusManager', FocusManagers.dom()),
           FieldSchema.state('handler', function () {
             return self;
-          })
+          }),
+          FieldSchema.state('state', Fun.constant(stateInit))
         ]);
       };
    
-      var processKey = function (component, simulatedEvent, escapeInfo) {
-        var rules = getRules(component, simulatedEvent, escapeInfo);
+      var processKey = function (component, simulatedEvent, keyingConfig, keyingState) {
+        var rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
         return KeyRules.choose(rules, simulatedEvent.event()).bind(function (rule) {
-          return rule(component, simulatedEvent, escapeInfo);
+          return rule(component, simulatedEvent, keyingConfig, keyingState);
         });
       };
 
-      var toEvents = function (keyInfo) {
-        var otherEvents = getEvents(keyInfo);
+      var toEvents = function (keyingConfig, keyingState) {
+        var otherEvents = getEvents(keyingConfig, keyingState);
         var keyEvents = Objects.wrapAll(
           optFocusIn.map(function (focusIn) {
             return { 
               key: SystemEvents.focus(),
               value: EventHandler.nu({
                 run: function (component, simulatedEvent) {
-                  focusIn(component, keyInfo, simulatedEvent);
+                  focusIn(component, keyingConfig, keyingState, simulatedEvent);
                   simulatedEvent.stop();
                 }
               })
@@ -48,7 +50,7 @@ define(
               key: 'keydown',
               value: EventHandler.nu({
                 run: function (component, simulatedEvent) {
-                  processKey(component, simulatedEvent, keyInfo).each(function (_) {
+                  processKey(component, simulatedEvent, keyingConfig, keyingState).each(function (_) {
                     simulatedEvent.stop();
                   });
                 }

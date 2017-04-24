@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -10,9 +11,7 @@ define(
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.MatrixNavigation',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
@@ -21,7 +20,10 @@ define(
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Option, Focus, SelectorFilter, SelectorFind) {
+  function (
+    Keys, NoState, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, MatrixNavigation, FieldSchema, Arr, Fun, Option, Focus, SelectorFilter,
+    SelectorFind
+  ) {
     var schema = [
       FieldSchema.strictObjOf('selectors', [
         FieldSchema.strict('row'),
@@ -34,9 +36,9 @@ define(
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
     ];
 
-    var focusIn = function (component, matrixInfo) {
-      var focused = matrixInfo.previousSelector()(component).orThunk(function () {
-        var selectors = matrixInfo.selectors();
+    var focusIn = function (component, matrixConfig) {
+      var focused = matrixConfig.previousSelector()(component).orThunk(function () {
+        var selectors = matrixConfig.selectors();
         return SelectorFind.descendant(component.element(), selectors.cell());
       });
 
@@ -45,29 +47,29 @@ define(
       });
     };
 
-    var execute = function (component, simulatedEvent, matrixInfo) {
+    var execute = function (component, simulatedEvent, matrixConfig) {
       return Focus.search(component.element()).bind(function (focused) {
-        return matrixInfo.execute()(component, simulatedEvent, focused);
+        return matrixConfig.execute()(component, simulatedEvent, focused);
       });
     };
 
-    var toMatrix = function (rows, matrixInfo) {
+    var toMatrix = function (rows, matrixConfig) {
       return Arr.map(rows, function (row) {
-        return SelectorFilter.descendants(row, matrixInfo.selectors().cell());
+        return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
       });
     };
   
     var doMove = function (ifCycle, ifMove) {
-      return function (element, focused, matrixInfo) {
-        var move = matrixInfo.cycles() ? ifCycle : ifMove;
-        return SelectorFind.closest(focused, matrixInfo.selectors().row()).bind(function (inRow) {
-          var cellsInRow = SelectorFilter.descendants(inRow, matrixInfo.selectors().cell());
+      return function (element, focused, matrixConfig) {
+        var move = matrixConfig.cycles() ? ifCycle : ifMove;
+        return SelectorFind.closest(focused, matrixConfig.selectors().row()).bind(function (inRow) {
+          var cellsInRow = SelectorFilter.descendants(inRow, matrixConfig.selectors().cell());
         
           return DomPinpoint.findIndex(cellsInRow, focused).bind(function (colIndex) {
-            var allRows = SelectorFilter.descendants(element, matrixInfo.selectors().row());
+            var allRows = SelectorFilter.descendants(element, matrixConfig.selectors().row());
             return DomPinpoint.findIndex(allRows, inRow).bind(function (rowIndex) {
               // Now, make the matrix.
-              var matrix = toMatrix(allRows, matrixInfo);
+              var matrix = toMatrix(allRows, matrixConfig);
               return move(matrix, rowIndex, colIndex).map(function (next) {
                 return next.cell();
               });
@@ -94,6 +96,6 @@ define(
     var getEvents = Fun.constant({ });
 
     var getApis = Fun.constant({ });
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
+    return KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

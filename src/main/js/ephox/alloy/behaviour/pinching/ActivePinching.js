@@ -39,7 +39,7 @@ define(
       }
     };
 
-    var events = function (pinchInfo) {
+    var events = function (pinchConfig, pinchState) {
       return {
         // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
         // Note: in testing, it didn't seem to cause problems on Android. Check.
@@ -54,13 +54,13 @@ define(
           run: function (component, simulatedEvent) {
             simulatedEvent.stop();
           
-            var delta = pinchInfo.state().update(mode, simulatedEvent.event());
+            var delta = pinchState.update(mode, simulatedEvent.event());
             delta.each(function (dlt) {
               var multiplier = dlt.deltaDistance() > 0 ? 1 : -1;
               var changeX = multiplier * Math.abs(dlt.deltaX()); 
               var changeY = multiplier * Math.abs(dlt.deltaY());
               
-              var f = multiplier === 1 ? pinchInfo.onPunch() : pinchInfo.onPinch();
+              var f = multiplier === 1 ? pinchConfig.onPunch() : pinchConfig.onPinch();
               f(component.element(), changeX, changeY);
             });
           }
@@ -68,7 +68,7 @@ define(
 
         touchend: EventHandler.nu({
           run: function (component, simulatedEvent) {
-            pinchInfo.state().reset();
+            pinchState.reset();
           }
         })
       };

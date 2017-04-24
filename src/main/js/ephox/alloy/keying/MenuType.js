@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -16,23 +17,23 @@ define(
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
+  function (Keys, NoState, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('moveOnTab', false)
     ];
 
-    var execute = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.focusManager().get(component).bind(function (focused) {
-        return menuInfo.execute()(component, simulatedEvent, focused);
+    var execute = function (component, simulatedEvent, menuConfig) {
+      return menuConfig.focusManager().get(component).bind(function (focused) {
+        return menuConfig.execute()(component, simulatedEvent, focused);
       });
     };
 
-    var focusIn = function (component, menuInfo, simulatedEvent) {
+    var focusIn = function (component, menuConfig, simulatedEvent) {
       // Maybe keep selection if it was there before
-      SelectorFind.descendant(component.element(), menuInfo.selector()).each(function (first) {
-        menuInfo.focusManager().set(component, first);
+      SelectorFind.descendant(component.element(), menuConfig.selector()).each(function (first) {
+        menuConfig.focusManager().set(component, first);
       });
     };
 
@@ -44,12 +45,12 @@ define(
       return DomNavigation.horizontal(element, info.selector(), focused, +1);
     };
 
-    var fireShiftTab = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.moveOnTab() ? DomMovement.move(moveUp)(component, simulatedEvent, menuInfo) : Option.none();
+    var fireShiftTab = function (component, simulatedEvent, menuConfig) {
+      return menuConfig.moveOnTab() ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig) : Option.none();
     };
 
-    var fireTab = function (component, simulatedEvent, menuInfo) {
-      return menuInfo.moveOnTab() ? DomMovement.move(moveDown)(component, simulatedEvent, menuInfo) : Option.none();
+    var fireTab = function (component, simulatedEvent, menuConfig) {
+      return menuConfig.moveOnTab() ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig) : Option.none();
     };
 
     var getRules = Fun.constant([
@@ -65,6 +66,6 @@ define(
 
     var getApis = Fun.constant({ });
 
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
+    return KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

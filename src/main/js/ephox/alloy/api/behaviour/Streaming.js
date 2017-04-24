@@ -3,17 +3,19 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.streaming.ActiveStreaming',
     'ephox.alloy.behaviour.streaming.StreamingSchema'
   ],
 
-  function (Behaviour, ActiveStreaming, StreamingSchema) {
+  function (Behaviour, NoState, ActiveStreaming, StreamingSchema) {
     return Behaviour.create(
       StreamingSchema,
       'streaming',
       ActiveStreaming,
       { },
-      { }
+      { },
+      NoState
     );
   }
 );

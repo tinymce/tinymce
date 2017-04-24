@@ -3,17 +3,19 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.tabstopping.ActiveTabstopping',
     'ephox.alloy.behaviour.tabstopping.TabstopSchema'
   ],
 
-  function (Behaviour, ActiveTabstopping, TabstopSchema) {
+  function (Behaviour, NoState, ActiveTabstopping, TabstopSchema) {
     return Behaviour.create(
       TabstopSchema,
       'tabstopping',
       ActiveTabstopping,
       { },
-      { }
+      { },
+      NoState
     );
   }
 );

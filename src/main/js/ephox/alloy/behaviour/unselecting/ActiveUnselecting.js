@@ -7,7 +7,7 @@ define(
   ],
 
   function (EventHandler, DomModification) {
-    var exhibit = function (base, unselectInfo) {
+    var exhibit = function (base, unselectConfig) {
       return DomModification.nu({
         styles: {
           '-webkit-user-select': 'none',
@@ -21,7 +21,7 @@ define(
       });
     };
 
-    var events = function (info) {
+    var events = function (unselectConfig) {
       return {
         selectstart: EventHandler.nu({
           run: function (component, simulatedEvent) {          

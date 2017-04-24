@@ -12,22 +12,22 @@ define(
   ],
 
   function (SystemEvents, Behaviour, DisableApis, EventHandler, DomModification, Objects, Arr) {
-    var exhibit = function (base, disableInfo) {
+    var exhibit = function (base, disableConfig, disableState) {
       return DomModification.nu({
         // Do not add the attribute yet, because it will depend on the node name
         // if we use "aria-disabled" or just "disabled"
-        classes: disableInfo.disabled() ? disableInfo.disableClass().map(Arr.pure).getOr([ ]) : [ ]
+        classes: disableConfig.disabled() ? disableConfig.disableClass().map(Arr.pure).getOr([ ]) : [ ]
       });
     };
 
-    var events = function (disableInfo) {
-      var load = Behaviour.loadEvent(disableInfo, DisableApis.onLoad);
+    var events = function (disableConfig, disableState) {
+      var load = Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad);
 
       var canExecute = {
         key: SystemEvents.execute(),
         value: EventHandler.nu({
           abort: function (component, simulatedEvent) {
-            return DisableApis.isDisabled(component, disableInfo);
+            return DisableApis.isDisabled(component, disableConfig, disableState);
           }
         })
       };

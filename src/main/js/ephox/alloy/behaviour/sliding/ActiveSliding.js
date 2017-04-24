@@ -10,28 +10,28 @@ define(
   ],
 
   function (SlidingApis, EventHandler, DomModification, Objects, Css) {
-    var exhibit = function (base, slideInfo) {
-      var expanded = slideInfo.expanded();
+    var exhibit = function (base, slideConfig/*, slideState */) {
+      var expanded = slideConfig.expanded();
 
       return expanded ? DomModification.nu({
-        classes: [ slideInfo.openClass() ],
+        classes: [ slideConfig.openClass() ],
         styles: { }
       }) : DomModification.nu({
-        classes: [ slideInfo.closedClass() ],
-        styles: Objects.wrap(slideInfo.dimension().property(), '0px')
+        classes: [ slideConfig.closedClass() ],
+        styles: Objects.wrap(slideConfig.dimension().property(), '0px')
       });
     };
 
-    var events = function (slideInfo) {
+    var events = function (slideConfig, slideState) {
       return {
         'transitionend': EventHandler.nu({
           run: function (component, simulatedEvent) {
             var raw = simulatedEvent.event().raw();
             // This will fire for all transitions, we're only interested in the dimension completion
-            if (raw.propertyName === slideInfo.dimension().property()) {
-              SlidingApis.disableTransitions(component, slideInfo); // disable transitions immediately (Safari animates the dimension removal below)
-              if (slideInfo.state().get() === true) Css.remove(component.element(), slideInfo.dimension().property()); // when showing, remove the dimension so it is responsive
-              var notify = slideInfo.state().get() === true ? slideInfo.onGrown() : slideInfo.onShrunk();
+            if (raw.propertyName === slideConfig.dimension().property()) {
+              SlidingApis.disableTransitions(component, slideConfig, slideState); // disable transitions immediately (Safari animates the dimension removal below)
+              if (slideState.isExpanded()) Css.remove(component.element(), slideConfig.dimension().property()); // when showing, remove the dimension so it is responsive
+              var notify = slideState.isExpanded() ? slideConfig.onGrown() : slideConfig.onShrunk();
               notify(component, simulatedEvent);
             }
           }

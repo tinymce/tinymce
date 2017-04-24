@@ -85,6 +85,7 @@ define(
         disconnect: disconnect,
         element: Fun.constant(extSpec.element()),
         spec: Fun.constant(spec),
+        readState: Fun.constant('No state'),
         syncComponents: Fun.noop,
         components: Fun.constant([ ]),
         events: Fun.constant({ })

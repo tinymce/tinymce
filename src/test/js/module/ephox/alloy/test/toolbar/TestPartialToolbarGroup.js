@@ -2,21 +2,23 @@ define(
   'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger'
   ],
 
-  function (ToolbarGroup, Merger, Fun) {
+  function (Behaviour, Focusing, ToolbarGroup, Fun, Merger) {
     var members = {
       item: {
         munge: function (itemSpec) {
           return Merger.deepMerge(
             itemSpec,
             {
-              behaviours: {
-                focusing: true
-              }
+              behaviours: Behaviour.derive([
+                Focusing.config(true)
+              ])
             }
           );
         }

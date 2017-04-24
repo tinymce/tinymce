@@ -11,8 +11,8 @@ define(
   ],
 
   function (SystemEvents, FocusApis, EventHandler, DomModification, AlloyLogger, Objects) {
-    var exhibit = function (base, focusInfo) {
-      if (focusInfo.ignore()) return DomModification.nu({ });
+    var exhibit = function (base, focusConfig) {
+      if (focusConfig.ignore()) return DomModification.nu({ });
       else return DomModification.nu({
         attributes: {
           'tabindex': '-1'
@@ -20,12 +20,12 @@ define(
       });
     };
 
-    var events = function (focusInfo) {
+    var events = function (focusConfig) {
       return Objects.wrap(
         SystemEvents.focus(),
         EventHandler.nu({
           run: function (component, simulatedEvent) {
-            FocusApis.focus(component, focusInfo);
+            FocusApis.focus(component, focusConfig);
             simulatedEvent.stop();
           }
         })

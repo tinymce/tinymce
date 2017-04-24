@@ -3,16 +3,11 @@ define(
 
   [
     'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Cell',
-    'ephox.katamari.api.Option'
+    'ephox.boulder.api.FieldSchema'
   ],
 
-  function (Fields, FieldSchema, Cell, Option) {
+  function (Fields, FieldSchema) {
     return [
-      FieldSchema.state('state', function () {
-        return Cell(Option.none());
-      }),
       Fields.onHandler('onOpen'),
       Fields.onHandler('onClose'),
 

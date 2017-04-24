@@ -8,114 +8,111 @@ define(
   ],
 
   function (Class, Classes, Css) {
-    var EXPANDED = true;
-    var COLLAPSED = false;
-
-    var getAnimationRoot = function (component, slideInfo) {
-      return slideInfo.getAnimationRoot().fold(function () {
+    var getAnimationRoot = function (component, slideConfig) {
+      return slideConfig.getAnimationRoot().fold(function () {
         return component.element();
       }, function (get) {
         return get(component);
       });
     };
 
-    var getDimensionProperty = function (slideInfo) {
-      return slideInfo.dimension().property();
+    var getDimensionProperty = function (slideConfig) {
+      return slideConfig.dimension().property();
     };
 
-    var getDimension = function (slideInfo, elem) {
-      return slideInfo.dimension().getDimension()(elem);
+    var getDimension = function (slideConfig, elem) {
+      return slideConfig.dimension().getDimension()(elem);
     };
 
-    var disableTransitions = function (component, slideInfo) {
-      var root = getAnimationRoot(component, slideInfo);
-      Classes.remove(root, [ slideInfo.shrinkingClass(), slideInfo.growingClass() ]);
+    var disableTransitions = function (component, slideConfig) {
+      var root = getAnimationRoot(component, slideConfig);
+      Classes.remove(root, [ slideConfig.shrinkingClass(), slideConfig.growingClass() ]);
     };
 
-    var setShrunk = function (component, slideInfo) {
-      Class.remove(component.element(), slideInfo.openClass());
-      Class.add(component.element(), slideInfo.closedClass());
+    var setShrunk = function (component, slideConfig) {
+      Class.remove(component.element(), slideConfig.openClass());
+      Class.add(component.element(), slideConfig.closedClass());
 
-      Css.set(component.element(), getDimensionProperty(slideInfo), '0px');
+      Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
       Css.reflow(component.element());
     };
 
     // Note, this is without transitions, so we can measure the size instantaneously
-    var measureTargetSize = function (component, slideInfo) {
-      setGrown(component, slideInfo);
-      var expanded = getDimension(slideInfo, component.element());
-      setShrunk(component, slideInfo);
+    var measureTargetSize = function (component, slideConfig) {
+      setGrown(component, slideConfig);
+      var expanded = getDimension(slideConfig, component.element());
+      setShrunk(component, slideConfig);
       return expanded;
     };
 
-    var setGrown = function (component, slideInfo) {
-      Class.remove(component.element(), slideInfo.closedClass());
-      Class.add(component.element(), slideInfo.openClass());
-      Css.remove(component.element(), getDimensionProperty(slideInfo));
+    var setGrown = function (component, slideConfig) {
+      Class.remove(component.element(), slideConfig.closedClass());
+      Class.add(component.element(), slideConfig.openClass());
+      Css.remove(component.element(), getDimensionProperty(slideConfig));
       // Reflow?
     };
 
-    var doImmediateShrink = function (component, slideInfo) {
-       slideInfo.state().set(COLLAPSED);
+    var doImmediateShrink = function (component, slideConfig, slideState) {
+      slideState.setCollapsed();
 
       // Force current dimension to begin transition
-      Css.set(component.element(), getDimensionProperty(slideInfo), getDimension(slideInfo, component.element()));
+      Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
       Css.reflow(component.element());
 
-      disableTransitions(component, slideInfo);
+      disableTransitions(component, slideConfig);
 
-      setShrunk(component, slideInfo);
-      slideInfo.onStartShrink()(component);
-      slideInfo.onShrunk()(component);
+      setShrunk(component, slideConfig);
+      slideConfig.onStartShrink()(component);
+      slideConfig.onShrunk()(component);
     };
 
-    var doStartShrink = function (component, slideInfo) {
-      slideInfo.state().set(COLLAPSED);
+    var doStartShrink = function (component, slideConfig, slideState) {
+      slideState.setCollapsed();
 
       // Force current dimension to begin transition
-      Css.set(component.element(), getDimensionProperty(slideInfo), getDimension(slideInfo, component.element()));
+      Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
       Css.reflow(component.element());
 
-      var root = getAnimationRoot(component, slideInfo);
-      Class.add(root, slideInfo.shrinkingClass()); // enable transitions
-      setShrunk(component, slideInfo);
-      slideInfo.onStartShrink()(component);
+      var root = getAnimationRoot(component, slideConfig);
+      Class.add(root, slideConfig.shrinkingClass()); // enable transitions
+      setShrunk(component, slideConfig);
+      slideConfig.onStartShrink()(component);
     };
 
     // Showing is complex due to the inability to transition to "auto".
     // We also can't cache the dimension as the parents may have resized since it was last shown.
-    var doStartGrow = function (component, slideInfo) {
-      var fullSize = measureTargetSize(component, slideInfo);
+    var doStartGrow = function (component, slideConfig, slideState) {
+      var fullSize = measureTargetSize(component, slideConfig);
       
       // Start the growing animation styles
-      var root = getAnimationRoot(component, slideInfo);
-      Class.add(root, slideInfo.growingClass());
+      var root = getAnimationRoot(component, slideConfig);
+      Class.add(root, slideConfig.growingClass());
 
-      setGrown(component, slideInfo);
-      Css.set(component.element(), getDimensionProperty(slideInfo), fullSize);
-      slideInfo.state().set(EXPANDED);
-      slideInfo.onStartGrow()(component);
+      setGrown(component, slideConfig);
+      Css.set(component.element(), getDimensionProperty(slideConfig), fullSize);
+      slideState.setExpanded();
+      slideConfig.onStartGrow()(component);
     };
 
-    var grow = function (component, slideInfo) {
-      if (slideInfo.state().get() !== EXPANDED) doStartGrow(component, slideInfo);
+    var grow = function (component, slideConfig, slideState) {
+      if (! slideState.isExpanded()) doStartGrow(component, slideConfig, slideState);
     };
 
-    var shrink = function (component, slideInfo) {
-      if (slideInfo.state().get() !== COLLAPSED) doStartShrink(component, slideInfo);
+    var shrink = function (component, slideConfig, slideState) {
+      if (slideState.isExpanded()) doStartShrink(component, slideConfig, slideState);
     };
 
-    var immediateShrink = function (component, slideInfo) {
-      if (slideInfo.state().get() !== COLLAPSED) doImmediateShrink(component, slideInfo);
+    var immediateShrink = function (component, slideConfig, slideState) {
+      if (slideState.isExpanded()) doImmediateShrink(component, slideConfig, slideState);
     };
 
-    var hasGrown = function (component, slideInfo) {
-      return slideInfo.state().get() === EXPANDED;
+    var hasGrown = function (component, slideConfig, slideState) {
+      return slideState.isExpanded();
     };
 
-    var toggleGrow = function (component, slideInfo) {
-      var f = slideInfo.state().get() === EXPANDED ? doStartShrink : doStartGrow;
-      f(component, slideInfo);
+    var toggleGrow = function (component, slideConfig, slideState) {
+      var f = slideState.isExpanded() ? doStartShrink : doStartGrow;
+      f(component, slideConfig, slideState);
     };
 
     return {

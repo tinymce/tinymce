@@ -18,12 +18,12 @@ define(
       });
     };
 
-    var events = function (receiveInfo) {
+    var events = function (receiveConfig/*, receiveState */) {
       return Objects.wrap(
         SystemEvents.receive(),
         EventHandler.nu({
           run: function (component, message) {
-            var channelMap = receiveInfo.channels();
+            var channelMap = receiveConfig.channels();
             var channels = Obj.keys(channelMap);
 
             var targetChannels = chooseChannels(channels, message);

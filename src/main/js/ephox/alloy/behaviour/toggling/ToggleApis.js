@@ -6,38 +6,38 @@ define(
   ],
 
   function (Class) {
-    var updateAriaState = function (component, toggleInfo) {
-      var pressed = isOn(component, toggleInfo);
+    var updateAriaState = function (component, toggleConfig, toggleState) {
+      var pressed = isOn(component, toggleConfig);
 
-      var ariaInfo = toggleInfo.aria();
+      var ariaInfo = toggleConfig.aria();
       ariaInfo.update()(component, ariaInfo, pressed);
     };
 
-    var toggle = function (component, toggleInfo) {
-      Class.toggle(component.element(), toggleInfo.toggleClass());
-      updateAriaState(component, toggleInfo);
+    var toggle = function (component, toggleConfig, toggleState) {
+      Class.toggle(component.element(), toggleConfig.toggleClass());
+      updateAriaState(component, toggleConfig);
     };
 
-    var on = function (component, toggleInfo) {
-      Class.add(component.element(), toggleInfo.toggleClass());
-      updateAriaState(component, toggleInfo);
+    var on = function (component, toggleConfig, toggleState) {
+      Class.add(component.element(), toggleConfig.toggleClass());
+      updateAriaState(component, toggleConfig);
     };
 
-    var off = function (component, toggleInfo) {
-      Class.remove(component.element(), toggleInfo.toggleClass());
-      updateAriaState(component, toggleInfo);
+    var off = function (component, toggleConfig, toggleState) {
+      Class.remove(component.element(), toggleConfig.toggleClass());
+      updateAriaState(component, toggleConfig);
     };
 
-    var isOn = function (component, toggleInfo) {
-      return Class.has(component.element(), toggleInfo.toggleClass());
+    var isOn = function (component, toggleConfig, toggleState) {
+      return Class.has(component.element(), toggleConfig.toggleClass());
     };
 
-    var onLoad = function (component, toggleInfo) {
+    var onLoad = function (component, toggleConfig, toggleState) {
       // There used to be a bit of code in here that would only overwrite
       // the attribute if it didn't have a current value. I can't remember
       // what case that was for, so I'm removing it until it is required.
-      var api = toggleInfo.selected() ? on : off;
-      api(component, toggleInfo);
+      var api = toggleConfig.selected() ? on : off;
+      api(component, toggleConfig, toggleState);
     };
 
     return {

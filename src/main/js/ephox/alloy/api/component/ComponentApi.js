@@ -14,6 +14,7 @@ define(
       'disconnect',
       'element',
       'syncComponents',
+      'readState',
       'components',
       'events'
     ]);

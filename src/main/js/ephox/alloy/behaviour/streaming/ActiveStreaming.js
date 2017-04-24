@@ -7,11 +7,11 @@ define(
   ],
 
   function (EventHandler, Objects) {
-    var events = function (streamInfo) {
-      var streams = streamInfo.stream().streams();
-      var processor = streams.setup(streamInfo);
+    var events = function (streamConfig) {
+      var streams = streamConfig.stream().streams();
+      var processor = streams.setup(streamConfig);
       return Objects.wrap(
-        streamInfo.event(),
+        streamConfig.event(),
         EventHandler.nu({
           run: function (component, simulatedEvent) {
             processor(component, simulatedEvent);

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.ArrNavigation',
@@ -14,12 +15,12 @@ define(
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
-    'ephox.sugar.api.view.Height',
     'ephox.sugar.api.search.SelectorFilter',
-    'ephox.sugar.api.search.SelectorFind'
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.view.Height'
   ],
 
-  function (Keys, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, Height, SelectorFilter, SelectorFind) {
+  function (Keys, NoState, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Height) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
@@ -27,17 +28,18 @@ define(
       FieldSchema.defaulted('firstTabstop', 0),
       FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
       // Maybe later we should just expose isVisible
-      FieldSchema.option('visibilitySelector')
+      FieldSchema.option('visibilitySelector'),
+      FieldSchema.state('state', Fun.constant(NoState.init))
     ];
 
     // Fire an alloy focus on the first visible element that matches the selector
-    var focusIn = function (component, cyclicInfo) {
-      var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
+    var focusIn = function (component, cyclicConfig, cyclicState) {
+      var tabstops = SelectorFilter.descendants(component.element(), cyclicConfig.selector());
       var visibles = Arr.filter(tabstops, function (elem) {
-        return isVisible(cyclicInfo, elem);
+        return isVisible(cyclicConfig, elem);
       });
 
-      var visibleOpt = Option.from(visibles[cyclicInfo.firstTabstop()]);
+      var visibleOpt = Option.from(visibles[cyclicConfig.firstTabstop()]);
 
       visibleOpt.each(function (target) {
         var originator = component.element();
@@ -46,8 +48,8 @@ define(
     };
 
     // TODO: Test this
-    var isVisible = function (cyclicInfo, element) {
-      var target = cyclicInfo.visibilitySelector().bind(function (sel) {
+    var isVisible = function (cyclicConfig, element) {
+      var target = cyclicConfig.visibilitySelector().bind(function (sel) {
         return SelectorFind.closest(element, sel);
       }).getOr(element);
 
@@ -55,15 +57,15 @@ define(
       return Height.get(target) > 0;
     };
 
-    var findTabstop = function (component, cyclicInfo) {
+    var findTabstop = function (component, cyclicConfig) {
       return Focus.search(component.element()).bind(function (elem) {
-        return SelectorFind.closest(elem, cyclicInfo.selector());
+        return SelectorFind.closest(elem, cyclicConfig.selector());
       });
     };
 
-    var goFromTabstop = function (component, tabstops, stopIndex, cyclicInfo, cycle) {
+    var goFromTabstop = function (component, tabstops, stopIndex, cyclicConfig, cycle) {
       return cycle(tabstops, stopIndex, function (elem) {
-        return isVisible(cyclicInfo, elem) && cyclicInfo.useTabstopAt(elem);
+        return isVisible(cyclicConfig, elem) && cyclicConfig.useTabstopAt(elem);
       }).fold(function () {
         // Even if there is only one, still capture the event.
         // logFailed(index, tabstops);
@@ -78,38 +80,38 @@ define(
       });
     };
 
-    var go = function (component, simulatedEvent, cyclicInfo, cycle) {
+    var go = function (component, simulatedEvent, cyclicConfig, cycle) {
       // 1. Find our current tabstop
       // 2. Find the index of that tabstop
       // 3. Cycle the tabstop
       // 4. Fire alloy focus on the resultant tabstop
-      var tabstops = SelectorFilter.descendants(component.element(), cyclicInfo.selector());
-      return findTabstop(component, cyclicInfo).bind(function (tabstop) {
+      var tabstops = SelectorFilter.descendants(component.element(), cyclicConfig.selector());
+      return findTabstop(component, cyclicConfig).bind(function (tabstop) {
         // focused component
         var optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
 
         return optStopIndex.bind(function (stopIndex) {
-          return goFromTabstop(component, tabstops, stopIndex, cyclicInfo, cycle);
+          return goFromTabstop(component, tabstops, stopIndex, cyclicConfig, cycle);
         });
       });
     };
 
-    var goBackwards = function (component, simulatedEvent, cyclicInfo) {
-      return go(component, simulatedEvent, cyclicInfo, ArrNavigation.cyclePrev);
+    var goBackwards = function (component, simulatedEvent, cyclicConfig, cyclicState) {
+      return go(component, simulatedEvent, cyclicConfig, ArrNavigation.cyclePrev);
     };
 
-    var goForwards = function (component, simulatedEvent, cyclicInfo) {
-      return go(component, simulatedEvent, cyclicInfo, ArrNavigation.cycleNext);
+    var goForwards = function (component, simulatedEvent, cyclicConfig, cyclicState) {
+      return go(component, simulatedEvent, cyclicConfig, ArrNavigation.cycleNext);
     };
 
-    var execute = function (component, simulatedEvent, cyclicInfo) {
-      return cyclicInfo.onEnter().bind(function (f) {
+    var execute = function (component, simulatedEvent, cyclicConfig, cyclicState) {
+      return cyclicConfig.onEnter().bind(function (f) {
         return f(component, simulatedEvent);
       });
     };
 
-    var exit = function (component, simulatedEvent, cyclicInfo) {
-      return cyclicInfo.onEscape().bind(function (f) {
+    var exit = function (component, simulatedEvent, cyclicConfig, cyclicState) {
+      return cyclicConfig.onEscape().bind(function (f) {
         return f(component, simulatedEvent);
       });
     };
@@ -124,6 +126,6 @@ define(
     var getEvents = Fun.constant({ });
     var getApis = Fun.constant({ });
 
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
+    return KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

@@ -3,16 +3,19 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.docking.ActiveDocking',
     'ephox.alloy.behaviour.docking.DockingSchema'
   ],
 
-  function (Behaviour, ActiveDocking, DockingSchema) {
+  function (Behaviour, NoState, ActiveDocking, DockingSchema) {
     return Behaviour.create(
       DockingSchema,
       'docking',
       ActiveDocking,
-      { }
+      { },
+      { },
+      NoState
     );
   }
 );

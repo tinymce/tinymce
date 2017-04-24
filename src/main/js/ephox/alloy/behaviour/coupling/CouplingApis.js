@@ -6,8 +6,8 @@ define(
   ],
 
   function () {
-    var getCoupled = function (component, coupledInfo, name) {
-      return coupledInfo.state().getOrCreate(component, coupledInfo, name);
+    var getCoupled = function (component, coupleConfig, coupleState, name) {
+      return coupleState.getOrCreate(component, coupleConfig, name);
     };
 
     return {

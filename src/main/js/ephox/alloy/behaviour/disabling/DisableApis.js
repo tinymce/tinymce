@@ -16,8 +16,8 @@ define(
       'textarea'
     ];
 
-    var onLoad = function (component, disableInfo) {
-      if (disableInfo.disabled()) disable(component, disableInfo);
+    var onLoad = function (component, disableConfig, disableState) {
+      if (disableConfig.disabled()) disable(component, disableConfig, disableState);
     };
 
     var hasNative = function (component) {
@@ -48,16 +48,16 @@ define(
       Attr.set(component.element(), 'aria-disabled', 'false');
     };
 
-    var disable = function (component, disableInfo) {
-      disableInfo.disableClass().each(function (disableClass) {
+    var disable = function (component, disableConfig, disableState) {
+      disableConfig.disableClass().each(function (disableClass) {
         Class.add(component.element(), disableClass);
       });
       var f = hasNative(component) ? nativeDisable : ariaDisable;
       f(component);
     };
 
-    var enable = function (component, disableInfo) {
-      disableInfo.disableClass().each(function (disableClass) {
+    var enable = function (component, disableConfig, disableState) {
+      disableConfig.disableClass().each(function (disableClass) {
         Class.remove(component.element(), disableClass);
       });
       var f = hasNative(component) ? nativeEnable : ariaEnable;
