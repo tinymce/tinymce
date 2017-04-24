@@ -521,11 +521,12 @@ define("tinymce/SelectionOverrides", [
 			var down = curry(moveV, 1, LineWalker.downUntil);
 
 			function override(evt, moveFn) {
-				var range = moveFn(getRange());
-
-				if (range && !evt.isDefaultPrevented()) {
-					evt.preventDefault();
-					setRange(range);
+				if (evt.isDefaultPrevented() === false) {
+					var range = moveFn(getRange());
+					if (range) {
+						evt.preventDefault();
+						setRange(range);
+					}
 				}
 			}
 
@@ -862,8 +863,16 @@ define("tinymce/SelectionOverrides", [
 			);
 		}
 
+		function isWithinCaretContainer(node) {
+			return (
+				CaretContainer.isCaretContainer(node) ||
+				CaretContainer.startsWithCaretContainer(node) ||
+				CaretContainer.endsWithCaretContainer(node)
+			);
+		}
+
 		function isRangeInCaretContainer(rng) {
-			return CaretContainer.isCaretContainer(rng.startContainer) || CaretContainer.isCaretContainer(rng.endContainer);
+			return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
 		}
 
 		function setContentEditableSelection(range) {
