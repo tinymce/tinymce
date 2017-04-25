@@ -94,6 +94,21 @@ define("tinymce/pasteplugin/Utils", [
 		return text;
 	}
 
+	var getInnerFragment = function (html) {
+		var startFragment = '<!--StartFragment-->';
+		var endFragment = '<!--EndFragment-->';
+		var startPos = html.indexOf(startFragment);
+		if (startPos !== -1) {
+			var fragmentHtml = html.substr(startPos + startFragment.length);
+			var endPos = fragmentHtml.indexOf(endFragment);
+			if (endPos !== -1 && /^<\/(p|h[1-6]|li)>/i.test(fragmentHtml.substr(endPos + endFragment.length, 5))) {
+				return fragmentHtml.substr(0, endPos);
+			}
+		}
+
+		return html;
+	};
+
 	/**
 	 * Trims the specified HTML by removing all WebKit fragments, all elements wrapping the body trailing BR elements etc.
 	 *
@@ -111,7 +126,7 @@ define("tinymce/pasteplugin/Utils", [
 			return '\u00a0';
 		}
 
-		html = filter(html, [
+		html = filter(getInnerFragment(html), [
 			/^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
 			/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
 			[/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
