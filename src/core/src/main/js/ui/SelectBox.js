@@ -23,11 +23,16 @@ define(
   function (Widget) {
     "use strict";
 
-    function createOptions(options) {
+    function createOptions(options, value) {
       var strOptions = '';
+      var selected = '';
       if (options) {
         for (var i = 0; i < options.length; i++) {
-          strOptions += '<option value="' + options[i] + '">' + options[i] + '</option>';
+          if (value === options[i]) {
+            selected = 'selected';
+          }
+          strOptions += '<option value="' + options[i] + '" ' + selected + '>' + options[i] + '</option>';
+          selected = '';
         }
       }
       return strOptions;
@@ -99,7 +104,7 @@ define(
       renderHtml: function () {
         var self = this, options, size = '';
 
-        options = createOptions(self._options);
+        options = createOptions(self._options, self.state.get('value'));
 
         if (self.size) {
           size = ' size = "' + self.size + '"';
@@ -126,18 +131,29 @@ define(
        * Override default value function
        *
        * @method value
+       * @param {String} value Optional value to set to Selectbox
        * @return {String} option selected.
        */
-      value: function () {
+      value: function (value) {
         var self = this;
 
-        var list = self.$el.context.children;
-        for (var i = 0; i < list.length; i++) {
-          var option = list[i];
-          if (option.selected === true) {
-            return option.value;
+        if (arguments.length) {
+          self.state.set('value', value);
+          return self;
+        }
+
+        if (this.state.get('rendered')) {
+          var list = self.$el.context.children;
+          for (var i = 0; i < list.length; i++) {
+            var option = list[i];
+            if (option.selected === true) {
+              this.state.set('value', option.value);
+              break;
+            }
           }
         }
+
+        return this.state.get('value');
       }
     });
   }
