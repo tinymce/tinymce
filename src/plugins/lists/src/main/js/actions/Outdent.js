@@ -29,7 +29,14 @@ define(
     };
 
     var outdent = function (editor, li) {
-      var ul = li.parentNode, ulParent = ul.parentNode, newBlock;
+      var ul = li.parentNode, ulParent, newBlock;
+
+      if (ul) {
+        ulParent = ul.parentNode;
+      } else {
+        removeEmptyLi(editor.dom, li);
+        return true;
+      }
 
       if (ul === editor.getBody()) {
         return true;
