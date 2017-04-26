@@ -31,22 +31,22 @@ define(
         return part.fold(
           function (factory, schema, name, pname, defaults, overrides) {
             return FieldSchema.strictObjOf(name, schema.concat([
-              Fields.snapshot(name)
+              Fields.snapshot(original)
             ]));
           },
           function (factory, schema, name, _defaults, _overrides) {
             return FieldSchema.strictObjOf(name, schema.concat([
-              Fields.snapshot(name)
+              Fields.snapshot(original)
             ]));
           },
           function (factory, schema, name, pname, defaults, overrides) {
             return FieldSchema.optionObjOf(name, schema.concat([
-              Fields.snapshot(name)
+              Fields.snapshot(original)
             ]));
           },
           function (factory, schema, name, unit, pname, defaults, overrides) {
             return FieldSchema.strictObjOf(name, schema.concat([
-              Fields.snapshot(name)
+              Fields.snapshot(original)
             ]));
           }
         );

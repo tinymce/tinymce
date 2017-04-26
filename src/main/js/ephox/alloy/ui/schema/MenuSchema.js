@@ -23,13 +23,11 @@ define(
     };
 
     var configureMenu = function (detail, movementInfo) {
-      return function (detail, movementInfo) {
-        return {
-          mode: 'menu',
-          selector: '.' + detail.markers().item(),
-          moveOnTab: movementInfo.moveOnTab(),
-          focusManager: detail.focusManager()
-        };
+      return {
+        mode: 'menu',
+        selector: '.' + detail.markers().item(),
+        moveOnTab: movementInfo.moveOnTab(),
+        focusManager: detail.focusManager()
       };
     };
 
