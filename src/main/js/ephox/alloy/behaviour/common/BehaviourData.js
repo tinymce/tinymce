@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.behaviour.common.BehaviourConfig',
+  'ephox.alloy.behaviour.common.BehaviourData',
 
   [
     'ephox.alloy.behaviour.common.NoState',
@@ -47,8 +47,18 @@ define(
       };
     };
 
+    var getBehaviours = function (bData) {
+      return bData.list;
+    };
+
+    var getData = function (bData) {
+      return bData.info;
+    };
+
     return {
-      generateFrom: generateFrom
+      generateFrom: generateFrom,
+      getBehaviours: getBehaviours,
+      getData: getData
     };
   }
 );
