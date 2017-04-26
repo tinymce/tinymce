@@ -246,8 +246,8 @@ define(
           '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
           '(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
           '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
-          '(?:\\/([^>]+)>)|' + // End element
-          '(?:([A-Za-z0-9\\-_\\:\\.]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
+          '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
+          '(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
           ')', 'g');
 
         attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
@@ -261,7 +261,7 @@ define(
         fixSelfClosing = settings.fix_self_closing;
         specialElements = schema.getSpecialElements();
 
-        while ((matches = tokenRegExp.exec(html))) {
+        while ((matches = tokenRegExp.exec(html + '>'))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
           // Text
           if (index < matches.index) {
             self.text(decode(html.substr(index, matches.index - index)));
