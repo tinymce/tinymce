@@ -147,3 +147,7 @@
 .tinymce-mobile-icon-ul:before {
   content: "ul";
 }
+
+.tinymce-mobile-icon-cancel-circle:before {
+  content: "\ea0d";
+}

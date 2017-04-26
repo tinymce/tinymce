@@ -68,18 +68,33 @@ define(
       }, Option.some);
     };
 
-    var applyInfo = function (editor, info) {
-      // We must have a non-empty URL to insert a link
-      info.url.filter(isNotEmpty).each(function (url) {
-        var attrs = { };
-        attrs.href = url;
+    var unlinkIfRequired = function (editor, info) {
+      var activeLink = info.link.bind(Fun.identity);
+      activeLink.each(function (link) {
+        editor.execCommand('unlink');
+      });
+    };
 
-        info.title.filter(isNotEmpty).each(function (title) {
-          attrs.title = title;
-        });
-        info.target.filter(isNotEmpty).each(function (target) {
-          attrs.target = target;
-        });
+    var getAttrs = function (url, info) {
+      var attrs = { };
+      attrs.href = url;
+
+      info.title.filter(isNotEmpty).each(function (title) {
+        attrs.title = title;
+      });
+      info.target.filter(isNotEmpty).each(function (target) {
+        attrs.target = target;
+      });
+      return attrs;
+    };
+
+    var applyInfo = function (editor, info) {
+      info.url.filter(isNotEmpty).fold(function () {
+        // Unlink if there is something to unlink
+        unlinkIfRequired(editor, info);
+      }, function (url) {
+        // We must have a non-empty URL to insert a link
+        var attrs = getAttrs(url, info);
 
         var activeLink = info.link.bind(Fun.identity);
         activeLink.fold(function () {

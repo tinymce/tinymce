@@ -65,7 +65,7 @@ define(
       return Button.sketch({
         dom: {
           tag: 'span',
-          classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-image') ]
+          classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-image'), Styles.resolve('icon') ]
         },
         components: [
           memPicker.asSpec()
