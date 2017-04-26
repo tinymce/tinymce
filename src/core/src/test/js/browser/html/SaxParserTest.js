@@ -825,7 +825,16 @@ asynctest(
       parser.parse('<b b b b b b b b b b b b b b b b b b b b b b b');
       LegacyUnit.equal(
         writer.getContent(),
-        '<b b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b="" b=""></b>'
+        '&lt;b b b b b b b b b b b b b b b b b b b b b b b'
+      );
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('a a<b c');
+      LegacyUnit.equal(
+        writer.getContent(),
+        'a a&lt;b c'
       );
     });
 

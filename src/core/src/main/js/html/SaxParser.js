@@ -277,6 +277,14 @@ define(
 
             processEndTag(value);
           } else if ((value = matches[7])) { // Start element
+            // Did we consume the extra character then treat it as text
+            // This handles the case with html like this: "text a<b text"
+            if (matches.index + matches[0].length > html.length) {
+              self.text(decode(html.substr(matches.index)));
+              index = matches.index + matches[0].length;
+              continue;
+            }
+
             value = value.toLowerCase();
 
             // IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements
