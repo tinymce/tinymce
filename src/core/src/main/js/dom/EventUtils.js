@@ -227,7 +227,7 @@ define(
         readyHandler();
       }
 
-      // Use W3C method (exclude IE 8,9,10 - readyState "interactive" became valid only in IE 11)
+      // Use W3C method (exclude IE 9,10 - readyState "interactive" became valid only in IE 11)
       if (doc.addEventListener && !(Env.ie && Env.ie < 11)) {
         if (isDocReady()) {
           readyHandler();
