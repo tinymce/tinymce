@@ -2,27 +2,25 @@ define(
   'ephox.alloy.spec.SpecSchema',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.UiSubstitutes',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Merger',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Obj',
+    'ephox.sand.api.JSON',
     'global!Error'
   ],
 
-  function (UiSubstitutes, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Obj, Merger, Json, Fun, Error) {
+  function (Fields, UiSubstitutes, FieldSchema, Objects, ValueSchema, Arr, Fun, Merger, Obj, Json, Error) {
     var getPartsSchema = function (partNames, _optPartNames, _owner) {
       var owner = _owner !== undefined ? _owner : 'Unknown owner';
       var fallbackThunk = function () {
         return [
-          FieldSchema.state('partUids', function () {
-            return { };
-          })
+          Fields.output('partUids', { })
         ];
       };
 
@@ -94,7 +92,7 @@ define(
         FieldSchema.strict('uid'),
         FieldSchema.defaulted('dom', { }), // Maybe get rid of.
         FieldSchema.defaulted('components', [ ]),
-        FieldSchema.state('originalSpec', Fun.identity),
+        Fields.snapshot('originalSpec'),
         FieldSchema.defaulted('debug.sketcher', { })
       ]);
     };

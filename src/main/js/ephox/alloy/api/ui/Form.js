@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.spec.SpecSchema',
     'ephox.alloy.spec.UiSubstitutes',
@@ -17,7 +18,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Composing, Representing, UiSketcher, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Fun, Merger, Obj, Option) {
+  function (Behaviour, Composing, Representing, UiSketcher, Fields, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Fun, Merger, Obj, Option) {
     var schema = [
       FieldSchema.defaulted('formBehaviours', { }),
       FieldSchema.defaulted('customBehaviours', [ ])
@@ -29,7 +30,7 @@ define(
         Obj.keys(rawSpec.parts),
         function (p) {
           return FieldSchema.strictObjOf(p, schema.concat([
-            FieldSchema.state(PartType.original(), Fun.identity)
+            Fields.snapshot(PartType.original())
           ]));
         }
       );

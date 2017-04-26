@@ -2,17 +2,18 @@ define(
   'ephox.alloy.positioning.mode.HotspotAnchor',
 
   [
+    'ephox.alloy.data.Fields',
+    'ephox.alloy.positioning.layout.Bubble',
+    'ephox.alloy.positioning.layout.Layout',
+    'ephox.alloy.positioning.layout.Origins',
     'ephox.alloy.positioning.mode.Anchoring',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.alloy.positioning.layout.Bubble',
-    'ephox.alloy.positioning.layout.Layout',
-    'ephox.alloy.positioning.layout.Origins',
     'ephox.sugar.api.properties.Direction'
   ],
 
-  function (Anchoring, FieldSchema, Fun, Option, Bubble, Layout, Origins, Direction) {
+  function (Fields, Bubble, Layout, Origins, Anchoring, FieldSchema, Fun, Option, Direction) {
     var placement = function (component, posInfo, anchorInfo, origin) {
       var hotspot = anchorInfo.hotspot();
       var anchorBox = Origins.toBox(origin, hotspot.element());
@@ -33,9 +34,7 @@ define(
 
     return [
       FieldSchema.strict('hotspot'),
-      FieldSchema.state('placement', function () {
-        return placement;
-      })
+      Fields.output('placement', placement)
     ];
   }
 );

@@ -9,6 +9,16 @@ define(
   ],
 
   function (Fields, FieldSchema, ValueSchema, Throttler) {
+    var setup = function (streamInfo) {
+      var sInfo = streamInfo.stream();
+      var throttler = Throttler.last(streamInfo.onStream(), sInfo.delay());
+
+      return function (component, simulatedEvent) {
+        throttler.throttle(component, simulatedEvent);
+        if (sInfo.stopEvent()) simulatedEvent.stop();
+      };
+    };
+
     return [
       FieldSchema.strictOf('stream', ValueSchema.choose(
         'mode',
@@ -16,20 +26,8 @@ define(
           'throttle': [
             FieldSchema.strict('delay'),
             FieldSchema.defaulted('stopEvent', true),
-            FieldSchema.state('streams', function () {
-              var setup = function (streamInfo) {
-                var sInfo = streamInfo.stream();
-                var throttler = Throttler.last(streamInfo.onStream(), sInfo.delay());
-
-                return function (component, simulatedEvent) {
-                  throttler.throttle(component, simulatedEvent);
-                  if (sInfo.stopEvent()) simulatedEvent.stop();
-                };
-              };
-
-              return {
-                setup: setup
-              };
+            Fields.output('streams', {
+              setup: setup
             })
           ]
         }

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.parts.PartType',
 
   [
+    'ephox.alloy.data.Fields',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -12,7 +13,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (UiSubstitutes, FieldSchema, Objects, Adt, Arr, Fun, Merger, Option) {
+  function (Fields, UiSubstitutes, FieldSchema, Objects, Adt, Arr, Fun, Merger, Option) {
     var adt = Adt.generate([
       { internal: [ 'factory', 'schema', 'name', 'pname', 'defaults', 'overrides' ] },
       { external: [ 'factory', 'schema', 'name', 'defaults', 'overrides' ] },
@@ -30,22 +31,22 @@ define(
         return part.fold(
           function (factory, schema, name, pname, defaults, overrides) {
             return FieldSchema.strictObjOf(name, schema.concat([
-              FieldSchema.state(original, Fun.identity)
+              Fields.snapshot(name)
             ]));
           },
           function (factory, schema, name, _defaults, _overrides) {
             return FieldSchema.strictObjOf(name, schema.concat([
-              FieldSchema.state(original, Fun.identity)
+              Fields.snapshot(name)
             ]));
           },
           function (factory, schema, name, pname, defaults, overrides) {
             return FieldSchema.optionObjOf(name, schema.concat([
-              FieldSchema.state(original, Fun.identity)
+              Fields.snapshot(name)
             ]));
           },
           function (factory, schema, name, unit, pname, defaults, overrides) {
             return FieldSchema.strictObjOf(name, schema.concat([
-              FieldSchema.state(original, Fun.identity)
+              Fields.snapshot(name)
             ]));
           }
         );

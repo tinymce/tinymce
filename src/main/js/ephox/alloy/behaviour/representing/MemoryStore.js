@@ -3,37 +3,34 @@ define(
 
   [
     'ephox.alloy.behaviour.representing.RepresentState',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema'
   ],
 
-  function (RepresentState, FieldSchema) {
-    var manager = function () {
-      var setValue = function (component, repConfig, repState, data) {
-        repState.set(data);
-        repConfig.onSetValue()(component, data);
-      };
+  function (RepresentState, Fields, FieldSchema) {
+    var setValue = function (component, repConfig, repState, data) {
+      repState.set(data);
+      repConfig.onSetValue()(component, data);
+    };
 
-      var getValue = function (component, repConfig, repState) {
-        return repState.get();
-      };
+    var getValue = function (component, repConfig, repState) {
+      return repState.get();
+    };
 
-      var onLoad = function (component, repConfig, repState) {
-        repConfig.store().initialValue().each(function (initVal) {
-          if (repState.isNotSet()) repState.set(initVal);
-        });
-      };
-
-      return {
-        setValue: setValue,
-        getValue: getValue,
-        onLoad: onLoad,
-        state: RepresentState.memory
-      };
+    var onLoad = function (component, repConfig, repState) {
+      repConfig.store().initialValue().each(function (initVal) {
+        if (repState.isNotSet()) repState.set(initVal);
+      });
     };
 
     return [
       FieldSchema.option('initialValue'),      
-      FieldSchema.state('manager', manager)
+      Fields.output('manager', {
+        setValue: setValue,
+        getValue: getValue,
+        onLoad: onLoad,
+        state: RepresentState.memory
+      })
     ];
   }
 );

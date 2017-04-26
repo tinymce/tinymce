@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.Keys',
     'ephox.alloy.behaviour.common.NoState',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.ArrNavigation',
@@ -20,7 +21,10 @@ define(
     'ephox.sugar.api.view.Height'
   ],
 
-  function (Keys, NoState, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind, Height) {
+  function (
+    Keys, NoState, Fields, KeyingType, AlloyLogger, ArrNavigation, KeyMatch, KeyRules, FieldSchema, Arr, Fun, Option, Compare, Focus, SelectorFilter, SelectorFind,
+    Height
+  ) {
     var schema = [
       FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
       FieldSchema.option('onEscape'),
@@ -29,7 +33,7 @@ define(
       FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
       // Maybe later we should just expose isVisible
       FieldSchema.option('visibilitySelector'),
-      FieldSchema.state('state', Fun.constant(NoState.init))
+      Fields.output('state', NoState.init)
     ];
 
     // Fire an alloy focus on the first visible element that matches the selector

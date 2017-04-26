@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.Boxes',
     'ephox.alloy.alien.CssPosition',
     'ephox.alloy.alien.Descend',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.positioning.layout.Bubble',
     'ephox.alloy.positioning.layout.Layout',
     'ephox.alloy.positioning.layout.Origins',
@@ -28,8 +29,8 @@ define(
   ],
 
   function (
-    Boxes, CssPosition, Descend, Bubble, Layout, Origins, Anchoring, ContainerOffsets, FieldSchema, Fun, Option, Struct, Unicode, Insert, Remove, Element, Node,
-    Direction, Traverse, Selection, WindowSelection, Position, Math
+    Boxes, CssPosition, Descend, Fields, Bubble, Layout, Origins, Anchoring, ContainerOffsets, FieldSchema, Fun, Option, Struct, Unicode, Insert, Remove, Element,
+    Node, Direction, Traverse, Selection, WindowSelection, Position, Math
   ) {
     var point = Struct.immutable('element', 'offset');
 
@@ -137,9 +138,7 @@ define(
       // chiefly MaxHeight.expandable()
       FieldSchema.defaulted('overrides', { }),
       FieldSchema.defaulted('showAbove', false),
-      FieldSchema.state('placement', function () {
-        return placement;
-      })
+      Fields.output('placement', placement)
     ];
   }
 );

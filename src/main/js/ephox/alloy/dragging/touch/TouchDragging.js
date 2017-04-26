@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.dragging.common.DragMovement',
     'ephox.alloy.dragging.common.DragState',
     'ephox.alloy.dragging.common.SnapSchema',
@@ -14,7 +15,7 @@ define(
     'global!window'
   ],
 
-  function (EventHandler, DragMovement, DragState, SnapSchema, Snappables, TouchData, FieldSchema, Fun, parseInt, window) {
+  function (EventHandler, Fields, DragMovement, DragState, SnapSchema, Snappables, TouchData, FieldSchema, Fun, parseInt, window) {
     var handlers = function (dragConfig, dragState) {
       
       return {
@@ -48,20 +49,16 @@ define(
         })
       };
     };
-    
-    var instance = function () {
-      return {
-        handlers: handlers
-      };
-    };
-
+ 
     var schema = [
       // Is this used?
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.defaulted('getTarget', Fun.identity),
       FieldSchema.defaulted('onDrop', Fun.noop),
       SnapSchema,
-      FieldSchema.state('dragger', instance)
+      Fields.output('dragger', {
+        handlers: handlers
+      })
     ];
 
     return schema;

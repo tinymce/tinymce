@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
@@ -17,20 +18,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (EditableFields, Behaviour, Focusing, Keying, Representing, SystemEvents, EventHandler, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {
-    var schema = [
-      FieldSchema.strict('uid'),
-      FieldSchema.strict('data'),
-      FieldSchema.strict('components'),
-      FieldSchema.strict('dom'),
-      FieldSchema.strict('widget'),
-      FieldSchema.defaulted('autofocus', false),
-      FieldSchema.defaulted('domModification', { }),
-      FieldSchema.state('builder', function () {
-        return builder;
-      })
-    ];
-
+  function (EditableFields, Behaviour, Focusing, Keying, Representing, SystemEvents, EventHandler, Fields, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {
     var builder = function (info) {
       var widgetUid = Objects.readOptFrom(
         info.widget(),
@@ -144,6 +132,18 @@ define(
         ])
       });
     };
+
+    var schema = [
+      FieldSchema.strict('uid'),
+      FieldSchema.strict('data'),
+      FieldSchema.strict('components'),
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('widget'),
+      FieldSchema.defaulted('autofocus', false),
+      FieldSchema.defaulted('domModification', { }),
+      Fields.output('builder', builder)
+    ];
+
 
     return schema;
   }

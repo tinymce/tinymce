@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -16,23 +17,7 @@ define(
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, Representing, Toggling, SystemEvents, EventHandler, ItemEvents, FieldSchema, Objects, Fun, Merger) {
-    var schema = [
-      FieldSchema.strict('data'),
-      FieldSchema.strict('components'),
-      FieldSchema.strict('dom'),
-
-      FieldSchema.optionOf('toggling', [
-        FieldSchema.strict('toggling')
-      ]),
-
-      FieldSchema.defaulted('ignoreFocus', false),
-      FieldSchema.defaulted('domModification', { }),
-      FieldSchema.state('builder', function () {
-        return builder;
-      })
-    ];
-
+  function (Behaviour, Focusing, Keying, Representing, Toggling, SystemEvents, EventHandler, Fields, ItemEvents, FieldSchema, Objects, Fun, Merger) {
     var builder = function (info) {
       return {
         dom: Merger.deepMerge(
@@ -100,6 +85,22 @@ define(
         domModification: info.domModification()
       };
     };
+
+    var schema = [
+      FieldSchema.strict('data'),
+      FieldSchema.strict('components'),
+      FieldSchema.strict('dom'),
+
+      FieldSchema.optionOf('toggling', [
+        FieldSchema.strict('toggling')
+      ]),
+
+      FieldSchema.defaulted('ignoreFocus', false),
+      FieldSchema.defaulted('domModification', { }),
+      Fields.output('builder', builder)
+    ];
+
+    
 
     return schema;
   }

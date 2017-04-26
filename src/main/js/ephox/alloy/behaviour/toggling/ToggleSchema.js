@@ -3,12 +3,13 @@ define(
 
   [
     'ephox.alloy.behaviour.toggling.ToggleModes',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (ToggleModes, FieldSchema, ValueSchema, Fun) {
+  function (ToggleModes, Fields, FieldSchema, ValueSchema, Fun) {
     return [
       FieldSchema.defaulted('selected', false),
       FieldSchema.strict('toggleClass'),
@@ -20,19 +21,19 @@ define(
         'mode', {
           'pressed': [
             FieldSchema.defaulted('syncWithExpanded', false),
-            FieldSchema.state('update', Fun.constant(ToggleModes.updatePressed))
+            Fields.output('update', ToggleModes.updatePressed)
           ],
           'checked': [
-            FieldSchema.state('update', Fun.constant(ToggleModes.updateChecked))
+            Fields.output('update', ToggleModes.updateChecked)
           ],
           'expanded': [
-            FieldSchema.state('update', Fun.constant(ToggleModes.updateExpanded))
+            Fields.output('update', ToggleModes.updateExpanded)
           ],
           'selected': [
-            FieldSchema.state('update', Fun.constant(ToggleModes.updateSelected))
+            Fields.output('update', ToggleModes.updateSelected)
           ],
           'none': [
-            FieldSchema.state('update', Fun.constant(Fun.noop))
+            Fields.output('update', Fun.noop)
           ]
         }
       ))

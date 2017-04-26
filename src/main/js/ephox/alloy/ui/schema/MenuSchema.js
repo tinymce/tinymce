@@ -10,6 +10,29 @@ define(
   ],
 
   function (FocusManagers, Fields, FieldSchema, ValueSchema, Fun) {
+    var configureGrid = function (detail, movementInfo) {
+      return {
+        mode: 'flatgrid',
+        selector: '.' + detail.markers().item(),
+        initSize: {
+          numColumns: movementInfo.initSize().numColumns(),
+          numRows: movementInfo.initSize().numRows()
+        },
+        focusManager: detail.focusManager()
+      };
+    };
+
+    var configureMenu = function (detail, movementInfo) {
+      return function (detail, movementInfo) {
+        return {
+          mode: 'menu',
+          selector: '.' + detail.markers().item(),
+          moveOnTab: movementInfo.moveOnTab(),
+          focusManager: detail.focusManager()
+        };
+      };
+    };
+
     var schema = [
       FieldSchema.strict('value'),
       FieldSchema.strict('items'),
@@ -27,32 +50,11 @@ define(
         {
           grid: [
             Fields.initSize(),
-            FieldSchema.state('config', function () {
-              return function (detail, movementInfo) {
-                return {
-                  mode: 'flatgrid',
-                  selector: '.' + detail.markers().item(),
-                  initSize: {
-                    numColumns: movementInfo.initSize().numColumns(),
-                    numRows: movementInfo.initSize().numRows()
-                  },
-                  focusManager: detail.focusManager()
-                };
-              };
-            })
+            Fields.output('config', configureGrid)
           ],
           menu: [
             FieldSchema.defaulted('moveOnTab', true),
-            FieldSchema.state('config', function () {
-              return function (detail, movementInfo) {
-                return {
-                  mode: 'menu',
-                  selector: '.' + detail.markers().item(),
-                  moveOnTab: movementInfo.moveOnTab(),
-                  focusManager: detail.focusManager()
-                };
-              };
-            })
+            Fields.output('config', configureMenu)
           ]
         }
       )),

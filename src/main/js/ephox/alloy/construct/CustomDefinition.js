@@ -22,6 +22,7 @@ define(
     'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.dom.DomDefinition',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.ephemera.AlloyTags',
@@ -38,8 +39,8 @@ define(
 
   function (
     Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
-    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema,
-    Arr, Fun, Merger, Result, Error
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, Fields, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects,
+    ValueSchema, Arr, Fun, Merger, Result, Error
   ) {
 
     var toInfo = function (spec) {
@@ -82,8 +83,7 @@ define(
         ),
 
         FieldSchema.option('domModification'),
-
-        FieldSchema.state('originalSpec', Fun.identity),
+        Fields.snapshot('originalSpec'),
 
         // Need to have this initially
         FieldSchema.defaulted('customBehaviours', [ ]),

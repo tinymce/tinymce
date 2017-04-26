@@ -93,12 +93,6 @@ define(
         })
       };
     };
-    
-    var instance = function () {
-      return {
-        handlers: handlers
-      };
-    };
 
     var schema = [
       // TODO: Is this used?
@@ -107,7 +101,9 @@ define(
       FieldSchema.defaulted('getTarget', Fun.identity),
       Fields.onHandler('onDrop'),
       SnapSchema,
-      FieldSchema.state('dragger', instance)
+      Fields.output('dragger', {
+        handlers: handlers
+      })
     ];
 
     return schema;
