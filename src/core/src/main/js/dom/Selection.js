@@ -25,13 +25,14 @@ define(
     'tinymce.core.dom.ControlSelection',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.ScrollIntoView',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.dom.TridentSelection',
     'tinymce.core.Env',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, TreeWalker, TridentSelection, Env, Zwsp, Tools) {
+  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, Zwsp, Tools) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
 
@@ -923,50 +924,7 @@ define(
       },
 
       scrollIntoView: function (elm, alignToTop) {
-        var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH, offsetY = 0;
-
-        function getPos(elm) {
-          var x = 0, y = 0;
-
-          var offsetParent = elm;
-          while (offsetParent && offsetParent.nodeType) {
-            x += offsetParent.offsetLeft || 0;
-            y += offsetParent.offsetTop || 0;
-            offsetParent = offsetParent.offsetParent;
-          }
-
-          return { x: x, y: y };
-        }
-
-        if (!NodeType.isElement(elm)) {
-          return;
-        }
-
-        if (alignToTop === false) {
-          offsetY = elm.offsetHeight;
-        }
-
-        if (root.nodeName != 'BODY') {
-          var scrollContainer = self.getScrollContainer();
-          if (scrollContainer) {
-            y = getPos(elm).y - getPos(scrollContainer).y + offsetY;
-            viewPortH = scrollContainer.clientHeight;
-            viewPortY = scrollContainer.scrollTop;
-            if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
-              scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
-            }
-
-            return;
-          }
-        }
-
-        viewPort = dom.getViewPort(self.editor.getWin());
-        y = dom.getPos(elm).y + offsetY;
-        viewPortY = viewPort.y;
-        viewPortH = viewPort.h;
-        if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
-          self.editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);
-        }
+        ScrollIntoView.scrollIntoView(this.editor, elm, alignToTop);
       },
 
       placeCaretAt: function (clientX, clientY) {
