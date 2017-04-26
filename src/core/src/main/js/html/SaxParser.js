@@ -246,8 +246,8 @@ define(
           '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
           '(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
           '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
-          '(?:\\/([^>]+)>)|' + // End element
-          '(?:([A-Za-z0-9\\-_\\:\\.]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
+          '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
+          '(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
           ')', 'g');
 
         attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
@@ -261,7 +261,7 @@ define(
         fixSelfClosing = settings.fix_self_closing;
         specialElements = schema.getSpecialElements();
 
-        while ((matches = tokenRegExp.exec(html))) {
+        while ((matches = tokenRegExp.exec(html + '>'))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
           // Text
           if (index < matches.index) {
             self.text(decode(html.substr(index, matches.index - index)));
@@ -277,6 +277,14 @@ define(
 
             processEndTag(value);
           } else if ((value = matches[7])) { // Start element
+            // Did we consume the extra character then treat it as text
+            // This handles the case with html like this: "text a<b text"
+            if (matches.index + matches[0].length > html.length) {
+              self.text(decode(html.substr(matches.index)));
+              index = matches.index + matches[0].length;
+              continue;
+            }
+
             value = value.toLowerCase();
 
             // IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements

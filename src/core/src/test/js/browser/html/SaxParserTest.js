@@ -789,6 +789,55 @@ asynctest(
       );
     });
 
+    suite.test('Parse elements with numbers', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('<a5>text</a5>');
+      LegacyUnit.equal(writer.getContent(), '<a5>text</a5>', 'Parse element with numbers.');
+      LegacyUnit.deepEqual(counter.counts, { start: 1, text: 1, end: 1 }, 'Parse element with numbers counts.');
+    });
+
+    suite.test('Parse malformed elements that start with numbers', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('a <2 b b b b b b b b b b b b b b b b b b b b b b');
+      LegacyUnit.equal(writer.getContent(), 'a &lt;2 b b b b b b b b b b b b b b b b b b b b b b');
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('a <2b>a</2b> b');
+      LegacyUnit.equal(writer.getContent(), 'a &lt;2b&gt;a&lt;/2b&gt; b');
+    });
+
+    suite.test('Parse malformed elements without an end', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('<b b b b b b b b b b b b b b b b b b b b b b b');
+      LegacyUnit.equal(
+        writer.getContent(),
+        '&lt;b b b b b b b b b b b b b b b b b b b b b b b'
+      );
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('a a<b c');
+      LegacyUnit.equal(
+        writer.getContent(),
+        'a a&lt;b c'
+      );
+    });
+
     Pipeline.async({}, suite.toSteps({}), function () {
       success();
     }, failure);
