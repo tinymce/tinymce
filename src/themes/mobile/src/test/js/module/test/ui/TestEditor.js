@@ -4,11 +4,12 @@ define(
   [
     'ephox.agar.api.Step',
     'ephox.alloy.test.TestStore',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Step, TestStore, Cell, Fun) {
+  function (Step, TestStore, Objects, Cell, Fun) {
     return function () {
       var store = TestStore();
 
@@ -32,6 +33,9 @@ define(
         },
         insertContent: function (data) {
           store.adder({ method: 'insertContent', data: data })();
+        },
+        execCommand: function (name, ui, args) {
+          store.adder({ method: 'execCommand', data: Objects.wrap(name, args) })();
         },
         dom: {
           createHTML: function (tag, attributes, innerText) {
