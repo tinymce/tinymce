@@ -12,9 +12,9 @@ define(
     return Behaviour.create(
       CouplingSchema,
       'coupling',
-      { },
+      Behaviour.noActive(),
       CouplingApis,
-      { },
+      Behaviour.noExtra(),
       CouplingState
     );
   }

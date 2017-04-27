@@ -15,7 +15,7 @@ define(
       'toggling',
       ActiveToggle,
       ToggleApis,
-      { },
+      Behaviour.noExtra(),
       NoState
     );
   }

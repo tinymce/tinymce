@@ -13,8 +13,8 @@ define(
       TabstopSchema,
       'tabstopping',
       ActiveTabstopping,
-      { },
-      { },
+      Behaviour.noApis(),
+      Behaviour.noExtra(),
       NoState
     );
   }

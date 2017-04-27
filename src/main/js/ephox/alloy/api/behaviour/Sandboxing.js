@@ -15,7 +15,7 @@ define(
       'sandboxing',
       ActiveSandbox,
       SandboxApis,
-      { },
+      Behaviour.noExtra(),
       SandboxState
     );
   }

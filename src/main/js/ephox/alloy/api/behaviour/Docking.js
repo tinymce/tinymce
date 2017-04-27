@@ -13,8 +13,8 @@ define(
       DockingSchema,
       'docking',
       ActiveDocking,
-      { },
-      { },
+      Behaviour.noActive(),
+      Behaviour.noApis(),
       NoState
     );
   }

@@ -15,7 +15,7 @@ define(
       'positioning',
       ActivePosition,
       PositionApis,
-      { },
+      Behaviour.noExtra(),
       NoState
     );
   }

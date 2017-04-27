@@ -12,9 +12,9 @@ define(
     return Behaviour.create(
       ComposeSchema,
       'composing',
-      { },
+      Behaviour.noActive(),
       ComposeApis,
-      { },
+      Behaviour.noExtra(),
       NoState
     );
   }

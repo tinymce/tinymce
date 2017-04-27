@@ -13,8 +13,8 @@ define(
       [ ],
       'unselecting',
       ActiveUnselecting,
-      { },
-      { },
+      Behaviour.noApis(),
+      Behaviour.noExtra(),
       NoState
     );
   }

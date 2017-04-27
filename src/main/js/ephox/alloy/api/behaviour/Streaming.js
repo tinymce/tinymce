@@ -13,8 +13,8 @@ define(
       StreamingSchema,
       'streaming',
       ActiveStreaming,
-      { },
-      { },
+      Behaviour.noApis(),
+      Behaviour.noExtra(),
       NoState
     );
   }

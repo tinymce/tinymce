@@ -13,8 +13,8 @@ define(
       ReceivingSchema,
       'receiving',
       ActiveReceiving,
-      { },
-      { },
+      Behaviour.noApis(),
+      Behaviour.noExtra(),
       NoState
     );
   }

@@ -13,9 +13,9 @@ define(
     return Behaviour.create(
       HighlightSchema,
       'highlighting',
-      { },
+      Behaviour.noActive(),
       HighlightApis,
-      { },
+      Behaviour.noExtra(),
       NoState
     );
   }

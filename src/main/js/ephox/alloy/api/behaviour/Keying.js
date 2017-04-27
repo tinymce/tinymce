@@ -37,7 +37,7 @@ define(
           }
         }
       },
-      { },
+      Behaviour.noExtra(),
       KeyingState
     );
   }

@@ -15,7 +15,7 @@ define(
       'sliding',
       ActiveSliding,
       SlidingApis,
-      { },
+      Behaviour.noExtra(),
       SlidingState
     );
   }

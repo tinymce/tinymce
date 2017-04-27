@@ -15,7 +15,7 @@ define(
       'invalidating',
       ActiveInvalidate,
       InvalidateApis,
-      { },
+      Behaviour.noExtra(),
       NoState
     );
   }

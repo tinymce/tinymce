@@ -24,6 +24,7 @@ define(
         value: {
           config: { },
           configAsRaw: Fun.constant({ }),
+          initialConfig: { },
           state: NoState
         }
       };

@@ -15,31 +15,25 @@ define(
       return Objects.wrapAll(capabilities);
     };
 
-    var create = function (fields, name, active, apis, extra, _state) {
+    var create = function (fields, name, active, apis, extra, state) {
       return Behaviour.create(
-        // This is the point where we need the schema to recognise
-        // that perhaps this has already been validated. So the fields
-        // here need to be wrapped in some way.
-        // FieldSchema.optionObjOf(
-        //   name,
-          fields,
-        // ),
+        fields,
         name,
         active,
         apis,
         extra,
-        _state
+        state
       );
     };
 
-    var createModes = function (branchKey, branches, name, active, apis, extra, _state) {
+    var createModes = function (branchKey, branches, name, active, apis, extra, state) {
       return Behaviour.createModes(
         ValueSchema.choose(branchKey, branches),
         name,
         active,
         apis,
         extra,
-        _state
+        state
       );
     };
 
@@ -47,6 +41,7 @@ define(
       derive: derive,
       revoke: Fun.constant(undefined),
       noActive: Fun.constant({ }),
+      noApis: Fun.constant({ }),
       noExtra: Fun.constant({ }),
       create: create,
       createModes: createModes

@@ -13,8 +13,8 @@ define(
       PinchingSchema,
       'pinching',
       ActivePinching,
-      { },
-      { },
+      Behaviour.noApis(),
+      Behaviour.noExtra(),
       DragState
     );
   }

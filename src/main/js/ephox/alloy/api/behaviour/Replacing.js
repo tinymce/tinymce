@@ -12,9 +12,9 @@ define(
       // Replacing has no schema requirements
       [ ],
       'replacing',
-      { },
+      Behaviour.noActive(),
       ReplaceApis,
-      { },
+      Behaviour.noExtra(),
       NoState
     );
   }

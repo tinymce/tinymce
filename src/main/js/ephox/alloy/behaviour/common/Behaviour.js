@@ -45,20 +45,20 @@ define(
       };
     };
 
-    var create = function (schema, name, active, apis, extra, _state) {
+    var create = function (schema, name, active, apis, extra, state) {
       var configSchema = ValueSchema.objOf(schema);
       var schemaSchema = FieldSchema.optionObjOf(name, [
         FieldSchema.optionObjOfOnly('config', schema)
       ]);
-      return doCreate(configSchema, schemaSchema, name, active, apis, extra, _state);
+      return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
     };
 
-    var createModes = function (modes, name, active, apis, extra, _state) {
+    var createModes = function (modes, name, active, apis, extra, state) {
       var configSchema = modes;
       var schemaSchema = FieldSchema.optionObjOf(name, [
         FieldSchema.optionOf('config', modes)
       ]);
-      return doCreate(configSchema, schemaSchema, name, active, apis, extra, _state);
+      return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
     };
 
     var doCreate = function (configSchema, schemaSchema, name, active, apis, extra, _state) {
