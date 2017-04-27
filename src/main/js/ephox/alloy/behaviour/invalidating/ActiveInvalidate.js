@@ -8,7 +8,7 @@ define(
   ],
 
   function (InvalidateApis, EventHandler, Objects) {
-    var events = function (invalidConfig/*, invalidState */) {
+    var events = function (invalidConfig, invalidState) {
       return invalidConfig.validator().map(function (validatorInfo) {
         return Objects.wrap(
           validatorInfo.onEvent(),
@@ -20,9 +20,9 @@ define(
 
               validatorInfo.validate()(component).get(function (valid) {
                 valid.fold(function (err) {
-                  InvalidateApis.markInvalid(component, invalidConfig, err);
+                  InvalidateApis.markInvalid(component, invalidConfig, invalidState, err);
                 }, function () {
-                  InvalidateApis.markValid(component, invalidConfig);
+                  InvalidateApis.markValid(component, invalidConfig, invalidState);
                 });
               });
             }
