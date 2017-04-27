@@ -14,6 +14,7 @@ asynctest(
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
@@ -22,13 +23,14 @@ asynctest(
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.WindowSelection',
+    'global!Math',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
   function (
-    Assertions, Mouse, Pipeline, Step, Replacing, GuiFactory, Attachment, GuiSetup, Fun, Merger, Option, Insert, DomEvent, Body, Element, Attr, Css, Html, Traverse,
-    WindowSelection, Styles, IosRealm
+    Assertions, Mouse, Pipeline, Step, Replacing, GuiFactory, Attachment, GuiSetup, Fun, Merger, Option, Insert, Remove, DomEvent, Body, Element, Attr, Css,
+    Html, Traverse, WindowSelection, Math, Styles, IosRealm
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -36,6 +38,7 @@ asynctest(
     var realm = IosRealm();
 
     var unload = function () {
+      Remove.remove(iframe);
       Attachment.detachSystem(realm.system());
     };
 
@@ -83,7 +86,8 @@ asynctest(
         container: realm.element(),
         socket: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-editor-socket')),
         toolstrip: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-toolstrip')),
-        toolbar: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-toolbar'))
+        toolbar: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-toolbar')),
+        alloy: realm.system()
       });
     });
 
@@ -103,9 +107,11 @@ asynctest(
         var newValue = Merger.deepMerge(
           value,
           {
+            target: target,
             targetTop: target.dom().getBoundingClientRect().top
           }
         );
+        console.log('newValue', newValue);
         next(newValue);
       });
     };
@@ -119,7 +125,7 @@ asynctest(
       }),
       Step.wait(1000),
       mShowKeyboard('p', 13),
-      Step.stateful(function (value, next, die) {
+      Step.sync(function () {
         var toolstrip = iframe.dom().contentWindow.document.querySelector('.tinymce-mobile-toolstrip');
         Assertions.assertEq('Checking that the toolstrip is off screen when window moves', true, toolstrip.getBoundingClientRect().top < 0);
       }),
@@ -129,19 +135,11 @@ asynctest(
         Assertions.assertEq('Checking that the toolstrip is at top of screen after scroll recognised', 0, toolstrip.getBoundingClientRect().top);
       }),
       Step.stateful(function (value, next, die) {
-        console.log('value', value);
+        var oldTop = value.targetTop;
+        var newTop = value.target.dom().getBoundingClientRect().top;
+        Assertions.assertEq('Checking top values are approximately equal after scrolling', true, Math.abs(newTop - oldTop) < 10);
         next(value);
       })
-      // Step.sync(function () {
-
-      //   iframe.dom().contentWindow.document.body.style.setProperty('margin-bottom', '2000px');
-      //   iframe.dom().contentWindow.scrollTo(0, 500);
-      // }),
-      // Step.sync(function () {
-      //   Css.set(Body.body(), 'margin-bottom', '2000px');
-      //   window.scrollTo(0, 500);
-      // }),
-      function () { }
     ], function () { unload(); success(); }, failure);
 
   }
