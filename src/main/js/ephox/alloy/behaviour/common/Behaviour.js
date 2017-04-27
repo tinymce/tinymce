@@ -60,26 +60,30 @@ define(
       return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
     };
 
+    var wrapApi = function (bName, apiFunction, apiName) {
+      return function (component) {
+        var args = arguments;
+        return component.config({
+          name: Fun.constant(bName)
+        }).fold(
+          function () {
+            throw new Error('We could not find any behaviour configuration for: ' + bName + '. Using API: ' + apiName);
+          },
+          function (info) {
+            var rest = Array.prototype.slice.call(args, 1);
+            return apiFunction.apply(undefined, [ component, info.config, info.state ].concat(rest));
+          }
+        );
+      };
+    };
+
     var doCreate = function (configSchema, schemaSchema, name, active, apis, extra, state) {
       var getConfig = function (info) {
         return Objects.hasKey(info, name) ? info[name]() : Option.none();
       };
 
       var wrappedApis = Obj.map(apis, function (apiF, apiName) {
-        return function (component) {
-          var args = arguments;
-          return component.config({
-            name: Fun.constant(name)
-          }).fold(
-            function () {
-              throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
-            },
-            function (info) {
-              var rest = Array.prototype.slice.call(args, 1);
-              return apiF.apply(undefined, [ component, info.config, info.state ].concat(rest));
-            }
-          );
-        };
+        return wrapApi(name, apiF, apiName);
       });
 
       return Merger.deepMerge(
