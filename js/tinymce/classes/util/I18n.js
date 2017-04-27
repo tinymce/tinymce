@@ -14,7 +14,9 @@
  *
  * @class tinymce.util.I18n
  */
-define("tinymce/util/I18n", [], function() {
+define("tinymce/util/I18n", [
+	"tinymce/util/Tools"
+], function(Tools) {
 	"use strict";
 
 	var data = {}, code = "en";
@@ -85,47 +87,65 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			if (typeof text == "undefined") {
+			/**
+			 * number - string
+			 * null, undefined and empty string - empty string
+			 * array - comma-delimited string
+			 * object - in [object Object]
+			 * function - in [object Function]
+			 *
+			 * @param obj
+			 * @returns {string}
+			 */
+			function toString(obj) {
+				if (Tools.is(obj, 'function')) {
+					return Object.prototype.toString.call(obj);
+				}
+				return !isEmpty(obj) ? '' + obj : '';
+			}
+
+			function isEmpty(text) {
+				return text === '' || text === null || Tools.is(text, 'undefined');
+			}
+
+			function getLangData(text) {
+				var variant = code; // Start with the defined translation / variant, e.g. en_US
+				var langData;
+
+				// make sure we work on a string and return a string
+				text = toString(text);
+
+				do {
+					langData = data[variant] || {};
+
+					if (Tools.hasOwn(langData, text)) {
+						return toString(langData[text]);
+					}
+
+					// Check the base translation if the variant does not have the key
+					variant = variant.substr(0, variant.lastIndexOf('_'));
+				} while (variant.length > 0);
+
 				return text;
 			}
 
-			if (typeof text != "string" && text.raw) {
-				return text.raw;
+
+			if (isEmpty(text)) {
+				return '';
 			}
 
-			/**
-			 * Get the translation of key in the current language/variant. If a variant is active and the key is not
-			 * found there, also tries the root language, e.g. if 'I am a text' is not found in "fr_FR", also looks for
-			 * it in "fr".
-			 * @param {String} the text to be translated
-			 * @return {String} the translation, for further processing, or undefined if no translation was found.
-			 */
-			function getTranslated(key) {
-				var langData = data[code];
-				if (!langData) {
-					langData = {};
-				}
-
-				if (langData[key] || code.indexOf('_') == -1) {
-					// Match found, or not using a language variant
-					return langData[key];
-				}
-
-				// No match found, and using a language variant
-				langData = data[code.substr(0, code.indexOf('_'))];
-
-				return langData ? langData[key] : undefined;
+			if (Tools.is(text, 'object') && Tools.hasOwn(text, 'raw')) {
+				return toString(text.raw);
 			}
 
-			if (text.push) {
+			if (Tools.is(text, 'array')) {
 				var values = text.slice(1);
-
-				text = (getTranslated(text[0]) || text[0]).replace(/\{([0-9]+)\}/g, function(match1, match2) {
-					return values[match2];
+				text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function($1, $2) {
+					return Tools.hasOwn(values, $2) ? toString(values[$2]) : $1;
 				});
 			}
 
-			return (getTranslated(text) || text).replace(/{context:\w+}$/, '');
+			return getLangData(text).replace(/{context:\w+}$/, '');
 		},
 
 		data: data
