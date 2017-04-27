@@ -4,7 +4,6 @@ define(
   [
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
@@ -20,7 +19,7 @@ define(
     'global!Error'
   ],
 
-  function (EventRoot, SystemEvents, NoState, EventHandler, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console, Error) {
+  function (EventRoot, SystemEvents, EventHandler, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console, Error) {
     var executeEvent = function (bConfig, bState, executor) {
       return {
         key: SystemEvents.execute(),
@@ -61,8 +60,7 @@ define(
       return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
     };
 
-    var doCreate = function (configSchema, schemaSchema, name, active, apis, extra, _state) {
-      var state = _state !== undefined ? _state : NoState;
+    var doCreate = function (configSchema, schemaSchema, name, active, apis, extra, state) {
       var getConfig = function (info) {
         return Objects.hasKey(info, name) ? info[name]() : Option.none();
       };
@@ -85,16 +83,6 @@ define(
             );
           };
         }),
-        {
-          delegation: function (component, cConfig, cState) {
-            return Obj.map(apis, function (apiF, apiName) {
-              return function (/* */) {
-                var rest = Array.prototype.slice.call(arguments, 1);
-                return apiF.apply(undefined, [ component, cConfig, cState ].concat(rest));
-              };
-            });
-          }
-        },
         {
           revoke: function () {
             return {
