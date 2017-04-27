@@ -7,11 +7,13 @@ define(
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.search.TransformFind'
+    'ephox.sugar.api.search.TransformFind',
+    'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Arr, Fun, Option, Compare, Element, Css, TransformFind) {
+  function (Arr, Fun, Option, Compare, Element, Node, Css, TransformFind, Traverse) {
     var candidates = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
     var defaultSize = 'medium';
@@ -27,7 +29,8 @@ define(
       });
     };
 
-    var getRawOrComputed = function (isRoot, start) {
+    var getRawOrComputed = function (isRoot, rawStart) {
+      var start = Node.isElement(rawStart) ? rawStart : Traverse.parent(rawStart).getOr(rawStart);
       var inline = TransformFind.closest(start, function (elem) {
         return Css.getRaw(elem, 'font-size');
       }, isRoot);

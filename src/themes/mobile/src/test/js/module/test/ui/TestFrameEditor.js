@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.test.ui.TestFrameEditor',
 
   [
+    'ephox.agar.api.Cursors',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Focus',
@@ -11,7 +12,7 @@ define(
     'tinymce.themes.mobile.test.ui.TestEditor'
   ],
 
-  function (GuiFactory, Fun, Focus, Element, Attr, WindowSelection, TestEditor) {
+  function (Cursors, GuiFactory, Fun, Focus, Element, Attr, WindowSelection, TestEditor) {
     return function () {
       var frame = Element.fromTag('iframe');
       Attr.set(frame, 'src', '/project/src/themes/mobile/src/test/html/editor.html');
@@ -54,7 +55,8 @@ define(
           var win = frame.dom().contentWindow;
           WindowSelection.getExact(win).orThunk(function () {
             var fbody = Element.fromDom(frame.dom().contentWindow.document.body);
-            WindowSelection.setExact(win, fbody, 0, fbody, 0);
+            var elem = Cursors.calculateOne(fbody, [ 0 ]);
+            WindowSelection.setExact(win, elem, 0, elem, 0);
           });
         }
       };
