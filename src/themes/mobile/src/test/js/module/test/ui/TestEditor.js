@@ -6,10 +6,11 @@ define(
     'ephox.alloy.test.TestStore',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'global!document'
   ],
 
-  function (Step, TestStore, Objects, Cell, Fun) {
+  function (Step, TestStore, Objects, Cell, Fun, document) {
     return function () {
       var store = TestStore();
 
@@ -31,6 +32,7 @@ define(
           getContent: editorState.content.get,
           select: Fun.noop
         },
+
         insertContent: function (data) {
           store.adder({ method: 'insertContent', data: data })();
         },
