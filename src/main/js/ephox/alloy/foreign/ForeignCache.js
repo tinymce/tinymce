@@ -43,8 +43,6 @@ define(
           return ComponentEvents.combine(bData, info.eventOrder(), [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
         });
 
-        console.log('evts', evts);
-
         return {
           elem: Fun.constant(elem),
           evts: Fun.constant(evts)
