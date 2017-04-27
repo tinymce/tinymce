@@ -65,24 +65,42 @@ define(
         return Objects.hasKey(info, name) ? info[name]() : Option.none();
       };
 
+      var wrappedApis = Obj.map(apis, function (apiF, apiName) {
+        return function (component) {
+          var args = arguments;
+          return component.config({
+            name: Fun.constant(name)
+          }).fold(
+            function () {
+              throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
+            },
+            function (info) {
+              var rest = Array.prototype.slice.call(args, 1);
+              return apiF.apply(undefined, [ component, info.config, info.state ].concat(rest));
+            }
+          );
+        };
+      });
+
       return Merger.deepMerge(
-        extra !== undefined ? extra : { },
-        Obj.map(apis, function (apiF, apiName) {
-          return function (component) {
-            var args = arguments;
-            return component.config({
-              name: Fun.constant(name)
-            }).fold(
-              function () {
-                throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
-              },
-              function (info) {
-                var rest = Array.prototype.slice.call(args, 1);
-                return apiF.apply(undefined, [ component, info.config, info.state ].concat(rest));
-              }
-            );
-          };
-        }),
+        extra,
+        wrappedApis,
+        // Obj.map(apis, function (apiF, apiName) {
+        //   return function (component) {
+        //     var args = arguments;
+        //     return component.config({
+        //       name: Fun.constant(name)
+        //     }).fold(
+        //       function () {
+        //         throw new Error('We could not find any behaviour configuration for: ' + name + '. Using API: ' + apiName);
+        //       },
+        //       function (info) {
+        //         var rest = Array.prototype.slice.call(args, 1);
+        //         return apiF.apply(undefined, [ component, info.config, info.state ].concat(rest));
+        //       }
+        //     );
+        //   };
+        // }),
         {
           revoke: function () {
             return {
