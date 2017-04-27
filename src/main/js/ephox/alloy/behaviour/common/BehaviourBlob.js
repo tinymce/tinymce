@@ -22,7 +22,7 @@ define(
         ]));
       });
       
-      var data = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold(function (errInfo) {
+      var validated = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold(function (errInfo) {
         throw new Error(
           ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
             JSON.stringify(spec, null, 2)
@@ -31,11 +31,12 @@ define(
       
       return {
         list: all,
-        data: Obj.map(data, function (v, k) {
-          return Fun.constant(v().map(function (vv) {
+        data: Obj.map(validated, function (blobOptionThunk/*, rawK */) {
+          var blobOption = blobOptionThunk();
+          return Fun.constant(blobOption.map(function (blob) {
             return {
-              config: vv.config(),
-              state: vv.state().init(vv.config())
+              config: blob.config(),
+              state: blob.state().init(blob.config())
             };
           }));
         })
