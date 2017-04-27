@@ -14,7 +14,6 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Waiter',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
@@ -23,7 +22,6 @@ asynctest(
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.Traverse',
     'global!navigator',
     'tinymce.themes.mobile.test.ui.TestEditor',
@@ -35,8 +33,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Attachment, GuiSetup, FieldSchema,
-    ValueSchema, Fun, Focus, Body, Element, Css, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
+    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Attachment, GuiSetup, FieldSchema,
+    ValueSchema, Fun, Focus, Body, Element, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -215,19 +213,7 @@ asynctest(
         '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }'
       ]),
 
-      Waiter.sTryUntil(
-        'Waiting until CSS has loaded',
-        Chain.asStep(realm.element(), [
-          UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
-          Chain.op(function (toolstrip) {
-            if (navigator.userAgent.indexOf('PhantomJS') === -1) {
-              Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
-            }
-          })
-        ]),
-        100,
-        8000
-      ),
+      TestStyles.sWaitForToolstrip(realm),
 
       tEditor.sPrepareState(Element.fromText('hi'), 'link-text'),
 
