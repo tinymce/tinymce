@@ -115,13 +115,10 @@ define(
                 configAsRaw: Thunk.cached(function () {
                   return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
                 }),
+                initialConfig: spec,
                 state: state
               }
             };
-            // return {
-            //   key: name,
-            //   value: spec
-            // };
           },
 
           schema: function () {
