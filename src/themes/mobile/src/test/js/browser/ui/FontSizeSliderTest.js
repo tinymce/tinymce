@@ -2,6 +2,7 @@ asynctest(
   'Browser Test: ui.FontSizeSliderTest',
 
   [
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.alloy.api.system.Attachment',
@@ -10,12 +11,13 @@ asynctest(
     'ephox.sugar.api.search.Traverse',
     'tinymce.themes.mobile.test.ui.TestEditor',
     'tinymce.themes.mobile.test.ui.TestFrameEditor',
+    'tinymce.themes.mobile.test.ui.TestSelectors',
     'tinymce.themes.mobile.test.ui.TestStyles',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (Pipeline, Step, Attachment, Body, Element, Traverse, TestEditor, TestFrameEditor, TestStyles, FontSizeSlider, IosRealm) {
+  function (Mouse, Pipeline, Step, Attachment, Body, Element, Traverse, TestEditor, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -43,22 +45,19 @@ asynctest(
         label: 'group1',
         items: [
           FontSizeSlider.sketch(realm, tEditor.editor())
-          // Buttons.forToolbarCommand(tEditor.editor(), 'alpha'),
-          // Buttons.forToolbarStateCommand(tEditor.editor(), 'beta'),
-          // Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
-          //   tEditor.adder('gamma-action')();
-          // })
         ]
       }
     ]);
 
     Pipeline.async({}, [
       TestStyles.sWaitForToolstrip(realm),
-      tEditor.sPrepareState(Element.fromTag('span'), 'content'),
       Step.sync(function () {
         tEditor.editor().focus();
       }),
-      function () { }
+      Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
+      tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ]),
+
+      // Think about how to do the slider events
     ], function () {
       unload(); success();
     }, failure);

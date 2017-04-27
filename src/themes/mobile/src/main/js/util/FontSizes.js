@@ -30,14 +30,16 @@ define(
     };
 
     var getRawOrComputed = function (isRoot, rawStart) {
-      var start = Node.isElement(rawStart) ? rawStart : Traverse.parent(rawStart).getOr(rawStart);
-      var inline = TransformFind.closest(start, function (elem) {
-        return Css.getRaw(elem, 'font-size');
-      }, isRoot);
+      var optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart);
+      return optStart.map(function (start) {
+        var inline = TransformFind.closest(start, function (elem) {
+          return Css.getRaw(elem, 'font-size');
+        }, isRoot);
 
-      return inline.getOrThunk(function () {
-        return Css.get(start, 'font-size');
-      });
+        return inline.getOrThunk(function () {
+          return Css.get(start, 'font-size');
+        });
+      }).getOr('');
     };
 
     var getSize = function (editor) {
