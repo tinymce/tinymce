@@ -1,51 +1,38 @@
-asynctest(
-  'Browser Test: .ui.SerialisedLinkTest',
+define(
+  'tinymce.themes.mobile.test.ui.TestStyles',
 
   [
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.FocusTools',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Mouse',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.UiControls',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Waiter',
-    'ephox.alloy.api.system.Attachment',
-    'ephox.alloy.log.AlloyLogger',
-    'ephox.alloy.test.GuiSetup',
-    'ephox.alloy.test.TestStore',
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Cell',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
-    'ephox.sugar.api.dom.Focus',
-    'ephox.sugar.api.node.Body',
+    'ephox.katamari.api.Id',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.properties.TextContent',
-    'ephox.sugar.api.search.Traverse',
-    'global!navigator',
-    'tinymce.themes.mobile.test.ui.TestSelectors',
-    'tinymce.themes.mobile.test.ui.TestUi',
-    'tinymce.themes.mobile.ui.IosRealm',
-    'tinymce.themes.mobile.ui.LinkButton'
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.search.SelectorFind',
+    'global!document'
   ],
 
-  function (
-    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, Attachment, AlloyLogger,
-    GuiSetup, TestStore, FieldPresence, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, navigator,
-    TestSelectors, TestUi, IosRealm, LinkButton
-  ) {
+  function (Id, Insert, Remove, Element, Attr, Class, SelectorFind, document) {
+    var styleClass = Id.generate('ui-test-styles');
+
+    var addStyles = function () {
+      var link = Element.fromTag('link');
+      Attr.setAll(link, {
+        rel: 'Stylesheet',
+        href: '/project/src/themes/mobile/src/main/css/mobile.css',
+        type: 'text/css'
+      });
+      Class.add(link, styleClass);
+
+      var head = Element.fromDom(document.head);
+      Insert.append(head, link);
+    };
+
+    var removeStyles = function () {
+      var head = Element.fromDom(document.head);
+      SelectorFind.descendant(head, '.' + styleClass).each(Remove.remove);
+    };
+
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -56,12 +43,7 @@ asynctest(
 
     var doc = Traverse.owner(body);
 
-    var styles = document.createElement('link');
-    styles.setAttribute('rel', 'Stylesheet');
-    styles.setAttribute('href', '/project/src/themes/mobile/src/main/css/mobile.css');
-    styles.setAttribute('type', 'text/css');
-    document.head.appendChild(styles);
-
+    
     var unload = function () {
       document.head.removeChild(styles);
       Attachment.detachSystem(realm.system());
@@ -141,11 +123,23 @@ asynctest(
       );
     };
 
+    var cGetFocused = Chain.binder(function () {
+      return Focus.active().fold(function () {
+        return Result.error('Could not find focused element');
+      }, Result.value);
+    });
+
+    var cGetParent = Chain.binder(function (elem) {
+      return Traverse.parent(elem).fold(function () {
+        return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
+      }, Result.value);
+    });
+
     var sClickNavigation = function (selector) {
       return Chain.asStep({ }, [
-        TestUi.cGetFocused,
-        TestUi.cGetParent,
-        TestUi.cGetParent,
+        cGetFocused,
+        cGetParent,
+        cGetParent,
         UiFinder.cFindIn(selector),
         Mouse.cClick
       ]);
@@ -203,11 +197,11 @@ asynctest(
       sAssertUrlFocused
     ]);
 
-    var sClickLink = Mouse.sClickOn(realm.element(), TestSelectors.link());
+    var sClickLink = Mouse.sClickOn(realm.element(), '.tinymce-mobile-icon-link');
 
     var sSetFieldValue = function (value) {
       return Chain.asStep({ }, [
-        TestUi.cGetFocused,
+        cGetFocused,
         UiControls.cSetValue(value)
       ]);
     };
