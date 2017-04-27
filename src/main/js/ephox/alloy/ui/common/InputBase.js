@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
@@ -13,13 +14,15 @@ define(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, Focusing, Representing, Tabstopping, FieldSchema, Objects, Fun, Merger, Value) {
+  function (Behaviour, Focusing, Representing, Tabstopping, Fields, FieldSchema, Objects, Fun, Merger, Value) {
+
     var schema = [
       FieldSchema.option('data'),
       FieldSchema.defaulted('inputAttributes', { }),
       FieldSchema.defaulted('inputStyles', { }),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
+      Fields.onHandler('onSetValue'),
       FieldSchema.defaulted('styles', { }),
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('eventOrder', { }),
@@ -46,7 +49,8 @@ define(
                   Value.set(input.element(), data);
                 }
               }
-            }
+            },
+            onSetValue: detail.onSetValue()
           }),
           Focusing.config({
             onFocus: function (component) {
