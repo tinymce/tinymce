@@ -11,7 +11,6 @@ define(
     };
 
     var setValue = function (component, repConfig, repState, data) {
-      console.log('setting', data);
       repConfig.store().manager().setValue(component, repConfig, repState, data);
     };
 
