@@ -1,5 +1,5 @@
 /**
- * BoundaryDelete.js
+ * InlineBoundaryDelete.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.keyboard.BoundaryDelete',
+  'tinymce.core.delete.InlineBoundaryDelete',
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
@@ -87,7 +87,7 @@ define(
 
         if (fromLocation.isSome() && toLocation.isSome()) {
           InlineUtils.findInline(rootNode, from).bind(function (elm) {
-            return DeleteElement.deleteElement(editor, Element.fromDom(elm));
+            return DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
           });
           return true;
         } else {
@@ -107,14 +107,12 @@ define(
     };
 
     var backspaceDelete = function (editor, caret, forward) {
-      return function () {
-        if (editor.selection.isCollapsed()) {
-          var from = CaretPosition.fromRangeStart(editor.selection.getRng());
-          return backspaceDeleteCollapsed(editor, caret, forward, from);
-        }
+      if (editor.selection.isCollapsed()) {
+        var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+        return backspaceDeleteCollapsed(editor, caret, forward, from);
+      }
 
-        return false;
-      };
+      return false;
     };
 
     return {

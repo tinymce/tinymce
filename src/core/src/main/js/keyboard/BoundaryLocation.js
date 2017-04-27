@@ -179,8 +179,9 @@ define(
         return readLocation(rootNode, from)
           .bind(onlyOutside)
           .orThunk(function () {
-            var toBlock = CaretUtils.getParentBlock(to.container(), rootNode);
-            return findFirstOrLastLocationInBlock(rootNode, forward, toBlock);
+            return Option.from(CaretUtils.getParentBlock(to.container(), rootNode)).bind(function (toBlock) {
+              return findFirstOrLastLocationInBlock(rootNode, forward, toBlock);
+            });
           });
       } else {
         return Option.some(location);

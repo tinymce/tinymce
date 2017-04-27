@@ -117,7 +117,6 @@ define(
       EditorManager.init({
         skin_url: '../../../../skins/lightgray/dist/lightgray',
         codesample_content_css: '../../../../plugins/codesample/dist/codesample/css/prism.css',
-        content_css: 'x',
         selector: "textarea",
         theme: "modern",
         plugins: [

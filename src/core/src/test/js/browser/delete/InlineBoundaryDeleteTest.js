@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.keyboard.BoundaryDeleteTest',
+  'browser.tinymce.core.delete.InlineBoundaryDeleteTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -89,11 +89,11 @@ asynctest(
         Logger.t('Delete key', GeneralSteps.sequence([
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 0], 1, '<p>a<a href="#">b</a>c</p>', 'start', [0, 1, 0], 1),
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>c</p>', 'after', [0, 2], 1),
-          sTestDelete('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>d</p>', 'end', [0, 1, 0], 1),
-          sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1),
-          sTestDelete('<p><img src="#1" /><a href="#">b</a><img src="#2" /></p>', [0, 1, 0], 0, '<p><img src="#1" /><img src="#2" /></p>', 'none', [0], 1)
+          sTestDelete('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>d</p>', 'end', [0, 1, 0], 1)
         ])),
         Logger.t('Backspace/delete last character', GeneralSteps.sequence([
+          sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1),
+          sTestDelete('<p><img src="#1" /><a href="#">b</a><img src="#2" /></p>', [0, 1, 0], 0, '<p><img src="#1" /><img src="#2" /></p>', 'none', [0], 1),
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1),
           tinyApis.sAssertContentStructure(paragraphWithText('ac')),
           sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>ac</p>', 'none', [0, 0], 1),

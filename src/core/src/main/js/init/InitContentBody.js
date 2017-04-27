@@ -13,6 +13,7 @@ define(
   [
     'global!document',
     'global!window',
+    'tinymce.core.caret.CaretContainerInput',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Selection',
     'tinymce.core.dom.Serializer',
@@ -32,7 +33,7 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    document, window, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, Formatter, DomParser, Node, Schema, KeyboardOverrides,
+    document, window, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, Formatter, DomParser, Node, Schema, KeyboardOverrides,
     NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
   ) {
     var DOM = DOMUtils.DOM;
@@ -215,10 +216,12 @@ define(
       editor.selection = new Selection(editor.dom, editor.getWin(), editor.serializer, editor);
       editor.formatter = new Formatter(editor);
       editor.undoManager = new UndoManager(editor);
-      editor.forceBlocks = new ForceBlocks(editor);
-      KeyboardOverrides.setup(editor);
       editor._nodeChangeDispatcher = new NodeChange(editor);
       editor._selectionOverrides = new SelectionOverrides(editor);
+
+      CaretContainerInput.setup(editor);
+      KeyboardOverrides.setup(editor);
+      ForceBlocks.setup(editor);
 
       editor.fire('PreInit');
 

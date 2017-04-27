@@ -4,12 +4,15 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Merger',
     'tinymce.core.keyboard.MatchKeys'
   ],
-  function (Assertions, Pipeline, Step, Merger, MatchKeys) {
+  function (Assertions, Pipeline, Step, Arr, Cell, Merger, MatchKeys) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+    var state = Cell([]);
 
     var event = function (evt) {
       return Merger.merge({
@@ -21,85 +24,54 @@ asynctest(
       }, evt);
     };
 
-    var testAction1 = function () {
+    var handleAction = function (value) {
+      return function () {
+        state.set(state.get().concat([value]));
+        return true;
+      };
     };
 
-    var testAction2 = function () {
+    var sTestMatch = function (patterns, event, expectedData) {
+      return Step.sync(function () {
+        state.set([]);
+
+        var matches = MatchKeys.match(patterns, event);
+        Assertions.assertEq('Should have some matches', true, matches.length > 0);
+
+        Arr.find(matches, function (pattern) {
+          return pattern.action();
+        });
+
+        Assertions.assertEq('Should have the expected state', expectedData, state.get());
+      });
     };
 
-    var sTestMatch = Step.sync(function () {
-      Assertions.assertEq(
-        'Empty patterns shouldn\'t match anything',
-        true,
-        MatchKeys.match([], {}).isNone()
-      );
-
-      Assertions.assertEq(
-        'Should match first keyCode',
-        true,
-        MatchKeys.match([{ keyCode: 65 }], event({ keyCode: 65 })).isSome()
-      );
-
-      Assertions.assertEq(
-        'Should match anything keyCode',
-        true,
-        MatchKeys.match([{ keyCode: 123 }], event({ keyCode: 65 })).isNone()
-      );
-
-      Assertions.assertEq(
-        'Should match first keyCode and action should be correct',
-        testAction1,
-        MatchKeys.match([{ keyCode: 65, action: testAction1 }], event({ keyCode: 65 })).getOrDie()
-      );
-
-      Assertions.assertEq(
-        'Should match shiftKey keyCode',
-        testAction1,
-        MatchKeys.match([
-          { keyCode: 65, action: testAction2 },
-          { keyCode: 65, shiftKey: true, action: testAction1 }
-        ], event({ keyCode: 65, shiftKey: true })).getOrDie()
-      );
-
-      Assertions.assertEq(
-        'Should match altKey keyCode',
-        testAction1,
-        MatchKeys.match([
-          { keyCode: 65, action: testAction2 },
-          { keyCode: 65, altKey: true, action: testAction1 }
-        ], event({ keyCode: 65, altKey: true })).getOrDie()
-      );
-
-      Assertions.assertEq(
-        'Should match ctrlKey keyCode',
-        testAction1,
-        MatchKeys.match([
-          { keyCode: 65, action: testAction2 },
-          { keyCode: 65, ctrlKey: true, action: testAction1 }
-        ], event({ keyCode: 65, ctrlKey: true })).getOrDie()
-      );
-
-      Assertions.assertEq(
-        'Should match metaKey keyCode',
-        testAction1,
-        MatchKeys.match([
-          { keyCode: 65, action: testAction2 },
-          { keyCode: 65, metaKey: true, action: testAction1 }
-        ], event({ keyCode: 65, metaKey: true })).getOrDie()
-      );
-
-      Assertions.assertEq(
-        'Should match metaKey+ctrlKey but not metaKey+ctrlKey+altKey keyCode',
-        testAction1,
-        MatchKeys.match([
-          { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: testAction2 },
-          { keyCode: 65, metaKey: true, ctrlKey: true, action: testAction1 }
-        ], event({ keyCode: 65, metaKey: true, ctrlKey: true })).getOrDie()
-      );
-    });
+    var sTestMatchNone = function (patterns, event) {
+      return Step.sync(function () {
+        Assertions.assertEq(
+          'Should not produce any matches',
+          0,
+          MatchKeys.match(patterns, event).length
+        );
+      });
+    };
 
     Pipeline.async({}, [
-      sTestMatch
+      sTestMatchNone([], {}),
+      sTestMatchNone([], event({ keyCode: 65 })),
+      sTestMatchNone([{ keyCode: 65, action: handleAction('a') }], event({ keyCode: 13 })),
+      sTestMatch([{ keyCode: 65, action: handleAction('a') }], event({ keyCode: 65 }), ['a']),
+      sTestMatch([{ keyCode: 65, shiftKey: true, action: handleAction('a') }], event({ keyCode: 65, shiftKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, altKey: true, action: handleAction('a') }], event({ keyCode: 65, altKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, ctrlKey: true, action: handleAction('a') }], event({ keyCode: 65, ctrlKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, metaKey: true, action: handleAction('a') }], event({ keyCode: 65, metaKey: true }), ['a']),
+      sTestMatch(
+        [
+          { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: handleAction('a') },
+          { keyCode: 65, ctrlKey: true, metaKey: true, action: handleAction('b') }
+        ],
+        event({ keyCode: 65, metaKey: true, ctrlKey: true }), ['b']
+      )
     ], function () {
       success();
     }, failure);
