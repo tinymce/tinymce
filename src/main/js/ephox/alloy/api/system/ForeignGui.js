@@ -142,7 +142,6 @@ define(
          * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
          */
 
-        console.log('receiving', type);
         if (gui.element().dom().contains(event.target().dom())) return;
 
         // Find if the target has an assigned dispatcher
