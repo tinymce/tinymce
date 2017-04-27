@@ -30,8 +30,8 @@ define(
       }, Fun.identity);
       
       return {
-        lista: all,
-        dataa: Obj.map(data, function (v, k) {
+        list: all,
+        data: Obj.map(data, function (v, k) {
           return Fun.constant(v().map(function (vv) {
             return {
               config: vv.config(),
@@ -43,11 +43,11 @@ define(
     };
 
     var getBehaviours = function (bData) {
-      return bData.lista;
+      return bData.list;
     };
 
     var getData = function (bData) {
-      return bData.dataa;
+      return bData.data;
     };
 
     return {
