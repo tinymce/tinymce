@@ -48,6 +48,7 @@ define(
 
       return {
         editor: Fun.constant(editor),
+        adder: store.adder,
         assertEq: store.assertEq,
         sAssertEq: store.sAssertEq,
         sClear: store.sClear,

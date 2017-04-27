@@ -45,7 +45,10 @@ asynctest(
         label: 'group1',
         items: [
           Buttons.forToolbarCommand(tEditor.editor(), 'alpha'),
-          Buttons.forToolbarStateCommand(tEditor.editor(), 'beta')
+          Buttons.forToolbarStateCommand(tEditor.editor(), 'beta'),
+          Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
+            tEditor.adder('gamma-action')();
+          })
         ]
       }
     ]);
@@ -85,24 +88,41 @@ asynctest(
         });
       }),
       Logger.t(
-        'Checking toggle after broadcasting event',
+        'Checking toggle after broadcasting event for beta',
         TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', true)
+      ),
+      tEditor.sClear
+    ]);
+
+    var sTestGamma = GeneralSteps.sequence([
+      tEditor.sAssertEq('before gamma, store is empty', [ ]),
+      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-gamma-class'),
+      tEditor.sAssertEq('After clicking on gamma', [ 'gamma-action' ]),
+      tEditor.sClear,
+      TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', false),
+      // Fire a format change
+      Step.sync(function () {
+        realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
+          command: 'gamma-query',
+          state: true
+        });
+      }),
+      Logger.t(
+        'Checking toggle after broadcasting event for gamma',
+        TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', true)
       )
     ]);
 
     Pipeline.async({}, [
       GuiSetup.mAddStyles(doc, [
         '.tinymce-mobile-icon-alpha:before { content: "ALPHA"; }',
-        '.tinymce-mobile-icon-beta:before { content: "BETA"; }'
+        '.tinymce-mobile-icon-beta:before { content: "BETA"; }',
+        '.tinymce-mobile-icon-gamma-class:before { content: "GAMMA"; }'
       ]),
       TestStyles.sWaitForToolstrip(realm),
       sTestAlpha,
       sTestBeta,
-
-
-
-
-      function () { }
+      sTestGamma
     ], function () {
       unload(); success();
     }, failure);
