@@ -32,8 +32,7 @@ define(
       FieldSchema.defaulted('firstTabstop', 0),
       FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
       // Maybe later we should just expose isVisible
-      FieldSchema.option('visibilitySelector'),
-      Fields.output('state', NoState.init)
+      FieldSchema.option('visibilitySelector')
     ];
 
     // Fire an alloy focus on the first visible element that matches the selector
