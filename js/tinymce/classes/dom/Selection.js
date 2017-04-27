@@ -498,6 +498,10 @@ define("tinymce/dom/Selection", [
 
 			doc = self.win.document;
 
+			if (typeof doc === 'undefined' || doc === null) {
+				return null;
+			}
+
 			// Use last rng passed from FocusManager if it's available this enables
 			// calls to editor.selection.getStart() to work when caret focus is lost on IE
 			if (!w3c && self.lastFocusBookmark) {

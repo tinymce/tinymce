@@ -221,6 +221,15 @@ define("tinymce/fmt/Preview", [
 			format = format[0];
 		}
 
+		// Format specific preview override
+		// TODO: This should probably be further reduced by the previewStyles option
+		if ('preview' in format) {
+			previewStyles = format.preview;
+			if (previewStyles === false) {
+				return '';
+			}
+		}
+
 		name = format.block || format.inline || 'span';
 
 		items = parseSelector(format.selector);

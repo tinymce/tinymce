@@ -31,6 +31,9 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
         ok(/font-weight\:(bold|700)/.test(getCssText({inline: 'b'})),
             'Bold not found in preview style');
 
+        ok(!/font-weight\:(bold|700)/.test(getCssText({inline: 'b', preview: 'font-size'})),
+            'Bold should not be when only we only preview font-size');
+
         editor.dom.addStyle(
             'table .preview {' +
             'color: rgb(0, 255, 0);' + // green
@@ -150,50 +153,50 @@ ModuleLoader.require(["tinymce/fmt/Preview"], function(Preview) {
             return Preview.selectorToHtml(selector).outerHTML;
         }
 
-        equal(selectorToHtml('ul > li.class1'), trimSpaces('\
-            <div>\
-                <ul>\
-                    <li class="class1"></li>\
-                </ul>\
-            </div>\
-        '), 'ul > li.class1 ok');
+        equal(selectorToHtml('ul > li.class1'), trimSpaces([
+            '<div>',
+                '<ul>',
+                    '<li class="class1"></li>',
+                '</ul>',
+            '</div>'
+        ].join('')), 'ul > li.class1 ok');
 
 
-        equal(selectorToHtml('ol + ul#id1 > li.class1[title="Some Title"]'), trimSpaces('\
-            <div>\
-                <div>\
-                    <ol></ol>\
-                    <ul id="id1">\
-                        <li class="class1" title="Some Title"></li>\
-                    </ul>\
-                </div>\
-            </div>\
-        '), 'ol + ul#id1 > li.class1[title="Some Title"] ok');
+        equal(selectorToHtml('ol + ul#id1 > li.class1[title="Some Title"]'), trimSpaces([
+            '<div>',
+                '<div>',
+                    '<ol></ol>',
+                    '<ul id="id1">',
+                      '  <li class="class1" title="Some Title"></li>',
+                    '</ul>',
+                '</div>',
+            '</div>'
+        ].join('')), 'ol + ul#id1 > li.class1[title="Some Title"] ok');
 
 
-        equal(selectorToHtml('tr > th + td'), trimSpaces('\
-            <div>\
-                <table>\
-                    <tbody>\
-                        <tr>\
-                            <th></th>\
-                            <td></td>\
-                        </tr>\
-                    </tbody>\
-                </table>\
-            </div>\
-        '), 'tr > th + td (required parental structure properly rebuilt) ok');
+        equal(selectorToHtml('tr > th + td'), trimSpaces([
+            '<div>',
+                '<table>',
+                    '<tbody>',
+                        '<tr>',
+                            '<th></th>',
+                            '<td></td>',
+                        '</tr>',
+                    '</tbody>',
+                '</table>',
+            '</div>'
+        ].join('')), 'tr > th + td (required parental structure properly rebuilt) ok');
 
 
-        equal(selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'), trimSpaces('\
-            <div>\
-                <p>\
-                    <ul>\
-                        <li title="Some Title" alt="Some Alt"></li>\
-                    </ul>\
-                </p>\
-            </div>\
-        '), 'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok');
+        equal(selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'), trimSpaces([
+            '<div>',
+                '<p>',
+                    '<ul>',
+                        '<li title="Some Title" alt="Some Alt"></li>',
+                    '</ul>',
+                '</p>',
+            '</div>'
+        ].join('')), 'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok');
 
     });
 });
