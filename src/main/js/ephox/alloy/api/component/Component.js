@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.component.ComponentApi',
     'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.api.ui.GuiTypes',
+    'ephox.alloy.behaviour.common.BehaviourBlob',
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.CustomDefinition',
@@ -23,8 +24,8 @@ define(
   ],
 
   function (
-    CompBehaviours, ComponentApi, NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Arr, Cell,
-    Fun, Merger, Type, Json, Traverse, Error
+    CompBehaviours, ComponentApi, NoContextApi, GuiTypes, BehaviourBlob, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema,
+    Arr, Cell, Fun, Merger, Type, Json, Traverse, Error
   ) {
     var build = function (spec) { 
        var getSelf = function () {
@@ -42,8 +43,9 @@ define(
       // The behaviour configuration is put into info.behaviours(). For everything else,
       // we just need the list of static behaviours that this component cares about. The behaviour info
       // to pass through will come from the info.behaviours() obj.
-      var behaviourData = CompBehaviours.generate(spec);
-      var behaviours = behaviourData.list;
+      var bBlob = CompBehaviours.generate(spec);
+      var bList = BehaviourBlob.getBehaviours(bBlob);
+      var bData = BehaviourBlob.getData(bBlob);
 
       var definition = CustomDefinition.toDefinition(info);
 
@@ -51,7 +53,7 @@ define(
         'alloy.base.modification': CustomDefinition.toModification(info)
       };
       
-      var modification = ComponentDom.combine(behaviourData.info, baseModification, behaviours, definition).getOrDie();
+      var modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
 
       var modDefinition = DomModification.merge(definition, modification);
 
@@ -61,7 +63,7 @@ define(
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
 
-      var events = ComponentEvents.combine(behaviourData.info, info.eventOrder(), behaviours, baseEvents).getOrDie();
+      var events = ComponentEvents.combine(bData, info.eventOrder(), bList, baseEvents).getOrDie();
 
       var subcomponents = Cell(info.components());
 
@@ -90,7 +92,7 @@ define(
 
       var config = function (behaviour) {
         if (behaviour === GuiTypes.apiConfig()) return info.apis();
-        var b = behaviourData.info;
+        var b = bData;
         var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
           throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
         };
@@ -99,7 +101,7 @@ define(
       };
 
       var readState = function (behaviourName) {
-        return behaviourData.info[behaviourName]().map(function (b) {
+        return bData[behaviourName]().map(function (b) {
           return b.state.readState();
         }).getOr('not enabled');
       };

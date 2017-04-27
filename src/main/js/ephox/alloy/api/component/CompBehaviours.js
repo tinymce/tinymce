@@ -22,24 +22,15 @@ define(
     'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
-    'ephox.alloy.behaviour.common.BehaviourData',
-    'ephox.alloy.behaviour.common.NoState',
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldSchema',
+    'ephox.alloy.behaviour.common.BehaviourBlob',
     'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Result',
-    'ephox.sand.api.JSON',
     'global!Error'
   ],
 
   function (
     Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
-    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, BehaviourData, NoState, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Obj,
-    Result, JSON, Error
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, BehaviourBlob, Objects, Arr, Error
   ) {
     var alloyBehaviours = [
       Toggling,
@@ -71,7 +62,7 @@ define(
     };
 
     var generateFrom = function (spec, all) {
-      return BehaviourData.generateFrom(spec, all);
+      return BehaviourBlob.generateFrom(spec, all);
     }
 
     var generate = function (spec) {

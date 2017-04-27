@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.behaviour.common.BehaviourData',
+  'ephox.alloy.behaviour.common.BehaviourBlob',
 
   [
     'ephox.alloy.behaviour.common.NoState',
@@ -22,21 +22,16 @@ define(
         ]));
       });
       
-      var info = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold(function (errInfo) {
+      var data = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold(function (errInfo) {
         throw new Error(
           ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
             JSON.stringify(spec, null, 2)
         );
       }, Fun.identity);
-      // var behaviours = Objects.readOr('customBehaviours', [])(spec);
-      // var bs = getDefaultBehaviours(spec);
-      // var behaviourSchema = Arr.map(bs.concat(behaviours), function (b) {
-      //   return FieldSchema.option(b.name());
-      // });
-      // console.log('behaviourSchema', ValueSchema.objOf(behaviourSchema).toString());
+      
       return {
-        list: all,
-        info: Obj.map(info, function (v, k) {
+        lista: all,
+        dataa: Obj.map(data, function (v, k) {
           return Fun.constant(v().map(function (vv) {
             return {
               config: vv.config(),
@@ -48,11 +43,11 @@ define(
     };
 
     var getBehaviours = function (bData) {
-      return bData.list;
+      return bData.lista;
     };
 
     var getData = function (bData) {
-      return bData.info;
+      return bData.dataa;
     };
 
     return {
