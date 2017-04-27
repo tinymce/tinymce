@@ -2,19 +2,24 @@ asynctest(
   'Browser Test: ui.ButtonsTest',
 
   [
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.search.Traverse',
+    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.test.ui.TestEditor',
     'tinymce.themes.mobile.test.ui.TestStyles',
+    'tinymce.themes.mobile.test.ui.TestUi',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (Mouse, Pipeline, Attachment, GuiSetup, Body, Traverse, TestEditor, TestStyles, Buttons, IosRealm) {
+  function (GeneralSteps, Logger, Mouse, Pipeline, Step, Attachment, GuiSetup, Body, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons, IosRealm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -39,16 +44,13 @@ asynctest(
       {
         label: 'group1',
         items: [
-          Buttons.forToolbarCommand(tEditor.editor(), 'alpha')
+          Buttons.forToolbarCommand(tEditor.editor(), 'alpha'),
+          Buttons.forToolbarStateCommand(tEditor.editor(), 'beta')
         ]
       }
     ]);
 
-    Pipeline.async({}, [
-      GuiSetup.mAddStyles(doc, [
-        '.tinymce-mobile-icon-alpha:before { content: "ALPHA"; }'
-      ]),
-      TestStyles.sWaitForToolstrip(realm),
+    var sTestAlpha = GeneralSteps.sequence([
       tEditor.sAssertEq('Initially empty', [ ]),
       Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-alpha'),
       tEditor.sAssertEq('After clicking on alpha', [
@@ -59,6 +61,47 @@ asynctest(
           }
         }
       ]),
+      tEditor.sClear
+    ]);
+
+    var sTestBeta = GeneralSteps.sequence([
+      tEditor.sAssertEq('before beta, store is empty', [ ]),
+      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-beta'),
+      tEditor.sAssertEq('After clicking on beta', [
+        {
+          method: 'execCommand',
+          data: {
+            'beta': undefined
+          }
+        }
+      ]),
+      tEditor.sClear,
+      TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', false),
+      // Fire a format change
+      Step.sync(function () {
+        realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
+          command: 'beta',
+          state: true
+        });
+      }),
+      Logger.t(
+        'Checking toggle after broadcasting event',
+        TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', true)
+      )
+    ]);
+
+    Pipeline.async({}, [
+      GuiSetup.mAddStyles(doc, [
+        '.tinymce-mobile-icon-alpha:before { content: "ALPHA"; }',
+        '.tinymce-mobile-icon-beta:before { content: "BETA"; }'
+      ]),
+      TestStyles.sWaitForToolstrip(realm),
+      sTestAlpha,
+      sTestBeta,
+
+
+
+
       function () { }
     ], function () {
       unload(); success();

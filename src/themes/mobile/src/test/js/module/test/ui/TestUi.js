@@ -2,16 +2,19 @@ define(
   'tinymce.themes.mobile.test.ui.TestUi',
 
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
+    'ephox.agar.api.UiFinder',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.log.AlloyLogger',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Chain, Step, UiControls, AlloyLogger, Result, Focus, Traverse) {
+  function (Assertions, Chain, Step, UiControls, UiFinder, Toggling, AlloyLogger, Result, Focus, Traverse) {
     var cGetFocused = Chain.binder(function () {
       return Focus.active().fold(function () {
         return Result.error('Could not find focused element');
@@ -37,11 +40,22 @@ define(
       }, sSetFieldValue);
     };
 
+    var sTogglingIs = function (alloy, selector, state) {
+      return Step.sync(function () {
+        var comp = UiFinder.findIn(alloy.element(), selector).bind(function (el) {
+          return alloy.getByDom(el);
+        }).getOrDie();
+        Assertions.assertEq('Checking toggling of ' + AlloyLogger.element(comp.element()), state, Toggling.isOn(comp));
+      });
+    };
+
     return {
       cGetFocused: cGetFocused,
       cGetParent: cGetParent,
       sSetFieldValue: sSetFieldValue,
-      sSetFieldOptValue: sSetFieldOptValue
+      sSetFieldOptValue: sSetFieldOptValue,
+
+      sTogglingIs: sTogglingIs
     };
   }
 );
