@@ -100,6 +100,28 @@
 	.vertical-gradient(@menuitem-bg-selected, @menuitem-bg-selected-hlight);
 }
 
+.@{prefix}-menu-item-link {
+	color: #093;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	b {
+		color: #093;
+	}
+}
+
+.@{prefix}-menu-item-ellipsis {
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.@{prefix}-menu-item:hover *, .@{prefix}-menu-item.@{prefix}-selected *, .@{prefix}-menu-item:focus * {
+	color: @menuitem-text-inverse;
+}
+
 div.@{prefix}-menu .@{prefix}-menu-item-sep, .@{prefix}-menu-item-sep:hover {
 	border: 0;
 	padding: 0;
@@ -111,6 +133,18 @@ div.@{prefix}-menu .@{prefix}-menu-item-sep, .@{prefix}-menu-item-sep:hover {
 	cursor: default;
 	filter: none;
 }
+
+div.@{prefix}-menu .@{prefix}-menu-item b {
+	font-weight: bold;
+}
+
+.@{prefix}-menu-item-indent-1 { padding-left: 20px; }
+.@{prefix}-menu-item-indent-2 { padding-left: 35px; }
+.@{prefix}-menu-item-indent-2 { padding-left: 35px; }
+.@{prefix}-menu-item-indent-3 { padding-left: 40px; }
+.@{prefix}-menu-item-indent-4 { padding-left: 45px; }
+.@{prefix}-menu-item-indent-5 { padding-left: 50px; }
+.@{prefix}-menu-item-indent-6 { padding-left: 55px; }
 
 // RTL
 

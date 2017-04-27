@@ -18,8 +18,9 @@ define('tinymce/inlite/Theme', [
 	'tinymce/inlite/core/ElementMatcher',
 	'tinymce/inlite/core/Matcher',
 	'tinymce/inlite/alien/Arr',
+	'tinymce/inlite/alien/EditorSettings',
 	'tinymce/inlite/core/PredicateId'
-], function(ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, PredicateId) {
+], function(ThemeManager, Delay, Panel, Buttons, SkinLoader, SelectionMatcher, ElementMatcher, Matcher, Arr, EditorSettings, PredicateId) {
 	var getSelectionElements = function (editor) {
 		var node = editor.selection.getNode();
 		var elms = editor.dom.getParents(node);
@@ -63,11 +64,16 @@ define('tinymce/inlite/Theme', [
 		return result && result.rect ? result : null;
 	};
 
-	var togglePanel = function (editor) {
+	var togglePanel = function (editor, panel) {
 		var toggle = function () {
 			var toolbars = getToolbars(editor);
 			var result = findMatchResult(editor, toolbars);
-			result ? Panel.show(editor, result.id, result.rect, toolbars) : Panel.hide();
+
+			if (result) {
+				panel.show(editor, result.id, result.rect, toolbars);
+			} else {
+				panel.hide();
+			}
 		};
 
 		return function () {
@@ -77,28 +83,28 @@ define('tinymce/inlite/Theme', [
 		};
 	};
 
-	var ignoreWhenFormIsVisible = function (f) {
+	var ignoreWhenFormIsVisible = function (panel, f) {
 		return function () {
-			if (!Panel.inForm()) {
+			if (!panel.inForm()) {
 				f();
 			}
 		};
 	};
 
-	var bindContextualToolbarsEvents = function (editor) {
-		var throttledTogglePanel = Delay.throttle(togglePanel(editor), 0);
-		var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(togglePanel(editor)), 0);
+	var bindContextualToolbarsEvents = function (editor, panel) {
+		var throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
+		var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(panel, togglePanel(editor, panel)), 0);
 
-		editor.on('blur hide ObjectResizeStart', Panel.hide);
+		editor.on('blur hide ObjectResizeStart', panel.hide);
 		editor.on('click', throttledTogglePanel);
 		editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
 		editor.on('ResizeEditor ResizeWindow keyup', throttledTogglePanel);
-		editor.on('remove', Panel.remove);
+		editor.on('remove', panel.remove);
 
-		editor.shortcuts.add('Alt+F10', '', Panel.focus);
+		editor.shortcuts.add('Alt+F10', '', panel.focus);
 	};
 
-	var overrideLinkShortcut = function (editor) {
+	var overrideLinkShortcut = function (editor, panel) {
 		editor.shortcuts.remove('meta+k');
 		editor.shortcuts.add('meta+k', '', function () {
 			var toolbars = getToolbars(editor);
@@ -107,17 +113,15 @@ define('tinymce/inlite/Theme', [
 			]);
 
 			if (result) {
-				Panel.show(editor, result.id, result.rect, toolbars);
+				panel.show(editor, result.id, result.rect, toolbars);
 			}
 		});
 	};
 
-	var renderInlineUI = function (editor) {
-		var skinName = editor.settings.skin || 'lightgray';
-
-		SkinLoader.load(editor, skinName, function () {
-			bindContextualToolbarsEvents(editor);
-			overrideLinkShortcut(editor);
+	var renderInlineUI = function (editor, panel) {
+		SkinLoader.load(editor, function () {
+			bindContextualToolbarsEvents(editor, panel);
+			overrideLinkShortcut(editor, panel);
 		});
 
 		return {};
@@ -128,10 +132,12 @@ define('tinymce/inlite/Theme', [
 	};
 
 	ThemeManager.add('inlite', function (editor) {
-		Buttons.addToEditor(editor);
+		var panel = new Panel();
+
+		Buttons.addToEditor(editor, panel);
 
 		var renderUI = function () {
-			return editor.inline ? renderInlineUI(editor) : fail('inlite theme only supports inline mode.');
+			return editor.inline ? renderInlineUI(editor, panel) : fail('inlite theme only supports inline mode.');
 		};
 
 		return {

@@ -87,9 +87,14 @@ define('tinymce/inlite/core/Layout', [
 		return panelRect;
 	};
 
+	var defaultHandler = function (rects) {
+		return rects.panelRect;
+	};
+
 	return {
 		calcInsert: calcInsert,
 		calc: calc,
-		userConstrain: userConstrain
+		userConstrain: userConstrain,
+		defaultHandler: defaultHandler
 	};
 });

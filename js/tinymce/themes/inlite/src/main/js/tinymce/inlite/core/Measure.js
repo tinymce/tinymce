@@ -24,36 +24,27 @@ define('tinymce/inlite/core/Measure', [
 		};
 	};
 
+	var measureElement = function (elm) {
+		var clientRect = elm.getBoundingClientRect();
+
+		return toAbsolute({
+			x: clientRect.left,
+			y: clientRect.top,
+			w: Math.max(elm.clientWidth, elm.offsetWidth),
+			h: Math.max(elm.clientHeight, elm.offsetHeight)
+		});
+	};
+
 	var getElementRect = function (editor, elm) {
-		var pos, targetRect, root;
-
-		pos = DOM.getPos(editor.getContentAreaContainer());
-		targetRect = editor.dom.getRect(elm);
-		root = editor.dom.getRoot();
-
-		// Adjust targetPos for scrolling in the editor
-		if (root.nodeName == 'BODY') {
-			targetRect.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;
-			targetRect.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;
-		}
-
-		targetRect.x += pos.x;
-		targetRect.y += pos.y;
-
-		// We need to use these instead of the rect values since the style
-		// size properites might not be the same as the real size for a table
-		targetRect.w = elm.clientWidth > 0 ? elm.clientWidth : elm.offsetWidth;
-		targetRect.h = elm.clientHeight > 0 ? elm.clientHeight : elm.offsetHeight;
-
-		return targetRect;
+		return measureElement(elm);
 	};
 
 	var getPageAreaRect = function (editor) {
-		return DOM.getRect(editor.getElement().ownerDocument.body);
+		return measureElement(editor.getElement().ownerDocument.body);
 	};
 
 	var getContentAreaRect = function (editor) {
-		return toAbsolute(DOM.getRect(editor.getContentAreaContainer() || editor.getBody()));
+		return measureElement(editor.getContentAreaContainer() || editor.getBody());
 	};
 
 	var getSelectionRect = function (editor) {

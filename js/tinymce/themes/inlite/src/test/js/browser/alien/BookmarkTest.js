@@ -31,10 +31,10 @@ asynctest('browser/alien/BookmarkTest', [
 
 	var cAssertRangeEq = function (expected) {
 		return Chain.op(function (actual) {
-			Assertions.assertEq(expected.start().dom(), actual.startContainer, 'Not equal startContainer');
-			Assertions.assertEq(expected.soffset(), actual.startOffset, 'Not equal startOffset');
-			Assertions.assertEq(expected.finish().dom(), actual.endContainer, 'Not equal endContainer');
-			Assertions.assertEq(expected.foffset(), actual.endOffset, 'Not equal endOffset');
+			Assertions.assertEq('Not equal startContainer', expected.start().dom(), actual.startContainer);
+			Assertions.assertEq('Not equal startOffset', expected.soffset(), actual.startOffset);
+			Assertions.assertEq('Not equal endContainer', expected.finish().dom(), actual.endContainer);
+			Assertions.assertEq('Not equal endOffset', expected.foffset(), actual.endOffset);
 		});
 	};
 

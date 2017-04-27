@@ -25,9 +25,18 @@ define('tinymce/inlite/core/SkinLoader', [
 		}
 	};
 
-	var load = function (editor, skin, callback) {
-		var baseUrl = EditorManager.baseURL;
-		var skinUrl = baseUrl + '/skins/' + skin;
+	var urlFromName = function (name) {
+		var prefix = EditorManager.baseURL + '/skins/';
+		return name ? prefix + name : prefix + 'lightgray';
+	};
+
+	var toAbsoluteUrl = function (editor, url) {
+		return editor.documentBaseURI.toAbsolute(url);
+	};
+
+	var load = function (editor, callback) {
+		var settings = editor.settings;
+		var skinUrl = settings.skin_url ? toAbsoluteUrl(editor, settings.skin_url) : urlFromName(settings.skin);
 
 		var done = function () {
 			fireSkinLoaded(editor, callback);

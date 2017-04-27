@@ -46,7 +46,7 @@
 		"indent": 0,
 		"curly": [2, "all"],
 		"dot-notation": [2, {"allowKeywords": false}],
-		"no-else-return": 2,
+		"no-else-return": 0,
 		"no-eval": 2,
 		"no-implied-eval": 2,
 		"no-loop-func": 2,

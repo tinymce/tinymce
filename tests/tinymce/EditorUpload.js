@@ -235,7 +235,8 @@ ModuleLoader.require([
 
 			if (callCount == 2) {
 				QUnit.start();
-				equal(uploadCount, 1, 'Should only be one upload.');
+				// This is in exact since the status of the image can be pending or failed meaing it should try again
+				ok(uploadCount >= 1, 'Should at least be one.');
 			}
 
 			equal(result[0].element, editor.$('img')[0]);

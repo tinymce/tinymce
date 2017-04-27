@@ -425,6 +425,14 @@ define("tinymce/tableplugin/Plugin", [
 				grid.pasteRows(clipboardRows);
 			},
 
+			mceSplitColsBefore: function(grid) {
+				grid.splitCols(true);
+			},
+
+			mceSplitColsAfter: function(grid) {
+				grid.splitCols(false);
+			},
+
 			mceTableDelete: function(grid) {
 				if (resizeBars) {
 					resizeBars.clearBars();

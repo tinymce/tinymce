@@ -637,7 +637,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		// This enables us to copy/paste the fake object
 		innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
 		if (innerHtml) {
-			targetNode.attr("data-mce-html", escape(innerHtml));
+			targetNode.attr("data-mce-html", escape(sanitize(innerHtml)));
 			targetNode.firstChild = null;
 		}
 	}

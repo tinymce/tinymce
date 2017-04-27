@@ -2,7 +2,7 @@ ModuleLoader.require(["tinymce/text/Zwsp"], function(Zwsp) {
 	module("tinymce.text.Zwsp");
 
 	test('ZWSP', function() {
-		strictEqual(Zwsp.ZWSP, '\u200b');
+		strictEqual(Zwsp.ZWSP, '\uFEFF');
 	});
 
 	test('isZwsp', function() {

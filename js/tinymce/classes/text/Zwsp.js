@@ -9,16 +9,17 @@
  */
 
 /**
- * ....
+ * Utility functions for working with zero width space
+ * characters used as character containers etc.
  *
  * @private
  * @class tinymce.text.Zwsp
  * @example
- * var isZwsp = Zwsp.isZwsp('\u200b');
- * var abc = Zwsp.trim('a\u200bc');
+ * var isZwsp = Zwsp.isZwsp('\uFEFF');
+ * var abc = Zwsp.trim('a\uFEFFc');
  */
 define("tinymce/text/Zwsp", [], function() {
-	var ZWSP = '\u200b';
+	var ZWSP = '\uFEFF';
 
 	function isZwsp(chr) {
 		return chr == ZWSP;

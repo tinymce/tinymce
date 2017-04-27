@@ -11,7 +11,14 @@ ModuleLoader.require([
 	}
 
 	function setViewHtml(html) {
-		getRoot().innerHTML = html;
+		var child, rootElm = getRoot();
+
+		// IE leaves zwsp in the dom on innerHTML
+		while ((child = rootElm.firstChild)) {
+			rootElm.removeChild(child);
+		}
+
+		rootElm.innerHTML = html;
 	}
 
 	function getRoot() {

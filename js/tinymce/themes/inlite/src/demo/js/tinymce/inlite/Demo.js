@@ -17,11 +17,20 @@ define('tinymce/inlite/Demo', [
 	tinymce.init({
 		selector: 'div.tinymce',
 		theme: 'inlite',
-		plugins: 'image table link paste contextmenu textpattern autolink',
+		plugins: 'image table link anchor paste contextmenu textpattern autolink',
 		insert_toolbar: 'quickimage quicktable',
 		selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
 		inline: true,
-		paste_data_images: true
+		paste_data_images: true,
+		filepicker_validator_handler: function (query, success) {
+			var valid = /^https?:/.test(query.url);
+
+			success({
+				status: valid ? 'valid' : 'invalid',
+				message: valid ? 'Url seems to be valid' : 'Are you use that this url is valid?'
+			});
+		},
+		file_picker_callback: function () {}
 	});
 
 	return function() {};

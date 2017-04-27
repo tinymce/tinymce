@@ -41,7 +41,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 0);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li>a</li><li>12</li></ul>');
 		assertSelection('li:nth-child(2)', 0);
 	});
@@ -50,7 +50,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 0);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li>b</li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li><li>b</li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li>a</li><li>b</li><li>12</li></ul>');
 		assertSelection('li:nth-child(3)', 0);
 	});
@@ -59,7 +59,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 2);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li>12</li><li>a</li></ul>');
 		assertSelection('li:nth-child(2)', 1);
 	});
@@ -68,7 +68,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 2);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li>b</li><li>c</li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li><li>b</li><li>c</li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li>12</li><li>a</li><li>b</li><li>c</li></ul>');
 		assertSelection('li:nth-child(4)', 1);
 	});
@@ -77,7 +77,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 1);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li>b</li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li><li>b</li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li>1</li><li>a</li><li>b</li><li>2</li></ul>');
 		assertSelection('li:nth-child(4)', 1);
 	});
@@ -86,7 +86,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li><em><strong>12</strong></em></li></ul>');
 		editor.focus();
 		Utils.setSelection('strong', 1);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li><em><strong>1</strong></em></li><li>a</li><li><em><strong>2</strong></em></li></ul>');
 		assertSelection('li:nth-child(3) strong', 1);
 	});
@@ -95,7 +95,7 @@ ModuleLoader.require([
 		editor.setContent('<ul><li>12</li></ul>');
 		editor.focus();
 		Utils.setSelection('li', 0);
-		InsertContent.insertAtCaret(editor, '<ul><li>a</li><li></li></ul>');
+		InsertContent.insertAtCaret(editor, {content: '<ul><li>a</li><li></li></ul>', paste: true});
 		equal(editor.getContent(), '<ul><li>a</li><li>12</li></ul>');
 		assertSelection('li:nth-child(2)', 0);
 	});

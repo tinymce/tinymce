@@ -109,12 +109,12 @@ define("tinymce/html/Schema", [
 
 		// Event attributes can be opt-in/opt-out
 		/*eventAttributes = split("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +
-				"ondblclick ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended " +
-				"onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart " +
-				"onmousedown onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange " +
-				"onreset onscroll onseeked onseeking onseeking onselect onshow onstalled onsubmit onsuspend ontimeupdate onvolumechange " +
-				"onwaiting"
-		);*/
+		 "ondblclick ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended " +
+		 "onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart " +
+		 "onmousedown onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange " +
+		 "onreset onscroll onseeked onseeking onseeking onselect onshow onstalled onsubmit onsuspend ontimeupdate onvolumechange " +
+		 "onwaiting"
+		 );*/
 
 		// Block content elements
 		blockContent = split(
@@ -131,10 +131,10 @@ define("tinymce/html/Schema", [
 		// Add HTML5 items to globalAttributes, blockContent, phrasingContent
 		if (type != "html4") {
 			globalAttributes.push.apply(globalAttributes, split("contenteditable contextmenu draggable dropzone " +
-				"hidden spellcheck translate"));
+			"hidden spellcheck translate"));
 			blockContent.push.apply(blockContent, split("article aside details dialog figure header footer hgroup section nav"));
 			phrasingContent.push.apply(phrasingContent, split("audio canvas command datalist mark meter output picture " +
-				"progress time wbr video ruby bdi keygen"));
+			"progress time wbr video ruby bdi keygen"));
 		}
 
 		// Add HTML4 elements unless it's html5-strict
@@ -173,8 +173,8 @@ define("tinymce/html/Schema", [
 		add("style", "media type scoped");
 		add("script", "src async defer type charset");
 		add("body", "onafterprint onbeforeprint onbeforeunload onblur onerror onfocus " +
-				"onhashchange onload onmessage onoffline ononline onpagehide onpageshow " +
-				"onpopstate onresize onscroll onstorage onunload", flowContent);
+		"onhashchange onload onmessage onoffline ononline onpagehide onpageshow " +
+		"onpopstate onresize onscroll onstorage onunload", flowContent);
 		add("address dt dd div caption", "", flowContent);
 		add("h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn", "", phrasingContent);
 		add("blockquote", "cite", flowContent);
@@ -203,7 +203,7 @@ define("tinymce/html/Schema", [
 		add("fieldset", "disabled form name", flowContent, "legend");
 		add("label", "form for", phrasingContent);
 		add("input", "accept alt autocomplete checked dirname disabled form formaction formenctype formmethod formnovalidate " +
-				"formtarget height list max maxlength min multiple name pattern readonly required size src step type value width"
+			"formtarget height list max maxlength min multiple name pattern readonly required size src step type value width"
 		);
 		add("button", "disabled form formaction formenctype formmethod formnovalidate formtarget name type value",
 			type == "html4" ? flowContent : phrasingContent);
@@ -222,7 +222,7 @@ define("tinymce/html/Schema", [
 			add("mark rt rp summary bdi", "", phrasingContent);
 			add("canvas", "width height", flowContent);
 			add("video", "src crossorigin poster preload autoplay mediagroup loop " +
-				"muted controls width height buffered", flowContent, "track source");
+			"muted controls width height buffered", flowContent, "track source");
 			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls buffered volume", flowContent, "track source");
 			add("picture", "", "img source");
 			add("source", "src srcset type media sizes");
@@ -299,8 +299,8 @@ define("tinymce/html/Schema", [
 
 		// Delete header, footer, sectioning and heading content descendants
 		/*each('dt th address', function(name) {
-			delete schema[name].children[name];
-		});*/
+		 delete schema[name].children[name];
+		 });*/
 
 		// Caption can't have tables
 		delete schema.caption.children.table;
@@ -390,18 +390,18 @@ define("tinymce/html/Schema", [
 		whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script noscript style textarea video audio iframe object');
 		selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
 		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' +
-			'meta param embed source wbr track');
+		'meta param embed source wbr track');
 		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
-			'noshade nowrap readonly selected autoplay loop controls');
+		'noshade nowrap readonly selected autoplay loop controls');
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object script', shortEndedElementsMap);
 		moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
 		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
-						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
+		'blockquote center dir fieldset header footer article section hgroup aside nav figure');
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
-						'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
-						'datalist select optgroup figcaption', textBlockElementsMap);
+		'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
+		'datalist select optgroup figcaption', textBlockElementsMap);
 		textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
-										'dfn code mark q sup sub samp');
+		'dfn code mark q sup sub samp');
 
 		each((settings.special || 'script noscript style textarea').split(' '), function(name) {
 			specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
@@ -715,8 +715,8 @@ define("tinymce/html/Schema", [
 			// Remove these by default
 			// TODO: Reenable in 4.1
 			/*each(split('script style'), function(name) {
-				delete elements[name];
-			});*/
+			 delete elements[name];
+			 });*/
 		} else {
 			setValidElements(settings.valid_elements);
 		}
@@ -727,6 +727,28 @@ define("tinymce/html/Schema", [
 
 		// Todo: Remove this when we fix list handling to be valid
 		addValidChildren('+ol[ul|ol],+ul[ul|ol]');
+
+
+		// Some elements are not valid by themselves - require parents
+		each({
+			dd: 'dl',
+			dt: 'dl',
+			li: 'ul ol',
+			td: 'tr',
+			th: 'tr',
+			tr: 'tbody thead tfoot',
+			tbody: 'table',
+			thead: 'table',
+			tfoot: 'table',
+			legend: 'fieldset',
+			area: 'map',
+			param: 'video audio object'
+		}, function(parents, item) {
+			if (elements[item]) {
+				elements[item].parentsRequired = split(parents);
+			}
+		});
+
 
 		// Delete invalid elements
 		if (settings.invalid_elements) {

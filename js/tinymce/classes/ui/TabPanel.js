@@ -117,7 +117,7 @@ define("tinymce/ui/TabPanel", [
 			this.on('click', function(e) {
 				var targetParent = e.target.parentNode;
 
-				if (e.target.parentNode.id == self._id + '-head') {
+				if (targetParent && targetParent.id == self._id + '-head') {
 					var i = targetParent.childNodes.length;
 
 					while (i--) {

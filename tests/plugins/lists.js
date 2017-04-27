@@ -35,7 +35,7 @@ ModuleLoader.require([
 				indent: false,
 				schema: 'html5',
 				entities: 'raw',
-				valid_elements: 'li,ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
+				valid_elements: 'li[style],ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
 				},
@@ -59,8 +59,8 @@ ModuleLoader.require([
 				},
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-				},
-				
+				}
+
 			});
 
 			tinymce.init({
@@ -76,8 +76,8 @@ ModuleLoader.require([
 				},
 				valid_styles: {
 					'*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-				},
-				
+				}
+
 			});
 		},
 
@@ -400,7 +400,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+		execCommand('InsertOrderedList', null, {'list-style-type': 'lower-alpha'});
 
 		equal(editor.getContent(),
 			'<ol>' +
@@ -427,7 +427,7 @@ ModuleLoader.require([
 
 		editor.focus();
 		Utils.setSelection('p', 1);
-		execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+		execCommand('InsertOrderedList', null, {'list-style-type': 'lower-alpha'});
 
 		equal(editor.getContent(),
 			'<ol>' +
@@ -451,7 +451,7 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
 		execCommand('InsertOrderedList');
@@ -478,10 +478,10 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', false, { 'list-style-type': 'upper-roman' });
+		execCommand('InsertOrderedList', false, {'list-style-type': 'upper-roman'});
 
 		equal(editor.getContent(),
 			'<ol style="list-style-type: upper-roman;">' +
@@ -503,10 +503,10 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
+		execCommand('InsertOrderedList', false, {'list-style-type': 'lower-roman'});
 
 		equal(editor.getContent(),
 			'<ol style="list-style-type: lower-roman;">' +
@@ -530,10 +530,10 @@ ModuleLoader.require([
 				'<li>c</li>' +
 			'</ol>'
 		);
-		
+
 		editor.focus();
 		Utils.setSelection('ul li', 1);
-		execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
+		execCommand('InsertOrderedList', false, {'list-style-type': 'lower-roman'});
 
 		equal(editor.getContent(),
 			'<ol style="list-style-type: upper-roman;">' +
@@ -968,7 +968,7 @@ ModuleLoader.require([
 			'</ol>' +
 			'<p>c</p>' +
 			'<ol>' +
-				'<li>' +
+				'<li style="list-style-type: none;">' +
 					'<ul>' +
 						'<li>d</li>' +
 					'</ul>' +
@@ -976,6 +976,64 @@ ModuleLoader.require([
 				'<li>e</li>' +
 			'</ol>'
 		);
+		equal(editor.selection.getStart().nodeName, 'P');
+	});
+
+	test('Remove OL on a deep nested LI', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ol>' +
+				'<li>a' +
+					'<ol>' +
+						'<li>b</li>' +
+						'<li>c' +
+							'<ol>' +
+								'<li>d</li>' +
+								'<li>e</li>' +
+								'<li>f</li>' +
+							'</ol>' +
+						'</li>' +
+						'<li>g</li>' +
+						'<li>h</li>' +
+					'</ol>' +
+				'</li>' +
+				'<li>i</li>' +
+			'</ol>'
+		);
+
+		editor.focus();
+		Utils.setSelection('ol ol ol li:nth-child(2)', 1);
+		execCommand('InsertOrderedList');
+
+		equal(editor.getContent(),
+			'<ol>' +
+					'<li>a' +
+							'<ol>' +
+									'<li>b</li>' +
+									'<li>c' +
+											'<ol>' +
+													'<li>d</li>' +
+											'</ol>' +
+									'</li>' +
+							'</ol>' +
+					'</li>' +
+			'</ol>' +
+			'<p>e</p>' +
+			'<ol>' +
+					'<li style="list-style-type: none;">' +
+							'<ol>' +
+									'<li style="list-style-type: none;">' +
+											'<ol>' +
+													'<li>f</li>' +
+											'</ol>' +
+									'</li>' +
+									'<li>g</li>' +
+									'<li>h</li>' +
+							'</ol>' +
+					'</li>' +
+					'<li>i</li>' +
+			'</ol>'
+		);
+
 		equal(editor.selection.getStart().nodeName, 'P');
 	});
 
@@ -2071,6 +2129,70 @@ ModuleLoader.require([
 		equal(editor.selection.getNode().nodeName, 'LI');
 	});
 
+	test('Backspace at LI selected with triple-click in UL', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+						'<li>d</li>' +
+					'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('li:nth-child(1)', 0, 'li:nth-child(2)', 0);
+		editor.plugins.lists.backspaceDelete();
+
+		equal(trimBrs(editor.getContent()),
+			'<ul>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+						'<li>d</li>' +
+					'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		equal(editor.selection.getNode().nodeName, 'LI');
+	});
+
+	test('Backspace at partially selected list', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<p>abc</p>' +
+			'<ul>' +
+				'<li>a</li>' +
+				'<li>b' +
+					'<ul>' +
+						'<li>c</li>' +
+						'<li>d</li>' +
+					'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		editor.focus();
+		Utils.setSelection('p', 1, 'li:nth-child(2)', 0);
+		editor.plugins.lists.backspaceDelete();
+
+		equal(trimBrs(editor.getContent()),
+			'<p>ab</p>' +
+			'<ul>' +
+				'<li style="list-style-type: none;">' +
+				'<ul>' +
+					'<li>c</li>' +
+					'<li>d</li>' +
+				'</ul>' +
+				'</li>' +
+			'</ul>'
+		);
+
+		equal(editor.selection.getNode().nodeName, 'P');
+	});
+
 	// Delete
 
 	test('Delete at end of single LI in UL', function() {
@@ -2443,4 +2565,44 @@ ModuleLoader.require([
 		equal(editor.getContent(), '<ul><li>a</li></ul>');
 		equal(editor.selection.getNode().nodeName, 'LI');
 	});
+
+	test('Apply UL list to more than two paragraphs', function() {
+		editor.getBody().innerHTML = trimBrs(
+			'<p>a</p>' +
+			'<p>b</p>' +
+			'<p>c</p>'
+		);
+
+		editor.focus();
+		Utils.setSelection('p:nth-child(1)', 0, 'p:nth-child(3)', 1);
+		execCommand('InsertUnorderedList', false, {'list-style-type': null});
+
+		equal(editor.getContent(), '<ul><li>a</li><li>b</li><li>c</li></ul>');
+	});
+
+	if (tinymce.Env.ie === 11) {
+		test('Backspace merge li elements on IE 11', function() {
+			// IE allows you to place the caret inside a LI without children
+			editor.getBody().innerHTML = trimBrs(
+				'<ul>' +
+					'<li>a</li>' +
+					'<li></li>' +
+				'</ul>'
+			);
+
+			editor.focus();
+			Utils.setSelection('li:nth-child(2)', 0);
+
+			editor.plugins.lists.backspaceDelete();
+
+			equal(editor.getContent(),
+				'<ul>' +
+					'<li>a</li>' +
+				'</ul>'
+			);
+
+			equal(editor.selection.getNode().nodeName, 'LI');
+			equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
+		});
+	}
 });

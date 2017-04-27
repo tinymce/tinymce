@@ -4,7 +4,7 @@
 	QUnit.config.reorder = false;
 	QUnit.config.hidepassed = true;
 
-	window.editor = window.inlineEditor = null; 
+	window.editor = window.inlineEditor = null;
 
 	var oldModule = module;
 
@@ -23,12 +23,12 @@
 
 	// Sauce labs
 	QUnit.testStart(function(testDetails) {
-		QUnit.log = function(details) {
+		QUnit.log(function(details) {
 			if (!details.result) {
 				details.name = currentModule + ':' + testDetails.name;
 				log.push(details);
 			}
-		};
+		});
 	});
 
 	QUnit.done(function(results) {

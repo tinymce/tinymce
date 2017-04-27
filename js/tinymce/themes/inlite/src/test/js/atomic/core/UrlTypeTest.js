@@ -21,5 +21,13 @@ test('atomic/core/UrlTypeTest', [
 		assert.eq(UrlType.isDomainLike('/a/b'), false);
 	};
 
+	var testIsAbsoluteUrl = function () {
+		assert.eq(UrlType.isAbsolute('http://www.site.com'), true);
+		assert.eq(UrlType.isAbsolute('https://www.site.com'), true);
+		assert.eq(UrlType.isAbsolute('www.site.com'), false);
+		assert.eq(UrlType.isAbsolute('file.gif'), false);
+	};
+
 	testIsDomainLike();
+	testIsAbsoluteUrl();
 });
