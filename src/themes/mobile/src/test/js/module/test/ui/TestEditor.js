@@ -9,43 +9,46 @@ define(
   ],
 
   function (Step, TestStore, Cell, Fun) {
-    var store = TestStore();
+    return function () {
+      var store = TestStore();
 
-    var editorState = {
-      start: Cell(null),
-      content: Cell('')
-    };
+      var editorState = {
+        start: Cell(null),
+        content: Cell('')
+      };
 
-    var sPrepareState = function (node, content) {
-      return Step.sync(function () {
-        editorState.start.set(node);
-        editorState.content.set(content);
-      });
-    };
+      var sPrepareState = function (node, content) {
+        return Step.sync(function () {
+          editorState.start.set(node);
+          editorState.content.set(content);
+        });
+      };
 
-    var editor = {
-      selection: {
-        getStart: editorState.start.get,
-        getContent: editorState.content.get,
-        select: Fun.noop
-      },
-      insertContent: function (data) {
-        store.adder({ method: 'insertContent', data: data })();
-      },
-      dom: {
-        createHTML: function (tag, attributes, innerText) {
-          return { tag: tag, attributes: attributes, innerText: innerText };
+      var editor = {
+        selection: {
+          getStart: editorState.start.get,
+          getContent: editorState.content.get,
+          select: Fun.noop
         },
-        encode: Fun.identity
-      },
-      focus: Fun.noop
-    };
+        insertContent: function (data) {
+          store.adder({ method: 'insertContent', data: data })();
+        },
+        dom: {
+          createHTML: function (tag, attributes, innerText) {
+            return { tag: tag, attributes: attributes, innerText: innerText };
+          },
+          encode: Fun.identity
+        },
+        focus: Fun.noop
+      };
 
-    return {
-      editor: Fun.constant(editor),
-      assertEq: store.assertEq,
-      sAssertEq: store.sAssertEq,
-      sPrepareState: sPrepareState
+      return {
+        editor: Fun.constant(editor),
+        assertEq: store.assertEq,
+        sAssertEq: store.sAssertEq,
+        sClear: store.sClear,
+        sPrepareState: sPrepareState
+      };
     };
   }
 );

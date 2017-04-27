@@ -13,38 +13,30 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.system.Attachment',
-    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.test.GuiSetup',
-    'ephox.alloy.test.TestStore',
-    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.properties.TextContent',
     'ephox.sugar.api.search.Traverse',
     'global!navigator',
+    'tinymce.themes.mobile.test.ui.TestEditor',
     'tinymce.themes.mobile.test.ui.TestSelectors',
+    'tinymce.themes.mobile.test.ui.TestStyles',
     'tinymce.themes.mobile.test.ui.TestUi',
     'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.ui.LinkButton'
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, Attachment, AlloyLogger,
-    GuiSetup, TestStore, FieldPresence, FieldSchema, ValueSchema, Cell, Fun, Result, Focus, Body, Element, Attr, Css, Html, TextContent, Traverse, navigator,
-    TestSelectors, TestUi, IosRealm, LinkButton
+    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Attachment, GuiSetup, FieldSchema,
+    ValueSchema, Fun, Focus, Body, Element, Css, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -56,58 +48,24 @@ asynctest(
 
     var doc = Traverse.owner(body);
 
-    var styles = document.createElement('link');
-    styles.setAttribute('rel', 'Stylesheet');
-    styles.setAttribute('href', '/project/src/themes/mobile/src/main/css/mobile.css');
-    styles.setAttribute('type', 'text/css');
-    document.head.appendChild(styles);
-
+    TestStyles.addStyles();
+    
     var unload = function () {
-      document.head.removeChild(styles);
+      TestStyles.removeStyles();
       Attachment.detachSystem(realm.system());
     };
 
+    var tEditor = TestEditor();
 
-    var store = TestStore();
-
-    var editorState = {
-      start: Cell(null),
-      content: Cell('')
-    };
-
-    var editor = {
-      selection: {
-        getStart: editorState.start.get,
-        getContent: editorState.content.get,
-        select: Fun.noop
-      },
-      insertContent: function (data) {
-        store.adder({ method: 'insertContent', data: data })();
-      },
-      dom: {
-        createHTML: function (tag, attributes, innerText) {
-          return { tag: tag, attributes: attributes, innerText: innerText };
-        },
-        encode: Fun.identity
-      },
-      focus: Fun.noop
-    };
 
     realm.setToolbarGroups([
       {
         label: 'group1',
         items: [
-          LinkButton.sketch(realm, editor)
+          LinkButton.sketch(realm, tEditor.editor())
         ]
       }
     ]);
-
-    var sPrepareState = function (node, content) {
-      return Step.sync(function () {
-        editorState.start.set(node);
-        editorState.content.set(content);
-      });
-    };
 
     var sAssertNavigation = function (label, prevEnabled, nextEnabled) {
       return Logger.t(
@@ -205,19 +163,6 @@ asynctest(
 
     var sClickLink = Mouse.sClickOn(realm.element(), TestSelectors.link());
 
-    var sSetFieldValue = function (value) {
-      return Chain.asStep({ }, [
-        TestUi.cGetFocused,
-        UiControls.cSetValue(value)
-      ]);
-    };
-
-    var sSetFieldOptValue = function (optVal) {
-      return optVal.fold(function () {
-        return Step.pass;
-      }, sSetFieldValue);
-    };
-
     var sTestScenario = function (rawScenario) {
       var scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
         FieldSchema.strict('label'),
@@ -237,18 +182,18 @@ asynctest(
       return Logger.t(
         scenario.label,
         GeneralSteps.sequence([
-          sPrepareState(scenario.node.dom(), scenario.content),
+          tEditor.sPrepareState(scenario.node.dom(), scenario.content),
           sClickLink,
-          sSetFieldOptValue(scenario.fields.url),
+          TestUi.sSetFieldOptValue(scenario.fields.url),
           sClickNext,
           sAssertTextFocused,
-          sSetFieldOptValue(scenario.fields.text),
+          TestUi.sSetFieldOptValue(scenario.fields.text),
           sClickNext,
           sAssertTitleFocused,
-          sSetFieldOptValue(scenario.fields.title),
+          TestUi.sSetFieldOptValue(scenario.fields.title),
           sClickNext,
           sAssertTargetFocused,
-          sSetFieldOptValue(scenario.fields.target),
+          TestUi.sSetFieldOptValue(scenario.fields.target),
           sClickPrev,
           sAssertTitleFocused,
           sClickPrev,
@@ -257,9 +202,9 @@ asynctest(
           sAssertUrlFocused,
           scenario.beforeExecute,
           Keyboard.sKeydown(doc, Keys.enter(), { }),
-          store.sAssertEq('Checking insert content', scenario.expected),
+          tEditor.sAssertEq('Checking insert content', scenario.expected),
           scenario.mutations(scenario.node),
-          store.sClear
+          tEditor.sClear
 
         ])
       );
@@ -284,7 +229,7 @@ asynctest(
         8000
       ),
 
-      sPrepareState(Element.fromText('hi'), 'link-text'),
+      tEditor.sPrepareState(Element.fromText('hi'), 'link-text'),
 
       sClickLink,
       FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),

@@ -3,13 +3,15 @@ define(
 
   [
     'ephox.agar.api.Chain',
+    'ephox.agar.api.Step',
+    'ephox.agar.api.UiControls',
     'ephox.alloy.log.AlloyLogger',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Chain, AlloyLogger, Result, Focus, Traverse) {
+  function (Chain, Step, UiControls, AlloyLogger, Result, Focus, Traverse) {
     var cGetFocused = Chain.binder(function () {
       return Focus.active().fold(function () {
         return Result.error('Could not find focused element');
@@ -22,9 +24,24 @@ define(
       }, Result.value);
     });
 
+    var sSetFieldValue = function (value) {
+      return Chain.asStep({ }, [
+        cGetFocused,
+        UiControls.cSetValue(value)
+      ]);
+    };
+
+    var sSetFieldOptValue = function (optVal) {
+      return optVal.fold(function () {
+        return Step.pass;
+      }, sSetFieldValue);
+    };
+
     return {
       cGetFocused: cGetFocused,
-      cGetParent: cGetParent
+      cGetParent: cGetParent,
+      sSetFieldValue: sSetFieldValue,
+      sSetFieldOptValue: sSetFieldOptValue
     };
   }
 );
