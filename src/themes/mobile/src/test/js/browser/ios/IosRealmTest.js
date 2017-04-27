@@ -93,6 +93,16 @@ asynctest(
 
     Insert.append(Body.body(), iframe);
 
+    var getCursorY = function (target) {
+      /* The y position on the cursor for the viewer is a combination of y position of the editor frame and the y
+       * y position of the target
+       */
+      var editorY = iframe.dom().contentWindow.document.querySelector('iframe').getBoundingClientRect().top;
+      var targetY = target.dom().getBoundingClientRect().top;
+      console.log('editorY', editorY, 'targetY', targetY);
+      return editorY + targetY;
+    };
+
     var mShowKeyboard = function (selector, index) {
       var keyboardHeight = 200;
       return Step.stateful(function (value, next, die) {
@@ -100,15 +110,18 @@ asynctest(
         var editorBody = pageBody.querySelector('iframe').contentWindow.document.body;
         var target = Option.from(editorBody.querySelectorAll(selector)[index]).map(Element.fromDom).getOrDie('no index ' + index + ' for selector: ' + selector);
         WindowSelection.setExact(editorBody.ownerDocument.defaultView, target, 0, target, 0);
-        pageBody.querySelector('.tinymce-mobile-editor-socket').scrollTop = target.dom().getBoundingClientRect().top - 100 - keyboardHeight;
+        var socket = pageBody.querySelector('.tinymce-mobile-editor-socket');
+        socket.scrollTop = target.dom().getBoundingClientRect().top - 100 - keyboardHeight;
         pageBody.style.setProperty('margin-bottom', '2000px');
         pageBody.ownerDocument.defaultView.scrollTo(0, keyboardHeight);
 
+        //
+        var cursorY = getCursorY(target);
         var newValue = Merger.deepMerge(
           value,
           {
             target: target,
-            targetTop: target.dom().getBoundingClientRect().top
+            cursorY: cursorY
           }
         );
         console.log('newValue', newValue);
@@ -135,9 +148,8 @@ asynctest(
         Assertions.assertEq('Checking that the toolstrip is at top of screen after scroll recognised', 0, toolstrip.getBoundingClientRect().top);
       }),
       Step.stateful(function (value, next, die) {
-        var oldTop = value.targetTop;
-        var newTop = value.target.dom().getBoundingClientRect().top;
-        Assertions.assertEq('Checking top values are approximately equal after scrolling', true, Math.abs(newTop - oldTop) < 10);
+        var nowCursorY = getCursorY(value.target);
+        Assertions.assertEq('Checking visual position values are approximately equal after scrolling', true, Math.abs(nowCursorY - value.cursorY) < 10);
         next(value);
       })
     ], function () { unload(); success(); }, failure);
