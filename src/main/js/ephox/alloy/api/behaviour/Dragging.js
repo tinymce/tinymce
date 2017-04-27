@@ -9,23 +9,22 @@ define(
   ],
 
   function (Behaviour, DraggingBranches, DragState, Struct) {
-    return Behaviour.createModes(
-      'mode',
-      DraggingBranches,
-      'dragging',
-      {
+    return Behaviour.createModes({
+      branchKey: 'mode',
+      branches: DraggingBranches,
+      name: 'dragging',
+      active: {
         events: function (dragConfig, dragState) {
           var dragger = dragConfig.dragger();
           return dragger.handlers(dragConfig, dragState);
         }
       },
-      { },
-      {
+      extra: {
         // Extra. Does not need component as input.
         snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ 'extra' ])
 
       },
-      DragState
-    );
+      state: DragState
+    });
   }
 );

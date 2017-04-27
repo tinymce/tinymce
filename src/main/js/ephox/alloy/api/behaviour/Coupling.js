@@ -9,13 +9,11 @@ define(
   ],
 
   function (Behaviour, CouplingApis, CouplingSchema, CouplingState) {
-    return Behaviour.create(
-      CouplingSchema,
-      'coupling',
-      Behaviour.noActive(),
-      CouplingApis,
-      Behaviour.noExtra(),
-      CouplingState
-    );
+    return Behaviour.create({
+      fields: CouplingSchema,
+      name: 'coupling',
+      apis: CouplingApis,
+      state: CouplingState
+    });
   }
 );

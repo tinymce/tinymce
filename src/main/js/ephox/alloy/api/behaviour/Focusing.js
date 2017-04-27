@@ -10,15 +10,12 @@ define(
   ],
 
   function (Behaviour, NoState, ActiveFocus, FocusApis, FocusSchema) {
-    return Behaviour.create(
-      FocusSchema,
-      'focusing',
-      ActiveFocus,
-      FocusApis,
-      {
-        // Consider adding isFocused here.
-      },
-      NoState
-    );
+    return Behaviour.create({
+      fields: FocusSchema,
+      name: 'focusing',
+      active: ActiveFocus,
+      apis: FocusApis,
+      // Consider adding isFocused an an extra
+    });
   }
 );

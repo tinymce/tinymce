@@ -9,13 +9,11 @@ define(
   ],
 
   function (Behaviour, NoState, ActiveStreaming, StreamingSchema) {
-    return Behaviour.create(
-      StreamingSchema,
-      'streaming',
-      ActiveStreaming,
-      Behaviour.noApis(),
-      Behaviour.noExtra(),
-      NoState
-    );
+    return Behaviour.create({
+      fields: StreamingSchema,
+      name: 'streaming',
+      active: ActiveStreaming,
+      state: NoState
+    });
   }
 );

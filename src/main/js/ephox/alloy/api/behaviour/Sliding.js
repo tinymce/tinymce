@@ -10,13 +10,12 @@ define(
   ],
 
   function (Behaviour, ActiveSliding, SlidingApis, SlidingSchema, SlidingState) {
-    return Behaviour.create(
-      SlidingSchema,
-      'sliding',
-      ActiveSliding,
-      SlidingApis,
-      Behaviour.noExtra(),
-      SlidingState
-    );
+    return Behaviour.create({
+      fields: SlidingSchema,
+      name: 'sliding',
+      active: ActiveSliding,
+      apis: SlidingApis,
+      state: SlidingState
+    });
   }
 );

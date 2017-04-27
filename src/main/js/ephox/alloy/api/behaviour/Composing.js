@@ -3,19 +3,15 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.composing.ComposeApis',
     'ephox.alloy.behaviour.composing.ComposeSchema'
   ],
 
-  function (Behaviour, NoState, ComposeApis, ComposeSchema) {
-    return Behaviour.create(
-      ComposeSchema,
-      'composing',
-      Behaviour.noActive(),
-      ComposeApis,
-      Behaviour.noExtra(),
-      NoState
-    );
+  function (Behaviour, ComposeApis, ComposeSchema) {
+    return Behaviour.create({
+      fields: ComposeSchema,
+      name: 'composing',
+      apis: ComposeApis
+    });
   }
 );

@@ -3,19 +3,21 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.common.NoState',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, NoState, FieldSchema, Fun) {
+  function (Behaviour, FieldSchema, Fun) {
     var events = function (name, eventHandlers) {
-      return Behaviour.create([
-        FieldSchema.strict('enabled')
-      ], name, {
-        events: Fun.constant(eventHandlers)
-      
-      }, { }, { });
+      return Behaviour.create({
+        fields: [
+          FieldSchema.strict('enabled')
+        ], 
+        name: name,
+        active: {
+          events: Fun.constant(eventHandlers)
+        }
+      });
     };
 
     var config = function (name) {
@@ -25,7 +27,7 @@ define(
           config: { },
           configAsRaw: Fun.constant({ }),
           initialConfig: { },
-          state: NoState
+          state: Behaviour.noState()
         }
       };
     };

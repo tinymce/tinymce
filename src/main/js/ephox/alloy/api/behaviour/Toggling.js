@@ -10,13 +10,11 @@ define(
   ],
 
   function (Behaviour, NoState, ActiveToggle, ToggleApis, ToggleSchema) {
-    return Behaviour.create(
-      ToggleSchema,
-      'toggling',
-      ActiveToggle,
-      ToggleApis,
-      Behaviour.noExtra(),
-      NoState
-    );
+    return Behaviour.create({
+      fields: ToggleSchema,
+      name: 'toggling',
+      active: ActiveToggle,
+      apis: ToggleApis
+    });
   }
 );

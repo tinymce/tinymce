@@ -11,19 +11,19 @@ define(
 
   function (Behaviour, ActiveRepresenting, RepresentApis, RepresentSchema, RepresentState) {
     // The self-reference is clumsy.
-    var self = Behaviour.create(
-      RepresentSchema,
-      'representing',
-      ActiveRepresenting,
-      RepresentApis,
-      {
+    var self = Behaviour.create({
+      fields: RepresentSchema,
+      name: 'representing',
+      active: ActiveRepresenting,
+      apis: RepresentApis,
+      extra: {
         setValueFrom: function (component, source) {
           var value = self.getValue(source);
           self.setValue(component, value);
         }
       },
-      RepresentState
-    );
+      state: RepresentState
+    });
 
     return self;
   }

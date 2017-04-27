@@ -25,47 +25,56 @@ asynctest(
     var bB = Cell(null);
 
     GuiSetup.setup(function (store, doc, body) {
-      var behaviourA = Behaviour.create([ ], 'behaviourA', {
-        exhibit: function (base, info) {
-          return DomModification.nu({
-            classes: [ 'behaviour-a-exhibit' ]
-          });
-        },
-        events: Fun.constant({
-          'alloy.custom.test.event': EventHandler.nu({
-            run: function (component) {
-              store.adder('behaviour.a.event')();
-            }
+      var behaviourA = Behaviour.create({
+        fields: [ ],
+        name: 'behaviourA',
+        active: {
+          exhibit: function (base, info) {
+            return DomModification.nu({
+              classes: [ 'behaviour-a-exhibit' ]
+            });
+          },
+          events: Fun.constant({
+            'alloy.custom.test.event': EventHandler.nu({
+              run: function (component) {
+                store.adder('behaviour.a.event')();
+              }
+            })
           })
-        })
-      }, {
-        behaveA: function (comp) {
-          store.adder('behaveA')();
+        }, 
+        apis: {
+          behaveA: function (comp) {
+            store.adder('behaveA')();
+          }
         }
-      }, { }/*, NoState */);
+      });
 
       bA.set(behaviourA);
 
-      var behaviourB = Behaviour.create([
-        FieldSchema.strict('attr')
-      ], 'behaviourB', {
-        exhibit: function (base, info) {
-          var extra = {
-            attributes: {
-              'behaviour-b-exhibit': info.attr()
-            }
-          };
-          return DomModification.nu(extra);
-        },
-        
-        events: Fun.constant({
-          'alloy.custom.test.event': EventHandler.nu({
-            run: function (component) {
-              store.adder('behaviour.b.event')();
-            }
+      var behaviourB = Behaviour.create({
+        fields: [
+          FieldSchema.strict('attr')
+        ], 
+        name: 'behaviourB',
+        active: {
+          exhibit: function (base, info) {
+            var extra = {
+              attributes: {
+                'behaviour-b-exhibit': info.attr()
+              }
+            };
+            return DomModification.nu(extra);
+          },
+          
+          events: Fun.constant({
+            'alloy.custom.test.event': EventHandler.nu({
+              run: function (component) {
+                store.adder('behaviour.b.event')();
+              }
+            })
           })
-        })
-      }, { }, { }/*, NoState */);
+        }
+      });
 
       bB.set(behaviourB);
 

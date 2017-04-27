@@ -9,13 +9,11 @@ define(
   ],
 
   function (Behaviour, ActivePinching, PinchingSchema, DragState) {
-    return Behaviour.create(
-      PinchingSchema,
-      'pinching',
-      ActivePinching,
-      Behaviour.noApis(),
-      Behaviour.noExtra(),
-      DragState
-    );
+    return Behaviour.create({
+      fields: PinchingSchema,
+      name: 'pinching',
+      active: ActivePinching,
+      state: DragState
+    });
   }
 );

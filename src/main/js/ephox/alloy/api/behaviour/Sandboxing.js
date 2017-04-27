@@ -10,14 +10,13 @@ define(
   ],
 
   function (Behaviour, ActiveSandbox, SandboxApis, SandboxSchema, SandboxState) {
-    return Behaviour.create(
-      SandboxSchema,
-      'sandboxing',
-      ActiveSandbox,
-      SandboxApis,
-      Behaviour.noExtra(),
-      SandboxState
-    );
+    return Behaviour.create({
+      fields: SandboxSchema,
+      name: 'sandboxing',
+      active: ActiveSandbox,
+      apis: SandboxApis,
+      state: SandboxState
+    });
   }
 );
 

@@ -12,17 +12,17 @@ define(
   function (Behaviour, KeyboardBranches, KeyingState, Objects, console) {
     // These APIs are going to be interesting because they are not
     // available for all keying modes
-    return Behaviour.createModes(
-      'mode',
-      KeyboardBranches,
-      'keying',
-      {
+    return Behaviour.createModes({
+      branchKey: 'mode',
+      branches: KeyboardBranches,
+      name: 'keying',
+      active: {
         events: function (keyingConfig, keyingState) {
           var handler = keyingConfig.handler();
           return handler.toEvents(keyingConfig, keyingState);
         }
       },
-      {
+      apis: {
         focusIn: function (component, keyInfo) {
           component.getSystem().triggerFocus(component.element(), component.element());
         },
@@ -37,8 +37,7 @@ define(
           }
         }
       },
-      Behaviour.noExtra(),
-      KeyingState
-    );
+      state: KeyingState
+    });
   }
 );
