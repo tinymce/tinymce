@@ -17,7 +17,6 @@ define(
     'global!parseInt',
     'global!setInterval',
     'global!setTimeout',
-    'global!window',
     'tinymce.themes.mobile.ios.focus.FakeSelection',
     'tinymce.themes.mobile.ios.scroll.IosScrolling',
     'tinymce.themes.mobile.ios.smooth.BackgroundActivity',
@@ -30,7 +29,7 @@ define(
   ],
 
   function (
-    Fun, Option, Throttler, Focus, DomEvent, Body, Element, Css, clearInterval, clearTimeout, console, Math, parseInt, setInterval, setTimeout, window, FakeSelection,
+    Fun, Option, Throttler, Focus, DomEvent, Body, Element, Css, clearInterval, clearTimeout, console, Math, parseInt, setInterval, setTimeout, FakeSelection,
     IosScrolling, BackgroundActivity, Greenzone, IosUpdates, IosViewport, Orientation, CaptureBin, Rectangles
   ) {
     var VIEW_MARGIN = 5;
@@ -47,7 +46,7 @@ define(
         var rects = Rectangles.getRectangles(cWin);
         return Option.from(rects[0]).bind(function (rect) {
           var viewTop = rect.top() - socket.dom().scrollTop;
-          var outside = viewTop > window.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
+          var outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
           return outside ? Option.some({
             top: Fun.constant(viewTop),
             bottom: Fun.constant(viewTop + rect.height())
@@ -60,6 +59,7 @@ define(
          * As soon as the window is back to 0 (idle), scroll the toolbar and socket back into place on scroll.
          */
         scroller.idle(function () {
+          console.log('** idle **');
           IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (/* _ */) {
             var extraScroll = scrollBounds();
             extraScroll.each(function (extra) {
@@ -117,9 +117,10 @@ define(
       var toolbar = bag.toolbar();
       var contentElement = bag.contentElement();
       var keyboardType = bag.keyboardType();
+      var outerWindow = bag.outerWindow();
 
       var structure = IosViewport.takeover(socket, ceBody, toolstrip);
-      var keyboardModel = keyboardType(cWin, Body.body(), contentElement, toolstrip, toolbar);
+      var keyboardModel = keyboardType(bag.outerBody(), cWin, Body.body(), contentElement, toolstrip, toolbar);
 
       var toEditing = function () {
         // Consider inlining, though it will make it harder to follow the API
@@ -135,7 +136,7 @@ define(
         keyboardModel.onToolbarTouch(event);
       };
 
-      var onOrientation = Orientation.onChange({
+      var onOrientation = Orientation.onChange(outerWindow, {
         onChange: Fun.noop,
         onReady: structure.refresh
       });
@@ -147,13 +148,13 @@ define(
         structure.refresh();
       });
 
-      var onResize = DomEvent.bind(Element.fromDom(window), 'resize', function () {
+      var onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
         if (structure.isExpanding()) {
           structure.refresh();
         }
       });
 
-      var onScroll = register(toolstrip, socket, Body.body(), window, structure, cWin);
+      var onScroll = register(toolstrip, socket, bag.outerBody(), outerWindow, structure, cWin);
 
       var unfocusedSelection = FakeSelection(cWin, contentElement);
 

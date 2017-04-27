@@ -4,7 +4,6 @@ define(
   [
     'ephox.katamari.api.Singleton',
     'ephox.sugar.api.properties.Class',
-    'global!window',
     'tinymce.themes.mobile.android.core.AndroidEvents',
     'tinymce.themes.mobile.android.core.AndroidSetup',
     'tinymce.themes.mobile.ios.core.PlatformEditor',
@@ -12,7 +11,7 @@ define(
     'tinymce.themes.mobile.touch.view.MetaViewport'
   ],
 
-  function (Singleton, Class, window, AndroidEvents, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
+  function (Singleton, Class, AndroidEvents, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
     var create = function (platform, mask) {
 
       var meta = MetaViewport.tag();
@@ -28,7 +27,7 @@ define(
         meta.maximize();
 
         androidApi.set(
-          AndroidSetup.setup(window, PlatformEditor.getWin(platform.editor).getOrDie('no'))
+          AndroidSetup.setup(platform.win, PlatformEditor.getWin(platform.editor).getOrDie('no'))
         );
 
         PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {

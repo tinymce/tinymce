@@ -5,16 +5,17 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
     'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Classes',
     'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.search.Traverse',
     'global!Math',
-    'global!window',
     'tinymce.themes.mobile.ios.smooth.SmoothAnimation',
     'tinymce.themes.mobile.ios.view.IosViewport',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.DataAttributes'
   ],
 
-  function (Fun, Future, Attr, Css, Math, window, SmoothAnimation, IosViewport, Styles, DataAttributes) {
+  function (Fun, Future, Attr, Classes, Css, Traverse, Math, SmoothAnimation, IosViewport, Styles, DataAttributes) {
     var animator = SmoothAnimation.create();
 
     var ANIMATION_STEP = 15;
@@ -33,6 +34,7 @@ define(
     };
 
     var moveScrollAndTop = function (element, destination, finalTop) {
+      console.log('moveScrollAndTop', Classes.get(element).join(','), 'scroll', destination, 'top', finalTop);
       return Future.nu(function (callback) {
         var getCurrent = Fun.curry(getScrollTop, element);
 
@@ -42,6 +44,7 @@ define(
         };
 
         var finish = function (/* dest */) {
+          console.log('finishing scroll', destination, 'finishing top', finalTop);
           element.dom().scrollTop = destination;
           Css.set(element, 'top', finalTop + 'px');
           callback(destination);
@@ -52,6 +55,7 @@ define(
     };
 
     var moveOnlyScroll = function (element, destination) {
+      console.log('moveOnlyScroll', Classes.get(element).join(','), 'scroll', destination);
       return Future.nu(function (callback) {
         var getCurrent = Fun.curry(getScrollTop, element);
         Attr.set(element, lastScroll, getCurrent());
@@ -82,6 +86,7 @@ define(
     };
 
     var moveOnlyTop = function (element, destination) {
+      console.log('moveOnlyTop', Classes.get(element).join(','), 'top', destination);
       return Future.nu(function (callback) {
         var getCurrent = Fun.curry(getTop, element);
 
@@ -110,10 +115,12 @@ define(
     // was changing. Therefore, until tests prove otherwise, we are just going to jump to the
     // destination in one go.
     var moveWindowScroll = function (toolbar, viewport, destY) {
+      console.log('moveWindowScroll', 'destY', destY);
+      var outerWindow = Traverse.owner(toolbar).dom().defaultView;
       return Future.nu(function (callback) {
         updateTop(toolbar, destY);
         updateTop(viewport, destY);
-        window.scrollTo(0, destY);
+        outerWindow.scrollTo(0, destY);
         callback(destY);
       });
     };

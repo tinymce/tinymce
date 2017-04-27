@@ -4,10 +4,12 @@ define(
   [
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Traverse'
   ],
 
-  function (FieldSchema, ValueSchema, Fun) {
+  function (FieldSchema, ValueSchema, Fun, Element, Traverse) {
     return ValueSchema.objOf([
       FieldSchema.strictObjOf('editor', [
         // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
@@ -41,7 +43,15 @@ define(
       FieldSchema.strict('toolstrip'),
       FieldSchema.strict('toolbar'),
       FieldSchema.strict('container'),
-      FieldSchema.strict('alloy')
+      FieldSchema.strict('alloy'),
+      FieldSchema.state('win', function (spec) {
+        return Traverse.owner(spec.socket).dom().defaultView;
+      }),
+      FieldSchema.state('body', function (spec) {
+        return Element.fromDom(
+          spec.socket.dom().ownerDocument.body
+        );
+      })
     ]);
   }
 );

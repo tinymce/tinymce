@@ -8,14 +8,13 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
     'global!Math',
-    'global!window',
     'tinymce.themes.mobile.android.focus.ResumeEditing',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.DataAttributes',
     'tinymce.themes.mobile.util.Rectangles'
   ],
 
-  function (Fun, Option, DomEvent, Element, Attr, Math, window, ResumeEditing, Styles, DataAttributes, Rectangles) {
+  function (Fun, Option, DomEvent, Element, Attr, Math, ResumeEditing, Styles, DataAttributes, Rectangles) {
     // This amount is added to the minimum scrolling distance when calculating how much to scroll
     // because the soft keyboard has appeared.
     var EXTRA_SPACING = 50;
@@ -42,9 +41,9 @@ define(
       return rects.length > 0 ? Option.some(rects[0]).map(getBoundsFrom) : Option.none();
     };
 
-    var findDelta = function (cBody) {
+    var findDelta = function (outerWindow, cBody) {
       var last = getLastHeight(cBody);
-      var current = window.innerHeight;
+      var current = outerWindow.innerHeight;
       return last > current ? Option.some(last - current) : Option.none();
     };
 
@@ -66,7 +65,7 @@ define(
 
       var onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
 
-        findDelta(cBody).each(function (delta) {
+        findDelta(outerWindow, cBody).each(function (delta) {
           getBounds(cWin).each(function (bounds) {
             // If the top is offscreen, scroll it into view.
             var cScrollBy = calculate(cWin, bounds, delta);
@@ -75,10 +74,10 @@ define(
             }
           });
         });
-        setLastHeight(cBody, window.innerHeight);
+        setLastHeight(cBody, outerWindow.innerHeight);
       });
 
-      setLastHeight(cBody, window.innerHeight);
+      setLastHeight(cBody, outerWindow.innerHeight);
 
       var destroy = function () {
         onResize.unbind();

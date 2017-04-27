@@ -3,15 +3,13 @@ define(
 
   [
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Fun, Obj, Option, Compare, DomEvent, Element, WindowSelection) {
+  function (Fun, Option, DomEvent, Element, WindowSelection) {
     var getBodyFromFrame = function (frame) {
       return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
     };
@@ -86,7 +84,9 @@ define(
       return getBodyFromFrame(frame).bind(function (body) {
         return getDocFromFrame(frame).bind(function (doc) {
           return getWinFromFrame(frame).map(function (win) {
+
             var html = Element.fromDom(doc.dom().documentElement);
+
             var getCursorBox = editor.getCursorBox.getOrThunk(function () {
               return function () {
                 return WindowSelection.get(win).bind(function (sel) {

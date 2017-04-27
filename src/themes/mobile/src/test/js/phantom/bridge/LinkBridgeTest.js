@@ -34,9 +34,6 @@ test(
       insertContent: function (data) {
         store.adder({ method: 'insertContent', data: data })();
       },
-      execCommand: function (name) {
-        store.adder({ method: 'execCommand', data: name })();
-      },
       dom: {
         createHTML: function (tag, attributes, innerText) {
           return { tag: tag, attributes: attributes, innerText: innerText };
@@ -344,37 +341,6 @@ test(
           });
         }), elem);
       }
-    });
-
-    checkApply({
-      label: 'Unlinking a link by removing the URL',
-      info: {
-        url: '',
-        text: 'new-text',
-        title: 'new-title',
-        target: '',
-        link: Option.some(
-          Element.fromHtml('<a href="http://foo">Foo</a>')
-        )
-      },
-      expected: [
-        {
-          method: 'execCommand',
-          data: 'unlink'
-        }
-      ]
-    });
-
-    checkApply({
-      label: 'Unlinking should not be called if there is no existing link',
-      info: {
-        url: '',
-        text: 'new-text',
-        title: 'new-title',
-        target: '',
-        link: Option.none()
-      },
-      expected: [ ]
     });
   }
 );
