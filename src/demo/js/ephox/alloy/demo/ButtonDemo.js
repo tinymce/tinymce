@@ -21,39 +21,41 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
 
-      var redBehaviour = Behaviour.create([ ], 'red.behaviour', {
-        exhibit: function (base, info) {
-          return DomModification.nu({
-            classes: [ 'cat' ],
-            attributes: {
-              
-            },
-            styles: {
-              color: 'red'
-            }
-          });
+      var redBehaviour = Behaviour.create({
+        fields: [ ],
+        name: 'red.behaviour',
+        active: {
+          exhibit: function (base, info) {
+            return DomModification.nu({
+              classes: [ 'cat' ],
+              attributes: {
+                
+              },
+              styles: {
+                color: 'red'
+              }
+            });
+          }
         }
-      }, {
-
       });
 
-
-      var catBehaviour = Behaviour.create([ ], 'cat.behaviour', {
-        exhibit: function (base, info) {
-          return DomModification.nu({
-            classes: [ 'cat' ],
-            attributes: {
-              'data-cat': 'cat'
-            },
-            styles: {
-              background: 'blue'
-            },
-            value: 10
-          });
+      var catBehaviour = Behaviour.create({
+        fields: [ ],
+        name: 'cat.behaviour',
+        active: {
+          exhibit: function (base, info) {
+            return DomModification.nu({
+              classes: [ 'cat' ],
+              attributes: {
+                'data-cat': 'cat'
+              },
+              styles: {
+                background: 'blue'
+              },
+              value: 10
+            });
+          }
         }
-      }, {
-
-
       });
 
       var button1 = HtmlDisplay.section(
