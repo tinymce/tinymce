@@ -130,7 +130,6 @@ define(
           },
 
           handlers: function (info) {
-            console.log(name, 'handlers', info);
             return getConfig(info).bind(function (behaviourInfo) {
               return Objects.readOptFrom(active, 'events').map(function (events) {
                 return events(behaviourInfo.config, behaviourInfo.state);
