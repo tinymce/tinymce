@@ -70,7 +70,7 @@ define(
                 mode: 'execution',
                 useSpace: true
               }),
-              Focusing.config(true)
+              Focusing.config({ })
             ]),
             detail.dropdownBehaviours()
           ),

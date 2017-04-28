@@ -452,7 +452,7 @@ define(
                               })
                             ],
                             containerBehaviours: Behaviour.derive([
-                              Tabstopping.config(true),
+                              Tabstopping.config({ }),
                               Keying.config({
                                 mode: 'flow',
                                 selector: 'button'

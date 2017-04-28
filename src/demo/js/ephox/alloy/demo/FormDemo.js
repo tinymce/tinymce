@@ -114,7 +114,7 @@ define(
             lock: {
               dom: { tag: 'button', innerHtml: 'x' },
               buttonBehaviours: Behaviour.derive([
-                Tabstopping.config(true)
+                Tabstopping.config({ })
               ])
             }
           },
@@ -160,8 +160,8 @@ define(
                 classes: [ 'ephox-select-wrapper' ]
               },
               selectBehaviours: Behaviour.derive([
-                Tabstopping.config(true),
-                Focusing.config(true)
+                Tabstopping.config({ }),
+                Focusing.config({ })
               ]),
               options: spec.options
             },
@@ -206,7 +206,7 @@ define(
               FormChooser.parts().choices()
             ],
             chooserBehaviours: Behaviour.derive([
-              Tabstopping.config(true)
+              Tabstopping.config({ })
             ]),
             members: {
               choice: {
@@ -392,7 +392,7 @@ define(
                 Keying.config({
                   mode: 'execution'
                 }),
-                Tabstopping.config(true)
+                Tabstopping.config({ })
               ])
             },
             'controls': {
@@ -400,7 +400,7 @@ define(
                 tag: 'div'
               },
               behaviours: Behaviour.derive([
-                Tabstopping.config(true),
+                Tabstopping.config({ }),
                 Keying.config({
                   mode: 'flow',
                   selector: 'button'

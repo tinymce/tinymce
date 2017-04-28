@@ -42,7 +42,7 @@ define(
           components: options,
           behaviours: Merger.deepMerge(
             Behaviour.derive([
-              Focusing.config(true),
+              Focusing.config({ }),
               Representing.config({
                 store: {
                   mode: 'manual'      ,
@@ -58,7 +58,7 @@ define(
                   }   
                 }
               }),
-              detail.hasTabstop() ? Tabstopping.config(true) : Tabstopping.revoke()
+              detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()
             ]),
             detail.selectBehaviours()
           )

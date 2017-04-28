@@ -104,7 +104,7 @@ define(
                     snaps: snapData
                   }
                 ),
-                Unselecting.config(true)
+                Unselecting.config({ })
               ]),
               eventOrder: {
                 // Because this is a button, allow dragging. It will stop clicking.

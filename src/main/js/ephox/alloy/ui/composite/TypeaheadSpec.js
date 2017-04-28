@@ -53,7 +53,7 @@ define(
       
       var behaviours = Behaviour.derive([
         inputBehaviours.tabstopping,
-        Focusing.config(true),
+        Focusing.config({ }),
         Representing.config({
           store: {
             mode: 'dataset',

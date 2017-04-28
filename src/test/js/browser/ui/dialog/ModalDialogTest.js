@@ -34,8 +34,8 @@ asynctest(
 
     }, function (doc, body, gui, sink, store) {
       var focusAndTab = Behaviour.derive([
-        Focusing.config(true),
-        Tabstopping.config(true)
+        Focusing.config({ }),
+        Tabstopping.config({ })
       ]);
       
       var dialog = GuiFactory.build(

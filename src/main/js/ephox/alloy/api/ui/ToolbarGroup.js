@@ -37,7 +37,7 @@ define(
                 mode: 'flow',
                 selector: '.' + detail.markers().itemClass()
               }),
-              detail.hasTabstop() ? Tabstopping.config(true) : Tabstopping.revoke()
+              detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()
             ]),
             detail.tgroupBehaviours()
           ),

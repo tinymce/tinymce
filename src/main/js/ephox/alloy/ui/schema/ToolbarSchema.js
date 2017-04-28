@@ -21,7 +21,7 @@ define(
     var enhanceGroups = function (detail) {
       return {
         behaviours: Behaviour.derive([
-          Replacing.config(true)
+          Replacing.config({ })
         ])
       };
     };

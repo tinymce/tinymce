@@ -59,7 +59,7 @@ asynctest(
               field: {
                 data: 'init',
                 inputBehaviours: Behaviour.derive([
-                  Tabstopping.config(true)
+                  Tabstopping.config({ })
                 ])
               },
               label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
@@ -90,7 +90,7 @@ asynctest(
             parts: {
               field: {
                 selectBehaviours: Behaviour.derive([
-                  Tabstopping.config(true)
+                  Tabstopping.config({ })
                 ]),                
                 options: [
                   { value: 'select-b-init', text: 'Select-b-init' },
@@ -121,7 +121,7 @@ asynctest(
               },
               components: [ ],
               buttonBehaviours: Behaviour.derive([
-                Tabstopping.config(true)
+                Tabstopping.config({ })
               ])
             },
             controls: {
@@ -146,7 +146,7 @@ asynctest(
                 ExpandableForm.collapseFormImmediately(self);
               },
               buttonBehaviours: Behaviour.derive([
-                Tabstopping.config(true)
+                Tabstopping.config({ })
               ])
             }),
 

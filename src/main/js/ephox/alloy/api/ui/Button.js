@@ -22,7 +22,7 @@ define(
         events: events,
         behaviours: Merger.deepMerge(
           Behaviour.derive([
-            Focusing.config(true),
+            Focusing.config({ }),
             Keying.config({ 
               mode: 'execution',
               useSpace: true,

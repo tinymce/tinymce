@@ -34,7 +34,7 @@ define(
         components: detail.components(),
         events: events,
         behaviours: Behaviour.derive([
-          Focusing.config(true),
+          Focusing.config({ }),
           Keying.config({
             mode: 'execution',
             useSpace: true,

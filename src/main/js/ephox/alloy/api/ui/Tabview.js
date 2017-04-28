@@ -27,7 +27,7 @@ define(
         ),
 
         behaviours: Behaviour.derive([
-          Replacing.config(true)
+          Replacing.config({ })
         ])
       };
     };

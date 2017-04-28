@@ -25,7 +25,7 @@ function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, To
     var enhanceGroups = function (detail) {
       return {
         behaviours: Behaviour.derive([
-          Replacing.config(true)
+          Replacing.config({ })
         ])
       };
     };

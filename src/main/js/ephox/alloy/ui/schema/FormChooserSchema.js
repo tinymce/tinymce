@@ -59,7 +59,7 @@ define(
                   initialValue: choiceSpec.value
                 }
               }),
-              Focusing.config(true)
+              Focusing.config({ })
             ]),
 
             domModification: {

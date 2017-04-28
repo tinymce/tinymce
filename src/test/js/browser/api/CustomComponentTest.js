@@ -90,7 +90,7 @@ asynctest(
             behaviourB
           ],
           containerBehaviours: Behaviour.derive([
-            behaviourA.config(true),
+            behaviourA.config({ }),
             behaviourB.config({
               attr: 'exhibition'
             })

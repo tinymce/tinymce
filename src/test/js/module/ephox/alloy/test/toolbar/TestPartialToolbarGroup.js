@@ -17,7 +17,7 @@ define(
             itemSpec,
             {
               behaviours: Behaviour.derive([
-                Focusing.config(true)
+                Focusing.config({ })
               ])
             }
           );

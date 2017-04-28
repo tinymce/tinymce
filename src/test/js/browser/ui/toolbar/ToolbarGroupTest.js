@@ -43,7 +43,7 @@ asynctest(
                   },
 
                   containerBehaviours: Behaviour.derive([
-                    Focusing.config(true)
+                    Focusing.config({ })
                   ])
                 });
               }

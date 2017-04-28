@@ -118,7 +118,7 @@ define(
               }
             }),
             // TODO: Do not allow keyboard focus on mobile (TM-25)
-            Focusing.config(true)
+            Focusing.config({ })
           ]),
 
           events: uiEvents

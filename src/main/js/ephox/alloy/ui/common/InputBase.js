@@ -59,7 +59,7 @@ define(
               input.dom().setSelectionRange(0, value.length);
             }
           }),
-          detail.hasTabstop() ? Tabstopping.config(true) : Tabstopping.revoke()
+          detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()
         ]),
         detail.inputBehaviours()
       );
