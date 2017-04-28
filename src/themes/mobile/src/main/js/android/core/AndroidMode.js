@@ -27,6 +27,11 @@ define(
         Class.add(platform.container, Styles.resolve('android-maximized'));
         meta.maximize();
 
+        /// TM-48 Prevent browser refresh by swipe/scroll on android devices
+        platform.editor.getBody.each(function (getBody) {
+          Class.add(getBody(), Styles.resolve('android-scroll-reload'));
+        });
+
         androidApi.set(
           AndroidSetup.setup(window, PlatformEditor.getWin(platform.editor).getOrDie('no'))
         );
@@ -43,6 +48,11 @@ define(
         mask.show();
         Class.remove(platform.container, Styles.resolve('fullscreen-maximized'));
         Class.remove(platform.container, Styles.resolve('android-maximized'));
+
+        /// TM-48 re-enable swipe/scroll browser refresh on android
+        platform.editor.getBody.each(function (getBody) {
+          Class.remove(getBody(), Styles.resolve('android-scroll-reload'));
+        });
 
         androidEvents.clear();
 
