@@ -96,8 +96,6 @@ define(
         {
           revoke: Fun.curry(revokeBehaviour, name),
           config: function (spec) {
-            if (spec === undefined || spec === false) return revokeBehaviour(name);
-
             var prepared = ValueSchema.asStructOrDie(name + '-config', configSchema, spec);
             
             return {
