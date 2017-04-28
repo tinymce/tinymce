@@ -1,6 +1,7 @@
 /*eslint-env node */
 
 module.exports = function (grunt) {
+  grunt.option('stack', true);
   grunt.initConfig({
     "bolt-init": {
       "theme": {
@@ -20,6 +21,26 @@ module.exports = function (grunt) {
 
         files: {
           src: ["src/main/js/Theme.js"]
+        }
+      }
+    },
+
+    "bedrock-auto": {
+      phantom: {
+        config: 'config/bolt/browser.js',
+        testfiles: 'src/test/js/phantom/**/*Test.js',
+        browser: 'phantomjs',
+        options: {
+          stopOnFailure: true
+        }
+      }
+    },
+
+    "bolt-test": {
+      "atomic" :{
+        config: "config/bolt/atomic.js",
+        files: {
+          src: [ "src/test/js/atomic/smooth/*Test.js" ]
         }
       }
     },
@@ -131,11 +152,20 @@ module.exports = function (grunt) {
         options: {
           nospawn: true
         }
+      },
+      build: {
+        files: ['src/**/**.js'],
+        tasks: [ 'bolt-build' ]
+      },
+      tests: {
+        files: ['src/**/**.js'],
+        tasks: [ 'bolt-test:atomic'/*, 'bedrock-auto:phantom'*/ ]
       }
     }
   });
 
   grunt.task.loadTasks("../../../node_modules/@ephox/bolt/tasks");
+  grunt.task.loadTasks("../../../node_modules/@ephox/bedrock/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
