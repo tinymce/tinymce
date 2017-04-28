@@ -29,6 +29,7 @@ module.exports = function (grunt) {
       phantom: {
         config: 'config/bolt/browser.js',
         testfiles: 'src/test/js/phantom/**/*Test.js',
+        projectdir: '../../..',
         browser: 'phantomjs',
         options: {
           stopOnFailure: true
@@ -159,7 +160,7 @@ module.exports = function (grunt) {
       },
       tests: {
         files: ['src/**/**.js'],
-        tasks: [ 'bolt-test:atomic'/*, 'bedrock-auto:phantom'*/ ]
+        tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantom' ]
       }
     }
   });
@@ -173,5 +174,6 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
+  grunt.registerTask("phantom", ["bedrock-auto:phantom"]);
   grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
 };
