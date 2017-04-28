@@ -82,7 +82,9 @@ aws_secret_access_key = {get from lastpass}
 
 The key is stored in `staging-aws-keys` and gives you access to the `morgan` account on aws. See the account's namesake if you need access.
 
-3. Run `$ grunt standalone` from either the `autochooser` theme project root or the mobile theme project root. The `autochooser` will create a theme that will still run `modern` on desktop, whereas `mobile` will always be the `mobile` theme.
+3. Edit the `index.html` file in the project directory (of either `mobile` or `autochooser`) to match your desired setup.
 
-4. Run `$ aws --profile tinymce-mobile-aws s3 sync deploy-local s3://ephox-tinymce-mobile/${SUBDIRECTORY_NAME}` where `$SUBDIRECTORY_NAME` can be blank or any other subdirectory that you would like (typically JIRA issues). Once uploaded, the build will be available at http://ephox-tinymce-mobile.s3-website-us-east-1.amazonaws.com/${SUBDIRECTORY_NAME}/index.html
+4. Run `$ grunt standalone` from either the `autochooser` theme project root or the mobile theme project root. The `autochooser` will create a theme that will still run `modern` on desktop, whereas `mobile` will always be the `mobile` theme. This task will create a `deploy-local` directory which can be tested before uploading. It is what is going to be uploaded to aws.
+
+5. Run `$ aws --profile tinymce-mobile-aws s3 sync deploy-local s3://ephox-tinymce-mobile/${SUBDIRECTORY_NAME}` where `$SUBDIRECTORY_NAME` can be blank or any other subdirectory that you would like (typically JIRA issues). Once uploaded, the build will be available at http://ephox-tinymce-mobile.s3-website-us-east-1.amazonaws.com/${SUBDIRECTORY_NAME}/index.html
 
