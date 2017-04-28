@@ -25,6 +25,18 @@ module.exports = function (grunt) {
       }
     },
 
+    "bedrock-manual": {
+      "all": {
+        config: "config/bolt/browser.js",
+        testfiles: "src/test/js/browser/**/*Test.js",
+        projectdir: "../../..",
+        browser: "chrome",
+        options: {
+          stopOnFailure: true
+        }
+      }
+    },
+
     "bedrock-auto": {
       phantom: {
         config: 'config/bolt/browser.js',
@@ -186,6 +198,7 @@ module.exports = function (grunt) {
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
   grunt.registerTask("atomic-tests", ["bolt-build"]);
   grunt.registerTask("phantom-tests", ["bedrock-auto:phantom"]);
-  grunt.registerTask("browser-tests", ["bedrock-auto:browser"]);
+  grunt.registerTask("browser-auto-tests", ["bedrock-auto:browser"]);
+  grunt.registerTask("browser-tests", ["bedrock-manual"]);
   grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
 };

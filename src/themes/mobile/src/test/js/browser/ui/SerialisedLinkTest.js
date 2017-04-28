@@ -277,7 +277,9 @@ asynctest(
 
     Pipeline.async({}, [
       GuiSetup.mAddStyles(doc, [
-        '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }'
+        '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }',
+        // Speeds up tests.
+        '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'
       ]),
 
       Waiter.sTryUntil(
