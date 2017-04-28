@@ -55,11 +55,11 @@ Note, if running `grunt watch`, the atomic and phantom tests will run automatica
 
 #### Browser tests
 
-There are two ways of running browser tests: manually and automatically. Manual tests will be sent to a port, and to run them, you browser to that location in your browser of choice.
+There are two ways of running browser tests: manually and automatically. Manual tests will be sent to a port, and to run them, you browse to that location in your browser of choice.
 
 `$ grunt browser-tests`
 
-Automatic tests will create a browser and run the tests automatically. They will require window focus (typically) as well as the installed webdrivers for the browser you are trying to run. The mobile theme uses chrome for its grunt task which can be installed via npm
+Automatic tests will create a browser window and run the tests automatically. They will require window focus (typically) as well as the installed webdrivers for the browser you are trying to run. The mobile theme uses chrome for its grunt task which can be installed via npm
 
 `$ npm install chromedriver`
 
