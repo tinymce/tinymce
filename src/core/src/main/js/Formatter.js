@@ -29,12 +29,13 @@ define(
     "tinymce.core.dom.RangeUtils",
     "tinymce.core.dom.BookmarkManager",
     "tinymce.core.dom.ElementUtils",
+    "tinymce.core.dom.NodeType",
     "tinymce.core.util.Fun",
     "tinymce.core.util.Tools",
     "tinymce.core.fmt.Preview",
     "tinymce.core.fmt.Hooks"
   ],
-  function (TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Fun, Tools, Preview, Hooks) {
+  function (TreeWalker, RangeUtils, BookmarkManager, ElementUtils, NodeType, Fun, Tools, Preview, Hooks) {
     /**
      * Constructs a new formatter instance.
      *
@@ -705,7 +706,7 @@ define(
                 // this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
                 // will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
                 each(dom.select(format.inline, node), function (child) {
-                  if (isBookmarkNode(child)) {
+                  if (!isElementNode(child)) {
                     return;
                   }
 
@@ -1471,7 +1472,7 @@ define(
       }
 
       function isElementNode(node) {
-        return node.nodeType == 1 && !isBookmarkNode(node) && !isWhiteSpaceNode(node) && !isCaretNode(node);
+        return node.nodeType == 1 && !isBookmarkNode(node) && !isWhiteSpaceNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
       }
 
       function hasStyle(name) {
