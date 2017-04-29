@@ -1842,6 +1842,29 @@ asynctest(
       LegacyUnit.equal(getContent(editor), '<p>a <span style="font-size: 36pt;">b</span> c</p>');
     });
 
+    suite.test("Formatter should wrap elements that have data-mce-bogus attribute, rather then attempt to inject styles into it", function (editor) {
+      // add a class to retain bogus element
+      editor.getBody().innerHTML = '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>';
+      editor.selection.select(editor.dom.select('span')[0]);
+
+      editor.formatter.apply('fontname', { value: "verdana" });
+
+      LegacyUnit.equal(editor.getBody().innerHTML,
+        '<p>That is a <span style="font-family: verdana;" data-mce-style="font-family: verdana;"><span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span></span> text</p>');
+
+      LegacyUnit.equal(getContent(editor),
+        '<p>that is a <span style="font-family: verdana;">misespelled</span> text</p>');
+
+      editor.selection.select(editor.dom.select('span')[0]);
+      editor.formatter.remove('fontname', { value: "verdana" });
+
+      LegacyUnit.equal(editor.getBody().innerHTML,
+        '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>');
+
+      LegacyUnit.equal(getContent(editor),
+        '<p>that is a misespelled text</p>');
+    });
+
     suite.test("TINY-782: Can't apply sub/sup to word on own line with large font", function (editor) {
       editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</p>';
       LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
