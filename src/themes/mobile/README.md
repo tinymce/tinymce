@@ -59,13 +59,13 @@ There are two ways of running browser tests: manually and automatically. Manual 
 
 `$ grunt browser-tests`
 
-Automatic tests will create a browser window and run the tests automatically. They will require window focus (typically) as well as the installed webdrivers for the browser you are trying to run. The mobile theme uses chrome for its grunt task which can be installed via npm
+Automatic tests will create a browser window and run the tests automatically. They will require window focus (typically) as well as the installed webdrivers for the browser you are trying to run. The mobile theme currently uses chrome for its grunt task which can be installed via npm
 
 `$ npm install chromedriver`
 
-Then, use the grunt task: `browser-auto-tests`
+Then, use the grunt task: `chrome-tests`
 
-`$ grunt browser-auto-tests`
+`$ grunt chrome-tests`
 
 ## Deployment to AWS
 
