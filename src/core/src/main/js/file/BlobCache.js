@@ -17,20 +17,57 @@
 define(
   'tinymce.core.file.BlobCache',
   [
-    "tinymce.core.util.Arr",
-    "tinymce.core.util.Fun"
+    'tinymce.core.util.Arr',
+    'tinymce.core.util.Fun',
+    'tinymce.core.util.Uuid',
+    'global!URL'
   ],
-  function (Arr, Fun) {
+  function (Arr, Fun, Uuid, URL) {
     return function () {
       var cache = [], constant = Fun.constant;
 
-      function create(id, blob, base64, filename) {
+      function mimeToExt(mime) {
+        var mimes = {
+          'image/jpeg': 'jpg',
+          'image/jpg': 'jpg',
+          'image/gif': 'gif',
+          'image/png': 'png'
+        };
+
+        return mimes[mime.toLowerCase()] || 'dat';
+      }
+
+
+      // IMHO this one should be deprecated, since number of arguments increases and their order doesn't make sense
+      // use toBlobInfo() instead
+      function create(id, blob, base64, filename/*, uri */) {
+        return toBlobInfo({
+          id: id,
+          name: filename,
+          blob: blob,
+          base64: base64
+        });
+      }
+
+      function toBlobInfo(o) {
+        var id, name;
+
+        if (!o.blob || !o.base64) {
+          throw "blob and base64 representations of the image are required for BlobInfo to be created";
+        }
+
+        id = o.id || Uuid.uuid('blobid');
+        name = o.name || id;
+
         return {
           id: constant(id),
-          filename: constant(filename || id),
-          blob: constant(blob),
-          base64: constant(base64),
-          blobUri: constant(URL.createObjectURL(blob))
+          name: constant(name),
+          filename: constant(name + '.' + mimeToExt(o.blob.type)),
+          blob: constant(o.blob),
+          base64: constant(o.base64),
+          type: constant(o.blob.type),
+          blobUri: constant(o.blobUri || URL.createObjectURL(o.blob)),
+          uri: constant(o.uri)
         };
       }
 
@@ -77,6 +114,7 @@ define(
 
       return {
         create: create,
+        toBlobInfo: toBlobInfo,
         add: add,
         get: get,
         getByUri: getByUri,
