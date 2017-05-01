@@ -9,9 +9,10 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.imagetools.Plugin',
     'tinymce.themes.modern.Theme',
+    'tinymce.core.util.URI',
     'tinymce.plugins.imagetools.test.ImageUtils'
   ],
-  function (GeneralSteps, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ModernTheme, ImageUtils) {
+  function (GeneralSteps, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ModernTheme, URI, ImageUtils) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var uploadHandlerState = ImageUtils.createStateContainer();
@@ -24,6 +25,14 @@ asynctest(
       return Step.sync(function () {
         var blobInfo = uploadHandlerState.get().blobInfo;
         RawAssertions.assertEq('Should be expected file name', expected, blobInfo.filename());
+      });
+    };
+
+    var sAssertUri = function (expected) {
+      return Step.sync(function () {
+        var blobInfo = uploadHandlerState.get().blobInfo;
+        var uri = new URI(blobInfo.uri());
+        RawAssertions.assertEq('Should be expected uri', expected, uri.relative);
       });
     };
 
@@ -51,7 +60,8 @@ asynctest(
         ImageUtils.sWaitForBlobImage(editor),
         ImageUtils.sUploadImages(editor),
         uploadHandlerState.sWaitForState,
-        sAssertUploadFilename('dogleft.jpg')
+        sAssertUploadFilename('dogleft.jpg'),
+        sAssertUri(sourceImageUrl)
       ]);
     };
 
