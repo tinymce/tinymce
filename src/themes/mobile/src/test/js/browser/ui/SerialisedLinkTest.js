@@ -113,8 +113,8 @@ asynctest(
         Step.sync(function () {
           var active = Focus.active().getOrDie();
           // The buttons are next and previous siblings
-          var prev = Traverse.prevSibling(active).getOrDie('Could not find button to left');
-          var next = Traverse.nextSibling(active).getOrDie('Could not find button to right');
+          var prev = Traverse.parent(active).bind(Traverse.prevSibling).getOrDie('Could not find button to left');
+          var next = Traverse.parent(active).bind(Traverse.nextSibling).getOrDie('Could not find button to right');
 
           var assertNavButton = function (buttonLabel, expected, button) {
             Assertions.assertStructure(
@@ -155,13 +155,14 @@ asynctest(
       return Chain.asStep({ }, [
         cGetFocused,
         cGetParent,
+        cGetParent,
         UiFinder.cFindIn(selector),
         Mouse.cClick
       ]);
     };
 
-    var sClickPrev = sClickNavigation('.tinymce-mobile-toolbar-previous');
-    var sClickNext = sClickNavigation('.tinymce-mobile-toolbar-next');
+    var sClickPrev = sClickNavigation('.tinymce-mobile-icon-previous');
+    var sClickNext = sClickNavigation('.tinymce-mobile-icon-next');
 
 
     var sAssertUrlFocused = GeneralSteps.sequence([
@@ -212,7 +213,7 @@ asynctest(
       sAssertUrlFocused
     ]);
 
-    var sClickLink = Mouse.sClickOn(realm.element(), '.tinymce-mobile-toolbar-button-link');
+    var sClickLink = Mouse.sClickOn(realm.element(), '.tinymce-mobile-icon-link');
 
     var sSetFieldValue = function (value) {
       return Chain.asStep({ }, [
@@ -276,7 +277,9 @@ asynctest(
 
     Pipeline.async({}, [
       GuiSetup.mAddStyles(doc, [
-        '.tinymce-mobile-toolbar-button-link:before { content: "LINK"; background: black; color: white; }'
+        '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }',
+        // Speeds up tests.
+        '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'
       ]),
 
       Waiter.sTryUntil(
