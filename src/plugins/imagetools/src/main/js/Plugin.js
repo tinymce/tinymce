@@ -111,17 +111,30 @@ define(
 
       function updateSelectedImage(ir, uploadImmediately) {
         return ir.toBlob().then(function (blob) {
-          var id, filename, base64, blobCache, blobInfo, selectedImage;
+          var uri, name, blobCache, blobInfo, selectedImage;
 
-          selectedImage = getSelectedImage();
           blobCache = editor.editorUpload.blobCache;
-          blobInfo = blobCache.getByUri(selectedImage.src);
-          base64 = ir.toBase64();
-          id = createId();
+          selectedImage = getSelectedImage();
+          uri = selectedImage.src;
+
           if (editor.settings.images_reuse_filename) {
-            filename = blobInfo ? blobInfo.filename() : extractFilename(selectedImage.src);
+            blobInfo = blobCache.getByUri(uri);
+            if (blobInfo) {
+              uri = blobInfo.uri();
+              name = blobInfo.name();
+            } else {
+              name = extractFilename(uri);
+            }
           }
-          blobInfo = blobCache.create(id, blob, base64, filename);
+
+          blobInfo = blobCache.toBlobInfo({
+            id: createId(),
+            blob: blob,
+            base64: ir.toBase64(),
+            uri: uri,
+            name: name
+          });
+
           blobCache.add(blobInfo);
 
           editor.undoManager.transact(function () {
