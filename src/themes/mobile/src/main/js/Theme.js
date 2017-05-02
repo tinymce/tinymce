@@ -87,10 +87,7 @@ define(
               },
 
               onTapContent: function (evt) {
-
-
-                // Now, let's see if they touched an image
-                console.log('target', evt.target().dom());
+                // If the user has tapped (touchstart, touchend without movement) on an image, select it.
                 if (Node.name(evt.target()) === 'img') {
                   editor.selection.select(evt.target().dom());
                 }
