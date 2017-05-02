@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
@@ -23,8 +24,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger, Css, Scrollables,
-    Styles, Scrollable
+    EventRoot, AdhocBehaviour, Behaviour, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger,
+    Css, Scrollables, Styles, Scrollable
   ) {
     return function () {
       var toolbar = GuiFactory.build(
@@ -40,18 +41,18 @@ define(
             parts: {
               groups: { }
             },
-            toolbarBehaviours: {
-              toggling: {
+            toolbarBehaviours: Behaviour.derive([
+              Toggling.config({
                 toggleClass: Styles.resolve('context-toolbar'),
                 toggleOnExecute: false,
                 aria: {
                   mode: 'none'
                 }
-              },
-              keying: {
+              }),
+              Keying.config({
                 mode: 'cyclic'
-              }
-            },
+              })
+            ]),
             shell: true,
             members: {
               group: {
@@ -68,9 +69,9 @@ define(
                         }
                       },
 
-                      tgroupBehaviours: {
-                        'adhoc-scrollable-toolbar': { enabled: true }
-                      },
+                      tgroupBehaviours: Behaviour.derive([
+                        AdhocBehaviour.config('adhoc-scrollable-toolbar')
+                      ]),
                       customBehaviours: [
                         AdhocBehaviour.events('adhoc-scrollable-toolbar', gSpec.scrollable === true ? Objects.wrap(
                           SystemEvents.systemInit(),

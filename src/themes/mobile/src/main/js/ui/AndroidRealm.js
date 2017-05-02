@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.ui.AndroidRealm',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
@@ -14,7 +15,7 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Replacing, GuiFactory, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
+  function (Behaviour, Replacing, GuiFactory, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('android-container') ]
@@ -31,7 +32,7 @@ define(
           },
           components: [ ],
 
-          containerBehaviours: Objects.wrapAll([
+          containerBehaviours: Behaviour.derive([
             Replacing.config({ })
           ])
         })

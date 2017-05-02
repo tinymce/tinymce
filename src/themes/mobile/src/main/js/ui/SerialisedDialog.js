@@ -4,6 +4,8 @@ define(
   [
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
@@ -26,8 +28,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton,
-    Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Keying, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr,
+    Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -145,8 +147,8 @@ define(
           return r;
         })(),
 
-        formBehaviours: {
-          keying: {
+        formBehaviours: Behaviour.derive([
+          Keying.config({
             mode: 'special',
             focusIn: function (dialog/*, specialInfo */) {
               focusInput(dialog);
@@ -159,9 +161,9 @@ define(
               navigate(dialog, -1);
               return Option.some(true);
             }
-          },
-          'adhoc-serialised-dialog-events': { enabled: true }
-        },
+          }),
+          AdhocBehaviour.config('adhoc-serialised-dialog-events')
+        ]),
 
         customBehaviours: [
           AdhocBehaviour.events(

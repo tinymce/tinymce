@@ -29,9 +29,11 @@ define(
             target: Fun.constant(input.element())
           });
         },
-        inputBehaviours: {
-          composing: { find: Option.some }
-        }
+        inputBehaviours: Behaviour.derive([
+          Composing.config({
+            find: Option.some
+          })
+        ])
       }));
 
       var buttonSpec = Memento.record(
@@ -70,10 +72,7 @@ define(
                 return Option.some(inputSpec.get(comp));
               }
             }),
-            {
-              key: clearInputEvent,
-              value: { enabled: true }
-            }
+            AdhocBehaviour.config(clearInputEvent)
           ]),
           customBehaviours: [
             AdhocBehaviour.events(clearInputEvent, {
