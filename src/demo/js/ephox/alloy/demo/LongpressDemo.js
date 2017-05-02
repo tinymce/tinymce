@@ -133,8 +133,15 @@ define(
             GuiFactory.premade(sink),
             {
               dom: {
-                tag: 'button',
-                innerHtml: 'Menu button'
+                tag: 'span',
+                innerHtml: 'Menu button',
+                styles: {
+                  padding: '1em',
+                  display: 'inline-block',
+                  'border-radius': '50%',
+                  background: 'black',
+                  color: 'white'
+                }
               },
               behaviours: Behaviour.derive([
                 Unselecting.config({ })
@@ -179,6 +186,7 @@ define(
                           y: Fun.constant(e.clientY)
                         });
                       });
+                      simulatedEvent.event().kill();
                     });
                   }
                 }),

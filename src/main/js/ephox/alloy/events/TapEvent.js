@@ -39,7 +39,7 @@ define(
       var longpress = DelayedFunction(function (event) {
         longpressActive.set(true);
         settings.triggerEvent('longpress', event);
-      }, 1000);
+      }, 400);
 
       var fireIfReady = function (event, type) {
         if (type === 'touchstart') {
