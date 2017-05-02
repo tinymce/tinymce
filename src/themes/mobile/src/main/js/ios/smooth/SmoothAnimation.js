@@ -22,7 +22,14 @@ define(
     var create = function () {
       var interval = null;
 
-      var animate = function (getCurrent, destination, amount, increment, finish, rate) {
+      var animate = function (getCurrent, destination, amount, increment, doFinish, rate) {
+        var finished = false;
+
+        var finish = function (v) {
+          finished = true;
+          doFinish(v);
+        };
+
         clearInterval(interval);
 
         var abort = function (v) {
@@ -37,11 +44,13 @@ define(
             finish(destination);
           }, function (s) {
             increment(s, abort);
-            var newValue = getCurrent();
-            // Jump to the end if the increment is no longer working.
-            if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {
-              clearInterval(interval);
-              finish(destination);
+            if (! finished) {
+              var newValue = getCurrent();
+              // Jump to the end if the increment is no longer working.
+              if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {
+                clearInterval(interval);
+                finish(destination);
+              }
             }
           });
         }, rate);
