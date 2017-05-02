@@ -2,14 +2,17 @@ define(
   'ephox.alloy.demo.LongpressDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.InlineView',
+    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
@@ -29,8 +32,8 @@ define(
   ],
 
   function (
-    Highlighting, Positioning, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Layout, Fun,
-    Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
+    Behaviour, Highlighting, Positioning, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, EventHandler, DemoSink,
+    HtmlDisplay, Layout, Fun, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -52,19 +55,25 @@ define(
       );
 
       var inlineMenu = Memento.record(
-        TieredMenu.sketch({
+        Menu.sketch({
           dom: {
-            tag: 'div'
+            tag: 'div',
+            styles: {
+              display: 'flex'
+            }
           },
 
-          onEscape: function () {
-            console.log('inline.menu.escape');
-            return Option.some(true);
-          },
+          value: 'edit.view.menu',
 
-          onExecute: function () {
-            console.log('inline.menu.execute')
-          },
+          items: [
+            { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
+            { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
+          ],
+
+          components: [
+            Menu.parts().items()
+          ],
+
           members: { 
             item: {
               munge: function (itemSpec) {
@@ -87,62 +96,28 @@ define(
                   components: [ ]
                 };              
               }
-            },
-            menu: {
-              munge: function (menuSpec) {
-                return {
-                  dom: {
-                    tag: 'div',
-                    attributes: {
-                      'data-value': menuSpec.value
-                    },
-                    styles: {
-                      display: 'flex'
-                    },
-                    classes: [ 'alloy-menu' ]
-                  },
-                  components: [ ],
-                  shell: true
-                };
-              }
             }
           },
 
-          onOpenMenu: function (sandbox, menu) {
-            // handled by inline view itself
-          },
+          // data: {
+          //   expansions: { },
+          //   menus: {
+          //     dog: {
+          //       value: 'dog',
+          //       items: [
+          //         { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
+          //         { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
 
-          onOpenSubmenu: function (sandbox, item, submenu) {
-            Positioning.position(sink, {
-              anchor: 'submenu',
-              item: item,
-              bubble: Option.none()
-            }, submenu);
-
-          },
-
-          data: {
-            expansions: { },
-            menus: {
-              dog: {
-                value: 'dog',
-                items: [
-                  { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
-                  { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
-
-                ],
-                textkey: 'Dog'
-              }
-            },
-            primary: 'dog'
-          },
+          //       ],
+          //       textkey: 'Dog'
+          //     }
+          //   },
+          //   primary: 'dog'
+          // },
 
           markers: {
             item: 'alloy-item',
-            selectedItem: 'alloy-selected-item',
-            menu: 'alloy-menu',
-            selectedMenu: 'alloy-selected-menu',
-            backgroundMenu: 'alloy-background-menu'
+            selectedItem: 'alloy-selected-item'
           }
         })
       );
@@ -161,7 +136,16 @@ define(
                 tag: 'button',
                 innerHtml: 'Menu button'
               },
+              behaviours: Behaviour.derive([
+                Unselecting.config({ })
+              ]),
               events: {
+                'contextmenu': EventHandler.nu({
+                  run: function (component, simulatedEvent) {
+                    simulatedEvent.event().kill();
+                  }
+                }),
+
                 'longpress': EventHandler.nu({
                   run: function (component, simulatedEvent) {
                     console.log('simulatedEvent', simulatedEvent.event());
@@ -186,12 +170,8 @@ define(
                         return menu.element().dom().contains(tgt.dom());
                       }).fold(function () {
                         console.log('no point');
-                        inlineMenu.getOpt(component).each(function (menu) {
-                          Highlighting.getHighlighted(menu).each(function (m) {
-                            Highlighting.dehighlightAll(m);
-                            Focus.active().each(Focus.blur);
-                          });
-                        });
+                        inlineMenu.getOpt(component).each(Highlighting.dehighlightAll);
+                        Focus.active().each(Focus.blur);
                       }, function (elem) {
                         component.getSystem().triggerEvent('mouseover', elem, {
                           target: Fun.constant(elem),
@@ -207,7 +187,7 @@ define(
                   run: function (component, simulatedEvent) {
                     var e = simulatedEvent.event().raw().touches[0];
                     inlineMenu.getOpt(component).each(function (menu) {
-                      TieredMenu.getSelectedItem(menu).each(function (item) {
+                      Highlighting.getHighlighted(menu).each(function (item) {
                         console.log('found item', item.element().dom());
                         component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
                           target: Fun.constant(item.element())
