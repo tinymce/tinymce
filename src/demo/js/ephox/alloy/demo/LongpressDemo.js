@@ -184,12 +184,10 @@ define(
                   run: function (component, simulatedEvent) {
                     var e = simulatedEvent.event().raw().touches[0];
                     inlineMenu.getOpt(component).each(function (menu) {
-                      Highlighting.getHighlighted(menu).each(function (activeMenu) {
-                        Highlighting.getHighlighted(activeMenu).each(function (item) {
-                          console.log('found item', item.element().dom());
-                          component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
-                            target: Fun.constant(item.element())
-                          });
+                      TieredMenu.getSelectedItem(menu).each(function (item) {
+                        console.log('found item', item.element().dom());
+                        component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
+                          target: Fun.constant(item.element())
                         });
                       });
                     });

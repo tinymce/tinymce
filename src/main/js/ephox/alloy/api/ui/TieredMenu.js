@@ -2,13 +2,15 @@ define(
   'ephox.alloy.api.ui.TieredMenu',
 
   [
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.TieredMenuSchema',
     'ephox.alloy.ui.single.TieredMenuSpec',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Merger'
   ],
 
-  function (UiSketcher, TieredMenuSchema, TieredMenuSpec, Objects) {
+  function (GuiTypes, UiSketcher, TieredMenuSchema, TieredMenuSpec, Objects, Merger) {
     var schema = TieredMenuSchema.schema();
 
     var sketch = function (spec) {
@@ -50,11 +52,15 @@ define(
       };
     };
 
-    return {
-      sketch: sketch,
-      simpleData: simpleData,
-      tieredData: tieredData,
-      singleData: singleData
-    };
+    return Merger.deepMerge(
+      {
+        sketch: sketch,
+        simpleData: simpleData,
+        tieredData: tieredData,
+        singleData: singleData
+      },
+
+      GuiTypes.makeApis([ 'getSelectedItem' ])
+    );
   }
 );
