@@ -1,7 +1,11 @@
 {
   "name": "@ephox/jax",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "AJAX library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/jax"
+  },
   "scripts": {
     "test": "bedrock-auto --customRoutes src/test/json/routes.json -b phantomjs --files src/test/js/browser/AjaxTest.js"
   },
