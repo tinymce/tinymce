@@ -2,8 +2,11 @@ define(
   'ephox.alloy.demo.LongpressDemo',
 
   [
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.InlineView',
@@ -19,7 +22,10 @@ define(
     'global!document'
   ],
 
-  function (Positioning, GuiFactory, Attachment, Gui, InlineView, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Option, Result, Element, Class, document) {
+  function (
+    Highlighting, Positioning, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Option,
+    Result, Element, Class, document
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -39,101 +45,101 @@ define(
         })
       );
 
-      var inlineMenu = TieredMenu.sketch({
-        dom: {
-          tag: 'div'
-        },
-
-        onEscape: function () {
-          console.log('inline.menu.escape');
-          return Option.some(true);
-        },
-
-        onExecute: function () {
-          console.log('inline.menu.execute')
-        },
-        members: { 
-          item: {
-            munge: function (itemSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  attributes: {
-                    'data-value': itemSpec.data.value
-                  },
-                  classes: [ 'alloy-item' ],
-                  innerHtml: itemSpec.data.text
-                },
-                components: [ ]
-              };              
-            }
+      var inlineMenu = Memento.record(
+        TieredMenu.sketch({
+          dom: {
+            tag: 'div'
           },
-          menu: {
-            munge: function (menuSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  attributes: {
-                    'data-value': menuSpec.value
-                  },
-                  classes: [ 'alloy-menu' ]
-                },
-                components: [ ],
-                shell: true
-              };
-            }
-          }
-        },
 
-        onOpenMenu: function (sandbox, menu) {
-          // handled by inline view itself
-        },
-
-        onOpenSubmenu: function (sandbox, item, submenu) {
-          Positioning.position(sink, {
-            anchor: 'submenu',
-            item: item,
-            bubble: Option.none()
-          }, submenu);
-
-        },
-
-        data: {
-          expansions: {
-            'gamma': 'gamma-menu'
+          onEscape: function () {
+            console.log('inline.menu.escape');
+            return Option.some(true);
           },
-          menus: {
-            dog: {
-              value: 'dog',
-              items: [
-                { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
-                { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } },
-                { type: 'item', data: { value: 'gamma', text: 'Gamma', 'item-class': 'gamma' } },
-                { type: 'item', data: { value: 'delta', text: 'Delta', 'item-class': 'delta' } }
 
-              ],
-              textkey: 'Dog'
+          onExecute: function () {
+            console.log('inline.menu.execute')
+          },
+          members: { 
+            item: {
+              munge: function (itemSpec) {
+                return {
+                  dom: {
+                    tag: 'span',
+                    attributes: {
+                      'data-value': itemSpec.data.value
+                    },
+                    classes: [ 'alloy-item' ],
+                    innerHtml: itemSpec.data.text,
+                    styles: {
+                      background: 'black',
+                      color: 'white',
+                      'border-radius': '50%',
+                      padding: '20px',
+                      margin: '5px'
+                    }
+                  },
+                  components: [ ]
+                };              
+              }
             },
-            'gamma-menu': {
-              value: 'gamma-menu',
-              items: [
-                { type: 'item', data: { value: 'gamma-1', text: 'Gamma-1', 'item-class': 'gamma-1' } },
-                { type: 'item', data: { value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' } },
-              ],
-              textkey: 'gamma-menu'
+            menu: {
+              munge: function (menuSpec) {
+                return {
+                  dom: {
+                    tag: 'div',
+                    attributes: {
+                      'data-value': menuSpec.value
+                    },
+                    styles: {
+                      display: 'flex'
+                    },
+                    classes: [ 'alloy-menu' ]
+                  },
+                  components: [ ],
+                  shell: true
+                };
+              }
             }
           },
-          primary: 'dog'
-        },
 
-        markers: {
-          item: 'alloy-item',
-          selectedItem: 'alloy-selected-item',
-          menu: 'alloy-menu',
-          selectedMenu: 'alloy-selected-menu',
-          backgroundMenu: 'alloy-background-menu'
-        }
-      });
+          onOpenMenu: function (sandbox, menu) {
+            // handled by inline view itself
+          },
+
+          onOpenSubmenu: function (sandbox, item, submenu) {
+            Positioning.position(sink, {
+              anchor: 'submenu',
+              item: item,
+              bubble: Option.none()
+            }, submenu);
+
+          },
+
+          data: {
+            expansions: { },
+            menus: {
+              dog: {
+                value: 'dog',
+                items: [
+                  { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
+                  { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
+
+                ],
+                textkey: 'Dog'
+              }
+            },
+            primary: 'dog'
+          },
+
+          markers: {
+            item: 'alloy-item',
+            selectedItem: 'alloy-selected-item',
+            menu: 'alloy-menu',
+            selectedMenu: 'alloy-selected-menu',
+            backgroundMenu: 'alloy-background-menu'
+          }
+        })
+      );
       
       var button1 = HtmlDisplay.section(
         gui,
@@ -143,7 +149,7 @@ define(
             tag: 'div'
           },
           components: [
-            GuiFactory.premade(sink),
+            // GuiFactory.premade(sink),
             {
               dom: {
                 tag: 'button',
@@ -158,17 +164,14 @@ define(
                       anchor: 'makeshift',
                       x: simulatedEvent.event().x(),
                       y: simulatedEvent.event().y()
-                    }, inlineMenu);
+                    }, inlineMenu.asSpec());
                   }
                 }),
 
                 'touchmove': EventHandler.nu({
                   run: function (component, simulatedEvent) {
                     var e = simulatedEvent.event().raw().touches[0];
-                    console.log('e', e.clientX, e.clientY);
                     var elem = Element.fromDom(document.elementFromPoint(e.clientX, e.clientY));
-                    console.log('elem' ,elem);
-                    // var elem = document.elementFromPoint(simulatedEvent.event().raw().touchX, simulatedEvent.event().raw().touchY
                     component.getSystem().triggerEvent('mouseover', elem, {
                       target: Fun.constant(elem),
                       x: Fun.constant(e.clientX),
@@ -179,7 +182,19 @@ define(
 
                 'touchend': EventHandler.nu({
                   run: function (component, simulatedEvent) {
+                    var e = simulatedEvent.event().raw().touches[0];
+                    inlineMenu.getOpt(component).each(function (menu) {
+                      Highlighting.getHighlighted(menu).each(function (activeMenu) {
+                        Highlighting.getHighlighted(activeMenu).each(function (item) {
+                          console.log('found item', item.element().dom());
+                          component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
+                            target: Fun.constant(item.element())
+                          });
+                        });
+                      });
+                    });
                     InlineView.hide(inlineComp);
+
                   }
                 })
               }
