@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.android.core.AndroidEvents',
 
   [
+    'ephox.alloy.events.TapEvent',
     'ephox.katamari.api.Arr',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
@@ -10,7 +11,7 @@ define(
     'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Arr, PlatformDetection, Compare, DomEvent, Css, WindowSelection) {
+  function (TapEvent, Arr, PlatformDetection, Compare, DomEvent, Css, WindowSelection) {
     var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
 
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -28,9 +29,23 @@ define(
 
     */
     var initEvents = function (editorApi, toolstrip) {
+
+      var tapEvent = TapEvent.monitor({
+        triggerEvent: function (type, evt) {
+          editorApi.onTapContent(evt);
+        }
+      });
+
       var listeners = [
-        DomEvent.bind(editorApi.body(), 'touchstart', function () {
-          editorApi.onTapContent();
+        DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
+          editorApi.onTouchContent(evt);
+          tapEvent.fireIfReady(evt, 'touchstart');
+        }),
+        DomEvent.bind(editorApi.body(), 'touchend', function (evt) {
+          tapEvent.fireIfReady(evt, 'touchend');
+        }),
+        DomEvent.bind(editorApi.body(), 'touchmove', function (evt) {
+          tapEvent.fireIfReady(evt, 'touchmove');
         })
       ].concat(
         isAndroid6 ? [ ] : [
