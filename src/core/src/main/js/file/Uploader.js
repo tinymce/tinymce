@@ -38,36 +38,12 @@ define(
     return function (uploadStatus, settings) {
       var pendingPromises = {};
 
-      function filename(blobInfo) {
-        var ext, extensions;
-
-        extensions = {
-          'image/jpeg': 'jpg',
-          'image/jpg': 'jpg',
-          'image/gif': 'gif',
-          'image/png': 'png'
-        };
-
-        ext = extensions[blobInfo.blob().type.toLowerCase()] || 'dat';
-
-        return blobInfo.filename() + '.' + ext;
-      }
-
       function pathJoin(path1, path2) {
         if (path1) {
           return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
         }
 
         return path2;
-      }
-
-      function blobInfoToData(blobInfo) {
-        return {
-          id: blobInfo.id,
-          blob: blobInfo.blob,
-          base64: blobInfo.base64,
-          filename: Fun.constant(filename(blobInfo))
-        };
       }
 
       function defaultHandler(blobInfo, success, failure, progress) {
@@ -183,7 +159,7 @@ define(
               notification.progressBar.value(percent);
             };
 
-            handler(blobInfoToData(blobInfo), success, failure, progress);
+            handler(blobInfo, success, failure, progress);
           } catch (ex) {
             resolve(handlerFailure(blobInfo, ex.message));
           }
