@@ -9,16 +9,32 @@ define(
 
   function (Behaviour, FieldSchema, Fun) {
     var events = function (name, eventHandlers) {
-      return Behaviour.create([
-        FieldSchema.strict('enabled')
-      ], name, {
-        events: Fun.constant(eventHandlers)
-      
-      }, { }, { });
+      return Behaviour.create({
+        fields: [
+          FieldSchema.strict('enabled')
+        ], 
+        name: name,
+        active: {
+          events: Fun.constant(eventHandlers)
+        }
+      });
+    };
+
+    var config = function (name) {
+      return {
+        key: name,
+        value: {
+          config: { },
+          configAsRaw: Fun.constant({ }),
+          initialConfig: { },
+          state: Behaviour.noState()
+        }
+      };
     };
 
     return {
-      events: events
+      events: events,
+      config: config
     };
   }
 );

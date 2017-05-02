@@ -9,12 +9,11 @@ define(
   ],
 
   function (Behaviour, ActivePosition, PositionApis, PositionSchema) {
-    return Behaviour.create(
-      PositionSchema,
-      'positioning',
-      ActivePosition,
-      PositionApis,
-      { }
-    );
+    return Behaviour.create({
+      fields: PositionSchema,
+      name: 'positioning',
+      active: ActivePosition,
+      apis: PositionApis
+    });
   }
 );

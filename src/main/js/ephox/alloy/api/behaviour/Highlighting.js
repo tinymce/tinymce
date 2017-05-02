@@ -9,12 +9,10 @@ define(
   ],
 
   function (Behaviour, HighlightApis, HighlightSchema, Array) {
-    return Behaviour.create(
-      HighlightSchema,
-      'highlighting',
-      { },
-      HighlightApis,
-      { }
-    );
+    return Behaviour.create({
+      fields: HighlightSchema,
+      name: 'highlighting',
+      apis: HighlightApis
+    });
   }
 );

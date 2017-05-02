@@ -6,10 +6,10 @@ define(
   ],
 
   function (DomModification) {
-    var exhibit = function (base, posInfo) {
+    var exhibit = function (base, posConfig/*, posState */) {
       return DomModification.nu({
         classes: [ ],
-        styles: posInfo.useFixed() ? { } : { position: 'relative' }
+        styles: posConfig.useFixed() ? { } : { position: 'relative' }
       });
     };
 

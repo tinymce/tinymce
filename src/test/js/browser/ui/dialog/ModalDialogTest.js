@@ -11,6 +11,9 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ModalDialog',
@@ -19,7 +22,10 @@ asynctest(
     'ephox.katamari.api.Result'
   ],
  
-  function (ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, GuiFactory, Container, ModalDialog, GuiSetup, Sinks, Result) {
+  function (
+    ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, Behaviour, Focusing, Tabstopping, GuiFactory, Container, ModalDialog,
+    GuiSetup, Sinks, Result
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -27,6 +33,11 @@ asynctest(
       return Sinks.relativeSink();
 
     }, function (doc, body, gui, sink, store) {
+      var focusAndTab = Behaviour.derive([
+        Focusing.config({ }),
+        Tabstopping.config({ })
+      ]);
+      
       var dialog = GuiFactory.build(
         ModalDialog.sketch({
           dom: {
@@ -66,7 +77,7 @@ asynctest(
                 innerHtml: 'Title',
                 classes: [ 'test-dialog-title' ]
               },
-              behaviours: { focusing: true, tabstopping: true },
+              behaviours: focusAndTab,
               components: [ ]
             },
             close: {
@@ -95,7 +106,7 @@ asynctest(
                   border: '1px solid green'
                 }
               },
-              behaviours: { focusing: true, tabstopping: true },
+              behaviours: focusAndTab,
               components: [ ]
             },
             blocker: {

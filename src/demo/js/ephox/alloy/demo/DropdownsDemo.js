@@ -3,7 +3,9 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
@@ -25,8 +27,8 @@ define(
   ],
 
   function (
-    Behaviour, Representing, Attachment, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink, HtmlDisplay, Future,
-    Result, DomEvent, Element, Class, document
+    Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink,
+    HtmlDisplay, Future, Result, DomEvent, Element, Class, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -209,9 +211,9 @@ define(
                 dom: {
                   classes: [ 'my-widget' ]
                 },
-                containerBehaviours: {
-                  keying: { mode: 'cyclic' }
-                },
+                containerBehaviours: Behaviour.derive([
+                  Keying.config({ mode: 'cyclic' })
+                ]),
                 components: [
                   Input.sketch({ dom: { tag: 'input' } }),
                   Input.sketch({ dom: { tag: 'input' } })
@@ -277,9 +279,9 @@ define(
                 dom: {
                   classes: [ 'my-widget' ]
                 },
-                containerBehaviours: {
-                  keying: { mode: 'cyclic' }
-                },
+                containerBehaviours: Behaviour.derive([
+                  Keying.config({ mode: 'cyclic' })
+                ]),
                 components: [
                   Input.sketch({ }),
                   Input.sketch({ })
@@ -434,9 +436,9 @@ define(
                                   tag: 'button',
                                   innerHtml: '-'
                                 },
-                                buttonBehaviours: {
-                                  tabstopping: Behaviour.revoke()
-                                }
+                                buttonBehaviours: Behaviour.derive([
+                                  Tabstopping.revoke()
+                                ])
                               }),
                               Button.sketch({
                                 action: function () { console.log('clicked on a button', arguments); },
@@ -444,25 +446,25 @@ define(
                                   tag: 'button',
                                   innerHtml: '+'
                                 },
-                                buttonBehaviours: {
-                                  tabstopping: Behaviour.revoke()
-                                }
+                                buttonBehaviours: Behaviour.derive([
+                                  Tabstopping.revoke()
+                                ])
                               })
                             ],
-                            containerBehaviours: {
-                              tabstopping: true,
-                              keying: {
+                            containerBehaviours: Behaviour.derive([
+                              Tabstopping.config({ }),
+                              Keying.config({
                                 mode: 'flow',
                                 selector: 'button'
-                              }
-                            }
+                              })
+                            ])
                           })
                         ],
-                        containerBehaviours: {
-                          keying: {
+                        containerBehaviours: Behaviour.derive([
+                          Keying.config({
                             mode: 'cyclic'
-                          }
-                        }
+                          })
+                        ])
                       })
                     }
                   ]

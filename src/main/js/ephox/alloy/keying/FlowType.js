@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
     'ephox.alloy.navigation.DomMovement',
@@ -17,7 +18,7 @@ define(
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (EditableFields, Keys, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
+  function (EditableFields, Keys, NoState, KeyingType, KeyingTypes, DomMovement, DomNavigation, KeyMatch, KeyRules, FieldSchema, Fun, Option, Focus, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('getInitial', Option.none),
@@ -25,14 +26,14 @@ define(
       FieldSchema.defaulted('executeOnMove', false)
     ];
 
-    var execute = function (component, simulatedEvent, flowInfo) {
+    var execute = function (component, simulatedEvent, flowConfig) {
       return Focus.search(component.element()).bind(function (focused) {
-        return flowInfo.execute()(component, simulatedEvent, focused);
+        return flowConfig.execute()(component, simulatedEvent, focused);
       });
     };
 
-    var focusIn = function (component, flowInfo) {
-      flowInfo.getInitial()(component).or(SelectorFind.descendant(component.element(), flowInfo.selector())).each(function (first) {
+    var focusIn = function (component, flowConfig) {
+      flowConfig.getInitial()(component).or(SelectorFind.descendant(component.element(), flowConfig.selector())).each(function (first) {
         component.getSystem().triggerFocus(first, component.element());
       });
     };
@@ -46,9 +47,9 @@ define(
     };
 
     var doMove = function (movement) {
-      return function (component, simulatedEvent, flowInfo) {
-        return movement(component, simulatedEvent, flowInfo).bind(function () {
-          return flowInfo.executeOnMove() ? execute(component, simulatedEvent, flowInfo) : Option.some(true);
+      return function (component, simulatedEvent, flowConfig) {
+        return movement(component, simulatedEvent, flowConfig).bind(function () {
+          return flowConfig.executeOnMove() ? execute(component, simulatedEvent, flowConfig) : Option.some(true);
         });
       };
     };
@@ -65,6 +66,6 @@ define(
     var getEvents = Fun.constant({ });
 
     var getApis = Fun.constant({ });
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
+    return KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

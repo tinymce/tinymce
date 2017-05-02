@@ -9,11 +9,11 @@ define(
   ],
 
   function (Behaviour, ActiveDisable, DisableApis, DisableSchema) {
-    return Behaviour.create(
-      DisableSchema,
-      'disabling',
-      ActiveDisable,
-      DisableApis
-    );
+    return Behaviour.create({
+      fields: DisableSchema,
+      name: 'disabling',
+      active: ActiveDisable,
+      apis: DisableApis
+    })
   }
 );

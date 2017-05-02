@@ -2,13 +2,15 @@ define(
   'ephox.alloy.test.Sinks',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.search.PredicateExists'
   ],
 
-  function (GuiFactory, Container, Compare, PredicateExists) {
+  function (Behaviour, Positioning, GuiFactory, Container, Compare, PredicateExists) {
     var fixedSink = function () {
       return GuiFactory.build(
         Container.sketch({
@@ -18,11 +20,11 @@ define(
             }
           },
           uid: 'fixed-sink',
-          containerBehaviours: {
-            positioning: {
+          containerBehaviours: Behaviour.derive([
+            Positioning.config({
               useFixed: true
-            }
-          }
+            })
+          ])
         })
       );
     };
@@ -37,11 +39,11 @@ define(
             }
           },
           uid: 'relative-sink',
-          containerBehaviours: {
-            positioning: {
-              useFixed: false
-            }
-          }
+          containerBehaviours: Behaviour.derive([
+            Positioning.config({
+              useFixed: true
+            })
+          ])
         })
       );
     };

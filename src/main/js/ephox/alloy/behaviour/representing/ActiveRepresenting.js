@@ -8,9 +8,9 @@ define(
   ],
 
   function (Behaviour, RepresentApis, Objects) {
-    var events = function (repInfo) {
+    var events = function (repConfig, repState) {
       return Objects.wrapAll([
-        Behaviour.loadEvent(repInfo, RepresentApis.onLoad)
+        Behaviour.loadEvent(repConfig, repState, RepresentApis.onLoad)
       ]);
     };
 

@@ -8,11 +8,10 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.Container',
-    'ephox.alloy.api.ui.ItemWidget',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.construct.EventHandler',
@@ -22,8 +21,8 @@ asynctest(
   ],
  
   function (
-    Assertions, Chain, Keyboard, Keys, Step, AdhocBehaviour, Keying, GuiFactory, SystemEvents, Container, ItemWidget, Menu, TieredMenu, EventHandler, MenuEvents,
-    GuiSetup, Objects
+    Assertions, Chain, Keyboard, Keys, Step, AdhocBehaviour, Behaviour, Keying, GuiFactory, SystemEvents, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup,
+    Objects
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -102,9 +101,9 @@ asynctest(
             }
           },
 
-          tmenuBehaviours: {
-            'tiered-menu-test': { enabled: true }
-          },
+          tmenuBehaviours: Behaviour.derive([
+            AdhocBehaviour.config('tiered-menu-test')
+          ]),
 
           eventOrder: Objects.wrapAll([
             {

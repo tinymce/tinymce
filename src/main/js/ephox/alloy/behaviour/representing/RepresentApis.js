@@ -6,16 +6,16 @@ define(
   ],
 
   function () {
-    var onLoad = function (component, repInfo) {
-      repInfo.store().manager().onLoad(component, repInfo);
+    var onLoad = function (component, repConfig, repState) {
+      repConfig.store().manager().onLoad(component, repConfig, repState);
     };
 
-    var setValue = function (component, repInfo, data) {
-      repInfo.store().manager().setValue(component, repInfo, data);
+    var setValue = function (component, repConfig, repState, data) {
+      repConfig.store().manager().setValue(component, repConfig, repState, data);
     };
 
-    var getValue = function (component, repInfo) {
-      return repInfo.store().manager().getValue(component, repInfo);
+    var getValue = function (component, repConfig, repState) {
+      return repConfig.store().manager().getValue(component, repConfig, repState);
     };
 
     return {

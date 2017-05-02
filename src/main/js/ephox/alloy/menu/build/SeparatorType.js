@@ -4,19 +4,12 @@ define(
   [
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects'
   ],
 
-  function (SystemEvents, EventHandler, FieldSchema, Objects) {
-    var schema = [
-      FieldSchema.strict('dom'),
-      FieldSchema.strict('components'),
-      FieldSchema.state('builder', function () {
-        return builder;
-      })
-    ];
-
+  function (SystemEvents, EventHandler, Fields, FieldSchema, Objects) {
     var builder = function (detail) {
       return {
         dom: detail.dom(),
@@ -34,6 +27,12 @@ define(
         ])
       };
     };
+
+    var schema = [
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('components'),
+      Fields.output('builder', builder)
+    ];
 
     return schema;
   }

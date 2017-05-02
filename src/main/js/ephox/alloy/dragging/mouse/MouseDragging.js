@@ -23,7 +23,7 @@ define(
     DelayedFunction, Container, EventHandler, Fields, BlockerUtils, DragMovement, DragState, SnapSchema, BlockerEvents, MouseData, Snappables, FieldSchema, Fun,
     parseInt, window
   ) {
-    var handlers = function (dragInfo) {
+    var handlers = function (dragConfig, dragState) {
       return {
         'mousedown': EventHandler.nu({
           run: function (component, simulatedEvent) {
@@ -43,7 +43,7 @@ define(
               move: function (event) {
                 // Stop any pending drops caused by mouseout
                 delayDrop.cancel();
-                var delta = dragInfo.state().update(MouseData, event);
+                var delta = dragState.update(MouseData, event);
                 delta.each(dragBy);
               }
             };
@@ -61,23 +61,23 @@ define(
                     background: 'rgb(100, 100, 0)',
                     'z-index': '1000000000000000'
                   },
-                  classes: [ dragInfo.blockerClass() ]
+                  classes: [ dragConfig.blockerClass() ]
                 },
                 events: BlockerEvents.init(dragApi)
               })
             );
 
             var dragBy = function (delta) {
-              DragMovement.dragBy(component, dragInfo, delta);
+              DragMovement.dragBy(component, dragConfig, delta);
             };
 
             var stop = function () {
               BlockerUtils.discard(blocker);
-              dragInfo.snaps().each(function (snapInfo) {
+              dragConfig.snaps().each(function (snapInfo) {
                 Snappables.stopDrag(component, snapInfo);
               });
-              var target = dragInfo.getTarget()(component.element());
-              dragInfo.onDrop()(component, target);
+              var target = dragConfig.getTarget()(component.element());
+              dragConfig.onDrop()(component, target);
             };
 
             // If the user has moved something outside the area, and has not come back within
@@ -93,21 +93,17 @@ define(
         })
       };
     };
-    
-    var instance = function () {
-      return {
-        handlers: handlers
-      };
-    };
 
     var schema = [
+      // TODO: Is this used?
       FieldSchema.defaulted('useFixed', false),
       FieldSchema.strict('blockerClass'),
       FieldSchema.defaulted('getTarget', Fun.identity),
       Fields.onHandler('onDrop'),
       SnapSchema,
-      FieldSchema.state('state', DragState),
-      FieldSchema.state('dragger', instance)
+      Fields.output('dragger', {
+        handlers: handlers
+      })
     ];
 
     return schema;

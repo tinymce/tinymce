@@ -2,12 +2,14 @@ define(
   'ephox.alloy.parts.InternalSink',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.katamari.api.Fun'
   ],
 
-  function (EventHandler, PartType, Fun) {
+  function (Behaviour, Positioning, EventHandler, PartType, Fun) {
     var suffix = 'sink';
     var partType =  PartType.optional(
       { sketch: Fun.identity },
@@ -19,12 +21,12 @@ define(
         dom: {
           tag: 'div'
         },
-        behaviours: {
-          positioning: {
+        behaviours: Behaviour.derive([
+          Positioning.config({
             // TODO: Make an internal sink also be able to be used with relative layouts
             useFixed: true
-          }
-        },
+          })
+        ]),
         events: {
           // Probably a behaviour: cut mania
           'keydown': EventHandler.nu({

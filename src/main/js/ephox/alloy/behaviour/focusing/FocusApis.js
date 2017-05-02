@@ -6,15 +6,15 @@ define(
   ],
 
   function (Focus) {
-    var focus = function (component, focusInfo) {
-      if (! focusInfo.ignore()) {
+    var focus = function (component, focusConfig) {
+      if (! focusConfig.ignore()) {
         Focus.focus(component.element());
-        focusInfo.onFocus()(component);
+        focusConfig.onFocus()(component);
       }
     };
 
-    var blur = function (component, focusInfo) {
-      if (! focusInfo.ignore()) {
+    var blur = function (component, focusConfig) {
+      if (! focusConfig.ignore()) {
         Focus.blur(component.element());
       }
     };

@@ -7,6 +7,8 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.ForeignGui',
     'ephox.alloy.construct.EventHandler',
@@ -22,8 +24,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Assertions, Mouse, Pipeline, Step, SystemEvents, ForeignGui, EventHandler, GuiSetup, Option, Insert, Remove, Body, Element, Node, Html,
-    document
+    ApproxStructure, Assertions, Mouse, Pipeline, Step, Behaviour, Toggling, SystemEvents, ForeignGui, EventHandler, GuiSetup, Option, Insert, Remove, Body,
+    Element, Node, Html, document
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -42,11 +44,11 @@ asynctest(
         {
           getTarget: function (elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
           alloyConfig: {
-            behaviours: {
-              toggling: {
+            behaviours: Behaviour.derive([
+              Toggling.config({
                 toggleClass: 'selected'
-              }
-            },
+              })
+            ]),
             events: {
               click: EventHandler.nu({
                 run: function (component, simulatedEvent) {

@@ -11,8 +11,10 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
-    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ExpandableForm',
@@ -20,13 +22,16 @@ asynctest(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.form.TestForm',
+    'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Focus'
   ],
  
-  function (FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Keying, Button, Container, ExpandableForm, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Fun, Focus) {
+  function (
+    FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Keying, Tabstopping, GuiFactory, Button, Container, ExpandableForm,
+    Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, Fun, Focus
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -53,9 +58,9 @@ asynctest(
             parts: {
               field: {
                 data: 'init',
-                inputBehaviours: {
-                  tabstopping: true
-                }
+                inputBehaviours: Behaviour.derive([
+                  Tabstopping.config({ })
+                ])
               },
               label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
             }
@@ -84,9 +89,9 @@ asynctest(
             ],
             parts: {
               field: {
-                selectBehaviours: {
-                  tabstopping: true
-                },                
+                selectBehaviours: Behaviour.derive([
+                  Tabstopping.config({ })
+                ]),                
                 options: [
                   { value: 'select-b-init', text: 'Select-b-init' },
                   { value: 'select-b-set', text: 'Select-b-set' },
@@ -115,9 +120,9 @@ asynctest(
                 classes: [ 'test-expander-button' ]
               },
               components: [ ],
-              buttonBehaviours: {
-                tabstopping: true
-              }
+              buttonBehaviours: Behaviour.derive([
+                Tabstopping.config({ })
+              ])
             },
             controls: {
               dom: {
@@ -140,20 +145,20 @@ asynctest(
               action: function (button) {
                 ExpandableForm.collapseFormImmediately(self);
               },
-              buttonBehaviours: {
-                tabstopping: true
-              }
+              buttonBehaviours: Behaviour.derive([
+                Tabstopping.config({ })
+              ])
             }),
 
             ExpandableForm.parts().controls()
           ],
 
-          expandableBehaviours: {
-            keying: {
+          expandableBehaviours: Behaviour.derive([
+            Keying.config({
               mode: 'cyclic',
               visibilitySelector: '.form-section'
-            }
-          },
+            })
+          ]),
 
           markers: {
             closedClass: 'expandable-closed',

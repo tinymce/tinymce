@@ -8,12 +8,10 @@ define(
   ],
 
   function (Behaviour, ComposeApis, ComposeSchema) {
-    return Behaviour.create(
-      ComposeSchema,
-      'composing',
-      { },
-      ComposeApis,
-      { }
-    );
+    return Behaviour.create({
+      fields: ComposeSchema,
+      name: 'composing',
+      apis: ComposeApis
+    });
   }
 );

@@ -6,13 +6,16 @@ define(
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.CompBehaviours',
+    'ephox.alloy.behaviour.common.BehaviourBlob',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (DomState, Dragging, Pinching, Toggling, ComponentEvents, FieldSchema, ValueSchema, Fun) {
+  function (DomState, Dragging, Pinching, Toggling, CompBehaviours, BehaviourBlob, ComponentEvents, FieldSchema, Objects, ValueSchema, Fun) {
     return function () { 
       var getEvents = function (elem, spec) {
         var evts = DomState.getOrCreate(elem, function () {
@@ -28,13 +31,16 @@ define(
             ]),
             FieldSchema.defaulted('eventOrder', {})
 
-          ]), spec);
+          ]), Objects.narrow(spec, [ 'events', 'eventOrder' ]));
 
+          var bInfo = CompBehaviours.generateFrom(spec, [ Toggling, Dragging, Pinching ]);
+          
           var baseEvents = {
             'alloy.base.behaviour': info.events()
           };
 
-          return ComponentEvents.combine(info, [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
+          var bData = BehaviourBlob.getData(bInfo);
+          return ComponentEvents.combine(bData, info.eventOrder(), [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
         });
 
         return {

@@ -54,9 +54,9 @@ define(
       return ObjIndex.byInnerKey(behaviourEvents, behaviourTuple);
     };
 
-    var combine = function (info, behaviours, base) {
-      var byEventName = groupByEvents(info, behaviours, base);
-      return combineGroups(byEventName, info.eventOrder());
+    var combine = function (info, eventOrder, behaviours, base) {
+       var byEventName = groupByEvents(info, behaviours, base);
+      return combineGroups(byEventName, eventOrder);
     };
 
     var assemble = function (rawHandler) {

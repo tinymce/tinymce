@@ -5,19 +5,19 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Cell'
+    'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Fun'
   ],
  
-  function (ApproxStructure, Assertions, Step, GuiFactory, Behaviour, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Fun, Cell) {
+  function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -25,47 +25,56 @@ asynctest(
     var bB = Cell(null);
 
     GuiSetup.setup(function (store, doc, body) {
-      var behaviourA = Behaviour.create([ ], 'behaviourA', {
-        exhibit: function (base, info) {
-          return DomModification.nu({
-            classes: [ 'behaviour-a-exhibit' ]
-          });
-        },
-        events: Fun.constant({
-          'alloy.custom.test.event': EventHandler.nu({
-            run: function (component) {
-              store.adder('behaviour.a.event')();
-            }
+      var behaviourA = Behaviour.create({
+        fields: [ ],
+        name: 'behaviourA',
+        active: {
+          exhibit: function (base, info) {
+            return DomModification.nu({
+              classes: [ 'behaviour-a-exhibit' ]
+            });
+          },
+          events: Fun.constant({
+            'alloy.custom.test.event': EventHandler.nu({
+              run: function (component) {
+                store.adder('behaviour.a.event')();
+              }
+            })
           })
-        })
-      }, {
-        behaveA: function (comp) {
-          store.adder('behaveA')();
+        }, 
+        apis: {
+          behaveA: function (comp) {
+            store.adder('behaveA')();
+          }
         }
-      }, { });
+      });
 
       bA.set(behaviourA);
 
-      var behaviourB = Behaviour.create([
-        FieldSchema.strict('attr')
-      ], 'behaviourB', {
-        exhibit: function (base, info) {
-          var extra = {
-            attributes: {
-              'behaviour-b-exhibit': info.attr()
-            }
-          };
-          return DomModification.nu(extra);
-        },
-        
-        events: Fun.constant({
-          'alloy.custom.test.event': EventHandler.nu({
-            run: function (component) {
-              store.adder('behaviour.b.event')();
-            }
+      var behaviourB = Behaviour.create({
+        fields: [
+          FieldSchema.strict('attr')
+        ], 
+        name: 'behaviourB',
+        active: {
+          exhibit: function (base, info) {
+            var extra = {
+              attributes: {
+                'behaviour-b-exhibit': info.attr()
+              }
+            };
+            return DomModification.nu(extra);
+          },
+          
+          events: Fun.constant({
+            'alloy.custom.test.event': EventHandler.nu({
+              run: function (component) {
+                store.adder('behaviour.b.event')();
+              }
+            })
           })
-        })
-      }, { }, { });
+        }
+      });
 
       bB.set(behaviourB);
 
@@ -80,12 +89,12 @@ asynctest(
             behaviourA,
             behaviourB
           ],
-          containerBehaviours: {
-            'behaviourA': { },
-            'behaviourB': {
+          containerBehaviours: Behaviour.derive([
+            behaviourA.config({ }),
+            behaviourB.config({
               attr: 'exhibition'
-            }
-          },
+            })
+          ]),
 
           domModification: {
             classes: [ 'base-dom-modification' ]

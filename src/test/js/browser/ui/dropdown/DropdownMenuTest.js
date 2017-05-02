@@ -12,33 +12,37 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
-    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
  
-  function (Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Memento, Behaviour, Focusing, Keying, Container, Dropdown, TieredMenu, GuiSetup, NavigationUtils, TestDropdownMenu, Arr, Future, Result) {
+  function (
+    Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Focusing, Keying, Positioning, GuiFactory, Memento,
+    Container, Dropdown, TieredMenu, TestDropdownMenu, GuiSetup, NavigationUtils, Arr, Future, Result
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var sink = Memento.record(
       Container.sketch({
-        containerBehaviours: {
-          positioning: {
+        containerBehaviours: Behaviour.derive([
+          Positioning.config({
             useFixed: true
-          }
-        }
+          })
+        ])
       })
     );
 

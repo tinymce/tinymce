@@ -2,6 +2,10 @@ define(
   'ephox.alloy.api.ui.TabButton',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.TabButtonSchema',
@@ -9,7 +13,7 @@ define(
     'ephox.katamari.api.Merger'
   ],
 
-  function (UiSketcher, ButtonBase, TabButtonSchema, Id, Merger) {
+  function (Behaviour, Focusing, Keying, Representing, UiSketcher, ButtonBase, TabButtonSchema, Id, Merger) {
     var schema = TabButtonSchema.schema();
 
     var make = function (detail, spec) {
@@ -29,20 +33,20 @@ define(
         ),
         components: detail.components(),
         events: events,
-        behaviours: {
-          focusing: true,
-          keying: {
+        behaviours: Behaviour.derive([
+          Focusing.config({ }),
+          Keying.config({
             mode: 'execution',
             useSpace: true,
             useEnter: true
-          },
-          representing: {
+          }),
+          Representing.config({
             store: {
               mode: 'memory',
               initialValue: detail.value()
             }
-          }
-        },
+          })
+        ]),
 
         domModification: detail.domModification()
       };

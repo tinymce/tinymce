@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.Toolbar',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.ToolbarGroup',
@@ -9,23 +10,23 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.ToolbarSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Result',
+    'ephox.sand.api.JSON',
     'global!console',
     'global!Error'
   ],
 
-function (Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Merger, Json, Fun, Result, console, Error) {
+function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Fun, Merger, Result, Json, console, Error) {
     var schema = ToolbarSchema.schema();
 
     // TODO: Dupe with ToolbarSchema
     var enhanceGroups = function (detail) {
       return {
-        behaviours: {
-          replacing: { }
-        }
+        behaviours: Behaviour.derive([
+          Replacing.config({ })
+        ])
       };
     };
 

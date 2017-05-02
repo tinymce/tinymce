@@ -8,12 +8,10 @@ define(
   ],
 
   function (Behaviour, ActiveTabstopping, TabstopSchema) {
-    return Behaviour.create(
-      TabstopSchema,
-      'tabstopping',
-      ActiveTabstopping,
-      { },
-      { }
-    );
+    return Behaviour.create({
+      fields: TabstopSchema,
+      name: 'tabstopping',
+      active: ActiveTabstopping
+    });
   }
 );

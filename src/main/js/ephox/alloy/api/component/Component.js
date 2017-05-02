@@ -2,9 +2,11 @@ define(
   'ephox.alloy.api.component.Component',
 
   [
+    'ephox.alloy.api.component.CompBehaviours',
     'ephox.alloy.api.component.ComponentApi',
     'ephox.alloy.api.system.NoContextApi',
     'ephox.alloy.api.ui.GuiTypes',
+    'ephox.alloy.behaviour.common.BehaviourBlob',
     'ephox.alloy.construct.ComponentDom',
     'ephox.alloy.construct.ComponentEvents',
     'ephox.alloy.construct.CustomDefinition',
@@ -14,6 +16,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Type',
     'ephox.sand.api.JSON',
     'ephox.sugar.api.search.Traverse',
@@ -21,8 +24,8 @@ define(
   ],
 
   function (
-    ComponentApi, NoContextApi, GuiTypes, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema, Arr, Cell, Fun, Type, Json,
-    Traverse, Error
+    CompBehaviours, ComponentApi, NoContextApi, GuiTypes, BehaviourBlob, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema,
+    Arr, Cell, Fun, Merger, Type, Json, Traverse, Error
   ) {
     var build = function (spec) { 
        var getSelf = function () {
@@ -32,12 +35,17 @@ define(
       var systemApi = Cell(NoContextApi(getSelf));
 
 
-      var info = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
+      var info = ValueSchema.getOrDie(CustomDefinition.toInfo(Merger.deepMerge(
+        spec,
+        {behaviours: undefined}
+      )));
 
       // The behaviour configuration is put into info.behaviours(). For everything else,
       // we just need the list of static behaviours that this component cares about. The behaviour info
       // to pass through will come from the info.behaviours() obj.
-      var behaviours = CustomDefinition.behaviours(info);
+      var bBlob = CompBehaviours.generate(spec);
+      var bList = BehaviourBlob.getBehaviours(bBlob);
+      var bData = BehaviourBlob.getData(bBlob);
 
       var definition = CustomDefinition.toDefinition(info);
 
@@ -45,7 +53,7 @@ define(
         'alloy.base.modification': CustomDefinition.toModification(info)
       };
       
-      var modification = ComponentDom.combine(info, baseModification, behaviours, definition).getOrDie();
+      var modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
 
       var modDefinition = DomModification.merge(definition, modification);
 
@@ -55,7 +63,7 @@ define(
         'alloy.base.behaviour': CustomDefinition.toEvents(info)
       };
 
-      var events = ComponentEvents.combine(info, behaviours, baseEvents).getOrDie();
+      var events = ComponentEvents.combine(bData, info.eventOrder(), bList, baseEvents).getOrDie();
 
       var subcomponents = Cell(info.components());
 
@@ -84,18 +92,25 @@ define(
 
       var config = function (behaviour) {
         if (behaviour === GuiTypes.apiConfig()) return info.apis();
-        return info.behaviours().bind(function (b) {
-          var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
-            throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
-          };
-          return f();
-        });
+        var b = bData;
+        var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
+          throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
+        };
+        return f();
+        // });
+      };
+
+      var readState = function (behaviourName) {
+        return bData[behaviourName]().map(function (b) {
+          return b.state.readState();
+        }).getOr('not enabled');
       };
 
       var self = ComponentApi({
         getSystem: systemApi.get,
         config: config,
         spec: Fun.constant(spec),
+        readState: readState,
 
         connect: connect,
         disconnect: disconnect,

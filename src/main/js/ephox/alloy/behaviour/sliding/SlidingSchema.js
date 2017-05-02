@@ -25,25 +25,18 @@ define(
       Fields.onHandler('onGrown'),
       Fields.onHandler('onStartGrow'),
       FieldSchema.defaulted('expanded', false),
-
-      FieldSchema.state('state', function (spec) { return Cell(spec.expanded); }),
-
       FieldSchema.strictOf('dimension', ValueSchema.choose(
         'property', {
           width: [
-            FieldSchema.state('property', function () { return 'width'; } ),
-            FieldSchema.state('getDimension', function () {
-              return function (elem) {
-                return Width.get(elem) + 'px';
-              };
+            Fields.output('property', 'width'),
+            Fields.output('getDimension', function (elem) {
+              return Width.get(elem) + 'px';
             })
           ],
           height: [
-            FieldSchema.state('property', function () { return 'height'; } ),
-            FieldSchema.state('getDimension', function () {
-              return function (elem) {
-                return Height.get(elem) + 'px';
-              };
+            Fields.output('property', 'height'),
+            Fields.output('getDimension', function (elem) {
+              return Height.get(elem) + 'px';
             })
           ]
         }

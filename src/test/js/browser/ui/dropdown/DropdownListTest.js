@@ -11,35 +11,36 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.test.dropdown.DropdownAssertions',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.TestBroadcasts',
-    'ephox.alloy.test.dropdown.DropdownAssertions',
-    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.TextContent'
+    'ephox.katamari.api.Result'
   ],
  
   function (
-    ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, Dropdown, TieredMenu, GuiSetup,
-    NavigationUtils, TestBroadcasts, DropdownAssertions, TestDropdownMenu, Future, Result, TextContent
+    ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, Dropdown,
+    TieredMenu, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils, TestBroadcasts, Future, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var sink = Memento.record(
       Container.sketch({
-        containerBehaviours: {
-          positioning: {
+        containerBehaviours: Behaviour.derive([
+          Positioning.config({
             useFixed: true
-          }
-        }
+          })
+        ])
       })
     );
 
@@ -89,6 +90,7 @@ asynctest(
       return c;
 
     }, function (doc, body, gui, component, store) {
+
       gui.add(
         GuiFactory.build(sink.asSpec())
       );

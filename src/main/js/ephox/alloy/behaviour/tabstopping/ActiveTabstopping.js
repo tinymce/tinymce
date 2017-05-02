@@ -7,10 +7,10 @@ define(
   ],
 
   function (DomModification, Objects) {
-    var exhibit = function (base, tabInfo) {
+    var exhibit = function (base, tabConfig) {
       return DomModification.nu({
         attributes: Objects.wrapAll([
-          { key: tabInfo.tabAttr(), value: 'true' }
+          { key: tabConfig.tabAttr(), value: 'true' }
         ])
       });
     };

@@ -7,13 +7,10 @@ define(
   ],
 
   function (Behaviour, ReplaceApis) {
-    return Behaviour.create(
-      // Replacing has no schema requirements
-      [ ],
-      'replacing',
-      { },
-      ReplaceApis,
-      { }
-    );
+    return Behaviour.create({
+      fields: [ ],
+      name: 'replacing',
+      apis: ReplaceApis
+    });
   }
 );

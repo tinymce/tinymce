@@ -3,10 +3,13 @@ define(
 
   [
     'ephox.alloy.alien.EditableFields',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
@@ -15,20 +18,7 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (EditableFields, SystemEvents, Focusing, Keying, EventHandler, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {
-    var schema = [
-      FieldSchema.strict('uid'),
-      FieldSchema.strict('data'),
-      FieldSchema.strict('components'),
-      FieldSchema.strict('dom'),
-      FieldSchema.strict('widget'),
-      FieldSchema.defaulted('autofocus', false),
-      FieldSchema.defaulted('domModification', { }),
-      FieldSchema.state('builder', function () {
-        return builder;
-      })
-    ];
-
+  function (EditableFields, Behaviour, Focusing, Keying, Representing, SystemEvents, EventHandler, Fields, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {
     var builder = function (info) {
       var widgetUid = Objects.readOptFrom(
         info.widget(),
@@ -41,8 +31,8 @@ define(
             { uid: widgetUid },
             info.widget(),
             {
-              behaviours: {
-                representing: {
+              behaviours: Behaviour.derive([
+                Representing.config({
                   store: {
                     mode: 'manual',
                     getValue: function (component) {
@@ -50,8 +40,8 @@ define(
                     },
                     setValue: function () { }
                   }
-                }
-              }
+                })
+              ])
             }
           );
         })
@@ -104,19 +94,19 @@ define(
             })
           }
         ]),
-        behaviours: {
-          representing: {
+        behaviours: Behaviour.derive([
+          Representing.config({
             store: {
               mode: 'memory',
               initialValue: info.data()
             }
-          },
-          focusing: {
+          }),
+          Focusing.config({
             onFocus: function (component) {
               ItemEvents.onFocus(component);
             }
-          },
-          keying: {
+          }),
+          Keying.config({
             mode: 'special',
             // focusIn: info.autofocus() ? function (component) {
             //   focusWidget(component);
@@ -138,10 +128,22 @@ define(
                 return Option.none();
               }
             }
-          }
-        }
+          })
+        ])
       });
     };
+
+    var schema = [
+      FieldSchema.strict('uid'),
+      FieldSchema.strict('data'),
+      FieldSchema.strict('components'),
+      FieldSchema.strict('dom'),
+      FieldSchema.strict('widget'),
+      FieldSchema.defaulted('autofocus', false),
+      FieldSchema.defaulted('domModification', { }),
+      Fields.output('builder', builder)
+    ];
+
 
     return schema;
   }

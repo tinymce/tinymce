@@ -4,16 +4,16 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.behaviour.pinching.ActivePinching',
-    'ephox.alloy.behaviour.pinching.PinchingSchema'
+    'ephox.alloy.behaviour.pinching.PinchingSchema',
+    'ephox.alloy.dragging.common.DragState'
   ],
 
-  function (Behaviour, ActivePinching, PinchingSchema) {
-    return Behaviour.create(
-      PinchingSchema,
-      'pinching',
-      ActivePinching,
-      { },
-      { }
-    );
+  function (Behaviour, ActivePinching, PinchingSchema, DragState) {
+    return Behaviour.create({
+      fields: PinchingSchema,
+      name: 'pinching',
+      active: ActivePinching,
+      state: DragState
+    });
   }
 );

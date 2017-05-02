@@ -44,16 +44,16 @@ define(
       });
     };
 
-    var dragBy = function (component, dragInfo, delta) {
+    var dragBy = function (component, dragConfig, delta) {
       var doc = Traverse.owner(component.element());
       var scroll = Scroll.get(doc);
       
-      var target = dragInfo.getTarget()(component.element());
+      var target = dragConfig.getTarget()(component.element());
       var origin = OffsetOrigin.getOrigin(target, scroll);
       
       var currentCoord = getCurrentCoord(target);
 
-      var newCoord = calcNewCoord(component, dragInfo.snaps(), currentCoord, scroll, origin, delta);
+      var newCoord = calcNewCoord(component, dragConfig.snaps(), currentCoord, scroll, origin, delta);
       var styles = DragCoord.toStyles(newCoord, scroll, origin);
       Css.setAll(target, styles);
     };

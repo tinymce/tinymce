@@ -10,7 +10,7 @@ define(
   ],
 
   function (AriaFocus, Attachment, Arr, Compare, Insert) {
-    var set = function (component, replaceInfo, data) {
+    var set = function (component, replaceConfig, replaceState, data) {
       Attachment.detachChildren(component);
 
       // NOTE: we may want to create a behaviour which allows you to switch
@@ -25,22 +25,22 @@ define(
       }, component.element());
     };
 
-    var insert = function (component, replaceInfo, insertion, childSpec) {
+    var insert = function (component, replaceConfig, insertion, childSpec) {
       var child = component.getSystem().build(childSpec);
       Attachment.attachWith(component, child, insertion);
     };
 
-    var append = function (component, replaceInfo, appendee) {
-      insert(component, replaceInfo, Insert.append, appendee);
+    var append = function (component, replaceConfig, replaceState, appendee) {
+      insert(component, replaceConfig, Insert.append, appendee);
     };
 
-    var prepend = function (component, replaceInfo, prependee) {
-      insert(component, replaceInfo, Insert.prepend, prependee);
+    var prepend = function (component, replaceConfig, replaceState, prependee) {
+      insert(component, replaceConfig, Insert.prepend, prependee);
     };
 
     // NOTE: Removee is going to be a component, not a spec.
-    var remove = function (component, replaceInfo, removee) {
-      var children = contents(component, replaceInfo);
+    var remove = function (component, replaceConfig, replaceState, removee) {
+      var children = contents(component, replaceConfig);
       var foundChild = Arr.find(children, function (child) {
         return Compare.eq(removee.element(), child.element());
       });
@@ -49,7 +49,7 @@ define(
     };
 
     // TODO: Rename
-    var contents = function (component, replaceInfo) {
+    var contents = function (component, replaceConfig/*, replaceState */) {
       return component.components();
     };
 

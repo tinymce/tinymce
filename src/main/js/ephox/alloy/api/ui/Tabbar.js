@@ -2,7 +2,9 @@ define(
   'ephox.alloy.api.ui.Tabbar',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TabbarSchema',
@@ -10,7 +12,7 @@ define(
     'ephox.katamari.api.Merger'
   ],
 
-  function (Highlighting, UiSketcher, PartType, TabbarSchema, Fun, Merger) {
+  function (Behaviour, Highlighting, Keying, UiSketcher, PartType, TabbarSchema, Fun, Merger) {
     var schema = TabbarSchema.schema();
     var partTypes = TabbarSchema.parts();
 
@@ -29,13 +31,13 @@ define(
         components: components,
         'debug.sketcher': 'Tabbar',
 
-        behaviours: {
-          highlighting: {
+        behaviours: Behaviour.derive([
+          Highlighting.config({
             highlightClass: detail.markers().selectedClass(),
             itemClass: detail.markers().tabClass()
-          },
+          }),
 
-          keying: {
+          Keying.config({
             mode: 'flow',
             getInitial: function (tabbar) {
               // Restore focus to the previously highlighted tab.
@@ -45,8 +47,8 @@ define(
             },
             selector: '.' + detail.markers().tabClass(),
             executeOnMove: true
-          }
-        }
+          })
+        ])
       };
     };
 

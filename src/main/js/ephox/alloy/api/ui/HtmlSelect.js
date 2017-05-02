@@ -3,17 +3,18 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.HtmlSelectSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.TextContent',
+    'ephox.katamari.api.Merger',
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, UiSketcher, HtmlSelectSchema, Arr, Merger, Fun, Result, TextContent, Value) {
+  function (Behaviour, Focusing, Representing, Tabstopping, UiSketcher, HtmlSelectSchema, Arr, Fun, Merger, Value) {
     var schema = HtmlSelectSchema.schema();
 
     // Dupe with Tiered Menu
@@ -40,9 +41,9 @@ define(
           },
           components: options,
           behaviours: Merger.deepMerge(
-            {
-              focusing: true,
-              representing: {
+            Behaviour.derive([
+              Focusing.config({ }),
+              Representing.config({
                 store: {
                   mode: 'manual'      ,
                   getValue: function (select) {
@@ -56,9 +57,9 @@ define(
                     if (found.isSome()) Value.set(select.element(), newValue);
                   }   
                 }
-              },
-              tabstopping: detail.hasTabstop() ? true : Behaviour.revoke()
-            },
+              }),
+              detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()
+            ]),
             detail.selectBehaviours()
           )
         }

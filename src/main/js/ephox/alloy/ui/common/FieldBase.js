@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.properties.Attr'
   ],
 
-  function (EventRoot, Composing, Representing, SystemEvents, EventHandler, Objects, Id, Merger, Option, Attr) {
+  function (EventRoot, Behaviour, Composing, Representing, SystemEvents, EventHandler, Objects, Id, Merger, Option, Attr) {
     var events = function (detail) {
      return Objects.wrap(
         SystemEvents.systemInit(),
@@ -39,8 +40,8 @@ define(
 
     var behaviours = function (detail) {
       return Merger.deepMerge(
-        {
-          representing: {
+        Behaviour.derive([
+          Representing.config({
             store: {
               mode: 'manual',
               getValue: function (container) {
@@ -54,13 +55,13 @@ define(
                 });
               }
             }
-          },
-          composing: {
+          }),
+          Composing.config({
             find: function (container) {
               return container.getSystem().getByUid(detail.partUids().field).fold(Option.none, Option.some);
             }
-          }
-        },
+          })
+        ]),
         detail.fieldBehaviours()
       );
     };

@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ComponentStructure',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
@@ -24,8 +25,8 @@ define(
   ],
 
   function (
-    ComponentStructure, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, InternalSink, Tagger, Dismissal, Fun, Future, Merger,
-    Option, Result, Remove, Width, Error
+    ComponentStructure, Behaviour, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, InternalSink, Tagger, Dismissal, Fun, Future,
+    Merger, Option, Result, Remove, Width, Error
   ) {
     
     var fetch = function (detail, component) {
@@ -140,8 +141,8 @@ define(
             id: ariaOwner.id()
           }
         },
-        behaviours: {
-          sandboxing: {
+        behaviours: Behaviour.derive([
+          Sandboxing.config({
             onOpen: onOpen,
             onClose: onClose,
             isPartOf: function (container, data, queryElem) {
@@ -150,18 +151,18 @@ define(
             getAttachPoint: function () {
               return lazySink().getOrDie();
             }
-          },
-          composing: {
+          }),
+          Composing.config({
             find: function (sandbox) {
               return Sandboxing.getState(sandbox).bind(function (menu) {
                 return Composing.getCurrent(menu);
               });
             }
-          },
-          receiving: Dismissal.receiving({
+          }),
+          Dismissal.receivingConfig({
             isExtraPart: Fun.constant(false)
           })
-        },
+        ]),
         events: { }
       };
     };

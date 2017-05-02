@@ -17,14 +17,10 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.LazyValue',
-    'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Node'
   ],
  
-  function (
-    Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue, Result,
-    Node
-  ) {
+  function (Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue, Node) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

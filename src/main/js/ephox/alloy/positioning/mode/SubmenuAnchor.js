@@ -2,17 +2,18 @@ define(
   'ephox.alloy.positioning.mode.SubmenuAnchor',
 
   [
+    'ephox.alloy.data.Fields',
+    'ephox.alloy.positioning.layout.Bubble',
+    'ephox.alloy.positioning.layout.LinkedLayout',
+    'ephox.alloy.positioning.layout.Origins',
     'ephox.alloy.positioning.mode.Anchoring',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.alloy.positioning.layout.Bubble',
-    'ephox.alloy.positioning.layout.LinkedLayout',
-    'ephox.alloy.positioning.layout.Origins',
     'ephox.sugar.api.properties.Direction'
   ],
 
-  function (Anchoring, FieldSchema, Fun, Option, Bubble, LinkedLayout, Origins, Direction) {
+  function (Fields, Bubble, LinkedLayout, Origins, Anchoring, FieldSchema, Fun, Option, Direction) {
     var placement = function (component, posInfo, submenuInfo, origin) {
       var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
@@ -44,9 +45,7 @@ define(
         FieldSchema.strict('onLtr'),
         FieldSchema.strict('onRtl')
       ]),
-      FieldSchema.state('placement', function () {
-        return placement;
-      })
+      Fields.output('placement', placement)
     ];
   }
 );

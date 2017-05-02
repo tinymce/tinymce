@@ -2,45 +2,35 @@ define(
   'ephox.alloy.behaviour.representing.MemoryStore',
 
   [
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Cell'
+    'ephox.alloy.behaviour.representing.RepresentState',
+    'ephox.alloy.data.Fields',
+    'ephox.boulder.api.FieldSchema'
   ],
 
-  function (FieldSchema, Cell) {
-    // Find a better way of storing this.
-    var state = function () {
-      return Cell(null);
+  function (RepresentState, Fields, FieldSchema) {
+    var setValue = function (component, repConfig, repState, data) {
+      repState.set(data);
+      repConfig.onSetValue()(component, data);
     };
 
-    var manager = function () {
-      var setValue = function (component, repInfo, data) {
-        repInfo.store().state().set(data);
-        repInfo.onSetValue()(component, data);
-      };
+    var getValue = function (component, repConfig, repState) {
+      return repState.get();
+    };
 
-      var getValue = function (component, repInfo) {
-        return repInfo.store().state().get();
-      };
-
-      var onLoad = function (component, repInfo) {
-        var current = repInfo.store().state().get();
-        repInfo.store().initialValue().each(function (initVal) {
-          // TODO: Maybe should call onSetValue here?
-          if (current === null) repInfo.store().state().set(initVal);
-        });
-      };
-
-      return {
-        setValue: setValue,
-        getValue: getValue,
-        onLoad: onLoad
-      };
+    var onLoad = function (component, repConfig, repState) {
+      repConfig.store().initialValue().each(function (initVal) {
+        if (repState.isNotSet()) repState.set(initVal);
+      });
     };
 
     return [
-      FieldSchema.state('state', state),
       FieldSchema.option('initialValue'),      
-      FieldSchema.state('manager', manager)
+      Fields.output('manager', {
+        setValue: setValue,
+        getValue: getValue,
+        onLoad: onLoad,
+        state: RepresentState.memory
+      })
     ];
   }
 );

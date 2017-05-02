@@ -11,67 +11,67 @@ define(
   ],
 
   function (Cycles, Arr, Option, Class, SelectorFilter, SelectorFind) {
-    var dehighlightAll = function (component, hInfo) {
-      var highlighted = SelectorFilter.descendants(component.element(), '.' + hInfo.highlightClass());
+    var dehighlightAll = function (component, hConfig, hState) {
+      var highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass());
       Arr.each(highlighted, function (h) {
-        Class.remove(h, hInfo.highlightClass());
+        Class.remove(h, hConfig.highlightClass());
         component.getSystem().getByDom(h).each(function (target) {
-          hInfo.onDehighlight()(component, target);
+          hConfig.onDehighlight()(component, target);
         });
       });
     };
 
-    var dehighlight = function (component, hInfo, target) {
-      var wasHighlighted = isHighlighted(component, hInfo, target);
-      Class.remove(target.element(), hInfo.highlightClass());
+    var dehighlight = function (component, hConfig, hState, target) {
+      var wasHighlighted = isHighlighted(component, hConfig, hState, target);
+      Class.remove(target.element(), hConfig.highlightClass());
 
       // Only fire the event if it was highlighted.
-      if (wasHighlighted) hInfo.onDehighlight()(component, target);
+      if (wasHighlighted) hConfig.onDehighlight()(component, target);
     };
 
-    var highlight = function (component, hInfo, target) {
-      var wasHighlighted = isHighlighted(component, hInfo, target);
-      dehighlightAll(component, hInfo);
-      Class.add(target.element(), hInfo.highlightClass());
+    var highlight = function (component, hConfig, hState, target) {
+      var wasHighlighted = isHighlighted(component, hConfig, hState, target);
+      dehighlightAll(component, hConfig, hState);
+      Class.add(target.element(), hConfig.highlightClass());
       
       // TODO: Check whether this should always fire
-      if (! wasHighlighted) hInfo.onHighlight()(component, target);
+      if (! wasHighlighted) hConfig.onHighlight()(component, target);
     };
 
-    var highlightFirst = function (component, hInfo) {
-      getFirst(component, hInfo).each(function (firstComp) {
-        highlight(component, hInfo, firstComp);
+    var highlightFirst = function (component, hConfig, hState) {
+      getFirst(component, hConfig, hState).each(function (firstComp) {
+        highlight(component, hConfig, hState, firstComp);
       });
     };
 
-    var highlightLast = function (component, hInfo) {
-      getLast(component, hInfo).each(function (lastComp) {
-        highlight(component, hInfo, lastComp);
+    var highlightLast = function (component, hConfig, hState) {
+      getLast(component, hConfig, hState).each(function (lastComp) {
+        highlight(component, hConfig, hState, lastComp);
       });
     };
 
-    var isHighlighted = function (component, hInfo, queryTarget) {
-      return Class.has(queryTarget.element(), hInfo.highlightClass());
+    var isHighlighted = function (component, hConfig, hState, queryTarget) {
+      return Class.has(queryTarget.element(), hConfig.highlightClass());
     };
 
-    var getHighlighted = function (component, hInfo) {
-      return SelectorFind.descendant(component.element(), '.' + hInfo.highlightClass()).bind(component.getSystem().getByDom);
+    var getHighlighted = function (component, hConfig, hState) {
+      return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind(component.getSystem().getByDom);
     };
 
-    var getFirst = function (component, hInfo) {
-      return SelectorFind.descendant(component.element(), '.' + hInfo.itemClass()).bind(component.getSystem().getByDom);
+    var getFirst = function (component, hConfig, hState) {
+      return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass()).bind(component.getSystem().getByDom);
     };
 
-    var getLast = function (component, hInfo) {
-      var items = SelectorFilter.descendants(component.element(), '.' + hInfo.itemClass());
+    var getLast = function (component, hConfig, hState) {
+      var items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
       var last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none();
       return last.bind(component.getSystem().getByDom);
     };
 
-    var getDelta = function (component, hInfo, delta) {
-      var items = SelectorFilter.descendants(component.element(), '.' + hInfo.itemClass());
+    var getDelta = function (component, hConfig, hState, delta) {
+      var items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
       var current = Arr.findIndex(items, function (item) {
-        return Class.has(item, hInfo.highlightClass());
+        return Class.has(item, hConfig.highlightClass());
       });
 
       return current.bind(function (selected) {
@@ -81,12 +81,12 @@ define(
       });
     };
 
-    var getPrevious = function (component, hInfo) {
-      return getDelta(component, hInfo, -1);
+    var getPrevious = function (component, hConfig, hState) {
+      return getDelta(component, hConfig, hState, -1);
     };
 
-    var getNext = function (component, hInfo) {
-      return getDelta(component, hInfo, +1);
+    var getNext = function (component, hConfig, hState) {
+      return getDelta(component, hConfig, hState, +1);
     };
 
     return {

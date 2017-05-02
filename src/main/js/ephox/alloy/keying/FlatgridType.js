@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.behaviour.keyboard.KeyingState',
     'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
@@ -12,68 +13,56 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.WrapArrNavigation',
     'ephox.boulder.api.FieldSchema',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.katamari.api.Cell',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (Keys, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, Cell, Focus, SelectorFind) {
+  function (
+    Keys, KeyingState, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Cell, Fun, Option, Focus,
+    SelectorFind
+  ) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       Fields.onKeyboardHandler('onEscape'),
       FieldSchema.defaulted('captureTab', false),
-
-      Fields.initSize(),
-      FieldSchema.state('dimensions', function () {
-        return Cell(Option.none());
-      }),
-
-      FieldSchema.state('setGridSize', function () {
-        return function (gridInfo, numRows, numColumns) {
-          gridInfo.dimensions().set(
-            Option.some({
-              numRows: Fun.constant(numRows),
-              numColumns: Fun.constant(numColumns)
-            })
-          );
-        };
-      })
+      Fields.initSize()
     ];
 
-    var focusIn = function (component, gridInfo) {
-      SelectorFind.descendant(component.element(), gridInfo.selector()).each(function (first) {
+    var focusIn = function (component, gridConfig, gridState) {
+      SelectorFind.descendant(component.element(), gridConfig.selector()).each(function (first) {
         component.getSystem().triggerFocus(first, component.element());
       });
     };
 
-    var execute = function (component, simulatedEvent, gridInfo) {
-      return Focus.search(component.element(), gridInfo.selector()).bind(function (focused) {
-        return gridInfo.execute()(component, simulatedEvent, focused);
+    var execute = function (component, simulatedEvent, gridConfig, gridState) {
+      return Focus.search(component.element(), gridConfig.selector()).bind(function (focused) {
+        return gridConfig.execute()(component, simulatedEvent, focused);
       });
     };
 
     var doMove = function (cycle) {
-      return function (element, focused, info) {
-        return DomPinpoint.locateVisible(element, focused, info.selector()).bind(function (identified) {
+      return function (element, focused, gridConfig, gridState) {
+        return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind(function (identified) {
           return cycle(
             identified.candidates(),
             identified.index(),
-            info.dimensions().get().map(function (d) { return d.numRows(); }).getOr(info.initSize().numRows()),
-            info.dimensions().get().map(function (d) { return d.numColumns(); }).getOr(info.initSize().numColumns())
+            gridState.getNumRows().getOr(gridConfig.initSize().numRows()),
+            gridState.getNumColumns().getOr(gridConfig.initSize().numColumns())
           );
         });
       };
     };
 
-    var handleTab = function (component, simulatedEvent, gridInfo) {
-      return gridInfo.captureTab() ? Option.some(true) : Option.none();
+    var handleTab = function (component, simulatedEvent, gridConfig, gridState) {
+      return gridConfig.captureTab() ? Option.some(true) : Option.none();
     };
 
-    var doEscape = function (component, simulatedEvent, gridInfo) {
-      return gridInfo.onEscape()(component, simulatedEvent);
+    var doEscape = function (component, simulatedEvent, gridConfig, gridState) {
+      return gridConfig.onEscape()(component, simulatedEvent);
     };
 
     var moveLeft = doMove(WrapArrNavigation.cycleLeft);
@@ -98,6 +87,6 @@ define(
 
     var getApis = {};
 
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.some(focusIn));
+    return KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));
   }
 );

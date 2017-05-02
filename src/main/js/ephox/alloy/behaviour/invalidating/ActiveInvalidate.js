@@ -8,21 +8,21 @@ define(
   ],
 
   function (InvalidateApis, EventHandler, Objects) {
-    var events = function (invalidInfo) {
-      return invalidInfo.validator().map(function (validatorInfo) {
+    var events = function (invalidConfig, invalidState) {
+      return invalidConfig.validator().map(function (validatorInfo) {
         return Objects.wrap(
           validatorInfo.onEvent(),
           EventHandler.nu({
             run: function (component) {
-              invalidInfo.notify().each(function (notifyInfo) {
+              invalidConfig.notify().each(function (notifyInfo) {
                 notifyInfo.onValidate()(component);
               });
 
               validatorInfo.validate()(component).get(function (valid) {
                 valid.fold(function (err) {
-                  InvalidateApis.markInvalid(component, invalidInfo, err);
+                  InvalidateApis.markInvalid(component, invalidConfig, invalidState, err);
                 }, function () {
-                  InvalidateApis.markValid(component, invalidInfo);
+                  InvalidateApis.markValid(component, invalidConfig, invalidState);
                 });
               });
             }

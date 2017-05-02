@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.data.Fields',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.navigation.KeyMatch',
@@ -11,13 +12,13 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (Keys, Fields, KeyingType, KeyMatch, KeyRules, Fun, Option) {
+  function (Keys, NoState, Fields, KeyingType, KeyMatch, KeyRules, Fun, Option) {
     var schema = [
       Fields.onStrictKeyboardHandler('onEscape')
     ];
 
-    var doEscape = function (component, simulatedEvent, escapeInfo) {
-      return escapeInfo.onEscape()(component, simulatedEvent);
+    var doEscape = function (component, simulatedEvent, escapeConfig, escapeState) {
+      return escapeConfig.onEscape()(component, simulatedEvent);
     };
     
     var getRules = Fun.constant([
@@ -27,6 +28,6 @@ define(
     var getEvents = Fun.constant({ });
     var getApis = Fun.constant({ });
 
-    return KeyingType.typical(schema, getRules, getEvents, getApis, Option.none());
+    return KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());
   }
 );

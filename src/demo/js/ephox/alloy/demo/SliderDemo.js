@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.SliderDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
@@ -18,7 +19,7 @@ define(
     'global!document'
   ],
 
-  function (Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, Insert, DomEvent, Element, Class, Css, document) {
+  function (Behaviour, Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -94,9 +95,9 @@ define(
                    display: 'flex', 'align-items': 'center', 'justify-content': 'center'
                 }
               },
-              behaviours: {
-                replacing: { }
-              }
+              behaviours: Behaviour.derive([
+                Replacing.config({ })
+              ])
             },
             spectrum: {
               dom: {

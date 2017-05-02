@@ -98,15 +98,23 @@ define(
       var go = function (c) {
         var cSpec = c.spec();
       
-        return Merger.deepMerge(
-          cSpec,
-          { 
-            '(dom.ref)': c.element().dom(),
-            '(element)': AlloyLogger.element(c.element()),
-            '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
-            components: Arr.map(c.components(), go)
-          }
-        );
+        return {
+          '(original.spec)': cSpec,
+          '(dom.ref)': c.element().dom(),
+          '(element)': AlloyLogger.element(c.element()),
+          '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
+          '(components)': Arr.map(c.components(), go),
+          '(bound.events)': Obj.mapToArray(c.events(), function (v, k) {
+            return [ k ];
+          }).join(', '),
+          '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, function (v, k) {
+            return v === undefined ? '--revoked--' : {
+              config: v.configAsRaw(),
+              'original-config': v.initialConfig,
+              state: c.readState(k)
+            };
+          }) : 'none'
+        };
       };
 
       return go(comp);

@@ -9,12 +9,11 @@ define(
   ],
 
   function (Behaviour, ActiveInvalidate, InvalidateApis, InvalidateSchema) {
-    return Behaviour.create(
-      InvalidateSchema,
-      'invalidating',
-      ActiveInvalidate,
-      InvalidateApis,
-      { }
-    );
+    return Behaviour.create({
+      fields: InvalidateSchema,
+      name: 'invalidating',
+      active: ActiveInvalidate,
+      apis: InvalidateApis
+    });
   }
 );

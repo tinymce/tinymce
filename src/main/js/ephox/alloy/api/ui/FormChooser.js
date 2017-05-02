@@ -3,7 +3,9 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.UiSketcher',
@@ -18,7 +20,10 @@ define(
     'ephox.sugar.api.search.SelectorFilter'
   ],
 
-  function (EventRoot, Highlighting, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Merger, Attr, SelectorFilter) {
+  function (
+    EventRoot, Behaviour, Highlighting, Keying, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Merger,
+    Attr, SelectorFilter
+  ) {
     var schema = FormChooserSchema.schema();
     var partTypes = FormChooserSchema.parts();
 
@@ -44,8 +49,8 @@ define(
         components: components,
 
         behaviours: Merger.deepMerge(
-          {
-            keying: {
+          Behaviour.derive([
+            Keying.config({
               mode: 'flow',
               selector: '.' + detail.markers().choiceClass(),
               executeOnMove: true,
@@ -60,9 +65,9 @@ define(
                   return true;
                 });
               }
-            },
+            }),
 
-            highlighting: {
+            Highlighting.config({
               itemClass: detail.markers().choiceClass(),
               highlightClass: detail.markers().selectedClass(),
               onHighlight: function (chooser, choice) {
@@ -71,9 +76,9 @@ define(
               onDehighlight: function (chooser, choice) {
                 Attr.set(choice.element(), 'aria-checked', 'false');
               }
-            },
+            }),
 
-            representing: {
+            Representing.config({
               store: {
                 mode: 'manual',
                 setValue: function (chooser, value) {
@@ -85,8 +90,8 @@ define(
                   return Highlighting.getHighlighted(chooser).map(Representing.getValue);
                 }
               }
-            }
-          },
+            })
+          ]),
           detail.chooserBehaviours()
         ),
 

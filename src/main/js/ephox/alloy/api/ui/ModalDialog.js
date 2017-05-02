@@ -73,13 +73,13 @@ define(
           getBody: getDialogBody
         },
 
-        behaviours: {
-          keying: {
+        behaviours: Behaviour.derive([
+          Keying.config({
             mode: 'cyclic',
             onEnter: detail.onExecute(),
             onEscape: detail.onEscape()
-          }
-        }
+          })
+        ])
       };
     };
 

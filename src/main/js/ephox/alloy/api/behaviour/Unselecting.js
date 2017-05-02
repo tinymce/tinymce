@@ -7,13 +7,10 @@ define(
   ],
 
   function (Behaviour, ActiveUnselecting) {
-    return Behaviour.create(
-      // No schema for unselecting
-      [ ],
-      'unselecting',
-      ActiveUnselecting,
-      { },
-      { }
-    );
+    return Behaviour.create({
+      fields: [ ],
+      name: 'unselecting',
+      active: ActiveUnselecting
+    });
   }
 );

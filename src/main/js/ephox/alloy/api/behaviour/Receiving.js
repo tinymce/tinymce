@@ -8,12 +8,10 @@ define(
   ],
 
   function (Behaviour, ActiveReceiving, ReceivingSchema) {
-    return Behaviour.create(
-      ReceivingSchema,
-      'receiving',
-      ActiveReceiving,
-      { },
-      { }
-    );
+    return Behaviour.create({
+      fields: ReceivingSchema,
+      name: 'receiving',
+      active: ActiveReceiving
+    });
   }
 );

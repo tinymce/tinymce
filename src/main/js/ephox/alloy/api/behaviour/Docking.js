@@ -8,11 +8,10 @@ define(
   ],
 
   function (Behaviour, ActiveDocking, DockingSchema) {
-    return Behaviour.create(
-      DockingSchema,
-      'docking',
-      ActiveDocking,
-      { }
-    );
+    return Behaviour.create({
+      fields: DockingSchema,
+      name: 'docking',
+      active: ActiveDocking
+    });
   }
 );

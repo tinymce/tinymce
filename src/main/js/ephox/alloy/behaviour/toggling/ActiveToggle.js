@@ -10,17 +10,17 @@ define(
   ],
 
   function (ToggleApis, Behaviour, DomModification, Objects, Arr) {
-    var exhibit = function (base, toggleInfo) {
+    var exhibit = function (base, toggleConfig, toggleState) {
       return DomModification.nu({ });
     };
 
-    var events = function (toggleInfo) {
-      var execute = Behaviour.executeEvent(toggleInfo, ToggleApis.toggle);
-      var load = Behaviour.loadEvent(toggleInfo, ToggleApis.onLoad);
+    var events = function (toggleConfig, toggleState) {
+      var execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);
+      var load = Behaviour.loadEvent(toggleConfig, toggleState, ToggleApis.onLoad);
 
       return Objects.wrapAll(
         Arr.flatten([
-          toggleInfo.toggleOnExecute() ? [ execute ] : [ ],
+          toggleConfig.toggleOnExecute() ? [ execute ] : [ ],
           [ load ]
         ])
       );

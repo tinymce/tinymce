@@ -25,9 +25,9 @@ asynctest(
         return Button.sketch({
           dom: { tag: 'button', innerHtml: t },
           action: store.adder(v + '.clicked'),
-          buttonBehaviours: {
-            tabstopping: true
-          }
+          buttonBehaviours: Behaviour.derive([
+            Tabstopping.config({ })
+          ])
         });
       };
 

@@ -8,31 +8,33 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.TieredMenu',
-    'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
+    'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
  
   function (
-    ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, GuiSetup, TestDropdownMenu,
-    Future, Result
+    ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, TestDropdownMenu,
+    GuiSetup, Future, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var sink = Memento.record(
       Container.sketch({
-        containerBehaviours: {
-          positioning: {
+        containerBehaviours: Behaviour.derive([
+          Positioning.config({
             useFixed: true
-          }
-        }
+          })
+        ])
       })
     );
 

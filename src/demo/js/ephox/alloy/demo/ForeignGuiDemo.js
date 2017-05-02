@@ -2,6 +2,10 @@ define(
   'ephox.alloy.demo.ForeignGuiDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Dragging',
+    'ephox.alloy.api.behaviour.Pinching',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.ForeignGui',
     'ephox.alloy.construct.EventHandler',
@@ -22,8 +26,8 @@ define(
   ],
 
   function (
-    SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, PlatformDetection, Insert, InsertAll, DomEvent, Element, Elements, Node, Css, SelectorFind,
-    Height, Width
+    Behaviour, Dragging, Pinching, Toggling, SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, PlatformDetection, Insert, InsertAll, DomEvent,
+    Element, Elements, Node, Css, SelectorFind, Height, Width
   ) {
 
     var resize = function (element, changeX, changeY) {
@@ -96,11 +100,11 @@ define(
             {
               getTarget: onNode('code'),
               alloyConfig: {
-                behaviours: {
-                  toggling: {
+                behaviours: Behaviour.derive([
+                  Toggling.config({
                     toggleClass: 'selected'
-                  }
-                },
+                  })
+                ]),
 
                 events: {
                   click: EventHandler.nu({
@@ -116,26 +120,28 @@ define(
             {
               getTarget: onNode('strong'),
               alloyConfig: {
-                behaviours: {
-                  dragging: platform.deviceType.isTouch() ? {
-                    mode: 'touch'
-                  } : {
-                    mode: 'mouse',
-                    blockerClass: 'blocker'
-                  }
-                }
+                behaviours: Behaviour.derive([
+                  Dragging.config(
+                    platform.deviceType.isTouch() ? {
+                      mode: 'touch'
+                    } : {
+                      mode: 'mouse',
+                      blockerClass: 'blocker'
+                    }
+                  )
+                ])
               }
             },
 
             {
               getTarget: onNode('img'),
               alloyConfig: {
-                behaviours: {
-                  pinching: {
+                behaviours: Behaviour.derive([
+                  Pinching.config({
                     onPinch: resize,
                     onPunch: resize
-                  }
-                }
+                  })
+                ])
               }
             }
           ]

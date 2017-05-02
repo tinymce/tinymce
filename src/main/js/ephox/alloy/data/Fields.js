@@ -80,7 +80,15 @@ define(
 
     var onStrictKeyboardHandler = function (fieldName) {
       return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
-    }
+    };
+
+    var output = function (name, value) {
+      return FieldSchema.state(name, Fun.constant(value));
+    };
+
+    var snapshot = function (name) {
+      return FieldSchema.state(name, Fun.identity);
+    };
 
     return {
       initSize: Fun.constant(initSize),
@@ -93,7 +101,10 @@ define(
       onHandler: onHandler,
       onKeyboardHandler: onKeyboardHandler,
       onStrictHandler: onStrictHandler,
-      onStrictKeyboardHandler: onStrictKeyboardHandler
+      onStrictKeyboardHandler: onStrictKeyboardHandler,
+
+      output: output,
+      snapshot: snapshot
     };
   }
 );
