@@ -41,7 +41,8 @@ define(
       FieldSchema.strict('toolstrip'),
       FieldSchema.strict('toolbar'),
       FieldSchema.strict('container'),
-      FieldSchema.strict('alloy')
+      FieldSchema.strict('alloy'),
+      FieldSchema.strict('masklabel')
     ]);
   }
 );

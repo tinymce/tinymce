@@ -30,7 +30,7 @@ define(
       };
 
       var mask = GuiFactory.build(
-        TapToEditMask.sketch(onTap)
+        TapToEditMask.sketch(onTap, mobile.masklabel())
       );
 
       mobile.alloy.add(mask);

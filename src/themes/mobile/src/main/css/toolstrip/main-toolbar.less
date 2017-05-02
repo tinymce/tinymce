@@ -13,10 +13,14 @@
     flex: 1;
   }
 
+  &.tinymce-mobile-toolbar-scrollable-group {
+    // Allow the scrollable group to fill all the space between the edge groups
+    flex-grow: 1;
+  }
+
   .tinymce-mobile-toolbar-group-item {
     padding-left: @toolstrip-button-horizontal-padding;
     padding-right: @toolstrip-button-horizontal-padding;
-
 
     &.tinymce-mobile-toolbar-button {
       color: @toolstrip-foreground-color;
@@ -33,13 +37,3 @@
     }
   }
 }
-  /*
-
-    Doesn't seem to be required any more.
-
-  &.tinymce-mobile-toolbar-scrollable-group {
-    // Allow the scrollable group to fill all the space between the edge groups
-    flex-grow: 1;
-  }
-
-  */
