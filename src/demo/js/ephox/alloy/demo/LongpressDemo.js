@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
@@ -32,8 +33,8 @@ define(
   ],
 
   function (
-    Behaviour, Highlighting, Positioning, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, EventHandler, DemoSink,
-    HtmlDisplay, Layout, Fun, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
+    Behaviour, Highlighting, Positioning, Toggling, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, EventHandler,
+    DemoSink, HtmlDisplay, Layout, Fun, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -118,21 +119,28 @@ define(
               dom: {
                 tag: 'span',
                 innerHtml: 'Menu button',
-                styles: {
-                  padding: '1em',
-                  display: 'inline-block',
-                  'border-radius': '50%',
-                  background: 'black',
-                  color: 'white'
-                }
+                classes: [ 'tap-menu' ]
               },
               behaviours: Behaviour.derive([
-                Unselecting.config({ })
+                Unselecting.config({ }),
+                Toggling.config({
+                  toggleClass: 'selected',
+                  toggleOnExecute: false,
+                  aria: {
+                    mode: 'selected'
+                  }
+                })
               ]),
               events: {
                 'contextmenu': EventHandler.nu({
                   run: function (component, simulatedEvent) {
                     simulatedEvent.event().kill();
+                  }
+                }),
+
+                'alloy.tap': EventHandler.nu({
+                  run: function (comp, se) {
+                    Toggling.toggle(comp);
                   }
                 }),
 
