@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <script type="text/javascript" src="../../../config/bolt/bootstrap-demo.js"></script>
-    <link href="../css/alloy-demo.css" rel="Stylesheet">
     <script type="text/javascript">
       ephox.bolt.module.api.main('ephox.alloy.demo.LongpressDemo');
     </script>
@@ -16,6 +15,28 @@
         display: inline-block;
         padding: 30px;
         border: 1px solid blue;
+      }
+
+      .alloy-selected-orb > span {
+        background-color: #cadbee;
+      }
+
+      .alloy-orb > span {
+        border-radius: 50%;
+        padding: 0.5em;
+        margin: 0.1em;
+      }
+
+      .alloy-orb {
+        background-color: white;
+        border-radius: 50%;
+        padding: 1.0em;
+        margin: 0.2em;
+        border: 1px solid black;
+      }
+
+      :focus {
+        outline: none;
       }
     </style>
   </head>

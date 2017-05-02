@@ -4,10 +4,11 @@ define(
   [
     'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.properties.Css'
   ],
 
-  function (Attachment, Future, Option) {
+  function (Attachment, Future, Option, Css) {
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sConfig, sState, data) {

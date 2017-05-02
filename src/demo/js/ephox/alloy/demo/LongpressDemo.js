@@ -83,48 +83,31 @@ define(
                     attributes: {
                       'data-value': itemSpec.data.value
                     },
-                    classes: [ 'alloy-item' ],
-                    innerHtml: itemSpec.data.text,
-                    styles: {
-                      // background: 'black',
-                      // color: 'white',
-                      'border-radius': '50%',
-                      padding: '20px',
-                      margin: '5px'
-                    }
+                    classes: [ 'alloy-orb' ]
                   },
-                  components: [ ]
+                  components: [
+                    {
+                      dom: {
+                        tag: 'span',
+                        innerHtml: itemSpec.data.text
+                      }
+                    }
+                  ]
                 };              
               }
             }
           },
 
-          // data: {
-          //   expansions: { },
-          //   menus: {
-          //     dog: {
-          //       value: 'dog',
-          //       items: [
-          //         { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
-          //         { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
-
-          //       ],
-          //       textkey: 'Dog'
-          //     }
-          //   },
-          //   primary: 'dog'
-          // },
-
           markers: {
-            item: 'alloy-item',
-            selectedItem: 'alloy-selected-item'
+            item: 'alloy-orb',
+            selectedItem: 'alloy-selected-orb'
           }
         })
       );
       
       var button1 = HtmlDisplay.section(
         gui,
-        'This button is a <code>button</code> tag with an image',
+        'Run this in touch device mode. It is a button that if you press and hold on it, it opens a circular menu below.',
         {
           dom: {
             tag: 'div'
