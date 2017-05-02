@@ -90,7 +90,9 @@ define(
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
             alloy: realm.system(),
-            masklabel: Fun.constant(editor.settings.readonly === 1 ? 'Tap to View' : 'Tap to Edit')
+            translate: function (key) {
+              return key === 'Tap to Edit' && editor.settings.readonly === 1 ? 'Tap to View' : key;
+            }
           });
 
           var createHeadingButton = function (level) {

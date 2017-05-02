@@ -8,7 +8,7 @@ define(
   ],
 
   function (Button, Container, Styles) {
-    var sketch = function (onTap, label) {
+    var sketch = function (onTap, translate) {
 
       return Button.sketch({
         dom: {
@@ -37,7 +37,7 @@ define(
                   Container.sketch({
                     dom: {
                       // FIX: i18n
-                      innerHtml: label // 'Tap to Edit'
+                      innerHtml: translate('Tap to Edit')
                     }
                   })
                 ]

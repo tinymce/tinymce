@@ -42,7 +42,7 @@ define(
       FieldSchema.strict('toolbar'),
       FieldSchema.strict('container'),
       FieldSchema.strict('alloy'),
-      FieldSchema.strict('masklabel')
+      FieldSchema.defaulted('translate', Fun.identity)
     ]);
   }
 );
