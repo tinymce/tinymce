@@ -144,7 +144,7 @@ define(
       }, { });
 
       var extract = function (path, strength, o) {
-        var keys = Type.isBoolean(o) ? [ ] : Obj.keys(o);
+        var keys = Type.isBoolean(o) ? [ ] : Arr.filter(Obj.keys(o), function (kv) { return o[kv] !== undefined; });
         var extra = Arr.filter(keys, function (k) {
           return !Objects.hasKey(fieldNames, k);
         });
