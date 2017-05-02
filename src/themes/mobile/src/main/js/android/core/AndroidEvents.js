@@ -2,16 +2,15 @@ define(
   'tinymce.themes.mobile.android.core.AndroidEvents',
 
   [
-    'ephox.alloy.events.TapEvent',
     'ephox.katamari.api.Arr',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.selection.WindowSelection'
+    'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (TapEvent, Arr, PlatformDetection, Compare, DomEvent, Css, WindowSelection) {
+  function (Arr, PlatformDetection, Compare, DomEvent, Css, TappingEvent) {
     var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
 
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -30,23 +29,15 @@ define(
     */
     var initEvents = function (editorApi, toolstrip) {
 
-      var tapEvent = TapEvent.monitor({
-        triggerEvent: function (type, evt) {
-          editorApi.onTapContent(evt);
-        }
-      });
+      var tapping = TappingEvent.monitor(editorApi);
 
       var listeners = [
         DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
           editorApi.onTouchContent(evt);
-          tapEvent.fireIfReady(evt, 'touchstart');
+          tapping.fireTouchstart(evt);
         }),
-        DomEvent.bind(editorApi.body(), 'touchend', function (evt) {
-          tapEvent.fireIfReady(evt, 'touchend');
-        }),
-        DomEvent.bind(editorApi.body(), 'touchmove', function (evt) {
-          tapEvent.fireIfReady(evt, 'touchmove');
-        })
+        tapping.onTouchmove(),
+        tapping.onTouchend()
       ].concat(
         isAndroid6 ? [ ] : [
           DomEvent.bind(editorApi.doc(), 'selectionchange', function () {

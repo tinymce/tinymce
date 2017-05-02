@@ -8,10 +8,11 @@ define(
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location'
+    'ephox.sugar.api.view.Location',
+    'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (TapEvent, Arr, Throttler, Compare, DomEvent, Height, Location) {
+  function (TapEvent, Arr, Throttler, Compare, DomEvent, Height, Location, TappingEvent) {
     var initEvents = function (editorApi, iosApi, toolstrip, socket) {
       var saveSelectionFirst = function () {
         iosApi.run(function (api) {
@@ -95,11 +96,7 @@ define(
         });
       };
 
-      var tapEvent = TapEvent.monitor({
-        triggerEvent: function () {
-           console.log('triggering');
-        }
-      });
+      var tapping = TappingEvent.monitor(editorApi);
 
       var refreshThrottle = Throttler.last(refreshView, 300);
 
@@ -163,17 +160,11 @@ define(
         DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
           clearSelection();
           editorApi.onTouchContent(evt);
-
-          tapEvent.fireIfReady(evt, 'touchstart');
+          tapping.fireTouchstart(evt);
         }),
 
-        DomEvent.bind(editorApi.body(), 'touchmove', function (evt) {
-          tapEvent.fireIfReady(evt, 'touchmove');
-        }),
-
-        DomEvent.bind(editorApi.body(), 'touchend', function (evt) {
-          tapEvent.fireIfReady(evt, 'touchend');
-        }),
+        tapping.onTouchmove(),
+        tapping.onTouchend(),
 
         // Stop any "clicks" being processed in the body at alls
         DomEvent.bind(editorApi.body(), 'click', function (event) {
