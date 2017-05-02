@@ -6,15 +6,16 @@ define(
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Traverse'
+    'ephox.sugar.api.search.Traverse',
+    'global!window'
   ],
 
-  function (FieldSchema, ValueSchema, Fun, Element, Traverse) {
+  function (FieldSchema, ValueSchema, Fun, Element, Traverse, window) {
     return ValueSchema.objOf([
       FieldSchema.strictObjOf('editor', [
         // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
         FieldSchema.strict('getFrame'),
-        FieldSchema.option('getBody'),
+        FieldSchema.defaulted('getBody', Fun.constant(Element.fromDom(window.document.body))),
         FieldSchema.option('getDoc'),
         FieldSchema.option('getWin'),
         FieldSchema.option('getSelection'),
