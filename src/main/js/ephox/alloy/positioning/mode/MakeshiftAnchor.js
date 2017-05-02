@@ -17,7 +17,10 @@ define(
     var placement = function (component, posInfo, anchorInfo, origin) {
       var anchorBox = Bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-      var layouts = Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
+      // var layouts = Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
+      var layouts = anchorInfo.layouts().getOrThunk(function () {
+        return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
+      });
 
       return Option.some(
         Anchoring({
@@ -37,6 +40,7 @@ define(
       FieldSchema.defaulted('height', 0),
       FieldSchema.defaulted('width', 0),
       FieldSchema.defaulted('bubble', Bubble(0, 0)),
+      FieldSchema.option('layouts'),
       Fields.output('placement', placement)
     ];
   }

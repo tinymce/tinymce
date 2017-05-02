@@ -14,17 +14,23 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.alloy.positioning.layout.Layout',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
+    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width',
     'global!document'
   ],
 
   function (
-    Highlighting, Positioning, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Fun, Option,
-    Result, Element, Class, document
+    Highlighting, Positioning, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, TieredMenu, EventHandler, DemoSink, HtmlDisplay, Layout, Fun,
+    Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -33,7 +39,7 @@ define(
       Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
-      gui.add(sink);
+      // gui.add(sink);
 
       var inlineComp = GuiFactory.build(
         InlineView.sketch({
@@ -71,8 +77,8 @@ define(
                     classes: [ 'alloy-item' ],
                     innerHtml: itemSpec.data.text,
                     styles: {
-                      background: 'black',
-                      color: 'white',
+                      // background: 'black',
+                      // color: 'white',
                       'border-radius': '50%',
                       padding: '20px',
                       margin: '5px'
@@ -149,7 +155,7 @@ define(
             tag: 'div'
           },
           components: [
-            // GuiFactory.premade(sink),
+            GuiFactory.premade(sink),
             {
               dom: {
                 tag: 'button',
@@ -159,11 +165,15 @@ define(
                 'longpress': EventHandler.nu({
                   run: function (component, simulatedEvent) {
                     console.log('simulatedEvent', simulatedEvent.event());
-                    
+                    var pos = Location.absolute(component.element());
+                    var w = Width.get(component.element());
+                    var h = Height.get(component.element());
                     InlineView.showAt(inlineComp, {
                       anchor: 'makeshift',
-                      x: simulatedEvent.event().x(),
-                      y: simulatedEvent.event().y()
+                      x: pos.left() + w/2,
+                      y: pos.top() + h,
+                      layouts: [ Layout.southmiddle, Layout.northmiddle ]
+                      // hotspot: component
                     }, inlineMenu.asSpec());
                   }
                 }),
@@ -171,11 +181,24 @@ define(
                 'touchmove': EventHandler.nu({
                   run: function (component, simulatedEvent) {
                     var e = simulatedEvent.event().raw().touches[0];
-                    var elem = Element.fromDom(document.elementFromPoint(e.clientX, e.clientY));
-                    component.getSystem().triggerEvent('mouseover', elem, {
-                      target: Fun.constant(elem),
-                      x: Fun.constant(e.clientX),
-                      y: Fun.constant(e.clientY)
+                    inlineMenu.getOpt(component).each(function (menu) {
+                      Option.from(document.elementFromPoint(e.clientX, e.clientY)).map(Element.fromDom).filter(function (tgt) {
+                        return menu.element().dom().contains(tgt.dom());
+                      }).fold(function () {
+                        console.log('no point');
+                        inlineMenu.getOpt(component).each(function (menu) {
+                          Highlighting.getHighlighted(menu).each(function (m) {
+                            Highlighting.dehighlightAll(m);
+                            Focus.active().each(Focus.blur);
+                          });
+                        });
+                      }, function (elem) {
+                        component.getSystem().triggerEvent('mouseover', elem, {
+                          target: Fun.constant(elem),
+                          x: Fun.constant(e.clientX),
+                          y: Fun.constant(e.clientY)
+                        });
+                      });
                     });
                   }
                 }),
