@@ -157,5 +157,5 @@
 
 .tinymce-mobile-icon-edit:before {
   content: url(../icons/tinymce-logo2.svg);
-  width: 48px;
+  width: 2em;
 }
