@@ -138,9 +138,9 @@ define(
                   }
                 }),
 
-                'alloy.tap': EventHandler.nu({
+                'touchstart': EventHandler.nu({
                   run: function (comp, se) {
-                    Toggling.toggle(comp);
+                    Toggling.on(comp);
                   }
                 }),
 
@@ -194,6 +194,7 @@ define(
                       });
                     });
                     InlineView.hide(inlineComp);
+                    Toggling.off(component);
 
                   }
                 })
