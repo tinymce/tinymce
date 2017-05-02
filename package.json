@@ -1,7 +1,11 @@
 {
   "name": "@ephox/sugar",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Basic DOM manipulation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/sugar"
+  },
   "scripts": {
     "test": "bedrock-auto --testdir src/test/js/browser -b chrome"
   },
