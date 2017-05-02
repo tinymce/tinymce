@@ -1,16 +1,18 @@
 asynctest(
   'browser.tinymce.core.EditorInitializationTest',
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'global!document',
     'global!window',
     'tinymce.core.EditorManager',
+    'tinymce.core.Env',
     'tinymce.core.test.ViewBlock',
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, document, window, EditorManager, ViewBlock, Tools, Theme) {
+  function (Assertions, Pipeline, LegacyUnit, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -76,6 +78,31 @@ asynctest(
           LegacyUnit.equalDom(ed.targetElm, elm2);
           teardown(done);
         }
+      });
+    });
+
+    suite.asyncTest("selector on non existing targets", function (_, done) {
+      EditorManager.init({
+        selector: '#non-existing-id',
+        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      }).then(function (result) {
+        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
+        teardown(done);
+      });
+    });
+
+    suite.asyncTest("selector on an unsupported browser", function (_, done) {
+      // Fake IE 8
+      var oldIeValue = Env.ie;
+      Env.ie = 8;
+
+      EditorManager.init({
+        selector: '#elm-2',
+        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      }).then(function (result) {
+        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
+        Env.ie = oldIeValue;
+        teardown(done);
       });
     });
 
