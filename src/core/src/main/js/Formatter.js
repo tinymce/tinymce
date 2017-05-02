@@ -1472,7 +1472,7 @@ define(
       }
 
       function isElementNode(node) {
-        return node.nodeType == 1 && !isBookmarkNode(node) && !isWhiteSpaceNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
+        return node && node.nodeType === 1 && !isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
       }
 
       function hasStyle(name) {
