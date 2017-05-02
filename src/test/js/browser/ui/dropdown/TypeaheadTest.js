@@ -82,7 +82,7 @@ asynctest(
       );
 
     }, function (doc, body, gui, component, store) {
-      
+
       var item = function (key) {
         return {
           selector: '.test-typeahead-selected-item[data-value="' + key + '"]',
