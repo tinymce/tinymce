@@ -53,10 +53,6 @@ define(
                 return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
               },
 
-              getBody: function () {
-                return Element.fromDom(window.document.body);
-              },
-
               onDomChanged: function () {
                 return {
                   unbind: Fun.noop
