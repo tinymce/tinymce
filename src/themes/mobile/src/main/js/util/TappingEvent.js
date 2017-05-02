@@ -7,7 +7,7 @@ define(
   ],
 
   function (TapEvent, DomEvent) {
-    // TODO: Work out how to make an API package of alloy
+    // TODO: TapEvent needs to be exposed in alloy's API somehow
     var monitor = function (editorApi) {
       var tapEvent = TapEvent.monitor({
         triggerEvent: function (type, evt) {

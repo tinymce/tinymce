@@ -74,7 +74,7 @@ define(
                 };
               },
 
-              onTouchContent: function (evt) {
+              onTouchContent: function () {
                 var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
                 // If something in the toolbar had focus, fire an execute on it (execute on tap away)
                 // Perhaps it will be clearer later what is a better way of doing this.

@@ -33,7 +33,7 @@ define(
 
       var listeners = [
         DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
-          editorApi.onTouchContent(evt);
+          editorApi.onTouchContent();
           tapping.fireTouchstart(evt);
         }),
         tapping.onTouchmove(),

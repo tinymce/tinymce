@@ -159,7 +159,7 @@ define(
         // When the user clicks back into the content, clear any fake selections
         DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
           clearSelection();
-          editorApi.onTouchContent(evt);
+          editorApi.onTouchContent();
           tapping.fireTouchstart(evt);
         }),
 
