@@ -62,7 +62,6 @@ define(
           filename: constant(name + '.' + mimeToExt(o.blob.type)),
           blob: constant(o.blob),
           base64: constant(o.base64),
-          type: constant(o.blob.type),
           blobUri: constant(o.blobUri || URL.createObjectURL(o.blob)),
           uri: constant(o.uri)
         };
