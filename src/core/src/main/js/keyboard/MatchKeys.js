@@ -45,8 +45,16 @@ define(
       });
     };
 
+    var action = function (f) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      return function () {
+        return f.apply(null, args);
+      };
+    };
+
     return {
-      match: match
+      match: match,
+      action: action
     };
   }
 );

@@ -14,15 +14,17 @@ define(
     'tinymce.core.keyboard.ArrowKeys',
     'tinymce.core.keyboard.BoundarySelection',
     'tinymce.core.keyboard.DeleteBackspaceKeys',
-    'tinymce.core.keyboard.EnterKey'
+    'tinymce.core.keyboard.EnterKey',
+    'tinymce.core.keyboard.SpaceKey'
   ],
-  function (ArrowKeys, BoundarySelection, DeleteBackspaceKeys, EnterKey) {
+  function (ArrowKeys, BoundarySelection, DeleteBackspaceKeys, EnterKey, SpaceKey) {
     var setup = function (editor) {
       var caret = BoundarySelection.setupSelectedState(editor);
 
       ArrowKeys.setup(editor, caret);
       DeleteBackspaceKeys.setup(editor, caret);
       EnterKey.setup(editor);
+      SpaceKey.setup(editor);
     };
 
     return {

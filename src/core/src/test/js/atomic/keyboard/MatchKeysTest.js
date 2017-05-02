@@ -2,6 +2,7 @@ asynctest(
   'atomic.tinymce.core.keyboard.MatchKeysTest',
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.katamari.api.Arr',
@@ -9,7 +10,7 @@ asynctest(
     'ephox.katamari.api.Merger',
     'tinymce.core.keyboard.MatchKeys'
   ],
-  function (Assertions, Pipeline, Step, Arr, Cell, Merger, MatchKeys) {
+  function (Assertions, Logger, Pipeline, Step, Arr, Cell, Merger, MatchKeys) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var state = Cell([]);
@@ -71,7 +72,14 @@ asynctest(
           { keyCode: 65, ctrlKey: true, metaKey: true, action: handleAction('b') }
         ],
         event({ keyCode: 65, metaKey: true, ctrlKey: true }), ['b']
-      )
+      ),
+      Logger.t('Action wrapper helper', Step.sync(function () {
+        var action = MatchKeys.action(function () {
+          return Array.prototype.slice.call(arguments, 0);
+        }, 1, 2, 3);
+
+        Assertions.assertEq('Should return the parameters passed in', [1, 2, 3], action());
+      }))
     ], function () {
       success();
     }, failure);
