@@ -90,6 +90,8 @@ define(
                 // If the user has tapped (touchstart, touchend without movement) on an image, select it.
                 if (Node.name(evt.target()) === 'img') {
                   editor.selection.select(evt.target().dom());
+                  // Prevent the default behaviour from firing so that the image stays selected
+                  evt.kill();
                 }
               }
             },
