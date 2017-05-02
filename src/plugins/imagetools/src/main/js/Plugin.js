@@ -127,7 +127,7 @@ define(
             }
           }
 
-          blobInfo = blobCache.toBlobInfo({
+          blobInfo = blobCache.create({
             id: createId(),
             blob: blob,
             base64: ir.toBase64(),

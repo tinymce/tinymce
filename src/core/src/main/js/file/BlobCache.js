@@ -37,12 +37,9 @@ define(
         return mimes[mime.toLowerCase()] || 'dat';
       }
 
-
-      // IMHO this one should be deprecated, since number of arguments increases and their order doesn't make sense
-      // use toBlobInfo() instead
-      function create(id, blob, base64, filename/*, uri */) {
-        return toBlobInfo({
-          id: id,
+      function create(o, blob, base64, filename) {
+        return typeof o === 'object' ? toBlobInfo(o) : toBlobInfo({
+          id: o,
           name: filename,
           blob: blob,
           base64: base64
@@ -114,7 +111,6 @@ define(
 
       return {
         create: create,
-        toBlobInfo: toBlobInfo,
         add: add,
         get: get,
         getByUri: getByUri,
