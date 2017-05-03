@@ -33,14 +33,15 @@ define(
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.Env',
     'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.InternalHtml',
+    'tinymce.plugins.paste.core.Newlines',
     'tinymce.plugins.paste.core.SmartPaste',
-    'tinymce.plugins.paste.core.Utils',
-    'tinymce.plugins.paste.core.Newlines'
+    'tinymce.plugins.paste.core.Utils'
   ],
-  function (RangeUtils, Env, Delay, VK, CutCopy, InternalHtml, SmartPaste, Utils, Newlines) {
+  function (RangeUtils, Env, Delay, Tools, VK, CutCopy, InternalHtml, Newlines, SmartPaste, Utils) {
     return function (editor) {
       var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
       var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
@@ -306,7 +307,10 @@ define(
        * @return {Object} Object with mime types and data for those mime types.
        */
       function getClipboardContent(clipboardEvent) {
-        return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+        var content = getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+
+        // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11877517/
+        return Utils.isMsEdge() ? Tools.extend(content, { 'text/html': '' }) : content;
       }
 
       function hasHtmlOrText(content) {
