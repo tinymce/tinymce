@@ -59,9 +59,9 @@ define(
       // when calculating anchors
       Css.set(placee.element(), 'position', 'fixed');
 
-      // var oldVisibility = Css.getRaw(placee.element(), 'visibility');
+      var oldVisibility = Css.getRaw(placee.element(), 'visibility');
       // INVESTIGATE: Will hiding the popup cause issues for focus?
-      // Css.set(placee.element(), 'visibility', 'hidden');
+      Css.set(placee.element(), 'visibility', 'hidden');
 
       var placer = anchorage.placement();
       placer(component, posConfig, anchorage, origin).each(function (anchoring) {
@@ -69,11 +69,11 @@ define(
         doPlace(component, origin, anchoring, posConfig, placee);
       });
 
-      // oldVisibility.fold(function () {
-      //   Css.remove(placee.element(), 'visibility');
-      // }, function (vis) {
-      //   Css.set(placee.element(), 'visibility', vis);
-      // });
+      oldVisibility.fold(function () {
+        Css.remove(placee.element(), 'visibility');
+      }, function (vis) {
+        Css.set(placee.element(), 'visibility', vis);
+      });
 
       // We need to remove position: fixed put on by above code if it is not needed.
       if (
@@ -85,13 +85,8 @@ define(
       ) Css.remove(placee.element(), 'position');
     };
 
-    var getMode = function (component, posConfig, posState) {
-      return posConfig.useFixed() ? 'fixed': 'absolute';
-    };
-
     return {
-      position: position,
-      getMode: getMode
+      position: position
     };
   }
 );
