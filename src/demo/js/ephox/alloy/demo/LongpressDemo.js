@@ -90,7 +90,7 @@ define(
                       shrinkingClass: 'longpress-menu-shrinking',
                       growingClass: 'longpress-menu-growing',
                       dimension: {
-                        property: 'height'
+                        property: 'transform'
                       },
 
                       onShrunk: function (view) {

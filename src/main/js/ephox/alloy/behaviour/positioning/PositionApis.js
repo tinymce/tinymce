@@ -85,8 +85,13 @@ define(
       ) Css.remove(placee.element(), 'position');
     };
 
+    var getMode = function (component, pConfig, pState) {
+      return pConfig.useFixed() ? 'fixed' : 'absolute'
+    };
+
     return {
-      position: position
+      position: position,
+      getMode: getMode
     };
   }
 );

@@ -18,7 +18,6 @@ define(
     var dimensionProp = function (property, getDimension) {
       return [
         Fields.output('initStyles', Objects.wrap(property, '0px')),
-        Fields.output('property', property),
         Fields.output('getDimension', function (elem) {
           return getDimension(elem) + 'px';
         }),
@@ -71,7 +70,14 @@ define(
             Fields.output('onDone', function (raw) {
               if (raw.propertyName === 'transform') return Option.some(Fun.noop);
               else return Option.none();
-            })
+            }),
+            Fields.output('getDimension', function (elem) {
+              return '0px';
+            }),
+            Fields.output('startShrink', Fun.noop),
+            Fields.output('forceSize', Fun.noop),
+            Fields.output('clearSize', Fun.noop),
+            Fields.output('setSize', Fun.noop)
           ]
         }
       ))
