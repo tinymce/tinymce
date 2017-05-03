@@ -82,6 +82,9 @@ define(
                     tag: 'div',
                     styles: { display: 'flex' }
                   },
+                  components: [
+                    Menu.parts().items()
+                  ],
                   value: 'touch-menu-1',
                   markers: {
                     item: 'alloy-orb',

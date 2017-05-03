@@ -67,7 +67,6 @@ define(
                     // var sink = DropdownUtils.getSink(hotspot, detail);
                     // console.log('sink', sink);
                     return InlineView.sketch({
-                      uid: 'inline-comp',
                       dom: {
                         tag: 'div'
                       },
@@ -119,38 +118,7 @@ define(
                     Merger.deepMerge(
                       externals.menu(),
                       {
-                        items: items,
-                        components: [
-                          Menu.parts().items()
-                        ],
-
-                        members: { 
-                          item: {
-                            munge: function (itemSpec) {
-                              return {
-                                dom: {
-                                  tag: 'span',
-                                  attributes: {
-                                    'data-value': itemSpec.data.value
-                                  },
-                                  classes: [ 'alloy-orb' ]
-                                },
-                                components: [
-                                  {
-                                    dom: {
-                                      tag: 'span',
-                                      innerHtml: itemSpec.data.text
-                                    }
-                                  }
-                                ]
-                              };              
-                            }
-                          }
-                        },
-                        markers: {
-                          item: 'alloy-orb',
-                          selectedItem: 'alloy-selected-orb'
-                        }
+                        items: items
                       }
                     )
                   );
