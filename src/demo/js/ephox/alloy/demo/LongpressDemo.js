@@ -91,12 +91,12 @@ define(
                   inlineBehaviours: Behaviour.derive([
                     Transitioning.config({
                       transitionClass: 'longpress-menu-transitioning',
-                      property: 'transform',
+                      initialState: 'closed',
                       destinationAttr: 'data-longpress-destination',
                       stateAttr: 'data-longpress-state',
 
                       routes: Transitioning.createRoutes({
-                        'open<->closed': { property: 'transform' }
+                        'open<->closed': { transition: 'transform' }
                       })
 
                       // closedClass: 'longpress-menu-closed',
@@ -114,8 +114,8 @@ define(
                   ]),
 
                   onShow: function (view) {
-                    Transitioning.progress(view, 'open');
-                    Sliding.grow(view)
+                    Transitioning.progressTo(view, 'open');
+                    // Sliding.grow(view)
                   },
 
                   onHide: function (view) {

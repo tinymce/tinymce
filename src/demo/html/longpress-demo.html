@@ -55,22 +55,27 @@
         padding-top: 40px;
       }
 
-      .longpress-menu-closed:not(.longpress-menu-shrinking) {
+      [data-longpress-state="closed"]:not(.longpress-menu-transitioning) [role="menu"] {
         visibility: hidden;
+        transform: translateY(-100%);
         opacity: 0;
       }
 
-      .longpress-menu-closed [role="menu"] {
-        transform: translateY(-100%);
-      }
-
-      .longpress-menu-open [role="menu"] {
+      [data-longpress-state="open"]:not(.longpress-menu-transitioning) [role="menu"] {
         visibility: visible;
         transform: translateY(0%);
         opacity: 1;
       }
 
-      .longpress-menu-growing [role="menu"] {
+      [data-longpress-state="open"][data-longpress-destination="closed"].longpress-menu-transitioning [role="menu"] {
+        transform: translateY(-100%);
+      }
+
+      [data-longpress-state="closed"][data-longpress-destination="open"].longpress-menu-transitioning [role="menu"] {
+        transform: translateY(0%);
+      }     
+
+      .longpress-menu-transitioning [role="menu"] {
         /*
         * Transition the height for 0.3s
         * After 0.1s, transition opacity for 0.2s
@@ -78,17 +83,6 @@
         */
         /*overflow: hidden;*/
         /*transform: translateY(0%);*/
-        transition: transform 1s ease-in-out;
-      }
-
-      .longpress-menu-shrinking [role="menu"] {
-        /*overflow: hidden;*/
-        /*transform: translateY(-100%);*/
-        /*
-        * Transition the opacity for 0.3s
-        * After 0.1s, transition height for 0.2s
-        * After 0.3s, transition visibility for 0s
-        */
         transition: transform 1s ease-in-out;
       }
 
