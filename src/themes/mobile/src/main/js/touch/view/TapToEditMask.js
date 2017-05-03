@@ -2,15 +2,15 @@ define(
   'tinymce.themes.mobile.touch.view.TapToEditMask',
 
   [
-    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.view.TapToEditButton'
   ],
 
-  function (Button, Container, Styles) {
-    var sketch = function (onTap, translate) {
+  function (Container, Styles, TapToEditButton) {
+    var sketch = function (onView, onEdit, translate) {
 
-      return Button.sketch({
+      return Container.sketch({
         dom: {
           tag: 'div',
           classes: [ Styles.resolve('disabled-mask') ]
@@ -21,8 +21,9 @@ define(
               classes: [ Styles.resolve('content-container') ]
             },
             components: [
-              Container.sketch({
+              TapToEditButton.sketch({
                 dom: {
+                  tag: 'div',
                   classes: [ Styles.resolve('content-tap-section') ]
                 },
                 components: [
@@ -44,7 +45,9 @@ define(
                       innerHtml: translate('Tap to Edit')
                     }
                   })
-                ]
+                ],
+                onView: onView,
+                onEdit: onEdit
               })
 
               // Container.sketch({
@@ -57,8 +60,8 @@ define(
               // })
             ]
           })
-        ],
-        action: onTap
+        ]
+        // action: onTap
       });
     };
 
