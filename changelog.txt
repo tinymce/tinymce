@@ -7,17 +7,17 @@ Version 4.6.0 (2017-05-04)
     Added role and aria- attributes as valid elements in the default valid elements config.
     Added new internal flag for PastePreProcess/PastePostProcess this is useful to know if the paste was coming from an external source.
     Added new ignore function to UndoManager this works similar to transact except that it doesn't add an undo level by default.
-    Fixed so urls gets retained for images when being edited. This url is then passed on to the upload handler.
-    Fixed so the editors would be initialized on readyState interactive instead of complete.
-    Fixed so the init event of the editor gets fired once all contentCSS files have been properly loaded.
-    Fixed so width/height of the editor gets taken from the textarea element if it's explicitly specified in styles.
-    Fixed so keep_styles set to false no longer clones class/style from the previous paragraph on enter.
-    Fixed so the default line-height is 1.2em to avoid zwnbsp characters from producing text rendering glitches on Windows.
-    Fixed so loading errors of content css gets presented by a notification message.
+    Fixed so that urls gets retained for images when being edited. This url is then passed on to the upload handler.
+    Fixed so that the editors would be initialized on readyState interactive instead of complete.
+    Fixed so that the init event of the editor gets fired once all contentCSS files have been properly loaded.
+    Fixed so that width/height of the editor gets taken from the textarea element if it's explicitly specified in styles.
+    Fixed so that keep_styles set to false no longer clones class/style from the previous paragraph on enter.
+    Fixed so that the default line-height is 1.2em to avoid zwnbsp characters from producing text rendering glitches on Windows.
+    Fixed so that loading errors of content css gets presented by a notification message.
     Fixed bug where it wasn't possible to copy/paste rows with colspans by using the table copy/paste feature.
     Fixed bug where the protect setting wasn't properly applied to header/footer parts when using the fullpage plugin.
     Fixed bug where custom formats that specified upper case element names where not applied correctly.
-    Fixed bug where some screen readers wasn't reading buttons due to an aria specific fix for IE 8.
+    Fixed bug where some screen readers weren't reading buttons due to an aria specific fix for IE 8.
     Fixed bug where cut wasn't working correctly on iOS due to it's clipboard API not working correctly.
     Fixed bug where Edge would paste div elements instead of paragraphs when pasting plain text.
     Fixed bug where the textpattern plugin wasn't dealing with trailing punctuations correctly.
@@ -27,7 +27,7 @@ Version 4.6.0 (2017-05-04)
     Fixed bug where the font size/font family dropdowns would sometimes show an incorrect value due to css not being loaded in time.
     Fixed bug with the media plugin inserting undefined instead of retaining size when media_dimensions was set to false.
     Fixed bug with deleting images when forced_root_blocks where set to false.
-    Fixed bug where input focus wasn't properly handled on nestled content editable elements.
+    Fixed bug where input focus wasn't properly handled on nested content editable elements.
     Fixed bug where Chrome/Firefox would throw an exception when selecting images due to recent change of setBaseAndExtent support.
     Fixed bug where malformed blobs would throw exceptions now they are simply ignored.
     Fixed bug where backspace/delete wouldn't work properly in some cases where all contents was selected in WebKit.
