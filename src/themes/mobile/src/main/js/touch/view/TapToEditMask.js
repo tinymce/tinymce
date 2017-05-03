@@ -37,20 +37,24 @@ define(
                   Container.sketch({
                     dom: {
                       // FIX: i18n
+                      styles: {
+                        'width': '60%',
+                        'text-align': 'center'
+                      },
                       innerHtml: translate('Tap to Edit')
                     }
                   })
                 ]
-              }),
-
-              Container.sketch({
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('disclosure') ],
-                  // FIX: i18n
-                  innerHtml: 'Powered by TinyMCE'
-                }
               })
+
+              // Container.sketch({
+              //   dom: {
+              //     tag: 'div',
+              //     classes: [ Styles.resolve('disclosure') ],
+              //     // FIX: i18n
+              //     innerHtml: 'Powered by TinyMCE'
+              //   }
+              // })
             ]
           })
         ],

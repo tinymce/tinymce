@@ -26,7 +26,8 @@ define(
         selector: '.tiny-text',
         theme: 'mobile',
         plugins: 'lists',
-        mobile_skin_url: '../../main/css'
+        mobile_skin_url: '../../main/css',
+        readonly: 1
       });
     };
   }
