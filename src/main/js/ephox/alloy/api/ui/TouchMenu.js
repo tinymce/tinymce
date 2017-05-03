@@ -148,7 +148,7 @@ define(
                   InlineView.showAt(sandbox, {
                     anchor: 'makeshift',
                     x: pos.left() + w/2,
-                    y: pos.top() + h,
+                    y: pos.top() + h/2,
                     layouts: [ Layout.southmiddle, Layout.northmiddle ]
                     // hotspot: component
                   }, iMenu);
