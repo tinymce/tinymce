@@ -2,10 +2,12 @@ define(
   'ephox.alloy.api.ui.TouchMenu',
 
   [
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.SystemEvents',
@@ -17,6 +19,7 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.positioning.layout.Layout',
     'ephox.alloy.ui.schema.TouchMenuSchema',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Merger',
@@ -31,8 +34,8 @@ define(
   ],
 
   function (
-    Behaviour, Coupling, Highlighting, Positioning, Sandboxing, Toggling, SystemEvents, InlineView, Menu, UiSketcher, EventHandler, DropdownUtils, PartType,
-    Layout, TouchMenuSchema, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location, Width, document
+    AdhocBehaviour, Behaviour, Coupling, Highlighting, Positioning, Representing, Sandboxing, Toggling, SystemEvents, InlineView, Menu, UiSketcher, EventHandler,
+    DropdownUtils, PartType, Layout, TouchMenuSchema, Objects, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location, Width, document
   ) {
     var schema = TouchMenuSchema.schema();
     var partTypes = TouchMenuSchema.parts();
@@ -68,7 +71,25 @@ define(
                       dom: {
                         tag: 'div'
                       },
-                      lazySink: DropdownUtils.getSink(hotspot, detail)
+                      lazySink: DropdownUtils.getSink(hotspot, detail),
+                      inlineBehaviours: Behaviour.derive([
+                        AdhocBehaviour.config('execute-for-menu')
+                      ]),
+                      customBehaviours: [
+                        AdhocBehaviour.events('execute-for-menu', Objects.wrapAll([
+                          {
+                            key: SystemEvents.execute(),
+                            value: EventHandler.nu({
+                              run: function (c, s) {
+                                var target = s.event().target();
+                                c.getSystem().getByDom(target).each(function (item) {
+                                  detail.onExecute()(c, item, Representing.getValue(item));
+                                });
+                              }
+                            })
+                          }
+                        ]))
+                      ]
                     });
                   }
                 }
@@ -94,51 +115,54 @@ define(
               run: function (component, simulatedEvent) {
                 detail.fetch()('').get(function (items) {
 
-                  var iMenu = Menu.sketch({
-                    dom: {
-                      tag: 'div',
-                      styles: {
-                        display: 'flex'
-                      }
-                    },
+                  var iMenu = Menu.sketch(
+                    Merger.deepMerge(
+                      externals.menu(),
+                      {
+                        dom: {
+                          tag: 'div',
+                          styles: {
+                            display: 'flex'
+                          }
+                        },
 
-                    value: 'edit.view.menu',
+                        value: 'edit.view.menu',
 
-                    items: items,
-                    components: [
-                      Menu.parts().items()
-                    ],
+                        items: items,
+                        components: [
+                          Menu.parts().items()
+                        ],
 
-                    members: { 
-                      item: {
-                        munge: function (itemSpec) {
-                          return {
-                            dom: {
-                              tag: 'span',
-                              attributes: {
-                                'data-value': itemSpec.data.value
-                              },
-                              classes: [ 'alloy-orb' ]
-                            },
-                            components: [
-                              {
+                        members: { 
+                          item: {
+                            munge: function (itemSpec) {
+                              return {
                                 dom: {
                                   tag: 'span',
-                                  innerHtml: itemSpec.data.text
-                                }
-                              }
-                            ]
-                          };              
+                                  attributes: {
+                                    'data-value': itemSpec.data.value
+                                  },
+                                  classes: [ 'alloy-orb' ]
+                                },
+                                components: [
+                                  {
+                                    dom: {
+                                      tag: 'span',
+                                      innerHtml: itemSpec.data.text
+                                    }
+                                  }
+                                ]
+                              };              
+                            }
+                          }
+                        },
+                        markers: {
+                          item: 'alloy-orb',
+                          selectedItem: 'alloy-selected-orb'
                         }
                       }
-                    },
-
-                    markers: {
-                      item: 'alloy-orb',
-                      selectedItem: 'alloy-selected-orb'
-                    }
-                  });
-
+                    )
+                  );
 
                   var sandbox = Coupling.getCoupled(component, 'sandbox');
                   console.log('simulatedEvent', simulatedEvent.event());

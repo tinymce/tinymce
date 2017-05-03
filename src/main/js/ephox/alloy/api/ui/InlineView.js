@@ -24,19 +24,23 @@ define(
         {
           uid: detail.uid(),
           dom: detail.dom(),
-          behaviours: Behaviour.derive([
-            Sandboxing.config({
-              isPartOf: function (container, data, queryElem) {
-                return ComponentStructure.isPartOf(data, queryElem);
-              },
-              getAttachPoint: function () {
-                return detail.lazySink()().getOrDie();
-              }
-            }),
-            Dismissal.receivingConfig({
-              isExtraPart: Fun.constant(false)
-            })
-          ]),
+          behaviours: Merger.deepMerge(
+            Behaviour.derive([
+              Sandboxing.config({
+                isPartOf: function (container, data, queryElem) {
+                  return ComponentStructure.isPartOf(data, queryElem);
+                },
+                getAttachPoint: function () {
+                  return detail.lazySink()().getOrDie();
+                }
+              }),
+              Dismissal.receivingConfig({
+                isExtraPart: Fun.constant(false)
+              })
+            ]),
+            detail.inlineBehaviours()
+          ),
+          customBehaviours: detail.customBehaviours(),
 
           apis: {
             showAt: function (sandbox, anchor, thing) {

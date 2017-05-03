@@ -30,11 +30,7 @@ define(
           Fields.members([ 'item' ])
         ],
         'menu', 
-        function (detail) {
-          return {
-            onExecute: detail.onExecute()
-          };
-        },
+        Fun.constant({ }),
         Fun.constant({ })
       ),
       InternalSink.partType()

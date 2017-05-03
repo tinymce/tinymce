@@ -10,7 +10,9 @@ define(
   function (Fields, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('lazySink'),
-      Fields.onHandler('onShow')
+      Fields.onHandler('onShow'),
+      FieldSchema.defaulted('inlineBehaviours', { }),
+      FieldSchema.defaulted('customBehaviours', [ ])
     ];
 
     return {
