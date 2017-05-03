@@ -51,6 +51,7 @@ define(
               onOpenMenu: function (sandbox, menu) {
                 var sink = lazySink().getOrDie();
                 Positioning.position(sink, anchor, menu);
+                Sandboxing.decloak(sandbox);
               },
 
               onOpenSubmenu: function (sandbox, item, submenu) {
@@ -60,6 +61,7 @@ define(
                   item: item,
                   bubble: Option.none()
                 }, submenu);
+                Sandboxing.decloak(sandbox);
 
               },
               onEscape: function () {
@@ -76,6 +78,7 @@ define(
 
     var open = function (detail, anchor, component, sandbox, externals) {
       var processed = openF(detail, anchor, component, sandbox, externals);
+      Sandboxing.cloak(sandbox);
       return Sandboxing.open(sandbox, processed).map(function () {
         return sandbox;
       });

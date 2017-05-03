@@ -45,13 +45,10 @@ define(
           apis: {
             showAt: function (sandbox, anchor, thing) {
               var sink = detail.lazySink()().getOrDie();
-              Css.set(sandbox.element(), 'visibility', 'hidden');
-              Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
+              Sandboxing.cloak(sandbox);
               Sandboxing.open(sandbox, Future.pure(thing)).get(function () {
-                
                 Positioning.position(sink, anchor, sandbox);
-                
-                Css.remove(sandbox.element(), 'visibility');
+                Sandboxing.decloak(sandbox);
                 detail.onShow()(sandbox);
               });
             },
