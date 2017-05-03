@@ -18,7 +18,6 @@ Version 4.6.0 (2017-05-04)
     Fixed bug where the protect setting wasn't properly applied to header/footer parts when using the fullpage plugin.
     Fixed bug where custom formats that specified upper case element names where not applied correctly.
     Fixed bug where some screen readers wasn't reading buttons due to an aria specific fix for IE 8.
-    Fixed bug where the assume_external_targets option in the link plugin wasn't working as expected.
     Fixed bug where cut wasn't working correctly on iOS due to it's clipboard API not working correctly.
     Fixed bug where Edge would paste div elements instead of paragraphs when pasting plain text.
     Fixed bug where the textpattern plugin wasn't dealing with trailing punctuations correctly.
