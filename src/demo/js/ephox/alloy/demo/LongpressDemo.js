@@ -78,6 +78,11 @@ define(
               toggleClass: 'selected',
               parts: { 
                 menu: {
+                  dom: {
+                    tag: 'div',
+                    styles: { display: 'flex' }
+                  },
+                  value: 'touch-menu-1',
                   markers: {
                     item: 'alloy-orb',
                     selectedItem: 'alloy-selected-orb'

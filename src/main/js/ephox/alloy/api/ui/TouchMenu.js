@@ -119,15 +119,6 @@ define(
                     Merger.deepMerge(
                       externals.menu(),
                       {
-                        dom: {
-                          tag: 'div',
-                          styles: {
-                            display: 'flex'
-                          }
-                        },
-
-                        value: 'edit.view.menu',
-
                         items: items,
                         components: [
                           Menu.parts().items()
