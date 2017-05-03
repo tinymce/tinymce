@@ -1,5 +1,51 @@
-Version 4.6.0 (2017-xx-xx)
-    ..
+Version 4.6.0 (2017-05-04)
+    Dropped support for IE 8-10 due to market share and lack of support from Microsoft. See tinymce docs for details.
+    Added an inline boundary caret position feature that makes it easier to type at the beginning/end of links/code elements.
+    Added a help plugin that adds a button and a dialog showing the editor shortcuts and loaded plugins.
+    Added an inline_boundaries option that allows you to disable the inline boundary feature if it's not desired.
+    Added a new ScrollIntoView event that allows you to override the default scroll to element behavior.
+    Added role and aria- attributes as valid elements in the default valid elements config.
+    Added new internal flag for PastePreProcess/PastePostProcess this is useful to know if the paste was coming from an external source.
+    Added new ignore function to UndoManager this works similar to transact except that it doesn't add an undo level by default.
+    Fixed so urls gets retained for images when being edited. This url is then passed on to the upload handler.
+    Fixed so the editors would be initialized on readyState interactive instead of complete.
+    Fixed so the init event of the editor gets fired once all contentCSS files have been properly loaded.
+    Fixed so width/height of the editor gets taken from the textarea element if it's explicitly specified in styles.
+    Fixed so keep_styles set to false no longer clones class/style from the previous paragraph on enter.
+    Fixed so the default line-height is 1.2em to avoid zwnbsp characters from producing text rendering glitches on Windows.
+    Fixed so loading errors of content css gets presented by a notification message.
+    Fixed bug where it wasn't possible to copy/paste rows with colspans by using the table copy/paste feature.
+    Fixed bug where the protect setting wasn't properly applied to header/footer parts when using the fullpage plugin.
+    Fixed bug where custom formats that specified upper case element names where not applied correctly.
+    Fixed bug where some screen readers wasn't reading buttons due to an aria specific fix for IE 8.
+    Fixed bug where the assume_external_targets option in the link plugin wasn't working as expected.
+    Fixed bug where cut wasn't working correctly on iOS due to it's clipboard API not working correctly.
+    Fixed bug where Edge would paste div elements instead of paragraphs when pasting plain text.
+    Fixed bug where the textpattern plugin wasn't dealing with trailing punctuations correctly.
+    Fixed bug where image editing would some times change the image format from jpg to png.
+    Fixed bug where some UI elements could be inserted into the toolbar even if they where not registered.
+    Fixed bug where it was possible to click the TD instead of the character in the character map and that caused an exception.
+    Fixed bug where the font size/font family dropdowns would sometimes show an incorrect value due to css not being loaded in time.
+    Fixed bug with the media plugin inserting undefined instead of retaining size when media_dimensions was set to false.
+    Fixed bug with deleting images when forced_root_blocks where set to false.
+    Fixed bug where input focus wasn't properly handled on nestled content editable elements.
+    Fixed bug where Chrome/Firefox would throw an exception when selecting images due to recent change of setBaseAndExtent support.
+    Fixed bug where malformed blobs would throw exceptions now they are simply ignored.
+    Fixed bug where backspace/delete wouldn't work properly in some cases where all contents was selected in WebKit.
+    Fixed bug with Angular producing errors since it was expecting events objects to be patched with their custom properties.
+    Fixed bug where the formatter would apply formatting to spellchecker errors now all bogus elements are excluded.
+    Fixed bug with backspace/delete inside table caption elements wouldn't behave properly on IE 11.
+    Fixed bug where typing after a contenteditable false inline element could move the caret to the end of that element.
+    Fixed bug where backspace before/after contenteditable false blocks wouldn't properly remove the right element.
+    Fixed bug where backspace before/after contenteditable false inline elements wouldn't properly empty the current block element.
+    Fixed bug where vertical caret navigation with a custom line-height would sometimes match incorrect positions.
+    Fixed bug with paste on Edge where character encoding wasn't handled properly due to a browser bug.
+    Fixed bug with paste on Edge where extra fragment data was inserted into the contents when pasting.
+    Fixed bug with pasting contents when having a whole block element selected on WebKit could cause WebKit spans to appear.
+    Fixed bug with visualchars not being filtered out correctly when extracting html contents.
+    Fixed bug where browsers would hang if you tried to load some malformed html contents.
+    Fixed bug where the init call promise wouldn't resolve if the specified selector didn't find any matching elements.
+    Fixed bug where the Schema isValidChild function was case sensitive.
 Version 4.5.3 (2017-02-01)
     Added keyboard navigation for menu buttons when the menu is in focus.
     Added api to the list plugin for setting custom classes/attributes on lists.
