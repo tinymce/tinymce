@@ -33,6 +33,11 @@ define(
               if (slideState.isExpanded()) Css.remove(component.element(), slideConfig.dimension().property()); // when showing, remove the dimension so it is responsive
               var notify = slideState.isExpanded() ? slideConfig.onGrown() : slideConfig.onShrunk();
               notify(component, simulatedEvent);
+            } else if (raw.propertyName === 'transform') {
+              SlidingApis.disableTransitions(component, slideConfig, slideState); // disable transitions immediately (Safari animates the dimension removal below)
+              if (slideState.isExpanded()) Css.remove(component.element(), raw.propertyName); // when showing, remove the dimension so it is responsive
+              var notify2 = slideState.isExpanded() ? slideConfig.onGrown() : slideConfig.onShrunk();
+              notify2(component, simulatedEvent);
             }
           }
         })

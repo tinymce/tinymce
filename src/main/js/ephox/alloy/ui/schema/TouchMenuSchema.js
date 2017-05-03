@@ -16,6 +16,7 @@ define(
       FieldSchema.strict('fetch'),
       Fields.onHandler('onOpen'),
       Fields.onKeyboardHandler('onExecute'),
+      Fields.onHandler('onTap'),
       FieldSchema.defaulted('touchmenuBehaviours', { }),
       FieldSchema.strict('toggleClass'),
       FieldSchema.option('lazySink'),
@@ -30,6 +31,15 @@ define(
           Fields.members([ 'item' ])
         ],
         'menu', 
+        Fun.constant({ }),
+        Fun.constant({ })
+      ),
+      PartType.external(
+        { sketch: Fun.identity },
+        [
+          FieldSchema.strict('dom')
+        ],
+        'view', 
         Fun.constant({ }),
         Fun.constant({ })
       ),

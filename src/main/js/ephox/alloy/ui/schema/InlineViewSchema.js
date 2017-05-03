@@ -11,6 +11,7 @@ define(
     var schema = [
       FieldSchema.strict('lazySink'),
       Fields.onHandler('onShow'),
+      Fields.onHandler('onHide'),
       FieldSchema.defaulted('inlineBehaviours', { }),
       FieldSchema.defaulted('customBehaviours', [ ])
     ];

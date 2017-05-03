@@ -9,7 +9,9 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
@@ -34,8 +36,9 @@ define(
   ],
 
   function (
-    AdhocBehaviour, Behaviour, Coupling, Highlighting, Positioning, Representing, Sandboxing, Toggling, SystemEvents, InlineView, Menu, UiSketcher, EventHandler,
-    DropdownUtils, PartType, Layout, TouchMenuSchema, Objects, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location, Width, document
+    AdhocBehaviour, Behaviour, Coupling, Highlighting, Positioning, Representing, Sandboxing, Sliding, Toggling, Unselecting, SystemEvents, InlineView, Menu,
+    UiSketcher, EventHandler, DropdownUtils, PartType, Layout, TouchMenuSchema, Objects, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location,
+    Width, document
   ) {
     var schema = TouchMenuSchema.schema();
     var partTypes = TouchMenuSchema.parts();
@@ -61,35 +64,41 @@ define(
                   syncWithExpanded: true
                 }
               }),
+              Unselecting.config({ }),
               Coupling.config({
                 others: {
                   sandbox: function (hotspot) {
                     // var sink = DropdownUtils.getSink(hotspot, detail);
                     // console.log('sink', sink);
-                    return InlineView.sketch({
-                      dom: {
-                        tag: 'div'
-                      },
-                      lazySink: DropdownUtils.getSink(hotspot, detail),
-                      inlineBehaviours: Behaviour.derive([
-                        AdhocBehaviour.config('execute-for-menu')
-                      ]),
-                      customBehaviours: [
-                        AdhocBehaviour.events('execute-for-menu', Objects.wrapAll([
-                          {
-                            key: SystemEvents.execute(),
-                            value: EventHandler.nu({
-                              run: function (c, s) {
-                                var target = s.event().target();
-                                c.getSystem().getByDom(target).each(function (item) {
-                                  detail.onExecute()(c, item, Representing.getValue(item));
-                                });
+                    return InlineView.sketch(
+                      Merger.deepMerge(
+                        externals.view(),
+                        {
+                          dom: {
+                            tag: 'div'
+                          },
+                          lazySink: DropdownUtils.getSink(hotspot, detail),
+                          inlineBehaviours: Behaviour.derive([
+                            AdhocBehaviour.config('execute-for-menu')
+                          ]),
+                          customBehaviours: [
+                            AdhocBehaviour.events('execute-for-menu', Objects.wrapAll([
+                              {
+                                key: SystemEvents.execute(),
+                                value: EventHandler.nu({
+                                  run: function (c, s) {
+                                    var target = s.event().target();
+                                    c.getSystem().getByDom(target).each(function (item) {
+                                      detail.onExecute()(c, item, Representing.getValue(item));
+                                    });
+                                  }
+                                })
                               }
-                            })
-                          }
-                        ]))
-                      ]
-                    });
+                            ]))
+                          ]
+                        }
+                      )
+                    );
                   }
                 }
               })
@@ -107,6 +116,13 @@ define(
             'touchstart': EventHandler.nu({
               run: function (comp, se) {
                 Toggling.on(comp);
+              }
+            }),
+
+            // FIX: SystemEvents.tap()
+            'alloy.tap': EventHandler.nu({
+              run: function (comp, se) {
+                detail.onTap()(comp);
               }
             }),
 
@@ -172,7 +188,7 @@ define(
                     });
                   });
                 });
-                InlineView.hide(Coupling.getCoupled(component, 'sandbox'));
+                Sliding.shrink(Coupling.getCoupled(component, 'sandbox'));
                 Toggling.off(component);
 
               }

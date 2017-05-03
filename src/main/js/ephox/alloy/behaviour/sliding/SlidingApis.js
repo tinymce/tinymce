@@ -33,7 +33,7 @@ define(
       Class.remove(component.element(), slideConfig.openClass());
       Class.add(component.element(), slideConfig.closedClass());
 
-      Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
+      // Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
       Css.reflow(component.element());
     };
 

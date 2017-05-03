@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
@@ -35,7 +36,7 @@ define(
   ],
 
   function (
-    Behaviour, Highlighting, Positioning, Toggling, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, TouchMenu,
+    Behaviour, Highlighting, Positioning, Sliding, Toggling, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, TouchMenu,
     EventHandler, DemoSink, HtmlDisplay, Layout, Fun, Future, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
   ) {
     return function () {
@@ -77,10 +78,39 @@ define(
               },
               toggleClass: 'selected',
               parts: { 
+                view: {
+                  dom: {
+                    tag: 'div'
+                  },
+
+                  inlineBehaviours: Behaviour.derive([
+                    Sliding.config({
+                      closedClass: 'longpress-menu-closed',
+                      openClass: 'longpress-menu-open',
+                      shrinkingClass: 'longpress-menu-shrinking',
+                      growingClass: 'longpress-menu-growing',
+                      dimension: {
+                        property: 'height'
+                      },
+
+                      onShrunk: function (view) {
+                        InlineView.hide(view);
+                      }
+                    })
+                  ]),
+
+                  onShow: function (view) {
+                    Sliding.grow(view)
+                  },
+
+                  onHide: function (view) {
+                    Sliding.shrink(view);
+                  }
+                },
                 menu: {
                   dom: {
                     tag: 'div',
-                    styles: { display: 'flex' }
+                    // styles: { display: 'flex' }
                   },
                   components: [
                     Menu.parts().items()
@@ -95,9 +125,13 @@ define(
                       munge: function (itemSpec) {
                         return {
                           dom: {
-                            tag: 'span',
+                            tag: 'div',
                             attributes: {
                               'data-value': itemSpec.data.value
+                            },
+                            styles: {
+                              display: 'flex',
+                              'justify-content': 'center'
                             },
                             classes: [ 'alloy-orb' ]
                           },

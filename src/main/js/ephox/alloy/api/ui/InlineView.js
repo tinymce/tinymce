@@ -57,6 +57,7 @@ define(
             },
             hide: function (sandbox) {
               Sandboxing.close(sandbox);
+              detail.onHide()(sandbox);
             }
           }
         }
