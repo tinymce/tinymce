@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TouchMenu',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result',
     'ephox.katamari.api.Throttler',
@@ -15,9 +16,11 @@ define(
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (Behaviour, Sliding, InlineView, Menu, TouchMenu, Future, Result, Throttler, Attr, Class, SelectorFind) {
+  function (Behaviour, Sliding, InlineView, Menu, TouchMenu, Cell, Future, Result, Throttler, Attr, Class, SelectorFind) {
     var sketch = function (spec) {
       var viewer = Throttler.last(spec.onView, 400);
+
+      var state = Cell('View');
 
       return TouchMenu.sketch({
         dom: spec.dom,
@@ -35,6 +38,7 @@ define(
         onExecute: function (comp, menuComp, item, data) {
           SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
             Attr.set(icon, 'data-mode', data.value);
+            state.set(data.value);
           });
           // if (data.value === 'view') spec.onView();
           // else if (data.value === 'edit') spec.onEdit();
@@ -44,6 +48,7 @@ define(
           Class.add(comp.element(), 'hovered');
           SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
             Attr.set(icon, 'data-mode', 'View');
+            state.set('View');
           });
         },
         onHoverOff: function (comp) {
@@ -55,6 +60,7 @@ define(
           console.log("onMiss");
           SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
             if (Class.has(comp.element(), 'hovered') === false) Attr.remove(icon, 'data-mode');
+            state.set('View');
           });
         },
 
@@ -66,7 +72,11 @@ define(
 
         toggleClass: 'selected',
         parts: {
-          sink: { },
+          sink: {
+            dom: {
+              classes: [ 'tap-button-sink' ]
+            }
+          },
           view: {
             dom: {
               tag: 'div',
@@ -86,7 +96,8 @@ define(
                 onShrunk: function (view) {
                   InlineView.hide(view);
                   
-                  spec.onView();
+                  if (state.get() === 'Edit') spec.onEdit();
+                  else spec.onView();
                 }
               })
             ]),

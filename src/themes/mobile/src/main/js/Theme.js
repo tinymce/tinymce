@@ -92,6 +92,10 @@ define(
             alloy: realm.system(),
             translate: function (key) {
               return key === 'Tap to Edit' && editor.settings.readonly === 1 ? 'Tap to View' : key;
+            },
+
+            setReadOnly: function (ro) {
+              realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
             }
           });
 
