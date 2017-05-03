@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
@@ -18,6 +19,7 @@ define(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.debugging.Debugging',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.positioning.layout.Layout',
@@ -36,11 +38,14 @@ define(
   ],
 
   function (
-    Behaviour, Highlighting, Positioning, Sliding, Toggling, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, TouchMenu,
-    EventHandler, DemoSink, HtmlDisplay, Layout, Fun, Future, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
+    Behaviour, Highlighting, Positioning, Sliding, Toggling, Transitioning, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu,
+    TieredMenu, TouchMenu, EventHandler, Debugging, DemoSink, HtmlDisplay, Layout, Fun, Future, Option, Result, Focus, Element, Node, Class, Height, Location,
+    Width, document
   ) {
     return function () {
       var gui = Gui.create();
+      Debugging.registerInspector('gui', gui);
+
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
@@ -84,22 +89,32 @@ define(
                   },
 
                   inlineBehaviours: Behaviour.derive([
-                    Sliding.config({
-                      closedClass: 'longpress-menu-closed',
-                      openClass: 'longpress-menu-open',
-                      shrinkingClass: 'longpress-menu-shrinking',
-                      growingClass: 'longpress-menu-growing',
-                      dimension: {
-                        property: 'transform'
-                      },
+                    Transitioning.config({
+                      transitionClass: 'longpress-menu-transitioning',
+                      property: 'transform',
+                      destinationAttr: 'data-longpress-destination',
+                      stateAttr: 'data-longpress-state',
 
-                      onShrunk: function (view) {
-                        InlineView.hide(view);
-                      }
+                      routes: Transitioning.createRoutes({
+                        'open<->closed': { property: 'transform' }
+                      })
+
+                      // closedClass: 'longpress-menu-closed',
+                      // openClass: 'longpress-menu-open',
+                      // shrinkingClass: 'longpress-menu-shrinking',
+                      // growingClass: 'longpress-menu-growing',
+                      // dimension: {
+                      //   property: 'transform'
+                      // },
+
+                      // onShrunk: function (view) {
+                      //   InlineView.hide(view);
+                      // }
                     })
                   ]),
 
                   onShow: function (view) {
+                    Transitioning.progress(view, 'open');
                     Sliding.grow(view)
                   },
 
