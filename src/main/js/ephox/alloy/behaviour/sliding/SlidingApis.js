@@ -16,14 +16,6 @@ define(
       });
     };
 
-    var getDimensionProperty = function (slideConfig) {
-      return slideConfig.dimension().property();
-    };
-
-    var getDimension = function (slideConfig, elem) {
-      return slideConfig.dimension().getDimension()(elem);
-    };
-
     var disableTransitions = function (component, slideConfig) {
       var root = getAnimationRoot(component, slideConfig);
       Classes.remove(root, [ slideConfig.shrinkingClass(), slideConfig.growingClass() ]);
@@ -33,14 +25,14 @@ define(
       Class.remove(component.element(), slideConfig.openClass());
       Class.add(component.element(), slideConfig.closedClass());
 
-      // Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
+      slideConfig.dimension().startShrink()(component, slideConfig);
       Css.reflow(component.element());
     };
 
     // Note, this is without transitions, so we can measure the size instantaneously
     var measureTargetSize = function (component, slideConfig) {
       setGrown(component, slideConfig);
-      var expanded = getDimension(slideConfig, component.element());
+      var expanded = slideConfig.dimension().getDimension()(component.element());
       setShrunk(component, slideConfig);
       return expanded;
     };
@@ -48,7 +40,7 @@ define(
     var setGrown = function (component, slideConfig) {
       Class.remove(component.element(), slideConfig.closedClass());
       Class.add(component.element(), slideConfig.openClass());
-      Css.remove(component.element(), getDimensionProperty(slideConfig));
+      slideConfig.dimension().clearSize()(component, slideConfig);
       // Reflow?
     };
 
@@ -56,8 +48,7 @@ define(
       slideState.setCollapsed();
 
       // Force current dimension to begin transition
-      Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
-      Css.reflow(component.element());
+      slideConfig.dimension().forceSize()(component, slideConfig, slideState);
 
       disableTransitions(component, slideConfig);
 
@@ -70,12 +61,12 @@ define(
       slideState.setCollapsed();
 
       // Force current dimension to begin transition
-      Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
-      Css.reflow(component.element());
+      slideConfig.dimension().forceSize()(component, slideConfig, slideState);
 
       var root = getAnimationRoot(component, slideConfig);
       Class.add(root, slideConfig.shrinkingClass()); // enable transitions
       setShrunk(component, slideConfig);
+
       slideConfig.onStartShrink()(component);
     };
 
@@ -89,7 +80,7 @@ define(
       Class.add(root, slideConfig.growingClass());
 
       setGrown(component, slideConfig);
-      Css.set(component.element(), getDimensionProperty(slideConfig), fullSize);
+      slideConfig.dimension().setSize()(component, slideConfig, fullSize);
       slideState.setExpanded();
       slideConfig.onStartGrow()(component);
     };
