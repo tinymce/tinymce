@@ -45,7 +45,7 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
     return {
       type: 'container',
       html: '<div style="padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
-              '<p><b>Plugins available:</b></p>' +
+              '<p><b>Premium plugins:</b></p>' +
               '<ul>' +
                 '<li>PowerPaste</li>' +
                 '<li>Spell Checker Pro</li>' +
