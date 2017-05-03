@@ -8,11 +8,17 @@ define(
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Result'
+    'ephox.katamari.api.Result',
+    'ephox.katamari.api.Throttler',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (Behaviour, Sliding, InlineView, Menu, TouchMenu, Future, Result) {
+  function (Behaviour, Sliding, InlineView, Menu, TouchMenu, Future, Result, Throttler, Attr, Class, SelectorFind) {
     var sketch = function (spec) {
+      var viewer = Throttler.last(spec.onView, 400);
+
       return TouchMenu.sketch({
         dom: spec.dom,
         components: [
@@ -23,23 +29,48 @@ define(
         // },
         fetch: function () {
           return Future.pure([
-            { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
-            { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
+            { type: 'item', data: { value: 'Edit', text: 'Edit' } }
           ]);
         },
-        onExecute: function (component, item, data) {
-          if (data.value === 'view') spec.onView();
-          else if (data.value === 'edit') spec.onEdit();
+        onExecute: function (comp, menuComp, item, data) {
+          SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
+            Attr.set(icon, 'data-mode', data.value);
+          });
+          // if (data.value === 'view') spec.onView();
+          // else if (data.value === 'edit') spec.onEdit();
         },
 
-        onTap: spec.onView,
+        onHoverOn: function (comp) {
+          Class.add(comp.element(), 'hovered');
+          SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
+            Attr.set(icon, 'data-mode', 'View');
+          });
+        },
+        onHoverOff: function (comp) {
+          console.log('removing');
+          Class.remove(comp.element(), 'hovered');
+        },
+
+        onMiss: function (comp) {
+          console.log("onMiss");
+          SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
+            if (Class.has(comp.element(), 'hovered') === false) Attr.remove(icon, 'data-mode');
+          });
+        },
+
+        onTap: function () {
+          setTimeout(function () {
+            viewer.throttle();
+          }, 300);
+        },
 
         toggleClass: 'selected',
         parts: {
           sink: { },
           view: {
             dom: {
-              tag: 'div'
+              tag: 'div',
+              classes: [ 'tap-button-view' ]
             },
 
             inlineBehaviours: Behaviour.derive([
@@ -54,6 +85,8 @@ define(
 
                 onShrunk: function (view) {
                   InlineView.hide(view);
+                  
+                  spec.onView();
                 }
               })
             ]),
