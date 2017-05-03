@@ -5,11 +5,27 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
+    'ephox.alloy.positioning.layout.Layout',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width'
   ],
 
-  function (Fields, InternalSink, PartType, FieldSchema, Fun) {
+  function (Fields, InternalSink, PartType, Layout, FieldSchema, Fun, Height, Location, Width) {
+    var anchorAtCentre = function (component) {
+      var pos = Location.absolute(component.element());
+      var w = Width.get(component.element());
+      var h = Height.get(component.element());
+      return {
+        anchor: 'makeshift',
+        x: pos.left() + w/2,
+        y: pos.top() + h/2,
+        layouts: [ Layout.southmiddle, Layout.northmiddle ]
+      };
+    };
+
     // Similar to dropdown.
     var schema = [
       FieldSchema.strict('dom'),
@@ -23,7 +39,9 @@ define(
       FieldSchema.defaulted('touchmenuBehaviours', { }),
       FieldSchema.strict('toggleClass'),
       FieldSchema.option('lazySink'),
-      FieldSchema.option('role')
+      FieldSchema.option('role'),
+
+      FieldSchema.defaulted('getAnchor', anchorAtCentre)
     ];
 
     var partTypes = [

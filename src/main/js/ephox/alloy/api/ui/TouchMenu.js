@@ -142,16 +142,8 @@ define(
 
                   var sandbox = Coupling.getCoupled(component, 'sandbox');
                   console.log('simulatedEvent', simulatedEvent.event());
-                  var pos = Location.absolute(component.element());
-                  var w = Width.get(component.element());
-                  var h = Height.get(component.element());
-                  InlineView.showAt(sandbox, {
-                    anchor: 'makeshift',
-                    x: pos.left() + w/2,
-                    y: pos.top() + h/2,
-                    layouts: [ Layout.southmiddle, Layout.northmiddle ]
-                    // hotspot: component
-                  }, iMenu);
+                  var anchor = detail.getAnchor()(component);
+                  InlineView.showAt(sandbox, anchor, iMenu);
                 });
               }
             }),
