@@ -38,6 +38,7 @@ define(
 
       var longpress = DelayedFunction(function (event) {
         longpressActive.set(true);
+        state.set(Option.none());
         settings.triggerEvent('longpress', event);
       }, 400);
 

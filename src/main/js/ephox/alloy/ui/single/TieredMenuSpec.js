@@ -281,13 +281,7 @@ define(
         ),
         customBehaviours: detail.customBehaviours(),
         eventOrder: detail.eventOrder(),
-        events: events,
-
-        apis: {
-          getSelectedItem: function (tmenu) {
-            return Highlighting.getHighlighted(tmenu).bind(Highlighting.getHighlighted);
-          }
-        }
+        events: events
       };
     };
 

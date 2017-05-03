@@ -56,8 +56,6 @@ define(
       var addPx = function (num) { return num + 'px'; };
 
       var newPosition = Origins.reposition(options.origin(), decision);
-      console.log('newPosition', decision, newPosition.left().getOr('no left'), newPosition.top().getOr('no top'),
-        newPosition.right().getOr('no right'), newPosition.bottom().getOr('no bottom'));
       Css.setOptions(element, {
         position: Option.some(newPosition.position()),
         left: newPosition.left().map(addPx),

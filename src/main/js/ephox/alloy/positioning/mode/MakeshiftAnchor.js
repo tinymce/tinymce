@@ -17,7 +17,6 @@ define(
     var placement = function (component, posInfo, anchorInfo, origin) {
       var anchorBox = Bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
 
-      // var layouts = Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
       var layouts = anchorInfo.layouts().getOrThunk(function () {
         return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
       });
