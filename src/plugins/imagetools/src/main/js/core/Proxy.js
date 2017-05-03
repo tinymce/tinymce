@@ -19,6 +19,15 @@ define(
     'tinymce.plugins.imagetools.core.Utils'
   ],
   function (Promise, Tools, Utils) {
+    var appendApiKey = function (url, apiKey) {
+      var separator = url.indexOf('?') === -1 ? '?' : '&';
+      if (/[?&]apiKey=/.test(url) || !apiKey) {
+        return url;
+      } else {
+        return url + separator + 'apiKey=' + encodeURIComponent(apiKey);
+      }
+    };
+
     var isServiceErrorCode = function (code) {
       return code === 400 || code === 403 || code === 500;
     };
@@ -44,7 +53,7 @@ define(
     };
 
     var requestServiceBlob = function (url, apiKey) {
-      return Utils.requestUrlAsBlob(url, {
+      return Utils.requestUrlAsBlob(appendApiKey(url, apiKey), {
         'Content-Type': 'application/json;charset=UTF-8',
         'tiny-api-key': apiKey
       }).then(function (result) {
