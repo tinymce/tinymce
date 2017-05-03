@@ -353,8 +353,8 @@ define(
 
           if (Env.ie && Env.ie < 11) {
             ErrorReporter.initError(
-              'Could not initialize TinyMCE since your browser is no longer supported.\n' +
-              'Read more here: https://www.tinymce.com/docs/get-started/system-requirements/'
+              'TinyMCE does not support the browser you are using. For a list of supported' +
+              ' browsers please see: https://www.tinymce.com/docs/get-started/system-requirements/'
             );
             return [];
           }
