@@ -41,7 +41,7 @@ Version 4.6.0 (2017-05-04)
     Fixed bug with paste on Edge where character encoding wasn't handled properly due to a browser bug.
     Fixed bug with paste on Edge where extra fragment data was inserted into the contents when pasting.
     Fixed bug with pasting contents when having a whole block element selected on WebKit could cause WebKit spans to appear.
-    Fixed bug with visualchars not being filtered out correctly when extracting html contents.
+    Fixed bug where the visualchars plugin wasn't working correctly showing invisible nbsp characters.
     Fixed bug where browsers would hang if you tried to load some malformed html contents.
     Fixed bug where the init call promise wouldn't resolve if the specified selector didn't find any matching elements.
     Fixed bug where the Schema isValidChild function was case sensitive.
