@@ -28,6 +28,11 @@ define(
           Css.set(component.element(), property, getDimension(component.element()) + 'px');
           Css.reflow(component.element());
         }),
+
+        Fields.output('garfield', function (f) {
+          var fullSize = measureTargetSize(component, slideConfig);
+        }),
+
         Fields.output('clearSize', function (component, slideConfig, slideState) {
           Css.remove(component.element(), property);
         }),
