@@ -89,7 +89,7 @@ define(
                                   run: function (c, s) {
                                     var target = s.event().target();
                                     c.getSystem().getByDom(target).each(function (item) {
-                                      detail.onExecute()(c, item, Representing.getValue(item));
+                                      detail.onExecute()(hotspot, c, item, Representing.getValue(item));
                                     });
                                   }
                                 })
@@ -116,6 +116,7 @@ define(
             'touchstart': EventHandler.nu({
               run: function (comp, se) {
                 Toggling.on(comp);
+                detail.onHoverOn()(comp);
               }
             }),
 
@@ -162,15 +163,31 @@ define(
                   Option.from(document.elementFromPoint(e.clientX, e.clientY)).map(Element.fromDom).filter(function (tgt) {
                     return iMenu.element().dom().contains(tgt.dom());
                   }).fold(function () {
+
+
+
                     console.log('no point');
                     Highlighting.dehighlightAll(iMenu);
                     Focus.active().each(Focus.blur);
+
+                    // Dupe.
+                    Option.from(document.elementFromPoint(e.clientX, e.clientY)).map(Element.fromDom).filter(function (tgt) {
+                      return component.element().dom().contains(tgt.dom());
+                    }).fold(function () {
+                      console.log("Hovering off");
+                      detail.onHoverOff()(component);
+                    }, function () {
+                      console.log("hovering on");
+                      detail.onHoverOn()(component);
+                    });
+
                   }, function (elem) {
                     component.getSystem().triggerEvent('mouseover', elem, {
                       target: Fun.constant(elem),
                       x: Fun.constant(e.clientX),
                       y: Fun.constant(e.clientY)
                     });
+                    detail.onHoverOff()(component);
                   });
                   simulatedEvent.event().kill();
                 });
@@ -181,7 +198,9 @@ define(
               run: function (component, simulatedEvent) {
                 var e = simulatedEvent.event().raw().touches[0];
                 getMenu(component).each(function (iMenu) {
-                  Highlighting.getHighlighted(iMenu).each(function (item) {
+                  Highlighting.getHighlighted(iMenu).fold(function () {
+                    detail.onMiss()(component);
+                  }, function (item) {
                     console.log('found item', item.element().dom());
                     component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
                       target: Fun.constant(item.element())
