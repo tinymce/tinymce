@@ -171,7 +171,9 @@ define(
     return {
       makeSandbox: makeSandbox,
       togglePopup: togglePopup,
-      open: open
+      open: open,
+
+      getSink: getSink
     };
   }
 );

@@ -1,0 +1,226 @@
+define(
+  'ephox.alloy.api.ui.TouchMenu',
+
+  [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.ui.InlineView',
+    'ephox.alloy.api.ui.Menu',
+    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.dropdown.DropdownUtils',
+    'ephox.alloy.parts.PartType',
+    'ephox.alloy.positioning.layout.Layout',
+    'ephox.alloy.ui.schema.TouchMenuSchema',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Future',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width',
+    'global!document'
+  ],
+
+  function (
+    Behaviour, Coupling, Highlighting, Positioning, Sandboxing, Toggling, SystemEvents, InlineView, Menu, UiSketcher, EventHandler, DropdownUtils, PartType,
+    Layout, TouchMenuSchema, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location, Width, document
+  ) {
+    var schema = TouchMenuSchema.schema();
+    var partTypes = TouchMenuSchema.parts();
+
+    var make = function (detail, components, spec, externals) {
+
+      var getMenu = function (component) {
+        var sandbox = Coupling.getCoupled(component, 'sandbox');
+        return Sandboxing.getState(sandbox);
+      };
+
+      return Merger.deepMerge(
+        {
+          uid: detail.uid(),
+          dom: detail.dom(),
+          components: components,
+          behaviours: Merger.deepMerge(
+            Behaviour.derive([
+              Toggling.config({
+                toggleClass: detail.toggleClass(),
+                aria: {
+                  mode: 'pressed',
+                  syncWithExpanded: true
+                }
+              }),
+              Coupling.config({
+                others: {
+                  sandbox: function (hotspot) {
+                    // var sink = DropdownUtils.getSink(hotspot, detail);
+                    // console.log('sink', sink);
+                    return InlineView.sketch({
+                      uid: 'inline-comp',
+                      dom: {
+                        tag: 'div'
+                      },
+                      lazySink: DropdownUtils.getSink(hotspot, detail)
+                    });
+                  }
+                }
+              })
+            ]),
+            detail.touchmenuBehaviours()
+          ),
+
+          events: {
+            'contextmenu': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                simulatedEvent.event().kill();
+              }
+            }),
+
+            'touchstart': EventHandler.nu({
+              run: function (comp, se) {
+                Toggling.on(comp);
+              }
+            }),
+
+            'longpress': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                detail.fetch()('').get(function (items) {
+
+                  var iMenu = Menu.sketch({
+                    dom: {
+                      tag: 'div',
+                      styles: {
+                        display: 'flex'
+                      }
+                    },
+
+                    value: 'edit.view.menu',
+
+                    items: items,
+                    components: [
+                      Menu.parts().items()
+                    ],
+
+                    members: { 
+                      item: {
+                        munge: function (itemSpec) {
+                          return {
+                            dom: {
+                              tag: 'span',
+                              attributes: {
+                                'data-value': itemSpec.data.value
+                              },
+                              classes: [ 'alloy-orb' ]
+                            },
+                            components: [
+                              {
+                                dom: {
+                                  tag: 'span',
+                                  innerHtml: itemSpec.data.text
+                                }
+                              }
+                            ]
+                          };              
+                        }
+                      }
+                    },
+
+                    markers: {
+                      item: 'alloy-orb',
+                      selectedItem: 'alloy-selected-orb'
+                    }
+                  });
+
+
+                  var sandbox = Coupling.getCoupled(component, 'sandbox');
+                  console.log('simulatedEvent', simulatedEvent.event());
+                  var pos = Location.absolute(component.element());
+                  var w = Width.get(component.element());
+                  var h = Height.get(component.element());
+                  InlineView.showAt(sandbox, {
+                    anchor: 'makeshift',
+                    x: pos.left() + w/2,
+                    y: pos.top() + h,
+                    layouts: [ Layout.southmiddle, Layout.northmiddle ]
+                    // hotspot: component
+                  }, iMenu);
+                });
+              }
+            }),
+
+            'touchmove': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                var e = simulatedEvent.event().raw().touches[0];
+                getMenu(component).each(function (iMenu) {
+                  Option.from(document.elementFromPoint(e.clientX, e.clientY)).map(Element.fromDom).filter(function (tgt) {
+                    return iMenu.element().dom().contains(tgt.dom());
+                  }).fold(function () {
+                    console.log('no point');
+                    Highlighting.dehighlightAll(iMenu);
+                    Focus.active().each(Focus.blur);
+                  }, function (elem) {
+                    component.getSystem().triggerEvent('mouseover', elem, {
+                      target: Fun.constant(elem),
+                      x: Fun.constant(e.clientX),
+                      y: Fun.constant(e.clientY)
+                    });
+                  });
+                  simulatedEvent.event().kill();
+                });
+              }
+            }),
+
+            'touchend': EventHandler.nu({
+              run: function (component, simulatedEvent) {
+                var e = simulatedEvent.event().raw().touches[0];
+                getMenu(component).each(function (iMenu) {
+                  Highlighting.getHighlighted(iMenu).each(function (item) {
+                    console.log('found item', item.element().dom());
+                    component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
+                      target: Fun.constant(item.element())
+                    });
+                  });
+                });
+                InlineView.hide(Coupling.getCoupled(component, 'sandbox'));
+                Toggling.off(component);
+
+              }
+            })
+          },
+
+          eventOrder: {
+            // Order, the button state is toggled first, so assumed !selected means close.
+            'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+          }
+        },
+        {
+          dom: {
+            attributes: {
+              role: detail.role().getOr('button')
+            }
+          }
+        }
+      );
+    };
+
+    var sketch = function (spec) {
+      return UiSketcher.composite(TouchMenuSchema.name(), schema, partTypes, make, spec);
+    };
+
+    // TODO: Remove likely dupe
+    var parts = PartType.generate(TouchMenuSchema.name(), partTypes);
+
+    return {
+      sketch: sketch,
+      parts: Fun.constant(parts)
+    };
+  }
+);

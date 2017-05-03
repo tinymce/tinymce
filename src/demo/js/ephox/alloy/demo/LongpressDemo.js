@@ -15,11 +15,13 @@ define(
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.api.ui.TouchMenu',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.alloy.positioning.layout.Layout',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
@@ -33,8 +35,8 @@ define(
   ],
 
   function (
-    Behaviour, Highlighting, Positioning, Toggling, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, EventHandler,
-    DemoSink, HtmlDisplay, Layout, Fun, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
+    Behaviour, Highlighting, Positioning, Toggling, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu, TieredMenu, TouchMenu,
+    EventHandler, DemoSink, HtmlDisplay, Layout, Fun, Future, Option, Result, Focus, Element, Node, Class, Height, Location, Width, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -45,66 +47,66 @@ define(
       var sink = DemoSink.make();
       // gui.add(sink);
 
-      var inlineComp = GuiFactory.build(
-        InlineView.sketch({
-          uid: 'inline-comp',
-          dom: {
-            tag: 'div'
-          },
-          lazySink: Fun.constant(Result.value(sink))
-        })
-      );
+      // var inlineComp = GuiFactory.build(
+      //   InlineView.sketch({
+      //     uid: 'inline-comp',
+      //     dom: {
+      //       tag: 'div'
+      //     },
+      //     lazySink: Fun.constant(Result.value(sink))
+      //   })
+      // );
 
-      var inlineMenu = Memento.record(
-        Menu.sketch({
-          dom: {
-            tag: 'div',
-            styles: {
-              display: 'flex'
-            }
-          },
+      // var inlineMenu = Memento.record(
+      //   Menu.sketch({
+      //     dom: {
+      //       tag: 'div',
+      //       styles: {
+      //         display: 'flex'
+      //       }
+      //     },
 
-          value: 'edit.view.menu',
+      //     value: 'edit.view.menu',
 
-          items: [
-            { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
-            { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
-          ],
+      //     items: [
+      //       { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
+      //       { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
+      //     ],
 
-          components: [
-            Menu.parts().items()
-          ],
+      //     components: [
+      //       Menu.parts().items()
+      //     ],
 
-          members: { 
-            item: {
-              munge: function (itemSpec) {
-                return {
-                  dom: {
-                    tag: 'span',
-                    attributes: {
-                      'data-value': itemSpec.data.value
-                    },
-                    classes: [ 'alloy-orb' ]
-                  },
-                  components: [
-                    {
-                      dom: {
-                        tag: 'span',
-                        innerHtml: itemSpec.data.text
-                      }
-                    }
-                  ]
-                };              
-              }
-            }
-          },
+      //     members: { 
+      //       item: {
+      //         munge: function (itemSpec) {
+      //           return {
+      //             dom: {
+      //               tag: 'span',
+      //               attributes: {
+      //                 'data-value': itemSpec.data.value
+      //               },
+      //               classes: [ 'alloy-orb' ]
+      //             },
+      //             components: [
+      //               {
+      //                 dom: {
+      //                   tag: 'span',
+      //                   innerHtml: itemSpec.data.text
+      //                 }
+      //               }
+      //             ]
+      //           };              
+      //         }
+      //       }
+      //     },
 
-          markers: {
-            item: 'alloy-orb',
-            selectedItem: 'alloy-selected-orb'
-          }
-        })
-      );
+      //     markers: {
+      //       item: 'alloy-orb',
+      //       selectedItem: 'alloy-selected-orb'
+      //     }
+      //   })
+      // );
       
       var button1 = HtmlDisplay.section(
         gui,
@@ -115,6 +117,57 @@ define(
           },
           components: [
             GuiFactory.premade(sink),
+
+            TouchMenu.sketch({
+              dom: {
+                tag: 'span',
+                innerHtml: 'Menu button (sketch)',
+                classes: [ 'tap-menu' ]
+              },
+              lazySink: function () {
+                return Result.value(sink)
+              },
+              fetch: function () {
+                return Future.pure([
+                  { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
+                  { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
+                ]);
+              },
+              toggleClass: 'selected',
+              parts: { 
+                menu: {
+                  markers: {
+                    item: 'alloy-orb',
+                    selectedItem: 'alloy-selected-orb'
+                  },
+                  members: {
+                    item: { 
+                      munge: function (itemSpec) {
+                        return {
+                          dom: {
+                            tag: 'span',
+                            attributes: {
+                              'data-value': itemSpec.data.value
+                            },
+                            classes: [ 'alloy-orb' ]
+                          },
+                          components: [
+                            {
+                              dom: {
+                                tag: 'span',
+                                innerHtml: itemSpec.data.text
+                              }
+                            }
+                          ]
+                        };              
+                      }
+                    }
+                  }
+                }
+
+              }
+            }),
+
             {
               dom: {
                 tag: 'span',
