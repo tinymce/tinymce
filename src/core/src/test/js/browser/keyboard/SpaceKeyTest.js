@@ -29,6 +29,15 @@ asynctest(
           tinyActions.sContentKeystroke(Keys.space(), {}),
           tinyApis.sAssertSelection([0, 1, 0], 1, [0, 1, 0], 1),
           tinyApis.sAssertContent('<p>a <a href="#">&nbsp;b</a> c</p>')
+        ])),
+        Logger.t('Press space at end of inline boundary', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetContent('<p>a <a href="#">b</a> c</p>'),
+          tinyApis.sSetCursor([0, 1, 0], 1),
+          tinyApis.sNodeChanged,
+          tinyActions.sContentKeystroke(Keys.space(), {}),
+          tinyApis.sAssertSelection([0, 1, 0], 2, [0, 1, 0], 2),
+          tinyApis.sAssertContent('<p>a <a href="#">b&nbsp;</a> c</p>')
         ]))
       ], onSuccess, onFailure);
     }, {

@@ -18,7 +18,7 @@ define(
   ],
   function (Fun, CaretPosition, NodeType, BoundaryLocation) {
     var isValidInsertPoint = function (location, caretPosition) {
-      return isAtStart(location) && NodeType.isText(caretPosition.container());
+      return isAtStartOrEnd(location) && NodeType.isText(caretPosition.container());
     };
 
     var insertNbspAtPosition = function (editor, caretPosition) {
@@ -44,11 +44,11 @@ define(
       return boundaryLocation.map(Fun.curry(insertAtLocation, editor, caretPosition)).getOr(false);
     };
 
-    var isAtStart = function (location) {
+    var isAtStartOrEnd = function (location) {
       return location.fold(
         Fun.constant(false), // Before
         Fun.constant(true),  // Start
-        Fun.constant(false), // End
+        Fun.constant(true),  // End
         Fun.constant(false)  // After
       );
     };
