@@ -90,7 +90,13 @@ define(
                                 'open<->closed': detail.transition().map(function (t) {
                                   return Objects.wrap('transition', t)
                                 }).getOr({ })
-                              })
+                              }),
+
+                              onTransition: function (view, route) {
+                                if (route.destination() === 'closed') {
+                                  InlineView.hide(view);
+                                }
+                              }
                             })
                           ]),
                           customBehaviours: [
