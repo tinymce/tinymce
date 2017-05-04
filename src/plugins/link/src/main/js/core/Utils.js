@@ -43,7 +43,12 @@ define(
 
 
     var getAnchorElement = function (editor, selectedElm) {
-      return editor.dom.getParent(selectedElm, 'a[href]');
+      if (isImageFigure(selectedElm)) {
+        // for an image conained in a figure we look for a link inside the selected element
+        return editor.dom.select('a[href]', selectedElm)[0];
+      } else {
+        return editor.dom.getParent(selectedElm, 'a[href]');
+      }
     };
 
 
@@ -70,6 +75,12 @@ define(
 
       return true;
     };
+
+
+    var isImageFigure = function (node) {
+      return node && node.nodeName === 'FIGURE' && /\bimage\b/i.test(node.className);
+    };
+
 
     var link = function (editor, attachState, data) {
       editor.undoManager.transact(function () {
@@ -109,7 +120,9 @@ define(
           editor.selection.select(anchorElm);
           editor.undoManager.add();
         } else {
-          if (data.hasOwnProperty('text')) {
+          if (isImageFigure(selectedElm)) {
+            linkImageFigure(editor, selectedElm, linkAttrs);
+          } else if (data.hasOwnProperty('text')) {
             editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(data.text)));
           } else {
             editor.execCommand('mceInsertLink', false, linkAttrs);
@@ -121,8 +134,37 @@ define(
 
     var unlink = function (editor) {
       return function () {
-        editor.execCommand('unlink');
+        var node = editor.selection.getNode();
+        if (isImageFigure(node)) {
+          unlinkImageFigure(editor, node);
+        } else {
+          editor.execCommand('unlink');
+        }
       };
+    };
+
+
+    var unlinkImageFigure = function (editor, fig) {
+      var a, img;
+      img = editor.dom.select('img', fig)[0];
+      if (img) {
+        a = editor.dom.getParents(img, 'a[href]', fig)[0];
+        if (a) {
+          a.parentNode.insertBefore(img, a);
+          editor.dom.remove(a);
+        }
+      }
+    };
+
+
+    var linkImageFigure = function (editor, fig, attrs) {
+      var a, img;
+      img = editor.dom.select('img', fig)[0];
+      if (img) {
+        a = editor.dom.create('a', attrs);
+        img.parentNode.insertBefore(a, img);
+        a.appendChild(img);
+      }
     };
 
     return {
