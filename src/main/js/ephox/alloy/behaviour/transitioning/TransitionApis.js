@@ -61,7 +61,8 @@ define(
     var jumpTo = function (comp, transConfig, transState, destination) {
       // Remove the previous transition
       disableTransition(comp, transConfig, transState);
-      transConfig.onFinish()(comp, destination);
+      // Only call finish if there was an original state
+      if (Attr.has(comp.element(), transConfig.stateAttr()) && Attr.get(comp.element(), transConfig.stateAttr()) !== destination) transConfig.onFinish()(comp, destination);
       Attr.set(comp.element(), transConfig.stateAttr(), destination);
     };
 

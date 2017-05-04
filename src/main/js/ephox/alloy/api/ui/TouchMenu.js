@@ -87,7 +87,11 @@ define(
                               }),
 
                               onFinish: function (view, destination) {
-                                if (destination === 'closed') InlineView.hide(view);
+                                if (destination === 'closed') {
+                                  console.trace();
+                                  InlineView.hide(view);
+                                  detail.onClosed()(view);
+                                }
                               }
                             })
 

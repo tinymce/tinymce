@@ -2,6 +2,7 @@ define(
   'ephox.alloy.behaviour.transitioning.ActiveTransitioning',
 
   [
+    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.transitioning.TransitionApis',
     'ephox.alloy.construct.EventHandler',
@@ -9,7 +10,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (SystemEvents, TransitionApis, EventHandler, Objects, Fun) {
+  function (EventRoot, SystemEvents, TransitionApis, EventHandler, Objects, Fun) {
     var findRoute = function (component, transConfig, route) {
       return Objects.readOptFrom(transConfig.routes(), route.start()).map(Fun.apply).bind(function (sConfig) {
         return Objects.readOptFrom(sConfig, route.destination()).map(Fun.apply);
@@ -39,7 +40,9 @@ define(
           key: SystemEvents.attachedToDom(),
           value: EventHandler.nu({
             run: function (comp, se) {
-              TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState());
+              if (EventRoot.isSource(comp, se)) {
+                TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState());
+              }
             }
           })
         }

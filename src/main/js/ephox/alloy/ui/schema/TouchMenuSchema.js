@@ -41,6 +41,8 @@ define(
       FieldSchema.option('lazySink'),
       FieldSchema.option('role'),
 
+      Fields.onHandler('onClosed'),
+
       FieldSchema.option('transition'),
 
       FieldSchema.defaulted('getAnchor', anchorAtCentre)
