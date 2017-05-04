@@ -42,6 +42,8 @@ define(
       // the touchend
       tap: Fun.constant('alloy.tap'),
 
+      // This event represents a longpress on the same location
+      longpress: Fun.constant('alloy.longpress'),
 
       // Fire by a child element to tell the outer element to close
       sandboxClose: Fun.constant('alloy.sandbox.close'),

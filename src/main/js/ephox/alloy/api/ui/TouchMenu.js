@@ -12,26 +12,25 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
+    'ephox.alloy.api.events.AlphaEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TouchMenuSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Focus',
-    'ephox.sugar.api.node.Element',
     'global!document'
   ],
 
   function (
-    ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, SystemEvents, InlineView,
-    Menu, UiSketcher, EventHandler, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Option, Focus, Element, document
+    ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlphaEvents, NativeEvents,
+    SystemEvents, InlineView, Menu, UiSketcher, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Focus, document
   ) {
     var schema = TouchMenuSchema.schema();
     var partTypes = TouchMenuSchema.parts();
@@ -63,8 +62,7 @@ define(
               Coupling.config({
                 others: {
                   sandbox: function (hotspot) {
-                    // var sink = DropdownUtils.getSink(hotspot, detail);
-                    // console.log('sink', sink);
+                    
                     return InlineView.sketch(
                       Merger.deepMerge(
                         externals.view(),
@@ -96,18 +94,16 @@ define(
 
                           ]),
                           customBehaviours: [
-                            AdhocBehaviour.events('execute-for-menu', Objects.wrapAll([
-                              {
-                                key: SystemEvents.execute(),
-                                value: EventHandler.nu({
-                                  run: function (c, s) {
-                                    var target = s.event().target();
-                                    c.getSystem().getByDom(target).each(function (item) {
-                                      detail.onExecute()(hotspot, c, item, Representing.getValue(item));
-                                    });
-                                  }
-                                })
-                              }
+                            AdhocBehaviour.events('execute-for-menu', AlphaEvents.derive([
+                              AlphaEvents.run(
+                                SystemEvents.execute(),
+                                function (c, s) {
+                                  var target = s.event().target();
+                                  c.getSystem().getByDom(target).each(function (item) {
+                                    detail.onExecute()(hotspot, c, item, Representing.getValue(item));
+                                  });
+                                }
+                              )
                             ]))
                           ],
 
@@ -124,100 +120,85 @@ define(
             detail.touchmenuBehaviours()
           ),
 
-          events: {
-            'contextmenu': EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                simulatedEvent.event().kill();
-              }
+          events: AlphaEvents.derive([
+
+            AlphaEvents.abort(NativeEvents.contextmenu()),
+
+            AlphaEvents.run(NativeEvents.touchstart(), function (comp, se) {
+              Toggling.on(comp);
+              detail.onHoverOn()(comp);
             }),
 
-            'touchstart': EventHandler.nu({
-              run: function (comp, se) {
-                Toggling.on(comp);
-                detail.onHoverOn()(comp);
-              }
+            AlphaEvents.run(SystemEvents.tap(), function (comp, se) {
+              detail.onTap()(comp);
             }),
 
-            // FIX: SystemEvents.tap()
-            'alloy.tap': EventHandler.nu({
-              run: function (comp, se) {
-                detail.onTap()(comp);
-              }
-            }),
-
-            'longpress': EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                detail.fetch()('').get(function (items) {
-
-                  var iMenu = Menu.sketch(
-                    Merger.deepMerge(
-                      externals.menu(),
-                      {
-                        items: items
-                      }
-                    )
-                  );
-
-                  var sandbox = Coupling.getCoupled(component, 'sandbox');
-                  console.log('simulatedEvent', simulatedEvent.event());
-                  var anchor = detail.getAnchor()(component);
-                  InlineView.showAt(sandbox, anchor, iMenu);
-                });
-              }
-            }),
-
-            'touchmove': EventHandler.nu({
-              // 1. Find if touchmove over button or any items
-              //   - if over items, trigger mousemover on item (and hoverOff on button)
-              //   - if over button, (dehighlight all items and trigger hoverOn on button)
-              //   - if over nothing (dehighlight all items and trigger hoverOff on button)
-              run: function (component, simulatedEvent) {
-                var e = simulatedEvent.event().raw().touches[0];
-                getMenu(component).each(function (iMenu) {
-                  ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(function () {
-                    // No items, so blur everything.
-                    Highlighting.dehighlightAll(iMenu);
-
-                    // INVESTIGATE: Should this focus.blur be called? Should it only be called here?
-                    Focus.active().each(Focus.blur);
-
-                    // could not find an item, so check the button itself
-                    var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(detail.onHoverOff, detail.onHoverOn);
-                    hoverF(component);
-                  }, function (elem) {
-                    // Trigger a hover on the item element
-                    component.getSystem().triggerEvent('mouseover', elem, {
-                      target: Fun.constant(elem),
-                      x: Fun.constant(e.clientX),
-                      y: Fun.constant(e.clientY)
-                    });
-                    detail.onHoverOff()(component);
-                  });
-                  simulatedEvent.event().kill();
-                });
-              }
-            }),
-
-            'touchend': EventHandler.nu({
-              // 1. Trigger execute on any selected item
-              // 2. Close the menu
-              // 3. Depress the button
-              run: function (component, simulatedEvent) {
-                getMenu(component).each(function (iMenu) {
-                  Highlighting.getHighlighted(iMenu).fold(
-                    function () {
-                      detail.onMiss()(component);
-                    },
-                    SystemEvents.triggerExecute
-                  );
-                });
+            // On longpress, create the menu items to show, and put them in the sandbox.
+            AlphaEvents.run(SystemEvents.longpress(), function (component, simulatedEvent) {
+              detail.fetch()(component).get(function (items) {
+                var iMenu = Menu.sketch(
+                  Merger.deepMerge(
+                    externals.menu(),
+                    {
+                      items: items
+                    }
+                  )
+                );
 
                 var sandbox = Coupling.getCoupled(component, 'sandbox');
-                Transitioning.progressTo(sandbox, 'closed');
-                Toggling.off(component);
-              }
+                var anchor = detail.getAnchor()(component);
+                InlineView.showAt(sandbox, anchor, iMenu);
+              });
+            }),
+
+            // 1. Find if touchmove over button or any items
+            //   - if over items, trigger mousemover on item (and hoverOff on button)
+            //   - if over button, (dehighlight all items and trigger hoverOn on button)
+            //   - if over nothing (dehighlight all items and trigger hoverOff on button)
+            AlphaEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+              var e = simulatedEvent.event().raw().touches[0];
+              getMenu(component).each(function (iMenu) {
+                ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(function () {
+                  // No items, so blur everything.
+                  Highlighting.dehighlightAll(iMenu);
+
+                  // INVESTIGATE: Should this focus.blur be called? Should it only be called here?
+                  Focus.active().each(Focus.blur);
+
+                  // could not find an item, so check the button itself
+                  var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(detail.onHoverOff, detail.onHoverOn);
+                  hoverF(component);
+                }, function (elem) {
+                  // Trigger a hover on the item element
+                  component.getSystem().triggerEvent('mouseover', elem, {
+                    target: Fun.constant(elem),
+                    x: Fun.constant(e.clientX),
+                    y: Fun.constant(e.clientY)
+                  });
+                  detail.onHoverOff()(component);
+                });
+                simulatedEvent.event().kill();
+              });
+            }),
+
+            // 1. Trigger execute on any selected item
+            // 2. Close the menu
+            // 3. Depress the button
+            AlphaEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
+              getMenu(component).each(function (iMenu) {
+                Highlighting.getHighlighted(iMenu).fold(
+                  function () {
+                    detail.onMiss()(component);
+                  },
+                  SystemEvents.triggerExecute
+                );
+              });
+
+              var sandbox = Coupling.getCoupled(component, 'sandbox');
+              Transitioning.progressTo(sandbox, 'closed');
+              Toggling.off(component);
             })
-          },
+          ]),
 
           eventOrder: {
             // Order, the button state is toggled first, so assumed !selected means close.
@@ -238,7 +219,6 @@ define(
       return UiSketcher.composite(TouchMenuSchema.name(), schema, partTypes, make, spec);
     };
 
-    // TODO: Remove likely dupe
     var parts = PartType.generate(TouchMenuSchema.name(), partTypes);
 
     return {

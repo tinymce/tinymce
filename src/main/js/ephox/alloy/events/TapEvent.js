@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.DelayedFunction',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
@@ -11,7 +12,7 @@ define(
     'global!Math'
   ],
 
-  function (DelayedFunction, SystemEvents, Cell, Fun, Option, Compare, Math) {
+  function (DelayedFunction, NativeEvents, SystemEvents, Cell, Fun, Option, Compare, Math) {
     var SIGNIFICANT_MOVE = 5;
 
     var getTouch = function (event) {
@@ -39,11 +40,11 @@ define(
       var longpress = DelayedFunction(function (event) {
         longpressActive.set(true);
         state.set(Option.none());
-        settings.triggerEvent('longpress', event);
+        settings.triggerEvent(SystemEvents.longpress(), event);
       }, 400);
 
       var fireIfReady = function (event, type) {
-        if (type === 'touchstart') {
+        if (type === NativeEvents.touchstart()) {
           getTouch(event).each(function (touch) {
             longpressActive.set(false);
             longpress.cancel();
@@ -59,7 +60,7 @@ define(
             }));
           });
           return Option.none();
-        } else if (type === 'touchmove') {
+        } else if (type === NativeEvents.touchmove()) {
           longpress.cancel();
           getTouch(event).each(function (touch) {
             state.get().each(function (data) {
@@ -67,7 +68,7 @@ define(
             });
           });
           return Option.none();
-        } else if (type === 'touchend') {
+        } else if (type === NativeEvents.touchend()) {
           // if (longpressActive.get()) {
           //   settings.triggerEvent('longpressEnd', event);
           // }
