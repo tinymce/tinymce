@@ -51,7 +51,7 @@ define(
       editor.addButton('unlink', {
         icon: 'unlink',
         tooltip: 'Remove link',
-        cmd: 'unlink',
+        onclick: Utils.unlink(editor),
         stateSelector: 'a[href]'
       });
 

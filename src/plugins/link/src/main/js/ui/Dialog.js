@@ -14,10 +14,11 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
+    'tinymce.core.util.Fun',
     'tinymce.plugins.link.core.Utils',
     'tinymce.plugins.link.core.Settings'
   ],
-  function (Delay, Tools, XHR, Utils, Settings) {
+  function (Delay, Tools, XHR, Fun, Utils, Settings) {
     var attachState = {};
 
     var createLinkList = function (editor, callback) {
@@ -77,27 +78,8 @@ define(
       });
     };
 
-    var toggleTargetRules = function (rel, isUnsafe) {
-      var rules = 'noopener noreferrer';
-
-      var addTargetRules = function (rel) {
-        rel = removeTargetRules(rel);
-        return rel ? [rel, rules].join(' ') : rules;
-      };
-
-      var removeTargetRules = function (rel) {
-        var regExp = new RegExp('(' + rules.replace(' ', '|') + ')', 'g');
-        if (rel) {
-          rel = Tools.trim(rel.replace(regExp, ''));
-        }
-        return rel ? rel : null;
-      };
-
-      return isUnsafe ? addTargetRules(rel) : removeTargetRules(rel);
-    };
-
     var showDialog = function (editor, linkList) {
-      var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
+      var data = {}, selection = editor.selection, dom = editor.dom, anchorElm, initialText;
       var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
 
       var linkListChangeHandler = function (e) {
@@ -180,9 +162,8 @@ define(
         e.meta = win.toJSON();
       };
 
-      selectedElm = selection.getStart();
-      anchorElm = dom.getParent(selectedElm, 'a[href]');
       onlyText = Utils.isOnlyTextSelected(selection.getContent());
+      anchorElm = Utils.getAnchorElement(editor, selection.getStart());
 
       data.text = initialText = Utils.getAnchorText(editor.selection, anchorElm);
       data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
@@ -315,58 +296,15 @@ define(
         onSubmit: function (e) {
           /*eslint dot-notation: 0*/
           var href;
+          var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
+          var insertLink = Fun.curry(Utils.link, editor, attachState);
+          var removeLink = Utils.unlink(editor);
 
           data = Tools.extend(data, e.data);
           href = data.href;
 
-          var createLink = function () {
-            var linkAttrs = {
-              href: href,
-              target: data.target ? data.target : null,
-              rel: data.rel ? data.rel : null,
-              "class": data["class"] ? data["class"] : null,
-              title: data.title ? data.title : null
-            };
-
-            if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-              linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
-            }
-
-            if (href === attachState.href) {
-              attachState.attach();
-              attachState = {};
-            }
-
-            if (anchorElm) {
-              editor.focus();
-
-              if (onlyText && data.text != initialText) {
-                if ("innerText" in anchorElm) {
-                  anchorElm.innerText = data.text;
-                } else {
-                  anchorElm.textContent = data.text;
-                }
-              }
-
-              dom.setAttribs(anchorElm, linkAttrs);
-
-              selection.select(anchorElm);
-              editor.undoManager.add();
-            } else {
-              if (onlyText) {
-                editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(data.text)));
-              } else {
-                editor.execCommand('mceInsertLink', false, linkAttrs);
-              }
-            }
-          };
-
-          var insertLink = function (editor) {
-            editor.undoManager.transact(createLink);
-          };
-
           if (!href) {
-            editor.execCommand('unlink');
+            removeLink();
             return;
           }
 
@@ -377,17 +315,13 @@ define(
               'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
               function (state) {
                 if (state) {
-                  href = 'mailto:' + href;
+                  data.href = 'mailto:' + href;
                 }
-
-                insertLink(editor);
+                insertLink(data);
               }
             );
-
             return;
           }
-
-          var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
 
           // Is not protocol prefixed
           if ((assumeExternalTargets === true && !/^\w+:/i.test(href)) ||
@@ -397,17 +331,15 @@ define(
               'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
               function (state) {
                 if (state) {
-                  href = 'http://' + href;
+                  data.href = 'http://' + href;
                 }
-
-                insertLink(editor);
+                insertLink(data);
               }
             );
-
             return;
           }
 
-          insertLink(editor);
+          insertLink(data);
         }
       });
     };
