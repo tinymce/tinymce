@@ -3,15 +3,17 @@ define(
 
   [
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.WindowSelection',
     'global!document'
   ],
 
-  function (Option, Element, document) {
+  function (Option, Traverse, WindowSelection, document) {
     var insideComponent = function (component, x, y) {
-      var optElement = Option.from(document.elementFromPoint(x, y)).map(Element.fromDom);
-      return optElement.filter(function (tgt) {
-        return component.element().dom().contains(tgt.dom());
+      var win = Traverse.owner(component.element()).dom().defaultView;
+      return WindowSelection.getAtPoint(win, x, y).bind(function (rng) {
+        var start = rng.start();
+        return component.element().dom().contains(start.dom()) ? Option.some(rng.start()) : Option.none();
       });
     };
 
