@@ -2,25 +2,33 @@ define(
   'tinymce.themes.mobile.touch.view.TapToEditButton',
 
   [
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TouchMenu',
-    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Result',
-    'ephox.katamari.api.Throttler',
+    'ephox.katamari.api.Singleton',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (Behaviour, Sliding, InlineView, Menu, TouchMenu, Cell, Future, Result, Throttler, Attr, Class, SelectorFind) {
+  function (AdhocBehaviour, Behaviour, Coupling, AlloyEvents, InlineView, Menu, TouchMenu, Future, Singleton, Attr, Class, SelectorFind) {
     var sketch = function (spec) {
-      var viewer = Throttler.last(spec.onView, 400);
+      var state = Singleton.value();
 
-      var state = Cell('View');
+      var gotoView = function (comp) {
+        if (state.isSet()) spec.onView();
+        state.clear();
+      };
+
+      var gotoEdit = function (comp) {
+        if (state.isSet()) spec.onEdit();
+        state.clear();
+      };
 
       return TouchMenu.sketch({
         dom: spec.dom,
@@ -52,25 +60,50 @@ define(
           });
         },
         onHoverOff: function (comp) {
-          console.log('removing');
           Class.remove(comp.element(), 'hovered');
-        },
-
-        onMiss: function (comp) {
-          console.log("onMiss");
           SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
-            if (Class.has(comp.element(), 'hovered') === false) Attr.remove(icon, 'data-mode');
-            state.set('View');
+            Attr.remove(icon, 'data-mode');
+            state.clear();
           });
         },
 
         onTap: function () {
           setTimeout(function () {
-            viewer.throttle();
+            gotoView();
           }, 300);
         },
 
         toggleClass: 'selected',
+
+        transition: {
+          property: 'transform',
+          transitionClass: 'longpress-menu-transitioning'
+        },
+
+        onClosed: function (comp) {
+          state.on(function (s) {
+            if (s === 'Edit') gotoEdit(comp);
+            else if (s === 'View') gotoView(comp);
+          })
+        },
+
+        customBehaviours: [
+          AdhocBehaviour.events('initial-state', AlloyEvents.derive([
+            AlloyEvents.runOnAttached(function (comp, se) {
+              state.clear();
+            }),
+            AlloyEvents.runOnDetached(function (comp, se) {
+              // Use an api
+              var sandbox = Coupling.getCoupled(comp, 'sandbox');
+              InlineView.hide(sandbox);
+            })
+          ]))
+        ],
+
+        touchmenuBehaviours: Behaviour.derive([
+          AdhocBehaviour.config('initial-state')
+        ]),
+
         parts: {
           sink: {
             dom: {
@@ -81,33 +114,6 @@ define(
             dom: {
               tag: 'div',
               classes: [ 'tap-button-view' ]
-            },
-
-            inlineBehaviours: Behaviour.derive([
-              Sliding.config({
-                closedClass: 'longpress-menu-closed',
-                openClass: 'longpress-menu-open',
-                shrinkingClass: 'longpress-menu-shrinking',
-                growingClass: 'longpress-menu-growing',
-                dimension: {
-                  property: 'height'
-                },
-
-                onShrunk: function (view) {
-                  InlineView.hide(view);
-                  
-                  if (state.get() === 'Edit') spec.onEdit();
-                  else spec.onView();
-                }
-              })
-            ]),
-
-            onShow: function (view) {
-              Sliding.grow(view)
-            },
-
-            onHide: function (view) {
-              Sliding.shrink(view);
             }
           },
           menu: {
