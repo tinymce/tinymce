@@ -90,6 +90,14 @@ asynctest(
         });
       };
 
+      var fireLongpress = function (target) {
+        SystemEvents.trigger(component, SystemEvents.longpress(), {
+          target: target
+        });
+      };
+
+      
+
       return [
         // Only tests the dispatched events (not the real ones or their formulation)
         Step.sync(function () {
@@ -106,6 +114,9 @@ asynctest(
 
         Step.sync(function () {
           store.assertEq('Checking no messages', [ ]);
+          var rect = component.element().dom().getBoundingClientRect();
+          fireTouchstart(component.element(), rect.x, rect.y);
+          fireLongpress(component.element());
           Assertions.assertEq('Checking selected class should be off initially', false, Class.has(component.element(), 'touch-menu-open'));
           var rect = component.element().dom().getBoundingClientRect();
           fireTouchstart(component.element(), rect.x, rect.y);
