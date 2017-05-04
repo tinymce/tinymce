@@ -93,6 +93,8 @@ define(
 
     var cloak = function (sandbox, sConfig, sState) {
       var sink = sConfig.getAttachPoint()();
+      // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
+      // We add it here to stop it causing layout problems.
       Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
       store(sandbox, 'visibility', sConfig.cloakVisibilityAttr(), 'hidden');
     };
