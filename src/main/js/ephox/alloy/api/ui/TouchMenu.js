@@ -47,6 +47,7 @@ define(
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,
+          customBehaviours: detail.customBehaviours(),
           behaviours: Merger.deepMerge(
             Behaviour.derive([
               // Button showing the the touch menu is depressed

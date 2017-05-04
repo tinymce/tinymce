@@ -37,6 +37,7 @@ define(
       Fields.onHandler('onHoverOff'),
       Fields.onHandler('onMiss'),
       FieldSchema.defaulted('touchmenuBehaviours', { }),
+      FieldSchema.defaulted('customBehaviours', [ ]),
       FieldSchema.strict('toggleClass'),
       FieldSchema.option('lazySink'),
       FieldSchema.option('role'),
