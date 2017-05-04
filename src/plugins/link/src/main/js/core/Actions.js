@@ -101,11 +101,21 @@ define(
       });
     };
 
+    var toggleActiveState = function (editor) {
+      return function () {
+        var self = this;
+        editor.on('nodechange', function (e) {
+          self.active(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
+        });
+      };
+    };
+
     return {
       openDialog: openDialog,
       gotoSelectedLink: gotoSelectedLink,
       leftClickedOnAHref: leftClickedOnAHref,
-      setupGotoLinks: setupGotoLinks
+      setupGotoLinks: setupGotoLinks,
+      toggleActiveState: toggleActiveState
     };
   }
 );

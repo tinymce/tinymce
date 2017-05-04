@@ -45,14 +45,14 @@ define(
         tooltip: 'Insert/edit link',
         shortcut: 'Meta+K',
         onclick: Actions.openDialog(editor),
-        stateSelector: 'a[href]'
+        onpostrender: Actions.toggleActiveState(editor)
       });
 
       editor.addButton('unlink', {
         icon: 'unlink',
         tooltip: 'Remove link',
         onclick: Utils.unlink(editor),
-        stateSelector: 'a[href]'
+        onpostrender: Actions.toggleActiveState(editor)
       });
 
       if (editor.addContextToolbar) {
