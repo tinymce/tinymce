@@ -15,29 +15,6 @@ define(
     'tinymce.plugins.link.core.Utils'
   ],
   function (Actions, Utils) {
-    var toggleViewLinkState = function (editor) {
-      return function () {
-        var self = this;
-
-        var toggleVisibility = function (e) {
-          if (Utils.hasLinks(e.parents)) {
-            self.show();
-          } else {
-            self.hide();
-          }
-        };
-
-        if (!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart()))) {
-          self.hide();
-        }
-
-        editor.on('nodechange', toggleVisibility);
-
-        self.on('remove', function () {
-          editor.off('nodechange', toggleVisibility);
-        });
-      };
-    };
 
     var setupButtons = function (editor) {
       editor.addButton('link', {
@@ -69,7 +46,7 @@ define(
         text: 'Open link',
         icon: 'newtab',
         onclick: Actions.gotoSelectedLink(editor),
-        onPostRender: toggleViewLinkState(editor),
+        onPostRender: Actions.toggleViewLinkState(editor),
         prependToContext: true
       });
 
