@@ -125,7 +125,7 @@ define(
               },
 
 
-              transition: {
+              menuTransition: {
                 property: 'transform',
                 transitionClass: 'longpress-menu-transitioning'
               },

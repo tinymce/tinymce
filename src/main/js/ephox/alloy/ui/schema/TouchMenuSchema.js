@@ -44,7 +44,7 @@ define(
 
       Fields.onHandler('onClosed'),
 
-      FieldSchema.option('transition'),
+      FieldSchema.option('menuTransition'),
 
       FieldSchema.defaulted('getAnchor', anchorAtCentre)
     ];

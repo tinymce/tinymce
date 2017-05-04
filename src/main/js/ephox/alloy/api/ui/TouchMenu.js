@@ -82,7 +82,7 @@ define(
                               stateAttr: 'data-longpress-state',
 
                               routes: Transitioning.createRoutes({
-                                'open<->closed': detail.transition().map(function (t) {
+                                'open<->closed': detail.menuTransition().map(function (t) {
                                   return Objects.wrap('transition', t);
                                 }).getOr({ })
                               }),
