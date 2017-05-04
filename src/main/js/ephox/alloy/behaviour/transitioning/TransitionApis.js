@@ -60,7 +60,6 @@ define(
 
     var jumpTo = function (comp, transConfig, transState, destination) {
       // Remove the previous transition
-      console.trace();
       disableTransition(comp, transConfig, transState);
       transConfig.onFinish()(comp, destination);
       Attr.set(comp.element(), transConfig.stateAttr(), destination);
