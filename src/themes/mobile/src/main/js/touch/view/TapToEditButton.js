@@ -10,15 +10,12 @@ define(
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Singleton',
     'global!setTimeout',
     'tinymce.themes.mobile.touch.view.TapToEditMenuParts'
   ],
 
-  function (Behaviour, Representing, Toggling, Transitioning, SystemEvents, TouchMenu, Objects, Future, Singleton, setTimeout, TapToEditMenuParts) {
+  function (Behaviour, Representing, Toggling, Transitioning, SystemEvents, TouchMenu, Objects, Future, setTimeout, TapToEditMenuParts) {
     var sketch = function (spec) {
-      var state = Singleton.value();
-
       var gotoView = function (comp) {
         if (Representing.getValue(comp) === false) {
           Representing.setValue(comp, true);
@@ -85,11 +82,7 @@ define(
             destinationAttr: 'data-mode-destination',
             stateAttr: 'data-mode',
             initialState: 'icon',
-            routes: Transitioning.createRoutes({
-              'icon<->view': { },
-              'icon<->edit': { },
-              'view<->edit': { }
-            })
+            routes: Transitioning.createTristate('icon', 'view', 'edit', { })
           }),
           Representing.config({
             store: {
