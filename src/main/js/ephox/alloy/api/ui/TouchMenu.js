@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.InlineView',
@@ -36,8 +37,8 @@ define(
   ],
 
   function (
-    AdhocBehaviour, Behaviour, Coupling, Highlighting, Positioning, Representing, Sandboxing, Sliding, Toggling, Unselecting, SystemEvents, InlineView, Menu,
-    UiSketcher, EventHandler, DropdownUtils, PartType, Layout, TouchMenuSchema, Objects, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location,
+    AdhocBehaviour, Behaviour, Coupling, Highlighting, Positioning, Representing, Sandboxing, Sliding, Toggling, Transitioning, Unselecting, SystemEvents, InlineView,
+    Menu, UiSketcher, EventHandler, DropdownUtils, PartType, Layout, TouchMenuSchema, Objects, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location,
     Width, document
   ) {
     var schema = TouchMenuSchema.schema();
@@ -199,7 +200,7 @@ define(
                     });
                   });
                 });
-                Sliding.shrink(Coupling.getCoupled(component, 'sandbox'));
+                Transitioning.progressTo(Coupling.getCoupled(component, 'sandbox'), 'closed');
                 Toggling.off(component);
 
               }

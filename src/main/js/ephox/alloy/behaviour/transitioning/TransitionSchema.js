@@ -10,7 +10,6 @@ define(
 
   function (Fields, FieldSchema, ValueSchema, Result) {
     return [
-      FieldSchema.strict('transitionClass'),
       FieldSchema.strict('destinationAttr'),
       FieldSchema.strict('stateAttr'),
       FieldSchema.strict('initialState'),
@@ -22,7 +21,10 @@ define(
           ValueSchema.setOf(
             Result.value,
             ValueSchema.objOfOnly([
-              FieldSchema.option('transition')
+              FieldSchema.optionObjOfOnly('transition', [
+                FieldSchema.strict('property'),
+                FieldSchema.strict('transitionClass')
+              ])
             ])
           )
         )

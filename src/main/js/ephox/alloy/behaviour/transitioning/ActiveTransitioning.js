@@ -23,12 +23,13 @@ define(
           value: EventHandler.nu({
             run: function (component, simulatedEvent) {
               var raw = simulatedEvent.event().raw();
-              var route = TransitionApis.getRoute(component, transConfig, transState);
-              findRoute(component, transConfig, route).each(function (rInfo) {
-                if (raw.propertyName = rInfo.transition()) {
-                  TransitionApis.jumpTo(component, transConfig, transState, route.destination());
-                  transConfig.onTransition()(component, route);
-                }
+              TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
+                TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
+                  if (raw.propertyName = rInfo.transition()) {
+                    TransitionApis.jumpTo(component, transConfig, transState, route.destination());
+                    transConfig.onTransition()(component, route);
+                  }
+                });
               });
             }
           })
