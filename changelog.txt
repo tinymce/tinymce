@@ -14,6 +14,7 @@ Version 4.6.0 (2017-05-04)
     Fixed so that keep_styles set to false no longer clones class/style from the previous paragraph on enter.
     Fixed so that the default line-height is 1.2em to avoid zwnbsp characters from producing text rendering glitches on Windows.
     Fixed so that loading errors of content css gets presented by a notification message.
+    Fixed so figure image elements can be linked when selected this wraps the figure image in a anchor element.
     Fixed bug where it wasn't possible to copy/paste rows with colspans by using the table copy/paste feature.
     Fixed bug where the protect setting wasn't properly applied to header/footer parts when using the fullpage plugin.
     Fixed bug where custom formats that specified upper case element names where not applied correctly.
