@@ -4,19 +4,17 @@ define(
   [
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.events.AlloyEvents',
-    'ephox.alloy.api.ui.InlineView',
-    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Singleton',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.search.SelectorFind'
+    'global!setTimeout',
+    'tinymce.themes.mobile.touch.view.TapToEditMenuParts'
   ],
 
-  function (AdhocBehaviour, Behaviour, Coupling, AlloyEvents, InlineView, Menu, TouchMenu, Future, Singleton, Attr, Class, SelectorFind) {
+  function (AdhocBehaviour, Behaviour, AlloyEvents, TouchMenu, Future, Singleton, Attr, Class, setTimeout, TapToEditMenuParts) {
     var sketch = function (spec) {
       var state = Singleton.value();
 
@@ -30,41 +28,44 @@ define(
         state.clear();
       };
 
+      var updateIcon = function (comp, value) {
+        var icon = spec.memIcon.get(comp);
+        Attr.set(icon.element(), 'data-mode', value);
+      };
+
+      var updateState = function (comp, value) {
+        updateIcon(comp, value);
+        state.set(value);
+      };
+
+      var clearState = function (comp) {
+        var icon = spec.memIcon.get(comp);
+        Attr.remove(icon.element(), 'data-mode');
+        state.clear();
+      };
+
       return TouchMenu.sketch({
         dom: spec.dom,
         components: [
           TouchMenu.parts().sink()
         ].concat(spec.components),
-        // lazySink: function () {
-        //   return Result.value(sink)
-        // },
+   
         fetch: function () {
           return Future.pure([
             { type: 'item', data: { value: 'Edit', text: 'Edit' } }
           ]);
         },
         onExecute: function (comp, menuComp, item, data) {
-          SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
-            Attr.set(icon, 'data-mode', data.value);
-            state.set(data.value);
-          });
-          // if (data.value === 'view') spec.onView();
-          // else if (data.value === 'edit') spec.onEdit();
+          updateState(comp, data.value);
         },
 
         onHoverOn: function (comp) {
           Class.add(comp.element(), 'hovered');
-          SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
-            Attr.set(icon, 'data-mode', 'View');
-            state.set('View');
-          });
+          updateState(comp, 'View');
         },
         onHoverOff: function (comp) {
           Class.remove(comp.element(), 'hovered');
-          SelectorFind.descendant(comp.element(), '.tinymce-mobile-mask-tap-icon').each(function (icon) {
-            Attr.remove(icon, 'data-mode');
-            state.clear();
-          });
+          clearState(comp);
         },
 
         onTap: function () {
@@ -90,12 +91,7 @@ define(
         customBehaviours: [
           AdhocBehaviour.events('initial-state', AlloyEvents.derive([
             AlloyEvents.runOnAttached(function (comp, se) {
-              state.clear();
-            }),
-            AlloyEvents.runOnDetached(function (comp, se) {
-              // Use an api
-              var sandbox = Coupling.getCoupled(comp, 'sandbox');
-              InlineView.hide(sandbox);
+              clearState(comp);
             })
           ]))
         ],
@@ -110,54 +106,8 @@ define(
               classes: [ 'tap-button-sink' ]
             }
           },
-          view: {
-            dom: {
-              tag: 'div',
-              classes: [ 'tap-button-view' ]
-            }
-          },
-          menu: {
-            dom: {
-              tag: 'div',
-              // styles: { display: 'flex' }
-            },
-            components: [
-              Menu.parts().items()
-            ],
-            value: 'touch-menu-1',
-            markers: {
-              item: 'alloy-orb',
-              selectedItem: 'alloy-selected-orb'
-            },
-            members: {
-              item: { 
-                munge: function (itemSpec) {
-                  return {
-                    dom: {
-                      tag: 'div',
-                      attributes: {
-                        'data-value': itemSpec.data.value
-                      },
-                      styles: {
-                        display: 'flex',
-                        'justify-content': 'center'
-                      },
-                      classes: [ 'alloy-orb' ]
-                    },
-                    components: [
-                      {
-                        dom: {
-                          tag: 'span',
-                          innerHtml: itemSpec.data.text
-                        }
-                      }
-                    ]
-                  };              
-                }
-              }
-            }
-          }
-
+          view: TapToEditMenuParts.view({ }),
+          menu: TapToEditMenuParts.menu({ })
         }
       });
     };
