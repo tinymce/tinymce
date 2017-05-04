@@ -2,48 +2,35 @@ define(
   'tinymce.themes.mobile.touch.view.TapToEditButton',
 
   [
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
-    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.TouchMenu',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Singleton',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Class',
     'global!setTimeout',
     'tinymce.themes.mobile.touch.view.TapToEditMenuParts'
   ],
 
-  function (AdhocBehaviour, Behaviour, Toggling, Transitioning, AlloyEvents, TouchMenu, Future, Singleton, Attr, Class, setTimeout, TapToEditMenuParts) {
+  function (Behaviour, Representing, Toggling, Transitioning, SystemEvents, TouchMenu, Objects, Future, Singleton, setTimeout, TapToEditMenuParts) {
     var sketch = function (spec) {
       var state = Singleton.value();
 
       var gotoView = function (comp) {
-        if (state.isSet()) spec.onView();
-        state.clear();
+        if (Representing.getValue(comp) === false) {
+          Representing.setValue(comp, true);
+          spec.onView();
+        }
       };
 
       var gotoEdit = function (comp) {
-        if (state.isSet()) spec.onEdit();
-        state.clear();
-      };
-
-      var updateIcon = function (comp, value) {
-        var icon = spec.memIcon.get(comp);
-        Attr.set(icon.element(), 'data-mode', value);
-      };
-
-      var updateState = function (comp, value) {
-        updateIcon(comp, value);
-        state.set(value);
-      };
-
-      var clearState = function (comp) {
-        var icon = spec.memIcon.get(comp);
-        Attr.remove(icon.element(), 'data-mode');
-        state.clear();
+        if (Representing.getValue(comp) === false) {
+          Representing.setValue(comp, true);
+          spec.onEdit();
+        }
       };
 
       return TouchMenu.sketch({
@@ -66,20 +53,16 @@ define(
           Transitioning.jumpTo(comp, 'view');
           var icon = spec.memIcon.get(comp);
           Toggling.on(icon);
-          // Class.add(comp.element(), 'hovered');
-          // updateState(comp, 'View');
         },
         onHoverOff: function (comp) {
           Transitioning.jumpTo(comp, 'icon');
           var icon = spec.memIcon.get(comp);
           Toggling.off(icon);
-          // Class.remove(comp.element(), 'hovered');
-          // clearState(comp);
         },
 
-        onTap: function () {
+        onTap: function (comp) {
           setTimeout(function () {
-            gotoView();
+            gotoView(comp);
           }, 300);
         },
 
@@ -91,10 +74,10 @@ define(
         },
 
         onClosed: function (comp) {
-          state.on(function (s) {
-            if (s === 'Edit') gotoEdit(comp);
-            else if (s === 'View') gotoView(comp);
-          })
+          Transitioning.getState(comp).each(function (mode) {
+            if (mode === 'edit') gotoEdit(comp);
+            else if (mode === 'view') gotoView(comp);
+          });
         },
 
         touchmenuBehaviours: Behaviour.derive([
@@ -107,7 +90,21 @@ define(
               'icon<->edit': { },
               'view<->edit': { }
             })
+          }),
+          Representing.config({
+            store: {
+              mode: 'memory',
+              initialValue: false
+            },
+            resetOnDom: true
           })
+        ]),
+
+        eventOrder: Objects.wrapAll([
+          {
+            key: SystemEvents.attachedToDom(),
+            value: [ Representing.name(), Transitioning.name() ]
+          }
         ]),
 
         parts: {
