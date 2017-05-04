@@ -21,6 +21,13 @@ define(
       return r;
     };
 
+    var createBistate = function (first, second, transitions) {
+      return Objects.wrapAll([
+        { key: first, value: Objects.wrap(second, transitions) },
+        { key: second, value: Objects.wrap(first, transitions) }
+      ]);
+    };
+
     var createTristate = function (first, second, third, transitions) {
       return Objects.wrapAll([
         {
@@ -54,6 +61,7 @@ define(
       apis: TransitionApis,
       extra: {
         createRoutes: createRoutes,
+        createBistate: createBistate,
         createTristate: createTristate
       }
     });

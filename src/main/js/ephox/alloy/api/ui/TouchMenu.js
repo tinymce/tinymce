@@ -81,11 +81,13 @@ define(
                               destinationAttr: 'data-longpress-destination',
                               stateAttr: 'data-longpress-state',
 
-                              routes: Transitioning.createRoutes({
-                                'open<->closed': detail.menuTransition().map(function (t) {
+                              routes: Transitioning.createBistate(
+                                'open',
+                                'closed',
+                                detail.menuTransition().map(function (t) {
                                   return Objects.wrap('transition', t);
                                 }).getOr({ })
-                              }),
+                              ),
 
                               onFinish: function (view, destination) {
                                 if (destination === 'closed') {
