@@ -135,12 +135,14 @@ define(
 
     var unlink = function (editor) {
       return function () {
-        var node = editor.selection.getNode();
-        if (isImageFigure(node)) {
-          unlinkImageFigure(editor, node);
-        } else {
-          editor.execCommand('unlink');
-        }
+        editor.undoManager.transact(function () {
+          var node = editor.selection.getNode();
+          if (isImageFigure(node)) {
+            unlinkImageFigure(editor, node);
+          } else {
+            editor.execCommand('unlink');
+          }
+        });
       };
     };
 
