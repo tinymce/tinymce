@@ -81,37 +81,18 @@ define(
               onExecute: function (component, item, data) {
                 console.log('selected', data.value);
               },
+
+
+              transition: {
+                property: 'transform',
+                transitionClass: 'longpress-menu-transitioning'
+              },
+
               toggleClass: 'selected',
               parts: { 
                 view: {
                   dom: {
                     tag: 'div'
-                  },
-
-                  inlineBehaviours: Behaviour.derive([
-                    Transitioning.config({
-                      initialState: 'closed',
-                      destinationAttr: 'data-longpress-destination',
-                      stateAttr: 'data-longpress-state',
-
-                      routes: Transitioning.createRoutes({
-                        'open<->closed': {
-                          transition: {
-                            property: 'transform',
-                            transitionClass: 'longpress-menu-transitioning'
-                          }
-                        }
-                      })
-                    })
-                  ]),
-
-                  onShow: function (view) {
-                    Transitioning.progressTo(view, 'open');
-                    // Sliding.grow(view)
-                  },
-
-                  onHide: function (view) {
-                    Transitioning.progressTo(view, 'closed');
                   }
                 },
                 menu: {

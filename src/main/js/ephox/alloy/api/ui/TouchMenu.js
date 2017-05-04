@@ -80,7 +80,18 @@ define(
                           },
                           lazySink: DropdownUtils.getSink(hotspot, detail),
                           inlineBehaviours: Behaviour.derive([
-                            AdhocBehaviour.config('execute-for-menu')
+                            AdhocBehaviour.config('execute-for-menu'),
+                            Transitioning.config({
+                              initialState: 'closed',
+                              destinationAttr: 'data-longpress-destination',
+                              stateAttr: 'data-longpress-state',
+
+                              routes: Transitioning.createRoutes({
+                                'open<->closed': detail.transition().map(function (t) {
+                                  return Objects.wrap('transition', t)
+                                }).getOr({ })
+                              })
+                            })
                           ]),
                           customBehaviours: [
                             AdhocBehaviour.events('execute-for-menu', Objects.wrapAll([
@@ -96,7 +107,15 @@ define(
                                 })
                               }
                             ]))
-                          ]
+                          ],
+
+                          onShow: function (view) {
+                            Transitioning.progressTo(view, 'open');
+                          },
+
+                          onHide: function (view) {
+                            Transitioning.progressTo(view, 'closed');
+                          }
                         }
                       )
                     );
