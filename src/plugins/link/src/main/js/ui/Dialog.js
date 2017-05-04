@@ -120,7 +120,7 @@ define(
       };
 
       var updateText = function () {
-        if (!initialText && data.text.length === 0 && onlyText) {
+        if (!initialText && onlyText && !data.text) {
           this.parent().parent().find('#text')[0].value(this.value());
         }
       };
@@ -293,22 +293,21 @@ define(
           classListCtrl
         ],
         onSubmit: function (e) {
-          /*eslint dot-notation: 0*/
-          var href;
           var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
           var insertLink = Utils.link(editor, attachState);
           var removeLink = Utils.unlink(editor);
 
-          data = Tools.extend(data, e.data);
-          href = data.href;
+          var resultData = Tools.extend({}, data, e.data);
+          /*eslint dot-notation: 0*/
+          var href = resultData.href;
 
           if (!href) {
             removeLink();
             return;
           }
 
-          if (!onlyText || data.text === initialText) {
-            delete data.text;
+          if (!onlyText || resultData.text === initialText) {
+            delete resultData.text;
           }
 
           // Is email and not //user@domain.com
@@ -318,9 +317,9 @@ define(
               'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
               function (state) {
                 if (state) {
-                  data.href = 'mailto:' + href;
+                  resultData.href = 'mailto:' + href;
                 }
-                insertLink(data);
+                insertLink(resultData);
               }
             );
             return;
@@ -334,15 +333,15 @@ define(
               'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
               function (state) {
                 if (state) {
-                  data.href = 'http://' + href;
+                  resultData.href = 'http://' + href;
                 }
-                insertLink(data);
+                insertLink(resultData);
               }
             );
             return;
           }
 
-          insertLink(data);
+          insertLink(resultData);
         }
       });
     };
