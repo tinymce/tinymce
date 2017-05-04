@@ -175,6 +175,10 @@ define(
       return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
     };
 
+    var externalSchema = function (name, schema) {
+      return adt.external({ sketch: Fun.identity }, schema, name, Fun.constant({ }), Fun.constant({ }));
+    };
+
     return {
       internal: adt.internal,
       external: adt.external,
@@ -187,7 +191,9 @@ define(
       externals: externals,
       placeholders: placeholders,
 
-      original: Fun.constant(original)
+      original: Fun.constant(original),
+
+      externalSchema: externalSchema
     };
   }
 );

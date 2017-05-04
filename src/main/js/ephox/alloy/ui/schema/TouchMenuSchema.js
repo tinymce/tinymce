@@ -47,25 +47,13 @@ define(
     ];
 
     var partTypes = [
-      PartType.external(
-        { sketch: Fun.identity },
-        [
-          Fields.itemMarkers(),
-          Fields.members([ 'item' ])
-        ],
-        'menu', 
-        Fun.constant({ }),
-        Fun.constant({ })
-      ),
-      PartType.external(
-        { sketch: Fun.identity },
-        [
-          FieldSchema.strict('dom')
-        ],
-        'view', 
-        Fun.constant({ }),
-        Fun.constant({ })
-      ),
+      PartType.externalSchema('menu', [
+        Fields.itemMarkers(),
+        Fields.members([ 'item' ])
+      ]),
+      PartType.externalSchema('view', [
+        FieldSchema.strict('dom')
+      ]),
       InternalSink.partType()
     ];
 
