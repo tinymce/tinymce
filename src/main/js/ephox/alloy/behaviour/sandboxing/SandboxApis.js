@@ -2,6 +2,7 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
@@ -9,7 +10,7 @@ define(
     'ephox.sugar.api.properties.Css'
   ],
 
-  function (Attachment, Future, Option, Attr, Css) {
+  function (Positioning, Attachment, Future, Option, Attr, Css) {
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sConfig, sState, data) {
@@ -91,6 +92,8 @@ define(
     };
 
     var cloak = function (sandbox, sConfig, sState) {
+      var sink = sConfig.getAttachPoint()();
+      Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
       store(sandbox, 'visibility', sConfig.cloakVisibilityAttr(), 'hidden');
     };
 

@@ -45,8 +45,7 @@ define(
           apis: {
             showAt: function (sandbox, anchor, thing) {
               var sink = detail.lazySink()().getOrDie();
-              Sandboxing.cloak(sandbox, sink);
-              Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
+              Sandboxing.cloak(sandbox);
               Sandboxing.open(sandbox, Future.pure(thing)).get(function () {
                 Positioning.position(sink, anchor, sandbox);
                 Sandboxing.decloak(sandbox);
