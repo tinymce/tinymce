@@ -11,13 +11,14 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.InternalHtml',
+    'tinymce.plugins.paste.core.Utils',
     'tinymce.plugins.paste.Plugin',
     'tinymce.plugins.paste.test.MockDataTransfer',
     'tinymce.themes.modern.Theme'
   ],
   function (
     GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter, TinyApis, TinyLoader,
-    CutCopy, InternalHtml, Plugin, MockDataTransfer, Theme
+    CutCopy, InternalHtml, Utils, Plugin, MockDataTransfer, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -200,7 +201,8 @@ asynctest(
 
       CutCopy.register(editor);
 
-      Pipeline.async({}, [
+      // Disabled tests on Edge 15 due to broken clipboard API
+      Pipeline.async({}, Utils.isMsEdge() ? [ ] : [
         sTestCopy(editor, tinyApis),
         sTestCut(editor, tinyApis),
         sTestPaste(editor, tinyApis)
