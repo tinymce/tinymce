@@ -12,12 +12,13 @@ define(
   'tinymce.core.delete.DeleteUtils',
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.PredicateFind'
   ],
-  function (Arr, Compare, Element, Node, PredicateFind) {
+  function (Arr, Option, Compare, Element, Node, PredicateFind) {
     var toLookup = function (names) {
       var lookup = Arr.foldl(names, function (acc, name) {
         acc[name] = true;
@@ -34,14 +35,14 @@ define(
       'dir', 'fieldset', 'header', 'footer', 'article', 'section', 'hgroup', 'aside', 'nav', 'figure'
     ]);
 
-    var isRoot = function (rootNode) {
+    var isBeforeRoot = function (rootNode) {
       return function (elm) {
         return Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
       };
     };
 
     var getParentTextBlock = function (rootNode, elm) {
-      return PredicateFind.closest(elm, isTextBlock, isRoot(rootNode));
+      return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, isTextBlock, isBeforeRoot(rootNode)) : Option.none();
     };
 
     return {
