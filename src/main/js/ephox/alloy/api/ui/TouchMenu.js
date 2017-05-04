@@ -12,7 +12,7 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
-    'ephox.alloy.api.events.AlphaEvents',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.InlineView',
@@ -29,7 +29,7 @@ define(
   ],
 
   function (
-    ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlphaEvents, NativeEvents,
+    ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlloyEvents, NativeEvents,
     SystemEvents, InlineView, Menu, UiSketcher, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Focus, document
   ) {
     var schema = TouchMenuSchema.schema();
@@ -94,8 +94,8 @@ define(
 
                           ]),
                           customBehaviours: [
-                            AdhocBehaviour.events('execute-for-menu', AlphaEvents.derive([
-                              AlphaEvents.run(
+                            AdhocBehaviour.events('execute-for-menu', AlloyEvents.derive([
+                              AlloyEvents.run(
                                 SystemEvents.execute(),
                                 function (c, s) {
                                   var target = s.event().target();
@@ -120,21 +120,21 @@ define(
             detail.touchmenuBehaviours()
           ),
 
-          events: AlphaEvents.derive([
+          events: AlloyEvents.derive([
 
-            AlphaEvents.abort(NativeEvents.contextmenu()),
+            AlloyEvents.abort(NativeEvents.contextmenu()),
 
-            AlphaEvents.run(NativeEvents.touchstart(), function (comp, se) {
+            AlloyEvents.run(NativeEvents.touchstart(), function (comp, se) {
               Toggling.on(comp);
               detail.onHoverOn()(comp);
             }),
 
-            AlphaEvents.run(SystemEvents.tap(), function (comp, se) {
+            AlloyEvents.run(SystemEvents.tap(), function (comp, se) {
               detail.onTap()(comp);
             }),
 
             // On longpress, create the menu items to show, and put them in the sandbox.
-            AlphaEvents.run(SystemEvents.longpress(), function (component, simulatedEvent) {
+            AlloyEvents.run(SystemEvents.longpress(), function (component, simulatedEvent) {
               detail.fetch()(component).get(function (items) {
                 var iMenu = Menu.sketch(
                   Merger.deepMerge(
@@ -155,7 +155,7 @@ define(
             //   - if over items, trigger mousemover on item (and hoverOff on button)
             //   - if over button, (dehighlight all items and trigger hoverOn on button)
             //   - if over nothing (dehighlight all items and trigger hoverOff on button)
-            AlphaEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+            AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
               var e = simulatedEvent.event().raw().touches[0];
               getMenu(component).each(function (iMenu) {
                 ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(function () {
@@ -184,7 +184,7 @@ define(
             // 1. Trigger execute on any selected item
             // 2. Close the menu
             // 3. Depress the button
-            AlphaEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
+            AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
               getMenu(component).each(function (iMenu) {
                 Highlighting.getHighlighted(iMenu).fold(
                   function () {

@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.api.events.AlphaEvents',
+  'ephox.alloy.api.events.AlloyEvents',
 
   [
     'ephox.alloy.construct.EventHandler',
