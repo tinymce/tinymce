@@ -45,6 +45,7 @@ define(
       }, LONGPRESS_DELAY);
 
       var handleTouchstart = function (event) {
+        console.log('touchstart', event.raw().touches);
         getTouch(event).each(function (touch) {
           longpress.cancel();
 
@@ -54,6 +55,7 @@ define(
             target: event.target
           };
 
+          console.log('scheduling');
           longpress.schedule(data);
           startData.set(Option.some(data));
         });
@@ -89,6 +91,7 @@ define(
       ]);
 
       var fireIfReady = function (event, type) {
+        console.log('fireIfReady');
         return Objects.readOptFrom(handlers, type).bind(function (handler) {
           return handler(event);
         });

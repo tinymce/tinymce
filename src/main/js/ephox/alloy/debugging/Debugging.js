@@ -2,6 +2,7 @@ define(
   'ephox.alloy.debugging.Debugging',
 
   [
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',
@@ -15,13 +16,13 @@ define(
     'global!window'
   ],
 
-  function (SystemEvents, AlloyLogger, Objects, Arr, Fun, Merger, Obj, Options, console, Error, window) {
+  function (NativeEvents, SystemEvents, AlloyLogger, Objects, Arr, Fun, Merger, Obj, Options, console, Error, window) {
     var unknown = 'unknown';
     var debugging = true;
 
     var CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-    var eventsMonitored = [ SystemEvents.focus() ];
+    var eventsMonitored = [ NativeEvents.touchstart() ];
 
     // Ignore these files in the error stack
     var path = [

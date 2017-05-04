@@ -68,9 +68,6 @@ define(
                       Merger.deepMerge(
                         externals.view(),
                         {
-                          dom: {
-                            tag: 'div'
-                          },
                           lazySink: DropdownUtils.getSink(hotspot, detail),
                           inlineBehaviours: Behaviour.derive([
                             AdhocBehaviour.config('execute-for-menu'),
