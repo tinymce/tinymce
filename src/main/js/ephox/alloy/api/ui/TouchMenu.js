@@ -82,7 +82,7 @@ define(
 
                               routes: Transitioning.createRoutes({
                                 'open<->closed': detail.transition().map(function (t) {
-                                  return Objects.wrap('transition', t)
+                                  return Objects.wrap('transition', t);
                                 }).getOr({ })
                               }),
 

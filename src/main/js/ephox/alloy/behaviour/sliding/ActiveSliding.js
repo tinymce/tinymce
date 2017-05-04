@@ -12,15 +12,14 @@ define(
   function (SlidingApis, EventHandler, DomModification, Objects, Css) {
     var exhibit = function (base, slideConfig/*, slideState */) {
       var expanded = slideConfig.expanded();
-      var dimension = slideConfig.dimension();
 
       return expanded ? DomModification.nu({
         classes: [ slideConfig.openClass() ],
         styles: { }
       }) : DomModification.nu({
         classes: [ slideConfig.closedClass() ],
-        styles: dimension.initStyles()
-      })
+        styles: Objects.wrap(slideConfig.dimension().property(), '0px')
+      });
     };
 
     var events = function (slideConfig, slideState) {
@@ -29,13 +28,12 @@ define(
           run: function (component, simulatedEvent) {
             var raw = simulatedEvent.event().raw();
             // This will fire for all transitions, we're only interested in the dimension completion
-            slideConfig.dimension().onDone()(raw).each(function (complete) {
-               // disable transitions immediately (Safari animates the dimension removal below)
-              SlidingApis.disableTransitions(component, slideConfig, slideState);
-              complete(component, slideConfig, slideState);
+            if (raw.propertyName === slideConfig.dimension().property()) {
+              SlidingApis.disableTransitions(component, slideConfig, slideState); // disable transitions immediately (Safari animates the dimension removal below)
+              if (slideState.isExpanded()) Css.remove(component.element(), slideConfig.dimension().property()); // when showing, remove the dimension so it is responsive
               var notify = slideState.isExpanded() ? slideConfig.onGrown() : slideConfig.onShrunk();
               notify(component, simulatedEvent);
-            });
+            }
           }
         })
       };
