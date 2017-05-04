@@ -14,11 +14,10 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
-    'tinymce.core.util.Fun',
     'tinymce.plugins.link.core.Utils',
     'tinymce.plugins.link.core.Settings'
   ],
-  function (Delay, Tools, XHR, Fun, Utils, Settings) {
+  function (Delay, Tools, XHR, Utils, Settings) {
     var attachState = {};
 
     var createLinkList = function (editor, callback) {
@@ -297,7 +296,7 @@ define(
           /*eslint dot-notation: 0*/
           var href;
           var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
-          var insertLink = Fun.curry(Utils.link, editor, attachState);
+          var insertLink = Utils.link(editor, attachState);
           var removeLink = Utils.unlink(editor);
 
           data = Tools.extend(data, e.data);

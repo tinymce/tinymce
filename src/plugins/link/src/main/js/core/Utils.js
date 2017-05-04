@@ -83,53 +83,55 @@ define(
     };
 
 
-    var link = function (editor, attachState, data) {
-      editor.undoManager.transact(function () {
-        var selectedElm = editor.selection.getNode();
-        var anchorElm = getAnchorElement(editor, selectedElm);
+    var link = function (editor, attachState) {
+      return function (data) {
+        editor.undoManager.transact(function () {
+          var selectedElm = editor.selection.getNode();
+          var anchorElm = getAnchorElement(editor, selectedElm);
 
-        var linkAttrs = {
-          href: data.href,
-          target: data.target ? data.target : null,
-          rel: data.rel ? data.rel : null,
-          "class": data["class"] ? data["class"] : null,
-          title: data.title ? data.title : null
-        };
+          var linkAttrs = {
+            href: data.href,
+            target: data.target ? data.target : null,
+            rel: data.rel ? data.rel : null,
+            "class": data["class"] ? data["class"] : null,
+            title: data.title ? data.title : null
+          };
 
-        if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-          linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
-        }
+          if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
+            linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
+          }
 
-        if (data.href === attachState.href) {
-          attachState.attach();
-          attachState = {};
-        }
+          if (data.href === attachState.href) {
+            attachState.attach();
+            attachState = {};
+          }
 
-        if (anchorElm) {
-          editor.focus();
+          if (anchorElm) {
+            editor.focus();
 
-          if (data.hasOwnProperty('text')) {
-            if ("innerText" in anchorElm) {
-              anchorElm.innerText = data.text;
+            if (data.hasOwnProperty('text')) {
+              if ("innerText" in anchorElm) {
+                anchorElm.innerText = data.text;
+              } else {
+                anchorElm.textContent = data.text;
+              }
+            }
+
+            editor.dom.setAttribs(anchorElm, linkAttrs);
+
+            editor.selection.select(anchorElm);
+            editor.undoManager.add();
+          } else {
+            if (isImageFigure(selectedElm)) {
+              linkImageFigure(editor, selectedElm, linkAttrs);
+            } else if (data.hasOwnProperty('text')) {
+              editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(data.text)));
             } else {
-              anchorElm.textContent = data.text;
+              editor.execCommand('mceInsertLink', false, linkAttrs);
             }
           }
-
-          editor.dom.setAttribs(anchorElm, linkAttrs);
-
-          editor.selection.select(anchorElm);
-          editor.undoManager.add();
-        } else {
-          if (isImageFigure(selectedElm)) {
-            linkImageFigure(editor, selectedElm, linkAttrs);
-          } else if (data.hasOwnProperty('text')) {
-            editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(data.text)));
-          } else {
-            editor.execCommand('mceInsertLink', false, linkAttrs);
-          }
-        }
-      });
+        });
+      };
     };
 
 
