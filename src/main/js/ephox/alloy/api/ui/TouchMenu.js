@@ -92,10 +92,8 @@ define(
                                 }).getOr({ })
                               }),
 
-                              onTransition: function (view, route) {
-                                if (route.destination() === 'closed') {
-                                  InlineView.hide(view);
-                                }
+                              onFinish: function (view, destination) {
+                                if (destination === 'closed') InlineView.hide(view);
                               }
                             })
                           ]),
@@ -117,10 +115,6 @@ define(
 
                           onShow: function (view) {
                             Transitioning.progressTo(view, 'open');
-                          },
-
-                          onHide: function (view) {
-                            Transitioning.progressTo(view, 'closed');
                           }
                         }
                       )

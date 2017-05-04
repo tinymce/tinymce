@@ -14,6 +14,7 @@ define(
       FieldSchema.strict('stateAttr'),
       FieldSchema.strict('initialState'),
       Fields.onHandler('onTransition'),
+      Fields.onHandler('onFinish'),
       FieldSchema.strictOf(
         'routes', 
         ValueSchema.setOf(
