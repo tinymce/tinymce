@@ -86,12 +86,20 @@ define(
       });
     };
 
+    var getState = function (comp, transConfig, transState) {
+      var e = comp.element();
+      return Attr.has(e, transConfig.stateAttr()) ? Option.some(
+        Attr.get(e, transConfig.stateAttr())
+      ) : Option.none();
+    };
+
     return {
       findRoute: findRoute,
       disableTransition: disableTransition,
       getCurrentRoute: getCurrentRoute,
       jumpTo: jumpTo,
-      progressTo: progressTo
+      progressTo: progressTo,
+      getState: getState
     };
   }
 );

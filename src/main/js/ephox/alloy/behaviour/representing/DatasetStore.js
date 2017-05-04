@@ -5,10 +5,11 @@ define(
     'ephox.alloy.behaviour.representing.RepresentState',
     'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (RepresentState, Fields, FieldSchema, Objects) {
+  function (RepresentState, Fields, FieldSchema, Objects, Fun) {
     var setValue = function (component, repConfig, repState, data) {
       var dataKey = repConfig.store().getDataKey()
       repState.set({ });
@@ -32,6 +33,10 @@ define(
       });
     };
 
+    var onUnload = function (component, repConfig, repState) {
+      repState.set({ });
+    };
+
     return [
       FieldSchema.option('initialValue'),
       FieldSchema.strict('getFallbackEntry'),
@@ -41,6 +46,7 @@ define(
         setValue: setValue,
         getValue: getValue,
         onLoad: onLoad,
+        onUnload: onUnload,
         state: RepresentState.dataset
       })
     ];

@@ -41,6 +41,7 @@ define(
       FieldSchema.strict('toggleClass'),
       FieldSchema.option('lazySink'),
       FieldSchema.option('role'),
+      FieldSchema.defaulted('eventOrder', { }),
 
       Fields.onHandler('onClosed'),
 

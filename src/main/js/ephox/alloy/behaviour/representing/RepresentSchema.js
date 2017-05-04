@@ -17,7 +17,8 @@ define(
         manual: ManualStore,
         dataset: DatasetStore
       })),
-      Fields.onHandler('onSetValue')
+      Fields.onHandler('onSetValue'),
+      FieldSchema.defaulted('resetOnDom', false)
     ];
   }
 );

@@ -91,7 +91,7 @@ define(
                                 if (destination === 'closed') {
                                   console.trace();
                                   InlineView.hide(view);
-                                  detail.onClosed()(view);
+                                  detail.onClosed()(hotspot, view);
                                 }
                               }
                             })
@@ -121,7 +121,7 @@ define(
             ]),
             detail.touchmenuBehaviours()
           ),
-
+          
           events: AlloyEvents.derive([
 
             AlloyEvents.abort(NativeEvents.contextmenu()),
@@ -202,10 +202,13 @@ define(
             })
           ]),
 
-          eventOrder: {
-            // Order, the button state is toggled first, so assumed !selected means close.
-            'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
-          }
+          eventOrder: Merger.deepMerge(
+            detail.eventOrder(),
+            {
+              // Order, the button state is toggled first, so assumed !selected means close.
+              'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
+            }
+          )
         },
         {
           dom: {

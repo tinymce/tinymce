@@ -21,10 +21,15 @@ define(
         return data.get() === null;
       };
 
+      var clear = function () {
+        data.set(null);
+      };
+
       return BehaviourState({
         set: data.set,
         get: data.get,
         isNotSet: isNotSet,
+        clear: clear,
         readState: readState
       });
     };
