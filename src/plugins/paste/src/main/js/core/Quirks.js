@@ -117,6 +117,9 @@ define(
           var dom = editor.dom, node = editor.selection.getNode();
 
           content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
+            // Newer Chrome clipboard data already encodes the clipboard data so " will be &quote;
+            // This needs to be decoded so TinyMCE can do its own encoding when parsing the style.
+            value = dom.decode(value);
             var inputStyles = dom.parseStyle(value, 'span'), outputStyles = {};
 
             if (webKitStyles === "none") {
