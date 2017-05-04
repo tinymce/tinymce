@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
@@ -12,7 +13,7 @@ define(
     'tinymce.themes.mobile.touch.view.TapToEditButton'
   ],
 
-  function (AdhocBehaviour, Behaviour, Memento, AlloyEvents, Container, Attr, Styles, TapToEditButton) {
+  function (AdhocBehaviour, Behaviour, Toggling, Memento, AlloyEvents, Container, Attr, Styles, TapToEditButton) {
     var sketch = function (onView, onEdit, translate) {
       
       var memIcon = Memento.record(
@@ -24,7 +25,11 @@ define(
             classes: [ Styles.resolve('mask-tap-icon') ]
           },
           containerBehaviours: Behaviour.derive([
-            AdhocBehaviour.config('conn')
+            AdhocBehaviour.config('conn'),
+            Toggling.config({
+              toggleClass: Styles.resolve('view-mode-hovered'),
+              toggleOnExecute: false
+            })
           ]),
           customBehaviours: [
             AdhocBehaviour.events('conn', AlloyEvents.derive([

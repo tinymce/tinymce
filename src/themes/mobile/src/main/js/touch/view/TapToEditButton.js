@@ -4,6 +4,8 @@ define(
   [
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.katamari.api.Future',
@@ -14,7 +16,7 @@ define(
     'tinymce.themes.mobile.touch.view.TapToEditMenuParts'
   ],
 
-  function (AdhocBehaviour, Behaviour, AlloyEvents, TouchMenu, Future, Singleton, Attr, Class, setTimeout, TapToEditMenuParts) {
+  function (AdhocBehaviour, Behaviour, Toggling, Transitioning, AlloyEvents, TouchMenu, Future, Singleton, Attr, Class, setTimeout, TapToEditMenuParts) {
     var sketch = function (spec) {
       var state = Singleton.value();
 
@@ -52,20 +54,27 @@ define(
    
         fetch: function () {
           return Future.pure([
-            { type: 'item', data: { value: 'Edit', text: 'Edit' } }
+            { type: 'item', data: { value: 'edit', text: 'Edit' } }
           ]);
         },
         onExecute: function (comp, menuComp, item, data) {
-          updateState(comp, data.value);
+          Transitioning.jumpTo(comp, data.value);
+          // updateState(comp, data.value);
         },
 
         onHoverOn: function (comp) {
-          Class.add(comp.element(), 'hovered');
-          updateState(comp, 'View');
+          Transitioning.jumpTo(comp, 'view');
+          var icon = spec.memIcon.get(comp);
+          Toggling.on(icon);
+          // Class.add(comp.element(), 'hovered');
+          // updateState(comp, 'View');
         },
         onHoverOff: function (comp) {
-          Class.remove(comp.element(), 'hovered');
-          clearState(comp);
+          Transitioning.jumpTo(comp, 'icon');
+          var icon = spec.memIcon.get(comp);
+          Toggling.off(icon);
+          // Class.remove(comp.element(), 'hovered');
+          // clearState(comp);
         },
 
         onTap: function () {
@@ -88,16 +97,17 @@ define(
           })
         },
 
-        customBehaviours: [
-          AdhocBehaviour.events('initial-state', AlloyEvents.derive([
-            AlloyEvents.runOnAttached(function (comp, se) {
-              clearState(comp);
-            })
-          ]))
-        ],
-
         touchmenuBehaviours: Behaviour.derive([
-          AdhocBehaviour.config('initial-state')
+          Transitioning.config({
+            destinationAttr: 'data-mode-destination',
+            stateAttr: 'data-mode',
+            initialState: 'icon',
+            routes: Transitioning.createRoutes({
+              'icon<->view': { },
+              'icon<->edit': { },
+              'view<->edit': { }
+            })
+          })
         ]),
 
         parts: {

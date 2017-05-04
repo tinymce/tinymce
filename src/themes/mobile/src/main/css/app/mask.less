@@ -105,11 +105,22 @@
         transition: transform 0.3s ease-in-out;
       }
 
-      &:not(.selected) .tinymce-mobile-mask-tap-icon:not([data-mode]) {
-        background-image: url('../icons/tinymce-logo2.svg');
-        background-size: cover;
-        background-color: transparent;
-        
+      &:not(.selected) {
+        &[data-mode="icon"] .tinymce-mobile-mask-tap-icon {
+          background-image: url('../icons/tinymce-logo2.svg');
+          background-size: cover;
+          background-color: transparent;
+        }
+
+        &[data-mode="view"] .tinymce-mobile-mask-tap-icon:before {
+          content: "View";
+          font-size: 0.5em;
+        }
+
+        &[data-mode="edit"] .tinymce-mobile-mask-tap-icon:before {
+          content: "Edit";
+          font-size: 0.5em;
+        }
       }
 
       .tinymce-mobile-mask-tap-icon {
@@ -119,6 +130,12 @@
         background: #4682B4;
         color: white;
         z-index: 2;
+      }
+
+
+
+      .tinymce-mobile-mask-tap-icon.tinymce-mobile-view-mode-hovered {
+        .mixin-selected-orb;
       }
 
       &.selected .tinymce-mobile-mask-tap-icon {
@@ -143,10 +160,6 @@
         width: 2.5em;
         height: 2.5em;
         border-radius: 50%;
-      }
-
-      &.hovered .tinymce-mobile-mask-tap-icon {
-        .mixin-selected-orb;
       }
     }
 
