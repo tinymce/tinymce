@@ -25,7 +25,6 @@ define(
 
     var getTransitionOf = function (comp, transConfig, transState, route) {
       return findRoute(comp, transConfig, transState, route).bind(function (r) {
-        console.log('getTransition found route');
         return r.transition().map(function (t) {
           return {
             transition: Fun.constant(t),
