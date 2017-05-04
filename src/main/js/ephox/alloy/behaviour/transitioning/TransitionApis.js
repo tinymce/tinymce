@@ -65,12 +65,19 @@ define(
       Attr.set(comp.element(), transConfig.stateAttr(), destination);
     };
 
+    var fasttrack = function (comp, transConfig, transState, destination) {
+      if (Attr.has(comp.element(), transConfig.destinationAttr())) {
+        Attr.set(comp.element(), transConfig.stateAttr(), Attr.get(comp.element(), transConfig.destinationAttr()));
+      }
+    }
+
     var progressTo = function (comp, transConfig, transState, destination) {
+      fasttrack(comp, transConfig, transState, destination);
       var route = getNewRoute(comp, transConfig, transState, destination);
       getTransitionOf(comp, transConfig, transState, route).fold(function () {
-        console.log('progress failed');
         jumpTo(comp, transConfig, transState, destination);
       }, function (routeTransition) {
+        disableTransition(comp, transConfig, transState);
         var t = routeTransition.transition();
         Class.add(comp.element(), t.transitionClass());
         Attr.set(comp.element(), transConfig.destinationAttr(), destination);
