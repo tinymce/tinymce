@@ -54,14 +54,19 @@ asynctest(
           cGetParentTextBlock([0, 0, 0]),
           cAssertBlock([0, 0])
         ])),
-        Logger.t('Should be the paragraph block', Chain.asStep(viewBlock, [
+        Logger.t('Should be none in inline elements', Chain.asStep(viewBlock, [
           cSetHtml('<span>a</span>'),
           cGetParentTextBlock([0, 0]),
           cAssertNone
         ])),
-        Logger.t('Should be the paragraph block', Chain.asStep(viewBlock, [
+        Logger.t('Should be none text nodes', Chain.asStep(viewBlock, [
           cSetHtml('a'),
           cGetParentTextBlock([0]),
+          cAssertNone
+        ])),
+        Logger.t('Should be none on root element', Chain.asStep(viewBlock, [
+          cSetHtml(''),
+          cGetParentTextBlock([]),
           cAssertNone
         ]))
       ]))
