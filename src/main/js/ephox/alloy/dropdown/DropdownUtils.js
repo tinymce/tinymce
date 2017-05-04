@@ -48,13 +48,13 @@ define(
               uid: Tagger.generate(''),
               data: data,
 
-              onOpenMenu: function (sandbox, menu) {
+              onOpenMenu: function (tmenu, menu) {
                 var sink = lazySink().getOrDie();
                 Positioning.position(sink, anchor, menu);
                 Sandboxing.decloak(sandbox);
               },
 
-              onOpenSubmenu: function (sandbox, item, submenu) {
+              onOpenSubmenu: function (tmenu, item, submenu) {
                 var sink = lazySink().getOrDie();
                 Positioning.position(sink, {
                   anchor: 'submenu',
