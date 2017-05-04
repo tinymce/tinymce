@@ -2,15 +2,23 @@ define(
   'ephox.alloy.api.events.SystemEvents',
 
   [
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.api.events.SystemEvents',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj'
   ],
 
-  function (Obj, Fun) {
+  function (SystemEvents, Fun, Obj) {
     return {
       trigger: function (component, event, properties) {
         component.getSystem().triggerEvent(event, component.element(), Obj.map(properties, Fun.constant));
       },
+
+      triggerExecute: function (component) {
+        component.getSystem().triggerEvent(SystemEvents.execute(), component.element(), {
+          target: Fun.constant(component.element())
+        });
+      },
+
       // This is used to pass focus to a component. A component might interpret
       // this event and pass the DOM focus to one of its children, depending on its
       // focus model.

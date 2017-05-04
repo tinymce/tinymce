@@ -6,10 +6,8 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
@@ -20,26 +18,19 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.positioning.layout.Layout',
     'ephox.alloy.ui.schema.TouchMenuSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Future',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
-    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.view.Width',
     'global!document'
   ],
 
   function (
-    AdhocBehaviour, Behaviour, Coupling, Highlighting, Positioning, Representing, Sandboxing, Sliding, Toggling, Transitioning, Unselecting, SystemEvents, InlineView,
-    Menu, UiSketcher, EventHandler, DropdownUtils, PartType, Layout, TouchMenuSchema, Objects, Fun, Future, Merger, Option, Result, Focus, Element, Height, Location,
-    Width, document
+    AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, SystemEvents, InlineView, Menu, UiSketcher,
+    EventHandler, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Option, Focus, Element, document
   ) {
     var schema = TouchMenuSchema.schema();
     var partTypes = TouchMenuSchema.parts();
@@ -58,6 +49,7 @@ define(
           components: components,
           behaviours: Merger.deepMerge(
             Behaviour.derive([
+              // Button showing the the touch menu is depressed
               Toggling.config({
                 toggleClass: detail.toggleClass(),
                 aria: {
@@ -66,6 +58,7 @@ define(
                 }
               }),
               Unselecting.config({ }),
+              // Menu that shows up
               Coupling.config({
                 others: {
                   sandbox: function (hotspot) {
@@ -81,6 +74,8 @@ define(
                           lazySink: DropdownUtils.getSink(hotspot, detail),
                           inlineBehaviours: Behaviour.derive([
                             AdhocBehaviour.config('execute-for-menu'),
+
+                            // Animation 
                             Transitioning.config({
                               initialState: 'closed',
                               destinationAttr: 'data-longpress-destination',
@@ -96,6 +91,8 @@ define(
                                 if (destination === 'closed') InlineView.hide(view);
                               }
                             })
+
+
                           ]),
                           customBehaviours: [
                             AdhocBehaviour.events('execute-for-menu', Objects.wrapAll([
@@ -207,21 +204,22 @@ define(
             }),
 
             'touchend': EventHandler.nu({
+              // When the touch is released, identify if there are any selected items
+              // If a selected item, trigger an execute
+              // "close" the menu, and depress the button
               run: function (component, simulatedEvent) {
-                var e = simulatedEvent.event().raw().touches[0];
                 getMenu(component).each(function (iMenu) {
-                  Highlighting.getHighlighted(iMenu).fold(function () {
-                    detail.onMiss()(component);
-                  }, function (item) {
-                    console.log('found item', item.element().dom());
-                    component.getSystem().triggerEvent(SystemEvents.execute(), item.element(), {
-                      target: Fun.constant(item.element())
-                    });
-                  });
+                  Highlighting.getHighlighted(iMenu).fold(
+                    function () {
+                      detail.onMiss()(component);
+                    },
+                    SystemEvents.triggerExecute
+                  );
                 });
-                Transitioning.progressTo(Coupling.getCoupled(component, 'sandbox'), 'closed');
-                Toggling.off(component);
 
+                var sandbox = Coupling.getCoupled(component, 'sandbox');
+                Transitioning.progressTo(sandbox, 'closed');
+                Toggling.off(component);
               }
             })
           },
