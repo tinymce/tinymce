@@ -163,7 +163,7 @@ define(
       };
 
       onlyText = Utils.isOnlyTextSelected(selection.getContent());
-      anchorElm = Utils.getAnchorElement(editor, selection.getStart());
+      anchorElm = Utils.getAnchorElement(editor);
 
       data.text = initialText = Utils.getAnchorText(editor.selection, anchorElm);
       data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
