@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.DelayedFunction',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
@@ -12,8 +13,10 @@ define(
     'global!Math'
   ],
 
-  function (DelayedFunction, NativeEvents, SystemEvents, Cell, Fun, Option, Compare, Math) {
+  function (DelayedFunction, NativeEvents, SystemEvents, Objects, Cell, Fun, Option, Compare, Math) {
     var SIGNIFICANT_MOVE = 5;
+
+    var LONGPRESS_DELAY = 400;
 
     var getTouch = function (event) {
       if (event.raw().touches === undefined || event.raw().touches.length !== 1) return Option.none();
@@ -22,8 +25,8 @@ define(
 
     // Check to see if the touch has changed a *significant* amount
     var isFarEnough = function (touch, data) {
-      var distX = Math.abs(touch.clientX - data.x);
-      var distY = Math.abs(touch.clientY - data.y);
+      var distX = Math.abs(touch.clientX - data.x());
+      var distY = Math.abs(touch.clientY - data.y());
       return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
     };
 
@@ -33,55 +36,62 @@ define(
        */
 
       // Need a return value, so can't use Singleton.value;
-      var state = Cell(Option.none());
-
-      var longpressActive = Cell(false);
+      var startData = Cell(Option.none());
 
       var longpress = DelayedFunction(function (event) {
-        longpressActive.set(true);
-        state.set(Option.none());
+        // Stop longpress firing a tap
+        startData.set(Option.none());
         settings.triggerEvent(SystemEvents.longpress(), event);
-      }, 400);
+      }, LONGPRESS_DELAY);
+
+      var handleTouchstart = function (event) {
+        getTouch(event).each(function (touch) {
+          longpress.cancel();
+
+          var data = {
+            x: Fun.constant(touch.clientX),
+            y: Fun.constant(touch.clientY),
+            target: event.target
+          };
+
+          longpress.schedule(data);
+          startData.set(Option.some(data));
+        });
+        return Option.none();
+      };
+
+      var handleTouchmove = function (event) {
+        longpress.cancel();
+        getTouch(event).each(function (touch) {
+          startData.get().each(function (data) {
+            if (isFarEnough(touch, data)) startData.set(Option.none());
+          });
+        });
+        return Option.none();
+      };
+
+      var handleTouchend = function (event) {
+        longpress.cancel();
+
+        var isSame = function (data) {
+          return Compare.eq(data.target(), event.target());
+        };
+
+        return startData.get().filter(isSame).map(function (data) {
+          return settings.triggerEvent(SystemEvents.tap(), event);
+        });
+      };
+
+      var handlers = Objects.wrapAll([
+        { key: NativeEvents.touchstart(), value: handleTouchstart },
+        { key: NativeEvents.touchmove(), value: handleTouchmove },
+        { key: NativeEvents.touchend(), value: handleTouchend }
+      ]);
 
       var fireIfReady = function (event, type) {
-        if (type === NativeEvents.touchstart()) {
-          getTouch(event).each(function (touch) {
-            longpressActive.set(false);
-            longpress.cancel();
-            longpress.schedule({
-              x: Fun.constant(touch.clientX),
-              y: Fun.constant(touch.clientY),
-              target: event.target
-            });
-            state.set(Option.some({
-              target: event.target(),
-              x: touch.clientX,
-              y: touch.clientY
-            }));
-          });
-          return Option.none();
-        } else if (type === NativeEvents.touchmove()) {
-          longpress.cancel();
-          getTouch(event).each(function (touch) {
-            state.get().each(function (data) {
-              if (isFarEnough(touch, data)) state.set(Option.none());
-            });
-          });
-          return Option.none();
-        } else if (type === NativeEvents.touchend()) {
-          // if (longpressActive.get()) {
-          //   settings.triggerEvent('longpressEnd', event);
-          // }
-          longpressActive.set(false);
-          longpress.cancel();
-          return state.get().filter(function (data) {
-            return Compare.eq(data.target, event.target());
-          }).map(function (data) {
-            return settings.triggerEvent(SystemEvents.tap(), event);
-          });
-        } else {
-          return Option.none();
-        }
+        return Objects.readOptFrom(handlers, type).bind(function (handler) {
+          return handler(event);
+        });
       };
 
       return {

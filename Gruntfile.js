@@ -57,7 +57,8 @@ module.exports = function(grunt) {
           'bedrock-auto:watching'
         ],
         options: {
-          spawn: false
+          spawn: false,
+          atBegin: true
         }
       }
     }
