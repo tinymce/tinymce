@@ -101,11 +101,46 @@ define(
       });
     };
 
+    var toggleActiveState = function (editor) {
+      return function () {
+        var self = this;
+        editor.on('nodechange', function (e) {
+          self.active(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
+        });
+      };
+    };
+
+    var toggleViewLinkState = function (editor) {
+      return function () {
+        var self = this;
+
+        var toggleVisibility = function (e) {
+          if (Utils.hasLinks(e.parents)) {
+            self.show();
+          } else {
+            self.hide();
+          }
+        };
+
+        if (!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart()))) {
+          self.hide();
+        }
+
+        editor.on('nodechange', toggleVisibility);
+
+        self.on('remove', function () {
+          editor.off('nodechange', toggleVisibility);
+        });
+      };
+    };
+
     return {
       openDialog: openDialog,
       gotoSelectedLink: gotoSelectedLink,
       leftClickedOnAHref: leftClickedOnAHref,
-      setupGotoLinks: setupGotoLinks
+      setupGotoLinks: setupGotoLinks,
+      toggleActiveState: toggleActiveState,
+      toggleViewLinkState: toggleViewLinkState
     };
   }
 );
