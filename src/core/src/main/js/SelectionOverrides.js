@@ -521,7 +521,8 @@ define(
               e.preventDefault();
               setContentEditableSelection(selectNode(contentEditableRoot));
             } else {
-              if (!isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
+              // Check that we're not attempting a shift + click select within a contenteditable='true' element
+              if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
                 editor.selection.placeCaretAt(e.clientX, e.clientY);
               }
             }
