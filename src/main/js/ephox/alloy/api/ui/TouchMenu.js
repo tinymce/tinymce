@@ -188,17 +188,17 @@ define(
             // 3. Depress the button
             AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
               getMenu(component).each(function (iMenu) {
-                Highlighting.getHighlighted(iMenu).fold(
-                  function () {
-                    detail.onMiss()(component);
-                  },
-                  SystemEvents.triggerExecute
-                );
+                Highlighting.getHighlighted(iMenu).each(SystemEvents.triggerExecute);
               });
 
               var sandbox = Coupling.getCoupled(component, 'sandbox');
               Transitioning.progressTo(sandbox, 'closed');
               Toggling.off(component);
+            }),
+
+            AlloyEvents.runOnDetached(function (component, simulatedEvent) {
+              var sandbox = Coupling.getCoupled(component, 'sandbox');
+              InlineView.hide(sandbox);
             })
           ]),
 
