@@ -68,6 +68,7 @@ define(
     var fasttrack = function (comp, transConfig, transState, destination) {
       if (Attr.has(comp.element(), transConfig.destinationAttr())) {
         Attr.set(comp.element(), transConfig.stateAttr(), Attr.get(comp.element(), transConfig.destinationAttr()));
+        Attr.remove(comp.element(), transConfig.destinationAttr());
       }
     }
 
