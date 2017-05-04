@@ -2,6 +2,7 @@ define(
   'ephox.alloy.api.ui.TouchMenu',
 
   [
+    'ephox.alloy.alien.ElementFromPoint',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Coupling',
@@ -29,8 +30,8 @@ define(
   ],
 
   function (
-    AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, SystemEvents, InlineView, Menu, UiSketcher,
-    EventHandler, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Option, Focus, Element, document
+    ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, SystemEvents, InlineView,
+    Menu, UiSketcher, EventHandler, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Option, Focus, Element, document
   ) {
     var schema = TouchMenuSchema.schema();
     var partTypes = TouchMenuSchema.parts();
@@ -166,31 +167,25 @@ define(
             }),
 
             'touchmove': EventHandler.nu({
+              // 1. Find if touchmove over button or any items
+              //   - if over items, trigger mousemover on item (and hoverOff on button)
+              //   - if over button, (dehighlight all items and trigger hoverOn on button)
+              //   - if over nothing (dehighlight all items and trigger hoverOff on button)
               run: function (component, simulatedEvent) {
                 var e = simulatedEvent.event().raw().touches[0];
                 getMenu(component).each(function (iMenu) {
-                  Option.from(document.elementFromPoint(e.clientX, e.clientY)).map(Element.fromDom).filter(function (tgt) {
-                    return iMenu.element().dom().contains(tgt.dom());
-                  }).fold(function () {
-
-
-
-                    console.log('no point');
+                  ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(function () {
+                    // No items, so blur everything.
                     Highlighting.dehighlightAll(iMenu);
+
+                    // INVESTIGATE: Should this focus.blur be called? Should it only be called here?
                     Focus.active().each(Focus.blur);
 
-                    // Dupe.
-                    Option.from(document.elementFromPoint(e.clientX, e.clientY)).map(Element.fromDom).filter(function (tgt) {
-                      return component.element().dom().contains(tgt.dom());
-                    }).fold(function () {
-                      console.log("Hovering off");
-                      detail.onHoverOff()(component);
-                    }, function () {
-                      console.log("hovering on");
-                      detail.onHoverOn()(component);
-                    });
-
+                    // could not find an item, so check the button itself
+                    var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(detail.onHoverOff, detail.onHoverOn);
+                    hoverF(component);
                   }, function (elem) {
+                    // Trigger a hover on the item element
                     component.getSystem().triggerEvent('mouseover', elem, {
                       target: Fun.constant(elem),
                       x: Fun.constant(e.clientX),
@@ -204,9 +199,9 @@ define(
             }),
 
             'touchend': EventHandler.nu({
-              // When the touch is released, identify if there are any selected items
-              // If a selected item, trigger an execute
-              // "close" the menu, and depress the button
+              // 1. Trigger execute on any selected item
+              // 2. Close the menu
+              // 3. Depress the button
               run: function (component, simulatedEvent) {
                 getMenu(component).each(function (iMenu) {
                   Highlighting.getHighlighted(iMenu).fold(

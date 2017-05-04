@@ -2,19 +2,18 @@ define(
   'ephox.alloy.api.events.SystemEvents',
 
   [
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj'
   ],
 
-  function (SystemEvents, Fun, Obj) {
+  function (Fun, Obj) {
     return {
       trigger: function (component, event, properties) {
         component.getSystem().triggerEvent(event, component.element(), Obj.map(properties, Fun.constant));
       },
 
       triggerExecute: function (component) {
-        component.getSystem().triggerEvent(SystemEvents.execute(), component.element(), {
+        component.getSystem().triggerEvent('alloy.execute', component.element(), {
           target: Fun.constant(component.element())
         });
       },
