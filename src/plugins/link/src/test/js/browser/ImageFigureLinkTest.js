@@ -6,13 +6,12 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
     'ephox.mcagar.api.TinyDom',
     'tinymce.plugins.link.Plugin',
     'tinymce.plugins.link.core.Utils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, Assertions, Step, TinyApis, TinyLoader, TinyUi, TinyDom, LinkPlugin, LinkPluginUtils, ModernTheme) {
+  function (Pipeline, Assertions, Step, TinyApis, TinyLoader, TinyDom, LinkPlugin, LinkPluginUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -21,7 +20,6 @@ asynctest(
 
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var ui = TinyUi(editor);
       var api = TinyApis(editor);
 
       var sLinkTheSelection = function () {
@@ -46,7 +44,12 @@ asynctest(
 
 
       Pipeline.async({}, [
-        api.sSetContent('<figure class="image"><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" /><figcaption>TinyMCE</figcaption></figure>'),
+        api.sSetContent(
+          '<figure class="image">' +
+            '<img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" />' +
+            '<figcaption>TinyMCE</figcaption>' +
+          '</figure>'
+        ),
         api.sSetSelection([0], 0, [0], 0),
         sLinkTheSelection(),
         sAssertPresense({ 'figure.image > a[href="http://google.com"] > img': 1 }),
