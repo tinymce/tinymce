@@ -21,13 +21,40 @@ define(
       return r;
     };
 
+    var createTristate = function (first, second, third, transitions) {
+      return Objects.wrapAll([
+        {
+          key: first,
+          value: Objects.wrapAll([
+            { key: second, value: transitions },
+            { key: third, value: transitions }
+          ])
+        },
+        {
+          key: second,
+          value: Objects.wrapAll([
+            { key: first, value: transitions },
+            { key: third, value: transitions }
+          ])
+        },
+        {
+          key: third,
+          value: Objects.wrapAll([
+            { key: first, value: transitions },
+            { key: second, value: transitions }
+          ])
+        }
+      ]);
+    };
+
     return Behaviour.create({
       fields: TransitionSchema,
       name: 'transitioning',
       active: ActiveTransitioning,
       apis: TransitionApis,
       extra: {
-        createRoutes: createRoutes
+        createRoutes: createRoutes,
+        createTristate: createTristate
       }
     });
   }
