@@ -308,6 +308,10 @@ define(
             return;
           }
 
+          if (!onlyText || data.text === initialText) {
+            delete data.text;
+          }
+
           // Is email and not //user@domain.com
           if (href.indexOf('@') > 0 && href.indexOf('//') == -1 && href.indexOf('mailto:') == -1) {
             delayedConfirm(
