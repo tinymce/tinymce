@@ -30,33 +30,31 @@ define(
       };
     };
 
-    var runOnAttached = function (handler) {
-      return {
-        key: SystemEvents.attachedToDom(),
-        value: EventHandler.nu({
-          run: function (component, simulatedEvent) {
-            if (EventRoot.isSource(component, simulatedEvent)) handler(component, simulatedEvent);
-          }
-        })
+    var runOnName = function (name) {
+      return function (handler) {
+        return run(name, handler);
       };
     };
 
-    var runOnDetached = function (handler) {
-      return {
-        key: SystemEvents.detachedFromDom(),
-        value: EventHandler.nu({
-          run: function (component, simulatedEvent) {
-            if (EventRoot.isSource(component, simulatedEvent)) handler(component, simulatedEvent);
-          }
-        })
+    var runOnSourceName = function (name) {
+      return function (handler) {
+        return {
+          key: name,
+          value: EventHandler.nu({
+            run: function (component, simulatedEvent) {
+              if (EventRoot.isSource(component, simulatedEvent)) handler(component, simulatedEvent);
+            }
+          })
+        };
       };
     };
 
     return {
       derive: derive,
       run: run,
-      runOnAttached: runOnAttached,
-      runOnDetached: runOnDetached,
+      runOnAttached: runOnSourceName(SystemEvents.attachedToDom()),
+      runOnDetached: runOnSourceName(SystemEvents.detachedFromDom()),
+      runOnExecute: runOnName(SystemEvents.execute()),
       abort: abort
     };
   }

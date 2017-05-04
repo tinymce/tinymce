@@ -100,15 +100,12 @@ define(
                           ]),
                           customBehaviours: [
                             AdhocBehaviour.events('execute-for-menu', AlloyEvents.derive([
-                              AlloyEvents.run(
-                                SystemEvents.execute(),
-                                function (c, s) {
-                                  var target = s.event().target();
-                                  c.getSystem().getByDom(target).each(function (item) {
-                                    detail.onExecute()(hotspot, c, item, Representing.getValue(item));
-                                  });
-                                }
-                              )
+                              AlloyEvents.runOnExecute(function (c, s) {
+                                var target = s.event().target();
+                                c.getSystem().getByDom(target).each(function (item) {
+                                  detail.onExecute()(hotspot, c, item, Representing.getValue(item));
+                                });
+                              })
                             ]))
                           ],
 
