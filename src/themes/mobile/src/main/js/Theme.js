@@ -96,6 +96,7 @@ define(
 
             setReadOnly: function (ro) {
               realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
+              editor.setMode(ro === true ? 'readonly' : 'design');
             }
           });
 
