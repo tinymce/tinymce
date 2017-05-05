@@ -642,10 +642,16 @@ module.exports = function (grunt) {
     grunt.file.write('tmp/version.txt', BUILD_VERSION);
   });
 
+  grunt.registerTask('build-headers', 'Appends build headers to js files', function () {
+    var header = '// ' + packageData.version + ' (' + packageData.date + ')\n';
+    grunt.file.write('js/tinymce/tinymce.js', header + grunt.file.read('js/tinymce/tinymce.js'));
+    grunt.file.write('js/tinymce/tinymce.min.js', header + grunt.file.read('js/tinymce/tinymce.min.js'));
+  });
+
   require("load-grunt-tasks")(grunt);
   grunt.loadTasks("tools/tasks");
   grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('@ephox/bedrock');
 
-  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 };
