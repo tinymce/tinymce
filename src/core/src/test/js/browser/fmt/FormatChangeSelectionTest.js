@@ -2,12 +2,11 @@ asynctest(
   'Browser Test: .fmt.FormatChangeSelectionTest',
   [
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, Step, TinyApis, TinyLoader, ModernTheme) {
+  function (Pipeline, TinyApis, TinyLoader, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -17,12 +16,11 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
-        tinyApis.sSetContent('<p><span style="text-decoration: underline;"><em><strong>a b c</strong></em></span></p>'),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 2, [0, 0, 0, 0, 0], 3),
-        tinyApis.sExecCommand('bold'),
+        tinyApis.sSetContent('<p><em><strong>a </strong>b<strong> c</strong></em></p>'),
+        tinyApis.sSetSelection([0, 0, 1], 0, [0, 0, 2], 0),
         tinyApis.sExecCommand('italic'),
-        tinyApis.sAssertSelection([0, 0, 0, 0, 0], 2, [0, 0, 0, 0, 0], 3)
-        // Step.wait(20000000)
+        tinyApis.sAssertContent('<p><em><strong>a </strong></em>b<em><strong> c</strong></em></p>'),
+        tinyApis.sAssertSelection([0, 1], 0, [0, 2], 0)
       ], onSuccess, onFailure);
     }, {
       plugins: '',
