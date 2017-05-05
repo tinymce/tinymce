@@ -30,12 +30,18 @@ define(
       { after: [ 'element' ] }
     ]);
 
+    var rescope = function (rootNode, node) {
+      var parentBlock = CaretUtils.getParentBlock(node, rootNode);
+      return parentBlock ? parentBlock : rootNode;
+    };
+
     var before = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeForwards(pos);
-      return InlineUtils.findInline(rootNode, nPos).fold(
+      var scope = rescope(rootNode, nPos.container());
+      return InlineUtils.findInline(scope, nPos).fold(
         function () {
-          return InlineUtils.findCaretPosition(rootNode, true, nPos)
-            .bind(Fun.curry(InlineUtils.findInline, rootNode))
+          return InlineUtils.findCaretPosition(scope, true, nPos)
+            .bind(Fun.curry(InlineUtils.findInline, scope))
             .map(function (inline) {
               return Location.before(inline);
             });
@@ -62,10 +68,11 @@ define(
 
     var after = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeBackwards(pos);
-      return InlineUtils.findInline(rootNode, nPos).fold(
+      var scope = rescope(rootNode, nPos.container());
+      return InlineUtils.findInline(scope, nPos).fold(
         function () {
-          return InlineUtils.findCaretPosition(rootNode, false, nPos)
-            .bind(Fun.curry(InlineUtils.findInline, rootNode))
+          return InlineUtils.findCaretPosition(scope, false, nPos)
+            .bind(Fun.curry(InlineUtils.findInline, scope))
             .map(function (inline) {
               return Location.after(inline);
             });
@@ -98,6 +105,15 @@ define(
       );
     };
 
+    var getName = function (location) {
+      return location.fold(
+        Fun.constant('before'), // Before
+        Fun.constant('start'),  // Start
+        Fun.constant('end'),    // End
+        Fun.constant('after')   // After
+      );
+    };
+
     var outside = function (location) {
       return location.fold(
         Location.before, // Before
@@ -116,13 +132,8 @@ define(
       );
     };
 
-    var isInside = function (location) {
-      return location.fold(
-        Fun.constant(false), // Before
-        Fun.constant(true),  // Start
-        Fun.constant(true),  // End
-        Fun.constant(false)  // After
-      );
+    var isEq = function (location1, location2) {
+      return getName(location1) === getName(location2) && getElement(location1) === getElement(location2);
     };
 
     var betweenInlines = function (forward, rootNode, from, to, location) {
@@ -139,70 +150,58 @@ define(
       }).getOr(location);
     };
 
-    var isFirstPositionInBlock = function (rootBlock, pos) {
-      return InlineUtils.findCaretPosition(rootBlock, false, pos).isNone();
-    };
-
-    var isLastPositionInBlock = function (rootBlock, pos) {
-      return InlineUtils.findCaretPosition(rootBlock, true, pos).bind(function (nextPos) {
-        if (NodeType.isBr(nextPos.getNode())) {
-          return InlineUtils.findCaretPosition(rootBlock, true, CaretPosition.after(nextPos.getNode()));
-        } else {
-          return Option.some(nextPos);
+    var skipNoMovement = function (fromLocation, toLocation) {
+      return fromLocation.fold(
+        Fun.constant(true),
+        function (fromLocation) {
+          return !isEq(fromLocation, toLocation);
         }
-      }).isNone();
+      );
     };
 
-    var isEndPositionInBlock = function (forward, rootBlock, pos) {
-      return forward ? isLastPositionInBlock(rootBlock, pos) : isFirstPositionInBlock(rootBlock, pos);
+    var findLocationTraverse = function (forward, rootNode, fromLocation, pos) {
+      var from = InlineUtils.normalizePosition(forward, pos);
+      var to = InlineUtils.findCaretPosition(rootNode, forward, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
+
+      var location = to.fold(
+        function () {
+          return fromLocation.map(outside);
+        },
+        function (to) {
+          return readLocation(rootNode, to)
+            .map(Fun.curry(betweenInlines, forward, rootNode, from, to))
+            .filter(Fun.curry(skipNoMovement, fromLocation));
+        }
+      );
+
+      return location.filter(isValidLocation);
     };
 
-    var onlyOutside = function (location) {
-      if (isInside(location)) {
-        return Option.some(outside(location));
+    var findLocationSimple = function (forward, location) {
+      if (forward) {
+        return location.fold(
+          Fun.compose(Option.some, Location.start), // Before -> Start
+          Option.none,
+          Fun.compose(Option.some, Location.after), // End -> After
+          Option.none
+        );
       } else {
-        return Option.none();
-      }
-    };
-
-    var findFirstOrLastLocationInBlock = function (rootNode, forward, toBlock) {
-      return InlineUtils.findCaretPositionIn(toBlock, forward).bind(function (lastPosition) {
-        return readLocation(toBlock, lastPosition).map(outside);
-      });
-    };
-
-    var betweenBlocks = function (forward, rootNode, from, to, location) {
-      var fromBlock = CaretUtils.getParentBlock(from.container(), rootNode);
-      if (isEndPositionInBlock(forward, fromBlock, to) && isInside(location) === false) {
-        return readLocation(rootNode, from).bind(onlyOutside);
-      } else if (isEndPositionInBlock(forward, fromBlock, from)) {
-        return readLocation(rootNode, from)
-          .bind(onlyOutside)
-          .orThunk(function () {
-            return Option.from(CaretUtils.getParentBlock(to.container(), rootNode)).bind(function (toBlock) {
-              return findFirstOrLastLocationInBlock(rootNode, forward, toBlock);
-            });
-          });
-      } else {
-        return Option.some(location);
+        return location.fold(
+          Option.none,
+          Fun.compose(Option.some, Location.before), // Before <- Start
+          Option.none,
+          Fun.compose(Option.some, Location.end) // End <- After
+        );
       }
     };
 
     var findLocation = function (forward, rootNode, pos) {
       var from = InlineUtils.normalizePosition(forward, pos);
-      var to = InlineUtils.findCaretPosition(rootNode, forward, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
-      var location = to.fold(
-        function () {
-          return readLocation(rootNode, from).map(outside);
-        },
-        function (to) {
-          return readLocation(rootNode, to)
-            .bind(Fun.curry(betweenBlocks, forward, rootNode, from, to))
-            .map(Fun.curry(betweenInlines, forward, rootNode, from, to));
-        }
-      );
+      var fromLocation = readLocation(rootNode, from);
 
-      return location.filter(isValidLocation);
+      return readLocation(rootNode, from).bind(Fun.curry(findLocationSimple, forward)).orThunk(function () {
+        return findLocationTraverse(forward, rootNode, fromLocation, pos);
+      });
     };
 
     return {
