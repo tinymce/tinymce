@@ -17,13 +17,18 @@ define(
     'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
+    'tinymce.core.caret.CaretUtils',
     'tinymce.core.delete.DeleteElement',
     'tinymce.core.keyboard.BoundaryCaret',
     'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.keyboard.BoundarySelection',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Fun, Option, Options, Element, CaretContainer, CaretPosition, DeleteElement, BoundaryCaret, BoundaryLocation, BoundarySelection, InlineUtils) {
+  function (Fun, Option, Options, Element, CaretContainer, CaretPosition, CaretUtils, DeleteElement, BoundaryCaret, BoundaryLocation, BoundarySelection, InlineUtils) {
+    var isFeatureEnabled = function (editor) {
+      return editor.settings.inline_boundaries !== false;
+    };
+
     var rangeFromPositions = function (from, to) {
       var range = document.createRange();
 
@@ -57,8 +62,13 @@ define(
       editor.nodeChanged();
     };
 
+    var rescope = function (rootNode, node) {
+      var parentBlock = CaretUtils.getParentBlock(node, rootNode);
+      return parentBlock ? parentBlock : rootNode;
+    };
+
     var backspaceDeleteCollapsed = function (editor, caret, forward, from) {
-      var rootNode = editor.getBody();
+      var rootNode = rescope(editor.getBody(), from.container());
       var fromLocation = BoundaryLocation.readLocation(rootNode, from);
 
       return fromLocation.bind(function (location) {
@@ -86,10 +96,10 @@ define(
         });
 
         if (fromLocation.isSome() && toLocation.isSome()) {
-          InlineUtils.findInline(rootNode, from).bind(function (elm) {
-            return DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
-          });
-          return true;
+          return InlineUtils.findInline(rootNode, from).map(function (elm) {
+            DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
+            return true;
+          }).getOr(false);
         } else {
           return toLocation.map(function (_) {
             toPosition.map(function (to) {
@@ -107,7 +117,7 @@ define(
     };
 
     var backspaceDelete = function (editor, caret, forward) {
-      if (editor.selection.isCollapsed()) {
+      if (editor.selection.isCollapsed() && isFeatureEnabled(editor)) {
         var from = CaretPosition.fromRangeStart(editor.selection.getRng());
         return backspaceDeleteCollapsed(editor, caret, forward, from);
       }

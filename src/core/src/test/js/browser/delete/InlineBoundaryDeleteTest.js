@@ -98,6 +98,15 @@ asynctest(
           tinyApis.sAssertContentStructure(paragraphWithText('ac')),
           sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>ac</p>', 'none', [0, 0], 1),
           tinyApis.sAssertContentStructure(paragraphWithText('ac'))
+        ])),
+        Logger.t('Backspace/delete between blocks', GeneralSteps.sequence([
+          sTestBackspace('<p><a href="#">a</a></p><p><a href="#">b</a></p>', [1], 0, '<p><a href="#">a</a><a href="#">b</a></p>', 'end', [0, 0, 0], 1),
+          sTestDelete('<p><a href="#">a</a></p><p><a href="#">b</a></p>', [0], 1, '<p><a href="#">a</a><a href="#">b</a></p>', 'end', [0, 0, 0], 1)
+        ])),
+        Logger.t('Backspace key inline_boundaries: false', GeneralSteps.sequence([
+          tinyApis.sSetSetting('inline_boundaries', false),
+          sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 2], 0, '<p>a<a href="#">b</a>c</p>', 'after', [0, 2], 0),
+          tinyApis.sSetSetting('inline_boundaries', true)
         ]))
       ], onSuccess, onFailure);
     }, {
