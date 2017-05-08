@@ -623,7 +623,7 @@ define(
         if (!self.tridentSel) {
           sel = self.getSel();
 
-          evt = self.editor.fire('SetSelectionRange', { range: rng });
+          evt = self.editor.fire('SetSelectionRange', { range: rng, forward: forward });
           rng = evt.range;
 
           if (sel) {
@@ -671,7 +671,7 @@ define(
             }
           }
 
-          self.editor.fire('AfterSetSelectionRange', { range: rng });
+          self.editor.fire('AfterSetSelectionRange', { range: rng, forward: forward });
         } else {
           // Is W3C Range fake range on IE
           if (rng.cloneRange) {
