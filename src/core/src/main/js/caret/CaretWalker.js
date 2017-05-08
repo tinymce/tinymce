@@ -120,6 +120,9 @@ define(
 
       if (startCaretPosition.isEqual(CaretPosition.after(rootNode)) && rootNode.lastChild) {
         caretPosition = CaretPosition.after(rootNode.lastChild);
+        if (isBackwards(direction) && isCaretCandidate(rootNode.lastChild) && isElement(rootNode.lastChild)) {
+          return isBr(rootNode.lastChild) ? CaretPosition.before(rootNode.lastChild) : caretPosition;
+        }
       } else {
         caretPosition = startCaretPosition;
       }
