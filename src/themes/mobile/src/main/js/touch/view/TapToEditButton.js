@@ -58,6 +58,7 @@ define(
         },
 
         onTap: function (comp) {
+          Transitioning.jumpTo(comp, 'view');
           setTimeout(function () {
             gotoView(comp);
           }, 300);
