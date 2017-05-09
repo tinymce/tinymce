@@ -54,14 +54,32 @@ asynctest(
             innerHtml: 'Touch button'
           },
 
+          components: [
+            TouchMenu.parts().sink()
+          ],
+
           parts: { 
             menu: menuPart,
-            view: viewPart
+            view: viewPart,
+            sink: {
+              dom: { tag: 'div' }
+            }
           },
 
           fetch: function () {
             return Future.pure([
-
+              {
+                type: 'item',
+                data: {
+                  value: 'dog',
+                  text: 'Dog'
+                },
+                dom: {
+                  tag: 'span',
+                  innerHtml: 'dog'
+                },
+                components: [ ]
+              }
             ]);
           },
 
@@ -117,12 +135,11 @@ asynctest(
           var rect = component.element().dom().getBoundingClientRect();
           fireTouchstart(component.element(), rect.x, rect.y);
           fireLongpress(component.element());
-          Assertions.assertEq('Checking selected class should be off initially', false, Class.has(component.element(), 'touch-menu-open'));
-          var rect = component.element().dom().getBoundingClientRect();
-          fireTouchstart(component.element(), rect.x, rect.y);
-          Assertions.assertEq('Checking selected class should be on', true, Class.has(component.element(), 'touch-menu-open'));
-          store.assertEq('Checking hoverOn message', [ 'onHoverOn' ]);
-        })
+          Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
+          
+        }),
+
+        function () { }
       ]
     }, success, failure);
   }
