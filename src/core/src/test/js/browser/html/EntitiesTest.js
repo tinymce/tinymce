@@ -65,6 +65,8 @@ asynctest(
       encodeFunc = Entities.getEncodeFunc('raw');
       LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding text');
       LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '\ud87e\udc04', 'Raw high-byte encoding text');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '\ud87e\udc04', 'Raw high-byte encoding attribute');
 
       encodeFunc = Entities.getEncodeFunc('named');
       LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&auml;&ouml;', 'Named encoding text');
@@ -73,10 +75,17 @@ asynctest(
         '&lt;&gt;&quot;\'&amp;&aring;&auml;&ouml;',
         'Named encoding attribute'
       );
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '\ud87e\udc04', 'Named high-byte encoding text');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '\ud87e\udc04', 'Named high-byte encoding attribute');
 
       encodeFunc = Entities.getEncodeFunc('numeric');
-      LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Named encoding text');
-      LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;', 'Named encoding attribute');
+      LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Numeric encoding text');
+      LegacyUnit.equal(
+        encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true),
+        '&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;',
+        'Numeric encoding attribute');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Numeric high-byte encoding text');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Numeric high-byte encoding attribute');
 
       encodeFunc = Entities.getEncodeFunc('named+numeric', '229,aring');
       LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding text');
@@ -85,6 +94,8 @@ asynctest(
         '&lt;&gt;&quot;\'&amp;&aring;&#228;&#246;',
         'Named+numeric encoding attribute'
       );
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Named+numeric high-byte encoding text');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
 
       encodeFunc = Entities.getEncodeFunc('named,numeric', '229,aring');
       LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding text');
@@ -93,6 +104,8 @@ asynctest(
         '&lt;&gt;&quot;\'&amp;&aring;&#228;&#246;',
         'Named+numeric encoding attribute'
       );
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Named+numeric high-byte encoding text');
+      LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
     });
 
     suite.test('decode', function () {
