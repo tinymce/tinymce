@@ -178,7 +178,8 @@ define(
                   });
                   detail.onHoverOff()(component);
                 });
-                simulatedEvent.event().kill();
+                simulatedEvent.stop();
+                // simulatedEvent.event().kill();
               });
             }),
 

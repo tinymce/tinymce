@@ -2,8 +2,13 @@ asynctest(
   'Browser Test: ui.touch.TouchMenuTest',
 
   [
+    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
@@ -15,7 +20,7 @@ asynctest(
     'ephox.sugar.api.properties.Class'
   ],
 
-  function (Assertions, Step, GuiFactory, NativeEvents, SystemEvents, Menu, TouchMenu, GuiSetup, Fun, Future, Class) {
+  function (ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter, GuiFactory, NativeEvents, SystemEvents, Menu, TouchMenu, GuiSetup, Fun, Future, Class) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -23,7 +28,10 @@ asynctest(
       var menuPart = {
         value: 'touchmenu1',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          styles: {
+            'padding-top': '40px'
+          }
         },
         components: [
           Menu.parts().items()
@@ -35,7 +43,12 @@ asynctest(
         },
         members: {
           item: {
-            munge: Fun.identity
+            munge: function (i) {
+              return {
+                dom: { tag: 'div', innerHtml: i.data.text, attributes: { 'data-value': i.data.value } },
+                components: [ ]
+              };
+            }
           }
         }
       };
@@ -49,7 +62,7 @@ asynctest(
       return GuiFactory.build(
         TouchMenu.sketch({
           dom: {
-            tag: 'div',
+            tag: 'button',
             classes: [ 'touch-menu-test' ],
             innerHtml: 'Touch button'
           },
@@ -68,23 +81,14 @@ asynctest(
 
           fetch: function () {
             return Future.pure([
-              {
-                type: 'item',
-                data: {
-                  value: 'dog',
-                  text: 'Dog'
-                },
-                dom: {
-                  tag: 'span',
-                  innerHtml: 'dog'
-                },
-                components: [ ]
-              }
+              { type: 'item', data: { value: 'dog', text: 'Dog' } },
+              { type: 'item', data: { value: 'elphant', text: 'Elephant' } }
             ]);
           },
 
           onHoverOn: store.adder('onHoverOn'),
           onHoverOff: store.adder('onHoverOff'),
+
 
           toggleClass: 'touch-menu-open'
         })
@@ -114,9 +118,37 @@ asynctest(
         });
       };
 
-      
+      var sFireTouchmoveOn = function (container, selector) {
+        return Chain.asStep(gui.element(), [
+          UiFinder.cFindIn(selector),
+          Chain.op(function (target) {
+            var rect = target.dom().getBoundingClientRect();
+            console.log('rect', rect);
+            SystemEvents.trigger(component, NativeEvents.touchmove(), {
+              target: container,
+              raw: {
+                touches: [
+                  { clientX: rect.left, clientY: rect.top }
+                ]
+              }
+            });
+          })
+        ]);
+      };
+
+      var sAssertMenuStructure = function (label, structure) {
+        return Logger.t(label, Chain.asStep(gui.element(), [
+          UiFinder.cFindIn('[role=menu]'),
+          Chain.op(function (menu) {
+            Assertions.assertStructure('Checking menu strucuture', structure, menu)
+          })
+        ]));
+      };
 
       return [
+        GuiSetup.mAddStyles(doc, [
+          '.test-selected-item { background-color: #cadbee; }'
+        ]),
         // Only tests the dispatched events (not the real ones or their formulation)
         Step.sync(function () {
           store.assertEq('Checking no messages', [ ]);
@@ -134,10 +166,20 @@ asynctest(
           store.assertEq('Checking no messages', [ ]);
           var rect = component.element().dom().getBoundingClientRect();
           fireTouchstart(component.element(), rect.x, rect.y);
+          Step.wait(300),
           fireLongpress(component.element());
           Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
-          
         }),
+        Waiter.sTryUntil(
+          'Waiting until menu appears',
+          UiFinder.sExists(gui.element(), '[role=menu]'),
+          100,
+          1000
+        ),
+        sFireTouchmoveOn(component, '[role="menu"] [data-value="dog"]'),
+        sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
+          return s.element('div', { });
+        })),
 
         function () { }
       ]
