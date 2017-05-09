@@ -82,7 +82,7 @@ asynctest(
           fetch: function () {
             return Future.pure([
               { type: 'item', data: { value: 'dog', text: 'Dog' } },
-              { type: 'item', data: { value: 'elphant', text: 'Elephant' } }
+              { type: 'item', data: { value: 'elephant', text: 'Elephant' } }
             ]);
           },
 
@@ -128,7 +128,7 @@ asynctest(
               target: container,
               raw: {
                 touches: [
-                  { clientX: rect.left, clientY: rect.top }
+                  { clientX: rect.left + rect.width/2, clientY: rect.top + rect.height/2 }
                 ]
               }
             });
@@ -170,6 +170,7 @@ asynctest(
           fireLongpress(component.element());
           Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
         }),
+        store.sAssertEq('Hover on should be fired immediately', [ 'onHoverOn' ]),
         Waiter.sTryUntil(
           'Waiting until menu appears',
           UiFinder.sExists(gui.element(), '[role=menu]'),
@@ -178,8 +179,34 @@ asynctest(
         ),
         sFireTouchmoveOn(component, '[role="menu"] [data-value="dog"]'),
         sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
-          return s.element('div', { });
+          return s.element('div', {
+            children: [
+              s.element('div', {
+                classes: [ arr.has('test-selected-item') ]
+              }),
+              s.element('div', {
+                classes: [ arr.not('test-selected-item') ]
+              })
+            ]
+          });
         })),
+        store.sAssertEq('Hover off should be fire when an item gets focus', [ 'onHoverOn', 'onHoverOff' ]),
+        Step.wait(200),
+        sFireTouchmoveOn(component, '[role="menu"] [data-value="elephant"]'),
+        sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
+          return s.element('div', {
+            children: [
+              s.element('div', {
+                classes: [ arr.not('test-selected-item') ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('test-selected-item') ]
+              })
+            ]
+          });
+        })),
+
+        store.sAssertEq('Hover off should not fire again until hover on has fired', [ 'onHoverOn', 'onHoverOff' ]),
 
         function () { }
       ]
