@@ -6,6 +6,9 @@
 @mask-button-foreground-color: white;
 @mask-button-background-color: @tinymce-blue;
 
+// Used to push the menu down, so that it can appear from the centre of the button
+@menu-padding-top: 3em;
+
 .mixin-selected-menu-item {
   // Invert colours for selected items
   color: @mask-button-background-color;
@@ -34,13 +37,22 @@
     z-index: @tinymce-mobile-mask-menu-zindex;
 
     [role="menu"] {
-      padding-top: 3em;
+      padding-top: @menu-padding-top;
       .tinymce-mobile-mask-menu-item {
         .mixin-menu-item;
         &.tinymce-mobile-mask-menu-item-selected {
           .mixin-selected-menu-item;
         }
       }
+    }
+  }
+
+  .tinymce-mobile-mask-tap-icon {
+    z-index: @tinymce-mobile-mask-menu-zindex + 1;
+    
+    .mixin-menu-item;
+    &.tinymce-mobile-mask-tap-icon-selected {
+      .mixin-selected-menu-item;
     }
   }
 
@@ -57,20 +69,6 @@
 
   &[data-mode="edit"] .tinymce-mobile-mask-tap-icon:before {
     content: "Edit";
-  }
-
-  .tinymce-mobile-mask-tap-icon {
-    .mixin-flex-and-centre;
-
-    z-index: @tinymce-mobile-mask-menu-zindex + 1;
-    width: @mask-button-size;
-    height: @mask-button-size;
-    border-radius: 50%;
-
-    .mixin-menu-item;
-    &.tinymce-mobile-mask-tap-icon-selected {
-      .mixin-selected-menu-item;
-    }
   }
 
   [data-longpress-state="closed"]:not(.longpress-menu-transitioning) [role="menu"] {
