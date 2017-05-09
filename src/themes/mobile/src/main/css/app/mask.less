@@ -13,10 +13,7 @@
   //   padding-right: .5em;
   // }
 
-  .mixin-selected-orb {
-    color: #4682B4;
-    background-color: white;
-  }
+  
 
   .tinymce-mobile-content-container {
     display: flex;
@@ -49,7 +46,10 @@
       flex-direction: column;
       justify-content: center;
 
+      @import "mask-menu.less";
+    }
 
+/*
       .alloy-orb > span {
         border-radius: 50%;
         
@@ -68,20 +68,14 @@
       
         width: @mask-button-size;
         height: @mask-button-size;
-        // border: 1px solid black;
       }
 
       * .alloy-selected-orb {
-        // box-shadow: inset -1.0em -1.0em 1em white/*, inset 0.15em 0.15em 0.15em white;*/;
+        
         // border: 2px solid white;
 
 
         .mixin-selected-orb;
-      }
-
-
-      [role=menu] {
-        
       }
 
       [role=menu] [role=menuitem] {
@@ -108,6 +102,8 @@
       .longpress-menu-transitioning [role="menu"] {
         transition: transform 0.3s ease-in-out;
       }
+
+
 
       &:not(.selected) {
         &[data-mode="icon"] .tinymce-mobile-mask-tap-icon {
@@ -161,6 +157,7 @@
         border-radius: 50%;
       }
     }
+    */
 
     .tinymce-mobile-disclosure {
       display: flex;

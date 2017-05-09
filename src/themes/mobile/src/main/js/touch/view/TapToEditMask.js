@@ -27,7 +27,7 @@ define(
           containerBehaviours: Behaviour.derive([
             AdhocBehaviour.config('conn'),
             Toggling.config({
-              toggleClass: Styles.resolve('view-mode-hovered'),
+              toggleClass: Styles.resolve('mask-tap-icon-selected'),
               toggleOnExecute: false
             })
           ]),

@@ -11,10 +11,11 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Future',
     'global!setTimeout',
+    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.TapToEditMenuParts'
   ],
 
-  function (Behaviour, Representing, Toggling, Transitioning, SystemEvents, TouchMenu, Objects, Future, setTimeout, TapToEditMenuParts) {
+  function (Behaviour, Representing, Toggling, Transitioning, SystemEvents, TouchMenu, Objects, Future, setTimeout, Styles, TapToEditMenuParts) {
     var sketch = function (spec) {
       var gotoView = function (comp) {
         if (Representing.getValue(comp) === false) {
@@ -43,7 +44,6 @@ define(
         },
         onExecute: function (comp, menuComp, item, data) {
           Transitioning.jumpTo(comp, data.value);
-          // updateState(comp, data.value);
         },
 
         onHoverOn: function (comp) {
@@ -58,13 +58,16 @@ define(
         },
 
         onTap: function (comp) {
+          
           Transitioning.jumpTo(comp, 'view');
+          var icon = spec.memIcon.get(comp);
+          Toggling.on(icon);
           setTimeout(function () {
             gotoView(comp);
           }, 300);
         },
 
-        toggleClass: 'selected',
+        toggleClass: Styles.resolve('mask-button-active'),
 
         menuTransition: {
           property: 'transform',
@@ -104,7 +107,7 @@ define(
         parts: {
           sink: {
             dom: {
-              classes: [ 'tap-button-sink' ]
+              classes: [ Styles.resolve('mask-menu-sink') ]
             }
           },
           view: TapToEditMenuParts.view({ }),
