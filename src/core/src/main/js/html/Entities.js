@@ -201,11 +201,11 @@ define(
 
         function encodeNamedAndNumeric(text, attr) {
           return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-            if (baseEntities[chr]) {
+            if (baseEntities[chr] !== undefined) {
               return baseEntities[chr];
             }
 
-            if (entities[chr]) {
+            if (entities[chr] !== undefined) {
               return entities[chr];
             }
 
