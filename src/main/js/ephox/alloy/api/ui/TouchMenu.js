@@ -202,7 +202,6 @@ define(
                   hoverOff(component);
                 });
                 simulatedEvent.stop();
-                // simulatedEvent.event().kill();
               });
             }),
 
