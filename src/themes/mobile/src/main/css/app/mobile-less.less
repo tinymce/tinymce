@@ -13,6 +13,11 @@
 @editor-mask-background-color: #333;
 @editor-mask-foreground-color: #eee;
 
+@mask-button-font-size-small: 0.5em;
+@mask-button-font-size-large: 1.0em;
+
+@mask-button-size: 4em;
+
 @import "icons.css";
 @import "mask.less";
 @import "android.less";
@@ -24,6 +29,10 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@smartphones: ~"only screen and (max-device-width: 700px)";
+
+@tablets: ~"only screen and (min-device-width:700px)";
 
 @media (min-width: 700px) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {

@@ -38,6 +38,12 @@
     font-size: 1em;
 
     .tinymce-mobile-content-tap-section {
+      font-size: @mask-button-font-size-large;
+
+      @media @tablets {
+        font-size: @mask-button-font-size-small;
+      }
+
       display: flex;
       align-items: center;
       flex-direction: column;
@@ -47,8 +53,6 @@
       .alloy-orb > span {
         border-radius: 50%;
         
-        width: 2.5em;
-        height: 2.5em;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -61,9 +65,9 @@
       .alloy-orb {
         background-color: #4682B4;
         border-radius: 50%;
-        padding: 1.0em;
-        margin: 0.2em;
-        font-size: 0.5em;
+      
+        width: @mask-button-size;
+        height: @mask-button-size;
         // border: 1px solid black;
       }
 
@@ -114,12 +118,10 @@
 
         &[data-mode="view"] .tinymce-mobile-mask-tap-icon:before {
           content: "View";
-          font-size: 0.5em;
         }
 
         &[data-mode="edit"] .tinymce-mobile-mask-tap-icon:before {
           content: "Edit";
-          font-size: 0.5em;
         }
       }
 
@@ -144,10 +146,6 @@
         align-items: center;
       }
 
-      &.selected .tinymce-mobile-mask-tap-icon:before, .tinymce-mobile-mask-tap-icon[data-mode]:before {
-        font-size: 0.5em;
-      }
-
       &.selected .tinymce-mobile-mask-tap-icon:before {
         content: "View";
       }
@@ -156,9 +154,10 @@
         content: attr(data-mode);
       }
 
+      
       .tinymce-mobile-mask-tap-icon {
-        width: 2.5em;
-        height: 2.5em;
+        width: @mask-button-size;
+        height: @mask-button-size;
         border-radius: 50%;
       }
     }
