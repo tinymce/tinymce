@@ -51,7 +51,7 @@ define(
       return {
         dom: {
           tag: 'div',
-          classes: [ 'tap-button-view' ]
+          classes: [ Styles.resolve('mask-menu-view') ]
         }
       };
     };
