@@ -22,7 +22,7 @@ define(
 
     var CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-    var eventsMonitored = [ NativeEvents.touchstart() ];
+    var eventsMonitored = [ SystemEvents.detachedFromDom() ];
 
     // Ignore these files in the error stack
     var path = [

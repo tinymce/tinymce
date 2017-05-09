@@ -22,6 +22,7 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TouchMenuSchema',
     'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.sugar.api.dom.Focus',
@@ -30,7 +31,7 @@ define(
 
   function (
     ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlloyEvents, NativeEvents,
-    SystemEvents, InlineView, Menu, UiSketcher, DropdownUtils, PartType, TouchMenuSchema, Objects, Fun, Merger, Focus, document
+    SystemEvents, InlineView, Menu, UiSketcher, DropdownUtils, PartType, TouchMenuSchema, Objects, Cell, Fun, Merger, Focus, document
   ) {
     var schema = TouchMenuSchema.schema();
     var partTypes = TouchMenuSchema.parts();
@@ -40,6 +41,26 @@ define(
       var getMenu = function (component) {
         var sandbox = Coupling.getCoupled(component, 'sandbox');
         return Sandboxing.getState(sandbox);
+      };
+
+      var hoveredState = Cell(false);
+
+      var hoverOn = function (component) {
+        if (hoveredState.get() === false) {
+          forceHoverOn(component);
+        }
+      };
+
+      var forceHoverOn = function (component) {
+        detail.onHoverOn()(component);
+        hoveredState.set(true);
+      };
+
+      var hoverOff = function (component) {
+        if (hoveredState.get() === true) {
+          detail.onHoverOff()(component);
+          hoveredState.set(false);
+        }
       };
 
       return Merger.deepMerge(
@@ -88,7 +109,6 @@ define(
 
                               onFinish: function (view, destination) {
                                 if (destination === 'closed') {
-                                  console.trace();
                                   InlineView.hide(view);
                                   detail.onClosed()(hotspot, view);
                                 }
@@ -127,7 +147,6 @@ define(
 
             AlloyEvents.run(NativeEvents.touchstart(), function (comp, se) {
               Toggling.on(comp);
-              detail.onHoverOn()(comp);
             }),
 
             AlloyEvents.run(SystemEvents.tap(), function (comp, se) {
@@ -137,6 +156,7 @@ define(
             // On longpress, create the menu items to show, and put them in the sandbox.
             AlloyEvents.run(SystemEvents.longpress(), function (component, simulatedEvent) {
               detail.fetch()(component).get(function (items) {
+                forceHoverOn(component);
                 var iMenu = Menu.sketch(
                   Merger.deepMerge(
                     externals.menu(),
@@ -154,8 +174,8 @@ define(
 
             // 1. Find if touchmove over button or any items
             //   - if over items, trigger mousemover on item (and hoverOff on button)
-            //   - if over button, (dehighlight all items and trigger hoverOn on button)
-            //   - if over nothing (dehighlight all items and trigger hoverOff on button)
+            //   - if over button, (dehighlight all items and trigger hoverOn on button if required)
+            //   - if over nothing (dehighlight all items and trigger hoverOff on button if required)
             AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
               var e = simulatedEvent.event().raw().touches[0];
               getMenu(component).each(function (iMenu) {
@@ -167,7 +187,10 @@ define(
                   Focus.active().each(Focus.blur);
 
                   // could not find an item, so check the button itself
-                  var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(detail.onHoverOff, detail.onHoverOn);
+                  var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(
+                    Fun.constant(hoverOff), 
+                    Fun.constant(hoverOn)
+                  );
                   hoverF(component);
                 }, function (elem) {
                   // Trigger a hover on the item element
@@ -176,7 +199,7 @@ define(
                     x: Fun.constant(e.clientX),
                     y: Fun.constant(e.clientY)
                   });
-                  detail.onHoverOff()(component);
+                  hoverOff(component);
                 });
                 simulatedEvent.stop();
                 // simulatedEvent.event().kill();

@@ -29,6 +29,7 @@ asynctest(
         value: 'touchmenu1',
         dom: {
           tag: 'div',
+          classes: [ 'touch-menu' ],
           styles: {
             'padding-top': '40px'
           }
@@ -45,7 +46,11 @@ asynctest(
           item: {
             munge: function (i) {
               return {
-                dom: { tag: 'div', innerHtml: i.data.text, attributes: { 'data-value': i.data.value } },
+                dom: {
+                  tag: 'div', innerHtml: i.data.text,
+                  attributes: { 'data-value': i.data.value },
+                  styles: { display: 'inline-block', padding: '10px' }
+                },
                 components: [ ]
               };
             }
@@ -62,12 +67,21 @@ asynctest(
       return GuiFactory.build(
         TouchMenu.sketch({
           dom: {
-            tag: 'button',
+            tag: 'div',
             classes: [ 'touch-menu-test' ],
-            innerHtml: 'Touch button'
+            styles: {
+              padding: '20px'
+            }
           },
 
           components: [
+            {
+              dom: {
+                tag: 'span',
+                classes: [ 'touch-menu-button' ],
+                innerHtml: 'Touch button'
+              }
+            },
             TouchMenu.parts().sink()
           ],
 
@@ -156,11 +170,16 @@ asynctest(
           var rect = component.element().dom().getBoundingClientRect();
           fireTouchstart(component.element(), rect.x, rect.y);
           Assertions.assertEq('Checking selected class should be on', true, Class.has(component.element(), 'touch-menu-open'));
-          store.assertEq('Checking hoverOn message', [ 'onHoverOn' ]);
+          store.assertEq('Checking no hovering messages until menu appears', [ ]);
           fireTouchend(component.element(), rect.x, rect.y);
           Assertions.assertEq('Checking selected class should be off again', false, Class.has(component.element(), 'touch-menu-open'));
           store.clear();
         }),
+        Waiter.sTryUntil(
+          'Waiting for menu to disappear',
+          UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+          100, 1000
+        ),
 
         Step.sync(function () {
           store.assertEq('Checking no messages', [ ]);
@@ -170,13 +189,15 @@ asynctest(
           fireLongpress(component.element());
           Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
         }),
-        store.sAssertEq('Hover on should be fired immediately', [ 'onHoverOn' ]),
+        
         Waiter.sTryUntil(
           'Waiting until menu appears',
           UiFinder.sExists(gui.element(), '[role=menu]'),
           100,
           1000
         ),
+        store.sAssertEq('Hover on should be fired immediately after longpress menu appears', [ 'onHoverOn' ]),
+          
         sFireTouchmoveOn(component, '[role="menu"] [data-value="dog"]'),
         sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
@@ -191,7 +212,6 @@ asynctest(
           });
         })),
         store.sAssertEq('Hover off should be fire when an item gets focus', [ 'onHoverOn', 'onHoverOff' ]),
-        Step.wait(200),
         sFireTouchmoveOn(component, '[role="menu"] [data-value="elephant"]'),
         sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
@@ -207,8 +227,49 @@ asynctest(
         })),
 
         store.sAssertEq('Hover off should not fire again until hover on has fired', [ 'onHoverOn', 'onHoverOff' ]),
+        sFireTouchmoveOn(component, '.touch-menu-button'),
+        sAssertMenuStructure('Checking menu structure with hover over the touch button (so nothing selected)',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('div', {
+                  classes: [ arr.not('test-selected-item') ]
+                }),
+                s.element('div', {
+                  classes: [ arr.not('test-selected-item') ]
+                })
+              ]
+            });
+          })
+        ),
+        store.sAssertEq('Hover on should fire again now the button is under the "touch"', [ 'onHoverOn', 'onHoverOff', 'onHoverOn' ]),
 
-        function () { }
+        sFireTouchmoveOn(component, '.touch-menu-button'),
+        store.sAssertEq(
+          'Hover on should not fire again because hover off has not yet',
+          [ 'onHoverOn', 'onHoverOff', 'onHoverOn' ]
+        ),
+
+        // Entire component, so inside the menu part
+        sFireTouchmoveOn(component, '.touch-menu'),
+        store.sAssertEq(
+          'Hover off should fire because nothing under "touch"',
+          [ 'onHoverOn', 'onHoverOff', 'onHoverOn', 'onHoverOff' ]
+        ),
+        sAssertMenuStructure('Checking menu structure with hover over nothing (so nothing selected)',
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              children: [
+                s.element('div', {
+                  classes: [ arr.not('test-selected-item') ]
+                }),
+                s.element('div', {
+                  classes: [ arr.not('test-selected-item') ]
+                })
+              ]
+            });
+          })
+        )
       ]
     }, success, failure);
   }

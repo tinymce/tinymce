@@ -41,6 +41,7 @@ define(
             detail.inlineBehaviours()
           ),
           customBehaviours: detail.customBehaviours(),
+          eventOrder: detail.eventOrder(),
 
           apis: {
             showAt: function (sandbox, anchor, thing) {
