@@ -68,7 +68,7 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
       layout: 'flex',
       padding: 10,
       spacing: 10,
-      items:	[
+      items: [
         installedPlugins(editor),
         availablePlugins()
       ]
