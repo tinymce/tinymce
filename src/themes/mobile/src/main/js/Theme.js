@@ -8,6 +8,7 @@ define(
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'global!window',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
@@ -27,7 +28,7 @@ define(
 
 
   function (
-    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider,
+    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider,
     ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
@@ -73,7 +74,7 @@ define(
                 };
               },
 
-              onTapContent: function () {
+              onTouchContent: function () {
                 var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
                 // If something in the toolbar had focus, fire an execute on it (execute on tap away)
                 // Perhaps it will be clearer later what is a better way of doing this.
@@ -83,6 +84,15 @@ define(
                   });
                 });
                 realm.restoreToolbar();
+              },
+
+              onTapContent: function (evt) {
+                // If the user has tapped (touchstart, touchend without movement) on an image, select it.
+                if (Node.name(evt.target()) === 'img') {
+                  editor.selection.select(evt.target().dom());
+                  // Prevent the default behaviour from firing so that the image stays selected
+                  evt.kill();
+                }
               }
             },
             container: Element.fromDom(editor.editorContainer),
