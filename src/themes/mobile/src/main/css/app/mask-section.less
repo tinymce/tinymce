@@ -12,9 +12,13 @@
   background-color: @mask-button-foreground-color;
 }
 
-.mixin-unselected-menu-item {
+.mixin-menu-item {
   color: @mask-button-foreground-color;
   background-color: @mask-button-background-color;
+  border-radius: 50%;
+  width: @mask-button-size;
+  height: @mask-button-size;
+  .mixin-flex-and-centre;
 }
 
 .tinymce-mobile-content-tap-section {
@@ -30,28 +34,11 @@
     z-index: @tinymce-mobile-mask-menu-zindex;
 
     [role="menu"] {
+      padding-top: 3em;
       .tinymce-mobile-mask-menu-item {
-        .mixin-unselected-menu-item;
+        .mixin-menu-item;
         &.tinymce-mobile-mask-menu-item-selected {
           .mixin-selected-menu-item;
-        }
-
-        margin-top: 3em;
-        border-radius: 50%;
-
-        width: @mask-button-size;
-        height: @mask-button-size;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        & > span {
-          border-radius: 50%;
-      
-          display: flex;
-          justify-content: center;
-          align-items: center;
         }
       }
     }
@@ -73,16 +60,14 @@
   }
 
   .tinymce-mobile-mask-tap-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .mixin-flex-and-centre;
 
     z-index: @tinymce-mobile-mask-menu-zindex + 1;
     width: @mask-button-size;
     height: @mask-button-size;
     border-radius: 50%;
 
-    .mixin-unselected-menu-item;
+    .mixin-menu-item;
     &.tinymce-mobile-mask-tap-icon-selected {
       .mixin-selected-menu-item;
     }
