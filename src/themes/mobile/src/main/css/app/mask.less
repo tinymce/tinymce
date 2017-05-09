@@ -1,19 +1,10 @@
-.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask {  
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tinymce-mobile-outer-container .tinymce-mobile-disabled-mask {
+  .mixin-flex-and-centre;
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0px;
   background: fadeout(@editor-mask-background-color, 50%);
-
-  /* Include RTL vs LTR difference */
-  // [dir=ltr] .tinymce-mobile-disabled-mask .tinyme-mobile-mask-tap-icon {
-  //   padding-right: .5em;
-  // }
-
-  
 
   .tinymce-mobile-content-container {
     display: flex;
@@ -24,149 +15,10 @@
     font-weight: bold;
     flex-direction: column;
 
-    background: #4682B4;
-    color: white;
-    // background:#4681D9;
-    // border: 2px solid white;
-    // box-shadow: inset -1.0em -1.0em 2em #3F51B5, inset 0.15em 0.15em 0.5em #3F51B5;
-    // box-shadow: inset 0 0.2em 0 rgba(255, 255, 255, 0.4), 0 0.2em 0.2em rgba(0, 0, 0, 0.2);
     font-family: sans-serif;
 
     font-size: 1em;
 
-    .tinymce-mobile-content-tap-section {
-      font-size: @mask-button-font-size-large;
-
-      @media @tablets {
-        font-size: @mask-button-font-size-small;
-      }
-
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-
-      @import "mask-menu.less";
-    }
-
-/*
-      .alloy-orb > span {
-        border-radius: 50%;
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .tap-button-sink {
-        z-index: 1;
-      }
-
-      .alloy-orb {
-        background-color: #4682B4;
-        border-radius: 50%;
-      
-        width: @mask-button-size;
-        height: @mask-button-size;
-      }
-
-      * .alloy-selected-orb {
-        
-        // border: 2px solid white;
-
-
-        .mixin-selected-orb;
-      }
-
-      [role=menu] [role=menuitem] {
-        margin-top: 3em;
-      }
-
-
-      * :focus {
-        outline: none;
-      }
-
-      [data-longpress-state="closed"]:not(.longpress-menu-transitioning) [role="menu"] {
-        transform: translateY(-100%);
-      }
-
-      [data-longpress-state="open"][data-longpress-destination="closed"] [role="menu"] {
-        transform: translateY(-100%);
-      }
-
-      [data-longpress-state="closed"][data-longpress-destination="open"] [role="menu"] {
-        transform: translateY(0%);
-      }     
-
-      .longpress-menu-transitioning [role="menu"] {
-        transition: transform 0.3s ease-in-out;
-      }
-
-
-
-      &:not(.selected) {
-        &[data-mode="icon"] .tinymce-mobile-mask-tap-icon {
-          background-image: url('../icons/tinymce-logo2-blue.svg');
-          background-size: cover;
-          background-color: transparent;
-        }
-
-        &[data-mode="view"] .tinymce-mobile-mask-tap-icon:before {
-          content: "View";
-        }
-
-        &[data-mode="edit"] .tinymce-mobile-mask-tap-icon:before {
-          content: "Edit";
-        }
-      }
-
-      .tinymce-mobile-mask-tap-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #4682B4;
-        color: white;
-        z-index: 2;
-      }
-
-
-
-      .tinymce-mobile-mask-tap-icon.tinymce-mobile-view-mode-hovered {
-        .mixin-selected-orb;
-      }
-
-      &.selected .tinymce-mobile-mask-tap-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      &.selected .tinymce-mobile-mask-tap-icon:before {
-        content: "View";
-      }
-
-      &:not(.selected) .tinymce-mobile-mask-tap-icon[data-mode]:before {
-        content: attr(data-mode);
-      }
-
-      
-      .tinymce-mobile-mask-tap-icon {
-        width: @mask-button-size;
-        height: @mask-button-size;
-        border-radius: 50%;
-      }
-    }
-    */
-
-    .tinymce-mobile-disclosure {
-      display: flex;
-      color: @toolstrip-foreground-color;
-      font-style: italic;
-      margin-top: 0.5em;
-      font-size: 50%;
-    }
-
-   
+    @import "mask-section.less";
   }
 }
