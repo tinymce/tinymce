@@ -167,8 +167,7 @@ define(
             ]
           };
 
-          var switchBack = editor.settings.readonly === 1 ? backToReadOnlyGroup : backToMaskGroup;
-          var mainGroups = Cell([ switchBack, actionGroup, extraGroup ]);
+          var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
           var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
 
           realm.setToolbarGroups(editor.settings.readonly === 1 ? readOnlyGroups.get() : mainGroups.get());
