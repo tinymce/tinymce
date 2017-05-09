@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .fmt.FormatChangeSelectionTest',
+  'browser.tinymce.core.fmt.FormatChangeSelectionTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.TinyApis',

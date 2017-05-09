@@ -2544,7 +2544,7 @@ define(
         // Move startContainer/startOffset in to a suitable node
         if (container.nodeType == 1) {
           nodes = container.childNodes;
-          if (offset < rng.startContainer.childNodes.length) {
+          if (offset < nodes.length) {
             container = nodes[offset];
             walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
           } else {
