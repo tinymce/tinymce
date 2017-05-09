@@ -67,7 +67,6 @@ define(
             ]
           })
         ]
-        // action: onTap
       });
     };
 
