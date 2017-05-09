@@ -29,6 +29,7 @@ define(
 
         FieldSchema.strict('onDomChanged'),
 
+        FieldSchema.defaulted('onTouchContent', Fun.noop),
         FieldSchema.defaulted('onTapContent', Fun.noop),
 
 
