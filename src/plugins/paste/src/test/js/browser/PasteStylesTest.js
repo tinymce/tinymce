@@ -27,7 +27,7 @@ asynctest(
             tinyApis.sSetSetting('paste_webkit_styles', 'font-family'),
             tinyApis.sSetContent('<p>test</p>'),
             tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
-            Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' }),
+            Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;;color:green;">b</span>' }),
             tinyApis.sAssertContent('<p><span style="font-family: \'a b\';">b</span></p>')
           ])
         ),
@@ -37,8 +37,8 @@ asynctest(
             tinyApis.sSetSetting('paste_webkit_styles', 'all'),
             tinyApis.sSetContent('<p>test</p>'),
             tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
-            Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' }),
-            tinyApis.sAssertContent('<p><span style="font-family: \'a b\';">b</span></p>')
+            Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;; color: green;">b</span>' }),
+            tinyApis.sAssertContent('<p><span style="font-family: \'a b\'; color: green;">b</span></p>')
           ])
         ),
 
@@ -67,6 +67,7 @@ asynctest(
     }, {
       plugins: 'paste',
       toolbar: '',
+      valid_styles: 'font-family,color',
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
