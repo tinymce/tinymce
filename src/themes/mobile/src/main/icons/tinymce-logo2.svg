@@ -4,7 +4,7 @@
  <style> path { stroke-width: 4; fill: none; } .tinymce-diamond { stroke: white; } .tinymce-lines { stroke: white } </style>
 </defs>
 
-<circle cx="90" cy="90" r="87.5" style="fill: steelblue;"/>
+<circle cx="90" cy="90" r="87.5"/>
 
 <!--<path id="textpath" d="M10 90 a1,1 0 0,0 160,0" transform="rotate(-48, 90, 90)" />
 
