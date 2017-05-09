@@ -210,6 +210,7 @@ define(
             // 2. Close the menu
             // 3. Depress the button
             AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
+              
               getMenu(component).each(function (iMenu) {
                 Highlighting.getHighlighted(iMenu).each(SystemEvents.triggerExecute);
               });

@@ -10,8 +10,8 @@ define(
 
   function (Fields, FieldSchema, ValueSchema, Result) {
     return [
-      FieldSchema.strict('destinationAttr'),
-      FieldSchema.strict('stateAttr'),
+      FieldSchema.defaulted('destinationAttr', 'data-transitioning-destination'),
+      FieldSchema.defaulted('stateAttr', 'data-transitioning-state'),
       FieldSchema.strict('initialState'),
       Fields.onHandler('onTransition'),
       Fields.onHandler('onFinish'),
