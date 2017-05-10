@@ -21,11 +21,16 @@ define(
   function () {
     return function (global) {
       var undef, lazyLoading, patchApplied;
-      var delayedInits = [], $, win, tinymce;
+      var delayedInits = [], $, win;
 
       win = global ? global : window;
-      tinymce = win.tinymce;
       $ = win.jQuery;
+
+      var getTinymce = function () {
+        // Reference to tinymce needs to be lazily evaluated since tinymce
+        // might be loaded through the compressor or other means
+        return win.tinymce;
+      };
 
       $.fn.tinymce = function (settings) {
         var self = this, url, base, lang, suffix = "";
@@ -37,7 +42,7 @@ define(
 
         // Get editor instance
         if (!settings) {
-          return win.tinymce ? tinymce.get(self[0].id) : null;
+          return getTinymce() ? getTinymce().get(self[0].id) : null;
         }
 
         self.css('visibility', 'hidden'); // Hide textarea to avoid flicker
@@ -57,16 +62,16 @@ define(
 
             // Generate unique id for target element if needed
             if (!id) {
-              node.id = id = tinymce.DOM.uniqueId();
+              node.id = id = getTinymce().DOM.uniqueId();
             }
 
             // Only init the editor once
-            if (tinymce.get(id)) {
+            if (getTinymce().get(id)) {
               return;
             }
 
             // Create editor instance and render it
-            ed = tinymce.createEditor(id, settings);
+            ed = getTinymce().createEditor(id, settings);
             editors.push(ed);
 
             ed.on('init', function () {
@@ -81,12 +86,12 @@ define(
                 // Fire the oninit event ones each editor instance is initialized
                 if (++initCount == editors.length) {
                   if (typeof func === "string") {
-                    scope = (func.indexOf(".") === -1) ? null : tinymce.resolve(func.replace(/\.\w+$/, ""));
-                    func = tinymce.resolve(func);
+                    scope = (func.indexOf(".") === -1) ? null : getTinymce().resolve(func.replace(/\.\w+$/, ""));
+                    func = getTinymce().resolve(func);
                   }
 
                   // Call the oninit function with the object
-                  func.apply(scope || tinymce, editors);
+                  func.apply(scope || getTinymce(), editors);
                 }
               }
             });
@@ -130,7 +135,7 @@ define(
               win.tinyMCE_GZ = {
                 start: function () {
                   function load(url) {
-                    tinymce.ScriptLoader.markDone(tinymce.baseURI.toAbsolute(url));
+                    getTinymce().ScriptLoader.markDone(getTinymce().baseURI.toAbsolute(url));
                   }
 
                   // Add core languages
@@ -161,7 +166,7 @@ define(
             e = e || window.event;
 
             if (lazyLoading !== 2 && (e.type == 'load' || /complete|loaded/.test(script.readyState))) {
-              tinymce.dom.Event.domLoaded = 1;
+              getTinymce().dom.Event.domLoaded = 1;
               lazyLoading = 2;
 
               // Execute callback after mainscript has been loaded and before the initialization occurs
@@ -197,9 +202,9 @@ define(
           var editor;
 
           if (e.id && "tinymce" in win) {
-            editor = tinymce.get(e.id);
+            editor = getTinymce().get(e.id);
 
-            if (editor && editor.editorManager === tinymce) {
+            if (editor && editor.editorManager === getTinymce()) {
               return true;
             }
           }
@@ -226,7 +231,7 @@ define(
           }
 
           this.find("span.mceEditor,div.mceEditor").each(function (i, node) {
-            var ed = tinymce.get(node.id.replace(/_parent$/, ""));
+            var ed = getTinymce().get(node.id.replace(/_parent$/, ""));
 
             if (ed) {
               ed.remove();
@@ -248,13 +253,13 @@ define(
             self.each(function (i, node) {
               var ed;
 
-              if ((ed = tinymce.get(node.id))) {
+              if ((ed = getTinymce().get(node.id))) {
                 ed.setContent(value);
               }
             });
           } else if (self.length > 0) {
             // Handle get value
-            if ((ed = tinymce.get(self[0].id))) {
+            if ((ed = getTinymce().get(self[0].id))) {
               return ed.getContent();
             }
           }
@@ -265,7 +270,7 @@ define(
           var ed = null;
 
           if (element && element.id && win.tinymce) {
-            ed = tinymce.get(element.id);
+            ed = getTinymce().get(element.id);
           }
 
           return ed;

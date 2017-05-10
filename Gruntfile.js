@@ -258,7 +258,7 @@ module.exports = function (grunt) {
 
             zip.addFile(
               "jquery.tinymce.js",
-              "src/core/src/main/js/JqueryIntegration.js"
+              "js/tinymce/jquery.tinymce.min.js"
             );
 
             var getDirs = zipUtils.getDirectories(grunt, this.excludes);
