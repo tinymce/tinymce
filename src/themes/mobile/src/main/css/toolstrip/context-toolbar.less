@@ -3,6 +3,7 @@
   @import "serialised-dialogs.less";
   @import "slider.less";
 
+  .tinymce-mobile-serializer-wrapper,
   & > div {
   .mixin-flex-bar;
   flex: 1;
@@ -26,6 +27,11 @@
   .tinymce-mobile-toolbar-group-item {
     display: flex;
     align-items: center;
+    flex-direction: column;
+  }
+
+  .tinymce-mobile-dot-container {
+    display: flex;
   }
 
   input {

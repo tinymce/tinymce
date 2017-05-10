@@ -5,8 +5,10 @@ define(
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -28,11 +30,13 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Keying, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr,
-    Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects,
+    ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
+
+      console.log(Highlighting);
 
       var schema = ValueSchema.objOf([
         FieldSchema.strict('fields'),
@@ -54,8 +58,8 @@ define(
         return Button.sketch({
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('icon-previous'), Styles.resolve('icon') ].concat(
-              enabled ? [ ] : [ Styles.resolve('toolbar-navigation-disabled') ]
+            classes: [Styles.resolve('icon-previous'), Styles.resolve('icon')].concat(
+              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
             )
           },
           action: function (button) {
@@ -68,8 +72,8 @@ define(
         return Button.sketch({
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('icon-next'), Styles.resolve('icon') ].concat(
-              enabled ? [ ] : [ Styles.resolve('toolbar-navigation-disabled') ]
+            classes: [Styles.resolve('icon-next'), Styles.resolve('icon')].concat(
+              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
             )
           },
           action: function (button) {
@@ -88,6 +92,8 @@ define(
               Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
+            var dotitems = dots.get(dialog);
+            Highlighting.hightlightAt(dotitems, spec.state.currentScreen.get());
           }
         });
       };
@@ -108,16 +114,18 @@ define(
         spec.state.dialogSwipeState.clear();
       };
 
-      return Form.sketch({
+
+
+      var f = Form.sketch({
         dom: {
           tag: 'div',
-          classes: [ Styles.resolve('serialised-dialog') ]
+          classes: [Styles.resolve('serialised-dialog')]
         },
         components: [
           Container.sketch({
             dom: {
               tag: 'div',
-              classes: [ Styles.resolve('serialised-dialog-chain') ],
+              classes: [Styles.resolve('serialised-dialog-chain')],
               styles: {
                 left: '0px',
                 position: 'absolute'
@@ -127,12 +135,12 @@ define(
               return i <= spec.maxFieldIndex ? Container.sketch({
                 dom: {
                   tag: 'div',
-                  classes: [ Styles.resolve('serialised-dialog-screen') ]
+                  classes: [Styles.resolve('serialised-dialog-screen')]
                 },
                 components: Arr.flatten([
-                  [ prevButton(i > 0) ],
-                  [ Form.parts(field.name) ],
-                  [ nextButton(i < spec.maxFieldIndex) ]
+                  [prevButton(i > 0)],
+                  [Form.parts(field.name)],
+                  [nextButton(i < spec.maxFieldIndex)]
                 ])
               }) : Form.parts(field.name);
             })
@@ -140,7 +148,7 @@ define(
         ],
 
         parts: (function () {
-          var r = { };
+          var r = {};
           Arr.each(spec.fields, function (f) {
             r[f.name] = f.spec;
           });
@@ -176,6 +184,8 @@ define(
                     if (EventRoot.isSource(dialog, simulatedEvent)) {
                       // Reset state to first screen.
                       resetState();
+                      var dotitems = dots.get(dialog);
+                      Highlighting.highlightFirst(dotitems);
                       spec.getInitialValue(dialog).each(function (v) {
                         Representing.setValue(dialog, v);
                       });
@@ -251,6 +261,40 @@ define(
           )
         ]
       });
+
+      var dots = Memento.record({
+        dom: {
+          tag: 'div',
+          classes: [Styles.resolve('dot-container')]
+        },
+        behaviours: Behaviour.derive([
+          Highlighting.config({
+            highlightClass: 'dot-active',
+            itemClass: 'dot-item'
+          })
+        ]),
+        components: Arr.bind(spec.fields, function (_f, i) {
+          return i <= spec.maxFieldIndex ? [
+            {
+              dom: {
+                tag: 'div',
+                innerHtml: 'dot',
+                classes: ['dot-item']
+              }
+            }] : [];
+        })
+      });
+
+      return {
+        dom: {
+          tag: 'div',
+          classes: [Styles.resolve('serializer-wrapper')]
+        },
+        components: [
+          f,
+          dots.asSpec()
+        ]
+      };
     };
 
     return {
