@@ -1,3 +1,16 @@
+Version 4.6.1 (2017-05-10)
+    Added configuration option to list plugin to disable tab indentation.
+    Fixed bug where format change on very specific content could cause the selection to change.
+    Fixed bug where TinyMCE could not be lazyloaded through jquery integration.
+    Fixed bug where entities in style attributes weren't decoded correctly on paste in webkit.
+    Fixed bug where fontsize_formats option had been renamed incorrectly.
+    Fixed bug with broken backspace/delete behaviour between contenteditable=false blocks.
+    Fixed bug where it wasn't possible to backspace to the previous line with the inline boundaries functionality turned on.
+    Fixed bug where is wasn't possible to move caret left and right around a linked image with the inline boundaries functionality turned on.
+    Fixed bug where pressing enter after/before hr element threw exception. Patch contributed bradleyke.
+    Fixed so the CSS in the visualblocks plugin doesn't overwrite background color. Patch contributed by Christian Rank.
+    Fixed bug where multibyte characters weren't encoded correctly. Patch contributed by James Tarkenton.
+    Fixed bug where shift-click to select within contenteditable=true fields wasn't working.
 Version 4.6.0 (2017-05-04)
     Dropped support for IE 8-10 due to market share and lack of support from Microsoft. See tinymce docs for details.
     Added an inline boundary caret position feature that makes it easier to type at the beginning/end of links/code elements.
