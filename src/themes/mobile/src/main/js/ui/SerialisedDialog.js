@@ -265,12 +265,12 @@ define(
       var dots = Memento.record({
         dom: {
           tag: 'div',
-          classes: [Styles.resolve('dot-container')]
+          classes: [ Styles.resolve('dot-container') ]
         },
         behaviours: Behaviour.derive([
           Highlighting.config({
-            highlightClass: 'dot-active',
-            itemClass: 'dot-item'
+            highlightClass: Styles.resolve('dot-active'),
+            itemClass: Styles.resolve('dot-item')
           })
         ]),
         components: Arr.bind(spec.fields, function (_f, i) {
@@ -278,8 +278,8 @@ define(
             {
               dom: {
                 tag: 'div',
-                innerHtml: 'dot',
-                classes: ['dot-item']
+                innerHtml: '&#x2022;',
+                classes: [ Styles.resolve('dot-item') ]
               }
             }] : [];
         })
@@ -288,7 +288,7 @@ define(
       return {
         dom: {
           tag: 'div',
-          classes: [Styles.resolve('serializer-wrapper')]
+          classes: [ Styles.resolve('serializer-wrapper') ]
         },
         components: [
           f,
