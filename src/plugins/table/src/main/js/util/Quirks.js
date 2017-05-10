@@ -98,7 +98,7 @@ define(
 
             var parentCell = editor.dom.getParent(table, 'td,th');
             if (parentCell) {
-              return handle(upBool, parentCell, e);
+              return handle(upBool, parentCell);
             }
 
             var backUpSibling = getChildForDirection(currentRow, !upBool);
@@ -174,7 +174,7 @@ define(
             var preBrowserNode = editor.selection.getNode();
             Delay.setEditorTimeout(editor, function () {
               if (shouldFixCaret(preBrowserNode)) {
-                handle(!e.shiftKey && key === VK.UP, preBrowserNode, e);
+                handle(!e.shiftKey && key === VK.UP, preBrowserNode);
               }
             }, 0);
           }

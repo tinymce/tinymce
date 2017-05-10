@@ -253,7 +253,7 @@ define(
         dragHelpers = [];
       }
 
-      render(containerElm);
+      render();
 
       instance = Tools.extend({
         toggleVisibility: toggleVisibility,
