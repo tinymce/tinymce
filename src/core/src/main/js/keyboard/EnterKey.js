@@ -38,6 +38,10 @@ define(
       elm.innerHTML = !isIE ? '<br data-mce-bogus="1">' : '';
     };
 
+    var containerAndSiblingName = function (container, nodeName) {
+      return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+    };
+
     // Returns true if the block can be split into two blocks or not
     var canSplitBlock = function (dom, node) {
       return node &&
@@ -125,7 +129,7 @@ define(
         moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
 
       function handleEnterKey(evt) {
-        var rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey, adjustCaretForHR,
+        var rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,
           newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
 
         // Moves the caret to a suitable position within the root for example in the first non
@@ -273,7 +277,7 @@ define(
 
         // Returns true/false if the caret is at the start/end of the parent block element
         function isCaretAtStartOrEndOfBlock(start) {
-          var walker, node, name, normalizedOffset, elemsToCheck, i;
+          var walker, node, name, normalizedOffset;
 
           normalizedOffset = normalizeZwspOffset(start, container, offset);
 
@@ -293,11 +297,8 @@ define(
           }
 
           // Caret can be before/after a table or a hr
-          elemsToCheck = ['TABLE', 'HR'];
-          for (i = 0; i < elemsToCheck.length; ++i) {
-            if (container.nodeName === elemsToCheck[i] || (container.previousSibling && container.previousSibling.nodeName == elemsToCheck[i])) {
-              return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
-            }
+          if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
+            return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
           }
 
           // Walk the DOM and look for text nodes or non empty elements
@@ -672,10 +673,11 @@ define(
           insertNewBlockAfter();
         } else if (isCaretAtStartOrEndOfBlock(true)) {
           // Insert new block before
-          adjustCaretForHR = parentBlockName === 'HR' || (container.previousSibling && container.previousSibling.nodeName === 'HR');
           newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
           renderBlockOnIE(dom, selection, newBlock);
-          adjustCaretForHR ? moveToCaretPosition(newBlock) : moveToCaretPosition(parentBlock);
+
+          // Adjust caret position if HR
+          containerAndSiblingName(parentBlock, 'HR') ? moveToCaretPosition(newBlock) : moveToCaretPosition(parentBlock);
         } else {
           // Extract after fragment and insert it after the current block
           tmpRng = includeZwspInRange(rng).cloneRange();
