@@ -117,7 +117,7 @@ var AutoValidator = {
   },
 
   getErrorMessages : function (f) {
-    var nl, i, s = this.settings, field, msg, values, messages = [], ed = tinyMCEPopup.editor;
+    var nl, i, s = this.settings, field, msg, values, messages = [], ed = tinyMCEPopup.editor, message;
     nl = this.tags(f, "label");
     for (i = 0; i < nl.length; i++) {
       if (this.hasClass(nl[i], s.invalid_cls)) {
