@@ -42,6 +42,10 @@ define(
 
     function globalEventDelegate(e) {
       each(EditorManager.editors, function (editor) {
+        if (!editor || !editor.fire) {
+          return;
+        }
+
         if (e.type === 'scroll') {
           editor.fire('ScrollWindow', e);
         } else {
