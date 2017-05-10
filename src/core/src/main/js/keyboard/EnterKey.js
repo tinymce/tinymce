@@ -38,6 +38,10 @@ define(
       elm.innerHTML = !isIE ? '<br data-mce-bogus="1">' : '';
     };
 
+    var containerAndSiblingName = function (container, nodeName) {
+      return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+    };
+
     // Returns true if the block can be split into two blocks or not
     var canSplitBlock = function (dom, node) {
       return node &&
@@ -228,7 +232,7 @@ define(
         function createNewBlock(name) {
           var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
 
-          if (name || parentBlockName == "TABLE") {
+          if (name || parentBlockName == "TABLE" || parentBlockName == "HR") {
             block = dom.create(name || newBlockName);
             setForcedBlockAttrs(block);
           } else {
@@ -292,8 +296,8 @@ define(
             return true;
           }
 
-          // Caret can be before/after a table
-          if (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {
+          // Caret can be before/after a table or a hr
+          if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
             return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
           }
 
@@ -671,7 +675,9 @@ define(
           // Insert new block before
           newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
           renderBlockOnIE(dom, selection, newBlock);
-          moveToCaretPosition(parentBlock);
+
+          // Adjust caret position if HR
+          containerAndSiblingName(parentBlock, 'HR') ? moveToCaretPosition(newBlock) : moveToCaretPosition(parentBlock);
         } else {
           // Extract after fragment and insert it after the current block
           tmpRng = includeZwspInRange(rng).cloneRange();
