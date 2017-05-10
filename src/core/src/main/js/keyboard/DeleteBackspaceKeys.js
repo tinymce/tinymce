@@ -19,12 +19,12 @@ define(
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (Arr, BlockBoundaryDelete, BlockRangeDelete, CefDelete, BoundaryDelete, MatchKeys, VK) {
+  function (Arr, BlockBoundaryDelete, BlockRangeDelete, CefDelete, InlineBoundaryDelete, MatchKeys, VK) {
     var setupKeyDownHandler = function (editor, caret) {
       editor.on('keydown', function (evt) {
         var matches = MatchKeys.match([
-          { keyCode: VK.BACKSPACE, action: MatchKeys.action(BoundaryDelete.backspaceDelete, editor, caret, false) },
-          { keyCode: VK.DELETE, action: MatchKeys.action(BoundaryDelete.backspaceDelete, editor, caret, true) },
+          { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, false) },
+          { keyCode: VK.DELETE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true) },
           { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
           { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
           { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, false) },
