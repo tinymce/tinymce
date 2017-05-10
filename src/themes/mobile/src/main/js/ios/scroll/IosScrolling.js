@@ -34,7 +34,6 @@ define(
     };
 
     var moveScrollAndTop = function (element, destination, finalTop) {
-      console.log('moveScrollAndTop', Classes.get(element).join(','), 'scroll', destination, 'top', finalTop);
       return Future.nu(function (callback) {
         var getCurrent = Fun.curry(getScrollTop, element);
 
@@ -55,7 +54,6 @@ define(
     };
 
     var moveOnlyScroll = function (element, destination) {
-      console.log('moveOnlyScroll', Classes.get(element).join(','), 'scroll', destination);
       return Future.nu(function (callback) {
         var getCurrent = Fun.curry(getScrollTop, element);
         Attr.set(element, lastScroll, getCurrent());
@@ -86,7 +84,6 @@ define(
     };
 
     var moveOnlyTop = function (element, destination) {
-      console.log('moveOnlyTop', Classes.get(element).join(','), 'top', destination);
       return Future.nu(function (callback) {
         var getCurrent = Fun.curry(getTop, element);
 
@@ -115,7 +112,6 @@ define(
     // was changing. Therefore, until tests prove otherwise, we are just going to jump to the
     // destination in one go.
     var moveWindowScroll = function (toolbar, viewport, destY) {
-      console.log('moveWindowScroll', 'destY', destY);
       var outerWindow = Traverse.owner(toolbar).dom().defaultView;
       return Future.nu(function (callback) {
         updateTop(toolbar, destY);
