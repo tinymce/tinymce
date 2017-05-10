@@ -117,7 +117,6 @@ define(
                 return Option.some(true);
               }
             }),
-            // // TODO: Do not allow keyboard focus on mobile (TM-25)
             Focusing.config({ })
           ]),
 
