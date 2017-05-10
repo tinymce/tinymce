@@ -27,7 +27,7 @@ define(
         meta.maximize();
 
         /// TM-48 Prevent browser refresh by swipe/scroll on android devices
-        Class.add(platform.body(), Styles.resolve('android-scroll-reload'));
+        Class.add(platform.body, Styles.resolve('android-scroll-reload'));
 
         androidApi.set(
           AndroidSetup.setup(platform.win, PlatformEditor.getWin(platform.editor).getOrDie('no'))
@@ -47,7 +47,7 @@ define(
         Class.remove(platform.container, Styles.resolve('android-maximized'));
 
         /// TM-48 re-enable swipe/scroll browser refresh on android
-        Class.remove(platform.body(), Styles.resolve('android-scroll-reload'));
+        Class.remove(platform.body, Styles.resolve('android-scroll-reload'));
 
         androidEvents.clear();
 
