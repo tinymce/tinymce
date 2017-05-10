@@ -129,6 +129,7 @@ define(
               onToEditing: editor.onToEditing,
 
               onToolbarScrollStart: editor.onToolbarScrollStart,
+              onTouchContent: editor.onTouchContent,
               onTapContent: editor.onTapContent,
 
               getCursorBox: getCursorBox

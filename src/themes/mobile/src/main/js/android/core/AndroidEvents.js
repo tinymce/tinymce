@@ -7,10 +7,10 @@ define(
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.selection.WindowSelection'
+    'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (Arr, PlatformDetection, Compare, DomEvent, Css, WindowSelection) {
+  function (Arr, PlatformDetection, Compare, DomEvent, Css, TappingEvent) {
     var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
 
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -28,10 +28,16 @@ define(
 
     */
     var initEvents = function (editorApi, toolstrip) {
+
+      var tapping = TappingEvent.monitor(editorApi);
+
       var listeners = [
-        DomEvent.bind(editorApi.body(), 'touchstart', function () {
-          editorApi.onTapContent();
-        })
+        DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
+          editorApi.onTouchContent();
+          tapping.fireTouchstart(evt);
+        }),
+        tapping.onTouchmove(),
+        tapping.onTouchend()
       ].concat(
         isAndroid6 ? [ ] : [
           DomEvent.bind(editorApi.doc(), 'selectionchange', function () {
