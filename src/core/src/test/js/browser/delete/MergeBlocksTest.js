@@ -59,7 +59,7 @@ asynctest(
         Logger.t('Merge two simple blocks with br', Chain.asStep(viewBlock, [
           cSetHtml('<p>a<br></p><p>b</p>'),
           cMergeBlocks(true, [0], [1]),
-          cAssertPosition([0], 1),
+          cAssertPosition([0, 0], 1),
           cAssertHtml('<p>ab</p>')
         ])),
 
@@ -82,7 +82,7 @@ asynctest(
         Logger.t('Merge two simple blocks with br', Chain.asStep(viewBlock, [
           cSetHtml('<p>a<br></p><p>b</p>'),
           cMergeBlocks(false, [1], [0]),
-          cAssertPosition([0], 1),
+          cAssertPosition([0, 0], 1),
           cAssertHtml('<p>ab</p>')
         ])),
 

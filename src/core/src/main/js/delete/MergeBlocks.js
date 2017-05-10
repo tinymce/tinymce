@@ -23,11 +23,12 @@ define(
     'tinymce.core.dom.NodeType'
   ],
   function (Arr, Option, Insert, Remove, Element, Traverse, CaretFinder, CaretPosition, Empty, NodeType) {
-    var mergeBlocksAndReposition = function (fromBlock, toBlock, toPosition) {
+    var mergeBlocksAndReposition = function (forward, fromBlock, toBlock, toPosition) {
       var children = Traverse.children(fromBlock);
 
       if (NodeType.isBr(toPosition.getNode())) {
         Remove.remove(Element.fromDom(toPosition.getNode()));
+        toPosition = CaretFinder.positionIn(false, toBlock.dom()).getOr();
       }
 
       Arr.each(children, function (node) {
@@ -38,17 +39,17 @@ define(
         Remove.remove(fromBlock);
       }
 
-      return children.length > 0 ? Option.some(toPosition) : Option.none();
+      return children.length > 0 ? Option.from(toPosition) : Option.none();
     };
 
     var mergeBlocks = function (forward, block1, block2) {
       if (forward) {
         return CaretFinder.positionIn(false, block1.dom()).bind(function (toPosition) {
-          return mergeBlocksAndReposition(block2, block1, toPosition);
+          return mergeBlocksAndReposition(forward, block2, block1, toPosition);
         });
       } else {
         return CaretFinder.positionIn(false, block2.dom()).bind(function (toPosition) {
-          return mergeBlocksAndReposition(block1, block2, toPosition);
+          return mergeBlocksAndReposition(forward, block1, block2, toPosition);
         });
       }
     };
