@@ -33,7 +33,7 @@ define(
         // If a developer is spamming orientation events in the simulator, clear our last check
         clearInterval(poller);
 
-        var orientation = get();
+        var orientation = get(outerWindow);
         listeners.onChange(orientation);
 
         onAdjustment(function () {

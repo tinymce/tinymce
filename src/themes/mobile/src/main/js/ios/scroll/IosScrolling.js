@@ -43,7 +43,6 @@ define(
         };
 
         var finish = function (/* dest */) {
-          console.log('finishing scroll', destination, 'finishing top', finalTop);
           element.dom().scrollTop = destination;
           Css.set(element, 'top', finalTop + 'px');
           callback(destination);

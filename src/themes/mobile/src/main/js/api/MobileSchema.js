@@ -15,7 +15,7 @@ define(
       FieldSchema.strictObjOf('editor', [
         // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
         FieldSchema.strict('getFrame'),
-        FieldSchema.defaulted('getBody', Fun.constant(Element.fromDom(window.document.body))),
+        FieldSchema.option('getBody'),
         FieldSchema.option('getDoc'),
         FieldSchema.option('getWin'),
         FieldSchema.option('getSelection'),
