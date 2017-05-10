@@ -64,7 +64,7 @@ define(
           var rect = elm.getBoundingClientRect();
 
           width = Math.max(rect.width || (rect.right - rect.left), elm.offsetWidth);
-          height = Math.max(rect.height || (rect.bottom - rect.bottom), elm.offsetHeight);
+          height = Math.max(rect.height || (rect.top - rect.bottom), elm.offsetHeight);
         } else {
           width = elm.offsetWidth;
           height = elm.offsetHeight;
