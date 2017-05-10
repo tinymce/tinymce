@@ -200,6 +200,16 @@ asynctest(
           cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>'),
           cReadAction(true, [1], 0),
           cAssertRemoveElementAction([2])
+        ])),
+        Logger.t('Should be removeElement since the block you are deleting from is empty', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>'),
+          cReadAction(true, [1], 0),
+          cAssertRemoveElementAction([1])
+        ])),
+        Logger.t('Should be removeElement since the block you are deleting from is empty', Chain.asStep(viewBlock, [
+          cSetHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>'),
+          cReadAction(false, [1], 0),
+          cAssertRemoveElementAction([1])
         ]))
       ])),
 

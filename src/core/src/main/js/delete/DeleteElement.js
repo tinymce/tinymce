@@ -43,32 +43,72 @@ define(
       return NodeType.isText(node) ? new CaretPosition(node, node.data.length) : CaretPosition.after(node);
     };
 
-    var findCaretPosition = function (forward, rootElement, elm) {
+    var getPreviousSiblingCaretPosition = function (elm) {
       if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
         return Option.some(afterOrEndOf(elm.previousSibling));
-      } else if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
-        return Option.some(beforeOrStartOf(elm));
       } else {
-        return InlineUtils.findCaretPosition(rootElement, forward, CaretPosition.before(elm)).fold(
-          function () {
-            return InlineUtils.findCaretPosition(rootElement, !forward, CaretPosition.after(elm));
-          },
-          Option.some
-        );
+        return elm.previousSibling ? InlineUtils.findCaretPositionIn(elm.previousSibling, false) : Option.none();
       }
+    };
+
+    var getNextSiblingCaretPosition = function (elm) {
+      if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
+        return Option.some(beforeOrStartOf(elm.nextSibling));
+      } else {
+        return elm.nextSibling ? InlineUtils.findCaretPositionIn(elm.nextSibling, true) : Option.none();
+      }
+    };
+
+    var findCaretPositionBackwardsFromElm = function (rootElement, elm) {
+      var startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
+      return InlineUtils.findCaretPosition(rootElement, false, startPosition).fold(
+        function () {
+          return InlineUtils.findCaretPosition(rootElement, true, CaretPosition.after(elm));
+        },
+        Option.some
+      );
+    };
+
+    var findCaretPositionForwardsFromElm = function (rootElement, elm) {
+      return InlineUtils.findCaretPosition(rootElement, true, CaretPosition.after(elm)).fold(
+        function () {
+          return InlineUtils.findCaretPosition(rootElement, false, CaretPosition.before(elm));
+        },
+        Option.some
+      );
+    };
+
+    var findCaretPositionBackwards = function (rootElement, elm) {
+      return getPreviousSiblingCaretPosition(elm).orThunk(function () {
+        return getNextSiblingCaretPosition(elm);
+      }).orThunk(function () {
+        return findCaretPositionBackwardsFromElm(rootElement, elm);
+      });
+    };
+
+    var findCaretPositionForward = function (rootElement, elm) {
+      return getNextSiblingCaretPosition(elm).orThunk(function () {
+        return getPreviousSiblingCaretPosition(elm);
+      }).orThunk(function () {
+        return findCaretPositionForwardsFromElm(rootElement, elm);
+      });
+    };
+
+    var findCaretPosition = function (forward, rootElement, elm) {
+      return forward ? findCaretPositionForward(rootElement, elm) : findCaretPositionBackwards(rootElement, elm);
     };
 
     var findCaretPosOutsideElmAfterDelete = function (forward, rootElement, elm) {
       return findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
     };
 
-    var setSelection = function (editor, pos) {
+    var setSelection = function (editor, forward, pos) {
       pos.fold(
         function () {
           editor.focus();
         },
         function (pos) {
-          editor.selection.setRng(pos.toRange());
+          editor.selection.setRng(pos.toRange(), forward);
         }
       );
     };
@@ -102,10 +142,10 @@ define(
 
       parentBlock.bind(paddEmptyBlock).fold(
         function () {
-          setSelection(editor, afterDeletePos);
+          setSelection(editor, forward, afterDeletePos);
         },
         function (paddPos) {
-          setSelection(editor, Option.some(paddPos));
+          setSelection(editor, forward, Option.some(paddPos));
         }
       );
     };

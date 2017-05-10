@@ -189,6 +189,28 @@ asynctest(
       }
     });
 
+    suite.test('set range after ce=false element but lean backwards', function (editor) {
+      editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
+
+      var rng = document.createRange();
+      rng.setStartBefore(editor.dom.select('p')[1]);
+      rng.setEndBefore(editor.dom.select('p')[1]);
+
+      editor.selection.setRng(rng, false);
+      LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'after');
+    });
+
+    suite.test('set range after ce=false element but lean forwards', function (editor) {
+      editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
+
+      var rng = document.createRange();
+      rng.setStartBefore(editor.dom.select('p')[1]);
+      rng.setEndBefore(editor.dom.select('p')[1]);
+
+      editor.selection.setRng(rng, true);
+      LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'before');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

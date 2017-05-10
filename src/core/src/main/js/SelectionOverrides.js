@@ -591,7 +591,7 @@ define(
         editor.on('setSelectionRange', function (e) {
           var rng;
 
-          rng = setContentEditableSelection(e.range);
+          rng = setContentEditableSelection(e.range, e.forward);
           if (rng) {
             e.range = rng;
           }
@@ -666,7 +666,7 @@ define(
         return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
       }
 
-      function setContentEditableSelection(range) {
+      function setContentEditableSelection(range, forward) {
         var node, $ = editor.$, dom = editor.dom, $realSelectionContainer, sel,
           startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
 
@@ -676,14 +676,26 @@ define(
 
         if (range.collapsed) {
           if (!isRangeInCaretContainer(range)) {
-            caretPosition = getNormalizedRangeEndPoint(1, range);
+            if (forward === false) {
+              caretPosition = getNormalizedRangeEndPoint(-1, range);
 
-            if (isContentEditableFalse(caretPosition.getNode())) {
-              return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd());
-            }
+              if (isContentEditableFalse(caretPosition.getNode(true))) {
+                return showCaret(-1, caretPosition.getNode(true), false);
+              }
 
-            if (isContentEditableFalse(caretPosition.getNode(true))) {
-              return showCaret(1, caretPosition.getNode(true), false);
+              if (isContentEditableFalse(caretPosition.getNode())) {
+                return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd());
+              }
+            } else {
+              caretPosition = getNormalizedRangeEndPoint(1, range);
+
+              if (isContentEditableFalse(caretPosition.getNode())) {
+                return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd());
+              }
+
+              if (isContentEditableFalse(caretPosition.getNode(true))) {
+                return showCaret(1, caretPosition.getNode(true), false);
+              }
             }
           }
 
