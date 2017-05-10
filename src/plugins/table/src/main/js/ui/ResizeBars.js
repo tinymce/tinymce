@@ -86,7 +86,7 @@ define(
       }
 
       function getBody() {
-        return isInline ? editor.getBody().ownerDocument.body : editor.getBody();
+        return isInline() ? editor.getBody().ownerDocument.body : editor.getBody();
       }
 
       function getInnerEdge(index, cell) {
