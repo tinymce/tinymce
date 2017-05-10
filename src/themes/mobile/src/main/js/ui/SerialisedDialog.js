@@ -36,8 +36,6 @@ define(
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
 
-      console.log(Highlighting);
-
       var schema = ValueSchema.objOf([
         FieldSchema.strict('fields'),
         // Used for when datafields are present.
