@@ -33,7 +33,7 @@ define(
       var wasHighlighted = isHighlighted(component, hConfig, hState, target);
       dehighlightAll(component, hConfig, hState);
       Class.add(target.element(), hConfig.highlightClass());
-      
+
       // TODO: Check whether this should always fire
       if (! wasHighlighted) hConfig.onHighlight()(component, target);
     };
@@ -50,12 +50,23 @@ define(
       });
     };
 
+    var hightlightAt = function (component, hConfig, hState, index) {
+      getByIndex(component, hConfig, hState, index).each(function (firstComp) {
+        highlight(component, hConfig, hState, firstComp);
+      });
+    };
+
     var isHighlighted = function (component, hConfig, hState, queryTarget) {
       return Class.has(queryTarget.element(), hConfig.highlightClass());
     };
 
     var getHighlighted = function (component, hConfig, hState) {
       return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind(component.getSystem().getByDom);
+    };
+
+    var getByIndex = function (component, hConfig, hState, index) {
+      var items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
+      return Option.from(items[index]).bind(component.getSystem().getByDom).toOption();
     };
 
     var getFirst = function (component, hConfig, hState) {
@@ -95,6 +106,7 @@ define(
       highlight: highlight,
       highlightFirst: highlightFirst,
       highlightLast: highlightLast,
+      hightlightAt: hightlightAt,
       isHighlighted: isHighlighted,
       getHighlighted: getHighlighted,
       getFirst: getFirst,
