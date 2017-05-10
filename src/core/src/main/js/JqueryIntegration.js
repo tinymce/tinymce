@@ -28,7 +28,7 @@ define(
 
       var getTinymce = function () {
         // Reference to tinymce needs to be lazily evaluated since tinymce
-        // might be loaded though the compressor or other means
+        // might be loaded through the compressor or other means
         return win.tinymce;
       };
 
