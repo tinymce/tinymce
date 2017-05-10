@@ -45,6 +45,14 @@ asynctest(
       });
     };
 
+    var mAssertSetSelectionEventArgs = function (editor, expectedForward) {
+      return Step.stateful(function (value, next, die) {
+        Assertions.assertEq('Should be expected forward flag', expectedForward, value.eventArgs.get().forward);
+        assertSelectAllRange(editor, value.eventArgs.get().range);
+        next(value);
+      });
+    };
+
     var getSelectAllRng = function (editor) {
       var rng = document.createRange();
       rng.setStartBefore(editor.getBody().firstChild);
@@ -89,23 +97,11 @@ asynctest(
           mBindEvent(editor, 'SetSelectionRange'),
           tinyApis.sSetContent('<p>a</p>'),
           sSetRng(editor, undefined),
-          Step.stateful(function (value, next, die) {
-            Assertions.assertEq('', 'undefined', typeof value.eventArgs.get().forward);
-            assertSelectAllRange(editor, value.eventArgs.get().range);
-            next(value);
-          }),
+          mAssertSetSelectionEventArgs(editor, undefined),
           sSetRng(editor, true),
-          Step.stateful(function (value, next, die) {
-            Assertions.assertEq('Should be true since it was passed in to setRng as forward flag', true, value.eventArgs.get().forward);
-            assertSelectAllRange(editor, value.eventArgs.get().range);
-            next(value);
-          }),
+          mAssertSetSelectionEventArgs(editor, true),
           sSetRng(editor, false),
-          Step.stateful(function (value, next, die) {
-            Assertions.assertEq('Should be false since it was passed in to setRng as forward flag', false, value.eventArgs.get().forward);
-            assertSelectAllRange(editor, value.eventArgs.get().range);
-            next(value);
-          }),
+          mAssertSetSelectionEventArgs(editor, false),
           mUnbindEvent(editor, 'SetSelectionRange')
         ])),
         Logger.t('AfterSetSelectionRange event', GeneralSteps.sequence([
@@ -117,21 +113,9 @@ asynctest(
             next(value);
           }),
           sSetRng(editor, true),
-          Step.stateful(function (value, next, die) {
-            Assertions.assertEq('Should be true since it was passed in to setRng as forward flag', true, value.eventArgs.get().forward);
-            assertSelectAllRange(editor, value.eventArgs.get().range);
-            next(value);
-          }),
+          mAssertSetSelectionEventArgs(editor, true),
           sSetRng(editor, false),
-          Step.stateful(function (value, next, die) {
-            Assertions.assertEq('Should be false since it was passed in to setRng as forward flag', false, value.eventArgs.get().forward);
-            Assertions.assertDomEq(
-              'Should be expected container',
-              Element.fromDom(editor.getBody()),
-              Element.fromDom(value.eventArgs.get().range.startContainer)
-            );
-            next(value);
-          }),
+          mAssertSetSelectionEventArgs(editor, false),
           mUnbindEvent(editor, 'AfterSetSelectionRange')
         ])),
         Logger.t('GetSelectionRange event', GeneralSteps.sequence([
