@@ -227,18 +227,14 @@ define(
         doc = self.doc;
 
         // Make a HTML5 safe shallow copy
-        if (!deep) {
-          clone = doc.createElement(node.nodeName);
+        clone = doc.createElement(node.nodeName);
 
-          // Copy attribs
-          each(self.getAttribs(node), function (attr) {
-            self.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));
-          });
+        // Copy attribs
+        each(self.getAttribs(node), function (attr) {
+          self.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));
+        });
 
-          return clone;
-        }
-
-        return clone.firstChild;
+        return clone;
       },
 
       /**
