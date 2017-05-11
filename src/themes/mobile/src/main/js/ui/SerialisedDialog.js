@@ -81,6 +81,16 @@ define(
         });
       };
 
+      var reposition = function (dialog) {
+        var screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
+        SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+          Css.getRaw(parent, 'left').each(function (left) {
+            var w = Width.get(screens[0]);
+            Css.set(parent, 'left', (-spec.state.currentScreen.get() * w) + 'px');
+          });
+        });
+      };
+
       var navigate = function (dialog, direction) {
         var screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
         SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
@@ -159,7 +169,7 @@ define(
             channels: {
               'orientation.change': {
                 onReceive: function (dialog, message) {
-                  navigate(dialog, 0);
+                  reposition(dialog);
                 }
               }
             }
