@@ -48,6 +48,14 @@ define(
           });
         };
 
+        var orientation = Orientation.onChange({
+          onChange: function () {
+            var alloy = realm.system();
+            alloy.broadcastOn(['orientation.change'], { orientation: Orientation.get() });
+          },
+          onReady: Fun.noop
+        });
+
         editor.on('init', function () {
           realm.init({
             editor: {
@@ -68,6 +76,7 @@ define(
 
                 var unbind = function () {
                   editor.off('scrollIntoView');
+                  orientation.destroy();
                 };
 
                 return {
@@ -100,14 +109,7 @@ define(
             socket: Element.fromDom(editor.contentAreaContainer),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
-            alloy: realm.system(),
-            orientation: Orientation.onChange({
-              onChange: function () {
-                var alloy = realm.system();
-                alloy.broadcastOn(['orientation.change'], {});
-              },
-              onReady: Fun.noop
-            })
+            alloy: realm.system()
           });
 
           var createHeadingButton = function (level) {
