@@ -4,10 +4,11 @@ define(
   [
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.textpattern.core.Patterns'
+    'tinymce.plugins.textpattern.core.Patterns',
+    'tinymce.plugins.textpattern.core.Settings'
   ],
 
-  function (TreeWalker, Tools, Patterns) {
+  function (TreeWalker, Tools, Patterns, Settings) {
     var splitContainer = function (container, pattern, offset, startOffset, delta) {
 
       // Split text node and remove start/end from text node
@@ -92,7 +93,9 @@ define(
         return;
       }
 
-      textBlockElm = dom.getParent(selection.getStart(), 'p');
+      var forcedRootBlock = Settings.getForcedRootBlock(editor.settings);
+
+      textBlockElm = dom.getParent(selection.getStart(), forcedRootBlock);
       if (textBlockElm) {
         walker = new TreeWalker(textBlockElm, textBlockElm);
         while ((node = walker.next())) {
