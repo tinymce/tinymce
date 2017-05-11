@@ -22,6 +22,7 @@ define(
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Singleton',
+    'ephox.katamari.api.Throttler',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
@@ -32,7 +33,7 @@ define(
 
   function (
     EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema,
-    Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    Objects, ValueSchema, Arr, Cell, Option, Singleton, Throttler, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -83,10 +84,14 @@ define(
 
       var reposition = function (dialog) {
         var screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
+        var currentState = spec.state.currentScreen.get();
+        Css.reflow(screens[currentState]);
         SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
           Css.getRaw(parent, 'left').each(function (left) {
-            var w = Width.get(screens[0]);
-            Css.set(parent, 'left', (-spec.state.currentScreen.get() * w) + 'px');
+            setTimeout(function () {
+              var w = Width.get(screens[currentState]);
+              Css.set(parent, 'left', (-spec.state.currentScreen.get() * w) + 'px');
+            }, 0);
           });
         });
       };
