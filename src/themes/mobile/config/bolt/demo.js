@@ -5,6 +5,7 @@ configure({
   ],
   sources: [
     source('amd', 'ephox/imagetools', '../../../../../node_modules/@ephox/imagetools/src/main/js', mapper.hierarchical),
+    source('amd', 'ephox.alloy', '../../../../../../alloy/src/main/js', mapper.hierarchical),
     source('amd', 'tinymce.themes.mobile.demo', '../../src/demo/js', function (id) {
       return mapper.hierarchical(id).replace(/^tinymce\/themes\/mobile\//, '');
     }),

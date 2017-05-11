@@ -83,16 +83,9 @@ define(
       };
 
       var reposition = function (dialog) {
-        var screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
-        var currentState = spec.state.currentScreen.get();
-        Css.reflow(screens[currentState]);
         SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
-          Css.getRaw(parent, 'left').each(function (left) {
-            setTimeout(function () {
-              var w = Width.get(screens[currentState]);
-              Css.set(parent, 'left', (-spec.state.currentScreen.get() * w) + 'px');
-            }, 0);
-          });
+          var w = window.screen.width;
+          Css.set(parent, 'left', (-spec.state.currentScreen.get() * w) + 'px');
         });
       };
 
