@@ -44,6 +44,7 @@ define(
       };
 
       Insert.append(mobile.container, mask.element());
+      
       var mode = AndroidMode.create(mobile, maskApi);
 
       return {
