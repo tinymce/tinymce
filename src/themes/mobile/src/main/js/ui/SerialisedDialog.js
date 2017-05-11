@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.SystemEvents',
@@ -30,8 +31,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects,
-    ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema,
+    Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -154,6 +155,15 @@ define(
         })(),
 
         formBehaviours: Behaviour.derive([
+          Receiving.config({
+            channels: {
+              'orientation.change': {
+                onReceive: function (dialog, message) {
+                  navigate(dialog, 0);
+                }
+              }
+            }
+          }),
           Keying.config({
             mode: 'special',
             focusIn: function (dialog/*, specialInfo */) {
@@ -263,7 +273,7 @@ define(
       var dots = Memento.record({
         dom: {
           tag: 'div',
-          classes: [ Styles.resolve('dot-container') ]
+          classes: [Styles.resolve('dot-container')]
         },
         behaviours: Behaviour.derive([
           Highlighting.config({
@@ -277,7 +287,7 @@ define(
               dom: {
                 tag: 'div',
                 innerHtml: '&#x2022;',
-                classes: [ Styles.resolve('dot-item') ]
+                classes: [Styles.resolve('dot-item')]
               }
             }] : [];
         })
@@ -286,7 +296,7 @@ define(
       return {
         dom: {
           tag: 'div',
-          classes: [ Styles.resolve('serializer-wrapper') ]
+          classes: [Styles.resolve('serializer-wrapper')]
         },
         components: [
           f,

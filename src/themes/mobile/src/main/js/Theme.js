@@ -13,6 +13,7 @@ define(
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.view.Orientation',
     'tinymce.themes.mobile.ui.AndroidRealm',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
@@ -27,8 +28,8 @@ define(
 
 
   function (
-    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider,
-    ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm, Buttons, ColorSlider,
+    FontSizeSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -89,7 +90,14 @@ define(
             socket: Element.fromDom(editor.contentAreaContainer),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
-            alloy: realm.system()
+            alloy: realm.system(),
+            orientation: Orientation.onChange({
+              onChange: function () {
+                var alloy = realm.system();
+                alloy.broadcastOn([ 'orientation.change' ], {});
+              },
+              onReady: Fun.noop
+            })
           });
 
           var createHeadingButton = function (level) {
