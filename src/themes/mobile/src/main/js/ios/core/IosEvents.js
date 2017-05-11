@@ -2,15 +2,17 @@ define(
   'tinymce.themes.mobile.ios.core.IosEvents',
 
   [
+    'ephox.alloy.events.TapEvent',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Throttler',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location'
+    'ephox.sugar.api.view.Location',
+    'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (Arr, Throttler, Compare, DomEvent, Height, Location) {
+  function (TapEvent, Arr, Throttler, Compare, DomEvent, Height, Location, TappingEvent) {
     var initEvents = function (editorApi, iosApi, toolstrip, socket) {
       var saveSelectionFirst = function () {
         iosApi.run(function (api) {
@@ -94,6 +96,8 @@ define(
         });
       };
 
+      var tapping = TappingEvent.monitor(editorApi);
+
       var refreshThrottle = Throttler.last(refreshView, 300);
 
       var listeners = [
@@ -153,10 +157,14 @@ define(
         }),
 
         // When the user clicks back into the content, clear any fake selections
-        DomEvent.bind(editorApi.body(), 'touchstart', function () {
+        DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
           clearSelection();
-          editorApi.onTapContent();
+          editorApi.onTouchContent();
+          tapping.fireTouchstart(evt);
         }),
+
+        tapping.onTouchmove(),
+        tapping.onTouchend(),
 
         // Stop any "clicks" being processed in the body at alls
         DomEvent.bind(editorApi.body(), 'click', function (event) {
