@@ -6,7 +6,6 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.debugging.Debugging',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
@@ -16,13 +15,11 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Container, Debugging, Objects, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, OuterContainer) {
+  function (Behaviour, Replacing, GuiFactory, Container, Objects, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('ios-container') ]
       });
-
-      Debugging.registerInspector('any-name', alloy);
 
       var toolbar = ScrollingToolbar();
 
