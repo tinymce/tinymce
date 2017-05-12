@@ -84,15 +84,7 @@ define(
 
       var reposition = function (dialog, message) {
         SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
-          var isIos = PlatformDetection.detect().os.isiOS();
-          var isPortrait = message.orientation.isPortrait();
-          var w;
-          if (isIos) {
-            w = isPortrait ? window.screen.width : window.screen.height;
-          } else {
-            w = window.screen.width;
-          }
-          Css.set(parent, 'left', (-spec.state.currentScreen.get() * w) + 'px');
+          Css.set(parent, 'left', (-spec.state.currentScreen.get() * message.width) + 'px');
         });
       };
 

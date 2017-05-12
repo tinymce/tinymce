@@ -4,6 +4,7 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'global!clearInterval',
@@ -12,7 +13,7 @@ define(
     'global!window'
   ],
 
-  function (Fun, Option, DomEvent, Element, clearInterval, Math, setInterval, window) {
+  function (Fun, Option, PlatformDetection, DomEvent, Element, clearInterval, Math, setInterval, window) {
 
     var INTERVAL = 50;
     var INSURANCE = 1000 / INTERVAL;
@@ -24,6 +25,20 @@ define(
       return {
         isPortrait: Fun.constant(isPortrait)
       };
+    };
+
+    // In iOS the width of the window is not swapped properly when the device is
+    // rotated causing problems.
+    // getActualWidth will return the actual width of the window accurated with the
+    // orientation of the device.
+    var getActualWidth = function () {
+      var isIos = PlatformDetection.detect().os.isiOS();
+      var isPortrait = get().isPortrait();
+      if (isIos) {
+        return isPortrait ? window.screen.width : window.screen.height;
+      } else {
+        return window.screen.width;
+      }
     };
 
     var onChange = function (listeners) {
@@ -75,7 +90,8 @@ define(
 
     return {
       get: get,
-      onChange: onChange
+      onChange: onChange,
+      getActualWidth: getActualWidth
     };
   }
 );

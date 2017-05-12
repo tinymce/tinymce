@@ -51,7 +51,7 @@ define(
         var orientation = Orientation.onChange({
           onChange: function () {
             var alloy = realm.system();
-            alloy.broadcastOn(['orientation.change'], { orientation: Orientation.get() });
+            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth() });
           },
           onReady: Fun.noop
         });
