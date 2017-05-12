@@ -5,12 +5,14 @@ define(
     'ephox.alloy.alien.Cycles',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.SelectorFilter',
-    'ephox.sugar.api.search.SelectorFind'
+    'ephox.sugar.api.search.SelectorFind',
+    'global!Error'
   ],
 
-  function (Cycles, Arr, Option, Class, SelectorFilter, SelectorFind) {
+  function (Cycles, Arr, Option, Result, Class, SelectorFilter, SelectorFind, Error) {
     var dehighlightAll = function (component, hConfig, hState) {
       var highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass());
       Arr.each(highlighted, function (h) {
@@ -51,7 +53,9 @@ define(
     };
 
     var highlightAt = function (component, hConfig, hState, index) {
-      getByIndex(component, hConfig, hState, index).each(function (firstComp) {
+      getByIndex(component, hConfig, hState, index).fold(function (err) {
+        throw new Error(err);
+      }, function (firstComp) {
         highlight(component, hConfig, hState, firstComp);
       });
     };
@@ -66,7 +70,10 @@ define(
 
     var getByIndex = function (component, hConfig, hState, index) {
       var items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
-      return Option.from(items[index]).bind(component.getSystem().getByDom).toOption();
+
+      return Option.from(items[index]).fold(function () {
+        return Result.error('No element found with index ' + index);
+      }, component.getSystem().getByDom);
     };
 
     var getFirst = function (component, hConfig, hState) {
