@@ -115,9 +115,15 @@ asynctest(
         });
       };
 
-      var cHighlightAtError = function (index, expectedError) {
-        return Chain.op(function () {
-          Highlighting.highlightAt(component, index)
+      var cHighlightAtError = function (index) {
+        return Chain.binder(function (v) {
+          try {
+            Highlighting.highlightAt(component, index);
+            return Result.error('Expected to get an error because there should be no item with index ' + index);
+          } catch (e) {
+
+          }
+          return Result.value(v);
         });
       };
 
@@ -197,6 +203,8 @@ asynctest(
 
             cHighlightAt(1),
             cCheckSelected('highlightAt(compontent, 1) => Beta is selected', 'beta'),
+
+            cHighlightAtError(6),
 
             cHighlightFirst,
             cCheckSelected('highlightFirst => Alpha is selected', 'alpha'),
