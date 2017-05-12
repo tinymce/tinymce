@@ -50,7 +50,7 @@ define(
       });
     };
 
-    var hightlightAt = function (component, hConfig, hState, index) {
+    var highlightAt = function (component, hConfig, hState, index) {
       getByIndex(component, hConfig, hState, index).each(function (firstComp) {
         highlight(component, hConfig, hState, firstComp);
       });
@@ -106,7 +106,7 @@ define(
       highlight: highlight,
       highlightFirst: highlightFirst,
       highlightLast: highlightLast,
-      hightlightAt: hightlightAt,
+      highlightAt: highlightAt,
       isHighlighted: isHighlighted,
       getHighlighted: getHighlighted,
       getFirst: getFirst,
