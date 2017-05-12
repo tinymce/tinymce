@@ -99,7 +99,7 @@ define(
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
             var dotitems = dots.get(dialog);
-            Highlighting.hightlightAt(dotitems, spec.state.currentScreen.get());
+            Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
           }
         });
       };
