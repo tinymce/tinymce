@@ -1,6 +1,6 @@
 asynctest(
   'SelectionInDocPositionTest',
- 
+
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
@@ -20,7 +20,7 @@ asynctest(
     'global!setTimeout',
     'global!window'
   ],
- 
+
   function (Chain, Cursors, NamedChain, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, Css, Element, Html, Error, setTimeout, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -28,7 +28,7 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       var content = '';
       for (var i = 0; i < 20; i++) {
-        content += '<p>paragraph ' + i  + '</p>';
+        content += '<p>paragraph ' + i + '</p>';
       }
 
       var editor = Element.fromTag('div');
@@ -95,7 +95,7 @@ asynctest(
             ),
 
             NamedChain.write('anchor', cSetupAnchor),
-            
+
             PositionTestUtils.cTestSink(
               'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
               'relative'
@@ -104,7 +104,7 @@ asynctest(
               'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
               'fixed'
             ),
-           
+
             PositionTestUtils.cScrollDown(
               'inline',
               '2000px'
@@ -118,7 +118,7 @@ asynctest(
               'Fixed, Selected: 3rd paragraph, large scroll, no editor scroll',
               'fixed'
             ),
-          
+
 
             ChainUtils.cLogging(
               'Setting selection to 13th paragraph and scrolling there',
@@ -154,7 +154,7 @@ asynctest(
         ])
       ];
     }, function () { success(); }, failure);
- 
+
 
   }
 );

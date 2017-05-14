@@ -11,7 +11,7 @@ define(
   function (BehaviourState, Cell, Fun, Option) {
     var flatgrid = function (spec) {
       var dimensions = Cell(Option.none());
-      
+
       var setGridSize = function (numRows, numColumns) {
         dimensions.set(
           Option.some({

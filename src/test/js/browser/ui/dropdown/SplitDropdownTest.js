@@ -1,6 +1,6 @@
 asynctest(
   'SplitDropdown List',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -20,7 +20,7 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
- 
+
   function (
     ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, TestDropdownMenu,
     GuiSetup, Future, Result
@@ -81,8 +81,8 @@ asynctest(
               ]
             }
           },
-      
-          fetch: function () { 
+
+          fetch: function () {
             var future = Future.pure([
               { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
               { type: 'item', data: { value: 'beta', text: 'Beta' } }

@@ -36,7 +36,7 @@ define(
     // TODO: Remove dupe with ExpandableForm
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
-        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids().extra);
         extraOpt.each(operation);
       };
     };

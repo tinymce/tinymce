@@ -2,7 +2,7 @@ define(
   'ephox.alloy.behaviour.representing.RepresentApis',
 
   [
-    
+
   ],
 
   function () {

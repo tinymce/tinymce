@@ -88,7 +88,7 @@ define(
             defnA.styles().getOr({}),
             mod.styles().getOr({})
           )
-        }, 
+        },
         mod.innerHtml().or(defnA.innerHtml()).map(function (innerHtml) {
           return Objects.wrap('innerHtml', innerHtml);
         }).getOr({ }),
@@ -100,7 +100,7 @@ define(
           return Objects.wrap('value', value);
         }).getOr({ })
       );
-      
+
       return DomDefinition.nu(raw);
     };
 

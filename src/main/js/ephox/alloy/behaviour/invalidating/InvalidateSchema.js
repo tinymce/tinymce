@@ -10,7 +10,7 @@ define(
   function (Fields, FieldSchema, Option) {
     return [
       FieldSchema.strict('invalidClass'),
-      
+
       FieldSchema.optionObjOf('notify', [
         FieldSchema.defaulted('aria', 'alert'),
         // Maybe we should use something else.

@@ -15,11 +15,11 @@ define(
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sConfig, sState, data) {
       sState.get().each(function (data) {
-        // If currently has data, so it hasn't been removed yet. It is 
+        // If currently has data, so it hasn't been removed yet. It is
         // being "re-opened"
         Attachment.detachChildren(sandbox);
       });
-      
+
       var point = sConfig.getAttachPoint()();
       Attachment.attach(point, sandbox);
 

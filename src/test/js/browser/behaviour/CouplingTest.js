@@ -1,6 +1,6 @@
 asynctest(
   'CouplingTest',
- 
+
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Logger',
@@ -17,7 +17,7 @@ asynctest(
     'ephox.sugar.api.node.Node',
     'global!Error'
   ],
- 
+
   function (Assertions, Logger, Step, GuiFactory, Behaviour, Coupling, Button, Container, Tagger, GuiSetup, StepUtils, Attr, Node, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -29,7 +29,7 @@ asynctest(
           containerBehaviours: Behaviour.derive([
             Coupling.config({
               others: {
-                'secondary-1': function (primary) { 
+                'secondary-1': function (primary) {
                   return Button.sketch({
                     dom: {
                       tag: 'button'

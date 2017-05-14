@@ -34,7 +34,7 @@ define(
           },
           components: [
             GuiFactory.premade(component)
-          
+
           ]
         })
       );

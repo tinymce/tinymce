@@ -1,6 +1,6 @@
 asynctest(
   'MenuKeyingTest',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
@@ -15,7 +15,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (FocusTools, GeneralSteps, Keyboard, Keys, Step, GuiFactory, Behaviour, Focusing, Keying, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -39,7 +39,7 @@ asynctest(
             tag: 'div',
             classes: [ 'menu-keying-test'],
             styles: {
-              
+
             }
           },
           uid: 'custom-uid',
@@ -97,7 +97,7 @@ asynctest(
         ], [ ]),
 
         FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
-        
+
         checkStore('pressing up', [
           Keyboard.sKeydown(doc, Keys.up(), { })
         ], [ ]),

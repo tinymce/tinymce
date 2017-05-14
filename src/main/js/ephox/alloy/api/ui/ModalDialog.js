@@ -28,7 +28,7 @@ define(
   ) {
     var schema = ModalDialogSchema.schema();
     var partTypes = ModalDialogSchema.parts();
-        
+
     var make = function (detail, components, spec, externals) {
       var showDialog = function (dialog) {
         var sink = detail.lazySink()().getOrDie();

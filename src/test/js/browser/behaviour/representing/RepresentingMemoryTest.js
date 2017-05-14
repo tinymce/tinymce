@@ -1,6 +1,6 @@
 asynctest(
   'RepresentingTest (mode: memory)',
- 
+
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
@@ -8,7 +8,7 @@ asynctest(
     'ephox.alloy.test.behaviour.RepresentPipes',
     'ephox.alloy.test.GuiSetup'
   ],
- 
+
   function (Behaviour, Representing, GuiFactory, RepresentPipes, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

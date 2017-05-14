@@ -72,11 +72,11 @@ define(
       fireChange(spectrum, newValue, Option.none());
     };
 
-    var moveRight = function (spectrum, detail) { 
+    var moveRight = function (spectrum, detail) {
       var newValue = SliderModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
       fireChange(spectrum, newValue, Option.none());
     };
-    
+
 
     return {
       setXFromEvent: setXFromEvent,

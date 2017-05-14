@@ -65,7 +65,7 @@ define(
 
     var generateFrom = function (spec, all) {
       return BehaviourBlob.generateFrom(spec, all);
-    }
+    };
 
     var generate = function (spec) {
       var custom = Objects.readOptFrom(spec, 'customBehaviours').getOr([ ]);

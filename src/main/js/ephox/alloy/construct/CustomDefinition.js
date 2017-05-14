@@ -75,7 +75,7 @@ define(
         domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
 
-      return DomDefinition.nu(Merger.deepMerge(base, 
+      return DomDefinition.nu(Merger.deepMerge(base,
         info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
         info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
       ));

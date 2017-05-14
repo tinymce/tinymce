@@ -30,7 +30,7 @@ define(
           Fields.tieredMenuMarkers(),
           Fields.members([ 'menu', 'item' ])
         ],
-        'menu', 
+        'menu',
         function (detail) {
           return {
             onExecute: detail.onExecute()

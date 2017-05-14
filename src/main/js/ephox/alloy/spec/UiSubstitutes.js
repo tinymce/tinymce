@@ -30,7 +30,7 @@ define(
       if (owner.exists(function (o) { return o !== compSpec.owner; })) return adt.single(true, Fun.constant(compSpec));
       // Ignore having to find something for the time being.
       return Objects.readOptFrom(placeholders, compSpec.name).fold(function () {
-        throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' + 
+        throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
           Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + Json.stringify(compSpec, null, 2)
         );
       }, function (newSpec) {
@@ -46,7 +46,7 @@ define(
 
     var substitute = function (owner, detail, compSpec, placeholders) {
       var base = scan(owner, detail, compSpec, placeholders);
-      
+
       return base.fold(
         function (req, valueThunk) {
           var value = valueThunk(detail);

@@ -97,7 +97,7 @@ define(
           revoke: Fun.curry(revokeBehaviour, name),
           config: function (spec) {
             var prepared = ValueSchema.asStructOrDie(name + '-config', configSchema, spec);
-            
+
             return {
               key: name,
               value: {

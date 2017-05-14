@@ -83,7 +83,7 @@ define(
             // If the user has moved something outside the area, and has not come back within
             // 200 ms, then drop
             var delayDrop = DelayedFunction(stop, 200);
-            
+
             var start = function () {
               BlockerUtils.instigate(component, blocker);
             };

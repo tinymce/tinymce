@@ -66,7 +66,7 @@ define(
           return WindowSelection.getFirstRect(win, Selection.exact(x, 0, x, 1)).map(function (rect) {
             Remove.remove(x);
             return rect;
-          });          
+          });
         });
         return optRect.map(function (rawRect) {
           // NOTE: We are going to have to do some interesting things to make inline toolbars not appear over the toolbar.
@@ -107,13 +107,13 @@ define(
         });
 
         var layoutsLtr = function () {
-          return anchorInfo.showAbove() ? 
+          return anchorInfo.showAbove() ?
             [ Layout.northeast, Layout.northwest, Layout.southeast, Layout.southwest, Layout.northmiddle, Layout.southmiddle ] :
             [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.southmiddle, Layout.northmiddle ];
         };
 
         var layoutsRtl = function () {
-          return anchorInfo.showAbove() ? 
+          return anchorInfo.showAbove() ?
             [ Layout.northwest, Layout.northeast, Layout.southwest, Layout.southeast, Layout.northmiddle, Layout.southmiddle ] :
             [ Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.southmiddle, Layout.northmiddle ];
         };

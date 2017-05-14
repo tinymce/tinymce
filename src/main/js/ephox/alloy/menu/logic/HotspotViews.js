@@ -20,7 +20,7 @@ define(
       return Option.some(true);
     };
 
-    
+
 
     return {
       onEscape: onEscape

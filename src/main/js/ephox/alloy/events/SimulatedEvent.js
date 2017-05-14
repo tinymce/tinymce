@@ -16,7 +16,7 @@ define(
       var stop = function () {
         stopper.set(true);
       };
-      
+
       var cut = function () {
         cutter.set(true);
       };

@@ -26,7 +26,7 @@ define(
               var raw = simulatedEvent.event().raw();
               TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
                 TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
-                  if (raw.propertyName = rInfo.transition()) {
+                  if (raw.propertyName === rInfo.transition()) {
                     TransitionApis.jumpTo(component, transConfig, transState, route.destination());
                     transConfig.onTransition()(component, route);
                   }

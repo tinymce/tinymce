@@ -2,16 +2,17 @@ define(
   'ephox.alloy.positioning.layout.Boxes',
 
   [
-    'ephox.alloy.positioning.layout.Bounds',
     'ephox.alloy.frame.OuterPosition',
+    'ephox.alloy.positioning.layout.Bounds',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Scroll',
     'ephox.sugar.api.view.Width',
     'global!document',
     'global!window'
   ],
 
-  function (Bounds, OuterPosition, Element, Scroll, Width, document, window) {
+  function (OuterPosition, Bounds, Element, Height, Scroll, Width, document, window) {
     // NOTE: We used to use AriaFocus.preserve here, but there is no reason to do that now that
     // we are not changing the visibility of the element. Hopefully (2015-09-29).
     var absolute = function (element) {

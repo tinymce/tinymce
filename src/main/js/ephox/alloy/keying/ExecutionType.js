@@ -26,7 +26,7 @@ define(
     var execute = function (component, simulatedEvent, executeConfig, executeState) {
       return executeConfig.execute()(component, simulatedEvent, component.element());
     };
-    
+
     var getRules = function (component, simulatedEvent, executeConfig, executeState) {
       var spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
       var enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
@@ -34,7 +34,7 @@ define(
       var execKeys = spaceExec.concat(enterExec).concat(downExec);
 
       return [
-        KeyRules.rule( KeyMatch.inSet(execKeys), execute)
+        KeyRules.rule(KeyMatch.inSet(execKeys), execute)
       ];
     };
 

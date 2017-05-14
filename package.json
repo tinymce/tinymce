@@ -15,6 +15,7 @@
     "@ephox/bolt": "^1.8.1",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
     "grunt-exec": "^2.0.0",
     "grunt-parallel": "^0.5.1",
     "load-grunt-tasks": "^3.5.2"

@@ -1,6 +1,6 @@
 asynctest(
   'FieldsTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -17,7 +17,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun'
   ],
- 
+
   function (
     ApproxStructure, Assertions, Step, Representing, GuiFactory, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, RepresentPipes, GuiSetup,
     Fun

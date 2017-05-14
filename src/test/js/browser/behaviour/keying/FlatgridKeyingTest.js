@@ -1,6 +1,6 @@
 asynctest(
   'Flat Grid Keying Test',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
@@ -17,7 +17,7 @@ asynctest(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr'
   ],
- 
+
   function (FocusTools, Keyboard, Keys, Step, GuiFactory, Behaviour, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -96,17 +96,17 @@ asynctest(
           };
         })
       );
-      
+
       return [
         GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
         Step.sync(function () {
           Keying.setGridSize(component, 4, 6);
-        }),         
+        }),
         NavigationUtils.sequence(
           doc,
           Keys.down(),
-          {},
+          { },
           [
             targets.s17,
             targets.s21,
@@ -120,7 +120,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.left(),
-          {  },
+          { },
           [
             targets.s02,
             targets.s01,
@@ -136,7 +136,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.up(),
-          {  },
+          { },
           [
             targets.s21,
             targets.s15,
@@ -152,7 +152,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.right(),
-          {  },
+          { },
           [
             targets.s19,
             targets.s20,
@@ -166,7 +166,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.left(),
-          {  },
+          { },
           [
             targets.s20,
             targets.s19,

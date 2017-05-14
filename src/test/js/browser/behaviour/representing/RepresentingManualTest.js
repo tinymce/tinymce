@@ -1,6 +1,6 @@
 asynctest(
   'RepresentingTest (mode: manual)',
- 
+
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
@@ -9,7 +9,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.properties.Html'
   ],
- 
+
   function (Behaviour, Representing, GuiFactory, RepresentPipes, GuiSetup, Html) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -42,9 +42,9 @@ asynctest(
       return [
         store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)' ]),
         RepresentPipes.sAssertValue('Checking initial value', 'init-value', component),
-        store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue' ]),     
+        store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue' ]),
         RepresentPipes.sSetValue(component, 'new-value'),
-        store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue', 'setValue(new-value)' ]),  
+        store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue', 'setValue(new-value)' ]),
         RepresentPipes.sAssertValue('Checking 2nd value', 'new-value', component)
       ];
     }, function () { success(); }, failure);

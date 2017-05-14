@@ -2,7 +2,7 @@ define(
   'ephox.alloy.spec.CustomSpec',
 
   [
-    
+
   ],
 
   function () {

@@ -82,11 +82,10 @@ define(
     };
 
     var base = function (label, partSchemas, spec) {
-      var ps = partSchemas.length > 0 ? 
-        [
-          FieldSchema.strictObjOf('parts', partSchemas),
-          getPartUidsSchema(label, spec)
-        ] : [ ];
+      var ps = partSchemas.length > 0 ? [
+        FieldSchema.strictObjOf('parts', partSchemas),
+        getPartUidsSchema(label, spec)
+      ] : [ ];
 
       return ps.concat([
         FieldSchema.strict('uid'),
@@ -119,7 +118,7 @@ define(
       return Merger.deepMerge(original, behaviours);
     };
 
-    
+
     return {
       asRawOrDie: asRawOrDie,
       asStructOrDie: asStructOrDie,

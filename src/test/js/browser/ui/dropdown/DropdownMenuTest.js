@@ -1,6 +1,6 @@
 asynctest(
   'DropdownMenuTest',
- 
+
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
@@ -28,7 +28,7 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
- 
+
   function (
     Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Focusing, Keying, Positioning, GuiFactory, Memento,
     Container, Dropdown, TieredMenu, TestDropdownMenu, GuiSetup, NavigationUtils, Arr, Future, Result
@@ -64,7 +64,7 @@ asynctest(
         containerBehaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',
-            selector: 'span'  
+            selector: 'span'
           })
         ]),
         components: Arr.map([
@@ -121,7 +121,7 @@ asynctest(
           'packages': 'packages-menu',
           'sortby': 'sortby-menu',
           'strings': 'strings-menu',
-          'numbers': 'numbers-menu' 
+          'numbers': 'numbers-menu'
         }
       };
 
@@ -133,7 +133,7 @@ asynctest(
             tag: 'div',
             innerHtml: '+',
             classes: 'dropdown-button'
-          }, 
+          },
 
           toggleClass: 'alloy-selected',
 
@@ -165,7 +165,7 @@ asynctest(
       gui.add(
         GuiFactory.build(sink.asSpec())
       );
-      
+
       var focusables = {
         toolsMenu: { label: 'tools-menu', selector: '.menu[aria-label="Tools Menu"]' },
         packagesMenu: { label: 'packages-menu', selector: '.menu[aria-label="Packages Menu"]' },
@@ -212,7 +212,7 @@ asynctest(
         );
 
         return Logger.t(
-          label, 
+          label,
           GeneralSteps.sequence([
             Step.sync(function () {
               Assertions.assertEq('Checking all menus are considered', 5, active.concat(background).concat(others).length);
@@ -238,7 +238,7 @@ asynctest(
           'Initially',
           [ ],
           focusables.button,
-          [ ], [ ], [ 
+          [ ], [ ], [
             focusables.toolsMenu,
             focusables.packagesMenu,
             focusables.sortbyMenu,
@@ -259,7 +259,7 @@ asynctest(
           'After open',
           [ ],
           focusables.packages,
-          [ focusables.toolsMenu ], [ ], [ 
+          [ focusables.toolsMenu ], [ ], [
             focusables.packagesMenu,
             focusables.sortbyMenu,
             focusables.stringsMenu,
@@ -273,7 +273,7 @@ asynctest(
           'After expand packages menu',
           [ ],
           focusables.sortby,
-          [ focusables.packagesMenu ], [ focusables.toolsMenu ], [ 
+          [ focusables.packagesMenu ], [ focusables.toolsMenu ], [
             focusables.sortbyMenu,
             focusables.stringsMenu,
             focusables.numbersMenu
@@ -300,7 +300,7 @@ asynctest(
           'After expanding packages menu with right arrow',
           [ ],
           focusables.sortby,
-          [ focusables.packagesMenu ], [ focusables.toolsMenu ], [ 
+          [ focusables.packagesMenu ], [ focusables.toolsMenu ], [
             focusables.sortbyMenu,
             focusables.stringsMenu,
             focusables.numbersMenu
@@ -313,7 +313,7 @@ asynctest(
           'After expanding sortby menu with space arrow',
           [ ],
           focusables.strings,
-          [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [ 
+          [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [
             focusables.stringsMenu,
             focusables.numbersMenu
           ]
@@ -325,32 +325,32 @@ asynctest(
           'After pressing down in sortby menu',
           [ ],
           focusables.numbers,
-          [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [ 
+          [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [
             focusables.stringsMenu,
             focusables.numbersMenu
           ]
         ),
 
-        // Pressing escape should focus sortby 
+        // Pressing escape should focus sortby
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         sTestMenus(
           'After pressing down in sortby menu',
           [ ],
           focusables.sortby,
-          [ focusables.packagesMenu ], [ focusables.toolsMenu ], [ 
+          [ focusables.packagesMenu ], [ focusables.toolsMenu ], [
             focusables.sortbyMenu,
             focusables.stringsMenu,
             focusables.numbersMenu
           ]
         ),
-       
+
         // Pressing right should open up sortby menu
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sTestMenus(
           'After pressing right again after Escape',
           [ ],
           focusables.strings,
-          [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [ 
+          [ focusables.sortbyMenu ], [ focusables.toolsMenu, focusables.packagesMenu ], [
             focusables.stringsMenu,
             focusables.numbersMenu
           ]
@@ -363,7 +363,7 @@ asynctest(
           'After pressing right again after Escape',
           [ ],
           focusables.doubled,
-          [ focusables.numbersMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [ 
+          [ focusables.numbersMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [
             focusables.stringsMenu
           ]
         ),
@@ -374,7 +374,7 @@ asynctest(
           'After pressing enter on last level',
           [ 'dropdown.menu.execute: doubled' ],
           focusables.doubled,
-          [ focusables.numbersMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [ 
+          [ focusables.numbersMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [
             focusables.stringsMenu
           ]
         ),
@@ -385,7 +385,7 @@ asynctest(
           'After hovering on "strings"',
           [ ],
           focusables.versions,
-          [ focusables.stringsMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [ 
+          [ focusables.stringsMenu ], [ focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu ], [
             focusables.numbersMenu
           ]
         ),

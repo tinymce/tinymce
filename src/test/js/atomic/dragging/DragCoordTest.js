@@ -44,7 +44,7 @@ test(
         var o = original.nu(coord.left(), coord.top());
 
         var label = [ original.mode ].concat(Arr.map(transformations, function (t) { return t.mode; }));
-        
+
         var result = Arr.foldl(transformations, function (b, transformation) {
           var pt = transformation.asPoint(b, scroll, origin);
           return transformation.nu(pt.left(), pt.top());

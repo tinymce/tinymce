@@ -12,7 +12,7 @@ define(
         purpose: Fun.constant(purpose)
       };
     };
-    
+
     var curryArgs = function (descHandler, extraArgs) {
       return {
         handler: Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
@@ -28,6 +28,6 @@ define(
       nu: nu,
       curryArgs: curryArgs,
       getHandler: getHandler
-    }
+    };
   }
 );

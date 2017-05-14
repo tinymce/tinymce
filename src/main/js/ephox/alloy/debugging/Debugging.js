@@ -28,7 +28,7 @@ define(
     var path = [
       'alloy/data/Fields',
       'alloy/debugging/Debugging'
-    ]
+    ];
 
     var getTrace = function () {
       if (debugging === false) return unknown;
@@ -44,7 +44,7 @@ define(
     };
 
     var logHandler = function (label, handlerName, trace) {
-      if (debugging && false) console.log(label + ' [' + handlerName + ']', trace);
+      if (debugging) console.log(label + ' [' + handlerName + ']', trace);
     };
 
     var ignoreEvent = {
@@ -59,7 +59,7 @@ define(
     var monitorEvent = function (eventName, initialTarget, f) {
       var logger = debugging && Arr.contains(eventsMonitored, eventName) ? (function () {
         var sequence = [ ];
-        
+
         return {
           logEventCut: function (name, target, purpose) {
             sequence.push({ outcome: 'cut', target: target, purpose: purpose });
@@ -98,7 +98,7 @@ define(
     var inspectorInfo = function (comp) {
       var go = function (c) {
         var cSpec = c.spec();
-      
+
         return {
           '(original.spec)': cSpec,
           '(dom.ref)': c.element().dom(),

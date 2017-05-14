@@ -26,11 +26,11 @@ define(
 
     /*
 
-  
 
-     Relationships: 
+
+     Relationships:
        - location -> absolute: should just need to subtract the position of the offset parent (origin)
-       - location -> fixed: subtract the scrolling 
+       - location -> fixed: subtract the scrolling
        - absolute -> fixed: add the origin, and subtract the scrolling
        - absolute -> location: add the origin
        - fixed -> absolute: add the scrolling, remove the origin
@@ -62,7 +62,7 @@ define(
 
       var fixedCoord = DragCoord.asFixed(newCoord, scroll, origin);
       Presnaps.set(component, snapInfo, fixedCoord);
-     
+
       return snap.fold(function () {
         return {
           coord: DragCoord.fixed(fixedCoord.left(), fixedCoord.top()),
@@ -106,9 +106,9 @@ define(
     };
 
     /*
-     Steps: 
+     Steps:
        1. calculate the absolute position of the element based on either its presnap position or its current position. Presnap is fixed so it needs to be converted.
-       2. get the scroll and size of the stage (we can ignore) to find the snapping container. The winning snapping container will have position, x, and y. It will 
+       2. get the scroll and size of the stage (we can ignore) to find the snapping container. The winning snapping container will have position, x, and y. It will
        have sensor values, and then snapping values. Sensors will be used to determine if the snap has been activated, and snapping values will say where to put it.
        3. regardless of whether or not we have found a suitable snapping location, store the presnap position as 'fixed' (probably for Transitions because it uses it also),
        as the result of graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height); We need to use fixed anyway unless the snapping is absolute,

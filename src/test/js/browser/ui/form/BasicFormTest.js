@@ -1,6 +1,6 @@
 asynctest(
   'Basic Form',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -16,7 +16,7 @@ asynctest(
     'ephox.alloy.test.form.TestForm',
     'ephox.katamari.api.Fun'
   ],
- 
+
   function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

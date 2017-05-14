@@ -28,7 +28,7 @@ define(
     };
 
     return [
-      FieldSchema.option('initialValue'),      
+      FieldSchema.option('initialValue'),
       Fields.output('manager', {
         setValue: setValue,
         getValue: getValue,

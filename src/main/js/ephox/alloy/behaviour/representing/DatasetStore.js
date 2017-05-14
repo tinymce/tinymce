@@ -11,7 +11,8 @@ define(
 
   function (RepresentState, Fields, FieldSchema, Objects, Fun) {
     var setValue = function (component, repConfig, repState, data) {
-      var dataKey = repConfig.store().getDataKey()
+      // TODO: Really rethink this mode.
+      var dataKey = repConfig.store().getDataKey();
       repState.set({ });
       repConfig.store().setData()(component, data);
       repConfig.onSetValue()(component, data);

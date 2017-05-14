@@ -10,7 +10,7 @@ define(
 
   function (FieldSchema, Cell, Fun, PlatformDetection) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
-    
+
     return [
       FieldSchema.strict('min'),
       FieldSchema.strict('max'),
@@ -20,7 +20,7 @@ define(
       FieldSchema.defaulted('snapToGrid', false),
       FieldSchema.option('snapStart'),
       FieldSchema.strict('getInitialValue'),
-      
+
       FieldSchema.state('value', function (spec) { return Cell(spec.min); })
     ].concat(! isTouch ? [
       // Only add if not on a touch device

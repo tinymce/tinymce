@@ -45,14 +45,14 @@ define(
     var describe = function (item, description) {
       var doc = Traverse.owner(item);
       var token = create(doc, description);
-      
+
       // We may not be able to get rid of them, so we'll make them display: none;
       Css.set(token, 'display', 'none');
       Attr.set(token, 'aria-hidden', 'true'); // aria-hidden needs to be in sync with dom visibility
       // Although described-by does not appear to work in IE10, we are currently only supporting JAWS in Firefox (and IE11),
       // and this does work for those browsers.
       linkToDescription(item, token);
-      
+
       return token;
     };
 

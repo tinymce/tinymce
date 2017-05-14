@@ -67,16 +67,16 @@ define(
       // We don't futz with the width.
 
       var reposition = Reposition.decision({
-          x: limitX,
-          y: limitY,
-          width: deltaW,
-          height: deltaH,
-          maxHeight: maxHeight,
-          direction: candidate.direction(),
-          classes: candidate.anchors(),
-          label: candidate.label(),
-          candidateYforTest: newY
-        });
+        x: limitX,
+        y: limitY,
+        width: deltaW,
+        height: deltaH,
+        maxHeight: maxHeight,
+        direction: candidate.direction(),
+        classes: candidate.anchors(),
+        label: candidate.label(),
+        candidateYforTest: newY
+      });
 
       // Take special note that we don't use the futz values in the nofit case; whether this position is a good fit is separate
       // to ensuring that if we choose it the popup is actually on screen properly.

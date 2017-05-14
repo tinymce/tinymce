@@ -1,6 +1,6 @@
 asynctest(
   'ReceivingTest',
- 
+
   [
     'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.Behaviour',
@@ -12,7 +12,7 @@ asynctest(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema'
   ],
- 
+
   function (Step, Behaviour, Keying, Receiving, GuiFactory, Container, GuiSetup, FieldSchema, ValueSchema) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -42,7 +42,7 @@ asynctest(
             })
           ]),
           components: [
-            
+
           ]
         })
       );
@@ -63,7 +63,7 @@ asynctest(
         store.sAssertEq('After broadcast to all', [ 'received: 2' ])
       ];
     }, function () { success(); }, failure);
- 
+
 
   }
 );

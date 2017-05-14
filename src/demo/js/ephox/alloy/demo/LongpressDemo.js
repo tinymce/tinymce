@@ -2,46 +2,23 @@ define(
   'ephox.alloy.demo.LongpressDemo',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.behaviour.Positioning',
-    'ephox.alloy.api.behaviour.Sliding',
-    'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.behaviour.Transitioning',
-    'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.component.Memento',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
-    'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.TouchMenu',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.debugging.Debugging',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.alloy.positioning.layout.Layout',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.view.Width',
+    'global!console',
     'global!document'
   ],
 
-  function (
-    Behaviour, Highlighting, Positioning, Sliding, Toggling, Transitioning, Unselecting, GuiFactory, Memento, SystemEvents, Attachment, Gui, InlineView, Menu,
-    TieredMenu, TouchMenu, EventHandler, Debugging, DemoSink, HtmlDisplay, Layout, Fun, Future, Option, Result, Focus, Element, Node, Class, Height, Location,
-    Width, document
-  ) {
+  function (GuiFactory, Attachment, Gui, Menu, TouchMenu, Debugging, DemoSink, HtmlDisplay, Future, Result, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       Debugging.registerInspector('gui', gui);
@@ -54,7 +31,7 @@ define(
 
       var orbMenuPart = {
         dom: {
-          tag: 'div',
+          tag: 'div'
           // styles: { display: 'flex' }
         },
         components: [
@@ -66,7 +43,7 @@ define(
           selectedItem: 'alloy-selected-orb'
         },
         members: {
-          item: { 
+          item: {
             munge: function (itemSpec) {
               return {
                 dom: {
@@ -88,13 +65,13 @@ define(
                     }
                   }
                 ]
-              };              
+              };
             }
           }
         }
       };
-     
-      
+
+
       var button1 = HtmlDisplay.section(
         gui,
         'Run this in touch device mode. It is a button that if you press and hold on it, it opens a circular menu below.',
@@ -112,7 +89,7 @@ define(
                 classes: [ 'tap-menu' ]
               },
               lazySink: function () {
-                return Result.value(sink)
+                return Result.value(sink);
               },
               fetch: function () {
                 return Future.pure([
@@ -131,7 +108,7 @@ define(
               },
 
               toggleClass: 'selected',
-              parts: { 
+              parts: {
                 view: {
                   dom: {
                     tag: 'div'

@@ -18,7 +18,7 @@ define(
       // Until then, we'll just use AriaFocus like redesigning does.
       AriaFocus.preserve(function () {
         var children = Arr.map(data, component.getSystem().build);
-        
+
         Arr.each(children, function (l) {
           Attachment.attach(component, l);
         });

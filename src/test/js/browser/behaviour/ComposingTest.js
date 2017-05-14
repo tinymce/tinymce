@@ -59,7 +59,7 @@ asynctest(
             Assertions.assertStructure(
               'Checking delegate structure',
               ApproxStructure.build(function (s, str, arr) {
-                return s.element('span', { html: str.is('inner') })
+                return s.element('span', { html: str.is('inner') });
               }),
               delegate.element()
             );

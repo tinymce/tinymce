@@ -26,7 +26,7 @@ define(
     // TODO: Make more functional if performance isn't an issue.
 
     var schemas = function (parts) {
-     
+
       return Arr.map(parts, function (part) {
         return part.fold(
           function (factory, schema, name, pname, defaults, overrides) {
@@ -140,7 +140,7 @@ define(
             ps[pname] = UiSubstitutes.single(false, function (detail) {
               return factory.sketch(
                 combine(name, detail, defaults, detail.parts()[name]().getOrDie(
-                  'Included optional part: ' + name + ' but has no part information'  
+                  'Included optional part: ' + name + ' but has no part information'
                 )[original](), overrides)
               );
             });
@@ -171,7 +171,7 @@ define(
     };
 
     var components = function (owner, detail, parts) {
-      var ps = placeholders(owner, detail, parts);      
+      var ps = placeholders(owner, detail, parts);
       return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), ps);
     };
 

@@ -67,7 +67,7 @@ define(
             Slider.parts().spectrum(),
             Slider.parts().thumb()
           ]
-        })        
+        })
       );
 
       var slider2 = HtmlDisplay.section(
@@ -92,7 +92,7 @@ define(
                   height: '25px',
                   'border': '1px solid green',
                   background: 'transparent',
-                   display: 'flex', 'align-items': 'center', 'justify-content': 'center'
+                  display: 'flex', 'align-items': 'center', 'justify-content': 'center'
                 }
               },
               behaviours: Behaviour.derive([
@@ -227,7 +227,7 @@ define(
             }),
             Slider.parts().thumb()
           ]
-        })        
+        })
       );
 
       DomEvent.bind(body, 'click', function () {

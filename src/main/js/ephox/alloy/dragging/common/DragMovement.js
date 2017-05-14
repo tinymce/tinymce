@@ -18,7 +18,7 @@ define(
           return Css.getRaw(target, 'position').map(function (position) {
             var nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
             return nu(
-              parseInt(left, 10), 
+              parseInt(left, 10),
               parseInt(top, 10)
             );
           });
@@ -47,10 +47,10 @@ define(
     var dragBy = function (component, dragConfig, delta) {
       var doc = Traverse.owner(component.element());
       var scroll = Scroll.get(doc);
-      
+
       var target = dragConfig.getTarget()(component.element());
       var origin = OffsetOrigin.getOrigin(target, scroll);
-      
+
       var currentCoord = getCurrentCoord(target);
 
       var newCoord = calcNewCoord(component, dragConfig.snaps(), currentCoord, scroll, origin, delta);

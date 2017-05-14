@@ -1,6 +1,6 @@
 asynctest(
   'StreamingTest',
- 
+
   [
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Mouse',
@@ -12,7 +12,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (GeneralSteps, Mouse, Step, GuiFactory, Behaviour, Streaming, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -25,7 +25,7 @@ asynctest(
           },
           containerBehaviours: Behaviour.derive([
             Streaming.config({
-               stream: {
+              stream: {
                 mode: 'throttle',
                 delay: 500
               },
@@ -48,7 +48,7 @@ asynctest(
 
         Step.wait(500),
         store.sAssertEq('Should have only fired one event', [ 'onStream' ]),
-        
+
         GeneralSteps.sequenceRepeat(
           5,
           GeneralSteps.sequence([

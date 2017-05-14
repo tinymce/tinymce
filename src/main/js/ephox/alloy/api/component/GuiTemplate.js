@@ -52,7 +52,7 @@ define(
             Arr.flatten([
               [ { key: 'tag', value: Node.name(elem) } ],
               Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
-              classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]            
+              classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
             ])
           ),
           components: components
@@ -75,7 +75,7 @@ define(
           Arr.flatten([
             [ { key: 'tag', value: Node.name(elem) } ],
             Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
-            classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]            
+            classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
           ])
         ),
         components: components

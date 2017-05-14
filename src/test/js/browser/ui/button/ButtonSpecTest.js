@@ -1,6 +1,6 @@
 asynctest(
   'ButtonSpecTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -19,7 +19,7 @@ asynctest(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.test.GuiSetup'
   ],
- 
+
   function (ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, Button, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -56,7 +56,7 @@ asynctest(
           component.element()
         );
       });
-      
+
       var testButtonClick = Logger.t(
         'testing button click',
         GeneralSteps.sequence([
@@ -122,6 +122,6 @@ asynctest(
         testExecuting
       ];
     }, success, failure);
- 
+
   }
 );

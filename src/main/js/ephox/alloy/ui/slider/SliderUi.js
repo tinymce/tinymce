@@ -48,7 +48,7 @@ define(
           });
         } else {
           // position along the slider
-          return (detail.value().get() - detail.min())/range * spectrumBounds.width;
+          return (detail.value().get() - detail.min()) / range * spectrumBounds.width;
         }
       };
 

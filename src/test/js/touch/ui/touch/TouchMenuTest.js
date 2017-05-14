@@ -37,7 +37,7 @@ asynctest(
         components: [
           Menu.parts().items()
         ],
-        
+
         markers: {
           'item': 'test-item',
           selectedItem: 'test-selected-item'
@@ -85,7 +85,7 @@ asynctest(
             TouchMenu.parts().sink()
           ],
 
-          parts: { 
+          parts: {
             menu: menuPart,
             view: viewPart,
             sink: {
@@ -137,12 +137,11 @@ asynctest(
           UiFinder.cFindIn(selector),
           Chain.op(function (target) {
             var rect = target.dom().getBoundingClientRect();
-            console.log('rect', rect);
             SystemEvents.trigger(component, NativeEvents.touchmove(), {
               target: container,
               raw: {
                 touches: [
-                  { clientX: rect.left + rect.width/2, clientY: rect.top + rect.height/2 }
+                  { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 }
                 ]
               }
             });
@@ -154,7 +153,7 @@ asynctest(
         return Logger.t(label, Chain.asStep(gui.element(), [
           UiFinder.cFindIn('[role=menu]'),
           Chain.op(function (menu) {
-            Assertions.assertStructure('Checking menu strucuture', structure, menu)
+            Assertions.assertStructure('Checking menu strucuture', structure, menu);
           })
         ]));
       };
@@ -185,11 +184,11 @@ asynctest(
           store.assertEq('Checking no messages', [ ]);
           var rect = component.element().dom().getBoundingClientRect();
           fireTouchstart(component.element(), rect.x, rect.y);
-          Step.wait(300),
+          Step.wait(300);
           fireLongpress(component.element());
           Assertions.assertEq('Checking selected class should now be on', true, Class.has(component.element(), 'touch-menu-open'));
         }),
-        
+
         Waiter.sTryUntil(
           'Waiting until menu appears',
           UiFinder.sExists(gui.element(), '[role=menu]'),
@@ -197,7 +196,7 @@ asynctest(
           1000
         ),
         store.sAssertEq('Hover on should be fired immediately after longpress menu appears', [ 'onHoverOn' ]),
-          
+
         sFireTouchmoveOn(component, '[role="menu"] [data-value="dog"]'),
         sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
@@ -270,7 +269,7 @@ asynctest(
             });
           })
         )
-      ]
+      ];
     }, success, failure);
   }
 );

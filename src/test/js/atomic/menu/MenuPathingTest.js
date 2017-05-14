@@ -8,7 +8,8 @@ test(
   ],
 
   function (RawAssertions, MenuPathing, Jsc) {
-    var actual = MenuPathing.generate({ }, { });    
+    /* global assert */
+    var actual = MenuPathing.generate({ }, { });
     assert.eq({ }, actual);
 
     var check = function (label, expected, menus, expansions) {

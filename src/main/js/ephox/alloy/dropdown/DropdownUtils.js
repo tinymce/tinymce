@@ -28,7 +28,7 @@ define(
     ComponentStructure, Behaviour, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, InternalSink, Tagger, Dismissal, Fun, Future,
     Merger, Option, Result, Remove, Width, Error
   ) {
-    
+
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
       return fetcher(component);
@@ -169,7 +169,7 @@ define(
         events: { }
       };
     };
-    
+
 
     return {
       makeSandbox: makeSandbox,

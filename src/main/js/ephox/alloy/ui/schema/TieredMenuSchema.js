@@ -22,7 +22,7 @@ define(
         FieldSchema.strict('menus'),
         FieldSchema.strict('expansions')
       ]),
-    
+
       FieldSchema.defaulted('fakeFocus', false),
       Fields.onHandler('onHighlight'),
       Fields.onHandler('onHover'),

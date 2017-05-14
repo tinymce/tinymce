@@ -29,7 +29,7 @@ define(
           return {
             transition: Fun.constant(t),
             route: Fun.constant(r)
-          }
+          };
         });
       });
     };
@@ -71,7 +71,7 @@ define(
         Attr.set(comp.element(), transConfig.stateAttr(), Attr.get(comp.element(), transConfig.destinationAttr()));
         Attr.remove(comp.element(), transConfig.destinationAttr());
       }
-    }
+    };
 
     var progressTo = function (comp, transConfig, transState, destination) {
       fasttrack(comp, transConfig, transState, destination);

@@ -1,6 +1,6 @@
 asynctest(
   'RepresentingTest (mode: dataset)',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -13,7 +13,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.properties.Value'
   ],
- 
+
   function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Behaviour, Representing, Container, GuiSetup, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

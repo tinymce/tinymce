@@ -24,7 +24,7 @@ define(
     var events = function (unselectConfig) {
       return {
         selectstart: EventHandler.nu({
-          run: function (component, simulatedEvent) {          
+          run: function (component, simulatedEvent) {
             simulatedEvent.event().kill();
             simulatedEvent.stop();
           }

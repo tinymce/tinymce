@@ -30,12 +30,12 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
 
-      var list =  HtmlDisplay.section(
+      var list = HtmlDisplay.section(
         gui,
         'This list will change after three seconds (when the square is added to the page)',
         Container.sketch({
           dom: {
-            tag: 'ol' 
+            tag: 'ol'
           },
           components: [
             {
@@ -91,7 +91,7 @@ define(
                       tag: 'li',
                       innerHtml: 'The square has been added to the system: ' + new Date().getSeconds()
                     }
-                  })
+                  });
                 }
               }
             })

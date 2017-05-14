@@ -1,6 +1,6 @@
 asynctest(
   'HotspotPositionTest',
- 
+
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
@@ -14,7 +14,7 @@ asynctest(
     'global!Error',
     'global!setTimeout'
   ],
- 
+
   function (Chain, NamedChain, GuiFactory, Button, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -77,7 +77,7 @@ asynctest(
         ])
       ];
     }, function () { success(); }, failure);
- 
+
 
   }
 );

@@ -54,12 +54,12 @@ define(
     };
 
     var getRules = Fun.constant([
-      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.move(moveUp)),
-      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.move(moveDown)),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), fireTab),
-      KeyRules.rule( KeyMatch.inSet( Keys.ENTER() ), execute),
-      KeyRules.rule( KeyMatch.inSet( Keys.SPACE() ), execute)
+      KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.move(moveUp)),
+      KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.move(moveDown)),
+      KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
+      KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), fireTab),
+      KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
+      KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
     ]);
 
     var getEvents = Fun.constant({ });

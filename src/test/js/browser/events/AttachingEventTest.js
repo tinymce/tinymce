@@ -87,7 +87,7 @@ asynctest(
               })
             }
           ])
-        
+
 
         })
       ]
@@ -97,7 +97,7 @@ asynctest(
       Step.sync(function () {
         RawAssertions.assertEq(
           'Checking that the component has no size',
-          0, 
+          0,
           wrapper.element().dom().getBoundingClientRect().width
         );
       }),
@@ -114,7 +114,7 @@ asynctest(
       Step.sync(function () {
         RawAssertions.assertEq(
           'Even though added to system, not added to DOM yet so still size 0',
-          0, 
+          0,
           wrapper.element().dom().getBoundingClientRect().width
         );
       }),
@@ -128,7 +128,7 @@ asynctest(
       Step.sync(function () {
         RawAssertions.assertEq(
           'Now added to the DOM, so should have size 100',
-          100, 
+          100,
           wrapper.element().dom().getBoundingClientRect().width
         );
       }),

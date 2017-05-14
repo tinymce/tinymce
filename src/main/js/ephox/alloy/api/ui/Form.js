@@ -60,7 +60,7 @@ define(
         placeholders
       );
 
-    
+
       return make(detail, components, spec);
     };
 

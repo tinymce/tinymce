@@ -23,7 +23,7 @@ define(
       // focus model.
       focus: Fun.constant('alloy.focus'),
 
-      // This event is fired a small amount of time after the blur has fired. This 
+      // This event is fired a small amount of time after the blur has fired. This
       // allows the handler to know what was the focused element, and what is now.
       postBlur: Fun.constant('alloy.blur.post'),
 

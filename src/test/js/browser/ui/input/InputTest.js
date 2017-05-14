@@ -1,6 +1,6 @@
 asynctest(
   'InputTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.sand.api.PlatformDetection'
   ],
- 
+
   function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Focusing, Representing, Input, GuiSetup, PlatformDetection) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -51,12 +51,12 @@ asynctest(
       var sCheckInputSelection = function (label, expected) {
         return Step.sync(function () {
           Assertions.assertEq(
-            label + '\nChecking selectionStart', 
+            label + '\nChecking selectionStart',
             expected.start,
             component.element().dom().selectionStart
           );
           Assertions.assertEq(
-            label + '\nChecking selectionEnd', 
+            label + '\nChecking selectionEnd',
             expected.end,
             component.element().dom().selectionEnd
           );
@@ -109,8 +109,8 @@ asynctest(
         testRepresenting
       ];
     }, success, failure);
- 
- 
+
+
 
   }
 );

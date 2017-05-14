@@ -21,6 +21,6 @@ define(
       name: Fun.constant('InlineView'),
       schema: Fun.constant(schema),
       parts: Fun.constant([ ])
-    }
+    };
   }
 );

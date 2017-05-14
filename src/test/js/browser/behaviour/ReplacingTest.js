@@ -1,6 +1,6 @@
 asynctest(
   'ReplacingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (ApproxStructure, Assertions, Logger, RawAssertions, Step, GuiFactory, Behaviour, Replacing, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -87,7 +87,7 @@ asynctest(
         }),
 
         Logger.t(
-          'Repeating adding the same uids to check clearing is working',          
+          'Repeating adding the same uids to check clearing is working',
           Step.sync(function () {
             Replacing.set(component, [
               Container.sketch({ uid: 'first' }),
@@ -113,7 +113,7 @@ asynctest(
 
 
         Logger.t(
-          'Replacing.append to put a new thing at the end.',          
+          'Replacing.append to put a new thing at the end.',
           Step.sync(function () {
             Replacing.append(component, Container.sketch({ dom: { tag: 'span' } }));
           })

@@ -25,7 +25,7 @@ define(
         ])
       );
     };
-    
+
     return {
       exhibit: exhibit,
       events: events

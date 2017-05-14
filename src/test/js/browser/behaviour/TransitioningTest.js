@@ -1,6 +1,6 @@
 asynctest(
   'TransitioningTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup'
   ],
- 
+
   function (ApproxStructure, Assertions, Keyboard, Keys, Step, Waiter, Behaviour, Transitioning, GuiFactory, EventHandler, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

@@ -12,8 +12,8 @@ define(
 
   function (Position, Element, Insert, Location, Remove, Traverse) {
     /*
-     * This returns the position of the offset parent excluding any scroll. That 
-     * means that the absolute coordinates can be obtained by adding the origin 
+     * This returns the position of the offset parent excluding any scroll. That
+     * means that the absolute coordinates can be obtained by adding the origin
      * to the offset coordinates and not needing to know scroll.
      */
     var getOrigin = function (element, scroll) {

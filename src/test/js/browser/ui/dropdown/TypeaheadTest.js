@@ -1,6 +1,6 @@
 asynctest(
   'TypeaheadTest',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
@@ -23,7 +23,7 @@ asynctest(
     'ephox.sugar.api.properties.Value',
     'global!Math'
   ],
- 
+
   function (
     FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, DropdownAssertions, GuiSetup, NavigationUtils, Sinks, TestBroadcasts,
     TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math
@@ -70,7 +70,7 @@ asynctest(
                   return TieredMenu.simpleData('blah', 'Blah', items);
                 });
               },
-              
+
               lazySink: function () { return Result.value(sink); },
 
               parts: {
@@ -106,7 +106,7 @@ asynctest(
 
         // check that the typeahead is not open.
         steps.sWaitForNoMenu('Should be no menu initially'),
-        
+
         Keyboard.sKeydown(doc, Keys.down(), { }),
         steps.sAssertFocusOnTypeahead('Focus stays on typeahead after pressing Down'),
         steps.sWaitForMenu('Down to activate menu'),
@@ -141,7 +141,7 @@ asynctest(
         steps.sAssertValue('After pressing ESC', 'new-value1'),
         steps.sAssertFocusOnTypeahead('After pressing ESC'),
         steps.sWaitForNoMenu('After pressing ESC'),
-        
+
         Keyboard.sKeydown(doc, Keys.down(), {}),
         steps.sAssertFocusOnTypeahead('ESC > Down'),
         steps.sWaitForMenu('ESC > Down'),
@@ -173,7 +173,7 @@ asynctest(
         ),
         steps.sWaitForMenu('Broadcasting on item should not dismiss popup'),
 
-         TestBroadcasts.sDismiss(
+        TestBroadcasts.sDismiss(
           'outer gui element: should close',
           gui,
           gui.element()

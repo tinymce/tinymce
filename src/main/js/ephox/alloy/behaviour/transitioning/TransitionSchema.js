@@ -16,7 +16,7 @@ define(
       Fields.onHandler('onTransition'),
       Fields.onHandler('onFinish'),
       FieldSchema.strictOf(
-        'routes', 
+        'routes',
         ValueSchema.setOf(
           Result.value,
           ValueSchema.setOf(

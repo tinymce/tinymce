@@ -10,7 +10,7 @@ define(
   function (Attr, Css, Traverse) {
     var initialAttribute = 'data-initial-z-index';
 
-    // We have to alter the z index of the alloy root of the blocker so that 
+    // We have to alter the z index of the alloy root of the blocker so that
     // it can have a z-index high enough to act as the "blocker". Just before
     // discarding it, we need to reset those z-indices back to what they
     // were. ASSUMPTION: the blocker has been added as a direct child of the root

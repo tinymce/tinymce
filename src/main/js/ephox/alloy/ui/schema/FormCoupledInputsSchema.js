@@ -59,10 +59,10 @@ define(
             customBehaviours: [
               AdhocBehaviour.events('coupled-input-behaviour', {
                 'input': EventHandler.nu({
-                  run: function (self) {
-                    getField(self, detail, otherName).each(function (other) {
-                      getPart(self, detail, 'lock').each(function (lock) {
-                        if (Toggling.isOn(lock)) detail.onLockedChange()(self, other, lock);
+                  run: function (me) {
+                    getField(me, detail, otherName).each(function (other) {
+                      getPart(me, detail, 'lock').each(function (lock) {
+                        if (Toggling.isOn(lock)) detail.onLockedChange()(me, other, lock);
                       });
                     });
                   }
@@ -105,6 +105,6 @@ define(
       name: Fun.constant('CoupledInputs'),
       schema: Fun.constant(schema),
       parts: Fun.constant(partTypes)
-    }
+    };
   }
 );

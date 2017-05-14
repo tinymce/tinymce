@@ -37,20 +37,20 @@ define(
             Highlighting.getHighlighted(menu).fold(function () {
               highlighter(menu);
             }, function () {
-              sandbox.getSystem().triggerEvent('keydown', menu.element(), simulatedEvent.event());  
+              sandbox.getSystem().triggerEvent('keydown', menu.element(), simulatedEvent.event());
             });
           });
         } else {
           DropdownUtils.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
             Composing.getCurrent(sandbox).each(highlighter);
           });
-        } 
+        }
       };
 
       // Due to the fact that typeahead probably need to separate value from text, they can't reuse
       // (easily) the same representing logic as input fields.
       var inputBehaviours = InputBase.behaviours(detail);
-      
+
       var behaviours = Behaviour.derive([
         inputBehaviours.tabstopping,
         Focusing.config({ }),

@@ -12,7 +12,7 @@ define(
       return Behaviour.create({
         fields: [
           FieldSchema.strict('enabled')
-        ], 
+        ],
         name: name,
         active: {
           events: Fun.constant(eventHandlers)

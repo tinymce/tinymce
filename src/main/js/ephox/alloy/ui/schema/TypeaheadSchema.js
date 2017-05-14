@@ -61,7 +61,7 @@ define(
                     Representing.setValue(input, nextValue);
                     input.element().dom().setSelectionRange(currentValue.length, nextValue.text.length);
                   }
-                  
+
                 });
               }
               detail.previewing().set(false);

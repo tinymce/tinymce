@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Element'
+    'ephox.sugar.api.node.Element',
+    'global!console'
   ],
 
-  function (Option, Element) {
+  function (Option, Element, console) {
 
     var iframeDoc = function (element) {
       var dom = element.dom();

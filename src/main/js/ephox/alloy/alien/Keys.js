@@ -28,6 +28,6 @@ define(
       DEL: Fun.constant([46]),
       META: Fun.constant([91, 93, 224]),
       F10: Fun.constant([121])
-    }
+    };
   }
 );

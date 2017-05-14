@@ -1,6 +1,6 @@
 asynctest(
   'TogglingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -13,7 +13,7 @@ asynctest(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup'
   ],
- 
+
   function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Behaviour, Toggling, Container, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

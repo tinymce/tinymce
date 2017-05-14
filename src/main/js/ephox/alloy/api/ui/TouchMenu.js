@@ -84,7 +84,7 @@ define(
               Coupling.config({
                 others: {
                   sandbox: function (hotspot) {
-                    
+
                     return InlineView.sketch(
                       Merger.deepMerge(
                         externals.view(),
@@ -93,7 +93,7 @@ define(
                           inlineBehaviours: Behaviour.derive([
                             AdhocBehaviour.config('execute-for-menu'),
 
-                            // Animation 
+                            // Animation
                             Transitioning.config({
                               initialState: 'closed',
                               destinationAttr: 'data-longpress-destination',
@@ -140,7 +140,7 @@ define(
             ]),
             detail.touchmenuBehaviours()
           ),
-          
+
           events: AlloyEvents.derive([
 
             AlloyEvents.abort(NativeEvents.contextmenu()),
@@ -188,7 +188,7 @@ define(
 
                   // could not find an item, so check the button itself
                   var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(
-                    Fun.constant(hoverOff), 
+                    Fun.constant(hoverOff),
                     Fun.constant(hoverOn)
                   );
                   hoverF(component);
@@ -209,7 +209,7 @@ define(
             // 2. Close the menu
             // 3. Depress the button
             AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
-              
+
               getMenu(component).each(function (iMenu) {
                 Highlighting.getHighlighted(iMenu).each(SystemEvents.triggerExecute);
               });

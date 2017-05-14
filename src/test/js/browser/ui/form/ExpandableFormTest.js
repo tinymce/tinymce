@@ -1,6 +1,6 @@
 asynctest(
   'ExpandableFormTest',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
@@ -27,7 +27,7 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Focus'
   ],
- 
+
   function (
     FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Keying, Tabstopping, GuiFactory, Button, Container, ExpandableForm,
     Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, Fun, Focus
@@ -91,7 +91,7 @@ asynctest(
               field: {
                 selectBehaviours: Behaviour.derive([
                   Tabstopping.config({ })
-                ]),                
+                ]),
                 options: [
                   { value: 'select-b-init', text: 'Select-b-init' },
                   { value: 'select-b-set', text: 'Select-b-set' },
@@ -104,7 +104,7 @@ asynctest(
         }
       };
 
-      var self = GuiFactory.build(
+      var me = GuiFactory.build(
         ExpandableForm.sketch({
           dom: {
             tag: 'div'
@@ -143,7 +143,7 @@ asynctest(
                 innerHtml: 'Shrink!'
               },
               action: function (button) {
-                ExpandableForm.collapseFormImmediately(self);
+                ExpandableForm.collapseFormImmediately(me);
               },
               buttonBehaviours: Behaviour.derive([
                 Tabstopping.config({ })
@@ -172,7 +172,7 @@ asynctest(
         })
       );
 
-      return self;
+      return me;
 
     }, function (doc, body, gui, component, store) {
       var helper = TestForm.helper(component);

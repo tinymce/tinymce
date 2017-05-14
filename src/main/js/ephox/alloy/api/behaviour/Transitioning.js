@@ -12,7 +12,7 @@ define(
 
   function (Behaviour, ActiveTransitioning, TransitionApis, TransitionSchema, Objects, Obj) {
     var createRoutes = function (routes) {
-      var r =  { };
+      var r = { };
       Obj.each(routes, function (v, k) {
         var waypoints = k.split('<->');
         r[waypoints[0]] = Objects.wrap(waypoints[1], v);
