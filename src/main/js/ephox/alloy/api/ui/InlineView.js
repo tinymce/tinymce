@@ -12,10 +12,11 @@ define(
     'ephox.alloy.ui.schema.InlineViewSchema',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Merger'
+    'ephox.katamari.api.Merger',
+    'ephox.sugar.api.properties.Css'
   ],
 
-  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, Fun, Future, Merger) {
+  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, Fun, Future, Merger, Css) {
     var schema = InlineViewSchema.schema();
 
     var make = function (detail, spec) {
@@ -23,30 +24,38 @@ define(
         {
           uid: detail.uid(),
           dom: detail.dom(),
-          behaviours: Behaviour.derive([
-            Sandboxing.config({
-              isPartOf: function (container, data, queryElem) {
-                return ComponentStructure.isPartOf(data, queryElem);
-              },
-              getAttachPoint: function () {
-                return detail.lazySink()().getOrDie();
-              }
-            }),
-            Dismissal.receivingConfig({
-              isExtraPart: Fun.constant(false)
-            })
-          ]),
+          behaviours: Merger.deepMerge(
+            Behaviour.derive([
+              Sandboxing.config({
+                isPartOf: function (container, data, queryElem) {
+                  return ComponentStructure.isPartOf(data, queryElem);
+                },
+                getAttachPoint: function () {
+                  return detail.lazySink()().getOrDie();
+                }
+              }),
+              Dismissal.receivingConfig({
+                isExtraPart: Fun.constant(false)
+              })
+            ]),
+            detail.inlineBehaviours()
+          ),
+          customBehaviours: detail.customBehaviours(),
+          eventOrder: detail.eventOrder(),
 
           apis: {
             showAt: function (sandbox, anchor, thing) {
+              var sink = detail.lazySink()().getOrDie();
+              Sandboxing.cloak(sandbox);
               Sandboxing.open(sandbox, Future.pure(thing)).get(function () {
-                var sink = detail.lazySink()().getOrDie();
                 Positioning.position(sink, anchor, sandbox);
+                Sandboxing.decloak(sandbox);
                 detail.onShow()(sandbox);
               });
             },
             hide: function (sandbox) {
               Sandboxing.close(sandbox);
+              detail.onHide()(sandbox);
             }
           }
         }

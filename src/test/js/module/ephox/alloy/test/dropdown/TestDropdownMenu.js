@@ -30,7 +30,7 @@ define(
           item: {
             munge: function (itemSpec) {
               return itemSpec.type === 'widget' ? {
-                dom: { 
+                dom: {
                   tag: 'li',
                   classes: [ 'item-widget' ]
                 },

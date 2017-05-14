@@ -1,6 +1,6 @@
 asynctest(
   'InlineViewTest',
- 
+
   [
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -21,17 +21,17 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
- 
+
   function (GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, GuiSetup, Sinks, TestBroadcasts, TestDropdownMenu, Future, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return Sinks.relativeSink();
-      
+
 
     }, function (doc, body, gui, component, store) {
-      var inline =  GuiFactory.build(
+      var inline = GuiFactory.build(
         InlineView.sketch({
           dom: {
             tag: 'div',
@@ -47,7 +47,7 @@ asynctest(
 
       var sCheckOpen = function (label) {
         return Logger.t(
-          label, 
+          label,
           Waiter.sTryUntil(
             'Test inline should not be DOM',
             UiFinder.sExists(gui.element(), '.test-inline'),
@@ -59,7 +59,7 @@ asynctest(
 
       var sCheckClosed = function (label) {
         return Logger.t(
-          label, 
+          label,
           Waiter.sTryUntil(
             'Test inline should not be in DOM',
             UiFinder.sNotExists(gui.element(), '.test-inline'),
@@ -165,7 +165,7 @@ asynctest(
             sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
           ])
         ),
-        
+
         TestBroadcasts.sDismiss(
           'outer gui element: should close',
           gui,

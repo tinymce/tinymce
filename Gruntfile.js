@@ -45,6 +45,17 @@ module.exports = function(grunt) {
       }
     },
 
+    eslint: {
+      options: {
+        config: ".eslintrc",
+        quiet: true
+      },
+
+      src: [
+        "src"
+      ]
+    },
+
     /* 
      * Use the --mydir=api (where api can be any directory under browser) when using watch mode.
      * Can use --mydir= for the whole browser directory
@@ -54,7 +65,7 @@ module.exports = function(grunt) {
       everything: {
         files: ['src/**/*.js'],
         tasks: [
-          'bedrock-auto:watching'
+          'eslint', 'bedrock-auto:watching'
         ],
         options: {
           spawn: false,
@@ -67,6 +78,7 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks("grunt-eslint");
   grunt.loadNpmTasks('grunt-exec');
 
   grunt.loadNpmTasks('grunt-parallel');

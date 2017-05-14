@@ -83,7 +83,7 @@ define(
     // We also can't cache the dimension as the parents may have resized since it was last shown.
     var doStartGrow = function (component, slideConfig, slideState) {
       var fullSize = measureTargetSize(component, slideConfig);
-      
+
       // Start the growing animation styles
       var root = getAnimationRoot(component, slideConfig);
       Class.add(root, slideConfig.growingClass());

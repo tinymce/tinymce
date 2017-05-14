@@ -2,6 +2,7 @@ define(
   'ephox.alloy.debugging.Debugging',
 
   [
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.log.AlloyLogger',
     'ephox.boulder.api.Objects',
@@ -15,19 +16,19 @@ define(
     'global!window'
   ],
 
-  function (SystemEvents, AlloyLogger, Objects, Arr, Fun, Merger, Obj, Options, console, Error, window) {
+  function (NativeEvents, SystemEvents, AlloyLogger, Objects, Arr, Fun, Merger, Obj, Options, console, Error, window) {
     var unknown = 'unknown';
     var debugging = true;
 
     var CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-    var eventsMonitored = [ SystemEvents.focus() ];
+    var eventsMonitored = [ SystemEvents.detachedFromDom() ];
 
     // Ignore these files in the error stack
     var path = [
       'alloy/data/Fields',
       'alloy/debugging/Debugging'
-    ]
+    ];
 
     var getTrace = function () {
       if (debugging === false) return unknown;
@@ -43,7 +44,7 @@ define(
     };
 
     var logHandler = function (label, handlerName, trace) {
-      if (debugging && false) console.log(label + ' [' + handlerName + ']', trace);
+      if (debugging) console.log(label + ' [' + handlerName + ']', trace);
     };
 
     var ignoreEvent = {
@@ -58,7 +59,7 @@ define(
     var monitorEvent = function (eventName, initialTarget, f) {
       var logger = debugging && Arr.contains(eventsMonitored, eventName) ? (function () {
         var sequence = [ ];
-        
+
         return {
           logEventCut: function (name, target, purpose) {
             sequence.push({ outcome: 'cut', target: target, purpose: purpose });
@@ -97,7 +98,7 @@ define(
     var inspectorInfo = function (comp) {
       var go = function (c) {
         var cSpec = c.spec();
-      
+
         return {
           '(original.spec)': cSpec,
           '(dom.ref)': c.element().dom(),

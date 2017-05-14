@@ -57,7 +57,7 @@ define(
         ValueSchema.valueOf(function (f) {
           return Result.value(function () {
             /*
-             * This line is just for debugging information 
+             * This line is just for debugging information
              */
             Debugging.logHandler(label, fieldName, trace);
             return f.apply(undefined, arguments);

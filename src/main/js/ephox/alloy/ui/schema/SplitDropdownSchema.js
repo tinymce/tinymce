@@ -103,7 +103,7 @@ define(
           Fields.tieredMenuMarkers(),
           Fields.members([ 'menu', 'item' ])
         ],
-        'menu', 
+        'menu',
         function (detail) {
           return {
             onExecute: detail.onExecute()
@@ -118,6 +118,6 @@ define(
       name: Fun.constant('SplitDropdown'),
       schema: Fun.constant(schema),
       parts: Fun.constant(partTypes)
-    }
+    };
   }
 );

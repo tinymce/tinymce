@@ -45,7 +45,7 @@ define(
               Focusing.config({ }),
               Representing.config({
                 store: {
-                  mode: 'manual'      ,
+                  mode: 'manual',
                   getValue: function (select) {
                     return Value.get(select.element());
                   },
@@ -55,7 +55,7 @@ define(
                       return opt.value === newValue;
                     });
                     if (found.isSome()) Value.set(select.element(), newValue);
-                  }   
+                  }
                 }
               }),
               detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()

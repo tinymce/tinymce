@@ -201,7 +201,7 @@ define(
         {
           key: ItemEvents.hover(),
           value: EventHandler.nu({
-            // Hide any irrelevant submenus and expand any submenus based 
+            // Hide any irrelevant submenus and expand any submenus based
             // on hovered item
             run: function (sandbox, simulatedEvent) {
               var item = simulatedEvent.event().item();
@@ -226,7 +226,7 @@ define(
             }
           })
         },
-        
+
         {
           key: SystemEvents.systemInit(),
           value: EventHandler.nu({

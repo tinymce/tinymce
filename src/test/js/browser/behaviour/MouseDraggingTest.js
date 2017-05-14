@@ -1,6 +1,6 @@
 asynctest(
   'MouseDraggingTest',
- 
+
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.Guard',
@@ -20,7 +20,7 @@ asynctest(
     'ephox.sugar.api.view.Position',
     'ephox.sugar.api.properties.Css'
   ],
- 
+
   function (Chain, Guard, NamedChain, UiFinder, Clicks, GuiFactory, Memento, Behaviour, Dragging, Container, DragCoord, GuiSetup, Json, Option, Result, Position, Css) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -84,7 +84,7 @@ asynctest(
       var cEnsurePositionChanged = Chain.control(
         Chain.binder(function (all) {
           return all.box_position1.left !== all.box_position2.left &&
-            all.box_position2.left !== all.box_position3.left ? Result.value({}) : 
+            all.box_position2.left !== all.box_position3.left ? Result.value({}) :
             Result.error('Positions did not change.\nPosition data: ' + Json.stringify({
               1: all.box_position1,
               2: all.box_position2,
@@ -96,7 +96,7 @@ asynctest(
       var cEnsurePinned = Chain.control(
         Chain.binder(function (all) {
           var pinned = all.box_position4.top !== all.box_position5_pinned.top &&
-            all.box_position5_pinned.top === all.box_position6_pinned.top && 
+            all.box_position5_pinned.top === all.box_position6_pinned.top &&
             all.box_position5_pinned.top === '10px';
           return pinned ? Result.value({ }) : Result.error(
             'Box should only have been pinned at 2 and 3 at top: 10px. Positions: ' + Json.stringify({
@@ -152,7 +152,7 @@ asynctest(
             ), 'blocker'),
 
             // When testing pinning, we need every browser to behave identically, so we reset positions
-            // so we know what we are dealing with            
+            // so we know what we are dealing with
             NamedChain.direct('box', Chain.op(function (elem) {
               Css.setAll(elem, {
                 'left': '50px',

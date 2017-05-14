@@ -1,6 +1,6 @@
 asynctest(
   'MenuTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -17,7 +17,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (
     ApproxStructure, Assertions, Chain, NamedChain, UiFinder, AdhocBehaviour, Behaviour, GuiFactory, SystemEvents, Menu, EventHandler, MenuEvents, GuiSetup,
     Objects
@@ -45,7 +45,7 @@ asynctest(
             item: 'test-item',
             selectedItem: 'test-selected-item'
           },
-          members: { 
+          members: {
             item: {
               munge: function (itemSpec) {
                 return {
@@ -58,7 +58,7 @@ asynctest(
                     innerHtml: itemSpec.data.text
                   },
                   components: [ ]
-                };              
+                };
               }
             }
           },
@@ -68,7 +68,7 @@ asynctest(
           ]),
 
           customBehaviours: [
-            AdhocBehaviour.events('menu-test-behaviour', 
+            AdhocBehaviour.events('menu-test-behaviour',
               Objects.wrap(
                 MenuEvents.focus(),
                 EventHandler.nu({
@@ -141,7 +141,7 @@ asynctest(
             })), '_'),
             cAssertStore('After focusItem event (beta)', [ 'menu.events.focus' ]),
             cClearStore
-            
+
           ])
         ])
       ];

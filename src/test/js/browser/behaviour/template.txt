@@ -1,6 +1,6 @@
 asynctest(
   'ExecutingKeyingTest',
- 
+
   [
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
@@ -9,7 +9,7 @@ asynctest(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup'
   ],
- 
+
   function (Keyboard, Keys, Step, GuiFactory, EventHandler, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

@@ -1,6 +1,6 @@
 asynctest(
   'ModalDialogTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -21,7 +21,7 @@ asynctest(
     'ephox.alloy.test.Sinks',
     'ephox.katamari.api.Result'
   ],
- 
+
   function (
     ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, Behaviour, Focusing, Tabstopping, GuiFactory, Container, ModalDialog,
     GuiSetup, Sinks, Result
@@ -37,7 +37,7 @@ asynctest(
         Focusing.config({ }),
         Tabstopping.config({ })
       ]);
-      
+
       var dialog = GuiFactory.build(
         ModalDialog.sketch({
           dom: {
@@ -151,7 +151,7 @@ asynctest(
               s.element('div', { }),
               s.element('div', { html: str.is('Title'), classes: [ arr.has('test-dialog-title') ] }),
               s.element('div', { html: str.is('X') }),
-              s.element('div', { 
+              s.element('div', {
                 classes: [ arr.has('test-dialog-body') ],
                 children: [
                   s.element('div', {
@@ -181,7 +181,7 @@ asynctest(
           var body = ModalDialog.getBody(dialog);
           Assertions.assertStructure('Checking body of dialog', ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
-               classes: [ arr.has('test-dialog-body') ]
+              classes: [ arr.has('test-dialog-body') ]
             });
           }), body.element());
         }),

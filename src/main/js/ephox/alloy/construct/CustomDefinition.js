@@ -43,7 +43,8 @@ define(
             'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
             'alloy.focus': [ 'alloy.base.behaviour', 'keying', 'focusing' ],
             'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
-            'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ]
+            'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
+            'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ]
           }),
           ValueSchema.anyValue()
         ),
@@ -74,7 +75,7 @@ define(
         domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
       };
 
-      return DomDefinition.nu(Merger.deepMerge(base, 
+      return DomDefinition.nu(Merger.deepMerge(base,
         info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
         info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
       ));

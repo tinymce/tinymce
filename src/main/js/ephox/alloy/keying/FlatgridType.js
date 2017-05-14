@@ -67,20 +67,20 @@ define(
 
     var moveLeft = doMove(WrapArrNavigation.cycleLeft);
     var moveRight = doMove(WrapArrNavigation.cycleRight);
-    
+
     var moveNorth = doMove(WrapArrNavigation.cycleUp);
     var moveSouth = doMove(WrapArrNavigation.cycleDown);
 
     var getRules = Fun.constant([
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
-      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), handleTab),
-      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE() ), doEscape),
+      KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
+      KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
+      KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
+      KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
+      KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
+      KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
+      KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape),
 
-      KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+      KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
     ]);
 
     var getEvents = Fun.constant({ });

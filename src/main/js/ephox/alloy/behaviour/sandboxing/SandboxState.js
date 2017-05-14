@@ -38,7 +38,7 @@ define(
         get: get
       });
     };
-    
+
     return {
       init: init
     };

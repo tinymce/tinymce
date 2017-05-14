@@ -23,12 +23,17 @@ define(
       });
     };
 
+    var onUnload = function (component, repConfig, repState) {
+      repState.clear();
+    };
+
     return [
-      FieldSchema.option('initialValue'),      
+      FieldSchema.option('initialValue'),
       Fields.output('manager', {
         setValue: setValue,
         getValue: getValue,
         onLoad: onLoad,
+        onUnload: onUnload,
         state: RepresentState.memory
       })
     ];

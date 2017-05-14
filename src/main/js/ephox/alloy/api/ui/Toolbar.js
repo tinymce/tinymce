@@ -18,7 +18,7 @@ define(
     'global!Error'
   ],
 
-function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Fun, Merger, Result, Json, console, Error) {
+  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Fun, Merger, Result, Json, console, Error) {
     var schema = ToolbarSchema.schema();
 
     // TODO: Dupe with ToolbarSchema

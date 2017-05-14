@@ -9,6 +9,7 @@ test(
   ],
 
   function (Bounds, Layout, Bounder, Position) {
+    /* global assert */
     var check = function (expected, preference, anchor, panel, bubbles, bounds) {
       var actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
       assert.eq(expected.label, actual.label());
@@ -26,7 +27,7 @@ test(
       };
 
       var northwest = function () {
-        return Position(width-1, 1);
+        return Position(width - 1, 1);
       };
 
       var southeast = function () {
@@ -34,7 +35,7 @@ test(
       };
 
       var southwest = function () {
-        return Position(width-1, -2);
+        return Position(width - 1, -2);
       };
 
       return {
@@ -138,35 +139,35 @@ test(
     check({
       label: 'layout-se',
       x: 350 - 100, // 350+50+1-101 - 1,
-      y: 220+50+2-10-76 + 10 - 2
-    }, four, Bounds(350+50+1-101, 220+50+2-10-76, 10, 10), panelBox, bubb, view);
+      y: 220 + 50 + 2 - 10 - 76 + 10 - 2
+    }, four, Bounds(350 + 50 + 1 - 101, 220 + 50 + 2 - 10 - 76, 10, 10), panelBox, bubb, view);
 
     // Southeast (exactly for x and y).
     check({
       label: 'layout-se',
       x: 350 - 100, // 350+50+1-100 - 1, capped at view width
-      y: 220+50+2-10-75 + 10 - 2
-    }, four, Bounds(350+50+1-100, 220+50+2-10-75, 10, 10), panelBox, bubb, view);
+      y: 220 + 50 + 2 - 10 - 75 + 10 - 2
+    }, four, Bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
     // Southeast -> Southwest (1px too far on x).
     check({
       label: 'layout-sw',
-      x: 350+50+1-99 - 100 + 32 + 10 - 1,
-      y: 220+50+2-10-75 + 10 - 2
-    }, four, Bounds(350+50+1-99, 220+50+2-10-75, 10, 10), panelBox, bubb, view);
+      x: 350 + 50 + 1 - 99 - 100 + 32 + 10 - 1,
+      y: 220 + 50 + 2 - 10 - 75 + 10 - 2
+    }, four, Bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
     // Southeast -> Northeast (1px too far on y).
     check({
       label: 'layout-ne',
       x: 350 - 100, // 350+50+1-100 - 1, capped at view width
-      y: 220+50+2-10-74 - 75 + 1
-    }, four, Bounds(350+50+1-100, 220+50+2-10-74, 10, 10), panelBox, bubb, view);
+      y: 220 + 50 + 2 - 10 - 74 - 75 + 1
+    }, four, Bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
 
     // Southeast -> Northwest (1px too far on x and y).
     check({
       label: 'layout-nw',
-      x: 350+50+1-99 - 100 + 32 + 10 - 1,
-      y: 220+50+2-10-74 - 75 + 1
-    }, four, Bounds(350+50+1-99, 220+50+2-10-74, 10, 10), panelBox, bubb, view);
+      x: 350 + 50 + 1 - 99 - 100 + 32 + 10 - 1,
+      y: 220 + 50 + 2 - 10 - 74 - 75 + 1
+    }, four, Bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
   }
 );

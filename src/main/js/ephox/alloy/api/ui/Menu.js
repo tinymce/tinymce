@@ -17,7 +17,7 @@ define(
 
     var parts = {
       items: Fun.constant({
-        uiType: UiSubstitutes.placeholder(), name: '<alloy.menu.items>', owner: 'menu' 
+        uiType: UiSubstitutes.placeholder(), name: '<alloy.menu.items>', owner: 'menu'
       })
     };
 

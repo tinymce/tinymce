@@ -33,7 +33,7 @@ define(
       var wasHighlighted = isHighlighted(component, hConfig, hState, target);
       dehighlightAll(component, hConfig, hState);
       Class.add(target.element(), hConfig.highlightClass());
-      
+
       // TODO: Check whether this should always fire
       if (! wasHighlighted) hConfig.onHighlight()(component, target);
     };

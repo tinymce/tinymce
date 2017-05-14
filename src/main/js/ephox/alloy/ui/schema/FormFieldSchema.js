@@ -37,11 +37,11 @@ define(
         )
       ];
     };
-    
+
     return {
       name: Fun.constant('FormField'),
       schema: Fun.constant(schema),
       makeParts: makeParts
-    }
+    };
   }
 );

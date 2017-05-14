@@ -23,7 +23,7 @@ define(
         var compOwner = Traverse.owner(component.element());
         return Compare.eq(frameOwner, compOwner);
       };
-      
+
       return Option.from(win.frameElement).map(Element.fromDom).
         filter(hasSameOwner).map(Location.absolute);
     };

@@ -18,7 +18,7 @@ test(
           var max = min + width;
           return Jsc.number(min - 1, max + 1).generator.map(function (value) {
             var v = Math.round(value);
-            
+
             return {
               min: min,
               max: max,
@@ -70,7 +70,7 @@ test(
         RawAssertions.assertEq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
         return true;
       },
-      {  }
+      { }
     );
 
     Jsc.syncProperty(
@@ -95,7 +95,7 @@ test(
       function (data, bounds, xValue) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none());
         var f = Math.abs((newValue - data.min) / data.stepSize);
-        RawAssertions.assertEq('Checking factors correctly: ' + newValue, true, 
+        RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
           Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
         );
         return true;
@@ -114,7 +114,7 @@ test(
       function (data, bounds, xValue, snapOffset) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min));
         var f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
-        RawAssertions.assertEq('Checking factors correctly: ' + newValue, true, 
+        RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
           Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
         );
         return true;
@@ -132,7 +132,7 @@ test(
       function (data, bounds, xValue) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none());
         RawAssertions.assertEq(
-          'Assert within range: ' + newValue, true, 
+          'Assert within range: ' + newValue, true,
           newValue >= data.min - 1 && newValue <= data.max + 1
         );
         return true;
@@ -150,7 +150,7 @@ test(
       function (data, bounds, xValue, snapOffset) {
         var newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max));
         RawAssertions.assertEq(
-          'Assert within range: ' + newValue, true, 
+          'Assert within range: ' + newValue, true,
           newValue >= data.min - 1 && newValue <= data.max + 1
         );
         return true;

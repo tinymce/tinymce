@@ -27,33 +27,33 @@ define(
       Fields.onKeyboardHandler('onEscape'),
       FieldSchema.option('focusIn')
     ];
-    
+
     var getRules = function (component, simulatedEvent, executeInfo) {
       return [
-        KeyRules.rule( KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
+        KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
         KeyRules.rule(
-          KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.ENTER()) ]), executeInfo.onEnter()
+          KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), executeInfo.onEnter()
         ),
         KeyRules.rule(
-          KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet( Keys.ENTER()) ]), executeInfo.onShiftEnter()
+          KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER()) ]), executeInfo.onShiftEnter()
         ),
         KeyRules.rule(
-          KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet( Keys.TAB()) ]), executeInfo.onShiftTab()
+          KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), executeInfo.onShiftTab()
         ),
         KeyRules.rule(
-          KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.TAB()) ]), executeInfo.onTab()
+          KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), executeInfo.onTab()
         ),
 
-        KeyRules.rule( KeyMatch.inSet(Keys.UP()), executeInfo.onUp()),
-        KeyRules.rule( KeyMatch.inSet(Keys.DOWN()), executeInfo.onDown()),
-        KeyRules.rule( KeyMatch.inSet(Keys.LEFT()), executeInfo.onLeft()),
-        KeyRules.rule( KeyMatch.inSet(Keys.RIGHT()), executeInfo.onRight()),
-        KeyRules.rule( KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
-        KeyRules.rule( KeyMatch.inSet(Keys.ESCAPE()), executeInfo.onEscape())
+        KeyRules.rule(KeyMatch.inSet(Keys.UP()), executeInfo.onUp()),
+        KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), executeInfo.onDown()),
+        KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), executeInfo.onLeft()),
+        KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), executeInfo.onRight()),
+        KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
+        KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), executeInfo.onEscape())
       ];
     };
 
-    var focusIn = function (component, executeInfo) {     
+    var focusIn = function (component, executeInfo) {
       return executeInfo.focusIn().bind(function (f) {
         return f(component, executeInfo);
       });

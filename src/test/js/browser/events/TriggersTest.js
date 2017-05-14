@@ -1,6 +1,6 @@
 asynctest(
   'TriggersTest',
- 
+
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Logger',
@@ -18,7 +18,7 @@ asynctest(
     'ephox.sugar.api.search.SelectorFind',
     'global!document'
   ],
- 
+
   function (Assertions, Logger, Pipeline, Step, Debugging, Triggers, Objects, Arr, Fun, Insert, Element, Attr, Html, SelectorFind, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -139,8 +139,7 @@ asynctest(
 
       { expected: [ 'gamma' ], target: 'gamma', type: 'all.stop' },
       { expected: [ 'beta' ], target: 'beta', type: 'all.stop' },
-      { expected: [ 'alpha' ], target: 'alpha', type: 'all.stop' },
-
+      { expected: [ 'alpha' ], target: 'alpha', type: 'all.stop' }
     ];
 
     var steps = Arr.map(cases, function (c) {

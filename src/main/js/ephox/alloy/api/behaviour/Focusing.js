@@ -3,18 +3,17 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.focusing.ActiveFocus',
     'ephox.alloy.behaviour.focusing.FocusApis',
     'ephox.alloy.behaviour.focusing.FocusSchema'
   ],
 
-  function (Behaviour, NoState, ActiveFocus, FocusApis, FocusSchema) {
+  function (Behaviour, ActiveFocus, FocusApis, FocusSchema) {
     return Behaviour.create({
       fields: FocusSchema,
       name: 'focusing',
       active: ActiveFocus,
-      apis: FocusApis,
+      apis: FocusApis
       // Consider adding isFocused an an extra
     });
   }

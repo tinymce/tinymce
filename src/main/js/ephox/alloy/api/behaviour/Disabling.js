@@ -14,6 +14,6 @@ define(
       name: 'disabling',
       active: ActiveDisable,
       apis: DisableApis
-    })
+    });
   }
 );

@@ -12,7 +12,7 @@ define(
     return function (getComp) {
       var fail = function (event) {
         return function () {
-          throw new Error('The component must be in a context to send: ' + event + '\n' + 
+          throw new Error('The component must be in a context to send: ' + event + '\n' +
             AlloyLogger.element(getComp().element()) + ' is not in context.'
           );
         };

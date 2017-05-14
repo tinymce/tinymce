@@ -1,6 +1,6 @@
 asynctest(
   'CustomComponentTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -16,7 +16,7 @@ asynctest(
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun'
   ],
- 
+
   function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -41,7 +41,7 @@ asynctest(
               }
             })
           })
-        }, 
+        },
         apis: {
           behaveA: function (comp) {
             store.adder('behaveA')();
@@ -54,7 +54,7 @@ asynctest(
       var behaviourB = Behaviour.create({
         fields: [
           FieldSchema.strict('attr')
-        ], 
+        ],
         name: 'behaviourB',
         active: {
           exhibit: function (base, info) {
@@ -65,7 +65,7 @@ asynctest(
             };
             return DomModification.nu(extra);
           },
-          
+
           events: Fun.constant({
             'alloy.custom.test.event': EventHandler.nu({
               run: function (component) {
@@ -99,7 +99,7 @@ asynctest(
           domModification: {
             classes: [ 'base-dom-modification' ]
           },
-     
+
           eventOrder: {
             'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
           },
@@ -157,7 +157,7 @@ asynctest(
         })
       ];
     }, success, failure);
- 
+
 
   }
 );

@@ -1,6 +1,6 @@
 asynctest(
   'HtmlSelectTest',
- 
+
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
@@ -12,7 +12,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun'
   ],
- 
+
   function (Assertions, Chain, Step, Representing, GuiFactory, HtmlSelect, RepresentPipes, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -21,7 +21,7 @@ asynctest(
       return GuiFactory.build(
         HtmlSelect.sketch({
           dom: { }, // is always a select
-          
+
           options: [
             { value: 'alpha', text: 'Alpha' },
             { value: 'beta', text: 'Beta' },

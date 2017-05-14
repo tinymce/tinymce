@@ -7,6 +7,7 @@ define(
   ],
 
   function (RawAssertions, Arr) {
+    /* global assert */
     var errsToString = function (err) {
       return Arr.map(err, function (e) {
         return e.message !== undefined ? e.message : e;

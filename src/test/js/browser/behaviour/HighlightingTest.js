@@ -1,6 +1,6 @@
 asynctest(
   'HighlightingTest',
- 
+
   [
     'ephox.agar.alien.Truncate',
     'ephox.agar.api.Assertions',
@@ -20,7 +20,7 @@ asynctest(
     'ephox.sugar.api.properties.Class',
     'global!Error'
   ],
- 
+
   function (Truncate, Assertions, Chain, NamedChain, UiFinder, GuiFactory, Behaviour, Highlighting, Container, ChainUtils, GuiSetup, Objects, Arr, Result, Attr, Class, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -82,8 +82,8 @@ asynctest(
           cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
           NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
           NamedChain.direct('selected', Chain.binder(function (sel) {
-            return Class.has(sel, expected) ? Result.value(sel) : 
-              Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' + 
+            return Class.has(sel, expected) ? Result.value(sel) :
+              Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
                 Attr.get(sel, 'class'));
           }), '_')
         ]);
@@ -128,7 +128,7 @@ asynctest(
       });
 
       var cGetFirst = Chain.binder(function () {
-        return  Highlighting.getFirst(component).fold(function () {
+        return Highlighting.getFirst(component).fold(function () {
           return Result.error(new Error('getFirst found nothing'));
         }, Result.value);
       });
@@ -142,7 +142,7 @@ asynctest(
       var cHasClass = function (clazz) {
         return Chain.binder(function (comp) {
           var elem = comp.element();
-          return Class.has(elem, clazz) ? Result.value(elem) : 
+          return Class.has(elem, clazz) ? Result.value(elem) :
             Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
         });
       };
@@ -179,7 +179,7 @@ asynctest(
 
             NamedChain.direct('beta', cHighlight, '_'),
             cCheckSelected('highlight(beta) => Beta is selected', 'beta'),
-        
+
             NamedChain.direct('beta', cDehighlight, '_'),
             cCheckNumOf('beta should be deselected', '.test-selected', 0),
 

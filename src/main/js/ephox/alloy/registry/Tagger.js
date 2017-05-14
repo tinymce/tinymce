@@ -14,7 +14,7 @@ define(
   function (AlloyTags, Id, Fun, Option, Attr, Node, SelectorFind) {
     var prefix = AlloyTags.prefix();
     var idAttr = AlloyTags.idAttr();
-    
+
     var write = function (label, elem) {
       var id = Id.generate(prefix + label);
       Attr.set(elem, idAttr, id);

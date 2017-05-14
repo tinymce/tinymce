@@ -2,12 +2,16 @@ define(
   'ephox.alloy.behaviour.representing.RepresentApis',
 
   [
-    
+
   ],
 
   function () {
     var onLoad = function (component, repConfig, repState) {
       repConfig.store().manager().onLoad(component, repConfig, repState);
+    };
+
+    var onUnload = function (component, repConfig, repState) {
+      repConfig.store().manager().onUnload(component, repConfig, repState);
     };
 
     var setValue = function (component, repConfig, repState, data) {
@@ -20,6 +24,7 @@ define(
 
     return {
       onLoad: onLoad,
+      onUnload: onUnload,
       setValue: setValue,
       getValue: getValue
     };

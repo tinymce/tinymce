@@ -20,9 +20,9 @@ define(
     var doEscape = function (component, simulatedEvent, escapeConfig, escapeState) {
       return escapeConfig.onEscape()(component, simulatedEvent);
     };
-    
+
     var getRules = Fun.constant([
-      KeyRules.rule( KeyMatch.inSet(Keys.ESCAPE()), doEscape)
+      KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
     ]);
 
     var getEvents = Fun.constant({ });

@@ -28,7 +28,7 @@ define(
     ComponentStructure, Behaviour, Composing, Coupling, Focusing, Positioning, Sandboxing, TieredMenu, AriaOwner, InternalSink, Tagger, Dismissal, Fun, Future,
     Merger, Option, Result, Remove, Width, Error
   ) {
-    
+
     var fetch = function (detail, component) {
       var fetcher = detail.fetch();
       return fetcher(component);
@@ -48,18 +48,20 @@ define(
               uid: Tagger.generate(''),
               data: data,
 
-              onOpenMenu: function (sandbox, menu) {
+              onOpenMenu: function (tmenu, menu) {
                 var sink = lazySink().getOrDie();
                 Positioning.position(sink, anchor, menu);
+                Sandboxing.decloak(sandbox);
               },
 
-              onOpenSubmenu: function (sandbox, item, submenu) {
+              onOpenSubmenu: function (tmenu, item, submenu) {
                 var sink = lazySink().getOrDie();
                 Positioning.position(sink, {
                   anchor: 'submenu',
                   item: item,
                   bubble: Option.none()
                 }, submenu);
+                Sandboxing.decloak(sandbox);
 
               },
               onEscape: function () {
@@ -76,6 +78,7 @@ define(
 
     var open = function (detail, anchor, component, sandbox, externals) {
       var processed = openF(detail, anchor, component, sandbox, externals);
+      Sandboxing.cloak(sandbox);
       return Sandboxing.open(sandbox, processed).map(function () {
         return sandbox;
       });
@@ -166,12 +169,14 @@ define(
         events: { }
       };
     };
-    
+
 
     return {
       makeSandbox: makeSandbox,
       togglePopup: togglePopup,
-      open: open
+      open: open,
+
+      getSink: getSink
     };
   }
 );

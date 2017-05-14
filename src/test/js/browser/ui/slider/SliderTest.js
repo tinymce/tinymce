@@ -32,7 +32,7 @@ asynctest(
     // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
     // viewed as an invalid value.
     if (navigator.userAgent.indexOf('PhantomJS') > -1) return success();
-    
+
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         Slider.sketch({
@@ -95,7 +95,7 @@ asynctest(
 
       var cCheckThumbAtLeft = Chain.op(function (parts) {
         RawAssertions.assertEq(
-          'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right + 
+          'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
             '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
           true,
           parts.ledgeRect.right > parts.thumbRect.left && parts.ledgeRect.left < parts.thumbRect.left
@@ -104,7 +104,7 @@ asynctest(
 
       var cCheckThumbAtRight = Chain.op(function (parts) {
         RawAssertions.assertEq(
-          'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right + 
+          'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
             '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
           true,
           parts.redgeRect.left < parts.thumbRect.right && parts.ledgeRect.left < parts.redgeRect.left
@@ -112,13 +112,13 @@ asynctest(
       });
 
       var cCheckThumbPastRight = Chain.op(function (parts) {
-        RawAssertions.assertEq('Checking thumb past end of spectrum', true, 
+        RawAssertions.assertEq('Checking thumb past end of spectrum', true,
           parts.thumbRect.left > parts.spectrumRect.right
         );
       });
 
       var cCheckThumbBeforeLeft = Chain.op(function (parts) {
-        RawAssertions.assertEq('Checking thumb before start of spectrum', true, 
+        RawAssertions.assertEq('Checking thumb before start of spectrum', true,
           parts.thumbRect.right < parts.spectrumRect.left
         );
       });

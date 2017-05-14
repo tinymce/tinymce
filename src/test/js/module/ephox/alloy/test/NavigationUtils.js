@@ -14,6 +14,8 @@ define(
   ],
 
   function (FocusTools, GeneralSteps, Keyboard, Step, UiFinder, Waiter, Arr, Traverse, Array) {
+    /* global assert */
+
     var range = function (num, f) {
       var array = new Array(num);
       return Arr.bind(array, f);
@@ -24,21 +26,21 @@ define(
         return [
           Keyboard.sKeydown(doc, key, modifiers),
           FocusTools.sTryOnSelector(
-            'Focus should move from ' + (i > 0 ? identifiers[i-1].label : '(start)') + ' to ' + identifiers[i].label,
+            'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label,
             doc,
             identifiers[i].selector
           ),
           Step.wait(0)
         ];
       });
-      
+
       return GeneralSteps.sequence(array);
     };
 
-    // Selector based 
+    // Selector based
     var highlights = function (container, key, modifiers, identifiers) {
       var array = range(identifiers.length, function (_, i) {
-        var msg = 'Highlight should move from ' + (i > 0 ? identifiers[i-1].label : '(start)') + ' to ' + identifiers[i].label;
+        var msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
         var doc = Traverse.owner(container);
         return [
           Keyboard.sKeydown(doc, key, modifiers),
@@ -51,7 +53,7 @@ define(
           Step.wait(0)
         ];
       });
-      
+
       return GeneralSteps.sequence(array);
     };
 

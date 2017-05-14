@@ -26,7 +26,7 @@ define(
     var basic = { sketch: Fun.identity };
 
     var partTypes = [
-      PartType.optional(basic, [ ], 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}), 
+      PartType.optional(basic, [ ], 'draghandle', '<alloy.dialog.draghandle>', Fun.constant({}),
         function (detail, spec) {
           return {
             behaviours: Behaviour.derive([
@@ -37,7 +37,7 @@ define(
                 },
                 blockerClass: detail.dragBlockClass().getOrDie(
                   new Error(
-                    'The drag blocker class was not specified for a dialog with a drag handle: \n' + 
+                    'The drag blocker class was not specified for a dialog with a drag handle: \n' +
                     Json.stringify(spec, null, 2)
                   )
                 )

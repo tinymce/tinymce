@@ -120,10 +120,10 @@ define(
     };
 
     var getRules = Fun.constant([
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
-      KeyRules.rule( KeyMatch.inSet( Keys.TAB() ), goForwards),
-      KeyRules.rule( KeyMatch.inSet( Keys.ESCAPE()), exit),
-      KeyRules.rule( KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet( Keys.ENTER()) ]), execute)
+      KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),
+      KeyRules.rule(KeyMatch.inSet(Keys.TAB()), goForwards),
+      KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), exit),
+      KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), execute)
     ]);
 
     var getEvents = Fun.constant({ });

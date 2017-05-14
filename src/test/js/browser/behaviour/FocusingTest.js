@@ -1,6 +1,6 @@
 asynctest(
   'FocusingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (ApproxStructure, Assertions, FocusTools, Guard, Step, GuiFactory, Behaviour, Focusing, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -55,7 +55,7 @@ asynctest(
           FocusTools.sIsOnSelector('Should not start with focus', doc, '.focusable'),
           // NOTE: this required a change to agar because it was throwing an error prototype,
           // rather than die for its assertion, which meant that the tryUntilNot did not work.
-          // I had to hack the local agar to ignore the error prototype check in Guard. Will 
+          // I had to hack the local agar to ignore the error prototype check in Guard. Will
           // need to fix this.
           Guard.tryUntilNot('Container should not be focused originally', 100, 1000)
         ),

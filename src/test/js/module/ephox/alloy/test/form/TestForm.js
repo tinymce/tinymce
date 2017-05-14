@@ -18,7 +18,7 @@ define(
             expected,
 
             Obj.map(val, function (v, k) {
-              return v.getOrDie(k + ' field is "None"'); 
+              return v.getOrDie(k + ' field is "None"');
             })
           );
         });

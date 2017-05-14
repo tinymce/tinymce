@@ -1,6 +1,6 @@
 asynctest(
   'TabstoppingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -11,7 +11,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (ApproxStructure, Assertions, GuiFactory, Behaviour, Tabstopping, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

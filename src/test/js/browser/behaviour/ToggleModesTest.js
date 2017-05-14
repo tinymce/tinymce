@@ -19,8 +19,8 @@ test(
     };
 
     Logger.sync('Checking tag=button', function () {
-      var button = GuiFactory.build( mTag('button') );
-      
+      var button = GuiFactory.build(mTag('button'));
+
 
       ToggleModes.updateAuto(button, { }, true);
 

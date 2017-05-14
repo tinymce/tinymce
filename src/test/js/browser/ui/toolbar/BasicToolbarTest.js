@@ -1,6 +1,6 @@
 asynctest(
   'BasicToolbarTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -13,7 +13,7 @@ asynctest(
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
     'ephox.katamari.api.Arr'
   ],
- 
+
   function (ApproxStructure, Assertions, Step, GuiFactory, Button, Container, Toolbar, GuiSetup, TestPartialToolbarGroup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -74,7 +74,7 @@ asynctest(
               }
             })
           ]
-        })        
+        })
       );
 
     }, function (doc, body, gui, component, store) {

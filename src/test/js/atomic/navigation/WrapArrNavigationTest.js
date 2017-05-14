@@ -16,7 +16,7 @@ test(
             values[i] = i;
           }
 
-          return { 
+          return {
             values: values,
             numRows: numRows,
             numCols: numCols,
@@ -37,7 +37,7 @@ test(
               values[i] = i;
             }
 
-            return { 
+            return {
               values: values,
               numRows: numRows + 1, // due to remainder
               numCols: numCols,

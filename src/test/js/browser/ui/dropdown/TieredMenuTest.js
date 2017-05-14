@@ -1,6 +1,6 @@
 asynctest(
   'TieredMenuTest',
- 
+
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
@@ -19,7 +19,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (
     Assertions, Chain, Keyboard, Keys, Step, AdhocBehaviour, Behaviour, Keying, GuiFactory, SystemEvents, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup,
     Objects
@@ -46,7 +46,7 @@ asynctest(
             selectedMenu: 'test-selected-menu',
             backgroundMenu: 'test-background-menu'
           },
-          members: { 
+          members: {
             item: {
               munge: function (itemSpec) {
                 return {
@@ -59,7 +59,7 @@ asynctest(
                     innerHtml: itemSpec.data.text
                   },
                   components: [ ]
-                };              
+                };
               }
             },
             menu: {
@@ -114,7 +114,7 @@ asynctest(
 
           customBehaviours: [
             AdhocBehaviour.events(
-              'tiered-menu-test', 
+              'tiered-menu-test',
               Objects.wrap(
                 MenuEvents.focus(),
                 EventHandler.nu({

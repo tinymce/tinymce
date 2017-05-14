@@ -16,7 +16,7 @@ define(
     return function (doc, gui, typeahead) {
       var sWaitForMenu = function (label) {
         return Logger.t(
-          label, 
+          label,
           Waiter.sTryUntil(
             'Waiting for menu to appear',
             UiFinder.sExists(gui.element(), '.test-typeahead-selected-menu'),
@@ -31,7 +31,7 @@ define(
           label,
           Waiter.sTryUntil(
             'Waiting for menu to go away',
-            UiFinder.sNotExists(gui.element(),  '.test-typeahead-selected-menu'),
+            UiFinder.sNotExists(gui.element(), '.test-typeahead-selected-menu'),
             100,
             1000
           )

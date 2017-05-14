@@ -17,7 +17,7 @@ define(
 
   function (EventHandler, Fields, DragMovement, DragState, SnapSchema, Snappables, TouchData, FieldSchema, Fun, parseInt, window) {
     var handlers = function (dragConfig, dragState) {
-      
+
       return {
         'touchstart': EventHandler.nu({
           run: function (component, simulatedEvent) {
@@ -25,10 +25,10 @@ define(
           }
         }),
         'touchmove': EventHandler.nu({
-          
+
           run: function (component, simulatedEvent) {
             simulatedEvent.stop();
-          
+
             var delta = dragState.update(TouchData, simulatedEvent.event());
             delta.each(function (dlt) {
               DragMovement.dragBy(component, dragConfig, dlt);
@@ -49,7 +49,7 @@ define(
         })
       };
     };
- 
+
     var schema = [
       // Is this used?
       FieldSchema.defaulted('useFixed', false),

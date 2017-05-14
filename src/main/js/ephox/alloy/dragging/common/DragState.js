@@ -11,7 +11,7 @@ define(
     // NOTE: mode refers to the way that information is retrieved from
     // the user interaction. It can be things like MouseData, TouchData etc.
     var init = function () {
-      // Dragging operates on the difference between the previous user 
+      // Dragging operates on the difference between the previous user
       // interaction and the next user interaction. Therefore, we store
       // the previous interaction so that we can compare it.
       var previous = Option.none();
@@ -20,7 +20,7 @@ define(
         previous = Option.none();
       };
 
-      // Return position delta between previous position and nu position, 
+      // Return position delta between previous position and nu position,
       // or None if this is the first. Set the previous position to nu.
       var calculateDelta = function (mode, nu) {
         var result = previous.map(function (old) {

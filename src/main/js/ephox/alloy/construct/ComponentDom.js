@@ -32,11 +32,11 @@ define(
 
     var onlyOne = function (chain, aspect, order) {
       if (chain.length > 1) return Result.error(
-        'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' + 
+        'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' +
           Json.stringify(Arr.map(chain, function (b) { return b.name(); })) + '. At this stage, this ' +
-          'is not supported. Future releases might provide strategies for resolving this.' 
+          'is not supported. Future releases might provide strategies for resolving this.'
       );
-      else if (chain.length === 0) return  Result.value({ });
+      else if (chain.length === 0) return Result.value({ });
       else return Result.value(
         chain[0].modification().fold(function () {
           return { };
@@ -53,14 +53,14 @@ define(
         }), null, 2) + '. This is not currently supported.'
       );
     };
-    
+
     var safeMerge = function (chain, aspect) {
       // return unsafeMerge(chain, aspect);
       var y = Arr.foldl(chain, function (acc, c) {
         var obj = c.modification().getOr({});
         return acc.bind(function (accRest) {
           var parts = Obj.mapToArray(obj, function (v, k) {
-            return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) : 
+            return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) :
               Result.value(Objects.wrap(k, v));
           });
           return Objects.consolidate(parts, accRest);
@@ -108,7 +108,7 @@ define(
       var modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
         return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
           return Result.error('Unknown field type: ' + aspect);
-        }, function (merger ){
+        }, function (merger) {
           return merger(values, aspect);
         });
       });

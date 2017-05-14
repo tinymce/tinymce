@@ -20,12 +20,12 @@ define(
 
         // When the user releases the mouse on the blocker, that is a drop
         mouseup: EventHandler.nu({
-          run: function () { 
+          run: function () {
             dragApi.drop();
           }
         }),
-        
-        // As the user moves the mouse around (while pressed down), we move the 
+
+        // As the user moves the mouse around (while pressed down), we move the
         // component around
         mousemove: EventHandler.nu({
           run: function (comp, simulatedEvent) {

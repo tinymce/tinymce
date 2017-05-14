@@ -31,7 +31,7 @@ define(
     GuiFactory, SystemEvents, Attachment, SystemApi, Container, Debugging, DescribedHandler, GuiEvents, Triggers, AlloyLogger, Registry, Tagger, Arr, Fun, Result,
     Compare, Focus, Insert, Remove, Node, Class, Traverse, Error
   ) {
-    var create = function ( ) {
+    var create = function () {
       var root = GuiFactory.build(
         Container.sketch({
           dom: {
@@ -47,7 +47,8 @@ define(
         return Traverse.parent(root.element()).fold(
           function () {
             return true;
-          }, function (parent) {
+          },
+          function (parent) {
             return Compare.eq(el, parent);
           }
         );
@@ -68,7 +69,7 @@ define(
 
         // This doesn't follow usual DOM bubbling. It will just dispatch on all
         // targets that have the event. It is the general case of the more specialised
-        // "message". "messages" may actually just go away. This is used for things 
+        // "message". "messages" may actually just go away. This is used for things
         // like window scroll.
         broadcastEvent: function (eventName, event) {
           var listeners = registry.filter(eventName);
@@ -126,15 +127,15 @@ define(
 
       var addToWorld = function (component) {
         component.connect(systemApi);
-        if (! Node.isText(component.element())) {
+        if (!Node.isText(component.element())) {
           registry.register(component);
           Arr.each(component.components(), addToWorld);
-          systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant( component.element() ) });
+          systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant(component.element()) });
         }
       };
 
       var removeFromWorld = function (component) {
-        if (! Node.isText(component.element())) {
+        if (!Node.isText(component.element())) {
           Arr.each(component.components(), removeFromWorld);
           registry.unregister(component);
         }

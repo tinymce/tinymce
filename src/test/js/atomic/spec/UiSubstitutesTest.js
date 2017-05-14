@@ -25,7 +25,7 @@ test(
         ], { });
         RawAssertions.assertEq('Normal should be returned as is', [
           { uiType: 'normal', components: [ ] }
-        ], actual); 
+        ], actual);
       }
     );
 

@@ -13,10 +13,11 @@ define(
     'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
+    'global!console',
     'global!document'
   ],
 
-  function (GuiFactory, Attachment, Gui, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Element, Class, document) {
+  function (GuiFactory, Attachment, Gui, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);

@@ -12,7 +12,7 @@ define(
     /*
      * origin: the position (without scroll) of the offset parent
      * scroll: the scrolling position of the window
-     * 
+     *
      * fixed: the fixed coordinates to show for css
      * offset: the absolute coordinates to show for css when inside an offset parent
      * absolute: the absolute coordinates to show before considering the offset parent

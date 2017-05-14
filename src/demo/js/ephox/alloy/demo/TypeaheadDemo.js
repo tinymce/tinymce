@@ -17,10 +17,11 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Value'
+    'ephox.sugar.api.properties.Value',
+    'global!console'
   ],
 
-  function (Representing, Attachment, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Insert, Element, Class, Value) {
+  function (Representing, Attachment, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Insert, Element, Class, Value, console) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -87,7 +88,7 @@ define(
             var matching = Arr.bind(dataset, function (d) {
               var index = d.indexOf(text.toLowerCase());
               if (index > -1) {
-                var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
+                var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
                   d.substring(index + text.length);
                 return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
               } else {
@@ -98,7 +99,7 @@ define(
             var matches = matching.length > 0 ? matching : [
               { type: 'separator', text: 'No items' }
             ];
-   
+
             var future = Future.pure(matches);
             return future.map(function (items) {
               return TieredMenu.simpleData('blah', 'Blah', items);
@@ -106,8 +107,8 @@ define(
           },
           onExecute: function (sandbox, item, itemValue) {
             var value = Representing.getValue(item);
-            return Option.some(true);
             console.log('*** typeahead menu demo execute on: ' + value + ' ***');
+            return Option.some(true);
           }
         })
       );

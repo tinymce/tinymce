@@ -35,6 +35,7 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value',
+    'global!console',
     'global!document',
     'global!setTimeout'
   ],
@@ -42,7 +43,7 @@ define(
   function (
     Behaviour, Focusing, Invalidating, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs,
     FormField, HtmlSelect, Input, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Future, Merger, Option, Result,
-    Element, Class, Value, document, setTimeout
+    Element, Class, Value, console, document, setTimeout
   ) {
     return function () {
       var gui = Gui.create();
@@ -50,7 +51,7 @@ define(
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
 
-       var sink = DemoSink.make();
+      var sink = DemoSink.make();
 
       gui.add(sink);
 
@@ -83,7 +84,7 @@ define(
                         setTimeout(function () {
                           var res = v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
                           callback(res);
-                        }, 1000);  
+                        }, 1000);
                       });
                     },
                     onEvent: 'input'
@@ -153,7 +154,7 @@ define(
               ]
             })
           ],
-          
+
           parts: {
             field: {
               dom: {
@@ -239,7 +240,7 @@ define(
               { value: 'b.b', text: 'B.B' },
               { value: 'c.c', text: 'C.C' },
               { value: 'd.d', text: 'D.D' }
-            ]        
+            ]
           })),
 
           maxis: FormField.sketch(Typeahead, {
@@ -256,7 +257,7 @@ define(
                   var matching = Arr.bind(DemoDataset, function (d) {
                     var index = d.indexOf(text.toLowerCase());
                     if (index > -1) {
-                      var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + 
+                      var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
                         d.substring(index + text.length);
                       return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
                     } else {
@@ -267,7 +268,7 @@ define(
                   var matches = matching.length > 0 ? matching : [
                     { type: 'separator', text: 'No items' }
                   ];
-         
+
                   var future = Future.pure(matches);
                   return future.map(function (items) {
                     return TieredMenu.simpleData('blah', 'Blah', items);
@@ -307,7 +308,7 @@ define(
             tag: 'div',
             classes: [ 'outside-form' ]
           },
-       
+
           parts: Objects.narrow(fieldParts(), [ 'alpha', 'maxis', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
 
           components: [
@@ -347,7 +348,7 @@ define(
             tag: 'div',
             classes: [ 'expandable-form' ]
           },
-          
+
           markers: {
             expandedClass: 'a',
             collapsedClass: 'b',

@@ -6,16 +6,17 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
+    'ephox.sand.api.JSON',
     'global!Error'
   ],
 
-  function (BehaviourState, Objects, Fun, Obj, Error) {
+  function (BehaviourState, Objects, Fun, Obj, JSON, Error) {
     var init = function (spec) {
       var coupled = { };
 
       var getOrCreate = function (component, coupleConfig, name) {
         var available = Obj.keys(coupleConfig.others());
-        if (! available) throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + Json.stringify(available, null, 2));
+        if (! available) throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2));
         else return Objects.readOptFrom(coupled, name).getOrThunk(function () {
           var builder = Objects.readOptFrom(coupleConfig.others(), name).getOrDie(
             new Error('No information found for coupled component: ' + name)

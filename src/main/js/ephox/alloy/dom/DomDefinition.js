@@ -39,9 +39,9 @@ define(
         })
       };
     };
-  
+
     return {
-      nu: nu,  
+      nu: nu,
       defToStr: defToStr,
       defToRaw: defToRaw
     };

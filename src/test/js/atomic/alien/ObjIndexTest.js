@@ -24,7 +24,7 @@ test(
     };
 
     var assertSortedEq = function (label, expected, actual) {
-      RawAssertions.assertEq(label, sortObjValue(expected), sortObjValue(actual)); 
+      RawAssertions.assertEq(label, sortObjValue(expected), sortObjValue(actual));
     };
 
     Logger.sync(

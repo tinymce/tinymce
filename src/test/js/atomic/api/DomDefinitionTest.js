@@ -8,6 +8,7 @@ test(
   ],
 
   function (Logger, DomDefinition, DomModification) {
+    /* global assert */
     // TODO: Add property based tests.
 
     Logger.sync(

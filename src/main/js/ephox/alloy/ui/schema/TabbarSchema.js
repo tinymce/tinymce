@@ -69,7 +69,7 @@ define(
         };
       }
     );
-  
+
     var partTypes = [
       tabsPart
     ];

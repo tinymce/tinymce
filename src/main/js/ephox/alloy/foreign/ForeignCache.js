@@ -16,7 +16,7 @@ define(
   ],
 
   function (DomState, Dragging, Pinching, Toggling, CompBehaviours, BehaviourBlob, ComponentEvents, FieldSchema, Objects, ValueSchema, Fun) {
-    return function () { 
+    return function () {
       var getEvents = function (elem, spec) {
         var evts = DomState.getOrCreate(elem, function () {
           // If we haven't already setup this particular element, then generate any state and config
@@ -34,7 +34,7 @@ define(
           ]), Objects.narrow(spec, [ 'events', 'eventOrder' ]));
 
           var bInfo = CompBehaviours.generateFrom(spec, [ Toggling, Dragging, Pinching ]);
-          
+
           var baseEvents = {
             'alloy.base.behaviour': info.events()
           };

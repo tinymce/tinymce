@@ -63,9 +63,9 @@ define(
 
       setStoredGroups(primary, groups.concat([ overflowGroup ]));
 
-   
+
       var total = Width.get(primary.element());
-      
+
       var overflows = Overflows.partition(total, groups, function (comp) {
         return Width.get(comp.element());
       }, overflowGroup);
@@ -111,7 +111,7 @@ define(
               role: 'group'
             }
           }
-        }, 
+        },
         {
           uid: detail.uid(),
           dom: detail.dom(),

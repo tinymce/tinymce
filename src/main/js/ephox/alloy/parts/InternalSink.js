@@ -11,7 +11,7 @@ define(
 
   function (Behaviour, Positioning, EventHandler, PartType, Fun) {
     var suffix = 'sink';
-    var partType =  PartType.optional(
+    var partType = PartType.optional(
       { sketch: Fun.identity },
       [ ],
       suffix,
@@ -54,6 +54,6 @@ define(
     return {
       partType: Fun.constant(partType),
       suffix: Fun.constant(suffix)
-    }
+    };
   }
 );

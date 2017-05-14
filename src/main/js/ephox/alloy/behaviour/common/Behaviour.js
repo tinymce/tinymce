@@ -45,7 +45,7 @@ define(
     };
 
     var create = function (schema, name, active, apis, extra, state) {
-      var configSchema = ValueSchema.objOf(schema);
+      var configSchema = ValueSchema.objOfOnly(schema);
       var schemaSchema = FieldSchema.optionObjOf(name, [
         FieldSchema.optionObjOfOnly('config', schema)
       ]);
@@ -97,7 +97,7 @@ define(
           revoke: Fun.curry(revokeBehaviour, name),
           config: function (spec) {
             var prepared = ValueSchema.asStructOrDie(name + '-config', configSchema, spec);
-            
+
             return {
               key: name,
               value: {

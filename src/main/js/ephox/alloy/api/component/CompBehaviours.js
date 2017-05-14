@@ -21,6 +21,7 @@ define(
     'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.behaviour.common.BehaviourBlob',
     'ephox.boulder.api.Objects',
@@ -30,7 +31,7 @@ define(
 
   function (
     Composing, Coupling, Disabling, Docking, Dragging, Focusing, Highlighting, Invalidating, Keying, Pinching, Positioning, Receiving, Replacing, Representing,
-    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Unselecting, BehaviourBlob, Objects, Arr, Error
+    Sandboxing, Sliding, Streaming, Tabstopping, Toggling, Transitioning, Unselecting, BehaviourBlob, Objects, Arr, Error
   ) {
     var alloyBehaviours = [
       Toggling,
@@ -52,6 +53,7 @@ define(
       Sliding,
       Streaming,
       Tabstopping,
+      Transitioning,
       Unselecting
     ];
 
@@ -63,7 +65,7 @@ define(
 
     var generateFrom = function (spec, all) {
       return BehaviourBlob.generateFrom(spec, all);
-    }
+    };
 
     var generate = function (spec) {
       var custom = Objects.readOptFrom(spec, 'customBehaviours').getOr([ ]);

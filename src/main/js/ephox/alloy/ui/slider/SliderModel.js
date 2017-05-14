@@ -39,8 +39,8 @@ define(
         // There is an initial snapping start, so using that as the starting point,
         // calculate the nearest snap position based on the value
         var remainder = (value - start) % step;
-        var adjustment = Math.round( remainder / step);
-        
+        var adjustment = Math.round(remainder / step);
+
 
         var rawSteps = Math.floor((value - start) / step);
         var maxSteps = Math.floor((max - start) / step);

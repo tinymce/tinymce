@@ -1,6 +1,6 @@
 asynctest(
   'Matrix Keying Test',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
@@ -16,7 +16,7 @@ asynctest(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr'
   ],
- 
+
   function (FocusTools, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -124,7 +124,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.left(),
-          {  },
+          { },
           [
             targets.c02,
             targets.c01,
@@ -140,7 +140,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.up(),
-          {  },
+          { },
           [
             targets.c21,
             targets.c15,
@@ -156,7 +156,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.right(),
-          {  },
+          { },
           [
             targets.c19,
             targets.c20,
@@ -170,7 +170,7 @@ asynctest(
         NavigationUtils.sequence(
           doc,
           Keys.left(),
-          {  },
+          { },
           [
             targets.c20,
             targets.c19,

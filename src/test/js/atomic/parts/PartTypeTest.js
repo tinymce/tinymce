@@ -4,10 +4,12 @@ test(
   [
     'ephox.alloy.parts.PartType',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'global!console'
   ],
 
-  function (PartType, Arr, Fun) {
+  function (PartType, Arr, Fun, console) {
+    // TODO: Make this into a proper test
     var internal = PartType.internal(
       { sketch: function (x) { return 'sketch.' + x; } },
       [ ],

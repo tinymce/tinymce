@@ -32,6 +32,7 @@ define(
         setValue: setValue,
         getValue: getValue,
         onLoad: onLoad,
+        onUnload: Fun.noop,
         state: NoState.init
       })
     ];

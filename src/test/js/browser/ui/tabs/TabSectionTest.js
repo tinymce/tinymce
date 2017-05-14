@@ -1,6 +1,6 @@
 asynctest(
   'TabSection Test',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -12,7 +12,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun'
   ],
- 
+
   function (ApproxStructure, Assertions, Step, GuiFactory, Container, TabSection, Tabbar, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

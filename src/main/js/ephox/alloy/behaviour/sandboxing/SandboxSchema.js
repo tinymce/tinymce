@@ -17,7 +17,9 @@ define(
       // Maybe this should be optional
       FieldSchema.strict('isPartOf'),
 
-      FieldSchema.strict('getAttachPoint')
+      FieldSchema.strict('getAttachPoint'),
+
+      FieldSchema.defaulted('cloakVisibilityAttr', 'data-precloak-visibility')
     ];
   }
 );

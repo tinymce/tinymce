@@ -16,7 +16,7 @@ define(
       return UiSketcher.composite(FormCoupledInputsSchema.name(), schema, partTypes, make, spec);
     };
 
-    var make = function (detail, components, spec, externals) { 
+    var make = function (detail, components, spec, externals) {
       return {
         uid: detail.uid(),
         dom: detail.dom(),

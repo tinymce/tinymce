@@ -18,6 +18,6 @@ define(
       name: Fun.constant('HtmlSelect'),
       schema: Fun.constant(schema),
       parts: Fun.constant([ ])
-    }
+    };
   }
 );

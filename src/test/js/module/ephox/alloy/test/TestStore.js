@@ -12,7 +12,7 @@ define(
     return function () {
       var array = [ ];
       var adder = function (value) {
-        return function () {            
+        return function () {
           array.push(value);
           console.log('store.add', value, array);
         };
