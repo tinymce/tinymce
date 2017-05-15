@@ -26,10 +26,12 @@ define(
               var raw = simulatedEvent.event().raw();
               TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
                 TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
-                  if (raw.propertyName === rInfo.transition()) {
-                    TransitionApis.jumpTo(component, transConfig, transState, route.destination());
-                    transConfig.onTransition()(component, route);
-                  }
+                  rInfo.transition().each(function (rTransition) {
+                    if (raw.propertyName === rTransition.property()) {
+                      TransitionApis.jumpTo(component, transConfig, transState, route.destination());
+                      transConfig.onTransition()(component, route);
+                    }
+                  });
                 });
               });
             }

@@ -44,7 +44,7 @@ define(
     };
 
     var logHandler = function (label, handlerName, trace) {
-      if (debugging) console.log(label + ' [' + handlerName + ']', trace);
+      // if (debugging) console.log(label + ' [' + handlerName + ']', trace);
     };
 
     var ignoreEvent = {
