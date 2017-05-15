@@ -6,11 +6,10 @@ define(
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.selection.WindowSelection',
     'global!clearInterval',
-    'global!setInterval',
-    'global!window'
+    'global!setInterval'
   ],
 
-  function (Focus, Css, WindowSelection, clearInterval, setInterval, window) {
+  function (Focus, Css, WindowSelection, clearInterval, setInterval) {
     var stopTouchFlicker = function (editorBody) {
       // TBIO-3691, stop the gray flicker on touch.
       // the content body will flicker grey when touched and there was no selection, this will make it
@@ -40,14 +39,15 @@ define(
       });
     };
 
-    var onOrientationReady = function (refreshView) {
+    // NOTE: NOT USED YET
+    var onOrientationReady = function (outerWindow, refreshView) {
       // When rotating into portrait, the page (and toolbar) is off the top of the screen (pageYOffset > 0)
       // when the view settles, the toolbar will readjust to be visible/fixed to the top (pageYOffset = 0)
       // wait for the toolbar to recover before refreshing the view and scrolling cursor into view
       // done here instead of nomad toolbar fixup since that is tied to window scroll, which does not
       // fire on landscape
       var scrollNotZero = setInterval(function () {
-        if (window.pageYOffset === 0) {
+        if (outerWindow.pageYOffset === 0) {
           clearInterval(scrollNotZero);
           refreshView();
         }
