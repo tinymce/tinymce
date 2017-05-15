@@ -35,16 +35,15 @@
 }
 
 @smartphones: ~"only screen and (max-device-width: 700px)";
-
 @tablets: ~"only screen and (min-device-width:700px)";
 
-@media (min-width: 700px) {
+@media (min-device-width: 700px) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
     font-size: 25px;
   }
 }
 
-@media (max-width: 700x) {
+@media (max-device-width: 700x) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
     font-size: 18px;
   }
