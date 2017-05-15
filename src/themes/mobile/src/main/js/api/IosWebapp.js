@@ -3,17 +3,15 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.system.Gui',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.api.MobileSchema',
     'tinymce.themes.mobile.ios.core.IosMode',
     'tinymce.themes.mobile.touch.view.TapToEditMask'
   ],
 
-  function (GuiFactory, Gui, ValueSchema, Fun, Insert, Css, MobileSchema, IosMode, TapToEditMask) {
+  function (GuiFactory, ValueSchema, Fun, Css, MobileSchema, IosMode, TapToEditMask) {
     var produce = function (raw) {
       var mobile = ValueSchema.asRawOrDie(
         'Getting IosWebapp schema',
@@ -25,12 +23,18 @@ define(
       Css.set(mobile.toolstrip, 'width', '100%');
 
       Css.set(mobile.container, 'position', 'relative');
-      var onTap = function () {
+      var onView = function () {
+        mobile.setReadOnly(true);
         mode.enter();
       };
 
+      var onEdit = function () {
+        mobile.setReadOnly(false);
+        mode.enter();
+      }
+
       var mask = GuiFactory.build(
-        TapToEditMask.sketch(onTap)
+        TapToEditMask.sketch(onView, onEdit, mobile.translate)
       );
 
       mobile.alloy.add(mask);

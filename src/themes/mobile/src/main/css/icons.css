@@ -85,7 +85,10 @@
 
 .tinymce-mobile-icon-back:before {
   content: 'Back';
+}
 
+.tinymce-mobile-icon-readonly-back:before {
+  content: 'Back';
 }
 
 .tinymce-mobile-icon-undo:before {
@@ -150,4 +153,9 @@
 
 .tinymce-mobile-icon-cancel-circle:before {
   content: "\ea0d";
+}
+
+.tinymce-mobile-icon-edit:before {
+  content: url(../icons/tinymce-logo2.svg);
+  width: 2em;
 }

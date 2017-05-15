@@ -2,15 +2,46 @@ define(
   'tinymce.themes.mobile.touch.view.TapToEditMask',
 
   [
-    'ephox.alloy.api.ui.Button',
+    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
-    'tinymce.themes.mobile.style.Styles'
+    'ephox.sugar.api.properties.Attr',
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.view.TapToEditButton'
   ],
 
-  function (Button, Container, Styles) {
-    var sketch = function (onTap) {
+  function (AdhocBehaviour, Behaviour, Toggling, Memento, AlloyEvents, Container, Attr, Styles, TapToEditButton) {
+    var sketch = function (onView, onEdit, translate) {
+      
+      var memIcon = Memento.record(
+        Container.sketch({
+          dom: {
+            attributes: {
+              'aria-hidden': 'true'
+            },
+            classes: [ Styles.resolve('mask-tap-icon') ]
+          },
+          containerBehaviours: Behaviour.derive([
+            AdhocBehaviour.config('conn'),
+            Toggling.config({
+              toggleClass: Styles.resolve('mask-tap-icon-selected'),
+              toggleOnExecute: false
+            })
+          ]),
+          customBehaviours: [
+            AdhocBehaviour.events('conn', AlloyEvents.derive([
+              AlloyEvents.runOnAttached(function (c, s) {
+                Attr.remove(c.element(), 'data-mode');
+              })
+            ]))
+          ]
+        })
+      );
 
-      return Button.sketch({
+      return Container.sketch({
         dom: {
           tag: 'div',
           classes: [ Styles.resolve('disabled-mask') ]
@@ -21,40 +52,21 @@ define(
               classes: [ Styles.resolve('content-container') ]
             },
             components: [
-              Container.sketch({
+              TapToEditButton.sketch({
                 dom: {
+                  tag: 'div',
                   classes: [ Styles.resolve('content-tap-section') ]
                 },
                 components: [
-                  Container.sketch({
-                    dom: {
-                      attributes: {
-                        'aria-hidden': 'true'
-                      },
-                      classes: [ Styles.resolve('mask-tap-icon') ]
-                    }
-                  }),
-                  Container.sketch({
-                    dom: {
-                      // FIX: i18n
-                      innerHtml: 'Tap to Edit'
-                    }
-                  })
-                ]
-              }),
-
-              Container.sketch({
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('disclosure') ],
-                  // FIX: i18n
-                  innerHtml: 'Powered by TinyMCE'
-                }
+                  memIcon.asSpec()
+                ],
+                memIcon: memIcon,
+                onView: onView,
+                onEdit: onEdit
               })
             ]
           })
-        ],
-        action: onTap
+        ]
       });
     };
 

@@ -13,6 +13,13 @@
 @editor-mask-background-color: #333;
 @editor-mask-foreground-color: #eee;
 
+@mask-button-font-size-small: 0.8em;
+@mask-button-font-size-large: 1.0em;
+
+@mask-button-size: 4em;
+
+@tinymce-blue: #4682B4;
+
 @import "icons.css";
 @import "mask.less";
 @import "android.less";
@@ -24,6 +31,10 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@smartphones: ~"only screen and (max-device-width: 700px)";
+
+@tablets: ~"only screen and (min-device-width:700px)";
 
 @media (min-width: 700px) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
@@ -41,6 +52,12 @@
   font-family: 'tinymce-mobile';
 }
 
+.mixin-flex-and-centre {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .mixin-flex-bar {
   display: flex;
   align-items: center;
@@ -51,6 +68,10 @@
   .tinymce-mobile-editor-socket {
     overflow: hidden;
     height: 300px;
+  }
+
+  .tinymce-mobile-toolstrip {
+    display: none;
   }
 }
 

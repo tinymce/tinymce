@@ -109,7 +109,15 @@ define(
             socket: Element.fromDom(editor.contentAreaContainer),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
-            alloy: realm.system()
+            alloy: realm.system(),
+            translate: function (key) {
+              return key === 'Tap to Edit' && editor.settings.readonly === 1 ? 'Tap to View' : key;
+            },
+
+            setReadOnly: function (ro) {
+              realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
+              editor.setMode(ro === true ? 'readonly' : 'design');
+            }
           });
 
           var createHeadingButton = function (level) {
@@ -118,46 +126,72 @@ define(
             });
           };
 
-          var mainGroups = Cell([
-            {
-              label: 'The first group',
-              scrollable: false,
-              items: [
-                Buttons.forToolbar('back', function (/* btn */) {
-                  realm.exit();
-                }, {})
-              ]
-            },
-            {
-              label: 'the action group',
-              scrollable: true,
-              items: [
-                Buttons.forToolbarCommand(editor, 'undo'),
-                Buttons.forToolbarStateCommand(editor, 'bold'),
-                Buttons.forToolbarStateCommand(editor, 'italic'),
-                createHeadingButton('h1'),
-                createHeadingButton('h2'),
-                createHeadingButton('h3'),
-                // NOTE: Requires "lists" plugin.
-                Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
-                  editor.execCommand('InsertUnorderedList', null, false);
-                }),
-                LinkButton.sketch(realm, editor),
-                ImagePicker.sketch(editor),
-                FontSizeSlider.sketch(realm, editor),
-                ColorSlider.sketch(realm, editor)
-              ]
-            },
-            {
-              label: 'The extra group',
-              scrollable: false,
-              items: [
-                // This is where the "add button" button goes.
-              ]
-            }
-          ]);
 
-          realm.setToolbarGroups(mainGroups.get());
+          var backToMaskGroup = {
+            label: 'The first group',
+            scrollable: false,
+            items: [
+              Buttons.forToolbar('back', function (/* btn */) {
+                realm.exit();
+              }, { })
+            ]
+          };
+
+          var backToReadOnlyGroup = {
+            label: 'Back to read only',
+            scrollable: false,
+            items: [
+              Buttons.forToolbar('readonly-back', function (/* btn */) {
+                realm.setToolbarGroups(readOnlyGroups.get());
+                editor.setMode('readonly');
+              }, {})
+            ]
+          };
+
+          var readOnlyGroup = {
+            label: 'The read only mode group',
+            scrollable: true,
+            items: [
+              Buttons.forToolbar('edit', function () {
+                realm.setToolbarGroups(mainGroups.get());
+                editor.setMode('design');
+              }, {})
+            ]
+          };
+
+          var actionGroup = {
+            label: 'the action group',
+            scrollable: true,
+            items: [
+              Buttons.forToolbarCommand(editor, 'undo'),
+              Buttons.forToolbarStateCommand(editor, 'bold'),
+              Buttons.forToolbarStateCommand(editor, 'italic'),
+              createHeadingButton('h1'),
+              createHeadingButton('h2'),
+              createHeadingButton('h3'),
+              // NOTE: Requires "lists" plugin.
+              Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
+                editor.execCommand('InsertUnorderedList', null, false);
+              }),
+              LinkButton.sketch(realm, editor),
+              ImagePicker.sketch(editor),
+              FontSizeSlider.sketch(realm, editor),
+              ColorSlider.sketch(realm, editor)
+            ]
+          };
+
+          var extraGroup = {
+            label: 'The extra group',
+            scrollable: false,
+            items: [
+              // This is where the "add button" button goes.
+            ]
+          };
+
+          var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
+          var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
+
+          realm.setToolbarGroups(editor.settings.readonly === 1 ? readOnlyGroups.get() : mainGroups.get());
 
           // Investigate ways to keep in sync with the ui
           FormatChangers.init(realm, editor);
