@@ -9,23 +9,23 @@ define(
     'ephox.sugar.api.node.Element',
     'global!clearInterval',
     'global!Math',
-    'global!setInterval',
-    'global!window'
+    'global!setInterval'
   ],
 
-  function (Fun, Option, PlatformDetection, DomEvent, Element, clearInterval, Math, setInterval, window) {
+  function (Fun, Option, PlatformDetection, DomEvent, Element, clearInterval, Math, setInterval) {
 
     var INTERVAL = 50;
     var INSURANCE = 1000 / INTERVAL;
 
-    var get = function () {
+    var get = function (outerWindow) {
       // We need to use this because the window shrinks due to an app keyboard,
       // width > height is no longer reliable.
-      var isPortrait = window.matchMedia('(orientation: portrait)').matches;
+      var isPortrait = outerWindow.matchMedia('(orientation: portrait)').matches;
       return {
         isPortrait: Fun.constant(isPortrait)
       };
     };
+
 
     // In iOS the width of the window is not swapped properly when the device is
     // rotated causing problems.
@@ -41,15 +41,15 @@ define(
       }
     };
 
-    var onChange = function (listeners) {
-      var win = Element.fromDom(window);
+    var onChange = function (outerWindow, listeners) {
+      var win = Element.fromDom(outerWindow);
       var poller = null;
 
       var change = function () {
         // If a developer is spamming orientation events in the simulator, clear our last check
         clearInterval(poller);
 
-        var orientation = get();
+        var orientation = get(outerWindow);
         listeners.onChange(orientation);
 
         onAdjustment(function () {
@@ -64,12 +64,12 @@ define(
         // If a developer is spamming orientation events in the simulator, clear our last check
         clearInterval(poller);
 
-        var flag = window.innerHeight;
+        var flag = outerWindow.innerHeight;
         var insurance = 0;
         poller = setInterval(function () {
-          if (flag !== window.innerHeight) {
+          if (flag !== outerWindow.innerHeight) {
             clearInterval(poller);
-            f(Option.some(window.innerHeight));
+            f(Option.some(outerWindow.innerHeight));
           } else if (insurance > INSURANCE) {
             clearInterval(poller);
             f(Option.none());

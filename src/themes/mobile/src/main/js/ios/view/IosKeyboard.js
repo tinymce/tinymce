@@ -42,13 +42,13 @@ define(
      * the stubborn keyboard in webapp mode, we will need to find some way to let repartee know the MaxHeight
      * needs to exclude the keyboard. This isn't a problem with timid, because the keyboard is dismissed.
      */
-    var stubborn = function (cWin, page, frame/*, toolstrip, toolbar*/) {
+    var stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
       var toEditing = function () {
         ResumeEditing.resume(cWin, frame);
       };
 
       var toReading = function () {
-        CaptureBin.input(Body.body(), Focus.blur);
+        CaptureBin.input(outerBody, Focus.blur);
       };
 
       var captureInput = DomEvent.bind(page, 'keydown', function (evt) {
@@ -96,7 +96,7 @@ define(
      * However, the timid keyboard mode will seamlessly integrate with dropdowns max-height, because
      * dropdowns dismiss the keyboard, so they have all the height they require.
      */
-    var timid = function (cWin, page, frame/*, toolstrip, toolbar*/) {
+    var timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
       var dismissKeyboard = function () {
         Focus.blur(frame);
       };

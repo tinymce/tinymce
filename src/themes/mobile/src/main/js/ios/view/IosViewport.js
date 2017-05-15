@@ -8,15 +8,15 @@ define(
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.view.Height',
-    'global!window',
     'tinymce.themes.mobile.ios.view.DeviceZones',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.scroll.Scrollable',
     'tinymce.themes.mobile.util.DataAttributes'
   ],
 
-  function (Adt, Arr, Fun, Attr, Css, SelectorFilter, Height, window, DeviceZones, Styles, Scrollable, DataAttributes) {
+  function (Adt, Arr, Fun, Attr, Css, SelectorFilter, Traverse, Height, DeviceZones, Styles, Scrollable, DataAttributes) {
     var fixture = Adt.generate([
       { 'fixed': [ 'element', 'offsetY' ] },
       { 'scroller' :[ 'element', 'offsetY' ] }
@@ -94,12 +94,14 @@ define(
     var deriveViewportHeight = function (viewport, toolbarHeight) {
       // Note, Mike thinks this value changes when the URL address bar grows and shrinks. If this value is too high
       // the main problem is that scrolling into the greenzone may not scroll into an area that is viewable. Investigate.
-      var winH = window.innerHeight;
+      var outerWindow = Traverse.owner(viewport).dom().defaultView;
+      var winH = outerWindow.innerHeight;
       Attr.set(viewport, windowSizeData, winH + 'px');
       return winH - toolbarHeight;
     };
 
     var takeover = function (viewport, contentBody, toolbar) {
+      var outerWindow = Traverse.owner(viewport).dom().defaultView;
       var toolbarSetup = takeoverToolbar(toolbar);
       var toolbarHeight = Height.get(toolbar);
       var viewportHeight = deriveViewportHeight(viewport, toolbarHeight);
@@ -115,7 +117,7 @@ define(
       };
 
       var isExpanding = function () {
-        var currentWinHeight = window.innerHeight;
+        var currentWinHeight = outerWindow.innerHeight;
         var lastWinHeight = getLastWindowSize(viewport);
         return currentWinHeight > lastWinHeight;
       };
