@@ -98,7 +98,7 @@ define(
               Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
-            var dotitems = dots.get(dialog);
+            var dotitems = memDots.get(dialog);
             Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
           }
         });
@@ -199,7 +199,7 @@ define(
                     if (EventRoot.isSource(dialog, simulatedEvent)) {
                       // Reset state to first screen.
                       resetState();
-                      var dotitems = dots.get(dialog);
+                      var dotitems = memDots.get(dialog);
                       Highlighting.highlightFirst(dotitems);
                       spec.getInitialValue(dialog).each(function (v) {
                         Representing.setValue(dialog, v);
@@ -277,7 +277,7 @@ define(
         ]
       });
 
-      var dots = Memento.record({
+      var memDots = Memento.record({
         dom: {
           tag: 'div',
           classes: [Styles.resolve('dot-container')]
@@ -307,7 +307,7 @@ define(
         },
         components: [
           f,
-          dots.asSpec()
+          memDots.asSpec()
         ]
       };
     };
