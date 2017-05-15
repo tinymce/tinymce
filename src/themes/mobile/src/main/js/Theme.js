@@ -48,10 +48,10 @@ define(
           });
         };
 
-        var orientation = Orientation.onChange(window.top, {
+        var orientation = Orientation.onChange(args.targetNode.ownerDocument.defaultView, {
           onChange: function () {
             var alloy = realm.system();
-            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth(window.top) });
+            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth(args.targetNode.ownerDocument.defaultView) });
           },
           onReady: Fun.noop
         });
