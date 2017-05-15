@@ -109,6 +109,24 @@ asynctest(
         Highlighting.highlightLast(component);
       });
 
+      var cHighlightAt = function (index) {
+        return Chain.op(function () {
+          Highlighting.highlightAt(component, index)
+        });
+      };
+
+      var cHighlightAtError = function (index) {
+        return Chain.binder(function (v) {
+          try {
+            Highlighting.highlightAt(component, index);
+            return Result.error('Expected to get an error because there should be no item with index ' + index);
+          } catch (e) {
+
+          }
+          return Result.value(v);
+        });
+      };
+
       var cIsHighlighted = Chain.mapper(function (item) {
         return Highlighting.isHighlighted(component, item);
       });
@@ -182,6 +200,11 @@ asynctest(
 
             NamedChain.direct('beta', cDehighlight, '_'),
             cCheckNumOf('beta should be deselected', '.test-selected', 0),
+
+            cHighlightAt(1),
+            cCheckSelected('highlightAt(compontent, 1) => Beta is selected', 'beta'),
+
+            cHighlightAtError(6),
 
             cHighlightFirst,
             cCheckSelected('highlightFirst => Alpha is selected', 'alpha'),
