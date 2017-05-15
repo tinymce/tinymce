@@ -76,10 +76,10 @@ asynctest(
     });
 
     suite.test('Delete from empty P with style span inside into H1', function (editor) {
-      editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red"><br></span></p>';
+      editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
       LegacyUnit.setSelection(editor, 'span', 0);
       editor.execCommand('Delete');
-      LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;"><br /></span></h1>');
+      LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
     });
 
