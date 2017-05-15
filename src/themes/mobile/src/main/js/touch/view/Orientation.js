@@ -31,9 +31,9 @@ define(
     // rotated causing problems.
     // getActualWidth will return the actual width of the window accurated with the
     // orientation of the device.
-    var getActualWidth = function () {
+    var getActualWidth = function (outerWindow) {
       var isIos = PlatformDetection.detect().os.isiOS();
-      var isPortrait = get().isPortrait();
+      var isPortrait = get(outerWindow).isPortrait();
       return isIos && !isPortrait ? window.screen.height : window.screen.width;
     };
 
