@@ -5,16 +5,17 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
     'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Classes',
     'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.search.Traverse',
     'global!Math',
-    'global!window',
     'tinymce.themes.mobile.ios.smooth.SmoothAnimation',
     'tinymce.themes.mobile.ios.view.IosViewport',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.DataAttributes'
   ],
 
-  function (Fun, Future, Attr, Css, Math, window, SmoothAnimation, IosViewport, Styles, DataAttributes) {
+  function (Fun, Future, Attr, Classes, Css, Traverse, Math, SmoothAnimation, IosViewport, Styles, DataAttributes) {
     var animator = SmoothAnimation.create();
 
     var ANIMATION_STEP = 15;
@@ -110,10 +111,11 @@ define(
     // was changing. Therefore, until tests prove otherwise, we are just going to jump to the
     // destination in one go.
     var moveWindowScroll = function (toolbar, viewport, destY) {
+      var outerWindow = Traverse.owner(toolbar).dom().defaultView;
       return Future.nu(function (callback) {
         updateTop(toolbar, destY);
         updateTop(viewport, destY);
-        window.scrollTo(0, destY);
+        outerWindow.scrollTo(0, destY);
         callback(destY);
       });
     };

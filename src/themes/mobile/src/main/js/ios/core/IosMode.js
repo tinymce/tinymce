@@ -74,7 +74,9 @@ define(
             'contentElement',
             'cursor',
             'keyboardType',
-            'isScrolling'
+            'isScrolling',
+            'outerWindow',
+            'outerBody'
           ], []);
 
           iosApi.set(
@@ -86,6 +88,8 @@ define(
               'toolbar': platform.toolbar,
               'contentElement': editorApi.frame(),
               'cursor': Fun.noop,
+              'outerBody': platform.body,
+              'outerWindow': platform.win,
               'keyboardType': IosKeyboard.stubborn,
               'isScrolling': function () {
                 return scrollEvents.get().exists(function (s) {

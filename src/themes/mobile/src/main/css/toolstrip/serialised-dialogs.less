@@ -8,7 +8,7 @@
   padding-right: 0em;
 
   .tinymce-mobile-serialised-dialog-chain {
-    transition: left linear 0.15s;
+    transition: left linear @quick-animation-time;
     display: flex;
     width: 100%;
     height: 100%;
@@ -62,5 +62,13 @@
         }
       }
     }
+  }
+}
+
+.tinymce-mobile-dot-item {
+  margin: auto 2px;
+
+  &.tinymce-mobile-dot-active {
+    color: @toolstrip-button-selected-background-color;
   }
 }

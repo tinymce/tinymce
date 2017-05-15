@@ -3,13 +3,13 @@ define(
 
   [
     'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.view.Height',
-    'global!window',
     'tinymce.themes.mobile.ios.view.Devices',
     'tinymce.themes.mobile.touch.view.Orientation'
   ],
 
-  function (Css, Height, window, Devices, Orientation) {
+  function (Css, Traverse, Height, Devices, Orientation) {
     // Green zone is the area below the toolbar and above the keyboard, its considered the viewable
     // region that is not obstructed by the keyboard. If the keyboard is down, then the Green Zone is larger.
 
@@ -27,27 +27,28 @@ define(
 
       */
 
-    var softKeyboardLimits = (function () {
-      return Devices.findDevice(window.screen.width, window.screen.height);
-    })();
+    var softKeyboardLimits = function (outerWindow) {
+      return Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
+    };
 
-    var accountableKeyboardHeight = function () {
-      var portrait = Orientation.get().isPortrait();
+    var accountableKeyboardHeight = function (outerWindow) {
+      var portrait = Orientation.get(outerWindow).isPortrait();
+      var limits = softKeyboardLimits(outerWindow);
 
-      var keyboard = portrait ? softKeyboardLimits.portrait : softKeyboardLimits.landscape;
+      var keyboard = portrait ? limits.portrait : limits.landscape;
 
-      var visualScreenHeight = portrait ? window.screen.height : window.screen.width;
+      var visualScreenHeight = portrait ? outerWindow.screen.height : outerWindow.screen.width;
 
       // This is our attempt to detect when we are in a webview. If the DOM window height is smaller than the
       // actual screen height by about the size of a keyboard, we assume that's because a keyboard is
       // causing it to be that small. We will improve this at a later date.
-      return (visualScreenHeight - window.innerHeight) > keyboard ? 0 : keyboard;
+      return (visualScreenHeight - outerWindow.innerHeight) > keyboard ? 0 : keyboard;
     };
 
     var getGreenzone = function (socket) {
+      var outerWindow = Traverse.owner(socket).dom().defaultView;
       var viewportHeight = Height.get(socket);
-
-      return viewportHeight - accountableKeyboardHeight();
+      return viewportHeight - accountableKeyboardHeight(outerWindow);
     };
 
     var updatePadding = function (contentBody, socket) {
