@@ -59,7 +59,6 @@ define(
          * As soon as the window is back to 0 (idle), scroll the toolbar and socket back into place on scroll.
          */
         scroller.idle(function () {
-          console.log('** idle **');
           IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (/* _ */) {
             var extraScroll = scrollBounds();
             extraScroll.each(function (extra) {
