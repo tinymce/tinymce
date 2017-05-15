@@ -48,7 +48,7 @@ define(
           });
         };
 
-        var orientation = Orientation.onChange({
+        var orientation = Orientation.onChange(window.top, {
           onChange: function () {
             var alloy = realm.system();
             alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth() });
