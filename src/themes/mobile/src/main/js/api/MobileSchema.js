@@ -44,7 +44,9 @@ define(
       FieldSchema.strict('toolstrip'),
       FieldSchema.strict('toolbar'),
       FieldSchema.strict('container'),
-      FieldSchema.strict('alloy')
+      FieldSchema.strict('alloy'),
+      FieldSchema.defaulted('translate', Fun.identity),
+      FieldSchema.defaulted('setReadOnly', Fun.noop)
     ]);
   }
 );

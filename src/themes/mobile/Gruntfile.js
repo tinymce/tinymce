@@ -173,7 +173,8 @@ module.exports = function (grunt) {
         files: ['src/main/css/**/*.less'], // which files to watch
         tasks: ['less'],
         options: {
-          nospawn: true
+          nospawn: true,
+          atBegin: true
         }
       },
       build: {
@@ -182,7 +183,7 @@ module.exports = function (grunt) {
       },
       tests: {
         files: ['src/**/**.js'],
-        tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantom' ]
+        tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]
       }
     }
   });
