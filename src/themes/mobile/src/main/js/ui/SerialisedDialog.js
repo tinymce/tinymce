@@ -22,7 +22,6 @@ define(
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Singleton',
-    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
@@ -32,8 +31,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema,
-    Objects, ValueSchema, Arr, Cell, Option, Singleton, PlatformDetection, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler,
+    FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
