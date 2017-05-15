@@ -34,11 +34,7 @@ define(
     var getActualWidth = function () {
       var isIos = PlatformDetection.detect().os.isiOS();
       var isPortrait = get().isPortrait();
-      if (isIos) {
-        return isPortrait ? window.screen.width : window.screen.height;
-      } else {
-        return window.screen.width;
-      }
+      return isIos && !isPortrait ? window.screen.height : window.screen.width;
     };
 
     var onChange = function (outerWindow, listeners) {
