@@ -110,7 +110,7 @@ module.exports = function (grunt) {
             src: "index.html",
             dest: "deploy-local/index.html"
           }
-          
+
         ]
       }
     },
@@ -161,6 +161,7 @@ module.exports = function (grunt) {
           plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions" ]}) ],
           compress: true,
           yuicompress: true,
+          sourceMap: true,
           optimization: 2
         },
         files: {

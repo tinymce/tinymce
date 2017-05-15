@@ -5,8 +5,11 @@ define(
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -28,8 +31,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Keying, Representing, SystemEvents, Button, Container, Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr,
-    Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler,
+    FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -54,8 +57,8 @@ define(
         return Button.sketch({
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('icon-previous'), Styles.resolve('icon') ].concat(
-              enabled ? [ ] : [ Styles.resolve('toolbar-navigation-disabled') ]
+            classes: [Styles.resolve('icon-previous'), Styles.resolve('icon')].concat(
+              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
             )
           },
           action: function (button) {
@@ -68,13 +71,19 @@ define(
         return Button.sketch({
           dom: {
             tag: 'span',
-            classes: [ Styles.resolve('icon-next'), Styles.resolve('icon') ].concat(
-              enabled ? [ ] : [ Styles.resolve('toolbar-navigation-disabled') ]
+            classes: [Styles.resolve('icon-next'), Styles.resolve('icon')].concat(
+              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
             )
           },
           action: function (button) {
             SystemEvents.trigger(button, navigateEvent, { direction: +1 });
           }
+        });
+      };
+
+      var reposition = function (dialog, message) {
+        SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+          Css.set(parent, 'left', (-spec.state.currentScreen.get() * message.width) + 'px');
         });
       };
 
@@ -88,6 +97,8 @@ define(
               Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
+            var dotitems = memDots.get(dialog);
+            Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
           }
         });
       };
@@ -108,16 +119,18 @@ define(
         spec.state.dialogSwipeState.clear();
       };
 
-      return Form.sketch({
+
+
+      var f = Form.sketch({
         dom: {
           tag: 'div',
-          classes: [ Styles.resolve('serialised-dialog') ]
+          classes: [Styles.resolve('serialised-dialog')]
         },
         components: [
           Container.sketch({
             dom: {
               tag: 'div',
-              classes: [ Styles.resolve('serialised-dialog-chain') ],
+              classes: [Styles.resolve('serialised-dialog-chain')],
               styles: {
                 left: '0px',
                 position: 'absolute'
@@ -127,12 +140,12 @@ define(
               return i <= spec.maxFieldIndex ? Container.sketch({
                 dom: {
                   tag: 'div',
-                  classes: [ Styles.resolve('serialised-dialog-screen') ]
+                  classes: [Styles.resolve('serialised-dialog-screen')]
                 },
                 components: Arr.flatten([
-                  [ prevButton(i > 0) ],
-                  [ Form.parts(field.name) ],
-                  [ nextButton(i < spec.maxFieldIndex) ]
+                  [prevButton(i > 0)],
+                  [Form.parts(field.name)],
+                  [nextButton(i < spec.maxFieldIndex)]
                 ])
               }) : Form.parts(field.name);
             })
@@ -140,7 +153,7 @@ define(
         ],
 
         parts: (function () {
-          var r = { };
+          var r = {};
           Arr.each(spec.fields, function (f) {
             r[f.name] = f.spec;
           });
@@ -148,6 +161,15 @@ define(
         })(),
 
         formBehaviours: Behaviour.derive([
+          Receiving.config({
+            channels: {
+              'orientation.change': {
+                onReceive: function (dialog, message) {
+                  reposition(dialog, message);
+                }
+              }
+            }
+          }),
           Keying.config({
             mode: 'special',
             focusIn: function (dialog/*, specialInfo */) {
@@ -176,6 +198,8 @@ define(
                     if (EventRoot.isSource(dialog, simulatedEvent)) {
                       // Reset state to first screen.
                       resetState();
+                      var dotitems = memDots.get(dialog);
+                      Highlighting.highlightFirst(dotitems);
                       spec.getInitialValue(dialog).each(function (v) {
                         Representing.setValue(dialog, v);
                       });
@@ -251,6 +275,40 @@ define(
           )
         ]
       });
+
+      var memDots = Memento.record({
+        dom: {
+          tag: 'div',
+          classes: [Styles.resolve('dot-container')]
+        },
+        behaviours: Behaviour.derive([
+          Highlighting.config({
+            highlightClass: Styles.resolve('dot-active'),
+            itemClass: Styles.resolve('dot-item')
+          })
+        ]),
+        components: Arr.bind(spec.fields, function (_f, i) {
+          return i <= spec.maxFieldIndex ? [
+            {
+              dom: {
+                tag: 'div',
+                innerHtml: '&#x2022;',
+                classes: [Styles.resolve('dot-item')]
+              }
+            }] : [];
+        })
+      });
+
+      return {
+        dom: {
+          tag: 'div',
+          classes: [Styles.resolve('serializer-wrapper')]
+        },
+        components: [
+          f,
+          memDots.asSpec()
+        ]
+      };
     };
 
     return {

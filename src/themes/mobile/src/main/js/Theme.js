@@ -14,6 +14,7 @@ define(
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.view.Orientation',
     'tinymce.themes.mobile.ui.AndroidRealm',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
@@ -28,8 +29,8 @@ define(
 
 
   function (
-    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, AndroidRealm, Buttons, ColorSlider, FontSizeSlider,
-    ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm, Buttons, ColorSlider,
+    FontSizeSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -46,6 +47,14 @@ define(
             return realm.system().getByDom(focused).toOption();
           });
         };
+
+        var orientation = Orientation.onChange(window.top, {
+          onChange: function () {
+            var alloy = realm.system();
+            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth() });
+          },
+          onReady: Fun.noop
+        });
 
         editor.on('init', function () {
           realm.init({
@@ -67,6 +76,7 @@ define(
 
                 var unbind = function () {
                   editor.off('scrollIntoView');
+                  orientation.destroy();
                 };
 
                 return {
@@ -116,6 +126,7 @@ define(
             });
           };
 
+
           var backToMaskGroup = {
             label: 'The first group',
             scrollable: false,
@@ -135,7 +146,7 @@ define(
                 editor.setMode('readonly');
               }, {})
             ]
-          }
+          };
 
           var readOnlyGroup = {
             label: 'The read only mode group',

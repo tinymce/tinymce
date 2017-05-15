@@ -3,9 +3,14 @@
   @import "serialised-dialogs.less";
   @import "slider.less";
 
+  .tinymce-mobile-serializer-wrapper,
   & > div {
   .mixin-flex-bar;
   flex: 1;
+  }
+
+  .tinymce-mobile-serializer-wrapper {
+    flex-direction: column;
   }
 
   .mixin-flex-bar;
@@ -26,6 +31,10 @@
   .tinymce-mobile-toolbar-group-item {
     display: flex;
     align-items: center;
+  }
+
+  .tinymce-mobile-dot-container {
+    display: flex;
   }
 
   input {
