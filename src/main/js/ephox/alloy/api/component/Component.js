@@ -27,12 +27,12 @@ define(
     CompBehaviours, ComponentApi, NoContextApi, GuiTypes, BehaviourBlob, ComponentDom, ComponentEvents, CustomDefinition, DomModification, DomRender, ValueSchema,
     Arr, Cell, Fun, Merger, Type, Json, Traverse, Error
   ) {
-    var build = function (spec) { 
-       var getSelf = function () {
-        return self;
+    var build = function (spec) {
+      var getMe = function () {
+        return me;
       };
 
-      var systemApi = Cell(NoContextApi(getSelf));
+      var systemApi = Cell(NoContextApi(getMe));
 
 
       var info = ValueSchema.getOrDie(CustomDefinition.toInfo(Merger.deepMerge(
@@ -52,7 +52,7 @@ define(
       var baseModification = {
         'alloy.base.modification': CustomDefinition.toModification(info)
       };
-      
+
       var modification = ComponentDom.combine(bData, baseModification, bList, definition).getOrDie();
 
       var modDefinition = DomModification.merge(definition, modification);
@@ -72,14 +72,14 @@ define(
       };
 
       var disconnect = function () {
-        systemApi.set(NoContextApi(getSelf));
+        systemApi.set(NoContextApi(getMe));
       };
 
       var syncComponents = function () {
         // Update the component list with the current children
         var children = Traverse.children(item);
         var subs = Arr.bind(children, function (child) {
-          
+
           return systemApi.get().getByDom(child).fold(function () {
             // INVESTIGATE: Not sure about how to handle text nodes here.
             return [ ];
@@ -93,7 +93,7 @@ define(
       var config = function (behaviour) {
         if (behaviour === GuiTypes.apiConfig()) return info.apis();
         var b = bData;
-        var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {            
+        var f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : function () {
           throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
         };
         return f();
@@ -106,7 +106,7 @@ define(
         }).getOr('not enabled');
       };
 
-      var self = ComponentApi({
+      var me = ComponentApi({
         getSystem: systemApi.get,
         config: config,
         spec: Fun.constant(spec),
@@ -120,7 +120,7 @@ define(
         events: Fun.constant(events)
       });
 
-      return self;
+      return me;
     };
 
     return {

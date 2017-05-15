@@ -43,7 +43,7 @@ define(
       });
 
       focused.each(function (cell) {
-        component.getSystem().triggerFocus(cell, component.element());  
+        component.getSystem().triggerFocus(cell, component.element());
       });
     };
 
@@ -58,13 +58,13 @@ define(
         return SelectorFilter.descendants(row, matrixConfig.selectors().cell());
       });
     };
-  
+
     var doMove = function (ifCycle, ifMove) {
       return function (element, focused, matrixConfig) {
         var move = matrixConfig.cycles() ? ifCycle : ifMove;
         return SelectorFind.closest(focused, matrixConfig.selectors().row()).bind(function (inRow) {
           var cellsInRow = SelectorFilter.descendants(inRow, matrixConfig.selectors().cell());
-        
+
           return DomPinpoint.findIndex(cellsInRow, focused).bind(function (colIndex) {
             var allRows = SelectorFilter.descendants(element, matrixConfig.selectors().row());
             return DomPinpoint.findIndex(allRows, inRow).bind(function (rowIndex) {
@@ -81,16 +81,16 @@ define(
 
     var moveLeft = doMove(MatrixNavigation.cycleLeft, MatrixNavigation.moveLeft);
     var moveRight = doMove(MatrixNavigation.cycleRight, MatrixNavigation.moveRight);
-    
+
     var moveNorth = doMove(MatrixNavigation.cycleUp, MatrixNavigation.moveUp);
     var moveSouth = doMove(MatrixNavigation.cycleDown, MatrixNavigation.moveDown);
 
     var getRules = Fun.constant([
-      KeyRules.rule( KeyMatch.inSet( Keys.LEFT() ), DomMovement.west(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.RIGHT() ), DomMovement.east(moveLeft, moveRight)),
-      KeyRules.rule( KeyMatch.inSet( Keys.UP() ), DomMovement.north(moveNorth)),
-      KeyRules.rule( KeyMatch.inSet( Keys.DOWN() ), DomMovement.south(moveSouth)),
-      KeyRules.rule( KeyMatch.inSet( Keys.SPACE().concat(Keys.ENTER()) ), execute)
+      KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
+      KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
+      KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
+      KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
+      KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
     ]);
 
     var getEvents = Fun.constant({ });

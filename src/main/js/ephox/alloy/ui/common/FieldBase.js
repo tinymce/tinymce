@@ -17,7 +17,7 @@ define(
 
   function (EventRoot, Behaviour, Composing, Representing, SystemEvents, EventHandler, Objects, Id, Merger, Option, Attr) {
     var events = function (detail) {
-     return Objects.wrap(
+      return Objects.wrap(
         SystemEvents.systemInit(),
         EventHandler.nu({
           run: function (component, simulatedEvent) {
@@ -26,12 +26,12 @@ define(
               system.getByUid(detail.partUids().label).each(function (label) {
                 system.getByUid(detail.partUids().field).each(function (field) {
                   var id = Id.generate(detail.prefix());
-                              
+
                   // TODO: Find a nicer way of doing this.
                   Attr.set(label.element(), 'for', id);
-                  Attr.set(field.element(), 'id', id);    
+                  Attr.set(field.element(), 'id', id);
                 });
-              });          
+              });
             }
           }
         })
@@ -70,6 +70,6 @@ define(
       events: events,
       behaviours: behaviours
     };
-   
+
   }
 );

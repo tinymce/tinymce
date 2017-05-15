@@ -1,6 +1,6 @@
 asynctest(
   'EventRegistryTest',
- 
+
   [
     'ephox.agar.alien.Truncate',
     'ephox.agar.api.Assertions',
@@ -24,7 +24,7 @@ asynctest(
     'ephox.sugar.api.properties.Html',
     'global!document'
   ],
- 
+
   function (
     Truncate, Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder, DescribedHandler, EventRegistry, Arr, Fun, Result, Json, Compare,
     Insert, Element, Attr, Html, document
@@ -36,7 +36,7 @@ asynctest(
     var body = Element.fromDom(document.body);
     var page = Element.fromTag('div');
 
-    Html.set(page, 
+    Html.set(page,
       '<div data-alloy-id="comp-1">' +
         '<div data-alloy-id="comp-2">' +
           '<div data-alloy-id="comp-3">' +
@@ -77,7 +77,7 @@ asynctest(
         'event.alpha.4.handler'
       )
     });
- 
+
     var sAssertFilterByType = function (expected, type) {
       return Step.sync(function () {
         var filtered = events.filterByType(type);
@@ -135,7 +135,7 @@ asynctest(
             Chain.op(function (actual) {
               var section = actual.handler;
               Assertions.assertEq(
-                'find(' + type + ', ' + id + ') = true', 
+                'find(' + type + ', ' + id + ') = true',
                 expected.target,
                 Attr.get(section.element(), 'data-alloy-id')
               );
@@ -155,10 +155,9 @@ asynctest(
       sAssertFilterByType([
         { handler: 'event.alpha.1(extra-args)', id: 'comp-1', purpose: 'event.alpha.1.handler' },
         { handler: 'event.alpha.4(extra-args)', id: 'comp-4', purpose: 'event.alpha.4.handler' }
-      ], 'event.alpha' ),
+      ], 'event.alpha'),
 
-
-      sAssertFind('comp-1!', 
+      sAssertFind('comp-1!',
         { handler: 'event.alpha.1(extra-args)', target: 'comp-1', purpose: 'event.alpha.1.handler' },
         'event.alpha', 'comp-1'
       ),
@@ -174,8 +173,8 @@ asynctest(
       sAssertNotFound('comp-5 > comp-4 > comp-3 > comp-2 > comp-1 > NOT FOUND', 'event.beta', 'comp-5'),
 
       sAssertFind(
-        'comp-5 > comp-4 > comp-3 > comp-2 > comp-1!', 
-        { handler: 'event.only(extra-args)', target: 'comp-1' }, 
+        'comp-5 > comp-4 > comp-3 > comp-2 > comp-1!',
+        { handler: 'event.only(extra-args)', target: 'comp-1' },
         'event.only', 'comp-5'
       )
     ], function () { success(); }, failure);

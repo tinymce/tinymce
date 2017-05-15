@@ -92,7 +92,7 @@ define(
               dom: {
                 tag: 'div'
               }
-            } 
+            }
           }
         })
       );

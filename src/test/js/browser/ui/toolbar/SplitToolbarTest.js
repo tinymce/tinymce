@@ -1,6 +1,6 @@
 asynctest(
   'SplitToolbarTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.sugar.api.properties.Css',
     'global!navigator'
   ],
- 
+
   function (
     ApproxStructure, Assertions, Step, GuiFactory, Button, SplitToolbar, GuiSetup, TestPartialToolbarGroup,
     Arr, Css, navigator
@@ -198,9 +198,9 @@ asynctest(
 
 
         sResetWidth('250px'),
-        
+
         sAssertGroups('width=300px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
-        
+
         sResetWidth('249px'),
         sAssertGroups('width=300px (+) (not enough space for the group and the +)', [ oGroup ], [ group1, group2, group3 ]),
 

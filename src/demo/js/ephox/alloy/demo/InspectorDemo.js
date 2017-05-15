@@ -10,10 +10,11 @@ define(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.debugging.Debugging',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.sugar.api.node.Body'
+    'ephox.sugar.api.node.Body',
+    'global!console'
   ],
 
-  function (GuiFactory, Attachment, Gui, Button, Form, Input, Debugging, HtmlDisplay, Body) {
+  function (GuiFactory, Attachment, Gui, Button, Form, Input, Debugging, HtmlDisplay, Body, console) {
     return function () {
       var gui = Gui.create();
 
@@ -22,7 +23,7 @@ define(
 
       Debugging.registerInspector('inspector-demo', gui);
 
-      HtmlDisplay.section(gui, 
+      HtmlDisplay.section(gui,
         '<p>Inspect away! "Alloy" will appear in the elements panel in Chrome Developer Tools</p>' +
         '<p>Get the inspector from: <a href="http://stash/projects/VAN/repos/alloy-inspector/browse">alloy-inspector</a></p>',
         {
@@ -37,7 +38,7 @@ define(
                 innerHtml: 'Button'
               },
               action: function () {
-                console.log('clicked on a button')
+                console.log('clicked on a button');
               }
             }),
             Form.sketch({

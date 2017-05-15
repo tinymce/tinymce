@@ -10,7 +10,7 @@ define(
 
   function (Struct, Node, Text, Traverse) {
     var point = Struct.immutable('element', 'offset');
-    
+
     // NOTE: This only descends once.
     var descendOnce = function (element, offset) {
       var children = Traverse.children(element);

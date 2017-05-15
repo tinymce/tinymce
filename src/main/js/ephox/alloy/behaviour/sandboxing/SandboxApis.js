@@ -2,21 +2,24 @@ define(
   'ephox.alloy.behaviour.sandboxing.SandboxApis',
 
   [
+    'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css'
   ],
 
-  function (Attachment, Future, Option) {
+  function (Positioning, Attachment, Future, Option, Attr, Css) {
     // NOTE: A sandbox should not start as part of the world. It is expected to be
     // added to the sink on rebuild.
     var rebuild = function (sandbox, sConfig, sState, data) {
       sState.get().each(function (data) {
-        // If currently has data, so it hasn't been removed yet. It is 
+        // If currently has data, so it hasn't been removed yet. It is
         // being "re-opened"
         Attachment.detachChildren(sandbox);
       });
-      
+
       var point = sConfig.getAttachPoint()();
       Attachment.attach(point, sandbox);
 
@@ -70,7 +73,39 @@ define(
       return sState.get();
     };
 
+    var store = function (sandbox, cssKey, attr, newValue) {
+      Css.getRaw(sandbox.element(), cssKey).fold(function () {
+        Attr.remove(sandbox.element(), attr);
+      }, function (v) {
+        Attr.set(sandbox.element(), attr, v);
+      });
+      Css.set(sandbox.element(), cssKey, newValue);
+    };
+
+    var restore = function (sandbox, cssKey, attr) {
+      if (Attr.has(sandbox.element(), attr)) {
+        var oldValue = Attr.get(sandbox.element(), attr);
+        Css.set(sandbox.element(), cssKey, oldValue);
+      } else {
+        Css.remove(sandbox.element(), cssKey);
+      }
+    };
+
+    var cloak = function (sandbox, sConfig, sState) {
+      var sink = sConfig.getAttachPoint()();
+      // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
+      // We add it here to stop it causing layout problems.
+      Css.set(sandbox.element(), 'position', Positioning.getMode(sink));
+      store(sandbox, 'visibility', sConfig.cloakVisibilityAttr(), 'hidden');
+    };
+
+    var decloak = function (sandbox, sConfig, sState) {
+      restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr());
+    };
+
     return {
+      cloak: cloak,
+      decloak: decloak,
       open: open,
       close: close,
       isOpen: isOpen,

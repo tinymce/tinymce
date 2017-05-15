@@ -26,13 +26,13 @@ define(
      * - Map over this index:
      *    - if the list == length 1, then collapse it to the head value
      *    - if the list > length 1, then:
-     *        - sort the tuples using the behavour name ordering specified using 
+     *        - sort the tuples using the behavour name ordering specified using
                 eventOrder[event]. Return error if insufficient
-     *        - generate a can, run, and abort that combines the handlers of the 
+     *        - generate a can, run, and abort that combines the handlers of the
                 tuples in the sorted order
      *
      * So at the end, you should have Result(eventName -> single function)
-     */ 
+     */
     var behaviourTuple = function (name, handler) {
       return {
         name: Fun.constant(name),
@@ -43,7 +43,7 @@ define(
     var nameToHandlers = function (behaviours, info) {
       var r = {};
       Arr.each(behaviours, function (behaviour) {
-        r[behaviour.name()] = behaviour.handlers(info);        
+        r[behaviour.name()] = behaviour.handlers(info);
       });
       return r;
     };
@@ -55,7 +55,7 @@ define(
     };
 
     var combine = function (info, eventOrder, behaviours, base) {
-       var byEventName = groupByEvents(info, behaviours, base);
+      var byEventName = groupByEvents(info, behaviours, base);
       return combineGroups(byEventName, eventOrder);
     };
 
@@ -73,10 +73,10 @@ define(
 
     var missingOrderError = function (eventName, tuples) {
       return new Result.error([
-        'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' + 
-        'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' + 
+        'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
+        'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
         'can trigger it are: ' + Json.stringify(Arr.map(tuples, function (c) { return c.name(); }), null, 2)
-      ]);        
+      ]);
     };
 
     var fuse = function (tuples, eventOrder, eventName) {
@@ -103,7 +103,7 @@ define(
 
       return Objects.consolidate(r, {});
     };
-   
+
     return {
       combine: combine
     };

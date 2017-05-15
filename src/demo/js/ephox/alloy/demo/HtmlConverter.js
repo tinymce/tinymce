@@ -14,10 +14,11 @@ define(
     'ephox.alloy.api.ui.Input',
     'ephox.sand.api.JSON',
     'ephox.sugar.api.search.SelectorFind',
+    'global!console',
     'global!document'
   ],
 
-  function (Behaviour, Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Json, SelectorFind, document) {
+  function (Behaviour, Replacing, Representing, GuiFactory, GuiTemplate, Attachment, Gui, Button, Container, Input, Json, SelectorFind, console, document) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -58,7 +59,7 @@ define(
               var display = button.getSystem().getByUid('pre-output').getOrDie();
               var prettyprint = Json.stringify(output, null, 2);
 
-              Replacing.set(display, [ GuiFactory.text(prettyprint) ])
+              Replacing.set(display, [ GuiFactory.text(prettyprint) ]);
             }
           }),
 
@@ -78,7 +79,7 @@ define(
       var gui = Gui.takeover(root);
 
       Attachment.attachSystem(ephoxUi, gui);
-      
+
     };
   }
 );

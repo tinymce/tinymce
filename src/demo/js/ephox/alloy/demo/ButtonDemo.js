@@ -11,10 +11,11 @@ define(
     'ephox.alloy.dom.DomModification',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
+    'global!console',
     'global!document'
   ],
 
-  function (Behaviour, Toggling, Attachment, Gui, Button, HtmlDisplay, DomModification, Element, Class, document) {
+  function (Behaviour, Toggling, Attachment, Gui, Button, HtmlDisplay, DomModification, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -29,7 +30,7 @@ define(
             return DomModification.nu({
               classes: [ 'cat' ],
               attributes: {
-                
+
               },
               styles: {
                 color: 'red'
@@ -124,7 +125,7 @@ define(
           ]),
           customBehaviours: [
             catBehaviour,
-            redBehaviour            
+            redBehaviour
           ]
         })
       );

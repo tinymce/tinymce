@@ -1,4 +1,4 @@
-/* jshint es3: false, esversion: 6 */
+/* global domtest */
 domtest(
   'ToggleModesTest',
 

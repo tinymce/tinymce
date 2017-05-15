@@ -27,7 +27,7 @@ define(
     };
 
     var isPartiallyVisible = function (box, viewport) {
-       return box.y() < viewport.bottom() && box.bottom() > viewport.y();
+      return box.y() < viewport.bottom() && box.bottom() > viewport.y();
     };
 
     var isCompletelyVisible = function (box, viewport) {

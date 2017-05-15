@@ -60,7 +60,7 @@ define(
           return builtItems;
         })
       };
-      
+
       var components = detail.shell() ? builtItems : UiSubstitutes.substitutePlaces(Option.none(), detail, detail.components(), placeholders, { });
 
       return Merger.deepMerge(
@@ -98,7 +98,7 @@ define(
           ),
           customBehaviours: detail.customBehaviours(),
           events: Objects.wrapAll([
-            { 
+            {
               // This is dispatched from a menu to tell an item to be highlighted.
               key: ItemEvents.focus(),
               value: EventHandler.nu({

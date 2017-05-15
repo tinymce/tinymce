@@ -1,6 +1,6 @@
 asynctest(
   'SelectionInFramePositionTest',
- 
+
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
@@ -27,7 +27,7 @@ asynctest(
     'global!setTimeout',
     'global!window'
   ],
- 
+
   function (
     Chain, Cursors, Guard, NamedChain, GuiFactory, Container, Writer, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Option, Result, DomEvent, Element, Node,
     Css, SelectorFind, Traverse, WindowSelection, Scroll, Error, setTimeout, window
@@ -38,7 +38,7 @@ asynctest(
     GuiSetup.setup(function (store, doc, body) {
       var content = '';
       for (var i = 0; i < 20; i++) {
-        content += '<p>paragraph ' + i  + '</p>';
+        content += '<p>paragraph ' + i + '</p>';
       }
 
       var frame = Element.fromTag('iframe');
@@ -85,7 +85,7 @@ asynctest(
         return Chain.binder(function (win) {
           var body = Element.fromDom(win.document.body);
           var range = Cursors.calculate(body, path);
-           WindowSelection.setExact(
+          WindowSelection.setExact(
             win,
             range.start(),
             range.soffset(),
@@ -126,7 +126,7 @@ asynctest(
                 )
               ]
             ),
-            
+
             ChainUtils.cLogging(
               'Selecting 3rd paragraph',
               [
@@ -197,7 +197,7 @@ asynctest(
         ])
       ];
     }, function () { success(); }, failure);
- 
+
 
   }
 );

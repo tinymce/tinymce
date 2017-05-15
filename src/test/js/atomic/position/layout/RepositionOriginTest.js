@@ -15,8 +15,9 @@ test(
   ],
 
   function (Direction, Origins, Reposition, Fun, Option, Type) {
+    /* global assert */
     // Disabled until we remove need for mocking.
-    
+
     var noneOrigin = Origins.none();
     var relativeOrigin = Origins.relative(5, 10);
     var fixedOrigin = Origins.fixed(5, 10, 500, 500);
@@ -88,7 +89,7 @@ test(
     var fixedBottom = Option.some(306); // 500 - 91 - 103
     var none = Option.none();
 
-    
+
 
     check(Reposition.css('fixed', fixedLeft, fixedTop, none, none), fixedOrigin, makeOnscreen(Direction.southeast()));
     check(Reposition.css('fixed', none, fixedTop, fixedRight, none), fixedOrigin, makeOnscreen(Direction.southwest()));

@@ -24,7 +24,7 @@ define(
           return Arr.map(defChildren, renderDef);
         }, function (domChildren) {
           return domChildren;
-        });      
+        });
       }
     };
 

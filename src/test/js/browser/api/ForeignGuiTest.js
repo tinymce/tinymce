@@ -75,7 +75,7 @@ asynctest(
               s.element('span', {
                 classes: [ arr.not('selected') ]
               }),
-              s.text( str.is(' and ')),
+              s.text(str.is(' and ')),
               s.element('span', {
                 classes: [ arr.not('selected') ]
               }),
@@ -85,7 +85,7 @@ asynctest(
                 }
               })
             ]
-          }); 
+          });
         }),
         root
       ),
@@ -103,7 +103,7 @@ asynctest(
                 },
                 classes: [ arr.has('selected') ]
               }),
-              s.text( str.is(' and ')),
+              s.text(str.is(' and ')),
               s.element('span', {
                 classes: [ arr.not('selected') ]
               }),
@@ -113,7 +113,7 @@ asynctest(
                 }
               })
             ]
-          }); 
+          });
         }),
         root
       ),

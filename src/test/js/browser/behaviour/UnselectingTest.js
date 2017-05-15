@@ -1,6 +1,6 @@
 asynctest(
   'UnselectingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -11,7 +11,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (ApproxStructure, Assertions, GuiFactory, Behaviour, Unselecting, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -33,7 +33,7 @@ asynctest(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('div', {
               styles: {
-                /* Browser dependent 
+                /* Browser dependent
                 '-webkit-user-select': str.is('none'),
                 'user-select': str.is('none'),
                 '-ms-user-select': str.is('none'),

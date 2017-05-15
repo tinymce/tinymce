@@ -1,6 +1,6 @@
 asynctest(
   'Dropdown List',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -26,7 +26,7 @@ asynctest(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
- 
+
   function (
     ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, Dropdown,
     TieredMenu, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils, TestBroadcasts, Future, Result
@@ -56,7 +56,7 @@ asynctest(
               dom: {
                 tag: 'span',
                 innerHtml: 'hi'
-              }  
+              }
             }
           ],
 
@@ -71,8 +71,8 @@ asynctest(
           parts: {
             menu: TestDropdownMenu(store)
           },
-      
-          fetch: function () { 
+
+          fetch: function () {
             var future = Future.pure([
               { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
               { type: 'item', data: { value: 'beta', text: 'Beta' } },

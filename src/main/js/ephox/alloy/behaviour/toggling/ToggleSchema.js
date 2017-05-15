@@ -17,7 +17,7 @@ define(
 
       FieldSchema.defaultedOf('aria', {
         mode: 'none'
-       }, ValueSchema.choose(
+      }, ValueSchema.choose(
         'mode', {
           'pressed': [
             FieldSchema.defaulted('syncWithExpanded', false),

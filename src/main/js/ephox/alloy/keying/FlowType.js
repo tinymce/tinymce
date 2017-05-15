@@ -56,10 +56,10 @@ define(
 
     var getRules = function (_) {
       return [
-        KeyRules.rule( KeyMatch.inSet( Keys.LEFT().concat(Keys.UP()) ), doMove(DomMovement.west(moveLeft, moveRight))),
-        KeyRules.rule( KeyMatch.inSet( Keys.RIGHT().concat(Keys.DOWN()) ), doMove(DomMovement.east(moveLeft, moveRight))),
-        KeyRules.rule( KeyMatch.inSet( Keys.ENTER() ), execute),
-        KeyRules.rule( KeyMatch.inSet( Keys.SPACE() ), execute)
+        KeyRules.rule(KeyMatch.inSet(Keys.LEFT().concat(Keys.UP())), doMove(DomMovement.west(moveLeft, moveRight))),
+        KeyRules.rule(KeyMatch.inSet(Keys.RIGHT().concat(Keys.DOWN())), doMove(DomMovement.east(moveLeft, moveRight))),
+        KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
+        KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
       ];
     };
 

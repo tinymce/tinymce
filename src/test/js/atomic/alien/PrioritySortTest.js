@@ -11,6 +11,7 @@ test(
   ],
 
   function (Logger, RawAssertions, PrioritySort, Arr, Json, Struct) {
+    /* global assert */
     var checkErr = function (expected, input, order) {
       var actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
       // TODO: Use ResultAssertions test?
@@ -42,7 +43,7 @@ test(
       'Checking [ a, d, f ] ordering',
       function () {
         return checkErr(
-          'The ordering for test.sort does not have an entry for a', 
+          'The ordering for test.sort does not have an entry for a',
           letters([ 'a', 'd', 'f' ]), [ 'e', 'f', 'b', 'c', 'd' ]
         );
       }

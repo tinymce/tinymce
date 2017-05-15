@@ -1,6 +1,6 @@
 asynctest(
   'SpecialKeyingTest',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (FocusTools, GeneralSteps, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -62,7 +62,7 @@ asynctest(
         press('down', Keys.down(), { }),
         press('right', Keys.right(), { }),
         press('escape', Keys.escape(), { }),
-        GuiSetup.mTeardownKeyLogger(body, [  ])
+        GuiSetup.mTeardownKeyLogger(body, [ ])
       ];
     }, function () { success(); }, failure);
 

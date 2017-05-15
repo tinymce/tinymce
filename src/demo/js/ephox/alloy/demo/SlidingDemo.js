@@ -11,10 +11,11 @@ define(
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
+    'global!console',
     'global!document'
   ],
 
-  function (Behaviour, Sliding, Attachment, Gui, Button, Container, HtmlDisplay, Element, Class, document) {
+  function (Behaviour, Sliding, Attachment, Gui, Button, Container, HtmlDisplay, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -95,7 +96,7 @@ define(
                   }
                 })
               ]),
-             
+
               components: [
                 Container.sketch({
                   dom: {

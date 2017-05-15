@@ -1,6 +1,6 @@
 asynctest(
   'InvalidatingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -18,7 +18,7 @@ asynctest(
     'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Value'
   ],
- 
+
   function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Behaviour, Invalidating, Container, GuiSetup, Future, Result, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

@@ -28,7 +28,7 @@ define(
             return spec.type === 'separator' ? {
               dom: {
                 tag: 'div',
-                classes: [  ],
+                classes: [ ],
                 innerHtml: spec.text
               },
               components: [

@@ -41,7 +41,7 @@ define(
           bounds: bounds,
           origin: origin,
           preference: anchoring.layouts(),
-          maxHeightFunction: function () { } 
+          maxHeightFunction: function () { }
         }
       );
     };
@@ -77,16 +77,21 @@ define(
 
       // We need to remove position: fixed put on by above code if it is not needed.
       if (
-        Css.getRaw(placee.element(), 'left').isNone() && 
-        Css.getRaw(placee.element(), 'top').isNone() && 
-        Css.getRaw(placee.element(), 'right').isNone() && 
+        Css.getRaw(placee.element(), 'left').isNone() &&
+        Css.getRaw(placee.element(), 'top').isNone() &&
+        Css.getRaw(placee.element(), 'right').isNone() &&
         Css.getRaw(placee.element(), 'bottom').isNone() &&
         Css.getRaw(placee.element(), 'position').is('fixed')
       ) Css.remove(placee.element(), 'position');
     };
 
+    var getMode = function (component, pConfig, pState) {
+      return pConfig.useFixed() ? 'fixed' : 'absolute';
+    };
+
     return {
-      position: position
+      position: position,
+      getMode: getMode
     };
   }
 );

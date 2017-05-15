@@ -53,13 +53,13 @@ define(
         touchmove: EventHandler.nu({
           run: function (component, simulatedEvent) {
             simulatedEvent.stop();
-          
+
             var delta = pinchState.update(mode, simulatedEvent.event());
             delta.each(function (dlt) {
               var multiplier = dlt.deltaDistance() > 0 ? 1 : -1;
-              var changeX = multiplier * Math.abs(dlt.deltaX()); 
+              var changeX = multiplier * Math.abs(dlt.deltaX());
               var changeY = multiplier * Math.abs(dlt.deltaY());
-              
+
               var f = multiplier === 1 ? pinchConfig.onPunch() : pinchConfig.onPinch();
               f(component.element(), changeX, changeY);
             });

@@ -1,6 +1,6 @@
 asynctest(
   'TypeaheadSpecTest',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
@@ -20,7 +20,7 @@ asynctest(
     'ephox.sugar.api.properties.Value',
     'global!Math'
   ],
- 
+
   function (FocusTools, Keyboard, Keys, RealKeys, UiControls, GuiFactory, Container, TieredMenu, Typeahead, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -62,7 +62,7 @@ asynctest(
                   return TieredMenu.simpleData('blah', 'Blah', items);
                 });
               },
-              
+
               lazySink: function () { return Result.value(sink); },
 
               parts: {
@@ -112,7 +112,7 @@ asynctest(
 
         // Focus should still be in the typeahead.
         steps.sAssertFocusOnTypeahead('Focus after backspace'),
-        
+
         Keyboard.sKeydown(doc, Keys.down(), { }),
         // Focus should still be in the typeahead.
         steps.sAssertFocusOnTypeahead('Focus after <down>')

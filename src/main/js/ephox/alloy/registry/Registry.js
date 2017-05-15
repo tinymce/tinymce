@@ -13,7 +13,7 @@ define(
   function (EventRegistry, AlloyLogger, Tagger, Objects, Body, Error) {
     return function () {
       var events = EventRegistry();
-      
+
       var components = { };
 
       var readOrTag = function (component) {

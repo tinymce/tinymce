@@ -6,6 +6,7 @@ test(
   ],
 
   function (Overflows) {
+    /* global assert */
     var len = function (unit) {
       return unit.length;
     };

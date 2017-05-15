@@ -36,7 +36,7 @@ define(
 
       // Build the subcomponents
       var components = buildSubcomponents(spec);
-    
+
       var completeSpec = Merger.deepMerge(
         DefaultEvents,
         spec,
@@ -55,7 +55,7 @@ define(
         element: element
       });
     };
- 
+
     var external = function (spec) {
       var extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
         FieldSchema.strict('element'),
@@ -63,14 +63,14 @@ define(
       ]), spec);
 
       var systemApi = Cell(NoContextApi());
-      
+
       var connect = function (newApi) {
         systemApi.set(newApi);
       };
 
       var disconnect = function () {
         systemApi.set(NoContextApi(function () {
-          return self; 
+          return me;
         }));
       };
 
@@ -78,7 +78,7 @@ define(
         Tagger.writeOnly(extSpec.element(), uid);
       });
 
-      var self = ComponentApi({
+      var me = ComponentApi({
         getSystem: systemApi.get,
         config: Option.none,
         connect: connect,
@@ -91,7 +91,7 @@ define(
         events: Fun.constant({ })
       });
 
-      return GuiTypes.premade(self);
+      return GuiTypes.premade(me);
     };
 
     // INVESTIGATE: A better way to provide 'meta-specs'
@@ -112,4 +112,4 @@ define(
       text: text
     };
   }
-);  
+);

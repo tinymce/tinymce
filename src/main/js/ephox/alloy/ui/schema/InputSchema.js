@@ -13,6 +13,6 @@ define(
       name: Fun.constant('Input'),
       schema: Fun.constant(schema),
       parts: Fun.constant([ ])
-    }
+    };
   }
 );

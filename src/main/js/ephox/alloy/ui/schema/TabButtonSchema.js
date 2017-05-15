@@ -22,6 +22,6 @@ define(
       name: Fun.constant('TabButton'),
       schema: Fun.constant(schema),
       parts: Fun.constant([ ])
-    }
+    };
   }
 );

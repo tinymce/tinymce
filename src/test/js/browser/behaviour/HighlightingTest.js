@@ -146,7 +146,7 @@ asynctest(
       });
 
       var cGetFirst = Chain.binder(function () {
-        return  Highlighting.getFirst(component).fold(function () {
+        return Highlighting.getFirst(component).fold(function () {
           return Result.error(new Error('getFirst found nothing'));
         }, Result.value);
       });

@@ -1,6 +1,6 @@
 asynctest(
   'ToolbarGroupTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -16,7 +16,7 @@ asynctest(
     'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.test.GuiSetup'
   ],
- 
+
   function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, Container, ToolbarGroup, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

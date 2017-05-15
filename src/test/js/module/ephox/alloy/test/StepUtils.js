@@ -16,7 +16,7 @@ define(
           try {
             f();
             passed = true;
-            
+
           } catch (err) {
             Assertions.assertEq('Checking exist error match', expected, err.message);
           }

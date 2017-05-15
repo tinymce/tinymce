@@ -1,6 +1,6 @@
 asynctest(
   'SubmenuPositionTest',
- 
+
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
@@ -13,7 +13,7 @@ asynctest(
     'global!Error',
     'global!setTimeout'
   ],
- 
+
   function (Chain, NamedChain, GuiFactory, Container, ChainUtils, GuiSetup, PositionTestUtils, Sinks, Error, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -25,7 +25,7 @@ asynctest(
             tag: 'li',
             innerHtml: 'Trigger Item'
           },
-          
+
           uid: 'test-item'
         })
       );
@@ -65,7 +65,7 @@ asynctest(
           item: item
         };
       });
-     
+
       return [
         Chain.asStep({}, [
           NamedChain.asChain([
@@ -89,7 +89,7 @@ asynctest(
         ])
       ];
     }, function () { success(); }, failure);
- 
+
 
   }
 );

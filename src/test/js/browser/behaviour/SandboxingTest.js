@@ -1,6 +1,6 @@
 asynctest(
   'SandboxingTest',
- 
+
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
@@ -19,7 +19,7 @@ asynctest(
     'ephox.katamari.api.LazyValue',
     'ephox.sugar.api.node.Node'
   ],
- 
+
   function (Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue, Node) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -47,7 +47,7 @@ asynctest(
           ])
         })
       );
-    
+
       var sOpenWith = function (data) {
         return Step.async(function (next, die) {
           Sandboxing.open(sandbox, LazyValue.pure(data)).get(function () {
@@ -72,7 +72,7 @@ asynctest(
 
       var sCheckOpenState = function (label, expected) {
         return Logger.t(
-          label, 
+          label,
           GeneralSteps.sequence([
             sCheckShowing(label, true),
             UiFinder.sExists(gui.element(), 'input[data-test-input="' + expected.data + '"]'),
@@ -123,7 +123,7 @@ asynctest(
         // // opening sandbox
         Logger.t('Opening sandbox', sOpenWith(firstOpening)),
         sCheckOpenState('Opening sandbox', { data: 'first-opening', store: [ 'onOpen' ] }),
-     
+
         // // opening sandbox again
         Logger.t('Opening sandbox while it is already open', sOpenWith(secondOpening)),
         sCheckOpenState('Opening sandbox while it is already open', {
@@ -143,7 +143,7 @@ asynctest(
 
         Logger.t(
           'Firing sandbox close system event',
-          
+
           Chain.asStep({}, [
             Chain.inject(sandbox.element()),
             UiFinder.cFindIn('input'),

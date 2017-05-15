@@ -24,12 +24,13 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value',
+    'global!console',
     'global!document'
   ],
 
   function (
     AdhocBehaviour, Behaviour, Keying, Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay,
-    Fun, Option, Result, DomEvent, Element, Class, Value, document
+    Fun, Option, Result, DomEvent, Element, Class, Value, console, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -67,9 +68,9 @@ define(
         },
 
         onExecute: function () {
-          console.log('inline.menu.execute')
+          console.log('inline.menu.execute');
         },
-        members: { 
+        members: {
           item: {
             munge: function (itemSpec) {
               return {
@@ -82,7 +83,7 @@ define(
                   innerHtml: itemSpec.data.text
                 },
                 components: [ ]
-              };              
+              };
             }
           },
           menu: {
@@ -136,7 +137,7 @@ define(
               value: 'gamma-menu',
               items: [
                 { type: 'item', data: { value: 'gamma-1', text: 'Gamma-1', 'item-class': 'gamma-1' } },
-                { type: 'item', data: { value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' } },
+                { type: 'item', data: { value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' } }
               ],
               textkey: 'gamma-menu'
             }
@@ -153,7 +154,7 @@ define(
         }
       });
 
-      gui.add(sink);      
+      gui.add(sink);
 
       var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
         gui.broadcastOn([ 'dismiss.popups' ], {
@@ -186,11 +187,11 @@ define(
           }
         })
       );
-      
+
 
       HtmlDisplay.section(
         gui,
-        'This inline toolbar shows up when you click in the second input field. Note, ' + 
+        'This inline toolbar shows up when you click in the second input field. Note, ' +
         'how when you focus an empty input, it will attach at the end of the field, and ' +
         'when you focus a non-empty input, it will attach below',
         Container.sketch({

@@ -9,6 +9,7 @@ test(
   ],
 
   function (Bounds, Bubble, LinkedLayout, Bounder) {
+    /* global assert */
     var check = function (expected, preference, anchor, panel, bubbles, bounds) {
       var actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
       assert.eq(expected.label, actual.label());
@@ -107,36 +108,36 @@ test(
     // Southeast (1px short on x and y).
     check({
       label: 'link-layout-se',
-      x: 350 - 100, // 350+50-2-101 + 2, capped at view width
-      y: 220+50-76
-    }, four, Bounds(350+50-2-101, 220+50-76, 2, 2), panelBox, bubb, view);
+      x: 350 - 100, // 350+50 - 2-101 + 2, capped at view width
+      y: 220 + 50 - 76
+    }, four, Bounds(350 + 50 - 2 - 101, 220 + 50 - 76, 2, 2), panelBox, bubb, view);
 
     // Southeast (exactly for x and y).
     check({
       label: 'link-layout-se',
-      x: 350 - 100, // 350+50-2-100 + 2,
-      y: 220+50-75
-    }, four, Bounds(350+50-2-100, 220+50-75, 2, 2), panelBox, bubb, view);
+      x: 350 - 100, // 350 + 50 - 2-100 + 2,
+      y: 220 + 50 - 75
+    }, four, Bounds(350 + 50 - 2 - 100, 220 + 50 - 75, 2, 2), panelBox, bubb, view);
 
     // Southeast -> Southwest (1px too far on x).
     check({
       label: 'link-layout-sw',
-      x: 350+50-2-99 - 100,
-      y: 220+50-75
-    }, four, Bounds(350+50-2-99, 220+50-75, 2, 2), panelBox, bubb, view);
+      x: 350 + 50 - 2 - 99 - 100,
+      y: 220 + 50 - 75
+    }, four, Bounds(350 + 50 - 2 - 99, 220 + 50 - 75, 2, 2), panelBox, bubb, view);
 
     // Southeast -> Northeast (1px too far on y).
     check({
       label: 'link-layout-ne',
-      x: 350 - 100, // 350+50-100, capped at view width
-      y: 220+50-74 + 2 - 75
-    }, four, Bounds(350+50-2-100, 220+50-74, 2, 2), panelBox, bubb, view);
+      x: 350 - 100, // 350 + 50 - 100, capped at view width
+      y: 220 + 50 - 74 + 2 - 75
+    }, four, Bounds(350 + 50 - 2 - 100, 220 + 50 - 74, 2, 2), panelBox, bubb, view);
 
     // Southeast -> Northwest (1px too far on x and y).
     check({
       label: 'link-layout-nw',
-      x: 350+50-2-99 - 100,
-      y: 220+50-74 + 2 - 75
-    }, four, Bounds(350+50-2-99, 220+50-74, 2, 2), panelBox, bubb, view);
+      x: 350 + 50 - 2 - 99 - 100,
+      y: 220 + 50 - 74 + 2 - 75
+    }, four, Bounds(350 + 50 - 2 - 99, 220 + 50 - 74, 2, 2), panelBox, bubb, view);
   }
 );

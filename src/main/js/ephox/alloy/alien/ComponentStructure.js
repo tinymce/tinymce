@@ -18,7 +18,7 @@ define(
     var isPartOf = function (component, queryElem) {
       return PredicateExists.closest(queryElem, function (el) {
         return Compare.eq(el, component.element());
-      }, Fun.constant(false)) || isAriaPartOf(component, queryElem);  
+      }, Fun.constant(false)) || isAriaPartOf(component, queryElem);
     };
 
     var isPartOfAnchor = function (anchor, queryElem) {

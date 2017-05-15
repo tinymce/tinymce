@@ -16,7 +16,7 @@ define(
   function (Behaviour, Representing, Sliding, GuiTypes, UiSketcher, PartType, ExpandableFormSchema, Fun, Merger) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
-        var extraOpt = anyComp.getSystem().getByUid(detail.partUids()['extra']);
+        var extraOpt = anyComp.getSystem().getByUid(detail.partUids().extra);
         extraOpt.each(operation);
       };
     };

@@ -1,6 +1,6 @@
 asynctest(
   'DisablingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -21,7 +21,7 @@ asynctest(
     'ephox.boulder.api.Objects',
     'ephox.sugar.api.dom.Focus'
   ],
- 
+
   function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Behaviour, Disabling, Button, Container, EventHandler, GuiSetup, Objects, Focus) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -90,7 +90,7 @@ asynctest(
           ])
         ),
 
-        
+
         Logger.t(
           'Re-enable button',
           Step.sync(function () {

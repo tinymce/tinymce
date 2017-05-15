@@ -1,6 +1,6 @@
 asynctest(
   'Cyclic Keying Test',
- 
+
   [
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
@@ -15,7 +15,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (FocusTools, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Tabstopping, Button, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

@@ -23,12 +23,13 @@ define(
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
+    'global!console',
     'global!document'
   ],
 
   function (
     Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink,
-    HtmlDisplay, Future, Result, DomEvent, Element, Class, document
+    HtmlDisplay, Future, Result, DomEvent, Element, Class, console, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -41,7 +42,7 @@ define(
 
       var sink = DemoSink.make();
 
-      gui.add(sink);      
+      gui.add(sink);
 
       console.log('sink', sink.element());
 
@@ -194,13 +195,13 @@ define(
           dom: {
             tag: 'div'
           },
-          components: [ 
+          components: [
             SplitDropdown.parts().button(),
             SplitDropdown.parts().arrow(),
             SplitDropdown.parts().sink()
           ],
           fetch: function () {
-            var future = Future.pure({             
+            var future = Future.pure({
               type: 'widget',
               autofocus: true,
               data: {
@@ -266,7 +267,7 @@ define(
           parts: {
             menu: widgetMenu
           },
-          
+
           fetch: function () {
             var future = Future.pure({
               type: 'widget',
@@ -305,7 +306,7 @@ define(
             innerHtml: 'here'
           },
           components: [
-            
+
           ],
 
           toggleClass: 'demo-selected',
@@ -323,10 +324,10 @@ define(
             ];
             var future = Future.pure(data);
             return future.map(function (items) {
-              return TieredMenu.simpleData('grid-list', 'Grid List', items);  
+              return TieredMenu.simpleData('grid-list', 'Grid List', items);
             });
           },
-         
+
           lazySink: lazySink
         })
       );
@@ -385,7 +386,7 @@ define(
             innerHtml: '+'
           },
           components: [
-            
+
           ],
           lazySink: lazySink,
           parts: {
@@ -407,7 +408,7 @@ define(
                   items: [
                     { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
                     { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
-                    { 
+                    {
                       type: 'widget',
                       data: {
                         value: 'widget',
@@ -495,12 +496,12 @@ define(
                     { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
                   ]
                 }
-              }, 
+              },
               expansions: {
                 'packages': 'packages-menu',
                 'sortby': 'sortby-menu',
                 'strings': 'strings-menu',
-                'numbers': 'numbers-menu' 
+                'numbers': 'numbers-menu'
               }
             });
 

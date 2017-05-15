@@ -109,7 +109,7 @@ define(
         if (stopped) event.kill();
 
         // INVESTIGATE: Come up with a better way of doing this. Related target can be used, but not on FF.
-        // It allows the active element to change before firing the blur that we will listen to 
+        // It allows the active element to change before firing the blur that we will listen to
         // for things like closing popups
         setTimeout(function () {
           settings.triggerEvent(SystemEvents.postBlur(), event);

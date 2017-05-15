@@ -2,21 +2,28 @@ define(
   'ephox.alloy.api.events.SystemEvents',
 
   [
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj'
   ],
 
-  function (Obj, Fun) {
+  function (Fun, Obj) {
     return {
       trigger: function (component, event, properties) {
         component.getSystem().triggerEvent(event, component.element(), Obj.map(properties, Fun.constant));
       },
+
+      triggerExecute: function (component) {
+        component.getSystem().triggerEvent('alloy.execute', component.element(), {
+          target: Fun.constant(component.element())
+        });
+      },
+
       // This is used to pass focus to a component. A component might interpret
       // this event and pass the DOM focus to one of its children, depending on its
       // focus model.
       focus: Fun.constant('alloy.focus'),
 
-      // This event is fired a small amount of time after the blur has fired. This 
+      // This event is fired a small amount of time after the blur has fired. This
       // allows the handler to know what was the focused element, and what is now.
       postBlur: Fun.constant('alloy.blur.post'),
 
@@ -35,6 +42,8 @@ define(
       // the touchend
       tap: Fun.constant('alloy.tap'),
 
+      // This event represents a longpress on the same location
+      longpress: Fun.constant('alloy.longpress'),
 
       // Fire by a child element to tell the outer element to close
       sandboxClose: Fun.constant('alloy.sandbox.close'),

@@ -12,13 +12,13 @@ define(
 
       var schedule = function () {
         var args = arguments;
-        ref = setTimeout(function() {
+        ref = setTimeout(function () {
           fun.apply(null, args);
           ref = null;
         }, delay);
       };
 
-      var cancel = function() {
+      var cancel = function () {
         if (ref !== null) {
           clearTimeout(ref);
           ref = null;

@@ -47,7 +47,7 @@ asynctest(
       return [
         GuiSetup.mAddStyles(doc, bodyMargin),
         Step.sync(function () {
-          window.scrollTo(0, 100)
+          window.scrollTo(0, 100);
         }),
         Waiter.sTryUntil(
           'Checking for scrolling message',

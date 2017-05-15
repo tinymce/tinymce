@@ -34,13 +34,14 @@ define(
     'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
+    'global!console',
     'global!document'
   ],
 
   function (
     GuiFactory, Attachment, Gui, Button, Container, Dropdown, ExpandableForm, Form, FormChooser, FormCoupledInputs, FormField, Input, Menu, ModalDialog, SplitDropdown,
     SplitToolbar, Tabbar, TabButton, TabSection, Tabview, TieredMenu, Toolbar, ToolbarGroup, Typeahead, DemoSink, HtmlDisplay, Fun, Future, Merger, Result, Element,
-    Class, document
+    Class, console, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -76,12 +77,12 @@ define(
             );
           },
 
-          
+
           onExecute: function () {
             console.log('Split dropdown fired');
           },
 
-          lazySink: function () { 
+          lazySink: function () {
             return Result.value(sink);
           },
 
@@ -117,7 +118,7 @@ define(
                       components: [
                         Menu.parts().items()
                       ]
-                    }
+                    };
                   }
                 },
                 item: {
@@ -139,7 +140,7 @@ define(
           }
         });
       };
-      
+
       var sketchButton = function () {
         return Button.sketch({
           dom: {
@@ -188,7 +189,7 @@ define(
                       components: [
                         Menu.parts().items()
                       ]
-                    }
+                    };
                   }
                 },
                 item: {
@@ -262,7 +263,7 @@ define(
 
           parts: {
             field1: {
-              parts: { 
+              parts: {
                 label: {
                   dom: {
                     tag: 'label'
@@ -303,8 +304,8 @@ define(
           markers: {
             lockClass: 'tutorial-locked'
           }
-        })
-      }
+        });
+      };
 
       var sketchExpandableForm = function () {
         return ExpandableForm.sketch({
@@ -368,14 +369,14 @@ define(
 
       var sketchModalDialog = function () {
         return ModalDialog.sketch({
-          lazySink: function () { 
+          lazySink: function () {
             return Result.value(sink);
           },
 
           onEscape: function () {
-          
+
           },
-          
+
           dom: {
             tag: 'div'
           },
@@ -424,7 +425,7 @@ define(
           dom: {
             tag: 'div'
           },
-          
+
           components: [
             SplitToolbar.parts().primary(),
             SplitToolbar.parts().overflow()
@@ -453,7 +454,7 @@ define(
                 Toolbar.parts().groups()
               ],
               shell: false,
-              parts: { 
+              parts: {
                 groups: {
                   dom: {
                     tag: 'div'
@@ -508,13 +509,13 @@ define(
           parts: {
             tabs: { }
           }
-        })
+        });
       };
 
       var sketchTabview = function () {
         return Tabview.sketch({
-          
-        })
+
+        });
       };
 
       var sketchTabButton = function () {
@@ -524,7 +525,7 @@ define(
             tag: 'button',
             innerHtml: '1'
           }
-        })
+        });
       };
 
       var sketchTabSection = function () {
@@ -612,7 +613,7 @@ define(
                   components: [
                     Menu.parts().items()
                   ]
-                }
+                };
               }
             },
             item: {
@@ -630,7 +631,7 @@ define(
               }
             }
           }
-        })
+        });
       };
 
       var sketchToolbar = function () {
@@ -667,11 +668,11 @@ define(
                     selectedItem: 'tutorial-selected-item',
                     itemClass: 'tutorial-item'
                   }
-                })
+                });
               }
             }
           }
-        })
+        });
       };
 
       var sketchToolbarGroup = function () {
@@ -704,9 +705,9 @@ define(
           parts: {
             items: { }
           }
-        })
+        });
       };
-   
+
       var sketchTypeahead = function () {
         return Typeahead.sketch({
           lazySink: function () { return Result.value(sink); },
@@ -718,7 +719,7 @@ define(
               ])
             );
           },
-          
+
           markers: {
             openClass: 'tutorial-open'
           },
@@ -743,7 +744,7 @@ define(
                       components: [
                         Menu.parts().items()
                       ]
-                    }
+                    };
                   }
                 },
                 item: {
@@ -763,8 +764,8 @@ define(
               }
             }
           }
-        })
-      }
+        });
+      };
 
       // var dialog = GuiFactory.build(
       //   sketchModalDialog()

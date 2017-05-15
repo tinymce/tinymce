@@ -15,10 +15,11 @@ define(
     'ephox.katamari.api.Merger',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
+    'global!console',
     'global!document'
   ],
 
-  function (Behaviour, Toggling, Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Element, Class, document) {
+  function (Behaviour, Toggling, Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -222,7 +223,7 @@ define(
             classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
           },
           components: [
-            Container.sketch({ 
+            Container.sketch({
               components: [
 
               ]
@@ -343,7 +344,7 @@ define(
       var gps2 = Toolbar.createGroups(toolbar2, groups());
       Toolbar.setGroups(toolbar2, gps2);
       toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
-      
+
 
       window.addEventListener('resize', function () {
         toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);

@@ -100,7 +100,7 @@ define(
       Fields.output('builder', builder)
     ];
 
-    
+
 
     return schema;
   }

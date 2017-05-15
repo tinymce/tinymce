@@ -1,6 +1,6 @@
 asynctest(
   'GuiEventsTest',
- 
+
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
@@ -28,7 +28,7 @@ asynctest(
     'global!document',
     'global!window'
   ],
- 
+
   function (
     Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter, Clicks, DomDefinition, DomRender, GuiEvents, TestStore, Insert,
     InsertAll, Remove, Element, Node, Text, Attr, Css, document, window
@@ -258,8 +258,8 @@ asynctest(
     Pipeline.async({}, [
       sTestFocusInput,
       sTestFocusSpan,
-      sTestKeydown,      
-      sTestClick,      
+      sTestKeydown,
+      sTestClick,
       sTestInput,
       sTestMouseover,
       sTestSelectStart,
@@ -278,7 +278,7 @@ asynctest(
       sTestWindowScroll,
 
       sTestUnbind
-    ], function () { 
+    ], function () {
       Remove.remove(page);
       success();
     }, failure);

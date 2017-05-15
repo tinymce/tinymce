@@ -1,6 +1,6 @@
 asynctest(
   'SlidingTest',
- 
+
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -23,7 +23,7 @@ asynctest(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove'
   ],
- 
+
   function (ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Logger, Step, Waiter, GuiFactory, Behaviour, Sliding, Container, EventHandler, GuiSetup, Objects, Class, Element, Html, Insert, Remove) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -46,7 +46,7 @@ asynctest(
               height: '20px'
             }
           },
-          containerBehaviours: Behaviour.derive([ 
+          containerBehaviours: Behaviour.derive([
             Sliding.config({
               closedClass: 'test-sliding-closed',
               openClass: 'test-sliding-open',
@@ -229,7 +229,7 @@ asynctest(
             });
           }),
           component.element()
-        ),        
+        ),
         Step.sync(function () {
           Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
         }),

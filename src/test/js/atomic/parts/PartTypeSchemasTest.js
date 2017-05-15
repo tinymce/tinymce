@@ -51,7 +51,7 @@ test(
     );
 
     var group = PartType.group(
-      { sketch: function (x) { return x + '.group' } },
+      { sketch: function (x) { return x + '.group'; } },
       [ ],
       'group',
       'member',
@@ -59,7 +59,7 @@ test(
       Fun.constant({ defaultValue: 10 }),
       Fun.constant({ overriddenValue: 15 })
     );
-    
+
 
     // We split up the checking functions like so:
     // checkSuccessWithNone, the non-optional parts are expected, and the optional = None
@@ -122,7 +122,7 @@ test(
       { external: 'external.schema' }
     );
 
-     checkSuccess(
+    checkSuccess(
       'sanity: group',
       { group: { entirety: 'group.schema' } },
       [ group ],

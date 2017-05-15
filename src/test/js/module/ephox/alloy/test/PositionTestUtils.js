@@ -25,7 +25,7 @@ define(
         return Result.value(data);
       });
     };
-    
+
     var cTestPopupInSink = function (label, sinkName) {
       return Chain.control(
         NamedChain.bundle(function (data) {

@@ -1,6 +1,6 @@
 asynctest(
   'ExecutingKeyingTest',
- 
+
   [
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
@@ -14,7 +14,7 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
- 
+
   function (Keyboard, Keys, Step, GuiFactory, Behaviour, Focusing, Keying, Container, EventHandler, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -25,13 +25,13 @@ asynctest(
           dom: {
             classes: [ 'executing-keying-test'],
             styles: {
-              
+
             }
           },
           uid: 'custom-uid',
 
           components: [
-            
+
           ],
           containerBehaviours: Behaviour.derive([
             Focusing.config({ }),

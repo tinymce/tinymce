@@ -22,12 +22,13 @@ define(
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Width'
+    'ephox.sugar.api.view.Width',
+    'global!document'
   ],
 
   function (
     Behaviour, Dragging, Pinching, Toggling, SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, PlatformDetection, Insert, InsertAll, DomEvent,
-    Element, Elements, Node, Css, SelectorFind, Height, Width
+    Element, Elements, Node, Css, SelectorFind, Height, Width, document
   ) {
 
     var resize = function (element, changeX, changeY) {
@@ -67,19 +68,19 @@ define(
       var onload = DomEvent.bind(frame, 'load', function () {
         onload.unbind();
         Writer.write(
-          frame, 
-          '<html>' + 
+          frame,
+          '<html>' +
             '<head>' +
-              '<style>' + 
+              '<style>' +
                 '.selected { color: white; background: black; }' +
-                '* { font-size: bigger; }\n' + 
-                'span { padding: 30px; display: inline-block; border: 1px solid blue; }' + 
-              '</style>' + 
+                '* { font-size: bigger; }\n' +
+                'span { padding: 30px; display: inline-block; border: 1px solid blue; }' +
+              '</style>' +
             '</head>' +
             '<body>' +
               contents +
             '</body>' +
-          '</html>'        
+          '</html>'
         );
         var root = Element.fromDom(Reader.doc(frame).dom().documentElement);
         addAsForeign(root, function (gui) {
@@ -91,10 +92,10 @@ define(
         contents
       );
 
-      
+
 
       var addAsForeign = function (root, doInsert) {
-        var connection =  ForeignGui.engage({
+        var connection = ForeignGui.engage({
           root: root,
           dispatchers: [
             {
@@ -150,7 +151,7 @@ define(
         return connection;
       };
 
-      InsertAll.append(ephoxUi, 
+      InsertAll.append(ephoxUi,
         Elements.fromHtml(
           '<p>This is a demo for alloy delegation. The iframe and the div editor are not alloy components' +
             ' but they need to exhibit alloy behaviours. This is done through ForeignGui</p>' +

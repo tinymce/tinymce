@@ -28,7 +28,7 @@ define(
       component.getSystem().triggerEvent(SystemEvents.attachedToDom(), component.element(), {
         target: Fun.constant(component.element())
       });
-    }
+    };
 
     var attach = function (parent, child) {
       attachWith(parent, child, Insert.append);

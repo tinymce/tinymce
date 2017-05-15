@@ -22,7 +22,7 @@ define(
         fy: Fun.constant(0)
       };
     };
-    
+
     return FieldSchema.optionObjOf('snaps', [
       FieldSchema.strict('getSnapPoints'),
       Fields.onHandler('onSensor'),

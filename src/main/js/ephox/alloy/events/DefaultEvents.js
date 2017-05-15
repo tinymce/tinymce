@@ -16,7 +16,7 @@ define(
     // as the element receiving it, and it wasn't its own target, then stop the focus call
     // and log a warning.
     var isRecursive = function (component, originator, target) {
-      return Compare.eq(originator, component.element()) && 
+      return Compare.eq(originator, component.element()) &&
         !Compare.eq(originator, target);
     };
 
@@ -31,8 +31,8 @@ define(
             if (isRecursive(component, originator, target)) {
               console.warn(
                 SystemEvents.focus() + ' did not get interpreted by the desired target. ' +
-                '\nOriginator: ' + AlloyLogger.element(originator) + 
-                '\nTarget: ' + AlloyLogger.element(target) + 
+                '\nOriginator: ' + AlloyLogger.element(originator) +
+                '\nTarget: ' + AlloyLogger.element(target) +
                 '\nCheck the ' + SystemEvents.focus() + ' event handlers'
               );
               return false;
