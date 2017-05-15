@@ -10,6 +10,7 @@ asynctest(
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.Traverse',
     'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.test.ui.TestEditor',
@@ -19,7 +20,7 @@ asynctest(
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (GeneralSteps, Logger, Mouse, Pipeline, Step, Attachment, GuiSetup, Body, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons, IosRealm) {
+  function (GeneralSteps, Logger, Mouse, Pipeline, Step, Attachment, GuiSetup, Body, Class, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons, IosRealm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -27,6 +28,9 @@ asynctest(
 
     var body = Body.body();
     Attachment.attachSystem(body, realm.system());
+
+    // Make toolbar appear
+    Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
     var doc = Traverse.owner(body);
 

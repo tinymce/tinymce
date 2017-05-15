@@ -22,6 +22,7 @@ asynctest(
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.Traverse',
     'global!navigator',
     'tinymce.themes.mobile.test.ui.TestEditor',
@@ -34,12 +35,14 @@ asynctest(
 
   function (
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Attachment, GuiSetup, FieldSchema,
-    ValueSchema, Fun, Focus, Body, Element, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
+    ValueSchema, Fun, Focus, Body, Element, Class, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var realm = IosRealm();
+    // Make toolbar appear
+    Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
     var body = Body.body();
     Attachment.attachSystem(body, realm.system());

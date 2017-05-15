@@ -8,6 +8,7 @@ asynctest(
     'ephox.alloy.api.system.Attachment',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.Traverse',
     'tinymce.themes.mobile.test.ui.TestEditor',
     'tinymce.themes.mobile.test.ui.TestFrameEditor',
@@ -17,11 +18,13 @@ asynctest(
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (Mouse, Pipeline, Step, Attachment, Body, Element, Traverse, TestEditor, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
+  function (Mouse, Pipeline, Step, Attachment, Body, Element, Class, Traverse, TestEditor, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var realm = IosRealm();
+    // Make toolbar appear
+    Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
     var body = Body.body();
     Attachment.attachSystem(body, realm.system());

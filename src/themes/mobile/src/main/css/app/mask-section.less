@@ -1,0 +1,89 @@
+/* This is used to put the menu underneath the button so 
+   it can appear from within
+ */
+@tinymce-mobile-mask-menu-zindex: 1;
+
+@mask-button-foreground-color: white;
+@mask-button-background-color: @tinymce-blue;
+
+// Used to push the menu down, so that it can appear from the centre of the button
+@menu-padding-top: 3em;
+
+.mixin-selected-menu-item {
+  // Invert colours for selected items
+  color: @mask-button-background-color;
+  background-color: @mask-button-foreground-color;
+}
+
+.mixin-menu-item {
+  color: @mask-button-foreground-color;
+  background-color: @mask-button-background-color;
+  border-radius: 50%;
+  width: @mask-button-size;
+  height: @mask-button-size;
+  .mixin-flex-and-centre;
+}
+
+.tinymce-mobile-content-tap-section {
+  font-size: @mask-button-font-size-large;
+  @media @tablets {
+    font-size: @mask-button-font-size-small;
+  }
+
+  .mixin-flex-and-centre;
+  flex-direction: column;
+
+  .tinymce-mobile-mask-menu-sink {
+    z-index: @tinymce-mobile-mask-menu-zindex;
+
+    [role="menu"] {
+      padding-top: @menu-padding-top;
+      .tinymce-mobile-mask-menu-item {
+        .mixin-menu-item;
+        &.tinymce-mobile-mask-menu-item-selected {
+          .mixin-selected-menu-item;
+        }
+      }
+    }
+  }
+
+  .tinymce-mobile-mask-tap-icon {
+    z-index: @tinymce-mobile-mask-menu-zindex + 1;
+    
+    .mixin-menu-item;
+    &.tinymce-mobile-mask-tap-icon-selected {
+      .mixin-selected-menu-item;
+    }
+  }
+
+  &:not(.tinymce-mobile-mask-button-active)[data-mode="icon"] .tinymce-mobile-mask-tap-icon {
+    background-image: url('../icons/tinymce-logo2-blue.svg');
+    background-size: cover;
+    background-color: transparent;
+  }
+
+  &[data-mode="view"] .tinymce-mobile-mask-tap-icon:before,
+    &.tinymce-mobile-mask-button-active[data-mode="icon"] .tinymce-mobile-mask-tap-icon:before {
+    content: "View";
+  }
+
+  &[data-mode="edit"] .tinymce-mobile-mask-tap-icon:before {
+    content: "Edit";
+  }
+
+  [data-longpress-state="closed"]:not(.longpress-menu-transitioning) [role="menu"] {
+    transform: translateY(-100%);
+  }
+
+  [data-longpress-state="open"][data-longpress-destination="closed"] [role="menu"] {
+    transform: translateY(-100%);
+  }
+
+  [data-longpress-state="closed"][data-longpress-destination="open"] [role="menu"] {
+    transform: translateY(0%);
+  }     
+
+  .longpress-menu-transitioning [role="menu"] {
+    transition: transform 0.3s ease-in-out;
+  }
+}

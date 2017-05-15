@@ -6,8 +6,11 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.NativeEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun',
@@ -25,12 +28,13 @@ asynctest(
     'ephox.sugar.api.selection.WindowSelection',
     'global!Math',
     'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.test.ui.TestUi',
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
   function (
-    Assertions, Mouse, Pipeline, Step, Replacing, GuiFactory, Attachment, GuiSetup, Fun, Merger, Option, Insert, Remove, DomEvent, Body, Element, Attr, Css,
-    Html, Traverse, WindowSelection, Math, Styles, IosRealm
+    Assertions, Mouse, Pipeline, Step, UiFinder, Replacing, GuiFactory, NativeEvents, SystemEvents, Attachment, GuiSetup, Fun, Merger, Option, Insert, Remove,
+    DomEvent, Body, Element, Attr, Css, Html, Traverse, WindowSelection, Math, Styles, TestUi, IosRealm
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -131,7 +135,7 @@ asynctest(
 
     Pipeline.async({}, [
       Step.wait(1000),
-      Mouse.sClickOn(realm.element(), '[role="button"]'),
+      TestUi.sStartEditor(realm.system()),
       Step.wait(1000),
       Step.sync(function () {
         // iframe.dom().contentWindow.document.querySelector('.tinymce-mobile-editor-socket').scrollTop = 200;

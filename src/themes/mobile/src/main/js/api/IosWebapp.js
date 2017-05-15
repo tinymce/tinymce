@@ -23,12 +23,18 @@ define(
       Css.set(mobile.toolstrip, 'width', '100%');
 
       Css.set(mobile.container, 'position', 'relative');
-      var onTap = function () {
+      var onView = function () {
+        mobile.setReadOnly(true);
         mode.enter();
       };
 
+      var onEdit = function () {
+        mobile.setReadOnly(false);
+        mode.enter();
+      }
+
       var mask = GuiFactory.build(
-        TapToEditMask.sketch(onTap)
+        TapToEditMask.sketch(onView, onEdit, mobile.translate)
       );
 
       mobile.alloy.add(mask);

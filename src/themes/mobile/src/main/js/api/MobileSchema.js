@@ -53,7 +53,9 @@ define(
         return Element.fromDom(
           spec.socket.dom().ownerDocument.body
         );
-      })
+      }),
+      FieldSchema.defaulted('translate', Fun.identity),
+      FieldSchema.defaulted('setReadOnly', Fun.noop)
     ]);
   }
 );
