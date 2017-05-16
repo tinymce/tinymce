@@ -4,20 +4,20 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PhantomSkipper'
   ],
 
-  function (ApproxStructure, Assertions, Keyboard, Keys, Step, Waiter, Behaviour, Transitioning, GuiFactory, EventHandler, GuiSetup) {
+  function (ApproxStructure, Assertions, Step, Waiter, Behaviour, Transitioning, GuiFactory, GuiSetup, PhantomSkipper) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    if (PhantomSkipper.skip()) return success();
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build({

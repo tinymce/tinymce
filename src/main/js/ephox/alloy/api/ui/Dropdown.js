@@ -99,6 +99,7 @@ define(
 
     return {
       sketch: sketch,
+      schemas: Fun.constant(DropdownSchema),
       parts: Fun.constant(parts)
     };
   }

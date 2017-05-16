@@ -68,9 +68,15 @@ define(
 
     return Merger.deepMerge(
       {
-        sketch: sketch
-      },
-      GuiTypes.makeApis([ 'showAt', 'hide' ])
+        sketch: sketch,
+        schemas: Fun.constant(InlineViewSchema),
+        showAt: GuiTypes.makeApi(function (apis, component, anchor, thing) {
+          apis.showAt(component, anchor, thing);
+        }),
+        hide: GuiTypes.makeApi(function (apis, component) {
+          apis.hide(component);
+        })
+      }
     );
   }
 );

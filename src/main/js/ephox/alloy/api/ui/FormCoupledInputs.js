@@ -28,6 +28,7 @@ define(
 
     return {
       sketch: sketch,
+      schemas: Fun.constant(FormCoupledInputsSchema),
       parts: Fun.constant(parts)
     };
   }

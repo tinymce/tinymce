@@ -57,7 +57,8 @@ define(
 
     return {
       sketch: sketch,
-      parts: Fun.constant(parts)
+      parts: Fun.constant(parts),
+      schemas: Fun.constant(ToolbarGroupSchema)
     };
   }
 );

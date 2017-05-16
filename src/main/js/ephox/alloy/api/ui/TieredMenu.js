@@ -3,12 +3,14 @@ define(
 
   [
     'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.debugging.FunctionAnnotator',
     'ephox.alloy.ui.schema.TieredMenuSchema',
     'ephox.alloy.ui.single.TieredMenuSpec',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (UiSketcher, TieredMenuSchema, TieredMenuSpec, Objects) {
+  function (UiSketcher, FunctionAnnotator, TieredMenuSchema, TieredMenuSpec, Objects, Fun) {
     var schema = TieredMenuSchema.schema();
 
     var sketch = function (spec) {
@@ -52,9 +54,10 @@ define(
 
     return {
       sketch: sketch,
-      simpleData: simpleData,
-      tieredData: tieredData,
-      singleData: singleData
+      schemas: Fun.constant(TieredMenuSchema),
+      simpleData: FunctionAnnotator.markAsExtraApi(simpleData, 'simpleData'),
+      tieredData: FunctionAnnotator.markAsExtraApi(tieredData, 'tieredData'),
+      singleData: FunctionAnnotator.markAsExtraApi(singleData, 'singleData')
     };
   }
 );

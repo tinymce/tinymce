@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         }
       },
       
-      watching: {
+      phantomjs: {
         config: 'config/bolt/browser.js',
         testfiles: 'src/test/js/browser/' + (grunt.option('my-dir') !== undefined ? grunt.option('my-dir') : '') + '/**/**Test.js',
         browser: driver,
@@ -29,11 +29,14 @@ module.exports = function(grunt) {
     },
 
     'bedrock-manual': {
-      'behaviours': {
+      'behaviours': grunt.option('just') ? {
+        config: 'config/bolt/browser.js',
+        testfiles: grunt.option('just'),
+        browser: driver
+      } : {
         config: 'config/bolt/browser.js',
         testdir: 'src/test/js/browser/behaviour',
         browser: driver
-
       }
     },
 
@@ -41,6 +44,15 @@ module.exports = function(grunt) {
       'test-toggling': {
         cmd: function () {
           return 'node_modules/.bin/bedrock-auto -b phantomjs --files src/test/js/browser/behaviour/TogglingTest.js'
+        }
+      }
+    },
+
+    "bolt-test": {
+      "atomic" :{
+        config: "config/bolt/atomic.js",
+        files: {
+          src: [ "src/test/js/atomic/**/**Test.js" ]
         }
       }
     },
@@ -54,6 +66,7 @@ module.exports = function(grunt) {
       src: [
         "src"
       ]
+
     },
 
     /* 
@@ -65,7 +78,9 @@ module.exports = function(grunt) {
       everything: {
         files: ['src/**/*.js'],
         tasks: [
-          'eslint', 'bedrock-auto:watching'
+
+          "bolt-test:atomic",
+          'bedrock-auto:phantomjs'
         ],
         options: {
           spawn: false,
@@ -85,4 +100,6 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('@ephox/bedrock');
+
+  grunt.registerTask('tests', [ 'bolt-test', 'bedrock-auto:phantomjs' ]);
 };

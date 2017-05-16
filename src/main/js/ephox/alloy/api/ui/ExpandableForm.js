@@ -80,9 +80,21 @@ define(
     return Merger.deepMerge(
       {
         sketch: sketch,
-        parts: Fun.constant(parts)
-      },
-      GuiTypes.makeApis([ 'toggleForm', 'collapseForm', 'collapseFormImmediately', 'expandForm' ])
+        schemas: Fun.constant(ExpandableFormSchema),
+        parts: Fun.constant(parts),
+        toggleForm: GuiTypes.makeApi(function (apis, component) {
+          apis.toggleForm(component);
+        }),
+        collapseForm: GuiTypes.makeApi(function (apis, component) {
+          apis.collapseForm(component);
+        }),
+        collapseFormImmediately: GuiTypes.makeApi(function (apis, component) {
+          apis.collapseFormImmediately(component);
+        }),
+        expandForm: GuiTypes.makeApi(function (apis, component) {
+          apis.expandForm(component);
+        })
+      }
     );
   }
 );

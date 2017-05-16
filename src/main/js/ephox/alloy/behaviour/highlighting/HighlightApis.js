@@ -65,6 +65,7 @@ define(
     };
 
     var getHighlighted = function (component, hConfig, hState) {
+      // FIX: Wrong return type (probably)
       return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass()).bind(component.getSystem().getByDom);
     };
 
@@ -77,6 +78,7 @@ define(
     };
 
     var getFirst = function (component, hConfig, hState) {
+      // FIX: Wrong return type (probably)
       return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass()).bind(component.getSystem().getByDom);
     };
 

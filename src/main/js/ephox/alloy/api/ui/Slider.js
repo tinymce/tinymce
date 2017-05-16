@@ -25,9 +25,19 @@ define(
     return Merger.deepMerge(
       {
         sketch: sketch,
-        parts: Fun.constant(parts)
-      },
-      GuiTypes.makeApis([ 'resetToMin', 'resetToMax' ])
+        parts: Fun.constant(parts),
+        schemas: Fun.constant({
+          schema: Fun.constant(SliderSchema),
+          name: Fun.constant('Slider'),
+          parts: Fun.constant(SliderParts)
+        }),
+        resetToMin: GuiTypes.makeApi(function (apis, slider) {
+          apis.resetToMin(slider);
+        }),
+        resetToMax: GuiTypes.makeApi(function (apis, slider) {
+          apis.resetToMax(slider);
+        })
+      }
     );
   }
 );

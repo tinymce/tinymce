@@ -16,12 +16,22 @@ node("primary") {
     stage "Primary: checkout"
     git([branch: "master", url:'ssh://git@stash:7999/van/alloy.git', credentialsId: credentialsId])
     
-    stage "Primary: dependencies"
+    stage "Fetching dent dependencies"
     sh "dent"
 
-    stage "Primary: atomic tests"
-    sh "bolt test config/bolt/atomic.js \$(find src/test/js/atomic -name *.js)"
+    stage "Fetching npm dependencies"
+    sh "npm install"
+
+    stage "Running atomic tests"
+    sh "grunt bolt-test"
+
+    stage "Running phantomjs tests"
+    sh "grunt bedrock-auto:phantomjs"
   }
+
+  stage "Skipping browser tests ... not yet working"
+
+  /*
 
   def permutations = [:]
 
@@ -33,6 +43,7 @@ node("primary") {
   ]
 
   def processes = [:]
+
 
   for (int i = 0; i < permutations.size(); i++) {
     def permutation = permutations.get(i);
@@ -53,6 +64,8 @@ node("primary") {
 
   stage "Browser Tests"
   parallel processes
+
+  */
 
   stage "Skipping publishing ... this will be an npm project"
 }

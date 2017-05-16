@@ -111,7 +111,7 @@ asynctest(
 
       var cHighlightAt = function (index) {
         return Chain.op(function () {
-          Highlighting.highlightAt(component, index)
+          Highlighting.highlightAt(component, index);
         });
       };
 
@@ -120,9 +120,7 @@ asynctest(
           try {
             Highlighting.highlightAt(component, index);
             return Result.error('Expected to get an error because there should be no item with index ' + index);
-          } catch (e) {
-
-          }
+          } catch (e) { /* */ }
           return Result.value(v);
         });
       };

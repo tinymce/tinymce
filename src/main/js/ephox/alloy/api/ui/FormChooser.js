@@ -129,6 +129,7 @@ define(
 
     return {
       sketch: sketch,
+      schemas: Fun.constant(FormChooserSchema),
       parts: Fun.constant(parts)
     };
   }

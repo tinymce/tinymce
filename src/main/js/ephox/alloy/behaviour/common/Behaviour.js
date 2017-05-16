@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.debugging.FunctionAnnotator',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -19,7 +20,10 @@ define(
     'global!Error'
   ],
 
-  function (EventRoot, SystemEvents, EventHandler, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console, Error) {
+  function (
+    EventRoot, SystemEvents, EventHandler, FunctionAnnotator, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console,
+    Error
+  ) {
     var executeEvent = function (bConfig, bState, executor) {
       return {
         key: SystemEvents.execute(),
@@ -61,7 +65,7 @@ define(
     };
 
     var wrapApi = function (bName, apiFunction, apiName) {
-      return function (component) {
+      var f = function (component) {
         var args = arguments;
         return component.config({
           name: Fun.constant(bName)
@@ -75,6 +79,7 @@ define(
           }
         );
       };
+      return FunctionAnnotator.markAsBehaviourApi(f, apiName, apiFunction);
     };
 
     var revokeBehaviour = function (name) {
@@ -90,8 +95,12 @@ define(
         return wrapApi(name, apiF, apiName);
       });
 
+      var wrappedExtra = Obj.map(extra, function (extraF, extraName) {
+        return FunctionAnnotator.markAsExtraApi(extraF, extraName);
+      });
+
       return Merger.deepMerge(
-        extra,
+        wrappedExtra,
         wrappedApis,
         {
           revoke: Fun.curry(revokeBehaviour, name),

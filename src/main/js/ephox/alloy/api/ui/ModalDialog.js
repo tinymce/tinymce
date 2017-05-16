@@ -93,10 +93,18 @@ define(
     return Merger.deepMerge(
       {
         sketch: sketch,
-        parts: Fun.constant(parts)
-      },
-
-      GuiTypes.makeApis([ 'show', 'hide', 'getBody' ])
+        parts: Fun.constant(parts),
+        schemas: Fun.constant(ModalDialogSchema),
+        show: GuiTypes.makeApi(function (apis, dialog) {
+          apis.show(dialog);
+        }),
+        hide: GuiTypes.makeApi(function (apis, dialog) {
+          apis.hide(dialog);
+        }),
+        getBody: GuiTypes.makeApi(function (apis, dialog) {
+          return apis.getBody(dialog);
+        })
+      }
     );
   }
 );

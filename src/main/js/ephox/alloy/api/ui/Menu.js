@@ -30,6 +30,7 @@ define(
     return {
       sketch: sketch,
       parts: Fun.constant(parts),
+      schemas: Fun.constant(MenuSchema),
 
       item: itemType('item'),
       widget: itemType('widget'),
