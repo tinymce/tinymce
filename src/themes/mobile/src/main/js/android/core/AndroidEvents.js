@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
@@ -10,7 +11,7 @@ define(
     'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (Arr, PlatformDetection, Compare, DomEvent, Css, TappingEvent) {
+  function (Arr, Fun, PlatformDetection, Compare, DomEvent, Css, TappingEvent) {
     var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
 
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -37,7 +38,10 @@ define(
           tapping.fireTouchstart(evt);
         }),
         tapping.onTouchmove(),
-        tapping.onTouchend()
+        tapping.onTouchend(),
+
+        editorApi.onToReading(Fun.noop)
+
       ].concat(
         isAndroid6 ? [ ] : [
           DomEvent.bind(editorApi.doc(), 'selectionchange', function () {

@@ -4,12 +4,13 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Fun, Option, DomEvent, Element, WindowSelection) {
+  function (Fun, Option, Compare, DomEvent, Element, WindowSelection) {
     var getBodyFromFrame = function (frame) {
       return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
     };

@@ -99,7 +99,6 @@ define(
       var tapping = TappingEvent.monitor(editorApi);
 
       var refreshThrottle = Throttler.last(refreshView, 300);
-
       var listeners = [
         // Clear any fake selections, scroll to cursor, and update the iframe height
         editorApi.onKeyup(clearAndRefresh),

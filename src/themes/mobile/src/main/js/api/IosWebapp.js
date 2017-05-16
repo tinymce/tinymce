@@ -28,13 +28,8 @@ define(
         mode.enter();
       };
 
-      var onEdit = function () {
-        mobile.setReadOnly(false);
-        mode.enter();
-      }
-
       var mask = GuiFactory.build(
-        TapToEditMask.sketch(onView, onEdit, mobile.translate)
+        TapToEditMask.sketch(onView, mobile.translate)
       );
 
       mobile.alloy.add(mask);
@@ -50,6 +45,7 @@ define(
       var mode = IosMode.create(mobile, maskApi);
 
       return {
+        setReadOnly: mobile.setReadOnly,
         enter: mode.enter,
         exit: mode.exit,
         destroy: Fun.noop

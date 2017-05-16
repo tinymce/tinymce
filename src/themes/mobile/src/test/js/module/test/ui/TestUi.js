@@ -54,7 +54,7 @@ define(
       return Step.sync(function () {
         var button = UiFinder.findIn(alloy.element(), '[role="button"]').getOrDie();
         var x = alloy.getByDom(button).getOrDie();
-        SystemEvents.trigger(x, SystemEvents.tap(), { });
+        SystemEvents.trigger(x, 'click', { });
       });
     };
 

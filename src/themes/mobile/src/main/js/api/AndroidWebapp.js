@@ -26,11 +26,12 @@ define(
 
       // We do not make the Android container relative, because we aren't positioning the toolbar absolutely.
       var onTap = function () {
+        mobile.setReadOnly(true);
         mode.enter();
       };
 
       var mask = GuiFactory.build(
-        TapToEditMask.sketch(onTap, onTap, mobile.translate)
+        TapToEditMask.sketch(onTap, mobile.translate)
       );
 
       mobile.alloy.add(mask);
@@ -48,6 +49,7 @@ define(
       var mode = AndroidMode.create(mobile, maskApi);
 
       return {
+        setReadOnly: mobile.setReadOnly,
         enter: mode.enter,
         exit: mode.exit,
         destroy: Fun.noop
