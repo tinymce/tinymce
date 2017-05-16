@@ -36,6 +36,7 @@
     "grunt-nuget-pack": "^0.0.6",
     "jquery": "~1.11.3",
     "load-grunt-tasks": "~3.5.2",
+    "less-plugin-autoprefix": "^1.5.1",
     "moxie-zip": "~0.0.3"
   },
 
