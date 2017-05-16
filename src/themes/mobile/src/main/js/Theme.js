@@ -55,6 +55,7 @@ define(
           },
           onReady: Fun.noop
         });
+
         var setReadOnly = function (readOnlyGroups, mainGroups, ro) {
           realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
           editor.setMode(ro === true ? 'readonly' : 'design');
@@ -131,9 +132,7 @@ define(
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
             alloy: realm.system(),
-            translate: function (key) {
-              return key === 'Tap to Edit' && editor.settings.readonly === 1 ? 'Tap to View' : key;
-            },
+            translate: Fun.noop,
 
             setReadOnly: function (ro) {
               setReadOnly(readOnlyGroups, mainGroups, ro);
@@ -201,7 +200,6 @@ define(
               // This is where the "add button" button goes.
             ]
           };
-          
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
           var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);

@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
@@ -15,7 +16,7 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
+  function (Behaviour, Replacing, GuiFactory, Button, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('android-container') ]
@@ -24,6 +25,21 @@ define(
       var toolbar = ScrollingToolbar();
 
       var webapp = Singleton.api();
+
+
+      var switchToEdit = GuiFactory.build(
+        Button.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tinymce-mobile-mask-tap-icon' ]
+          },
+          action: function () {
+            webapp.run(function (w) {
+              w.setReadOnly(false);
+            });
+          }
+        })
+      );
 
       var socket = GuiFactory.build(
         Container.sketch({
@@ -69,7 +85,22 @@ define(
       var exit = function () {
         webapp.run(function (w) {
           w.exit();
+          Replacing.remove(socket, switchToEdit);
         });
+      };
+
+      var showEdit = function () {
+        Replacing.append(socket, GuiFactory.premade(switchToEdit));
+      };
+
+      var hideEdit = function () {
+        Replacing.remove(socket, switchToEdit);
+      };
+
+
+      var updateMode = function (readOnly) {
+        var f = readOnly ? showEdit : hideEdit;
+        f();
       };
 
       return {
@@ -81,6 +112,7 @@ define(
         setContextToolbar: setContextToolbar,
         focusToolbar: focusToolbar,
         restoreToolbar: restoreToolbar,
+        updateMode: updateMode,
         socket: Fun.constant(socket)
       };
     };

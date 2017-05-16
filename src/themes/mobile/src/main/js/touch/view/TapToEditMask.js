@@ -6,18 +6,15 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
-    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Throttler',
-    'ephox.sugar.api.properties.Attr',
     'global!setTimeout',
-    'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.touch.view.TapToEditButton'
+    'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (AdhocBehaviour, Behaviour, Toggling, Memento, AlloyEvents, Button, Container, Throttler, Attr, setTimeout, Styles, TapToEditButton) {
-    var sketch = function (onView, onEdit, translate) {
+  function (AdhocBehaviour, Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles) {
+    var sketch = function (onView, translate) {
       
       var memIcon = Memento.record(
         Container.sketch({

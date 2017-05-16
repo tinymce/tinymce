@@ -38,8 +38,6 @@ define(
         })
       );
 
-      
-
       var toolbar = ScrollingToolbar();
 
       var webapp = Singleton.api();

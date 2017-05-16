@@ -28,13 +28,8 @@ define(
         mode.enter();
       };
 
-      var onEdit = function () {
-        mobile.setReadOnly(false);
-        mode.enter();
-      };
-
       var mask = GuiFactory.build(
-        TapToEditMask.sketch(onView, onEdit, mobile.translate)
+        TapToEditMask.sketch(onView, mobile.translate)
       );
 
       mobile.alloy.add(mask);
