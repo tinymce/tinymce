@@ -83,7 +83,9 @@ define(
     };
 
     var read = function (elm) {
-      return Arr.map(elm.childNodes, getOuterHtml);
+      return Arr.filter(Arr.map(elm.childNodes, getOuterHtml), function (item) {
+        return item.length > 0;
+      });
     };
 
     var write = function (fragments, elm) {
