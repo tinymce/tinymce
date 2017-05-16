@@ -6,6 +6,10 @@
   opacity: 0.5;
 }
 
+body {
+  -webkit-text-size-adjust: none;
+}
+
 body img {
   max-width: 98vw;
 }
