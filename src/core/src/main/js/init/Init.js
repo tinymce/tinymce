@@ -196,7 +196,6 @@ define(
       // TODO: ACC add the appropriate description on this.
       var ifr = DOM.create('iframe', {
         id: editor.id + "_ifr",
-        //src: url || 'javascript:""', // Workaround for HTTPS warning in IE6/7
         frameBorder: '0',
         allowTransparency: "true",
         title: editor.editorManager.translate(
@@ -214,8 +213,6 @@ define(
         ifr.onload = null;
         editor.fire("load");
       };
-
-      DOM.setAttrib(ifr, "src", url || 'javascript:""');
 
       editor.contentAreaContainer = o.iframeContainer;
       editor.iframeElement = ifr;
