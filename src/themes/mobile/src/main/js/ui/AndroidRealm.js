@@ -2,21 +2,17 @@ define(
   'tinymce.themes.mobile.ui.AndroidRealm',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.Container',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
     'tinymce.themes.mobile.api.AndroidWebapp',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
+    'tinymce.themes.mobile.ui.CommonRealm',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Button, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
+  function (Replacing, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('android-container') ]
@@ -26,33 +22,9 @@ define(
 
       var webapp = Singleton.api();
 
+      var switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-      var switchToEdit = GuiFactory.build(
-        Button.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'tinymce-mobile-mask-tap-icon' ]
-          },
-          action: function () {
-            webapp.run(function (w) {
-              w.setReadOnly(false);
-            });
-          }
-        })
-      );
-
-      var socket = GuiFactory.build(
-        Container.sketch({
-          dom: {
-            classes: [ Styles.resolve('editor-socket') ]
-          },
-          components: [ ],
-
-          containerBehaviours: Behaviour.derive([
-            Replacing.config({ })
-          ])
-        })
-      );
+      var socket = CommonRealm.makeSocket();
 
       alloy.add(toolbar.wrapper());
       alloy.add(socket);
@@ -89,18 +61,8 @@ define(
         });
       };
 
-      var showEdit = function () {
-        Replacing.append(socket, GuiFactory.premade(switchToEdit));
-      };
-
-      var hideEdit = function () {
-        Replacing.remove(socket, switchToEdit);
-      };
-
-
       var updateMode = function (readOnly) {
-        var f = readOnly ? showEdit : hideEdit;
-        f();
+        CommonRealm.updateMode(socket, switchToEdit, readOnly);
       };
 
       return {
