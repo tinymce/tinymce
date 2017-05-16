@@ -8,6 +8,9 @@
 @toolstrip-button-selected-background-color: rgb(219,219,219);
 @toolstrip-thumb-background-color: @toolstrip-foreground-color;
 
+@mask-button-foreground-color: white;
+@mask-button-background-color: @tinymce-blue;
+
 @quick-animation-time: .05s;
 
 @android-background-color: rgba(255, 255, 255, 1.0);
@@ -44,7 +47,7 @@
   }
 }
 
-@media (max-width: 700x) {
+@media (max-width: 700px) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
     font-size: 18px;
   }
@@ -74,6 +77,31 @@
 
   .tinymce-mobile-toolstrip {
     display: none;
+  }
+}
+
+.tinymce-mobile-editor-socket {
+  .tinymce-mobile-mask-tap-icon {
+    position: fixed;
+
+    right: 2em;
+    bottom: 2em;
+
+    color: @mask-button-foreground-color;
+    background-color: @mask-button-background-color;
+    border-radius: 50%;
+    width: @mask-button-size;
+    height: @mask-button-size;
+    .mixin-flex-and-centre;
+
+    font-size: @mask-button-font-size-large;
+    @media @tablets {
+      font-size: @mask-button-font-size-small;
+    }
+  }
+
+  .tinymce-mobile-mask-tap-icon:before {
+    content: "Edit";
   }
 }
 

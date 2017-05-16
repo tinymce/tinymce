@@ -33,7 +33,7 @@ define(
     // orientation of the device.
     var getActualWidth = function () {
       var isIos = PlatformDetection.detect().os.isiOS();
-      var isPortrait = get().isPortrait();
+      var isPortrait = get(window).isPortrait();
       return isIos && !isPortrait ? window.screen.height : window.screen.width;
     };
 

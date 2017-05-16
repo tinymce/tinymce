@@ -55,6 +55,13 @@ define(
           },
           onReady: Fun.noop
         });
+        var setReadOnly = function (readOnlyGroups, mainGroups, ro) {
+          realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
+          editor.setMode(ro === true ? 'readonly' : 'design');
+          if (ro) editor.fire('toReading');
+          realm.updateMode(ro);
+        };
+
 
         editor.on('init', function () {
           realm.init({
@@ -66,6 +73,20 @@ define(
               onDomChanged: function () {
                 return {
                   unbind: Fun.noop
+                };
+              },
+
+              onToReading: function (handler) {
+                editor.on('toReading', function () {
+                  handler();
+                });
+
+                var unbind = function () {
+                  editor.off('toReading');
+                };
+
+                return {
+                  unbind: unbind
                 };
               },
 
@@ -115,8 +136,7 @@ define(
             },
 
             setReadOnly: function (ro) {
-              realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
-              editor.setMode(ro === true ? 'readonly' : 'design');
+              setReadOnly(readOnlyGroups, mainGroups, ro);
             }
           });
 
@@ -142,8 +162,7 @@ define(
             scrollable: false,
             items: [
               Buttons.forToolbar('readonly-back', function (/* btn */) {
-                realm.setToolbarGroups(readOnlyGroups.get());
-                editor.setMode('readonly');
+                setReadOnly(readOnlyGroups, mainGroups, true);
               }, {})
             ]
           };
@@ -151,12 +170,7 @@ define(
           var readOnlyGroup = {
             label: 'The read only mode group',
             scrollable: true,
-            items: [
-              Buttons.forToolbar('edit', function () {
-                realm.setToolbarGroups(mainGroups.get());
-                editor.setMode('design');
-              }, {})
-            ]
+            items: [ ]
           };
 
           var actionGroup = {
@@ -187,11 +201,11 @@ define(
               // This is where the "add button" button goes.
             ]
           };
+          
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
           var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
 
-          realm.setToolbarGroups(editor.settings.readonly === 1 ? readOnlyGroups.get() : mainGroups.get());
 
           // Investigate ways to keep in sync with the ui
           FormatChangers.init(realm, editor);
