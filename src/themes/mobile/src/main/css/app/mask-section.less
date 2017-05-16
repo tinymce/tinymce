@@ -1,11 +1,3 @@
-/* This is used to put the menu underneath the button so 
-   it can appear from within
- */
-@tinymce-mobile-mask-menu-zindex: 1;
-
-@mask-button-foreground-color: white;
-@mask-button-background-color: @tinymce-blue;
-
 // Used to push the menu down, so that it can appear from the centre of the button
 @menu-padding-top: 3em;
 
@@ -49,7 +41,7 @@
 
   .tinymce-mobile-mask-tap-icon {
     z-index: @tinymce-mobile-mask-menu-zindex + 1;
-    
+
     .mixin-menu-item;
     &.tinymce-mobile-mask-tap-icon-selected {
       .mixin-selected-menu-item;
@@ -81,7 +73,7 @@
 
   [data-longpress-state="closed"][data-longpress-destination="open"] [role="menu"] {
     transform: translateY(0%);
-  }     
+  }
 
   .longpress-menu-transitioning [role="menu"] {
     transition: transform 0.3s ease-in-out;

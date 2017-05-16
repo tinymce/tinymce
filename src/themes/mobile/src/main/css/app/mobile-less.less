@@ -1,27 +1,4 @@
-@toolstrip-background-color: rgb(240,240,240);
-@toolstrip-foreground-color: rgb(51,51,51);
-@toolstrip-dark-background-color: darken(@toolstrip-background-color, 20%);
-@toolstrip-input-background-color: lighten(@toolstrip-background-color, 20%);
-@toolstrip-slider-background-color: darken(@toolstrip-background-color, 20%);
-@toolstrip-input-foreground-color: @toolstrip-foreground-color;
-@toolstrip-input-placeholder-foreground-color: darken(@toolstrip-input-foreground-color, 10%);
-@toolstrip-button-selected-background-color: rgb(219,219,219);
-@toolstrip-thumb-background-color: @toolstrip-foreground-color;
-
-@quick-animation-time: .05s;
-
-@android-background-color: rgba(255, 255, 255, 1.0);
-
-@editor-mask-background-color: #333;
-@editor-mask-foreground-color: #eee;
-
-@mask-button-font-size-small: 0.8em;
-@mask-button-font-size-large: 1.0em;
-
-@mask-button-size: 4em;
-
-@tinymce-blue: #4682B4;
-
+@import "variables.less";
 @import "icons.css";
 @import "mask.less";
 @import "android.less";
@@ -34,6 +11,7 @@
   font-style: normal;
 }
 
+// to be moved
 @smartphones: ~"only screen and (max-device-width: 700px)";
 @tablets: ~"only screen and (min-device-width:700px)";
 
@@ -43,7 +21,7 @@
   }
 }
 
-@media (max-device-width: 700x) {
+@media (max-device-width: 700px) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
     font-size: 18px;
   }
