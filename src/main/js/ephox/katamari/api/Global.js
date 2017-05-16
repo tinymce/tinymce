@@ -5,7 +5,12 @@ define(
   ],
 
   function () {
-    return Function('return this;')();
+    // Use window object as the global if it's available since CSP will block script evals
+    if (typeof window !== 'undefined') {
+      return window;
+    } else {
+      return Function('return this;')();
+    }
   }
 );
 
