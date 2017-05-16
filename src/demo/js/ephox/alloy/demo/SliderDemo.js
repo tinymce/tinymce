@@ -231,7 +231,7 @@ define(
       );
 
       DomEvent.bind(body, 'click', function () {
-        Keying.focusIn(hueSlider);
+        // Keying.focusIn(hueSlider);
       });
     };
   }

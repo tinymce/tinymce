@@ -49,12 +49,22 @@ define(
       };
     };
 
+    var redirectToUid = function (name, uid) {
+      return run(name, function (component, simulatedEvent) {
+        component.getSystem().getByUid(uid).each(function (redirectee) {
+          redirectee.getSystem().triggerEvent(name, redirectee.element(), simulatedEvent.event());
+        });
+      });
+    };
+
     return {
       derive: derive,
       run: run,
       runOnAttached: runOnSourceName(SystemEvents.attachedToDom()),
       runOnDetached: runOnSourceName(SystemEvents.detachedFromDom()),
       runOnExecute: runOnName(SystemEvents.execute()),
+
+      redirectToUid: redirectToUid,
       abort: abort
     };
   }
