@@ -224,10 +224,10 @@ define(
             { inline: 'strike', remove: 'all' }
           ],
 
-          forecolor: { inline: 'span', styles: { color: '%value' }, links: true, remove_similar: true },
-          hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true },
-          fontname: { inline: 'span', styles: { fontFamily: '%value' } },
-          fontsize: { inline: 'span', styles: { fontSize: '%value' } },
+          forecolor: { inline: 'span', styles: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
+          hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
+          fontname: { inline: 'span', styles: { fontFamily: '%value' }, clear_child_styles: true },
+          fontsize: { inline: 'span', styles: { fontSize: '%value' }, clear_child_styles: true },
           fontsize_class: { inline: 'span', attributes: { 'class': '%value' } },
           blockquote: { block: 'blockquote', wrapper: 1, remove: 'all' },
           subscript: { inline: 'sub' },
@@ -269,6 +269,16 @@ define(
         // Register user defined formats
         register(ed.settings.formats);
       }
+
+      var clearChildStyles = function (format, node) {
+        if (format.clear_child_styles) {
+          each(dom.select('*', node), function (node) {
+            each(format.styles, function (value, name) {
+              dom.setStyle(node, name, '');
+            });
+          });
+        }
+      };
 
       function addKeyboardShortcuts() {
         // Add some inline shortcuts
@@ -712,6 +722,8 @@ define(
 
                   removeFormat(format, vars, child, format.exact ? child : null);
                 });
+
+                clearChildStyles(format, node);
               });
 
               // Remove format if direct parent already has the same format

@@ -1907,6 +1907,42 @@ asynctest(
       LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
     });
 
+    suite.test("Formatter should remove similar styles when clear_child_styles is set to true", function (editor) {
+      editor.getBody().innerHTML = (
+        '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
+        '<del style="font-family: Arial; font-size: 13px">b</del>' +
+        '<span style="font-size: 13px">c</span></p>'
+      );
+
+      editor.selection.select(editor.dom.select('p')[0]);
+
+      editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }, clear_child_styles: true });
+      editor.formatter.apply('format');
+
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-family: arial;">b</del>c</span></p>'
+      );
+    });
+
+    suite.test("Formatter should remove similar styles when clear_child_styles isn't defined", function (editor) {
+      editor.getBody().innerHTML = (
+        '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
+        '<del style="font-family: Arial; font-size: 13px">b</del>' +
+        '<span style="font-size: 13px">c</span></p>'
+      );
+
+      editor.selection.select(editor.dom.select('p')[0]);
+
+      editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' } });
+      editor.formatter.apply('format');
+
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-size: 13px; font-family: arial;">b</del>c</span></p>'
+      );
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
