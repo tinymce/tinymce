@@ -82,7 +82,6 @@ define(
         webapp.set(
           IosWebapp.produce(spec)
         );
-        Replacing.append(socket, GuiFactory.premade(switchToEdit));
       };
 
       var exit = function () {
