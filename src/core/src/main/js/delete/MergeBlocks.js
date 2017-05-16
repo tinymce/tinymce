@@ -28,7 +28,7 @@ define(
 
       if (NodeType.isBr(toPosition.getNode())) {
         Remove.remove(Element.fromDom(toPosition.getNode()));
-        toPosition = CaretFinder.positionIn(false, toBlock.dom()).getOr();
+        toPosition = CaretFinder.positionIn(false, toBlock.dom()).getOr(toPosition);
       }
 
       if (Empty.isEmpty(fromBlock) === false) {

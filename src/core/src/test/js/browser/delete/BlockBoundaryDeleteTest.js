@@ -1,6 +1,7 @@
 asynctest(
   'browser.tinymce.core.delete.BlockBoundaryDeleteTest',
   [
+    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -11,7 +12,7 @@ asynctest(
     'tinymce.core.delete.BlockBoundaryDelete',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, BlockBoundaryDelete, Theme) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, BlockBoundaryDelete, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -42,6 +43,12 @@ asynctest(
       return Step.sync(function () {
         var returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
         Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
+      });
+    };
+
+    var sSetRawContent = function (editor, html) {
+      return Step.sync(function () {
+        editor.getBody().innerHTML = html;
       });
     };
 
@@ -146,6 +153,122 @@ asynctest(
           sDelete(editor),
           tinyApis.sAssertContent('<p><span style="color: red;">a</span>b</p>'),
           tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        ])),
+        Logger.t('Backspace from block into block with trailing br should merge', GeneralSteps.sequence([
+          sSetRawContent(editor, '<p>a<br></p><p>b</p>'),
+          tinyApis.sSetCursor([1, 0], 0),
+          sBackspace(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.text(str.is('a')),
+                      s.text(str.is('b'))
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+        Logger.t('Delete from block into block with trailing br should merge', GeneralSteps.sequence([
+          sSetRawContent(editor, '<p>a<br></p><p>b</p>'),
+          tinyApis.sSetCursor([0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.text(str.is('a')),
+                      s.text(str.is('b'))
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+        Logger.t('Backspace from empty block into content block should merge', GeneralSteps.sequence([
+          sSetRawContent(editor, '<p>a</p><p><br></p>'),
+          tinyApis.sSetCursor([1], 0),
+          sBackspace(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.text(str.is('a'))
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+        Logger.t('Delete from empty block into content block should merge', GeneralSteps.sequence([
+          sSetRawContent(editor, '<p><br></p><p>a</p>'),
+          tinyApis.sSetCursor([0], 0),
+          sDelete(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.text(str.is('a'))
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0)
+        ])),
+        Logger.t('Backspace between empty blocks should merge', GeneralSteps.sequence([
+          sSetRawContent(editor, '<p><br></p><p><br></p>'),
+          tinyApis.sSetCursor([1], 0),
+          sBackspace(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0], 0, [0], 0)
+        ])),
+        Logger.t('Delete between empty blocks should merge', GeneralSteps.sequence([
+          sSetRawContent(editor, '<p><br></p><p><br></p>'),
+          tinyApis.sSetCursor([0], 0),
+          sDelete(editor),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.element('br', {})
+                    ]
+                  })
+                ]
+              });
+            })
+          ),
+          tinyApis.sAssertSelection([0], 0, [0], 0)
         ]))
       ], onSuccess, onFailure);
     }, {

@@ -137,6 +137,26 @@ asynctest(
           cSetHtml('<p></p>'),
           cPositionIn(false, [0]),
           cAssertNone
+        ])),
+        Logger.t('Should not find any position in an empty element and not walk outside backwards', Chain.asStep(viewBlock, [
+          cSetHtml('<p>a</p><p></p><p>b</p>'),
+          cPositionIn(false, [1]),
+          cAssertNone
+        ])),
+        Logger.t('Should not find any position in an empty element and not walk outside forwards', Chain.asStep(viewBlock, [
+          cSetHtml('<p>a</p><p></p><p>b</p>'),
+          cPositionIn(true, [1]),
+          cAssertNone
+        ])),
+        Logger.t('Should walk past comment node backwards', Chain.asStep(viewBlock, [
+          cSetHtml('<p><!-- a-->b<!-- c --></p>'),
+          cPositionIn(false, []),
+          cAssertCaretPosition([0, 1], 1)
+        ])),
+        Logger.t('Should walk past comment node forwards', Chain.asStep(viewBlock, [
+          cSetHtml('<p><!-- a-->b<!-- c --></p>'),
+          cPositionIn(true, []),
+          cAssertCaretPosition([0, 1], 0)
         ]))
       ]))
     ], function () {

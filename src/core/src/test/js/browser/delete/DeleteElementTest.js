@@ -157,6 +157,20 @@ asynctest(
           tinyApis.sAssertContent('<p contenteditable="false">a</p><p contenteditable="false">c</p>'),
           tinyApis.sAssertSelection([1], 0, [1], 0),
           sAssertCaretDirection(editor, 'before')
+        ])),
+        Logger.t('Delete element adjacent text nodes forward', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>a<br>b</p>'),
+          tinyApis.sSetCursor([0, 0], 1),
+          sDeleteElementPath(editor, true, [0, 1]),
+          tinyApis.sAssertContent('<p>ab</p>'),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        ])),
+        Logger.t('Delete element adjacent text nodes backwards', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>a<br>b</p>'),
+          tinyApis.sSetCursor([0, 2], 0),
+          sDeleteElementPath(editor, false, [0, 1]),
+          tinyApis.sAssertContent('<p>ab</p>'),
+          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
         ]))
       ], onSuccess, onFailure);
     }, {
