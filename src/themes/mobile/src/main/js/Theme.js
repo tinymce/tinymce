@@ -47,11 +47,11 @@ define(
             return realm.system().getByDom(focused).toOption();
           });
         };
-
-        var orientation = Orientation.onChange(window.top, {
+        var outerWindow = args.targetNode.ownerDocument.defaultView;
+        var orientation = Orientation.onChange(outerWindow, {
           onChange: function () {
             var alloy = realm.system();
-            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth() });
+            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth(outerWindow) });
           },
           onReady: Fun.noop
         });
