@@ -11,6 +11,7 @@ define(
     'ephox.alloy.api.ui.Slider',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Fun',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
@@ -19,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (Behaviour, Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, Insert, DomEvent, Element, Class, Css, document) {
+  function (Behaviour, Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, PlatformDetection, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -230,8 +231,11 @@ define(
         })
       );
 
+      var platform = PlatformDetection.detect();
+      var isTouch = platform.deviceType.isTouch();
+
       DomEvent.bind(body, 'click', function () {
-        // Keying.focusIn(hueSlider);
+        if (! isTouch) Keying.focusIn(hueSlider);
       });
     };
   }
