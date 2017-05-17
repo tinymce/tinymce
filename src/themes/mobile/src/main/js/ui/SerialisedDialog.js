@@ -10,6 +10,8 @@ define(
     'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
@@ -31,11 +33,14 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema,
-    Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container,
+    Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
+
+      var wrapperAdhocEvents = 'serializer-wrapper-events';
+      var formAdhocEvents = 'form-events';
 
       var schema = ValueSchema.objOf([
         FieldSchema.strict('fields'),
@@ -185,12 +190,12 @@ define(
                 return Option.some(true);
               }
             }),
-            AdhocBehaviour.config('adhoc-serialised-dialog-events')
+            AdhocBehaviour.config(formAdhocEvents)
           ]),
 
           customBehaviours: [
             AdhocBehaviour.events(
-              'adhoc-serialised-dialog-events',
+              formAdhocEvents,
               Objects.wrapAll([
                 {
                   key: SystemEvents.attachedToDom(),
@@ -216,42 +221,6 @@ define(
                     }
                   })
                 },
-                {
-                  key: 'touchstart',
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      spec.state.dialogSwipeState.set(
-                        SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
-                      );
-                    }
-                  })
-                },
-                {
-                  key: 'touchmove',
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      spec.state.dialogSwipeState.on(function (state) {
-                        simulatedEvent.event().prevent();
-                        spec.state.dialogSwipeState.set(
-                          SwipingModel.move(state, simulatedEvent.event().raw().touches[0].clientX)
-                        );
-                      });
-                    }
-                  })
-                },
-                {
-                  key: 'touchend',
-                  value: EventHandler.nu({
-                    run: function (dialog/*, simulatedEvent */) {
-                      spec.state.dialogSwipeState.on(function (state) {
-                        // Confusing
-                        var direction = -1 * SwipingModel.complete(state);
-                        navigate(dialog, direction);
-                      });
-                    }
-                  })
-                },
-
                 {
                   key: 'transitionend',
                   value: EventHandler.nu({
@@ -318,8 +287,35 @@ define(
               var form = memForm.get(wrapper);
               Keying.focusIn(form);
             }
-          })
-        ])
+          }),
+          AdhocBehaviour.config(wrapperAdhocEvents)
+        ]),
+
+        customBehaviours: [
+          AdhocBehaviour.events(wrapperAdhocEvents, AlloyEvents.derive([
+            AlloyEvents.run(NativeEvents.touchstart(), function (wrapper, simulatedEvent) {
+              spec.state.dialogSwipeState.set(
+                SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
+              );
+            }),
+            AlloyEvents.run(NativeEvents.touchmove(), function (wrapper, simulatedEvent) {
+              spec.state.dialogSwipeState.on(function (state) {
+                simulatedEvent.event().prevent();
+                spec.state.dialogSwipeState.set(
+                  SwipingModel.move(state, simulatedEvent.event().raw().touches[0].clientX)
+                );
+              });
+            }),
+            AlloyEvents.run(NativeEvents.touchend(), function (wrapper/*, simulatedEvent */) {
+              spec.state.dialogSwipeState.on(function (state) {
+                var dialog = memForm.get(wrapper);
+                // Confusing
+                var direction = -1 * SwipingModel.complete(state);
+                navigate(dialog, direction);
+              });
+            })
+          ]))
+        ]
       };
     };
 
