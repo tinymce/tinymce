@@ -5,6 +5,8 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.slider.SliderActions',
@@ -15,7 +17,7 @@ define(
     'ephox.sand.api.PlatformDetection'
   ],
 
-  function (Behaviour, Focusing, Keying, EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
+  function (Behaviour, Focusing, Keying, AlloyEvents, NativeEvents, EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
     var platform = PlatformDetection.detect();
     var isTouch = platform.deviceType.isTouch();
 
@@ -69,7 +71,17 @@ define(
           styles: { position: 'absolute' }
         }
       }),
-      Fun.constant({ })
+      function (detail) {
+        return {
+          events: AlloyEvents.derive([
+            // If the user touches the thumb itself, pretend they touched the spectrum instead. This
+            // allows sliding even when they touchstart the current value
+            AlloyEvents.redirectToUid(NativeEvents.touchstart(), detail.partUids().spectrum),
+            AlloyEvents.redirectToUid(NativeEvents.touchmove(), detail.partUids().spectrum),
+            AlloyEvents.redirectToUid(NativeEvents.touchend(), detail.partUids().spectrum)
+          ])
+        };
+      }
     );
 
     var spectrumPart = PartType.internal(

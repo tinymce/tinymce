@@ -10,13 +10,14 @@ define(
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.ui.slider.SliderActions',
     'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (EventRoot, Behaviour, Keying, Representing, SystemEvents, EventHandler, SliderActions, Objects, Option, PlatformDetection, Css, Width) {
+  function (EventRoot, Behaviour, Keying, Representing, SystemEvents, EventHandler, SliderActions, Objects, Arr, Option, PlatformDetection, Css, Width) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
 
     var sketch = function (detail, components, spec, externals) {
@@ -115,24 +116,30 @@ define(
         dom: detail.dom(),
         components: components,
 
-        behaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'special',
-            focusIn: function (slider) {
-              var spectrum = slider.getSystem().getByUid(detail.partUids().spectrum).getOrDie();
-              Keying.focusIn(spectrum);
-              return Option.some(true);
-            }
-          }),
-          Representing.config({
-            store: {
-              mode: 'manual',
-              getValue: function (_) {
-                return detail.value().get();
-              }
-            }
-          })
-        ]),
+        behaviours: Behaviour.derive(
+          Arr.flatten([
+            !isTouch ? [
+              Keying.config({
+                mode: 'special',
+                focusIn: function (slider) {
+                  var spectrum = slider.getSystem().getByUid(detail.partUids().spectrum).getOrDie();
+                  Keying.focusIn(spectrum);
+                  return Option.some(true);
+                }
+              })
+            ] : [ ],
+            [
+              Representing.config({
+                store: {
+                  mode: 'manual',
+                  getValue: function (_) {
+                    return detail.value().get();
+                  }
+                }
+              })
+            ]
+          ])
+        ),
 
         events: Objects.wrapAll([
           {
