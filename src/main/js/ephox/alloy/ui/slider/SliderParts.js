@@ -7,7 +7,6 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.slider.SliderActions',
@@ -18,7 +17,7 @@ define(
     'ephox.sand.api.PlatformDetection'
   ],
 
-  function (Behaviour, Focusing, Keying, AlloyEvents, NativeEvents, SystemEvents, EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
+  function (Behaviour, Focusing, Keying, AlloyEvents, NativeEvents, EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
     var platform = PlatformDetection.detect();
     var isTouch = platform.deviceType.isTouch();
 
