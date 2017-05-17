@@ -81,7 +81,7 @@ define(
 
     var getData = function (editor) {
       return {
-        html: editor.selection.getContent(),
+        html: editor.selection.getContent({ contextual: true }),
         text: editor.selection.getContent({ format: 'text' })
       };
     };
