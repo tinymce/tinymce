@@ -6,6 +6,10 @@
   opacity: 0.5;
 }
 
+body {
+  -webkit-text-size-adjust: none;
+}
+
 body img {
   /* this is related to the content margin */
   max-width: 96vw;
