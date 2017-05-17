@@ -31,8 +31,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler,
-    FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, SystemEvents, Button, Container, Form, EventHandler, FieldSchema,
+    Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -121,160 +121,162 @@ define(
 
 
 
-      var f = Form.sketch({
-        dom: {
-          tag: 'div',
-          classes: [Styles.resolve('serialised-dialog')]
-        },
-        components: [
-          Container.sketch({
-            dom: {
-              tag: 'div',
-              classes: [Styles.resolve('serialised-dialog-chain')],
-              styles: {
-                left: '0px',
-                position: 'absolute'
-              }
-            },
-            components: Arr.map(spec.fields, function (field, i) {
-              return i <= spec.maxFieldIndex ? Container.sketch({
-                dom: {
-                  tag: 'div',
-                  classes: [Styles.resolve('serialised-dialog-screen')]
-                },
-                components: Arr.flatten([
-                  [prevButton(i > 0)],
-                  [Form.parts(field.name)],
-                  [nextButton(i < spec.maxFieldIndex)]
-                ])
-              }) : Form.parts(field.name);
+      var memForm = Memento.record(
+        Form.sketch({
+          dom: {
+            tag: 'div',
+            classes: [Styles.resolve('serialised-dialog')]
+          },
+          components: [
+            Container.sketch({
+              dom: {
+                tag: 'div',
+                classes: [Styles.resolve('serialised-dialog-chain')],
+                styles: {
+                  left: '0px',
+                  position: 'absolute'
+                }
+              },
+              components: Arr.map(spec.fields, function (field, i) {
+                return i <= spec.maxFieldIndex ? Container.sketch({
+                  dom: {
+                    tag: 'div',
+                    classes: [Styles.resolve('serialised-dialog-screen')]
+                  },
+                  components: Arr.flatten([
+                    [prevButton(i > 0)],
+                    [Form.parts(field.name)],
+                    [nextButton(i < spec.maxFieldIndex)]
+                  ])
+                }) : Form.parts(field.name);
+              })
             })
-          })
-        ],
+          ],
 
-        parts: (function () {
-          var r = {};
-          Arr.each(spec.fields, function (f) {
-            r[f.name] = f.spec;
-          });
-          return r;
-        })(),
+          parts: (function () {
+            var r = {};
+            Arr.each(spec.fields, function (f) {
+              r[f.name] = f.spec;
+            });
+            return r;
+          })(),
 
-        formBehaviours: Behaviour.derive([
-          Receiving.config({
-            channels: {
-              'orientation.change': {
-                onReceive: function (dialog, message) {
-                  reposition(dialog, message);
+          formBehaviours: Behaviour.derive([
+            Receiving.config({
+              channels: {
+                'orientation.change': {
+                  onReceive: function (dialog, message) {
+                    reposition(dialog, message);
+                  }
                 }
               }
-            }
-          }),
-          Keying.config({
-            mode: 'special',
-            focusIn: function (dialog/*, specialInfo */) {
-              focusInput(dialog);
-            },
-            onTab: function (dialog/*, specialInfo */) {
-              navigate(dialog, +1);
-              return Option.some(true);
-            },
-            onShiftTab: function (dialog/*, specialInfo */) {
-              navigate(dialog, -1);
-              return Option.some(true);
-            }
-          }),
-          AdhocBehaviour.config('adhoc-serialised-dialog-events')
-        ]),
+            }),
+            Keying.config({
+              mode: 'special',
+              focusIn: function (dialog/*, specialInfo */) {
+                focusInput(dialog);
+              },
+              onTab: function (dialog/*, specialInfo */) {
+                navigate(dialog, +1);
+                return Option.some(true);
+              },
+              onShiftTab: function (dialog/*, specialInfo */) {
+                navigate(dialog, -1);
+                return Option.some(true);
+              }
+            }),
+            AdhocBehaviour.config('adhoc-serialised-dialog-events')
+          ]),
 
-        customBehaviours: [
-          AdhocBehaviour.events(
-            'adhoc-serialised-dialog-events',
-            Objects.wrapAll([
-              {
-                key: SystemEvents.attachedToDom(),
-                value: EventHandler.nu({
-                  run: function (dialog, simulatedEvent) {
-                    if (EventRoot.isSource(dialog, simulatedEvent)) {
-                      // Reset state to first screen.
-                      resetState();
-                      var dotitems = memDots.get(dialog);
-                      Highlighting.highlightFirst(dotitems);
-                      spec.getInitialValue(dialog).each(function (v) {
-                        Representing.setValue(dialog, v);
+          customBehaviours: [
+            AdhocBehaviour.events(
+              'adhoc-serialised-dialog-events',
+              Objects.wrapAll([
+                {
+                  key: SystemEvents.attachedToDom(),
+                  value: EventHandler.nu({
+                    run: function (dialog, simulatedEvent) {
+                      if (EventRoot.isSource(dialog, simulatedEvent)) {
+                        // Reset state to first screen.
+                        resetState();
+                        var dotitems = memDots.get(dialog);
+                        Highlighting.highlightFirst(dotitems);
+                        spec.getInitialValue(dialog).each(function (v) {
+                          Representing.setValue(dialog, v);
+                        });
+                      }
+                    }
+                  })
+                },
+                {
+                  key: SystemEvents.execute(),
+                  value: EventHandler.nu({
+                    run: function (dialog, simulatedEvent) {
+                      spec.onExecute(dialog, simulatedEvent);
+                    }
+                  })
+                },
+                {
+                  key: 'touchstart',
+                  value: EventHandler.nu({
+                    run: function (dialog, simulatedEvent) {
+                      spec.state.dialogSwipeState.set(
+                        SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
+                      );
+                    }
+                  })
+                },
+                {
+                  key: 'touchmove',
+                  value: EventHandler.nu({
+                    run: function (dialog, simulatedEvent) {
+                      spec.state.dialogSwipeState.on(function (state) {
+                        simulatedEvent.event().prevent();
+                        spec.state.dialogSwipeState.set(
+                          SwipingModel.move(state, simulatedEvent.event().raw().touches[0].clientX)
+                        );
                       });
                     }
-                  }
-                })
-              },
-              {
-                key: SystemEvents.execute(),
-                value: EventHandler.nu({
-                  run: function (dialog, simulatedEvent) {
-                    spec.onExecute(dialog, simulatedEvent);
-                  }
-                })
-              },
-              {
-                key: 'touchstart',
-                value: EventHandler.nu({
-                  run: function (dialog, simulatedEvent) {
-                    spec.state.dialogSwipeState.set(
-                      SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
-                    );
-                  }
-                })
-              },
-              {
-                key: 'touchmove',
-                value: EventHandler.nu({
-                  run: function (dialog, simulatedEvent) {
-                    spec.state.dialogSwipeState.on(function (state) {
-                      simulatedEvent.event().prevent();
-                      spec.state.dialogSwipeState.set(
-                        SwipingModel.move(state, simulatedEvent.event().raw().touches[0].clientX)
-                      );
-                    });
-                  }
-                })
-              },
-              {
-                key: 'touchend',
-                value: EventHandler.nu({
-                  run: function (dialog/*, simulatedEvent */) {
-                    spec.state.dialogSwipeState.on(function (state) {
-                      // Confusing
-                      var direction = -1 * SwipingModel.complete(state);
-                      navigate(dialog, direction);
-                    });
-                  }
-                })
-              },
-
-              {
-                key: 'transitionend',
-                value: EventHandler.nu({
-                  run: function (dialog, simulatedEvent) {
-                    if (simulatedEvent.event().raw().propertyName === 'left') {
-                      focusInput(dialog);
+                  })
+                },
+                {
+                  key: 'touchend',
+                  value: EventHandler.nu({
+                    run: function (dialog/*, simulatedEvent */) {
+                      spec.state.dialogSwipeState.on(function (state) {
+                        // Confusing
+                        var direction = -1 * SwipingModel.complete(state);
+                        navigate(dialog, direction);
+                      });
                     }
-                  }
-                })
-              },
+                  })
+                },
 
-              {
-                key: navigateEvent,
-                value: EventHandler.nu({
-                  run: function (dialog, simulatedEvent) {
-                    var direction = simulatedEvent.event().direction();
-                    navigate(dialog, direction);
-                  }
-                })
-              }
-            ])
-          )
-        ]
-      });
+                {
+                  key: 'transitionend',
+                  value: EventHandler.nu({
+                    run: function (dialog, simulatedEvent) {
+                      if (simulatedEvent.event().raw().propertyName === 'left') {
+                        focusInput(dialog);
+                      }
+                    }
+                  })
+                },
+
+                {
+                  key: navigateEvent,
+                  value: EventHandler.nu({
+                    run: function (dialog, simulatedEvent) {
+                      var direction = simulatedEvent.event().direction();
+                      navigate(dialog, direction);
+                    }
+                  })
+                }
+              ])
+            )
+          ]
+        })
+      );
 
       var memDots = Memento.record({
         dom: {
@@ -305,9 +307,19 @@ define(
           classes: [Styles.resolve('serializer-wrapper')]
         },
         components: [
-          f,
+          memForm.asSpec(),
           memDots.asSpec()
-        ]
+        ],
+
+        behaviours: Behaviour.derive([
+          Keying.config({
+            mode: 'special',
+            focusIn: function (wrapper) {
+              var form = memForm.get(wrapper);
+              Keying.focusIn(form);
+            }
+          })
+        ])
       };
     };
 

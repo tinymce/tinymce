@@ -54,6 +54,33 @@
   }
 }
 
+.tinymce-mobile-editor-socket {
+  .tinymce-mobile-mask-edit-icon {
+    position: fixed;
+
+    /* Note, on the iPod touch in landscape, this isn't visible when the navbar appears */
+    right: 2em;
+    bottom: 2em;
+
+    color: @mask-button-foreground-color;
+    background-color: @mask-button-background-color;
+    border-radius: 50%;
+    width: @mask-button-size;
+    font-family: sans-serif;
+    height: @mask-button-size;
+    .mixin-flex-and-centre;
+
+    font-size: @mask-button-font-size-large;
+    @media @tablets {
+      font-size: @mask-button-font-size-small;
+    }
+  }
+
+  .tinymce-mobile-mask-edit-icon:before {
+    content: "Edit";
+  }
+}
+
 /*
   Note, that if you don't include this (::-webkit-file-upload-button), the toolbar width gets
   increased and the whole body becomes scrollable. It's important!

@@ -13,7 +13,6 @@ define(
   ],
 
   function (Fun, Option, PlatformDetection, DomEvent, Element, clearInterval, Math, setInterval) {
-
     var INTERVAL = 50;
     var INSURANCE = 1000 / INTERVAL;
 
@@ -34,7 +33,7 @@ define(
     var getActualWidth = function (outerWindow) {
       var isIos = PlatformDetection.detect().os.isiOS();
       var isPortrait = get(outerWindow).isPortrait();
-      return isIos && !isPortrait ? window.screen.height : window.screen.width;
+      return isIos && !isPortrait ? outerWindow.screen.height : outerWindow.screen.width;
     };
 
     var onChange = function (outerWindow, listeners) {

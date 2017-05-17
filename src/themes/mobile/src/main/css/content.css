@@ -11,7 +11,8 @@ body {
 }
 
 body img {
-  max-width: 98vw;
+  /* this is related to the content margin */
+  max-width: 96vw;
 }
 
 body table img {

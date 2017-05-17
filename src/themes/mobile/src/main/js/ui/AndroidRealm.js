@@ -2,20 +2,17 @@ define(
   'tinymce.themes.mobile.ui.AndroidRealm',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.ui.Container',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
     'tinymce.themes.mobile.api.AndroidWebapp',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
+    'tinymce.themes.mobile.ui.CommonRealm',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Container, Objects, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, OuterContainer) {
+  function (Replacing, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('android-container') ]
@@ -25,18 +22,9 @@ define(
 
       var webapp = Singleton.api();
 
-      var socket = GuiFactory.build(
-        Container.sketch({
-          dom: {
-            classes: [ Styles.resolve('editor-socket') ]
-          },
-          components: [ ],
+      var switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-          containerBehaviours: Behaviour.derive([
-            Replacing.config({ })
-          ])
-        })
-      );
+      var socket = CommonRealm.makeSocket();
 
       alloy.add(toolbar.wrapper());
       alloy.add(socket);
@@ -69,7 +57,12 @@ define(
       var exit = function () {
         webapp.run(function (w) {
           w.exit();
+          Replacing.remove(socket, switchToEdit);
         });
+      };
+
+      var updateMode = function (readOnly) {
+        CommonRealm.updateMode(socket, switchToEdit, readOnly);
       };
 
       return {
@@ -81,6 +74,7 @@ define(
         setContextToolbar: setContextToolbar,
         focusToolbar: focusToolbar,
         restoreToolbar: restoreToolbar,
+        updateMode: updateMode,
         socket: Fun.constant(socket)
       };
     };

@@ -6,15 +6,15 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
-    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
-    'ephox.sugar.api.properties.Attr',
-    'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.touch.view.TapToEditButton'
+    'ephox.katamari.api.Throttler',
+    'global!setTimeout',
+    'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (AdhocBehaviour, Behaviour, Toggling, Memento, AlloyEvents, Container, Attr, Styles, TapToEditButton) {
-    var sketch = function (onView, onEdit, translate) {
+  function (AdhocBehaviour, Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles) {
+    var sketch = function (onView, translate) {
       
       var memIcon = Memento.record(
         Container.sketch({
@@ -30,16 +30,11 @@ define(
               toggleClass: Styles.resolve('mask-tap-icon-selected'),
               toggleOnExecute: false
             })
-          ]),
-          customBehaviours: [
-            AdhocBehaviour.events('conn', AlloyEvents.derive([
-              AlloyEvents.runOnAttached(function (c, s) {
-                Attr.remove(c.element(), 'data-mode');
-              })
-            ]))
-          ]
+          ])
         })
       );
+
+      var onViewThrottle = Throttler.first(onView, 200);
 
       return Container.sketch({
         dom: {
@@ -52,7 +47,7 @@ define(
               classes: [ Styles.resolve('content-container') ]
             },
             components: [
-              TapToEditButton.sketch({
+              Button.sketch({
                 dom: {
                   tag: 'div',
                   classes: [ Styles.resolve('content-tap-section') ]
@@ -60,9 +55,15 @@ define(
                 components: [
                   memIcon.asSpec()
                 ],
-                memIcon: memIcon,
-                onView: onView,
-                onEdit: onEdit
+                action: function (button) {
+                  onViewThrottle.throttle();
+                },
+
+                buttonBehaviours: Behaviour.derive([
+                  Toggling.config({
+                    toggleClass: Styles.resolve('mask-tap-icon-selected')
+                  })
+                ])
               })
             ]
           })
