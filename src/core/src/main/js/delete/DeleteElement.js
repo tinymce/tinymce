@@ -13,18 +13,20 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.PredicateFind',
+    'ephox.sugar.api.search.Traverse',
     'tinymce.core.caret.CaretCandidate',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.Empty',
     'tinymce.core.dom.NodeType',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Fun, Option, Insert, Remove, Element, Node, PredicateFind, CaretCandidate, CaretPosition, Empty, NodeType, InlineUtils) {
+  function (Fun, Option, Options, Insert, Remove, Element, Node, PredicateFind, Traverse, CaretCandidate, CaretPosition, Empty, NodeType, InlineUtils) {
     var needsReposition = function (pos, elm) {
       var container = pos.container();
       var offset = pos.offset();
@@ -134,15 +136,39 @@ define(
       }
     };
 
+    // When deleting an element between two text nodes IE 11 doesn't automatically merge the adjacent text nodes
+    var deleteNormalized = function (elm, afterDeletePosOpt) {
+      return Options.liftN([Traverse.prevSibling(elm), Traverse.nextSibling(elm), afterDeletePosOpt], function (prev, next, afterDeletePos) {
+        var offset, prevNode = prev.dom(), nextNode = next.dom();
+
+        if (NodeType.isText(prevNode) && NodeType.isText(nextNode)) {
+          offset = prevNode.data.length;
+          prevNode.appendData(nextNode.data);
+          Remove.remove(next);
+          Remove.remove(elm);
+          if (afterDeletePos.container() === nextNode) {
+            return new CaretPosition(prevNode, offset);
+          } else {
+            return afterDeletePos;
+          }
+        } else {
+          Remove.remove(elm);
+          return afterDeletePos;
+        }
+      }).orThunk(function () {
+        Remove.remove(elm);
+        return afterDeletePosOpt;
+      });
+    };
+
     var deleteElement = function (editor, forward, elm) {
       var afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
       var parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-
-      Remove.remove(elm);
+      var normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);
 
       parentBlock.bind(paddEmptyBlock).fold(
         function () {
-          setSelection(editor, forward, afterDeletePos);
+          setSelection(editor, forward, normalizedAfterDeletePos);
         },
         function (paddPos) {
           setSelection(editor, forward, Option.some(paddPos));

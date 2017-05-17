@@ -28,12 +28,14 @@ define(
 
       if (NodeType.isBr(toPosition.getNode())) {
         Remove.remove(Element.fromDom(toPosition.getNode()));
-        toPosition = CaretFinder.positionIn(false, toBlock.dom()).getOr();
+        toPosition = CaretFinder.positionIn(false, toBlock.dom()).getOr(toPosition);
       }
 
-      Arr.each(children, function (node) {
-        Insert.append(toBlock, node);
-      });
+      if (Empty.isEmpty(fromBlock) === false) {
+        Arr.each(children, function (node) {
+          Insert.append(toBlock, node);
+        });
+      }
 
       if (Empty.isEmpty(fromBlock)) {
         Remove.remove(fromBlock);
@@ -44,13 +46,23 @@ define(
 
     var mergeBlocks = function (forward, block1, block2) {
       if (forward) {
-        return CaretFinder.positionIn(false, block1.dom()).bind(function (toPosition) {
-          return mergeBlocksAndReposition(forward, block2, block1, toPosition);
-        });
+        if (Empty.isEmpty(block1)) {
+          Remove.remove(block1);
+          return CaretFinder.positionIn(true, block2.dom());
+        } else {
+          return CaretFinder.positionIn(false, block1.dom()).bind(function (toPosition) {
+            return mergeBlocksAndReposition(forward, block2, block1, toPosition);
+          });
+        }
       } else {
-        return CaretFinder.positionIn(false, block2.dom()).bind(function (toPosition) {
-          return mergeBlocksAndReposition(forward, block1, block2, toPosition);
-        });
+        if (Empty.isEmpty(block2)) {
+          Remove.remove(block2);
+          return CaretFinder.positionIn(true, block1.dom());
+        } else {
+          return CaretFinder.positionIn(false, block2.dom()).bind(function (toPosition) {
+            return mergeBlocksAndReposition(forward, block1, block2, toPosition);
+          });
+        }
       }
     };
 

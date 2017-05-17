@@ -68,6 +68,48 @@ asynctest(
           cMergeBlocks(true, [0], [1]),
           cAssertPosition([0, 1, 0], 1),
           cAssertHtml('<p><b>a</b><i>b</i><b>c</b><i>d</i></p>')
+        ])),
+
+        Logger.t('Merge two headers blocks', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a</h1><h2>b</h2>'),
+          cMergeBlocks(true, [0], [1]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<h1>ab</h1>')
+        ])),
+
+        Logger.t('Merge two headers blocks first one empty', Chain.asStep(viewBlock, [
+          cSetHtml('<h1><br></h1><h2>b</h2>'),
+          cMergeBlocks(true, [0], [1]),
+          cAssertPosition([0, 0], 0),
+          cAssertHtml('<h2>b</h2>')
+        ])),
+
+        Logger.t('Merge two headers blocks second one empty', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a</h1><h2><br></h2>'),
+          cMergeBlocks(true, [0], [1]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<h1>a</h1>')
+        ])),
+
+        Logger.t('Merge two headers complex blocks', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a<b>b</b></h1><h2>c<b>d</b></h2>'),
+          cMergeBlocks(true, [0], [1]),
+          cAssertPosition([0, 1, 0], 1),
+          cAssertHtml('<h1>a<b>b</b>c<b>d</b></h1>')
+        ])),
+
+        Logger.t('Merge two headers blocks first one empty second one complex', Chain.asStep(viewBlock, [
+          cSetHtml('<h1><br></h1><h2>a<b>b</b></h2>'),
+          cMergeBlocks(true, [0], [1]),
+          cAssertPosition([0, 0], 0),
+          cAssertHtml('<h2>a<b>b</b></h2>')
+        ])),
+
+        Logger.t('Merge two headers blocks second one empty first one complex', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a<b>b</b></h1><h2><br></h2>'),
+          cMergeBlocks(true, [0], [1]),
+          cAssertPosition([0, 1, 0], 1),
+          cAssertHtml('<h1>a<b>b</b></h1>')
         ]))
       ])),
 
@@ -91,6 +133,48 @@ asynctest(
           cMergeBlocks(false, [1], [0]),
           cAssertPosition([0, 1, 0], 1),
           cAssertHtml('<p><b>a</b><i>b</i><b>c</b><i>d</i></p>')
+        ])),
+
+        Logger.t('Merge two headers blocks', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a</h1><h2>b</h2>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<h1>ab</h1>')
+        ])),
+
+        Logger.t('Merge two headers blocks first one empty', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a</h1><h2><br></h2>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<h1>a</h1>')
+        ])),
+
+        Logger.t('Merge two headers blocks second one empty', Chain.asStep(viewBlock, [
+          cSetHtml('<h1><br></h1><h2>b</h2>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 0], 0),
+          cAssertHtml('<h2>b</h2>')
+        ])),
+
+        Logger.t('Merge two headers complex blocks', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a<b>b</b></h1><h2>c<b>d</b></h2>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 1, 0], 1),
+          cAssertHtml('<h1>a<b>b</b>c<b>d</b></h1>')
+        ])),
+
+        Logger.t('Merge two headers blocks first one empty second one complex', Chain.asStep(viewBlock, [
+          cSetHtml('<h1>a<b>b</b></h1><h2><br></h2>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 1, 0], 1),
+          cAssertHtml('<h1>a<b>b</b></h1>')
+        ])),
+
+        Logger.t('Merge two headers blocks second one empty first one complex', Chain.asStep(viewBlock, [
+          cSetHtml('<h1><br></h1><h2>a<b>b</b></h2>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 0], 0),
+          cAssertHtml('<h2>a<b>b</b></h2>')
         ]))
       ]))
     ], function () {
