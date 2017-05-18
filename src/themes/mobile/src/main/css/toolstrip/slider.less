@@ -41,6 +41,52 @@
 
   }
 
+  &.tinymce-mobile-slider-heading-container {
+    margin-left: 1.5em;
+    margin-right:1.5em;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    align-items: center;
+
+    .tinymce-mobile-slider-heading-spectrum {
+      display: flex;
+      flex: 1;
+      margin-top: 0.3em;
+      margin-bottom: 0.3em;
+      height: 100%;
+      align-items: center;
+      
+
+      .tinymce-mobile-slider-heading-spectrum-line {
+        display: flex;
+        flex-grow: 1;
+        height: 0.4em;
+        background: @toolstrip-slider-background-color;
+      }
+    }
+
+    .tinymce-mobile-slider-thumb {
+      position: absolute;
+      background: @toolstrip-foreground-color;
+      color: @toolstrip-background-color;
+
+      font-size: 0.7em;
+      padding: 0.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* vertically centering trick (margin: auto, top: 0, bottom: 0) */
+      margin: auto;
+      top: 0;
+      bottom: 0;
+
+      border: 0.1em solid  @toolstrip-background-color;
+      border-radius: 3em;
+    }
+  }
+
   &.tinymce-mobile-hue-slider-container {
     padding-left: 0.5em;
     padding-right: 0.5em;

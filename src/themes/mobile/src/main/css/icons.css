@@ -132,6 +132,11 @@
   content: "\e91a";
 }
 
+.tinymce-mobile-icon-heading:before {
+  content: "H";
+  font-weight: bold;
+}
+
 .tinymce-mobile-icon-h1:before {
   content: "H1";
   font-weight: bold;

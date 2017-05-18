@@ -3,10 +3,12 @@ define(
 
   [
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'global!window',
@@ -19,6 +21,7 @@ define(
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider',
+    'tinymce.themes.mobile.ui.HeadingSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.ui.LinkButton',
@@ -29,8 +32,8 @@ define(
 
 
   function (
-    SystemEvents, Cell, Fun, PlatformDetection, Focus, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm, Buttons, ColorSlider,
-    FontSizeSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    SystemEvents, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm,
+    Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -39,8 +42,11 @@ define(
         editor.contentCSS.push(cssUrls.content);
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
+        var wrapper = Element.fromTag('div');
         var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm() : IosRealm();
-        args.targetNode.ownerDocument.body.appendChild(realm.element().dom());
+        var original = Element.fromDom(args.targetNode);
+        Insert.after(original, wrapper);
+        Attachment.attachSystem(wrapper, realm.system());
 
         var findFocusIn = function (elem) {
           return Focus.search(elem).bind(function (focused) {
@@ -182,6 +188,7 @@ define(
               createHeadingButton('h1'),
               createHeadingButton('h2'),
               createHeadingButton('h3'),
+              HeadingSlider.sketch(realm, editor),
               // NOTE: Requires "lists" plugin.
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
