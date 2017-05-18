@@ -1,9 +1,9 @@
 .tinymce-mobile-icon-previous:before {
-  content: '<';
+  content: "\e924";
 }
 
 .tinymce-mobile-icon-next:before {
-  content: '>';
+  content: "\e91f";
 }
 
 .tinymce-mobile-icon-align-left:before {
