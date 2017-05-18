@@ -1,7 +1,3 @@
-
-// Used to push the menu down, so that it can appear from the centre of the button
-@menu-padding-top: 3em;
-
 .mixin-selected-menu-item {
   // Invert colours for selected items
   color: @mask-button-background-color;
@@ -27,7 +23,6 @@
   flex-direction: column;
 
   .tinymce-mobile-mask-tap-icon {
-
     .mixin-menu-item;
   }
 
@@ -41,7 +36,7 @@
 
   &:not(.tinymce-mobile-mask-tap-icon-selected) .tinymce-mobile-mask-tap-icon {
     z-index: @tinymce-mobile-mask-menu-zindex + 1;
-    
+
     background-image: url('../icons/tinymce-logo2-blue.svg');
     background-size: cover;
     background-color: transparent;
