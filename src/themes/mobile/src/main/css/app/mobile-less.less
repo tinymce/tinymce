@@ -57,7 +57,6 @@
     /* Note, on the iPod touch in landscape, this isn't visible when the navbar appears */
     right: 2em;
     bottom: 2em;
-
     color: @mask-button-foreground-color;
     background-color: @mask-button-background-color;
     border-radius: 50%;
@@ -83,4 +82,15 @@
  */
 input[type="file"]::-webkit-file-upload-button {
   display: none;
+}
+
+// Media query for iphone only as the edit button cannot be placed correctly
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) and (orientation : landscape) {
+  .tinymce-mobile-ios-container {
+    .tinymce-mobile-editor-socket {
+      .tinymce-mobile-mask-edit-icon {
+        bottom: 50%;
+      }
+    }
+  }
 }
