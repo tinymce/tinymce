@@ -77,11 +77,6 @@
       align-items: center;
       justify-content: center;
 
-      /* vertically centering trick (margin: auto, top: 0, bottom: 0) */
-      margin: auto;
-      top: 0;
-      bottom: 0;
-
       border: 0.1em solid  @toolstrip-background-color;
       border-radius: 3em;
     }
@@ -133,7 +128,11 @@
     background: @toolstrip-thumb-background-color;
     left: -10px;
 
-    /* vertically centering trick (margin: auto, top: 0, bottom: 0) */
+    /* vertically centering trick (margin: auto, top: 0, bottom: 0). On iOS and Safari, if you leave
+     * out these values, then it shows the thumb at the top of the spectrum. This is probably because it is 
+     * absolutely positioned with only a left value, and not a top. Note, on Chrome it seems to be fine without
+     * this approach.
+     */
     margin: auto;
     top: 0;
     bottom: 0;
