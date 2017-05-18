@@ -185,15 +185,13 @@ define(
               Buttons.forToolbarCommand(editor, 'undo'),
               Buttons.forToolbarStateCommand(editor, 'bold'),
               Buttons.forToolbarStateCommand(editor, 'italic'),
-              createHeadingButton('h1'),
-              createHeadingButton('h2'),
-              createHeadingButton('h3'),
+              LinkButton.sketch(realm, editor),
               HeadingSlider.sketch(realm, editor),
               // NOTE: Requires "lists" plugin.
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
-              LinkButton.sketch(realm, editor),
+              
               ImagePicker.sketch(editor),
               FontSizeSlider.sketch(realm, editor),
               ColorSlider.sketch(realm, editor)
