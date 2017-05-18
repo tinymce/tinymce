@@ -17,19 +17,22 @@
 define(
   'tinymce.core.fmt.FontInfo',
   [
-    "tinymce.core.dom.DOMUtils"
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'tinymce.core.dom.DOMUtils'
   ],
-  function (DOMUtils) {
+  function (Fun, Option, Element, Node, DOMUtils) {
     var getSpecifiedFontProp = function (propName, rootElm, elm) {
       while (elm !== rootElm) {
         if (elm.style[propName]) {
-          return elm.style[propName];
+          var foundStyle = elm.style[propName];
+          return foundStyle !== '' ? Option.some(foundStyle) : Option.none();
         }
-
         elm = elm.parentNode;
       }
-
-      return '';
+      return Option.none();
     };
 
     var toPt = function (fontSize) {
@@ -46,24 +49,25 @@ define(
     };
 
     var getComputedFontProp = function (propName, elm) {
-      return DOMUtils.DOM.getStyle(elm, propName, true);
+      return Option.from(DOMUtils.DOM.getStyle(elm, propName, true));
     };
 
-    var getFontSize = function (rootElm, elm) {
-      var specifiedFontSize = getSpecifiedFontProp('fontSize', rootElm, elm);
-      return specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontSize', elm);
-    };
-
-    var getFontFamily = function (rootElm, elm) {
-      var specifiedFontSize = getSpecifiedFontProp('fontFamily', rootElm, elm);
-      var fontValue = specifiedFontSize !== '' ? specifiedFontSize : getComputedFontProp('fontFamily', elm);
-
-      return fontValue !== undefined ? normalizeFontFamily(fontValue) : '';
+    var getFontProp = function (propName) {
+      return function (rootElm, elm) {
+        return Option.from(elm)
+          .map(Element.fromDom)
+          .filter(Node.isElement)
+          .bind(function (element) {
+            return getSpecifiedFontProp(propName, rootElm, element.dom())
+              .or(getComputedFontProp(propName, element.dom()));
+          })
+          .getOr('');
+      };
     };
 
     return {
-      getFontSize: getFontSize,
-      getFontFamily: getFontFamily,
+      getFontSize: getFontProp('fontSize'),
+      getFontFamily: Fun.compose(normalizeFontFamily, getFontProp('fontFamily')),
       toPt: toPt
     };
   }
