@@ -145,13 +145,6 @@ define(
             }
           });
 
-          var createHeadingButton = function (level) {
-            return Buttons.forToolbarStateAction(editor, level, level, function () {
-              editor.execCommand('FormatBlock', null, level);
-            });
-          };
-
-
           var backToMaskGroup = {
             label: 'The first group',
             scrollable: false,
