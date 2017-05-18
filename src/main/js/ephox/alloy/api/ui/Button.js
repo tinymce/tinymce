@@ -8,10 +8,11 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.ButtonSchema',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, UiSketcher, ButtonBase, ButtonSchema, Merger) {
+  function (Behaviour, Focusing, Keying, UiSketcher, ButtonBase, ButtonSchema, Fun, Merger) {
     var make = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
@@ -48,6 +49,7 @@ define(
     };
 
     return {
+      schemas: Fun.constant(ButtonSchema),
       sketch: sketch
     };
   }

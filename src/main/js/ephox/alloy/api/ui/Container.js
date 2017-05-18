@@ -4,10 +4,11 @@ define(
   [
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.ContainerSchema',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (UiSketcher, ContainerSchema, Merger) {
+  function (UiSketcher, ContainerSchema, Fun, Merger) {
     var make = function (detail, spec) {
       return {
         uid: detail.uid(),
@@ -34,7 +35,8 @@ define(
     };
 
     return {
-      sketch: sketch
+      sketch: sketch,
+      schemas: Fun.constant(ContainerSchema)
     };
   }
 );

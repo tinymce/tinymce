@@ -29,6 +29,7 @@ define(
 
     return {
       sketch: sketch,
+      schemas: Fun.constant(InputSchema),
       name: Fun.constant(InputSchema.name())
     };
   }

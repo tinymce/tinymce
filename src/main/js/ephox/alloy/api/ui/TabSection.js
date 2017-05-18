@@ -97,6 +97,7 @@ define(
 
     return {
       sketch: sketch,
+      schemas: Fun.constant(TabSectionSchema),
       parts: Fun.constant(parts)
     };
   }

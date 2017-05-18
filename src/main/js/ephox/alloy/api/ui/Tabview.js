@@ -6,10 +6,11 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.schema.TabviewSchema',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Replacing, UiSketcher, TabviewSchema, Merger) {
+  function (Behaviour, Replacing, UiSketcher, TabviewSchema, Fun, Merger) {
     var schema = TabviewSchema.schema();
     var partTypes = TabviewSchema.parts();
 
@@ -37,7 +38,8 @@ define(
     };
 
     return {
-      sketch: sketch
+      sketch: sketch,
+      schemas: Fun.constant(TabviewSchema)
     };
   }
 );

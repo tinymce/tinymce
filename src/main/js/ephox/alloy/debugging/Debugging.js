@@ -8,15 +8,14 @@ define(
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Options',
     'global!console',
-    'global!Error',
-    'global!window'
+    'global!Error'
   ],
 
-  function (NativeEvents, SystemEvents, AlloyLogger, Objects, Arr, Fun, Merger, Obj, Options, console, Error, window) {
+
+  function (NativeEvents, SystemEvents, AlloyLogger, Objects, Arr, Fun, Obj, Options, console, Error) {
     var unknown = 'unknown';
     var debugging = true;
 

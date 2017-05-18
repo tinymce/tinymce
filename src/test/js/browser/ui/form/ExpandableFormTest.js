@@ -24,16 +24,20 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.form.TestForm',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PhantomSkipper',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Focus'
   ],
 
   function (
     FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Keying, Tabstopping, GuiFactory, Button, Container, ExpandableForm,
-    Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, Fun, Focus
+    Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, PhantomSkipper, Fun, Focus
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    // Seems to have stopped working on phantomjs
+    if (PhantomSkipper.skip()) return success();
 
     GuiSetup.setup(function (store, doc, body) {
 

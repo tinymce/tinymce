@@ -27,6 +27,7 @@ define(
     return {
       // Used so that it can be a form factory
       name: Fun.constant(TypeaheadSchema.name()),
+      schemas: Fun.constant(TypeaheadSchema),
       sketch: sketch
     };
   }

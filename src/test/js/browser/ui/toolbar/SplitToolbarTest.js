@@ -9,22 +9,20 @@ asynctest(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.test.GuiSetup',
+    'ephox.alloy.test.PhantomSkipper',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.properties.Css',
     'global!navigator'
   ],
 
-  function (
-    ApproxStructure, Assertions, Step, GuiFactory, Button, SplitToolbar, GuiSetup, TestPartialToolbarGroup,
-    Arr, Css, navigator
-  ) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Button, SplitToolbar, GuiSetup, PhantomSkipper, TestPartialToolbarGroup, Arr, Css, navigator) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
     // viewed as an invalid value.
-    if (navigator.userAgent.indexOf('PhantomJS') > -1) return success();
+    if (PhantomSkipper.skip()) return success();
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(

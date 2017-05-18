@@ -2,13 +2,15 @@ define(
   'ephox.alloy.api.ui.GuiTypes',
 
   [
+    'ephox.alloy.debugging.FunctionAnnotator',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
-    'ephox.katamari.api.Fun'
+    'global!Array'
   ],
 
-  function (Objects, Arr, Id, Fun) {
+  function (FunctionAnnotator, Objects, Arr, Fun, Id, Array) {
     var premadeTag = Id.generate('alloy-premade');
     var apiConfig = Id.generate('api');
 
@@ -21,24 +23,17 @@ define(
       return Objects.readOptFrom(spec, premadeTag);
     };
 
-    var makeApis = function (apiNames) {
-      var apis = Arr.map(apiNames, function (apiName) {
-        return {
-          key: apiName,
-          value: function (component/*, ... */) {
-            var args = Array.prototype.slice.call(arguments, 0);
-            var spi = component.config(apiConfig);
-            return spi[apiName].apply(null, args);
-          }
-        };
-      });
-
-      return Objects.wrapAll(apis);
+    var makeApi = function (f) {
+      return FunctionAnnotator.markAsSketchApi(function (component/*, ... */) {
+        var args = Array.prototype.slice.call(arguments, 0);
+        var spi = component.config(apiConfig);
+        return f.apply(undefined, [ spi ].concat(args));
+      }, f);
     };
 
     return {
       apiConfig: Fun.constant(apiConfig),
-      makeApis: makeApis,
+      makeApi: makeApi,
       premade: premade,
       getPremade: getPremade
     };

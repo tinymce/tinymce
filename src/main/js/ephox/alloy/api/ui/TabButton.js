@@ -9,11 +9,12 @@ define(
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.TabButtonSchema',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, Representing, UiSketcher, ButtonBase, TabButtonSchema, Id, Merger) {
+  function (Behaviour, Focusing, Keying, Representing, UiSketcher, ButtonBase, TabButtonSchema, Fun, Id, Merger) {
     var schema = TabButtonSchema.schema();
 
     var make = function (detail, spec) {
@@ -58,7 +59,8 @@ define(
     };
 
     return {
-      sketch: sketch
+      sketch: sketch,
+      schemas: Fun.constant(TabButtonSchema)
     };
   }
 );

@@ -68,6 +68,7 @@ define(
 
     return {
       sketch: sketch,
+      schemas: Fun.constant(HtmlSelectSchema),
       name: Fun.constant(HtmlSelectSchema.name())
     };
   }

@@ -109,10 +109,15 @@ define(
     return Merger.deepMerge(
       {
         sketch: sketch,
-        parts: Fun.constant(parts)
-      },
-
-      GuiTypes.makeApis([ 'createGroups', 'setGroups' ])
+        schemas: Fun.constant(ToolbarSchema),
+        parts: Fun.constant(parts),
+        createGroups: GuiTypes.makeApi(function (apis, toolbar, gspecs) {
+          return apis.createGroups(toolbar, gspecs);
+        }),
+        setGroups: GuiTypes.makeApi(function (apis, toolbar, gspecs) {
+          apis.setGroups(toolbar, gspecs);
+        })
+      }
     );
   }
 );
