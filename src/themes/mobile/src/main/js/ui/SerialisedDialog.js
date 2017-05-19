@@ -263,8 +263,7 @@ define(
             {
               dom: {
                 tag: 'div',
-                innerHtml: '&#x2022;',
-                classes: [Styles.resolve('dot-item')]
+                classes: [Styles.resolve('dot-item'), Styles.resolve('icon-full-dot'), Styles.resolve('icon')]
               }
             }] : [];
         })
