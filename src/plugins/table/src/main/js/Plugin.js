@@ -17,17 +17,18 @@
 define(
   'tinymce.plugins.table.Plugin',
   [
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK',
     'tinymce.plugins.table.model.TableGrid',
-    'tinymce.plugins.table.util.Quirks',
     'tinymce.plugins.table.selection.CellSelection',
     'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.ResizeBars',
-    'tinymce.core.util.Tools',
-    'tinymce.core.dom.TreeWalker',
-    'tinymce.core.Env',
-    'tinymce.core.PluginManager'
+    'tinymce.plugins.table.util.Quirks'
   ],
-  function (TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
+  function (TreeWalker, Env, PluginManager, Tools, VK, TableGrid, CellSelection, Dialogs, ResizeBars, Quirks) {
     var each = Tools.each;
 
     function Plugin(editor) {
@@ -594,8 +595,12 @@ define(
         editor.on('keydown', function (e) {
           var cellElm, grid, delta;
 
-          if (e.keyCode == 9) {
+          if (e.keyCode === VK.TAB) {
             cellElm = editor.dom.getParent(editor.selection.getStart(), 'th,td');
+
+            if (editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD')) {
+              return;
+            }
 
             if (cellElm) {
               e.preventDefault();
