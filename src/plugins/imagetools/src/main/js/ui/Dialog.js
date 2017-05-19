@@ -302,7 +302,12 @@ define(
           g = win.find('#g')[0].value();
           b = win.find('#b')[0].value();
 
-          filter(currentState.blob, r, g, b).then(function (blob) {
+          BlobConversions.blobToImageResult(currentState.blob).
+          then(function (ir) {
+            return filter(ir, r, g, b);
+          }).
+          then(imageResultToBlob).
+          then(function (blob) {
             var newTempState = createState(blob);
             displayState(newTempState);
             destroyState(tempState);
