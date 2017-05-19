@@ -14,7 +14,7 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = new ViewBlock();
-    var csp = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self';";
+    var csp = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self';";
     var tinymceScriptUrl = '/project/js/tinymce/tinymce.js';
     var tinymceInitUrl = '/project/src/core/src/test/js/browser/InitCspIframeScript.js';
 
@@ -60,12 +60,18 @@ asynctest(
       });
     };
 
+    var mDestoryEditor = Step.stateful(function (state, next, die) {
+      state.editor.remove();
+      next(state);
+    });
+
     viewBlock.attach();
     Pipeline.async({}, [
       Logger.t('Load editor into csp restricted iframe and do some basic operations', GeneralSteps.sequence([
         mCreateIframeSandbox,
         mSetContent('<p>test</p>'),
-        mAssertContent('<p>test</p>')
+        mAssertContent('<p>test</p>'),
+        mDestoryEditor
       ]))
     ], function () {
       EditorManager.remove();
