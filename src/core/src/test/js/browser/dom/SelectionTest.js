@@ -54,6 +54,15 @@ asynctest(
       editor.off('GetContent', handler);
     });
 
+    suite.test('getContent contextual', function (editor) {
+      editor.setContent('<p><em>text</em></p>');
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('em')[0].firstChild, 1);
+      rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.selection.getContent({ contextual: true }), '<em>ex</em>', 'Get selected contents');
+    });
+
     suite.test('getContent of zwsp', function (editor) {
       editor.setContent('<p>a' + Zwsp.ZWSP + 'b</p>');
       var rng = editor.dom.createRng();

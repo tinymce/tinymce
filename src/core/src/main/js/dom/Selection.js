@@ -29,10 +29,11 @@ define(
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.dom.TridentSelection',
     'tinymce.core.Env',
+    'tinymce.core.selection.FragmentReader',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, Zwsp, Tools) {
+  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader, Zwsp, Tools) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
 
@@ -114,8 +115,7 @@ define(
         }
 
         if (rng.cloneContents) {
-          fragment = rng.cloneContents();
-
+          fragment = args.contextual ? FragmentReader.read(self.editor.getBody(), rng).dom() : rng.cloneContents();
           if (fragment) {
             tmpElm.appendChild(fragment);
           }
