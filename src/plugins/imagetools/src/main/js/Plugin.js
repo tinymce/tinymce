@@ -229,7 +229,7 @@ define(
 
         findSelectedBlob().
           then(BlobConversions.blobToImageResult).
-          then(openDialog);
+          then(openDialog, displayError);
       }
 
       function addButtons() {
