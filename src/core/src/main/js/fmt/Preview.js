@@ -56,7 +56,7 @@ define(
       function getRequiredParent(elm, candidate) {
         var name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
         var elmRule = schema.getElementRule(name);
-        var parentsRequired = elmRule.parentsRequired;
+        var parentsRequired = elmRule && elmRule.parentsRequired;
 
         if (parentsRequired && parentsRequired.length) {
           return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
@@ -67,7 +67,7 @@ define(
 
       function wrapInHtml(elm, ancestry, siblings) {
         var parent, parentCandidate, parentRequired;
-        var ancestor = ancestry.length && ancestry[0];
+        var ancestor = ancestry.length > 0 && ancestry[0];
         var ancestorName = ancestor && ancestor.name;
 
         parentRequired = getRequiredParent(elm, ancestorName);
