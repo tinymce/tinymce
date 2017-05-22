@@ -58,6 +58,10 @@ define(
       function execCommand(command, ui, value, args) {
         var func, customCommand, state = 0;
 
+        if (editor.removed) {
+          return;
+        }
+
         if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
           editor.focus();
         }
@@ -118,8 +122,7 @@ define(
       function queryCommandState(command) {
         var func;
 
-        // Is hidden then return undefined
-        if (editor.quirks.isHidden()) {
+        if (editor.quirks.isHidden() || editor.removed) {
           return;
         }
 
@@ -148,8 +151,7 @@ define(
       function queryCommandValue(command) {
         var func;
 
-        // Is hidden then return undefined
-        if (editor.quirks.isHidden()) {
+        if (editor.quirks.isHidden() || editor.removed) {
           return;
         }
 
