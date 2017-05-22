@@ -594,13 +594,14 @@ define(
       if (editor.settings.table_tab_navigation !== false) {
         editor.on('keydown', function (e) {
           var cellElm, grid, delta;
+          var selectionStart = editor.selection.getStart();
 
           if (e.keyCode === VK.TAB) {
-            cellElm = editor.dom.getParent(editor.selection.getStart(), 'th,td');
-
-            if (editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD')) {
+            if (editor.dom.getParent(selectionStart, 'LI,DT,DD')) {
               return;
             }
+
+            cellElm = editor.dom.getParent(selectionStart, 'th,td');
 
             if (cellElm) {
               e.preventDefault();
