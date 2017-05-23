@@ -60,18 +60,11 @@
     }
 
     .tinymce-mobile-slider-thumb {
-      position: absolute;
-      background: @toolstrip-foreground-color;
-      color: @toolstrip-background-color;
-
       font-size: 0.7em;
       padding: 0.5em;
       display: flex;
       align-items: center;
       justify-content: center;
-
-      border: 0.1em solid  @toolstrip-background-color;
-      border-radius: 3em;
     }
   }
 
@@ -130,7 +123,9 @@
     top: 0;
     bottom: 0;
 
-    border: 0.1em solid black;
+    background-color: @toolstrip-foreground-color;
+    color: @toolstrip-background-color;
+    border: 0.5em solid fadeout(@toolstrip-background-color, 30%);
     border-radius: 3em;
   }
 }
