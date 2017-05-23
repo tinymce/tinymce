@@ -1,3 +1,20 @@
+Version 4.6.2 (2017-05-23)
+    Fixed bug where the SaxParser would run out of memory on very large documents.
+    Fixed bug with formatting like font size wasn't applied to del elements.
+    Fixed bug where various api calls would be throwing exceptions if they where invoked on a removed editor instance.
+    Fixed bug where the branding position would be incorrect if the editor was inside a hidden tab and then later showed.
+    Fixed bug where the color levels feature in the imagetools dialog wasn't working properly.
+    Fixed bug where imagetools dialog wouldn't pre-load images from CORS domains, before trying to prepare them for editing.
+    Fixed bug where the tab key would move the caret to the next table cell if being pressed inside a list inside a table.
+    Fixed bug where the cut/copy operations would loose parent context like the current format etc.
+    Fixed bug with format preview not working on invalid elements excluded by valid_elements.
+    Fixed bug where blocks would be merged in incorrect order on backspace/delete.
+    Fixed bug where zero length text nodes would cause issues with the undo logic if there where iframes present.
+    Fixed bug where the font size/family select lists would throw errors if the first node was a comment.
+    Fixed bug with csp having to allow local script evaluation since it was used to detect global scope.
+    Fixed bug where CSP required a relaxed option for javascript: URLs in unsupported legacy browsers.
+    Fixed bug where a fake caret would be rendered for td with the contenteditable=false.
+    Fixed bug where typing would be blocked on IE 11 when within a nested contenteditable=true/false structure.
 Version 4.6.1 (2017-05-10)
     Added configuration option to list plugin to disable tab indentation.
     Fixed bug where format change on very specific content could cause the selection to change.
