@@ -283,6 +283,10 @@ define(
           });
         }
 
+        if (self.removed) {
+          return;
+        }
+
         if (!skipFocus) {
           // Get selected control element
           rng = selection.getRng();
@@ -831,6 +835,10 @@ define(
       load: function (args) {
         var self = this, elm = self.getElement(), html;
 
+        if (self.removed) {
+          return '';
+        }
+
         if (elm) {
           args = args || {};
           args.load = true;
@@ -860,7 +868,7 @@ define(
       save: function (args) {
         var self = this, elm = self.getElement(), html, form;
 
-        if (!elm || !self.initialized) {
+        if (!elm || !self.initialized || self.removed) {
           return;
         }
 
@@ -1022,6 +1030,10 @@ define(
        */
       getContent: function (args) {
         var self = this, content, body = self.getBody();
+
+        if (self.removed) {
+          return '';
+        }
 
         // Setup args object
         args = args || {};

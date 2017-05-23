@@ -30,55 +30,21 @@ define(
       return (prefix || 'blobid') + (count++);
     };
 
-    return function (uploadStatus, blobCache) {
-      var cachedPromises = {};
+    var imageToBlobInfo = function (blobCache, img, resolve, reject) {
+      var base64, blobInfo;
 
-      function findAll(elm, predicate) {
-        var images, promises;
+      if (img.src.indexOf('blob:') === 0) {
+        blobInfo = blobCache.getByUri(img.src);
 
-        function imageToBlobInfo(img, resolve, reject) {
-          var base64, blobInfo;
-
-          if (img.src.indexOf('blob:') === 0) {
-            blobInfo = blobCache.getByUri(img.src);
-
-            if (blobInfo) {
-              resolve({
-                image: img,
-                blobInfo: blobInfo
-              });
-            } else {
-              Conversions.uriToBlob(img.src).then(function (blob) {
-                Conversions.blobToDataUri(blob).then(function (dataUri) {
-                  base64 = Conversions.parseDataUri(dataUri).data;
-                  blobInfo = blobCache.create(uniqueId(), blob, base64);
-                  blobCache.add(blobInfo);
-
-                  resolve({
-                    image: img,
-                    blobInfo: blobInfo
-                  });
-                });
-              }, function (err) {
-                reject(err);
-              });
-            }
-
-            return;
-          }
-
-          base64 = Conversions.parseDataUri(img.src).data;
-          blobInfo = blobCache.findFirst(function (cachedBlobInfo) {
-            return cachedBlobInfo.base64() === base64;
+        if (blobInfo) {
+          resolve({
+            image: img,
+            blobInfo: blobInfo
           });
-
-          if (blobInfo) {
-            resolve({
-              image: img,
-              blobInfo: blobInfo
-            });
-          } else {
-            Conversions.uriToBlob(img.src).then(function (blob) {
+        } else {
+          Conversions.uriToBlob(img.src).then(function (blob) {
+            Conversions.blobToDataUri(blob).then(function (dataUri) {
+              base64 = Conversions.parseDataUri(dataUri).data;
               blobInfo = blobCache.create(uniqueId(), blob, base64);
               blobCache.add(blobInfo);
 
@@ -86,17 +52,55 @@ define(
                 image: img,
                 blobInfo: blobInfo
               });
-            }, function (err) {
-              reject(err);
             });
-          }
+          }, function (err) {
+            reject(err);
+          });
         }
+
+        return;
+      }
+
+      base64 = Conversions.parseDataUri(img.src).data;
+      blobInfo = blobCache.findFirst(function (cachedBlobInfo) {
+        return cachedBlobInfo.base64() === base64;
+      });
+
+      if (blobInfo) {
+        resolve({
+          image: img,
+          blobInfo: blobInfo
+        });
+      } else {
+        Conversions.uriToBlob(img.src).then(function (blob) {
+          blobInfo = blobCache.create(uniqueId(), blob, base64);
+          blobCache.add(blobInfo);
+
+          resolve({
+            image: img,
+            blobInfo: blobInfo
+          });
+        }, function (err) {
+          reject(err);
+        });
+      }
+    };
+
+    var getAllImages = function (elm) {
+      return elm ? elm.getElementsByTagName('img') : [];
+    };
+
+    return function (uploadStatus, blobCache) {
+      var cachedPromises = {};
+
+      function findAll(elm, predicate) {
+        var images, promises;
 
         if (!predicate) {
           predicate = Fun.constant(true);
         }
 
-        images = Arr.filter(elm.getElementsByTagName('img'), function (img) {
+        images = Arr.filter(getAllImages(elm), function (img) {
           var src = img.src;
 
           if (!Env.fileApi) {
@@ -146,7 +150,7 @@ define(
           }
 
           newPromise = new Promise(function (resolve, reject) {
-            imageToBlobInfo(img, resolve, reject);
+            imageToBlobInfo(blobCache, img, resolve, reject);
           }).then(function (result) {
             delete cachedPromises[result.image.src];
             return result;
