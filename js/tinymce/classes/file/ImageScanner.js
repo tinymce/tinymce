@@ -131,6 +131,10 @@ define("tinymce/file/ImageScanner", [
 					// We need to wrap it and resolve with the actual image
 					return new Promise(function(resolve) {
 						cachedPromises[img.src].then(function(imageInfo) {
+							if (typeof imageInfo === 'string') { // error apparently
+								return imageInfo;
+							}
+
 							resolve({
 								image: img,
 								blobInfo: imageInfo.blobInfo
