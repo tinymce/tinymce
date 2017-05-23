@@ -26,12 +26,12 @@ define(
       // Does not fire change intentionally.
       var onInit = function (slider, thumb, value) {
         var color = getColor(value);
-        Css.set(thumb.element(), 'background', color);
+        Css.set(thumb.element(), 'background-color', color);
       };
 
       var onChange = function (slider, thumb, value) {
         var color = getColor(value);
-        Css.set(thumb.element(), 'background', color);
+        Css.set(thumb.element(), 'background-color', color);
         spec.onChange(slider, thumb, color);
       };
 

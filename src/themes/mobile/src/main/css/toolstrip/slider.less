@@ -29,7 +29,7 @@
       margin-top: 0.3em;
       margin-bottom: 0.3em;
       background: @toolstrip-slider-background-color;
-      height: 0.4em;
+      height: 0.2em;
     }
 
   }
@@ -54,7 +54,7 @@
       .tinymce-mobile-slider-heading-spectrum-line {
         display: flex;
         flex-grow: 1;
-        height: 0.4em;
+        height: 0.2em;
         background: @toolstrip-slider-background-color;
       }
     }
@@ -84,7 +84,7 @@
         margin-top: 0.3em;
         margin-bottom: 0.3em;
         background: linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%);
-        height: 0.4em;
+        height: 0.2em;
       }
     }
 
@@ -92,7 +92,7 @@
       /* Not part of theming */
       background: black;
       width: 1.2em;
-      height: 0.4em;
+      height: 0.2em;
       margin-top: 0.3em;
       margin-bottom: 0.3em;
     }
@@ -101,7 +101,7 @@
       /* Not part of theming */
       background: white;
       width: 1.2em;
-      height: 0.4em;
+      height: 0.2em;
       margin-top: 0.3em;
       margin-bottom: 0.3em;
     }
@@ -109,9 +109,8 @@
 
   .tinymce-mobile-slider-thumb {
     position: absolute;
-    height: 0.8em;
-    width: 1em;
-    background: @toolstrip-thumb-background-color;
+    height: .5em;
+    width: .5em;
     left: -10px;
 
     /* vertically centering trick (margin: auto, top: 0, bottom: 0). On iOS and Safari, if you leave
@@ -124,8 +123,9 @@
     bottom: 0;
 
     background-color: @toolstrip-foreground-color;
+    background-clip: padding-box;
     color: @toolstrip-background-color;
-    border: 0.5em solid fadeout(@toolstrip-background-color, 30%);
+    border: .5em solid rgba(136, 136, 136, 0.39);
     border-radius: 3em;
   }
 }
