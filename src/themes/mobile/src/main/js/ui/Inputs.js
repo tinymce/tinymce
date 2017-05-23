@@ -2,23 +2,24 @@ define(
   'tinymce.themes.mobile.ui.Inputs',
 
   [
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.DataField',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.construct.EventHandler',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (AdhocBehaviour, Behaviour, Composing, Representing, Toggling, Memento, Button, Container, DataField, Input, EventHandler, Fun, Option, Styles) {
+  function (AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, NativeEvents, Button, Container, DataField, Input, Fun, Option, Styles) {
     var clearInputEvent = 'input-clearing';
 
     var field = function (name, placeholder) {
@@ -72,20 +73,15 @@ define(
                 return Option.some(inputSpec.get(comp));
               }
             }),
-            AdhocBehaviour.config(clearInputEvent)
-          ]),
-          customBehaviours: [
-            AdhocBehaviour.events(clearInputEvent, {
-              input: EventHandler.nu({
-                run: function (iContainer) {
-                  var input = inputSpec.get(iContainer);
-                  var val = Representing.getValue(input);
-                  var f = val.length > 0 ? Toggling.off : Toggling.on;
-                  f(iContainer);
-                }
+            AddEventsBehaviour.config(clearInputEvent, [
+              AlloyEvents.run(NativeEvents.input(), function (iContainer) {
+                var input = inputSpec.get(iContainer);
+                var val = Representing.getValue(input);
+                var f = val.length > 0 ? Toggling.off : Toggling.on;
+                f(iContainer);
               })
-            })
-          ]
+            ])
+          ])
         })
       };
     };

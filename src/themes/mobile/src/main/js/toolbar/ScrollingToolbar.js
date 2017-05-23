@@ -2,18 +2,15 @@ define(
   'tinymce.themes.mobile.toolbar.ScrollingToolbar',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
@@ -24,8 +21,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger,
-    Css, Scrollables, Styles, Scrollable
+    AddEventsBehaviour, Behaviour, Keying, Toggling, GuiFactory, AlloyEvents, Container, Toolbar, ToolbarGroup, Cell, Fun, Merger, Css, Scrollables, Styles,
+    Scrollable
   ) {
     return function () {
       var toolbar = GuiFactory.build(
@@ -70,22 +67,14 @@ define(
                       },
 
                       tgroupBehaviours: Behaviour.derive([
-                        AdhocBehaviour.config('adhoc-scrollable-toolbar')
-                      ]),
-                      customBehaviours: [
-                        AdhocBehaviour.events('adhoc-scrollable-toolbar', gSpec.scrollable === true ? Objects.wrap(
-                          SystemEvents.systemInit(),
-                          EventHandler.nu({
-                            run: function (component, simulatedEvent) {
-                              if (EventRoot.isSource(component, simulatedEvent)) {
-                                Css.set(component.element(), 'overflow-x', 'auto');
-                                Scrollables.markAsHorizontal(component.element());
-                                Scrollable.register(component.element());
-                              }
-                            }
+                        AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
+                          AlloyEvents.runOnInit(function (component, simulatedEvent) {
+                            Css.set(component.element(), 'overflow-x', 'auto');
+                            Scrollables.markAsHorizontal(component.element());
+                            Scrollable.register(component.element());
                           })
-                        ) : { })
-                      ],
+                        ] : [ ])
+                      ]),
 
                       components: [
                         Container.sketch({

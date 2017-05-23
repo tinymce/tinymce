@@ -2,8 +2,7 @@ define(
   'tinymce.themes.mobile.ui.SerialisedDialog',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
@@ -16,9 +15,7 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Form',
-    'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
@@ -33,8 +30,8 @@ define(
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container,
-    Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    AddEventsBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container, Form,
+    FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -190,60 +187,32 @@ define(
                 return Option.some(true);
               }
             }),
-            AdhocBehaviour.config(formAdhocEvents)
-          ]),
 
-          customBehaviours: [
-            AdhocBehaviour.events(
-              formAdhocEvents,
-              Objects.wrapAll([
-                {
-                  key: SystemEvents.attachedToDom(),
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      if (EventRoot.isSource(dialog, simulatedEvent)) {
-                        // Reset state to first screen.
-                        resetState();
-                        var dotitems = memDots.get(dialog);
-                        Highlighting.highlightFirst(dotitems);
-                        spec.getInitialValue(dialog).each(function (v) {
-                          Representing.setValue(dialog, v);
-                        });
-                      }
-                    }
-                  })
-                },
-                {
-                  key: SystemEvents.execute(),
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      spec.onExecute(dialog, simulatedEvent);
-                    }
-                  })
-                },
-                {
-                  key: 'transitionend',
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      if (simulatedEvent.event().raw().propertyName === 'left') {
-                        focusInput(dialog);
-                      }
-                    }
-                  })
-                },
+            AddEventsBehaviour.config(formAdhocEvents, [
+              AlloyEvents.runOnAttached(function (dialog, simulatedEvent) {
+                // Reset state to first screen.
+                resetState();
+                var dotitems = memDots.get(dialog);
+                Highlighting.highlightFirst(dotitems);
+                spec.getInitialValue(dialog).each(function (v) {
+                  Representing.setValue(dialog, v);
+                });
+              }),
 
-                {
-                  key: navigateEvent,
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      var direction = simulatedEvent.event().direction();
-                      navigate(dialog, direction);
-                    }
-                  })
+              AlloyEvents.runOnExecute(spec.onExecute),
+
+              AlloyEvents.run(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
+                if (simulatedEvent.event().raw().propertyName === 'left') {
+                  focusInput(dialog);
                 }
-              ])
-            )
-          ]
+              }),
+
+              AlloyEvents.run(navigateEvent, function (dialog, simulatedEvent) {
+                var direction = simulatedEvent.event().direction();
+                navigate(dialog, direction);
+              })
+            ])
+          ])
         })
       );
 
@@ -288,11 +257,8 @@ define(
               Keying.focusIn(form);
             }
           }),
-          AdhocBehaviour.config(wrapperAdhocEvents)
-        ]),
 
-        customBehaviours: [
-          AdhocBehaviour.events(wrapperAdhocEvents, AlloyEvents.derive([
+          AddEventsBehaviour.config(wrapperAdhocEvents, [
             AlloyEvents.run(NativeEvents.touchstart(), function (wrapper, simulatedEvent) {
               spec.state.dialogSwipeState.set(
                 SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
@@ -314,8 +280,8 @@ define(
                 navigate(dialog, direction);
               });
             })
-          ]))
-        ]
+          ])
+        ])
       };
     };
 

@@ -2,7 +2,6 @@ define(
   'tinymce.themes.mobile.touch.view.TapToEditMask',
 
   [
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
@@ -13,7 +12,7 @@ define(
     'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (AdhocBehaviour, Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles) {
+  function (Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles) {
     var sketch = function (onView, translate) {
       
       var memIcon = Memento.record(
@@ -25,7 +24,6 @@ define(
             classes: [ Styles.resolve('mask-tap-icon') ]
           },
           containerBehaviours: Behaviour.derive([
-            AdhocBehaviour.config('conn'),
             Toggling.config({
               toggleClass: Styles.resolve('mask-tap-icon-selected'),
               toggleOnExecute: false
