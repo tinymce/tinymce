@@ -1039,7 +1039,7 @@ define(
       function isHidden() {
         var sel;
 
-        if (!isGecko) {
+        if (!isGecko || editor.removed) {
           return 0;
         }
 
