@@ -3,15 +3,16 @@ define(
 
   [
     'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.construct.EventHandler',
     'ephox.imagetools.api.BlobConversions',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Option',
     'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (Memento, Button, EventHandler, BlobConversions, Id, Option, Styles) {
+  function (Memento, AlloyEvents, NativeEvents, Button, BlobConversions, Id, Option, Styles) {
     var addImage = function (editor, blob) {
       BlobConversions.blobToBase64(blob).then(function (base64) {
         editor.undoManager.transact(function () {
@@ -45,21 +46,16 @@ define(
 
       var memPicker = Memento.record({
         dom: pickerDom,
-        events: {
-          click: EventHandler.nu({
-            run: function (picker, simulatedEvent) {
-              // Stop the event firing again at the button level
-              simulatedEvent.cut();
-            }
-          }),
-          change: EventHandler.nu({
-            run: function (picker, simulatedEvent) {
-              extractBlob(simulatedEvent).each(function (blob) {
-                addImage(editor, blob);
-              });
-            }
+        events: AlloyEvents.derive([
+          // Stop the event firing again at the button level
+          AlloyEvents.cutter(NativeEvents.click()),
+
+          AlloyEvents.run(NativeEvents.change(), function (picker, simulatedEvent) {
+            extractBlob(simulatedEvent).each(function (blob) {
+              addImage(editor, blob);
+            });
           })
-        }
+        ])
       });
 
       return Button.sketch({
