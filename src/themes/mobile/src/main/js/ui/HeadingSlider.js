@@ -11,11 +11,11 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.TransformFind',
-    'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.ToolbarWidgets'
+    'tinymce.themes.mobile.ui.ToolbarWidgets',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Slider, Arr, Compare, Element, Node, TransformFind, Styles, ToolbarWidgets) {
+  function (Behaviour, Replacing, GuiFactory, Slider, Arr, Compare, Element, Node, TransformFind, ToolbarWidgets, UiDomFactory) {
     var headings = [ 'p', 'h3', 'h2', 'h1' ];
 
     var isValidValue = function (valueIndex) {
@@ -38,10 +38,7 @@ define(
       };
 
       return Slider.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('slider-heading-container'), Styles.resolve('slider') ]
-        },
+        dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-heading-container ${prefix}-slider"></div>'),
         onChange: onChange,
         onInit: onInit,
         min: 0,
@@ -57,24 +54,15 @@ define(
 
         parts: {
           spectrum: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-heading-spectrum') ]
-            },
+            dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-heading-spectrum"></div>'),
             components: [
               {
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('slider-heading-spectrum-line') ]
-                }
+                dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-heading-spectrum-line"></div>')
               }
             ]
           },
           thumb: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-thumb') ]
-            },
+            dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-thumb"></div>'),
             behaviours: Behaviour.derive([
               Replacing.config({ })
             ])
