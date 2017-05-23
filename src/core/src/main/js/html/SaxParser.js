@@ -142,7 +142,7 @@ define(
         var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name;
         var isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
         var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-        var attributesRequired, attributesDefault, attributesForced;
+        var attributesRequired, attributesDefault, attributesForced, processHtml;
         var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
         var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
         var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
@@ -260,8 +260,9 @@ define(
         removeInternalElements = settings.remove_internals;
         fixSelfClosing = settings.fix_self_closing;
         specialElements = schema.getSpecialElements();
+        processHtml = html + '>';
 
-        while ((matches = tokenRegExp.exec(html + '>'))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
+        while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
           // Text
           if (index < matches.index) {
             self.text(decode(html.substr(index, matches.index - index)));
