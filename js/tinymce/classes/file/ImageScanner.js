@@ -33,7 +33,7 @@ define("tinymce/file/ImageScanner", [
 		function findAll(elm, predicate) {
 			var images, promises;
 
-			function imageToBlobInfo(img, resolve) {
+			function imageToBlobInfo(img, resolve, reject) {
 				var base64, blobInfo;
 
 				if (img.src.indexOf('blob:') === 0) {
@@ -56,6 +56,8 @@ define("tinymce/file/ImageScanner", [
 									blobInfo: blobInfo
 								});
 							});
+						}, function (err) {
+							reject(err);
 						});
 					}
 
@@ -81,6 +83,8 @@ define("tinymce/file/ImageScanner", [
 							image: img,
 							blobInfo: blobInfo
 						});
+					}, function (err) {
+						reject(err);
 					});
 				}
 			}
@@ -135,8 +139,8 @@ define("tinymce/file/ImageScanner", [
 					});
 				}
 
-				newPromise = new Promise(function(resolve) {
-					imageToBlobInfo(img, resolve);
+				newPromise = new Promise(function(resolve, reject) {
+					imageToBlobInfo(img, resolve, reject);
 				}).then(function(result) {
 					delete cachedPromises[result.image.src];
 					return result;
