@@ -15,6 +15,8 @@ ModuleLoader.require([
 
 	var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
 	var blobUriSrc;
+	var invalidBlobUriSrc = "blob:70BE8432-BA4D-4787-9AB9-86563351FBF7";
+
 
 	Conversions.uriToBlob(base64Src).then(function(blob) {
 		blobUriSrc = URL.createObjectURL(blob);
@@ -29,13 +31,15 @@ ModuleLoader.require([
 			'<img src="' + blobUriSrc + '">' +
 			'<img src="' + Env.transparentSrc + '">' +
 			'<img src="' + base64Src + '" data-mce-bogus="1">' +
-			'<img src="' + base64Src + '" data-mce-placeholder="1">'
+			'<img src="' + base64Src + '" data-mce-placeholder="1">' +
+			'<img src="' + invalidBlobUriSrc + '">'
 		);
 
 		imageScanner.findAll(document.getElementById('view')).then(function(result) {
 			QUnit.start();
 			var blobInfo = result[0].blobInfo;
-			equal(result.length, 2);
+			equal(result.length, 3);
+			equal(typeof result[result.length - 1], 'string', "Last item is not the image, but error message.");
 			equal('data:image/gif;base64,' + blobInfo.base64(), base64Src);
 			strictEqual(result[0].image, document.getElementById('view').firstChild);
 		});
