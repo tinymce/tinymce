@@ -3,16 +3,11 @@ asynctest(
 
   [
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
-    'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
@@ -23,18 +18,15 @@ asynctest(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.WindowSelection',
     'global!Math',
-    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.test.ui.TestUi',
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
   function (
-    Assertions, Mouse, Pipeline, Step, UiFinder, Replacing, GuiFactory, NativeEvents, SystemEvents, Attachment, GuiSetup, Fun, Merger, Option, Insert, Remove,
-    DomEvent, Body, Element, Attr, Css, Html, Traverse, WindowSelection, Math, Styles, TestUi, IosRealm
+    Assertions, Pipeline, Step, Replacing, GuiFactory, Attachment, Fun, Merger, Option, Insert, Remove, DomEvent, Body, Element, Attr, Css, WindowSelection,
+    Math, TestUi, IosRealm
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

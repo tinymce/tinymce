@@ -9,30 +9,29 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.DataField',
     'ephox.alloy.api.ui.Input',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, NativeEvents, Button, Container, DataField, Input, Fun, Option, Styles,
-    UiDomFactory
+    AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, AlloyTriggers, NativeEvents, Button, Container, DataField, Input,
+    Option, Styles, UiDomFactory
   ) {
-    var clearInputEvent = 'input-clearing';
+    var clearInputBehaviour = 'input-clearing';
 
     var field = function (name, placeholder) {
       var inputSpec = Memento.record(Input.sketch({
         placeholder: placeholder,
         onSetValue: function (input, data) {
-          input.getSystem().triggerEvent('input', input.element(), {
-            target: Fun.constant(input.element())
-          });
+          // If the value changes, inform the container so that it can update whether the "x" is visible
+          AlloyTriggers.emit(input, NativeEvents.input());
         },
         inputBehaviours: Behaviour.derive([
           Composing.config({
@@ -68,7 +67,7 @@ define(
                 return Option.some(inputSpec.get(comp));
               }
             }),
-            AddEventsBehaviour.config(clearInputEvent, [
+            AddEventsBehaviour.config(clearInputBehaviour, [
               AlloyEvents.run(NativeEvents.input(), function (iContainer) {
                 var input = inputSpec.get(iContainer);
                 var val = Representing.getValue(input);

@@ -11,8 +11,8 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Form',
@@ -32,7 +32,7 @@ define(
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Disabling, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container,
+    AddEventsBehaviour, Behaviour, Disabling, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, AlloyTriggers, NativeEvents, Button, Container,
     Form, FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles, UiDomFactory
   ) {
     var sketch = function (rawSpec) {
@@ -61,7 +61,7 @@ define(
         return Button.sketch({
           dom: UiDomFactory.dom('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
           action: function (button) {
-            SystemEvents.trigger(button, navigateEvent, { direction: direction });
+            AlloyTriggers.emitWith(button, navigateEvent, { direction: direction });
           },
           buttonBehaviours: Behaviour.derive([
             Disabling.config({
@@ -100,7 +100,7 @@ define(
         var optInput = Option.from(inputs[spec.state.currentScreen.get()]);
         optInput.each(function (input) {
           dialog.getSystem().getByDom(input).each(function (inputComp) {
-            inputComp.getSystem().triggerFocus(inputComp.element(), dialog.element());
+            AlloyTriggers.dispatchFocus(dialog, inputComp.element());
           });
         });
       };

@@ -2,7 +2,7 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
@@ -32,7 +32,7 @@ define(
 
 
   function (
-    SystemEvents, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm,
+    AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm,
     Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
@@ -116,11 +116,7 @@ define(
                 var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
                 // If something in the toolbar had focus, fire an execute on it (execute on tap away)
                 // Perhaps it will be clearer later what is a better way of doing this.
-                findFocusIn(toolbar).each(function (input) {
-                  input.getSystem().triggerEvent(SystemEvents.execute(), input.element(), {
-                    target: Fun.constant(input.element())
-                  });
-                });
+                findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
                 realm.restoreToolbar();
               },
 
