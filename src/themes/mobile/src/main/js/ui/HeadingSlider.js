@@ -69,7 +69,6 @@ define(
       });
     };
 
-
     var sketch = function (realm, editor) {
       var updateThumb = function (_slider, thumb, value) {
         Replacing.set(thumb, [
