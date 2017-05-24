@@ -8,15 +8,23 @@ define(
   ],
 
   function (DomFactory, Strings, Styles) {
-    var fromHtml = function (rawHtml) {
+    var dom = function (rawHtml) {
       var html = Strings.supplant(rawHtml, {
         'prefix': Styles.prefix()
       });
       return DomFactory.fromHtml(html);
     };
 
+    var spec = function (rawHtml) {
+      var sDom = dom(rawHtml);
+      return {
+        dom: sDom
+      };
+    };
+
     return {
-      fromHtml: fromHtml
+      dom: dom,
+      spec: spec
     };
   }
 );

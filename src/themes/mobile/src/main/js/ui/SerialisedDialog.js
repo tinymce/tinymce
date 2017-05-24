@@ -59,7 +59,7 @@ define(
 
       var navigationButton = function (direction, directionName, enabled) {
         return Button.sketch({
-          dom: UiDomFactory.fromHtml('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
+          dom: UiDomFactory.dom('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
           action: function (button) {
             SystemEvents.trigger(button, navigateEvent, { direction: direction });
           },
@@ -112,13 +112,13 @@ define(
 
       var memForm = Memento.record(
         Form.sketch({
-          dom: UiDomFactory.fromHtml('<div class="${prefix}-serialised-dialog"></div>'),
+          dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
           components: [
             Container.sketch({
-              dom: UiDomFactory.fromHtml('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
+              dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
               components: Arr.map(spec.fields, function (field, i) {
                 return i <= spec.maxFieldIndex ? Container.sketch({
-                  dom: UiDomFactory.fromHtml('<div class="${prefix}-serialised-dialog-screen"></div>'),
+                  dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
                   components: Arr.flatten([
                     [ navigationButton(-1, 'previous', (i > 0)) ],
                     [ Form.parts(field.name) ],
@@ -191,7 +191,7 @@ define(
       );
 
       var memDots = Memento.record({
-        dom: UiDomFactory.fromHtml('<div class="${prefix}-dot-container"></div>'),
+        dom: UiDomFactory.dom('<div class="${prefix}-dot-container"></div>'),
         behaviours: Behaviour.derive([
           Highlighting.config({
             highlightClass: Styles.resolve('dot-active'),
@@ -199,14 +199,14 @@ define(
           })
         ]),
         components: Arr.bind(spec.fields, function (_f, i) {
-          return i <= spec.maxFieldIndex ? [{
-            dom: UiDomFactory.fromHtml('<div class="${prefix}-dot-item">&#x2022;</div>')
-          }] : [];
+          return i <= spec.maxFieldIndex ? [
+            UiDomFactory.spec('<div class="${prefix}-dot-item">&#x2022;</div>')
+          ] : [];
         })
       });
 
       return {
-        dom: UiDomFactory.fromHtml('<div class="${prefix}-serializer-wrapper"></div>'),
+        dom: UiDomFactory.dom('<div class="${prefix}-serializer-wrapper"></div>'),
         components: [
           memForm.asSpec(),
           memDots.asSpec()

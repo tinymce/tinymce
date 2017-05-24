@@ -16,10 +16,14 @@ define(
     'ephox.alloy.api.ui.Input',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, NativeEvents, Button, Container, DataField, Input, Fun, Option, Styles) {
+  function (
+    AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, NativeEvents, Button, Container, DataField, Input, Fun, Option, Styles,
+    UiDomFactory
+  ) {
     var clearInputEvent = 'input-clearing';
 
     var field = function (name, placeholder) {
@@ -39,14 +43,7 @@ define(
 
       var buttonSpec = Memento.record(
         Button.sketch({
-          dom: {
-            tag: 'button',
-            classes: [
-              Styles.resolve('input-container-x'),
-              Styles.resolve('icon-cancel-circle'),
-              Styles.resolve('icon')
-            ]
-          },
+          dom: UiDomFactory.dom('<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'),
           action: function (button) {
             var input = inputSpec.get(button);
             Representing.setValue(input, '');
@@ -57,9 +54,7 @@ define(
       return {
         name: name,
         spec: Container.sketch({
-          dom: {
-            classes: [ Styles.resolve('input-container') ]
-          },
+          dom: UiDomFactory.dom('<div class="${prefix}-input-container"></div>'),
           components: [
             inputSpec.asSpec(),
             buttonSpec.asSpec()

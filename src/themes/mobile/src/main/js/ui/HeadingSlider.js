@@ -38,7 +38,7 @@ define(
       };
 
       return Slider.sketch({
-        dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-heading-container ${prefix}-slider"></div>'),
+        dom: UiDomFactory.dom('<div class="${prefix}-slider-heading-container ${prefix}-slider"></div>'),
         onChange: onChange,
         onInit: onInit,
         min: 0,
@@ -54,15 +54,13 @@ define(
 
         parts: {
           spectrum: {
-            dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-heading-spectrum"></div>'),
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-heading-spectrum"></div>'),
             components: [
-              {
-                dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-heading-spectrum-line"></div>')
-              }
+              UiDomFactory.spec('<div class="${prefix}-slider-heading-spectrum-line"></div>')
             ]
           },
           thumb: {
-            dom: UiDomFactory.fromHtml('<div class="${prefix}-slider-thumb"></div>'),
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
             behaviours: Behaviour.derive([
               Replacing.config({ })
             ])

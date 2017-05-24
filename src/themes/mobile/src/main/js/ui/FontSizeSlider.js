@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.alloy.api.ui.Slider',
-    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.ToolbarWidgets',
-    'tinymce.themes.mobile.util.FontSizes'
+    'tinymce.themes.mobile.util.FontSizes',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Slider, Styles, ToolbarWidgets, FontSizes) {
+  function (Slider, ToolbarWidgets, FontSizes, UiDomFactory) {
     var sizes = FontSizes.candidates();
 
     var makeSlider = function (spec) {
@@ -18,10 +18,7 @@ define(
       };
 
       return Slider.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('slider-font-size-container'), Styles.resolve('slider') ]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-slider-font-size-container ${prefix}-slider"></div>'),
         onChange: onChange,
         min: 0,
         max: sizes.length - 1,
@@ -36,44 +33,21 @@ define(
 
         parts: {
           spectrum: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-font-size-container') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-font-size-container"></div>'),
             components: [
-              { 
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('slider-font-size') ]
-                }
-              }
+              UiDomFactory.spec('<div class="${prefix}-slider-font-size"></div>')
             ]
           },
-          thumb: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-thumb') ]
-            }
-          }
+          thumb: UiDomFactory.spec('<div class="${prefix}-slider-thumb"></div>')
         }
       });
     };
 
     var makeItems = function (spec) {
       return [
-        {
-          dom: {
-            tag: 'span',
-            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-small-font'), Styles.resolve('icon') ]
-          }
-        },
+        UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
         makeSlider(spec),
-        {
-          dom: {
-            tag: 'span',
-            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-large-font'), Styles.resolve('icon') ]
-          }
-        }
+        UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
       ];
     };
 

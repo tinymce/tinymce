@@ -9,10 +9,10 @@ define(
     'ephox.imagetools.api.BlobConversions',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Option',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Memento, AlloyEvents, NativeEvents, Button, BlobConversions, Id, Option, Styles) {
+  function (Memento, AlloyEvents, NativeEvents, Button, BlobConversions, Id, Option, UiDomFactory) {
     var addImage = function (editor, blob) {
       BlobConversions.blobToBase64(blob).then(function (base64) {
         editor.undoManager.transact(function () {
@@ -59,10 +59,7 @@ define(
       });
 
       return Button.sketch({
-        dom: {
-          tag: 'span',
-          classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-image'), Styles.resolve('icon') ]
-        },
+        dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-icon-image ${prefix}-icon"></span>'),
         components: [
           memPicker.asSpec()
         ],
