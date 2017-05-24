@@ -9,20 +9,16 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Throttler',
     'global!setTimeout',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles) {
+  function (Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles, UiDomFactory) {
     var sketch = function (onView, translate) {
-      
+
       var memIcon = Memento.record(
         Container.sketch({
-          dom: {
-            attributes: {
-              'aria-hidden': 'true'
-            },
-            classes: [ Styles.resolve('mask-tap-icon') ]
-          },
+          dom: UiDomFactory.dom('<div aria-hidden="true" class="${prefix}-mask-tap-icon"></div>'),
           containerBehaviours: Behaviour.derive([
             Toggling.config({
               toggleClass: Styles.resolve('mask-tap-icon-selected'),
@@ -35,21 +31,13 @@ define(
       var onViewThrottle = Throttler.first(onView, 200);
 
       return Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('disabled-mask') ]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-disabled-mask"></div>'),
         components: [
           Container.sketch({
-            dom: {
-              classes: [ Styles.resolve('content-container') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-content-container"></div>'),
             components: [
               Button.sketch({
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('content-tap-section') ]
-                },
+                dom: UiDomFactory.dom('<div class="${prefix}-content-tap-section"></div>'),
                 components: [
                   memIcon.asSpec()
                 ],

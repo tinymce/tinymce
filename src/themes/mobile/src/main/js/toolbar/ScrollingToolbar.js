@@ -17,21 +17,19 @@ define(
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.touch.scroll.Scrollable'
+    'tinymce.themes.mobile.touch.scroll.Scrollable',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
   function (
     AddEventsBehaviour, Behaviour, Keying, Toggling, GuiFactory, AlloyEvents, Container, Toolbar, ToolbarGroup, Cell, Fun, Merger, Css, Scrollables, Styles,
-    Scrollable
+    Scrollable, UiDomFactory
   ) {
     return function () {
       var toolbar = GuiFactory.build(
         Toolbar.sketch(
           {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('toolbar') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
             components: [
               Toolbar.parts().groups()
             ],
@@ -54,17 +52,10 @@ define(
             members: {
               group: {
                 munge: function (gSpec) {
+                  var scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
                   return Merger.deepMerge(
                     {
-                      dom: {
-                        tag: 'div',
-                        classes: [ Styles.resolve('toolbar-group') ].concat(
-                          gSpec.scrollable === true ? Styles.resolve([ 'toolbar-scrollable-group' ]) : [ ]
-                        ),
-                        attributes: {
-                          'aria-label': gSpec.label
-                        }
-                      },
+                      dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
 
                       tgroupBehaviours: Behaviour.derive([
                         AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [

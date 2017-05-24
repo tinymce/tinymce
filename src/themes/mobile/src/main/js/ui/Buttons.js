@@ -9,10 +9,11 @@ define(
     'ephox.alloy.api.ui.Button',
     'ephox.katamari.api.Merger',
     'tinymce.themes.mobile.channels.FormatReceiver',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Receiving, Toggling, Unselecting, Button, Merger, FormatReceiver, Styles) {
+  function (Behaviour, Receiving, Toggling, Unselecting, Button, Merger, FormatReceiver, Styles, UiDomFactory) {
     var forToolbarCommand = function (editor, command) {
       return forToolbar(command, function () {
         editor.execCommand(command);
@@ -53,10 +54,7 @@ define(
 
     var forToolbar = function (clazz, action, extraBehaviours) {
       return Button.sketch({
-        dom: {
-          tag: 'span',
-          classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-' + clazz), Styles.resolve('icon') ]
-        },
+        dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
         action: action,
 
         buttonBehaviours: Merger.deepMerge(

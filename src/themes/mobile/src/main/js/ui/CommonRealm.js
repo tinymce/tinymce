@@ -7,17 +7,14 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Button, Container, Styles) {
+  function (Behaviour, Replacing, GuiFactory, Button, Container, UiDomFactory) {
     var makeEditSwitch = function (webapp) {
       return GuiFactory.build(
         Button.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'tinymce-mobile-mask-edit-icon' ]
-          },
+          dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon"></div>'),
           action: function () {
             webapp.run(function (w) {
               w.setReadOnly(false);
@@ -30,9 +27,7 @@ define(
     var makeSocket = function () {
       return GuiFactory.build(
         Container.sketch({
-          dom: {
-            classes: [ Styles.resolve('editor-socket') ]
-          },
+          dom: UiDomFactory.dom('<div class="${prefix}-editor-socket"></div>'),
           components: [ ],
 
           containerBehaviours: Behaviour.derive([
