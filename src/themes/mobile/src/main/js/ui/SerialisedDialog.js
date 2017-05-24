@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Receiving',
@@ -26,12 +27,13 @@ define(
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
     'tinymce.themes.mobile.model.SwipingModel',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container, Form,
-    FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    AddEventsBehaviour, Behaviour, Disabling, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container,
+    Form, FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles, UiDomFactory
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -55,31 +57,18 @@ define(
 
       var spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
 
-      var prevButton = function (enabled) {
+      var navigationButton = function (direction, directionName, enabled) {
         return Button.sketch({
-          dom: {
-            tag: 'span',
-            classes: [Styles.resolve('icon-previous'), Styles.resolve('icon')].concat(
-              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
-            )
-          },
+          dom: UiDomFactory.fromHtml('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
           action: function (button) {
-            SystemEvents.trigger(button, navigateEvent, { direction: -1 });
-          }
-        });
-      };
-
-      var nextButton = function (enabled) {
-        return Button.sketch({
-          dom: {
-            tag: 'span',
-            classes: [Styles.resolve('icon-next'), Styles.resolve('icon')].concat(
-              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
-            )
+            SystemEvents.trigger(button, navigateEvent, { direction: direction });
           },
-          action: function (button) {
-            SystemEvents.trigger(button, navigateEvent, { direction: +1 });
-          }
+          buttonBehaviours: Behaviour.derive([
+            Disabling.config({
+              disableClass: Styles.resolve('toolbar-navigation-disabled'),
+              disabled: !enabled
+            })
+          ])
         });
       };
 
@@ -121,34 +110,19 @@ define(
         spec.state.dialogSwipeState.clear();
       };
 
-
-
       var memForm = Memento.record(
         Form.sketch({
-          dom: {
-            tag: 'div',
-            classes: [Styles.resolve('serialised-dialog')]
-          },
+          dom: UiDomFactory.fromHtml('<div class="${prefix}-serialised-dialog"></div>'),
           components: [
             Container.sketch({
-              dom: {
-                tag: 'div',
-                classes: [Styles.resolve('serialised-dialog-chain')],
-                styles: {
-                  left: '0px',
-                  position: 'absolute'
-                }
-              },
+              dom: UiDomFactory.fromHtml('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
               components: Arr.map(spec.fields, function (field, i) {
                 return i <= spec.maxFieldIndex ? Container.sketch({
-                  dom: {
-                    tag: 'div',
-                    classes: [Styles.resolve('serialised-dialog-screen')]
-                  },
+                  dom: UiDomFactory.fromHtml('<div class="${prefix}-serialised-dialog-screen"></div>'),
                   components: Arr.flatten([
-                    [prevButton(i > 0)],
-                    [Form.parts(field.name)],
-                    [nextButton(i < spec.maxFieldIndex)]
+                    [ navigationButton(-1, 'previous', (i > 0)) ],
+                    [ Form.parts(field.name) ],
+                    [ navigationButton(+1, 'next', (i < spec.maxFieldIndex)) ]
                   ])
                 }) : Form.parts(field.name);
               })
@@ -217,10 +191,7 @@ define(
       );
 
       var memDots = Memento.record({
-        dom: {
-          tag: 'div',
-          classes: [Styles.resolve('dot-container')]
-        },
+        dom: UiDomFactory.fromHtml('<div class="${prefix}-dot-container"></div>'),
         behaviours: Behaviour.derive([
           Highlighting.config({
             highlightClass: Styles.resolve('dot-active'),
@@ -228,22 +199,14 @@ define(
           })
         ]),
         components: Arr.bind(spec.fields, function (_f, i) {
-          return i <= spec.maxFieldIndex ? [
-            {
-              dom: {
-                tag: 'div',
-                innerHtml: '&#x2022;',
-                classes: [Styles.resolve('dot-item')]
-              }
-            }] : [];
+          return i <= spec.maxFieldIndex ? [{
+            dom: UiDomFactory.fromHtml('<div class="${prefix}-dot-item">&#x2022;</div>')
+          }] : [];
         })
       });
 
       return {
-        dom: {
-          tag: 'div',
-          classes: [Styles.resolve('serializer-wrapper')]
-        },
+        dom: UiDomFactory.fromHtml('<div class="${prefix}-serializer-wrapper"></div>'),
         components: [
           memForm.asSpec(),
           memDots.asSpec()
