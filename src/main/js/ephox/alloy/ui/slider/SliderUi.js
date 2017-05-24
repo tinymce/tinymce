@@ -91,7 +91,27 @@ define(
         changeValue(slider, detail.max(), Option.none());
       };
 
-      var uiEventsArr = isTouch ? [ ] : [
+      var uiEventsArr = isTouch ? [
+        {
+          key: 'touchstart',
+          value: EventHandler.nu({
+            run: function (slider, simulatedEvent) {
+              console.log('touchstart');
+              detail.onDragStart()(getThumb(slider));
+            }
+          })
+        },
+        {
+          key: 'touchend',
+          value: EventHandler.nu({
+            run: function (slider, simulatedEvent) {
+              console.log('touchend ');
+              detail.onDragEnd()(getThumb(slider));
+            }
+          })
+        }
+
+      ] : [
         {
           key: 'mousedown',
           value: EventHandler.nu({
@@ -127,7 +147,7 @@ define(
                   return Option.some(true);
                 }
               })
-            ] : [ ],
+            ] : [],
             [
               Representing.config({
                 store: {
