@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Slider',
     'ephox.katamari.api.Arr',
@@ -15,7 +16,7 @@ define(
     'tinymce.themes.mobile.ui.ToolbarWidgets'
   ],
 
-  function (Behaviour, Replacing, GuiFactory, Slider, Arr, Compare, Element, Node, TransformFind, Styles, ToolbarWidgets) {
+  function (Behaviour, Replacing, Toggling, GuiFactory, Slider, Arr, Compare, Element, Node, TransformFind, Styles, ToolbarWidgets) {
     var headings = [ 'p', 'h3', 'h2', 'h1' ];
 
     var isValidValue = function (valueIndex) {
@@ -44,6 +45,12 @@ define(
         },
         onChange: onChange,
         onInit: onInit,
+        onDragStart: function (thumb) {
+          Toggling.on(thumb);
+        },
+        onDragEnd: function (thumb) {
+          Toggling.off(thumb);
+        },
         min: 0,
         max: headings.length - 1,
         stepSize: 1,
@@ -76,7 +83,10 @@ define(
               classes: [ Styles.resolve('slider-thumb') ]
             },
             behaviours: Behaviour.derive([
-              Replacing.config({ })
+              Replacing.config({ }),
+              Toggling.config({
+                toggleClass: 'selected'
+              })
             ])
           }
         }

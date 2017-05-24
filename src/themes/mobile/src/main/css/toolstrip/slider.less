@@ -125,11 +125,15 @@
     margin: auto;
     top: 0;
     bottom: 0;
+    transition : border 120ms cubic-bezier(0.39, 0.58, 0.57, 1);
 
     background-color: @toolstrip-foreground-color;
     background-clip: padding-box;
     color: @toolstrip-background-color;
-    border: .5em solid rgba(136, 136, 136, 0.39);
+    &.selected {
+      border: .5em solid rgba(136, 136, 136, 0.39);
+    }
+    border: .5em solid rgba(136, 136, 136, 0.0);
     border-radius: 3em;
   }
 }
