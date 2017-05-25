@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.debugging.Debugging',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
@@ -32,8 +33,8 @@ define(
 
 
   function (
-    SystemEvents, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm,
-    Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    SystemEvents, Attachment, Debugging, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation,
+    AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -44,6 +45,7 @@ define(
 
         var wrapper = Element.fromTag('div');
         var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm() : IosRealm();
+        Debugging.registerInspector('maurizio', realm.system());
         var original = Element.fromDom(args.targetNode);
         Insert.after(original, wrapper);
         Attachment.attachSystem(wrapper, realm.system());
@@ -148,6 +150,7 @@ define(
           var backToMaskGroup = {
             label: 'The first group',
             scrollable: false,
+            extraClasses: [Styles.resolve('exit-container')],
             items: [
               Buttons.forToolbar('back', function (/* btn */) {
                 realm.exit();
@@ -184,7 +187,7 @@ define(
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
-              
+
               ImagePicker.sketch(editor),
               FontSizeSlider.sketch(realm, editor),
               ColorSlider.sketch(realm, editor)

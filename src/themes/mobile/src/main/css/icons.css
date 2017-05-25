@@ -60,14 +60,14 @@
 }
 
 .tinymce-mobile-icon-readonly-back:before {
-  content: "\e02f";
+  content: "\e900";
 }
 
 .tinymce-mobile-mask-edit-icon:before {
   content: "\e254";
 }
 .tinymce-mobile-icon-back:before {
-  content: '\e5cd';
+  content: '\e879';
 }
 
 .tinymce-mobile-icon-heading:before {
