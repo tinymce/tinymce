@@ -85,6 +85,60 @@
     {
       "icon": {
         "paths": [
+          "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "close"
+        ],
+        "defaultCode": 58829,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "clear, close",
+        "id": 157,
+        "order": 92,
+        "prevSize": 24,
+        "code": 58829,
+        "name": "close"
+      },
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 157
+    },
+    {
+      "icon": {
+        "paths": [
+          "M884 300l-78 78-160-160 78-78c16-16 44-16 60 0l100 100c16 16 16 44 0 60zM128 736l472-472 160 160-472 472h-160v-160z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "mode_edit"
+        ],
+        "defaultCode": 57940,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "create, edit, mode_edit",
+        "id": 184,
+        "order": 93,
+        "prevSize": 24,
+        "code": 57940,
+        "name": "edit-mode"
+      },
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 184
+    },
+    {
+      "icon": {
+        "paths": [
           "M170 512c0-188 154-342 342-342s342 154 342 342-154 342-342 342-342-154-342-342z"
         ],
         "attrs": [],
@@ -459,6 +513,33 @@
       "setIdx": 0,
       "setId": 2,
       "iconIdx": 413
+    },
+    {
+      "icon": {
+        "paths": [
+          "M810 298v-84h-426v84h426zM640 640v-86h-256v86h256zM810 470v-86h-426v86h426zM854 86c46 0 84 38 84 84v512c0 46-38 86-84 86h-512c-46 0-86-40-86-86v-512c0-46 40-84 86-84h512zM170 256v598h598v84h-598c-46 0-84-38-84-84v-598h84z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "library_books"
+        ],
+        "defaultCode": 57391,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "library_books",
+        "id": 435,
+        "order": 95,
+        "prevSize": 24,
+        "code": 57391,
+        "name": "readonly-back"
+      },
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 435
     },
     {
       "icon": {

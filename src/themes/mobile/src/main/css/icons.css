@@ -1,5 +1,5 @@
 .tinymce-mobile-icon-arrow-back:before {
-  content: "\e5c4";
+  content: "\e5cd";
 }
 .tinymce-mobile-icon-image:before {
   content: "\e412";
@@ -59,9 +59,15 @@
   content: "\e906";
 }
 
-.tinymce-mobile-icon-readonly-back:before,
+.tinymce-mobile-icon-readonly-back:before {
+  content: "\e02f";
+}
+
+.tinymce-mobile-mask-edit-icon:before {
+  content: "\e254";
+}
 .tinymce-mobile-icon-back:before {
-  content: '\e5c4';
+  content: '\e5cd';
 }
 
 .tinymce-mobile-icon-heading:before {
