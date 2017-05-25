@@ -2,13 +2,15 @@ define(
   'tinymce.themes.mobile.ui.FontSizeSlider',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Slider',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.ToolbarWidgets',
     'tinymce.themes.mobile.util.FontSizes'
   ],
 
-  function (Slider, Styles, ToolbarWidgets, FontSizes) {
+  function (Behaviour, Toggling, Slider, Styles, ToolbarWidgets, FontSizes) {
     var sizes = FontSizes.candidates();
 
     var makeSlider = function (spec) {
@@ -23,6 +25,12 @@ define(
           classes: [ Styles.resolve('slider-font-size-container'), Styles.resolve('slider') ]
         },
         onChange: onChange,
+        onDragStart: function (thumb) {
+          Toggling.on(thumb);
+        },
+        onDragEnd: function (thumb) {
+          Toggling.off(thumb);
+        },
         min: 0,
         max: sizes.length - 1,
         stepSize: 1,
@@ -41,7 +49,7 @@ define(
               classes: [ Styles.resolve('slider-font-size-container') ]
             },
             components: [
-              { 
+              {
                 dom: {
                   tag: 'div',
                   classes: [ Styles.resolve('slider-font-size') ]
@@ -53,7 +61,12 @@ define(
             dom: {
               tag: 'div',
               classes: [ Styles.resolve('slider-thumb') ]
-            }
+            },
+            behaviours: Behaviour.derive([
+              Toggling.config({
+                toggleClass: 'selected'
+              })
+            ])
           }
         }
       });

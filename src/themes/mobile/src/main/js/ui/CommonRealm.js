@@ -16,7 +16,7 @@ define(
         Button.sketch({
           dom: {
             tag: 'div',
-            classes: [ 'tinymce-mobile-mask-edit-icon' ]
+            classes: [ 'tinymce-mobile-mask-edit-icon', 'tinymce-mobile-icon' ]
           },
           action: function () {
             webapp.run(function (w) {

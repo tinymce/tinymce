@@ -2,13 +2,15 @@ define(
   'tinymce.themes.mobile.ui.ColorSlider',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Slider',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.ToolbarWidgets'
   ],
 
-  function (Slider, Css, Styles, ToolbarWidgets) {
+  function (Behaviour, Toggling, Slider, Css, Styles, ToolbarWidgets) {
     var BLACK = -1;
 
     var makeSlider = function (spec) {
@@ -48,6 +50,12 @@ define(
         ],
 
         onChange: onChange,
+        onDragStart: function (thumb) {
+          Toggling.on(thumb);
+        },
+        onDragEnd: function (thumb) {
+          Toggling.off(thumb);
+        },
         onInit: onInit,
         stepSize: 10,
         min: 0,
@@ -73,7 +81,12 @@ define(
             dom: {
               tag: 'div',
               classes: [ Styles.resolve('slider-thumb') ]
-            }
+            },
+            behaviours: Behaviour.derive([
+              Toggling.config({
+                toggleClass: 'selected'
+              })
+            ])
           },
           'left-edge': {
             dom: {
