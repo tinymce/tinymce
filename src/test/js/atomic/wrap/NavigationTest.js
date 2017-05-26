@@ -71,6 +71,14 @@ test(
       assert.eq(expected.offset, actual.offset());
     };
 
+    var checkFreeFallRtl = function (expected, universe, elementId) {
+      var element = Finder.get(doc, elementId);
+      var actual = Navigation.freefallRtl(universe, element);
+      assert.eq(element.id, elementId);
+      assert.eq(expected.element, actual.element().id);
+      assert.eq(expected.offset, actual.offset());
+    };
+
     // Freefall without comment nodes
     checkFreeFallLtr({ element: '1.1.1', offset: 0 }, doc, 'root');
     checkFreeFallLtr({ element: '1.1.1', offset: 0 }, doc, '1');
@@ -85,6 +93,19 @@ test(
     checkFreeFallLtr({ element: '1.2.4.1', offset: 0 }, doc, '1.2.4.1');
     checkFreeFallLtr({ element: '1.2.5', offset: 0 }, doc, '1.2.5');
 
+    checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, 'root');
+    checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1');
+    checkFreeFallRtl({ element: '1.1.2', offset: 15 }, doc, '1.1');
+    checkFreeFallRtl({ element: '1.1.1', offset:  0 }, doc, '1.1.1');
+    checkFreeFallRtl({ element: '1.1.2', offset: 15 }, doc, '1.1.2');
+    checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1.2');
+    checkFreeFallRtl({ element: '1.2.1', offset: 12 }, doc, '1.2.1');
+    checkFreeFallRtl({ element: '1.2.2.1', offset: 13 }, doc, '1.2.2');
+    checkFreeFallRtl({ element: '1.2.3', offset: 9 }, doc, '1.2.3');
+    checkFreeFallRtl({ element: '1.2.4.1', offset: 9 }, doc, '1.2.4');
+    checkFreeFallRtl({ element: '1.2.4.1', offset: 9 }, doc, '1.2.4.1');
+    checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1.2.5');
+
     // Freefall with comment nodes: tbio-4938
     doc = TestUniverse(
       Gene('2-root', '2-root', [
@@ -97,6 +118,10 @@ test(
     checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-root');
     checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-1');
     checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-1.1');
+
+    checkFreeFallRtl({ element: '2-1.1', offset: 9 }, doc, '2-root');
+    checkFreeFallRtl({ element: '2-1.1', offset: 9 }, doc, '2-1');
+    checkFreeFallRtl({ element: '2-1.1', offset: 9 }, doc, '2-1.1');
 
     doc = TestUniverse(
       Gene('3-root', '3-root', [
@@ -111,6 +136,11 @@ test(
     checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-1');
     checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-c0');
     checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-1.1');
+
+    checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-root');
+    checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-1');
+    checkFreeFallRtl({ element: '3-c0', offset:  0 }, doc, '3-c0');
+    checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-1.1');
 
     doc = TestUniverse(
       Gene('4-root', '4-root', [
@@ -128,7 +158,14 @@ test(
     checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1');
     checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-c1');
     checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1.1');
-    checkFreeFallLtr({ element: '4-c2', offset: 0 }, doc, '4-c2');
+    checkFreeFallLtr({ element: '4-c2', offset:  0 }, doc, '4-c2');
+
+    checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-root');
+    checkFreeFallRtl({ element: '4-c0', offset:  0 }, doc, '4-c0');
+    checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1');
+    checkFreeFallRtl({ element: '4-c1', offset:  0 }, doc, '4-c1');
+    checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1.1');
+    checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-c2');
 
   }
 );
