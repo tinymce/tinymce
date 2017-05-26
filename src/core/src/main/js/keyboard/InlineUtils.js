@@ -67,9 +67,17 @@ define(
       var container = pos.container(), offset = pos.offset();
 
       if (forward) {
-        return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
+        if (CaretContainer.isCaretContainerInline(container)) {
+          return CaretPosition.after(container);
+        } else {
+          return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
+        }
       } else {
-        return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
+        if (CaretContainer.isCaretContainerInline(container)) {
+          return CaretPosition.before(container);
+        } else {
+          return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
+        }
       }
     };
 

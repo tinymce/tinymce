@@ -28,6 +28,11 @@ define(
       }
     };
 
+    var isPosCaretContainer = function (pos, caret) {
+      var caretNode = caret.get();
+      return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
+    };
+
     var renderCaret = function (caret, location) {
       return location.fold(
         function (element) { // Before
@@ -38,18 +43,26 @@ define(
         },
         function (element) { // Start
           return InlineUtils.findCaretPositionIn(element, true).map(function (pos) {
-            CaretContainerRemove.remove(caret.get());
-            var text = insertInlinePos(pos, true);
-            caret.set(text);
-            return new CaretPosition(text, 1);
+            if (!isPosCaretContainer(pos, caret)) {
+              CaretContainerRemove.remove(caret.get());
+              var text = insertInlinePos(pos, true);
+              caret.set(text);
+              return new CaretPosition(text, 1);
+            } else {
+              return new CaretPosition(caret.get(), 1);
+            }
           });
         },
         function (element) { // End
           return InlineUtils.findCaretPositionIn(element, false).map(function (pos) {
-            CaretContainerRemove.remove(caret.get());
-            var text = insertInlinePos(pos, false);
-            caret.set(text);
-            return new CaretPosition(text, text.length - 1);
+            if (!isPosCaretContainer(pos, caret)) {
+              CaretContainerRemove.remove(caret.get());
+              var text = insertInlinePos(pos, false);
+              caret.set(text);
+              return new CaretPosition(text, text.length - 1);
+            } else {
+              return new CaretPosition(caret.get(), caret.get().length - 1);
+            }
           });
         },
         function (element) { // After

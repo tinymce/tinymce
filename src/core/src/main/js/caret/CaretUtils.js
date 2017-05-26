@@ -27,7 +27,7 @@ define(
   function (Fun, TreeWalker, NodeType, CaretPosition, CaretContainer, CaretCandidate) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
-      isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption'),
+      isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item'),
       isCaretContainer = CaretContainer.isCaretContainer,
       isCaretContainerBlock = CaretContainer.isCaretContainerBlock,
       curry = Fun.curry,
