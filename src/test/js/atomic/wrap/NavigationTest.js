@@ -2,6 +2,7 @@ test(
   'NavigationTest',
 
   [
+    'ephox.boss.api.CommentGene',
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
@@ -9,7 +10,8 @@ test(
     'ephox.phoenix.wrap.Navigation'
   ],
 
-  function (Gene, TestUniverse, TextGene, Finder, Navigation) {
+  function (CommentGene, Gene, TestUniverse, TextGene, Finder, Navigation) {
+
     var doc = TestUniverse(
       Gene('root', 'root', [
         Gene('1', 'div', [
@@ -60,6 +62,73 @@ test(
     checkLeaf({ element: '1.1.2', offset: 'post-image text'.length }, '1.1', 2);
     checkLeaf({ element: '1.2.2.1', offset: 0 }, '1.2', 1);
     checkLeaf({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2', 5);
+
+    var checkFreeFallLtr = function (expected, universe, elementId) {
+      var element = Finder.get(doc, elementId);
+      var actual = Navigation.freefallLtr(universe, element);
+      assert.eq(element.id, elementId);
+      assert.eq(expected.element, actual.element().id);
+      assert.eq(expected.offset, actual.offset());
+    };
+
+    // Freefall without comment nodes
+    checkFreeFallLtr({ element: '1.1.1', offset: 0 }, doc, 'root');
+    checkFreeFallLtr({ element: '1.1.1', offset: 0 }, doc, '1');
+    checkFreeFallLtr({ element: '1.1.1', offset: 0 }, doc, '1.1');
+    checkFreeFallLtr({ element: '1.1.1', offset: 0 }, doc, '1.1.1');
+    checkFreeFallLtr({ element: '1.1.2', offset: 0 }, doc, '1.1.2');
+    checkFreeFallLtr({ element: '1.2.1', offset: 0 }, doc, '1.2');
+    checkFreeFallLtr({ element: '1.2.1', offset: 0 }, doc, '1.2.1');
+    checkFreeFallLtr({ element: '1.2.2.1', offset: 0 }, doc, '1.2.2');
+    checkFreeFallLtr({ element: '1.2.3', offset: 0 }, doc, '1.2.3');
+    checkFreeFallLtr({ element: '1.2.4.1', offset: 0 }, doc, '1.2.4');
+    checkFreeFallLtr({ element: '1.2.4.1', offset: 0 }, doc, '1.2.4.1');
+    checkFreeFallLtr({ element: '1.2.5', offset: 0 }, doc, '1.2.5');
+
+    // Freefall with comment nodes: tbio-4938
+    doc = TestUniverse(
+      Gene('2-root', '2-root', [
+        Gene('2-1', 'p', [
+          TextGene('2-1.1', 'some text')
+        ])
+      ])
+    );
+
+    checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-root');
+    checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-1');
+    checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-1.1');
+
+    doc = TestUniverse(
+      Gene('3-root', '3-root', [
+        Gene('3-1', 'p', [
+          CommentGene('3-c0', 'some comment'),
+          TextGene('3-1.1', 'some text')
+        ])
+      ])
+    );
+
+    checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-root');
+    checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-1');
+    checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-c0');
+    checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-1.1');
+
+    doc = TestUniverse(
+      Gene('4-root', '4-root', [
+        CommentGene('4-c0', 'some comment'),
+        Gene('4-1', 'p', [
+          CommentGene('4-c1', 'some comment'),
+          TextGene('4-1.1', 'some text'),
+          CommentGene('4-c2', 'some comment')
+        ])
+      ])
+    );
+
+    checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-root');
+    checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-c0');
+    checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1');
+    checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-c1');
+    checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1.1');
+    checkFreeFallLtr({ element: '4-c2', offset: 0 }, doc, '4-c2');
 
   }
 );
