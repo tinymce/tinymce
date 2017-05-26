@@ -174,6 +174,13 @@ define(
             items: [ ]
           };
 
+          var gapGroup = {
+            label: 'Group for read only buttons',
+            scrollable: false,
+            items: [ ],
+            extraClasses: [ Styles.resolve('readonly-expand') ]
+          };
+
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
@@ -203,7 +210,7 @@ define(
           };
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
-          var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
+          var readOnlyGroups = Cell([ gapGroup, backToMaskGroup ]);
 
 
           // Investigate ways to keep in sync with the ui
