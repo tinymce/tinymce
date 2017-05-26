@@ -21,6 +21,10 @@ define(
   function (Arr, Cell, BoundarySelection, CefNavigation, MatchKeys, VK) {
     var setup = function (editor, caret) {
       editor.on('keydown', function (evt) {
+        if (evt.isDefaultPrevented()) {
+          return;
+        }
+
         var matches = MatchKeys.match([
           { keyCode: VK.RIGHT, action: CefNavigation.moveH(editor, true) },
           { keyCode: VK.LEFT, action: CefNavigation.moveH(editor, false) },

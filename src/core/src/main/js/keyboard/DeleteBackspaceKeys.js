@@ -22,6 +22,10 @@ define(
   function (Arr, BlockBoundaryDelete, BlockRangeDelete, CefDelete, InlineBoundaryDelete, MatchKeys, VK) {
     var setupKeyDownHandler = function (editor, caret) {
       editor.on('keydown', function (evt) {
+        if (evt.isDefaultPrevented()) {
+          return;
+        }
+
         var matches = MatchKeys.match([
           { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, false) },
           { keyCode: VK.DELETE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true) },
