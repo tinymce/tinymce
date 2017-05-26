@@ -98,6 +98,7 @@ define(
           name: Node.name,
           parent: Traverse.parent,
           isText: Node.isText,
+          isComment: Node.isComment,
           isElement: Node.isElement,
           getText: Text.get,
           setText: Text.set,

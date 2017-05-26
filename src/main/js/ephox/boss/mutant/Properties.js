@@ -23,8 +23,12 @@ define(
       return item.name === 'TEXT_GENE';
     };
 
+    var isComment = function (item) {
+      return item.name === 'COMMENT_GENE';
+    };
+
     var isElement = function (item) {
-      return item.name !== undefined && item.name !== 'TEXT_GENE';
+      return item.name !== undefined && item.name !== 'TEXT_GENE' && item.name !== 'COMMENT_GENE';
     };
 
     var getText = function (item) {
@@ -48,6 +52,7 @@ define(
       name: name,
       parent: parent,
       isText: isText,
+      isComment: isComment,
       isElement: isElement,
       getText: getText,
       setText: setText,
