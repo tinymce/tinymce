@@ -38,10 +38,10 @@ define(
     var before = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeForwards(pos);
       var scope = rescope(rootNode, nPos.container());
-      return InlineUtils.findInline(scope, nPos).fold(
+      return InlineUtils.findRootInline(scope, nPos).fold(
         function () {
           return InlineUtils.findCaretPosition(scope, true, nPos)
-            .bind(Fun.curry(InlineUtils.findInline, scope))
+            .bind(Fun.curry(InlineUtils.findRootInline, scope))
             .map(function (inline) {
               return Location.before(inline);
             });
@@ -52,7 +52,7 @@ define(
 
     var start = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeBackwards(pos);
-      return InlineUtils.findInline(rootNode, nPos).bind(function (inline) {
+      return InlineUtils.findRootInline(rootNode, nPos).bind(function (inline) {
         var prevPos = InlineUtils.findCaretPosition(inline, false, nPos);
         return prevPos.isNone() ? Option.some(Location.start(inline)) : Option.none();
       });
@@ -60,7 +60,7 @@ define(
 
     var end = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeForwards(pos);
-      return InlineUtils.findInline(rootNode, nPos).bind(function (inline) {
+      return InlineUtils.findRootInline(rootNode, nPos).bind(function (inline) {
         var nextPos = InlineUtils.findCaretPosition(inline, true, nPos);
         return nextPos.isNone() ? Option.some(Location.end(inline)) : Option.none();
       });
@@ -69,10 +69,10 @@ define(
     var after = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeBackwards(pos);
       var scope = rescope(rootNode, nPos.container());
-      return InlineUtils.findInline(scope, nPos).fold(
+      return InlineUtils.findRootInline(scope, nPos).fold(
         function () {
           return InlineUtils.findCaretPosition(scope, false, nPos)
-            .bind(Fun.curry(InlineUtils.findInline, scope))
+            .bind(Fun.curry(InlineUtils.findRootInline, scope))
             .map(function (inline) {
               return Location.after(inline);
             });
@@ -138,8 +138,8 @@ define(
 
     var betweenInlines = function (forward, rootNode, from, to, location) {
       return Options.liftN([
-        InlineUtils.findInline(rootNode, from),
-        InlineUtils.findInline(rootNode, to)
+        InlineUtils.findRootInline(rootNode, from),
+        InlineUtils.findRootInline(rootNode, to)
       ], function (fromInline, toInline) {
         if (fromInline !== toInline && InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)) {
           // Force after since some browsers normalize and lean left into the closest inline

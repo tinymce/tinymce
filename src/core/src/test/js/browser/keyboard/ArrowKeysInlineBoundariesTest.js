@@ -77,6 +77,7 @@ asynctest(
             sAssertCaretAfterZwsp(editor)
           ]))
         ])),
+
         Logger.t('Arrow keys anchor with image', GeneralSteps.sequence([
           Logger.t('From start to end inside anchor over img', GeneralSteps.sequence([
             tinyApis.sSetContent('<p><a href="#"><img src="#"></a></p>'),
@@ -111,6 +112,7 @@ asynctest(
             sAssertCaretAfterZwsp(editor)
           ]))
         ])),
+
         Logger.t('Arrow keys between blocks', GeneralSteps.sequence([
           Logger.t('From end of anchor text to after anchor to start of anchor in next paragraph', GeneralSteps.sequence([
             tinyApis.sSetContent('<p><a href="#">a</a></p><p><a href="#">b</a></p>'),
@@ -157,6 +159,7 @@ asynctest(
             sAssertCaretAtZwsp(editor)
           ]))
         ])),
+
         Logger.t('Arrow keys between lists', GeneralSteps.sequence([
           Logger.t('From end of anchor text to after anchor to start of anchor in next list item', GeneralSteps.sequence([
             tinyApis.sSetContent('<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>'),
@@ -223,6 +226,41 @@ asynctest(
             tinyActions.sContentKeystroke(Keys.right(), { }),
             tinyApis.sAssertSelection([0, 0, 1], 1, [0, 0, 1], 1),
             sAssertCaretAfterZwsp(editor)
+          ])),
+
+          Logger.t('Arrow keys at anchor + code', GeneralSteps.sequence([
+            Logger.t('From start to end inside anchor + code over text', GeneralSteps.sequence([
+              tinyApis.sSetContent('<p><a href="#"><code>x</code></a></p>'),
+              tinyApis.sSetCursor([0, 0, 0, 0], 0),
+              tinyApis.sNodeChanged,
+              tinyActions.sContentKeystroke(Keys.right(), { }),
+              tinyApis.sAssertSelection([0, 0, 0, 0], 1, [0, 0, 0, 0], 1),
+              sAssertCaretAtZwsp(editor)
+            ])),
+            Logger.t('From start to before anchor + code with text', GeneralSteps.sequence([
+              tinyApis.sSetContent('<p><a href="#"><code>x</code></a></p>'),
+              tinyApis.sSetCursor([0, 0, 0, 0], 0),
+              tinyApis.sNodeChanged,
+              tinyActions.sContentKeystroke(Keys.left(), { }),
+              tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0),
+              sAssertCaretAtZwsp(editor)
+            ])),
+            Logger.t('From end to after anchor + code with text', GeneralSteps.sequence([
+              tinyApis.sSetContent('<p><a href="#"><code>x</code></a></p>'),
+              tinyApis.sSetCursor([0, 0, 0, 0], 1),
+              tinyApis.sNodeChanged,
+              tinyActions.sContentKeystroke(Keys.right(), { }),
+              tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+              sAssertCaretAfterZwsp(editor)
+            ])),
+            Logger.t('From end to start inside anchor + code over text', GeneralSteps.sequence([
+              tinyApis.sSetContent('<p><a href="#"><code>x</code></a></p>'),
+              tinyApis.sSetCursor([0, 0, 0, 0], 1),
+              tinyApis.sNodeChanged,
+              tinyActions.sContentKeystroke(Keys.left(), { }),
+              tinyApis.sAssertSelection([0, 0, 0, 0], 1, [0, 0, 0, 0], 1),
+              sAssertCaretAfterZwsp(editor)
+            ]))
           ]))
         ]))
       ], onSuccess, onFailure);

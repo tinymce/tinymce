@@ -96,7 +96,7 @@ define(
         });
 
         if (fromLocation.isSome() && toLocation.isSome()) {
-          return InlineUtils.findInline(rootNode, from).map(function (elm) {
+          return InlineUtils.findRootInline(rootNode, from).map(function (elm) {
             DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
             return true;
           }).getOr(false);
