@@ -111,82 +111,76 @@ define(
       };
 
       var memForm = Memento.record(
-        Form.sketch({
-          dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
-          components: [
-            Container.sketch({
-              dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
-              components: Arr.map(spec.fields, function (field, i) {
-                return i <= spec.maxFieldIndex ? Container.sketch({
-                  dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
-                  components: Arr.flatten([
-                    [ navigationButton(-1, 'previous', (i > 0)) ],
-                    [ Form.parts(field.name) ],
-                    [ navigationButton(+1, 'next', (i < spec.maxFieldIndex)) ]
-                  ])
-                }) : Form.parts(field.name);
+        Form.sketch(function (parts) {
+          return {
+            dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
+            components: [
+              Container.sketch({
+                dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
+                components: Arr.map(spec.fields, function (field, i) {
+                  return i <= spec.maxFieldIndex ? Container.sketch({
+                    dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
+                    components: Arr.flatten([
+                      [ navigationButton(-1, 'previous', (i > 0)) ],
+                      [ parts.field(field.name, field.spec) ],
+                      [ navigationButton(+1, 'next', (i < spec.maxFieldIndex)) ]
+                    ])
+                  }) : parts.field(field.name, field.spec);
+                })
               })
-            })
-          ],
+            ],
 
-          parts: (function () {
-            var r = {};
-            Arr.each(spec.fields, function (f) {
-              r[f.name] = f.spec;
-            });
-            return r;
-          })(),
-
-          formBehaviours: Behaviour.derive([
-            Receiving.config({
-              channels: {
-                'orientation.change': {
-                  onReceive: function (dialog, message) {
-                    reposition(dialog, message);
+            formBehaviours: Behaviour.derive([
+              Receiving.config({
+                channels: {
+                  'orientation.change': {
+                    onReceive: function (dialog, message) {
+                      reposition(dialog, message);
+                    }
                   }
                 }
-              }
-            }),
-            Keying.config({
-              mode: 'special',
-              focusIn: function (dialog/*, specialInfo */) {
-                focusInput(dialog);
-              },
-              onTab: function (dialog/*, specialInfo */) {
-                navigate(dialog, +1);
-                return Option.some(true);
-              },
-              onShiftTab: function (dialog/*, specialInfo */) {
-                navigate(dialog, -1);
-                return Option.some(true);
-              }
-            }),
-
-            AddEventsBehaviour.config(formAdhocEvents, [
-              AlloyEvents.runOnAttached(function (dialog, simulatedEvent) {
-                // Reset state to first screen.
-                resetState();
-                var dotitems = memDots.get(dialog);
-                Highlighting.highlightFirst(dotitems);
-                spec.getInitialValue(dialog).each(function (v) {
-                  Representing.setValue(dialog, v);
-                });
               }),
-
-              AlloyEvents.runOnExecute(spec.onExecute),
-
-              AlloyEvents.run(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
-                if (simulatedEvent.event().raw().propertyName === 'left') {
+              Keying.config({
+                mode: 'special',
+                focusIn: function (dialog/*, specialInfo */) {
                   focusInput(dialog);
+                },
+                onTab: function (dialog/*, specialInfo */) {
+                  navigate(dialog, +1);
+                  return Option.some(true);
+                },
+                onShiftTab: function (dialog/*, specialInfo */) {
+                  navigate(dialog, -1);
+                  return Option.some(true);
                 }
               }),
 
-              AlloyEvents.run(navigateEvent, function (dialog, simulatedEvent) {
-                var direction = simulatedEvent.event().direction();
-                navigate(dialog, direction);
-              })
+              AddEventsBehaviour.config(formAdhocEvents, [
+                AlloyEvents.runOnAttached(function (dialog, simulatedEvent) {
+                  // Reset state to first screen.
+                  resetState();
+                  var dotitems = memDots.get(dialog);
+                  Highlighting.highlightFirst(dotitems);
+                  spec.getInitialValue(dialog).each(function (v) {
+                    Representing.setValue(dialog, v);
+                  });
+                }),
+
+                AlloyEvents.runOnExecute(spec.onExecute),
+
+                AlloyEvents.run(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
+                  if (simulatedEvent.event().raw().propertyName === 'left') {
+                    focusInput(dialog);
+                  }
+                }),
+
+                AlloyEvents.run(navigateEvent, function (dialog, simulatedEvent) {
+                  var direction = simulatedEvent.event().direction();
+                  navigate(dialog, direction);
+                })
+              ])
             ])
-          ])
+          };
         })
       );
 
