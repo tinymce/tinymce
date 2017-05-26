@@ -40,6 +40,8 @@ define(
     var isValidRange = function (rng) {
       if (!rng) {
         return false;
+      } else if (rng.select) { // Native IE range still produced by placeCaretAt
+        return true;
       } else {
         var sc = rng.startContainer, ec = rng.endContainer;
         return !!(sc && sc.parentNode && ec && ec.parentNode);
