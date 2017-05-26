@@ -533,6 +533,25 @@ define("tinymce/dom/ControlSelection", [
 
 			if (!isIE) {
 				return;
+			} else {
+				var ieVersion;
+				var ieCompatibilityModeVersion;
+				
+				var trident = navigator.userAgent.match(/Trident\/(\d+)/);
+				if (trident) {
+					ieVersion = parseInt(trident[1], 10) + 4;
+				}
+				
+				var msie = navigator.userAgent.match(/MSIE (\d+)/);
+				if (msie) {
+					ieCompatibilityModeVersion = parseInt(msie[1]);
+				} else {
+					ieCompatibilityModeVersion = ieVersion;
+				}
+				
+				if ( ieVersion == 11 && ieCompatibilityModeVersion <= 10) {
+					return;
+				}
 			}
 
 			ctrlRng = editableDoc.body.createControlRange();
