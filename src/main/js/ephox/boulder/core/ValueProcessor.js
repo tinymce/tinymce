@@ -43,7 +43,7 @@ define(
 
     var fallbackAccess = function (obj, key, fallbackThunk) {
       var v = ObjReader.readOptFrom(obj, key).fold(function () {
-        return fallbackThunk();
+        return fallbackThunk(obj);
       }, Fun.identity);
       return Result.value(v);
     };
@@ -90,7 +90,7 @@ define(
               // Defaulted option access
               return optionDefaultedAccess(obj, key, fallbackThunk).bind(bundleAsOption);
             }, function (baseThunk) {
-              var base = baseThunk();
+              var base = baseThunk(obj);
               return fallbackAccess(obj, key, Fun.constant({})).map(function (v) {
                 return Merger.deepMerge(base, v);
               }).bind(bundle);
