@@ -37,6 +37,15 @@ define(
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
 
+    var isValidRange = function (rng) {
+      if (!rng) {
+        return false;
+      } else {
+        var sc = rng.startContainer, ec = rng.endContainer;
+        return !!(sc && sc.parentNode && ec && ec.parentNode);
+      }
+    };
+
     /**
      * Constructs a new selection instance.
      *
@@ -603,7 +612,7 @@ define(
       setRng: function (rng, forward) {
         var self = this, sel, node, evt;
 
-        if (!rng) {
+        if (!isValidRange(rng)) {
           return;
         }
 
