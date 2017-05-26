@@ -48,24 +48,19 @@ define(
         snapToGrid: true,
 
         components: [
-          Slider.parts().spectrum(),
-          Slider.parts().thumb()
-        ],
-
-        parts: {
-          spectrum: {
+          Slider.parts().spectrum({
             dom: UiDomFactory.dom('<div class="${prefix}-slider-heading-spectrum"></div>'),
             components: [
               UiDomFactory.spec('<div class="${prefix}-slider-heading-spectrum-line"></div>')
             ]
-          },
-          thumb: {
+          }),
+          Slider.parts().thumb({
             dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
             behaviours: Behaviour.derive([
               Replacing.config({ })
             ])
-          }
-        }
+          })
+        ]
       });
     };
 

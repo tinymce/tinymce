@@ -31,11 +31,8 @@ define(
           {
             dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
             components: [
-              Toolbar.parts().groups()
+              Toolbar.parts().groups({ })
             ],
-            parts: {
-              groups: { }
-            },
             toolbarBehaviours: Behaviour.derive([
               Toggling.config({
                 toggleClass: Styles.resolve('context-toolbar'),
@@ -70,7 +67,7 @@ define(
                       components: [
                         Container.sketch({
                           components: [
-                            ToolbarGroup.parts().items()
+                            ToolbarGroup.parts().items({ })
                           ]
                         })
                       ],
@@ -82,10 +79,6 @@ define(
                         item: {
                           munge: Fun.identity
                         }
-                      },
-
-                      parts: {
-                        items: { }
                       },
 
                       items: gSpec.items

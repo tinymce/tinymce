@@ -38,10 +38,15 @@ define(
       return Slider.sketch({
         dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
         components: [
-          Slider.parts()['left-edge'](),
-          Slider.parts().spectrum(),
-          Slider.parts()['right-edge'](),
-          Slider.parts().thumb()
+          Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
+          Slider.parts().spectrum({
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
+            components: [
+              UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
+            ]
+          }),
+          Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
+          Slider.parts().thumb(UiDomFactory.spec('<div class="${prefix}-slider-thumb"></div>'))
         ],
 
         onChange: onChange,
@@ -49,19 +54,7 @@ define(
         stepSize: 10,
         min: 0,
         max: 360,
-        getInitialValue: spec.getInitialValue,
-
-        parts: {
-          spectrum: {
-            dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
-            components: [
-              UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
-            ]
-          },
-          thumb: UiDomFactory.spec('<div class="${prefix}-slider-thumb"></div>'),
-          'left-edge': UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>'),
-          'right-edge': UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')
-        }
+        getInitialValue: spec.getInitialValue
       });
     };
 
