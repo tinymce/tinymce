@@ -41,6 +41,14 @@ asynctest(
       });
     };
 
+    var cSplitAt = function (path, offset) {
+      return Chain.mapper(function (elm) {
+        var textNode = Hierarchy.follow(elm, path).getOrDie();
+        textNode.dom().splitText(offset);
+        return elm;
+      });
+    };
+
     Pipeline.async({}, [
       Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
         Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
@@ -131,6 +139,33 @@ asynctest(
           cCreateElement('<p>' + ZWSP + '<input></p>'),
           cNormalizePosition(false, [0], 0),
           cAssertPosition([], 0)
+        ]))
+      ])),
+
+      Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
+        Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
+          cCreateElement('<p>' + ZWSP + 'a</p>'),
+          cSplitAt([0], 1),
+          cNormalizePosition(true, [0], 0),
+          cAssertPosition([1], 0)
+        ])),
+        Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
+          cCreateElement('<p>' + ZWSP + 'a</p>'),
+          cSplitAt([0], 1),
+          cNormalizePosition(true, [0], 1),
+          cAssertPosition([1], 0)
+        ])),
+        Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
+          cCreateElement('<p>a' + ZWSP + '</p>'),
+          cSplitAt([0], 1),
+          cNormalizePosition(true, [1], 0),
+          cAssertPosition([], 2)
+        ])),
+        Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
+          cCreateElement('<p>a' + ZWSP + '</p>'),
+          cSplitAt([0], 1),
+          cNormalizePosition(true, [1], 1),
+          cAssertPosition([], 2)
         ]))
       ]))
     ], function () {

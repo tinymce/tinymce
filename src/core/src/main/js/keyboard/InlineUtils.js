@@ -21,9 +21,10 @@ define(
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.NodeType',
     'tinymce.core.text.Bidi'
   ],
-  function (Arr, Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, Bidi) {
+  function (Arr, Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, NodeType, Bidi) {
     var isInlineTarget = function (elm) {
       return DOMUtils.DOM.is(elm, 'a[href],code');
     };
@@ -79,13 +80,21 @@ define(
 
       if (forward) {
         if (CaretContainer.isCaretContainerInline(container)) {
-          return CaretPosition.after(container);
+          if (NodeType.isText(container.nextSibling)) {
+            return new CaretPosition(container.nextSibling, 0);
+          } else {
+            return CaretPosition.after(container);
+          }
         } else {
           return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
         }
       } else {
         if (CaretContainer.isCaretContainerInline(container)) {
-          return CaretPosition.before(container);
+          if (NodeType.isText(container.previousSibling)) {
+            return new CaretPosition(container.previousSibling, container.previousSibling.data.length);
+          } else {
+            return CaretPosition.before(container);
+          }
         } else {
           return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
         }
