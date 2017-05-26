@@ -2,16 +2,19 @@ define(
   'ephox.mcagar.api.TinyUi',
 
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.UiFinder',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.view.Visibility',
     'global!document'
   ],
 
-  function (Chain, Mouse, UiFinder, Fun, Element, Visibility, document) {
+  function (Assertions, Chain, Mouse, UiFinder, Fun, Arr, Merger, Element, Visibility, document) {
   	return function (editor) {
       var dialogRoot = Element.fromDom(document.body);
       var toolstripRoot = Element.fromDom(editor.getContainer());
@@ -28,7 +31,7 @@ define(
       ]);
 
       var cEditorRoot = Chain.inject(editorRoot);
- 
+
       var cFindIn = function (cRoot, selector) {
         return Chain.fromChains([
           cRoot,
@@ -95,6 +98,51 @@ define(
         ]);
       };
 
+      var getDialogByElement = function (element) {
+        return Arr.find(editor.windowManager.getWindows(), function (win) {
+          return element.dom().id === win._id;
+        });
+      };
+
+      var cAssertDialogContents = function (data) {
+        return Chain.on(function (element, next, die) {
+          getDialogByElement(element).fold(die, function (win) {
+            Assertions.assertEq('asserting dialog contents', data, win.toJSON());
+            next(Chain.wrap(element));
+          });
+        });
+      };
+
+      var cFillDialogWith = function (data) {
+        return Chain.on(function (element, next, die) {
+          getDialogByElement(element).fold(die, function (win) {
+            win.fromJSON(Merger.merge(win.toJSON(), data));
+            next(Chain.wrap(element));
+          });
+        });
+      };
+
+      var sFillDialogWith = function (data, selector) {
+        return Chain.asStep({}, [
+          cFindIn(cDialogRoot, selector),
+          cFillDialogWith(data)
+        ]);
+      };
+
+      var cSubmitDialog = function () {
+        return Chain.fromChains([
+          UiFinder.cFindIn('div.mce-primary > button'),
+          Mouse.cClick
+        ]);
+      };
+
+      var sSubmitDialog = function (selector) {
+        return Chain.asStep({}, [
+          cFindIn(cDialogRoot, selector),
+          cSubmitDialog
+        ]);
+      };
+
       return {
         sClickOnToolbar: sClickOnToolbar,
         sClickOnMenu: sClickOnMenu,
@@ -106,6 +154,12 @@ define(
         cWaitForUi: cWaitForUi,
         // General state predicate
         cWaitForState: cWaitForState,
+
+        cFillDialogWith: cFillDialogWith,
+        sFillDialogWith: sFillDialogWith,
+        cSubmitDialog: cSubmitDialog,
+        sSubmitDialog: sSubmitDialog,
+        cAssertDialogContents: cAssertDialogContents,
 
         cTriggerContextMenu: cTriggerContextMenu,
 
