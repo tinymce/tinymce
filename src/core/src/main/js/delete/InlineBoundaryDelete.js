@@ -38,6 +38,21 @@ define(
       return range;
     };
 
+    // Checks for delete at <code>|a</code> when there is only one item left except the zwsp caret container nodes
+    var hasOnlyTwoOrLessPositionsLeft = function (elm) {
+      return Options.liftN([
+        InlineUtils.findCaretPositionIn(elm, true),
+        InlineUtils.findCaretPositionIn(elm, false)
+      ], function (firstPos, lastPos) {
+        var normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+        var normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+
+        return InlineUtils.findCaretPosition(elm, true, normalizedFirstPos).map(function (pos) {
+          return pos.isEqual(normalizedLastPos);
+        }).getOr(true);
+      }).getOr(true);
+    };
+
     var setCaretLocation = function (editor, caret) {
       return function (location) {
         return BoundaryCaret.renderCaret(caret, location).map(function (pos) {
@@ -97,8 +112,12 @@ define(
 
         if (fromLocation.isSome() && toLocation.isSome()) {
           return InlineUtils.findRootInline(rootNode, from).map(function (elm) {
-            DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
-            return true;
+            if (hasOnlyTwoOrLessPositionsLeft(elm)) {
+              DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
+              return true;
+            } else {
+              return false;
+            }
           }).getOr(false);
         } else {
           return toLocation.map(function (_) {
