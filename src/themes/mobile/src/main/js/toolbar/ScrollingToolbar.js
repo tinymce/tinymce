@@ -11,9 +11,9 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.style.Styles',
@@ -22,10 +22,40 @@ define(
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Keying, Toggling, GuiFactory, AlloyEvents, Container, Toolbar, ToolbarGroup, Cell, Fun, Merger, Css, Scrollables, Styles,
-    Scrollable, UiDomFactory
+    AddEventsBehaviour, Behaviour, Keying, Toggling, GuiFactory, AlloyEvents, Container, Toolbar, ToolbarGroup, Arr, Cell, Fun, Css, Scrollables, Styles, Scrollable,
+    UiDomFactory
   ) {
     return function () {
+      var makeGroup = function (gSpec) {
+        var scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
+        return {
+          dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
+
+          tgroupBehaviours: Behaviour.derive([
+            AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
+              AlloyEvents.runOnInit(function (component, simulatedEvent) {
+                Css.set(component.element(), 'overflow-x', 'auto');
+                Scrollables.markAsHorizontal(component.element());
+                Scrollable.register(component.element());
+              })
+            ] : [ ])
+          ]),
+
+          components: [
+            Container.sketch({
+              components: [
+                ToolbarGroup.parts().items({ })
+              ]
+            })
+          ],
+          markers: {
+            itemClass: Styles.resolve('toolbar-group-item')
+          },
+
+          items: gSpec.items
+        };
+      };
+
       var toolbar = GuiFactory.build(
         Toolbar.sketch(
           {
@@ -45,48 +75,7 @@ define(
                 mode: 'cyclic'
               })
             ]),
-            shell: true,
-            members: {
-              group: {
-                munge: function (gSpec) {
-                  var scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
-                  return Merger.deepMerge(
-                    {
-                      dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
-
-                      tgroupBehaviours: Behaviour.derive([
-                        AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
-                          AlloyEvents.runOnInit(function (component, simulatedEvent) {
-                            Css.set(component.element(), 'overflow-x', 'auto');
-                            Scrollables.markAsHorizontal(component.element());
-                            Scrollable.register(component.element());
-                          })
-                        ] : [ ])
-                      ]),
-
-                      components: [
-                        Container.sketch({
-                          components: [
-                            ToolbarGroup.parts().items({ })
-                          ]
-                        })
-                      ],
-                      markers: {
-                        itemClass: Styles.resolve('toolbar-group-item')
-                      },
-
-                      members: {
-                        item: {
-                          munge: Fun.identity
-                        }
-                      },
-
-                      items: gSpec.items
-                    }
-                  );
-                }
-              }
-            }
+            shell: true
           }
         )
       );
@@ -107,7 +96,6 @@ define(
         Toggling.off(toolbar);
       };
 
-
       var initGroups = Cell([ ]);
 
       var setGroups = function (gs) {
@@ -116,7 +104,7 @@ define(
       };
 
       var createGroups = function (gs) {
-        return Toolbar.createGroups(toolbar, gs);
+        return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, makeGroup));
       };
 
       var refresh = function () {
