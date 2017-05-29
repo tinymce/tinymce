@@ -598,6 +598,33 @@
     {
       "icon": {
         "paths": [
+          "M384 690l452-452 60 60-512 512-238-238 60-60z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "check"
+        ],
+        "defaultCode": 58826,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "check",
+        "id": 148,
+        "order": 64,
+        "prevSize": 24,
+        "code": 58826,
+        "name": "check"
+      },
+      "setIdx": 2,
+      "setId": 8,
+      "iconIdx": 148
+    },
+    {
+      "icon": {
+        "paths": [
           "M512 426h-86v86h-42v-86h-86v-42h86v-86h42v86h86v42zM406 598c106 0 192-86 192-192s-86-192-192-192-192 86-192 192 86 192 192 192zM662 598l212 212-64 64-212-212v-34l-12-12c-48 42-112 66-180 66-154 0-278-122-278-276s124-278 278-278 276 124 276 278c0 68-24 132-66 180l12 12h34z"
         ],
         "attrs": [],

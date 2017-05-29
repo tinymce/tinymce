@@ -1,12 +1,4 @@
-.mixin-selected-menu-item {
-  // Invert colours for selected items
-  color: @mask-button-background-color;
-  background-color: @mask-button-foreground-color;
-}
-
 .mixin-menu-item {
-  color: @mask-button-background-color;
-  background-color: @mask-button-foreground-color;
   border-radius: 50%;
   width: @mask-button-size;
   height: @mask-button-size;
@@ -24,15 +16,13 @@
 
   .tinymce-mobile-mask-tap-icon {
     .mixin-menu-item;
+    color: @mask-button-background-color;
+    background-color: @mask-button-foreground-color;
   }
 
   .tinymce-mobile-mask-tap-icon:before {
     font-family: 'tinymce-mobile';
     content: "\e900"
-  }
-
-  &.tinymce-mobile-mask-tap-icon-selected .tinymce-mobile-mask-tap-icon {
-    .mixin-selected-menu-item;
   }
 
   &:not(.tinymce-mobile-mask-tap-icon-selected) .tinymce-mobile-mask-tap-icon {
