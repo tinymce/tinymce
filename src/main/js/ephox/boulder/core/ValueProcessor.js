@@ -54,7 +54,7 @@ define(
 
     var optionDefaultedAccess = function (obj, key, fallback) {
       var opt = ObjReader.readOptFrom(obj, key).map(function (val) {
-        return val === true ? fallback : val;
+        return val === true ? fallback(obj) : val;
       });
       return Result.value(opt);
     };
