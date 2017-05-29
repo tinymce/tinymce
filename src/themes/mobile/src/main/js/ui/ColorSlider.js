@@ -84,7 +84,7 @@ define(
             },
             behaviours: Behaviour.derive([
               Toggling.config({
-                toggleClass: 'selected'
+                toggleClass: Styles.resolve('thumb-active')
               })
             ])
           },
