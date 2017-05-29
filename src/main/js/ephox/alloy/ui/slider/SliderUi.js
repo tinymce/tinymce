@@ -91,12 +91,31 @@ define(
         changeValue(slider, detail.max(), Option.none());
       };
 
-      var uiEventsArr = isTouch ? [ ] : [
+      var uiEventsArr = isTouch ? [
+        {
+          key: 'touchstart',
+          value: EventHandler.nu({
+            run: function (slider, simulatedEvent) {
+              detail.onDragStart()(slider, getThumb(slider));
+            }
+          })
+        },
+        {
+          key: 'touchend',
+          value: EventHandler.nu({
+            run: function (slider, simulatedEvent) {
+              detail.onDragEnd()(slider, getThumb(slider));
+            }
+          })
+        }
+
+      ] : [
         {
           key: 'mousedown',
           value: EventHandler.nu({
-            run: function (spectrum, simulatedEvent) {
+            run: function (slider, simulatedEvent) {
               simulatedEvent.stop();
+              detail.onDragStart()(slider, getThumb(slider));
               detail.mouseIsDown().set(true);
             }
           })
@@ -104,7 +123,8 @@ define(
         {
           key: 'mouseup',
           value: EventHandler.nu({
-            run: function (spectrum, simulatedEvent) {
+            run: function (slider, simulatedEvent) {
+              detail.onDragEnd()(slider, getThumb(slider));
               detail.mouseIsDown().set(false);
             }
           })
@@ -127,7 +147,7 @@ define(
                   return Option.some(true);
                 }
               })
-            ] : [ ],
+            ] : [],
             [
               Representing.config({
                 store: {

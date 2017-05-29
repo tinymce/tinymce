@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
@@ -20,7 +21,7 @@ define(
     'global!document'
   ],
 
-  function (Behaviour, Keying, Replacing, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, PlatformDetection, Insert, DomEvent, Element, Class, Css, document) {
+  function (Behaviour, Keying, Replacing, Toggling, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, PlatformDetection, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -83,6 +84,10 @@ define(
           stepSize: 40,
           snapStart: 35,
           snapToGrid: true,
+
+          onDragStart: function (_, thumb) { Toggling.on(thumb); },
+          onDragEnd: function (_, thumb) { Toggling.off(thumb); },
+
           parts: {
             thumb: {
               dom: {
@@ -97,7 +102,11 @@ define(
                 }
               },
               behaviours: Behaviour.derive([
-                Replacing.config({ })
+                Replacing.config({ }),
+                Toggling.config({
+                  toggleClass: 'thumb-pressed',
+                  toggleOnExecute: false
+                })
               ])
             },
             spectrum: {
