@@ -20,7 +20,7 @@ define(
     };
 
     var noLink = function (editor) {
-      var text = editor.selection.getContent({format: 'text'});
+      var text = editor.selection.getContent({ format: 'text' });
       return {
         url: '',
         text: text,

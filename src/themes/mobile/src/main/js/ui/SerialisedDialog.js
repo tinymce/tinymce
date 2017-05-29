@@ -102,8 +102,6 @@ define(
               Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
-            var dotitems = memDots.get(dialog);
-            Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
           }
         });
       };
@@ -117,6 +115,8 @@ define(
             inputComp.getSystem().triggerFocus(inputComp.element(), dialog.element());
           });
         });
+        var dotitems = memDots.get(dialog);
+        Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
       };
 
       var resetState = function () {
@@ -263,8 +263,7 @@ define(
             {
               dom: {
                 tag: 'div',
-                innerHtml: '&#x2022;',
-                classes: [Styles.resolve('dot-item')]
+                classes: [Styles.resolve('dot-item'), Styles.resolve('icon-full-dot'), Styles.resolve('icon')]
               }
             }] : [];
         })
