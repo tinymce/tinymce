@@ -79,7 +79,7 @@ module.exports = function(grunt) {
         files: ['src/**/*.js'],
         tasks: [
 
-//          "bolt-test:atomic",
+          "bolt-test:atomic",
           'bedrock-auto:phantomjs'
         ],
         options: {
