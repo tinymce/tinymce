@@ -247,6 +247,21 @@ test(
       ));
     });
 
+    Logger.sync('asDefaultedOptionThunk supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.option',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+            return s.label + '.' + 'fallback';
+          }), ValueSchema.anyValue())
+        ]),
+        { label: 'defaulted thunk', alpha: 'alpha.value' }
+      );
+      RawAssertions.assertEq('Checking output', 'alpha.value', v.alpha.getOrDie(
+        'Alpha should be some'
+      ));
+    });
+
     Logger.sync(
       'Checking choose',
       function () {
