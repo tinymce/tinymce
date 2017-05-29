@@ -96,8 +96,7 @@ define(
           key: 'touchstart',
           value: EventHandler.nu({
             run: function (slider, simulatedEvent) {
-              console.log('touchstart');
-              detail.onDragStart()(getThumb(slider));
+              detail.onDragStart()(slider, getThumb(slider));
             }
           })
         },
@@ -105,8 +104,7 @@ define(
           key: 'touchend',
           value: EventHandler.nu({
             run: function (slider, simulatedEvent) {
-              console.log('touchend ');
-              detail.onDragEnd()(getThumb(slider));
+              detail.onDragEnd()(slider, getThumb(slider));
             }
           })
         }
@@ -115,8 +113,9 @@ define(
         {
           key: 'mousedown',
           value: EventHandler.nu({
-            run: function (spectrum, simulatedEvent) {
+            run: function (slider, simulatedEvent) {
               simulatedEvent.stop();
+              detail.onDragStart()(slider, getThumb(slider));
               detail.mouseIsDown().set(true);
             }
           })
@@ -124,7 +123,8 @@ define(
         {
           key: 'mouseup',
           value: EventHandler.nu({
-            run: function (spectrum, simulatedEvent) {
+            run: function (slider, simulatedEvent) {
+              detail.onDragEnd()(slider, getThumb(slider));
               detail.mouseIsDown().set(false);
             }
           })
