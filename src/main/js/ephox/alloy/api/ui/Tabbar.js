@@ -5,18 +5,13 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.schema.TabbarSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Highlighting, Keying, UiSketcher, PartType, TabbarSchema, Fun, Merger) {
-    var schema = TabbarSchema.schema();
-    var partTypes = TabbarSchema.parts();
-
-    var make = function (detail, components, spec, externals) {
+  function (Behaviour, Highlighting, Keying, Sketcher, TabbarSchema, Merger) {
+    var factory = function (detail, components, spec, externals) {
       return {
         uid: detail.uid(),
         dom: Merger.deepMerge(
@@ -52,20 +47,11 @@ define(
       };
     };
 
-
-    var sketch = function (spec) {
-      return UiSketcher.composite(TabbarSchema.name(), schema, partTypes, make, spec);
-    };
-
-    // TODO: Remove likely dupe
-    var parts = PartType.generate(TabbarSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      parts: Fun.constant(parts),
-      schemas: Fun.constant(TabbarSchema)
-
-
-    };
+    return Sketcher.composite({
+      name: 'Tabbar',
+      configFields: TabbarSchema.schema(),
+      partFields: TabbarSchema.parts(),
+      factory: factory
+    });
   }
 );

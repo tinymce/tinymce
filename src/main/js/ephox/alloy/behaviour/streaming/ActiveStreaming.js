@@ -2,22 +2,16 @@ define(
   'ephox.alloy.behaviour.streaming.ActiveStreaming',
 
   [
-    'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects'
+    'ephox.alloy.api.events.AlloyEvents'
   ],
 
-  function (EventHandler, Objects) {
+  function (AlloyEvents) {
     var events = function (streamConfig) {
       var streams = streamConfig.stream().streams();
       var processor = streams.setup(streamConfig);
-      return Objects.wrap(
-        streamConfig.event(),
-        EventHandler.nu({
-          run: function (component, simulatedEvent) {
-            processor(component, simulatedEvent);
-          }
-        })
-      );
+      return AlloyEvents.derive([
+        AlloyEvents.run(streamConfig.event(), processor)
+      ]);
     };
 
     return {

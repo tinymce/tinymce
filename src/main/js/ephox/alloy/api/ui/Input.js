@@ -2,35 +2,26 @@ define(
   'ephox.alloy.api.ui.Input',
 
   [
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.ui.common.InputBase',
-    'ephox.alloy.ui.schema.InputSchema',
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.ui.common.InputBase'
   ],
 
-  function (UiSketcher, InputBase, InputSchema, Fun) {
-    var schema = InputSchema.schema();
-
-    var sketch = function (spec) {
-      return UiSketcher.single(InputSchema.name(), schema, make, spec);
-    };
-
-    var make = function (detail, spec) {
+  function (Sketcher, InputBase) {
+    var factory = function (detail, spec) {
       return {
         uid: detail.uid(),
         dom: InputBase.dom(detail),
         // No children.
         components: [ ],
         behaviours: InputBase.behaviours(detail),
-        customBehaviours: detail.customBehaviours(),
         eventOrder: detail.eventOrder()
       };
     };
 
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(InputSchema),
-      name: Fun.constant(InputSchema.name())
-    };
+    return Sketcher.single({
+      name: 'Input',
+      configFields: InputBase.schema(),
+      factory: factory
+    });
   }
 );

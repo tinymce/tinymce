@@ -2,17 +2,17 @@ define(
   'ephox.alloy.keying.KeyingType',
 
   [
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.focus.FocusManagers',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger'
   ],
 
-  function (SystemEvents, FocusManagers, EventHandler, Fields, KeyRules, FieldSchema, Objects, Merger) {
+  function (AlloyEvents, NativeEvents, SystemEvents, FocusManagers, Fields, KeyRules, FieldSchema, Merger) {
     var typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
       var schema = function () {
         return infoSchema.concat([
@@ -32,30 +32,20 @@ define(
 
       var toEvents = function (keyingConfig, keyingState) {
         var otherEvents = getEvents(keyingConfig, keyingState);
-        var keyEvents = Objects.wrapAll(
+        var keyEvents = AlloyEvents.derive(
           optFocusIn.map(function (focusIn) {
-            return {
-              key: SystemEvents.focus(),
-              value: EventHandler.nu({
-                run: function (component, simulatedEvent) {
-                  focusIn(component, keyingConfig, keyingState, simulatedEvent);
-                  simulatedEvent.stop();
-                }
-              })
-            };
+            return AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
+              focusIn(component, keyingConfig, keyingState, simulatedEvent);
+              simulatedEvent.stop();
+            });
           }).toArray().concat([
-            {
-              key: 'keydown',
-              value: EventHandler.nu({
-                run: function (component, simulatedEvent) {
-                  processKey(component, simulatedEvent, keyingConfig, keyingState).each(function (_) {
-                    simulatedEvent.stop();
-                  });
-                }
-              })
-            }
-          ]
-        ));
+            AlloyEvents.run(NativeEvents.keydown(), function (component, simulatedEvent) {
+              processKey(component, simulatedEvent, keyingConfig, keyingState).each(function (_) {
+                simulatedEvent.stop();
+              });
+            })
+          ])
+        );
         return Merger.deepMerge(otherEvents, keyEvents);
       };
 

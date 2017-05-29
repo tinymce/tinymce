@@ -7,17 +7,17 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, Representing, Toggling, SystemEvents, EventHandler, Fields, ItemEvents, FieldSchema, Objects, Fun, Merger) {
+  function (Behaviour, Focusing, Keying, Representing, Toggling, AlloyEvents, AlloyTriggers, NativeEvents, SystemEvents, Fields, ItemEvents, FieldSchema, Merger) {
     var builder = function (info) {
       return {
         dom: Merger.deepMerge(
@@ -46,39 +46,16 @@ define(
             }
           })
         ]),
-        events: Objects.wrapAll([
-          {
-            key: 'click',
-            value: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                var target = component.element();
-                component.getSystem().triggerEvent(SystemEvents.execute(), target, {
-                  target: Fun.constant(target)
-                });
-              }
-            })
-          },
+        events: AlloyEvents.derive([
+          // Trigger execute when clicked
+          AlloyEvents.runWithTarget(NativeEvents.click(), AlloyTriggers.emitExecute),
 
-          {
-            key: 'mousedown',
-            value: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                // Like button, stop mousedown propagating up the DOM tree.
-                simulatedEvent.cut();
-              }
-            })
-          },
+          // Like button, stop mousedown propagating up the DOM tree.
+          AlloyEvents.cutter(NativeEvents.mousedown()),
 
-          {
-            key: 'mouseover',
-            value: ItemEvents.hoverHandler
-          },
-          {
-            key: SystemEvents.focusItem(),
-            value: EventHandler.nu({
-              run: Focusing.focus
-            })
-          }
+          AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
+
+          AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
         ]),
         components: info.components(),
 

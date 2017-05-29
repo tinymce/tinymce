@@ -7,7 +7,6 @@ define(
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.slider.SliderActions',
     'ephox.boulder.api.FieldSchema',
@@ -17,44 +16,30 @@ define(
     'ephox.sand.api.PlatformDetection'
   ],
 
-  function (Behaviour, Focusing, Keying, AlloyEvents, NativeEvents, EventHandler, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
+  function (Behaviour, Focusing, Keying, AlloyEvents, NativeEvents, PartType, SliderActions, FieldSchema, Cell, Fun, Option, PlatformDetection) {
     var platform = PlatformDetection.detect();
     var isTouch = platform.deviceType.isTouch();
 
-    var noSketch = { sketch: Fun.identity };
-
     var edgePart = function (name, action) {
-      return PartType.optional(
-        noSketch, [ ], '' + name + '-edge', '<alloy.slider.' + name + '-edge>',
-        Fun.constant({ }),
-        function (detail) {
-          var uiEvents = isTouch ? {
-            touchstart: EventHandler.nu({
-              run: function (l) {
-                action(l, detail);
-              }
-            })
-          } : {
-            mousedown: EventHandler.nu({
-              run: function (l) {
-                action(l, detail);
-              }
-            }),
+      return PartType.optional({
+        name: '' + name + '-edge',
+        overrides: function (detail) {
+          var touchEvents = AlloyEvents.derive([
+            AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [ detail ])
+          ]);
 
-            'mousemove': EventHandler.nu({
-              run: function (l, simulatedEvent) {
-                if (detail.mouseIsDown().get()) {
-                  action(l, detail);
-                }
-              }
-            })
-          };
+          var mouseEvents = AlloyEvents.derive([
+            AlloyEvents.runActionExtra(NativeEvents.mousedown(), action, [ detail ]),
+            AlloyEvents.runActionExtra(NativeEvents.mousemove(), function (l, det) {
+              if (det.mouseIsDown().get()) action (l, det);
+            }, [ detail ])
+          ]);
 
           return {
-            events: uiEvents
+            events: isTouch ? touchEvents : mouseEvents
           };
         }
-      );
+      });
     };
 
     // When the user touches the left edge, it should move the thumb
@@ -64,56 +49,50 @@ define(
     var redgePart = edgePart('right', SliderActions.setToRedge);
 
     // The thumb part needs to have position absolute to be positioned correctly
-    var thumbPart = PartType.internal(
-      noSketch, [ ], 'thumb', '<alloy.slider.thumb>',
-      Fun.constant({
+    var thumbPart = PartType.required({
+      name: 'thumb',
+      defaults: Fun.constant({
         dom: {
           styles: { position: 'absolute' }
         }
       }),
-      function (detail) {
+      overrides: function (detail) {
         return {
           events: AlloyEvents.derive([
             // If the user touches the thumb itself, pretend they touched the spectrum instead. This
             // allows sliding even when they touchstart the current value
-            AlloyEvents.redirectToUid(NativeEvents.touchstart(), detail.partUids().spectrum),
-            AlloyEvents.redirectToUid(NativeEvents.touchmove(), detail.partUids().spectrum),
-            AlloyEvents.redirectToUid(NativeEvents.touchend(), detail.partUids().spectrum)
+            AlloyEvents.redirectToPart(NativeEvents.touchstart(), detail, 'spectrum'),
+            AlloyEvents.redirectToUid(NativeEvents.touchmove(), detail, 'spectrum'),
+            AlloyEvents.redirectToUid(NativeEvents.touchend(), detail, 'spectrum')
           ])
         };
       }
-    );
+    });
 
-    var spectrumPart = PartType.internal(
-      noSketch, [
+    var spectrumPart = PartType.required({
+      schema: [
         FieldSchema.state('mouseIsDown', function () { return Cell(false); })
-      ], 'spectrum', '<alloy.slider.spectrum>',
-      Fun.constant({ }),
-      function (detail) {
+      ],
+      name: 'spectrum',
+      overrides: function (detail) {
 
         var moveToX = function (spectrum, simulatedEvent) {
           var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
           SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
         };
 
-        var uiEvents = PlatformDetection.detect().deviceType.isTouch() ? {
-          touchstart: EventHandler.nu({
-            run: moveToX
-          }),
-          touchmove: EventHandler.nu({
-            run: moveToX
-          })
-        } : {
-          'mousedown': EventHandler.nu({
-            run: moveToX
-          }),
+        var touchEvents = AlloyEvents.derive([
+          AlloyEvents.run(NativeEvents.touchstart(), moveToX),
+          AlloyEvents.run(NativeEvents.touchmove(), moveToX)
+        ]);
 
-          'mousemove': EventHandler.nu({
-            run: function (spectrum, simulatedEvent) {
-              if (detail.mouseIsDown().get()) moveToX(spectrum, simulatedEvent);
-            }
+        var mouseEvents = AlloyEvents.derive([
+          AlloyEvents.run(NativeEvents.mousedown(), moveToX),
+          AlloyEvents.run(NativeEvents.mousemove(), function (spectrum, se) {
+            if (detail.mouseIsDown().get()) moveToX(spectrum, se);
           })
-        };
+        ]);
+
 
         return {
           behaviours: Behaviour.derive(isTouch ? [ ] : [
@@ -132,10 +111,10 @@ define(
             Focusing.config({ })
           ]),
 
-          events: uiEvents
+          events: isTouch ? touchEvents : mouseEvents
         };
       }
-    );
+    });
 
     return [
       ledgePart,

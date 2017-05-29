@@ -27,6 +27,7 @@ define(
         isStopped: stopper.get,
         isCut: cutter.get,
         event: Fun.constant(event),
+        // Used only for tiered menu at the moment. It is an element, not a component
         setSource: source.set,
         getSource: source.get
       };

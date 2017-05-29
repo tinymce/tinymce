@@ -7,22 +7,26 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.MenuEvents',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj'
   ],
 
   function (
-    Assertions, Chain, Keyboard, Keys, Step, AdhocBehaviour, Behaviour, Keying, GuiFactory, SystemEvents, Menu, TieredMenu, EventHandler, MenuEvents, GuiSetup,
-    Objects
+    Assertions, Chain, Keyboard, Keys, Step, AddEventsBehaviour, Behaviour, Keying, GuiFactory, AlloyEvents, AlloyTriggers, SystemEvents, Menu, TieredMenu, MenuEvents,
+    TestDropdownMenu, GuiSetup, Objects, Arr, Obj
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -36,73 +40,38 @@ asynctest(
             classes: [ 'test-menu' ]
           },
           components: [
-            Menu.parts().items()
+            Menu.parts().items({ })
           ],
 
-          markers: {
-            item: 'test-item',
-            selectedItem: 'test-selected-item',
-            menu: 'test-menu',
-            selectedMenu: 'test-selected-menu',
-            backgroundMenu: 'test-background-menu'
-          },
-          members: {
-            item: {
-              munge: function (itemSpec) {
-                return {
-                  dom: {
-                    tag: 'div',
-                    attributes: {
-                      'data-value': itemSpec.data.value
-                    },
-                    classes: [ 'test-item' ],
-                    innerHtml: itemSpec.data.text
-                  },
-                  components: [ ]
-                };
-              }
-            },
-            menu: {
-              munge: function (menuSpec) {
-                return {
-                  dom: {
-                    tag: 'div',
-                    attributes: {
-                      'data-value': menuSpec.value
-                    }
-                  },
-                  components: [ ],
-                  shell: true
-                };
-              }
-            }
-          },
+          markers: TestDropdownMenu.markers(),
 
           data: {
             primary: 'menu-a',
-            menus: {
+            menus: Obj.map({
               'menu-a': {
                 value: 'menu-a',
-                items: [
+                items: Arr.map([
                   { type: 'item', data: { value: 'a-alpha', text: 'a-Alpha' }},
                   { type: 'item', data: { value: 'a-beta', text: 'a-Beta' }},
                   { type: 'item', data: { value: 'a-gamma', text: 'a-Gamma' }}
-                ]
+                ], TestDropdownMenu.renderItem)
               },
               'menu-b': {
                 value: 'menu-b',
-                items: [
+                items: Arr.map([
                   { type: 'item', data: { value: 'b-alpha', text: 'b-Alpha' } }
-                ]
+                ], TestDropdownMenu.renderItem)
               }
-            },
+            }, TestDropdownMenu.renderMenu),
             expansions: {
               'a-beta': 'menu-b'
             }
           },
 
           tmenuBehaviours: Behaviour.derive([
-            AdhocBehaviour.config('tiered-menu-test')
+            AddEventsBehaviour.config('tiered-menu-test', [
+              AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))
+            ])
           ]),
 
           eventOrder: Objects.wrapAll([
@@ -111,18 +80,6 @@ asynctest(
               value: [ 'alloy.base.behaviour', 'tiered-menu-test' ]
             }
           ]),
-
-          customBehaviours: [
-            AdhocBehaviour.events(
-              'tiered-menu-test',
-              Objects.wrap(
-                MenuEvents.focus(),
-                EventHandler.nu({
-                  run: store.adder('menu.events.focus')
-                })
-              )
-            )
-          ],
 
           onExecute: store.adderH('onExecute'),
           onEscape: store.adderH('onEscape'),
@@ -139,7 +96,7 @@ asynctest(
       };
 
       var cTriggerFocusItem = Chain.op(function (target) {
-        component.getSystem().triggerEvent(SystemEvents.focusItem(), target, { });
+        AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
       });
 
       var cAssertStore = function (label, expected) {

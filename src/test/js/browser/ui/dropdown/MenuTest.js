@@ -7,20 +7,22 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.UiFinder',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Menu',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.util.MenuEvents',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects'
+    'ephox.katamari.api.Arr'
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, NamedChain, UiFinder, AdhocBehaviour, Behaviour, GuiFactory, SystemEvents, Menu, EventHandler, MenuEvents, GuiSetup,
-    Objects
+    ApproxStructure, Assertions, Chain, NamedChain, UiFinder, AddEventsBehaviour, Behaviour, GuiFactory, AlloyEvents, AlloyTriggers, SystemEvents, Menu, MenuEvents,
+    TestDropdownMenu, GuiSetup, Arr
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -29,54 +31,28 @@ asynctest(
       return GuiFactory.build(
         Menu.sketch({
           value: 'test-menu-1',
-          items: [
+          items: Arr.map([
             { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
             { type: 'item', data: { value: 'beta', text: 'Beta' } }
-          ],
+          ], TestDropdownMenu.renderItem),
           dom: {
-            tag: 'div',
+            tag: 'ol',
             classes: [ 'test-menu' ]
           },
           components: [
-            Menu.parts().items()
+            Menu.parts().items({ })
           ],
 
           markers: {
-            item: 'test-item',
-            selectedItem: 'test-selected-item'
-          },
-          members: {
-            item: {
-              munge: function (itemSpec) {
-                return {
-                  dom: {
-                    tag: 'div',
-                    attributes: {
-                      'data-value': itemSpec.data.value
-                    },
-                    classes: [ 'test-item' ],
-                    innerHtml: itemSpec.data.text
-                  },
-                  components: [ ]
-                };
-              }
-            }
+            item: TestDropdownMenu.markers().item,
+            selectedItem: TestDropdownMenu.markers().selectedItem
           },
 
           menuBehaviours: Behaviour.derive([
-            AdhocBehaviour.config('menu-test-behaviour')
-          ]),
-
-          customBehaviours: [
-            AdhocBehaviour.events('menu-test-behaviour',
-              Objects.wrap(
-                MenuEvents.focus(),
-                EventHandler.nu({
-                  run: store.adder('menu.events.focus')
-                })
-              )
-            )
-          ]
+            AddEventsBehaviour.config('menu-test-behaviour', [
+              AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))
+            ])
+          ])
         })
       );
     }, function (doc, body, gui, component, store) {
@@ -88,7 +64,7 @@ asynctest(
       };
 
       var cTriggerFocusItem = Chain.op(function (target) {
-        component.getSystem().triggerEvent(SystemEvents.focusItem(), target, { });
+        AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
       });
 
       var cAssertStore = function (label, expected) {
@@ -105,21 +81,21 @@ asynctest(
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('menu', component.element()),
-            NamedChain.direct('menu', UiFinder.cFindIn('div[data-value="alpha"]'), 'alpha'),
-            NamedChain.direct('menu', UiFinder.cFindIn('div[data-value="beta"]'), 'beta'),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 
             cAssertStore('Before focusItem event', [ ]),
 
             NamedChain.direct('alpha', cTriggerFocusItem, '_'),
 
             NamedChain.direct('menu', cAssertStructure('After focusing item on alpha', ApproxStructure.build(function (s, str, arr) {
-              return s.element('div', {
+              return s.element('ol', {
                 classes: [
                   arr.has('test-menu')
                 ],
                 children: [
-                  s.element('div', { classes: [ arr.has('test-selected-item') ] }),
-                  s.element('div', { classes: [ arr.not('test-selected-item') ] })
+                  s.element('li', { classes: [ arr.has('selected-item') ] }),
+                  s.element('li', { classes: [ arr.not('selected-item') ] })
                 ]
               });
             })), '_'),
@@ -129,13 +105,13 @@ asynctest(
             cClearStore,
             NamedChain.direct('beta', cTriggerFocusItem, '_'),
             NamedChain.direct('menu', cAssertStructure('After focusing item on beta', ApproxStructure.build(function (s, str, arr) {
-              return s.element('div', {
+              return s.element('ol', {
                 classes: [
                   arr.has('test-menu')
                 ],
                 children: [
-                  s.element('div', { classes: [ arr.not('test-selected-item') ] }),
-                  s.element('div', { classes: [ arr.has('test-selected-item') ] })
+                  s.element('li', { classes: [ arr.not('selected-item') ] }),
+                  s.element('li', { classes: [ arr.has('selected-item') ] })
                 ]
               });
             })), '_'),

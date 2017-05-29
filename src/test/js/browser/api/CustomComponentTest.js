@@ -7,8 +7,9 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.FieldSchema',
@@ -17,7 +18,7 @@ asynctest(
     'ephox.katamari.api.Fun'
   ],
 
-  function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, Container, EventHandler, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
+  function (ApproxStructure, Assertions, Step, Behaviour, GuiFactory, AlloyEvents, AlloyTriggers, Container, DomModification, GuiSetup, FieldSchema, Objects, Cell, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -34,13 +35,11 @@ asynctest(
               classes: [ 'behaviour-a-exhibit' ]
             });
           },
-          events: Fun.constant({
-            'alloy.custom.test.event': EventHandler.nu({
-              run: function (component) {
-                store.adder('behaviour.a.event')();
-              }
-            })
-          })
+          events: Fun.constant(
+            AlloyEvents.derive([
+              AlloyEvents.run('alloy.custom.test.event', store.adder('behaviour.a.event'))
+            ])
+          )
         },
         apis: {
           behaveA: function (comp) {
@@ -66,13 +65,11 @@ asynctest(
             return DomModification.nu(extra);
           },
 
-          events: Fun.constant({
-            'alloy.custom.test.event': EventHandler.nu({
-              run: function (component) {
-                store.adder('behaviour.b.event')();
-              }
-            })
-          })
+          events: Fun.constant(
+            AlloyEvents.derive([
+              AlloyEvents.run('alloy.custom.test.event', store.adder('behaviour.b.event'))
+            ])
+          )
         }
       });
 
@@ -85,10 +82,6 @@ asynctest(
             classes: [ 'custom-component-test']
           },
           uid: 'custom-uid',
-          customBehaviours: [
-            behaviourA,
-            behaviourB
-          ],
           containerBehaviours: Behaviour.derive([
             behaviourA.config({ }),
             behaviourB.config({
@@ -130,11 +123,7 @@ asynctest(
         store.sClear,
 
         Step.sync(function () {
-          component.getSystem().triggerEvent(
-            'alloy.custom.test.event',
-            component.element(),
-            'event.data'
-          );
+          AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
         }),
 
         store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [

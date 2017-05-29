@@ -8,11 +8,10 @@ define(
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Merger',
     'ephox.sand.api.JSON',
-    'ephox.katamari.api.Result',
     'ephox.katamari.api.Struct'
   ],
 
-  function (DomDefinition, Objects, Arr, Obj, Merger, Json, Result, Struct) {
+  function (DomDefinition, Objects, Arr, Obj, Merger, Json, Struct) {
     var fields = [
       'classes',
       'attributes',

@@ -37,7 +37,6 @@ define(
       Fields.onHandler('onHoverOff'),
       Fields.onHandler('onMiss'),
       FieldSchema.defaulted('touchmenuBehaviours', { }),
-      FieldSchema.defaulted('customBehaviours', [ ]),
       FieldSchema.strict('toggleClass'),
       FieldSchema.option('lazySink'),
       FieldSchema.option('role'),
@@ -51,13 +50,18 @@ define(
     ];
 
     var partTypes = [
-      PartType.externalSchema('menu', [
-        Fields.itemMarkers(),
-        Fields.members([ 'item' ])
-      ]),
-      PartType.externalSchema('view', [
-        FieldSchema.strict('dom')
-      ]),
+      PartType.external({
+        schema: [
+          Fields.itemMarkers()
+        ],
+        name: 'menu'
+      }),
+
+      PartType.external({
+        schema: [ FieldSchema.strict('dom') ],
+        name: 'view'
+      }),
+
       InternalSink.partType()
     ];
 

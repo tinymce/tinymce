@@ -15,12 +15,15 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.test.GuiSetup'
   ],
 
-  function (ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, GuiFactory, SystemEvents, Button, GuiSetup) {
+  function (
+    ApproxStructure, Assertions, Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, GuiFactory, AlloyTriggers, Button,
+    GuiSetup
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -80,8 +83,7 @@ asynctest(
           Step.sync(function () {
             store.clear();
             store.assertEq('post clear', [ ]);
-            var system = component.getSystem();
-            system.triggerEvent(SystemEvents.execute(), component.element(), {});
+            AlloyTriggers.emitExecute(component);
             store.assertEq('post execute', [ 'button.action' ]);
             store.clear();
           })

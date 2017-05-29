@@ -9,24 +9,17 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.SplitDropdownSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (
-    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, SplitDropdownSchema, Fun, Merger,
-    Option
-  ) {
-    var schema = SplitDropdownSchema.schema();
-    var partTypes = SplitDropdownSchema.parts();
-
-    var make = function (detail, components, spec, externals) {
+  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, AlloyParts, ButtonBase, SplitDropdownSchema, Merger, Option) {
+    var factory = function (detail, components, spec, externals) {
       var buttonEvents = ButtonBase.events(Option.some(
         function (component) {
           DropdownUtils.togglePopup(detail, {
@@ -56,7 +49,7 @@ define(
             Coupling.config({
               others: {
                 sandbox: function (hotspot) {
-                  var arrow = hotspot.getSystem().getByUid(detail.partUids().arrow).getOrDie();
+                  var arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
                   var extras = {
                     onOpen: function () {
                       Toggling.on(arrow);
@@ -90,16 +83,11 @@ define(
       );
     };
 
-    var sketch = function (f) {
-      return UiSketcher.composite(SplitDropdownSchema.name(), schema, partTypes, make, f);
-    };
-
-    // TODO: Remove likely dupe
-    var parts = PartType.generate(SplitDropdownSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      parts: Fun.constant(parts)
-    };
+    return Sketcher.composite({
+      name: 'SplitDropdown',
+      configFields: SplitDropdownSchema.schema(),
+      partFields: SplitDropdownSchema.parts(),
+      factory: factory
+    });
   }
 );

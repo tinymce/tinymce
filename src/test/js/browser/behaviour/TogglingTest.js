@@ -6,15 +6,16 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup'
   ],
 
-  function (ApproxStructure, Assertions, Logger, Step, GuiFactory, SystemEvents, Behaviour, Toggling, Container, GuiSetup) {
+  function (ApproxStructure, Assertions, Logger, Step, Behaviour, Toggling, GuiFactory, AlloyTriggers, SystemEvents, Container, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -137,11 +138,7 @@ asynctest(
         assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select', true),
 
         Step.sync(function () {
-          component.getSystem().triggerEvent(
-            SystemEvents.execute(),
-            component.element(),
-            { }
-          );
+          AlloyTriggers.emitExecute(component);
         }),
 
         testNotSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec'),

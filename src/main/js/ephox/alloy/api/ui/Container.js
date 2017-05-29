@@ -2,14 +2,13 @@ define(
   'ephox.alloy.api.ui.Container',
 
   [
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.ui.schema.ContainerSchema',
-    'ephox.katamari.api.Fun',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Merger'
   ],
 
-  function (UiSketcher, ContainerSchema, Fun, Merger) {
-    var make = function (detail, spec) {
+  function (Sketcher, FieldSchema, Merger) {
+    var factory = function (detail, spec) {
       return {
         uid: detail.uid(),
         dom: Merger.deepMerge(
@@ -25,18 +24,20 @@ define(
         behaviours: detail.containerBehaviours(),
         events: detail.events(),
         domModification: detail.domModification(),
-        customBehaviours: detail.customBehaviours(),
         eventOrder: detail.eventOrder()
       };
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.single(ContainerSchema.name(), ContainerSchema.schema(), make, spec);
-    };
-
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(ContainerSchema)
-    };
+    return Sketcher.single({
+      name: 'Container',
+      factory: factory,
+      configFields: [
+        FieldSchema.defaulted('components', [ ]),
+        FieldSchema.defaulted('containerBehaviours', { }),
+        FieldSchema.defaulted('events', { }),
+        FieldSchema.defaulted('domModification', { }),
+        FieldSchema.defaulted('eventOrder', { })
+      ]
+    });
   }
 );

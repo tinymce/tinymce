@@ -6,11 +6,13 @@ asynctest(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Step, Behaviour, Pinching, GuiFactory, GuiSetup, Fun) {
+  function (Step, Behaviour, Pinching, GuiFactory, AlloyTriggers, NativeEvents, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -39,10 +41,8 @@ asynctest(
 
       var sSendTouchmove = function (touches) {
         return Step.sync(function () {
-          component.getSystem().triggerEvent('touchmove', component.element(), {
-            raw: Fun.constant({
-              touches: touches
-            })
+          AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
+            raw: { touches: touches }
           });
         });
       };

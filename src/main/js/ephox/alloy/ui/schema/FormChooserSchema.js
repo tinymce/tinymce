@@ -9,42 +9,40 @@ define(
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Focusing, Representing, Fields, PartType, ButtonBase, FieldSchema, Fun, Option) {
+  function (Behaviour, Focusing, Representing, Fields, PartType, ButtonBase, FieldSchema, Objects, Fun, Obj, Option) {
     var schema = [
-      Fields.members([ 'choice' ]),
       FieldSchema.strict('choices'),
       FieldSchema.defaulted('chooserBehaviours'),
       Fields.markers([ 'choiceClass', 'selectedClass' ])
     ];
 
     var partTypes = [
-      PartType.internal(
-        { sketch: Fun.identity },
-        [ ],
-        'legend',
-        '<alloy.form-chooser.legend>',
-        function (detail) {
+      PartType.required({
+        name: 'legend',
+        defaults: function (detail) {
           return {
             dom: {
               tag: 'legend'
             }
           };
-        },
-        Fun.constant({ })
-      ),
+        }
+      }),
 
-      PartType.group(
-        { sketch: Fun.identity },
-        [ ],
-        'choices',
-        'choice',
-        '<alloy.form-chooser.choices>',
-        Fun.constant({ }),
-        function (detail, choiceSpec) {
+      PartType.group({
+        factory: {
+          sketch: function (spec) {
+            return Objects.exclude(spec, [ 'value' ]);
+          }
+        },
+        name: 'choices',
+        unit: 'choice',
+        overrides: function (detail, choiceSpec) {
           return {
             dom: {
               // Consider making a domModification, although we probably do not want it overwritten.
@@ -68,7 +66,7 @@ define(
             events: ButtonBase.events(Option.none())
           };
         }
-      )
+      })
     ];
 
     return {

@@ -19,7 +19,7 @@ define(
           label,
           Waiter.sTryUntil(
             'Waiting for menu to appear',
-            UiFinder.sExists(gui.element(), '.test-typeahead-selected-menu'),
+            UiFinder.sExists(gui.element(), '.selected-menu'),
             100,
             4000
           )
@@ -31,7 +31,7 @@ define(
           label,
           Waiter.sTryUntil(
             'Waiting for menu to go away',
-            UiFinder.sNotExists(gui.element(), '.test-typeahead-selected-menu'),
+            UiFinder.sNotExists(gui.element(), '.selected-menu'),
             100,
             1000
           )

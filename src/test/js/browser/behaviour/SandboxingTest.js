@@ -10,6 +10,7 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Input',
@@ -20,7 +21,10 @@ asynctest(
     'ephox.sugar.api.node.Node'
   ],
 
-  function (Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue, Node) {
+  function (
+    Assertions, Chain, GeneralSteps, Logger, Step, UiFinder, Behaviour, Sandboxing, AlloyTriggers, SystemEvents, Container, Input, GuiSetup, Sinks, Fun, LazyValue,
+    Node
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -148,7 +152,7 @@ asynctest(
             Chain.inject(sandbox.element()),
             UiFinder.cFindIn('input'),
             Chain.op(function (input) {
-              sandbox.getSystem().triggerEvent(SystemEvents.sandboxClose(), input, { });
+              AlloyTriggers.dispatch(sandbox, input, SystemEvents.sandboxClose());
             })
           ])
         ),

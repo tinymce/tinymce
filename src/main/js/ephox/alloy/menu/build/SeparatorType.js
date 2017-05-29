@@ -2,28 +2,19 @@ define(
   'ephox.alloy.menu.build.SeparatorType',
 
   [
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.FieldSchema'
   ],
 
-  function (SystemEvents, EventHandler, Fields, FieldSchema, Objects) {
+  function (AlloyEvents, SystemEvents, Fields, FieldSchema) {
     var builder = function (detail) {
       return {
         dom: detail.dom(),
         components: detail.components(),
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.focusItem(),
-            value: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                simulatedEvent.stop();
-              }
-            })
-          }
-
+        events: AlloyEvents.derive([
+          AlloyEvents.stopper(SystemEvents.focusItem())
         ])
       };
     };

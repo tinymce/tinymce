@@ -2,41 +2,74 @@ define(
   'ephox.alloy.api.ui.FormField',
 
   [
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.parts.PartType',
-    'ephox.alloy.ui.common.FieldBase',
-    'ephox.alloy.ui.schema.FormFieldSchema'
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.parts.AlloyParts',
+    'ephox.alloy.ui.schema.FormFieldSchema',
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Merger',
+    'ephox.sugar.api.properties.Attr'
   ],
 
-  function (UiSketcher, PartType, FieldBase, FormFieldSchema) {
-    var schema = FormFieldSchema.schema();
+  function (Behaviour, Composing, Representing, AlloyEvents, Sketcher, AlloyParts, FormFieldSchema, Id, Merger, Attr) {
+    var factory = function (detail, components, spec, externals) {
+      var behaviours = Merger.deepMerge(
+        Behaviour.derive([
+          Composing.config({
+            find: function (container) {
+              return AlloyParts.getPart(container, detail, 'field');
+            }
+          }),
 
-    var sketch = function (factory, spec) {
-      var partTypes = FormFieldSchema.makeParts(factory);
-      return UiSketcher.composite('FormField(' + factory.name() + ')', schema, partTypes, make, spec);
-    };
+          Representing.config({
+            store: {
+              mode: 'manual',
+              getValue: function (field) {
+                return Composing.getCurrent(field).bind(Representing.getValue);
+              },
+              setValue: function (field, value) {
+                Composing.getCurrent(field).each(function (current) {
+                  Representing.setValue(current, value);
+                });
+              }
+            }
+          })
+        ]),
+        detail.fieldBehaviours()
+      );
 
-    var make = function (detail, components, spec, externals) {
+      var events = AlloyEvents.derive([
+        // Used to be systemInit
+        AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+          var ps = AlloyParts.getParts(component, detail, [ 'label', 'field' ]);
+          ps.label().each(function (label) {
+            ps.field().each(function (field) {
+              var id = Id.generate(detail.prefix());
+
+              // TODO: Find a nicer way of doing this.
+              Attr.set(label.element(), 'for', id);
+              Attr.set(field.element(), 'id', id);
+            });
+          });
+        })
+      ]);
       return {
         uid: detail.uid(),
-        dom: {
-          tag: 'div'
-        },
+        dom: detail.dom(),
         components: components,
-        behaviours: FieldBase.behaviours(detail),
-        events: FieldBase.events(detail),
-        customBehaviours: detail.customBehaviours()
+        behaviours: behaviours,
+        events: events
       };
     };
 
-    var parts = function (factory) {
-      var partTypes = FormFieldSchema.makeParts(factory);
-      return PartType.generate('FormField(' + factory.name() + ')', partTypes);
-    };
-
-    return {
-      sketch: sketch,
-      parts: parts
-    };
+    return Sketcher.composite({
+      name: 'FormField',
+      configFields: FormFieldSchema.schema(),
+      partFields: FormFieldSchema.parts(),
+      factory: factory
+    });
   }
 );

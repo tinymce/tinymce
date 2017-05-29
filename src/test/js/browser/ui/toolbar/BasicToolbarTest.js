@@ -9,12 +9,14 @@ asynctest(
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Toolbar',
+    'ephox.alloy.api.ui.ToolbarGroup',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
-    'ephox.katamari.api.Arr'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (ApproxStructure, Assertions, Step, GuiFactory, Button, Container, Toolbar, GuiSetup, TestPartialToolbarGroup, Arr) {
+  function (ApproxStructure, Assertions, Step, GuiFactory, Button, Container, Toolbar, ToolbarGroup, GuiSetup, TestPartialToolbarGroup, Arr, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -26,22 +28,9 @@ asynctest(
               uid: 'shell-toolbar',
               shell: true,
               dom: {
-                tag: 'div'
-              },
-
-              members: {
-                group: {
-                  munge: TestPartialToolbarGroup.munge
-                }
-              },
-              parts: {
-                groups: {
-                  dom: {
-                    // tag: 'div',
-                    attributes: {
-                      'data-group-container': 'true'
-                    }
-                  }
+                tag: 'div',
+                attributes: {
+                  'data-group-container': 'true'
                 }
               }
             }),
@@ -53,25 +42,15 @@ asynctest(
                 tag: 'div'
               },
               components: [
-                Toolbar.parts().groups()
-              ],
-
-              members: {
-                group: {
-                  munge: TestPartialToolbarGroup.munge
-                }
-              },
-
-              parts: {
-                groups: {
+                Toolbar.parts().groups({
                   dom: {
                     tag: 'div',
                     attributes: {
                       'data-group-container': 'true'
                     }
                   }
-                }
-              }
+                })
+              ]
             })
           ]
         })
@@ -89,6 +68,7 @@ asynctest(
 
       var t1 = component.getSystem().getByUid('shell-toolbar').getOrDie();
       var t2 = component.getSystem().getByUid('not-shell-toolbar').getOrDie();
+
       return [
         GuiSetup.mAddStyles(doc, [
           '[data-alloy-id="not-shell-toolbar"] { padding-top: 10px; padding-bottom: 10px; background: blue }',
@@ -122,12 +102,11 @@ asynctest(
         ),
 
         Step.sync(function () {
-          var groups = Toolbar.createGroups(t1, [
+          TestPartialToolbarGroup.setGroups(t1, [
             {
               items: Arr.map([ { text: 'a1' }, { text: 'a2' } ], makeButton)
             }
           ]);
-          Toolbar.setGroups(t1, groups);
         }),
 
         Assertions.sAssertStructure(
@@ -168,12 +147,11 @@ asynctest(
         ),
 
         Step.sync(function () {
-          var groups = Toolbar.createGroups(t2, [
+          TestPartialToolbarGroup.setGroups(t2, [
             {
               items: Arr.map([ { text: 'b1' }, { text: 'b2' } ], makeButton)
             }
           ]);
-          Toolbar.setGroups(t2, groups);
         }),
 
         Assertions.sAssertStructure(

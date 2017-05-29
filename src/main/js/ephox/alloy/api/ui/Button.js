@@ -5,15 +5,14 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.common.ButtonBase',
-    'ephox.alloy.ui.schema.ButtonSchema',
-    'ephox.katamari.api.Fun',
+    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, UiSketcher, ButtonBase, ButtonSchema, Fun, Merger) {
-    var make = function (detail, spec) {
+  function (Behaviour, Focusing, Keying, Sketcher, ButtonBase, FieldSchema, Merger) {
+    var factory = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
       return {
@@ -38,19 +37,22 @@ define(
             role: detail.role().getOr('button')
           }
         },
-        customBehaviours: detail.customBehaviours(),
         eventOrder: detail.eventOrder()
       };
     };
 
-    // Dupe with Tiered Menu
-    var sketch = function (spec) {
-      return UiSketcher.single(ButtonSchema.name(), ButtonSchema.schema(), make, spec);
-    };
-
-    return {
-      schemas: Fun.constant(ButtonSchema),
-      sketch: sketch
-    };
+    return Sketcher.single({
+      name: 'Button',
+      factory: factory,
+      configFields: [
+        FieldSchema.defaulted('uid', undefined),
+        FieldSchema.strict('dom'),
+        FieldSchema.defaulted('components', [ ]),
+        FieldSchema.defaulted('buttonBehaviours', { }),
+        FieldSchema.option('action'),
+        FieldSchema.option('role'),
+        FieldSchema.defaulted('eventOrder', { })
+      ]
+    });
   }
 );

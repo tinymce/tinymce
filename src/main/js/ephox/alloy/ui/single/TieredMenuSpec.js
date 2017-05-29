@@ -3,19 +3,18 @@ define(
 
   [
     'ephox.alloy.alien.EditableFields',
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.api.ui.Menu',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.menu.layered.LayeredState',
     'ephox.alloy.menu.util.ItemEvents',
     'ephox.alloy.menu.util.MenuEvents',
@@ -33,22 +32,19 @@ define(
   ],
 
   function (
-    EditableFields, EventRoot, Behaviour, Composing, Highlighting, Keying, Replacing, Representing, Sandboxing, GuiFactory, SystemEvents, FocusManagers, Menu,
-    EventHandler, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Fun, Merger, Obj, Option, Options, Body, Class, Classes, SelectorFind
+    EditableFields, Behaviour, Composing, Highlighting, Keying, Replacing, Representing, GuiFactory, AlloyEvents, AlloyTriggers, SystemEvents, FocusManagers,
+    Menu, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Fun, Merger, Obj, Option, Options, Body, Class, Classes, SelectorFind
   ) {
     var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
         return Obj.map(menus, function (spec, name) {
           var data = Menu.sketch(
             Merger.deepMerge(
-              detail.members().menu().munge()(spec),
+              spec,
               {
                 value: name,
                 items: spec.items,
                 markers: Objects.narrow(rawUiSpec.markers, [ 'item', 'selectedItem' ]),
-                members: {
-                  item: Obj.map(detail.members().item(), Fun.apply)
-                },
 
                 // Fake focus.
                 fakeFocus: detail.fakeFocus(),
@@ -72,9 +68,7 @@ define(
           return toMenuValues(container, sMenus);
         });
 
-        return state.getPrimary().map(function (primary) {
-          return primary;
-        });
+        return state.getPrimary();
       };
 
       var getItemValue = function (item) {
@@ -94,7 +88,7 @@ define(
         Highlighting.getHighlighted(menu).orThunk(function () {
           return Highlighting.getFirst(menu);
         }).each(function (item) {
-          container.getSystem().triggerEvent(SystemEvents.focusItem(), item.element(), { });
+          AlloyTriggers.dispatch(container, item.element(), SystemEvents.focusItem());
         });
       };
 
@@ -187,63 +181,44 @@ define(
         };
       };
 
-      var events = Objects.wrapAll([
-        {
-          key: MenuEvents.focus(),
-          value: EventHandler.nu({
-            // Set "active-menu" for the menu with focus
-            run: function (sandbox, simulatedEvent) {
-              var menu = simulatedEvent.event().menu();
-              Highlighting.highlight(sandbox, menu);
-            }
-          })
-        },
-        {
-          key: ItemEvents.hover(),
-          value: EventHandler.nu({
-            // Hide any irrelevant submenus and expand any submenus based
-            // on hovered item
-            run: function (sandbox, simulatedEvent) {
-              var item = simulatedEvent.event().item();
-              updateView(sandbox, item);
-              expandRight(sandbox, item);
-              detail.onHover()(sandbox, item);
-            }
-          })
-        },
-        {
-          key: SystemEvents.execute(),
-          value: EventHandler.nu({
-            run: function (sandbox, simulatedEvent) {
-              // Trigger on execute on the targeted element
-              // I.e. clicking on menu item
-              var target = simulatedEvent.event().target();
-              return sandbox.getSystem().getByDom(target).bind(function (item) {
-                return expandRight(sandbox, item).orThunk(function () {
-                  return detail.onExecute()(sandbox, item);
-                });
-              });
-            }
-          })
-        },
+      var events = AlloyEvents.derive([
+        // Set "active-menu" for the menu with focus
+        AlloyEvents.run(MenuEvents.focus(), function (sandbox, simulatedEvent) {
+          var menu = simulatedEvent.event().menu();
+          Highlighting.highlight(sandbox, menu);
+        }),
 
-        {
-          key: SystemEvents.systemInit(),
-          value: EventHandler.nu({
-            run: function (container, simulatedEvent) {
-              if (EventRoot.isSource(container, simulatedEvent)) {
-                setup(container).each(function (primary) {
-                  Replacing.append(container, GuiFactory.premade(primary));
+        // Hide any irrelevant submenus and expand any submenus based
+        // on hovered item
+        AlloyEvents.run(ItemEvents.hover(), function (sandbox, simulatedEvent) {
+          var item = simulatedEvent.event().item();
+          updateView(sandbox, item);
+          expandRight(sandbox, item);
+          detail.onHover()(sandbox, item);
+        }),
 
-                  if (detail.openImmediately()) {
-                    setActiveMenu(container, primary);
-                    detail.onOpenMenu()(container, primary);
-                  }
-                });
-              }
+        AlloyEvents.runOnExecute(function (sandbox, simulatedEvent) {
+          // Trigger on execute on the targeted element
+          // I.e. clicking on menu item
+          var target = simulatedEvent.event().target();
+          return sandbox.getSystem().getByDom(target).bind(function (item) {
+            return expandRight(sandbox, item).orThunk(function () {
+              return detail.onExecute()(sandbox, item);
+            });
+          });
+        }),
+
+        // Open the menu as soon as it is added to the DOM
+        AlloyEvents.runOnAttached(function (container, simulatedEvent) {
+          setup(container).each(function (primary) {
+            Replacing.append(container, GuiFactory.premade(primary));
+
+            if (detail.openImmediately()) {
+              setActiveMenu(container, primary);
+              detail.onOpenMenu()(container, primary);
             }
-          })
-        }
+          });
+        })
       ]);
 
       return {
@@ -261,7 +236,7 @@ define(
               onEscape: keyOnItem(onEscape),
               focusIn: function (container, keyInfo) {
                 state.getPrimary().each(function (primary) {
-                  container.getSystem().triggerEvent(SystemEvents.focusItem(), primary.element(), { });
+                  AlloyTriggers.dispatch(container, primary.element(), SystemEvents.focusItem());
                 });
               }
             }),
@@ -279,7 +254,6 @@ define(
           ]),
           detail.tmenuBehaviours()
         ),
-        customBehaviours: detail.customBehaviours(),
         eventOrder: detail.eventOrder(),
         events: events
       };

@@ -2,11 +2,13 @@ define(
   'ephox.alloy.demo.InlinesDemo',
 
   [
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
@@ -14,13 +16,13 @@ define(
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.api.ui.TieredMenu',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoSink',
+    'ephox.alloy.demo.forms.DemoRenders',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value',
@@ -29,8 +31,8 @@ define(
   ],
 
   function (
-    AdhocBehaviour, Behaviour, Keying, Positioning, GuiFactory, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu, EventHandler, DemoSink, HtmlDisplay,
-    Fun, Option, Result, DomEvent, Element, Class, Value, console, document
+    AddEventsBehaviour, Behaviour, Keying, Positioning, GuiFactory, AlloyEvents, NativeEvents, Attachment, Gui, Button, Container, InlineView, Input, TieredMenu,
+    DemoSink, DemoRenders, HtmlDisplay, Arr, Fun, Option, Result, Element, Class, Value, console, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -70,38 +72,6 @@ define(
         onExecute: function () {
           console.log('inline.menu.execute');
         },
-        members: {
-          item: {
-            munge: function (itemSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  attributes: {
-                    'data-value': itemSpec.data.value
-                  },
-                  classes: [ 'alloy-item' ],
-                  innerHtml: itemSpec.data.text
-                },
-                components: [ ]
-              };
-            }
-          },
-          menu: {
-            munge: function (menuSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  attributes: {
-                    'data-value': menuSpec.value
-                  },
-                  classes: [ 'alloy-menu' ]
-                },
-                components: [ ],
-                shell: true
-              };
-            }
-          }
-        },
 
         onOpenMenu: function (sandbox, menu) {
           // handled by inline view itself
@@ -122,45 +92,33 @@ define(
             'gamma': 'gamma-menu'
           },
           menus: {
-            dog: {
+            dog: DemoRenders.menu({
               value: 'dog',
-              items: [
+              items: Arr.map([
                 { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
                 { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } },
                 { type: 'item', data: { value: 'gamma', text: 'Gamma', 'item-class': 'gamma' } },
                 { type: 'item', data: { value: 'delta', text: 'Delta', 'item-class': 'delta' } }
 
-              ],
+              ], DemoRenders.item),
               textkey: 'Dog'
-            },
-            'gamma-menu': {
+            }),
+            'gamma-menu': DemoRenders.menu({
               value: 'gamma-menu',
-              items: [
+              items: Arr.map([
                 { type: 'item', data: { value: 'gamma-1', text: 'Gamma-1', 'item-class': 'gamma-1' } },
                 { type: 'item', data: { value: 'gamma-2', text: 'Gamma-2', 'item-class': 'gamma-2' } }
-              ],
+              ], DemoRenders.item),
               textkey: 'gamma-menu'
-            }
+            })
           },
           primary: 'dog'
         },
 
-        markers: {
-          item: 'alloy-item',
-          selectedItem: 'alloy-selected-item',
-          menu: 'alloy-menu',
-          selectedMenu: 'alloy-selected-menu',
-          backgroundMenu: 'alloy-background-menu'
-        }
+        markers: DemoRenders.tieredMarkers()
       });
 
       gui.add(sink);
-
-      var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
-        gui.broadcastOn([ 'dismiss.popups' ], {
-          target: evt.target()
-        });
-      });
 
       HtmlDisplay.section(
         gui,
@@ -172,19 +130,17 @@ define(
               height: '100px'
             }
           },
-          events: {
-            contextmenu: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                simulatedEvent.event().kill();
-                console.log('inlineMenu', inlineMenu);
-                InlineView.showAt(inlineComp, {
-                  anchor: 'makeshift',
-                  x: simulatedEvent.event().x(),
-                  y: simulatedEvent.event().y()
-                }, inlineMenu);
-              }
+          events: AlloyEvents.derive([
+            AlloyEvents.run(NativeEvents.contextmenu(), function (component, simulatedEvent) {
+              simulatedEvent.event().kill();
+              console.log('inlineMenu', inlineMenu);
+              InlineView.showAt(inlineComp, {
+                anchor: 'makeshift',
+                x: simulatedEvent.event().x(),
+                y: simulatedEvent.event().y()
+              }, inlineMenu);
             })
-          }
+          ])
         })
       );
 
@@ -213,59 +169,54 @@ define(
               },
 
               inputBehaviours: Behaviour.derive([
-                AdhocBehaviour.config('adhoc-show-popup')
-              ]),
-              customBehaviours: [
-                AdhocBehaviour.events('adhoc-show-popup', {
-                  focusin: EventHandler.nu({
-                    run: function (input) {
-                      var emptyAnchor = {
-                        anchor: 'submenu',
-                        item: input
-                      };
+                AddEventsBehaviour.config('adhoc-show-popup', [
+                  AlloyEvents.run(NativeEvents.focusin(), function (input) {
+                    var emptyAnchor = {
+                      anchor: 'submenu',
+                      item: input
+                    };
 
-                      var nonEmptyAnchor = {
-                        anchor: 'selection',
-                        root: gui.element()
-                      };
+                    var nonEmptyAnchor = {
+                      anchor: 'selection',
+                      root: gui.element()
+                    };
 
-                      var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                      InlineView.showAt(inlineComp, anchor, Container.sketch({
-                        containerBehaviours: Behaviour.derive([
-                          Keying.config({
-                            mode: 'flow',
-                            selector: 'button'
-                          })
-                        ]),
-                        components: [
-                          Button.sketch({
-                            dom: {
-                              tag: 'button',
-                              innerHtml: 'B'
-                            },
-                            action: function () { console.log('inline bold'); }
-                          }),
-                          Button.sketch({
-                            dom: {
-                              tag: 'button',
-                              innerHtml: 'I'
-                            },
-                            action: function () { console.log('inline italic'); }
-                          }),
-                          Button.sketch({
-                            dom: {
-                              tag: 'button',
-                              innerHtml: 'U'
-                            },
-                            action: function () { console.log('inline underline'); }
-                          })
-                        ]
+                    var anchor = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
+                    InlineView.showAt(inlineComp, anchor, Container.sketch({
+                      containerBehaviours: Behaviour.derive([
+                        Keying.config({
+                          mode: 'flow',
+                          selector: 'button'
+                        })
+                      ]),
+                      components: [
+                        Button.sketch({
+                          dom: {
+                            tag: 'button',
+                            innerHtml: 'B'
+                          },
+                          action: function () { console.log('inline bold'); }
+                        }),
+                        Button.sketch({
+                          dom: {
+                            tag: 'button',
+                            innerHtml: 'I'
+                          },
+                          action: function () { console.log('inline italic'); }
+                        }),
+                        Button.sketch({
+                          dom: {
+                            tag: 'button',
+                            innerHtml: 'U'
+                          },
+                          action: function () { console.log('inline underline'); }
+                        })
+                      ]
 
-                      }));
-                    }
+                    }));
                   })
-                })
-              ]
+                ])
+              ])
             })
           ]
         })

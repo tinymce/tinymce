@@ -53,8 +53,6 @@ define(
         Fields.snapshot('originalSpec'),
 
         // Need to have this initially
-        FieldSchema.defaulted('customBehaviours', [ ]),
-
         FieldSchema.defaulted('debug.sketcher', 'unknown')
       ]), spec);
     };

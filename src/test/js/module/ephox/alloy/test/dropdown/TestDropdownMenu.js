@@ -4,62 +4,79 @@ define(
   [
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.ItemWidget',
-    'ephox.alloy.api.ui.Menu'
+    'ephox.alloy.api.ui.Menu',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (Representing, ItemWidget, Menu) {
-    return function (store) {
+  function (Representing, ItemWidget, Menu, Fun) {
+    var renderMenu = function (spec) {
       return {
-        members: {
-          menu: {
-            munge: function (menuSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  classes: [ 'menu' ],
-                  attributes: menuSpec.text !== undefined ? {
-                    'aria-label': menuSpec.text
-                  } : { }
-                },
-                components: [
-                  Menu.parts().items()
-                ]
-              };
-            }
+        dom: {
+          tag: 'ol',
+          classes: [ 'menu' ],
+          attributes: spec.text !== undefined ? {
+            'aria-label': spec.text
+          } : { }
+        },
+        items: spec.items,
+        components: [
+          Menu.parts().items({ })
+        ]
+      };
+    };
+
+    var renderItem = function (spec) {
+      return spec.type === 'widget' ? {
+        type: 'widget',
+        data: spec.data,
+        dom: {
+          tag: 'li',
+          attributes: {
+            'data-value': spec.data.value
           },
-          item: {
-            munge: function (itemSpec) {
-              return itemSpec.type === 'widget' ? {
-                dom: {
-                  tag: 'li',
-                  classes: [ 'item-widget' ]
-                },
-                components: [
-                  ItemWidget.parts().widget()
-                ]
-              } : {
-                dom: {
-                  tag: 'li',
-                  classes: [ ],
-                  innerHtml: itemSpec.data.text
-                },
-                components: [ ]
-              };
-            }
-          }
+          classes: [ 'item-widget' ]
         },
-        markers: {
-          item: 'item',
-          selectedItem: 'selected-item',
-          menu: 'menu',
-          selectedMenu: 'selected-menu',
-          'backgroundMenu': 'background-menu'
+        components: [
+          ItemWidget.parts().widget(spec.widget)
+        ]
+      } : {
+        type: spec.type,
+        data: spec.data,
+        dom: {
+          tag: 'li',
+          attributes: {
+            'data-value': spec.data.value
+          },
+          classes: [ ],
+          innerHtml: spec.data.text
         },
+        components: [ ]
+      };
+    };
+
+    var part = function (store) {
+      return {
+        markers: markers,
         onExecute: function (dropdown, item) {
           var v = Representing.getValue(item);
           return store.adderH('dropdown.menu.execute: ' + v.value)();
         }
       };
+    };
+
+    var markers = {
+      item: 'item',
+      selectedItem: 'selected-item',
+      menu: 'menu',
+      selectedMenu: 'selected-menu',
+      'backgroundMenu': 'background-menu'
+    };
+
+    return {
+      renderItem: renderItem,
+      renderMenu: renderMenu,
+      part: part,
+      markers: Fun.constant(markers)
     };
   }
 );

@@ -6,62 +6,50 @@ define(
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.data.Fields',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.parts.PartType',
-    'ephox.alloy.spec.SpecSchema',
-    'ephox.alloy.spec.UiSubstitutes',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Obj',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Obj'
   ],
 
-  function (Behaviour, Composing, Representing, UiSketcher, Fields, PartType, SpecSchema, UiSubstitutes, FieldSchema, Arr, Fun, Merger, Obj, Option) {
+  function (Behaviour, Composing, Representing, UiSketcher, AlloyParts, PartType, FieldSchema, Arr, Merger, Obj) {
+    var owner = 'form';
+
     var schema = [
-      FieldSchema.defaulted('formBehaviours', { }),
-      FieldSchema.defaulted('customBehaviours', [ ])
+      FieldSchema.defaulted('formBehaviours', { })
     ];
 
-    var sketch = function (rawSpec) {
-      var spec = UiSketcher.supplyUid(rawSpec);
-      var partSchemas = Arr.map(
-        Obj.keys(rawSpec.parts),
-        function (p) {
-          return FieldSchema.strictObjOf(p, schema.concat([
-            Fields.snapshot(PartType.original())
-          ]));
-        }
-      );
+    var getPartName = function (name) {
+      return '<alloy.field.' + name + '>';
+    };
 
-      var detail = SpecSchema.asStructOrDie('form', schema, spec, partSchemas);
+    var sketch = function (fSpec) {
+      var parts = (function () {
+        var record = [ ];
 
-      var placeholders = Obj.tupleMap(spec.parts !== undefined ? spec.parts : {}, function (partSpec, partName) {
-        return {
-          k: '<alloy.field.' + partName + '>',
-          v: UiSubstitutes.single(true, function () {
-            var partUid = detail.partUids()[partName];
-            return Merger.deepMerge(
-              // could use entirety here.
-              partSpec,
-              {
-                uid: partUid
-              }
-            );
-          })
+        var field = function (name, config) {
+          record.push(name);
+          return AlloyParts.generateOne(owner, getPartName(name), config);
         };
+
+        return {
+          field: field,
+          record: function () { return record; }
+        };
+      })();
+      
+      var spec = fSpec(parts);
+
+      var partNames = parts.record();
+      // Unlike other sketches, a form does not know its parts in advance (as they represent each field
+      // in a particular form). Therefore, it needs to calculate the part names on the fly
+      var fieldParts = Arr.map(partNames, function (n) {
+        return PartType.required({ name: n, pname: getPartName(n) });
       });
 
-      var components = UiSubstitutes.substitutePlaces(
-        Option.some('form'),
-        detail,
-        detail.components(),
-        placeholders
-      );
-
-
-      return make(detail, components, spec);
+      return UiSketcher.composite(owner, schema, fieldParts, make, spec);
     };
 
     var make = function (detail, components, spec) {
@@ -74,24 +62,24 @@ define(
           dom: detail.dom(),
           components: components,
 
+          // Form has an assumption that every field must have composing, and that the composed element has representing.
           behaviours: Merger.deepMerge(
             Behaviour.derive([
               Representing.config({
                 store: {
                   mode: 'manual',
                   getValue: function (form) {
-                    var partUids = detail.partUids();
-                    return Obj.map(partUids, function (pUid, pName) {
-                      return form.getSystem().getByUid(pUid).fold(Option.none, Option.some).bind(Composing.getCurrent).map(Representing.getValue);
+                    var optPs = AlloyParts.getAllParts(form, detail);
+                    return Obj.map(optPs, function (optPThunk, pName) {
+                      return optPThunk().bind(Composing.getCurrent).map(Representing.getValue);
                     });
                   },
                   setValue: function (form, values) {
                     Obj.each(values, function (newValue, key) {
-                      // TODO: Make this cleaner. Maybe make the whole thing need to be specified.
-                      // This should ignore things that it cannot find which helps with dynamic forms but may be undesirable
-                      var part = form.getSystem().getByUid(detail.partUids()[key]).fold(Option.none, Option.some).bind(Composing.getCurrent);
-                      part.each(function (current) {
-                        Representing.setValue(current, newValue);
+                      AlloyParts.getPart(form, detail, key).each(function (wrapper) {
+                        Composing.getCurrent(wrapper).each(function (field) {
+                          Representing.setValue(field, newValue);
+                        });
                       });
                     });
                   }
@@ -99,26 +87,13 @@ define(
               })
             ]),
             detail.formBehaviours()
-          ),
-          customBehaviours: detail.customBehaviours()
+          )
         }
       );
-
-    };
-
-
-    var parts = function (partName) {
-      // FIX: Breaking abstraction
-      return {
-        uiType: UiSubstitutes.placeholder(),
-        owner: 'form',
-        name: '<alloy.field.' + partName + '>'
-      };
     };
 
     return {
-      sketch: sketch,
-      parts: parts
+      sketch: sketch
     };
   }
 );

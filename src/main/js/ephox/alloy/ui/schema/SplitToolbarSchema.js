@@ -21,36 +21,44 @@ define(
     ];
 
     var toolbarSchema = [
-      FieldSchema.strict('dom'),
-      FieldSchema.strictObjOf('parts', [
-        // NOTE: In shell===false mode, this is a little different (for a toolbar)
-        FieldSchema.strict('groups')
-      ]),
-      FieldSchema.strictObjOf('members', [
-        FieldSchema.strictObjOf('group', [
-          FieldSchema.strict('munge')
-        ])
-      ])
+      FieldSchema.strict('dom')
     ];
 
     var partTypes = [
-      PartType.internal(Toolbar, toolbarSchema, 'primary', '<alloy.split-toolbar.primary>', Fun.constant({ }), Fun.constant({ })),
-      PartType.internal(Toolbar, toolbarSchema, 'overflow', '<alloy.split-toolbar.overflow>', Fun.constant({ }), function (detail) {
-        return {
-          toolbarBehaviours: Behaviour.derive([
-            Sliding.config({
-              dimension: {
-                property: 'height'
-              },
-              closedClass: detail.markers().closedClass(),
-              openClass: detail.markers().openClass(),
-              shrinkingClass: detail.markers().shrinkingClass(),
-              growingClass: detail.markers().growingClass()
-            })
-          ])
-        };
+      PartType.required({
+        factory: Toolbar,
+        schema: toolbarSchema,
+        name: 'primary'
       }),
-      PartType.external({ built: Fun.identity }, [ ], 'overflow-button', Fun.constant({ }), Fun.constant({ }))
+
+      PartType.required({
+        factory: Toolbar,
+        schema: toolbarSchema,
+        name: 'overflow',
+        overrides: function (detail) {
+          return {
+            toolbarBehaviours: Behaviour.derive([
+              Sliding.config({
+                dimension: {
+                  property: 'height'
+                },
+                closedClass: detail.markers().closedClass(),
+                openClass: detail.markers().openClass(),
+                shrinkingClass: detail.markers().shrinkingClass(),
+                growingClass: detail.markers().growingClass()
+              })
+            ])
+          };
+        }
+      }),
+
+      PartType.external({
+        name: 'overflow-button'
+      }),
+
+      PartType.external({
+        name: 'overflow-group'
+      })
     ];
 
     return {

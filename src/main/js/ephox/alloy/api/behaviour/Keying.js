@@ -23,7 +23,7 @@ define(
         }
       },
       apis: {
-        focusIn: function (component, keyInfo) {
+        focusIn: function (component/*, keyConfig, keyState */) {
           component.getSystem().triggerFocus(component.element(), component.element());
         },
 

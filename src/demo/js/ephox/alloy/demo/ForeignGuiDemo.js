@@ -6,9 +6,10 @@ define(
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.behaviour.Pinching',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.ForeignGui',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.frame.Reader',
     'ephox.alloy.frame.Writer',
     'ephox.katamari.api.Option',
@@ -27,8 +28,8 @@ define(
   ],
 
   function (
-    Behaviour, Dragging, Pinching, Toggling, SystemEvents, ForeignGui, EventHandler, Reader, Writer, Option, PlatformDetection, Insert, InsertAll, DomEvent,
-    Element, Elements, Node, Css, SelectorFind, Height, Width, document
+    Behaviour, Dragging, Pinching, Toggling, AlloyEvents, NativeEvents, SystemEvents, ForeignGui, Reader, Writer, Option, PlatformDetection, Insert, InsertAll,
+    DomEvent, Element, Elements, Node, Css, SelectorFind, Height, Width, document
   ) {
 
     var resize = function (element, changeX, changeY) {
@@ -107,15 +108,13 @@ define(
                   })
                 ]),
 
-                events: {
-                  click: EventHandler.nu({
-                    run: function (component, simulatedEvent) {
-                      // We have to remove the proxy first, because we are during a proxied event (click)
-                      connection.unproxy(component);
-                      connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
-                    }
+                events: AlloyEvents.derive([
+                  AlloyEvents.run(NativeEvents.click(), function (component, simulatedEvent) {
+                    // We have to remove the proxy first, because we are during a proxied event (click)
+                    connection.unproxy(component);
+                    connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
                   })
-                }
+                ])
               }
             },
             {

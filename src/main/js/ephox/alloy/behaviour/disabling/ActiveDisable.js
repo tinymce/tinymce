@@ -2,16 +2,15 @@ define(
   'ephox.alloy.behaviour.disabling.ActiveDisable',
 
   [
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.behaviour.disabling.DisableApis',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dom.DomModification',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr'
   ],
 
-  function (SystemEvents, Behaviour, DisableApis, EventHandler, DomModification, Objects, Arr) {
+  function (AlloyEvents, SystemEvents, Behaviour, DisableApis, DomModification, Arr) {
     var exhibit = function (base, disableConfig, disableState) {
       return DomModification.nu({
         // Do not add the attribute yet, because it will depend on the node name
@@ -21,18 +20,12 @@ define(
     };
 
     var events = function (disableConfig, disableState) {
-      var load = Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad);
-
-      var canExecute = {
-        key: SystemEvents.execute(),
-        value: EventHandler.nu({
-          abort: function (component, simulatedEvent) {
-            return DisableApis.isDisabled(component, disableConfig, disableState);
-          }
-        })
-      };
-
-      return Objects.wrapAll([ canExecute, load ]);
+      return AlloyEvents.derive([
+        AlloyEvents.abort(SystemEvents.execute(), function (component, simulatedEvent) {
+          return DisableApis.isDisabled(component, disableConfig, disableState);
+        }),
+        Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)
+      ]);
     };
 
     return {

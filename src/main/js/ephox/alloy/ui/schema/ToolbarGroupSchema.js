@@ -11,20 +11,22 @@ define(
   function (Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('items'),
-      Fields.members([ 'item' ]),
       Fields.markers([ 'itemClass' ]),
       FieldSchema.defaulted('hasTabstop', true),
-      FieldSchema.defaulted('tgroupBehaviours', { }),
-      FieldSchema.defaulted('customBehaviours', [ ])
+      FieldSchema.defaulted('tgroupBehaviours', { })
     ];
 
     var partTypes = [
-      PartType.group({ sketch: Fun.identity }, [ ], 'items', 'item', '<alloy.toolbar-group.items>', Fun.constant({ }), function (detail) {
-        return {
-          domModification: {
-            classes: [ detail.markers().itemClass() ]
-          }
-        };
+      PartType.group({
+        name: 'items',
+        unit: 'item',
+        overrides: function (detail) {
+          return {
+            domModification: {
+              classes: [ detail.markers().itemClass() ]
+            }
+          };
+        }
       })
     ];
 

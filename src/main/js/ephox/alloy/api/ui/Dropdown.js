@@ -9,21 +9,16 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
-    'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.DropdownSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, UiSketcher, DropdownUtils, PartType, ButtonBase, DropdownSchema, Fun, Merger, Option) {
-    var schema = DropdownSchema.schema();
-    var partTypes = DropdownSchema.parts();
-
-    var make = function (detail, components, spec, externals) {
+  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, ButtonBase, DropdownSchema, Merger, Option) {
+    var factory = function (detail, components, spec, externals) {
       return Merger.deepMerge(
         {
           events: ButtonBase.events(
@@ -90,17 +85,11 @@ define(
       );
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.composite(DropdownSchema.name(), schema, partTypes, make, spec);
-    };
-
-    // TODO: Remove likely dupe
-    var parts = PartType.generate(DropdownSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(DropdownSchema),
-      parts: Fun.constant(parts)
-    };
+    return Sketcher.composite({
+      name: 'Dropdown',
+      configFields: DropdownSchema.schema(),
+      partFields: DropdownSchema.parts(),
+      factory: factory
+    });
   }
 );

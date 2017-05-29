@@ -6,15 +6,17 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (ApproxStructure, Assertions, FocusTools, Step, GuiFactory, Behaviour, Representing, Container, GuiSetup, Value) {
+  function (ApproxStructure, Assertions, FocusTools, Step, Behaviour, Representing, GuiFactory, AlloyTriggers, NativeEvents, Container, GuiSetup, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -71,7 +73,7 @@ asynctest(
         FocusTools.sSetActiveValue(doc, 'Cat'),
         // Note, Value.set does not actually dispatch the event, so we have to simulate it.
         Step.sync(function () {
-          component.getSystem().triggerEvent('input', component.element(), { });
+          AlloyTriggers.emit(component, NativeEvents.input());
         }),
 
         sAssertValue('Checking represented value after change', { value: 'cat', text: 'Cat' }),

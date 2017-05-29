@@ -25,13 +25,12 @@ asynctest(
     'ephox.alloy.test.form.TestForm',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PhantomSkipper',
-    'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Focus'
   ],
 
   function (
     FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Keying, Tabstopping, GuiFactory, Button, Container, ExpandableForm,
-    Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, PhantomSkipper, Fun, Focus
+    Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, PhantomSkipper, Focus
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -39,74 +38,72 @@ asynctest(
     // Seems to have stopped working on phantomjs
     if (PhantomSkipper.skip()) return success();
 
+
     GuiSetup.setup(function (store, doc, body) {
 
-      var minimal = {
-        dom: {
-          tag: 'div',
-          classes: [ 'minimal-form', 'form-section' ]
-        },
-        components: [
-          Form.parts('form.ant')
-        ],
-        parts: {
-          'form.ant': FormField.sketch(Input, {
-            uid: 'input-ant',
+      var pMinimal = ExpandableForm.parts().minimal(
+        Form.sketch(function (parts) {
+          return {
             dom: {
-              tag: 'div'
+              tag: 'div',
+              classes: [ 'minimal-form', 'form-section' ]
             },
             components: [
-              FormField.parts(Input).field(),
-              FormField.parts(Input).label()
-            ],
-            parts: {
-              field: {
-                data: 'init',
-                inputBehaviours: Behaviour.derive([
-                  Tabstopping.config({ })
-                ])
-              },
-              label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
-            }
-          })
-        }
-      };
-
-      var extra = {
-        dom: {
-          tag: 'div',
-          classes: [ 'extra-form', 'form-section' ]
-        },
-        components: [
-          Container.sketch({ dom: { styles: { 'height': '100px', 'width': '100px', 'background': 'green' } } }),
-          Form.parts('form.bull')
-        ],
-        parts: {
-          'form.bull': FormField.sketch(HtmlSelect, {
-            uid: 'select-bull',
-            dom: {
-              tag: 'div'
-            },
-            components: [
-              FormField.parts(HtmlSelect).field(),
-              FormField.parts(HtmlSelect).label()
-            ],
-            parts: {
-              field: {
-                selectBehaviours: Behaviour.derive([
-                  Tabstopping.config({ })
-                ]),
-                options: [
-                  { value: 'select-b-init', text: 'Select-b-init' },
-                  { value: 'select-b-set', text: 'Select-b-set' },
-                  { value: 'select-b-other', text: 'Select-b-other' }
+              parts.field('form.ant', FormField.sketch({
+                uid: 'input-ant',
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  FormField.parts().field({
+                    factory: Input,
+                    data: 'init',
+                    inputBehaviours: Behaviour.derive([
+                      Tabstopping.config({ })
+                    ])
+                  }),
+                  FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
                 ]
-              },
-              label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
-            }
-          })
-        }
-      };
+              }))
+            ]
+          };
+        })
+      );
+
+      var pExtra = ExpandableForm.parts().extra(
+        Form.sketch(function (parts) {
+          return {
+            dom: {
+              tag: 'div',
+              classes: [ 'extra-form', 'form-section' ]
+            },
+            components: [
+              Container.sketch({ dom: { styles: { 'height': '100px', 'width': '100px', 'background': 'green' } } }),
+              parts.field('form.bull', FormField.sketch({
+                uid: 'select-bull',
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  FormField.parts().field({
+                    factory: HtmlSelect,
+                    selectBehaviours: Behaviour.derive([
+                      Tabstopping.config({ })
+                    ]),
+                    options: [
+                      { value: 'select-b-init', text: 'Select-b-init' },
+                      { value: 'select-b-set', text: 'Select-b-set' },
+                      { value: 'select-b-other', text: 'Select-b-other' }
+                    ]
+                  }),
+
+                  FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+                ]
+              }))
+            ]
+          };
+        })
+      );
 
       var me = GuiFactory.build(
         ExpandableForm.sketch({
@@ -114,10 +111,9 @@ asynctest(
             tag: 'div'
           },
 
-          parts: {
-            minimal: minimal,
-            extra: extra,
-            expander: {
+          components: [
+            pMinimal,
+            ExpandableForm.parts().expander({
               dom: {
                 tag: 'button',
                 innerHtml: '+',
@@ -127,19 +123,8 @@ asynctest(
               buttonBehaviours: Behaviour.derive([
                 Tabstopping.config({ })
               ])
-            },
-            controls: {
-              dom: {
-                tag: 'div',
-                classes: [ 'form-controls' ]
-              },
-              components: [ ]
-            }
-          },
-          components: [
-            ExpandableForm.parts().minimal(),
-            ExpandableForm.parts().expander(),
-            ExpandableForm.parts().extra(),
+            }),
+            pExtra,
 
             Button.sketch({
               dom: {
@@ -154,7 +139,13 @@ asynctest(
               ])
             }),
 
-            ExpandableForm.parts().controls()
+            ExpandableForm.parts().controls({
+              dom: {
+                tag: 'div',
+                classes: [ 'form-controls' ]
+              },
+              components: [ ]
+            })
           ],
 
           expandableBehaviours: Behaviour.derive([

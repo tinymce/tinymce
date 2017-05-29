@@ -6,37 +6,43 @@
   white-space: pre-wrap;
 }
 
-.demo-selected {
-  color: white;
-  background: black;
-}
-
-.demo-selected-tab {
-  color: white;
-  background: black;
-}
-
 .demo-alloy-menu {
   margin: 0px;
-  padding: 2px;
   background: white;
   list-style-type: none;
   border: 1px solid black;
 }
 
-.demo-alloy-menu li {
-  padding: 0px;
-  margin: 2px;
-  color: black;
+
+
+.demo-alloy-item, .demo-alloy-choice {
+  padding: 10px;
   background: white;
+  cursor: pointer;
 }
 
-.demo-alloy-menu li.alloy-selected-item {
-  background: #cadbee;
+.demo-alloy-item-selected, .demo-alloy-choice-selected {
+  color: white;
+  background: #777;
 }
 
-:focus {
-  outline: 2px solid green;
+
+.demo-alloy-toolbar-group {
+  background: gray;
+  display: flex;
+  border: 2px solid green;
+}
+
+.demo-alloy-toolbar-item {
+  padding: 1em;
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+
+.demo-selected-tab {
+  color: white;
+  background: black;
 }
 
 button {

@@ -3,20 +3,40 @@ define(
 
   [
     'ephox.alloy.alien.EventRoot',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun'
+    'ephox.boulder.api.Objects'
   ],
 
-  function (EventRoot, SystemEvents, EventHandler, Objects, Fun) {
+  function (EventRoot, AlloyTriggers, SystemEvents, EventHandler, Objects) {
     var derive = Objects.wrapAll;
 
-    var abort = function (name) {
+    var abort = function (name, predicate) {
       return {
         key: name,
         value: EventHandler.nu({
-          abort: Fun.constant(true)
+          abort: predicate
+        })
+      };
+    };
+
+    var can = function (name, predicate) {
+      return {
+        key: name,
+        value: EventHandler.nu({
+          can: predicate
+        })
+      };
+    };
+
+    var preventDefault = function (name) {
+      return {
+        key: name,
+        value: EventHandler.nu({
+          run: function (component, simulatedEvent) {
+            simulatedEvent.event().prevent();
+          }
         })
       };
     };
@@ -26,6 +46,17 @@ define(
         key: name,
         value: EventHandler.nu({
           run: handler
+        })
+      };
+    };
+
+    var runActionExtra = function (name, action, extra) {
+      return {
+        key: name,
+        value: EventHandler.nu({
+          run: function (component) {
+            action.apply(undefined, [ component ].concat(extra));
+          }
         })
       };
     };
@@ -52,20 +83,53 @@ define(
     var redirectToUid = function (name, uid) {
       return run(name, function (component, simulatedEvent) {
         component.getSystem().getByUid(uid).each(function (redirectee) {
-          redirectee.getSystem().triggerEvent(name, redirectee.element(), simulatedEvent.event());
+          AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), simulatedEvent);
         });
+      });
+    };
+
+    var redirectToPart = function (name, detail, partName) {
+      var uid = detail.partUids()[partName];
+      return redirectToUid(name, uid);
+    };
+
+    var runWithTarget = function (name, f) {
+      return run(name, function (component, simulatedEvent) {
+        component.getSystem().getByDom(simulatedEvent.event().target()).each(function (target) {
+          f(component, target, simulatedEvent);
+        });
+      });
+    };
+
+    var cutter = function (name) {
+      return run(name, function (component, simulatedEvent) {
+        simulatedEvent.cut();
+      });
+    };
+
+    var stopper = function (name) {
+      return run(name, function (component, simulatedEvent) {
+        simulatedEvent.stop();
       });
     };
 
     return {
       derive: derive,
       run: run,
+      preventDefault: preventDefault,
+      runActionExtra: runActionExtra,
       runOnAttached: runOnSourceName(SystemEvents.attachedToDom()),
       runOnDetached: runOnSourceName(SystemEvents.detachedFromDom()),
+      runOnInit: runOnSourceName(SystemEvents.systemInit()),
       runOnExecute: runOnName(SystemEvents.execute()),
 
       redirectToUid: redirectToUid,
-      abort: abort
+      redirectToPart: redirectToPart,
+      runWithTarget: runWithTarget,
+      abort: abort,
+      can: can,
+      cutter: cutter,
+      stopper: stopper
     };
   }
 );

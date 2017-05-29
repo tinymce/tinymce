@@ -6,18 +6,15 @@ define(
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.common.ButtonBase',
-    'ephox.alloy.ui.schema.TabButtonSchema',
-    'ephox.katamari.api.Fun',
+    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, Representing, UiSketcher, ButtonBase, TabButtonSchema, Fun, Id, Merger) {
-    var schema = TabButtonSchema.schema();
-
-    var make = function (detail, spec) {
+  function (Behaviour, Focusing, Keying, Representing, Sketcher, ButtonBase, FieldSchema, Id, Merger) {
+    var factory = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
       return {
@@ -53,14 +50,19 @@ define(
       };
     };
 
-    // Dupe with Button
-    var sketch = function (spec) {
-      return UiSketcher.single(TabButtonSchema.name(), schema, make, spec);
-    };
+    return Sketcher.single({
+      name: 'TabButton',
+      configFields: [
+        FieldSchema.strict('value'),
+        FieldSchema.strict('dom'),
+        FieldSchema.option('action'),
+        FieldSchema.option('role'),
+        FieldSchema.defaulted('domModification', { }),
 
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(TabButtonSchema)
-    };
+        // TODO: Move view out of the resultant object.
+        FieldSchema.strict('view')         
+      ],
+      factory: factory
+    });
   }
 );

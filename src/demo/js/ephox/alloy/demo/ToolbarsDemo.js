@@ -11,7 +11,9 @@ define(
     'ephox.alloy.api.ui.SplitToolbar',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.alloy.demo.forms.DemoRenders',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
@@ -19,7 +21,10 @@ define(
     'global!document'
   ],
 
-  function (Behaviour, Toggling, Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, HtmlDisplay, Merger, Element, Class, console, document) {
+  function (
+    Behaviour, Toggling, Attachment, Gui, Button, Container, SplitToolbar, Toolbar, ToolbarGroup, DemoRenders, HtmlDisplay, Arr, Merger, Element, Class, console,
+    document
+  ) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -27,211 +32,69 @@ define(
       Attachment.attachSystem(body, gui);
 
       var groups = function () {
-        return [
+        return Arr.map([
           {
             label: 'group-1',
-            items: [
+            items: Arr.map([
               { text: '1a', action: function () { } },
               { text: '1b', action: function () { } },
               { text: '1c', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           },
           {
             label: 'group-2',
-            items: [
+            items: Arr.map([
               { text: '2a', action: function () { } },
               { text: '2b', action: function () { } },
               { text: '2c', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           },
           {
             label: 'group-3',
-            items: [
+            items: Arr.map([
               { text: '3a', action: function () { } },
               { text: '3b', action: function () { } },
               { text: '3c', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           },
           {
             label: 'group-4',
-            items: [
+            items: Arr.map([
               { text: '4a', action: function () { } },
               { text: '4b', action: function () { } },
               { text: '4c', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           },
           {
             label: 'group-5',
-            items: [
+            items: Arr.map([
               { text: '5a', action: function () { } },
               { text: '5b', action: function () { } },
               { text: '5c', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           },
           {
             label: 'group-6',
-            items: [
+            items: Arr.map([
               { text: '6a', action: function () { } },
               { text: '6b', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           },
           {
             label: 'group-7',
-            items: [
+            items: Arr.map([
               { text: '7a', action: function () { } },
               { text: '7b', action: function () { } }
 
-            ]
+            ], DemoRenders.toolbarItem)
           }
-        ];
-      };
-
-      var itemMunge = function (s) {
-        if (s.action === undefined) return s;
-        return s.behaviours === undefined ? Button.sketch({
-          'dom': {
-            'tag': 'div',
-            'attributes': {
-              'id': 'mceu_0',
-              'class': 'mce-widget mce-btn mce-first',
-              'tabindex': '-1',
-              'aria-labelledby': 'mceu_0',
-              'role': 'button',
-              'aria-label': s.text,
-              'aria-pressed': 'true'
-            }
-          },
-          'components': [
-            Container.sketch({
-              'dom': {
-                'tag': 'button',
-                'attributes': {
-                  'role': 'presentation',
-                  'type': 'button',
-                  'tabindex': '-1'
-                }
-              },
-              'components': [
-                Container.sketch({
-                  'dom': {
-                    'tag': 'i',
-                    'attributes': {
-                      'class': 'mce-ico mce-i-bullist'
-                    }
-                  },
-                  'components': []
-                })
-              ]
-            })
-          ],
-          action: s.action !== undefined ? s.action : function () {
-            console.log('clicked on button', s);
-          },
-
-          buttonBehaviours: Behaviour.derive([
-            Toggling.config({
-              toggleClass: 'mce-active',
-              aria: {
-                mode: 'pressed'
-              }
-            })
-          ])
-        }) : Button.sketch({
-          'dom': {
-            'tag': 'div',
-            'attributes': {
-              'id': 'mceu_0',
-              'class': 'mce-widget mce-btn mce-first',
-              'tabindex': '-1',
-              'aria-labelledby': 'mceu_0',
-              'role': 'button',
-              'aria-label': s.dom.innerHtml,
-              'aria-pressed': 'true'
-            }
-          },
-          action: s.action,
-          'components': [
-            Container.sketch({
-              'dom': {
-                'tag': 'button',
-                'attributes': {
-                  'role': 'presentation',
-                  'type': 'button',
-                  'tabindex': '-1'
-                }
-              },
-              'components': [
-                Container.sketch({
-                  'dom': {
-                    'tag': 'i',
-                    'attributes': {
-                      'class': 'mce-text mce-i-bullist'
-                    },
-                    innerHtml: s.dom.innerHtml
-                  },
-                  'components': []
-                })
-              ]
-            })
-          ]
-        });
-      };
-
-      var groupMunge = function (s) {
-        return {
-          dom: {
-            tag: 'div',
-            classes: [ 'mce-container', 'mce-flow-layout-item', 'mce-btn-group' ]
-          },
-
-          members: {
-            item: {
-              munge: itemMunge
-            }
-          },
-
-          markers: {
-            itemClass: 'mce-btn'
-          },
-
-          components: [
-            Container.sketch({
-              dom: { tag: 'div' },
-              components: [
-                ToolbarGroup.parts().items()
-              ]
-            })
-          ],
-          items: s.items,
-
-          parts: {
-            items: { }
-          }
-        };
-      };
-
-      var toolbarSpec = function (extra) {
-        return Merger.deepMerge(extra, {
-          dom: {
-            tag: 'div',
-            classes: [ 'mce-toolbar-grp', 'mce-container', 'mce-panel', 'mce-stack-layout-item' ]
-          },
-          components: [
-            Container.sketch({
-              components: [
-
-              ]
-            })
-          ],
-
-          parts: { }
-        });
+        ], DemoRenders.toolbarGroup);
       };
 
       var subject = HtmlDisplay.section(
@@ -242,112 +105,82 @@ define(
             classes: [ 'mce-container' ]
           },
           components: [
-            Toolbar.sketch(
-              toolbarSpec({
-                dom: {
-                  tag: 'div',
-                  styles: {
-                    'overflow-x': 'auto',
-                    'max-width': '200px',
-                    display: 'flex'
-                  }
-                },
-                parts: {
-                  groups: { }
-                },
-
-                members: {
-                  group: {
-                    munge: groupMunge
-                  }
-                }
-              })
-            )
-          ]
-        })
-      );
-
-      var toolbar1 = subject.components()[0];
-      var gps = Toolbar.createGroups(toolbar1, groups());
-      Toolbar.setGroups(toolbar1, gps);
-
-      var subject2 = HtmlDisplay.section(
-        gui,
-        'This toolbar has overflow behaviour that uses a more drawer',
-        Container.sketch({
-          dom: {
-            classes: [ 'mce-container' ]
-          },
-          components: [
-            SplitToolbar.sketch({
-              uid: 'demo-toolstrip',
+            Toolbar.sketch({
               dom: {
-                tag: 'div'
-              },
-              parts: {
-                primary: toolbarSpec({
-                  dom: {
-                    tag: 'div'
-                  },
-                  parts: {
-                    groups: { }
-                  },
-
-                  members: {
-                    group: {
-                      munge: groupMunge
-                    }
-                  }
-                }),
-                overflow: toolbarSpec({
-                  dom: {
-                    tag: 'div',
-                    styles: {
-                      display: 'flex',
-                      'flex-wrap': 'wrap'
-                    }
-                  },
-                  parts: {
-                    groups: { }
-                  },
-
-                  members: {
-                    group: {
-                      munge: groupMunge
-                    }
-                  }
-                }),
-                'overflow-button': {
-                  dom: {
-                    tag: 'button',
-                    innerHtml: 'More'
-                  }
+                tag: 'div',
+                styles: {
+                  'overflow-x': 'auto',
+                  'max-width': '200px',
+                  display: 'flex'
                 }
               },
               components: [
-                SplitToolbar.parts().primary(),
-                SplitToolbar.parts().overflow()
-              ],
-
-              markers: {
-                openClass: 'demo-sliding-open',
-                closedClass: 'demo-sliding-closed',
-                growingClass: 'demo-sliding-height-growing',
-                shrinkingClass: 'demo-sliding-height-shrinking'
-              }
+                Toolbar.parts().groups()
+              ]
             })
           ]
         })
       );
 
-      var toolbar2 = subject2.components()[0];
-      var gps2 = Toolbar.createGroups(toolbar2, groups());
-      Toolbar.setGroups(toolbar2, gps2);
-      toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
+      var toolbar1 = subject.components()[0];
+      var gps = Arr.map(groups(), ToolbarGroup.sketch);
+      Toolbar.setGroups(toolbar1, gps);
 
+      var subject2 = HtmlDisplay.section(
+        gui,
+        'This toolbar has overflow behaviour that uses a more drawer',
+        SplitToolbar.sketch({
+          uid: 'demo-toolstrip',
+          dom: {
+            tag: 'div'
+          },
+          parts: {
+            'overflow-group': DemoRenders.toolbarGroup({
+              items: [ ]
+            }),
+            'overflow-button': {
+              dom: {
+                tag: 'button',
+                innerHtml: 'More'
+              }
+            }
+          },
+          components: [
+            SplitToolbar.parts().primary({
+              dom: {
+                tag: 'div',
+                styles: {
+                  display: 'flex'
+                }
+              }
+            }),
+            SplitToolbar.parts().overflow({
+              dom: {
+                tag: 'div',
+                styles: {
+                  display: 'flex',
+                  'flex-wrap': 'wrap'
+                }
+              }
+            })
+          ],
+
+          markers: {
+            openClass: 'demo-sliding-open',
+            closedClass: 'demo-sliding-closed',
+            growingClass: 'demo-sliding-height-growing',
+            shrinkingClass: 'demo-sliding-height-shrinking'
+          }
+        })
+      );
+
+      var splitToolbar = subject2;
+      var gps2 = Arr.map(groups(), ToolbarGroup.sketch);
+      console.log('gps2', gps2);
+      SplitToolbar.setGroups(splitToolbar, gps2);
 
       window.addEventListener('resize', function () {
-        toolbar2.getSystem().getByUid('demo-toolstrip').each(SplitToolbar.refresh);
+        SplitToolbar.refresh(splitToolbar);
       });
     };
   }

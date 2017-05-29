@@ -20,14 +20,6 @@ define(
       FieldSchema.strict('numRows')
     ]);
 
-    var members = function (required) {
-      return FieldSchema.strictObjOf('members', Arr.map(required, function (reqd) {
-        return FieldSchema.strictObjOf(reqd, [
-          FieldSchema.strict('munge')
-        ]);
-      }));
-    };
-
     var itemMarkers = function () {
       return FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
     };
@@ -92,7 +84,6 @@ define(
 
     return {
       initSize: Fun.constant(initSize),
-      members: members,
       itemMarkers: itemMarkers,
       menuMarkers: menuMarkers,
       tieredMenuMarkers: tieredMenuMarkers,

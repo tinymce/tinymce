@@ -7,50 +7,28 @@ define(
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.menu.build.WidgetParts',
     'ephox.alloy.menu.util.ItemEvents',
-    'ephox.alloy.spec.UiSubstitutes',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (EditableFields, Behaviour, Focusing, Keying, Representing, SystemEvents, EventHandler, Fields, ItemEvents, UiSubstitutes, FieldSchema, Objects, Merger, Option) {
+  function (
+    EditableFields, Behaviour, Focusing, Keying, Representing, AlloyEvents, NativeEvents, SystemEvents, Fields, WidgetParts, ItemEvents, AlloyParts, FieldSchema,
+    Merger, Option
+  ) {
     var builder = function (info) {
-      var widgetUid = Objects.readOptFrom(
-        info.widget(),
-        'uid'
-      ).getOr(info.uid() + '-widget');
-
-      var placeholders = {
-        '<alloy.item.widget>': UiSubstitutes.single(true, function () {
-          return Merger.deepMerge(
-            { uid: widgetUid },
-            info.widget(),
-            {
-              behaviours: Behaviour.derive([
-                Representing.config({
-                  store: {
-                    mode: 'manual',
-                    getValue: function (component) {
-                      return info.data();
-                    },
-                    setValue: function () { }
-                  }
-                })
-              ])
-            }
-          );
-        })
-      };
-
-      var components = UiSubstitutes.substitutePlaces(Option.some('item-widget'), info, info.components(), placeholders);
+      var subs = AlloyParts.substitutes(WidgetParts.owner(), info, WidgetParts.parts());
+      var components = AlloyParts.components(WidgetParts.owner(), info, subs.internals());
 
       var focusWidget = function (component) {
-        return component.getSystem().getByUid(widgetUid).map(function (widget) {
+        return AlloyParts.getPart(component, info, 'widget').map(function (widget) {
           Keying.focusIn(widget);
           return widget;
         });
@@ -59,40 +37,31 @@ define(
       var onHorizontalArrow = function (component, simulatedEvent) {
         return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (function () {
           if (info.autofocus()) {
-            simulatedEvent.setSource(component);
+            simulatedEvent.setSource(component.element());
+            return Option.none();
+          } else {
             return Option.none();
           }
-        });
+        })();
       };
 
       return Merger.deepMerge({
         dom: info.dom(),
         components: components,
         domModification: info.domModification(),
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.execute(),
-            value: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                focusWidget(component).each(function (widget) {
-                  simulatedEvent.stop();
-                });
-              }
-            })
-          },
-          {
-            key: 'mouseover',
-            value: ItemEvents.hoverHandler
-          },
-          {
-            key: SystemEvents.focusItem(),
-            value: EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                if (info.autofocus()) focusWidget(component);
-                else Focusing.focus(component);
-              }
-            })
-          }
+        events: AlloyEvents.derive([
+          AlloyEvents.runOnExecute(function (component, simulatedEvent) {
+            focusWidget(component).each(function (widget) {
+              simulatedEvent.stop();
+            });
+          }),
+
+          AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
+
+          AlloyEvents.run(SystemEvents.focusItem(), function (component, simulatedEvent) {
+            if (info.autofocus()) focusWidget(component);
+            else Focusing.focus(component);
+          })
         ]),
         behaviours: Behaviour.derive([
           Representing.config({
@@ -138,9 +107,10 @@ define(
       FieldSchema.strict('data'),
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
-      FieldSchema.strict('widget'),
       FieldSchema.defaulted('autofocus', false),
       FieldSchema.defaulted('domModification', { }),
+      // We don't have the uid at this point
+      AlloyParts.defaultUidsSchema(WidgetParts.parts()),
       Fields.output('builder', builder)
     ];
 

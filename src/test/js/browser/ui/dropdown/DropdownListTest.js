@@ -23,13 +23,14 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.TestBroadcasts',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
 
   function (
     ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, Dropdown,
-    TieredMenu, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils, TestBroadcasts, Future, Result
+    TieredMenu, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils, TestBroadcasts, Arr, Future, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -69,7 +70,7 @@ asynctest(
           matchWidth: true,
 
           parts: {
-            menu: TestDropdownMenu(store)
+            menu: TestDropdownMenu.part(store)
           },
 
           fetch: function () {
@@ -81,7 +82,11 @@ asynctest(
             ]);
 
             return future.map(function (f) {
-              return TieredMenu.simpleData('test', 'Test', f);
+              var menu = TestDropdownMenu.renderMenu({
+                value: 'v',
+                items: Arr.map(f, TestDropdownMenu.renderItem)
+              });
+              return TieredMenu.singleData('test', menu);
             });
           }
         })

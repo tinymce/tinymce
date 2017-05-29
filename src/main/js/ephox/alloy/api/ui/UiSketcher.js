@@ -2,17 +2,17 @@ define(
   'ephox.alloy.api.ui.UiSketcher',
 
   [
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.registry.Tagger',
     'ephox.alloy.spec.SpecSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger'
   ],
 
-  function (PartType, Tagger, SpecSchema, Objects, Merger) {
+  function (AlloyParts, Tagger, SpecSchema, Objects, Merger) {
     var single = function (owner, schema, factory, spec) {
       var specWithUid = supplyUid(spec);
-      var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ]);
+      var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ], [ ]);
       return Merger.deepMerge(
         factory(detail, specWithUid),
         { 'debug.sketcher': Objects.wrap(owner, spec) }
@@ -22,19 +22,27 @@ define(
     var composite = function (owner, schema, partTypes, factory, spec) {
       var specWithUid = supplyUid(spec);
 
-      var partSchemas = PartType.schemas(partTypes);
+      // Identify any information required for external parts
+      var partSchemas = AlloyParts.schemas(partTypes);
 
-      var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, partSchemas);
+      // Generate partUids for all parts (external and otherwise)
+      var partUidsSchema = AlloyParts.defaultUidsSchema(partTypes);
 
-      // This is the point where internal parts are created (internal and optional)
-      var components = PartType.components(owner, detail, partTypes);
-      var externals = PartType.externals(owner, detail, partTypes);
+      var detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
+
+      // Create (internals, externals) substitutions
+      var subs = AlloyParts.substitutes(owner, detail, partTypes);
+
+      // Work out the components by substituting internals
+      var components = AlloyParts.components(owner, detail, subs.internals());
 
       return Merger.deepMerge(
-        factory(detail, components, specWithUid, externals),
+        // Pass through the substituted components and the externals
+        factory(detail, components, specWithUid, subs.externals()),
         { 'debug.sketcher': Objects.wrap(owner, spec) }
       );
     };
+
 
     var supplyUid = function (spec) {
       return Merger.deepMerge(

@@ -6,23 +6,15 @@ define(
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.ui.schema.HtmlSelectSchema',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, Focusing, Representing, Tabstopping, UiSketcher, HtmlSelectSchema, Arr, Fun, Merger, Value) {
-    var schema = HtmlSelectSchema.schema();
-
-    // Dupe with Tiered Menu
-    var sketch = function (spec) {
-      return UiSketcher.single(HtmlSelectSchema.name(), schema, make, spec);
-    };
-
-    var make = function (detail, spec) {
+  function (Behaviour, Focusing, Representing, Tabstopping, Sketcher, FieldSchema, Arr, Merger, Value) {
+    var factory = function (detail, spec) {
       var options = Arr.map(detail.options(), function (option) {
         return {
           dom: {
@@ -66,10 +58,15 @@ define(
       );
     };
 
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(HtmlSelectSchema),
-      name: Fun.constant(HtmlSelectSchema.name())
-    };
+    return Sketcher.single({
+      name: 'HtmlSelect',
+      configFields: [
+        FieldSchema.strict('options'),
+        FieldSchema.defaulted('selectBehaviours', { }),
+        FieldSchema.option('data'),
+        FieldSchema.defaulted('hasTabstop', true)
+      ],
+      factory: factory
+    });
   }
 );

@@ -2,6 +2,7 @@ define(
   'ephox.alloy.ui.slider.SliderActions',
 
   [
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.ui.slider.SliderModel',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
@@ -9,7 +10,7 @@ define(
     'global!Math'
   ],
 
-  function (SliderModel, Fun, Option, PlatformDetection, Math) {
+  function (AlloyTriggers, SliderModel, Fun, Option, PlatformDetection, Math) {
     var changeEvent = 'slider.change.value';
 
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
@@ -30,9 +31,7 @@ define(
     };
 
     var fireChange = function (component, value) {
-      component.getSystem().triggerEvent(changeEvent, component.element(), {
-        value: Fun.constant(value)
-      });
+      AlloyTriggers.emitWith(component, changeEvent, { value: value });
     };
 
     var moveRightFromLedge = function (ledge, detail) {

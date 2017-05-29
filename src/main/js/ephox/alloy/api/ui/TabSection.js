@@ -2,29 +2,23 @@ define(
   'ephox.alloy.api.ui.TabSection',
 
   [
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.schema.TabSectionSchema',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.sugar.api.properties.Attr'
   ],
 
-  function (EventRoot, Highlighting, Replacing, Representing, SystemEvents, UiSketcher, EventHandler, PartType, TabSectionSchema, Objects, Arr, Fun, Attr) {
-    var schema = TabSectionSchema.schema();
-    var partTypes = TabSectionSchema.parts();
-
-    var make = function (detail, components, spec, externals) {
+  function (Highlighting, Replacing, Representing, AlloyEvents, SystemEvents, Sketcher, AlloyParts, TabSectionSchema, Arr, Attr) {
+    var factory = function (detail, components, spec, externals) {
       var changeTab = function (button) {
         var tabValue = Representing.getValue(button);
-        button.getSystem().getByUid(detail.partUids().tabview).each(function (tabview) {
+        AlloyParts.getPart(button, detail, 'tabview').each(function (tabview) {
           var tabWithValue = Arr.find(detail.tabs(), function (t) {
             return t.value === tabValue;
           });
@@ -46,59 +40,41 @@ define(
         components: components,
 
 
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.systemInit(),
-            value: EventHandler.nu({
-              run: function (section, simulatedEvent) {
-                if (detail.selectFirst() && EventRoot.isSource(section, simulatedEvent)) {
-                  section.getSystem().getByUid(detail.partUids().tabbar).each(function (tabbar) {
-                    Highlighting.getFirst(tabbar).each(function (button) {
-                      Highlighting.highlight(tabbar, button);
-                      changeTab(button);
-                    });
-                  });
-                }
-              }
-            })
-          },
+        events: AlloyEvents.derive(
+          Arr.flatten([
 
-          {
-            key: SystemEvents.changeTab(),
-            value: EventHandler.nu({
-              run: function (section, simulatedEvent) {
+            detail.selectFirst() ? [
+              AlloyEvents.runOnAttached(function (section, simulatedEvent) {
+                AlloyParts.getPart(section, detail, 'tabbar').each(function (tabbar) {
+                  Highlighting.getFirst(tabbar).each(function (button) {
+                    Highlighting.highlight(tabbar, button);
+                    changeTab(button);
+                  });
+                });
+              })
+            ] : [ ],
+
+            [
+              AlloyEvents.run(SystemEvents.changeTab(), function (section, simulatedEvent) {
                 var button = simulatedEvent.event().button();
                 changeTab(button);
-              }
-            })
-          },
-
-          {
-            key: SystemEvents.dismissTab(),
-            value: EventHandler.nu({
-              run: function (section, simulatedEvent) {
+              }),
+              AlloyEvents.run(SystemEvents.dismissTab(), function (section, simulatedEvent) {
                 var button = simulatedEvent.event().button();
                 detail.onDismissTab()(section, button);
-              }
-            })
-          }
-
-
-        ])
+              })
+            ]
+          ])
+        )
       };
 
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.composite(TabSectionSchema.name(), schema, partTypes, make, spec);
-    };
-
-    var parts = PartType.generate(TabSectionSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(TabSectionSchema),
-      parts: Fun.constant(parts)
-    };
+    return Sketcher.composite({
+      name: 'TabSection',
+      configFields: TabSectionSchema.schema(),
+      partFields: TabSectionSchema.parts(),
+      factory: factory
+    });
   }
 );

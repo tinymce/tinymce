@@ -17,13 +17,14 @@ asynctest(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
 
   function (
     ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, TestDropdownMenu,
-    GuiSetup, Future, Result
+    GuiSetup, Arr, Future, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -49,24 +50,7 @@ asynctest(
           onExecute: store.adderH('dropdown.execute'),
 
           components: [
-            SplitDropdown.parts().button(),
-            SplitDropdown.parts().arrow()
-          ],
-
-          lazySink: function () {
-            return Result.value(sink.get(c));
-          },
-
-          parts: {
-            menu: TestDropdownMenu(store),
-            arrow: {
-              dom: {
-                tag: 'button',
-                innerHtml: 'v',
-                classes: [ 'test-split-button-arrow' ]
-              }
-            },
-            button: {
+            SplitDropdown.parts().button({
               dom: {
                 tag: 'button',
                 classes: [ 'test-split-button-action' ]
@@ -79,7 +63,22 @@ asynctest(
                   }
                 }
               ]
-            }
+            }),
+            SplitDropdown.parts().arrow({
+              dom: {
+                tag: 'button',
+                innerHtml: 'v',
+                classes: [ 'test-split-button-arrow' ]
+              }
+            })
+          ],
+
+          lazySink: function () {
+            return Result.value(sink.get(c));
+          },
+
+          parts: {
+            menu: TestDropdownMenu.part(store)
           },
 
           fetch: function () {
@@ -89,7 +88,11 @@ asynctest(
             ]);
 
             return future.map(function (f) {
-              return TieredMenu.simpleData('test', 'Test', f);
+              var menu = TestDropdownMenu.renderMenu({
+                value: 'split-dropdown-test',
+                items: Arr.map(f, TestDropdownMenu.renderItem)
+              });
+              return TieredMenu.singleData('test', menu);
             });
           }
         })

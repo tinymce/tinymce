@@ -2,6 +2,7 @@ define(
   'ephox.alloy.demo.DialogDemo',
 
   [
+    'ephox.alloy.api.component.DomFactory',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
@@ -17,7 +18,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Attachment, Gui, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Element, Class, console, document) {
+  function (DomFactory, GuiFactory, Attachment, Gui, Container, ModalDialog, DemoSink, HtmlDisplay, Option, Result, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -32,47 +33,61 @@ define(
         return Result.value(sink);
       };
 
+      var pTitle = ModalDialog.parts().title({
+        dom: DomFactory.fromHtml('<div class="mce-title">Insert Link</div>')
+      });
+
+      var pDraghandle = ModalDialog.parts().draghandle({
+        dom: DomFactory.fromHtml('<div class="mce-dragh"></div>')
+      });
+
+      var pClose = ModalDialog.parts().close({
+        dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
+        components: [
+          Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
+        ]
+      });
+
+      var pBody = ModalDialog.parts().body({
+        dom: DomFactory.fromHtml('<div></div>'),
+        components: [
+          Container.sketch({
+            dom: DomFactory.fromHtml('<div style="width: 400px; height: 200px;"></div>')
+          })
+        ]
+      });
+
+      var pFooter = ModalDialog.parts().footer({
+        dom: {
+          tag: 'div'
+        }
+      });
+
       var dialog = GuiFactory.build(
         ModalDialog.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'mce-container', 'mce-panel', 'mce-floatpanel', 'mce-window', 'mce-in' ],
-            styles: {
-              outline: '1px solid green'
-            }
-          },
+          dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-floatpanel mce-window mce-in"></div>'),
           components: [
             Container.sketch({
-              dom: {
-                tag: 'div',
-                classes: [ 'mce-reset' ],
-                attributes: { role: 'application' }
-              },
+              dom: DomFactory.fromHtml('<div class="mce-reset" role="application"></div>'),
               components: [
                 Container.sketch({
-                  dom: {
-                    classes: [ 'mce-window-head' ]
-                  },
+                  dom: DomFactory.fromHtml('<div class="mce-window-head"></div>'),
                   components: [
-                    ModalDialog.parts().title(),
-                    ModalDialog.parts().draghandle(),
-                    ModalDialog.parts().close()
+                    pTitle,
+                    pDraghandle,
+                    pClose
                   ]
                 }),
                 Container.sketch({
-                  dom: {
-                    classes: [ 'mce-container-body', 'mce-window-body', 'mce-abs-layout' ]
-                  },
+                  dom: DomFactory.fromHtml('<div class="mce-container-body mce-window-body mce-abs-layout"></div>'),
                   components: [
-                    ModalDialog.parts().body()
+                    pBody
                   ]
                 }),
                 Container.sketch({
-                  dom: {
-                    classes: [ 'mce-container', 'mce-panel', 'mce-foot' ]
-                  },
+                  dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-foot"></div>'),
                   components: [
-                    ModalDialog.parts().footer()
+                    pFooter
                   ]
                 })
               ]
@@ -87,56 +102,7 @@ define(
           dragBlockClass: [ 'blocker-class' ],
 
           parts: {
-            title: {
-              dom: {
-                tag: 'div',
-                classes: [ 'mce-title' ],
-                innerHtml: 'Insert link'
-              }
-
-            },
-            //<div id="mceu_85-dragh" class="mce-dragh"></div>
-            draghandle: {
-              dom: {
-                tag: 'div',
-                classes: [ 'mce-dragh' ]
-              }
-            },
-
-            blocker: { },
-            body: {
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                Container.sketch({
-                  dom: {
-                    styles: {
-                      width: '400px',
-                      height: '200px'
-                    }
-                  }
-                })
-              ]
-            },
-            footer: {
-              dom: {
-                tag: 'div'
-              }
-            },
-            close: {
-              dom: {
-                tag: 'button',
-                attributes: {
-                  type: 'button',
-                  'aria-hidden': 'true'
-                },
-                classes: [ 'mce-close' ]
-              },
-              components: [
-                Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
-              ]
-            }
+            blocker: { }
           }
         })
       );

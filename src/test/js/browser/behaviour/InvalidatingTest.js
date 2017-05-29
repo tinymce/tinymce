@@ -9,9 +9,10 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Invalidating',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Future',
@@ -19,7 +20,10 @@ asynctest(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, GuiFactory, Behaviour, Invalidating, Container, GuiSetup, Future, Result, Value) {
+  function (
+    ApproxStructure, Assertions, GeneralSteps, Guard, Logger, Step, UiControls, Behaviour, Invalidating, GuiFactory, AlloyTriggers, Container, GuiSetup, Future,
+    Result, Value
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -89,7 +93,7 @@ asynctest(
 
       var sValidate = GeneralSteps.sequence([
         Step.sync(function () {
-          component.getSystem().triggerEvent('custom.test.validate', component.element(), { });
+          AlloyTriggers.emit(component, 'custom.test.validate');
         }),
         // It is future based, so give it a bit of time. The rest of the assertions should all
         // repeat until as well to stop this being fragile. I just don't want it to pass incorrectly

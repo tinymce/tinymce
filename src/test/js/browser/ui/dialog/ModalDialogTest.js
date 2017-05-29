@@ -38,6 +38,60 @@ asynctest(
         Tabstopping.config({ })
       ]);
 
+
+      var pDraghandle = ModalDialog.parts().draghandle({
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '100px',
+            height: '40px',
+            background: 'black'
+          }
+        }
+      });
+
+      var pTitle = ModalDialog.parts().title({
+        dom: {
+          tag: 'div',
+          innerHtml: 'Title',
+          classes: [ 'test-dialog-title' ]
+        },
+        behaviours: focusAndTab,
+        components: [ ]
+      });
+
+      var pClose = ModalDialog.parts().close({
+        dom: {
+          tag: 'div',
+          innerHtml: 'X'
+        },
+        components: [ ]
+      });
+
+      var pBody = ModalDialog.parts().body({
+        dom: {
+          tag: 'div',
+          classes: [ 'test-dialog-body' ]
+        },
+        components: [
+          Container.sketch({ dom: { innerHtml: '<p>This is something else</p>' } })
+        ]
+      });
+
+      var pFooter = ModalDialog.parts().footer({
+        dom: {
+          tag: 'div',
+          classes: [ 'test-dialog-footer' ],
+          styles: {
+            // Needs size to get focus.
+            height: '10px',
+            border: '1px solid green'
+          }
+        },
+        behaviours: focusAndTab,
+        components: [ ]
+      });
+
       var dialog = GuiFactory.build(
         ModalDialog.sketch({
           dom: {
@@ -45,11 +99,11 @@ asynctest(
             classes: [ 'test-dialog' ]
           },
           components: [
-            ModalDialog.parts().draghandle(),
-            ModalDialog.parts().title(),
-            ModalDialog.parts().close(),
-            ModalDialog.parts().body(),
-            ModalDialog.parts().footer()
+            pDraghandle,
+            pTitle,
+            pClose,
+            pBody,
+            pFooter
           ],
 
           dragBlockClass: 'drag-blocker',
@@ -61,54 +115,6 @@ asynctest(
           onExecute: store.adderH('dialog.execute'),
 
           parts: {
-            draghandle: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  width: '100px',
-                  height: '40px',
-                  background: 'black'
-                }
-              }
-            },
-            title: {
-              dom: {
-                tag: 'div',
-                innerHtml: 'Title',
-                classes: [ 'test-dialog-title' ]
-              },
-              behaviours: focusAndTab,
-              components: [ ]
-            },
-            close: {
-              dom: {
-                tag: 'div',
-                innerHtml: 'X'
-              },
-              components: [ ]
-            },
-            body: {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-dialog-body' ]
-              },
-              components: [
-                Container.sketch({ dom: { innerHtml: '<p>This is something else</p>' } })
-              ]
-            },
-            footer: {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-dialog-footer' ],
-                styles: {
-                  // Needs size to get focus.
-                  height: '10px',
-                  border: '1px solid green'
-                }
-              },
-              behaviours: focusAndTab,
-              components: [ ]
-            },
             blocker: {
               dom: {
                 styles: {

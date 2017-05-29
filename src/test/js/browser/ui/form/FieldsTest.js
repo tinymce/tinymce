@@ -5,9 +5,13 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.api.ui.DataField',
     'ephox.alloy.api.ui.FormChooser',
     'ephox.alloy.api.ui.FormCoupledInputs',
     'ephox.alloy.api.ui.FormField',
@@ -15,15 +19,30 @@ asynctest(
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.behaviour.RepresentPipes',
     'ephox.alloy.test.GuiSetup',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun'
   ],
 
   function (
-    ApproxStructure, Assertions, Step, Representing, GuiFactory, Container, FormChooser, FormCoupledInputs, FormField, HtmlSelect, Input, RepresentPipes, GuiSetup,
-    Fun
+    ApproxStructure, Assertions, Step, Behaviour, Composing, Replacing, Representing, GuiFactory, Container, DataField, FormChooser, FormCoupledInputs, FormField,
+    HtmlSelect, Input, RepresentPipes, GuiSetup, Arr, Fun
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var renderChoice = function (choiceSpec) {
+      return {
+        value: choiceSpec.value,
+        dom: {
+          tag: 'span',
+          innerHtml: choiceSpec.text,
+          attributes: {
+            'data-value': choiceSpec.value
+          }
+        },
+        components: [ ]
+      };
+    };
 
     var labelSpec = {
       dom: {
@@ -34,42 +53,35 @@ asynctest(
     };
 
     GuiSetup.setup(function (store, doc, body) {
-
-      var inputA = FormField.sketch(Input, {
+      var inputA = FormField.sketch({
         uid: 'input-a',
         dom: {
           tag: 'div'
         },
         components: [
-          FormField.parts(Input).field(),
-          FormField.parts(Input).label()
-        ],
-        parts: {
-          field: {
+          FormField.parts().field({
+            factory: Input,
             data: 'init'
-          },
-          label: labelSpec
-        }
+          }),
+          FormField.parts().label(labelSpec)
+        ]
       });
 
-      var selectB = FormField.sketch(HtmlSelect, {
+      var selectB = FormField.sketch({
         uid: 'select-b',
         dom: {
           tag: 'div'
         },
         components: [
           // TODO: Do not recalculate
-          FormField.parts(HtmlSelect).label(),
-          FormField.parts(HtmlSelect).field()
-        ],
-        parts: {
-          field: {
+          FormField.parts().label(labelSpec),
+          FormField.parts().field({
+            factory: HtmlSelect,
             options: [
               { value: 'select-b-init', text: 'Select-b-init' }
             ]
-          },
-          label: labelSpec
-        }
+          })
+        ]
       });
 
       var chooserC = FormChooser.sketch({
@@ -78,38 +90,19 @@ asynctest(
           tag: 'div'
         },
         components: [
-          FormChooser.parts().legend(),
-          FormChooser.parts().choices()
+          FormChooser.parts().legend({ }),
+          FormChooser.parts().choices({ })
         ],
-        members: {
-          choice: {
-            munge: function (choiceSpec) {
-              return Container.sketch({
-                dom: {
-                  tag: 'span',
-                  innerHtml: choiceSpec.text,
-                  attributes: {
-                    'data-value': choiceSpec.value
-                  }
-                },
-                components: [ ]
-              });
-            }
-          }
-        },
+        
         markers: {
           choiceClass: 'test-choice',
           selectedClass: 'test-selected-choice'
         },
-        choices: [
+        choices: Arr.map([
           { value: 'choice1', text: 'Choice1' },
           { value: 'choice2', text: 'Choice2' },
           { value: 'choice3', text: 'Choice3' }
-        ],
-        parts: {
-          legend: { },
-          choices: { }
-        }
+        ], renderChoice)
       });
 
       var coupledDText = {
@@ -117,13 +110,11 @@ asynctest(
           tag: 'div'
         },
         components: [
-          FormField.parts(Input).label(),
-          FormField.parts(Input).field()
-        ],
-        parts: {
-          field: { },
-          label: labelSpec
-        }
+          FormField.parts().label(labelSpec),
+          FormField.parts().field({
+            factory: Input
+          })
+        ]
       };
 
       var coupledD = FormCoupledInputs.sketch({
@@ -132,9 +123,14 @@ asynctest(
           classes: [ 'coupled-group' ]
         },
         components: [
-          FormCoupledInputs.parts().field1(),
-          FormCoupledInputs.parts().field2(),
-          FormCoupledInputs.parts().lock()
+          FormCoupledInputs.parts().field1(coupledDText),
+          FormCoupledInputs.parts().field2(coupledDText),
+          FormCoupledInputs.parts().lock({
+            dom: {
+              tag: 'button',
+              innerHtml: '+'
+            }
+          })
         ],
 
         onLockedChange: function (current, other) {
@@ -142,17 +138,15 @@ asynctest(
         },
         markers: {
           lockClass: 'coupled-lock'
-        },
-        parts: {
-          field1: coupledDText,
-          field2: coupledDText,
-          lock: {
-            dom: {
-              tag: 'button',
-              innerHtml: '+'
-            }
-          }
         }
+      });
+
+      var dataE = DataField.sketch({
+        uid: 'data-e',
+        dom: {
+          tag: 'span'
+        },
+        getInitialValue: Fun.constant('data-e-init')
       });
 
       return GuiFactory.build(
@@ -161,8 +155,13 @@ asynctest(
             inputA,
             selectB,
             chooserC,
-            coupledD
-          ]
+            coupledD,
+            dataE
+          ],
+
+          containerBehaviours: Behaviour.derive([
+            Replacing.config({ })
+          ])
         })
       );
 
@@ -171,6 +170,7 @@ asynctest(
       var inputA = component.getSystem().getByUid('input-a').getOrDie();
       var selectB = component.getSystem().getByUid('select-b').getOrDie();
       var chooserC = component.getSystem().getByUid('chooser-c').getOrDie();
+      var dataE = component.getSystem().getByUid('data-e').getOrDie();
 
       return [
         GuiSetup.mAddStyles(doc, [
@@ -218,6 +218,27 @@ asynctest(
           var val2 = Representing.getValue(chooserC).getOrDie();
           Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
         }),
+
+
+        Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build(function (s, str, arr) {
+          return s.element('span', { children: [ ] });
+        }), dataE.element()),
+
+        Step.sync(function () {
+          var val = Representing.getValue(dataE);
+          Assertions.assertEq('Checking data-e value', 'data-e-init', val);
+
+          Representing.setValue(dataE, 'data-e-new');
+          Assertions.assertEq('Checking data-e value after set', 'data-e-new', Representing.getValue(dataE));
+
+          // Remove it from the container
+          Replacing.remove(component, dataE);
+
+          // Add it back the the container
+          Replacing.append(component, GuiFactory.premade(dataE));
+          Assertions.assertEq('Checking data-e value was reset when added back to DOM', 'data-e-init', Representing.getValue(dataE));
+        }),
+
 
         GuiSetup.mRemoveStyles
       ];

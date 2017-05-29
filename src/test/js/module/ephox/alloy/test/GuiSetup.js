@@ -34,7 +34,10 @@ define(
       Pipeline.async({}, f(doc, body, gui, component, store), function () {
         Attachment.detachSystem(gui);
         success();
-      }, failure);
+      }, function (e) {
+        console.error(e);
+        failure(e);
+      });
     };
 
     var mSetupKeyLogger = function (body) {

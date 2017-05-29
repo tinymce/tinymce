@@ -47,18 +47,11 @@ asynctest(
           stepSize: 10,
           snapToGrid: true,
 
-          parts: {
-            'left-edge': { dom: { tag: 'div', classes: [ 'slider-test-left-edge' ] } },
-            'right-edge': { dom: { tag: 'div', classes: [ 'slider-test-right-edge' ] } },
-            thumb: { dom: { tag: 'div', classes: [ 'slider-test-thumb' ] } },
-            spectrum: { dom: { tag: 'div', classes: [ 'slider-test-spectrum' ] } }
-          },
-
           components: [
-            Slider.parts()['left-edge'](),
-            Slider.parts().spectrum(),
-            Slider.parts()['right-edge'](),
-            Slider.parts().thumb()
+            Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'slider-test-left-edge' ] } }),
+            Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'slider-test-spectrum' ] } }),
+            Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'slider-test-right-edge' ] } }),
+            Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'slider-test-thumb' ] } })
           ]
         })
       );

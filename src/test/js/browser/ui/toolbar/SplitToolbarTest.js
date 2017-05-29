@@ -25,6 +25,22 @@ asynctest(
     if (PhantomSkipper.skip()) return success();
 
     GuiSetup.setup(function (store, doc, body) {
+      var pPrimary = SplitToolbar.parts().primary({
+        dom: {
+          tag: 'div',
+          classes: [ 'test-toolbar-primary' ]
+        },
+        shell: true
+      });
+
+      var pOverflow = SplitToolbar.parts().overflow({
+        dom: {
+          tag: 'div',
+          classes: [ 'test-toolbar-overflow' ]
+        },
+        shell: true
+      });
+
       return GuiFactory.build(
         SplitToolbar.sketch({
           dom: {
@@ -36,8 +52,8 @@ asynctest(
             }
           },
           components: [
-            SplitToolbar.parts().primary(),
-            SplitToolbar.parts().overflow()
+            pPrimary,
+            pOverflow
           ],
 
           markers: {
@@ -48,37 +64,9 @@ asynctest(
           },
 
           parts: {
-            primary: {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-toolbar-primary' ]
-              },
-              shell: true,
-              parts: {
-                groups: { }
-              },
-              members: {
-                group: {
-                  munge: TestPartialToolbarGroup.munge
-                }
-              }
-            },
-            overflow: {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-toolbar-overflow' ]
-              },
-              shell: true,
-              parts: {
-                groups: { }
-              },
-              members: {
-                group: {
-                  munge: TestPartialToolbarGroup.munge
-                }
-              }
-            },
-
+            'overflow-group': TestPartialToolbarGroup.munge({
+              items: [ ]
+            }),
             'overflow-button': {
               dom: {
                 tag: 'button',
@@ -184,7 +172,7 @@ asynctest(
         ]),
 
         Step.sync(function () {
-          var groups = SplitToolbar.createGroups(component, [
+          var groups = TestPartialToolbarGroup.createGroups([
             { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
             { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
             { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }

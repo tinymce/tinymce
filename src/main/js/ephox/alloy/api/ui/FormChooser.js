@@ -2,36 +2,24 @@ define(
   'ephox.alloy.api.ui.FormChooser',
 
   [
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.schema.FormChooserSchema',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter'
   ],
 
-  function (
-    EventRoot, Behaviour, Highlighting, Keying, Representing, SystemEvents, UiSketcher, EventHandler, PartType, FormChooserSchema, Objects, Arr, Fun, Merger,
-    Attr, SelectorFilter
-  ) {
-    var schema = FormChooserSchema.schema();
-    var partTypes = FormChooserSchema.parts();
-
-    var sketch = function (spec) {
-      return UiSketcher.composite(FormChooserSchema.name(), schema, partTypes, make, spec);
-    };
-
-    var make = function (detail, components, spec, externals) {
+  function (Behaviour, Composing, Highlighting, Keying, Representing, AlloyEvents, SystemEvents, Sketcher, FormChooserSchema, Arr, Merger, Option, Attr, SelectorFilter) {
+    var factory = function (detail, components, spec, externals) {
       var findByValue = function (chooser, value) {
         var choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers().choiceClass());
         var choiceComps = Arr.map(choices, function (c) {
@@ -78,6 +66,10 @@ define(
               }
             }),
 
+            Composing.config({
+              find: Option.some
+            }),
+
             Representing.config({
               store: {
                 mode: 'manual',
@@ -95,42 +87,18 @@ define(
           detail.chooserBehaviours()
         ),
 
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.execute(),
-            value: EventHandler.nu({
-              run: function (chooser, simulatedEvent) {
-                // TODO :Check this will always be present (button property)
-                chooser.getSystem().getByDom(simulatedEvent.event().target()).each(function (choice) {
-                  Highlighting.highlight(chooser, choice);
-                });
-              }
-            })
-          },
-
-          {
-            key: SystemEvents.systemInit(),
-            value: EventHandler.nu({
-              run: function (chooser, simulatedEvent) {
-                if (EventRoot.isSource(chooser, simulatedEvent)) {
-                  Highlighting.getFirst(chooser).each(function (choice) {
-                    Highlighting.highlight(chooser, choice);
-                  });
-                }
-              }
-            })
-          }
-
+        events: AlloyEvents.derive([
+          AlloyEvents.runWithTarget(SystemEvents.execute(), Highlighting.highlight),
+          AlloyEvents.runOnAttached(Highlighting.highlightFirst)
         ])
       };
     };
 
-    var parts = PartType.generate(FormChooserSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(FormChooserSchema),
-      parts: Fun.constant(parts)
-    };
+    return Sketcher.composite({
+      name: 'FormChooser',
+      configFields: FormChooserSchema.schema(),
+      partFields: FormChooserSchema.parts(),
+      factory: factory
+    });
   }
 );
