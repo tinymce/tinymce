@@ -17,22 +17,24 @@ define(
     'tinymce.core.util.VK'
   ],
   function (Arr, InsertSpace, MatchKeys, VK) {
-    var setupKeyDownHandler = function (editor, caret) {
-      editor.on('keydown', function (evt) {
-        var matches = MatchKeys.match([
-          { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
-        ], evt);
+    var executeKeydownOverride = function (editor, evt) {
+      var matches = MatchKeys.match([
+        { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
+      ], evt);
 
-        Arr.find(matches, function (pattern) {
-          return pattern.action();
-        }).each(function (_) {
-          evt.preventDefault();
-        });
+      Arr.find(matches, function (pattern) {
+        return pattern.action();
+      }).each(function (_) {
+        evt.preventDefault();
       });
     };
 
     var setup = function (editor) {
-      setupKeyDownHandler(editor);
+      editor.on('keydown', function (evt) {
+        if (evt.isDefaultPrevented() === false) {
+          executeKeydownOverride(editor, evt);
+        }
+      });
     };
 
     return {
