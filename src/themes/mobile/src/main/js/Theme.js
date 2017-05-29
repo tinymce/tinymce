@@ -150,7 +150,6 @@ define(
           var backToMaskGroup = {
             label: 'The first group',
             scrollable: false,
-            extraClasses: [Styles.resolve('exit-container')],
             items: [
               Buttons.forToolbar('back', function (/* btn */) {
                 realm.exit();
@@ -174,13 +173,6 @@ define(
             items: [ ]
           };
 
-          var gapGroup = {
-            label: 'Group for read only buttons',
-            scrollable: false,
-            items: [ ],
-            extraClasses: [ Styles.resolve('readonly-expand') ]
-          };
-
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
@@ -189,13 +181,13 @@ define(
               Buttons.forToolbarStateCommand(editor, 'bold'),
               Buttons.forToolbarStateCommand(editor, 'italic'),
               LinkButton.sketch(realm, editor),
+              ImagePicker.sketch(editor),
               HeadingSlider.sketch(realm, editor),
               // NOTE: Requires "lists" plugin.
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
 
-              ImagePicker.sketch(editor),
               FontSizeSlider.sketch(realm, editor),
               ColorSlider.sketch(realm, editor)
             ]
@@ -210,7 +202,7 @@ define(
           };
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
-          var readOnlyGroups = Cell([ gapGroup, backToMaskGroup ]);
+          var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
 
 
           // Investigate ways to keep in sync with the ui

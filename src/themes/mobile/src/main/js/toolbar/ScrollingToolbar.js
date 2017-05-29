@@ -57,14 +57,13 @@ define(
             members: {
               group: {
                 munge: function (gSpec) {
-                  console.log(gSpec)
                   return Merger.deepMerge(
                     {
                       dom: {
                         tag: 'div',
                         classes: [ Styles.resolve('toolbar-group') ].concat(
                           gSpec.scrollable === true ? Styles.resolve([ 'toolbar-scrollable-group' ]) : [ ]
-                        ).concat(gSpec.extraClasses !== undefined ? gSpec.extraClasses : []),
+                        ),
                         attributes: {
                           'aria-label': gSpec.label
                         }

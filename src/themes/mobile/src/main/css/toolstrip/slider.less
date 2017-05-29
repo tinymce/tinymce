@@ -7,12 +7,12 @@
   margin-right: 10%;
 }
 
-.tinymce-mobile-icon-large-font:before {
+.tinymce-mobile-icon-large-font:before, .tinymce-mobile-icon-large-heading:before {
   margin-right: .9em;
   margin-left: .5em;
 }
 
-.tinymce-mobile-icon-small-font:before {
+.tinymce-mobile-icon-small-font:before, .tinymce-mobile-icon-small-heading:before {
   margin-left: .9em;
   margin-right: .5em;
 }
@@ -21,54 +21,19 @@
   margin-left: 0px;
   margin-right: 0px;
 
-  .tinymce-mobile-slider-font-size-container {
+  .tinymce-mobile-slider-size-container {
     display: flex;
     flex-grow: 1;
     height: 100%;
     align-items: center;
 
-    .tinymce-mobile-slider-font-size {
+    .tinymce-mobile-slider-size-line {
       display: flex;
       flex: 1;
       margin-top: 0.3em;
       margin-bottom: 0.3em;
       background: @toolstrip-slider-background-color;
       height: 0.2em;
-    }
-
-  }
-
-  &.tinymce-mobile-slider-heading-container {
-    margin-left: 2em;
-    margin-right:2em;
-    display: flex;
-    flex-grow: 1;
-    height: 100%;
-    align-items: center;
-
-    .tinymce-mobile-slider-heading-spectrum {
-      display: flex;
-      flex: 1;
-      margin-top: 0.3em;
-      margin-bottom: 0.3em;
-      height: 100%;
-      align-items: center;
-
-
-      .tinymce-mobile-slider-heading-spectrum-line {
-        display: flex;
-        flex-grow: 1;
-        height: 0.2em;
-        background: @toolstrip-slider-background-color;
-      }
-    }
-
-    .tinymce-mobile-slider-thumb {
-      font-size: 0.7em;
-      padding: 0.5em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
   }
 
@@ -116,6 +81,10 @@
     height: .5em;
     width: .5em;
     left: -10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     /* vertically centering trick (margin: auto, top: 0, bottom: 0). On iOS and Safari, if you leave
      * out these values, then it shows the thumb at the top of the spectrum. This is probably because it is

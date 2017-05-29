@@ -50,10 +50,10 @@ define(
         ],
 
         onChange: onChange,
-        onDragStart: function (thumb) {
+        onDragStart: function (slider, thumb) {
           Toggling.on(thumb);
         },
-        onDragEnd: function (thumb) {
+        onDragEnd: function (slider, thumb) {
           Toggling.off(thumb);
         },
         onInit: onInit,
