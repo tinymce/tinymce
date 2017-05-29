@@ -6,12 +6,13 @@ test(
     'ephox.agar.api.RawAssertions',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Result',
     'ephox.sand.api.JSON'
   ],
 
-  function (Logger, RawAssertions, FieldPresence, FieldSchema, ValueSchema, Result, Json) {
+  function (Logger, RawAssertions, FieldPresence, FieldSchema, Objects, ValueSchema, Result, Json) {
     var checkErr = function (label, expectedPart, input, processor) {
       ValueSchema.asRaw(label, processor, input).fold(function (err) {
         var message = ValueSchema.formatError(err);
@@ -270,6 +271,39 @@ test(
       RawAssertions.assertEq('Checking output', 'alpha.value', v.alpha.getOrDie(
         'Alpha should be some'
       ));
+    });
+
+    Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.mergeWith',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
+            return Objects.wrap('extra', s.label);
+          }), ValueSchema.anyValue())
+        ]),
+        {
+          alpha: {
+            original: 'value'
+          },
+          label: 'dog'
+        }
+      );
+      RawAssertions.assertEq('Checking output', { original: 'value', extra: 'dog' }, v.alpha);
+    });
+
+    Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.mergeWith',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
+            return Objects.wrap('extra', s.label);
+          }), ValueSchema.anyValue())
+        ]),
+        {
+          label: 'dog'
+        }
+      );
+      RawAssertions.assertEq('Checking output', { extra: 'dog' }, v.alpha);
     });
 
     Logger.sync(
