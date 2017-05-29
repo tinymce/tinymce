@@ -90,10 +90,11 @@ define(
 
       function findSelectedBlob() {
         var blobInfo;
-
         blobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage().src);
         if (blobInfo) {
-          return blobInfo.blob();
+          return new Promise(function (resolve) {
+            resolve(blobInfo.blob());
+          });
         }
 
         return imageToBlob(getSelectedImage());
