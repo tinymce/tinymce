@@ -168,6 +168,32 @@ test(
       ])
     );
 
+    checkIs('test.9 (defaulted thunk) with no value supplied',
+      {
+        name: 'Dr Jekyll'
+      },
+      {
+        surname: 'Jekyll'
+      }, ValueSchema.objOf([
+        FieldSchema.field('name', 'name', FieldPresence.defaultedThunk(function (s) {
+          return 'Dr ' + s.surname;
+        }), ValueSchema.anyValue())
+      ])
+    );
+
+    checkIs('test.10 (defaulted thunk) with value supplied',
+      {
+        name: 'Hyde'
+      },
+      {
+        name: 'Hyde'
+      }, ValueSchema.objOf([
+        FieldSchema.field('name', 'name', FieldPresence.defaultedThunk(function (s) {
+          return 'Dr ' + s.surname;
+        }), ValueSchema.anyValue())
+      ])
+    );
+
     var optionValue = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), {});    
@@ -192,7 +218,6 @@ test(
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), {  });    
     RawAssertions.assertEq('fallback.opt: no alpha should be none', true, optionValue5.alpha.isNone());
-
 
     Logger.sync(
       'Checking choose',
