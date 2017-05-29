@@ -2,10 +2,11 @@ define(
   'ephox.boulder.core.ObjChanger',
 
   [
-    'ephox.katamari.api.Arr'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj'
   ],
 
-  function (Arr) {
+  function (Arr, Obj) {
     var narrow = function (obj, fields) {
       var r = { };
       Arr.each(fields, function (field) {
@@ -25,8 +26,19 @@ define(
       return obj;
     };
 
+    var exclude = function (obj, fields) {
+      var r = { };
+      Obj.each(obj, function (v, k) {
+        if (! Arr.contains(fields, k)) {
+          r[k] = v;
+        }
+      });
+      return r;
+    };
+
     return {
       narrow: narrow,
+      exclude: exclude,
       indexOnKey: indexOnKey
     };
   }
