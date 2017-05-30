@@ -1,140 +1,95 @@
-.tinymce-mobile-icon-previous:before {
-  content: "\e924";
+.tinymce-mobile-icon-arrow-back:before {
+  content: "\e5cd";
 }
-
-.tinymce-mobile-icon-next:before {
-  content: "\e91f";
+.tinymce-mobile-icon-image:before {
+  content: "\e412";
 }
-
-.tinymce-mobile-icon-align-left:before {
-  content: "\e90d";
+.tinymce-mobile-icon-cancel-circle:before {
+  content: "\e5c9";
 }
-
-.tinymce-mobile-icon-align-right:before {
-  content: "\e90f";
+.tinymce-mobile-icon-full-dot:before {
+  content: "\e061";
 }
-
 .tinymce-mobile-icon-align-center:before {
-  content: "\e90e";
+  content: "\e234";
 }
-
-.tinymce-mobile-icon-align-justify:before {
-  content: "\e910";
+.tinymce-mobile-icon-align-left:before {
+  content: "\e236";
 }
-
-.tinymce-mobile-icon-insert-char:before {
-  content: "\e90b";
+.tinymce-mobile-icon-align-right:before {
+  content: "\e237";
 }
-
-.tinymce-mobile-icon-insert-hr:before {
-  content: "\e90c";
+.tinymce-mobile-icon-bold:before {
+  content: "\e238";
 }
-
-.tinymce-mobile-icon-ordered-list:before {
-  content: "\e912";
+.tinymce-mobile-icon-italic:before {
+  content: "\e23f";
 }
-
 .tinymce-mobile-icon-unordered-list:before {
-  content: "\e911";
+  content: "\e241";
 }
-
-.tinymce-mobile-icon-insert-hr:before {
-  content: "\e90c";
+.tinymce-mobile-icon-ordered-list:before {
+  content: "\e242";
 }
-
-.tinymce-mobile-icon-outdent:before {
-  content: "\e914";
+.tinymce-mobile-icon-font-size:before {
+  content: "\e245";
 }
-
-.tinymce-mobile-icon-indent:before {
-  content: "\e913";
-}
-
-.tinymce-mobile-icon-redo:before {
-  content: "\e909";
-}
-
 .tinymce-mobile-icon-underline:before {
-  content: "\e90a";
+  content: "\e249";
 }
-
-.tinymce-mobile-icon-quote:before {
-  content: "\e915";
+.tinymce-mobile-icon-link:before {
+  content: "\e157";
 }
-.tinymce-mobile-icon-remove-formatting:before {
-  content: "\e916";
+.tinymce-mobile-icon-color:before {
+  content: "\e891";
 }
-.tinymce-mobile-icon-subscript:before {
-  content: "\e917";
+.tinymce-mobile-icon-previous:before {
+  content: "\e314";
 }
-.tinymce-mobile-icon-superscript:before {
-  content: "\e918";
+.tinymce-mobile-icon-next:before {
+  content: "\e315";
 }
-.tinymce-mobile-icon-strikethrough:before {
-  content: "\e919";
+.tinymce-mobile-icon-large-font:before {
+  content: "\e264";
 }
-
+.tinymce-mobile-icon-undo:before {
+  content: "\e166";
+}
 .tinymce-mobile-icon-small-font:before {
   content: "\e906";
 }
 
-.tinymce-mobile-icon-large-font:before {
-  content: "\e907";
-}
-
-
-.tinymce-mobile-icon-back:before {
-  content: 'Back';
-}
-
 .tinymce-mobile-icon-readonly-back:before {
-  content: 'Back';
+  content: "\e5ca";
 }
 
-.tinymce-mobile-icon-undo:before {
-  content: "\e900";
+
+.tinymce-mobile-icon-small-heading:before {
+  content: "small";
 }
 
-.tinymce-mobile-icon-bold:before {
-  content: "\e901";
+.tinymce-mobile-icon-large-heading:before {
+  content: "large";
 }
 
-.tinymce-mobile-icon-italic:before {
-  content: "\e902";
+.tinymce-mobile-icon-small-heading:before, .tinymce-mobile-icon-large-heading:before {
+  font-family: sans-serif;
+  font-size: 80%;
 }
 
-.tinymce-mobile-icon-link:before {
-  content: "\e903";
+.tinymce-mobile-mask-edit-icon:before {
+  content: "\e254";
 }
-
-.tinymce-mobile-icon-image:before {
-  content: "\e904";
-}
-
-.tinymce-mobile-icon-font-size:before {
-  content: "\e905";
-}
-
-.tinymce-mobile-icon-headings:before {
-  content: "H";
-  font-weight: bold;
-}
-
-.tinymce-mobile-icon-watson:before {
-  content: "W";
-}
-
-.tinymce-mobile-icon-color:before {
-  content: "\e908";
-}
-
-.tinymce-mobile-icon-add-button:before {
-  content: "\e91a";
+.tinymce-mobile-icon-back:before {
+  content: "\e5c4";
 }
 
 .tinymce-mobile-icon-heading:before {
-  content: "H";
+  /* TODO: Translate */
+  content: "Headings";
+  font-family: sans-serif;
   font-weight: bold;
+  font-size: 80%;
 }
 
 .tinymce-mobile-icon-h1:before {
@@ -150,14 +105,6 @@
 .tinymce-mobile-icon-h3:before {
   content: "H3";
   font-weight: bold;
-}
-
-.tinymce-mobile-icon-ul:before {
-  content: "ul";
-}
-
-.tinymce-mobile-icon-cancel-circle:before {
-  content: "\ea0d";
 }
 
 .tinymce-mobile-icon-edit:before {

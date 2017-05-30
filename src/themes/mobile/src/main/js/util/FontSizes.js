@@ -14,7 +14,7 @@ define(
   ],
 
   function (Arr, Fun, Option, Compare, Element, Node, Css, TransformFind, Traverse) {
-    var candidates = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
+    var candidates = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
 
     var defaultSize = 'medium';
     var defaultIndex = 2;

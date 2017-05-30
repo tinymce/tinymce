@@ -14,7 +14,7 @@ define(
     var makeEditSwitch = function (webapp) {
       return GuiFactory.build(
         Button.sketch({
-          dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon"></div>'),
+          dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
           action: function () {
             webapp.run(function (w) {
               w.setReadOnly(false);

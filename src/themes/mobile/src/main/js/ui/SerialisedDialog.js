@@ -88,8 +88,6 @@ define(
               Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
             });
             spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
-            var dotitems = memDots.get(dialog);
-            Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
           }
         });
       };
@@ -103,6 +101,8 @@ define(
             AlloyTriggers.dispatchFocus(dialog, inputComp.element());
           });
         });
+        var dotitems = memDots.get(dialog);
+        Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
       };
 
       var resetState = function () {
@@ -194,7 +194,7 @@ define(
         ]),
         components: Arr.bind(spec.fields, function (_f, i) {
           return i <= spec.maxFieldIndex ? [
-            UiDomFactory.spec('<div class="${prefix}-dot-item">&#x2022;</div>')
+            UiDomFactory.spec('<div class="${prefix}-dot-item ${prefix}-icon-full-dot ${prefix}-icon"></div>')
           ] : [];
         })
       });

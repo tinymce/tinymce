@@ -1,5 +1,6 @@
 .tinymce-mobile-toolbar-group:first-of-type, .tinymce-mobile-toolbar-group:last-of-type {
   background: @toolstrip-dark-background-color;
+  color: @toolstrip-dark-color;
 }
 
 .tinymce-mobile-toolbar-group {
@@ -9,6 +10,10 @@
   & > div {
     .mixin-flex-bar;
     flex: 1;
+  }
+
+  &.tinymce-mobile-exit-container {
+    background: #f44336;
   }
 
   &.tinymce-mobile-toolbar-scrollable-group {
@@ -29,6 +34,7 @@
 
       &.tinymce-mobile-toolbar-button-selected {
         background: @toolstrip-button-selected-background-color;
+        color: @toolstrip-button-selected-color;
       }
     }
   }

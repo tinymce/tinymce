@@ -2,39 +2,22 @@ define(
   'tinymce.themes.mobile.ui.FontSizeSlider',
 
   [
-    'ephox.alloy.api.ui.Slider',
+    'tinymce.themes.mobile.ui.SizeSlider',
     'tinymce.themes.mobile.ui.ToolbarWidgets',
     'tinymce.themes.mobile.util.FontSizes',
     'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Slider, ToolbarWidgets, FontSizes, UiDomFactory) {
+
+  function (SizeSlider, ToolbarWidgets, FontSizes, UiDomFactory) {
     var sizes = FontSizes.candidates();
 
     var makeSlider = function (spec) {
-      var onChange = function (slider, thumb, valueIndex) {
-        // Slider has index values
-        spec.onChange(slider, valueIndex);
-      };
-
-      return Slider.sketch({
-        dom: UiDomFactory.dom('<div class="${prefix}-slider-font-size-container ${prefix}-slider"></div>'),
-        onChange: onChange,
-        min: 0,
-        max: sizes.length - 1,
-        stepSize: 1,
-        getInitialValue: spec.getInitialValue,
-        snapToGrid: true,
-
-        components: [
-          Slider.parts().spectrum({
-            dom: UiDomFactory.dom('<div class="${prefix}-slider-font-size-container"></div>'),
-            components: [
-              UiDomFactory.spec('<div class="${prefix}-slider-font-size"></div>')
-            ]
-          }),
-          Slider.parts().thumb(UiDomFactory.spec('<div class="${prefix}-slider-thumb"></div>'))
-        ]
+      return SizeSlider.sketch({
+        onChange: spec.onChange,
+        sizes: sizes,
+        category: 'font',
+        getInitialValue: spec.getInitialValue
       });
     };
 
@@ -48,7 +31,7 @@ define(
 
     var sketch = function (realm, editor) {
       var spec = {
-        onChange: function (slider, value) {
+        onChange: function (value) {
           FontSizes.apply(editor, value);
         },
         getInitialValue: function (/* slider */) {

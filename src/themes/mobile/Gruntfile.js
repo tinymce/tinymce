@@ -198,9 +198,10 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
-  grunt.registerTask("atomic-tests", ["bolt-build"]);
+  grunt.registerTask("atomic-tests", ["bolt-build", "bolt-test:atomic"]);
   grunt.registerTask("phantom-tests", ["bedrock-auto:phantomjs"]);
   grunt.registerTask("chrome-tests", ["bedrock-auto:chrome"]);
+  grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("browser-tests", ["bedrock-manual"]);
   grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
 };

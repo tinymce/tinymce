@@ -1,6 +1,9 @@
 .tinymce-mobile-android-container {
   &.tinymce-mobile-android-maximized {
-    min-height: 100vh;
+    /* Android WebView only */
+    /* The min-height: 100vh is required for webview which we aren't supporting yet.
+    It breaks normal mode by making the container larger than the window height */
+    /*min-height: 100vh;*/
     position: fixed;
     top: 0;
     bottom: 0;
