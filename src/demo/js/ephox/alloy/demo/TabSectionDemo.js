@@ -5,22 +5,50 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Arr',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'global!document'
   ],
 
-  function (GuiFactory, Attachment, Gui, Container, Tabbar, TabSection, HtmlDisplay, Merger, Element, Class, document) {
+  function (GuiFactory, Attachment, Gui, Tabbar, TabSection, HtmlDisplay, Arr, Element, Class, document) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
       Class.add(gui.element(), 'gui-root-demo-container');
       Attachment.attachSystem(body, gui);
+
+      var makeTab = function (tabSpec) {
+        return {
+          view: tabSpec.view,
+          value: tabSpec.value,
+          dom: {
+            tag: 'button',
+            attributes: {
+              'data-value': tabSpec.value
+            }
+          },
+          components: [
+            GuiFactory.text(tabSpec.text)
+          ]
+        };
+      };
+
+      var pTabbar = TabSection.parts().tabbar({
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          Tabbar.parts().tabs({ })
+        ],
+        markers: {
+          tabClass: 'demo-tab',
+          selectedClass: 'demo-selected-tab'
+        }
+      });
 
       var subject = HtmlDisplay.section(
         gui,
@@ -30,10 +58,14 @@ define(
             tag: 'div'
           },
           components: [
-            TabSection.parts().tabbar(),
-            TabSection.parts().tabview()
+            pTabbar,
+            TabSection.parts().tabview({
+              dom: {
+                tag: 'div'
+              }
+            })
           ],
-          tabs: [
+          tabs: Arr.map([
             {
               value: 'alpha',
               text: 'Alpha',
@@ -52,48 +84,7 @@ define(
                 ];
               }
             }
-          ],
-          parts: {
-            tabbar: {
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                Tabbar.parts().tabs()
-              ],
-              parts: {
-                tabs: { }
-              },
-              members: {
-                tab: {
-                  munge: function (tabSpec) {
-                    return {
-                      view: tabSpec.view,
-                      value: tabSpec.value,
-                      dom: {
-                        tag: 'button',
-                        attributes: {
-                          'data-value': tabSpec.value
-                        }
-                      },
-                      components: [
-                        GuiFactory.text(tabSpec.text)
-                      ]
-                    };
-                  }
-                }
-              },
-              markers: {
-                tabClass: 'demo-tab',
-                selectedClass: 'demo-selected-tab'
-              }
-            },
-            'tabview': {
-              dom: {
-                tag: 'div'
-              }
-            }
-          }
+          ], makeTab)
         })
       );
 

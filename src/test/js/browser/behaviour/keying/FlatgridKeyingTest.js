@@ -6,19 +6,19 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr'
   ],
 
-  function (FocusTools, Keyboard, Keys, Step, GuiFactory, Behaviour, Focusing, Keying, Container, EventHandler, GuiSetup, NavigationUtils, Objects, Arr) {
+  function (FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, AlloyEvents, Container, GuiSetup, NavigationUtils, Objects, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -43,11 +43,11 @@ asynctest(
             },
             classes: [ 'square' ].concat(classes)
           },
-          events: {
-            'alloy.execute': EventHandler.nu({
-              run: store.adder('item.execute: ' + classes.join(','))
-            })
-          },
+          events: AlloyEvents.derive([
+            AlloyEvents.runOnExecute(
+              store.adder('item.execute: ' + classes.join(','))
+            )
+          ]),
           containerBehaviours: Behaviour.derive([
             Focusing.config({ })
           ])

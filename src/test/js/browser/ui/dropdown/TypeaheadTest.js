@@ -12,12 +12,13 @@ asynctest(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.test.dropdown.DropdownAssertions',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.NavigationUtils',
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.TestBroadcasts',
-    'ephox.alloy.test.typeahead.TestTypeaheadList',
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Value',
@@ -25,8 +26,8 @@ asynctest(
   ],
 
   function (
-    FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, DropdownAssertions, GuiSetup, NavigationUtils, Sinks, TestBroadcasts,
-    TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math
+    FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils,
+    Sinks, TestBroadcasts, TestTypeaheadSteps, Arr, Future, Result, Value, Math
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -67,14 +68,18 @@ asynctest(
                   var items = text === 'no-data' ? [
                     { type: 'separator', text: 'No data' }
                   ] : f;
-                  return TieredMenu.simpleData('blah', 'Blah', items);
+                  var menu = TestDropdownMenu.renderMenu({
+                    value: 'blah',
+                    items: Arr.map(items, TestDropdownMenu.renderItem)
+                  });
+                  return TieredMenu.singleData('blah.overall', menu);
                 });
               },
 
               lazySink: function () { return Result.value(sink); },
 
               parts: {
-                menu: TestTypeaheadList
+                menu: TestDropdownMenu.part(store)
               }
             })
           ]
@@ -85,7 +90,7 @@ asynctest(
 
       var item = function (key) {
         return {
-          selector: '.test-typeahead-selected-item[data-value="' + key + '"]',
+          selector: '.selected-item[data-value="' + key + '"]',
           label: key
         };
       };
@@ -98,7 +103,7 @@ asynctest(
         FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
 
         GuiSetup.mAddStyles(doc, [
-          '.test-typeahead-selected-item { background-color: #cadbee; }'
+          '.selected-item { background-color: #cadbee; }'
         ]),
 
         steps.sAssertValue('Initial value of typeahead', 'initial-value'),
@@ -113,7 +118,7 @@ asynctest(
 
         // On typeaheads, there should be a width property that is approximately
         // the same size as the input field
-        DropdownAssertions.sSameWidth('Typeahead', gui, typeahead, '.test-typeahead-menu'),
+        DropdownAssertions.sSameWidth('Typeahead', gui, typeahead, '.menu'),
 
         NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
           item('peo2'),
@@ -151,7 +156,7 @@ asynctest(
           item('new-value11')
         ]),
 
-        Mouse.sClickOn(gui.element(), '.test-typeahead-item[data-value="new-value12"]'),
+        Mouse.sClickOn(gui.element(), '.item[data-value="new-value12"]'),
         steps.sWaitForNoMenu('After clicking on item'),
         steps.sAssertValue('After clicking on item', 'new-value12'),
 
@@ -169,7 +174,7 @@ asynctest(
         TestBroadcasts.sDismissOn(
           'typeahead list option: should not close',
           gui,
-          '.test-typeahead-item[data-value="new-value122"]'
+          '.item[data-value="new-value122"]'
         ),
         steps.sWaitForMenu('Broadcasting on item should not dismiss popup'),
 

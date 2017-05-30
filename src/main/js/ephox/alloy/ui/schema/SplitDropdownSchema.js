@@ -6,7 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.InternalSink',
@@ -15,7 +15,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, Focusing, Tabstopping, Toggling, SystemEvents, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
+  function (Behaviour, Focusing, Tabstopping, Toggling, AlloyTriggers, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -29,14 +29,11 @@ define(
       FieldSchema.defaulted('matchWidth', false)
     ];
 
-    var arrowPart = PartType.internal(
-      Button,
-      [
-        FieldSchema.strict('dom')
-      ],
-      'arrow',
-      '<alloy.split-dropdown.arrow>',
-      function (detail) {
+    var arrowPart = PartType.required({
+      factory: Button,
+      schema: [ FieldSchema.strict('dom') ],
+      name: 'arrow',
+      defaults: function (detail) {
         return {
           dom: {
             attributes: {
@@ -49,11 +46,10 @@ define(
           ])
         };
       },
-      function (detail) {
+      overrides: function (detail) {
         return {
           action: function (arrow) {
-            var hotspot = arrow.getSystem().getByUid(detail.uid()).getOrDie();
-            hotspot.getSystem().triggerEvent(SystemEvents.execute(), hotspot.element(), { });
+            arrow.getSystem().getByUid(detail.uid()).each(AlloyTriggers.emitExecute);
           },
           buttonBehaviours: Behaviour.derive([
             Toggling.config({
@@ -66,16 +62,13 @@ define(
           ])
         };
       }
-    );
+    });
 
-    var buttonPart = PartType.internal(
-      Button,
-      [
-        FieldSchema.strict('dom')
-      ],
-      'button',
-      '<alloy.split-dropdown.button>',
-      function (detail) {
+    var buttonPart = PartType.required({
+      factory: Button,
+      schema: [ FieldSchema.strict('dom') ],
+      name: 'button',
+      defaults: function (detail) {
         return {
           dom: {
             attributes: {
@@ -87,30 +80,29 @@ define(
           ])
         };
       },
-      function (detail) {
+      overrides: function (detail) {
         return {
           action: detail.onExecute()
         };
       }
-    );
+    });
 
     var partTypes = [
       arrowPart,
       buttonPart,
-      PartType.external(
-        { sketch: Fun.identity },
-        [
-          Fields.tieredMenuMarkers(),
-          Fields.members([ 'menu', 'item' ])
+
+      PartType.external({
+        schema: [
+          Fields.tieredMenuMarkers()
         ],
-        'menu',
-        function (detail) {
+        name: 'menu',
+        defaults: function (detail) {
           return {
             onExecute: detail.onExecute()
           };
-        },
-        Fun.constant({ })
-      ),
+        }
+      }),
+
       InternalSink.partType()
     ];
 

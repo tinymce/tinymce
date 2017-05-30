@@ -13,62 +13,59 @@ asynctest(
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
     'ephox.alloy.test.GuiSetup',
-    'ephox.alloy.test.form.TestForm',
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.test.form.TestForm'
   ],
 
-  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm, Fun) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    var formAntSpec = {
+      uid: 'input-ant',
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        FormField.parts().field({
+          factory: Input,
+          data: 'Init'
+        }),
+        FormField.parts().label({
+          dom: { tag: 'label', innerHtml: 'a' },
+          components: [ ]
+        })
+      ]
+    };
+
+    var formBullSpec = {
+      uid: 'select-bull',
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        FormField.parts().field({
+          factory: HtmlSelect,
+          options: [
+            { value: 'select-b-init', text: 'Select-b-init' },
+            { value: 'select-b-other', text: 'Select-b-other' }
+          ]
+        }),
+        FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+      ]
+    };
+
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
-        Form.sketch({
-          dom: {
-            tag: 'div'
-          },
-          parts: {
-            'form.ant': FormField.sketch(Input, {
-              uid: 'input-ant',
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                FormField.parts(Input).field(),
-                FormField.parts(Input).label()
-              ],
-              parts: {
-                field: {
-                  data: 'Init'
-                },
-                label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
-              }
-            }),
-
-            'form.bull': FormField.sketch(HtmlSelect, {
-              uid: 'select-bull',
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                FormField.parts(HtmlSelect).field(),
-                FormField.parts(HtmlSelect).label()
-              ],
-              parts: {
-                field: {
-                  options: [
-                    { value: 'select-b-init', text: 'Select-b-init' },
-                    { value: 'select-b-other', text: 'Select-b-other' }
-                  ]
-                },
-                label: { dom: { tag: 'label', innerHtml: 'a' }, components: [ ] }
-              }
-            })
-          },
-          components: [
-            Form.parts('form.ant'),
-            Form.parts('form.bull')
-          ]
+        Form.sketch(function (parts) {
+          return {
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              parts.field('form.ant', FormField.sketch(formAntSpec)),
+              parts.field('form.bull', FormField.sketch(formBullSpec))
+            ]
+          };
         })
       );
 

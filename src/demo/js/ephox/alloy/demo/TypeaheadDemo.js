@@ -7,21 +7,20 @@ define(
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
-    'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoSink',
+    'ephox.alloy.demo.forms.DemoRenders',
     'ephox.alloy.demo.HtmlDisplay',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Value',
     'global!console'
   ],
 
-  function (Representing, Attachment, Gui, TieredMenu, Typeahead, DemoMenus, DemoSink, HtmlDisplay, Arr, Future, Option, Result, Insert, Element, Class, Value, console) {
+  function (Representing, Attachment, Gui, TieredMenu, Typeahead, DemoSink, DemoRenders, HtmlDisplay, Arr, Future, Option, Result, Element, Class, Value, console) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -75,7 +74,9 @@ define(
           },
 
           parts: {
-            menu: DemoMenus.list()
+            menu: {
+              markers: DemoRenders.tieredMarkers()
+            }
           },
 
           markers: {
@@ -102,7 +103,11 @@ define(
 
             var future = Future.pure(matches);
             return future.map(function (items) {
-              return TieredMenu.simpleData('blah', 'Blah', items);
+              var menu = DemoRenders.menu({
+                value: 'blah.value',
+                items: Arr.map(items, DemoRenders.item)
+              });
+              return TieredMenu.singleData('blah', menu)
             });
           },
           onExecute: function (sandbox, item, itemValue) {

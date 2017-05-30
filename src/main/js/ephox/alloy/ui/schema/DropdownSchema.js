@@ -24,20 +24,18 @@ define(
     ];
 
     var partTypes = [
-      PartType.external(
-        { sketch: Fun.identity },
-        [
-          Fields.tieredMenuMarkers(),
-          Fields.members([ 'menu', 'item' ])
+      PartType.external({
+        schema: [
+          Fields.tieredMenuMarkers()
         ],
-        'menu',
-        function (detail) {
+        name: 'menu',
+        defaults: function (detail) {
           return {
             onExecute: detail.onExecute()
           };
-        },
-        Fun.constant({ })
-      ),
+        }
+      }),
+
       InternalSink.partType()
     ];
 

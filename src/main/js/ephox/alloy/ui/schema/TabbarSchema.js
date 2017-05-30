@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.TabButton',
     'ephox.alloy.data.Fields',
@@ -11,13 +12,11 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Highlighting, SystemEvents, TabButton, Fields, PartType, FieldSchema, Fun) {
+  function (Highlighting, AlloyTriggers, SystemEvents, TabButton, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
       FieldSchema.strict('dom'),
-
-      Fields.members([ 'tab' ]),
 
       FieldSchema.defaulted('clickToDismiss', false),
 
@@ -25,17 +24,14 @@ define(
     ];
 
 
-    var tabsPart = PartType.group(
-      TabButton,
-      [ ],
-      'tabs',
-      'tab',
-      '<alloy.tabs>',
-      Fun.constant({ }),
-      function (barDetail, tabSpec) {
+    var tabsPart = PartType.group({
+      factory: TabButton,
+      name: 'tabs',
+      unit: 'tab',
+      overrides: function (barDetail, tabSpec) {
         var dismissTab = function (tabbar, button) {
           Highlighting.dehighlight(tabbar, button);
-          SystemEvents.trigger(tabbar, SystemEvents.dismissTab(), {
+          AlloyTriggers.emitWith(tabbar, SystemEvents.dismissTab(), {
             tabbar: tabbar,
             button: button
           });
@@ -43,7 +39,7 @@ define(
 
         var changeTab = function (tabbar, button) {
           Highlighting.highlight(tabbar, button);
-          SystemEvents.trigger(tabbar, SystemEvents.changeTab(), {
+          AlloyTriggers.emitWith(tabbar, SystemEvents.changeTab(), {
             tabbar: tabbar,
             button: button
           });
@@ -68,7 +64,7 @@ define(
           }
         };
       }
-    );
+    });
 
     var partTypes = [
       tabsPart

@@ -14,12 +14,26 @@ asynctest(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.alloy.test.GuiSetup'
+    'ephox.alloy.test.GuiSetup',
+    'ephox.katamari.api.Arr'
   ],
 
-  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, Container, ToolbarGroup, GuiSetup) {
+  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, Container, ToolbarGroup, GuiSetup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var mungeItem = function (itemSpec) {
+      return {
+        dom: {
+          tag: 'button',
+          innerHtml: itemSpec.data.text
+        },
+
+        behaviours: Behaviour.derive([
+          Focusing.config({ })
+        ])
+      };
+    };
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
@@ -28,39 +42,17 @@ asynctest(
             tag: 'div'
           },
           components: [
-            ToolbarGroup.parts().items()
-          ],
-
-          items: [ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ],
-
-          members: {
-            item: {
-              munge: function (itemSpec) {
-                return Container.sketch({
-                  dom: {
-                    tag: 'button',
-                    innerHtml: itemSpec.data.text
-                  },
-
-                  containerBehaviours: Behaviour.derive([
-                    Focusing.config({ })
-                  ])
-                });
-              }
-            }
-          },
-
-          markers: {
-            itemClass: 'toolbar-item'
-          },
-
-          parts: {
-            items: {
+            ToolbarGroup.parts().items({
               dom: {
                 tag: 'div',
                 classes: [ 'group-items' ]
               }
-            }
+            })
+          ],
+
+          items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
+          markers: {
+            itemClass: 'toolbar-item'
           }
         })
       );

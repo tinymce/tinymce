@@ -9,20 +9,21 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.component.Memento',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Disabling',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects',
     'ephox.sugar.api.dom.Focus'
   ],
 
-  function (ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, GuiFactory, Memento, SystemEvents, Behaviour, Disabling, Button, Container, EventHandler, GuiSetup, Objects, Focus) {
+  function (
+    ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, Behaviour, Disabling, GuiFactory, Memento, AlloyEvents, Button, Container, GuiSetup,
+    Focus
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -47,12 +48,9 @@ asynctest(
           components: [
             subject.asSpec()
           ],
-          events: Objects.wrap(
-            SystemEvents.execute(),
-            EventHandler.nu({
-              run: store.adder('execute.reached')
-            })
-          )
+          events: AlloyEvents.derive([
+            AlloyEvents.runOnExecute(store.adder('execute.reached'))
+          ])
         }
       ));
     }, function (doc, body, gui, component, store) {

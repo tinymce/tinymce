@@ -5,19 +5,14 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Tabstopping',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.schema.ToolbarGroupSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'global!Error'
   ],
 
-  function (Behaviour, Keying, Tabstopping, UiSketcher, PartType, ToolbarGroupSchema, Fun, Merger, Error) {
-    var schema = ToolbarGroupSchema.schema();
-    var partTypes = ToolbarGroupSchema.parts();
-
-    var make = function (detail, components, spec, _externals) {
+  function (Behaviour, Keying, Tabstopping, Sketcher, ToolbarGroupSchema, Merger, Error) {
+    var factory = function (detail, components, spec, _externals) {
       return Merger.deepMerge(
         {
           dom: {
@@ -42,23 +37,16 @@ define(
             detail.tgroupBehaviours()
           ),
 
-          'debug.sketcher': spec['debug.sketcher'],
-          customBehaviours: detail.customBehaviours()
+          'debug.sketcher': spec['debug.sketcher']
         }
       );
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.composite(ToolbarGroupSchema.name(), schema, partTypes, make, spec);
-    };
-
-    // TODO: Remove likely dupe
-    var parts = PartType.generate(ToolbarGroupSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      parts: Fun.constant(parts),
-      schemas: Fun.constant(ToolbarGroupSchema)
-    };
+    return Sketcher.composite({
+      name: 'ToolbarGroup',
+      configFields: ToolbarGroupSchema.schema(),
+      partFields: ToolbarGroupSchema.parts(),
+      factory: factory
+    });
   }
 );

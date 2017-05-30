@@ -3,8 +3,6 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Focusing',
-    'ephox.alloy.api.behaviour.Invalidating',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Tabstopping',
@@ -14,36 +12,22 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ExpandableForm',
     'ephox.alloy.api.ui.Form',
-    'ephox.alloy.api.ui.FormChooser',
-    'ephox.alloy.api.ui.FormCoupledInputs',
-    'ephox.alloy.api.ui.FormField',
-    'ephox.alloy.api.ui.HtmlSelect',
-    'ephox.alloy.api.ui.Input',
-    'ephox.alloy.api.ui.TieredMenu',
-    'ephox.alloy.api.ui.Typeahead',
     'ephox.alloy.demo.DemoDataset',
-    'ephox.alloy.demo.DemoMenus',
     'ephox.alloy.demo.DemoSink',
+    'ephox.alloy.demo.forms.DemoFields',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.alloy.registry.Tagger',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Future',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Value',
     'global!console',
     'global!document',
     'global!setTimeout'
   ],
 
   function (
-    Behaviour, Focusing, Invalidating, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, ExpandableForm, Form, FormChooser, FormCoupledInputs,
-    FormField, HtmlSelect, Input, TieredMenu, Typeahead, DemoDataset, DemoMenus, DemoSink, HtmlDisplay, Tagger, Objects, Arr, Future, Merger, Option, Result,
-    Element, Class, Value, console, document, setTimeout
+    Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, ExpandableForm, Form, DemoDataset, DemoSink, DemoFields, HtmlDisplay, Obj,
+    Result, Element, Class, console, document, setTimeout
   ) {
     return function () {
       var gui = Gui.create();
@@ -59,278 +43,96 @@ define(
         return Result.value(sink);
       };
 
-      var textMunger = function (spec) {
-        var invalidUid = Tagger.generate('demo-invalid-uid');
-        return {
-          dom: {
-            tag: 'div'
-          },
-          parts: {
-            field: {
-              inputBehaviours: Behaviour.derive([
-                Invalidating.config({
-                  invalidClass: 'invalid-input',
-                  notify: {
-                    getContainer: function (input) {
-                      return input.getSystem().getByUid(invalidUid).fold(Option.none, function (c) {
-                        return Option.some(c.element());
-                      });
-                    }
-                  },
-                  validator: {
-                    validate: function (input) {
-                      var v = Representing.getValue(input);
-                      return Future.nu(function (callback) {
-                        setTimeout(function () {
-                          var res = v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
-                          callback(res);
-                        }, 1000);
-                      });
-                    },
-                    onEvent: 'input'
-                  }
-                })
-              ])
-            },
-            label: {
-              dom: { tag: 'label', innerHtml: spec.label }
-            }
-          },
-          components: [
-            FormField.parts(Input).label(),
-            Container.sketch({ uid: invalidUid }),
-            FormField.parts(Input).field()
-          ]
-        };
+      var alphaSpec = { label: 'Alpha', inline: false };
+      var betaSpec = { label: 'Beta', inline: false };
+      var gammaSpec = { label: 'Gamma', inline: true };
+      var deltaSpec = { label: 'Delta', inline: false };
+      var epsilonSpec = { label: 'Epsilon' };
+
+
+      var thetaSpec = {
+        label: 'AA',
+        options: [
+          { value: 'a.a', text: 'A.A' },
+          { value: 'b.b', text: 'B.B' },
+          { value: 'c.c', text: 'C.C' },
+          { value: 'd.d', text: 'D.D' }
+        ]
       };
 
-      var coupledTextMunger = function (spec) {
-        return {
-          dom: {
-            tag: 'div'
-          },
-          parts: {
-            'field1': spec.field1,
-            'field2': spec.field2,
-            lock: {
-              dom: { tag: 'button', innerHtml: 'x' },
-              buttonBehaviours: Behaviour.derive([
-                Tabstopping.config({ })
-              ])
-            }
-          },
-          markers: {
-            lockClass: 'demo-selected'
-          },
-          onLockedChange: function (current, other) {
-            var cValue = Representing.getValue(current);
-            Representing.setValue(other, cValue);
-          },
-
-          components: [
-            FormCoupledInputs.parts().field1(),
-            FormCoupledInputs.parts().field2(),
-            FormCoupledInputs.parts().lock()
-          ]
-        };
+      var rhoSpec = {
+        legend: 'Rho',
+        choices: [
+          { value: 'left', text: 'Left' },
+          { value: 'middle', text: 'Middle' },
+          { value: 'right', text: 'Right' }
+        ]
       };
 
-      var selectMunger = function (spec) {
-        return {
-          dom: {
-            tag: 'div',
-            styles: {
-              border: '1px solid blue'
-            }
-          },
-          components: [
-            FormField.parts(HtmlSelect).label(),
-            Container.sketch({
-              dom: {
-                classes: [ 'wrapper' ]
-              },
-              components: [
-                FormField.parts(HtmlSelect).field()
-              ]
-            })
-          ],
-
-          parts: {
-            field: {
-              dom: {
-                classes: [ 'ephox-select-wrapper' ]
-              },
-              selectBehaviours: Behaviour.derive([
-                Tabstopping.config({ }),
-                Focusing.config({ })
-              ]),
-              options: spec.options
-            },
-            label: { dom: { tag: 'label', innerHtml: spec.label } }
-          }
-        };
+      var omegaSpec = {
+        field1: { label: 'omega-1', inline: false },
+        field2: { label: 'omega-2', inline: false }
       };
 
-      var fieldParts = function () {
-        return {
-          omega: FormCoupledInputs.sketch(
-            coupledTextMunger({
-              field1: textMunger({ label: 'omega-1', inline: false }),
-              field2: textMunger({ label: 'omega-2', inline: false })
-            })
-          ),
-          alpha: FormField.sketch(Input, textMunger({ label: 'Alpha', inline: false })),
-          beta: FormField.sketch(Input, textMunger({ label: 'Beta', inline: false })),
-          gamma: FormField.sketch(Input, textMunger({ label: 'Gamma', inline: false })),
-          delta: FormField.sketch(Input, textMunger({ label: 'Delta', inline: false })),
-          epsilon: FormField.sketch(Input, textMunger({ label: 'Epsilon' })),
-          rho: FormChooser.sketch({
-            parts: {
-              legend: {
-                dom: {
-                  innerHtml: 'Rho'
-                }
-              },
-              choices: { }
-            },
-
-            markers: {
-              choiceClass: 'ephox-pastry-independent-button',
-              selectedClass: 'demo-selected'
-            },
-
-            dom: {
-              tag: 'div'
-            },
-            components: [
-              FormChooser.parts().legend(),
-              FormChooser.parts().choices()
-            ],
-            chooserBehaviours: Behaviour.derive([
-              Tabstopping.config({ })
-            ]),
-            members: {
-              choice: {
-                munge: function (data) {
-                  return {
-                    dom: {
-                      tag: 'span',
-                      classes: [ 'ephox-pastry-independent-button' ],
-                      attributes: {
-                        title: data.text
-                      },
-                      styles: {
-                        display: 'flex'
-                      }
-                    }
-                  };
-                }
-              }
-            },
-            choices: [
-              { value: 'left', text: 'Left' },
-              { value: 'middle', text: 'Middle' },
-              { value: 'right', text: 'Right' }
-            ]
-          }),
-          theta: FormField.sketch(HtmlSelect, selectMunger({
-            label: 'AA',
-            options: [
-              { value: 'a.a', text: 'A.A' },
-              { value: 'b.b', text: 'B.B' },
-              { value: 'c.c', text: 'C.C' },
-              { value: 'd.d', text: 'D.D' }
-            ]
-          })),
-
-          maxis: FormField.sketch(Typeahead, {
-            parts: {
-              field: {
-                minChars: 1,
-
-                lazySink: lazySink,
-
-                fetch: function (input) {
-
-                  var text = Value.get(input.element());
-                  console.log('text', text);
-                  var matching = Arr.bind(DemoDataset, function (d) {
-                    var index = d.indexOf(text.toLowerCase());
-                    if (index > -1) {
-                      var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
-                        d.substring(index + text.length);
-                      return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
-                    } else {
-                      return [ ];
-                    }
-                  });
-
-                  var matches = matching.length > 0 ? matching : [
-                    { type: 'separator', text: 'No items' }
-                  ];
-
-                  var future = Future.pure(matches);
-                  return future.map(function (items) {
-                    return TieredMenu.simpleData('blah', 'Blah', items);
-                  });
-                },
-                dom: {
-
-                },
-                parts: {
-                  menu: DemoMenus.list()
-                },
-
-                markers: {
-                  openClass: 'alloy-selected-open'
-                }
-              },
-              label: {
-                dom: {
-                  tag: 'label',
-                  innerHtml: 'Maxis'
-                }
-              }
-            },
-            components: [
-              FormField.parts(Typeahead).label(),
-              FormField.parts(Typeahead).field()
-            ]
-          })
-        };
+      var maxiSpec = {
+        label: 'Maxis',
+        dataset: DemoDataset,
+        lazySink: lazySink
       };
 
       var form = HtmlDisplay.section(
         gui,
         'This form has many fields',
-        Form.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'outside-form' ]
-          },
+        Form.sketch(function (parts) {
+          return {
+            dom: {
+              tag: 'div',
+              classes: [ 'outside-form' ]
+            },
 
-          parts: Objects.narrow(fieldParts(), [ 'alpha', 'maxis', 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
+            components: [
+              parts.field('alpha', DemoFields.textMunger(alphaSpec)),
+              parts.field('beta', DemoFields.textMunger(betaSpec)),
+              Container.sketch({
+                dom: {
+                  styles: {
+                    border: '1px solid green'
+                  }
+                },
+                components: [
+                  parts.field('gamma', DemoFields.textMunger(gammaSpec))
+                ]
+              }),
 
-          components: [
-            Form.parts('alpha'),
-            Form.parts('maxis'),
-            Form.parts('beta'),
-            Form.parts('gamma'),
-            Container.sketch({
-              components: [
-                Form.parts('delta'),
-                Form.parts('epsilon')
-              ]
-            }),
-            Form.parts('rho')
+              parts.field('delta', DemoFields.textMunger(deltaSpec)),
+              parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
+              parts.field('theta', DemoFields.selectMunger(thetaSpec)),
+              parts.field('rho', DemoFields.chooserMunger(rhoSpec)),
+              parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
+              parts.field('maxis', DemoFields.typeaheadMunger(maxiSpec)),
 
-          ],
+              Button.sketch({
+                dom: {
+                  tag: 'button',
+                  innerHtml: 'OK'
+                },
+                action: function (button) {
+                  console.log('Form values', Obj.map(
+                    Representing.getValue(form),
+                    function (v) {
+                      return v.getOr('Not found');
+                    }
+                  ));
+                }
+              })
+            ],
 
-          formBehaviours: Behaviour.derive([
-            Keying.config({
-              mode: 'cyclic'
-            })
-          ])
+            formBehaviours: Behaviour.derive([
+              Keying.config({
+                mode: 'cyclic'
+              })
+            ])
+          };
         })
       );
 
@@ -357,34 +159,52 @@ define(
             shrinkingClass: 'demo-sliding-height-shrinking',
             growingClass: 'demo-sliding-height-growing'
           },
-          parts: {
-            'minimal': {
-              dom: {
-                tag: 'div',
-                classes: [ 'form-section' ]
-              },
-              parts: Objects.narrow(fieldParts(), [ 'omega', 'alpha', 'theta' ]),
-              components: [
-                Form.parts('omega'),
-                Form.parts('alpha'),
-                Form.parts('theta')
-              ]
-            },
-            'extra': {
-              dom: {
-                tag: 'div',
-                classes: [ 'form-section' ]
-              },
-              parts: Objects.narrow(fieldParts(), [ 'beta', 'gamma', 'delta', 'epsilon', 'rho' ]),
-              components: [
-                Form.parts('beta'),
-                Form.parts('gamma'),
-                Form.parts('delta'),
-                Form.parts('epsilon'),
-                Form.parts('rho')
-              ]
-            },
-            'expander': {
+
+          components: [
+            ExpandableForm.parts().minimal(
+              Form.sketch(function (parts) {
+                return {
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'form-section' ]
+                  },
+
+                  components: [
+                    parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
+                    parts.field('alpha', DemoFields.textMunger(alphaSpec)),
+                    parts.field('beta', DemoFields.textMunger(betaSpec)),
+                  ]
+                };
+              })
+            ),
+
+            ExpandableForm.parts().extra(
+              Form.sketch(function (parts) {
+                return {
+                  dom: {
+                    tag: 'div',
+                    classes: [ 'form-section' ]
+                  },
+                  components: [
+                    parts.field('beta', DemoFields.textMunger(betaSpec)),
+                    Container.sketch({
+                      dom: {
+                        styles: {
+                          border: '1px solid green'
+                        }
+                      },
+                      components: [
+                        parts.field('gamma', DemoFields.textMunger(gammaSpec))
+                      ]
+                    }),
+                    parts.field('delta', DemoFields.textMunger(deltaSpec)),
+                    parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
+                    parts.field('rho', DemoFields.chooserMunger(rhoSpec))    
+                  ]
+                };
+              })
+            ),
+            ExpandableForm.parts().expander({
               dom: {
                 tag: 'button',
                 innerHtml: 'v'
@@ -395,8 +215,8 @@ define(
                 }),
                 Tabstopping.config({ })
               ])
-            },
-            'controls': {
+            }),
+            ExpandableForm.parts().controls({
               dom: {
                 tag: 'div'
               },
@@ -408,16 +228,21 @@ define(
                 })
               ]),
               components: [
-                Button.sketch({ dom: { tag: 'button', innerHtml: 'OK' } })
+                Button.sketch(
+                  {
+                    dom: { tag: 'button', innerHtml: 'OK' },
+                    action: function (button) {
+                      console.log('Exp Form values', Obj.map(
+                        Representing.getValue(expform),
+                        function (v) {
+                          return v.getOr('Not found');
+                        }
+                      ));
+                    }
+                  }
+                )
               ]
-            }
-          },
-
-          components: [
-            ExpandableForm.parts().minimal(),
-            ExpandableForm.parts().extra(),
-            ExpandableForm.parts().expander(),
-            ExpandableForm.parts().controls()
+            })
           ],
           expandableBehaviours: Behaviour.derive([
             Keying.config({
@@ -432,7 +257,22 @@ define(
 
       setTimeout(function () {
         ExpandableForm.toggleForm(expform);
-      }, 1000);
+
+        Representing.setValue(form, {
+          alpha: 'hi'
+        });
+
+        console.log('form', Obj.map(Representing.getValue(form), function (v) { return v.getOrDie(); }));
+
+        console.log('expform', Obj.map(Representing.getValue(expform), function (v) { return v.getOrDie(); }));
+
+        Representing.setValue(expform, {
+          'omega': 'hi'
+        });
+
+        Representing.getValue(expform);
+
+      }, 100);
     };
   }
 );

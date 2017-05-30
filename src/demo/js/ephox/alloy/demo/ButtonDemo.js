@@ -122,11 +122,7 @@ define(
           buttonBehaviours: Behaviour.derive([
             catBehaviour.config({ }),
             redBehaviour.config({ })
-          ]),
-          customBehaviours: [
-            catBehaviour,
-            redBehaviour
-          ]
+          ])
         })
       );
     };

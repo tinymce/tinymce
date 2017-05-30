@@ -12,13 +12,14 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.api.ui.ItemWidget',
-    'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.demo.DemoSink',
+    'ephox.alloy.demo.forms.DemoRenders',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
@@ -28,8 +29,8 @@ define(
   ],
 
   function (
-    Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, Dropdown, Input, ItemWidget, Menu, SplitDropdown, TieredMenu, DemoSink,
-    HtmlDisplay, Future, Result, DomEvent, Element, Class, console, document
+    Behaviour, Keying, Representing, Tabstopping, Attachment, Gui, Button, Container, Dropdown, Input, SplitDropdown, TieredMenu, DemoSink, DemoRenders, HtmlDisplay,
+    Arr, Future, Obj, Result, DomEvent, Element, Class, console, document
   ) {
     return function () {
       var gui = Gui.create();
@@ -44,148 +45,33 @@ define(
 
       gui.add(sink);
 
-      console.log('sink', sink.element());
-
-      var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
-        gui.broadcastOn([ 'dismiss.popups' ], {
-          target: evt.target()
-        });
-      });
-
       var lazySink = function () {
         return Result.value(sink);
       };
 
+      var menuMarkers = DemoRenders.menuMarkers();
 
-      var menuMarkers = {
-        selectedItem: 'no-selection',
-        item: 'alloy-item',
-        menu: 'no-selection',
-        selectedMenu: 'alloy-menu',
-        backgroundMenu: 'no-selection'
-      };
-
-      var widgetMenu = {
-        members: {
-          menu: {
-            munge: function (spec) {
-              return {
-                dom: {
-                  tag: 'div'
-                },
-                components: [
-                  Menu.parts().items()
-                ]
-              };
-            }
-          },
-          item: {
-            munge: function (spec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  classes: [ 'alloy-item' ]
-                },
-                components: [
-                  ItemWidget.parts().widget()
-                ]
-              };
-            }
-          }
+      var wDoubleInput = DemoRenders.widgetItem({
+        type: 'widget',
+        autofocus: true,
+        data: {
+          value: 'widget1',
+          text: 'Widget1'
         },
-        markers: menuMarkers
-      };
-
-      var gridMenu = {
-        members: {
-          item: {
-            munge: function (spec) {
-              return {
-                dom: {
-                  tag: 'span',
-                  classes: [ 'alloy-item' ],
-                  innerHtml: spec.data.text,
-                  styles: {
-                    'display': 'inline-block',
-                    width: '50px'
-                  }
-                },
-                components: [ ]
-              };
-            }
+        widget: Container.sketch({
+          dom: {
+            classes: [ 'my-widget' ]
           },
+          containerBehaviours: Behaviour.derive([
+            Keying.config({ mode: 'cyclic' })
+          ]),
+          components: [
+            Input.sketch({ dom: { tag: 'input' } }),
+            Input.sketch({ dom: { tag: 'input' } })
+          ]
+        })
 
-          menu: {
-            munge: function (spec) {
-              return {
-                movement: {
-                  mode: 'grid',
-                  initSize: {
-                    numColumns: 2,
-                    numRows: 2
-                  }
-                },
-                dom: {
-                  tag: 'div',
-                  classes: [ 'demo-alloy-menu' ],
-                  styles: {
-                    width: '100px'
-                  }
-                },
-                shell: true,
-                components: [ ]
-              };
-            }
-          }
-        },
-
-        markers: menuMarkers
-      };
-
-      var listMenu = {
-        members: {
-          menu: {
-            munge: function (spec) {
-              return {
-                dom: {
-                  tag: 'ol',
-                  attributes: {
-                    'aria-label': spec.text
-                  },
-                  classes: [ 'demo-alloy-menu' ]
-                },
-                shell: true,
-                components: [ ]
-              };
-            }
-          },
-          item: {
-            munge: function (spec) {
-
-              return spec.type === 'widget' ? {
-                dom: {
-                  tag: 'div',
-                  classes: [ 'alloy-item' ]
-                },
-
-                components: [
-                  ItemWidget.parts().widget()
-                ]
-              } : {
-                dom: {
-                  tag: 'li',
-                  classes: spec.type === 'item' ? [ 'alloy-item' ] : [ ],
-                  innerHtml: spec.data.text
-                },
-                components: [
-
-                ]
-              };
-            }
-          }
-        },
-        markers: menuMarkers
-      };
+      });
 
       HtmlDisplay.section(
         gui,
@@ -196,57 +82,39 @@ define(
             tag: 'div'
           },
           components: [
-            SplitDropdown.parts().button(),
-            SplitDropdown.parts().arrow(),
-            SplitDropdown.parts().sink()
+            SplitDropdown.parts().button({
+              dom: {
+                tag: 'button',
+                innerHtml: 'Run'
+              },
+              uid: 'supplied'
+            }),
+            SplitDropdown.parts().arrow({
+              dom: {
+                tag: 'button',
+                innerHtml: 'v'
+              }
+            }),
+            SplitDropdown.parts().sink({ })
           ],
           fetch: function () {
-            var future = Future.pure({
-              type: 'widget',
-              autofocus: true,
-              data: {
-                value: 'widget1',
-                text: 'Widget1'
-              },
-              widget: Container.sketch({
-                dom: {
-                  classes: [ 'my-widget' ]
-                },
-                containerBehaviours: Behaviour.derive([
-                  Keying.config({ mode: 'cyclic' })
-                ]),
-                components: [
-                  Input.sketch({ dom: { tag: 'input' } }),
-                  Input.sketch({ dom: { tag: 'input' } })
-                ]
-              })
-
+            var wMenu = DemoRenders.menu({
+              value: 'demo.1.widget.menu',
+              items: [ wDoubleInput ]
             });
 
-            return future.map(function (f) {
-              return TieredMenu.singleData('name', 'label', f);
-            });
+            return Future.pure(
+              TieredMenu.singleData('name', wMenu)
+            );
           },
           lazySink: lazySink,
           onExecute: function () {
             console.log('split-dropdown button clicked');
           },
           parts: {
-            button: {
-              dom: {
-                tag: 'button',
-                innerHtml: 'Run'
-              },
-              uid: 'supplied'
-            },
-            arrow: {
-              dom: {
-                tag: 'button',
-                innerHtml: 'v'
-              }
-            },
-            menu: widgetMenu,
-            sink: { }
+            menu: {
+              markers: menuMarkers
+            }
           }
         })
       );
@@ -265,33 +133,19 @@ define(
           },
 
           parts: {
-            menu: widgetMenu
+            menu: {
+              markers: menuMarkers
+            }
           },
 
           fetch: function () {
-            var future = Future.pure({
-              type: 'widget',
-              autofocus: true,
-              data: {
-                value: 'widget1',
-                text: 'Widget1'
-              },
-              widget: Container.sketch({
-                dom: {
-                  classes: [ 'my-widget' ]
-                },
-                containerBehaviours: Behaviour.derive([
-                  Keying.config({ mode: 'cyclic' })
-                ]),
-                components: [
-                  Input.sketch({ }),
-                  Input.sketch({ })
-                ]
-              })
+            var menu = DemoRenders.menu({
+              value: 'demo.2.widget',
+              items: [ wDoubleInput ]
             });
 
-            return future.map(function (data) {
-              return TieredMenu.singleData('primary-menu', 'Widget', data);
+            return Future.pure(menu).map(function (m) {
+              return TieredMenu.singleData('demo.2.menu', menu);
             });
           }
         })
@@ -312,27 +166,34 @@ define(
           toggleClass: 'demo-selected',
 
           parts: {
-            menu: gridMenu
+            menu: {
+              markers: menuMarkers
+            }
           },
           fetch: function () {
 
-            var data = [
+            var data = Arr.map([
               { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
               { type: 'item', data: { value: 'beta', text: '+Beta' } },
               { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
               { type: 'item', data: { value: 'delta', text: '+Delta' } }
-            ];
+            ], DemoRenders.gridItem);
+
             var future = Future.pure(data);
             return future.map(function (items) {
-              return TieredMenu.simpleData('grid-list', 'Grid List', items);
+              var menu = DemoRenders.gridMenu({
+                value: 'demo.3.menu',
+                items: items,
+                columns: 2,
+                rows: 2
+              });
+              return TieredMenu.singleData('grid-list', menu);
             });
           },
 
           lazySink: lazySink
         })
       );
-
-
 
       HtmlDisplay.section(
         gui,
@@ -343,32 +204,36 @@ define(
             innerHtml: 'Click me to expand'
           },
           components: [
-            Dropdown.parts().sink()
+            Dropdown.parts().sink({ })
           ],
 
           toggleClass: 'demo-selected',
 
           parts: {
-            menu: listMenu,
-            sink: { }
+            menu: {
+              markers: menuMarkers
+            }
           },
           lazySink: lazySink,
 
           matchWidth: true,
 
           fetch: function () {
-
-            var data = [
+            var data = Arr.map([
               { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
               { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
-              { type: 'separator', data: { value: 'text' } },
+              { type: 'separator', data: { value: 'text', text: '-- separator --' } },
               { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
               { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
-            ];
+            ], DemoRenders.item);
 
             var future = Future.pure(data);
             return future.map(function (items) {
-              return TieredMenu.simpleData('basic-list', 'Basic List', items);
+              var menu = DemoRenders.menu({
+                value: 'demo.4.menu',
+                items: items
+              });
+              return TieredMenu.singleData('basic-list', menu);
             });
           },
           onExecute: function (sandbox, item, itemValue) {
@@ -390,7 +255,9 @@ define(
           ],
           lazySink: lazySink,
           parts: {
-            menu: listMenu
+            menu: {
+              markers: menuMarkers
+            }
           },
 
           toggleClass: 'demo-selected',
@@ -402,10 +269,11 @@ define(
           fetch: function () {
             var future = Future.pure({
               primary: 'tools-menu',
-              menus: {
+              menus: Obj.map({
                 'tools-menu': {
+                  value: 'tools-menu',
                   text: 'tools-menu',
-                  items: [
+                  items: Arr.map([
                     { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
                     { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
                     {
@@ -468,35 +336,39 @@ define(
                         ])
                       })
                     }
-                  ]
+                  ], DemoRenders.item)
                 },
                 'packages-menu': {
+                  value: 'packages',
                   text: 'packages',
-                  items: [
+                  items: Arr.map([
                     { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
-                  ]
+                  ], DemoRenders.item)
                 },
                 'sortby-menu': {
+                  value: 'sortby',
                   text: 'sortby',
-                  items: [
+                  items: Arr.map([
                     { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
                     { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
-                  ]
+                  ], DemoRenders.item)
                 },
                 'strings-menu': {
+                  value: 'strings',
                   text: 'strings',
-                  items: [
+                  items: Arr.map([
                     { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
                     { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
-                  ]
+                  ], DemoRenders.item)
                 },
                 'numbers-menu': {
+                  value: 'numbers',
                   text: 'numbers',
-                  items: [
+                  items: Arr.map([
                     { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
-                  ]
+                  ], DemoRenders.item)
                 }
-              },
+              }, DemoRenders.menu),
               expansions: {
                 'packages': 'packages-menu',
                 'sortby': 'sortby-menu',

@@ -14,15 +14,19 @@ asynctest(
     'ephox.alloy.api.ui.Dropdown',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.TieredMenu',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
     'ephox.alloy.test.TestBroadcasts',
-    'ephox.alloy.test.dropdown.TestDropdownMenu',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result'
   ],
 
-  function (GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, GuiSetup, Sinks, TestBroadcasts, TestDropdownMenu, Future, Result) {
+  function (
+    GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, TestDropdownMenu, GuiSetup, Sinks,
+    TestBroadcasts, Arr, Future, Result
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -111,7 +115,7 @@ asynctest(
 
                   lazySink: function () { return Result.value(component); },
                   parts: {
-                    menu: TestDropdownMenu(store)
+                    menu: TestDropdownMenu.part(store)
                   },
                   fetch: function () {
                     var future = Future.pure([
@@ -120,7 +124,11 @@ asynctest(
                     ]);
 
                     return future.map(function (f) {
-                      return TieredMenu.simpleData('test', 'Test', f);
+                      var menu = TestDropdownMenu.renderMenu({
+                        value: 'inline-view-test',
+                        items: Arr.map(f, TestDropdownMenu.renderItem)
+                      });
+                      return TieredMenu.singleData('test', menu);
                     });
                   }
                 })

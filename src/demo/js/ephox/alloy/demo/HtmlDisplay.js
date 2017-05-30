@@ -4,15 +4,25 @@ define(
   [
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
+    'ephox.alloy.debugging.Debugging',
     'ephox.katamari.api.Id',
+    'ephox.katamari.api.Thunk',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.properties.TextContent',
+    'global!document',
     'global!MutationObserver',
     'global!setInterval'
   ],
 
-  function (GuiFactory, Container, Id, Html, TextContent, MutationObserver, setInterval) {
+  function (GuiFactory, Container, Debugging, Id, Thunk, DomEvent, Element, Html, TextContent, document, MutationObserver, setInterval) {
+    var register = Thunk.cached(function (gui) {
+      Debugging.registerInspector('htmldisplay', gui);
+    });
+    
     var section = function (gui, instructions, spec) {
+      register(gui);
       var information = Container.sketch({
         dom: {
           tag: 'p',
@@ -79,6 +89,14 @@ define(
       );
 
       gui.add(all);
+
+      var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
+        if (evt.raw().button === 0) {
+          gui.broadcastOn([ 'dismiss.popups' ], {
+            target: evt.target()
+          });
+        }
+      });
 
       return component;
 

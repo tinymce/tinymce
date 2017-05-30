@@ -7,19 +7,18 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.TestStore',
-    'ephox.boulder.api.Objects',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Pipeline, RawAssertions, Step, EventRoot, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, TestStore, Objects, Body, Attr, Traverse) {
+  function (Pipeline, RawAssertions, Step, EventRoot, GuiFactory, AlloyEvents, SystemEvents, Attachment, Gui, Container, TestStore, Body, Attr, Traverse) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -46,49 +45,30 @@ asynctest(
       },
       components: [
         Container.sketch({
-          events: Objects.wrapAll([
-            {
-              key: SystemEvents.attachedToDom(),
-              value: EventHandler.nu({
-                run: function (comp, simulatedEvent) {
-                  if (EventRoot.isSource(comp, simulatedEvent)) {
-                    simulatedEvent.stop();
-                    var parent = Traverse.parent(comp.element()).getOrDie(
-                      'At attachedToDom, a DOM parent must exist'
-                    );
-                    store.adder('attached-to:' + Attr.get(parent, 'class'))();
-                  }
-                }
-              })
-            },
-            {
-              key: SystemEvents.detachedFromDom(),
-              value: EventHandler.nu({
-                run: function (comp, simulatedEvent) {
-                  if (EventRoot.isSource(comp, simulatedEvent)) {
-                    simulatedEvent.stop();
-                    var parent = Traverse.parent(comp.element()).getOrDie(
-                      'At detachedFromDom, a DOM parent must exist'
-                    );
-                    store.adder('detached-from:' + Attr.get(parent, 'class'))();
-                  }
-                }
-              })
-            },
-            {
-              key: SystemEvents.systemInit(),
-              value: EventHandler.nu({
-                run: function (comp, simulatedEvent) {
-                  if (EventRoot.isSource(comp, simulatedEvent)) {
-                    simulatedEvent.stop();
-                    store.adder('init')();
-                  }
-                }
-              })
-            }
+          events: AlloyEvents.derive([
+            AlloyEvents.runOnAttached(function (comp, simulatedEvent) {
+              simulatedEvent.stop();
+              var parent = Traverse.parent(comp.element()).getOrDie(
+                'At attachedToDom, a DOM parent must exist'
+              );
+              store.adder('attached-to:' + Attr.get(parent, 'class'))();
+            }),
+
+            AlloyEvents.runOnDetached(function (comp, simulatedEvent) {
+              simulatedEvent.stop();
+              var parent = Traverse.parent(comp.element()).getOrDie(
+                'At detachedFromDom, a DOM parent must exist'
+              );
+              store.adder('detached-from:' + Attr.get(parent, 'class'))();
+            }),
+
+            AlloyEvents.run(SystemEvents.systemInit(), function (comp, simulatedEvent) {
+              if (EventRoot.isSource(comp, simulatedEvent)) {
+                simulatedEvent.stop();
+                store.adder('init')();
+              }
+            })
           ])
-
-
         })
       ]
     });

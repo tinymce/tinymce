@@ -12,11 +12,11 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.InputBase',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
@@ -26,8 +26,8 @@ define(
   ],
 
   function (
-    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, SystemEvents, EventHandler, DropdownUtils,
-    InputBase, Objects, Fun, Merger, Option, Value, console, document
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, AlloyEvents, AlloyTriggers, SystemEvents,
+    DropdownUtils, InputBase, Fun, Merger, Option, Value, console, document
   ) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
@@ -37,7 +37,7 @@ define(
             Highlighting.getHighlighted(menu).fold(function () {
               highlighter(menu);
             }, function () {
-              sandbox.getSystem().triggerEvent('keydown', menu.element(), simulatedEvent.event());
+              AlloyTriggers.dispatchEvent(sandbox, menu.element(), 'keydown', simulatedEvent);
             });
           });
         } else {
@@ -150,27 +150,19 @@ define(
           uid: detail.uid(),
           dom: InputBase.dom(detail),
           behaviours: behaviours,
-          events: Objects.wrapAll([
-            {
-              key: SystemEvents.execute(),
-              value: EventHandler.nu({
-                run: function (comp) {
-                  DropdownUtils.togglePopup(detail, {
-                    anchor: 'hotspot',
-                    hotspot: comp
-                  }, comp, externals);
-                }
-              })
-            },
-            {
-              key: SystemEvents.postBlur(),
-              value: EventHandler.nu({
-                run: function (typeahead) {
-                  var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-                  Sandboxing.close(sandbox);
-                }
-              })
-            }
+
+          events: AlloyEvents.derive([
+            AlloyEvents.runOnExecute(function (comp) {
+              DropdownUtils.togglePopup(detail, {
+                anchor: 'hotspot',
+                hotspot: comp
+              }, comp, externals);
+            }),
+
+            AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
+              var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+              Sandboxing.close(sandbox);
+            })
           ])
         }
       );

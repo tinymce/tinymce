@@ -4,20 +4,17 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Positioning',
-    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.parts.PartType',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, Positioning, EventHandler, PartType, Fun) {
+  function (Behaviour, Positioning, AlloyEvents, NativeEvents, PartType, Fun) {
     var suffix = 'sink';
-    var partType = PartType.optional(
-      { sketch: Fun.identity },
-      [ ],
-      suffix,
-      '<alloy.sink>',
-      Fun.constant({ }),
-      Fun.constant({
+    var partType = PartType.optional({
+      name: suffix,
+      overrides: Fun.constant({
         dom: {
           tag: 'div'
         },
@@ -27,29 +24,14 @@ define(
             useFixed: true
           })
         ]),
-        events: {
-          // Probably a behaviour: cut mania
-          'keydown': EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              // Sinks should not let keydown or click propagate
-              simulatedEvent.cut();
-            }
-          }),
-          'mousedown': EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              // Sinks should not let keydown or click propagate or mousedown
-              simulatedEvent.cut();
-            }
-          }),
-          'click': EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              // Sinks should not let keydown or click propagate
-              simulatedEvent.cut();
-            }
-          })
-        }
+        events: AlloyEvents.derive([
+          // Sinks should not let keydown or click propagate
+          AlloyEvents.cutter(NativeEvents.keydown()),
+          AlloyEvents.cutter(NativeEvents.mousedown()),
+          AlloyEvents.cutter(NativeEvents.click())
+        ])
       })
-    );
+    });
 
     return {
       partType: Fun.constant(partType),

@@ -4,120 +4,66 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.api.ui.GuiTypes',
-    'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.schema.ToolbarSchema',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Result',
-    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Option',
     'global!console',
     'global!Error'
   ],
 
-  function (Behaviour, Replacing, GuiTypes, ToolbarGroup, UiSketcher, PartType, ToolbarSchema, Arr, Fun, Merger, Result, Json, console, Error) {
-    var schema = ToolbarSchema.schema();
-
-    // TODO: Dupe with ToolbarSchema
-    var enhanceGroups = function (detail) {
-      return {
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      };
-    };
-
-    var partTypes = ToolbarSchema.parts();
-
-    var make = function (detail, components, spec, _externals) {
+  function (Behaviour, Replacing, Sketcher, AlloyParts, ToolbarSchema, Merger, Option, console, Error) {
+    var factory = function (detail, components, spec, _externals) {
       var setGroups = function (toolbar, groups) {
-        getGroupContainer(toolbar).fold(function (err) {
+        getGroupContainer(toolbar).fold(function () {
           // check that the group container existed. It may not have if the components
           // did not list anything, and shell was false.
           console.error('Toolbar was defined to not be a shell, but no groups container was specified in components');
-          console.error(Json.stringify(spec, null, 2));
-          throw new Error(err);
+          throw new Error('Toolbar was defined to not be a shell, but no groups container was specified in components');
         }, function (container) {
           Replacing.set(container, groups);
         });
       };
 
       var getGroupContainer = function (component) {
-        return detail.shell() ? Result.value(component) : component.getSystem().getByUid(
-          detail.partUids().groups
-        );
+        return detail.shell() ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
       };
 
-      var createGroups = function (toolbar, gspecs) {
-        return Arr.map(gspecs, function (grp) {
-          return ToolbarGroup.sketch(
-            detail.members().group().munge()(grp)
-          );
-        });
-      };
+      // In shell mode, the group overrides need to be added to the main container, and there can be no children
+      var extra = detail.shell() ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
+        { behaviours: [ ], components: components };
 
-      var extra = (function () {
-        if (detail.shell()) {
-          return {
-            base: Merger.deepMerge(detail.parts().groups().getOrDie(
-              'Shell mode specified for toolbar, but no groups part provided'
-            )[PartType.original()](), enhanceGroups(detail)),
-            comps: [ ]
-          };
-        } else {
-          return {
-            base: { },
-            comps: components
-          };
-        }
-      })();
+      return {
+        uid: detail.uid(),
+        dom: detail.dom(),
+        components: extra.components,
 
-      return Merger.deepMerge(
-        extra.base,
-        {
-          dom: {
-            attributes: {
-              role: 'group'
-            }
-          }
+        behaviours: Merger.deepMerge(
+          Behaviour.derive(extra.behaviours),
+          detail.toolbarBehaviours()
+        ),
+        apis: {
+          setGroups: setGroups
         },
-        {
-          uid: detail.uid(),
-          dom: detail.dom(),
-          components: extra.comps,
-
-          behaviours: detail.toolbarBehaviours(),
-          apis: {
-            createGroups: createGroups,
-            setGroups: setGroups
+        domModification: {
+          attributes: {
+            role: 'group'
           }
         }
-      );
+      };
     };
 
-
-    var sketch = function (spec) {
-      return UiSketcher.composite('toolbar', schema, partTypes, make, spec);
-    };
-
-    // TODO: Remove likely dupe
-    var parts = PartType.generate('toolbar', partTypes);
-
-    return Merger.deepMerge(
-      {
-        sketch: sketch,
-        schemas: Fun.constant(ToolbarSchema),
-        parts: Fun.constant(parts),
-        createGroups: GuiTypes.makeApi(function (apis, toolbar, gspecs) {
-          return apis.createGroups(toolbar, gspecs);
-        }),
-        setGroups: GuiTypes.makeApi(function (apis, toolbar, gspecs) {
-          apis.setGroups(toolbar, gspecs);
-        })
+    return Sketcher.composite({
+      name: 'Toolbar',
+      configFields: ToolbarSchema.schema(),
+      partFields: ToolbarSchema.parts(),
+      factory: factory,
+      apis: {
+        setGroups: function (apis, toolbar, groups) {
+          apis.setGroups(toolbar, groups);
+        }
       }
-    );
+    });
   }
 );

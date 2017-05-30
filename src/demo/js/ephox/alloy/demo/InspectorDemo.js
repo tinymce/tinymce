@@ -41,16 +41,15 @@ define(
                 console.log('clicked on a button');
               }
             }),
-            Form.sketch({
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                Form.parts('alpha')
-              ],
-              parts: {
-                alpha: Input.sketch({ })
-              }
+            Form.sketch(function (parts) {
+              return {
+                dom: {
+                  tag: 'div'
+                },
+                components: [
+                  parts.field('alpha', Input.sketch({ }))
+                ]
+              };
             })
           ]
         }

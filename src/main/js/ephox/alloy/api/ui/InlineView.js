@@ -6,20 +6,17 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.api.ui.GuiTypes',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.sandbox.Dismissal',
-    'ephox.alloy.ui.schema.InlineViewSchema',
+    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Merger',
-    'ephox.sugar.api.properties.Css'
+    'ephox.katamari.api.Merger'
   ],
 
-  function (ComponentStructure, Behaviour, Positioning, Sandboxing, GuiTypes, UiSketcher, Dismissal, InlineViewSchema, Fun, Future, Merger, Css) {
-    var schema = InlineViewSchema.schema();
-
-    var make = function (detail, spec) {
+  function (ComponentStructure, Behaviour, Positioning, Sandboxing, Sketcher, Fields, Dismissal, FieldSchema, Fun, Future, Merger) {
+    var factory = function (detail, spec) {
       return Merger.deepMerge(
         {
           uid: detail.uid(),
@@ -40,7 +37,6 @@ define(
             ]),
             detail.inlineBehaviours()
           ),
-          customBehaviours: detail.customBehaviours(),
           eventOrder: detail.eventOrder(),
 
           apis: {
@@ -62,21 +58,24 @@ define(
       );
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.single(InlineViewSchema.name(), schema, make, spec);
-    };
-
-    return Merger.deepMerge(
-      {
-        sketch: sketch,
-        schemas: Fun.constant(InlineViewSchema),
-        showAt: GuiTypes.makeApi(function (apis, component, anchor, thing) {
+    return Sketcher.single({
+      name: 'InlineView',
+      configFields: [
+        FieldSchema.strict('lazySink'),
+        Fields.onHandler('onShow'),
+        Fields.onHandler('onHide'),
+        FieldSchema.defaulted('inlineBehaviours', { }),
+        FieldSchema.defaulted('eventOrder')
+      ],
+      factory: factory,
+      apis: {
+        showAt: function (apis, component, anchor, thing) {
           apis.showAt(component, anchor, thing);
-        }),
-        hide: GuiTypes.makeApi(function (apis, component) {
+        },
+        hide: function (apis, component) {
           apis.hide(component);
-        })
+        }
       }
-    );
+    });
   }
 );

@@ -2,7 +2,6 @@ define(
   'ephox.alloy.ui.schema.TabSectionSchema',
 
   [
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.data.Fields',
@@ -11,7 +10,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (SystemEvents, Tabbar, Tabview, Fields, PartType, FieldSchema, Fun) {
+  function (Tabbar, Tabview, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       Fields.onHandler('onChangeTab'),
@@ -19,42 +18,27 @@ define(
       FieldSchema.defaulted('tabs', [ ])
     ];
 
-    var barPart = PartType.internal(
-      Tabbar,
-      [
+    var barPart = PartType.required({
+      factory: Tabbar,
+      schema: [
         FieldSchema.strict('dom'),
-        FieldSchema.strictObjOf('parts', [
-          FieldSchema.strict('tabs')
-        ]),
         FieldSchema.strictObjOf('markers', [
           FieldSchema.strict('tabClass'),
           FieldSchema.strict('selectedClass')
-        ]),
-        FieldSchema.strictObjOf('members', [
-          FieldSchema.strictObjOf('tab', [
-            FieldSchema.strict('munge')
-          ])
         ])
       ],
-      'tabbar',
-      '<alloy.tab-section.tabbar>',
-      function (detail) {
+      name: 'tabbar',
+      defaults: function (detail) {
         return {
           tabs: detail.tabs()
         };
-      },
-      Fun.constant({ })
-    );
+      }
+    });
 
-    var viewPart = PartType.internal(
-      Tabview,
-      [ ],
-      'tabview',
-      '<alloy.tab-section.tabview>',
-      Fun.constant({ }),
-      Fun.constant({ })
-    );
-
+    var viewPart = PartType.required({
+      factory: Tabview,
+      name: 'tabview'
+    });
 
     var partTypes = [
       barPart,

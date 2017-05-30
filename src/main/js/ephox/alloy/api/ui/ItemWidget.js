@@ -2,19 +2,14 @@ define(
   'ephox.alloy.api.ui.ItemWidget',
 
   [
-    'ephox.alloy.spec.UiSubstitutes',
+    'ephox.alloy.menu.build.WidgetParts',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.katamari.api.Fun'
   ],
 
-  function (UiSubstitutes, Fun) {
-    var parts = {
-      widget: Fun.constant({
-        uiType: UiSubstitutes.placeholder(),
-        owner: 'item-widget',
-        name: '<alloy.item.widget>'
-      })
-    };
-
+  function (WidgetParts, AlloyParts, Fun) {
+    var parts = AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts());
+    
     return {
       parts: Fun.constant(parts)
     };

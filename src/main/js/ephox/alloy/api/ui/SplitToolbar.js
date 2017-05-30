@@ -6,31 +6,29 @@ define(
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.GuiTypes',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.api.ui.Toolbar',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.ToolbarGroup',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.toolbar.Overflows',
     'ephox.alloy.ui.schema.SplitToolbarSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Fun',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Replacing, Sliding, GuiFactory, Button, GuiTypes, Toolbar, UiSketcher, PartType, Overflows, SplitToolbarSchema, Arr, Merger, Fun, Css, Width) {
-    var schema = SplitToolbarSchema.schema();
-    var partTypes = SplitToolbarSchema.parts();
-
+  function (Replacing, Sliding, GuiFactory, Button, Sketcher, Toolbar, ToolbarGroup, AlloyParts, PartType, Overflows, SplitToolbarSchema, Arr, Merger, Css, Width) {
     var setStoredGroups = function (bar, storedGroups) {
       var bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
       Toolbar.setGroups(bar, bGroups);
     };
 
-    var refresh = function (toolbar, detail) {
-      var primary = toolbar.getSystem().getByUid(detail.partUids().primary).getOrDie();
-      var overflow = toolbar.getSystem().getByUid(detail.partUids().overflow).getOrDie();
+    var refresh = function (toolbar, detail, externals) {
+      var ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
+      var primary = ps.primary();
+      var overflow = ps.overflow();
 
       // Set the primary toolbar to have visibilty hidden;
       Css.set(primary.element(), 'visibility', 'hidden');
@@ -41,24 +39,26 @@ define(
       // Put all the groups inside the primary toolbar
       var groups = detail.builtGroups().get();
 
-      var overflowGroupSpec = Toolbar.createGroups(primary, [
-        {
-          items: [
-            Button.sketch(
-              Merger.deepMerge(
-                detail.parts()['overflow-button']()[PartType.original()](),
-                {
-                  action: function (button) {
-                    button.getSystem().getByUid(detail.partUids().overflow).each(function (overflow) {
-                      Sliding.toggleGrow(overflow);
-                    });
+      var overflowGroupSpec = ToolbarGroup.sketch(
+        Merger.deepMerge(
+          externals['overflow-group'](),
+          {
+            items: [
+              Button.sketch(
+                Merger.deepMerge(
+                  externals['overflow-button'](),
+                  {
+                    action: function (button) {
+                      // This used to look up the overflow again ... we may need to do that.
+                      Sliding.toggleGrow(ps.overflow());
+                    }
                   }
-                }
+                )
               )
-            )
-          ]
-        }
-      ])[0];
+            ]
+          }
+        )
+      );
       var overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
 
       setStoredGroups(primary, groups.concat([ overflowGroup ]));
@@ -88,7 +88,7 @@ define(
     };
 
 
-    var make = function (detail, components, spec, externals) {
+    var factory = function (detail, components, spec, externals) {
       var doSetGroups = function (toolbar, groups) {
         var built = Arr.map(groups, toolbar.getSystem().build);
         detail.builtGroups().set(built);
@@ -96,12 +96,7 @@ define(
 
       var setGroups = function (toolbar, groups) {
         doSetGroups(toolbar, groups);
-        refresh(toolbar, detail);
-      };
-
-      var createGroups = function (toolbar, gspecs) {
-        var primary = toolbar.getSystem().getByUid(detail.partUids().primary).getOrDie();
-        return Toolbar.createGroups(primary, gspecs);
+        refresh(toolbar, detail, externals);
       };
 
       return Merger.deepMerge(
@@ -118,36 +113,27 @@ define(
           components: components,
           apis: {
             setGroups: setGroups,
-            createGroups: createGroups,
             refresh: function (toolbar) {
-              refresh(toolbar, detail);
+              refresh(toolbar, detail, externals);
             }
           }
         }
       );
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.composite('split-toolbar', schema, partTypes, make, spec);
-    };
-
-    var parts = PartType.generate('split-toolbar', partTypes);
-
-    return Merger.deepMerge(
-      {
-        sketch: sketch,
-        parts: Fun.constant(parts),
-        schemas: Fun.constant(SplitToolbarSchema),
-        createGroups: GuiTypes.makeApi(function (apis, toolbar, gspecs) {
-          return apis.createGroups(toolbar, gspecs);
-        }),
-        setGroups: GuiTypes.makeApi(function (apis, toolbar, gspecs) {
-          apis.setGroups(toolbar, gspecs);
-        }),
-        refresh: GuiTypes.makeApi(function (apis, toolbar) {
+    return Sketcher.composite({
+      name: 'SplitToolbar',
+      configFields: SplitToolbarSchema.schema(),
+      partFields: SplitToolbarSchema.parts(),
+      factory: factory,
+      apis: {
+        setGroups: function (apis, toolbar, groups) {
+          apis.setGroups(toolbar, groups);
+        },
+        refresh: function (apis, toolbar) {
           apis.refresh(toolbar);
-        })
+        }
       }
-    );
+    });
   }
 );

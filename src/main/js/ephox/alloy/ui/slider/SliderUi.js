@@ -2,22 +2,22 @@ define(
   'ephox.alloy.ui.slider.SliderUi',
 
   [
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.slider.SliderActions',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (EventRoot, Behaviour, Keying, Representing, SystemEvents, EventHandler, SliderActions, Objects, Arr, Option, PlatformDetection, Css, Width) {
+  function (Behaviour, Keying, Representing, AlloyEvents, NativeEvents, AlloyParts, SliderActions, Arr, Fun, Option, PlatformDetection, Css, Width) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
 
     var sketch = function (detail, components, spec, externals) {
@@ -29,20 +29,20 @@ define(
       };
 
       var getThumb = function (component) {
-        return component.getSystem().getByUid(detail.partUids().thumb).getOrDie();
+        return AlloyParts.getPartOrDie(component, detail, 'thumb');
       };
 
       var getXOffset = function (slider, spectrumBounds, detail) {
         var v = detail.value().get();
         if (v < detail.min()) {
-          return slider.getSystem().getByUid(detail.partUids()['left-edge']).fold(function () {
+          return AlloyParts.getPart(slider, detail, 'left-edge').fold(function () {
             return 0;
           }, function (ledge) {
             return getXCentre(ledge) - spectrumBounds.left;
           });
         } else if (v > detail.max()) {
           // position at right edge
-          return slider.getSystem().getByUid(detail.partUids()['right-edge']).fold(function () {
+          return AlloyParts.getPart(slider, detail, 'right-edge').fold(function () {
             return spectrumBounds.width;
           }, function (redge) {
             return getXCentre(redge) - spectrumBounds.left;
@@ -54,7 +54,7 @@ define(
       };
 
       var getXPos = function (slider) {
-        var spectrum = slider.getSystem().getByUid(detail.partUids().spectrum).getOrDie();
+        var spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
         var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
         var sliderBounds = slider.element().dom().getBoundingClientRect();
 
@@ -92,43 +92,22 @@ define(
       };
 
       var uiEventsArr = isTouch ? [
-        {
-          key: 'touchstart',
-          value: EventHandler.nu({
-            run: function (slider, simulatedEvent) {
-              detail.onDragStart()(slider, getThumb(slider));
-            }
-          })
-        },
-        {
-          key: 'touchend',
-          value: EventHandler.nu({
-            run: function (slider, simulatedEvent) {
-              detail.onDragEnd()(slider, getThumb(slider));
-            }
-          })
-        }
-
+        AlloyEvents.run(NativeEvents.touchstart(), function (slider, simulatedEvent) {
+          detail.onDragStart()(slider, getThumb(slider));
+        }),
+        AlloyEvents.run(NativeEvents.touchend(), function (slider, simulatedEvent) {
+          detail.onDragEnd()(slider, getThumb(slider));
+        })
       ] : [
-        {
-          key: 'mousedown',
-          value: EventHandler.nu({
-            run: function (slider, simulatedEvent) {
-              simulatedEvent.stop();
-              detail.onDragStart()(slider, getThumb(slider));
-              detail.mouseIsDown().set(true);
-            }
-          })
-        },
-        {
-          key: 'mouseup',
-          value: EventHandler.nu({
-            run: function (slider, simulatedEvent) {
-              detail.onDragEnd()(slider, getThumb(slider));
-              detail.mouseIsDown().set(false);
-            }
-          })
-        }
+        AlloyEvents.run(NativeEvents.mousedown(), function (slider, simulatedEvent) {
+          simulatedEvent.stop();
+          detail.onDragStart()(slider, getThumb(slider));
+          detail.mouseIsDown().set(true);
+        }),
+        AlloyEvents.run(NativeEvents.mouseup(), function (slider, simulatedEvent) {
+          detail.onDragEnd()(slider, getThumb(slider));
+          detail.mouseIsDown().set(false);
+        })
       ];
 
       return {
@@ -142,9 +121,7 @@ define(
               Keying.config({
                 mode: 'special',
                 focusIn: function (slider) {
-                  var spectrum = slider.getSystem().getByUid(detail.partUids().spectrum).getOrDie();
-                  Keying.focusIn(spectrum);
-                  return Option.some(true);
+                  return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
                 }
               })
             ] : [],
@@ -161,30 +138,20 @@ define(
           ])
         ),
 
-        events: Objects.wrapAll([
-          {
-            key: SliderActions.changeEvent(),
-            value: EventHandler.nu({
-              run: function (slider, simulatedEvent) {
-                changeValue(slider, simulatedEvent.event().value());
-              }
+        events: AlloyEvents.derive(
+          [
+            AlloyEvents.run(SliderActions.changeEvent(), function (slider, simulatedEvent) {
+              changeValue(slider, simulatedEvent.event().value());
+            }),
+            AlloyEvents.runOnAttached(function (slider, simulatedEvent) {
+              detail.value().set(detail.getInitialValue()());
+              var thumb = getThumb(slider);
+              // Call onInit instead of onChange for the first value.
+              refresh(slider);
+              detail.onInit()(slider, thumb, detail.value().get());
             })
-          },
-          {
-            key: SystemEvents.attachedToDom(),
-            value: EventHandler.nu({
-              run: function (slider, simulatedEvent) {
-                if (EventRoot.isSource(slider, simulatedEvent)) {
-                  detail.value().set(detail.getInitialValue()());
-                  var thumb = getThumb(slider);
-                  // Call onInit instead of onChange for the first value.
-                  refresh(slider);
-                  detail.onInit()(slider, thumb, detail.value().get());
-                }
-              }
-            })
-          }
-        ].concat(uiEventsArr)),
+          ].concat(uiEventsArr)
+        ),
 
         apis: {
           resetToMin: resetToMin,

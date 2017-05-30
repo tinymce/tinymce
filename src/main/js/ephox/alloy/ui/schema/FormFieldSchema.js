@@ -4,44 +4,37 @@ define(
   [
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun'
   ],
 
-  function (PartType, FieldSchema, Fun) {
+  function (PartType, FieldSchema, Objects, Fun) {
     var schema = [
       FieldSchema.defaulted('prefix', 'form-field'),
-      FieldSchema.defaulted('fieldBehaviours', { }),
-      FieldSchema.defaulted('customBehaviours', [ ])
+      FieldSchema.defaulted('fieldBehaviours', { })
     ];
 
-    // Different because it needs a factory
-    var makeParts = function (factory) {
-      return [
-        PartType.optional(
-          { sketch: Fun.identity },
-          [
-            FieldSchema.strict('dom')
-          ],
-          'label',
-          '<alloy.form-field.label>',
-          Fun.constant({ }),
-          Fun.constant({ })
-        ),
-        PartType.internal(
-          factory,
-          [ ],
-          'field',
-          '<alloy.form-field.field>',
-          Fun.constant({ }),
-          Fun.constant({ })
-        )
-      ];
-    };
+    var parts = [
+      PartType.optional({
+        schema: [ FieldSchema.strict('dom') ],
+        name: 'label'
+      }),
+
+      PartType.required({
+        factory: {
+          sketch: function (spec) {
+            var excludeFactory = Objects.exclude(spec, [ 'factory' ]);
+            return spec.factory.sketch(excludeFactory);
+          }
+        },
+        schema: [ FieldSchema.strict('factory') ],
+        name: 'field'
+      })
+    ];
 
     return {
-      name: Fun.constant('FormField'),
       schema: Fun.constant(schema),
-      makeParts: makeParts
+      parts: Fun.constant(parts)
     };
   }
 );

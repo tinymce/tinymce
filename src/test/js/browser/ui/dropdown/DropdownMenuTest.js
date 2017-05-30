@@ -26,12 +26,13 @@ asynctest(
     'ephox.alloy.test.NavigationUtils',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Result'
   ],
 
   function (
     Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Focusing, Keying, Positioning, GuiFactory, Memento,
-    Container, Dropdown, TieredMenu, TestDropdownMenu, GuiSetup, NavigationUtils, Arr, Future, Result
+    Container, Dropdown, TieredMenu, TestDropdownMenu, GuiSetup, NavigationUtils, Arr, Future, Obj, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -76,47 +77,47 @@ asynctest(
 
       var testData = {
         primary: 'tools-menu',
-        menus: {
+        menus: Obj.map({
           'tools-menu': {
             value: 'tools-menu-value',
             text: 'Tools Menu',
-            items: [
+            items: Arr.map([
               { type: 'item', data: { value: 'packages', text: 'Packages' } },
               { type: 'item', data: { value: 'about', text: 'About' } },
               { type: 'widget', widget: widget, data: { value: 'widget' } }
-            ]
+            ], TestDropdownMenu.renderItem)
           },
           'packages-menu': {
             value: 'packages-menu-value',
             text: 'Packages Menu',
-            items: [
+            items: Arr.map([
               { type: 'item', data: { value: 'sortby', text: 'SortBy' } }
-            ]
+            ], TestDropdownMenu.renderItem)
           },
           'sortby-menu': {
             value: 'sortby-menu-value',
             text: 'Sortby Menu',
-            items: [
+            items: Arr.map([
               { type: 'item', data: { value: 'strings', text: 'Strings' } },
               { type: 'item', data: { value: 'numbers', text: 'Numbers' } }
-            ]
+            ], TestDropdownMenu.renderItem)
           },
           'strings-menu': {
             value: 'strings-menu-value',
             text: 'Strings Menu',
-            items: [
+            items: Arr.map([
               { type: 'item', data: { value: 'versions', text: 'Versions', html: '<b>V</b>ersions' } },
               { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' } }
-            ]
+            ], TestDropdownMenu.renderItem)
           },
           'numbers-menu': {
             value: 'numbers-menu-value',
             text: 'Numbers Menu',
-            items: [
+            items: Arr.map([
               { type: 'item', data: { value: 'doubled', text: 'Doubled digits' } }
-            ]
+            ], TestDropdownMenu.renderItem)
           }
-        },
+        }, TestDropdownMenu.renderMenu),
         expansions: {
           'packages': 'packages-menu',
           'sortby': 'sortby-menu',
@@ -148,7 +149,7 @@ asynctest(
           },
 
           parts: {
-            menu: TestDropdownMenu(store)
+            menu: TestDropdownMenu.part(store)
           },
 
           fetch: function () {

@@ -2,36 +2,14 @@ define(
   'ephox.alloy.api.ui.TieredMenu',
 
   [
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.debugging.FunctionAnnotator',
-    'ephox.alloy.ui.schema.TieredMenuSchema',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.data.Fields',
     'ephox.alloy.ui.single.TieredMenuSpec',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun'
+    'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects'
   ],
 
-  function (UiSketcher, FunctionAnnotator, TieredMenuSchema, TieredMenuSpec, Objects, Fun) {
-    var schema = TieredMenuSchema.schema();
-
-    var sketch = function (spec) {
-      return UiSketcher.single(TieredMenuSchema.name(), schema, TieredMenuSpec.make, spec);
-    };
-
-    var simpleData = function (name, label, items) {
-      return {
-        primary: name,
-        menus: Objects.wrap(
-          name,
-          {
-            value: name,
-            text: label,
-            items: items
-          }
-        ),
-        expansions: { }
-      };
-    };
-
+  function (Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects) {
     var tieredData = function (primary, menus, expansions) {
       return {
         primary: primary,
@@ -40,24 +18,46 @@ define(
       };
     };
 
-    var singleData = function (name, label, item) {
+    var singleData = function (name, menu) {
       return {
         primary: name,
-        menus: Objects.wrap(name, {
-          value: name,
-          text: label,
-          items: [ item ]
-        }),
+        menus: Objects.wrap(name, menu),
         expansions: { }
       };
     };
 
-    return {
-      sketch: sketch,
-      schemas: Fun.constant(TieredMenuSchema),
-      simpleData: FunctionAnnotator.markAsExtraApi(simpleData, 'simpleData'),
-      tieredData: FunctionAnnotator.markAsExtraApi(tieredData, 'tieredData'),
-      singleData: FunctionAnnotator.markAsExtraApi(singleData, 'singleData')
-    };
+    return Sketcher.single({
+      name: 'TieredMenu',
+      configFields: [
+        Fields.onStrictKeyboardHandler('onExecute'),
+        Fields.onStrictKeyboardHandler('onEscape'),
+
+        Fields.onStrictHandler('onOpenMenu'),
+        Fields.onStrictHandler('onOpenSubmenu'),
+
+        FieldSchema.defaulted('openImmediately', true),
+
+        FieldSchema.strictObjOf('data', [
+          FieldSchema.strict('primary'),
+          FieldSchema.strict('menus'),
+          FieldSchema.strict('expansions')
+        ]),
+
+        FieldSchema.defaulted('fakeFocus', false),
+        Fields.onHandler('onHighlight'),
+        Fields.onHandler('onHover'),
+        Fields.tieredMenuMarkers(),
+
+        FieldSchema.defaulted('tmenuBehaviours', { }),
+        FieldSchema.defaulted('eventOrder', { })
+      ],
+
+      factory: TieredMenuSpec.make,
+
+      extraApis: {
+        tieredData: tieredData,
+        singleData: singleData
+      }
+    });
   }
 );

@@ -2,54 +2,44 @@ define(
   'ephox.alloy.ui.common.ButtonBase',
 
   [
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection'
   ],
 
-  function (SystemEvents, EventHandler, Objects, Arr, Fun, PlatformDetection) {
-    // TODO: Move
+  function (AlloyEvents, AlloyTriggers, NativeEvents, SystemEvents, Arr, PlatformDetection) {
     var events = function (optAction) {
-      var executeHandler = EventHandler.nu({
-        run: function (component, simulatedEvent) {
-          optAction.each(function (action) {
-            action(component);
-            simulatedEvent.stop();
-          });
-        }
-      });
-
-      var clickHandler = EventHandler.nu({
-        run: function (component, simulatedEvent) {
-          var system = component.getSystem();
+      var executeHandler = function (action) {
+        return AlloyEvents.run(SystemEvents.execute(), function (component, simulatedEvent) {
+          action(component);
           simulatedEvent.stop();
-          system.triggerEvent(SystemEvents.execute(), component.element(), {
-            button: Fun.constant(component),
-            target: Fun.constant(component.element())
-          });
-        }
-      });
+        });
+      };
+
+      var onClick = function (component, simulatedEvent) {
+        simulatedEvent.stop();
+        AlloyTriggers.emitExecute(component);
+      };
 
       // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
-      var mousedownHandler = EventHandler.nu({
-        run: function (component, simulatedEvent) {
-          simulatedEvent.cut();
-        }
-      });
+      var onMousedown = function (component, simulatedEvent) {
+        simulatedEvent.cut();
+      };
 
       var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
-        { key: SystemEvents.tap(), value: clickHandler }
+        AlloyEvents.run(SystemEvents.tap(), onClick)
       ] : [
-        { key: 'click', value: clickHandler },
-        { key: 'mousedown', value: mousedownHandler }
+        AlloyEvents.run(NativeEvents.click(), onClick),
+        AlloyEvents.run(NativeEvents.mousedown(), onMousedown)
       ];
 
-      return Objects.wrapAll(
+      return AlloyEvents.derive(
         Arr.flatten([
-          optAction.isSome() ? [ { key: SystemEvents.execute(), value: executeHandler } ] : [ ],
+          // Only listen to execute if it is supplied
+          optAction.map(executeHandler).toArray(),
           pointerEvents
         ])
       );

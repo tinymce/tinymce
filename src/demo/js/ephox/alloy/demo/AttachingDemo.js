@@ -2,17 +2,14 @@ define(
   'ephox.alloy.demo.AttachingDemo',
 
   [
-    'ephox.alloy.alien.EventRoot',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.HtmlDisplay',
-    'ephox.boulder.api.Objects',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'global!Date',
@@ -20,10 +17,7 @@ define(
     'global!setTimeout'
   ],
 
-  function (
-    EventRoot, Behaviour, Replacing, GuiFactory, SystemEvents, Attachment, Gui, Container, EventHandler, HtmlDisplay, Objects, Element, Class, Date, document,
-    setTimeout
-  ) {
+  function (Behaviour, Replacing, GuiFactory, AlloyEvents, Attachment, Gui, Container, HtmlDisplay, Element, Class, Date, document, setTimeout) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -63,39 +57,26 @@ define(
           }
         },
 
-        events: Objects.wrapAll([
-          {
-            key: SystemEvents.attachedToDom(),
-            value: EventHandler.nu({
-              run: function (sq, simulatedEvent) {
-                if (EventRoot.isSource(sq, simulatedEvent)) {
-                  simulatedEvent.stop();
-                  Replacing.append(list, {
-                    dom: {
-                      tag: 'li',
-                      innerHtml: 'The square has been attached to the DOM: ' + new Date().getSeconds()
-                    }
-                  });
-                }
+        events: AlloyEvents.derive([
+          AlloyEvents.runOnAttached(function (sq, simulatedEvent) {
+            simulatedEvent.stop();
+            Replacing.append(list, {
+              dom: {
+                tag: 'li',
+                innerHtml: 'The square has been attached to the DOM: ' + new Date().getSeconds()
               }
-            })
-          },
-          {
-            key: SystemEvents.systemInit(),
-            value: EventHandler.nu({
-              run: function (sq, simulatedEvent) {
-                if (EventRoot.isSource(sq, simulatedEvent)) {
-                  simulatedEvent.stop();
-                  Replacing.append(list, {
-                    dom: {
-                      tag: 'li',
-                      innerHtml: 'The square has been added to the system: ' + new Date().getSeconds()
-                    }
-                  });
-                }
+            });
+          }),
+          
+          AlloyEvents.runOnInit(function (sq, simulatedEvent) {
+            simulatedEvent.stop();
+            Replacing.append(list, {
+              dom: {
+                tag: 'li',
+                innerHtml: 'The square has been added to the system: ' + new Date().getSeconds()
               }
-            })
-          }
+            });
+          })
         ])
       });
 

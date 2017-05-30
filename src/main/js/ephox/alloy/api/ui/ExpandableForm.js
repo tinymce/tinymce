@@ -5,31 +5,24 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
-    'ephox.alloy.api.ui.GuiTypes',
-    'ephox.alloy.api.ui.UiSketcher',
-    'ephox.alloy.parts.PartType',
+    'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.schema.ExpandableFormSchema',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Representing, Sliding, GuiTypes, UiSketcher, PartType, ExpandableFormSchema, Fun, Merger) {
+  function (Behaviour, Representing, Sliding, Sketcher, AlloyParts, ExpandableFormSchema, Merger) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
-        var extraOpt = anyComp.getSystem().getByUid(detail.partUids().extra);
-        extraOpt.each(operation);
+        AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
       };
     };
 
-    var schema = ExpandableFormSchema.schema();
-    var partTypes = ExpandableFormSchema.parts();
+    var factory = function (detail, components, spec, _externals) {
+      var getParts = function (form) {
+        return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
+      };
 
-    // Dupe with Tiered Menu
-    var sketch = function (spec) {
-      return UiSketcher.composite(ExpandableFormSchema.name(), schema, partTypes, make, spec);
-    };
-
-    var make = function (detail, components, spec, _externals) {
       return {
         uid: detail.uid(),
         dom: detail.dom(),
@@ -41,23 +34,19 @@ define(
               store: {
                 mode: 'manual',
                 getValue: function (form) {
-                  var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
-                  var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
-
-                  var minimalValues = Representing.getValue(minimal);
-                  var extraValues = Representing.getValue(extra);
+                  var parts = getParts(form);
+                  var minimalValues = Representing.getValue(parts.minimal());
+                  var extraValues = Representing.getValue(parts.extra());
                   return Merger.deepMerge(
                     minimalValues,
                     extraValues
                   );
                 },
                 setValue: function (form, values) {
-                  var minimal = form.getSystem().getByUid(detail.partUids().minimal).getOrDie();
-                  var extra = form.getSystem().getByUid(detail.partUids().extra).getOrDie();
-
+                  var parts = getParts(form);
                   // ASSUMPTION: Form ignore values that it does not have.
-                  Representing.setValue(minimal, values);
-                  Representing.setValue(extra, values);
+                  Representing.setValue(parts.minimal(), values);
+                  Representing.setValue(parts.extra(), values);
                 }
               }
             })
@@ -75,26 +64,25 @@ define(
 
     };
 
-    var parts = PartType.generate(ExpandableFormSchema.name(), partTypes);
-
-    return Merger.deepMerge(
-      {
-        sketch: sketch,
-        schemas: Fun.constant(ExpandableFormSchema),
-        parts: Fun.constant(parts),
-        toggleForm: GuiTypes.makeApi(function (apis, component) {
+    return Sketcher.composite({
+      name: 'ExpandableForm',
+      configFields: ExpandableFormSchema.schema(),
+      partFields: ExpandableFormSchema.parts(),
+      factory: factory,
+      apis: {
+        toggleForm: function (apis, component) {
           apis.toggleForm(component);
-        }),
-        collapseForm: GuiTypes.makeApi(function (apis, component) {
+        },
+        collapseForm: function (apis, component) {
           apis.collapseForm(component);
-        }),
-        collapseFormImmediately: GuiTypes.makeApi(function (apis, component) {
+        },
+        collapseFormImmediately: function (apis, component) {
           apis.collapseFormImmediately(component);
-        }),
-        expandForm: GuiTypes.makeApi(function (apis, component) {
+        },
+        expandForm: function (apis, component) {
           apis.expandForm(component);
-        })
+        }
       }
-    );
+    });
   }
 );

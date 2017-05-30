@@ -9,7 +9,9 @@ define(
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.alloy.debugging.Debugging',
     'ephox.alloy.demo.DemoSink',
+    'ephox.alloy.demo.forms.DemoRenders',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Element',
@@ -18,7 +20,7 @@ define(
     'global!document'
   ],
 
-  function (GuiFactory, Attachment, Gui, Menu, TouchMenu, Debugging, DemoSink, HtmlDisplay, Future, Result, Element, Class, console, document) {
+  function (GuiFactory, Attachment, Gui, Menu, TouchMenu, Debugging, DemoSink, DemoRenders, HtmlDisplay, Arr, Future, Result, Element, Class, console, document) {
     return function () {
       var gui = Gui.create();
       Debugging.registerInspector('gui', gui);
@@ -28,49 +30,6 @@ define(
       Attachment.attachSystem(body, gui);
 
       var sink = DemoSink.make();
-
-      var orbMenuPart = {
-        dom: {
-          tag: 'div'
-          // styles: { display: 'flex' }
-        },
-        components: [
-          Menu.parts().items()
-        ],
-        value: 'touch-menu-1',
-        markers: {
-          item: 'alloy-orb',
-          selectedItem: 'alloy-selected-orb'
-        },
-        members: {
-          item: {
-            munge: function (itemSpec) {
-              return {
-                dom: {
-                  tag: 'div',
-                  attributes: {
-                    'data-value': itemSpec.data.value
-                  },
-                  styles: {
-                    display: 'flex',
-                    'justify-content': 'center'
-                  },
-                  classes: [ 'alloy-orb' ]
-                },
-                components: [
-                  {
-                    dom: {
-                      tag: 'span',
-                      innerHtml: itemSpec.data.text
-                    }
-                  }
-                ]
-              };
-            }
-          }
-        }
-      };
-
 
       var button1 = HtmlDisplay.section(
         gui,
@@ -92,16 +51,14 @@ define(
                 return Result.value(sink);
               },
               fetch: function () {
-                return Future.pure([
-                  { type: 'item', data: { value: 'alpha', text: 'Alpha', 'item-class': 'alpha' } },
-                  { type: 'item', data: { value: 'beta', text: 'Beta', 'item-class': 'beta' } }
-                ]);
+                return Future.pure(Arr.map([
+                  { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
+                  { type: 'item', data: { value: 'beta', text: 'Beta'} }
+                ], DemoRenders.orb));
               },
               onExecute: function (component, menuComp, item, data) {
                 console.log('selected', data.value);
               },
-
-
               menuTransition: {
                 property: 'transform',
                 transitionClass: 'longpress-menu-transitioning'
@@ -114,7 +71,16 @@ define(
                     tag: 'div'
                   }
                 },
-                menu: orbMenuPart
+                menu: {
+                  dom: {
+                    tag: 'div'
+                  },
+                  components: [
+                    Menu.parts().items({ })
+                  ],
+                  value: 'touchmenu',
+                  markers: DemoRenders.orbMarkers()
+                }
               }
             })
           ]

@@ -10,17 +10,20 @@ asynctest(
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TouchMenu',
     'ephox.alloy.test.GuiSetup',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
     'ephox.sugar.api.properties.Class'
   ],
 
-  function (ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter, GuiFactory, NativeEvents, SystemEvents, Menu, TouchMenu, GuiSetup, Fun, Future, Class) {
+  function (
+    ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter, GuiFactory, AlloyTriggers, NativeEvents, SystemEvents, Menu, TouchMenu, GuiSetup, Future,
+    Class
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -35,7 +38,7 @@ asynctest(
           }
         },
         components: [
-          Menu.parts().items()
+          Menu.parts().items({ })
         ],
 
         markers: {
@@ -110,8 +113,7 @@ asynctest(
     }, function (doc, body, gui, component, store) {
 
       var fireTouchstart = function (target, x, y) {
-        SystemEvents.trigger(component, NativeEvents.touchstart(), {
-          target: target,
+        AlloyTriggers.dispatchWith(component, target, NativeEvents.touchstart(), {
           raw: {
             touches: [
               { clientX: x, clientY: y }
@@ -121,15 +123,11 @@ asynctest(
       };
 
       var fireTouchend = function (target, x, y) {
-        SystemEvents.trigger(component, NativeEvents.touchend(), {
-          target: target
-        });
+        AlloyTriggers.dispatch(component, target, NativeEvents.touchend());
       };
 
       var fireLongpress = function (target) {
-        SystemEvents.trigger(component, SystemEvents.longpress(), {
-          target: target
-        });
+        AlloyTriggers.dispatch(component, target, SystemEvents.longpress());
       };
 
       var sFireTouchmoveOn = function (container, selector) {
@@ -137,8 +135,7 @@ asynctest(
           UiFinder.cFindIn(selector),
           Chain.op(function (target) {
             var rect = target.dom().getBoundingClientRect();
-            SystemEvents.trigger(component, NativeEvents.touchmove(), {
-              target: container,
+            AlloyTriggers.dispatchWith(component, container, NativeEvents.touchmove(), {
               raw: {
                 touches: [
                   { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 }

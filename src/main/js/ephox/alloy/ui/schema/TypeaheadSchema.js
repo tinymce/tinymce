@@ -34,17 +34,12 @@ define(
     );
 
     var partTypes = [
-      PartType.external(
-        { sketch: Fun.identity },
-        [
-          Fields.tieredMenuMarkers(),
-          Fields.members([ 'menu', 'item' ])
+      PartType.external({
+        schema: [
+          Fields.tieredMenuMarkers()
         ],
-        'menu',
-        function (detail) {
-          return { };
-        },
-        function (detail) {
+        name: 'menu',
+        overrides: function (detail) {
           return {
             fakeFocus: true,
             onHighlight: function (menu, item) {
@@ -90,7 +85,7 @@ define(
             }
           };
         }
-      )
+      })
     ];
 
     return {

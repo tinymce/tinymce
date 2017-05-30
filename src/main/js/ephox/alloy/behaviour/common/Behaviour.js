@@ -2,9 +2,7 @@ define(
   'ephox.alloy.behaviour.common.Behaviour',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.construct.EventHandler',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.debugging.FunctionAnnotator',
     'ephox.alloy.dom.DomModification',
     'ephox.boulder.api.FieldSchema',
@@ -20,32 +18,17 @@ define(
     'global!Error'
   ],
 
-  function (
-    EventRoot, SystemEvents, EventHandler, FunctionAnnotator, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console,
-    Error
-  ) {
+  function (AlloyEvents, FunctionAnnotator, DomModification, FieldSchema, Objects, ValueSchema, Fun, Merger, Obj, Option, Thunk, Array, console, Error) {
     var executeEvent = function (bConfig, bState, executor) {
-      return {
-        key: SystemEvents.execute(),
-        value: EventHandler.nu({
-          run: function (component) {
-            executor(component, bConfig, bState);
-          }
-        })
-      };
+      return AlloyEvents.runOnExecute(function (component) {
+        executor(component, bConfig, bState);
+      });
     };
 
     var loadEvent = function (bConfig, bState, f) {
-      return {
-        key: SystemEvents.systemInit(),
-        value: EventHandler.nu({
-          run: function (component, simulatedEvent) {
-            if (EventRoot.isSource(component, simulatedEvent)) {
-              f(component, bConfig, bState);
-            }
-          }
-        })
-      };
+      return AlloyEvents.runOnInit(function (component, simulatedEvent) {
+        f(component, bConfig, bState);
+      });
     };
 
     var create = function (schema, name, active, apis, extra, state) {
@@ -82,8 +65,12 @@ define(
       return FunctionAnnotator.markAsBehaviourApi(f, apiName, apiFunction);
     };
 
+    // I think the "revoke" idea is fragile at best.
     var revokeBehaviour = function (name) {
-      return Objects.wrap(name, undefined);
+      return {
+        key: name,
+        value: undefined
+      };
     };
 
     var doCreate = function (configSchema, schemaSchema, name, active, apis, extra, state) {
@@ -99,7 +86,7 @@ define(
         return FunctionAnnotator.markAsExtraApi(extraF, extraName);
       });
 
-      return Merger.deepMerge(
+      var me = Merger.deepMerge(
         wrappedExtra,
         wrappedApis,
         {
@@ -111,6 +98,7 @@ define(
               key: name,
               value: {
                 config: prepared,
+                me: me,
                 configAsRaw: Thunk.cached(function () {
                   return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
                 }),
@@ -145,6 +133,8 @@ define(
           }
         }
       );
+
+      return me;
     };
 
     return {

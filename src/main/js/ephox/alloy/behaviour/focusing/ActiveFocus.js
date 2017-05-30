@@ -2,15 +2,13 @@ define(
   'ephox.alloy.behaviour.focusing.ActiveFocus',
 
   [
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.behaviour.focusing.FocusApis',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.dom.DomModification',
-    'ephox.alloy.log.AlloyLogger',
-    'ephox.boulder.api.Objects'
+    'ephox.alloy.dom.DomModification'
   ],
 
-  function (SystemEvents, FocusApis, EventHandler, DomModification, AlloyLogger, Objects) {
+  function (AlloyEvents, SystemEvents, FocusApis, DomModification) {
     var exhibit = function (base, focusConfig) {
       if (focusConfig.ignore()) return DomModification.nu({ });
       else return DomModification.nu({
@@ -21,15 +19,12 @@ define(
     };
 
     var events = function (focusConfig) {
-      return Objects.wrap(
-        SystemEvents.focus(),
-        EventHandler.nu({
-          run: function (component, simulatedEvent) {
-            FocusApis.focus(component, focusConfig);
-            simulatedEvent.stop();
-          }
+      return AlloyEvents.derive([
+        AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
+          FocusApis.focus(component, focusConfig);
+          simulatedEvent.stop();
         })
-      );
+      ]);
     };
 
     return {

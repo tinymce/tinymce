@@ -4,21 +4,18 @@ define(
   [
     'ephox.alloy.alien.EditableFields',
     'ephox.alloy.alien.Keys',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.navigation.KeyMatch',
-    'ephox.alloy.navigation.KeyRules',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option'
   ],
 
-  function (EditableFields, Keys, SystemEvents, KeyMatch, KeyRules, Merger, Fun, Option) {
+  function (EditableFields, Keys, AlloyTriggers, SystemEvents, KeyMatch, Option) {
 
     var doDefaultExecute = function (component, simulatedEvent, focused) {
-      var system = component.getSystem();
-      system.triggerEvent(SystemEvents.execute(), focused, Merger.deepMerge({
-        target: Fun.constant(component.element())
-      }, simulatedEvent.event()));
+      // Note, we use to pass through simulatedEvent here and make target: component. This simplification
+      // may be a problem
+      AlloyTriggers.dispatch(component, focused, SystemEvents.execute());
       return Option.some(true);
     };
 

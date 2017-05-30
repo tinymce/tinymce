@@ -2,91 +2,64 @@ define(
   'ephox.alloy.ui.schema.FormCoupledInputsSchema',
 
   [
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.FormField',
-    'ephox.alloy.api.ui.Input',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.data.Fields',
+    'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Fun'
   ],
 
-  function (AdhocBehaviour, Behaviour, Composing, Toggling, Button, FormField, Input, EventHandler, Fields, PartType, FieldSchema, Fun, Option) {
+  function (AddEventsBehaviour, Behaviour, Composing, Toggling, AlloyEvents, NativeEvents, Button, FormField, Fields, AlloyParts, PartType, FieldSchema, Fun) {
     var schema = [
       Fields.onStrictHandler('onLockedChange'),
       Fields.markers([ 'lockClass' ])
     ];
 
-    var formInput = {
-      sketch: function (spec) {
-        return FormField.sketch(Input, spec);
-      }
-    };
-
-    var getPart = function (comp, detail, partName) {
-      return comp.getSystem().getByUid(detail.partUids()[partName]).fold(Option.none, Option.some);
-    };
-
     var getField = function (comp, detail, partName) {
-      return getPart(comp, detail, partName).bind(Composing.getCurrent);
+      return AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
     };
 
     var coupledPart = function (selfName, otherName) {
-      return PartType.internal(
-        formInput,
-        [
-          FieldSchema.strictObjOf('parts', [
-            FieldSchema.strictObjOf('label', [
-              FieldSchema.strict('dom')
-            ]),
-            FieldSchema.strict('field')
-          ])
-        ],
-        selfName,
-        '<alloy.coupled-inputs.' + selfName + '>',
-        Fun.constant({ }),
-        function (detail) {
+      return PartType.required({
+        factory: FormField,
+        name: selfName,
+        overrides: function (detail) {
           return {
             fieldBehaviours: Behaviour.derive([
-              AdhocBehaviour.config('coupled-input-behaviour')
-            ]),
-            customBehaviours: [
-              AdhocBehaviour.events('coupled-input-behaviour', {
-                'input': EventHandler.nu({
-                  run: function (me) {
-                    getField(me, detail, otherName).each(function (other) {
-                      getPart(me, detail, 'lock').each(function (lock) {
-                        if (Toggling.isOn(lock)) detail.onLockedChange()(me, other, lock);
-                      });
+              AddEventsBehaviour.config('coupled-input-behaviour', [
+                AlloyEvents.run(NativeEvents.input(), function (me) {
+                  getField(me, detail, otherName).each(function (other) {
+                    AlloyParts.getPart(me, detail, 'lock').each(function (lock) {
+                      if (Toggling.isOn(lock)) detail.onLockedChange()(me, other, lock);
                     });
-                  }
+                  });
                 })
-              })
-            ]
+              ])
+            ])
           };
         }
-      );
+      });
     };
 
     var partTypes = [
       coupledPart('field1', 'field2'),
       coupledPart('field2', 'field1'),
 
-      PartType.internal(
-        Button,
-        [
+      PartType.required({
+        factory: Button,
+        schema: [
           FieldSchema.strict('dom')
         ],
-        'lock',
-        '<alloy.coupled-inputs.lock>',
-        Fun.constant({ }),
-        function (detail) {
+        name: 'lock',
+        overrides: function (detail) {
           return {
             buttonBehaviours: Behaviour.derive([
               Toggling.config({
@@ -98,7 +71,7 @@ define(
             ])
           };
         }
-      )
+      })
     ];
 
     return {

@@ -5,15 +5,14 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects',
     'global!window'
   ],
 
-  function (Step, Waiter, GuiFactory, SystemEvents, Container, EventHandler, GuiSetup, Objects, window) {
+  function (Step, Waiter, GuiFactory, AlloyEvents, SystemEvents, Container, GuiSetup, window) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -32,14 +31,11 @@ asynctest(
               height: '20px'
             }
           },
-          events: Objects.wrap(
-            SystemEvents.windowScroll(),
-            EventHandler.nu({
-              run: function (component, simulatedEvent) {
-                store.adder(simulatedEvent.event().raw().type)();
-              }
+          events: AlloyEvents.derive([
+            AlloyEvents.run(SystemEvents.windowScroll(), function (component, simulatedEvent) {
+              store.adder(simulatedEvent.event().raw().type)();
             })
-          )
+          ])
         })
       );
 

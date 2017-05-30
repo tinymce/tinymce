@@ -2,9 +2,9 @@ define(
   'ephox.alloy.api.system.Attachment',
 
   [
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
@@ -12,12 +12,9 @@ define(
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (SystemEvents, Arr, Fun, Option, Insert, Remove, Body, Traverse) {
+  function (AlloyTriggers, SystemEvents, Arr, Option, Insert, Remove, Body, Traverse) {
     var fireDetaching = function (component) {
-      component.getSystem().triggerEvent(SystemEvents.detachedFromDom(), component.element(), {
-        target: Fun.constant(component.element())
-      });
-
+      AlloyTriggers.emit(component, SystemEvents.detachedFromDom());
       var children = component.components();
       Arr.each(children, fireDetaching);
     };
@@ -25,9 +22,7 @@ define(
     var fireAttaching = function (component) {
       var children = component.components();
       Arr.each(children, fireAttaching);
-      component.getSystem().triggerEvent(SystemEvents.attachedToDom(), component.element(), {
-        target: Fun.constant(component.element())
-      });
+      AlloyTriggers.emit(component, SystemEvents.attachedToDom());
     };
 
     var attach = function (parent, child) {

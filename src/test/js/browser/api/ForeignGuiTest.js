@@ -9,9 +9,10 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.system.ForeignGui',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Insert',
@@ -24,8 +25,8 @@ asynctest(
   ],
 
   function (
-    ApproxStructure, Assertions, Mouse, Pipeline, Step, Behaviour, Toggling, SystemEvents, ForeignGui, EventHandler, GuiSetup, Option, Insert, Remove, Body,
-    Element, Node, Html, document
+    ApproxStructure, Assertions, Mouse, Pipeline, Step, Behaviour, Toggling, AlloyEvents, NativeEvents, SystemEvents, ForeignGui, GuiSetup, Option, Insert, Remove,
+    Body, Element, Node, Html, document
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -49,15 +50,13 @@ asynctest(
                 toggleClass: 'selected'
               })
             ]),
-            events: {
-              click: EventHandler.nu({
-                run: function (component, simulatedEvent) {
-                  // We have to remove the proxy first, because we are during a proxied event (click)
-                  connection.unproxy(component);
-                  connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
-                }
+            events: AlloyEvents.derive([
+              AlloyEvents.run(NativeEvents.click(), function (component, simulatedEvent) {
+                // We have to remove the proxy first, because we are during a proxied event (click)
+                connection.unproxy(component);
+                connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
               })
-            }
+            ])
           }
         }
       ]

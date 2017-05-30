@@ -5,17 +5,16 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Step',
-    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.test.GuiSetup',
-    'ephox.boulder.api.Objects'
+    'ephox.alloy.test.GuiSetup'
   ],
 
-  function (Keyboard, Keys, Step, GuiFactory, Behaviour, Focusing, Keying, Container, EventHandler, GuiSetup, Objects) {
+  function (Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, AlloyEvents, Container, GuiSetup) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -39,11 +38,9 @@ asynctest(
               mode: 'execution'
             })
           ]),
-          events: {
-            'alloy.execute': EventHandler.nu({
-              run: store.adder('event.execute')
-            })
-          }
+          events: AlloyEvents.derive([
+            AlloyEvents.runOnExecute(store.adder('event.execute'))
+          ])
         })
       );
 

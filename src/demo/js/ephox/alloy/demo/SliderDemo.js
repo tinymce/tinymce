@@ -21,6 +21,7 @@ define(
     'global!document'
   ],
 
+
   function (Behaviour, Keying, Replacing, Toggling, GuiFactory, Gui, Container, Slider, HtmlDisplay, Fun, PlatformDetection, Insert, DomEvent, Element, Class, Css, document) {
     return function () {
       var gui = Gui.create();
@@ -40,8 +41,19 @@ define(
           getInitialValue: Fun.constant(80),
           stepSize: 10,
           snapToGrid: true,
-          parts: {
-            thumb: {
+
+          components: [
+            Slider.parts().spectrum({
+              dom: {
+                tag: 'div',
+                styles: {
+                  height: '20px',
+                  background: 'blue',
+                  outline: '4px solid green'
+                }
+              }
+            }),
+            Slider.parts().thumb({
               dom: {
                 tag: 'div',
                 styles: {
@@ -52,22 +64,7 @@ define(
                   'padding-top': '-5px'
                 }
               }
-            },
-            spectrum: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  height: '20px',
-                  background: 'blue',
-                  outline: '4px solid green'
-                }
-              }
-            }
-          },
-
-          components: [
-            Slider.parts().spectrum(),
-            Slider.parts().thumb()
+            })
           ]
         })
       );
@@ -84,40 +81,8 @@ define(
           stepSize: 40,
           snapStart: 35,
           snapToGrid: true,
-
           onDragStart: function (_, thumb) { Toggling.on(thumb); },
           onDragEnd: function (_, thumb) { Toggling.off(thumb); },
-
-          parts: {
-            thumb: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  'border-radius': '20px',
-                  width: '25px',
-                  height: '25px',
-                  'border': '1px solid green',
-                  background: 'transparent',
-                  display: 'flex', 'align-items': 'center', 'justify-content': 'center'
-                }
-              },
-              behaviours: Behaviour.derive([
-                Replacing.config({ }),
-                Toggling.config({
-                  toggleClass: 'thumb-pressed',
-                  toggleOnExecute: false
-                })
-              ])
-            },
-            spectrum: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  width: '300px', background: 'green', height: '20px'
-                }
-              }
-            }
-          },
 
           onInit: function (slider, thumb, value) {
             Replacing.set(thumb, [
@@ -132,8 +97,33 @@ define(
           },
 
           components: [
-            Slider.parts().spectrum(),
-            Slider.parts().thumb()
+            Slider.parts().spectrum({
+              dom: {
+                tag: 'div',
+                styles: {
+                  width: '300px', background: 'green', height: '20px'
+                }
+              }
+            }),
+            Slider.parts().thumb({
+              dom: {
+                tag: 'div',
+                styles: {
+                  'border-radius': '20px',
+                  width: '25px',
+                  height: '25px',
+                  'border': '1px solid green',
+                  background: 'transparent',
+                  display: 'flex', 'align-items': 'center', 'justify-content': 'center'
+                }
+              },
+              behaviours: Behaviour.derive([
+                Replacing.config({ }),
+                Toggling.config({
+                  toggleClass: 'thumb-pressed'
+                })
+              ])
+            })
           ]
         })
       );
@@ -152,54 +142,7 @@ define(
           max: 360,
           getInitialValue: Fun.constant(120),
           stepSize: 10,
-          parts: {
-            thumb: {
-              dom: {
-                tag: 'div',
-                classes: [ 'demo-sliding-thumb' ],
-                styles: {
-                  height: '30px',
-                  width: '10px',
-                  top: '0px',
-                  background: 'black',
-                  'padding-top': '-5px',
-                  border: '1px solid black',
-                  outline: '1px solid white'
-                }
-              }
-            },
-            spectrum: {
-              dom: {
-                tag: 'div',
-                styles: {
-                  height: '20px',
-                  background: 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
-                  display: 'flex',
-                  'flex-grow': '1'
-                }
-              }
-            },
-            'left-edge': {
-              dom: {
-                tag: 'div',
-                styles: {
-                  'width': '120px',
-                  height: '20px',
-                  background: 'black'
-                }
-              }
-            },
-            'right-edge': {
-              dom: {
-                tag: 'div',
-                styles: {
-                  'width': '120px',
-                  height: '20px',
-                  background: 'white'
-                }
-              }
-            }
-          },
+
           onChange: function (slider, thumb, value) {
             var getColor = function (hue) {
               if (hue < 0) return 'black';
@@ -230,12 +173,54 @@ define(
                 }
               },
               components: [
-                Slider.parts()['left-edge'](),
-                Slider.parts().spectrum(),
-                Slider.parts()['right-edge']()
+                Slider.parts()['left-edge']({
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      'width': '120px',
+                      height: '20px',
+                      background: 'black'
+                    }
+                  }
+                }),
+                Slider.parts().spectrum({
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      height: '20px',
+                      background: 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
+                      display: 'flex',
+                      'flex-grow': '1'
+                    }
+                  }
+                }),
+                Slider.parts()['right-edge']({
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      'width': '120px',
+                      height: '20px',
+                      background: 'white'
+                    }
+                  }
+                })
               ]
             }),
-            Slider.parts().thumb()
+            Slider.parts().thumb({
+              dom: {
+                tag: 'div',
+                classes: [ 'demo-sliding-thumb' ],
+                styles: {
+                  height: '30px',
+                  width: '10px',
+                  top: '0px',
+                  background: 'black',
+                  'padding-top': '-5px',
+                  border: '1px solid black',
+                  outline: '1px solid white'
+                }
+              }
+            })
           ]
         })
       );
@@ -244,7 +229,7 @@ define(
       var isTouch = platform.deviceType.isTouch();
 
       DomEvent.bind(body, 'click', function () {
-        if (! isTouch) Keying.focusIn(hueSlider);
+        if (! isTouch) Keying.focusIn(slider1);
       });
     };
   }

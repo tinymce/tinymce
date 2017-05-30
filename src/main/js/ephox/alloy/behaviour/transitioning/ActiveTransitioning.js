@@ -2,52 +2,31 @@ define(
   'ephox.alloy.behaviour.transitioning.ActiveTransitioning',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.behaviour.transitioning.TransitionApis',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
+    'ephox.alloy.behaviour.transitioning.TransitionApis'
   ],
 
-  function (EventRoot, SystemEvents, TransitionApis, EventHandler, Objects, Fun) {
-    var findRoute = function (component, transConfig, route) {
-      return Objects.readOptFrom(transConfig.routes(), route.start()).map(Fun.apply).bind(function (sConfig) {
-        return Objects.readOptFrom(sConfig, route.destination()).map(Fun.apply);
-      });
-    };
-
+  function (AlloyEvents, NativeEvents, TransitionApis) {
     var events = function (transConfig, transState) {
-      return Objects.wrapAll([
-        {
-          key: 'transitionend',
-          value: EventHandler.nu({
-            run: function (component, simulatedEvent) {
-              var raw = simulatedEvent.event().raw();
-              TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
-                TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
-                  rInfo.transition().each(function (rTransition) {
-                    if (raw.propertyName === rTransition.property()) {
-                      TransitionApis.jumpTo(component, transConfig, transState, route.destination());
-                      transConfig.onTransition()(component, route);
-                    }
-                  });
-                });
+      return AlloyEvents.derive([
+        AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
+          var raw = simulatedEvent.event().raw();
+          TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
+            TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
+              rInfo.transition().each(function (rTransition) {
+                if (raw.propertyName === rTransition.property()) {
+                  TransitionApis.jumpTo(component, transConfig, transState, route.destination());
+                  transConfig.onTransition()(component, route);
+                }
               });
-            }
-          })
-        },
+            });
+          });
+        }),
 
-        {
-          key: SystemEvents.attachedToDom(),
-          value: EventHandler.nu({
-            run: function (comp, se) {
-              if (EventRoot.isSource(comp, se)) {
-                TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState());
-              }
-            }
-          })
-        }
+        AlloyEvents.runOnAttached(function (comp, se) {
+          TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState());
+        })
       ]);
     };
 

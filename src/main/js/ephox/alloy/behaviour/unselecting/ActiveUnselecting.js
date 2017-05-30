@@ -2,11 +2,13 @@ define(
   'ephox.alloy.behaviour.unselecting.ActiveUnselecting',
 
   [
-    'ephox.alloy.construct.EventHandler',
-    'ephox.alloy.dom.DomModification'
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
+    'ephox.alloy.dom.DomModification',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (EventHandler, DomModification) {
+  function (AlloyEvents, NativeEvents, DomModification, Fun) {
     var exhibit = function (base, unselectConfig) {
       return DomModification.nu({
         styles: {
@@ -22,14 +24,9 @@ define(
     };
 
     var events = function (unselectConfig) {
-      return {
-        selectstart: EventHandler.nu({
-          run: function (component, simulatedEvent) {
-            simulatedEvent.event().kill();
-            simulatedEvent.stop();
-          }
-        })
-      };
+      return AlloyEvents.derive([
+        AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
+      ]);
     };
 
     return {

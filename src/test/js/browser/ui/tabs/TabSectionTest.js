@@ -4,7 +4,6 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
-    'ephox.agar.api.Step',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TabSection',
@@ -13,7 +12,7 @@ asynctest(
     'ephox.katamari.api.Fun'
   ],
 
-  function (ApproxStructure, Assertions, Step, GuiFactory, Container, TabSection, Tabbar, GuiSetup, Fun) {
+  function (ApproxStructure, Assertions, GuiFactory, Container, TabSection, Tabbar, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -24,8 +23,23 @@ asynctest(
             tag: 'div'
           },
           components: [
-            TabSection.parts().tabbar(),
-            TabSection.parts().tabview()
+            TabSection.parts().tabbar({
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                Tabbar.parts().tabs({ })
+              ],
+              markers: {
+                tabClass: 'test-tab-button',
+                selectedClass: 'selected-test-tab-button'
+              }
+            }),
+            TabSection.parts().tabview({
+              dom: {
+                tag: 'div'
+              }
+            })
           ],
 
           tabs: [
@@ -43,35 +57,7 @@ asynctest(
                 ];
               }
             }
-          ],
-
-          parts: {
-            tabbar: {
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                Tabbar.parts().tabs()
-              ],
-              members: {
-                tab: {
-                  munge: Fun.identity
-                }
-              },
-              parts: {
-                'tabs': { }
-              },
-              markers: {
-                tabClass: 'test-tab-button',
-                selectedClass: 'selected-test-tab-button'
-              }
-            },
-            tabview: {
-              dom: {
-                tag: 'div'
-              }
-            }
-          }
+          ]
         })
       );
 

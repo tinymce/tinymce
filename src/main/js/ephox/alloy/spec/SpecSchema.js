@@ -81,10 +81,9 @@ define(
       );
     };
 
-    var base = function (label, partSchemas, spec) {
+    var base = function (label, partSchemas, partUidsSchemas, spec) {
       var ps = partSchemas.length > 0 ? [
-        FieldSchema.strictObjOf('parts', partSchemas),
-        getPartUidsSchema(label, spec)
+        FieldSchema.strictObjOf('parts', partSchemas)
       ] : [ ];
 
       return ps.concat([
@@ -93,7 +92,7 @@ define(
         FieldSchema.defaulted('components', [ ]),
         Fields.snapshot('originalSpec'),
         FieldSchema.defaulted('debug.sketcher', { })
-      ]);
+      ]).concat(partUidsSchemas);
     };
 
 
@@ -103,8 +102,8 @@ define(
       return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
     };
 
-    var asStructOrDie = function (label, schema, spec, partSchemas) {
-      var baseS = base(label, partSchemas, spec);
+    var asStructOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) {
+      var baseS = base(label, partSchemas, partUidsSchemas, spec);
       return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
     };
 

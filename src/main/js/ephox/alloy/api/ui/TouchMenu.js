@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.alloy.alien.ElementFromPoint',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Highlighting',
@@ -13,13 +13,13 @@ define(
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.InlineView',
     'ephox.alloy.api.ui.Menu',
-    'ephox.alloy.api.ui.UiSketcher',
+    'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
-    'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.schema.TouchMenuSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
@@ -30,13 +30,10 @@ define(
   ],
 
   function (
-    ElementFromPoint, AdhocBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlloyEvents, NativeEvents,
-    SystemEvents, InlineView, Menu, UiSketcher, DropdownUtils, PartType, TouchMenuSchema, Objects, Cell, Fun, Merger, Focus, document
+    ElementFromPoint, AddEventsBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlloyEvents, AlloyTriggers,
+    NativeEvents, SystemEvents, InlineView, Menu, Sketcher, DropdownUtils, TouchMenuSchema, Objects, Cell, Fun, Merger, Focus, document
   ) {
-    var schema = TouchMenuSchema.schema();
-    var partTypes = TouchMenuSchema.parts();
-
-    var make = function (detail, components, spec, externals) {
+    var factory = function (detail, components, spec, externals) {
 
       var getMenu = function (component) {
         var sandbox = Coupling.getCoupled(component, 'sandbox');
@@ -68,7 +65,6 @@ define(
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,
-          customBehaviours: detail.customBehaviours(),
           behaviours: Merger.deepMerge(
             Behaviour.derive([
               // Button showing the the touch menu is depressed
@@ -91,7 +87,14 @@ define(
                         {
                           lazySink: DropdownUtils.getSink(hotspot, detail),
                           inlineBehaviours: Behaviour.derive([
-                            AdhocBehaviour.config('execute-for-menu'),
+                            AddEventsBehaviour.config('execute-for-menu', [
+                              AlloyEvents.runOnExecute(function (c, s) {
+                                var target = s.event().target();
+                                c.getSystem().getByDom(target).each(function (item) {
+                                  detail.onExecute()(hotspot, c, item, Representing.getValue(item));
+                                });
+                              })
+                            ]),
 
                             // Animation
                             Transitioning.config({
@@ -117,16 +120,6 @@ define(
 
 
                           ]),
-                          customBehaviours: [
-                            AdhocBehaviour.events('execute-for-menu', AlloyEvents.derive([
-                              AlloyEvents.runOnExecute(function (c, s) {
-                                var target = s.event().target();
-                                c.getSystem().getByDom(target).each(function (item) {
-                                  detail.onExecute()(hotspot, c, item, Representing.getValue(item));
-                                });
-                              })
-                            ]))
-                          ],
 
                           onShow: function (view) {
                             Transitioning.progressTo(view, 'open');
@@ -143,7 +136,7 @@ define(
 
           events: AlloyEvents.derive([
 
-            AlloyEvents.abort(NativeEvents.contextmenu()),
+            AlloyEvents.abort(NativeEvents.contextmenu(), Fun.constant(true)),
 
             AlloyEvents.run(NativeEvents.touchstart(), function (comp, se) {
               Toggling.on(comp);
@@ -193,11 +186,9 @@ define(
                   );
                   hoverF(component);
                 }, function (elem) {
-                  // Trigger a hover on the item element
-                  component.getSystem().triggerEvent('mouseover', elem, {
-                    target: Fun.constant(elem),
-                    x: Fun.constant(e.clientX),
-                    y: Fun.constant(e.clientY)
+                  AlloyTriggers.dispatchWith(component, elem, NativeEvents.mouseover(), {
+                    x: e.clientX,
+                    y: e.clientY
                   });
                   hoverOff(component);
                 });
@@ -211,7 +202,7 @@ define(
             AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
 
               getMenu(component).each(function (iMenu) {
-                Highlighting.getHighlighted(iMenu).each(SystemEvents.triggerExecute);
+                Highlighting.getHighlighted(iMenu).each(AlloyTriggers.emitExecute);
               });
 
               var sandbox = Coupling.getCoupled(component, 'sandbox');
@@ -243,15 +234,11 @@ define(
       );
     };
 
-    var sketch = function (spec) {
-      return UiSketcher.composite(TouchMenuSchema.name(), schema, partTypes, make, spec);
-    };
-
-    var parts = PartType.generate(TouchMenuSchema.name(), partTypes);
-
-    return {
-      sketch: sketch,
-      parts: Fun.constant(parts)
-    };
+    return Sketcher.composite({
+      name: 'TouchMenu',
+      configFields: TouchMenuSchema.schema(),
+      partFields: TouchMenuSchema.parts(),
+      factory: factory
+    });
   }
 );

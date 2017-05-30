@@ -6,11 +6,12 @@ define(
     'ephox.alloy.api.behaviour.Positioning',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.construct.EventHandler',
     'ephox.alloy.demo.DemoContent',
     'ephox.alloy.demo.DemoSink',
     'ephox.alloy.demo.HtmlDisplay',
@@ -22,8 +23,8 @@ define(
   ],
 
   function (
-    Behaviour, Positioning, Toggling, GuiFactory, Attachment, Gui, Button, Container, EventHandler, DemoContent, DemoSink, HtmlDisplay, Writer, DomEvent, Element,
-    Class, Css
+    Behaviour, Positioning, Toggling, GuiFactory, AlloyEvents, NativeEvents, Attachment, Gui, Button, Container, DemoContent, DemoSink, HtmlDisplay, Writer,
+    DomEvent, Element, Class, Css
   ) {
     return function () {
       var gui = Gui.create();
@@ -109,17 +110,15 @@ define(
                   width: '100px'
                 }
               },
-              events: {
-                mouseover: EventHandler.nu({
-                  run: function (item) {
-                    Attachment.attach(sink, popup);
-                    Positioning.position(sink, {
-                      anchor: 'submenu',
-                      item: item
-                    }, popup);
-                  }
+              events: AlloyEvents.derive([
+                AlloyEvents.run(NativeEvents.mouseover(), function (item) {
+                  Attachment.attach(sink, popup);
+                  Positioning.position(sink, {
+                    anchor: 'submenu',
+                    item: item
+                  }, popup);
                 })
-              }
+              ])
             })
           ]
         })
