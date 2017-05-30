@@ -327,6 +327,7 @@ define(
                 body.focus();
               }
             } else {
+              self.selection.setRng(self.lastRng);
               body.focus();
             }
 
