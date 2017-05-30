@@ -6,11 +6,10 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.search.SelectorFind',
     'tinymce.themes.mobile.channels.TinyChannels'
   ],
 
-  function (Arr, Fun, Element, Node, SelectorFind, TinyChannels) {
+  function (Arr, Fun, Element, Node, TinyChannels) {
     var fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
     var fireChange = function (realm, command, state) {

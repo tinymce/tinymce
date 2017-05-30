@@ -2,13 +2,14 @@ define(
   'tinymce.themes.mobile.ui.FontSizeSlider',
 
   [
-    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.SizeSlider',
     'tinymce.themes.mobile.ui.ToolbarWidgets',
-    'tinymce.themes.mobile.util.FontSizes'
+    'tinymce.themes.mobile.util.FontSizes',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Styles, SizeSlider, ToolbarWidgets, FontSizes) {
+
+  function (SizeSlider, ToolbarWidgets, FontSizes, UiDomFactory) {
     var sizes = FontSizes.candidates();
 
     var makeSlider = function (spec) {
@@ -22,19 +23,9 @@ define(
 
     var makeItems = function (spec) {
       return [
-        {
-          dom: {
-            tag: 'span',
-            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-small-font'), Styles.resolve('icon') ]
-          }
-        },
+        UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
         makeSlider(spec),
-        {
-          dom: {
-            tag: 'span',
-            classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-large-font'), Styles.resolve('icon') ]
-          }
-        }
+        UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
       ];
     };
 

@@ -2,16 +2,19 @@ define(
   'tinymce.themes.mobile.style.Styles',
 
   [
-
+    'ephox.katamari.api.Fun'
   ],
 
-  function () {
+  function (Fun) {
+    var prefix = 'tinymce-mobile';
+
     var resolve = function (p) {
-      return 'tinymce-mobile-' + p;
+      return prefix + '-' + p;
     };
 
     return {
-      resolve: resolve
+      resolve: resolve,
+      prefix: Fun.constant(prefix)
     };
   }
 );

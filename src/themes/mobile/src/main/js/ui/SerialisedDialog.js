@@ -2,23 +2,21 @@ define(
   'tinymce.themes.mobile.ui.SerialisedDialog',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Disabling',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Form',
-    'ephox.alloy.construct.EventHandler',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
@@ -29,12 +27,13 @@ define(
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
     'tinymce.themes.mobile.model.SwipingModel',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, NativeEvents, SystemEvents, Button, Container,
-    Form, EventHandler, FieldSchema, Objects, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles
+    AddEventsBehaviour, Behaviour, Disabling, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, AlloyTriggers, NativeEvents, Button, Container,
+    Form, FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles, UiDomFactory
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -58,31 +57,18 @@ define(
 
       var spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
 
-      var prevButton = function (enabled) {
+      var navigationButton = function (direction, directionName, enabled) {
         return Button.sketch({
-          dom: {
-            tag: 'span',
-            classes: [Styles.resolve('icon-previous'), Styles.resolve('icon')].concat(
-              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
-            )
-          },
+          dom: UiDomFactory.dom('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
           action: function (button) {
-            SystemEvents.trigger(button, navigateEvent, { direction: -1 });
-          }
-        });
-      };
-
-      var nextButton = function (enabled) {
-        return Button.sketch({
-          dom: {
-            tag: 'span',
-            classes: [Styles.resolve('icon-next'), Styles.resolve('icon')].concat(
-              enabled ? [] : [Styles.resolve('toolbar-navigation-disabled')]
-            )
+            AlloyTriggers.emitWith(button, navigateEvent, { direction: direction });
           },
-          action: function (button) {
-            SystemEvents.trigger(button, navigateEvent, { direction: +1 });
-          }
+          buttonBehaviours: Behaviour.derive([
+            Disabling.config({
+              disableClass: Styles.resolve('toolbar-navigation-disabled'),
+              disabled: !enabled
+            })
+          ])
         });
       };
 
@@ -112,7 +98,7 @@ define(
         var optInput = Option.from(inputs[spec.state.currentScreen.get()]);
         optInput.each(function (input) {
           dialog.getSystem().getByDom(input).each(function (inputComp) {
-            inputComp.getSystem().triggerFocus(inputComp.element(), dialog.element());
+            AlloyTriggers.dispatchFocus(dialog, inputComp.element());
           });
         });
         var dotitems = memDots.get(dialog);
@@ -124,134 +110,82 @@ define(
         spec.state.dialogSwipeState.clear();
       };
 
-
-
       var memForm = Memento.record(
-        Form.sketch({
-          dom: {
-            tag: 'div',
-            classes: [Styles.resolve('serialised-dialog')]
-          },
-          components: [
-            Container.sketch({
-              dom: {
-                tag: 'div',
-                classes: [Styles.resolve('serialised-dialog-chain')],
-                styles: {
-                  left: '0px',
-                  position: 'absolute'
-                }
-              },
-              components: Arr.map(spec.fields, function (field, i) {
-                return i <= spec.maxFieldIndex ? Container.sketch({
-                  dom: {
-                    tag: 'div',
-                    classes: [Styles.resolve('serialised-dialog-screen')]
-                  },
-                  components: Arr.flatten([
-                    [prevButton(i > 0)],
-                    [Form.parts(field.name)],
-                    [nextButton(i < spec.maxFieldIndex)]
-                  ])
-                }) : Form.parts(field.name);
+        Form.sketch(function (parts) {
+          return {
+            dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
+            components: [
+              Container.sketch({
+                dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
+                components: Arr.map(spec.fields, function (field, i) {
+                  return i <= spec.maxFieldIndex ? Container.sketch({
+                    dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
+                    components: Arr.flatten([
+                      [ navigationButton(-1, 'previous', (i > 0)) ],
+                      [ parts.field(field.name, field.spec) ],
+                      [ navigationButton(+1, 'next', (i < spec.maxFieldIndex)) ]
+                    ])
+                  }) : parts.field(field.name, field.spec);
+                })
               })
-            })
-          ],
+            ],
 
-          parts: (function () {
-            var r = {};
-            Arr.each(spec.fields, function (f) {
-              r[f.name] = f.spec;
-            });
-            return r;
-          })(),
-
-          formBehaviours: Behaviour.derive([
-            Receiving.config({
-              channels: {
-                'orientation.change': {
-                  onReceive: function (dialog, message) {
-                    reposition(dialog, message);
+            formBehaviours: Behaviour.derive([
+              Receiving.config({
+                channels: {
+                  'orientation.change': {
+                    onReceive: function (dialog, message) {
+                      reposition(dialog, message);
+                    }
                   }
                 }
-              }
-            }),
-            Keying.config({
-              mode: 'special',
-              focusIn: function (dialog/*, specialInfo */) {
-                focusInput(dialog);
-              },
-              onTab: function (dialog/*, specialInfo */) {
-                navigate(dialog, +1);
-                return Option.some(true);
-              },
-              onShiftTab: function (dialog/*, specialInfo */) {
-                navigate(dialog, -1);
-                return Option.some(true);
-              }
-            }),
-            AdhocBehaviour.config(formAdhocEvents)
-          ]),
-
-          customBehaviours: [
-            AdhocBehaviour.events(
-              formAdhocEvents,
-              Objects.wrapAll([
-                {
-                  key: SystemEvents.attachedToDom(),
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      if (EventRoot.isSource(dialog, simulatedEvent)) {
-                        // Reset state to first screen.
-                        resetState();
-                        var dotitems = memDots.get(dialog);
-                        Highlighting.highlightFirst(dotitems);
-                        spec.getInitialValue(dialog).each(function (v) {
-                          Representing.setValue(dialog, v);
-                        });
-                      }
-                    }
-                  })
+              }),
+              Keying.config({
+                mode: 'special',
+                focusIn: function (dialog/*, specialInfo */) {
+                  focusInput(dialog);
                 },
-                {
-                  key: SystemEvents.execute(),
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      spec.onExecute(dialog, simulatedEvent);
-                    }
-                  })
+                onTab: function (dialog/*, specialInfo */) {
+                  navigate(dialog, +1);
+                  return Option.some(true);
                 },
-                {
-                  key: 'transitionend',
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      if (simulatedEvent.event().raw().propertyName === 'left') {
-                        focusInput(dialog);
-                      }
-                    }
-                  })
-                },
-
-                {
-                  key: navigateEvent,
-                  value: EventHandler.nu({
-                    run: function (dialog, simulatedEvent) {
-                      var direction = simulatedEvent.event().direction();
-                      navigate(dialog, direction);
-                    }
-                  })
+                onShiftTab: function (dialog/*, specialInfo */) {
+                  navigate(dialog, -1);
+                  return Option.some(true);
                 }
+              }),
+
+              AddEventsBehaviour.config(formAdhocEvents, [
+                AlloyEvents.runOnAttached(function (dialog, simulatedEvent) {
+                  // Reset state to first screen.
+                  resetState();
+                  var dotitems = memDots.get(dialog);
+                  Highlighting.highlightFirst(dotitems);
+                  spec.getInitialValue(dialog).each(function (v) {
+                    Representing.setValue(dialog, v);
+                  });
+                }),
+
+                AlloyEvents.runOnExecute(spec.onExecute),
+
+                AlloyEvents.run(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
+                  if (simulatedEvent.event().raw().propertyName === 'left') {
+                    focusInput(dialog);
+                  }
+                }),
+
+                AlloyEvents.run(navigateEvent, function (dialog, simulatedEvent) {
+                  var direction = simulatedEvent.event().direction();
+                  navigate(dialog, direction);
+                })
               ])
-            )
-          ]
+            ])
+          };
         })
       );
 
       var memDots = Memento.record({
-        dom: {
-          tag: 'div',
-          classes: [Styles.resolve('dot-container')]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-dot-container"></div>'),
         behaviours: Behaviour.derive([
           Highlighting.config({
             highlightClass: Styles.resolve('dot-active'),
@@ -260,20 +194,13 @@ define(
         ]),
         components: Arr.bind(spec.fields, function (_f, i) {
           return i <= spec.maxFieldIndex ? [
-            {
-              dom: {
-                tag: 'div',
-                classes: [Styles.resolve('dot-item'), Styles.resolve('icon-full-dot'), Styles.resolve('icon')]
-              }
-            }] : [];
+            UiDomFactory.spec('<div class="${prefix}-dot-item ${prefix}-icon-full-dot ${prefix}-icon"></div>')
+          ] : [];
         })
       });
 
       return {
-        dom: {
-          tag: 'div',
-          classes: [Styles.resolve('serializer-wrapper')]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-serializer-wrapper"></div>'),
         components: [
           memForm.asSpec(),
           memDots.asSpec()
@@ -287,11 +214,8 @@ define(
               Keying.focusIn(form);
             }
           }),
-          AdhocBehaviour.config(wrapperAdhocEvents)
-        ]),
 
-        customBehaviours: [
-          AdhocBehaviour.events(wrapperAdhocEvents, AlloyEvents.derive([
+          AddEventsBehaviour.config(wrapperAdhocEvents, [
             AlloyEvents.run(NativeEvents.touchstart(), function (wrapper, simulatedEvent) {
               spec.state.dialogSwipeState.set(
                 SwipingModel.init(simulatedEvent.event().raw().touches[0].clientX)
@@ -313,8 +237,8 @@ define(
                 navigate(dialog, direction);
               });
             })
-          ]))
-        ]
+          ])
+        ])
       };
     };
 

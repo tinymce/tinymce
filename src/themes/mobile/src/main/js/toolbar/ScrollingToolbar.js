@@ -2,45 +2,67 @@ define(
   'tinymce.themes.mobile.toolbar.ScrollingToolbar',
 
   [
-    'ephox.alloy.alien.EventRoot',
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.touch.scroll.Scrollable'
+    'tinymce.themes.mobile.touch.scroll.Scrollable',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
   function (
-    EventRoot, AdhocBehaviour, Behaviour, Keying, Toggling, GuiFactory, SystemEvents, Container, Toolbar, ToolbarGroup, EventHandler, Objects, Cell, Fun, Merger,
-    Css, Scrollables, Styles, Scrollable
+    AddEventsBehaviour, Behaviour, Keying, Toggling, GuiFactory, AlloyEvents, Container, Toolbar, ToolbarGroup, Arr, Cell, Fun, Css, Scrollables, Styles, Scrollable,
+    UiDomFactory
   ) {
     return function () {
+      var makeGroup = function (gSpec) {
+        var scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
+        return {
+          dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
+
+          tgroupBehaviours: Behaviour.derive([
+            AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
+              AlloyEvents.runOnInit(function (component, simulatedEvent) {
+                Css.set(component.element(), 'overflow-x', 'auto');
+                Scrollables.markAsHorizontal(component.element());
+                Scrollable.register(component.element());
+              })
+            ] : [ ])
+          ]),
+
+          components: [
+            Container.sketch({
+              components: [
+                ToolbarGroup.parts().items({ })
+              ]
+            })
+          ],
+          markers: {
+            itemClass: Styles.resolve('toolbar-group-item')
+          },
+
+          items: gSpec.items
+        };
+      };
+
       var toolbar = GuiFactory.build(
         Toolbar.sketch(
           {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('toolbar') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
             components: [
-              Toolbar.parts().groups()
+              Toolbar.parts().groups({ })
             ],
-            parts: {
-              groups: { }
-            },
             toolbarBehaviours: Behaviour.derive([
               Toggling.config({
                 toggleClass: Styles.resolve('context-toolbar'),
@@ -53,67 +75,7 @@ define(
                 mode: 'cyclic'
               })
             ]),
-            shell: true,
-            members: {
-              group: {
-                munge: function (gSpec) {
-                  return Merger.deepMerge(
-                    {
-                      dom: {
-                        tag: 'div',
-                        classes: [ Styles.resolve('toolbar-group') ].concat(
-                          gSpec.scrollable === true ? Styles.resolve([ 'toolbar-scrollable-group' ]) : [ ]
-                        ),
-                        attributes: {
-                          'aria-label': gSpec.label
-                        }
-                      },
-
-                      tgroupBehaviours: Behaviour.derive([
-                        AdhocBehaviour.config('adhoc-scrollable-toolbar')
-                      ]),
-                      customBehaviours: [
-                        AdhocBehaviour.events('adhoc-scrollable-toolbar', gSpec.scrollable === true ? Objects.wrap(
-                          SystemEvents.systemInit(),
-                          EventHandler.nu({
-                            run: function (component, simulatedEvent) {
-                              if (EventRoot.isSource(component, simulatedEvent)) {
-                                Css.set(component.element(), 'overflow-x', 'auto');
-                                Scrollables.markAsHorizontal(component.element());
-                                Scrollable.register(component.element());
-                              }
-                            }
-                          })
-                        ) : { })
-                      ],
-
-                      components: [
-                        Container.sketch({
-                          components: [
-                            ToolbarGroup.parts().items()
-                          ]
-                        })
-                      ],
-                      markers: {
-                        itemClass: Styles.resolve('toolbar-group-item')
-                      },
-
-                      members: {
-                        item: {
-                          munge: Fun.identity
-                        }
-                      },
-
-                      parts: {
-                        items: { }
-                      },
-
-                      items: gSpec.items
-                    }
-                  );
-                }
-              }
-            }
+            shell: true
           }
         )
       );
@@ -134,7 +96,6 @@ define(
         Toggling.off(toolbar);
       };
 
-
       var initGroups = Cell([ ]);
 
       var setGroups = function (gs) {
@@ -143,7 +104,7 @@ define(
       };
 
       var createGroups = function (gs) {
-        return Toolbar.createGroups(toolbar, gs);
+        return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, makeGroup));
       };
 
       var refresh = function () {

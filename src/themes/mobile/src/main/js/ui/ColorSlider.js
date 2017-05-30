@@ -7,10 +7,11 @@ define(
     'ephox.alloy.api.ui.Slider',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.ToolbarWidgets'
+    'tinymce.themes.mobile.ui.ToolbarWidgets',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Toggling, Slider, Css, Styles, ToolbarWidgets) {
+  function (Behaviour, Toggling, Slider, Css, Styles, ToolbarWidgets, UiDomFactory) {
     var BLACK = -1;
 
     var makeSlider = function (spec) {
@@ -38,15 +39,29 @@ define(
       };
 
       return Slider.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('slider'), Styles.resolve('hue-slider-container') ]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
         components: [
-          Slider.parts()['left-edge'](),
-          Slider.parts().spectrum(),
-          Slider.parts()['right-edge'](),
-          Slider.parts().thumb()
+          Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
+          Slider.parts().spectrum({
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
+            components: [
+              UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
+            ],
+            behaviours: Behaviour.derive([
+              Toggling.config({
+                toggleClass: Styles.resolve('thumb-active')
+              })
+            ])
+          }),
+          Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
+          Slider.parts().thumb({
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
+            behaviours: Behaviour.derive([
+              Toggling.config({
+                toggleClass: Styles.resolve('thumb-active')
+              })
+            ])
+          })
         ],
 
         onChange: onChange,
@@ -60,47 +75,7 @@ define(
         stepSize: 10,
         min: 0,
         max: 360,
-        getInitialValue: spec.getInitialValue,
-
-        parts: {
-          spectrum: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-gradient-container') ]
-            },
-            components: [
-              {
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('slider-gradient') ]
-                }
-              }
-            ]
-          },
-          thumb: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-thumb') ]
-            },
-            behaviours: Behaviour.derive([
-              Toggling.config({
-                toggleClass: Styles.resolve('thumb-active')
-              })
-            ])
-          },
-          'left-edge': {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('hue-slider-black') ]
-            }
-          },
-          'right-edge': {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('hue-slider-white') ]
-            }
-          }
-        }
+        getInitialValue: spec.getInitialValue
       });
     };
 

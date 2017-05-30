@@ -8,14 +8,15 @@ define(
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.log.AlloyLogger',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Assertions, Chain, Step, UiControls, UiFinder, Toggling, SystemEvents, AlloyLogger, Result, Focus, Traverse) {
+  function (Assertions, Chain, Step, UiControls, UiFinder, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Traverse) {
     var cGetFocused = Chain.binder(function () {
       return Focus.active().fold(function () {
         return Result.error('Could not find focused element');
@@ -54,7 +55,7 @@ define(
       return Step.sync(function () {
         var button = UiFinder.findIn(alloy.element(), '[role="button"]').getOrDie();
         var x = alloy.getByDom(button).getOrDie();
-        SystemEvents.trigger(x, 'click', { });
+        AlloyTriggers.emit(x, NativeEvents.click());
       });
     };
 

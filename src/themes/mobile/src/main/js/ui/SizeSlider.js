@@ -7,10 +7,11 @@ define(
     'ephox.alloy.api.ui.Slider',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Toggling, Slider, FieldSchema, ValueSchema, Styles) {
+  function (Behaviour, Toggling, Slider, FieldSchema, ValueSchema, Styles, UiDomFactory) {
     var schema = ValueSchema.objOfOnly([
       FieldSchema.strict('getInitialValue'),
       FieldSchema.strict('onChange'),
@@ -53,37 +54,22 @@ define(
         snapToGrid: true,
 
         components: [
-          Slider.parts().spectrum(),
-          Slider.parts().thumb()
-        ],
-
-        parts: {
-          spectrum: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-size-container') ]
-            },
+          Slider.parts().spectrum({
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-size-container"></div>'),
             components: [
-              {
-                dom: {
-                  tag: 'div',
-                  classes: [ Styles.resolve('slider-size-line') ]
-                }
-              }
+              UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')
             ]
-          },
-          thumb: {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('slider-thumb') ]
-            },
+          }),
+          
+          Slider.parts().thumb({
+            dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
             behaviours: Behaviour.derive([
               Toggling.config({
                 toggleClass: Styles.resolve('thumb-active')
               })
             ])
-          }
-        }
+          })
+        ]
       });
     };
 

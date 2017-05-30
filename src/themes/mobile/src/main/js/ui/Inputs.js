@@ -2,32 +2,36 @@ define(
   'tinymce.themes.mobile.ui.Inputs',
 
   [
-    'ephox.alloy.api.behaviour.AdhocBehaviour',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.DataField',
     'ephox.alloy.api.ui.Input',
-    'ephox.alloy.construct.EventHandler',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (AdhocBehaviour, Behaviour, Composing, Representing, Toggling, Memento, Button, Container, DataField, Input, EventHandler, Fun, Option, Styles) {
-    var clearInputEvent = 'input-clearing';
+  function (
+    AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, AlloyTriggers, NativeEvents, Button, Container, DataField, Input,
+    Option, Styles, UiDomFactory
+  ) {
+    var clearInputBehaviour = 'input-clearing';
 
     var field = function (name, placeholder) {
       var inputSpec = Memento.record(Input.sketch({
         placeholder: placeholder,
         onSetValue: function (input, data) {
-          input.getSystem().triggerEvent('input', input.element(), {
-            target: Fun.constant(input.element())
-          });
+          // If the value changes, inform the container so that it can update whether the "x" is visible
+          AlloyTriggers.emit(input, NativeEvents.input());
         },
         inputBehaviours: Behaviour.derive([
           Composing.config({
@@ -38,14 +42,7 @@ define(
 
       var buttonSpec = Memento.record(
         Button.sketch({
-          dom: {
-            tag: 'button',
-            classes: [
-              Styles.resolve('input-container-x'),
-              Styles.resolve('icon-cancel-circle'),
-              Styles.resolve('icon')
-            ]
-          },
+          dom: UiDomFactory.dom('<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'),
           action: function (button) {
             var input = inputSpec.get(button);
             Representing.setValue(input, '');
@@ -56,9 +53,7 @@ define(
       return {
         name: name,
         spec: Container.sketch({
-          dom: {
-            classes: [ Styles.resolve('input-container') ]
-          },
+          dom: UiDomFactory.dom('<div class="${prefix}-input-container"></div>'),
           components: [
             inputSpec.asSpec(),
             buttonSpec.asSpec()
@@ -72,20 +67,15 @@ define(
                 return Option.some(inputSpec.get(comp));
               }
             }),
-            AdhocBehaviour.config(clearInputEvent)
-          ]),
-          customBehaviours: [
-            AdhocBehaviour.events(clearInputEvent, {
-              input: EventHandler.nu({
-                run: function (iContainer) {
-                  var input = inputSpec.get(iContainer);
-                  var val = Representing.getValue(input);
-                  var f = val.length > 0 ? Toggling.off : Toggling.on;
-                  f(iContainer);
-                }
+            AddEventsBehaviour.config(clearInputBehaviour, [
+              AlloyEvents.run(NativeEvents.input(), function (iContainer) {
+                var input = inputSpec.get(iContainer);
+                var val = Representing.getValue(input);
+                var f = val.length > 0 ? Toggling.off : Toggling.on;
+                f(iContainer);
               })
-            })
-          ]
+            ])
+          ])
         })
       };
     };

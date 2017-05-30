@@ -7,12 +7,12 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.TransformFind',
-    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.SizeSlider',
-    'tinymce.themes.mobile.ui.ToolbarWidgets'
+    'tinymce.themes.mobile.ui.ToolbarWidgets',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Arr, Compare, Element, Node, TransformFind, Styles, SizeSlider, ToolbarWidgets) {
+  function (Arr, Compare, Element, Node, TransformFind, SizeSlider, ToolbarWidgets, UiDomFactory) {
     var headings = [ 'p', 'h3', 'h2', 'h1' ];
 
     var makeSlider = function (spec) {
@@ -43,19 +43,9 @@ define(
 
       return ToolbarWidgets.button(realm, 'heading', function () {
         return [
-          {
-            dom: {
-              tag: 'span',
-              classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-small-heading'), Styles.resolve('icon') ]
-            }
-          },
+          UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-heading ${prefix}-icon"></span>'),
           makeSlider(spec),
-          {
-            dom: {
-              tag: 'span',
-              classes: [ Styles.resolve('toolbar-button'), Styles.resolve('icon-large-heading'), Styles.resolve('icon') ]
-            }
-          }
+          UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-heading ${prefix}-icon"></span>')
         ];
       });
     };
