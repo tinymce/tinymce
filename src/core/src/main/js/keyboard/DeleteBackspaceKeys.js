@@ -11,7 +11,6 @@
 define(
   'tinymce.core.keyboard.DeleteBackspaceKeys',
   [
-    'ephox.katamari.api.Arr',
     'tinymce.core.delete.BlockBoundaryDelete',
     'tinymce.core.delete.BlockRangeDelete',
     'tinymce.core.delete.CefDelete',
@@ -19,9 +18,9 @@ define(
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (Arr, BlockBoundaryDelete, BlockRangeDelete, CefDelete, InlineBoundaryDelete, MatchKeys, VK) {
+  function (BlockBoundaryDelete, BlockRangeDelete, CefDelete, InlineBoundaryDelete, MatchKeys, VK) {
     var executeKeydownOverride = function (editor, caret, evt) {
-      var matches = MatchKeys.match([
+      MatchKeys.execute([
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
         { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, false) },
@@ -30,24 +29,16 @@ define(
         { keyCode: VK.DELETE, action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, true) },
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, false) },
         { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) }
-      ], evt);
-
-      Arr.find(matches, function (pattern) {
-        return pattern.action();
-      }).each(function (_) {
+      ], evt).each(function (_) {
         evt.preventDefault();
       });
     };
 
     var executeKeyupOverride = function (editor, evt) {
-      var matches = MatchKeys.match([
+      MatchKeys.execute([
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
         { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
       ], evt);
-
-      Arr.find(matches, function (pattern) {
-        return pattern.action();
-      });
     };
 
     var setup = function (editor, caret) {

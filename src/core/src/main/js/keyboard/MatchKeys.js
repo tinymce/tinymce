@@ -52,9 +52,16 @@ define(
       };
     };
 
+    var execute = function (patterns, evt) {
+      return Arr.find(match(patterns, evt), function (pattern) {
+        return pattern.action();
+      });
+    };
+
     return {
       match: match,
-      action: action
+      action: action,
+      execute: execute
     };
   }
 );
