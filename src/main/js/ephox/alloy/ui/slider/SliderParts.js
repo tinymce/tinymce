@@ -62,8 +62,8 @@ define(
             // If the user touches the thumb itself, pretend they touched the spectrum instead. This
             // allows sliding even when they touchstart the current value
             AlloyEvents.redirectToPart(NativeEvents.touchstart(), detail, 'spectrum'),
-            AlloyEvents.redirectToUid(NativeEvents.touchmove(), detail, 'spectrum'),
-            AlloyEvents.redirectToUid(NativeEvents.touchend(), detail, 'spectrum')
+            AlloyEvents.redirectToPart(NativeEvents.touchmove(), detail, 'spectrum'),
+            AlloyEvents.redirectToPart(NativeEvents.touchend(), detail, 'spectrum')
           ])
         };
       }
