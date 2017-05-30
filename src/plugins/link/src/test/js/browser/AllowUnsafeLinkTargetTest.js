@@ -36,7 +36,7 @@ asynctest(
         tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
         sEnterUrl('http://www.google.com'),
         tinyUi.sClickOnUi('click ok button', 'button:contains("Ok")'),
-        tinyApis.sAssertContentPresence({ 'a[rel="noopener noreferrer"]': 0, 'a': 1 }),
+        tinyApis.sAssertContentPresence({ 'a[rel="noopener"]': 0, 'a': 1 }),
         tinyApis.sSetContent(''),
 
         // adds if allow_unsafe_link_target: false
@@ -45,7 +45,7 @@ asynctest(
         tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
         sEnterUrl('http://www.google.com'),
         tinyUi.sClickOnUi('click ok button', 'button:contains("Ok")'),
-        tinyApis.sAssertContentPresence({ 'a[rel="noopener noreferrer"]': 1 }),
+        tinyApis.sAssertContentPresence({ 'a[rel="noopener"]': 1 }),
         tinyApis.sSetContent(''),
 
         // and if it's undefined
@@ -54,7 +54,7 @@ asynctest(
         tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
         sEnterUrl('http://www.google.com'),
         tinyUi.sClickOnUi('click ok button', 'button:contains("Ok")'),
-        tinyApis.sAssertContentPresence({ 'a[rel="noopener noreferrer"]': 1 })
+        tinyApis.sAssertContentPresence({ 'a[rel="noopener"]': 1 })
       ], onSuccess, onFailure);
     }, {
       plugins: 'link',

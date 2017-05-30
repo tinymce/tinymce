@@ -774,31 +774,28 @@ define(
 
       if (!settings.allow_unsafe_link_target) {
         self.addAttributeFilter('href', function (nodes) {
-          var i = nodes.length, node, rel;
-          var rules = 'noopener noreferrer';
+          var i = nodes.length, node;
 
-          function addTargetRules(rel) {
-            rel = removeTargetRules(rel);
-            return rel ? [rel, rules].join(' ') : rules;
-          }
+          var appendRel = function (rel) {
+            var parts = rel.split(' ').filter(function (p) {
+              return p.length > 0;
+            });
+            return parts.concat(['noopener']).join(' ');
+          };
 
-          function removeTargetRules(rel) {
-            var regExp = new RegExp('(' + rules.replace(' ', '|') + ')', 'g');
-            if (rel) {
-              rel = Tools.trim(rel.replace(regExp, ''));
+          var addNoOpener = function (rel) {
+            var newRel = rel ? Tools.trim(rel) : '';
+            if (!/\b(noopener)\b/g.test(newRel)) {
+              return appendRel(newRel);
+            } else {
+              return newRel;
             }
-            return rel ? rel : null;
-          }
-
-          function toggleTargetRules(rel, isUnsafe) {
-            return isUnsafe ? addTargetRules(rel) : removeTargetRules(rel);
-          }
+          };
 
           while (i--) {
             node = nodes[i];
-            rel = node.attr('rel');
-            if (node.name === 'a') {
-              node.attr('rel', toggleTargetRules(rel, node.attr('target') == '_blank'));
+            if (node.name === 'a' && node.attr('target') === '_blank') {
+              node.attr('rel', addNoOpener(node.attr('rel')));
             }
           }
         });

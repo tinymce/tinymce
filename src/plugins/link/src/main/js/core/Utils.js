@@ -18,7 +18,7 @@ define(
   function (Tools, Settings, RegExp) {
 
     var toggleTargetRules = function (rel, isUnsafe) {
-      var rules = 'noopener noreferrer';
+      var rules = 'noopener';
 
       var addTargetRules = function (rel) {
         rel = removeTargetRules(rel);
