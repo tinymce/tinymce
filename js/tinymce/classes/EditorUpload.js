@@ -152,6 +152,16 @@ define("tinymce/EditorUpload", [
 			}
 
 			return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard(function(result) {
+				result = Arr.filter(result, function (resultItem) {
+					// ImageScanner internally converts images that it finds, but it may fail to do so if image source is inaccessible.
+					// In such case resultItem will contain appropriate text error message, instead of image data.
+					if (typeof resultItem === 'string') {
+						ErrorReporter.displayError(editor, resultItem);
+						return false;
+					}
+					return true;
+				});
+
 				Arr.each(result, function(resultItem) {
 					replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
 					resultItem.image.src = resultItem.blobInfo.blobUri();
@@ -180,7 +190,7 @@ define("tinymce/EditorUpload", [
 
 				if (!blobInfo) {
 					blobInfo = Arr.reduce(editor.editorManager.editors, function(result, editor) {
-						return result || editor.editorUpload.blobCache.getByUri(blobUri);
+						return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
 					}, null);
 				}
 

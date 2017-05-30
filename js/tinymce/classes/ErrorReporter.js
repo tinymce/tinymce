@@ -64,6 +64,7 @@ define("tinymce/ErrorReporter", [
 
 	return {
 		pluginLoadError: pluginLoadError,
-		uploadError: uploadError
+		uploadError: uploadError,
+		displayError: displayError
 	};
 });
