@@ -83,7 +83,7 @@ define(
     var redirectToUid = function (name, uid) {
       return run(name, function (component, simulatedEvent) {
         component.getSystem().getByUid(uid).each(function (redirectee) {
-          AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), simulatedEvent);
+          AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
         });
       });
     };
