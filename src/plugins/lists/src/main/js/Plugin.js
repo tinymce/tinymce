@@ -122,8 +122,8 @@ define(
         icon: 'indent',
         title: 'Increase indent',
         cmd: 'Indent',
-        onPostRender: function (e) {
-          var ctrl = e.control;
+        onPostRender: function () {
+          var ctrl = this;
 
           editor.on('nodechange', function () {
             var blocks = editor.selection.getSelectedBlocks();
