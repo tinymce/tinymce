@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
     'tinymce.themes.mobile.api.IosWebapp',
@@ -12,7 +14,7 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Replacing, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
+  function (Replacing, GuiFactory, Container, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('ios-container') ]
@@ -26,8 +28,28 @@ define(
 
       var socket = CommonRealm.makeSocket();
 
+
+      var dropup = GuiFactory.build(
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            innerHtml: 'Dropup',
+            styles: {
+              background: 'blue',
+              display: 'flex',
+              'flex-grow': '1'
+            }
+          }
+        })
+      );
+
+      setTimeout(function () {
+        Replacing.append(socket, GuiFactory.premade(dropup));
+      }, 10000);
+
       alloy.add(toolbar.wrapper());
       alloy.add(socket);
+      // alloy.add(GuiFactory.build(dropup));
 
       var setToolbarGroups = function (rawGroups) {
         var groups = toolbar.createGroups(rawGroups);

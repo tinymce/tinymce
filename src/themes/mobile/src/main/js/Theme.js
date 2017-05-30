@@ -130,7 +130,7 @@ define(
               }
             },
             container: Element.fromDom(editor.editorContainer),
-            socket: Element.fromDom(editor.contentAreaContainer),
+            socket: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('editor-socket'))),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
             alloy: realm.system(),
@@ -204,7 +204,7 @@ define(
         });
 
         return {
-          iframeContainer: realm.socket().element().dom(),
+          iframeContainer: realm.socket().element().dom().childNodes[0],
           editorContainer: realm.element().dom()
         };
       };
