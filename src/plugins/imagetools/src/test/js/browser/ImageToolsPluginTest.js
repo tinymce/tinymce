@@ -20,7 +20,7 @@ asynctest(
     var uploadHandlerState = ImageUtils.createStateContainer();
 
     var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
-    var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
+    //var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
     Plugin();
     ModernTheme();
