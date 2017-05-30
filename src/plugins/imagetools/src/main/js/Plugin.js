@@ -92,9 +92,7 @@ define(
         var blobInfo;
         blobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage().src);
         if (blobInfo) {
-          return new Promise(function (resolve) {
-            resolve(blobInfo.blob());
-          });
+          return Promise.resolve(blobInfo.blob());
         }
 
         return imageToBlob(getSelectedImage());
