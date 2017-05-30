@@ -45,13 +45,13 @@ define(
     // Checks for delete at <code>|a</code> when there is only one item left except the zwsp caret container nodes
     var hasOnlyTwoOrLessPositionsLeft = function (elm) {
       return Options.liftN([
-        InlineUtils.findCaretPositionIn(elm, true),
-        InlineUtils.findCaretPositionIn(elm, false)
+        CaretFinder.firstPositionIn(elm),
+        CaretFinder.lastPositionIn(elm)
       ], function (firstPos, lastPos) {
         var normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
         var normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
 
-        return InlineUtils.findCaretPosition(elm, true, normalizedFirstPos).map(function (pos) {
+        return CaretFinder.nextPosition(elm, normalizedFirstPos).map(function (pos) {
           return pos.isEqual(normalizedLastPos);
         }).getOr(true);
       }).getOr(true);

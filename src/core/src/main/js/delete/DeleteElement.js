@@ -21,12 +21,12 @@ define(
     'ephox.sugar.api.search.PredicateFind',
     'ephox.sugar.api.search.Traverse',
     'tinymce.core.caret.CaretCandidate',
+    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.Empty',
-    'tinymce.core.dom.NodeType',
-    'tinymce.core.keyboard.InlineUtils'
+    'tinymce.core.dom.NodeType'
   ],
-  function (Fun, Option, Options, Insert, Remove, Element, Node, PredicateFind, Traverse, CaretCandidate, CaretPosition, Empty, NodeType, InlineUtils) {
+  function (Fun, Option, Options, Insert, Remove, Element, Node, PredicateFind, Traverse, CaretCandidate, CaretFinder, CaretPosition, Empty, NodeType) {
     var needsReposition = function (pos, elm) {
       var container = pos.container();
       var offset = pos.offset();
@@ -49,7 +49,7 @@ define(
       if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
         return Option.some(afterOrEndOf(elm.previousSibling));
       } else {
-        return elm.previousSibling ? InlineUtils.findCaretPositionIn(elm.previousSibling, false) : Option.none();
+        return elm.previousSibling ? CaretFinder.lastPositionIn(elm.previousSibling) : Option.none();
       }
     };
 
@@ -57,24 +57,24 @@ define(
       if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
         return Option.some(beforeOrStartOf(elm.nextSibling));
       } else {
-        return elm.nextSibling ? InlineUtils.findCaretPositionIn(elm.nextSibling, true) : Option.none();
+        return elm.nextSibling ? CaretFinder.firstPositionIn(elm.nextSibling) : Option.none();
       }
     };
 
     var findCaretPositionBackwardsFromElm = function (rootElement, elm) {
       var startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
-      return InlineUtils.findCaretPosition(rootElement, false, startPosition).fold(
+      return CaretFinder.prevPosition(rootElement, startPosition).fold(
         function () {
-          return InlineUtils.findCaretPosition(rootElement, true, CaretPosition.after(elm));
+          return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm));
         },
         Option.some
       );
     };
 
     var findCaretPositionForwardsFromElm = function (rootElement, elm) {
-      return InlineUtils.findCaretPosition(rootElement, true, CaretPosition.after(elm)).fold(
+      return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
         function () {
-          return InlineUtils.findCaretPosition(rootElement, false, CaretPosition.before(elm));
+          return CaretFinder.prevPosition(rootElement, CaretPosition.before(elm));
         },
         Option.some
       );
