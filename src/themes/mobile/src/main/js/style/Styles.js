@@ -6,13 +6,15 @@ define(
   ],
 
   function (Fun) {
+    var prefix = 'tinymce-mobile';
+
     var resolve = function (p) {
-      return 'tinymce-mobile-' + p;
+      return prefix + '-' + p;
     };
 
     return {
       resolve: resolve,
-      prefix: Fun.constant('tinymce-mobile')
+      prefix: Fun.constant(prefix)
     };
   }
 );
