@@ -1089,6 +1089,29 @@ asynctest(
       LegacyUnit.equal(rng.endOffset, 1);
     });
 
+    suite.test('setRng invalid range', function (editor) {
+      var rng = editor.dom.createRng();
+
+      editor.setContent('<p>x</p>');
+
+      rng.setStart(editor.$('p')[0].firstChild, 0);
+      rng.setEnd(editor.$('p')[0].firstChild, 1);
+      editor.selection.setRng(rng);
+
+      var tmpNode = document.createTextNode('y');
+      var invalidRng = rng.cloneRange();
+      invalidRng.setStart(tmpNode, 0);
+      invalidRng.setEnd(tmpNode, 0);
+      editor.selection.setRng(invalidRng);
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.startContainer.data, 'x');
+      LegacyUnit.equal(rng.startOffset, 0);
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.endOffset, 1);
+    });
+
     suite.test('getRng should return null if win.document is not defined or null', function (editor) {
       var win = editor.selection.win,
         rng = editor.dom.createRng();

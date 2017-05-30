@@ -218,14 +218,6 @@ define(
           return block1 === block2;
         };
 
-        var isContentKey = function (e) {
-          if (e.keyCode >= 112 && e.keyCode <= 123) {
-            return false;
-          }
-
-          return true;
-        };
-
         // Checks if the target node is in a block and if that block has a caret position better than the
         // suggested caretNode this is to prevent the caret from being sucked in towards a cE=false block if
         // they are adjacent on the vertical axis
@@ -271,14 +263,14 @@ define(
           }
         });
 
-        editor.on('keydown', function (e) {
+        editor.on('keypress', function (e) {
           if (VK.modifierPressed(e)) {
             return;
           }
 
           switch (e.keyCode) {
             default:
-              if (isContentEditableFalse(editor.selection.getNode()) && isContentKey(e)) {
+              if (isContentEditableFalse(editor.selection.getNode())) {
                 e.preventDefault();
               }
               break;

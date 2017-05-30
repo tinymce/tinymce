@@ -101,20 +101,36 @@ asynctest(
     var sTestNextLocationInvalid = Fun.curry(sTestFindLocationInvalid, true);
 
     var sTestValidLocations = Logger.t('sTestValidLocations', GeneralSteps.sequence([
-      sTestValidLocation('<p><a href="a">a</a></p>', [0], 0, 'before', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'start', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'end', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p>', [0], 1, 'after', 'a'),
-      sTestValidLocation('<p>a<a href="a">a</a></p>', [0, 0], 1, 'before', 'a'),
-      sTestValidLocation('<p><a href="a">a</a>a</p>', [0, 1], 0, 'after', 'a'),
-      sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 0, 'start', 'a'),
-      sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 2, 'end', 'a'),
-      sTestValidLocation('<p><img src="a"><a href="a">a</a></p>', [0], 1, 'before', 'a'),
-      sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 0, 'start', 'a'),
-      sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 1, 'end', 'a'),
-      sTestValidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 1, 'after', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0], 1, 'after', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1], 0, 'before', 'p:nth-child(2) a')
+      Logger.t('anchor locations', GeneralSteps.sequence([
+        sTestValidLocation('<p><a href="a">a</a></p>', [0], 0, 'before', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'end', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p>', [0], 1, 'after', 'a'),
+        sTestValidLocation('<p>a<a href="a">a</a></p>', [0, 0], 1, 'before', 'a'),
+        sTestValidLocation('<p><a href="a">a</a>a</p>', [0, 1], 0, 'after', 'a'),
+        sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 2, 'end', 'a'),
+        sTestValidLocation('<p><img src="a"><a href="a">a</a></p>', [0], 1, 'before', 'a'),
+        sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 1, 'end', 'a'),
+        sTestValidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 1, 'after', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0], 1, 'after', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1], 0, 'before', 'p:nth-child(2) a')
+      ])),
+
+      Logger.t('code locations', GeneralSteps.sequence([
+        sTestValidLocation('<p><code>a</code></p>', [0], 0, 'before', 'code'),
+        sTestValidLocation('<p><code>a</code></p>', [0, 0], 0, 'start', 'code'),
+        sTestValidLocation('<p><code>a</code></p>', [0, 0], 1, 'end', 'code'),
+        sTestValidLocation('<p><code>a</code></p>', [0], 1, 'after', 'code')
+      ])),
+
+      Logger.t('anchor + code locations', GeneralSteps.sequence([
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0], 0, 'before', 'a'),
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0, 0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0, 0, 0], 1, 'end', 'a'),
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0], 1, 'after', 'a')
+      ]))
     ]));
 
     var sTestValidZwspLocations = Logger.t('sTestValidZwspLocations', GeneralSteps.sequence([
@@ -134,7 +150,12 @@ asynctest(
       sTestInvalidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 2),
       sTestInvalidLocation('<p><a href="a"><img src="a"><img src="a"></a><img src="a"></p>', [0, 0], 1),
       sTestInvalidLocation('<p dir="rtl"><a href="a">a</a></p>', [0, 0, 0], 0),
-      sTestInvalidLocation('<p><a href="a">\u05D4</a></p>', [0, 0, 0], 0)
+      sTestInvalidLocation('<p><a href="a">\u05D4</a></p>', [0, 0, 0], 0),
+
+      Logger.t('anchor + code locations', GeneralSteps.sequence([
+        sTestInvalidLocation('<p><a href="#">a<code>b</code>c</a></p>', [0, 0, 0], 1),
+        sTestInvalidLocation('<p><a href="#">a<code>b</code>c</a></p>', [0, 0, 2], 0)
+      ]))
     ]));
 
     var sTestPrevLocations = Logger.t('sTestPrevLocations', GeneralSteps.sequence([

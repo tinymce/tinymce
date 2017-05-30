@@ -81,15 +81,26 @@ asynctest(
 
       Pipeline.async({}, [
         tinyApis.sFocus,
-        Logger.t('Backspace key', GeneralSteps.sequence([
+        Logger.t('Backspace key on text', GeneralSteps.sequence([
           sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 2], 0, '<p>a<a href="#">b</a>c</p>', 'end', [0, 1, 0], 1),
           sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>a<a href="#">b</a>c</p>', 'before', [0, 0], 1),
           sTestBackspace('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">c</a>d</p>', 'start', [0, 1, 0], 1)
         ])),
-        Logger.t('Delete key', GeneralSteps.sequence([
+        Logger.t('Backspace key on image', GeneralSteps.sequence([
+          sTestBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [0, 2], 0, '<p>a<a href="#"><img src="#" /></a>c</p>', 'end', [0, 1, 1], 0),
+          sTestBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [0, 1], 0, '<p>a<a href="#"><img src="#" /></a>c</p>', 'before', [0, 0], 1),
+          tinyApis.sExecCommand('SelectAll'), // Needed for IE 11 for some odd reason the selection api is in some odd state
+          sTestBackspace('<p>a<a href="#"><img src="#" />c</a>d</p>', [0, 1], 1, '<p>a<a href="#">c</a>d</p>', 'start', [0, 1, 0], 1)
+        ])),
+        Logger.t('Delete key on text', GeneralSteps.sequence([
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 0], 1, '<p>a<a href="#">b</a>c</p>', 'start', [0, 1, 0], 1),
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>c</p>', 'after', [0, 2], 1),
           sTestDelete('<p>a<a href="#">bc</a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>d</p>', 'end', [0, 1, 0], 1)
+        ])),
+        Logger.t('Delete key on image', GeneralSteps.sequence([
+          sTestDelete('<p>a<a href="#"><img src="#" /></a>c</p>', [0, 0], 1, '<p>a<a href="#"><img src="#" /></a>c</p>', 'start', [0, 1, 0], 1),
+          sTestDelete('<p>a<a href="#"><img src="#" /></a>c</p>', [0, 1], 1, '<p>a<a href="#"><img src="#" /></a>c</p>', 'after', [0, 2], 1),
+          sTestDelete('<p>a<a href="#">b<img src="#" /></a>d</p>', [0, 1, 0], 1, '<p>a<a href="#">b</a>d</p>', 'end', [0, 1, 0], 1)
         ])),
         Logger.t('Backspace/delete last character', GeneralSteps.sequence([
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1),
@@ -97,7 +108,9 @@ asynctest(
           sTestDelete('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 0, '<p>ac</p>', 'none', [0, 0], 1),
           tinyApis.sAssertContentStructure(paragraphWithText('ac')),
           sTestBackspace('<p>a<a href="#">b</a>c</p>', [0, 1, 0], 1, '<p>ac</p>', 'none', [0, 0], 1),
-          tinyApis.sAssertContentStructure(paragraphWithText('ac'))
+          tinyApis.sAssertContentStructure(paragraphWithText('ac')),
+          sTestDelete('<p>a<a href="#"><img src="#1" /></a>c</p>', [0, 1], 0, '<p>ac</p>', 'none', [0, 0], 1),
+          sTestBackspace('<p>a<a href="#"><img src="#1" /></a>c</p>', [0, 1], 1, '<p>ac</p>', 'none', [0, 0], 1)
         ])),
         Logger.t('Backspace/delete between blocks', GeneralSteps.sequence([
           sTestBackspace('<p><a href="#">a</a></p><p><a href="#">b</a></p>', [1], 0, '<p><a href="#">a</a><a href="#">b</a></p>', 'end', [0, 0, 0], 1),
