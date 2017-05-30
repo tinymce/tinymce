@@ -43,6 +43,32 @@ test(
       assert.eq({ a: 'a', c: 'c' }, actual);
     };
 
+    var testExclude = function () {
+      var excludeGen = Jsc.bless({
+        generator: Jsc.dict(smallSet).generator.flatMap(function (obj) {
+          var keys = Obj.keys(obj);
+          return keys.length === 0 ? Jsc.constant( { obj: obj, fields: [ ] }).generator : Jsc.array(Jsc.elements(keys)).generator.map(function (fields) {
+            return {
+              obj: obj,
+              fields: fields
+            };
+          });
+        })
+      });
+
+      check('Testing exclude', excludeGen, function (input) {
+        var excluded = Objects.exclude(input.obj, input.fields);
+        Obj.each(excluded, function (_, k) {
+          if (Arr.contains(input.fields, k)) throw 'Excluded object contained property: ' + ' which should have been excluded by: [' +
+            input.fields.join(', ') + ']';
+        });
+        return true;
+      })
+
+      var actual = Objects.exclude({ a: 'a', b: 'b', c: 'c' }, [ 'b' ]);
+      assert.eq({ a: 'a', c: 'c' }, actual);
+    };
+
     var testReaders = function () {
       // TODO: Think of a good way to property test.
       var subject = { alpha: 'Alpha' };
@@ -205,6 +231,7 @@ test(
 
     
     testNarrow();
+    testExclude();
     testReaders();
     testConsolidate();
   }

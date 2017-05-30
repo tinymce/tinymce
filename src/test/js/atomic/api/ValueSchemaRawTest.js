@@ -6,12 +6,13 @@ test(
     'ephox.agar.api.RawAssertions',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Result',
     'ephox.sand.api.JSON'
   ],
 
-  function (Logger, RawAssertions, FieldPresence, FieldSchema, ValueSchema, Result, Json) {
+  function (Logger, RawAssertions, FieldPresence, FieldSchema, Objects, ValueSchema, Result, Json) {
     var checkErr = function (label, expectedPart, input, processor) {
       ValueSchema.asRaw(label, processor, input).fold(function (err) {
         var message = ValueSchema.formatError(err);
@@ -168,31 +169,142 @@ test(
       ])
     );
 
-    var optionValue = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.option('alpha')
-    ]), {});    
-    RawAssertions.assertEq('alpha should be none', true, optionValue.alpha.isNone());
+    checkIs('test.9 (defaulted thunk) with no value supplied',
+      {
+        name: 'Dr Jekyll'
+      },
+      {
+        surname: 'Jekyll'
+      }, ValueSchema.objOf([
+        FieldSchema.field('name', 'name', FieldPresence.defaultedThunk(function (s) {
+          return 'Dr ' + s.surname;
+        }), ValueSchema.anyValue())
+      ])
+    );
 
-    var optionValue2 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.option('alpha')
-    ]), { alpha: 'beta' });    
-    RawAssertions.assertEq('alpha should be some', true, optionValue2.alpha.isSome());
+    checkIs('test.10 (defaulted thunk) with value supplied',
+      {
+        name: 'Hyde'
+      },
+      {
+        name: 'Hyde'
+      }, ValueSchema.objOf([
+        FieldSchema.field('name', 'name', FieldPresence.defaultedThunk(function (s) {
+          return 'Dr ' + s.surname;
+        }), ValueSchema.anyValue())
+      ])
+    );
 
-    var optionValue3 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), { alpha: 'beta' });
-    RawAssertions.assertEq('fallback.opt: alpha:beta should be some(beta)', 'beta', optionValue3.alpha.getOrDie());
+    Logger.sync('option, value not supplied', function () {
+      var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+        FieldSchema.option('alpha')
+      ]), {});    
+      RawAssertions.assertEq('alpha should be none', true, v.alpha.isNone());
+    });
 
-    var optionValue4 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), { alpha: true });
-    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', optionValue4.alpha.getOrDie()());
+    Logger.sync('option, value supplied', function () {
+      var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+        FieldSchema.option('alpha')
+      ]), { alpha: 'beta' });    
+      RawAssertions.assertEq('alpha should be some(beta)', 'beta', v.alpha.getOrDie('expected some'));
+    });
 
-    var optionValue5 = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), {  });    
-    RawAssertions.assertEq('fallback.opt: no alpha should be none', true, optionValue5.alpha.isNone());
+    Logger.sync('defaulted option(fallback), value supplied', function () {
+      var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+      ]), { alpha: 'beta' });
+      RawAssertions.assertEq('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha.getOrDie());
+    });
 
+    Logger.sync('defaulted option(fallback), value supplied as true', function () {
+      var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+      ]), { alpha: true });
+      RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha.getOrDie());
+    });
+
+    Logger.sync('defaulted option(fallback), value not supplied', function () {
+      var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+      ]), {  });    
+      RawAssertions.assertEq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
+    });
+
+    Logger.sync('asDefaultedOptionThunk not supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.option',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+            return s.label + '.' + 'fallback';
+          }), ValueSchema.anyValue())
+        ]),
+        { label: 'defaulted thunk' }
+      );
+      RawAssertions.assertEq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
+    });
+
+    Logger.sync('asDefaultedOptionThunk supplied as true', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.option',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+            return s.label + '.' + 'fallback';
+          }), ValueSchema.anyValue())
+        ]),
+        { label: 'defaulted thunk', alpha: true }
+      );
+      RawAssertions.assertEq('Checking output', 'defaulted thunk.fallback', v.alpha.getOrDie(
+        'Alpha should be some'
+      ));
+    });
+
+    Logger.sync('asDefaultedOptionThunk supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.option',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+            return s.label + '.' + 'fallback';
+          }), ValueSchema.anyValue())
+        ]),
+        { label: 'defaulted thunk', alpha: 'alpha.value' }
+      );
+      RawAssertions.assertEq('Checking output', 'alpha.value', v.alpha.getOrDie(
+        'Alpha should be some'
+      ));
+    });
+
+    Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.mergeWith',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
+            return Objects.wrap('extra', s.label);
+          }), ValueSchema.anyValue())
+        ]),
+        {
+          alpha: {
+            original: 'value'
+          },
+          label: 'dog'
+        }
+      );
+      RawAssertions.assertEq('Checking output', { original: 'value', extra: 'dog' }, v.alpha);
+    });
+
+    Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', function () {
+      var v = ValueSchema.asRawOrDie(
+        'test.mergeWith',
+        ValueSchema.objOf([
+          FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
+            return Objects.wrap('extra', s.label);
+          }), ValueSchema.anyValue())
+        ]),
+        {
+          label: 'dog'
+        }
+      );
+      RawAssertions.assertEq('Checking output', { extra: 'dog' }, v.alpha);
+    });
 
     Logger.sync(
       'Checking choose',

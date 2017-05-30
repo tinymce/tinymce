@@ -14,6 +14,10 @@ define(
       return ObjChanger.narrow(obj, fields);
     };
 
+    var exclude = function (obj, fields) {
+      return ObjChanger.exclude(obj, fields);
+    };
+
     var readOpt = function (key) {
       return ObjReader.readOpt(key);
     };
@@ -48,6 +52,7 @@ define(
 
     return {
       narrow: narrow,
+      exclude: exclude,
       readOpt: readOpt,
       readOr: readOr,
       readOptFrom: readOptFrom,
