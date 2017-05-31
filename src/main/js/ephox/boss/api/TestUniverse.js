@@ -96,6 +96,7 @@ define(
           name: Properties.name,
           parent: Properties.parent,
           isText: Properties.isText,
+          isComment: Properties.isComment,
           isElement: Properties.isElement,
           setText: Properties.setText,
           getText: Properties.getText,
