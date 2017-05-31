@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: .ClosedDialogScrollTest',
+  'browser.ClosedDialogScrollTest',
   [
     'ephox.agar.api.Chain',
     'ephox.agar.api.Keys',
