@@ -800,6 +800,39 @@ asynctest(
       LegacyUnit.deepEqual(counter.counts, { start: 1, text: 1, end: 1 }, 'Parse element with numbers counts.');
     });
 
+    suite.test('Parse internal elements with disallowed attributes', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('<b data-mce-type="test" id="x" style="color: red" src="1" data="2" onclick="3"></b>');
+      LegacyUnit.equal(writer.getContent(), '<b data-mce-type="test" id="x" style="color: red"></b>');
+      LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 });
+    });
+
+    suite.test('Parse cdata with comments and trim those comments away', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('<![CDATA[<!--x--><!--y-->--><!--]]>');
+      LegacyUnit.equal(writer.getContent(), '<![CDATA[xy]]>');
+      LegacyUnit.deepEqual(counter.counts, { cdata: 1 });
+    });
+
+    suite.test('Parse special elements', function () {
+      var counter, parser;
+
+      counter = createCounter(writer);
+      parser = new SaxParser(counter, schema);
+      writer.reset();
+      parser.parse('<b><textarea></b></textarea><title></b></title><script></b></script><noframes></b></noframes><noscript></b></noscript><style></b></style></b>');
+      LegacyUnit.equal(writer.getContent(), '<b><textarea></b></textarea><title></b></title><script></b></script><noframes></b></noframes><noscript></b></noscript><style></b></style></b>');
+      LegacyUnit.deepEqual(counter.counts, { start: 7, text: 6, end: 7 });
+    });
+
     suite.test('Parse malformed elements that start with numbers', function () {
       var counter, parser;
 
