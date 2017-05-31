@@ -405,7 +405,7 @@ define(
       textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
         'dfn code mark q sup sub samp');
 
-      each((settings.special || 'script noscript noframes title style textarea').split(' '), function (name) {
+      each((settings.special || 'script noscript noframes noembed title style textarea xmp').split(' '), function (name) {
         specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
       });
 

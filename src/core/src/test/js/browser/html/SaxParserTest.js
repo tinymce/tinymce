@@ -825,12 +825,21 @@ asynctest(
     suite.test('Parse special elements', function () {
       var counter, parser;
 
+      var specialHtml = (
+        '<b>' +
+        '<textarea></b></textarea><title></b></title><script></b></script>' +
+        '<noframes></b></noframes><noscript></b></noscript><style></b></style>' +
+        '<xmp></b></xmp>' +
+        '<noembed></b></noembed>' +
+        '</b>'
+      );
+
       counter = createCounter(writer);
       parser = new SaxParser(counter, schema);
       writer.reset();
-      parser.parse('<b><textarea></b></textarea><title></b></title><script></b></script><noframes></b></noframes><noscript></b></noscript><style></b></style></b>');
-      LegacyUnit.equal(writer.getContent(), '<b><textarea></b></textarea><title></b></title><script></b></script><noframes></b></noframes><noscript></b></noscript><style></b></style></b>');
-      LegacyUnit.deepEqual(counter.counts, { start: 7, text: 6, end: 7 });
+      parser.parse(specialHtml);
+      LegacyUnit.equal(writer.getContent(), specialHtml);
+      LegacyUnit.deepEqual(counter.counts, { start: 9, text: 8, end: 9 });
     });
 
     suite.test('Parse malformed elements that start with numbers', function () {
