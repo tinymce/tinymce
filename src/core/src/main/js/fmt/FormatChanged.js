@@ -12,15 +12,12 @@ define(
   'tinymce.core.fmt.FormatChanged',
   [
     'ephox.katamari.api.Cell',
+    'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.util.Tools'
   ],
-  function (Cell, MatchFormat, Tools) {
+  function (Cell, FormatUtils, MatchFormat, Tools) {
     var each = Tools.each;
-
-    function getParents(dom, node, selector) {
-      return dom.getParents(node, selector, dom.getRoot());
-    }
 
     var setup = function (formatChangeData, editor) {
       var currentFormats = {};
@@ -28,11 +25,11 @@ define(
       formatChangeData.set({});
 
       editor.on('NodeChange', function (e) {
-        var parents = getParents(editor.dom, e.element), matchedFormats = {};
+        var parents = FormatUtils.getParents(editor.dom, e.element), matchedFormats = {};
 
         // Ignore bogus nodes like the <a> tag created by moveStart()
         parents = Tools.grep(parents, function (node) {
-          return node.nodeType == 1 && !node.getAttribute('data-mce-bogus');
+          return node.nodeType === 1 && !node.getAttribute('data-mce-bogus');
         });
 
         // Check for new formats

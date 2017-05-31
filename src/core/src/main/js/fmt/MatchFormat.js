@@ -63,54 +63,54 @@ define(
 
       // Check for selector match
       if (format.selector) {
-        return node.nodeType == 1 && dom.is(node, format.selector);
+        return node.nodeType === 1 && dom.is(node, format.selector);
       }
     };
 
-    var matchNode = function (ed, node, name, vars, similar) {
-      var formatList = ed.formatter.get(name), format, i, classes, dom = ed.dom;
+    function matchItems(dom, node, format, itemName, similar, vars) {
+      var key, value, items = format[itemName], i;
 
-      function matchItems(node, format, itemName) {
-        var key, value, items = format[itemName], i;
+      // Custom match
+      if (format.onmatch) {
+        return format.onmatch(node, format, itemName);
+      }
 
-        // Custom match
-        if (format.onmatch) {
-          return format.onmatch(node, format, itemName);
-        }
-
-        // Check all items
-        if (items) {
-          // Non indexed object
-          if (typeof items.length === 'undefined') {
-            for (key in items) {
-              if (items.hasOwnProperty(key)) {
-                if (itemName === 'attributes') {
-                  value = ed.dom.getAttrib(node, key);
-                } else {
-                  value = FormatUtils.getStyle(dom, node, key);
-                }
-
-                if (similar && !value && !format.exact) {
-                  return;
-                }
-
-                if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(items[key], vars), key))) {
-                  return;
-                }
+      // Check all items
+      if (items) {
+        // Non indexed object
+        if (typeof items.length === 'undefined') {
+          for (key in items) {
+            if (items.hasOwnProperty(key)) {
+              if (itemName === 'attributes') {
+                value = dom.getAttrib(node, key);
+              } else {
+                value = FormatUtils.getStyle(dom, node, key);
               }
-            }
-          } else {
-            // Only one match needed for indexed arrays
-            for (i = 0; i < items.length; i++) {
-              if (itemName === 'attributes' ? ed.dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
-                return format;
+
+              if (similar && !value && !format.exact) {
+                return;
+              }
+
+              if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(items[key], vars), key))) {
+                return;
               }
             }
           }
+        } else {
+          // Only one match needed for indexed arrays
+          for (i = 0; i < items.length; i++) {
+            if (itemName === 'attributes' ? dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
+              return format;
+            }
+          }
         }
-
-        return format;
       }
+
+      return format;
+    }
+
+    var matchNode = function (ed, node, name, vars, similar) {
+      var formatList = ed.formatter.get(name), format, i, x, classes, dom = ed.dom;
 
       if (formatList && node) {
         // Check each format in list
@@ -118,11 +118,11 @@ define(
           format = formatList[i];
 
           // Name name, attributes, styles and classes
-          if (matchName(ed.dom, node, format) && matchItems(node, format, 'attributes') && matchItems(node, format, 'styles')) {
+          if (matchName(ed.dom, node, format) && matchItems(dom, node, format, 'attributes', similar, vars) && matchItems(dom, node, format, 'styles', similar, vars)) {
             // Match classes
             if ((classes = format.classes)) {
-              for (i = 0; i < classes.length; i++) {
-                if (!ed.dom.hasClass(node, classes[i])) {
+              for (x = 0; x < classes.length; x++) {
+                if (!ed.dom.hasClass(node, classes[x])) {
                   return;
                 }
               }
@@ -150,7 +150,7 @@ define(
 
       // Check start node if it's different
       startNode = editor.selection.getStart();
-      if (startNode != node) {
+      if (startNode !== node) {
         if (matchParents(editor, startNode, name, vars)) {
           return true;
         }
@@ -170,7 +170,7 @@ define(
         for (i = 0; i < names.length; i++) {
           name = names[i];
 
-          if (!checkedMap[name] && matchNode(node, name, vars)) {
+          if (!checkedMap[name] && matchNode(editor, node, name, vars)) {
             checkedMap[name] = true;
             matchedFormatNames.push(name);
           }

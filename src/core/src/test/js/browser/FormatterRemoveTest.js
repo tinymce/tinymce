@@ -432,11 +432,19 @@ asynctest(
       LegacyUnit.equal(editor.getContent(editor), '<p><b><i>a</i></b><i>b</i></p>');
     });
 
+    suite.test('Remove format with classes', function (editor) {
+      editor.formatter.register('format', { inline: 'span', classes: ['a', 'b'] });
+      editor.getBody().innerHTML = '<p><span class="a b c">a</span></p>';
+      LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
+      editor.formatter.remove('format');
+      LegacyUnit.equal(getContent(editor), '<p><span class="c">a</span></p>', 'Element should only have c left');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       indent: false,
-      extended_valid_elements: 'b,i,span[style|contenteditable]',
+      extended_valid_elements: 'b,i,span[style|contenteditable|class]',
       entities: 'raw',
       valid_styles: {
         '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +

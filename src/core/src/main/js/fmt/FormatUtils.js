@@ -18,7 +18,7 @@ define(
       return node && /^(IMG)$/.test(node.nodeName);
     };
 
-    function moveStart(dom, selection, rng) {
+    var moveStart = function (dom, selection, rng) {
       var container = rng.startContainer,
         offset = rng.startOffset,
         walker, node, nodes;
@@ -49,7 +49,7 @@ define(
         }
 
         for (node = walker.current(); node; node = walker.next()) {
-          if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
+          if (node.nodeType === 3 && !isWhiteSpaceNode(node)) {
             rng.setStart(node, 0);
             selection.setRng(rng);
 
@@ -57,7 +57,7 @@ define(
           }
         }
       }
-    }
+    };
 
     /**
      * Returns the next/previous non whitespace node.
@@ -68,33 +68,33 @@ define(
      * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.
      * @return {Node} Next or previous node or undefined if it wasn't found.
      */
-    function getNonWhiteSpaceSibling(node, next, inc) {
+    var getNonWhiteSpaceSibling = function (node, next, inc) {
       if (node) {
         next = next ? 'nextSibling' : 'previousSibling';
 
         for (node = inc ? node : node[next]; node; node = node[next]) {
-          if (node.nodeType == 1 || !isWhiteSpaceNode(node)) {
+          if (node.nodeType === 1 || !isWhiteSpaceNode(node)) {
             return node;
           }
         }
       }
-    }
+    };
 
-    function isTextBlock(editor, name) {
+    var isTextBlock = function (editor, name) {
       if (name.nodeType) {
         name = name.nodeName;
       }
 
       return !!editor.schema.getTextBlockElements()[name.toLowerCase()];
-    }
+    };
 
     var isValid = function (ed, parent, child) {
       return ed.schema.isValidChild(parent, child);
     };
 
-    function isWhiteSpaceNode(node) {
+    var isWhiteSpaceNode = function (node) {
       return node && node.nodeType === 3 && /^([\t \r\n]+|)$/.test(node.nodeValue);
-    }
+    };
 
     /**
      * Replaces variables in the value. The variable format is %var.
@@ -104,8 +104,8 @@ define(
      * @param {Object} vars Name/value array with variables to replace.
      * @return {String} New value with replaced variables.
      */
-    function replaceVars(value, vars) {
-      if (typeof value != "string") {
+    var replaceVars = function (value, vars) {
+      if (typeof value !== "string") {
         value = value(vars);
       } else if (vars) {
         value = value.replace(/%(\w+)/g, function (str, name) {
@@ -114,7 +114,7 @@ define(
       }
 
       return value;
-    }
+    };
 
     /**
      * Compares two string/nodes regardless of their case.
@@ -124,40 +124,40 @@ define(
      * @param {String/Node} str2 Node or string to compare.
      * @return {boolean} True/false if they match.
      */
-    function isEq(str1, str2) {
+    var isEq = function (str1, str2) {
       str1 = str1 || '';
       str2 = str2 || '';
 
       str1 = '' + (str1.nodeName || str1);
       str2 = '' + (str2.nodeName || str2);
 
-      return str1.toLowerCase() == str2.toLowerCase();
-    }
+      return str1.toLowerCase() === str2.toLowerCase();
+    };
 
-    function normalizeStyleValue(dom, value, name) {
+    var normalizeStyleValue = function (dom, value, name) {
       // Force the format to hex
-      if (name == 'color' || name == 'backgroundColor') {
+      if (name === 'color' || name === 'backgroundColor') {
         value = dom.toHex(value);
       }
 
       // Opera will return bold as 700
-      if (name == 'fontWeight' && value == 700) {
+      if (name === 'fontWeight' && value === 700) {
         value = 'bold';
       }
 
       // Normalize fontFamily so "'Font name', Font" becomes: "Font name,Font"
-      if (name == 'fontFamily') {
+      if (name === 'fontFamily') {
         value = value.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
       }
 
       return '' + value;
-    }
+    };
 
-    function getStyle(dom, node, name) {
+    var getStyle = function (dom, node, name) {
       return normalizeStyleValue(dom, dom.getStyle(node, name), name);
-    }
+    };
 
-    function getTextDecoration(dom, node) {
+    var getTextDecoration = function (dom, node) {
       var decoration;
 
       dom.getParent(node, function (n) {
@@ -166,11 +166,11 @@ define(
       });
 
       return decoration;
-    }
+    };
 
-    function getParents(dom, node, selector) {
+    var getParents = function (dom, node, selector) {
       return dom.getParents(node, selector, dom.getRoot());
-    }
+    };
 
     return {
       isInlineBlock: isInlineBlock,

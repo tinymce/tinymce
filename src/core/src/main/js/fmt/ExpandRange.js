@@ -12,44 +12,12 @@ define(
   'tinymce.core.fmt.ExpandRange',
   [
     'tinymce.core.dom.BookmarkManager',
-    'tinymce.core.dom.TreeWalker'
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.fmt.FormatUtils'
   ],
-  function (BookmarkManager, TreeWalker) {
+  function (BookmarkManager, TreeWalker, FormatUtils) {
     var isBookmarkNode = BookmarkManager.isBookmarkNode;
-
-    function isTextBlock(editor, name) {
-      if (name.nodeType) {
-        name = name.nodeName;
-      }
-
-      return !!editor.schema.getTextBlockElements()[name.toLowerCase()];
-    }
-
-    function isWhiteSpaceNode(node) {
-      return node && node.nodeType === 3 && /^([\t \r\n]+|)$/.test(node.nodeValue);
-    }
-
-    function getParents(dom, node, selector) {
-      return dom.getParents(node, selector, dom.getRoot());
-    }
-
-    /**
-     * Compares two string/nodes regardless of their case.
-     *
-     * @private
-     * @param {String/Node} str1 Node or string to compare.
-     * @param {String/Node} str2 Node or string to compare.
-     * @return {boolean} True/false if they match.
-     */
-    function isEq(str1, str2) {
-      str1 = str1 || '';
-      str2 = str2 || '';
-
-      str1 = '' + (str1.nodeName || str1);
-      str2 = '' + (str2.nodeName || str2);
-
-      return str1.toLowerCase() == str2.toLowerCase();
-    }
+    var getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
 
     var expandRng = function (editor, rng, format, remove) {
       var lastIdx, leaf, endPoint,
@@ -60,7 +28,7 @@ define(
         dom = editor.dom;
 
       // This function walks up the tree if there is no siblings before/after the node
-      function findParentContainer(start) {
+      var findParentContainer = function (start) {
         var container, parent, sibling, siblingName, root;
 
         container = parent = start ? startContainer : endContainer;
@@ -68,11 +36,11 @@ define(
         root = dom.getRoot();
 
         function isBogusBr(node) {
-          return node.nodeName == "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
+          return node.nodeName === "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
         }
 
         // If it's a text node and the offset is inside the text
-        if (container.nodeType == 3 && !isWhiteSpaceNode(container)) {
+        if (container.nodeType === 3 && !isWhiteSpaceNode(container)) {
           if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
             return container;
           }
@@ -93,7 +61,7 @@ define(
           }
 
           // Check if we can move up are we at root level or body level
-          if (parent == root || parent.parentNode == root) {
+          if (parent === root || parent.parentNode === root) {
             container = parent;
             break;
           }
@@ -102,11 +70,11 @@ define(
         }
 
         return container;
-      }
+      };
 
       // This function walks down the tree to find the leaf at the selection.
       // The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
-      function findLeaf(node, offset) {
+      var findLeaf = function (node, offset) {
         if (typeof offset === 'undefined') {
           offset = node.nodeType === 3 ? node.length : node.childNodes.length;
         }
@@ -118,30 +86,30 @@ define(
           }
         }
         return { node: node, offset: offset };
-      }
+      };
 
       // If index based start position then resolve it
-      if (startContainer.nodeType == 1 && startContainer.hasChildNodes()) {
+      if (startContainer.nodeType === 1 && startContainer.hasChildNodes()) {
         lastIdx = startContainer.childNodes.length - 1;
         startContainer = startContainer.childNodes[startOffset > lastIdx ? lastIdx : startOffset];
 
-        if (startContainer.nodeType == 3) {
+        if (startContainer.nodeType === 3) {
           startOffset = 0;
         }
       }
 
       // If index based end position then resolve it
-      if (endContainer.nodeType == 1 && endContainer.hasChildNodes()) {
+      if (endContainer.nodeType === 1 && endContainer.hasChildNodes()) {
         lastIdx = endContainer.childNodes.length - 1;
         endContainer = endContainer.childNodes[endOffset > lastIdx ? lastIdx : endOffset - 1];
 
-        if (endContainer.nodeType == 3) {
+        if (endContainer.nodeType === 3) {
           endOffset = endContainer.nodeValue.length;
         }
       }
 
       // Expands the node to the closes contentEditable false element if it exists
-      function findParentContentEditable(node) {
+      var findParentContentEditable = function (node) {
         var parent = node;
 
         while (parent) {
@@ -153,15 +121,15 @@ define(
         }
 
         return node;
-      }
+      };
 
-      function findWordEndPoint(container, offset, start) {
+      var findWordEndPoint = function (container, offset, start) {
         var walker, node, pos, lastTextNode;
 
         function findSpace(node, offset) {
           var pos, pos2, str = node.nodeValue;
 
-          if (typeof offset == "undefined") {
+          if (typeof offset === "undefined") {
             offset = start ? str.length : 0;
           }
 
@@ -217,12 +185,12 @@ define(
 
           return { container: lastTextNode, offset: offset };
         }
-      }
+      };
 
-      function findSelectorEndPoint(container, siblingName) {
+      var findSelectorEndPoint = function (container, siblingName) {
         var parents, i, y, curFormat;
 
-        if (container.nodeType == 3 && container.nodeValue.length === 0 && container[siblingName]) {
+        if (container.nodeType === 3 && container.nodeValue.length === 0 && container[siblingName]) {
           container = container[siblingName];
         }
 
@@ -243,9 +211,9 @@ define(
         }
 
         return container;
-      }
+      };
 
-      function findBlockEndPoint(container, siblingName) {
+      var findBlockEndPoint = function (container, siblingName) {
         var node, root = dom.getRoot();
 
         // Expand to block of similar type
@@ -255,9 +223,9 @@ define(
 
         // Expand to first wrappable block element or any block element
         if (!node) {
-          node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, function (node) {
+          node = dom.getParent(container.nodeType === 3 ? container.parentNode : container, function (node) {
             // Fixes #6183 where it would expand to editable parent element in inline mode
-            return node != root && isTextBlock(editor, node);
+            return node !== root && isTextBlock(editor, node);
           });
         }
 
@@ -275,14 +243,14 @@ define(
 
             // Break on BR but include it will be removed later on
             // we can't remove it now since we need to check if it can be wrapped
-            if (isEq(node, 'br')) {
+            if (FormatUtils.isEq(node, 'br')) {
               break;
             }
           }
         }
 
         return node || container;
-      }
+      };
 
       // Expand to closest contentEditable element
       startContainer = findParentContentEditable(startContainer);
@@ -293,7 +261,7 @@ define(
         startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;
         startContainer = startContainer.nextSibling || startContainer;
 
-        if (startContainer.nodeType == 3) {
+        if (startContainer.nodeType === 3) {
           startOffset = 0;
         }
       }
@@ -302,7 +270,7 @@ define(
         endContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode;
         endContainer = endContainer.previousSibling || endContainer;
 
-        if (endContainer.nodeType == 3) {
+        if (endContainer.nodeType === 3) {
           endOffset = endContainer.length;
         }
       }
@@ -347,11 +315,11 @@ define(
       // This will reduce the number of wrapper elements that needs to be created
       // Move start point up the tree
       if (format[0].inline || format[0].block_expand) {
-        if (!format[0].inline || (startContainer.nodeType != 3 || startOffset === 0)) {
+        if (!format[0].inline || (startContainer.nodeType !== 3 || startOffset === 0)) {
           startContainer = findParentContainer(true);
         }
 
-        if (!format[0].inline || (endContainer.nodeType != 3 || endOffset === endContainer.nodeValue.length)) {
+        if (!format[0].inline || (endContainer.nodeType !== 3 || endOffset === endContainer.nodeValue.length)) {
           endContainer = findParentContainer();
         }
       }
@@ -382,13 +350,13 @@ define(
       }
 
       // Setup index for startContainer
-      if (startContainer.nodeType == 1) {
+      if (startContainer.nodeType === 1) {
         startOffset = dom.nodeIndex(startContainer);
         startContainer = startContainer.parentNode;
       }
 
       // Setup index for endContainer
-      if (endContainer.nodeType == 1) {
+      if (endContainer.nodeType === 1) {
         endOffset = dom.nodeIndex(endContainer) + 1;
         endContainer = endContainer.parentNode;
       }

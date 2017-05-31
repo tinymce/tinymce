@@ -28,11 +28,11 @@ define(
   function (BookmarkManager, ElementUtils, NodeType, RangeUtils, TreeWalker, CaretAction, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat, Fun, Tools) {
     var each = Tools.each;
 
-    function isElementNode(node) {
+    var isElementNode = function (node) {
       return node && node.nodeType === 1 && !BookmarkManager.isBookmarkNode(node) && !CaretAction.isCaretNode(node) && !NodeType.isBogus(node);
-    }
+    };
 
-    function processChildElements(node, filter, process) {
+    var processChildElements = function (node, filter, process) {
       each(node.childNodes, function (node) {
         if (isElementNode(node)) {
           if (filter(node)) {
@@ -43,7 +43,7 @@ define(
           }
         }
       });
-    }
+    };
 
     var clearChildStyles = function (dom, format, node) {
       if (format.clear_child_styles) {
@@ -55,7 +55,7 @@ define(
       }
     };
 
-    function processUnderlineAndColor(dom, node) {
+    var processUnderlineAndColor = function (dom, node) {
       var textDecoration;
       if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
         textDecoration = FormatUtils.getTextDecoration(dom, node.parentNode);
@@ -65,19 +65,35 @@ define(
           dom.setStyle(node, 'text-decoration', null);
         }
       }
-    }
+    };
 
-    function hasStyle(dom, name) {
+    var hasStyle = function (dom, name) {
       return Fun.curry(function (name, node) {
         return !!(node && FormatUtils.getStyle(dom, node, name));
       }, name);
-    }
+    };
 
-    function applyStyle(dom, name, value) {
+    var applyStyle = function (dom, name, value) {
       return Fun.curry(function (name, value, node) {
         dom.setStyle(node, name, value);
       }, name, value);
-    }
+    };
+
+    var findElementSibling = function (node, siblingName) {
+      var sibling;
+
+      for (sibling = node; sibling; sibling = sibling[siblingName]) {
+        if (sibling.nodeType === 3 && sibling.nodeValue.length !== 0) {
+          return node;
+        }
+
+        if (sibling.nodeType === 1 && !BookmarkManager.isBookmarkNode(sibling)) {
+          return sibling;
+        }
+      }
+
+      return node;
+    };
 
     /**
      * Merges the next/previous sibling element if they match.
@@ -90,20 +106,6 @@ define(
     function mergeSiblings(dom, prev, next) {
       var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
 
-      function findElementSibling(node, siblingName) {
-        for (sibling = node; sibling; sibling = sibling[siblingName]) {
-          if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0) {
-            return node;
-          }
-
-          if (sibling.nodeType == 1 && !BookmarkManager.isBookmarkNode(sibling)) {
-            return sibling;
-          }
-        }
-
-        return node;
-      }
-
       // Check if next/prev exists and that they are elements
       if (prev && next) {
         // If previous sibling is empty then jump over it
@@ -113,16 +115,14 @@ define(
         // Compare next and previous nodes
         if (elementUtils.compare(prev, next)) {
           // Append nodes between
-          for (sibling = prev.nextSibling; sibling && sibling != next;) {
+          for (sibling = prev.nextSibling; sibling && sibling !== next;) {
             tmpSibling = sibling;
             sibling = sibling.nextSibling;
             prev.appendChild(tmpSibling);
           }
 
-          // Remove next node
           dom.remove(next);
 
-          // Move children into prev node
           each(Tools.grep(next.childNodes), function (node) {
             prev.appendChild(node);
           });
@@ -134,11 +134,43 @@ define(
       return next;
     }
 
+    var findSelectionEnd = function (start, end) {
+      var walker = new TreeWalker(end), node;
+
+      for (node = walker.prev2(); node; node = walker.prev2()) {
+        if (node.nodeType === 3 && node.data.length > 0) {
+          return node;
+        }
+
+        if (node.childNodes.length > 1 || node === start || node.tagName === 'BR') {
+          return node;
+        }
+      }
+    };
+
+    // This converts: <p>[a</p><p>]b</p> -> <p>[a]</p><p>b</p>
+    var adjustSelectionToVisibleSelection = function (ed) {
+      // Adjust selection so that a end container with a end offset of zero is not included in the selection
+      // as this isn't visible to the user.
+      var rng = ed.selection.getRng();
+      var start = rng.startContainer;
+      var end = rng.endContainer;
+
+      if (start !== end && rng.endOffset === 0) {
+        var newEnd = findSelectionEnd(start, end);
+        var endOffset = newEnd.nodeType === 3 ? newEnd.data.length : newEnd.childNodes.length;
+
+        rng.setEnd(newEnd, endOffset);
+      }
+
+      return rng;
+    };
+
     function applyFormat(ed, name, vars, node) {
       var formatList = ed.formatter.get(name), format = formatList[0], bookmark, rng, isCollapsed = !node && ed.selection.isCollapsed();
       var dom = ed.dom, selection = ed.selection;
 
-      function setElementFormat(elm, fmt) {
+      var setElementFormat = function (elm, fmt) {
         fmt = fmt || format;
 
         if (elm) {
@@ -172,9 +204,9 @@ define(
             }
           });
         }
-      }
+      };
 
-      function applyNodeStyle(formatList, node) {
+      var applyNodeStyle = function (formatList, node) {
         var found = false;
 
         if (!format.selector) {
@@ -196,40 +228,9 @@ define(
         });
 
         return found;
-      }
+      };
 
-      // This converts: <p>[a</p><p>]b</p> -> <p>[a]</p><p>b</p>
-      function adjustSelectionToVisibleSelection() {
-        function findSelectionEnd(start, end) {
-          var walker = new TreeWalker(end);
-          for (node = walker.prev2(); node; node = walker.prev2()) {
-            if (node.nodeType == 3 && node.data.length > 0) {
-              return node;
-            }
-
-            if (node.childNodes.length > 1 || node == start || node.tagName == 'BR') {
-              return node;
-            }
-          }
-        }
-
-        // Adjust selection so that a end container with a end offset of zero is not included in the selection
-        // as this isn't visible to the user.
-        var rng = ed.selection.getRng();
-        var start = rng.startContainer;
-        var end = rng.endContainer;
-
-        if (start != end && rng.endOffset === 0) {
-          var newEnd = findSelectionEnd(start, end);
-          var endOffset = newEnd.nodeType == 3 ? newEnd.data.length : newEnd.childNodes.length;
-
-          rng.setEnd(newEnd, endOffset);
-        }
-
-        return rng;
-      }
-
-      function applyRngStyle(dom, rng, bookmark, nodeSpecific) {
+      var applyRngStyle = function (dom, rng, bookmark, nodeSpecific) {
         var newWrappers = [], wrapName, wrapElm, contentEditable = true;
 
         // Setup wrapper element
@@ -476,7 +477,7 @@ define(
             }
           }
         });
-      }
+      };
 
       if (dom.getContentEditable(selection.getNode()) === "false") {
         node = selection.getNode();
@@ -515,7 +516,7 @@ define(
             }
 
             // Apply formatting to selection
-            ed.selection.setRng(adjustSelectionToVisibleSelection());
+            ed.selection.setRng(adjustSelectionToVisibleSelection(ed));
             bookmark = selection.getBookmark();
             applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(true), formatList), bookmark);
 

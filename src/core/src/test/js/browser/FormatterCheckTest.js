@@ -134,32 +134,16 @@ asynctest(
       LegacyUnit.equal(editor.formatter.match('complex', { color: '#ff00' }), true, 'Selected element match with variable and function');
     });
 
-    suite.test('formatChanged simple format', function (editor) {
-      var newState, newArgs;
+    suite.test('matchAll', function (editor) {
+      editor.getBody().innerHTML = '<p><b><i>a</i></b></p>';
+      LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
+      LegacyUnit.equal(editor.formatter.matchAll(['bold', 'italic', 'underline']), ['italic', 'bold']);
+    });
 
-      editor.formatter.formatChanged('bold', function (state, args) {
-        newState = state;
-        newArgs = args;
-      });
-
-      editor.getBody().innerHTML = '<p>text</p>';
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-
-      // Check apply
-      editor.formatter.apply('bold');
-      editor.nodeChanged();
-      LegacyUnit.equal(newState, true);
-      LegacyUnit.equal(newArgs.format, 'bold');
-      LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
-      LegacyUnit.equal(newArgs.parents.length, 2);
-
-      // Check remove
-      editor.formatter.remove('bold');
-      editor.nodeChanged();
-      LegacyUnit.equal(newState, false);
-      LegacyUnit.equal(newArgs.format, 'bold');
-      LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
-      LegacyUnit.equal(newArgs.parents.length, 1);
+    suite.test('canApply', function (editor) {
+      editor.getBody().innerHTML = '<p>a</p>';
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+      LegacyUnit.equal(editor.formatter.canApply('bold'), true);
     });
 
     suite.test('formatChanged complex format', function (editor) {
@@ -190,6 +174,16 @@ asynctest(
       LegacyUnit.equal(newArgs.format, 'complex');
       LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
       LegacyUnit.equal(newArgs.parents.length, 1);
+    });
+
+    suite.test('Selected style element text', function (editor) {
+      editor.formatter.register('bold', { inline: 'b' });
+      editor.getBody().innerHTML = '<p><b>1234</b></p>';
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+      rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected style element text');
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

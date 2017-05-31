@@ -1794,6 +1794,20 @@ asynctest(
       LegacyUnit.equal(editor.getContent(editor), '<p><span style="font-weight: bold;">abc</span></p>');
     });
 
+    suite.test('merge_with_parents', function (editor) {
+      editor.formatter.register('format', {
+        inline: 'span',
+        styles: {
+          fontWeight: 'bold'
+        },
+        merge_with_parents: true
+      });
+      editor.setContent('<p><span style="color: red">a</span></p>');
+      LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(editor.getContent(editor), '<p><span style="color: red; font-weight: bold;">a</span></p>');
+    });
+
     suite.test('Format selection from with end at beginning of block', function (editor) {
       editor.setContent("<div id='a'>one</div><div id='b'>two</div>");
       editor.focus();

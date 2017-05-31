@@ -36,7 +36,7 @@ define(
       container = rng[start ? 'startContainer' : 'endContainer'];
       offset = rng[start ? 'startOffset' : 'endOffset'];
 
-      if (container.nodeType == 1) {
+      if (container.nodeType === 1) {
         lastIdx = container.childNodes.length - 1;
 
         if (!start && offset) {
@@ -89,12 +89,17 @@ define(
 
       // Check for selector match
       if (format.selector) {
-        return node.nodeType == 1 && dom.is(node, format.selector);
+        return node.nodeType === 1 && dom.is(node, format.selector);
       }
     };
 
     var isColorFormatAndAnchor = function (node, format) {
       return format.links && node.tagName === 'A';
+    };
+
+    var find = function (dom, node, next, inc) {
+      node = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
+      return !node || (node.nodeName === 'BR' || dom.isBlock(node));
     };
 
     /**
@@ -119,27 +124,21 @@ define(
       var parentNode = node.parentNode, rootBlockElm;
       var dom = ed.dom, forcedRootBlock = ed.settings.forced_root_block;
 
-      function find(node, next, inc) {
-        node = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
-
-        return !node || (node.nodeName == 'BR' || dom.isBlock(node));
-      }
-
       if (format.block) {
         if (!forcedRootBlock) {
           // Append BR elements if needed before we remove the block
           if (dom.isBlock(node) && !dom.isBlock(parentNode)) {
-            if (!find(node, false) && !find(node.firstChild, true, 1)) {
+            if (!find(dom, node, false) && !find(dom, node.firstChild, true, 1)) {
               node.insertBefore(dom.create('br'), node.firstChild);
             }
 
-            if (!find(node, true) && !find(node.lastChild, false, 1)) {
+            if (!find(dom, node, true) && !find(dom, node.lastChild, false, 1)) {
               node.appendChild(dom.create('br'));
             }
           }
         } else {
           // Wrap the block in a forcedRootBlock if we are at the root of document
-          if (parentNode == dom.getRoot()) {
+          if (parentNode === dom.getRoot()) {
             if (!format.list_block || !isEq(node, format.list_block)) {
               each(Tools.grep(node.childNodes), function (node) {
                 if (FormatUtils.isValid(ed, forcedRootBlock, node.nodeName.toLowerCase())) {
@@ -186,7 +185,7 @@ define(
       }
 
       // Should we compare with format attribs and styles
-      if (format.remove != 'all') {
+      if (format.remove !== 'all') {
         // Remove styles
         each(format.styles, function (value, name) {
           value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name);
@@ -224,7 +223,7 @@ define(
 
           if (!compareNode || isEq(dom.getAttrib(compareNode, name), value)) {
             // Keep internal classes
-            if (name == 'class') {
+            if (name === 'class') {
               value = dom.getAttrib(node, name);
               if (value) {
                 // Build new class value where everything is removed except the internal prefixed classes
@@ -244,7 +243,7 @@ define(
             }
 
             // IE6 has a bug where the attribute doesn't get removed correctly
-            if (name == "class") {
+            if (name === "class") {
               node.removeAttribute('className');
             }
 
@@ -277,18 +276,89 @@ define(
       }
 
       // Remove the inline child if it's empty for example <b> or <span>
-      if (format.remove != 'none') {
+      if (format.remove !== 'none') {
         removeNode(ed, node, format);
         return true;
       }
+    };
+
+    var findFormatRoot = function (editor, container, name, vars, similar) {
+      var formatRoot;
+
+      // Find format root
+      each(FormatUtils.getParents(editor.dom, container.parentNode).reverse(), function (parent) {
+        var format;
+
+        // Find format root element
+        if (!formatRoot && parent.id !== '_start' && parent.id !== '_end') {
+          // Is the node matching the format we are looking for
+          format = MatchFormat.matchNode(editor, parent, name, vars, similar);
+          if (format && format.split !== false) {
+            formatRoot = parent;
+          }
+        }
+      });
+
+      return formatRoot;
+    };
+
+    var wrapAndSplit = function (editor, formatList, formatRoot, container, target, split, format, vars) {
+      var parent, clone, lastClone, firstClone, i, formatRootParent, dom = editor.dom;
+
+      // Format root found then clone formats and split it
+      if (formatRoot) {
+        formatRootParent = formatRoot.parentNode;
+
+        for (parent = container.parentNode; parent && parent !== formatRootParent; parent = parent.parentNode) {
+          clone = dom.clone(parent, false);
+
+          for (i = 0; i < formatList.length; i++) {
+            if (removeFormat(editor, formatList[i], vars, clone, clone)) {
+              clone = 0;
+              break;
+            }
+          }
+
+          // Build wrapper node
+          if (clone) {
+            if (lastClone) {
+              clone.appendChild(lastClone);
+            }
+
+            if (!firstClone) {
+              firstClone = clone;
+            }
+
+            lastClone = clone;
+          }
+        }
+
+        // Never split block elements if the format is mixed
+        if (split && (!format.mixed || !dom.isBlock(formatRoot))) {
+          container = dom.split(formatRoot, container);
+        }
+
+        // Wrap container in cloned formats
+        if (lastClone) {
+          target.parentNode.insertBefore(lastClone, target);
+          firstClone.appendChild(target);
+        }
+      }
+
+      return container;
     };
 
     var remove = function (ed, name, vars, node, similar) {
       var formatList = ed.formatter.get(name), format = formatList[0];
       var bookmark, rng, contentEditable = true, dom = ed.dom, selection = ed.selection;
 
+      var splitToFormatRoot = function (container) {
+        var formatRoot = findFormatRoot(ed, container, name, vars, similar);
+        return wrapAndSplit(ed, formatList, formatRoot, container, container, true, format, vars);
+      };
+
       // Merges the styles for each node
-      function process(node) {
+      var process = function (node) {
         var children, i, l, lastContentEditable, hasContentEditableState;
 
         // Node has a contentEditable value
@@ -322,79 +392,9 @@ define(
             }
           }
         }
-      }
+      };
 
-      function findFormatRoot(container) {
-        var formatRoot;
-
-        // Find format root
-        each(FormatUtils.getParents(dom, container.parentNode).reverse(), function (parent) {
-          var format;
-
-          // Find format root element
-          if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
-            // Is the node matching the format we are looking for
-            format = MatchFormat.matchNode(ed, parent, name, vars, similar);
-            if (format && format.split !== false) {
-              formatRoot = parent;
-            }
-          }
-        });
-
-        return formatRoot;
-      }
-
-      function wrapAndSplit(formatRoot, container, target, split) {
-        var parent, clone, lastClone, firstClone, i, formatRootParent;
-
-        // Format root found then clone formats and split it
-        if (formatRoot) {
-          formatRootParent = formatRoot.parentNode;
-
-          for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
-            clone = dom.clone(parent, false);
-
-            for (i = 0; i < formatList.length; i++) {
-              if (removeFormat(ed, formatList[i], vars, clone, clone)) {
-                clone = 0;
-                break;
-              }
-            }
-
-            // Build wrapper node
-            if (clone) {
-              if (lastClone) {
-                clone.appendChild(lastClone);
-              }
-
-              if (!firstClone) {
-                firstClone = clone;
-              }
-
-              lastClone = clone;
-            }
-          }
-
-          // Never split block elements if the format is mixed
-          if (split && (!format.mixed || !dom.isBlock(formatRoot))) {
-            container = dom.split(formatRoot, container);
-          }
-
-          // Wrap container in cloned formats
-          if (lastClone) {
-            target.parentNode.insertBefore(lastClone, target);
-            firstClone.appendChild(target);
-          }
-        }
-
-        return container;
-      }
-
-      function splitToFormatRoot(container) {
-        return wrapAndSplit(findFormatRoot(container), container, container, true);
-      }
-
-      function unwrap(start) {
+      var unwrap = function (start) {
         var node = dom.get(start ? '_start' : '_end'),
           out = node[start ? 'firstChild' : 'lastChild'];
 
@@ -406,16 +406,16 @@ define(
         }
 
         // Since dom.remove removes empty text nodes then we need to try to find a better node
-        if (out.nodeType == 3 && out.data.length === 0) {
+        if (out.nodeType === 3 && out.data.length === 0) {
           out = start ? node.previousSibling || node.nextSibling : node.nextSibling || node.previousSibling;
         }
 
         dom.remove(node, true);
 
         return out;
-      }
+      };
 
-      function removeRngStyle(rng) {
+      var removeRngStyle = function (rng) {
         var startContainer, endContainer;
         var commonAncestorContainer = rng.commonAncestorContainer;
 
@@ -425,12 +425,12 @@ define(
           startContainer = getContainer(ed, rng, true);
           endContainer = getContainer(ed, rng);
 
-          if (startContainer != endContainer) {
+          if (startContainer !== endContainer) {
             // WebKit will render the table incorrectly if we wrap a TH or TD in a SPAN
             // so let's see if we can use the first child instead
             // This will happen if you triple click a table cell and use remove formatting
             if (/^(TR|TH|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
-              if (startContainer.nodeName == "TR") {
+              if (startContainer.nodeName === "TR") {
                 startContainer = startContainer.firstChild.firstChild || startContainer;
               } else {
                 startContainer = startContainer.firstChild || startContainer;
@@ -493,7 +493,7 @@ define(
             }
           });
         });
-      }
+      };
 
       // Handle node
       if (node) {
