@@ -42,14 +42,17 @@ define(
     };
 
     var scan = function (universe, element, direction) {
-      if (! universe.property().isText(element)) return Option.none();
-      var text = universe.property().getText(element);
-      if (text.trim().length > 0) return Option.none();
-      return direction(element).bind(function (elem) {
-        return scan(universe, elem, direction).orThunk(function () {
-          return Option.some(elem);
+      // if a comment or zero-length text, scan the siblings
+      if ((universe.property().isText(element) && universe.property().getText(element).trim().length === 0)
+        || universe.property().isComment(element)) {
+        return direction(element).bind(function (elem) {
+          return scan(universe, elem, direction).orThunk(function () {
+            return Option.some(elem);
+          });
         });
-      });
+      } else {
+        return Option.none();
+      }
     };
 
     var freefallLtr = function (universe, element) {
