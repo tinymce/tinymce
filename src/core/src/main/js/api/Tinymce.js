@@ -11,6 +11,7 @@
 define(
   'tinymce.core.api.Tinymce',
   [
+    'tinymce.core.api.Formatter',
     'tinymce.core.geom.Rect',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Delay',
@@ -37,7 +38,6 @@ define(
     'tinymce.core.dom.ControlSelection',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.Selection',
-    'tinymce.core.Formatter',
     'tinymce.core.UndoManager',
     'tinymce.core.EditorCommands',
     'tinymce.core.util.URI',
@@ -62,9 +62,9 @@ define(
     'tinymce.core.ui.Api'
   ],
   function (
-    Rect, Promise, Delay, Env, EventUtils, Sizzle, Tools, DomQuery, Styles, TreeWalker, Entities, DOMUtils, ScriptLoader, AddOnManager,
+    Formatter, Rect, Promise, Delay, Env, EventUtils, Sizzle, Tools, DomQuery, Styles, TreeWalker, Entities, DOMUtils, ScriptLoader, AddOnManager,
     RangeUtils, Node, Schema, SaxParser, DomParser, Writer, HtmlSerializer, DomSerializer, VK, ControlSelection, BookmarkManager, Selection,
-    Formatter, UndoManager, EditorCommands, URI, Class, EventDispatcher, Observable, WindowManager,
+    UndoManager, EditorCommands, URI, Class, EventDispatcher, Observable, WindowManager,
     NotificationManager, EditorObservable, Shortcuts, Editor, I18n, FocusManager, EditorManager,
     XHR, JSON, JSONRequest, JSONP, LocalStorage, Compat, Color, Api
   ) {

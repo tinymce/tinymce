@@ -23,21 +23,20 @@
  *  tinymce.activeEditor.formatter.apply('mycustomformat');
  */
 define(
-  'tinymce.core.Formatter',
+  'tinymce.core.api.Formatter',
   [
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'tinymce.core.fmt.ApplyFormat',
-    'tinymce.core.fmt.DefaultFormats',
-    'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatChanged',
     'tinymce.core.fmt.FormatRegistry',
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.fmt.Preview',
     'tinymce.core.fmt.RemoveFormat',
+    'tinymce.core.fmt.ToggleFormat',
     'tinymce.core.keyboard.FormatShortcuts'
   ],
-  function (Cell, Fun, ApplyFormat, DefaultFormats, ExpandRange, FormatChanged, FormatRegistry, MatchFormat, Preview, RemoveFormat, FormatShortcuts) {
+  function (Cell, Fun, ApplyFormat, FormatChanged, FormatRegistry, MatchFormat, Preview, RemoveFormat, ToggleFormat, FormatShortcuts) {
     /**
      * Constructs a new formatter instance.
      *
@@ -46,16 +45,7 @@ define(
      */
     return function (editor) {
       var formats = FormatRegistry(editor);
-
-      var toggle = function (name, vars, node) {
-        var fmt = formats.get(name);
-
-        if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
-          RemoveFormat.remove(editor, name, vars, node);
-        } else {
-          ApplyFormat.applyFormat(editor, name, vars, node);
-        }
-      };
+      var formatChangeState = Cell(null);
 
       FormatShortcuts.setup(editor);
 
@@ -115,7 +105,7 @@ define(
          * @param {Object} vars Optional list of variables to replace within format before applying/removing it.
          * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
          */
-        toggle: toggle,
+        toggle: Fun.curry(ToggleFormat.toggle, editor, formats),
 
         /**
          * Matches the current selection or specified node against the specified format name.
@@ -168,7 +158,7 @@ define(
          * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
          * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
          */
-        formatChanged: Fun.curry(FormatChanged.formatChanged, editor, Cell(null)),
+        formatChanged: Fun.curry(FormatChanged.formatChanged, editor, formatChangeState),
 
         /**
          * Returns a preview css text for the specified format.

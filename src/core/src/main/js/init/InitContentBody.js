@@ -13,6 +13,7 @@ define(
   [
     'global!document',
     'global!window',
+    'tinymce.core.api.Formatter',
     'tinymce.core.caret.CaretContainerInput',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Selection',
@@ -20,7 +21,6 @@ define(
     'tinymce.core.EditorUpload',
     'tinymce.core.ErrorReporter',
     'tinymce.core.ForceBlocks',
-    'tinymce.core.Formatter',
     'tinymce.core.html.DomParser',
     'tinymce.core.html.Node',
     'tinymce.core.html.Schema',
@@ -33,7 +33,7 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    document, window, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, Formatter, DomParser, Node, Schema, KeyboardOverrides,
+    document, window, Formatter, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, DomParser, Node, Schema, KeyboardOverrides,
     NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
   ) {
     var DOM = DOMUtils.DOM;
