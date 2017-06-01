@@ -103,7 +103,7 @@ define(
      * @param {Node} next Next node to compare/merge.
      * @return {Node} Next node if we didn't merge and prev node if we did.
      */
-    function mergeSiblings(dom, prev, next) {
+    var mergeSiblings = function (dom, prev, next) {
       var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
 
       // Check if next/prev exists and that they are elements
@@ -132,7 +132,7 @@ define(
       }
 
       return next;
-    }
+    };
 
     var findSelectionEnd = function (start, end) {
       var walker = new TreeWalker(end), node;
@@ -166,7 +166,7 @@ define(
       return rng;
     };
 
-    function applyFormat(ed, name, vars, node) {
+    var applyFormat = function (ed, name, vars, node) {
       var formatList = ed.formatter.get(name), format = formatList[0], bookmark, rng, isCollapsed = !node && ed.selection.isCollapsed();
       var dom = ed.dom, selection = ed.selection;
 
@@ -244,7 +244,7 @@ define(
           /**
            * Process a list of nodes wrap them.
            */
-          function process(node) {
+          var process = function (node) {
             var nodeName, parentName, hasContentEditableState, lastContentEditable;
 
             lastContentEditable = contentEditable;
@@ -328,7 +328,7 @@ define(
               // End the last wrapper
               currentWrapElm = 0;
             }
-          }
+          };
 
           // Process siblings from range
           each(nodes, process);
@@ -337,13 +337,13 @@ define(
         // Apply formats to links as well to get the color of the underline to change as well
         if (format.links === true) {
           each(newWrappers, function (node) {
-            function process(node) {
+            var process = function (node) {
               if (node.nodeName === 'A') {
                 setElementFormat(node, format);
               }
 
               each(Tools.grep(node.childNodes), process);
-            }
+            };
 
             process(node);
           });
@@ -353,7 +353,7 @@ define(
         each(newWrappers, function (node) {
           var childCount;
 
-          function getChildCount(node) {
+          var getChildCount = function (node) {
             var count = 0;
 
             each(node.childNodes, function (node) {
@@ -363,9 +363,9 @@ define(
             });
 
             return count;
-          }
+          };
 
-          function getChildElementNode(root) {
+          var getChildElementNode = function (root) {
             var child = false;
             each(root.childNodes, function (node) {
               if (isElementNode(node)) {
@@ -374,9 +374,9 @@ define(
               }
             });
             return child;
-          }
+          };
 
-          function matchNestedWrapper(node, filter) {
+          var matchNestedWrapper = function (node, filter) {
             do {
               if (getChildCount(node) !== 1) {
                 break;
@@ -391,9 +391,9 @@ define(
             } while (node);
 
             return null;
-          }
+          };
 
-          function mergeStyles(node) {
+          var mergeStyles = function (node) {
             var child, clone;
 
             child = getChildElementNode(node);
@@ -408,7 +408,7 @@ define(
             }
 
             return clone || node;
-          }
+          };
 
           childCount = getChildCount(node);
 
@@ -546,7 +546,7 @@ define(
 
         Hooks.postProcess(name, ed);
       }
-    }
+    };
 
     return {
       applyFormat: applyFormat

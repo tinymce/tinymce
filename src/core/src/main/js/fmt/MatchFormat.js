@@ -67,7 +67,7 @@ define(
       }
     };
 
-    function matchItems(dom, node, format, itemName, similar, vars) {
+    var matchItems = function (dom, node, format, itemName, similar, vars) {
       var key, value, items = format[itemName], i;
 
       // Custom match
@@ -107,7 +107,7 @@ define(
       }
 
       return format;
-    }
+    };
 
     var matchNode = function (ed, node, name, vars, similar) {
       var formatList = ed.formatter.get(name), format, i, x, classes, dom = ed.dom;

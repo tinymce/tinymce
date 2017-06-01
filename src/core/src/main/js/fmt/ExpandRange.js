@@ -35,9 +35,9 @@ define(
         siblingName = start ? 'previousSibling' : 'nextSibling';
         root = dom.getRoot();
 
-        function isBogusBr(node) {
+        var isBogusBr = function (node) {
           return node.nodeName === "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
-        }
+        };
 
         // If it's a text node and the offset is inside the text
         if (container.nodeType === 3 && !isWhiteSpaceNode(container)) {
@@ -126,7 +126,7 @@ define(
       var findWordEndPoint = function (container, offset, start) {
         var walker, node, pos, lastTextNode;
 
-        function findSpace(node, offset) {
+        var findSpace = function (node, offset) {
           var pos, pos2, str = node.nodeValue;
 
           if (typeof offset === "undefined") {
@@ -149,7 +149,7 @@ define(
           }
 
           return pos;
-        }
+        };
 
         if (container.nodeType === 3) {
           pos = findSpace(container, offset);
