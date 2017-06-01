@@ -1,14 +1,16 @@
 asynctest(
   'browser.tinymce.core.FormatterApplyTest',
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
+    'ephox.katamari.api.Obj',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.test.KeyUtils',
     'tinymce.core.test.HtmlUtils',
+    'tinymce.core.test.KeyUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, KeyUtils, HtmlUtils, Theme) {
+  function (Assertions, Pipeline, Obj, LegacyUnit, TinyLoader, HtmlUtils, KeyUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -1567,6 +1569,17 @@ asynctest(
       LegacyUnit.equal(editor.getContent(editor), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
     });
 
+    suite.test('Format caret with multiple formats', function (editor) {
+      editor.getBody().innerHTML = '<p><br></p>';
+      editor.formatter.register('format1', { inline: 'b' });
+      editor.formatter.register('format2', { inline: 'i' });
+      editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
+      editor.formatter.apply('format1');
+      editor.formatter.apply('format2');
+      LegacyUnit.equal(1, editor.dom.select('b').length, 'Should be one b element');
+      LegacyUnit.equal(1, editor.dom.select('i').length, 'Should be one i element');
+    });
+
     suite.test('Selector format on whole contents', function (editor) {
       editor.setContent('<p>a</p>');
       editor.formatter.register('format', {
@@ -1955,6 +1968,65 @@ asynctest(
         getContent(editor),
         '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-size: 13px; font-family: arial;">b</del>c</span></p>'
       );
+    });
+
+    suite.test('register/unregister', function (editor) {
+      editor.formatter.register('format', { inline: 'span' });
+      Assertions.assertEq('Should have format', true, !!editor.formatter.get('format'));
+      editor.formatter.unregister('format');
+      Assertions.assertEq('Should not have format', false, !!editor.formatter.get('format'));
+    });
+
+    suite.test('Get all formats', function (editor) {
+      Assertions.assertEq('Should have a bunch of formats', true, Obj.keys(editor.formatter.get()).length > 0);
+    });
+
+    suite.test("Apply ceFalseOverride format", function (editor) {
+      editor.setContent('<p contenteditable="false">a</p><div contenteditable="false">b</div>');
+      editor.formatter.register('format', { selector: 'div', classes: ['a'], ceFalseOverride: true });
+
+      editor.selection.select(editor.dom.select('p')[0]);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p contenteditable="false">a</p><div contenteditable="false">b</div>'
+      );
+
+      editor.selection.select(editor.dom.select('div')[0]);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p contenteditable="false">a</p><div class="a" contenteditable="false">b</div>'
+      );
+    });
+
+    suite.test("Apply defaultBlock format", function (editor) {
+      editor.getBody().innerHTML = 'a<br>b';
+      editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: ['a'] });
+      editor.selection.setCursorLocation(editor.firstChild, 0);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
+    });
+
+    suite.test("Apply format excluding trailing space", function (editor) {
+      editor.setContent('<p>a b</p>');
+      editor.formatter.register('format', { inline: 'b' });
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 2);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<p><b>a</b> b</p>');
+    });
+
+    suite.test("Apply format with onformat handler", function (editor) {
+      editor.setContent('<p>a</p>');
+      editor.formatter.register('format', {
+        inline: 'span',
+        onformat: function (elm) {
+          elm.className = 'x';
+        }
+      });
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<p><span class="x">a</span></p>');
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
