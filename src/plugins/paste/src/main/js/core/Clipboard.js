@@ -291,7 +291,11 @@ define(
           if (dataTransfer.types) {
             for (var i = 0; i < dataTransfer.types.length; i++) {
               var contentType = dataTransfer.types[i];
-              items[contentType] = dataTransfer.getData(contentType);
+              try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
+                items[contentType] = dataTransfer.getData(contentType);
+              } catch (ex) {
+                items[contentType] = ""; // useless in general, but for consistency across browsers
+              }
             }
           }
         }
