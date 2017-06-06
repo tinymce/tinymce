@@ -9,10 +9,9 @@ asynctest(
     'tinymce.core.Env',
     'tinymce.core.test.HtmlUtils',
     'tinymce.core.util.URI',
-    'tinymce.core.util.I18n',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, document, EditorManager, Env, HtmlUtils, URI, I18n, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, EditorManager, Env, HtmlUtils, URI, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
