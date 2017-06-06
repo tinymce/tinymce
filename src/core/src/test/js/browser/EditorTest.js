@@ -9,9 +9,10 @@ asynctest(
     'tinymce.core.Env',
     'tinymce.core.test.HtmlUtils',
     'tinymce.core.util.URI',
+    'tinymce.core.util.I18n',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, document, EditorManager, Env, HtmlUtils, URI, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, EditorManager, Env, HtmlUtils, URI, I18n, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -382,10 +383,12 @@ asynctest(
 
     suite.test('translate', function (editor) {
       EditorManager.addI18n('en_US', {
-        'input i18n': 'output i18n'
+        'input i18n': 'output i18n',
+        "value:{0}{1}": "value translation:{0}{1}"
       });
 
       LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
+      LegacyUnit.equal(editor.translate(["value:{0}{1}", "a", "b"]), "value translation:ab");
     });
 
     suite.test('Treat some paragraphs as empty contents', function (editor) {
