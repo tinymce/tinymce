@@ -392,15 +392,13 @@ define(
        * @return {String} Translated string.
        */
       translate: function (text) {
-        var lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
+        if (text && Tools.is(text, 'string')) {
+          var lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
 
-        if (!text) {
-          return '';
+          text = i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function (a, b) {
+            return i18n.data[lang + '.' + b] || '{#' + b + '}';
+          });
         }
-
-        text = i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function (a, b) {
-          return i18n.data[lang + '.' + b] || '{#' + b + '}';
-        });
 
         return this.editorManager.translate(text);
       },
