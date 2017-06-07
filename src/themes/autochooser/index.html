@@ -9,7 +9,9 @@
   var run = function () {
     tinymce.init({
       selector: 'textarea',
-      theme: 'autochooser'
+      theme: 'autochooser',
+      // Required for list functionality (commands)
+      plugins: 'lists'
     })
   };
 </script>
