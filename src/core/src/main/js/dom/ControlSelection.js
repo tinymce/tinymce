@@ -646,7 +646,7 @@ define(
         });
 
         editor.on('hide blur', hideResizeRect);
-        editor.on('contextmenu', Fun.curry(editor, contextMenuSelectImage));
+        editor.on('contextmenu', Fun.curry(contextMenuSelectImage, editor));
 
         // Hide rect on focusout since it would float on top of windows otherwise
         //editor.on('focusout', hideResizeRect);
