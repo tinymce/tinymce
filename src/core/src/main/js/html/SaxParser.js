@@ -64,6 +64,10 @@ define(
       return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
     };
 
+    var trimComments = function (text) {
+      return text.replace(/<!--|-->/g, '');
+    };
+
     /**
      * Returns the index of the end tag for a specific start tag. This can be
      * used to skip all children of a parent element from being processed.
@@ -230,6 +234,11 @@ define(
             if (!settings.allow_html_data_urls && dataUriRegExp.test(uri) && !/^data:image\//i.test(uri)) {
               return;
             }
+          }
+
+          // Block data or event attributes on elements marked as internal
+          if (isInternalElement && (name in filteredUrlAttrs || name.indexOf('on') === 0)) {
+            return;
           }
 
           // Add attribute to list and map
@@ -458,7 +467,7 @@ define(
 
             self.comment(value);
           } else if ((value = matches[2])) { // CDATA
-            self.cdata(value);
+            self.cdata(trimComments(value));
           } else if ((value = matches[3])) { // DOCTYPE
             self.doctype(value);
           } else if ((value = matches[4])) { // PI
