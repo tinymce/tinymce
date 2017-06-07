@@ -24,8 +24,8 @@ asynctest(
         var rect = element.getBoundingClientRect();
         var clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
 
-        editor.fire('mousedown', { target: element, clientX: clientX, clientY: clientY });
-        editor.fire('mouseup', { target: element, clientX: clientX, clientY: clientY });
+        editor.fire('mousedown', { target: element, clientX: clientX, clientY: clientY, button: 2 });
+        editor.fire('mouseup', { target: element, clientX: clientX, clientY: clientY, button: 2 });
         editor.fire('contextmenu', { target: element, clientX: clientX, clientY: clientY });
       });
     };

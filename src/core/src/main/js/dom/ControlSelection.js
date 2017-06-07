@@ -594,7 +594,9 @@ define(
               var target = e.target, nodeName = target.nodeName;
 
               if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
-                editor.selection.select(target, nodeName == 'TABLE');
+                if (e.button !== 2) {
+                  editor.selection.select(target, nodeName == 'TABLE');
+                }
 
                 // Only fire once since nodeChange is expensive
                 if (e.type == 'mousedown') {
