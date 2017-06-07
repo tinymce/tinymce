@@ -95,6 +95,20 @@ module.exports = function (grunt) {
             filter: 'isFile'
           },
           {
+            expand: true,
+            flatten: true,
+            src: ['src/main/css/**'],
+            dest: 'deploy-local/js/skins/lightgray/',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['src/main/icons/**'],
+            dest: 'deploy-local/js/skins/lightgray',
+            filter: 'isFile'
+          },
+          {
             src: "../../../js/tinymce/tinymce.min.js",
             dest: "deploy-local/js/tinymce.min.js"
           },
@@ -142,6 +156,10 @@ module.exports = function (grunt) {
           {
             src: "deploy-local/js/mobile_theme.js",
             dest: "deploy-local/js/mobile_theme.min.js"
+          },
+          {
+            src: "deploy-local/js/mobile_theme.js",
+            dest: "deploy-local/js/themes/mobile/theme.min.js"
           }
         ]
       },
