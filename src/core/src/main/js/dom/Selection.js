@@ -43,7 +43,7 @@ define(
     var isIE = Env.ie;
 
     var isAttachedToDom = function (node) {
-      return node && node.ownerDocument && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
+      return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
     };
 
     var isValidRange = function (rng) {
