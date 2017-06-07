@@ -2,20 +2,17 @@
 <html>
 
 <head>
-<script src="js/tinymce.min.js"></script>
+<script src="tinymce.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 
 <script>
   var run = function () {
     tinymce.init({
       selector: 'textarea',
-      theme_url: 'js/mobile_theme.min.js',
+      theme: 'mobile',
       // Required for list functionality (commands)
       plugins: 'lists',
-      theme: 'mobile',
-      content_css_url: '/../css',
-      skin_url: '../../../../../skins/lightgray/dist/lightgray',
-      mobile_skin_url: 'css'
+      theme: 'mobile'
     })
   };
 </script>
