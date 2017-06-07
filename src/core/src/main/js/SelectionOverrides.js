@@ -31,16 +31,14 @@ define(
     'tinymce.core.caret.FakeCaret',
     'tinymce.core.caret.LineUtils',
     'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangePoint',
     'tinymce.core.DragDropOverrides',
     'tinymce.core.Env',
-    'tinymce.core.geom.ClientRect',
     'tinymce.core.keyboard.CefUtils',
-    'tinymce.core.util.Arr',
     'tinymce.core.util.Delay',
-    'tinymce.core.util.Fun',
     'tinymce.core.util.VK'
   ],
-  function (CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, DragDropOverrides, Env, ClientRect, CefUtils, Arr, Delay, Fun, VK) {
+  function (CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint, DragDropOverrides, Env, CefUtils, Delay, VK) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
       isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse,
@@ -129,16 +127,6 @@ define(
           }
 
           return null;
-        }
-
-        function isXYWithinRange(clientX, clientY, range) {
-          if (range.collapsed) {
-            return false;
-          }
-
-          return Arr.reduce(range.getClientRects(), function (state, rect) {
-            return state || ClientRect.containsXY(rect, clientX, clientY);
-          }, false);
         }
 
         // Some browsers (Chrome) lets you place the caret after a cE=false
@@ -242,7 +230,7 @@ define(
               removeContentEditableSelection();
 
               // Check that we're not attempting a shift + click select within a contenteditable='true' element
-              if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
+              if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !RangePoint.isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
                 editor.selection.placeCaretAt(e.clientX, e.clientY);
               }
             }
