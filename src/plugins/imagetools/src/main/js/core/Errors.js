@@ -46,7 +46,7 @@ define(
       return Arr.find(friendlyServiceErrors, function (error) {
         return error.type === type;
       }).fold(
-        Fun.constant('Bla bla'),
+        Fun.constant('Unknown service error'),
         function (error) {
           return error.message;
         }
@@ -56,7 +56,7 @@ define(
     var getServiceError = function (text) {
       var serviceError = Utils.parseJson(text);
       var errorType = Utils.traverse(serviceError, ['error', 'type']);
-      var errorMsg = errorType ? getServiceErrorMsg(errorType) : 'Invalid JSON';
+      var errorMsg = errorType ? getServiceErrorMsg(errorType) : 'Invalid JSON in service error message';
 
       return "ImageProxy Service error: " + errorMsg;
     };

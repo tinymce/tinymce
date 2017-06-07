@@ -28,7 +28,6 @@ asynctest(
     var failure = arguments[arguments.length - 1];
     var uploadHandlerState = ImageUtils.createStateContainer();
 
-    var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
     var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
     Plugin();
@@ -54,35 +53,35 @@ asynctest(
       function (editor, onSuccess, onFailure) {
         var tinyApis = TinyApis(editor);
         var stepsWithTeardown = Arr.bind([
-          // Logger.t('incorrect service url no api key', GeneralSteps.sequence([
-          //   uploadHandlerState.sResetState,
-          //   tinyApis.sSetSetting('imagetools_proxy', 'http://noserver/'),
-          //   tinyApis.sSetSetting('api_key', undefined),
-          //   ImageUtils.sLoadImage(editor, corsUrl),
-          //   tinyApis.sSelect('img', []),
-          //   ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          //   sAssertErrorMessage('ImageProxy HTTP error: 0')
-          // ])),
+          Logger.t('incorrect service url no api key', GeneralSteps.sequence([
+            uploadHandlerState.sResetState,
+            tinyApis.sSetSetting('imagetools_proxy', 'http://noserver/'),
+            tinyApis.sSetSetting('api_key', undefined),
+            ImageUtils.sLoadImage(editor, corsUrl),
+            tinyApis.sSelect('img', []),
+            ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
+            sAssertErrorMessage('ImageProxy HTTP error: Incorrect Image Proxy URL')
+          ])),
 
-          // Logger.t('incorrect service url with api key', GeneralSteps.sequence([
-          //   uploadHandlerState.sResetState,
-          //   tinyApis.sSetSetting('imagetools_proxy', 'http://noserver/'),
-          //   tinyApis.sSetSetting('api_key', 'fake_key'),
-          //   ImageUtils.sLoadImage(editor, corsUrl),
-          //   tinyApis.sSelect('img', []),
-          //   ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          //   sAssertErrorMessage('ImageProxy HTTP error: 0')
-          // ])),
+          Logger.t('incorrect service url with api key', GeneralSteps.sequence([
+            uploadHandlerState.sResetState,
+            tinyApis.sSetSetting('imagetools_proxy', 'http://noserver/'),
+            tinyApis.sSetSetting('api_key', 'fake_key'),
+            ImageUtils.sLoadImage(editor, corsUrl),
+            tinyApis.sSelect('img', []),
+            ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
+            sAssertErrorMessage('ImageProxy HTTP error: Incorrect Image Proxy URL')
+          ])),
 
-          // Logger.t('403 no api key', GeneralSteps.sequence([
-          //   uploadHandlerState.sResetState,
-          //   tinyApis.sSetSetting('imagetools_proxy', '/custom/403'),
-          //   tinyApis.sSetSetting('api_key', undefined),
-          //   ImageUtils.sLoadImage(editor, corsUrl),
-          //   tinyApis.sSelect('img', []),
-          //   ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          //   sAssertErrorMessage('ImageProxy HTTP error: 403')
-          // ])),
+          Logger.t('403 no api key', GeneralSteps.sequence([
+            uploadHandlerState.sResetState,
+            tinyApis.sSetSetting('imagetools_proxy', '/custom/403'),
+            tinyApis.sSetSetting('api_key', undefined),
+            ImageUtils.sLoadImage(editor, corsUrl),
+            tinyApis.sSelect('img', []),
+            ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
+            sAssertErrorMessage('ImageProxy HTTP error: Rejected request')
+          ])),
 
           Logger.t('403 with api key', GeneralSteps.sequence([
             uploadHandlerState.sResetState,
@@ -91,7 +90,7 @@ asynctest(
             ImageUtils.sLoadImage(editor, corsUrl),
             tinyApis.sSelect('img', []),
             ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-            sAssertErrorMessage('ImageProxy Service error: Invalid JSON')
+            sAssertErrorMessage('ImageProxy Service error: Invalid JSON in service error message')
           ])),
 
           Logger.t('403 with api key and return error data', GeneralSteps.sequence([
@@ -101,7 +100,7 @@ asynctest(
             ImageUtils.sLoadImage(editor, corsUrl),
             tinyApis.sSelect('img', []),
             ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-            sAssertErrorMessage('ImageProxy Service error: Error from server')
+            sAssertErrorMessage('ImageProxy Service error: Unknown service error')
           ])),
 
           Logger.t('404 no api key', GeneralSteps.sequence([
@@ -111,7 +110,7 @@ asynctest(
             ImageUtils.sLoadImage(editor, corsUrl),
             tinyApis.sSelect('img', []),
             ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-            sAssertErrorMessage('ImageProxy HTTP error: 404')
+            sAssertErrorMessage('ImageProxy HTTP error: Could not find Image Proxy')
           ])),
 
           Logger.t('404 with api key', GeneralSteps.sequence([
@@ -121,7 +120,7 @@ asynctest(
             ImageUtils.sLoadImage(editor, corsUrl),
             tinyApis.sSelect('img', []),
             ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-            sAssertErrorMessage('ImageProxy HTTP error: 404')
+            sAssertErrorMessage('ImageProxy HTTP error: Could not find Image Proxy')
           ]))
         ], function (step) {
           return [
