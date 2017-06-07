@@ -1112,6 +1112,24 @@ asynctest(
       LegacyUnit.equal(rng.endOffset, 1);
     });
 
+    suite.test('setRng invalid range removed parent context', function (editor) {
+      editor.setContent('<p><strong><em>x</em></strong></p>');
+      var textNode = editor.$('em')[0].firstChild;
+
+      editor.setContent('');
+
+      var rng = editor.dom.createRng();
+      rng.setStart(textNode, 0);
+      rng.setEnd(textNode, 1);
+      editor.selection.setRng(rng);
+
+      var curRng = editor.selection.getRng(true);
+      LegacyUnit.equal(curRng.startContainer.nodeName, 'BODY');
+      LegacyUnit.equal(curRng.startOffset, 0);
+      LegacyUnit.equal(curRng.endContainer.nodeName, 'BODY');
+      LegacyUnit.equal(curRng.endOffset, 0);
+    });
+
     suite.test('getRng should return null if win.document is not defined or null', function (editor) {
       var win = editor.selection.win,
         rng = editor.dom.createRng();

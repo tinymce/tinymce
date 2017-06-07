@@ -20,6 +20,8 @@
 define(
   'tinymce.core.dom.Selection',
   [
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.ControlSelection',
@@ -33,9 +35,16 @@ define(
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader, Zwsp, Tools) {
+  function (
+    Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader,
+    Zwsp, Tools
+  ) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
+
+    var isAttachedToDom = function (node) {
+      return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
+    };
 
     var isValidRange = function (rng) {
       if (!rng) {
@@ -43,8 +52,7 @@ define(
       } else if (rng.select) { // Native IE range still produced by placeCaretAt
         return true;
       } else {
-        var sc = rng.startContainer, ec = rng.endContainer;
-        return !!(sc && sc.parentNode && ec && ec.parentNode);
+        return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
       }
     };
 
