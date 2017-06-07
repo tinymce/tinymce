@@ -2,15 +2,13 @@
 <html>
 
 <head>
-<script src="js/tinymce.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="tinymce.min.js"></script>
 
 <script>
   var run = function () {
     tinymce.init({
       selector: 'textarea',
-      theme_url: 'js/autochooser_theme.min.js',
-      autochooser_modern_skin_url: 'modern/css',
-      autochooser_mobile_skin_url: 'mobile/css',
       theme: 'autochooser'
     })
   };

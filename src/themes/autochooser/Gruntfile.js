@@ -40,14 +40,14 @@ module.exports = function (grunt) {
             expand: true,
             flatten: true,
             src: ['../mobile/src/main/css/**'],
-            dest: 'deploy-local/mobile/css',
+            dest: 'deploy-local/skins/lightgray',
             filter: 'isFile'
           },
           {
             expand: true,
             flatten: true,
             src: ['../mobile/src/main/icons/**'],
-            dest: 'deploy-local/mobile/icons',
+            dest: 'deploy-local/skins/icons',
             filter: 'isFile'
           },
           {
@@ -55,22 +55,22 @@ module.exports = function (grunt) {
             flatten: false,
             cwd: '../../skins/lightgray/dist/lightgray',
             src: ['**/**'],
-            dest: 'deploy-local/modern/css'
+            dest: 'deploy-local/skins/lightgray'
           },
           {
             expand: true,
             flatten: true,
             src: ['../mobile/src/main/icons/**'],
-            dest: 'deploy-local/mobile/icons',
+            dest: 'deploy-local/skins/icons',
             filter: 'isFile'
           },
           {
             src: "../../../js/tinymce/tinymce.min.js",
-            dest: "deploy-local/js/tinymce.min.js"
+            dest: "deploy-local/tinymce.min.js"
           },
           {
             src: "scratch/inline/theme.js",
-            dest: "deploy-local/js/autochooser_theme.js"
+            dest: "deploy-local/themes/autochooser/theme.js"
           },
           {
             src: "index.html",
@@ -106,8 +106,8 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            src: "deploy-local/js/autochooser_theme.js",
-            dest: "deploy-local/js/autochooser_theme.min.js"
+            src: "deploy-local/themes/autochooser/theme.js",
+            dest: "deploy-local/themes/autochooser/theme.min.js"
           }
         ]
       },
