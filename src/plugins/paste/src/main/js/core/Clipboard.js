@@ -291,7 +291,11 @@ define(
           if (dataTransfer.types) {
             for (var i = 0; i < dataTransfer.types.length; i++) {
               var contentType = dataTransfer.types[i];
-              items[contentType] = dataTransfer.getData(contentType);
+              try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
+                items[contentType] = dataTransfer.getData(contentType);
+              } catch (ex) {
+                items[contentType] = ""; // useless in general, but for consistency across browsers
+              }
             }
           }
         }
@@ -332,6 +336,11 @@ define(
         return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
       }
 
+      function extractFilename(str) {
+        var m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
+        return m ? editor.dom.encode(m[1]) : null;
+      }
+
       function pasteImage(rng, reader, blob) {
         if (rng) {
           editor.selection.setRng(rng);
@@ -340,8 +349,10 @@ define(
 
         var dataUri = reader.result;
         var base64 = getBase64FromUri(dataUri);
-
+        var id = uniqueId();
+        var name = editor.settings.images_reuse_filename && blob.name ? extractFilename(blob.name) : id;
         var img = new Image();
+
         img.src = dataUri;
 
         // TODO: Move the bulk of the cache logic to EditorUpload
@@ -354,7 +365,7 @@ define(
           });
 
           if (!existingBlobInfo) {
-            blobInfo = blobCache.create(uniqueId(), blob, base64);
+            blobInfo = blobCache.create(id, blob, base64, name);
             blobCache.add(blobInfo);
           } else {
             blobInfo = existingBlobInfo;
