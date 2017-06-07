@@ -66,14 +66,16 @@ asynctest(
     });
 
     viewBlock.attach();
-    Pipeline.async({}, [
+
+    // Disables the csp test on Firefox since an iframe will change the sandbox of the parent document
+    Pipeline.async({}, navigator.userAgent.indexOf('Firefox/') === -1 ? [
       Logger.t('Load editor into csp restricted iframe and do some basic operations', GeneralSteps.sequence([
         mCreateIframeSandbox,
         mSetContent('<p>test</p>'),
         mAssertContent('<p>test</p>'),
         mDestoryEditor
       ]))
-    ], function () {
+    ] : [], function () {
       EditorManager.remove();
       viewBlock.detach();
       success();
