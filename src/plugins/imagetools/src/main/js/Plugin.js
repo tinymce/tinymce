@@ -217,7 +217,7 @@ define(
         };
 
         var openDialog = function (imageResult) {
-          return Dialog.edit(imageResult).then(handleDialogBlob).
+          return Dialog.edit(editor, imageResult).then(handleDialogBlob).
             then(BlobConversions.blobToImageResult).
             then(function (imageResult) {
               return updateSelectedImage(imageResult, true);
