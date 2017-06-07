@@ -9,7 +9,7 @@
  */
 
 /**
- * Contains a logic for handling keyboard shortcuts.
+ * Contains logic for handling keyboard shortcuts.
  *
  * @class tinymce.Shortcuts
  * @example
