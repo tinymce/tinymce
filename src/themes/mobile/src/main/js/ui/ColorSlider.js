@@ -3,15 +3,17 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Slider',
     'ephox.sugar.api.properties.Css',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.ToolbarWidgets',
     'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Toggling, Slider, Css, Styles, ToolbarWidgets, UiDomFactory) {
+  function (Behaviour, Receiving, Toggling, Slider, Css, Receivers, Styles, ToolbarWidgets, UiDomFactory) {
     var BLACK = -1;
 
     var makeSlider = function (spec) {
@@ -75,7 +77,11 @@ define(
         stepSize: 10,
         min: 0,
         max: 360,
-        getInitialValue: spec.getInitialValue
+        getInitialValue: spec.getInitialValue,
+
+        sliderBehaviours: Behaviour.derive([
+          Receivers.orientation(Slider.refresh)
+        ])
       });
     };
 
