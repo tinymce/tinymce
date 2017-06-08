@@ -3,7 +3,11 @@ asynctest(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Selectors',
     'global!document',
     'global!window',
     'tinymce.core.EditorManager',
@@ -12,7 +16,7 @@ asynctest(
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Pipeline, LegacyUnit, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
+  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Selectors, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -129,9 +133,51 @@ asynctest(
       });
     });
 
-    setup();
-    Pipeline.async({}, suite.toSteps({}), function () {
+    var getSkinCssFilenames = function () {
+      return Arr.map(
+        Arr.filter(Selectors.all('link', Element.fromDom(document)), function (link) {
+          return link.dom().href.indexOf('lightgray/') !== -1;
+        }),
+        function (link) {
+          return link.dom().href.split('/').slice(-1).join('');
+        }
+      );
+    };
+
+    var sTestInlineModeMultipleInstances = Step.async(function (next, die) {
+      viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
+
+      EditorManager.init({
+        selector: '.tinymce-editor',
+        inline: true,
+        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      }).then(function (editors) {
+        try {
+          Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
+          Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
+
+          Assertions.assertEq(
+            'Should only be two skin files the skin and the content for inline mode',
+            ["skin.min.css", "content.inline.min.css"],
+            getSkinCssFilenames()
+          );
+
+          next({});
+        } catch (e) {
+          die(e);
+        }
+      });
+    });
+
+    var sRemoveAllEditors = Step.sync(function () {
       EditorManager.remove();
+    });
+
+    setup();
+    Pipeline.async({}, ([
+      sTestInlineModeMultipleInstances,
+      sRemoveAllEditors
+    ]), function () {
       viewBlock.detach();
       success();
     }, failure);

@@ -143,6 +143,10 @@ define(
       autoFocus(editor);
     };
 
+    var getStyleSheetLoader = function (editor) {
+      return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
+    };
+
     var initContentBody = function (editor, skipWrite) {
       var settings = editor.settings, targetElm = editor.getElement(), doc = editor.getDoc(), body, contentCssText;
 
@@ -280,7 +284,7 @@ define(
         editor.dom.addStyle(contentCssText);
       }
 
-      editor.dom.styleSheetLoader.loadAll(
+      getStyleSheetLoader(editor).loadAll(
         editor.contentCSS,
         function (_) {
           initEditor(editor);
