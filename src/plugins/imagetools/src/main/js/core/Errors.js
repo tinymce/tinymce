@@ -16,7 +16,7 @@ define(
     ];
     var friendlyServiceErrors = [
       { type: 'key_missing', message: 'The request did not include an api key.' },
-      { type: 'key_not_found', message: 'The provided apikey could not be found.' },
+      { type: 'key_not_found', message: 'The provided api key could not be found.' },
       { type: 'domain_not_trusted', message: 'The api key is not valid for the request origins.' }
     ];
 
@@ -32,7 +32,8 @@ define(
         function (error) {
           return error.message;
         }
-        );
+      );
+
       return "ImageProxy HTTP error: " + message;
     };
 
