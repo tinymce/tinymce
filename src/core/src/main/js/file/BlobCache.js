@@ -31,7 +31,9 @@ define(
           'image/jpeg': 'jpg',
           'image/jpg': 'jpg',
           'image/gif': 'gif',
-          'image/png': 'png'
+          'image/png': 'png',
+          'image/x-icon': 'ico',
+          'image/icon': 'ico'
         };
 
         return mimes[mime.toLowerCase()] || 'dat';
