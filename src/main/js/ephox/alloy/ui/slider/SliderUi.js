@@ -11,13 +11,14 @@ define(
     'ephox.alloy.ui.slider.SliderActions',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Behaviour, Keying, Representing, AlloyEvents, NativeEvents, AlloyParts, SliderActions, Arr, Fun, Option, PlatformDetection, Css, Width) {
+  function (Behaviour, Keying, Representing, AlloyEvents, NativeEvents, AlloyParts, SliderActions, Arr, Fun, Merger, Option, PlatformDetection, Css, Width) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
 
     var sketch = function (detail, components, spec, externals) {
@@ -115,27 +116,30 @@ define(
         dom: detail.dom(),
         components: components,
 
-        behaviours: Behaviour.derive(
-          Arr.flatten([
-            !isTouch ? [
-              Keying.config({
-                mode: 'special',
-                focusIn: function (slider) {
-                  return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
-                }
-              })
-            ] : [],
-            [
-              Representing.config({
-                store: {
-                  mode: 'manual',
-                  getValue: function (_) {
-                    return detail.value().get();
+        behaviours: Merger.deepMerge(
+          Behaviour.derive(
+            Arr.flatten([
+              !isTouch ? [
+                Keying.config({
+                  mode: 'special',
+                  focusIn: function (slider) {
+                    return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
                   }
-                }
-              })
-            ]
-          ])
+                })
+              ] : [],
+              [
+                Representing.config({
+                  store: {
+                    mode: 'manual',
+                    getValue: function (_) {
+                      return detail.value().get();
+                    }
+                  }
+                })
+              ]
+            ])
+          ),
+          detail.sliderBehaviours()
         ),
 
         events: AlloyEvents.derive(
@@ -155,7 +159,8 @@ define(
 
         apis: {
           resetToMin: resetToMin,
-          resetToMax: resetToMax
+          resetToMax: resetToMax,
+          refresh: refresh
         },
 
         domModification: {
