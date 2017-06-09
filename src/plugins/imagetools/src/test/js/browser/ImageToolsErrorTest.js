@@ -54,7 +54,7 @@ asynctest(
         var stepsWithTeardown = Arr.bind([
           Logger.t('incorrect service url no api key', GeneralSteps.sequence([
             uploadHandlerState.sResetState,
-            tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0/'),
+            tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0.0.0/'),
             tinyApis.sSetSetting('api_key', undefined),
             ImageUtils.sLoadImage(editor, corsUrl),
             tinyApis.sSelect('img', []),
@@ -64,7 +64,7 @@ asynctest(
 
           Logger.t('incorrect service url with api key', GeneralSteps.sequence([
             uploadHandlerState.sResetState,
-            tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0/'),
+            tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0.0.0/'),
             tinyApis.sSetSetting('api_key', 'fake_key'),
             ImageUtils.sLoadImage(editor, corsUrl),
             tinyApis.sSelect('img', []),
