@@ -15,7 +15,7 @@ test(
 
     var testServiceErrors = function () {
       RawAssertions.assertEq('key missing', 'The request did not include an api key.', Errors.getServiceErrorMsg('key_missing'));
-      RawAssertions.assertEq('key not found', 'The provided apikey could not be found.', Errors.getServiceErrorMsg('key_not_found'));
+      RawAssertions.assertEq('key not found', 'The provided api key could not be found.', Errors.getServiceErrorMsg('key_not_found'));
       RawAssertions.assertEq('key not found', 'The api key is not valid for the request origins.', Errors.getServiceErrorMsg('domain_not_trusted'));
     };
 
