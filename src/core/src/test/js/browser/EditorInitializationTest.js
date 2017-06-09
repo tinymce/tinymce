@@ -7,6 +7,7 @@ asynctest(
     'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.Selectors',
     'global!document',
     'global!window',
@@ -16,7 +17,7 @@ asynctest(
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Selectors, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
+  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Attr, Selectors, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -134,39 +135,35 @@ asynctest(
     });
 
     var getSkinCssFilenames = function () {
-      return Arr.map(
-        Arr.filter(Selectors.all('link', Element.fromDom(document)), function (link) {
-          return link.dom().href.indexOf('lightgray/') !== -1;
-        }),
-        function (link) {
-          return link.dom().href.split('/').slice(-1).join('');
-        }
-      );
+      return Arr.bind(Selectors.all('link', Element.fromDom(document)), function (link) {
+        var href = Attr.get(link, 'href');
+        var fileName = href.split('/').slice(-1).join('');
+        var isSkin = href.indexOf('lightgray/') > -1;
+        return isSkin ? [ fileName ] : [ ];
+      });
     };
 
-    var sTestInlineModeMultipleInstances = Step.async(function (next, die) {
+    var mCreateInlineModeMultipleInstances = Step.stateful(function (value, next, die) {
       viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
 
       EditorManager.init({
         selector: '.tinymce-editor',
         inline: true,
         skin_url: '/project/src/skins/lightgray/dist/lightgray'
-      }).then(function (editors) {
-        try {
-          Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
-          Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
+      }).then(next, die);
+    });
 
-          Assertions.assertEq(
-            'Should only be two skin files the skin and the content for inline mode',
-            ["skin.min.css", "content.inline.min.css"],
-            getSkinCssFilenames()
-          );
+    var mAssertEditors = Step.stateful(function (editors, next, die) {
+      Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
+      Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
 
-          next({});
-        } catch (e) {
-          die(e);
-        }
-      });
+      Assertions.assertEq(
+        'Should only be two skin files the skin and the content for inline mode',
+        ["skin.min.css", "content.inline.min.css"],
+        getSkinCssFilenames()
+      );
+
+      next({});
     });
 
     var sRemoveAllEditors = Step.sync(function () {
@@ -175,7 +172,8 @@ asynctest(
 
     setup();
     Pipeline.async({}, ([
-      sTestInlineModeMultipleInstances,
+      mCreateInlineModeMultipleInstances,
+      mAssertEditors,
       sRemoveAllEditors
     ]), function () {
       viewBlock.detach();
