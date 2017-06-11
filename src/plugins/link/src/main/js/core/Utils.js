@@ -101,7 +101,7 @@ define(
             title: data.title ? data.title : null
           };
 
-          if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
+          if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
             linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
           }
 
