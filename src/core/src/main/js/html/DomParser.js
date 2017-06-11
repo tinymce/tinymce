@@ -780,7 +780,7 @@ define(
             var parts = rel.split(' ').filter(function (p) {
               return p.length > 0;
             });
-            return parts.concat(['noopener']).join(' ');
+            return parts.concat(['noopener']).sort().join(' ');
           };
 
           var addNoOpener = function (rel) {
