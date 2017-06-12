@@ -1,13 +1,13 @@
 /* Content.less */
 
-@font-family: Verdana, Arial, Helvetica, sans-serif;
-@font-size: 14px;
+@import "Variables.less";
 
 body {
   background-color: #FFFFFF;
   color: #000000;
-  font-family: @font-family;
-  font-size: @font-size;
+  font-family: @content-font-family;
+  font-size: @content-font-size;
+  line-height: @content-line-height;
   scrollbar-3dlight-color: #F0F0EE;
   scrollbar-arrow-color: #676662;
   scrollbar-base-color: #F0F0EE;
@@ -19,8 +19,8 @@ body {
 }
 
 td, th {
-  font-family: @font-family;
-  font-size: @font-size;
+  font-family: @content-font-family;
+  font-size: @content-font-size;
 }
 
 @import "Mixins.less";
