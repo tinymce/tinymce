@@ -772,34 +772,35 @@ define(
         });
       }
 
-      if (!settings.allow_unsafe_link_target) {
-        self.addAttributeFilter('href', function (nodes) {
-          var i = nodes.length, node;
 
-          var appendRel = function (rel) {
-            var parts = rel.split(' ').filter(function (p) {
-              return p.length > 0;
-            });
-            return parts.concat(['noopener']).join(' ');
-          };
+      self.addAttributeFilter('href', function (nodes) {
+        var i = nodes.length, node;
 
-          var addNoOpener = function (rel) {
-            var newRel = rel ? Tools.trim(rel) : '';
-            if (!/\b(noopener)\b/g.test(newRel)) {
-              return appendRel(newRel);
-            } else {
-              return newRel;
-            }
-          };
+        var appendRel = function (rel) {
+          var parts = rel.split(' ').filter(function (p) {
+            return p.length > 0;
+          });
+          return parts.concat(['noopener']).sort().join(' ');
+        };
 
+        var addNoOpener = function (rel) {
+          var newRel = rel ? Tools.trim(rel) : '';
+          if (!/\b(noopener)\b/g.test(newRel)) {
+            return appendRel(newRel);
+          } else {
+            return newRel;
+          }
+        };
+
+        if (!settings.allow_unsafe_link_target) {
           while (i--) {
             node = nodes[i];
             if (node.name === 'a' && node.attr('target') === '_blank') {
               node.attr('rel', addNoOpener(node.attr('rel')));
             }
           }
-        });
-      }
+        }
+      });
 
       // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
       if (!settings.allow_html_in_named_anchor) {
