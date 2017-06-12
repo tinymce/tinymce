@@ -4,22 +4,19 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.RawAssertions',
-    'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.imagetools.Plugin',
     'tinymce.themes.modern.Theme',
-    'tinymce.core.util.URI',
     'tinymce.plugins.imagetools.test.ImageOps',
     'tinymce.plugins.imagetools.test.ImageUtils'
   ],
-  function (GeneralSteps, Logger, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ModernTheme, URI, ImageOps, ImageUtils) {
+  function (GeneralSteps, Logger, Pipeline, TinyApis, TinyLoader, Plugin, ModernTheme, ImageOps, ImageUtils) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
-    var corsUrl = '/project/src/plugins/imagetools/src/demo/img/logo.jpg';
+    var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
     Plugin();
     ModernTheme();
@@ -38,8 +35,8 @@ asynctest(
           imgOps.sExecDialog('Invert'),
           imgOps.sExecDialog('Crop'),
           imgOps.sExecDialog('Resize'),
-          //imgOps.sExecDialog('Flip vertically'),
-          //imgOps.sExecDialog('Rotate clockwise'),
+          imgOps.sExecDialog('Flip vertically'),
+          imgOps.sExecDialog('Rotate clockwise'),
           imgOps.sExecDialog('Brightness'),
           imgOps.sExecDialog('Sharpen'),
           imgOps.sExecDialog('Contrast'),
@@ -49,10 +46,8 @@ asynctest(
       };
 
       Pipeline.async({}, [
-        //sTestGenerateFileName(),
-        //sTestReuseFilename(),
-        //sManipulateImage('Test image operations on an image from the same domain', srcUrl),
-        sManipulateImage('Test image operations on an image CORS domain', corsUrl)
+        //sManipulateImage('Test image operations on an image CORS domain', corsUrl),
+        sManipulateImage('Test image operations on an image from the same domain', srcUrl)
       ], onSuccess, onFailure);
     }, {
       plugins: 'imagetools',

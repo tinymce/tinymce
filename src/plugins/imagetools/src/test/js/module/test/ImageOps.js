@@ -5,8 +5,10 @@ define(
     'ephox.agar.api.Step',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Mouse',
+    'ephox.agar.mouse.Clicks',
     'ephox.agar.api.Guard',
     'ephox.agar.api.UiFinder',
+    'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.view.Visibility',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.PredicateFilter',
@@ -16,7 +18,7 @@ define(
     'ephox.mcagar.api.TinyUi',
     'ephox.mcagar.api.TinyDom'
   ],
-  function (Pipeline, Step, Chain, Mouse, Guard, UiFinder, Visibility, Attr, PredicateFilter, Selectors, Fun, Result, TinyUi, TinyDom) {
+  function (Pipeline, Step, Chain, Mouse, Clicks, Guard, UiFinder, DomEvent, Visibility, Attr, PredicateFilter, Selectors, Fun, Result, TinyUi, TinyDom) {
 
     // IMPORTANT: we match buttons by their aria-label
 
@@ -56,6 +58,27 @@ define(
       };
 
 
+      var cDragSlider = Chain.fromChains([
+        UiFinder.cFindIn('div[role="slider"]'),
+        Chain.on(function (element, next, die) {
+          var pos = editor.dom.getPos(element.dom());
+
+          var unbindMouseMove = DomEvent.bind(element, 'mousemove', function (e) {
+            Clicks.mouseup(element);
+            unbindMouseMove();
+            next(Chain.wrap(element));
+          }).unbind;
+
+          var unbindMouseDown = DomEvent.bind(element, 'mousedown', function (e) {
+            Clicks.mousemove(element, pos.x + 10, pos.y); // not sure if xy actually matters here
+            unbindMouseDown();
+          }).unbind;
+
+          Clicks.mousedown(element);
+        })
+      ]);
+
+
       var cExecCommandFromDialog = function (label) {
         var cInteractWithUi;
 
@@ -65,16 +88,20 @@ define(
           case 'Flip vertically':
           case 'Flip horizontally':
             // Orientation operations, like Flip or Rotate are grouped in a sub-panel
-            // and require an additional step
             cInteractWithUi = cClickToolbarButton(label);
             label = 'Orientation';
             break;
 
           case 'Brightness':
+          case 'Contrast':
+          case 'Color levels':
+          case 'Gamma':
+            cInteractWithUi = cDragSlider;
+            break;
+
           default:
             cInteractWithUi = Chain.wait(1);
         }
-
 
 
         return Chain.fromChains([
@@ -82,11 +109,11 @@ define(
           Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', 'div[aria-label="Edit image"][role="dialog"]'), [
             ui.cWaitForUi('wait for canvas', '.mce-imagepanel > img'),
             cClickToolbarButton(label),
-            Chain.wait(500),
-            Chain.fromChains([
-              cWaitForChain(cFindChildWithState('.mce-container.mce-form', Visibility.isVisible)),
-              Chain.wait(500),
-              cInteractWithUi,
+            Chain.fromParent(cWaitForChain(cFindChildWithState('.mce-container.mce-form', Visibility.isVisible)), [
+              Chain.fromChains([
+                cInteractWithUi,
+                Chain.wait(200) // we wait until image updates
+              ]),
               cClickButton('Apply')
             ]),
             ui.cWaitForUi('wait for Save button to become enabled', 'div[role="button"]:contains(Save):not(.mce-disabled)'),
@@ -96,10 +123,14 @@ define(
       };
 
 
+      var cWaitForUi = function (label, selector) {
+        return UiFinder.cWaitForState(label, selector, Fun.constant(true));
+      };
+
+
       var cClickButton = function (text) {
         return Chain.fromChains([
-          //UiFinder.cFindIn('div[role="button"]:contains(' + text + ')'),
-          ui.cWaitForUi('wait for ' + text + ' button', 'div[role="button"]:contains(' + text + '):not(.mce-disabled)'),
+          cWaitForUi('wait for ' + text + ' button', 'div[role="button"]:contains(' + text + '):not(.mce-disabled)'),
           Mouse.cClick
         ]);
       };
