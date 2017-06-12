@@ -33,12 +33,16 @@ define(
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangePoint',
     'tinymce.core.DragDropOverrides',
+    'tinymce.core.EditorView',
     'tinymce.core.Env',
     'tinymce.core.keyboard.CefUtils',
     'tinymce.core.util.Delay',
     'tinymce.core.util.VK'
   ],
-  function (CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint, DragDropOverrides, Env, CefUtils, Delay, VK) {
+  function (
+    CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint, DragDropOverrides, EditorView, Env, CefUtils, Delay,
+    VK
+  ) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
       isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse,
@@ -131,10 +135,10 @@ define(
 
         // Some browsers (Chrome) lets you place the caret after a cE=false
         // Make sure we render the caret container in this case
-        editor.on('mouseup', function () {
+        editor.on('mouseup', function (e) {
           var range = getRange();
 
-          if (range.collapsed) {
+          if (range.collapsed && EditorView.isXYInContentArea(editor, e.clientX, e.clientY)) {
             setRange(CefUtils.renderCaretAtRange(editor, range));
           }
         });
@@ -220,6 +224,10 @@ define(
 
         editor.on('mousedown', function (e) {
           var contentEditableRoot;
+
+          if (EditorView.isXYInContentArea(editor, e.clientX, e.clientY) === false) {
+            return;
+          }
 
           contentEditableRoot = getContentEditableRoot(e.target);
           if (contentEditableRoot) {
