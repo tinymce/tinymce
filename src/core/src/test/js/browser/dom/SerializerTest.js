@@ -100,7 +100,7 @@ asynctest(
       DOM.setHTML('test', '<a href="a" rel="lightbox x" target="_blank">a</a><a href="b" rel="lightbox x" target="_blank">b</a>');
       LegacyUnit.equal(
         ser.serialize(DOM.get('test'), { getInner: true }),
-        '<a href="a" target="_blank" rel="lightbox x noopener">a</a><a href="b" target="_blank" rel="lightbox x noopener">b</a>'
+        '<a href="a" target="_blank" rel="lightbox noopener x">a</a><a href="b" target="_blank" rel="lightbox noopener x">b</a>'
       );
 
       DOM.setHTML('test', '<a href="a" rel="noopener a" target="_blank">a</a>');
