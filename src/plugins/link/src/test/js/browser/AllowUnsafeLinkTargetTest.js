@@ -1,6 +1,8 @@
 asynctest(
   'browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest',
   [
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
@@ -10,7 +12,7 @@ asynctest(
     'tinymce.plugins.link.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, Step, TinyApis, TinyLoader, TinyUi, DOMUtils, LinkPlugin, ModernTheme) {
+  function (GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TinyUi, DOMUtils, LinkPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -26,41 +28,45 @@ asynctest(
       });
     };
 
+    var sInsertLink = function (ui, url) {
+      return GeneralSteps.sequence([
+        ui.sClickOnToolbar('click link button', 'div[aria-label="Insert/edit link"] > button'),
+        ui.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
+        sEnterUrl(url),
+        ui.sClickOnUi('click ok button', 'button:contains("Ok")')
+      ]);
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyUi = TinyUi(editor);
-      var tinyApis = TinyApis(editor);
+      var ui = TinyUi(editor);
+      var api = TinyApis(editor);
 
       Pipeline.async({}, [
-        // doesn't add rel noopener stuff with allow_unsafe_link_target: true
-        tinyUi.sClickOnToolbar('click link button', 'div[aria-label="Insert/edit link"] > button'),
-        tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
-        sEnterUrl('http://www.google.com'),
-        tinyUi.sClickOnUi('click ok button', 'button:contains("Ok")'),
-        tinyApis.sAssertContentPresence({ 'a[rel="noopener"]': 0, 'a': 1 }),
-        tinyApis.sSetContent(''),
+        Logger.t("doesn't add rel noopener stuff with allow_unsafe_link_target: true", GeneralSteps.sequence([
+          api.sSetSetting('allow_unsafe_link_target', true),
+          sInsertLink(ui, 'http://www.google.com'),
+          api.sAssertContentPresence({ 'a[rel="noopener"]': 0, 'a': 1 }),
+          api.sSetContent('')
+        ])),
 
-        // adds if allow_unsafe_link_target: false
-        tinyApis.sSetSetting('allow_unsafe_link_target', false),
-        tinyUi.sClickOnToolbar('click link button', 'div[aria-label="Insert/edit link"] > button'),
-        tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
-        sEnterUrl('http://www.google.com'),
-        tinyUi.sClickOnUi('click ok button', 'button:contains("Ok")'),
-        tinyApis.sAssertContentPresence({ 'a[rel="noopener"]': 1 }),
-        tinyApis.sSetContent(''),
+        Logger.t("adds if allow_unsafe_link_target: false", GeneralSteps.sequence([
+          api.sSetSetting('allow_unsafe_link_target', false),
+          sInsertLink(ui, 'http://www.google.com'),
+          api.sAssertContentPresence({ 'a[rel="noopener"]': 1 }),
+          api.sSetContent('')
+        ])),
 
-        // and if it's undefined
-        tinyApis.sSetSetting('allow_unsafe_link_target', undefined),
-        tinyUi.sClickOnToolbar('click link button', 'div[aria-label="Insert/edit link"] > button'),
-        tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
-        sEnterUrl('http://www.google.com'),
-        tinyUi.sClickOnUi('click ok button', 'button:contains("Ok")'),
-        tinyApis.sAssertContentPresence({ 'a[rel="noopener"]': 1 })
+        Logger.t("...and if it's undefined", GeneralSteps.sequence([
+          api.sSetSetting('allow_unsafe_link_target', undefined),
+          sInsertLink(ui, 'http://www.google.com'),
+          api.sAssertContentPresence({ 'a[rel="noopener"]': 1 })
+        ]))
+
       ], onSuccess, onFailure);
     }, {
       plugins: 'link',
       toolbar: 'link',
       skin_url: '/project/src/skins/lightgray/dist/lightgray',
-      allow_unsafe_link_target: true,
       target_list: [
         { title: 'New page', value: '_blank' }
       ]
