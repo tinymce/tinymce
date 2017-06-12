@@ -110,7 +110,7 @@ define(
             return fontFamily ? fontFamily.split(',')[0] : '';
           };
 
-          editor.on('nodeChange', function (e) {
+          editor.on('init nodeChange', function (e) {
             var fontFamily, value = null;
 
             fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
@@ -140,7 +140,7 @@ define(
         return function () {
           var self = this;
 
-          editor.on('nodeChange', function (e) {
+          editor.on('init nodeChange', function (e) {
             var px, pt, value = null;
 
             px = FontInfo.getFontSize(editor.getBody(), e.element);
