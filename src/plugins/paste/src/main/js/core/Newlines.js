@@ -54,7 +54,7 @@ define(
 
 
     var toBlockElements = function (text, rootTag, rootAttrs) {
-      var blocks = text.trim().split(/\n\n/);
+      var blocks = text.split(/\n\n/);
       var tagOpen = openContainer(rootTag, rootAttrs);
       var tagClose = '</' + rootTag + '>';
 
