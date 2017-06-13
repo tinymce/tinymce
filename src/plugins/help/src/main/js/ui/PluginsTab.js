@@ -20,12 +20,32 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
     });
   };
 
+  var removeForced = function (forcedPlugins) {
+    return function (pluginName) {
+      if (!forcedPlugins) {
+        return true;
+      }
+      for (var i = 0; i < forcedPlugins.length; i++) {
+        if (pluginName === forcedPlugins[i]) {
+          return false;
+        }
+      }
+      return true;
+    };
+  };
+
+  var getPluginKeys = function (editor) {
+    var keys = Obj.keys(editor.plugins);
+    return editor.settings.forced_plugins === undefined ? keys : Arr.filter(keys, removeForced(editor.settings.forced_plugins));
+  };
+
   var pluginLister = function (editor) {
-    var plugins = Obj.mapToArray(editor.plugins, function (plugin, key) {
+    var pluginKeys = getPluginKeys(editor);
+    var pluginLis = Arr.map(pluginKeys, function (key) {
       return '<li>' + maybeUrlize(key) + '</li>';
     });
-    var count = plugins.length;
-    var pluginsString = plugins.join('');
+    var count = pluginLis.length;
+    var pluginsString = pluginLis.join('');
 
     return '<p><b>Plugins installed (' + count + '):</b></p>' +
             '<ul>' + pluginsString + '</ul>';

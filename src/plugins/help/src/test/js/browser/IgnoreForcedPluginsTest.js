@@ -1,11 +1,11 @@
 asynctest(
-  'browser.plugin.PluginTest',
+  'browser.plugin.IgnoreForcedPluginsTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
@@ -14,7 +14,7 @@ asynctest(
     'tinymce.plugins.link.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, Pipeline, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, Html, HelpPlugin, LinkPlugin, Theme) {
+  function (Assertions, Chain, Pipeline, Step, UiFinder, TinyDom, TinyLoader, TinyUi, Html, HelpPlugin, LinkPlugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -35,11 +35,12 @@ asynctest(
 
       Pipeline.async({}, [
         tinyUi.sClickOnToolbar('click on button', 'button'),
-        sAssertPluginList('<li>help</li><li><a href="https://www.tinymce.com/docs/plugins/link" target="_blank">link</a></li>')
+        sAssertPluginList('<li>help</li>')
       ], onSuccess, onFailure);
     }, {
       plugins: 'help link',
       toolbar: 'help',
+      forced_plugins: ['link'],
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
