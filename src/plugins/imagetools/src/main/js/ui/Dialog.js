@@ -20,12 +20,11 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.plugins.imagetools.ui.ImagePanel',
     'tinymce.plugins.imagetools.core.UndoStack',
-    'global!Math',
-    'global!URL'
+    'global!Math'
   ],
   function (
     BlobConversions, ImageTransformations, DOMUtils, Container, Form, Promise,
-    Tools, ImagePanel, UndoStack, Math, URL
+    Tools, ImagePanel, UndoStack, Math
   ) {
     function createState(blob) {
       return {
