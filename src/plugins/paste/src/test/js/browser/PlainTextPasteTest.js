@@ -88,30 +88,30 @@ asynctest(
     };
 
 
-    var srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\n\r\nfour';
+    var srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\nfour\r\n\r\n\r\n\r\n.';
 
     var pasteData = {
       'Firefox': {
         'text/plain': srcText,
-        'text/html': 'one<br>two<br><br>three<br><br><br><br>four'
+        'text/html': 'one<br>two<br><br>three<br><br><br>four<br><br><br><br>.'
       },
       'Chrome': {
         'text/plain': srcText,
-        'text/html': '<div>one</div><div>two</div><div><br></div><div>three</div><div><br></div><div><br></div><div><br></div><div>four</div>'
+        'text/html': '<div>one</div><div>two</div><div><br></div><div>three</div><div><br></div><div><br></div><div>four</div><div><br></div><div><br></div><div><br></div><div>.'
       },
       'Edge': {
         'text/plain': srcText,
-        'text/html': '<div>one<br>two</div><div>three</div><div><br></div><div>four</div><div><br></div>'
+        'text/html': '<div>one<br>two</div><div>three</div><div><br>four</div><div><br></div><div>.</div>'
       },
       'IE': {
         'text/plain': srcText,
-        'text/html': '<p>one<br>two</p><p>three</p><p><br></p><p>four</p><p><br></p>'
+        'text/html': '<p>one<br>two</p><p>three</p><p><br>four</p><p><br></p><p>.</p>'
       }
     };
 
-    var expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p>&nbsp;</p><p>four</p>';
-    var expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr">&nbsp;</p><p class="attr">four</p>';
-    var expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br /><br />four';
+    var expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p><br />four</p><p>&nbsp;</p><p>.</p>';
+    var expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
+    var expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
 
     Theme();
