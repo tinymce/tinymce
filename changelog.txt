@@ -1,3 +1,22 @@
+Version 4.6.4 (2017-06-13)
+    Fixed bug where the editor would move the caret when clicking on the scrollbar next to a content editable false block.
+    Fixed bug where the text color select dropdowns wasn't placed correctly when they didn't fit the width of the screen.
+    Fixed bug where the default editor line height wasn't working for mixed font size contents.
+    Fixed bug where the content css files for inline editors were loaded multiple times for multiple editor instances.
+    Fixed bug where the initial value of the font size/font family dropdowns wasn't displayed.
+    Fixed bug where the I18n api was not supporting arrays as the translation replacement values.
+    Fixed bug where chrome would display "The given range isn't in document." errors for invalid ranges passed to setRng.
+    Fixed bug where the compat3x plugin wasn't working since the global tinymce references wasn't resolved correctly.
+    Fixed bug where the preview plugin wasn't encoding the base url passed into the iframe contents producing a xss bug.
+    Fixed bug where the dom parser/serializer wasn't handling some special elements like noframes, title and xmp.
+    Fixed bug where the dom parser/serializer wasn't handling cdata sections with comments inside.
+    Fixed bug where the editor would scroll to the top of the editable area if a dialog was closed in inline mode.
+    Fixed bug where the link dialog would not display the right rel value if rel_list was configured.
+    Fixed bug where the context menu would select images on some platforms but not others.
+    Fixed bug where the filenames of images were not retained on dragged and drop into the editor from the desktop.
+    Fixed bug where the paste plugin would misrepresent newlines when pasting plain text and having forced_root_block configured.
+    Fixed so that the error messages for the imagetools plugin is more human readable.
+    Fixed so the internal validate setting for the parser/serializer can't be set from editor initialization settings.
 Version 4.6.3 (2017-05-30)
     Fixed bug where the arrow keys didn't work correctly when navigating on nested inline boundary elements.
     Fixed bug where delete/backspace didn't work correctly on nested inline boundary elements.
