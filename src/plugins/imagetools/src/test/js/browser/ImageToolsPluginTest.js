@@ -2,7 +2,6 @@ asynctest(
   'browser.tinymce.plugins.imagetools.ImageToolsPluginTest',
   [
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
@@ -11,16 +10,14 @@ asynctest(
     'tinymce.plugins.imagetools.Plugin',
     'tinymce.themes.modern.Theme',
     'tinymce.core.util.URI',
-    'tinymce.plugins.imagetools.test.ImageOps',
     'tinymce.plugins.imagetools.test.ImageUtils'
   ],
-  function (GeneralSteps, Logger, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ModernTheme, URI, ImageOps, ImageUtils) {
+  function (GeneralSteps, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, Plugin, ModernTheme, URI, ImageUtils) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var uploadHandlerState = ImageUtils.createStateContainer();
 
     var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
-    //var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
     Plugin();
     ModernTheme();
@@ -43,7 +40,6 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
-      var imgOps = ImageOps(editor);
 
       var sTestGenerateFileName = function () {
         return GeneralSteps.sequence([
@@ -74,25 +70,13 @@ asynctest(
         ]);
       };
 
-      var sManipulateImage = function (message, url) {
-        return Logger.t(message, GeneralSteps.sequence([
-          ImageUtils.sLoadImage(editor, url),
-          tinyApis.sSelect('img', []),
-          imgOps.sExec('Flip horizontally'),
-          imgOps.sExec('Rotate clockwise')
-        ]));
-      };
-
       Pipeline.async({}, [
         sTestGenerateFileName(),
-        sTestReuseFilename(),
-        sManipulateImage('Test image operations on an image from the same domain', srcUrl)
-        //sManipulateImage('Test image operations on an image CORS domain', corsUrl)
+        sTestReuseFilename()
       ], onSuccess, onFailure);
     }, {
       plugins: 'imagetools',
       automatic_uploads: false,
-      imagetools_cors_hosts: ['moxiecode.cachefly.net'],
       images_upload_handler: uploadHandlerState.handler(srcUrl),
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);

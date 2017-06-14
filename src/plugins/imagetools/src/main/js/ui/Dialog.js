@@ -15,16 +15,16 @@ define(
     'ephox.imagetools.api.ImageTransformations',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Container',
-    'tinymce.core.ui.Factory',
     'tinymce.core.ui.Form',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
     'tinymce.plugins.imagetools.ui.ImagePanel',
-    'tinymce.plugins.imagetools.core.UndoStack'
+    'tinymce.plugins.imagetools.core.UndoStack',
+    'global!Math'
   ],
   function (
-    BlobConversions, ImageTransformations, DOMUtils, Container, Factory, Form, Promise,
-    Tools, ImagePanel, UndoStack
+    BlobConversions, ImageTransformations, DOMUtils, Container, Form, Promise,
+    Tools, ImagePanel, UndoStack, Math
   ) {
     function createState(blob) {
       return {
@@ -43,7 +43,7 @@ define(
       Tools.each(states, destroyState);
     }
 
-    function open(currentState, resolve, reject) {
+    function open(editor, currentState, resolve, reject) {
       var win, undoStack = new UndoStack(), mainPanel, filtersPanel, tempState,
         cropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,
         invertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,
@@ -468,7 +468,7 @@ define(
         exposurePanel
       ];
 
-      win = Factory.create('window', {
+      win = editor.windowManager.open({
         layout: 'flex',
         direction: 'column',
         align: 'stretch',
@@ -481,8 +481,6 @@ define(
           { text: 'Cancel', onclick: 'close' }
         ]
       });
-
-      win.renderTo(document.body).reflow();
 
       win.on('close', function () {
         reject();
@@ -507,10 +505,10 @@ define(
       imagePanel.on('crop', crop);
     }
 
-    function edit(imageResult) {
+    function edit(editor, imageResult) {
       return new Promise(function (resolve, reject) {
         return imageResult.toBlob().then(function (blob) {
-          open(createState(blob), resolve, reject);
+          open(editor, createState(blob), resolve, reject);
         });
       });
     }

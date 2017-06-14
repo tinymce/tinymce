@@ -5,15 +5,20 @@ define(
     'ephox.agar.api.Step',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Mouse',
+    'ephox.agar.mouse.Clicks',
     'ephox.agar.api.Guard',
     'ephox.agar.api.UiFinder',
+    'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.view.Visibility',
     'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.PredicateFilter',
+    'ephox.sugar.api.search.Selectors',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
     'ephox.mcagar.api.TinyUi',
     'ephox.mcagar.api.TinyDom'
   ],
-  function (Pipeline, Step, Chain, Mouse, Guard, UiFinder, Visibility, Attr, Result, TinyUi, TinyDom) {
+  function (Pipeline, Step, Chain, Mouse, Clicks, Guard, UiFinder, DomEvent, Visibility, Attr, PredicateFilter, Selectors, Fun, Result, TinyUi, TinyDom) {
 
     // IMPORTANT: we match buttons by their aria-label
 
@@ -30,62 +35,109 @@ define(
       var cWaitForState = function (predicate) {
         return Chain.control(
           cHasState(predicate),
-          Guard.tryUntil("Predicate didn't match.", 10, 3000)
+          Guard.tryUntil("Predicate has failed.", 10, 3000)
         );
       };
 
 
-      var cFindWithState = function (selector, predicate) {
-        return Chain.fromChains([
-          UiFinder.cFindIn(selector),
-          cHasState(predicate)
-        ]);
+      var cWaitForChain = function (chain) {
+        return Chain.control(
+          chain,
+          Guard.tryUntil("Chain has failed.", 10, 3000)
+        );
       };
 
 
-      var cFindParent = function (selector) {
-        return Chain.on(function (element, next, die) {
-          var parent = editor.dom.getParent(element.dom(), selector);
-          if (!parent) {
-            die();
-          } else {
-            next(Chain.wrap(TinyDom.fromDom(parent)));
-          }
+      var cFindChildWithState = function (selector, predicate) {
+        return Chain.on(function (scope, next, die) {
+          var children = PredicateFilter.descendants(scope, function (element) {
+            return Selectors.is(element, selector) && predicate(element);
+          });
+          children.length ? next(Chain.wrap(children[0])) : die();
         });
       };
 
 
-      var doesntRequireDialog = function (label) {
-        // native indexOf is ok to use on array, since IE9
-        return [
-          'Rotate counterclockwise',
-          'Rotate clockwise',
-          'Flip vertically',
-          'Flip horizontally',
-          'Edit image'
-        ].indexOf(label) !== -1;
+      var cDragSlider = Chain.fromChains([
+        UiFinder.cFindIn('div[role="slider"]'),
+        Chain.on(function (element, next, die) {
+          var pos = editor.dom.getPos(element.dom());
+
+          var unbindMouseMove = DomEvent.bind(element, 'mousemove', function (e) {
+            Clicks.mouseup(element);
+            unbindMouseMove();
+            next(Chain.wrap(element));
+          }).unbind;
+
+          var unbindMouseDown = DomEvent.bind(element, 'mousedown', function (e) {
+            Clicks.mousemove(element, pos.x + 10, pos.y); // not sure if xy actually matters here
+            unbindMouseDown();
+          }).unbind;
+
+          Clicks.mousedown(element);
+        })
+      ]);
+
+
+      var cExecCommandFromDialog = function (label) {
+        var cInteractWithUi;
+
+        switch (label) {
+          case 'Rotate counterclockwise':
+          case 'Rotate clockwise':
+          case 'Flip vertically':
+          case 'Flip horizontally':
+            // Orientation operations, like Flip or Rotate are grouped in a sub-panel
+            cInteractWithUi = cClickToolbarButton(label);
+            label = 'Orientation';
+            break;
+
+          case 'Brightness':
+          case 'Contrast':
+          case 'Color levels':
+          case 'Gamma':
+            cInteractWithUi = cDragSlider;
+            break;
+
+          default:
+            cInteractWithUi = Chain.wait(1);
+        }
+
+
+        return Chain.fromChains([
+          cClickToolbarButton('Edit image'),
+          Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', 'div[aria-label="Edit image"][role="dialog"]'), [
+            ui.cWaitForUi('wait for canvas', '.mce-imagepanel > img'),
+            cClickToolbarButton(label),
+            Chain.fromParent(cWaitForChain(cFindChildWithState('.mce-container.mce-form', Visibility.isVisible)), [
+              Chain.fromChains([
+                cInteractWithUi,
+                Chain.wait(200) // we wait until image updates
+              ]),
+              cClickButton('Apply')
+            ]),
+            ui.cWaitForUi('wait for Save button to become enabled', 'div[role="button"]:contains(Save):not(.mce-disabled)'),
+            cClickButton('Save')
+          ])
+        ]);
       };
 
 
-      var sExecComplexCommand = function (label) {
-        return Chain.asStep({}, [
-          ui.cWaitForPopup('wait for Imagetools toolbar', 'div[aria-label="Inline toolbar"][role="dialog"]'),
-          UiFinder.cFindIn('div[aria-label="Edit image"][role="button"]'),
-          Mouse.cClick,
-          ui.cWaitForPopup('wait for Edit Image dialog', 'div[aria-label="Edit image"][role="dialog"]'),
-          UiFinder.cFindIn('div[aria-label="' + label + '"][role="button"]'),
-          Mouse.cClick,
-          cFindParent('div[aria-label="Edit image"][role="dialog"]'),
-          cFindWithState('.mce-container.mce-form', Visibility.isVisible),
-          UiFinder.cFindIn('div.mce-primary > button'), // Apply button
+      var cWaitForUi = function (label, selector) {
+        return UiFinder.cWaitForState(label, selector, Fun.constant(true));
+      };
+
+
+      var cClickButton = function (text) {
+        return Chain.fromChains([
+          cWaitForUi('wait for ' + text + ' button', 'div[role="button"]:contains(' + text + '):not(.mce-disabled)'),
           Mouse.cClick
         ]);
       };
 
 
-      var sExecCommand = function (label) {
-        return Chain.asStep({}, [
-          ui.cWaitForPopup('wait for Imagetools toolbar', 'div[aria-label="Inline toolbar"][role="dialog"]'),
+      var cClickToolbarButton = function (label) {
+        return Chain.fromChains([
           UiFinder.cFindIn('div[aria-label="' + label + '"][role="button"]'),
           Mouse.cClick
         ]);
@@ -101,24 +153,29 @@ define(
       };
 
 
-      var sExec = function (label) {
+      var sExec = function (execFromToolbar, label) {
         return Step.async(function (next, die) {
           var imgEl = TinyDom.fromDom(editor.selection.getNode());
           var origUrl = Attr.get(imgEl, 'src');
 
           Pipeline.async({}, [
             Chain.asStep(imgEl, [
-              Mouse.cClick
+              Mouse.cClick,
+              ui.cWaitForPopup('wait for Imagetools toolbar', 'div[aria-label="Inline toolbar"][role="dialog"]'),
+              execFromToolbar ? cClickToolbarButton(label) : cExecCommandFromDialog(label)
             ]),
-            doesntRequireDialog(label) ? sExecCommand(label) : sExecComplexCommand(label),
             sWaitForUrlChange(imgEl, origUrl)
-          ], next, die);
+          ], function () {
+            next();
+          }, die);
         });
       };
 
 
+
       return {
-        sExec: sExec
+        sExecToolbar: Fun.curry(sExec, true),
+        sExecDialog: Fun.curry(sExec, false)
       };
     };
   }
