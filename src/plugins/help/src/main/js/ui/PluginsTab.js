@@ -20,23 +20,11 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
     });
   };
 
-  var removeForced = function (forcedPlugins) {
-    return function (pluginName) {
-      if (!forcedPlugins) {
-        return true;
-      }
-      for (var i = 0; i < forcedPlugins.length; i++) {
-        if (pluginName === forcedPlugins[i]) {
-          return false;
-        }
-      }
-      return true;
-    };
-  };
-
   var getPluginKeys = function (editor) {
     var keys = Obj.keys(editor.plugins);
-    return editor.settings.forced_plugins === undefined ? keys : Arr.filter(keys, removeForced(editor.settings.forced_plugins));
+    return editor.settings.forced_plugins === undefined ?
+      keys :
+      Arr.filter(keys, Fun.not(Fun.curry(Arr.contains, editor.settings.forced_plugins)));
   };
 
   var pluginLister = function (editor) {
