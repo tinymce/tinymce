@@ -16,7 +16,7 @@ asynctest(
     var failure = arguments[arguments.length - 1];
 
     var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
-    var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
+    // var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
     Plugin();
     ModernTheme();
