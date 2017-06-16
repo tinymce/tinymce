@@ -971,6 +971,23 @@ define(
           return out;
         }
 
+        function removeNodeStyle(node) {
+          process(node);
+
+          // Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
+          if (node.nodeType === 1 && ed.dom.getStyle(node, 'text-decoration') === 'underline' &&
+            node.parentNode && getTextDecoration(node.parentNode) === 'underline') {
+            removeFormat({
+              'deep': false,
+              'exact': true,
+              'inline': 'span',
+              'styles': {
+                'textDecoration': 'underline'
+              }
+            }, null, node);
+          }
+        }
+
         function removeRngStyle(rng) {
           var startContainer, endContainer;
           var commonAncestorContainer = rng.commonAncestorContainer;
@@ -1005,6 +1022,7 @@ define(
                 startContainer = wrap(startContainer, 'span', { id: '_start', 'data-mce-type': 'bookmark' });
                 splitToFormatRoot(startContainer);
                 startContainer = unwrap(TRUE);
+                removeNodeStyle(startContainer);
                 return;
               }
 
@@ -1032,22 +1050,7 @@ define(
 
           // Remove items between start/end
           rangeUtils.walk(rng, function (nodes) {
-            each(nodes, function (node) {
-              process(node);
-
-              // Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
-              if (node.nodeType === 1 && ed.dom.getStyle(node, 'text-decoration') === 'underline' &&
-                node.parentNode && getTextDecoration(node.parentNode) === 'underline') {
-                removeFormat({
-                  'deep': false,
-                  'exact': true,
-                  'inline': 'span',
-                  'styles': {
-                    'textDecoration': 'underline'
-                  }
-                }, null, node);
-              }
-            });
+            each(nodes, removeNodeStyle);
           });
         }
 
