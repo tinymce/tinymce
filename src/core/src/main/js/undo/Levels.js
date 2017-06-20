@@ -68,11 +68,7 @@ define(
     };
 
     var getLevelContent = function (level) {
-      if (!level) {
-        return undefined;
-      } else {
-        return level.type === 'fragmented' ? level.fragments.join('') : level.content;
-      }
+      return level.type === 'fragmented' ? level.fragments.join('') : level.content;
     };
 
     var isEq = function (level1, level2) {
