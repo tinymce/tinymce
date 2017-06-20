@@ -15,6 +15,7 @@ define(
   ],
   function (Tools) {
     var getEditorSettings = function (editor, id, documentBaseUrl, defaultOverrideSettings, settings) {
+      settings = settings ? settings : {};
       settings = Tools.extend(
         // Default settings
         {
