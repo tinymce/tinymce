@@ -1,21 +1,23 @@
 asynctest(
-  'TinySetSettingTest',
+  'TinySetAndDeleteSettingTest',
 
   [
-    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader'
   ],
 
-  function (Pipeline, Assertions, Step, TinyApis, TinyLoader) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var sAssertSetting = function (editor, key, expected) {
       return Step.sync(function () {
-        var actual = editor.settings[key]
+        var actual = editor.settings[key];
 
         return Assertions.assertEq('should have expected val at key', expected, actual);
       });
@@ -33,10 +35,25 @@ asynctest(
       var apis = TinyApis(editor);
 
       Pipeline.async({}, [
-        apis.sSetSetting('a', 'b'),
-        sAssertSetting(editor, 'a', 'b'),
-        apis.sSetSetting('a', function (a) { return a;}),
-        sAssertSettingType(editor, 'a', 'function')
+        Logger.t('set and change setting', GeneralSteps.sequence([
+          apis.sSetSetting('a', 'b'),
+          sAssertSetting(editor, 'a', 'b'),
+          apis.sSetSetting('a', 'c'),
+          sAssertSetting(editor, 'a', 'c')
+        ])),
+
+        Logger.t('set setting to function', GeneralSteps.sequence([
+          apis.sSetSetting('a', function (a) {
+            return a;
+          }),
+          sAssertSettingType(editor, 'a', 'function')
+        ])),
+
+        Logger.t('delete setting', GeneralSteps.sequence([
+          apis.sDeleteSetting('a'),
+          sAssertSetting(editor, 'a', undefined)
+        ]))
+
       ], onSuccess, onFailure);
 
     }, { }, success, failure);
