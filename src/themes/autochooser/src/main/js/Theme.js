@@ -4,12 +4,13 @@ define(
   [
     'ephox.katamari.api.Obj',
     'ephox.sand.api.PlatformDetection',
+    'tinymce.core.EditorManager',
     'tinymce.core.ThemeManager',
     'tinymce.themes.mobile.Theme',
     'tinymce.themes.modern.Theme'
   ],
 
-  function (Obj, PlatformDetection, ThemeManager, MobileTheme, ModernTheme) {
+  function (Obj, PlatformDetection, EditorManager, ThemeManager, MobileTheme, ModernTheme) {
     MobileTheme();
     ModernTheme();
 
@@ -24,12 +25,13 @@ define(
 
     ThemeManager.add('autochooser', function (editor, themeUrl) {
       var theme = (function () {
+        var skin = editor.settings.skin !== false ? editor.settings.skin || 'lightgray' : false;
         if (platform.deviceType.isTouch()) {
           return {
             instance: ThemeManager.get('mobile'),
             settings: {
               mobile_skin_url: editor.settings.autochooser_mobile_skin_url !== undefined ?
-                editor.settings.autochooser_mobile_skin_url : (themeUrl + '/css')
+                editor.settings.autochooser_mobile_skin_url : EditorManager.baseURL + '/skins/' + skin
             }
           };
         } else {
