@@ -3,17 +3,16 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Unselecting',
     'ephox.alloy.api.ui.Button',
     'ephox.katamari.api.Merger',
-    'tinymce.themes.mobile.channels.FormatReceiver',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Receiving, Toggling, Unselecting, Button, Merger, FormatReceiver, Styles, UiDomFactory) {
+  function (Behaviour, Toggling, Unselecting, Button, Merger, Receivers, Styles, UiDomFactory) {
     var forToolbarCommand = function (editor, command) {
       return forToolbar(command, function () {
         editor.execCommand(command);
@@ -29,14 +28,12 @@ define(
             mode: 'pressed'
           }
         }),
-        Receiving.config(
-          FormatReceiver.setup(command, function (button, status) {
-            var toggle = status ? Toggling.on : Toggling.off;
-            toggle(button);
-          })
-        )
+        Receivers.format(command, function (button, status) {
+          var toggle = status ? Toggling.on : Toggling.off;
+          toggle(button);
+        })
       ]);
-    }
+    };
 
     var forToolbarStateCommand = function (editor, command) {
       var extraBehaviours = getToggleBehaviours(command);
