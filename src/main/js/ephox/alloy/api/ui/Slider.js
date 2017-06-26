@@ -21,6 +21,9 @@ define(
         },
         resetToMax: function (apis, slider) {
           apis.resetToMax(slider);
+        },
+        refresh: function (apis, slider) {
+          apis.refresh(slider);
         }
       }
     });

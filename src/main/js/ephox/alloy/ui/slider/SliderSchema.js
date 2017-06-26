@@ -22,6 +22,7 @@ define(
       FieldSchema.defaulted('snapToGrid', false),
       FieldSchema.option('snapStart'),
       FieldSchema.strict('getInitialValue'),
+      FieldSchema.defaulted('sliderBehaviours', { }),
 
       FieldSchema.state('value', function (spec) { return Cell(spec.min); })
     ].concat(! isTouch ? [
