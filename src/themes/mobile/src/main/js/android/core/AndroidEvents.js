@@ -6,12 +6,16 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.WindowSelection',
     'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (Arr, Fun, PlatformDetection, Compare, DomEvent, Css, TappingEvent) {
+  function (Arr, Fun, PlatformDetection, Compare, Focus, DomEvent, Node, Css, Traverse, WindowSelection, TappingEvent) {
     var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
 
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -23,14 +27,35 @@ define(
       we add `23px` --- this is most likely based on trial and error. We may need to work out how to get
       this value properly.
 
-      2. `focusin` on the outer document. This will always reset the margin back to `0px`. The idea is
-      that if the outer window has focus, then Android doesn't think there is any selected text to provide
-      a context menu for.
+      2. `select` on the outer document. This will also need to add the margin if the selection is ranged within
+      an input or textarea
 
     */
     var initEvents = function (editorApi, toolstrip) {
 
       var tapping = TappingEvent.monitor(editorApi);
+      var outerDoc = Traverse.owner(toolstrip);
+
+      var isRanged = function (sel) {
+        return !Compare.eq(sel.start(), sel.finish()) || sel.soffset() !== sel.foffset();
+      };
+
+      var hasRangeInUi = function () {
+        return Focus.active(outerDoc).filter(function (input) {
+          return Node.name(input) === 'input';
+        }).exists(function (input) {
+          return input.dom().selectionStart !== input.dom().selectionEnd;
+        });
+      };
+
+      var updateMargin = function () {
+        var rangeInContent = editorApi.doc().dom().hasFocus() && editorApi.getSelection().exists(isRanged);
+        if (rangeInContent || hasRangeInUi()) {
+          Css.set(toolstrip, 'margin-top', ANDROID_CONTEXT_TOOLBAR_HEIGHT);
+        } else {
+          Css.remove(toolstrip, 'margin-top');
+        }
+      };
 
       var listeners = [
         DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
@@ -43,17 +68,18 @@ define(
         editorApi.onToReading(Fun.noop)
 
       ].concat(
-        isAndroid6 ? [ ] : [
-          DomEvent.bind(editorApi.doc(), 'selectionchange', function () {
-            var hasRange = editorApi.getSelection().exists(function (sel) {
-              return !Compare.eq(sel.start(), sel.finish()) || sel.soffset() !== sel.foffset();
-            });
-            if (hasRange) {
+        isAndroid6 && false ? [ ] : [
+          // DomEvent.bind(Element.fromDom(editorApi.win()), 'blur', function () {
+          //   Css.remove(toolstrip, 'margin-top');
+          // }),
+          DomEvent.bind(outerDoc, 'select', function () {
+            if (hasRangeInUi()) {
               Css.set(toolstrip, 'margin-top', ANDROID_CONTEXT_TOOLBAR_HEIGHT);
             } else {
               Css.remove(toolstrip, 'margin-top');
             }
-          })
+          }),
+          DomEvent.bind(editorApi.doc(), 'selectionchange', updateMargin)
         ]
       );
 
