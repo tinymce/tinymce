@@ -28,10 +28,7 @@ define(
       return GuiFactory.build(
         Container.sketch({
           dom: UiDomFactory.dom('<div class="${prefix}-editor-socket"></div>'),
-          components: [
-            { dom: UiDomFactory.dom('<div class="${prefix}-editor-frame-wrapper"></div>') }
-          ],
-
+          components: [ ],
           containerBehaviours: Behaviour.derive([
             Replacing.config({ })
           ])

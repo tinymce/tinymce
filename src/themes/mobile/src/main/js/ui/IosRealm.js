@@ -43,13 +43,9 @@ define(
         })
       );
 
-      setTimeout(function () {
-        Replacing.append(socket, GuiFactory.premade(dropup));
-      }, 10000);
-
       alloy.add(toolbar.wrapper());
       alloy.add(socket);
-      // alloy.add(GuiFactory.build(dropup));
+      alloy.add(dropup);
 
       var setToolbarGroups = function (rawGroups) {
         var groups = toolbar.createGroups(rawGroups);
@@ -96,7 +92,8 @@ define(
         focusToolbar: focusToolbar,
         restoreToolbar: restoreToolbar,
         updateMode: updateMode,
-        socket: Fun.constant(socket)
+        socket: Fun.constant(socket),
+        dropup: Fun.constant(dropup)
       };
     };
   }

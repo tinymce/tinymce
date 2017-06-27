@@ -131,9 +131,10 @@ define(
               }
             },
             container: Element.fromDom(editor.editorContainer),
-            socket: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('editor-socket'))),
+            socket: Element.fromDom(editor.contentAreaContainer),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
+            dropup: realm.dropup(),
             alloy: realm.system(),
             translate: Fun.noop,
 
@@ -205,7 +206,7 @@ define(
         });
 
         return {
-          iframeContainer: realm.socket().element().dom().childNodes[0],
+          iframeContainer: realm.socket().element().dom(),
           editorContainer: realm.element().dom()
         };
       };

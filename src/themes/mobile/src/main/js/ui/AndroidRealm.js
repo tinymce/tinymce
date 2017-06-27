@@ -116,7 +116,8 @@ define(
         focusToolbar: focusToolbar,
         restoreToolbar: restoreToolbar,
         updateMode: updateMode,
-        socket: Fun.constant(socket)
+        socket: Fun.constant(socket),
+        dropup: Fun.constant(dropup)
       };
     };
   }

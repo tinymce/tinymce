@@ -71,6 +71,7 @@ define(
             'socket',
             'toolstrip',
             'toolbar',
+            'dropup',
             'contentElement',
             'cursor',
             'keyboardType',
@@ -86,6 +87,7 @@ define(
               'socket': platform.socket,
               'toolstrip': platform.toolstrip,
               'toolbar': platform.toolbar,
+              'dropup': platform.dropup.element(),
               'contentElement': editorApi.frame(),
               'cursor': Fun.noop,
               'outerBody': platform.body,
@@ -106,7 +108,7 @@ define(
 
 
           iosEvents.set(
-            IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket)
+            IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket, platform.dropup)
           );
         });
       };

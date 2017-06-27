@@ -91,22 +91,44 @@ define(
       };
     };
 
-    var deriveViewportHeight = function (viewport, toolbarHeight) {
+    var takeoverDropup = function (dropup, toolbarHeight, viewportHeight) {
+      var oldDropupStyle = Attr.get(dropup, 'style');
+      Css.setAll(dropup, {
+        position: 'absolute',
+        top: (toolbarHeight + viewportHeight) + 'px',
+        width: '100%'
+      });
+
+      Attr.set(dropup, yFixedData, (toolbarHeight + viewportHeight) + 'px');
+      var restore = function () {
+        Attr.set(dropup, 'style', oldDropupStyle || '');
+        Attr.remove(dropup, yFixedData);
+      };
+
+      return {
+        restore: restore
+      };
+    };
+
+    var deriveViewportHeight = function (viewport, toolbarHeight, dropupHeight) {
       // Note, Mike thinks this value changes when the URL address bar grows and shrinks. If this value is too high
       // the main problem is that scrolling into the greenzone may not scroll into an area that is viewable. Investigate.
       var outerWindow = Traverse.owner(viewport).dom().defaultView;
       var winH = outerWindow.innerHeight;
       Attr.set(viewport, windowSizeData, winH + 'px');
-      return winH - toolbarHeight;
+      return winH - toolbarHeight - dropupHeight;
     };
 
-    var takeover = function (viewport, contentBody, toolbar) {
+    var takeover = function (viewport, contentBody, toolbar, dropup) {
       var outerWindow = Traverse.owner(viewport).dom().defaultView;
       var toolbarSetup = takeoverToolbar(toolbar);
       var toolbarHeight = Height.get(toolbar);
-      var viewportHeight = deriveViewportHeight(viewport, toolbarHeight);
+      var dropupHeight = Height.get(dropup);
+      var viewportHeight = deriveViewportHeight(viewport, toolbarHeight, dropupHeight);
 
       var viewportSetup = takeoverViewport(toolbarHeight, viewportHeight, viewport);
+
+      var dropupSetup = takeoverDropup(dropup, toolbarHeight, viewportHeight);
 
       var isActive = true;
 
@@ -114,6 +136,7 @@ define(
         isActive = false;
         toolbarSetup.restore();
         viewportSetup.restore();
+        dropupSetup.restore();
       };
 
       var isExpanding = function () {
@@ -128,6 +151,9 @@ define(
           var newHeight = deriveViewportHeight(viewport, newToolbarHeight);
           Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
           Css.set(viewport, 'height', newHeight + 'px');
+
+
+          Attr.set(dropup, 'top', newToolbarHeight + newHeight + 'px');
           DeviceZones.updatePadding(contentBody, viewport);
         }
       };

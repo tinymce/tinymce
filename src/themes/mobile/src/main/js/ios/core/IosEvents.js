@@ -13,7 +13,7 @@ define(
   ],
 
   function (TapEvent, Arr, Throttler, Compare, DomEvent, Height, Location, TappingEvent) {
-    var initEvents = function (editorApi, iosApi, toolstrip, socket) {
+    var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
       var saveSelectionFirst = function () {
         iosApi.run(function (api) {
           api.highlightSelection();

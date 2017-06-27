@@ -117,8 +117,9 @@ define(
       var contentElement = bag.contentElement();
       var keyboardType = bag.keyboardType();
       var outerWindow = bag.outerWindow();
+      var dropup = bag.dropup();
 
-      var structure = IosViewport.takeover(socket, ceBody, toolstrip);
+      var structure = IosViewport.takeover(socket, ceBody, toolstrip, dropup);
       var keyboardModel = keyboardType(bag.outerBody(), cWin, Body.body(), contentElement, toolstrip, toolbar);
 
       var toEditing = function () {

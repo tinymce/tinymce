@@ -43,6 +43,7 @@ define(
 
       FieldSchema.strict('socket'),
       FieldSchema.strict('toolstrip'),
+      FieldSchema.strict('dropup'),
       FieldSchema.strict('toolbar'),
       FieldSchema.strict('container'),
       FieldSchema.strict('alloy'),
