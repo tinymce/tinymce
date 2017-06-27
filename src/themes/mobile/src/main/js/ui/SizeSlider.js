@@ -3,15 +3,17 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.ui.Slider',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (Behaviour, Toggling, Slider, FieldSchema, ValueSchema, Styles, UiDomFactory) {
+  function (Behaviour, Receiving, Toggling, Slider, FieldSchema, ValueSchema, Receivers, Styles, UiDomFactory) {
     var schema = ValueSchema.objOfOnly([
       FieldSchema.strict('getInitialValue'),
       FieldSchema.strict('onChange'),
@@ -52,6 +54,10 @@ define(
         stepSize: 1,
         getInitialValue: spec.getInitialValue,
         snapToGrid: true,
+
+        sliderBehaviours: Behaviour.derive([
+          Receivers.orientation(Slider.refresh)
+        ]),
 
         components: [
           Slider.parts().spectrum({

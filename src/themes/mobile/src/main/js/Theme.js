@@ -15,6 +15,7 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
+    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.Orientation',
     'tinymce.themes.mobile.ui.AndroidRealm',
@@ -32,8 +33,8 @@ define(
 
 
   function (
-    AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, Styles, Orientation, AndroidRealm,
-    Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, TinyChannels, Styles, Orientation,
+    AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -57,7 +58,7 @@ define(
         var orientation = Orientation.onChange(outerWindow, {
           onChange: function () {
             var alloy = realm.system();
-            alloy.broadcastOn(['orientation.change'], { width: Orientation.getActualWidth(outerWindow) });
+            alloy.broadcastOn([ TinyChannels.orientationChanged() ], { width: Orientation.getActualWidth(outerWindow) });
           },
           onReady: Fun.noop
         });

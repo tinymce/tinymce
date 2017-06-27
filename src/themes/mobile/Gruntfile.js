@@ -84,27 +84,35 @@ module.exports = function (grunt) {
             expand: true,
             flatten: true,
             src: ['src/main/css/**'],
-            dest: 'deploy-local/css',
+            dest: 'deploy-local/skins/lightgray/',
             filter: 'isFile'
           },
           {
             expand: true,
             flatten: true,
             src: ['src/main/icons/**'],
-            dest: 'deploy-local/icons',
+            dest: 'deploy-local/skins/icons/',
             filter: 'isFile'
           },
           {
             src: "../../../js/tinymce/tinymce.min.js",
-            dest: "deploy-local/js/tinymce.min.js"
+            dest: "deploy-local/tinymce.min.js"
           },
           {
             src: "../../../js/tinymce/plugins/lists/plugin.min.js",
-            dest: "deploy-local/js/plugins/lists/plugin.min.js"
+            dest: "deploy-local/plugins/lists/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/autolink/plugin.min.js",
+            dest: "deploy-local/plugins/autolink/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
+            dest: "deploy-local/plugins/autosave/plugin.min.js"
           },
           {
             src: "scratch/inline/theme.js",
-            dest: "deploy-local/js/mobile_theme.js"
+            dest: "deploy-local/themes/mobile/theme.js"
           },
           {
             src: "index.html",
@@ -140,8 +148,8 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            src: "deploy-local/js/mobile_theme.js",
-            dest: "deploy-local/js/mobile_theme.min.js"
+            src: "deploy-local/themes/mobile/theme.js",
+            dest: "deploy-local/themes/mobile/theme.min.js"
           }
         ]
       },

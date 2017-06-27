@@ -26,6 +26,7 @@ define(
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.model.SwipingModel',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.util.UiDomFactory'
@@ -33,7 +34,7 @@ define(
 
   function (
     AddEventsBehaviour, Behaviour, Disabling, Highlighting, Keying, Receiving, Representing, Memento, AlloyEvents, AlloyTriggers, NativeEvents, Button, Container,
-    Form, FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, SwipingModel, Styles, UiDomFactory
+    Form, FieldSchema, ValueSchema, Arr, Cell, Option, Singleton, Css, SelectorFilter, SelectorFind, Width, Receivers, SwipingModel, Styles, UiDomFactory
   ) {
     var sketch = function (rawSpec) {
       var navigateEvent = 'navigateEvent';
@@ -131,14 +132,8 @@ define(
             ],
 
             formBehaviours: Behaviour.derive([
-              Receiving.config({
-                channels: {
-                  'orientation.change': {
-                    onReceive: function (dialog, message) {
-                      reposition(dialog, message);
-                    }
-                  }
-                }
+              Receivers.orientation(function (dialog, message) {
+                reposition(dialog, message);
               }),
               Keying.config({
                 mode: 'special',
