@@ -15,21 +15,24 @@ define(
   [
     'tinymce.core.EditorManager',
     'tinymce.plugins.autolink.Plugin',
+    'tinymce.plugins.autosave.Plugin',
     'tinymce.plugins.lists.Plugin',
     'tinymce.themes.mobile.Theme'
   ],
-  function (EditorManager, AutolinkPlugin, ListsPlugin, Theme) {
+  function (EditorManager, AutolinkPlugin, AutosavePlugin, ListsPlugin, Theme) {
     return function () {
       Theme();
       ListsPlugin;
       AutolinkPlugin;
+      AutosavePlugin;
 
       EditorManager.init({
         selector: '.tiny-text',
         theme: 'mobile',
         plugins: [
           'lists', // Required for list functionality (commands),
-          'autolink' // Required for turning pasted text into hyperlinks
+          'autolink', // Required for turning pasted text into hyperlinks
+          'autosave' // Required to prevent users losing content when they press back
         ],
         mobile_skin_url: '../../main/css'
       });
