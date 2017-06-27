@@ -70,6 +70,10 @@ module.exports = function (grunt) {
             dest: "deploy-local/plugins/autolink/plugin.min.js"
           },
           {
+            src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
+            dest: "deploy-local/plugins/autosave/plugin.min.js"
+          },
+          {
             src: "scratch/inline/theme.js",
             dest: "deploy-local/themes/autochooser/theme.js"
           },
