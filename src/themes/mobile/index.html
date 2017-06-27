@@ -10,8 +10,10 @@
     tinymce.init({
       selector: 'textarea',
       theme: 'mobile',
-      // Required for list functionality (commands)
-      plugins: 'lists'
+      plugins: [
+        'lists', // Required for list functionality (commands),
+        'autolink' // Required for turning pasted text into hyperlinks
+      ]
     })
   };
 </script>
