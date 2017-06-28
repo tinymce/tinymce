@@ -19,12 +19,15 @@ define(
     'tinymce.core.util.JSON',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
+    'tinymce.core.file.Uploader',
+    'tinymce.core.file.UploadStatus',
+    'tinymce.core.ErrorReporter',
     'tinymce.plugins.image.core.Utils',
     'global!Math',
     'global!RegExp',
     'global!document'
   ],
-  function (Env, JSON, Tools, XHR, Utils, Math, RegExp, document) {
+  function (Env, JSON, Tools, XHR, Uploader, UploadStatus, ErrorReporter, Utils, Math, RegExp, document) {
 
     function createImageList(editor, callback) {
       var imageList = editor.settings.image_list;
@@ -44,8 +47,54 @@ define(
     }
 
     function showDialog(editor, imageList) {
-      var win, data = {}, imgElm, figureElm, dom = editor.dom;
-      var width, height, imageListCtrl, classListCtrl, imageDimensions = editor.settings.image_dimensions !== false;
+      var win, data = {}, imgElm, figureElm, dom = editor.dom, settings = editor.settings;
+      var width, height, imageListCtrl, classListCtrl, imageDimensions = settings.image_dimensions !== false;
+
+
+      function onFileInput() {
+        var uploadStatus = new UploadStatus();
+        var uploader = new Uploader(uploadStatus, {
+          url: settings.images_upload_url,
+          basePath: settings.images_upload_base_path,
+          credentials: settings.images_upload_credentials,
+          handler: settings.images_upload_handler
+        });
+
+        var openNotification = function () {
+          return editor.notificationManager.open({
+            text: editor.translate('Image uploading...'),
+            type: 'info',
+            timeout: -1,
+            progressBar: true
+          });
+        };
+
+        var file = this.value();
+
+        // we do not need to add this to editors blobCache, so we fake bare minimum
+        var blobInfo = editor.editorUpload.blobCache.create({
+          blob: file,
+          name: file.name.replace(/\.[^\.]+$/, ''), // strip extension
+          base64: 'data:image/fake;base64,=' // without this create() will throw exception
+        });
+
+        return uploader.upload([blobInfo], openNotification).then(function (result) {
+          var uploadInfo = result[0], src;
+
+          if (uploadInfo.status) {
+            win.find('tabpanel')[0].activateTab(0); // switch to General tab
+            src = win.find('#src');
+            src.value(uploadInfo.url);
+            src.fire('change'); // this will invoke onSrcChange (and any other handlers, if any)
+          } else if (uploadInfo.error) {
+            ErrorReporter.uploadError(editor, uploadInfo.error);
+          }
+
+          URL.revokeObjectURL(blobInfo.blobUri()); // in theory we could fake blobUri too, but until it's legitimate, we have too revoke it manually
+
+          return uploadInfo;
+        });
+      }
 
       function isTextBlock(node) {
         return editor.schema.getTextBlockElements()[node.nodeName];
@@ -481,6 +530,37 @@ define(
             }
           ]
         });
+
+        if (editor.settings.images_upload_url) {
+          var uploadTab = {
+            title: 'Upload',
+            type: 'form',
+            layout: 'grid',
+            columns: 1,
+            padding: '10 10 10 10',
+            alignH: 'center',
+            alignV: 'center',
+            items: [
+              {
+                text: "Browse for an image",
+                type: 'button'
+              },
+              {
+                text: 'OR',
+                type: 'label'
+              },
+              {
+                text: "Drop an image here",
+                type: 'dropzone',
+                width: 300,
+                height: 100,
+                onchange: onFileInput
+              }
+            ]
+          };
+
+          body.push(uploadTab);
+        }
 
         // Advanced dialog shows general+advanced tabs
         win = editor.windowManager.open({
