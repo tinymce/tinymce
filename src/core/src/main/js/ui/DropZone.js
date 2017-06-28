@@ -1,0 +1,153 @@
+/**
+ * DropZone.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+/**
+ * Creates a new dropzone.
+ *
+ * @-x-less DropZone.less
+ * @class tinymce.ui.DropZone
+ * @extends tinymce.ui.Widget
+ */
+define(
+  'tinymce.core.ui.DropZone',
+  [
+    "tinymce.core.ui.Widget",
+    "tinymce.core.util.Tools",
+    "tinymce.core.ui.DomUtils"
+  ],
+  function (Widget, Tools, DomUtils) {
+    return Widget.extend({
+      /**
+       * Constructs a instance with the specified settings.
+       *
+       * @constructor
+       * @param {Object} settings Name/value object with settings.
+       * @setting {Boolean} multiple True if the dropzone is a multiple control.
+       * @setting {Number} maxLength Max length for the dropzone.
+       * @setting {Number} size Size of the dropzone in characters.
+       */
+      init: function (settings) {
+        var self = this;
+
+        settings = Tools.extend({
+          width: '100%',
+          height: '100%',
+          text: "Drop an image here",
+          multiple: false
+        }, settings);
+
+        self._super(settings);
+
+        self.classes.add('dropzone');
+
+        if (settings.multiple) {
+          self.classes.add('multiple');
+        }
+      },
+
+
+      /**
+       * Renders the control as a HTML string.
+       *
+       * @method renderHtml
+       * @return {String} HTML representing the control.
+       */
+      renderHtml: function () {
+        var self = this, attrs, elm;
+        var cfg = self.settings;
+
+        var isDecimal = function (str) {
+          var type = typeof str;
+          if (type == 'number') {
+            return true;
+          } else if (type === 'string') {
+            return /^\d+$/.test(str);
+          } else {
+            return false;
+          }
+        };
+
+        attrs = {
+          id: self._id,
+          hidefocus: '1'
+        };
+
+        elm = DomUtils.create('div', attrs, '<span>' + cfg.text + '</span>'); // TODO: better encode this
+
+        DomUtils.css(elm, {
+          width: isDecimal(cfg.width) ? cfg.width + 'px' : cfg.width,
+          height: isDecimal(cfg.height) ? cfg.height + 'px' : cfg.height
+        });
+
+        elm.className = self.classes;
+
+        return elm.outerHTML;
+      },
+
+
+        /**
+       * Called after the control has been rendered.
+       *
+       * @method postRender
+       */
+      postRender: function () {
+        var self = this;
+
+        var toggleDragClass = function (e) {
+          e.preventDefault();
+          self.classes.toggle('dragenter');
+          self.getEl().className = self.classes;
+        };
+
+        self._super();
+
+        self.$el.on('dragover', function (e) {
+          e.preventDefault();
+        });
+
+        self.$el.on('dragenter', toggleDragClass);
+        self.$el.on('dragleave', toggleDragClass);
+
+        self.$el.on('drop', function (e) {
+          e.preventDefault();
+
+          self.value = function () {
+            var files = e.dataTransfer.files;
+            return self.settings.multiple ? files : files[0];
+          };
+
+          self.fire('change', e); // should we fire a drop event here for consistency (as well) maybe?
+        });
+      },
+
+
+      bindStates: function () {
+        var self = this;
+
+        self.state.on('change:value', function (e) {
+          if (self.getEl().value != e.value) {
+            self.getEl().value = e.value;
+          }
+        });
+
+        self.state.on('change:disabled', function (e) {
+          self.getEl().disabled = e.value;
+        });
+
+        return self._super();
+      },
+
+      remove: function () {
+        this.$el.off();
+        this._super();
+      }
+    });
+  }
+);
