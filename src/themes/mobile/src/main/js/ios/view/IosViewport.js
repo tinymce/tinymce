@@ -174,9 +174,7 @@ define(
           Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
           Css.set(viewport, 'height', newHeight + 'px');
 
-          console.log('refreshing', newToolbarHeight, newHeight);
-
-          Css.set(dropup, 'bottom', -(newToolbarHeight + newHeight) + 'px');
+          Css.set(dropup, 'bottom', -(newToolbarHeight + newHeight + dropupHeight) + 'px');
           DeviceZones.updatePadding(contentBody, viewport);
         }
       };
