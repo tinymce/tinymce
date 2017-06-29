@@ -2,7 +2,11 @@ define(
   'tinymce.themes.mobile.ui.IosRealm',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
@@ -14,7 +18,7 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Replacing, GuiFactory, Container, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
+  function (Behaviour, Focusing, Keying, Replacing, Sliding, GuiFactory, Container, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('ios-container') ]
@@ -33,13 +37,42 @@ define(
         Container.sketch({
           dom: {
             tag: 'div',
-            innerHtml: 'Dropup',
             styles: {
               background: 'blue',
               display: 'flex',
-              'flex-grow': '1'
+              'flex-grow': '1',
+              'width': '100%',
+              'overflow': 'hidden'
             }
-          }
+          },
+          components: [
+            Container.sketch({
+              dom: {
+                innerHtml: 'Dropup',
+                styles: {
+                  'padding': '50px'
+                }
+              }
+            })
+          ],
+          containerBehaviours: Behaviour.derive([
+            Sliding.config({
+              closedClass: 'dropup-closed',
+              openClass: 'dropup-open',
+              shrinkingClass: 'dropup-shrinking',
+              growingClass: 'dropup-growing',
+              dimension: {
+                property: 'height'
+              },
+
+              onShrunk: function () {
+
+              },
+              onGrown: function () {
+
+              }
+            })
+          ])
         })
       );
 

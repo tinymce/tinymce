@@ -190,6 +190,10 @@ module.exports = function (grunt) {
         files: ['src/**/**.js'],
         tasks: [ 'bolt-build' ]
       },
+      deploy: {
+        files: ['src/**/**.js'],
+        tasks: [ "copy:standalone", "uglify:standalone" ]
+      },
       tests: {
         files: ['src/**/**.js'],
         tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]

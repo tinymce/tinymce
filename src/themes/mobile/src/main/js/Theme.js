@@ -2,6 +2,9 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Cell',
@@ -33,8 +36,8 @@ define(
 
 
   function (
-    AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, TinyChannels, Styles, Orientation,
-    AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    Focusing, Keying, Sliding, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, TinyChannels,
+    Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
@@ -119,6 +122,8 @@ define(
                 // Perhaps it will be clearer later what is a better way of doing this.
                 findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
                 realm.restoreToolbar();
+
+                Sliding.shrink(realm.dropup());
               },
 
               onTapContent: function (evt) {
@@ -183,6 +188,11 @@ define(
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
+
+              Buttons.forToolbar('styles', function () {
+                Sliding.grow(realm.dropup());
+                editor.fire('toReading');
+              }, { }),
 
               FontSizeSlider.sketch(realm, editor),
               ColorSlider.sketch(realm, editor)

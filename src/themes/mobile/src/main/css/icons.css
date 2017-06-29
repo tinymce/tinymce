@@ -111,3 +111,8 @@
   content: url(../icons/tinymce-logo2.svg);
   width: 2em;
 }
+
+
+.tinymce-mobile-icon-styles:before {
+  content: "STYLES";
+}
