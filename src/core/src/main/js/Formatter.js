@@ -1178,7 +1178,7 @@ define(
               // Match classes
               if ((classes = format.classes)) {
                 for (i = 0; i < classes.length; i++) {
-                  if (!dom.hasClass(node, classes[i])) {
+                  if (!dom.hasClass(node, replaceVars(classes[i], vars))) {
                     return;
                   }
                 }

@@ -192,6 +192,17 @@ asynctest(
       LegacyUnit.equal(newArgs.parents.length, 1);
     });
 
+    suite.test('Selected element match classes with variable', function (editor) {
+      editor.formatter.register('textcolor', { inline: 'span', classes: ['text-color-%color'] });
+      editor.getBody().innerHTML = '<p><span class="text-color-red">1234</span></p>';
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+      rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.formatter.match('textcolor', { color: 'red' }), true, 'Selected element match classes with variable');
+      LegacyUnit.equal(editor.formatter.match('textcolor', { color: 'blue' }), false, 'Selected element must not match classes with wrong variable value');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
