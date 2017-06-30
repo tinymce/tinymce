@@ -46,8 +46,13 @@ define(
         editor.contentCSS.push(cssUrls.content);
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
+        var doScrollIntoView = function () {
+          console.log('scrolling into view');
+          editor.fire('scrollIntoView');
+        };
+
         var wrapper = Element.fromTag('div');
-        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm() : IosRealm();
+        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
         var original = Element.fromDom(args.targetNode);
         Insert.after(original, wrapper);
         Attachment.attachSystem(wrapper, realm.system());
@@ -102,7 +107,9 @@ define(
               },
 
               onScrollToCursor: function (handler) {
+                console.log('onScrollToCursor binding');
                 editor.on('scrollIntoView', function (tinyEvent) {
+                  console.log("handing scroll into view");
                   handler(tinyEvent);
                 });
 
@@ -122,8 +129,7 @@ define(
                 // Perhaps it will be clearer later what is a better way of doing this.
                 findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
                 realm.restoreToolbar();
-
-                Sliding.shrink(realm.dropup());
+                realm.dropup().disappear();
               },
 
               onTapContent: function (evt) {
@@ -190,7 +196,7 @@ define(
               }),
 
               Buttons.forToolbar('styles', function () {
-                Sliding.grow(realm.dropup());
+                realm.dropup().appear();
                 editor.fire('toReading');
               }, { }),
 

@@ -40,8 +40,22 @@ define(
         tapping.onTouchmove(),
         tapping.onTouchend(),
 
-        editorApi.onToReading(Fun.noop)
+        editorApi.onToReading(Fun.noop),
 
+        // Scroll to cursor and update the iframe height
+        editorApi.onScrollToCursor(function (tinyEvent) {
+          tinyEvent.preventDefault();
+          console.log("scrolling to cursor')")
+          editorApi.getCursorBox().each(function (bounds) {
+            var cWin = editorApi.win();
+            // The goal here is to shift as little as required.
+            var isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
+            var cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50/*EXTRA_SPACING*/ : 0;
+            if (cScrollBy !== 0) {
+              cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
+            }            
+          });
+        })
       ].concat(
         isAndroid6 ? [ ] : [
           DomEvent.bind(editorApi.doc(), 'selectionchange', function () {

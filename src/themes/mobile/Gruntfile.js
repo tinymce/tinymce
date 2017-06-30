@@ -180,7 +180,7 @@ module.exports = function (grunt) {
     watch: {
       styles: {
         files: ['src/main/css/**/*.less'], // which files to watch
-        tasks: ['less'],
+        tasks: ['less', 'copy:standalone', 'uglify:standalone' ],
         options: {
           nospawn: true,
           atBegin: true
@@ -193,11 +193,11 @@ module.exports = function (grunt) {
       deploy: {
         files: ['src/**/**.js'],
         tasks: [ "copy:standalone", "uglify:standalone" ]
-      },
-      tests: {
-        files: ['src/**/**.js'],
-        tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]
-      }
+      }//,
+      // tests: {
+      //   files: ['src/**/**.js'],
+      //   tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]
+      // }
     }
   });
 
