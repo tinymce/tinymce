@@ -93,7 +93,9 @@ define(
               },
 
               onToReading: function (handler) {
+                console.log("handler", handler, new Error('blah').stack);
                 editor.on('toReading', function () {
+                  console.log('listening to toReading', handler);
                   handler();
                 });
 
@@ -196,8 +198,14 @@ define(
               }),
 
               Buttons.forToolbar('styles', function () {
-                realm.dropup().appear();
                 editor.fire('toReading');
+                // Hack to make the keyboard disappear first ... there should be a way to detect it.
+                setTimeout(function () {
+                  window.requestAnimationFrame(function () {
+                    
+                    realm.dropup().appear();
+                  });
+                }, 1000);
               }, { }),
 
               FontSizeSlider.sketch(realm, editor),

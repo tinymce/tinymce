@@ -6,12 +6,13 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.properties.Css',
     'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (Arr, Fun, PlatformDetection, Compare, DomEvent, Css, TappingEvent) {
+  function (Arr, Fun, PlatformDetection, Compare, Focus, DomEvent, Css, TappingEvent) {
     var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
 
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
@@ -40,7 +41,9 @@ define(
         tapping.onTouchmove(),
         tapping.onTouchend(),
 
-        editorApi.onToReading(Fun.noop),
+        editorApi.onToReading(function () {
+          Focus.blur(editorApi.body());
+        }),
 
         // Scroll to cursor and update the iframe height
         editorApi.onScrollToCursor(function (tinyEvent) {
