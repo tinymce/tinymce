@@ -12,13 +12,14 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
     'tinymce.themes.mobile.api.IosWebapp',
+    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
     'tinymce.themes.mobile.ui.CommonRealm',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Behaviour, Focusing, Keying, Replacing, Sliding, GuiFactory, Container, Fun, Singleton, IosWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
+  function (Behaviour, Focusing, Keying, Replacing, Sliding, GuiFactory, Container, Fun, Singleton, IosWebapp, TinyChannels, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('ios-container') ]
@@ -66,10 +67,14 @@ define(
               },
 
               onShrunk: function () {
-
+                webapp.run(function (w) {
+                  w.refreshStructure();
+                });
               },
               onGrown: function () {
-
+                webapp.run(function (w) {
+                  w.refreshStructure();
+                });
               }
             })
           ])

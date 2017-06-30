@@ -152,8 +152,16 @@ define(
         });
       };
 
+      // dropup
+      var refreshStructure = function () {
+        iosApi.run(function (api) {
+          api.refreshStructure();
+        });
+      };
+
       return {
         enter: enter,
+        refreshStructure: refreshStructure,
         exit: exit
       };
     };

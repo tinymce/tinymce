@@ -209,6 +209,7 @@ define(
         updateToolbarPadding: Fun.noop,
         setViewportOffset: setViewportOffset,
         syncHeight: syncHeight,
+        refreshStructure: structure.refresh,
         destroy: destroy
       };
     };
