@@ -552,6 +552,7 @@ define(
               {
                 text: "Drop an image here",
                 type: 'dropzone',
+                accept: '.jpg,.jpeg,.png,.gif',
                 width: 300,
                 height: 100,
                 onchange: onFileInput

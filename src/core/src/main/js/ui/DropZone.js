@@ -18,11 +18,12 @@
 define(
   'tinymce.core.ui.DropZone',
   [
-    "tinymce.core.ui.Widget",
-    "tinymce.core.util.Tools",
-    "tinymce.core.ui.DomUtils"
+    'tinymce.core.ui.Widget',
+    'tinymce.core.util.Tools',
+    'tinymce.core.ui.DomUtils',
+    'global!RegExp'
   ],
-  function (Widget, Tools, DomUtils) {
+  function (Widget, Tools, DomUtils, RegExp) {
     return Widget.extend({
       /**
        * Constructs a instance with the specified settings.
@@ -40,7 +41,8 @@ define(
           width: '100%',
           height: '100%',
           text: "Drop an image here",
-          multiple: false
+          multiple: false,
+          accept: null // by default accept any files
         }, settings);
 
         self._super(settings);
@@ -52,6 +54,24 @@ define(
         }
       },
 
+      /**
+       * Filters files array according to the accept setting
+       *
+       * @method filter
+       * @param {Array} files
+       * @return {Array} Filtered files array
+       */
+      filter: function (files) {
+        var accept = this.settings.accept;
+        if (typeof accept !== 'string') {
+          return files;
+        }
+
+        var re = new RegExp('(' + accept.split(/\s*,\s*/).join('|') + ')$', 'i');
+        return Tools.grep(files, function (file) {
+          return re.test(file.name);
+        });
+      },
 
       /**
        * Renders the control as a HTML string.
@@ -118,12 +138,21 @@ define(
         self.$el.on('drop', function (e) {
           e.preventDefault();
 
+          var files = self.filter(e.dataTransfer.files);
+
           self.value = function () {
-            var files = e.dataTransfer.files;
-            return self.settings.multiple ? files : files[0];
+            if (!files.length) {
+              return null;
+            } else if (self.settings.multiple) {
+              return files;
+            } else {
+              return files[0];
+            }
           };
 
-          self.fire('change', e); // should we fire a drop event here for consistency (as well) maybe?
+          if (files.length) {
+            self.fire('change', e); // should we fire a drop event here for consistency (as well) maybe?
+          }
         });
       },
 
