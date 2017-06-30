@@ -199,7 +199,7 @@ define(
 
               Buttons.forToolbar('styles', function () {
                 editor.fire('toReading');
-                // Hack to make the keyboard disappear first ... there should be a way to detect it.
+                // Hack to make the keyboard disappear first ... there should be a way to detect it. (for Android only maybe)
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
                     
