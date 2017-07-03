@@ -471,8 +471,8 @@ define(
                     offset = dom.nodeIndex(node);
                     container = node.parentNode;
 
-                    // Put caret after image when moving the end point
-                    if (node.nodeName == "IMG" && !directionLeft) {
+                    // Put caret after image and pre tag when moving the end point
+                    if ((node.nodeName == "IMG" || node.nodeName == "PRE") && !directionLeft) {
                       offset++;
                     }
 
