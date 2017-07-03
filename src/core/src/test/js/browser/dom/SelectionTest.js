@@ -764,6 +764,25 @@ asynctest(
         LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
       });
 
+      suite.test('normalize to before/after pre', function (editor) {
+        var rng;
+
+        editor.getBody().innerHTML = '<pre>a<pre>';
+        rng = editor.dom.createRng();
+        rng.setStart(editor.getBody(), 0);
+        rng.setEnd(editor.getBody(), 1);
+        editor.selection.setRng(rng);
+        editor.selection.normalize();
+
+        rng = editor.selection.getRng(true);
+        LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
+        LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+        LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
+        LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+      });
+
       suite.test('normalize to text node inside P', function (editor) {
         var rng;
 
