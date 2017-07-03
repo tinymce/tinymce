@@ -472,7 +472,7 @@ define(
                     container = node.parentNode;
 
                     // Put caret after image and pre tag when moving the end point
-                    if ((node.nodeName == "IMG" || node.nodeName == "PRE") && !directionLeft) {
+                    if ((node.nodeName === "IMG" || node.nodeName === "PRE") && !directionLeft) {
                       offset++;
                     }
 
