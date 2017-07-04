@@ -466,7 +466,7 @@ define(
                     break;
                   }
 
-                  // Found a BR/IMG element that we can place the caret before
+                  // Found a BR/IMG/PRE element that we can place the caret before
                   if (nonEmptyElementsMap[node.nodeName.toLowerCase()] && !isTableCell(node)) {
                     offset = dom.nodeIndex(node);
                     container = node.parentNode;
