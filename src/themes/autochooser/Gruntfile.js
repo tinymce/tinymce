@@ -1,6 +1,9 @@
 /*eslint-env node */
 
 module.exports = function (grunt) {
+  var fs = require('fs');
+  var version = fs.readFileSync('../mobile/version.txt', "UTF-8");
+
   grunt.initConfig({
     "bolt-init": {
       "theme": {
@@ -86,6 +89,26 @@ module.exports = function (grunt) {
       }
     },
 
+    replace: {
+      "standalone": {
+        options: {
+          patterns: [
+            {
+              match: 'MOBILE_THEME_VERSION',
+              replacement: version.trim()
+            }
+          ]
+        },
+        files: [
+          {
+            src: "deploy-local/themes/autochooser/theme.js",
+            dest: "deploy-local/themes/autochooser/theme.js"
+          }
+        ]
+
+      }
+    },
+
     eslint: {
       options: {
         config: "../../../.eslintrc"
@@ -132,7 +155,8 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-replace/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
+  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace:standalone", "uglify:standalone"]);
 };
