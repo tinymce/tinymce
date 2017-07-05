@@ -18,14 +18,17 @@
     "test": "grunt bedrock-manual"
   },
   "dependencies": {
-    "@ephox/katamari": "^1.1.0",
-    "@ephox/sugar": "^3.1.0"
+    "@ephox/boulder": "git+ssh://git@stash:7999/van/boulder.git",
+    "@ephox/alloy": "git+ssh://git@stash:7999/van/alloy.git",
+    "@ephox/katamari": "git+ssh://git@stash:7999/van/katamari.git",
+    "@ephox/sugar": "git+ssh://git@stash:7999/libs/sugar.git",
+    "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
   },
   "devDependencies": {
+    "@ephox/bedrock": "^1.5.0",
     "@ephox/bolt": "^1.6.0",
     "@ephox/imagetools": "2.0.0",
     "@ephox/mcagar": "^1.1.1",
-    "@ephox/bedrock": "^1.5.0",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
@@ -34,17 +37,10 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-eslint": "~19.0.0",
     "grunt-nuget-pack": "^0.0.6",
+    "grunt-replace": "^1.0.1",
     "jquery": "~1.11.3",
-    "load-grunt-tasks": "~3.5.2",
     "less-plugin-autoprefix": "^1.5.1",
+    "load-grunt-tasks": "~3.5.2",
     "moxie-zip": "~0.0.3"
-  },
-
-  "dependencies": {
-    "@ephox/boulder": "git+ssh://git@stash:7999/van/boulder.git",
-    "@ephox/alloy": "git+ssh://git@stash:7999/van/alloy.git",
-    "@ephox/katamari": "git+ssh://git@stash:7999/van/katamari.git",
-    "@ephox/sugar": "git+ssh://git@stash:7999/libs/sugar.git",
-    "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
   }
 }

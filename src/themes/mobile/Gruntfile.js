@@ -1,6 +1,11 @@
 /*eslint-env node */
 
 module.exports = function (grunt) {
+  var fs = require('fs');
+  var version = fs.readFileSync('./version.txt', "UTF-8");
+
+console.log('version', version);
+
   grunt.option('stack', true);
   grunt.initConfig({
     "bolt-init": {
@@ -118,8 +123,27 @@ module.exports = function (grunt) {
             src: "index.html",
             dest: "deploy-local/index.html"
           }
-
         ]
+      }
+    },
+
+    replace: {
+      "standalone": {
+        options: {
+          patterns: [
+            {
+              match: 'MOBILE_THEME_VERSION',
+              replacement: version.trim()
+            }
+          ]
+        },
+        files: [
+          {
+            src: "deploy-local/themes/mobile/theme.js",
+            dest: "deploy-local/themes/mobile/theme.js"
+          }
+        ]
+
       }
     },
 
@@ -204,6 +228,7 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-less/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-replace/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
   grunt.registerTask("atomic-tests", ["bolt-build", "bolt-test:atomic"]);
@@ -211,5 +236,5 @@ module.exports = function (grunt) {
   grunt.registerTask("chrome-tests", ["bedrock-auto:chrome"]);
   grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("browser-tests", ["bedrock-manual"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
+  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace:standalone", "uglify:standalone"]);
 };
