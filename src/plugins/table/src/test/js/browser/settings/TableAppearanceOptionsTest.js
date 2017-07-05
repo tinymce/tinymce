@@ -5,18 +5,15 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
-    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.UiFinder',
     'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.table.test.TableTestUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, TinyApis, TinyLoader, TinyUi, TablePlugin, TableTestUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,7 +30,7 @@ asynctest(
         Logger.t('text that settings for appearance can be disabled', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetContent(tableHtml),
-          Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'table'),
+          TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
           tinyUi.sWaitForUi('no context found', 'div[aria-label="Inline toolbar"]'),
           tinyUi.sClickOnToolbar('click table button', 'div[aria-label="Table"] > button'),
           tinyUi.sClickOnUi('click properties menu item', 'span:contains("Table properties")'),

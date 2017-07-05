@@ -5,7 +5,6 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
-    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
@@ -14,9 +13,10 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.table.test.TableTestUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, TableTestUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,7 +33,7 @@ asynctest(
           tinyApis.sFocus,
           tinyApis.sSetSetting('table_toolbar', 'tableprops tabledelete'),
           tinyApis.sSetContent(tableHtml),
-          Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'table'),
+          TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
           Step.wait(100), // How should I do this better?
                           // I want to check that the inline toolbar does not appear,
                           // but I have to wait unless it won't exist any way because it's too fast
