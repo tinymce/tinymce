@@ -30,6 +30,7 @@ define(
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "table code",
         toolbar: "table code",
+        table_toolbar: '',
         media_dimensions: false,
         // media_live_embeds: false,
         // media_url_resolver: function (data, resolve) {

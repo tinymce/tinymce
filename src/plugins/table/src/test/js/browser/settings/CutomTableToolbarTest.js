@@ -1,6 +1,8 @@
 asynctest(
-  'browser.tinymce.plugins.table.TableToolbarTest',
+  'browser.tinymce.plugins.table.CustomTableToolbarTest',
   [
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
@@ -9,10 +11,11 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (GeneralSteps, Logger, Mouse, Pipeline, Step, TinyApis, TinyDom, TinyLoader, TablePlugin, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -23,18 +26,25 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
+      var tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
         Logger.t('check default count of toolbar buttons', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetContent(tableHtml),
           Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'table'),
-        // tinyApis.sAssertContent('dfd'),
-          Step.wait(90000000)
+          Chain.asStep({}, [
+            tinyUi.cWaitForUi('no context found', 'div[aria-label="Inline toolbar"]'),
+            Chain.mapper(function (x) {
+              return x.dom().querySelectorAll('button').length;
+            }),
+            Assertions.cAssertEq('has correct count', 2)
+          ])
         ]))
       ], onSuccess, onFailure);
     }, {
       plugins: 'table',
+      table_toolbar: 'tableprops tabledelete',
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
