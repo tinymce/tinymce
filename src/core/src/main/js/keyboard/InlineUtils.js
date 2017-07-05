@@ -26,7 +26,7 @@ define(
   ],
   function (Arr, Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, NodeType, Bidi) {
     var isInlineTarget = function (elm) {
-      return DOMUtils.DOM.is(elm, 'a[href],code');
+      return DOMUtils.DOM.is(elm, 'a[href],code,em,strong,sup,sub,span[style*="text-decoration: underline;"],span[style*="text-decoration: line-through;"]');
     };
 
     var isRtl = function (element) {

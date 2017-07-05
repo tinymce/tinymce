@@ -57,7 +57,7 @@ define(
     };
 
     var toggleInlines = function (dom, elms) {
-      var selectedInlines = dom.select('a[href][data-mce-selected],code[data-mce-selected]');
+      var selectedInlines = dom.select('a[href][data-mce-selected],code[data-mce-selected],em[data-mce-selected],strong[data-mce-selected],sup[data-mce-selected],sub[data-mce-selected],span[style*="text-decoration: underline;"][data-mce-selected],span[style*="text-decoration: line-through;"][data-mce-selected]');
       var targetInlines = Arr.filter(elms, InlineUtils.isInlineTarget);
       Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));
       Arr.each(Arr.difference(targetInlines, selectedInlines), Fun.curry(setSelected, true));
