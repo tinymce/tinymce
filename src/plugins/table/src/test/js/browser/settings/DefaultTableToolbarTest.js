@@ -29,7 +29,7 @@ asynctest(
       var tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
-        Logger.t('check default count of toolbar buttons', GeneralSteps.sequence([
+        Logger.t('test default count of toolbar buttons', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetContent(tableHtml),
           Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'table'),

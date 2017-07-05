@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.plugins.table.DisableTableToolbarTest',
+  'browser.tinymce.plugins.table.CustomTableToolbarTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
@@ -8,7 +8,6 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.UiFinder',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
@@ -16,33 +15,36 @@ asynctest(
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TablePlugin();
 
-    var tableHtml = '<table><tbody><tr><td><span id="aim">x</span></td></tr></tbody></table>';
+    var tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
+      var tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
-        Logger.t('test that table toolbar can be disabled', GeneralSteps.sequence([
+        Logger.t('test custom count of toolbar buttons', GeneralSteps.sequence([
           tinyApis.sFocus,
-          tinyApis.sSetSetting('table_toolbar', 'tableprops tabledelete'),
           tinyApis.sSetContent(tableHtml),
           Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'table'),
-          Step.wait(100), // How should I do this better?
-                          // I want to check that the inline toolbar does not appear,
-                          // but I have to wait unless it won't exist any way because it's too fast
-          UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Inline toolbar"]')
+          Chain.asStep({}, [
+            tinyUi.cWaitForUi('no context found', 'div[aria-label="Inline toolbar"]'),
+            Chain.mapper(function (x) {
+              return x.dom().querySelectorAll('button').length;
+            }),
+            Assertions.cAssertEq('has correct count', 2)
+          ])
         ]))
       ], onSuccess, onFailure);
     }, {
       plugins: 'table',
-      table_toolbar: '',
+      table_toolbar: 'tableprops tabledelete',
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }
