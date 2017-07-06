@@ -26,7 +26,7 @@ node("aws-tools") {
   }
   
   stage "Building local deployment"
-  dir("mobile-project/src/themes/mobile") {
+  dir("mobile-project/src/themes/autochooser") {
       
       
       def version = readFile 'version.txt'
