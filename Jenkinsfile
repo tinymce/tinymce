@@ -1,1 +1,1 @@
-echo "DONE !"
+echo "DONE (automatic?)!"
