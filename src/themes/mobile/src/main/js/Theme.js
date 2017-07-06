@@ -165,7 +165,14 @@ define(
           var readOnlyGroup = {
             label: 'The read only mode group',
             scrollable: true,
-            items: [ ]
+            items: [
+              {
+                dom: {
+                  tag: 'span',
+                  innerHtml: 'Mobile Theme: v' + '@@MOBILE_THEME_VERSION'
+                }
+              }
+            ]
           };
 
           var actionGroup = {
