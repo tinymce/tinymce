@@ -37,7 +37,7 @@ asynctest(
           tinyApis.sSetContent('')
         ])),
 
-        Logger.t('test default title attribute', GeneralSteps.sequence([
+        Logger.t('test default style border attribute', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetSetting('table_default_styles', { border: '3px solid blue' }),
           tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
