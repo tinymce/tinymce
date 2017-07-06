@@ -2,6 +2,6 @@ stage "Demo"
 echo "DONE (automatic?)!"
 
 stage "Connecting to Uploader"
-node("jenkins-awstools") {
+node("aws-tools") {
   echo "Connected"
 }
