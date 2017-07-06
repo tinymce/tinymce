@@ -4,8 +4,6 @@ module.exports = function (grunt) {
   var fs = require('fs');
   var version = fs.readFileSync('./version.txt', "UTF-8");
 
-console.log('version', version);
-
   grunt.option('stack', true);
   grunt.initConfig({
     "bolt-init": {
@@ -45,7 +43,12 @@ console.log('version', version);
     "bedrock-auto": {
       phantomjs: {
         config: 'config/bolt/browser.js',
-        testfiles: 'src/test/js/phantom/**/*Test.js',
+        testfiles: [
+          // NOTE: This one is temperamental on phantom with focus. Put it first.
+          'src/test/js/browser/ui/SerialisedLinkTest.js',
+          'src/test/js/phantom/**/*Test.js',
+          'src/test/js/browser/ui/ButtonsTest.js'
+        ],
         projectdir: '../../..',
         browser: 'phantomjs',
         options: {
@@ -190,7 +193,7 @@ console.log('version', version);
     less: {
       development: {
         options: {
-          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions" ]}) ],
+          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions", /* for phantom */"safari >= 4" ]}) ],
           compress: true,
           yuicompress: true,
           sourceMap: true,

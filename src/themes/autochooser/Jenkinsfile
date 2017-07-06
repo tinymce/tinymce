@@ -1,21 +1,33 @@
-node("aws-tools") {
-  def credentialsId = '8aa93893-84cc-45fc-a029-a42f21197bb3'
+def credentialsId = '8aa93893-84cc-45fc-a029-a42f21197bb3'
 
-  stage("Primary: make directories") {
-    sh "mkdir -p mobile-project"
-    sh "mkdir -p jenkins-plumbing"
+node("primary") {
+  stage ("Checkout project") {
+    git([branch: "TM-81", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
+  }
+
+  stage ("Fetch dependencies") {
+    echo "Fetching npm dependencies"
+    sh "npm install"
   }
   
-  stage ("Primary: load shared pipelines") {
-    dir("jenkins-plumbing") {
-      git ([url: "ssh://git@stash:7999/van/jenkins-plumbing.git", credentialsId: credentialsId]) 
+  stage ("Build project") {
+    sh "grunt"
+
+    dir("src/themes/mobile") {
+      sh "grunt less"
     }
-    def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
-    def exec = load("jenkins-plumbing/exec.groovy")
   }
-  
-  dir("mobile-project") {    
-    stage "Primary: checkout"
+
+  stage ("Run tests") {
+    dir("src/themes/mobile") {
+      sh "grunt atomic-tests phantom-tests"
+    }
+  }
+}
+
+node("aws-tools") {
+  stage ("Deployment") {
+    echo "Git checkout"
     git([branch: "TM-81", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
     
     echo "Fetching npm dependencies"
@@ -23,20 +35,19 @@ node("aws-tools") {
     
     echo "Grunt"
     sh "grunt"
-  }
   
-  stage "Building local deployment"
-  dir("mobile-project/src/themes/mobile") {
+    dir("src/themes/mobile") {
+      echo "Building CSS"
       sh "grunt less"
-  }
+    }
 
-  dir("mobile-project/src/themes/autochooser") {
-      
+    dir("src/themes/autochooser") {  
       def version = readFile '../mobile/version.txt'
       echo version
       
       sh "grunt standalone"
       
       sh "aws --profile staging s3 sync deploy-local s3://ephox-tinymce-mobile/versions/m" + version
+    }
   }
 }
