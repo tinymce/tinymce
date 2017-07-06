@@ -29,7 +29,7 @@ node("aws-tools") {
   dir("mobile-project/src/themes/autochooser") {
       
       
-      def version = readFile 'version.txt'
+      def version = readFile '../mobile/version.txt'
       echo version
       
       sh "grunt less standalone"
