@@ -26,13 +26,16 @@ node("aws-tools") {
   }
   
   stage "Building local deployment"
+  dir("mobile-project/src/themes/mobile") {
+      sh "grunt less"
+  }
+
   dir("mobile-project/src/themes/autochooser") {
-      
       
       def version = readFile '../mobile/version.txt'
       echo version
       
-      sh "grunt less standalone"
+      sh "grunt standalone"
       
       sh "aws --profile staging s3 sync deploy-local s3://ephox-tinymce-mobile/versions/m" + version
   }
