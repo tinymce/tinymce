@@ -69,7 +69,8 @@ define(
     'tinymce.core.ui.SplitButton',
     'tinymce.core.ui.StackLayout',
     'tinymce.core.ui.TabPanel',
-    'tinymce.core.ui.TextBox'
+    'tinymce.core.ui.TextBox',
+    'tinymce.core.ui.DropZone'
   ],
   function (
     Selector, Collection, ReflowQueue, Control, Factory, KeyboardNavigation, Container, DragHelper, Scrollable, Panel, Movable,
@@ -77,7 +78,7 @@ define(
     ButtonGroup, Checkbox, ComboBox, ColorBox, PanelButton, ColorButton, ColorPicker, Path, ElementPath, FormItem, Form,
     FieldSet, FilePicker, FitLayout, FlexLayout, FlowLayout, FormatControls, GridLayout, Iframe, InfoBox, Label, Toolbar,
     MenuBar, MenuButton, MenuItem, Throbber, Menu, ListBox, Radio, ResizeHandle, SelectBox, Slider, Spacer, SplitButton,
-    StackLayout, TabPanel, TextBox
+    StackLayout, TabPanel, TextBox, DropZone
   ) {
     "use strict";
 
@@ -162,6 +163,7 @@ define(
       expose(target, 'ui.StackLayout', StackLayout);
       expose(target, 'ui.TabPanel', TabPanel);
       expose(target, 'ui.TextBox', TextBox);
+      expose(target, 'ui.DropZone', DropZone);
       expose(target, 'ui.Api', Api);
     };
 
