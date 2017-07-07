@@ -18,11 +18,10 @@ define(
   'tinymce.plugins.image.Plugin',
   [
     'tinymce.core.PluginManager',
-    'tinymce.core.util.Fun',
     'tinymce.core.util.Tools',
     'tinymce.plugins.image.ui.Dialog'
   ],
-  function (PluginManager, Fun, Tools, Dialog) {
+  function (PluginManager, Tools, Dialog) {
     PluginManager.add('image', function (editor) {
 
       editor.on('preInit', function () {
@@ -57,19 +56,19 @@ define(
       editor.addButton('image', {
         icon: 'image',
         tooltip: 'Insert/edit image',
-        onclick: Fun.curry(Dialog.open, editor),
+        onclick: Dialog(editor).open,
         stateSelector: 'img:not([data-mce-object],[data-mce-placeholder]),figure.image'
       });
 
       editor.addMenuItem('image', {
         icon: 'image',
         text: 'Image',
-        onclick: Fun.curry(Dialog.open, editor),
+        onclick: Dialog(editor).open,
         context: 'insert',
         prependToContext: true
       });
 
-      editor.addCommand('mceImage', Fun.curry(Dialog.open, editor));
+      editor.addCommand('mceImage', Dialog(editor).open);
     });
 
     return function () { };
