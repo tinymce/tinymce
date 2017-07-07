@@ -23,7 +23,7 @@ asynctest(
     ModernTheme();
     TablePlugin();
 
-    var tableHtml = '<table><tbody><tr><td><span id="aim">x</span></td></tr></tbody></table>';
+    var tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
