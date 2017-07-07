@@ -83,7 +83,7 @@ define(
             return url;
           }, function (err) {
             // TODO: show the error somewhere perhaps?
-            console.info(err);
+            console.error(err);
             finalize();
           });
         }
