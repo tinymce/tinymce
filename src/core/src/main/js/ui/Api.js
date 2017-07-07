@@ -70,7 +70,8 @@ define(
     'tinymce.core.ui.StackLayout',
     'tinymce.core.ui.TabPanel',
     'tinymce.core.ui.TextBox',
-    'tinymce.core.ui.DropZone'
+    'tinymce.core.ui.DropZone',
+    'tinymce.core.ui.BrowseButton'
   ],
   function (
     Selector, Collection, ReflowQueue, Control, Factory, KeyboardNavigation, Container, DragHelper, Scrollable, Panel, Movable,
@@ -78,7 +79,7 @@ define(
     ButtonGroup, Checkbox, ComboBox, ColorBox, PanelButton, ColorButton, ColorPicker, Path, ElementPath, FormItem, Form,
     FieldSet, FilePicker, FitLayout, FlexLayout, FlowLayout, FormatControls, GridLayout, Iframe, InfoBox, Label, Toolbar,
     MenuBar, MenuButton, MenuItem, Throbber, Menu, ListBox, Radio, ResizeHandle, SelectBox, Slider, Spacer, SplitButton,
-    StackLayout, TabPanel, TextBox, DropZone
+    StackLayout, TabPanel, TextBox, DropZone, BrowseButton
   ) {
     "use strict";
 
@@ -164,6 +165,7 @@ define(
       expose(target, 'ui.TabPanel', TabPanel);
       expose(target, 'ui.TextBox', TextBox);
       expose(target, 'ui.DropZone', DropZone);
+      expose(target, 'ui.BrowseButton', BrowseButton);
       expose(target, 'ui.Api', Api);
     };
 
