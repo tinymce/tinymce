@@ -19,13 +19,14 @@ define(
     'tinymce.core.util.JSON',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
+    'tinymce.core.ui.Throbber',
     'tinymce.plugins.image.core.Uploader',
     'tinymce.plugins.image.core.Utils',
     'global!Math',
     'global!RegExp',
     'global!document'
   ],
-  function (Env, JSON, Tools, XHR, Uploader, Utils, Math, RegExp, document) {
+  function (Env, JSON, Tools, XHR, Throbber, Uploader, Utils, Math, RegExp, document) {
 
     return function (editor) {
       function createImageList(callback) {
@@ -51,6 +52,7 @@ define(
 
 
         function onFileInput() {
+          var throbber = new Throbber(win.getEl());
           var file = this.value();
 
           var uploader = new Uploader({
@@ -68,11 +70,11 @@ define(
           });
 
           var finalize = function () {
-            // TODO: hide throbber
+            throbber.hide();
             URL.revokeObjectURL(blobInfo.blobUri()); // in theory we could fake blobUri too, but until it's legitimate, we have too revoke it manually
           };
 
-          // TODO: show throbber
+          throbber.show();
 
           return uploader.upload(blobInfo).then(function (url) {
             var src = win.find('#src');
@@ -531,7 +533,7 @@ define(
               type: 'form',
               layout: 'grid',
               columns: 1,
-              padding: '10 10 10 10',
+              padding: '20 20 20 20',
               alignH: 'center',
               alignV: 'center',
               items: [
@@ -549,9 +551,8 @@ define(
                   text: "Drop an image here",
                   type: 'dropzone',
                   accept: acceptExts,
-                  width: 300,
+                  width: 440,
                   height: 100,
-                  disabled: 'disabled',
                   onchange: onFileInput
                 }
               ]

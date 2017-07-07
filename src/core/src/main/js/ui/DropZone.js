@@ -38,8 +38,7 @@ define(
         var self = this;
 
         settings = Tools.extend({
-          width: '100%',
-          height: '100%',
+          height: 100,
           text: "Drop an image here",
           multiple: false,
           accept: null // by default accept any files
@@ -158,23 +157,6 @@ define(
             self.fire('change', e); // should we fire a drop event here for consistency (as well) maybe?
           }
         });
-      },
-
-
-      bindStates: function () {
-        var self = this;
-
-        self.state.on('change:value', function (e) {
-          if (self.getEl().value != e.value) {
-            self.getEl().value = e.value;
-          }
-        });
-
-        self.state.on('change:disabled', function (e) {
-          self.getEl().disabled = e.value;
-        });
-
-        return self._super();
       },
 
       remove: function () {
