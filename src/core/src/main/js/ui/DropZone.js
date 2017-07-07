@@ -138,6 +138,10 @@ define(
         self.$el.on('drop', function (e) {
           e.preventDefault();
 
+          if (self.state.get('disabled')) {
+            return;
+          }
+
           var files = self.filter(e.dataTransfer.files);
 
           self.value = function () {

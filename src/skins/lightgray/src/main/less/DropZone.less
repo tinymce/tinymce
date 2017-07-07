@@ -3,20 +3,27 @@
 .@{prefix}-dropzone {
   border: 3px dashed gray;
   text-align: center;
-}
 
+  & span {
+    color: gray;
+    text-transform: uppercase;
+    font-family: Verdana;
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-.@{prefix}-dropzone span {
-  color: gray;
-  text-transform: uppercase;
-  font-family: Verdana;
-  display: inline-block;
-  vertical-align: middle;
-}
+  &:after {
+    content:"";
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-.@{prefix}-dropzone:after {
-  content:"";
-  height: 100%;
-  display: inline-block;
-  vertical-align: middle;
+  &.@{prefix}-disabled {
+    .opacity(@btn-box-disabled-opacity);
+
+    &.@{prefix}-dragenter {
+      cursor: not-allowed;
+    }
+  }
 }
