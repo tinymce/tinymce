@@ -518,8 +518,6 @@ define(
             plainTextMode = true;
           }
 
-
-
           // Grab plain text from Clipboard API or convert existing HTML to plain text
           if (plainTextMode) {
             // Use plain text contents from Clipboard API unless the HTML contains paragraphs then

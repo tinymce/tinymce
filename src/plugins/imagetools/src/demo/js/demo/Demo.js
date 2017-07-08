@@ -28,8 +28,6 @@ define(
       ImageToolsPlugin();
       ModernTheme();
 
-      var imgSrc = '../img/dogleft.jpg';
-
       $(
         '<textarea class="tinymce">' +
         '<p>' +

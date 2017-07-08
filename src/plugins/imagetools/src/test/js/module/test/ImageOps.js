@@ -171,8 +171,6 @@ define(
         });
       };
 
-
-
       return {
         sExecToolbar: Fun.curry(sExec, true),
         sExecDialog: Fun.curry(sExec, false)
