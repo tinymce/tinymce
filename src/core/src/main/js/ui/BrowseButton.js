@@ -9,7 +9,7 @@
  */
 
 /**
- * Creates a new dropzone.
+ * Creates a new browse button.
  *
  * @-x-less BrowseButton.less
  * @class tinymce.ui.BrowseButton

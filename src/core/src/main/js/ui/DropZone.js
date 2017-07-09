@@ -98,7 +98,7 @@ define(
           hidefocus: '1'
         };
 
-        elm = DomUtils.create('div', attrs, '<span>' + cfg.text + '</span>'); // TODO: better encode this
+        elm = DomUtils.create('div', attrs, '<span>' + cfg.text + '</span>');
 
         DomUtils.css(elm, {
           width: isDecimal(cfg.width) ? cfg.width + 'px' : cfg.width,
@@ -154,7 +154,7 @@ define(
           };
 
           if (files.length) {
-            self.fire('change', e); // should we fire a drop event here for consistency (as well) maybe?
+            self.fire('change', e);
           }
         });
       },
