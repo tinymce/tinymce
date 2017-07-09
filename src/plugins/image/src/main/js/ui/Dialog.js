@@ -84,8 +84,8 @@ define(
             finalize();
             return url;
           }, function (err) {
-            // TODO: show the error somewhere perhaps?
-            console.error(err);
+            /*eslint no-console: ["error", { allow: ["error"] }] */
+            console.error(err); // TODO: show the error somewhere else perhaps?
             finalize();
           });
         }
