@@ -48,9 +48,13 @@ define(
     var clearChildStyles = function (dom, format, node) {
       if (format.clear_child_styles) {
         each(dom.select('*', node), function (node) {
-          each(format.styles, function (value, name) {
-            dom.setStyle(node, name, '');
-          });
+          if (isElementNode(node)) {
+            each(format.styles, function (value, name) {
+              if (!(format.links && node.nodeName === 'A')) {
+                dom.setStyle(node, name, '');
+              }
+            });
+          }
         });
       }
     };
