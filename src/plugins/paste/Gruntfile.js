@@ -45,6 +45,53 @@ module.exports = function (grunt) {
       ]
     },
 
+     "bedrock-manual": {
+      "all": {
+        config: "config/bolt/browser.js",
+        testfiles: "src/test/js/browser/**/*Test.js",
+        projectdir: "../../..",
+        browser: "chrome",
+        options: {
+          stopOnFailure: true
+        }
+      }
+    },
+
+    "bedrock-auto": {
+      phantomjs: {
+        config: 'config/bolt/browser.js',
+        testfiles: [
+          'src/test/js/browser/**/*Test.js'
+        ],
+        projectdir: '../../..',
+        browser: 'phantomjs',
+        options: {
+          stopOnFailure: true
+        }
+      },
+
+      "chrome": {
+        config: "config/bolt/browser.js",
+        testfiles: [
+          'src/test/js/webdriver/**/*Test.js'
+        ],
+        projectdir: "../../..",
+        browser: "chrome",
+        options: {
+          stopOnFailure: true
+        }
+      }
+    },
+
+    "bolt-test": {
+      "atomic" :{
+        config: "config/bolt/atomic.js",
+        files: {
+          src: [ "src/test/js/atomic/smooth/*Test.js" ]
+        }
+      }
+    },
+
     uglify: {
       options: {
         beautify: {
@@ -69,9 +116,12 @@ module.exports = function (grunt) {
   });
 
   grunt.task.loadTasks("../../../node_modules/@ephox/bolt/tasks");
+  grunt.task.loadTasks("../../../node_modules/@ephox/bedrock/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
 
+  // grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
+  grunt.registerTask("tests", [ "bolt-test", "bedrock-auto:phantomjs", "bedrock-auto:chrome" ]);
 };
