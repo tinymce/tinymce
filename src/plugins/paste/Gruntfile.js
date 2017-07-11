@@ -45,12 +45,12 @@ module.exports = function (grunt) {
       ]
     },
 
-     "bedrock-manual": {
+    "bedrock-manual": {
       "all": {
         config: "config/bolt/browser.js",
+        // Exclude webdriver tests
         testfiles: "src/test/js/browser/**/*Test.js",
         projectdir: "../../..",
-        browser: "chrome",
         options: {
           stopOnFailure: true
         }
