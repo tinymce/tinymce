@@ -88,7 +88,7 @@ module.exports = function (grunt) {
       "atomic" :{
         config: "config/bolt/atomic.js",
         files: {
-          src: [ "src/test/js/atomic/smooth/*Test.js" ]
+          src: [ "src/test/js/atomic/**/*Test.js" ]
         }
       }
     },
@@ -122,7 +122,6 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
 
-  // grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
   grunt.registerTask("tests", [ "bolt-test", "bedrock-auto:phantomjs", "bedrock-auto:chrome" ]);
 };
