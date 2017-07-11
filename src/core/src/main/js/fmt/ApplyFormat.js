@@ -47,12 +47,11 @@ define(
 
     var clearChildStyles = function (dom, format, node) {
       if (format.clear_child_styles) {
-        each(dom.select('*', node), function (node) {
+        var selector = format.links ? '*:not(a)' : '*';
+        each(dom.select(selector, node), function (node) {
           if (isElementNode(node)) {
             each(format.styles, function (value, name) {
-              if (!(format.links && node.nodeName === 'A')) {
-                dom.setStyle(node, name, '');
-              }
+              dom.setStyle(node, name, '');
             });
           }
         });
