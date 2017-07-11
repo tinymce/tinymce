@@ -35,7 +35,7 @@ define(
 
         PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
           androidEvents.set(
-            AndroidEvents.initEvents(editorApi, platform.toolstrip)
+            AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy)
           );
         });
       };

@@ -67,9 +67,10 @@ define(
         });
 
         var setReadOnly = function (readOnlyGroups, mainGroups, ro) {
+          if (ro === false) editor.selection.collapse();
           realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
           editor.setMode(ro === true ? 'readonly' : 'design');
-          editor.fire(ro ? READING() : EDITING());
+          editor.fire(ro === true ? READING() : EDITING());
           realm.updateMode(ro);
         };
 
@@ -152,6 +153,7 @@ define(
             scrollable: false,
             items: [
               Buttons.forToolbar('back', function (/* btn */) {
+                editor.selection.collapse();
                 realm.exit();
               }, { })
             ]

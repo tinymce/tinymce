@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.behaviour.Swapping',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Singleton',
     'tinymce.themes.mobile.api.AndroidWebapp',
@@ -12,7 +13,10 @@ define(
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (Replacing, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm, OuterContainer) {
+  function (
+    Replacing, Swapping, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm,
+    OuterContainer
+  ) {
     return function () {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('android-container') ]
@@ -62,7 +66,7 @@ define(
       };
 
       var updateMode = function (readOnly) {
-        CommonRealm.updateMode(socket, switchToEdit, readOnly);
+        CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root);
       };
 
       return {

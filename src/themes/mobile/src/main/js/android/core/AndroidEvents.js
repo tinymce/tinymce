@@ -2,22 +2,23 @@ define(
   'tinymce.themes.mobile.android.core.AndroidEvents',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.Traverse',
-    'ephox.sugar.api.selection.WindowSelection',
     'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (Arr, Fun, PlatformDetection, Compare, Focus, DomEvent, Node, Css, Traverse, WindowSelection, TappingEvent) {
-    var ANDROID_CONTEXT_TOOLBAR_HEIGHT = '23px';
-
+  function (
+    Toggling, Arr, Fun, PlatformDetection, Compare, Focus, DomEvent, Element, Node, Traverse,
+    TappingEvent
+  ) {
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
     /*
 
@@ -31,7 +32,7 @@ define(
       an input or textarea
 
     */
-    var initEvents = function (editorApi, toolstrip) {
+    var initEvents = function (editorApi, toolstrip, alloy) {
 
       var tapping = TappingEvent.monitor(editorApi);
       var outerDoc = Traverse.owner(toolstrip);
@@ -50,11 +51,7 @@ define(
 
       var updateMargin = function () {
         var rangeInContent = editorApi.doc().dom().hasFocus() && editorApi.getSelection().exists(isRanged);
-        if (rangeInContent || hasRangeInUi()) {
-          Css.set(toolstrip, 'margin-top', ANDROID_CONTEXT_TOOLBAR_HEIGHT);
-        } else {
-          Css.remove(toolstrip, 'margin-top');
-        }
+        alloy.getByDom(toolstrip).each((rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off);
       };
 
       var listeners = [
@@ -65,20 +62,15 @@ define(
         tapping.onTouchmove(),
         tapping.onTouchend(),
 
-        editorApi.onToReading(Fun.noop)
+        editorApi.onToReading(Fun.noop),
+        editorApi.onToEditing(Fun.noop)
 
       ].concat(
-        isAndroid6 && false ? [ ] : [
-          // DomEvent.bind(Element.fromDom(editorApi.win()), 'blur', function () {
-          //   Css.remove(toolstrip, 'margin-top');
-          // }),
-          DomEvent.bind(outerDoc, 'select', function () {
-            if (hasRangeInUi()) {
-              Css.set(toolstrip, 'margin-top', ANDROID_CONTEXT_TOOLBAR_HEIGHT);
-            } else {
-              Css.remove(toolstrip, 'margin-top');
-            }
+        isAndroid6 === true ? [ ] : [
+          DomEvent.bind(Element.fromDom(editorApi.win()), 'blur', function () {
+            alloy.getByDom(toolstrip).each(Toggling.off);
           }),
+          DomEvent.bind(outerDoc, 'select', updateMargin),
           DomEvent.bind(editorApi.doc(), 'selectionchange', updateMargin)
         ]
       );
