@@ -61,7 +61,8 @@ module.exports = function (grunt) {
       phantomjs: {
         config: 'config/bolt/browser.js',
         testfiles: [
-          'src/test/js/browser/**/*Test.js'
+          'src/test/js/browser/**/*Test.js',
+          'src/test/js/webdriver/**/*Test.js'
         ],
         projectdir: '../../..',
         browser: 'phantomjs',
