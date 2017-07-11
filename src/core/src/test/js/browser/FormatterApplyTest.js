@@ -1952,6 +1952,20 @@ asynctest(
       );
     });
 
+    suite.test("If links=true, formatter shouldn't remove similar styles from links even if clear_child_styles=true", function (editor) {
+      editor.getBody().innerHTML = '<p>a<a href="#">b</a>c</p>';
+
+      editor.selection.select(editor.dom.select('p')[0]);
+
+      editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }, links: true, clear_child_styles: true });
+      editor.formatter.apply('format');
+
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="font-size: 14px;">a<a style="font-size: 14px;" href="#">b</a>c</span></p>'
+      );
+    });
+
     suite.test("Formatter should remove similar styles when clear_child_styles isn't defined", function (editor) {
       editor.getBody().innerHTML = (
         '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
