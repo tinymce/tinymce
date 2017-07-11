@@ -2,12 +2,11 @@ define(
   'ephox.sugar.api.events.ScrollChange',
 
   [
-    'ephox.katamari.api.Fun',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.view.Scroll'
   ],
 
-  function (Fun, DomEvent, Scroll) {
+  function (DomEvent, Scroll) {
     /* Some browsers (Firefox) fire a scroll event even if the values for scroll don't 
      * change. This acts as an intermediary between the scroll event, and the value for scroll
      * changing
