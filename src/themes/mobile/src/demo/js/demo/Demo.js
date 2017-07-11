@@ -21,13 +21,6 @@ define(
   ],
   function (EditorManager, AutolinkPlugin, AutosavePlugin, ListsPlugin, Theme) {
     return function () {
-
-//       history.pushState(null, null, document.title);
-// window.addEventListener('popstate', function () {
-//   console.log('arguments', arguments);
-//     history.pushState(null, null, document.title);
-// });
-
       Theme();
       ListsPlugin;
       AutolinkPlugin;
@@ -36,9 +29,12 @@ define(
       EditorManager.init({
         selector: '.tiny-text',
         theme: 'mobile',
-        plugins: 'lists, autolink autosave',
-        mobile_skin_url: '../../main/css',
-        add_unload_trigger: true
+        plugins: [
+          'lists', // Required for list functionality (commands),
+          'autolink', // Required for turning pasted text into hyperlinks
+          'autosave' // Required to prevent users losing content when they press back
+        ],
+        mobile_skin_url: '../../main/css'
       });
     };
   }
