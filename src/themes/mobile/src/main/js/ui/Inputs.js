@@ -21,8 +21,8 @@ define(
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents, AlloyTriggers, NativeEvents, Button, Container, DataField, Input,
-    Option, Styles, UiDomFactory
+    AddEventsBehaviour, Behaviour, Composing, Representing, Toggling, Memento, AlloyEvents,
+    AlloyTriggers, NativeEvents, Button, Container, DataField, Input, Option, Styles, UiDomFactory
   ) {
     var clearInputBehaviour = 'input-clearing';
 
@@ -37,7 +37,8 @@ define(
           Composing.config({
             find: Option.some
           })
-        ])
+        ]),
+        selectOnFocus: false
       }));
 
       var buttonSpec = Memento.record(

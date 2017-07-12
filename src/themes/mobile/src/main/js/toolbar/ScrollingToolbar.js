@@ -87,7 +87,13 @@ define(
           },
           components: [
             GuiFactory.premade(toolbar)
-          ]
+          ],
+          containerBehaviours: Behaviour.derive([
+            Toggling.config({
+              toggleClass: Styles.resolve('android-selection-context-toolbar'),
+              toggleOnExecute: false
+            })
+          ])
         })
       );
 
