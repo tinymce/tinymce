@@ -36,6 +36,10 @@ define(
     AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, TinyChannels, Styles, Orientation,
     AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
   ) {
+    /// not to be confused with editor mode
+    var READING = Fun.constant('toReading'); /// 'hide the keyboard'
+    var EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
+
     ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var cssUrls = CssUrls.derive(editor);
@@ -64,12 +68,21 @@ define(
         });
 
         var setReadOnly = function (readOnlyGroups, mainGroups, ro) {
+          if (ro === false) editor.selection.collapse();
           realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
           editor.setMode(ro === true ? 'readonly' : 'design');
-          if (ro) editor.fire('toReading');
+          editor.fire(ro === true ? READING() : EDITING());
           realm.updateMode(ro);
         };
 
+        var bindHandler = function (label, handler) {
+          editor.on(label, handler);
+          return {
+            unbind: function () {
+              editor.off(label);
+            }
+          };
+        };
 
         editor.on('init', function () {
           realm.init({
@@ -85,17 +98,11 @@ define(
               },
 
               onToReading: function (handler) {
-                editor.on('toReading', function () {
-                  handler();
-                });
+                return bindHandler(READING(), handler);
+              },
 
-                var unbind = function () {
-                  editor.off('toReading');
-                };
-
-                return {
-                  unbind: unbind
-                };
+              onToEditing: function (handler) {
+                return bindHandler(EDITING(), handler);
               },
 
               onScrollToCursor: function (handler) {
@@ -147,6 +154,7 @@ define(
             scrollable: false,
             items: [
               Buttons.forToolbar('back', function (/* btn */) {
+                editor.selection.collapse();
                 realm.exit();
               }, { })
             ]

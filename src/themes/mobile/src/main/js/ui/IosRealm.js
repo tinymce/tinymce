@@ -61,7 +61,7 @@ define(
       };
 
       var updateMode = function (readOnly) {
-        CommonRealm.updateMode(socket, switchToEdit, readOnly);
+        CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
       };
 
       return {
