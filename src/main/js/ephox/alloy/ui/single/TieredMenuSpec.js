@@ -109,6 +109,9 @@ define(
           if (! Body.inBody(activeMenu.element())) {
             Replacing.append(container, GuiFactory.premade(activeMenu));
           }
+
+          // Remove the background-menu class from the active menu
+          Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
           setActiveMenu(container, activeMenu);
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
@@ -189,15 +192,7 @@ define(
           Highlighting.highlight(sandbox, menu);
         }),
 
-        // Hide any irrelevant submenus and expand any submenus based
-        // on hovered item
-        AlloyEvents.run(ItemEvents.hover(), function (sandbox, simulatedEvent) {
-          var item = simulatedEvent.event().item();
-          updateView(sandbox, item);
-          expandRight(sandbox, item);
-          detail.onHover()(sandbox, item);
-        }),
-
+        
         AlloyEvents.runOnExecute(function (sandbox, simulatedEvent) {
           // Trigger on execute on the targeted element
           // I.e. clicking on menu item
@@ -221,7 +216,16 @@ define(
             }
           });
         })
-      ]);
+      ].concat(detail.navigateOnHover() ? [
+        // Hide any irrelevant submenus and expand any submenus based
+        // on hovered item
+        AlloyEvents.run(ItemEvents.hover(), function (sandbox, simulatedEvent) {
+          var item = simulatedEvent.event().item();
+          updateView(sandbox, item);
+          expandRight(sandbox, item);
+          detail.onHover()(sandbox, item);
+        })
+      ] : [ ]));
 
       return {
         uid: detail.uid(),

@@ -48,6 +48,9 @@ define(
         Fields.onHandler('onHover'),
         Fields.tieredMenuMarkers(),
 
+
+        FieldSchema.defaulted('navigateOnHover', true),
+
         FieldSchema.defaulted('tmenuBehaviours', { }),
         FieldSchema.defaulted('eventOrder', { })
       ],

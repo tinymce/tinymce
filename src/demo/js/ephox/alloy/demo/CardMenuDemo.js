@@ -73,16 +73,18 @@ define(
             console.log('onOpenSubmenu');
           },
 
+          navigateOnHover: false,
+
           openImmediately: true,
           data: TieredMenu.tieredData(
             'primary',
             {
-              'primary': makeMenu('primary-value', [
+              'primary': makeMenu('primary', [
                 makeItem('alpha', 'Alpha'),
                 makeItem('beta', 'Beta')
               ]),
 
-              'secondary': makeMenu('secondary-value', [
+              'secondary': makeMenu('secondary', [
                 makeItem('animal', 'Animal'),
                 makeItem('bear', 'Bear')
               ])
@@ -93,11 +95,11 @@ define(
           ),
 
           markers: {
-            backgroundMenu: 'blah',
-            menu: 'blah',
-            selectedMenu: 'blah',
-            item: 'blah',
-            selectedItem: 'blah'
+            backgroundMenu: 'background-menu',
+            menu: 'menu',
+            selectedMenu: 'selected-menu',
+            item: 'item',
+            selectedItem: 'selected-item'
           }
         })
       );
