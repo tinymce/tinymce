@@ -31,6 +31,7 @@ node("aws-tools") {
     git([branch: "master", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
     
     echo "Fetching npm dependencies"
+    sh "rm -rf node_modules"
     sh "npm install"
     
     echo "Grunt"
