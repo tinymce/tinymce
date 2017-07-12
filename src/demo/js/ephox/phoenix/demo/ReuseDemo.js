@@ -2,18 +2,17 @@ define(
   'ephox.phoenix.demo.ReuseDemo',
 
   [
-    'ephox.boss.api.DomUniverse',
     'ephox.compass.Arr',
     'ephox.phoenix.api.dom.DomWrapping',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.Node',
+    'ephox.syrup.api.SelectorFind'
   ],
 
-  function (DomUniverse, Arr, DomWrapping, Css, DomEvent, Element, Insert, Node, SelectorFind) {
+  function (Arr, DomWrapping, Css, DomEvent, Element, Insert, Node, SelectorFind) {
     return function () {
       var editor = Element.fromTag('div');
       Css.setAll(editor, {

@@ -1,0 +1,24 @@
+{
+  "name": "@ephox/phoenix",
+  "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
+  "version": "4.0.0",
+  "dependencies": {
+    "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#NPM-boss",
+    "@ephox/bud": "git+ssh://git@stash:7999/lib/bud.git#master",
+    "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
+    "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
+    "@ephox/perhaps": "git+ssh://git@stash:7999/libs/perhaps.git#master",
+    "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master",
+    "@ephox/scullion": "git+ssh://git@stash:7999/libs/scullion.git#master"
+  },
+  "devDependencies": {
+    "@ephox/bolt": "*",
+    "@ephox/modulator-text": "git+ssh://git@stash:7999/bolt/modulator-text.git#master",
+    "@ephox/syrup": "git+ssh://git@stash:7999/tbio/syrup.git#master",
+    "grunt": "*",
+    "grunt-npm": "*"
+  },
+  "publishConfig": {
+    "registry": "http://nexus:8081/repository/ephox-npm/"
+  }
+}
