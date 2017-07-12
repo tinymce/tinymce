@@ -195,6 +195,7 @@ define(
       addToWorld(root);
 
       return {
+        root: Fun.constant(root),
         element: root.element,
         destroy: destroy,
         add: add,

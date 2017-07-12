@@ -1,0 +1,33 @@
+define(
+  'ephox.alloy.behaviour.swapping.SwapApis',
+
+  [
+    'ephox.sugar.api.properties.Class'
+  ],
+
+  function (Class) {
+    var swap = function (element, addCls, removeCls) {
+      Class.remove(element, removeCls);
+      Class.add(element, addCls);
+    };
+
+    var toAlpha = function (component, swapConfig, swapState) {
+      swap(component.element(), swapConfig.alpha(), swapConfig.omega());
+    };
+
+    var toOmega = function (component, swapConfig, swapState) {
+      swap(component.element(), swapConfig.omega(), swapConfig.alpha());
+    };
+
+    var clear = function (component, swapConfig, swapState) {
+      Class.remove(component.element(), swapConfig.alpha());
+      Class.remove(component.element(), swapConfig.omega());
+    };
+
+    return {
+      toAlpha: toAlpha,
+      toOmega: toOmega,
+      clear: clear
+    };
+  }
+);

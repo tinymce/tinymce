@@ -6,11 +6,10 @@ define(
     'ephox.alloy.behaviour.common.Behaviour',
     'ephox.alloy.behaviour.toggling.ToggleApis',
     'ephox.alloy.dom.DomModification',
-    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr'
   ],
 
-  function (AlloyEvents, Behaviour, ToggleApis, DomModification, Objects, Arr) {
+  function (AlloyEvents, Behaviour, ToggleApis, DomModification, Arr) {
     var exhibit = function (base, toggleConfig, toggleState) {
       return DomModification.nu({ });
     };

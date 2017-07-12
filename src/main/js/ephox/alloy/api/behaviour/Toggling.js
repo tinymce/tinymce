@@ -3,13 +3,12 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.behaviour.toggling.ActiveToggle',
     'ephox.alloy.behaviour.toggling.ToggleApis',
     'ephox.alloy.behaviour.toggling.ToggleSchema'
   ],
 
-  function (Behaviour, NoState, ActiveToggle, ToggleApis, ToggleSchema) {
+  function (Behaviour, ActiveToggle, ToggleApis, ToggleSchema) {
     return Behaviour.create({
       fields: ToggleSchema,
       name: 'toggling',

@@ -27,7 +27,8 @@ define(
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('eventOrder', { }),
       FieldSchema.defaulted('hasTabstop', true),
-      FieldSchema.defaulted('inputBehaviours', { })
+      FieldSchema.defaulted('inputBehaviours', { }),
+      FieldSchema.defaulted('selectOnFocus', true)
     ];
 
     var behaviours = function (detail) {
@@ -52,7 +53,7 @@ define(
             onSetValue: detail.onSetValue()
           }),
           Focusing.config({
-            onFocus: function (component) {
+            onFocus: detail.selectOnFocus() === false ? Fun.noop : function (component) {
               var input = component.element();
               var value = Value.get(input);
               input.dom().setSelectionRange(0, value.length);
