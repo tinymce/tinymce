@@ -16,6 +16,11 @@ test(
       return div;
     };
 
+    var textNode = function (text) {
+      var el = Element.fromText(text);
+      return el;
+    };
+
     var grandparent = node('grandparent');
     var uncle = node('uncle');
     var mother = node('mother');
@@ -74,5 +79,16 @@ test(
     var el = Element.fromTag('div');
     assert.eq(true, Traverse.owner(el).dom() === document);
     assert.eq(true, Traverse.defaultView(el).dom() === window);
+
+    var n = node('n');
+    var c1 = node('c1');
+    var c2 = node('c2');
+    var t1 = textNode('t1');
+    var t2 = textNode('t2');
+    var t3 = textNode('t3');
+    InsertAll.append(n, [ c1, t1, c2, t2, t3 ]);
+    assert.eq(0, Traverse.childNodesCount(c1));
+    assert.eq(0, Traverse.childNodesCount(t1));
+    assert.eq(5, Traverse.childNodesCount(n));
   }
 );

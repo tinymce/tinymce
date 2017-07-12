@@ -2,12 +2,16 @@ define(
   'ephox.sugar.api.view.Scroll',
 
   [
-    'ephox.sugar.api.view.Position',
+    'ephox.katamari.api.Type',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Position',
     'global!document'
   ],
 
-  function (Position, Location, document) {
+  function (Type, PlatformDetection, Location, Position, document) {
+    var isSafari = PlatformDetection.detect().browser.isSafari();
+
     var get = function (_doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
 
@@ -53,9 +57,27 @@ define(
 
     // };
 
-    // var intoView = function (element) {
+    // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
+    var intoView = function (element, alignToTop) {
+      if (isSafari && Type.isFunction(element.dom().scrollIntoViewIfNeeded)) {
+        element.dom().scrollIntoViewIfNeeded(false); // false=align to nearest edge
+      } else {
+        element.dom().scrollIntoView(alignToTop); // true=to top, false=to bottom
+      }
+    };
 
-    // };
+    // If the element is above the container, or below the container, then scroll to the top or bottom
+    var intoViewIfNeeded = function (element, container) {
+      var containerBox = container.dom().getBoundingClientRect();
+      var elementBox = element.dom().getBoundingClientRect();
+      if (elementBox.top < containerBox.top) {
+        // element top is above the viewport top, scroll so it's at the top
+        intoView(element, true);
+      } else if (elementBox.bottom > containerBox.bottom) {
+        // element bottom is below the viewport bottom, scroll so it's at the bottom
+        intoView(element, false);
+      }
+    }
 
     return {
       get: get,
@@ -65,7 +87,8 @@ define(
       // right: right,
       // fromTop: fromTop,
       // fromLeft: fromLeft,
-      // intoView: intoView,
+      intoView: intoView,
+      intoViewIfNeeded: intoViewIfNeeded,
       setToElement: setToElement
     };
   }

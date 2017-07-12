@@ -52,6 +52,7 @@ test(
       '</div>'
     );
 
+
     Insert.append(Body.body(), page);
 
     var checkChild = function (expected, path) {
@@ -212,6 +213,5 @@ test(
     })();
 
     Remove.remove(page);
-
   }
 );

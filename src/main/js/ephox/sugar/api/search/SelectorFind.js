@@ -36,6 +36,7 @@ define(
       return Selectors.one(selector, scope);
     };
 
+    // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
     var closest = function (scope, selector, isRoot) {
       return ClosestOrAncestor(Selectors.is, ancestor, scope, selector, isRoot);
     };

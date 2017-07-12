@@ -117,6 +117,10 @@ define(
       return child(element, element.dom().childNodes.length - 1);
     };
 
+    var childNodesCount = function (element, index) {
+      return element.dom().childNodes.length;
+    };
+
     var spot = Struct.immutable('element', 'offset');
     var leaf = function (element, offset) {
       var cs = children(element);
@@ -140,6 +144,7 @@ define(
       child: child,
       firstChild: firstChild,
       lastChild: lastChild,
+      childNodesCount: childNodesCount,
       leaf: leaf
     };
   }
