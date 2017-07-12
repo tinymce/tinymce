@@ -3,7 +3,7 @@
   "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
   "version": "4.0.0",
   "dependencies": {
-    "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#NPM-boss",
+    "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#master",
     "@ephox/bud": "git+ssh://git@stash:7999/lib/bud.git#master",
     "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
     "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
