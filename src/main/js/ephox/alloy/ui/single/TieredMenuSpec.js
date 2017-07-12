@@ -99,6 +99,7 @@ define(
       };
 
       var updateMenuPath = function (container, state, path) {
+        console.log('updateMenuPath');
         return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu) {
           var rest = getMenus(state, path.slice(1));
           Arr.each(rest, function (r) {
@@ -213,6 +214,7 @@ define(
           setup(container).each(function (primary) {
             Replacing.append(container, GuiFactory.premade(primary));
 
+            console.log('before open immediately');
             if (detail.openImmediately()) {
               setActiveMenu(container, primary);
               detail.onOpenMenu()(container, primary);
@@ -224,8 +226,7 @@ define(
       return {
         uid: detail.uid(),
         dom: {
-          tag: 'div',
-          classes: [ 'main-menu' ]
+          tag: 'div'
         },
         behaviours: Merger.deepMerge(
           Behaviour.derive([

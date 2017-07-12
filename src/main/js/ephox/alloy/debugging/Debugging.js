@@ -20,7 +20,7 @@ define(
 
     var CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-    var eventsMonitored = [ ];
+    var eventsMonitored = '*'//[ ];
 
     // Ignore these files in the error stack
     var path = [
@@ -55,7 +55,7 @@ define(
     };
 
     var monitorEvent = function (eventName, initialTarget, f) {
-      var logger = debugging && Arr.contains(eventsMonitored, eventName) ? (function () {
+      var logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (function () {
         var sequence = [ ];
 
         return {

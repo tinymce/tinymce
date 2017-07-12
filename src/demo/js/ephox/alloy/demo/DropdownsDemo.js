@@ -49,7 +49,7 @@ define(
         return Result.value(sink);
       };
 
-      var menuMarkers = DemoRenders.menuMarkers();
+      var menuMarkers = DemoRenders.tieredMarkers();
 
       var wDoubleInput = DemoRenders.widgetItem({
         type: 'widget',

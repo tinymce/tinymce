@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.debugging.Debugging',
     'ephox.katamari.api.Id',
@@ -16,7 +17,7 @@ define(
     'global!setInterval'
   ],
 
-  function (GuiFactory, Container, Debugging, Id, Thunk, DomEvent, Element, Html, TextContent, document, MutationObserver, setInterval) {
+  function (GuiFactory, Attachment, Container, Debugging, Id, Thunk, DomEvent, Element, Html, TextContent, document, MutationObserver, setInterval) {
     var register = Thunk.cached(function (gui) {
       Debugging.registerInspector('htmldisplay', gui);
     });
