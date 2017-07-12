@@ -1,6 +1,9 @@
 /*eslint-env node */
 
 module.exports = function (grunt) {
+  var fs = require('fs');
+  var version = fs.readFileSync('./version.txt', "UTF-8");
+
   grunt.option('stack', true);
   grunt.initConfig({
     "bolt-init": {
@@ -40,7 +43,12 @@ module.exports = function (grunt) {
     "bedrock-auto": {
       phantomjs: {
         config: 'config/bolt/browser.js',
-        testfiles: 'src/test/js/phantom/**/*Test.js',
+        testfiles: [
+          // NOTE: This one is temperamental on phantom with focus.
+          /* 'src/test/js/browser/ui/SerialisedLinkTest.js', */
+          'src/test/js/phantom/**/*Test.js',
+          'src/test/js/browser/ui/ButtonsTest.js'
+        ],
         projectdir: '../../..',
         browser: 'phantomjs',
         options: {
@@ -84,34 +92,61 @@ module.exports = function (grunt) {
             expand: true,
             flatten: true,
             src: ['src/main/css/**'],
-            dest: 'deploy-local/css',
+            dest: 'deploy-local/skins/lightgray/',
             filter: 'isFile'
           },
           {
             expand: true,
             flatten: true,
             src: ['src/main/icons/**'],
-            dest: 'deploy-local/icons',
+            dest: 'deploy-local/skins/icons/',
             filter: 'isFile'
           },
           {
             src: "../../../js/tinymce/tinymce.min.js",
-            dest: "deploy-local/js/tinymce.min.js"
+            dest: "deploy-local/tinymce.min.js"
           },
           {
             src: "../../../js/tinymce/plugins/lists/plugin.min.js",
-            dest: "deploy-local/js/plugins/lists/plugin.min.js"
+            dest: "deploy-local/plugins/lists/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/autolink/plugin.min.js",
+            dest: "deploy-local/plugins/autolink/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
+            dest: "deploy-local/plugins/autosave/plugin.min.js"
           },
           {
             src: "scratch/inline/theme.js",
-            dest: "deploy-local/js/mobile_theme.js"
+            dest: "deploy-local/themes/mobile/theme.js"
           },
           {
             src: "index.html",
             dest: "deploy-local/index.html"
           }
-
         ]
+      }
+    },
+
+    replace: {
+      "standalone": {
+        options: {
+          patterns: [
+            {
+              match: 'MOBILE_THEME_VERSION',
+              replacement: version.trim()
+            }
+          ]
+        },
+        files: [
+          {
+            src: "deploy-local/themes/mobile/theme.js",
+            dest: "deploy-local/themes/mobile/theme.js"
+          }
+        ]
+
       }
     },
 
@@ -140,8 +175,8 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            src: "deploy-local/js/mobile_theme.js",
-            dest: "deploy-local/js/mobile_theme.min.js"
+            src: "deploy-local/themes/mobile/theme.js",
+            dest: "deploy-local/themes/mobile/theme.min.js"
           }
         ]
       },
@@ -158,7 +193,7 @@ module.exports = function (grunt) {
     less: {
       development: {
         options: {
-          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions" ]}) ],
+          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions", /* for phantom */"safari >= 4" ]}) ],
           compress: true,
           yuicompress: true,
           sourceMap: true,
@@ -196,6 +231,7 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-less/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-replace/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
   grunt.registerTask("atomic-tests", ["bolt-build", "bolt-test:atomic"]);
@@ -203,5 +239,5 @@ module.exports = function (grunt) {
   grunt.registerTask("chrome-tests", ["bedrock-auto:chrome"]);
   grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("browser-tests", ["bedrock-manual"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
+  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace:standalone", "uglify:standalone"]);
 };

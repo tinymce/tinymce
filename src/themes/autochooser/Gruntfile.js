@@ -1,6 +1,9 @@
 /*eslint-env node */
 
 module.exports = function (grunt) {
+  var fs = require('fs');
+  var version = fs.readFileSync('../mobile/version.txt', "UTF-8");
+
   grunt.initConfig({
     "bolt-init": {
       "theme": {
@@ -40,14 +43,14 @@ module.exports = function (grunt) {
             expand: true,
             flatten: true,
             src: ['../mobile/src/main/css/**'],
-            dest: 'deploy-local/mobile/css',
+            dest: 'deploy-local/skins/lightgray',
             filter: 'isFile'
           },
           {
             expand: true,
             flatten: true,
             src: ['../mobile/src/main/icons/**'],
-            dest: 'deploy-local/mobile/icons',
+            dest: 'deploy-local/skins/icons',
             filter: 'isFile'
           },
           {
@@ -55,22 +58,27 @@ module.exports = function (grunt) {
             flatten: false,
             cwd: '../../skins/lightgray/dist/lightgray',
             src: ['**/**'],
-            dest: 'deploy-local/modern/css'
-          },
-          {
-            expand: true,
-            flatten: true,
-            src: ['../mobile/src/main/icons/**'],
-            dest: 'deploy-local/mobile/icons',
-            filter: 'isFile'
+            dest: 'deploy-local/skins/lightgray'
           },
           {
             src: "../../../js/tinymce/tinymce.min.js",
-            dest: "deploy-local/js/tinymce.min.js"
+            dest: "deploy-local/tinymce.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/lists/plugin.min.js",
+            dest: "deploy-local/plugins/lists/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/autolink/plugin.min.js",
+            dest: "deploy-local/plugins/autolink/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
+            dest: "deploy-local/plugins/autosave/plugin.min.js"
           },
           {
             src: "scratch/inline/theme.js",
-            dest: "deploy-local/js/autochooser_theme.js"
+            dest: "deploy-local/themes/autochooser/theme.js"
           },
           {
             src: "index.html",
@@ -78,6 +86,26 @@ module.exports = function (grunt) {
           }
           
         ]
+      }
+    },
+
+    replace: {
+      "standalone": {
+        options: {
+          patterns: [
+            {
+              match: 'MOBILE_THEME_VERSION',
+              replacement: version.trim()
+            }
+          ]
+        },
+        files: [
+          {
+            src: "deploy-local/themes/autochooser/theme.js",
+            dest: "deploy-local/themes/autochooser/theme.js"
+          }
+        ]
+
       }
     },
 
@@ -106,8 +134,8 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            src: "deploy-local/js/autochooser_theme.js",
-            dest: "deploy-local/js/autochooser_theme.min.js"
+            src: "deploy-local/themes/autochooser/theme.js",
+            dest: "deploy-local/themes/autochooser/theme.min.js"
           }
         ]
       },
@@ -127,7 +155,8 @@ module.exports = function (grunt) {
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
   grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-replace/tasks");
 
   grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "uglify:standalone"]);
+  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace:standalone", "uglify:standalone"]);
 };
