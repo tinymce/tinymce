@@ -2,7 +2,7 @@
 *~
 *.iws
 *.sublime-workspace
-/lib
+/node_modules
 /dist
 /scratch
 /dependency
