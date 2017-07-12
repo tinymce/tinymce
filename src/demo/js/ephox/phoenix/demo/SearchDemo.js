@@ -2,21 +2,21 @@ define(
   'ephox.phoenix.demo.SearchDemo',
 
   [
-    'ephox.wrap.JQuery',
     'ephox.compass.Arr',
     'ephox.phoenix.api.dom.DomSearch',
     'ephox.phoenix.api.dom.DomWrapping',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Event',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Class',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.InsertAll',
+    'ephox.syrup.api.Value',
     'text!html/content.html'
   ],
 
-  function ($, Arr, DomSearch, DomWrapping, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
+  function (Arr, DomSearch, DomWrapping, Attr, Class, Css, DomEvent, Element, Insert, InsertAll, Value, ContentHtml) {
     return function () {
       var container = Element.fromTag('div');
 
@@ -37,16 +37,16 @@ define(
         return DomWrapping.nu(c);
       };
 
-      Event.bind(button, 'click', function (event) {
-        var token = Attr.get(input, 'value');
+      DomEvent.bind(button, 'click', function (event) {
+        var token = Value.get(input);
         if (token.length > 0) {
           var matches = DomSearch.safeToken([content], token);
           highlight(matches);
         }
       });
 
-      Event.bind(buttonWord, 'click', function (event) {
-        var word = Attr.get(input, 'value');
+      DomEvent.bind(buttonWord, 'click', function (event) {
+        var word = Value.get(input);
         if (word.length > 0) {
           var matches = DomSearch.safeWords([content], [word]);
           highlight(matches);
