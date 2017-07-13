@@ -9,7 +9,8 @@
     "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
     "@ephox/porkbun": "git+ssh://git@stash:7999/libs/porkbun.git#master",
     "@ephox/highway": "git+ssh://git@stash:7999/libs/highway.git#master",
-    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master"
+    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
+    "@ephox/photon": "git+ssh://git@stash:7999/tbio/photon.git#master"
   },
   "devDependencies": {
     "@ephox/bolt": "*",
