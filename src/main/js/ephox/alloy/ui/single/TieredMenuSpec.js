@@ -133,6 +133,8 @@ define(
             if (! Body.inBody(activeMenu.element())) {
               Replacing.append(container, GuiFactory.premade(activeMenu));
               detail.onOpenSubmenu()(container, item, activeMenu);
+            } else if (Body.inBody(activeMenu.element()) && 'hacky' === 'hacky') {
+              detail.onOpenSubmenu()(container, item, activeMenu);
             }
 
             Highlighting.highlightFirst(activeMenu);
