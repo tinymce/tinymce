@@ -7,4 +7,4 @@
 /scratch
 /dependency
 /config/bolt/bootstrap*.js
-
+/node_modules

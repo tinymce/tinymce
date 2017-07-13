@@ -4,10 +4,10 @@ define(
   [
     'ephox.dragster.style.Styles',
     'ephox.highway.Merger',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Remove'
+    'ephox.syrup.api.Class',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Remove'
   ],
 
   function (Styles, Merger, Class, Css, Element, Remove) {

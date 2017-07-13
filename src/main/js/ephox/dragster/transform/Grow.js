@@ -5,8 +5,8 @@ define(
     'ephox.peanut.Fun',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Width'
+    'ephox.syrup.api.Height',
+    'ephox.syrup.api.Width'
   ],
 
   function (Fun, Event, Events, Height, Width) {

@@ -5,10 +5,10 @@ define(
     'ephox.dragster.api.DragApis',
     'ephox.dragster.detect.Blocker',
     'ephox.perhaps.Option',
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove'
+    'ephox.syrup.alien.Position',
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.Remove'
   ],
 
   function (DragApis, Blocker, Option, Position, DomEvent, Insert, Remove) {

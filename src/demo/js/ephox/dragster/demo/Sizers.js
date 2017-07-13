@@ -5,15 +5,15 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.photon.OuterPosition',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Visibility',
-    'ephox.sugar.api.Width'
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Height',
+    'ephox.syrup.api.InsertAll',
+    'ephox.syrup.api.Location',
+    'ephox.syrup.api.Remove',
+    'ephox.syrup.api.SelectorFind',
+    'ephox.syrup.api.Visibility',
+    'ephox.syrup.api.Width'
   ],
 
   function (Arr, Fun, OuterPosition, Css, Element, Height, InsertAll, Location, Remove, SelectorFind, Visibility, Width) {
