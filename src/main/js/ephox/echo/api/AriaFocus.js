@@ -3,10 +3,10 @@ define(
 
   [
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.PredicateFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.Focus',
+    'ephox.syrup.api.PredicateFind',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Option, Compare, Focus, PredicateFind, Traverse) {

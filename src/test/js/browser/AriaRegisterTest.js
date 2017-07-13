@@ -5,8 +5,8 @@ test(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.echo.api.AriaRegister',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Html'
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Html'
   ],
  
   function (ApproxStructure, Assertions, AriaRegister, Element, Html) {
@@ -54,14 +54,14 @@ test(
           children: [ 
             s.element('label', { 
                 attrs: {'for': str.startsWith('bob_')},
-                html: str.is('Bob Text') 
+                html: str.is('Bob Text')
               }), 
             s.element('input', { attrs: {'id': str.startsWith('bob_')} })
             ]
           }
         );
       }),
-      '<div><label for="bob_',
+      '<div role="presentation"><label for="bob_',
       Element.fromTag('input'), 'bob', 'Bob Text');
 
     checkLabelledField(
@@ -70,15 +70,15 @@ test(
         return s.element('div', {
           children: [ 
             s.element('label', { 
-                attrs: {'for': str.startsWith('bob_')},
-                html: str.is('Bob Text') 
+                attrs: {'for': str.startsWith('rob_')},
+                html: str.is('Rob Text')
               }), 
-            s.element('select', { attrs: {'id': str.startsWith('bob_')} })
+            s.element('select', { attrs: {'id': str.startsWith('rob_')} })
             ]
           }
         );
       }),
-      '<div><label for="bob_',
-      Element.fromTag('select'), 'bob', 'Bob Text');
+      '<div role="presentation"><label for="rob_',
+      Element.fromTag('select'), 'rob', 'Rob Text');
   }
 );

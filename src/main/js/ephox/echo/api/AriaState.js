@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.sugar.api.Attr',
+    'ephox.syrup.api.Attr',
     'global!String'
   ],
 
