@@ -6,8 +6,8 @@ test(
     'ephox.robin.api.dom.DomParent',
     'ephox.robin.api.dom.DomStructure',
     'ephox.robin.test.BrowserCheck',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Node',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (DomLook, DomParent, DomStructure, BrowserCheck, Node, Traverse) {

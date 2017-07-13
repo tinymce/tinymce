@@ -12,7 +12,7 @@ test(
     'ephox.robin.test.Arbitraries',
     'ephox.robin.words.Clustering',
     'ephox.robin.zone.LanguageZones',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Logger, RawAssertions, Gene, TestUniverse, TextGene, Arr, Option, Arbitraries, Clustering, LanguageZones, Jsc) {

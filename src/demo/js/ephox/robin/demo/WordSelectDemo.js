@@ -4,13 +4,16 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.robin.api.dom.DomSmartSelect',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.SelectorFind',
+    'global!console',
+    'global!document',
+    'global!window'
   ],
 
-  function (Fun, DomSmartSelect, DomEvent, Element, Insert, SelectorFind) {
+  function (Fun, DomSmartSelect, DomEvent, Element, Insert, SelectorFind, console, document, window) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
