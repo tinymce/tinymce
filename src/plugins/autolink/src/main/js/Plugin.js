@@ -176,7 +176,7 @@ define(
           // Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
         } while (rngText != ' ' && rngText !== '' && rngText.charCodeAt(0) != 160 && (end - 2) >= 0 && rngText != delimiter);
 
-        if (rng.toString() == delimiter || rng.toString().charCodeAt(0) == 160) {
+        if (rng.toString() == delimiter || rng.toString() === ' ' || rng.toString().charCodeAt(0) == 160) {
           setStart(endContainer, end);
           setEnd(endContainer, start);
           end += 1;
