@@ -120,7 +120,7 @@ define(
             Replacing.remove(container, o);
           });
 
-          return true;
+          return activeMenu;
         });
       };
 
@@ -147,7 +147,10 @@ define(
       var collapseLeft = function (container, item) {
         var value = getItemValue(item);
         return state.collapse(value).bind(function (path) {
-          return updateMenuPath(container, state, path);
+          return updateMenuPath(container, state, path).map(function (activeMenu) {
+            detail.onCollapseMenu()(container, item, activeMenu);
+            return activeMenu;
+          });
         });
       };
 
@@ -229,9 +232,7 @@ define(
 
       return {
         uid: detail.uid(),
-        dom: {
-          tag: 'div'
-        },
+        dom: detail.dom(),
         behaviours: Merger.deepMerge(
           Behaviour.derive([
             Keying.config({

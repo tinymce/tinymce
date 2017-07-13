@@ -34,6 +34,7 @@ define(
 
         Fields.onStrictHandler('onOpenMenu'),
         Fields.onStrictHandler('onOpenSubmenu'),
+        Fields.onHandler('onCollapseMenu'),
 
         FieldSchema.defaulted('openImmediately', true),
 
@@ -48,6 +49,8 @@ define(
         Fields.onHandler('onHover'),
         Fields.tieredMenuMarkers(),
 
+
+        FieldSchema.strict('dom'),
 
         FieldSchema.defaulted('navigateOnHover', true),
 
