@@ -9,14 +9,16 @@ define(
     'tinymce.plugins.help.data.PluginUrls'
   ],
 function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
-  var maybeUrlize = function (name) {
+  var makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank">${name}</a>');
+
+  var maybeUrlize = function (editor, key) {
     return Arr.find(PluginUrls.urls, function (x) {
-      return x === name;
-    }).fold(Fun.constant(name), function (pluginName) {
-      return Strings.supplant('<a href="${url}" target="_blank">${name}</a>', {
-        name: pluginName,
-        url: 'https://www.tinymce.com/docs/plugins/' + pluginName
-      });
+      return x.key === key;
+    }).fold(function () {
+      var getMetadata = editor.plugins[key].getMetadata;
+      return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
+    }, function (x) {
+      return makeLink({ name: x.name, url: 'https://www.tinymce.com/docs/plugins/' + x.key });
     });
   };
 
@@ -30,7 +32,7 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
   var pluginLister = function (editor) {
     var pluginKeys = getPluginKeys(editor);
     var pluginLis = Arr.map(pluginKeys, function (key) {
-      return '<li>' + maybeUrlize(key) + '</li>';
+      return '<li>' + maybeUrlize(editor, key) + '</li>';
     });
     var count = pluginLis.length;
     var pluginsString = pluginLis.join('');
