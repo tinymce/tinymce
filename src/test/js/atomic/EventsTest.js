@@ -64,7 +64,13 @@ test(
       });
 
       assert.throws(
-        function() { eb.trigger.quack('hay', 'bee', 'quee'); },
+        function() { 
+          try {
+            eb.trigger.quack('hay', 'bee', 'quee');
+          } catch (ex) {
+           throw ex.message;
+          }
+        },
         'Cannot trigger a source event.'
       );
 
