@@ -118,10 +118,15 @@ define(
               'secondary': makeMenu('secondary', [
                 makeItem('animal', 'Animal'),
                 makeItem('bear', 'Bear')
+              ]),
+
+              'tertiary': makeMenu('secondary', [
+                makeItem('university', 'University')
               ])
             },
             {
-              'beta': 'secondary'
+              'beta': 'secondary',
+              'alpha': 'tertiary'
             }
           ),
 

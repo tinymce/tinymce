@@ -117,7 +117,7 @@ define(
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
             Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
-            Replacing.remove(container, o);
+            // Replacing.remove(container, o);
           });
 
           return activeMenu;
