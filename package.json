@@ -1,6 +1,6 @@
 {
   "name": "@ephox/dragster",
-  "description": "This project does xyz.",
+  "description": "This project handles dragging.",
   "version": "3.0.0",
   "dependencies": {
       "@ephox/scullion": "git+ssh://git@stash:7999/libs/scullion.git#master",
