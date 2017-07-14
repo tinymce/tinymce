@@ -108,12 +108,6 @@ define(
           var w = Width.get(container.element());
           Width.set(menu.element(), w);
           Transitioning.jumpTo(menu, 'current');
-
-          // Class.remove(menu.element(), 'transitioning');
-          // Css.set(menu.element(), 'transform', 'translate(0%)');
-          // console.log('width', w);
-
-          
         },
         onOpenSubmenu: function (container, item, submenu) {
           var w = Width.get(container.element());
@@ -125,22 +119,6 @@ define(
           Transitioning.progressTo(menuComp, 'before');
           Transitioning.jumpTo(submenu, 'after');
           Transitioning.progressTo(submenu, 'current');
-
-          // Class.remove(submenu.element(), 'transitioning');
-          // Width.set(submenu.element(), w);
-          // Class.remove(submenu.element(), 'transitioning');
-          // Css.set(submenu.element(), 'transform', 'translate(100%)');
-          
-          // Class.add(menu, 'transitioning');
-          // Css.reflow(menu);
-          // Width.set(menu, w);
-          // Css.set(menu, 'transform', 'translate(-100%)');
-          
-          // Class.add(submenu.element(), 'transitioning');
-          // Css.reflow(submenu.element());
-          // Css.set(submenu.element(), 'transform', 'translate(0%)');
-          // Css.reflow(menu);
-          // Css.reflow(submenu.element());
         },
 
         onCollapseMenu: function (container, item, menu) {
@@ -148,13 +126,6 @@ define(
           var submenuComp = container.getSystem().getByDom(submenu).getOrDie();
           Transitioning.progressTo(submenuComp, 'after');
           Transitioning.progressTo(menu, 'current');
-
-          
-          // Class.add(menu.element(), 'transitioning');
-          // Css.set(menu.element(), 'transform', 'translate(0%)');
-          // Class.add(submenu, 'transitioning');
-          // Css.set(submenu, 'transform', 'translate(100%)');
-          // debugger;
         },
 
         navigateOnHover: false,
