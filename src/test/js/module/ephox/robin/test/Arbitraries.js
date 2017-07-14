@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (Arr, Jsc) {

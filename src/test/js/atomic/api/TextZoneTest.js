@@ -13,7 +13,7 @@ test(
     'ephox.robin.test.Arbitraries',
     'ephox.robin.test.PropertyAssertions',
     'ephox.robin.test.ZoneObjects',
-    'ephox.wrap.Jsc'
+    'ephox.wrap-jsverify.Jsc'
   ],
 
   function (RawAssertions, Gene, TestUniverse, TextGene, Json, Fun, Option, TextZone, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {

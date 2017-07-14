@@ -1,6 +1,6 @@
 configure({
   sources: [
     source('amd', 'ephox.robin', '../../src/main/js', mapper.hierarchical),
-    source('amd', 'ephox', '../../lib/run/depend', mapper.flat)
+    source('amd', 'ephox', '../../node_modules/@ephox', mapper.repo('src/main/js', mapper.hierarchical))
   ]
 });

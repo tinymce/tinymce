@@ -4,7 +4,7 @@ define(
   [
     'ephox.agar.api.Logger',
     'ephox.numerosity.api.JSON',
-    'ephox.wrap.Jsc',
+    'ephox.wrap-jsverify.Jsc',
     'global!Error'
   ],
 
