@@ -16,17 +16,41 @@
 
       [role="menu"] {
         /*display: inline-block;*/
-        
+        height: 100%;
         position: absolute;
+        display: flex;
+        flex-direction: column;
       }
 
       [role="menu"].transitioning {
         transition: transform 0.3s ease-in-out;
       }
 
+      .demo-tiered-menu {
+        overflow: hidden;
+        outline: 4px solid black;
+        width: 100px;
+        position: relative;
+        height: 100px;
+      }
+
+      .menu-items-container {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
       .item {
         cursor: pointer;
+        padding: 10px 5px;
       }
+
+      .separator {
+        text-align: center;
+        border-bottom: 1px solid black;
+        background: #ccc;
+      }
+
 
 
       [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {

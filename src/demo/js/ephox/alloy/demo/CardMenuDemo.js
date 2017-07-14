@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.demo.HtmlDisplay',
+    'ephox.boulder.api.Objects',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Behaviour, Transitioning, Attachment, Gui, Menu, TieredMenu, HtmlDisplay, Element, Class, Css, SelectorFind, Width) {
+  function (Behaviour, Transitioning, Attachment, Gui, Menu, TieredMenu, HtmlDisplay, Objects, Element, Class, Css, SelectorFind, Width) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -76,7 +77,16 @@ define(
             tag: 'div'
           },
           components: [
-            Menu.parts().items({ })
+            Objects.exclude(makeSeparator(value), [ 'type' ]),
+            {
+              dom: {
+                tag: 'div',
+                classes: [ 'menu-items-container' ]
+              },
+              components: [
+                Menu.parts().items({ })
+              ]
+            }
           ],
           items: items,
           menuBehaviours: Behaviour.derive([
@@ -97,17 +107,7 @@ define(
       var tieredMenu = TieredMenu.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'demo-tiered-menu' ],
-          styles: {
-            outline: '4px solid black',
-            // This would make the left 800px somehow get shifted inside the box. Weird.
-            overflow: 'hidden',
-            width: '100px',
-            // 'max-width': '100px',
-            // 'box-sizing': 'border-box',
-            position: 'relative',
-            height: '100px'
-          }
+          classes: [ 'demo-tiered-menu' ]
         },
         components: [
           
@@ -155,15 +155,6 @@ define(
           'styles',
           {
             'styles': makeMenu('Styles', [
-              {
-                type: 'separator',
-                dom: {
-                  tag: 'div',
-                  classes: [ 'separator' ],
-                  innerHtml: '<strong>Styles</strong>'
-                },
-                components: [ ]
-              },
               makeItem('headers', 'Headers'),
               makeItem('inline', 'Inline'),
               makeItem('blocks', 'Blocks'),
@@ -172,7 +163,6 @@ define(
 
             'headers': makeMenu('Headers', [
               makeBack('Back'),
-              makeSeparator('Headers'),
               makeItem('h1', 'Header 1'),
               makeItem('h2', 'Header 2'),
               makeItem('h3', 'Header 3')
