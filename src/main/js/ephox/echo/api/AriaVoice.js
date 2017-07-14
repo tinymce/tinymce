@@ -6,12 +6,12 @@ define(
     'ephox.epithet.Id',
     'ephox.fred.PlatformDetection',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Traverse',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.Remove',
+    'ephox.syrup.api.Traverse',
     'global!setTimeout'
   ],
 

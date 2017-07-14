@@ -6,10 +6,10 @@ define(
     'ephox.echo.api.Styles',
     'ephox.epithet.Id',
     'ephox.scullion.Struct',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert'
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Class',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert'
   ],
 
   function (AriaRegister, Styles, Id, Struct, Attr, Class, Element, Insert) {

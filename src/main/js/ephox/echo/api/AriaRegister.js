@@ -9,11 +9,11 @@ define(
     'ephox.highway.Merger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll'
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Class',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.InsertAll'
   ],
 
   function (Type, Arr, Styles, Id, Merger, Fun, Option, Attr, Class, Element, Insert, InsertAll) {
