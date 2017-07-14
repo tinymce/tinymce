@@ -22,6 +22,18 @@ define(
       Attachment.attachSystem(body, gui);
 
 
+      var makeBack = function (text) {
+        return {
+          data: TieredMenu.collapseItem(text),
+          type: 'item',
+          dom: {
+            tag: 'div',
+            innerHtml: text
+          },
+          components: [ ]
+        };
+      };
+
       var makeItem = function (value, text) {
         return {
           data: {
@@ -59,7 +71,7 @@ define(
             outline: '4px solid black',
             // This would make the left 800px somehow get shifted inside the box. Weird.
             overflow: 'hidden',
-            // width: '100px',
+            width: '100px',
             // 'max-width': '100px',
             // 'box-sizing': 'border-box',
             position: 'relative',
@@ -132,17 +144,19 @@ define(
               makeItem('beta', 'Beta')
             ]),
 
-            // 'secondary': makeMenu('secondary', [
-            //   makeItem('animal', 'Animal'),
-            //   makeItem('bear', 'Bear')
-            // ]),
+            'secondary': makeMenu('secondary', [
+              makeBack('Back'),
+              makeItem('animal', 'Animal'),
+              makeItem('bear', 'Bear')
+            ]),
 
             'tertiary': makeMenu('secondary', [
+              makeBack('Back'),
               makeItem('university', 'University')
             ])
           },
           {
-            // 'beta': 'secondary',
+            'beta': 'secondary',
             'alpha': 'tertiary'
           }
         ),
@@ -159,18 +173,18 @@ define(
       var menu = HtmlDisplay.section(
         gui,
         'This menu is a card menu',
-        {
-          dom: {
-            tag: 'div',
-            styles: {
-              // overflow: 'hidden',
-              // width: '800px'
-            }
-          },
-          components: [
+        // {
+        //   dom: {
+        //     tag: 'div',
+        //     styles: {
+        //       // overflow: 'hidden',
+        //       // width: '800px'
+        //     }
+        //   },
+        //   components: [
             tieredMenu
-          ]
-        }
+        //   ]
+        // }
       );
     };
   }

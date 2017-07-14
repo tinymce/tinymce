@@ -26,6 +26,13 @@ define(
       };
     };
 
+    var collapseItem = function (text) {
+      return {
+        value: TieredMenuSpec.collapseItem(),
+        text: text
+      };
+    };
+
     return Sketcher.single({
       name: 'TieredMenu',
       configFields: [
@@ -62,7 +69,8 @@ define(
 
       extraApis: {
         tieredData: tieredData,
-        singleData: singleData
+        singleData: singleData,
+        collapseItem: collapseItem
       }
     });
   }

@@ -104,7 +104,6 @@ define(
       };
 
       var updateMenuPath = function (container, state, path) {
-        console.log('updateMenuPath');
         return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu) {
           var rest = getMenus(state, path.slice(1));
           Arr.each(rest, function (r) {
@@ -215,6 +214,12 @@ define(
           // I.e. clicking on menu item
           var target = simulatedEvent.event().target();
           return sandbox.getSystem().getByDom(target).bind(function (item) {
+            var itemValue = getItemValue(item);
+            if (itemValue === 'collapse-item') {
+              return collapseLeft(sandbox, item);
+            }
+
+
             return expandRight(sandbox, item).orThunk(function () {
               return detail.onExecute()(sandbox, item);
             });
@@ -226,7 +231,6 @@ define(
           setup(container).each(function (primary) {
             Replacing.append(container, GuiFactory.premade(primary));
 
-            console.log('before open immediately');
             if (detail.openImmediately()) {
               setActiveMenu(container, primary);
               detail.onOpenMenu()(container, primary);
@@ -280,7 +284,8 @@ define(
     };
 
     return {
-      make: make
+      make: make,
+      collapseItem: Fun.constant('collapse-item')
     };
   }
 );
