@@ -28,7 +28,9 @@ module.exports = function(grunt) {
 
             'chrome': {
                 config: 'config/bolt/browser.js',
-                testfiles: 'src/test/js/webdriver/**/*Test.js',
+                testfiles: [
+                    'src/test/js/browser/**/*Test.js',
+                    'src/test/js/webdriver/**/*Test.js'],
                 browser: 'chrome',
                 options: { stopOnFailure: true }
             }

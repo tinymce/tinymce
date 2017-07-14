@@ -19,6 +19,7 @@
     "@ephox/numerosity": "git+ssh://git@stash:7999/tbio/numerosity.git#master",
     "@ephox/syrup": "git+ssh://git@stash:7999/tbio/syrup.git#master",
     "@ephox/wrap-jsverify": "*",
+    "chromedriver": "*",
     "grunt": "*",
     "grunt-npm": "*"
   },
