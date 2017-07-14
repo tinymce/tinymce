@@ -97,6 +97,8 @@ define(
 
         // Focus causes issues when the things being focused are offscreen.
         fakeFocus: true,
+        // For animations, need things to stay around in the DOM (at least until animation is done)
+        stayInDom: true,
 
         onExecute: function () {
           console.log('Executing');

@@ -85,16 +85,11 @@ define(
 
       var setActiveMenu = function (container, menu) {
         Highlighting.highlight(container, menu);
-        
         Highlighting.getHighlighted(menu).orThunk(function () {
           return Highlighting.getFirst(menu);
         }).each(function (item) {
-
           AlloyTriggers.dispatch(container, item.element(), SystemEvents.focusItem());
-          
-          
         });
-        
       };
 
       var getMenus = function (state, menuValues) {
@@ -114,21 +109,15 @@ define(
             Replacing.append(container, GuiFactory.premade(activeMenu));
           }
 
-          
-
           // Remove the background-menu class from the active menu
           Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
           setActiveMenu(container, activeMenu);
-
-
-          
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
             Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
-            // Replacing.remove(container, o);
+            if (! detail.stayInDom()) Replacing.remove(container, o);
           });
-
           
           return activeMenu;
         });
@@ -143,14 +132,10 @@ define(
             // DUPE with above. Fix later.
             if (! Body.inBody(activeMenu.element())) {
               Replacing.append(container, GuiFactory.premade(activeMenu));
-              detail.onOpenSubmenu()(container, item, activeMenu);
-            } else if (Body.inBody(activeMenu.element()) && 'hacky' === 'hacky') {
-              detail.onOpenSubmenu()(container, item, activeMenu);
             }
 
+            detail.onOpenSubmenu()(container, item, activeMenu);
             Highlighting.highlightFirst(activeMenu);
-
-
           });
 
           return updateMenuPath(container, state, path);

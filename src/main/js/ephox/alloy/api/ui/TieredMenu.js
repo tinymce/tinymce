@@ -60,6 +60,7 @@ define(
         FieldSchema.strict('dom'),
 
         FieldSchema.defaulted('navigateOnHover', true),
+        FieldSchema.defaulted('stayInDom', false),
 
         FieldSchema.defaulted('tmenuBehaviours', { }),
         FieldSchema.defaulted('eventOrder', { })
