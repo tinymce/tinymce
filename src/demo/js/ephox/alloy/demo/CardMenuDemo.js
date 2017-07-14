@@ -162,27 +162,27 @@ define(
             ]),
 
             'headers': makeMenu('Headers', [
-              makeBack('Back'),
+              makeBack('< Back'),
               makeItem('h1', 'Header 1'),
               makeItem('h2', 'Header 2'),
               makeItem('h3', 'Header 3')
             ]),
 
             'inline': makeMenu('Inline', [
-              makeBack('Back'),
+              makeBack('< Back'),
               makeItem('bold', 'Bold'),
               makeItem('italic', 'Italic')
             ]),
 
             'blocks': makeMenu('Blocks', [
-              makeBack('Back'),
+              makeBack('< Back'),
               makeItem('p', 'Paragraph'),
               makeItem('blockquote', 'Blockquote'),
               makeItem('div', 'Div')
             ]),
 
             'alignment': makeMenu('Alignment', [
-              makeBack('Back'),
+              makeBack('< Back'),
               makeItem('alignleft', 'Left')
             ])
           },
