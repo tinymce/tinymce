@@ -16,8 +16,12 @@
 
       [role="menu"] {
         /*display: inline-block;*/
-        transition: left 2s ease;
+        
         position: absolute;
+      }
+
+      [role="menu"].transitioning {
+        transition: transform 5s ease-in-out;
       }
 
       .background-menu {
