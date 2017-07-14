@@ -3,15 +3,19 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.ui.StylesMenu'
   ],
 
-  function (Behaviour, Sliding, GuiFactory, Container, Fun, Styles) {
+  function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Styles, StylesMenu) {
     var build = function (refresh, scrollIntoView) {
+      var menu = Memento.record(StylesMenu.sketch({ }));
       console.log('scrollIntoView', scrollIntoView);
       var dropup = GuiFactory.build(
         Container.sketch({
@@ -19,23 +23,17 @@ define(
             tag: 'div',
             classes: Styles.resolve('dropup'),
             styles: {
-              background: 'blue',
+              // background: 'blue',
               display: 'flex',
               'width': '100%',
               'overflow': 'hidden'
             }
           },
           components: [
-            Container.sketch({
-              dom: {
-                innerHtml: 'Dropup',
-                styles: {
-                  'padding': '50px'
-                }
-              }
-            })
+            
           ],
           containerBehaviours: Behaviour.derive([
+            Replacing.config({ }),
             Sliding.config({
               closedClass: 'dropup-closed',
               openClass: 'dropup-open',
@@ -45,17 +43,18 @@ define(
                 property: 'height'
               },
 
-              onShrunk: function () {
+              onShrunk: function (component) {
                 console.log('onShrunk');
-                debugger;
                 refresh();
                 scrollIntoView();
+
+                Replacing.set(component, [ ]);
               },
-              onGrown: function () {
+              onGrown: function (component) {
                 console.log('onGrown');
-                debugger;
                 refresh();
                 scrollIntoView();
+
               }
             })
           ])
@@ -63,6 +62,7 @@ define(
       );
 
       var appear = function () {
+        Replacing.set(dropup, [ menu.asSpec() ]);
         Sliding.grow(dropup);
       };
 
