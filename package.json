@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@ephox/agar": "*",
-    "@ephox/bolt": "*",
     "@ephox/bedrock": "*",
+    "@ephox/bolt": "*",
     "grunt": "*",
     "grunt-npm": "*"
   },
