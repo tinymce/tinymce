@@ -2,6 +2,8 @@ define(
   'ephox.alloy.demo.CardMenuDemo',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.api.ui.Menu',
@@ -14,7 +16,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Attachment, Gui, Menu, TieredMenu, HtmlDisplay, Element, Class, Css, SelectorFind, Width) {
+  function (Behaviour, Transitioning, Attachment, Gui, Menu, TieredMenu, HtmlDisplay, Element, Class, Css, SelectorFind, Width) {
     return function () {
       var gui = Gui.create();
       var body = Element.fromDom(document.body);
@@ -58,7 +60,18 @@ define(
           components: [
             Menu.parts().items({ })
           ],
-          items: items
+          items: items,
+          menuBehaviours: Behaviour.derive([
+            Transitioning.config({
+              initialState: 'after',
+              routes: Transitioning.createTristate('before', 'current', 'after', {
+                transition: {
+                  property: 'transform',
+                  transitionClass: 'transitioning'
+                }
+              })
+            })
+          ])
         };
       };
 
@@ -94,8 +107,10 @@ define(
         onOpenMenu: function (container, menu) {
           var w = Width.get(container.element());
           Width.set(menu.element(), w);
-          Class.remove(menu.element(), 'transitioning');
-          Css.set(menu.element(), 'transform', 'translate(0%)');
+          Transitioning.jumpTo(menu, 'current');
+
+          // Class.remove(menu.element(), 'transitioning');
+          // Css.set(menu.element(), 'transform', 'translate(0%)');
           // console.log('width', w);
 
           
@@ -103,33 +118,42 @@ define(
         onOpenSubmenu: function (container, item, submenu) {
           var w = Width.get(container.element());
           var menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+          var menuComp = container.getSystem().getByDom(menu).getOrDie();
 
-          Class.remove(submenu.element(), 'transitioning');
           Width.set(submenu.element(), w);
-          Class.remove(submenu.element(), 'transitioning');
-          Css.set(submenu.element(), 'transform', 'translate(100%)');
+
+          Transitioning.progressTo(menuComp, 'before');
+          Transitioning.jumpTo(submenu, 'after');
+          Transitioning.progressTo(submenu, 'current');
+
+          // Class.remove(submenu.element(), 'transitioning');
+          // Width.set(submenu.element(), w);
+          // Class.remove(submenu.element(), 'transitioning');
+          // Css.set(submenu.element(), 'transform', 'translate(100%)');
           
-          Class.add(menu, 'transitioning');
-          Css.reflow(menu);
-          Width.set(menu, w);
-          Css.set(menu, 'transform', 'translate(-100%)');
+          // Class.add(menu, 'transitioning');
+          // Css.reflow(menu);
+          // Width.set(menu, w);
+          // Css.set(menu, 'transform', 'translate(-100%)');
           
-          Class.add(submenu.element(), 'transitioning');
-          Css.reflow(submenu.element());
-          Css.set(submenu.element(), 'transform', 'translate(0%)');
-          Css.reflow(menu);
-          Css.reflow(submenu.element());
+          // Class.add(submenu.element(), 'transitioning');
+          // Css.reflow(submenu.element());
+          // Css.set(submenu.element(), 'transform', 'translate(0%)');
+          // Css.reflow(menu);
+          // Css.reflow(submenu.element());
         },
 
         onCollapseMenu: function (container, item, menu) {
-          var w = Width.get(container.element());
           var submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+          var submenuComp = container.getSystem().getByDom(submenu).getOrDie();
+          Transitioning.progressTo(submenuComp, 'after');
+          Transitioning.progressTo(menu, 'current');
 
           
-          Class.add(menu.element(), 'transitioning');
-          Css.set(menu.element(), 'transform', 'translate(0%)');
-          Class.add(submenu, 'transitioning');
-          Css.set(submenu, 'transform', 'translate(100%)');
+          // Class.add(menu.element(), 'transitioning');
+          // Css.set(menu.element(), 'transform', 'translate(0%)');
+          // Class.add(submenu, 'transitioning');
+          // Css.set(submenu, 'transform', 'translate(100%)');
           // debugger;
         },
 

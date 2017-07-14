@@ -28,6 +28,19 @@
         cursor: pointer;
       }
 
+
+      [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {
+        transform: translate(-100%);
+      }
+
+      [data-transitioning-destination="current"][data-transitioning-state], [data-transitioning-state="current"] { 
+        transform: translate(0%);
+      }
+
+      [data-transitioning-destination="after"][data-transitioning-state], [data-transitioning-state="after"] {
+        transform: translate(100%);
+      }
+
       .background-menu {
         /*display: inline-block;
         overflow: hidden;
