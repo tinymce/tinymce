@@ -3,4 +3,5 @@
 *.iws
 *.sublime-workspace
 /node_modules
+/scratch
 /config/bolt/bootstrap*.js
