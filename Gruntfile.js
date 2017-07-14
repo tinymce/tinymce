@@ -43,7 +43,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['bolt-test']);
     grunt.registerTask('npmpublish', ['bolt-test', 'npm-publish']);
 
-    grunt.loadNpmTasks('@ephox/bolt');
     grunt.loadNpmTasks('@ephox/bedrock');
+    grunt.loadNpmTasks('@ephox/bolt');
     grunt.loadNpmTasks('grunt-npm');
 };
