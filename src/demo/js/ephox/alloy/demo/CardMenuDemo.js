@@ -51,6 +51,24 @@ define(
         };
       };
 
+      var makeSeparator = function (text) {
+        return {
+          type: 'separator',
+          dom: {
+            tag: 'div',
+            classes: [ 'separator' ]
+          },
+          components: [
+            {
+              dom: {
+                tag: 'strong',
+                innerHtml: text
+              }
+            }
+          ]
+        };
+      };
+
       var makeMenu = function (value, items) {
         return {
           value: value,
@@ -134,27 +152,55 @@ define(
 
         openImmediately: true,
         data: TieredMenu.tieredData(
-          'primary',
+          'styles',
           {
-            'primary': makeMenu('primary', [
-              makeItem('alpha', 'Alpha'),
-              makeItem('beta', 'Beta')
+            'styles': makeMenu('Styles', [
+              {
+                type: 'separator',
+                dom: {
+                  tag: 'div',
+                  classes: [ 'separator' ],
+                  innerHtml: '<strong>Styles</strong>'
+                },
+                components: [ ]
+              },
+              makeItem('headers', 'Headers'),
+              makeItem('inline', 'Inline'),
+              makeItem('blocks', 'Blocks'),
+              makeItem('alignment', 'Alignment')
             ]),
 
-            'secondary': makeMenu('secondary', [
+            'headers': makeMenu('Headers', [
               makeBack('Back'),
-              makeItem('animal', 'Animal'),
-              makeItem('bear', 'Bear')
+              makeSeparator('Headers'),
+              makeItem('h1', 'Header 1'),
+              makeItem('h2', 'Header 2'),
+              makeItem('h3', 'Header 3')
             ]),
 
-            'tertiary': makeMenu('secondary', [
+            'inline': makeMenu('Inline', [
               makeBack('Back'),
-              makeItem('university', 'University')
+              makeItem('bold', 'Bold'),
+              makeItem('italic', 'Italic')
+            ]),
+
+            'blocks': makeMenu('Blocks', [
+              makeBack('Back'),
+              makeItem('p', 'Paragraph'),
+              makeItem('blockquote', 'Blockquote'),
+              makeItem('div', 'Div')
+            ]),
+
+            'alignment': makeMenu('Alignment', [
+              makeBack('Back'),
+              makeItem('alignleft', 'Left')
             ])
           },
           {
-            'beta': 'secondary',
-            'alpha': 'tertiary'
+            'headers': 'headers',
+            'inline': 'inline',
+            'blocks': 'blocks',
+            'alignment': 'alignment'
           }
         ),
 
