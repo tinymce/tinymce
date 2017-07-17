@@ -23,6 +23,7 @@ define(
   function (console, DomQuery, EditorManager, CodePlugin, ImageToolsPlugin, ModernTheme) {
     return function () {
       var $ = DomQuery;
+      var imgSrc = '../img/dogleft.jpg';
 
       CodePlugin();
       ImageToolsPlugin();

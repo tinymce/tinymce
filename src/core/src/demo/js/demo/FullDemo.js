@@ -120,7 +120,7 @@ define(
         selector: "textarea",
         theme: "modern",
         plugins: [
-          "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
+          "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
           "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
         ],
