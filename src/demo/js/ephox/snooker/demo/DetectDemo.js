@@ -9,16 +9,16 @@ define(
     'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Direction',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Ready',
-    'ephox.sugar.api.Replication',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Direction',
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.InsertAll',
+    'ephox.syrup.api.Ready',
+    'ephox.syrup.api.Replication',
+    'ephox.syrup.api.SelectorFind'
   ],
 
   function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {

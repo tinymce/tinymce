@@ -3,13 +3,13 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.InsertAll',
+    'ephox.syrup.api.Remove',
+    'ephox.syrup.api.SelectorFind',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Arr, Attr, Element, Insert, InsertAll, Remove, SelectorFind, Traverse) {

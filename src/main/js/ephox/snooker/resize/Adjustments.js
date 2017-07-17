@@ -10,7 +10,7 @@ define(
     'ephox.snooker.resize.Recalculations',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
-    'ephox.sugar.api.SelectorFind',
+    'ephox.syrup.api.SelectorFind',
     'global!Math'
   ],
 

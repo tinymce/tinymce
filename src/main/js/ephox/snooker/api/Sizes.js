@@ -11,9 +11,9 @@ define(
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Width'
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Height',
+    'ephox.syrup.api.Width'
   ],
 
   function (Arr, Fun, DetailsList, Warehouse, BarPositions, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {

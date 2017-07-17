@@ -7,7 +7,7 @@ define(
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellBounds',
     'ephox.snooker.selection.CellGroup',
-    'ephox.sugar.api.Compare'
+    'ephox.syrup.api.Compare'
   ],
 
   function (Arr, Fun, Warehouse, CellBounds, CellGroup, Compare) {

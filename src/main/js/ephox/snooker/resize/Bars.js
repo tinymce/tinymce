@@ -8,14 +8,14 @@ define(
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Bar',
     'ephox.snooker.style.Styles',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.Width'
+    'ephox.syrup.api.Class',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Height',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.Location',
+    'ephox.syrup.api.Remove',
+    'ephox.syrup.api.SelectorFilter',
+    'ephox.syrup.api.Width'
   ],
 
   function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {

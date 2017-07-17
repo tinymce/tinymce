@@ -14,8 +14,8 @@ define(
     'ephox.snooker.operate.Redraw',
     'ephox.snooker.resize.BarPositions',
     'ephox.snooker.resize.Bars',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {

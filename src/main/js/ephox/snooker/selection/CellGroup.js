@@ -5,7 +5,7 @@ define(
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellBounds',
-    'ephox.sugar.api.Compare',
+    'ephox.syrup.api.Compare',
     'global!Math'
   ],
 

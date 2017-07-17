@@ -7,8 +7,8 @@ define(
     'ephox.perhaps.Option',
     'ephox.scullion.Cell',
     'ephox.scullion.Contracts',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Css',
     'global!parseInt'
   ],
 

@@ -8,12 +8,12 @@ define(
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.util.LayerSelector',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Selectors'
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.Remove',
+    'ephox.syrup.api.Selectors'
   ],
 
   function (Arr, Obj, Struct, DetailsList, Warehouse, LayerSelector, Attr, Css, Element, Insert, Remove, Selectors) {

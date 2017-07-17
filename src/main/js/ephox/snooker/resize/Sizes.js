@@ -3,11 +3,11 @@ define(
 
   [
     'ephox.snooker.api.TableLookup',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Width',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Height',
+    'ephox.syrup.api.Node',
+    'ephox.syrup.api.Width',
     'ephox.violin.Strings',
     'global!Math',
     'global!parseInt'

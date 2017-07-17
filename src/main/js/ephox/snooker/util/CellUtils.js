@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Css',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Css',
     'global!parseInt'
   ],
 
