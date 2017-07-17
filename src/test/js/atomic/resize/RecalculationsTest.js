@@ -2,9 +2,9 @@ test(
   'RecalculationsTest',
 
   {
-    'ephox.syrup.api.Css': '../mock/ephox/sugar/api/Css',
-    'ephox.syrup.api.Attr': '../mock/ephox/sugar/api/Attr',
-    'ephox.syrup.api.SelectorFind': '../mock/ephox/sugar/api/SelectorFind',
+    'ephox.syrup.api.Css': '../mock/ephox/syrup/api/Css',
+    'ephox.syrup.api.Attr': '../mock/ephox/syrup/api/Attr',
+    'ephox.syrup.api.SelectorFind': '../mock/ephox/syrup/api/SelectorFind',
     'ephox.snooker.model.DetailsList': '../mock/ephox/snooker/model/DetailsList',
     'ephox.snooker.resize.Sizes': '../mock/ephox/snooker/resize/Sizes'
   },
