@@ -2,19 +2,18 @@ define(
   'ephox.dragster.demo.DragsterDemo',
 
   [
-    'ephox.wrap.JQuery',
     'ephox.dragster.api.Dragger',
     'ephox.dragster.demo.Sizers',
     'ephox.dragster.transform.Grow',
     'ephox.dragster.transform.Relocate',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.SelectorFind'
   ],
 
-  function ($, Dragger, Sizers, Grow, Relocate, Css, DomEvent, Element, Insert, SelectorFind) {
+  function (Dragger, Sizers, Grow, Relocate, Css, DomEvent, Element, Insert, SelectorFind) {
     return function () {
       // var container = $('<div/>').append('Hi.');
 

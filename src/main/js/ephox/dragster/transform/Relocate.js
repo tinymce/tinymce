@@ -4,8 +4,8 @@ define(
   [
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.sugar.api.Css',
-    'ephox.sugar.api.Location'
+    'ephox.syrup.api.Css',
+    'ephox.syrup.api.Location'
   ],
 
   function (Event, Events, Css, Location) {
