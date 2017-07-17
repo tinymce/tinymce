@@ -1,6 +1,6 @@
 {
   "name": "@ephox/snooker",
-  "description": "This project does TODO",
+  "description": "This project implements the table model.",
   "version": "3.0.0",
   "dependencies": {
     "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
