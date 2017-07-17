@@ -70,6 +70,12 @@ define(
         });
       };
 
+      var sDeleteSetting = function (key) {
+        return Step.sync(function () {
+          delete editor.settings[key];
+        });
+      };
+
       var sSelect = function (selector, path) {
         return Chain.asStep(lazyBody(), [
           UiFinder.cFindIn(selector),
@@ -121,7 +127,7 @@ define(
         var message = function () {
           var actual = Element.fromDom(actElement);
           var actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-          return 'Expected path: '  + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
+          return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
         };
         Assertions.assertEq('Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
         Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
@@ -165,6 +171,7 @@ define(
         sSetSelectionFrom: sSetSelectionFrom,
         sSetSelection: sSetSelection,
         sSetSetting: sSetSetting,
+        sDeleteSetting: sDeleteSetting,
         sSetCursor: sSetCursor,
         sSelect: sSelect,
         sExecCommand: sExecCommand,
