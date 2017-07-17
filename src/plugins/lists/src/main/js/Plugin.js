@@ -18,9 +18,10 @@ define(
     'tinymce.plugins.lists.actions.Outdent',
     'tinymce.plugins.lists.actions.ToggleList',
     'tinymce.plugins.lists.core.Delete',
-    'tinymce.plugins.lists.core.NodeType'
+    'tinymce.plugins.lists.core.NodeType',
+    'tinymce.plugins.lists.core.Selection'
   ],
-  function (PluginManager, Tools, VK, Indent, Outdent, ToggleList, Delete, NodeType) {
+  function (PluginManager, Tools, VK, Indent, Outdent, ToggleList, Delete, NodeType, Selection) {
     var queryListCommandState = function (editor, listName) {
       return function () {
         var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
@@ -126,15 +127,8 @@ define(
           var ctrl = e.control;
 
           editor.on('nodechange', function () {
-            var blocks = editor.selection.getSelectedBlocks();
-            var disable = false;
-
-            for (var i = 0, l = blocks.length; !disable && i < l; i++) {
-              var tag = blocks[i].nodeName;
-
-              disable = (tag === 'LI' && NodeType.isFirstChild(blocks[i]) || tag === 'UL' || tag === 'OL' || tag === 'DD');
-            }
-
+            var listItemBlocks = Selection.getSelectedListItems(editor);
+            var disable = listItemBlocks.length > 0 && NodeType.isFirstChild(listItemBlocks[0]);
             ctrl.disabled(disable);
           });
         }

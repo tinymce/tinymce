@@ -290,6 +290,30 @@ asynctest(
       );
     });
 
+    suite.test('Indent on second li with inner block element', function (editor) {
+      editor.getBody().innerHTML = LegacyUnit.trimBrs(
+        '<ul>' +
+        '<li><p>a</p></li>' +
+        '<li><p>b</p></li>' +
+        '<li><p>c</p></li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'ul > li:nth-child(2) > p', 0);
+      LegacyUnit.execCommand(editor, 'Indent');
+
+      LegacyUnit.equal(editor.getContent(),
+        '<ul>' +
+          '<li>' +
+            '<p>a</p>' +
+            '<ul><li><p>b</p></li></ul>' +
+          '</li>' +
+          '<li><p>c</p></li>' +
+        '</ul>'
+      );
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
