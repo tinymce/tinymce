@@ -111,8 +111,7 @@ define(
             cClickToolbarButton(label),
             Chain.fromParent(cWaitForChain(cFindChildWithState('.mce-container.mce-form', Visibility.isVisible)), [
               Chain.fromChains([
-                cInteractWithUi,
-                Chain.wait(200) // we wait until image updates
+                cInteractWithUi
               ]),
               cClickButton('Apply')
             ]),

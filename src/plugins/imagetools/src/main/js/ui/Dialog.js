@@ -166,10 +166,26 @@ define(
         updateButtonUndoStates();
       }
 
+      function waitForTempState(times, applyCall) {
+        if (tempState) {
+          applyCall();
+        } else {
+          setTimeout(function () {
+            if (times-- > 0) {
+              waitForTempState(times, applyCall);
+            } else {
+              editor.windowManager.alert('Error: failed to apply image operation.');
+            }
+          }, 10);
+        }
+      }
+
       function applyTempState() {
         if (tempState) {
           addBlobState(tempState.blob);
           cancel();
+        } else {
+          waitForTempState(100, applyTempState);
         }
       }
 
