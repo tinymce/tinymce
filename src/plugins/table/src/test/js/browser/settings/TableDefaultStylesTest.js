@@ -29,7 +29,7 @@ asynctest(
           tinyApis.sFocus,
           tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
           tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
-          tinyUi.sClickOnUi('click table grid', 'a#mcegrid11'),
+          tinyUi.sClickOnUi('click table grid', 'td[role="gridcell"]:first a'),
           Step.sync(function () {
             var table = editor.getBody().querySelector('table');
             RawAssertions.assertEq('should be empty', '', table.style.border);
@@ -42,7 +42,7 @@ asynctest(
           tinyApis.sSetSetting('table_default_styles', { border: '3px solid blue' }),
           tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
           tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
-          tinyUi.sClickOnUi('click table grid', 'a#mcegrid11'),
+          tinyUi.sClickOnUi('click table grid', 'td[role="gridcell"]:first a'),
           Step.sync(function () {
             var table = editor.getBody().querySelector('table');
             RawAssertions.assertEq('should be undefined', '3px solid blue', table.style.border);

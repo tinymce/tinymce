@@ -12,7 +12,7 @@ define(
     var sOpenToolbarOn = function (editor, selector, path) {
       return Chain.asStep(TinyDom.fromDom(editor.getBody()), [
         UiFinder.cFindIn(selector),
-        Cursors.cFollow(path ? path : [0]),
+        Cursors.cFollow(path),
         Chain.op(function (target) {
           editor.selection.select(target.dom());
         }),

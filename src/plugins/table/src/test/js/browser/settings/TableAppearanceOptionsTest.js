@@ -38,7 +38,7 @@ asynctest(
             tinyUi.cWaitForPopup('wait for popup', 'div[aria-label="Table properties"][role="dialog"]'),
             Chain.op(function (x) {
               Assertions.assertPresence(
-                'assert presence',
+                'assert presence of spacing, padding, border and caption inputs',
                 {
                   'label:contains("Cell spacing")': 0,
                   'label:contains("Cell padding")': 0,
