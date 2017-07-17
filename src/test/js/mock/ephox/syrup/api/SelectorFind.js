@@ -1,5 +1,5 @@
 define(
-  'ephox.sugar.api.SelectorFind',
+  'ephox.syrup.api.SelectorFind',
 
   [
     'ephox.peanut.Fun',

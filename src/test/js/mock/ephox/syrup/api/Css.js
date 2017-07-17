@@ -1,5 +1,5 @@
 define(
-  'ephox.sugar.api.Css',
+  'ephox.syrup.api.Css',
 
   [
     'ephox.peanut.Fun'

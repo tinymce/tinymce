@@ -4,8 +4,8 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.sugar.api.Selectors',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Selectors',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Arr, Fun, Selectors, Traverse) {

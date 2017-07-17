@@ -6,7 +6,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
-    'ephox.sugar.api.Attr'
+    'ephox.syrup.api.Attr'
   ],
 
   function (Arr, Fun, Structs, TableLookup, Attr) {

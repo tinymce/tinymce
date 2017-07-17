@@ -6,12 +6,12 @@ define(
     'ephox.snooker.api.PickerDirection',
     'ephox.snooker.demo.DemoTranslations',
     'ephox.snooker.picker.PickerUi',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.DomEvent',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Focus',
-    'ephox.sugar.api.Insert',
-    'ephox.sugar.api.Remove',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.DomEvent',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Focus',
+    'ephox.syrup.api.Insert',
+    'ephox.syrup.api.Remove',
     'global!Math'
   ],
 
@@ -19,8 +19,8 @@ define(
     return function () {
 
       var picker = PickerUi(PickerDirection.rtl, {
-        maxCols: 34,
-        maxRows: 34,
+        maxCols: 10,
+        maxRows: 10,
         minCols: 1,
         minRows: 1
       }, AriaGrid.createHelp(10, 10, DemoTranslations));

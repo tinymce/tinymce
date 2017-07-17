@@ -1,0 +1,85 @@
+#ephox-ui {
+  margin-bottom: 20px;
+}
+
+.ephox-snooker-table-picker {
+  /*border: none;*/
+  padding: 0;
+  margin: 0;
+  border-spacing: .25em;
+  border-collapse: separate;
+}
+
+.ephox-echo-aria-help {
+  display: none;
+}
+
+
+.ephox-snooker-table-picker .ephox-snooker-table-picker-cell {
+  /*border: none;*/
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+
+  /* Yes, 1.5px is weird. But 1.5 + 1.5 == 3px between cells */
+  margin: 1px 1.5px;
+
+  /* Force <button> to play nice like div */
+  box-sizing: content-box;
+  padding: 0;
+  background-color: inherit;
+}
+
+.ephox-snooker-table-picker .ephox-snooker-table-picker-row {
+  white-space: nowrap;
+}
+
+.ephox-snooker-table-picker {
+  padding-top: 1em;
+}
+
+
+.ephox-snooker-table-picker {
+  display: inline-block;
+  border: 5px solid black;
+}
+
+.ephox-snooker-table-picker .ephox-snooker-table-picker-cell {
+  border: 1px solid black;
+  width: 30px;
+  height: 30px;
+}
+
+.ephox-snooker-adjust-se-resize {
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
+
+.ephox-snooker-adjust-selected {
+  border-collapse: collapse !important;
+}
+
+.ephox-snooker-adjust-selected .ephox-snooker-table-picker-cell {
+  border-bottom: 1px solid #ccc !important;
+}
+
+.ephox-snooker-adjust-selected .ephox-snooker-table-picker-cell {
+  border-right: 1px solid #ccc !important;
+}
+
+.ephox-snooker-adjust-selected .ephox-snooker-table-picker-cell {
+  border: none;
+}
+
+.ephox-snooker-table-picker-cell.ephox-snooker-picker-selected {
+  background-color: #CADBEE;
+}
+
+.ephox-snooker-picker-selected.ephox-snooker-picker-header {
+  background-color: #BEECAD;
+}

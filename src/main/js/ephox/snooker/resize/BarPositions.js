@@ -5,9 +5,9 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.scullion.Struct',
-    'ephox.sugar.api.Height',
-    'ephox.sugar.api.Location',
-    'ephox.sugar.api.Width'
+    'ephox.syrup.api.Height',
+    'ephox.syrup.api.Location',
+    'ephox.syrup.api.Width'
   ],
 
   function (Arr, Fun, Struct, Height, Location, Width) {

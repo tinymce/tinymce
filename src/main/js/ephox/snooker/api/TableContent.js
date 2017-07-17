@@ -5,14 +5,14 @@ define(
     'ephox.compass.Arr',
     'ephox.oath.navigation.Descend',
     'ephox.robin.api.dom.DomStructure',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.InsertAll',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.PredicateFind',
-    'ephox.sugar.api.Remove',
-    'ephox.sugar.api.Text',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.InsertAll',
+    'ephox.syrup.api.Node',
+    'ephox.syrup.api.PredicateFind',
+    'ephox.syrup.api.Remove',
+    'ephox.syrup.api.Text',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove, Text, Traverse) {

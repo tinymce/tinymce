@@ -4,9 +4,9 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.alien.Position',
-    'ephox.sugar.api.Element',
-    'ephox.sugar.api.Location'
+    'ephox.syrup.alien.Position',
+    'ephox.syrup.api.Element',
+    'ephox.syrup.api.Location'
   ],
 
   function (Fun, Option, Position, Element, Location) {

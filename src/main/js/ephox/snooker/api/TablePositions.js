@@ -7,7 +7,7 @@ define(
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellFinder',
     'ephox.snooker.selection.CellGroup',
-    'ephox.sugar.api.Compare'
+    'ephox.syrup.api.Compare'
   ],
 
   function (TableLookup, DetailsList, Warehouse, CellFinder, CellGroup, Compare) {

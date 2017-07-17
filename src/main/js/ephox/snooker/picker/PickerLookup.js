@@ -4,9 +4,9 @@ define(
   [
     'ephox.snooker.api.Structs',
     'ephox.snooker.picker.PickerStyles',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.SelectorFilter',
+    'ephox.syrup.api.SelectorFind',
     'global!parseInt'
   ],
 

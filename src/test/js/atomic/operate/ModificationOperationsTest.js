@@ -2,8 +2,8 @@ test(
   'ModificationOperationsTest',
 
   {
-    'ephox.sugar.api.Css': '../mock/ephox/sugar/api/Css',
-    'ephox.sugar.api.Attr': '../mock/ephox/sugar/api/Attr'
+    'ephox.syrup.api.Css': '../mock/ephox/syrup/api/Css',
+    'ephox.syrup.api.Attr': '../mock/ephox/syrup/api/Attr'
   },
 
   [

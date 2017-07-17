@@ -8,7 +8,7 @@ define(
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.snooker.util.Util',
-    'ephox.sugar.api.Css'
+    'ephox.syrup.api.Css'
   ],
 
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {

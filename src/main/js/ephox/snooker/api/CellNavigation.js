@@ -7,7 +7,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.api.CellLocation',
     'ephox.snooker.api.TableLookup',
-    'ephox.sugar.api.Compare'
+    'ephox.syrup.api.Compare'
   ],
 
   function (Arr, Fun, Option, CellLocation, TableLookup, Compare) {

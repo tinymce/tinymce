@@ -7,12 +7,12 @@ define(
     'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.util.LayerSelector',
-    'ephox.sugar.api.Attr',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Selectors',
-    'ephox.sugar.api.Traverse',
+    'ephox.syrup.api.Attr',
+    'ephox.syrup.api.Node',
+    'ephox.syrup.api.SelectorFilter',
+    'ephox.syrup.api.SelectorFind',
+    'ephox.syrup.api.Selectors',
+    'ephox.syrup.api.Traverse',
     'global!parseInt'
   ],
 

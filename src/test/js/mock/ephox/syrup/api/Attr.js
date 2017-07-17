@@ -1,5 +1,5 @@
 define(
-  'ephox.sugar.api.Attr',
+  'ephox.syrup.api.Attr',
 
   [
     'ephox.peanut.Fun'
