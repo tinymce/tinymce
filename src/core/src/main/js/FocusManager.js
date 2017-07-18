@@ -136,25 +136,6 @@ define(
                 }
               });
             }
-
-            // Handles the issue with WebKit not retaining selection within inline document
-            // If the user releases the mouse out side the body since a mouse up event wont occur on the body
-            if (Env.webkit && !selectionChangeHandler) {
-              selectionChangeHandler = function () {
-                var activeEditor = editorManager.activeEditor;
-
-                if (activeEditor && activeEditor.selection) {
-                  var rng = activeEditor.selection.getRng();
-
-                  // Store when it's non collapsed
-                  if (rng && !rng.collapsed) {
-                    editor.lastRng = rng;
-                  }
-                }
-              };
-
-              DOM.bind(document, 'selectionchange', selectionChangeHandler);
-            }
           }
         });
 
