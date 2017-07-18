@@ -11,8 +11,8 @@ define(
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Node'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.Node'
   ],
 
   function (Carets, Rectangles, Retries, BeforeAfter, BrTags, PlatformDetection, Awareness, Option, Spot, Compare, Node) {

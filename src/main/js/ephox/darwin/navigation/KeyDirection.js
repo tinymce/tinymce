@@ -6,7 +6,7 @@ define(
     'ephox.darwin.navigation.BeforeAfter',
     'ephox.fussy.api.Situ',
     'ephox.phoenix.api.dom.DomGather',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Retries, BeforeAfter, Situ, DomGather, Traverse) {

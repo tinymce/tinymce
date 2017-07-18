@@ -10,10 +10,10 @@ define(
     'ephox.fussy.api.Situ',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.PredicateExists',
-    'ephox.sugar.api.SelectorFind',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.PredicateExists',
+    'ephox.syrup.api.SelectorFind',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (Responses, KeySelection, TableKeys, PlatformDetection, SelectionRange, Situ, Fun, Option, Compare, PredicateExists, SelectorFind, Traverse) {

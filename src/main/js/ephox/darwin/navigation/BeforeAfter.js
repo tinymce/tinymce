@@ -5,8 +5,8 @@ define(
     'ephox.oath.proximity.Awareness',
     'ephox.robin.api.dom.DomParent',
     'ephox.scullion.ADT',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.SelectorFind'
   ],
 
   function (Awareness, DomParent, Adt, Compare, SelectorFind) {

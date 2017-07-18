@@ -5,8 +5,8 @@ define(
     'ephox.darwin.selection.CellSelection',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.SelectorFind'
   ],
 
   function (CellSelection, Fun, Option, Compare, SelectorFind) {

@@ -9,8 +9,8 @@ define(
     'ephox.fussy.api.WindowSelection',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.SelectorFind'
   ],
 
   function (Responses, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Option, Compare, SelectorFind) {
