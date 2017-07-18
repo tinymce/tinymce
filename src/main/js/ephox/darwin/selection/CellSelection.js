@@ -8,11 +8,11 @@ define(
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
-    'ephox.sugar.api.Class',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.OnNode',
-    'ephox.sugar.api.SelectorFilter',
-    'ephox.sugar.api.SelectorFind'
+    'ephox.syrup.api.Class',
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.OnNode',
+    'ephox.syrup.api.SelectorFilter',
+    'ephox.syrup.api.SelectorFind'
   ],
 
   function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, Compare, OnNode, SelectorFilter, SelectorFind) {

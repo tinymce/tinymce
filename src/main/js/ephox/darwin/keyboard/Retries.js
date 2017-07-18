@@ -9,7 +9,7 @@ define(
     'ephox.phoenix.api.dom.DomGather',
     'ephox.robin.api.dom.DomStructure',
     'ephox.scullion.ADT',
-    'ephox.sugar.api.PredicateFind',
+    'ephox.syrup.api.PredicateFind',
     'global!Math'
   ],
 

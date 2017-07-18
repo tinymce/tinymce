@@ -5,7 +5,7 @@ define(
     'ephox.darwin.keyboard.Carets',
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
-    'ephox.sugar.api.Node'
+    'ephox.syrup.api.Node'
   ],
 
   function (Carets, Awareness, Option, Node) {

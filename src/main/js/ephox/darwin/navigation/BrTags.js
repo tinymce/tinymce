@@ -8,10 +8,10 @@ define(
     'ephox.oath.proximity.Awareness',
     'ephox.perhaps.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.sugar.api.ElementFind',
-    'ephox.sugar.api.Node',
-    'ephox.sugar.api.Text',
-    'ephox.sugar.api.Traverse'
+    'ephox.syrup.api.ElementFind',
+    'ephox.syrup.api.Node',
+    'ephox.syrup.api.Text',
+    'ephox.syrup.api.Traverse'
   ],
 
   function (BeforeAfter, SelectionRange, Situ, Awareness, Option, Spot, ElementFind, Node, Text, Traverse) {
