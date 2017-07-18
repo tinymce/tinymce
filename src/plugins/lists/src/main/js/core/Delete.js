@@ -137,6 +137,15 @@ define(
       return false;
     };
 
+    var removeBlock = function (dom, block) {
+      var parentBlock = dom.getParent(block.parentNode, dom.isBlock);
+
+      dom.remove(block);
+      if (parentBlock && dom.isEmpty(parentBlock)) {
+        dom.remove(parentBlock);
+      }
+    };
+
     var backspaceDeleteIntoListCaret = function (editor, isForward) {
       var dom = editor.dom;
       var block = dom.getParent(editor.selection.getStart(), dom.isBlock);
@@ -147,7 +156,7 @@ define(
 
         if (otherLi) {
           editor.undoManager.transact(function () {
-            dom.remove(block);
+            removeBlock(dom, block);
             ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
             editor.selection.select(otherLi, true);
             editor.selection.collapse(isForward);
