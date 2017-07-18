@@ -1,6 +1,6 @@
 {
   "name": "@ephox/darwin",
-  "description": "This project does TODO",
+  "description": "This project's purpose is to handle selection and cursor navigation.",
   "version": "2.0.0",
   "dependencies": {
     "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
