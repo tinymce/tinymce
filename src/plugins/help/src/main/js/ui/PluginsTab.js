@@ -9,7 +9,7 @@ define(
     'tinymce.plugins.help.data.PluginUrls'
   ],
 function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
-  var makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank">${name}</a>');
+  var makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');
 
   var maybeUrlize = function (editor, key) {
     return Arr.find(PluginUrls.urls, function (x) {
