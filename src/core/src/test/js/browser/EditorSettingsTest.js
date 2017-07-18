@@ -39,19 +39,6 @@ asynctest(
             Assertions.assertEq('Should have the default theme', 'modern', settings.theme);
             Assertions.assertEq('Should have the default overrides plugins', ['a'], settings.plugins);
           })
-        ),
-        Logger.t('Test undefined settings does not throw error',
-          Step.sync(function () {
-            var settings = EditorSettings.getEditorSettings(
-              editor,
-              'id',
-              'documentBaseUrl',
-              {},
-              undefined
-            );
-
-            Assertions.assertEq('Should have the specified id', 'id', settings.id);
-          })
         )
       ], onSuccess, onFailure);
     }, {
