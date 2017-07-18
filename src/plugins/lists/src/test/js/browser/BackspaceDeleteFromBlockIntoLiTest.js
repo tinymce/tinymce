@@ -51,6 +51,13 @@ asynctest(
           tinyApis.sSetCursor([1, 0, 0, 0], 0),
           tinyActions.sContentKeystroke(Keys.backspace(), { }),
           tinyApis.sAssertContent('<ul><li>a</li></ul>')
+        ])),
+        Logger.t('backspace from p into li', GeneralSteps.sequence([
+          tinyApis.sFocus,
+          tinyApis.sSetContent('<ul><li>a</li></ul><p><br /></p>'),
+          tinyApis.sSetCursor([1, 0], 0),
+          tinyActions.sContentKeystroke(Keys.backspace(), { }),
+          tinyApis.sAssertContent('<ul><li>a</li></ul>')
         ]))
       ], onSuccess, onFailure);
     }, {

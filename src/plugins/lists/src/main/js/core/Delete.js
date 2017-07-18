@@ -141,7 +141,7 @@ define(
       var parentBlock = dom.getParent(block.parentNode, dom.isBlock);
 
       dom.remove(block);
-      if (dom.isEmpty(parentBlock)) {
+      if (parentBlock && dom.isEmpty(parentBlock)) {
         dom.remove(parentBlock);
       }
     };
