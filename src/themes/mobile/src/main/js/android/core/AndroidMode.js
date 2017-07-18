@@ -25,9 +25,6 @@ define(
 
         Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
         Class.add(platform.container, Styles.resolve('android-maximized'));
-        PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
-          Thor.clobberStyles(platform.container, editorApi.body());
-        });
         meta.maximize();
 
         /// TM-48 Prevent browser refresh by swipe/scroll on android devices
@@ -38,6 +35,7 @@ define(
         );
 
         PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
+          Thor.clobberStyles(platform.container, editorApi.body());
           androidEvents.set(
             AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy)
           );
