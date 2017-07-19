@@ -65,7 +65,7 @@ define(
           // we do not need to add this to editors blobCache, so we fake bare minimum
           var blobInfo = editor.editorUpload.blobCache.create({
             blob: file,
-            name: file.name.replace(/\.[^\.]+$/, ''), // strip extension
+            name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null, // strip extension
             base64: 'data:image/fake;base64,=' // without this create() will throw exception
           });
 
