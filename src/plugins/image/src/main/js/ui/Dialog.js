@@ -382,7 +382,7 @@ define(
           imageListCtrl = {
             type: 'listbox',
             label: 'Image list',
-            values: Utils.autofocusbuildListItems(
+            values: Utils.buildListItems(
               imageList,
               function (item) {
                 item.value = editor.convertURL(item.value || item.url, 'src');
