@@ -680,31 +680,167 @@ asynctest(
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
     });
 
-    if (Env.ie === 11) {
-      suite.test('Backspace merge li elements on IE 11', function (editor) {
-        // IE allows you to place the caret inside a LI without children
-        editor.getBody().innerHTML = LegacyUnit.trimBrs(
-          '<ul>' +
-          '<li>a</li>' +
-          '<li></li>' +
-          '</ul>'
-        );
+    suite.test('Backspace merge li elements', function (editor) {
+      // IE allows you to place the caret inside a LI without children
+      editor.getBody().innerHTML = LegacyUnit.trimBrs(
+        '<ul>' +
+        '<li>a</li>' +
+        '<li></li>' +
+        '</ul>'
+      );
 
-        editor.focus();
-        LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
 
-        editor.plugins.lists.backspaceDelete();
+      editor.plugins.lists.backspaceDelete();
 
-        LegacyUnit.equal(editor.getContent(),
-          '<ul>' +
-          '<li>a</li>' +
-          '</ul>'
-        );
+      LegacyUnit.equal(editor.getContent(),
+        '<ul>' +
+        '<li>a</li>' +
+        '</ul>'
+      );
 
-        LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
-        LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
-      });
-    }
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+      LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeType, 3, 'Should be a text node');
+    });
+
+    suite.test('Backspace at block inside li element into li without block element', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ul>' +
+          '<li>1</li>' +
+          '<li><p>2</p></li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.plugins.lists.backspaceDelete();
+
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul>' +
+          '<li>12</li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    });
+
+    suite.test('Backspace at block inside li element into li with block element', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ul>' +
+          '<li><p>1</p></li>' +
+          '<li><p>2</p></li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(2) p', 0);
+      editor.plugins.lists.backspaceDelete();
+
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul>' +
+          '<li><p>12</p></li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    });
+
+    suite.test('Backspace at block inside li element into li with multiple block elements', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ul>' +
+          '<li><p>1</p><p>2</p></li>' +
+          '<li><p>3</p></li>' +
+          '<li>4</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(2) p', 0);
+      editor.plugins.lists.backspaceDelete();
+
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul>' +
+          '<li><p>1</p><p>2</p>3</li>' +
+          '<li>4</li>' +
+        '</ul>'
+      );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    });
+
+    suite.test('Delete at block inside li element into li without block element', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ul>' +
+          '<li><p>1</p></li>' +
+          '<li>2</li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'p', 1);
+      editor.plugins.lists.backspaceDelete(true);
+
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul>' +
+          '<li><p>12</p></li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    });
+
+    suite.test('Delete at block inside li element into li with block element', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ul>' +
+          '<li><p>1</p></li>' +
+          '<li><p>2</p></li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(1) p', 1);
+      editor.plugins.lists.backspaceDelete(true);
+
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul>' +
+          '<li><p>12</p></li>' +
+          '<li>3</li>' +
+        '</ul>'
+      );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    });
+
+    suite.test('Delete at block inside li element into li with multiple block elements', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ul>' +
+          '<li>1</li>' +
+          '<li><p>2</p><p>3</p></li>' +
+          '<li>4</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1);
+      editor.plugins.lists.backspaceDelete(true);
+
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul>' +
+          '<li>1<p>2</p><p>3</p></li>' +
+          '<li>4</li>' +
+        '</ul>'
+      );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
