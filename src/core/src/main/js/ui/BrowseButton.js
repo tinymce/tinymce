@@ -21,9 +21,10 @@ define(
     'tinymce.core.ui.Button',
     'tinymce.core.util.Tools',
     'tinymce.core.ui.DomUtils',
+    'tinymce.core.dom.DomQuery',
     'global!RegExp'
   ],
-  function (Button, Tools, DomUtils, RegExp) {
+  function (Button, Tools, DomUtils, $, RegExp) {
     return Button.extend({
       /**
        * Constructs a instance with the specified settings.
@@ -60,37 +61,55 @@ define(
       postRender: function () {
         var self = this;
 
+        var input = DomUtils.create('input', {
+          type: 'file',
+          id: self._id + '-browse',
+          accept: self.settings.accept
+        });
+
         self._super();
 
-        self.on('click', function () {
-          var input = DomUtils.create('input', {
-            type: 'file',
-            accept: self.settings.accept
-          });
+        $(input).on('change', function (e) {
+          var files = e.target.files;
 
-          DomUtils.on(input, 'change', function onChange(e) {
-            var files = e.target.files;
-
-            self.value = function () {
-              if (!files.length) {
-                return null;
-              } else if (self.settings.multiple) {
-                return files;
-              } else {
-                return files[0];
-              }
-            };
-
-            e.preventDefault();
-            DomUtils.off(this, 'change', onChange);
-
-            if (files.length) {
-              self.fire('change', e);
+          self.value = function () {
+            if (!files.length) {
+              return null;
+            } else if (self.settings.multiple) {
+              return files;
+            } else {
+              return files[0];
             }
-          });
+          };
 
+          e.preventDefault();
+
+          if (files.length) {
+            self.fire('change', e);
+          }
+        });
+
+        // ui.Button prevents default on click, so we shouldn't let the click to propagate up to it
+        $(input).on('click', function (e) {
+          e.stopPropagation();
+        });
+
+        $(self.getEl('button')).on('click', function (e) {
+          e.stopPropagation();
           input.click();
         });
+
+        // in newer browsers input doesn't have to be attached to dom to trigger browser dialog
+        // however older IE11 (< 11.1358.14393.0) still requires this
+        self.getEl().appendChild(input);
+      },
+
+
+      remove: function () {
+        $(this.getEl('button')).off();
+        $(this.getEl('input')).off();
+
+        this._super();
       }
     });
   }
