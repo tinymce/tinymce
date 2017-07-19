@@ -470,21 +470,6 @@ define(
         }
 
         if (editor.settings.image_advtab || editor.settings.images_upload_url) {
-          // Parse styles from img
-          if (imgElm) {
-            if (imgElm.style.marginLeft && imgElm.style.marginRight && imgElm.style.marginLeft === imgElm.style.marginRight) {
-              data.hspace = Utils.removePixelSuffix(imgElm.style.marginLeft);
-            }
-            if (imgElm.style.marginTop && imgElm.style.marginBottom && imgElm.style.marginTop === imgElm.style.marginBottom) {
-              data.vspace = Utils.removePixelSuffix(imgElm.style.marginTop);
-            }
-            if (imgElm.style.borderWidth) {
-              data.border = Utils.removePixelSuffix(imgElm.style.borderWidth);
-            }
-
-            data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
-          }
-
           var body = [
             {
               title: 'General',
@@ -493,37 +478,54 @@ define(
             }
           ];
 
-          body.push({
-            title: 'Advanced',
-            type: 'form',
-            pack: 'start',
-            items: [
-              {
-                label: 'Style',
-                name: 'style',
-                type: 'textbox',
-                onchange: updateVSpaceHSpaceBorder
-              },
-              {
-                type: 'form',
-                layout: 'grid',
-                packV: 'start',
-                columns: 2,
-                padding: 0,
-                alignH: ['left', 'right'],
-                defaults: {
-                  type: 'textbox',
-                  maxWidth: 50,
-                  onchange: updateStyle
-                },
-                items: [
-                  { label: 'Vertical space', name: 'vspace' },
-                  { label: 'Horizontal space', name: 'hspace' },
-                  { label: 'Border', name: 'border' }
-                ]
+          if (editor.settings.image_advtab) {
+            // Parse styles from img
+            if (imgElm) {
+              if (imgElm.style.marginLeft && imgElm.style.marginRight && imgElm.style.marginLeft === imgElm.style.marginRight) {
+                data.hspace = Utils.removePixelSuffix(imgElm.style.marginLeft);
               }
-            ]
-          });
+              if (imgElm.style.marginTop && imgElm.style.marginBottom && imgElm.style.marginTop === imgElm.style.marginBottom) {
+                data.vspace = Utils.removePixelSuffix(imgElm.style.marginTop);
+              }
+              if (imgElm.style.borderWidth) {
+                data.border = Utils.removePixelSuffix(imgElm.style.borderWidth);
+              }
+
+              data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
+            }
+
+            body.push({
+              title: 'Advanced',
+              type: 'form',
+              pack: 'start',
+              items: [
+                {
+                  label: 'Style',
+                  name: 'style',
+                  type: 'textbox',
+                  onchange: updateVSpaceHSpaceBorder
+                },
+                {
+                  type: 'form',
+                  layout: 'grid',
+                  packV: 'start',
+                  columns: 2,
+                  padding: 0,
+                  alignH: ['left', 'right'],
+                  defaults: {
+                    type: 'textbox',
+                    maxWidth: 50,
+                    onchange: updateStyle
+                  },
+                  items: [
+                    { label: 'Vertical space', name: 'vspace' },
+                    { label: 'Horizontal space', name: 'hspace' },
+                    { label: 'Border', name: 'border' }
+                  ]
+                }
+              ]
+            });
+          }
 
           if (editor.settings.images_upload_url) {
             var acceptExts = '.jpg,.jpeg,.png,.gif';
