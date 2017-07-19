@@ -29,17 +29,17 @@ define(
       ImageToolsPlugin();
       ModernTheme();
 
-      $(
-        '<textarea class="tinymce">' +
-        '<p>' +
-        '<img src="' + imgSrc + '" width="160" height="100">' +
-        '<img src="' + imgSrc + '" style="width: 160px; height: 100px">' +
-        '<img src="' + imgSrc + '" style="width: 20%">' +
-        '<img src="' + imgSrc + '">' +
-        '<img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
-        '</p>' +
-        '</textarea>'
-      ).appendTo('#ephox-ui');
+      // $(
+      //   '<textarea class="tinymce">' +
+      //   '<p>' +
+      //   '<img src="' + imgSrc + '" width="160" height="100">' +
+      //   '<img src="' + imgSrc + '" style="width: 160px; height: 100px">' +
+      //   '<img src="' + imgSrc + '" style="width: 20%">' +
+      //   '<img src="' + imgSrc + '">' +
+      //   '<img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
+      //   '</p>' +
+      //   '</textarea>'
+      // ).appendTo('#ephox-ui');
 
       EditorManager.init({
         //imagetools_cors_hosts: ["moxiecode.cachefly.net"],
