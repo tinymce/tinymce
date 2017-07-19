@@ -54,25 +54,6 @@ define(
       },
 
       /**
-       * Filters files array according to the accept setting
-       *
-       * @method filter
-       * @param {Array} files
-       * @return {Array} Filtered files array
-       */
-      filter: function (files) {
-        var accept = this.settings.accept;
-        if (typeof accept !== 'string') {
-          return files;
-        }
-
-        var re = new RegExp('(' + accept.split(/\s*,\s*/).join('|') + ')$', 'i');
-        return Tools.grep(files, function (file) {
-          return re.test(file.name);
-        });
-      },
-
-      /**
        * Renders the control as a HTML string.
        *
        * @method renderHtml
@@ -125,6 +106,18 @@ define(
           self.getEl().className = self.classes;
         };
 
+        var filter = function (files) {
+          var accept = self.settings.accept;
+          if (typeof accept !== 'string') {
+            return files;
+          }
+
+          var re = new RegExp('(' + accept.split(/\s*,\s*/).join('|') + ')$', 'i');
+          return Tools.grep(files, function (file) {
+            return re.test(file.name);
+          });
+        };
+
         self._super();
 
         self.$el.on('dragover', function (e) {
@@ -141,7 +134,7 @@ define(
             return;
           }
 
-          var files = self.filter(e.dataTransfer.files);
+          var files = filter(e.dataTransfer.files);
 
           self.value = function () {
             if (!files.length) {
