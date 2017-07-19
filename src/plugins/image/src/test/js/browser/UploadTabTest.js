@@ -5,13 +5,14 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Logger',
     'tinymce.plugins.image.Plugin',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyUi',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, GeneralSteps, Chain, Assertions, Plugin, TinyLoader, TinyApis, TinyUi, Theme) {
+  function (Pipeline, GeneralSteps, Chain, Assertions, Logger, Plugin, TinyLoader, TinyApis, TinyUi, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -40,12 +41,18 @@ asynctest(
       };
 
       Pipeline.async({}, [
-        api.sSetContent('<p><img src="' + src + '" /></p>'),
-        api.sSelect('img', []),
-        api.sSetSetting('images_upload_url', 'postAcceptor.php'),
-        sAssertImageTab('Upload', true),
-        api.sSetSetting('images_upload_url', null),
-        sAssertImageTab('Upload', false)
+        Logger.t("Upload tab should be present when images_upload_url is set to some truthy value", GeneralSteps.sequence([
+          api.sSetContent('<p><img src="' + src + '" /></p>'),
+          api.sSelect('img', []),
+          api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
+          api.sSetSetting('images_upload_url', 'postAcceptor.php'),
+          sAssertImageTab('Upload', true),
+          sAssertImageTab('Advanced', false),
+          api.sSetSetting('image_advtab', true),
+          api.sSetSetting('images_upload_url', null),
+          sAssertImageTab('Upload', false),
+          sAssertImageTab('Advanced', true)
+        ]))
       ], onSuccess, onFailure);
     }, {
       plugins: 'image',
