@@ -164,6 +164,8 @@ define(
        */
       activeEditor: null,
 
+      settings: {},
+
       setup: function () {
         var self = this, baseURL, documentBaseURL, suffix = "", preInit, src;
 
