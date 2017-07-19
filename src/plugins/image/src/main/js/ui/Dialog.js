@@ -533,27 +533,34 @@ define(
             var uploadTab = {
               title: 'Upload',
               type: 'form',
-              layout: 'grid',
-              columns: 1,
+              layout: 'flex',
+              direction: 'column',
+              align: 'stretch',
               padding: '20 20 20 20',
-              alignH: 'center',
-              alignV: 'center',
               items: [
                 {
-                  text: "Browse for an image",
-                  type: 'browsebutton',
-                  accept: acceptExts,
-                  onchange: onFileInput
-                },
-                {
-                  text: 'OR',
-                  type: 'label'
+                  type: 'container',
+                  layout: 'flex',
+                  direction: 'column',
+                  align: 'center',
+                  spacing: 10,
+                  items: [
+                    {
+                      text: "Browse for an image",
+                      type: 'browsebutton',
+                      accept: acceptExts,
+                      onchange: onFileInput
+                    },
+                    {
+                      text: 'OR',
+                      type: 'label'
+                    }
+                  ]
                 },
                 {
                   text: "Drop an image here",
                   type: 'dropzone',
                   accept: acceptExts,
-                  width: 440,
                   height: 100,
                   onchange: onFileInput
                 }
