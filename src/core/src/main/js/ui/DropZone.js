@@ -63,17 +63,6 @@ define(
         var self = this, attrs, elm;
         var cfg = self.settings;
 
-        var isDecimal = function (str) {
-          var type = typeof str;
-          if (type == 'number') {
-            return true;
-          } else if (type === 'string') {
-            return /^\d+$/.test(str);
-          } else {
-            return false;
-          }
-        };
-
         attrs = {
           id: self._id,
           hidefocus: '1'
@@ -81,10 +70,13 @@ define(
 
         elm = DomUtils.create('div', attrs, '<span>' + cfg.text + '</span>');
 
-        DomUtils.css(elm, {
-          width: isDecimal(cfg.width) ? cfg.width + 'px' : cfg.width,
-          height: isDecimal(cfg.height) ? cfg.height + 'px' : cfg.height
-        });
+        if (cfg.height) {
+          DomUtils.css(elm, 'height', cfg.height + 'px');
+        }
+
+        if (cfg.width) {
+          DomUtils.css(elm, 'width', cfg.width + 'px');
+        }
 
         elm.className = self.classes;
 
