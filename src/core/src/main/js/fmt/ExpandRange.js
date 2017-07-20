@@ -19,8 +19,50 @@ define(
     var isBookmarkNode = BookmarkManager.isBookmarkNode;
     var getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
 
+    // This function walks down the tree to find the leaf at the selection.
+      // The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
+    var findLeaf = function (node, offset) {
+      if (typeof offset === 'undefined') {
+        offset = node.nodeType === 3 ? node.length : node.childNodes.length;
+      }
+
+      while (node && node.hasChildNodes()) {
+        node = node.childNodes[offset];
+        if (node) {
+          offset = node.nodeType === 3 ? node.length : node.childNodes.length;
+        }
+      }
+      return { node: node, offset: offset };
+    };
+
+    var removeTrailingWhitespace = function (endContainer, endOffset, remove) {
+      // Avoid applying formatting to a trailing space,
+      // but remove formatting from trailing space
+      var leaf = findLeaf(endContainer, endOffset);
+      if (leaf.node && !remove) {
+        while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {
+          leaf = findLeaf(leaf.node.previousSibling);
+        }
+
+        if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
+            leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
+
+          if (leaf.offset > 1) {
+            endContainer = leaf.node;
+            endContainer.splitText(leaf.offset - 1);
+          }
+        }
+      }
+
+      return endContainer;
+    };
+
+    var isBogusBr = function (node) {
+      return node.nodeName === "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
+    };
+
     var expandRng = function (editor, rng, format, remove) {
-      var lastIdx, leaf, endPoint,
+      var lastIdx, endPoint,
         startContainer = rng.startContainer,
         startOffset = rng.startOffset,
         endContainer = rng.endContainer,
@@ -34,10 +76,6 @@ define(
         container = parent = start ? startContainer : endContainer;
         siblingName = start ? 'previousSibling' : 'nextSibling';
         root = dom.getRoot();
-
-        var isBogusBr = function (node) {
-          return node.nodeName === "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
-        };
 
         // If it's a text node and the offset is inside the text
         if (container.nodeType === 3 && !isWhiteSpaceNode(container)) {
@@ -70,22 +108,6 @@ define(
         }
 
         return container;
-      };
-
-      // This function walks down the tree to find the leaf at the selection.
-      // The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
-      var findLeaf = function (node, offset) {
-        if (typeof offset === 'undefined') {
-          offset = node.nodeType === 3 ? node.length : node.childNodes.length;
-        }
-
-        while (node && node.hasChildNodes()) {
-          node = node.childNodes[offset];
-          if (node) {
-            offset = node.nodeType === 3 ? node.length : node.childNodes.length;
-          }
-        }
-        return { node: node, offset: offset };
       };
 
       // If index based start position then resolve it
@@ -292,22 +314,7 @@ define(
           }
         }
 
-        // Avoid applying formatting to a trailing space.
-        leaf = findLeaf(endContainer, endOffset);
-        if (leaf.node) {
-          while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {
-            leaf = findLeaf(leaf.node.previousSibling);
-          }
-
-          if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
-            leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
-
-            if (leaf.offset > 1) {
-              endContainer = leaf.node;
-              endContainer.splitText(leaf.offset - 1);
-            }
-          }
-        }
+        endContainer = removeTrailingWhitespace(endContainer, endOffset, remove);
       }
 
       // Move start/end point up the tree if the leaves are sharp and if we are in different containers
