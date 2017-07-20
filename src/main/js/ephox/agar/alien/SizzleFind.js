@@ -20,9 +20,13 @@ define(
       return toOptionEl(siz);
     };
 
+    var toArrayEl = function (elements) {
+      return Arr.map(elements, Element.fromDom);
+    }
+
     /* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
     var descendants = function (sugarElement, selector) {
-      return Sizzle(selector, sugarElement.dom());
+      return toArrayEl(Sizzle(selector, sugarElement.dom()));
     };
 
     var matches = function (sugarElement, selector) {

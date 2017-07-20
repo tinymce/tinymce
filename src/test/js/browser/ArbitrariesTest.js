@@ -38,7 +38,8 @@ test(
     };
 
     var checkProperty = function (label, arb, f) {
-      Jsc.syncProperty(label, [ arb ], f, { tests: 15 });
+      // Increase when doing proper testing.
+      Jsc.syncProperty(label, [ arb ], f, { tests: 3 });
     };
 
     checkProperty('Text nodes should have node type 3', Arbitraries.content('netext'), function(textnode) {

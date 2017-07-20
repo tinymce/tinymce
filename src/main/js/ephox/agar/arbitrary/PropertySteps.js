@@ -3,19 +3,35 @@ define(
 
   [
     'ephox.agar.api.Step',
-    'ephox.sand.api.JSON',
+    'ephox.katamari.api.Thunk',
     'ephox.wrap-jsverify.Jsc',
-    'global!Promise'
+    'global!console'
   ],
 
-  function (Step, Json, Jsc, Promise) {
+  function (Step, Thunk, Jsc, console) {
+    var logNoPromises = Thunk.cached(function () {
+      console.warn('No native promise support on browser to run async property tests. Skipping!');
+    });
+
+    var fakePromise = function () {
+      var self = {
+        then: function (fs) {
+          logNoPromises();
+          fs(true);
+          return self;
+        }
+      };
+
+      return self;
+    };
+
     var stepToPromise = function (step) {
       return function (input) {
-        return new Promise(function (resolve, reject) {
+        return typeof Promise !== "undefined" ? new Promise(function (resolve, reject) {
           step(input, function () {
             resolve(true);
           }, reject);
-        });
+        }) : fakePromise();
       };
     };
 

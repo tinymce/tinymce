@@ -7,18 +7,19 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.dom.Hierarchy',
-    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.properties.Html',
     'global!document',
     'global!setTimeout'
   ],
 
-  function (Assertions, Chain, Pipeline, Step, UiFinder, Class, Css, Element, Hierarchy, Html, Insert, Remove, document, setTimeout) {
+  function (Assertions, Chain, Pipeline, Step, UiFinder, Hierarchy, Insert, Remove, Element, Node, Class, Css, Html, document, setTimeout) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -54,6 +55,7 @@ asynctest(
         UiFinder.cFindAllIn('p'),
         Chain.op(function (ps) {
           Assertions.assertEq('Should find two paragraphs', 2, ps.length);
+          Assertions.assertEq('Should be sugared paragraphs', 'p', Node.name(ps[0]));
         })
       ]),
 
