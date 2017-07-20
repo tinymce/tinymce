@@ -35,11 +35,11 @@ define(
       return { node: node, offset: offset };
     };
 
-    var removeTrailingWhitespace = function (endContainer, endOffset, remove) {
+    var excludeTrailingWhitespace = function (endContainer, endOffset) {
       // Avoid applying formatting to a trailing space,
       // but remove formatting from trailing space
       var leaf = findLeaf(endContainer, endOffset);
-      if (leaf.node && !remove) {
+      if (leaf.node) {
         while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {
           leaf = findLeaf(leaf.node.previousSibling);
         }
@@ -314,7 +314,7 @@ define(
           }
         }
 
-        endContainer = removeTrailingWhitespace(endContainer, endOffset, remove);
+        endContainer = remove ? endContainer : excludeTrailingWhitespace(endContainer, endOffset);
       }
 
       // Move start/end point up the tree if the leaves are sharp and if we are in different containers
