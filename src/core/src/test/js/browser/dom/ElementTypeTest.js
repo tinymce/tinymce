@@ -67,6 +67,11 @@ asynctest(
         sCheckElement('h1', ElementType.isTableCell, false),
         sCheckElement('span', ElementType.isTableCell, false),
         sCheckText(ElementType.isTableCell)
+      ])),
+      Logger.t('Check br elements', GeneralSteps.sequence([
+        sCheckElement('br', ElementType.isBr, true),
+        sCheckElement('b', ElementType.isBr, false),
+        sCheckText(ElementType.isBr)
       ]))
     ], function () {
       success();
