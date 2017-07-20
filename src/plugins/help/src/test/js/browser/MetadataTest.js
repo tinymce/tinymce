@@ -36,8 +36,8 @@ asynctest(
       Pipeline.async({}, [
         tinyUi.sClickOnToolbar('click on help button', 'button'),
         sAssertPluginList(
-          '<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank">Help</a></li>' +
-          '<li><a href="http://www.fake.com" target="_blank">Fake</a></li>' +
+          '<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank" rel="noopener">Help</a></li>' +
+          '<li><a href="http://www.fake.com" target="_blank" rel="noopener">Fake</a></li>' +
           '<li>nometafake</li>'
         )
       ], onSuccess, onFailure);

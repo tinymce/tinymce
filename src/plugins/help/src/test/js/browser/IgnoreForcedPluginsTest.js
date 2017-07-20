@@ -35,7 +35,7 @@ asynctest(
 
       Pipeline.async({}, [
         tinyUi.sClickOnToolbar('click on button', 'button'),
-        sAssertPluginList('<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank">Help</a></li>')
+        sAssertPluginList('<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank" rel="noopener">Help</a></li>')
       ], onSuccess, onFailure);
     }, {
       plugins: 'help link',
