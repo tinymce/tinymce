@@ -8,9 +8,10 @@ asynctest(
     'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Serializer',
-    'tinymce.core.test.ViewBlock'
+    'tinymce.core.test.ViewBlock',
+    'tinymce.core.text.Zwsp'
   ],
-  function (Pipeline, Step, Arr, LegacyUnit, document, DOMUtils, Serializer, ViewBlock) {
+  function (Pipeline, Step, Arr, LegacyUnit, document, DOMUtils, Serializer, ViewBlock, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -628,6 +629,16 @@ asynctest(
       LegacyUnit.equal(ser1.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
       LegacyUnit.equal(ser2.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
       LegacyUnit.equal(ser2.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+    });
+
+    suite.test('zwsp should not be treated as contents', function () {
+      var ser = new Serializer({ });
+
+      DOM.setHTML('test', '<p>' + Zwsp.ZWSP + '</p>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<p>&nbsp;</p>'
+      );
     });
 
     viewBlock.attach();
