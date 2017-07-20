@@ -16,7 +16,7 @@ define(
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.fmt.CaretAction',
+    'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.Hooks',
@@ -25,11 +25,11 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, ElementUtils, NodeType, RangeUtils, TreeWalker, CaretAction, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat, Fun, Tools) {
+  function (BookmarkManager, ElementUtils, NodeType, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat, Fun, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
-      return node && node.nodeType === 1 && !BookmarkManager.isBookmarkNode(node) && !CaretAction.isCaretNode(node) && !NodeType.isBogus(node);
+      return node && node.nodeType === 1 && !BookmarkManager.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
     };
 
     var processChildElements = function (node, filter, process) {
@@ -223,7 +223,7 @@ define(
             return;
           }
 
-          if (dom.is(node, format.selector) && !CaretAction.isCaretNode(node)) {
+          if (dom.is(node, format.selector) && !CaretFormat.isCaretNode(node)) {
             setElementFormat(node, format);
             found = true;
             return false;
@@ -307,7 +307,7 @@ define(
               !(!nodeSpecific && node.nodeType === 3 &&
                 node.nodeValue.length === 1 &&
                 node.nodeValue.charCodeAt(0) === 65279) &&
-              !CaretAction.isCaretNode(node) &&
+              !CaretFormat.isCaretNode(node) &&
               (!format.inline || !dom.isBlock(node))) {
               // Start wrapping
               if (!currentWrapElm) {
@@ -543,7 +543,7 @@ define(
             FormatUtils.moveStart(dom, selection, selection.getRng(true));
             ed.nodeChanged();
           } else {
-            CaretAction.performCaretAction(ed, applyFormat, 'apply', name, vars);
+            CaretFormat.applyCaretFormat(ed, name, vars);
           }
         }
 

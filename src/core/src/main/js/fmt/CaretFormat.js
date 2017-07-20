@@ -1,5 +1,5 @@
 /**
- * CaretAction.js
+ * CaretFormat.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -9,10 +9,12 @@
  */
 
 define(
-  'tinymce.core.fmt.CaretAction',
+  'tinymce.core.fmt.CaretFormat',
   [
+    'ephox.sugar.api.node.Element',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
+    'tinymce.core.dom.PaddingBr',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.MatchFormat',
@@ -20,7 +22,7 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
+  function (Element, RangeUtils, TreeWalker, PaddingBr, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret', DEBUG = false;
 
     var isCaretNode = function (node) {
@@ -61,7 +63,7 @@ define(
     };
 
     var createCaretContainer = function (dom, fill) {
-      var caretContainer = dom.create('span', { id: CARET_ID, 'data-mce-bogus': true, style: DEBUG ? 'color:red' : '' });
+      var caretContainer = dom.create('span', { id: CARET_ID, 'data-mce-bogus': '1', style: DEBUG ? 'color:red' : '' });
 
       if (fill) {
         caretContainer.appendChild(dom.doc.createTextNode(ZWSP));
@@ -95,54 +97,103 @@ define(
       }
     };
 
+    var trimZwspFromCaretContainer = function (caretContainerNode) {
+      var textNode = findFirstTextNode(caretContainerNode);
+      if (textNode && textNode.nodeValue.charAt(0) === ZWSP) {
+        textNode.deleteData(0, 1);
+      }
+
+      return textNode;
+    };
+
+    var removeCaretContainerNode = function (dom, selection, node, moveCaret) {
+      var rng, block, textNode;
+
+      rng = selection.getRng(true);
+      block = dom.getParent(node, dom.isBlock);
+
+      if (isCaretContainerEmpty(node)) {
+        if (moveCaret !== false) {
+          rng.setStartBefore(node);
+          rng.setEndBefore(node);
+        }
+
+        dom.remove(node);
+      } else {
+        textNode = trimZwspFromCaretContainer(node);
+        if (rng.startContainer === textNode && rng.startOffset > 0) {
+          rng.setStart(textNode, rng.startOffset - 1);
+        }
+
+        if (rng.endContainer === textNode && rng.endOffset > 0) {
+          rng.setEnd(textNode, rng.endOffset - 1);
+        }
+
+        dom.remove(node, true);
+      }
+
+      if (block && dom.isEmpty(block)) {
+        PaddingBr.fillWithPaddingBr(Element.fromDom(block));
+      }
+
+      selection.setRng(rng);
+    };
+
     // Removes the caret container for the specified node or all on the current document
     var removeCaretContainer = function (dom, selection, node, moveCaret) {
-      var child, rng;
-
       if (!node) {
         node = getParentCaretContainer(selection.getStart());
 
         if (!node) {
           while ((node = dom.get(CARET_ID))) {
-            removeCaretContainer(dom, selection, node, false);
+            removeCaretContainerNode(dom, selection, node, false);
           }
         }
       } else {
-        rng = selection.getRng(true);
-
-        if (isCaretContainerEmpty(node)) {
-          if (moveCaret !== false) {
-            rng.setStartBefore(node);
-            rng.setEndBefore(node);
-          }
-
-          dom.remove(node);
-        } else {
-          child = findFirstTextNode(node);
-
-          if (child.nodeValue.charAt(0) === ZWSP) {
-            child.deleteData(0, 1);
-
-            // Fix for bug #6976
-            if (rng.startContainer === child && rng.startOffset > 0) {
-              rng.setStart(child, rng.startOffset - 1);
-            }
-
-            if (rng.endContainer === child && rng.endOffset > 0) {
-              rng.setEnd(child, rng.endOffset - 1);
-            }
-          }
-
-          dom.remove(node, 1);
-        }
-
-        selection.setRng(rng);
+        removeCaretContainerNode(dom, selection, node, moveCaret);
       }
     };
 
-    var applyCaretFormat = function (editor, name, vars, applyFormat) {
+    var insertCaretContainerNode = function (editor, caretContainer, formatNode) {
+      var dom = editor.dom, block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
+
+      if (block && dom.isEmpty(block)) {
+        // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
+        formatNode.parentNode.replaceChild(caretContainer, formatNode);
+      } else {
+        PaddingBr.removeTrailingBr(Element.fromDom(formatNode));
+        if (dom.isEmpty(formatNode)) {
+          formatNode.parentNode.replaceChild(caretContainer, formatNode);
+        } else {
+          dom.insertAfter(caretContainer, formatNode);
+        }
+      }
+    };
+
+    var insertFormatNodesIntoCaretContainer = function (formatNodes, caretContainer) {
+      var node = caretContainer;
+
+      for (var i = formatNodes.length - 1; i >= 0; i--) {
+        node.appendChild(formatNodes[i].cloneNode(false));
+        node = node.firstChild;
+      }
+
+      node.appendChild(node.ownerDocument.createTextNode(ZWSP));
+      return node.firstChild;
+    };
+
+    var setupCaretEvents = function (editor) {
+      if (!editor._hasCaretEvents) {
+        bindEvents(editor);
+        editor._hasCaretEvents = true;
+      }
+    };
+
+    var applyCaretFormat = function (editor, name, vars) {
       var rng, caretContainer, textNode, offset, bookmark, container, text;
       var dom = editor.dom, selection = editor.selection;
+
+      setupCaretEvents(editor);
 
       rng = selection.getRng(true);
       offset = rng.startOffset;
@@ -169,7 +220,7 @@ define(
         rng = new RangeUtils(dom).split(rng);
 
         // Apply the format to the range
-        applyFormat(editor, name, vars, rng);
+        editor.formatter.apply(name, vars, rng);
 
         // Move selection back to caret position
         selection.moveToBookmark(bookmark);
@@ -181,9 +232,9 @@ define(
           rng.insertNode(caretContainer);
           offset = 1;
 
-          applyFormat(editor, name, vars, caretContainer);
+          editor.formatter.apply(name, vars, caretContainer);
         } else {
-          applyFormat(editor, name, vars, caretContainer);
+          editor.formatter.apply(name, vars, caretContainer);
         }
 
         // Move selection to text node
@@ -193,8 +244,10 @@ define(
 
     var removeCaretFormat = function (editor, name, vars, similar) {
       var dom = editor.dom, selection = editor.selection;
-      var rng = selection.getRng(true), container, offset, bookmark,
-        hasContentAfter, node, formatNode, parents = [], i, caretContainer;
+      var rng = selection.getRng(true), container, offset, bookmark;
+      var hasContentAfter, node, formatNode, parents = [], caretContainer;
+
+      setupCaretEvents(editor);
 
       container = rng.startContainer;
       offset = rng.startOffset;
@@ -229,7 +282,6 @@ define(
 
       // Is there contents after the caret then remove the format on the element
       if (hasContentAfter) {
-        // Get bookmark of caret position
         bookmark = selection.getBookmark();
 
         // Collapse bookmark range (WebKit)
@@ -239,38 +291,22 @@ define(
         rng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name), true);
         rng = new RangeUtils(dom).split(rng);
 
-        // Remove the format from the range
         editor.formatter.remove(name, vars, rng);
-
-        // Move selection back to caret position
         selection.moveToBookmark(bookmark);
       } else {
-        caretContainer = createCaretContainer(dom, false);
+        caretContainer = getParentCaretContainer(formatNode);
+        var newCaretContainer = createCaretContainer(dom, false);
+        var caretNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
 
-        node = caretContainer;
-        for (i = parents.length - 1; i >= 0; i--) {
-          node.appendChild(dom.clone(parents[i], false));
-          node = node.firstChild;
-        }
-
-        // Insert invisible character into inner most format element
-        node.appendChild(dom.doc.createTextNode(ZWSP));
-        node = node.firstChild;
-
-        var block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
-
-        if (block && dom.isEmpty(block)) {
-          // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
-          formatNode.parentNode.replaceChild(caretContainer, formatNode);
+        if (caretContainer) {
+          insertCaretContainerNode(editor, newCaretContainer, caretContainer);
         } else {
-          // Insert caret container after the formatted node
-          dom.insertAfter(caretContainer, formatNode);
+          insertCaretContainerNode(editor, newCaretContainer, formatNode);
         }
 
-        // Move selection to text node
-        selection.setCursorLocation(node, 1);
+        removeCaretContainerNode(dom, selection, caretContainer, false);
+        selection.setCursorLocation(caretNode, 1);
 
-        // If the formatNode is empty, we can remove it safely.
         if (dom.isEmpty(formatNode)) {
           dom.remove(formatNode);
         }
@@ -336,21 +372,9 @@ define(
       }
     };
 
-    var performCaretAction = function (editor, applyFormat, type, name, vars, similar) {
-      if (!editor._hasCaretEvents) {
-        bindEvents(editor);
-        editor._hasCaretEvents = true;
-      }
-
-      if (type === "apply") {
-        applyCaretFormat(editor, name, vars, applyFormat);
-      } else {
-        removeCaretFormat(editor, name, vars, similar);
-      }
-    };
-
     return {
-      performCaretAction: performCaretAction,
+      applyCaretFormat: applyCaretFormat,
+      removeCaretFormat: removeCaretFormat,
       isCaretNode: isCaretNode
     };
   }

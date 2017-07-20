@@ -15,13 +15,13 @@ define(
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.fmt.CaretAction',
+    'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, BookmarkManager, RangeUtils, TreeWalker, CaretAction, ExpandRange, FormatUtils, MatchFormat, Tools) {
+  function (Fun, BookmarkManager, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, Tools) {
     var MCE_ATTR_RE = /^(src|href|style)$/;
     var each = Tools.each;
     var isEq = FormatUtils.isEq;
@@ -535,7 +535,7 @@ define(
 
         ed.nodeChanged();
       } else {
-        CaretAction.performCaretAction(ed, Fun.noop, 'remove', name, vars, similar);
+        CaretFormat.removeCaretFormat(ed, name, vars, similar);
       }
     };
 
