@@ -1,5 +1,5 @@
 test(
-  'atomic.tinymce.plugins.paste.InternalHtmlTest',
+  'atomic.tinymce.plugins.paste.FragmentParserTest',
   [
     'ephox.agar.api.RawAssertions',
     'tinymce.plugins.paste.core.FragmentParser'
