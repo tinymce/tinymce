@@ -654,4 +654,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('@ephox/bedrock');
 
   grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+
+  grunt.registerTask("test", ["bedrock-auto:phantomjs"]);
 };
