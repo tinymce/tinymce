@@ -27,6 +27,8 @@ test(
       assert.eq(['bengt@mail.se'], getWords('bengt@mail.se'));
       assert.eq(['bengt@mail.se', 'abc'], getWords('bengt@mail.se abc'));
       assert.eq(['http://www.google.com', 'abc'], getWords('http://www.google.com abc'));
+
+      assert.eq(['ab'], getWords('a\ufeffb'));
     };
 
     testGetWords();
