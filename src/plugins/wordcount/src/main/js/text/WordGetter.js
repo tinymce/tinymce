@@ -52,7 +52,7 @@ define(
       };
     };
 
-    var getWords = function (string, options) {
+    var doGetWords = function (string, options) {
       var i = 0;
       var map = StringMapper.classify(string);
       var len = map.length;
@@ -105,6 +105,10 @@ define(
       }
 
       return words;
+    };
+
+    var getWords = function (string, options) {
+      return doGetWords(string.replace(/\ufeff/g, ''), options);
     };
 
     return {
