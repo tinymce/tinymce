@@ -22,6 +22,13 @@ define(
   function (PluginManager) {
     PluginManager.add('nonbreaking', function (editor) {
       var setting = editor.getParam('nonbreaking_force_tab');
+      var stringRepeat = function (string, repeats) {
+        var str = '';
+        for (var index = 0; index < repeats; index++) {
+          str += string;
+        }
+        return str;
+      };
 
       editor.addCommand('mceNonBreaking', function () {
         editor.insertContent(
@@ -54,9 +61,9 @@ define(
             }
 
             e.preventDefault();
-            for (var i = 0; i < spaces; i++) {
-              editor.execCommand('mceNonBreaking');
-            }
+            editor.undoManager.transact(function () {
+              editor.insertContent(stringRepeat('&nbsp;', spaces));
+            });
           }
         });
       }
