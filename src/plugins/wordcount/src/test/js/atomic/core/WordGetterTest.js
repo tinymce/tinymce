@@ -29,7 +29,7 @@ test(
       assert.eq(['http://www.google.com', 'abc'], getWords('http://www.google.com abc'));
 
 
-      assert.eq(['1+1*1=1'], getWords('1+1*1=1'));
+      assert.eq(['1+1*1/1⋉1=1'], getWords('1+1*1/1⋉1=1'));
     };
 
     testGetWords();
