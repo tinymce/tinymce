@@ -19,14 +19,7 @@ define(
     var findParentListItemsNodes = function (elms) {
       var listItemsElms = Tools.map(elms, function (elm) {
         var parentNode = elm.parentNode;
-
-        if (NodeType.isListItemNode(elm)) {
-          return elm;
-        } else if (NodeType.isListItemNode(parentNode)) {
-          return parentNode;
-        } else {
-          return elm;
-        }
+        return !NodeType.isListItemNode(elm) && NodeType.isListItemNode(parentNode) ? parentNode : elm;
       });
 
       return DomQuery.unique(listItemsElms);
