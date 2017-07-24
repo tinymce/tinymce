@@ -30,13 +30,15 @@ define(
         return str;
       };
 
-      editor.addCommand('mceNonBreaking', function () {
-        editor.insertContent(
-          (editor.plugins.visualchars && editor.plugins.visualchars.state) ?
-            '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;'
-        );
+      var insertNbsp = function (times) {
+        var nbsp = (editor.plugins.visualchars && editor.plugins.visualchars.state) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
 
+        editor.insertContent(stringRepeat(nbsp, times));
         editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
+      };
+
+      editor.addCommand('mceNonBreaking', function () {
+        insertNbsp(1);
       });
 
       editor.addButton('nonbreaking', {
@@ -61,9 +63,7 @@ define(
             }
 
             e.preventDefault();
-            editor.undoManager.transact(function () {
-              editor.insertContent(stringRepeat('&nbsp;', spaces));
-            });
+            insertNbsp(spaces);
           }
         });
       }

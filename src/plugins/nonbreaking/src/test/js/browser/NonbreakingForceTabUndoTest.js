@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.plugins.nonbreaking.NonbreakingSForceTabUndoTest',
+  'browser.tinymce.plugins.nonbreaking.NonbreakingForceTabUndoTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Keys',
