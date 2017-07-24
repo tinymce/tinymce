@@ -11,10 +11,11 @@
 define(
   'tinymce.core.fmt.CaretFormat',
   [
+    'ephox.katamari.api.Arr',
     'ephox.sugar.api.node.Element',
+    'tinymce.core.dom.PaddingBr',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.dom.PaddingBr',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.MatchFormat',
@@ -22,7 +23,7 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (Element, RangeUtils, TreeWalker, PaddingBr, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
+  function (Arr, Element, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret', DEBUG = false;
 
     var isCaretNode = function (node) {
@@ -170,16 +171,17 @@ define(
       }
     };
 
+    var appendNode = function (parentNode, node) {
+      parentNode.appendChild(node);
+      return node;
+    };
+
     var insertFormatNodesIntoCaretContainer = function (formatNodes, caretContainer) {
-      var node = caretContainer;
+      var innerMostFormatNode = Arr.foldr(formatNodes, function (parentNode, formatNode) {
+        return appendNode(parentNode, formatNode.cloneNode(false));
+      }, caretContainer);
 
-      for (var i = formatNodes.length - 1; i >= 0; i--) {
-        node.appendChild(formatNodes[i].cloneNode(false));
-        node = node.firstChild;
-      }
-
-      node.appendChild(node.ownerDocument.createTextNode(ZWSP));
-      return node.firstChild;
+      return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
     };
 
     var setupCaretEvents = function (editor) {
