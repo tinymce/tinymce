@@ -652,6 +652,27 @@ asynctest(
       LegacyUnit.equal(rng.startContainer.data !== ' ', true);
     });
 
+    suite.test('Enter inside first li with block inside', function (editor) {
+      editor.getBody().innerHTML = '<ul><li><p><br /></p></li><li><p>b</p></><li>c</></ul>';
+      LegacyUnit.setSelection(editor, 'p', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><ul><li><p>b</p></li><li>c</li></ul>');
+    });
+
+    suite.test('Enter inside middle li with block inside', function (editor) {
+      editor.getBody().innerHTML = '<ul><li>a</><li><p><br /></p></><li>c</></ul>';
+      LegacyUnit.setSelection(editor, 'p', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<ul><li>a</li></ul><p>\u00a0</p><ul><li>c</li></ul>');
+    });
+
+    suite.test('Enter inside last li with block inside', function (editor) {
+      editor.getBody().innerHTML = '<ul><li>a</li><li>b</><li><p><br /></p></li></ul>';
+      LegacyUnit.setSelection(editor, 'p', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<ul><li>a</li><li>b</li></ul><p>\u00a0</p>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

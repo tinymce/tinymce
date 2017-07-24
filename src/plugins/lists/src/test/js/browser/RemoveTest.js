@@ -431,6 +431,30 @@ asynctest(
       LegacyUnit.equal(editor.selection.getEnd().firstChild.data, 'c');
     });
 
+    suite.test('Remove indented list with multiple items', function (editor) {
+      editor.getBody().innerHTML = LegacyUnit.trimBrs(
+        '<ul>' +
+          '<li>a</li>' +
+          '<li><p>b</p></li>' +
+          '<li>c</li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'p', 0);
+      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+      LegacyUnit.equal(editor.getContent(),
+        '<ul>' +
+          '<li>a</li>' +
+        '</ul>' +
+        '<p>b</p>' +
+        '<ul>' +
+          '<li>c</li>' +
+        '</ul>'
+      );
+    });
+
     // Ignore on IE 7, 8 this is a known bug not worth fixing
     if (!Env.ie || Env.ie > 8) {
       suite.test('Remove empty UL between two textblocks in BR mode', function (editor) {
