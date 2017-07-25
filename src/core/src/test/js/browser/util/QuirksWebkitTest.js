@@ -297,7 +297,7 @@ asynctest(
       LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>a</p><p><b><i><br></i></b></p>');
       LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'I');
     });
-*/
+
     suite.test('Type over all contents', function (editor) {
       editor.getBody().innerHTML = '<p>abc</p>';
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
@@ -306,7 +306,7 @@ asynctest(
       LegacyUnit.equal(editor.selection.getRng().startContainer.data, 'a');
       LegacyUnit.equal(editor.selection.getRng().startOffset, 1);
     });
-
+*/
     suite.test('ForwardDelete all contents', function (editor) {
       editor.getBody().innerHTML = '<p>abc</p>';
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
