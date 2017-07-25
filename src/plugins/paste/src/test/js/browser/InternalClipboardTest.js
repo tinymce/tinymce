@@ -110,8 +110,6 @@ asynctest(
       ]));
     };
 
-    
-
     var sTestCut = function (editor, tinyApis) {
       var sWaitUntilAssertContent = function (expected) {
         return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected), 100, 1000);
