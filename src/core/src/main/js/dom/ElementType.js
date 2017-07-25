@@ -56,13 +56,18 @@ define(
       return Node.isElement(node) && !isBlock(node);
     };
 
+    var isBr = function (node) {
+      return Node.isElement(node) && Node.name(node) === 'br';
+    };
+
     return {
       isBlock: isBlock,
       isInline: isInline,
       isHeading: isHeading,
       isTextBlock: lazyLookup(textBlocks),
       isVoid: lazyLookup(voids),
-      isTableCell: lazyLookup(tableCells)
+      isTableCell: lazyLookup(tableCells),
+      isBr: isBr
     };
   }
 );
