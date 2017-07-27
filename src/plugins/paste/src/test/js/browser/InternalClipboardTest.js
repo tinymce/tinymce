@@ -203,8 +203,6 @@ asynctest(
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
 
-      CutCopy.register(editor);
-
       // Disabled tests on Edge 15 due to broken clipboard API
       Pipeline.async({}, Utils.isMsEdge() ? [ ] : [
         sTestCopy(editor, tinyApis),

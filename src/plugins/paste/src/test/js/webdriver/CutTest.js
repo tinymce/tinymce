@@ -8,15 +8,18 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'global!window',
+    'ephox.sand.api.PlatformDetection',
     'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, RealMouse, Waiter, TinyApis, TinyLoader, TinyUi, window, PastePlugin, Theme) {
+  function (Pipeline, RealMouse, Waiter, TinyApis, TinyLoader, TinyUi, window, PlatformDetection, PastePlugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     Theme();
     PastePlugin();
+
+    var platform = PlatformDetection.detect();
 
     /* Test does not work on Phantom */
     if (window.navigator.userAgent.indexOf('PhantomJS') > -1) {
@@ -27,7 +30,8 @@ asynctest(
       var api = TinyApis(editor);
       var ui = TinyUi(editor);
 
-      Pipeline.async({}, [
+      // Cut doesn't seem to work in webdriver mode on ie, firefox is producing moveto not supported
+      Pipeline.async({}, (platform.browser.isIE() || platform.browser.isFirefox()) ? [] : [
         api.sSetContent('<p>abc</p>'),
         api.sSetSelection([0, 0], 1, [0, 0], 2),
         ui.sClickOnMenu("Click Edit menu", 'button:contains("Edit")'),
