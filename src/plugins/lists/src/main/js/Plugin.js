@@ -22,6 +22,30 @@ define(
     'tinymce.plugins.lists.core.Selection'
   ],
   function (PluginManager, Tools, VK, Indent, Outdent, ToggleList, Delete, NodeType, Selection) {
+    var applyListFormat = function (editor, listName) {
+      editor.undoManager.transact(function () {
+        var parentList = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+
+        if (!parentList || parentList.nodeName !== listName) {
+          editor.execCommand(listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false);
+        }
+
+        var childLists = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+        if (childLists) {
+          Tools.each(editor.dom.select('ol,ul', childLists).concat([childLists]), function (list) {
+            if (list.nodeName !== listName) {
+              list = editor.dom.rename(list, listName);
+            }
+
+            editor.dom.setStyle(list, 'listStyleType', null);
+            list.removeAttribute('data-mce-style');
+          });
+        }
+
+        editor.focus();
+      });
+    };
+
     var queryListCommandState = function (editor, listName) {
       return function () {
         var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
@@ -108,13 +132,17 @@ define(
       if (!hasPlugin(editor, 'advlist')) {
         editor.addButton('numlist', {
           title: 'Numbered list',
-          cmd: 'InsertOrderedList',
+          onclick: function () {
+            applyListFormat(editor, 'OL');
+          },
           onPostRender: listState('OL')
         });
 
         editor.addButton('bullist', {
           title: 'Bullet list',
-          cmd: 'InsertUnorderedList',
+          onclick: function () {
+            applyListFormat(editor, 'UL');
+          },
           onPostRender: listState('UL')
         });
       }
