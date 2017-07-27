@@ -19,14 +19,13 @@ define(
     var context = this || window;
 
     var exportToModuleLoaders = function (tinymce) {
-      if (typeof context.define === "function") {
-        // Bolt
-        if (!context.define.amd) {
-          context.define("ephox/tinymce", [], Fun.constant(tinymce));
-          context.define("tinymce.core.EditorManager", [], Fun.constant(tinymce));
-        }
+      // Bolt
+      if (typeof context.define === "function" && !context.define.amd) {
+        context.define("ephox/tinymce", [], Fun.constant(tinymce));
+        context.define("tinymce.core.EditorManager", [], Fun.constant(tinymce));
       }
 
+      // CommonJS
       if (typeof module === 'object') {
         /* global module */
         module.exports = tinymce;
