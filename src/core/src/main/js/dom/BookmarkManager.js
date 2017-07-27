@@ -436,7 +436,7 @@ define(
               selection.setRng(rng);
             }
           } else if (typeof bookmark.start == 'string') {
-            selection.setRng(resolveCaretPositionBookmark(bookmark));
+            selection.setRng(resolveCaretPositionBookmark());
           } else if (bookmark.id) {
             // Restore start/end points
             restoreEndPoint('start');

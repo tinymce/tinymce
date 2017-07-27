@@ -85,7 +85,7 @@ define(
         }
 
         function getSide(name) {
-          var val = parseFloat(getStyle(name), 10);
+          var val = parseFloat(getStyle(name));
 
           return isNaN(val) ? 0 : val;
         }

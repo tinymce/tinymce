@@ -259,7 +259,7 @@ define(
 
       if (parentList) {
         if (parentList.nodeName === listName) {
-          removeList(editor, listName);
+          removeList(editor);
         } else {
           var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
           updateListWithDetails(editor.dom, parentList, detail);

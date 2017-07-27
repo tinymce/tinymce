@@ -65,15 +65,15 @@ define(
       });
 
       function handleEclipse(editor) {
-        parseCurrentLine(editor, -1, '(', true);
+        parseCurrentLine(editor, -1, '(');
       }
 
       function handleSpacebar(editor) {
-        parseCurrentLine(editor, 0, '', true);
+        parseCurrentLine(editor, 0, '');
       }
 
       function handleEnter(editor) {
-        parseCurrentLine(editor, -1, '', false);
+        parseCurrentLine(editor, -1, '');
       }
 
       var rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {

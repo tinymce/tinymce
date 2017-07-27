@@ -86,7 +86,7 @@ define(
       }
 
       function getBody() {
-        return isInline ? editor.getBody().ownerDocument.body : editor.getBody();
+        return isInline() ? editor.getBody().ownerDocument.body : editor.getBody();
       }
 
       function getInnerEdge(index, cell) {
@@ -725,7 +725,7 @@ define(
 
         var step = percentageBased ? getCellPercentDelta(table, delta) : delta;
         // TODO: change the min for percentage maybe?
-        var deltas = determineDeltas(widths, index, step, RESIZE_MINIMUM_WIDTH, percentageBased, table);
+        var deltas = determineDeltas(widths, index, step, RESIZE_MINIMUM_WIDTH, percentageBased);
         var newWidths = [];
 
         for (var i = 0; i < deltas.length; i++) {
