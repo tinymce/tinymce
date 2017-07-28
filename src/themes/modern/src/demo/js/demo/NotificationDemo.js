@@ -23,8 +23,12 @@ define(
     var notifyShort = function (type) {
       var notification = EditorManager.activeEditor.notificationManager.open({
         type: type,
-        text: 'Short text message'
+        text: 'This is an example ' + (type ? type : 'blank') + ' message.'
       });
+
+      setTimeout(function () {
+        notification.text('Message changed.');
+      }, 5000);
       console.log(notification);
     };
 
@@ -48,6 +52,10 @@ define(
       });
 
       notification.progressBar.value(percent);
+
+      setTimeout(function () {
+        notification.progressBar.value(90);
+      }, 5000);
       console.log(notification);
     };
 
@@ -68,7 +76,11 @@ define(
     };
 
     Arr.each([
-      { title: 'notifyShort', action: notifyShort },
+      { title: 'success', action: notifyShort, value: 'success' },
+      { title: 'error', action: notifyShort, value: 'error' },
+      { title: 'warn', action: notifyShort, value: 'warning' },
+      { title: 'info', action: notifyShort, value: 'info' },
+      { title: 'blank', action: notifyShort },
       { title: 'notifyLong', action: notifyLong, value: 100 },
       { title: 'notifyProgress', action: notifyProgress, value: 50 },
       { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
