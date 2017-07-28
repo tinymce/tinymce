@@ -271,7 +271,48 @@ define(
       }
     };
 
+    var hasNoSublist = function (editor, list) {
+      var lists = editor.dom.select('ol,ul', list);
+
+      return lists.length < 1;
+    };
+
+    var applyListFormat = function (editor, listName, detail) {
+      editor.undoManager.transact(function () {
+        editor.focus();
+        var parentList = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+        var styleValue = detail ? detail['list-style-type'] : '';
+
+        if (
+            !parentList ||
+            parentList.nodeName !== listName ||
+            styleValue === false ||
+            (hasNoSublist(editor, parentList) && styleValue === '')
+          ) {
+          toggleList(editor, listName, detail);
+        }
+
+        var bookmark = Bookmark.createBookmark(editor.selection.getRng());
+
+        var parentList2 = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+        Tools.each(editor.selection.getSelectedBlocks(parentList2), function (list) {
+          if (NodeType.isListNode(list)) {
+            if (list.nodeName !== listName) {
+              list = editor.dom.rename(list, listName);
+            }
+
+            editor.dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
+            list.removeAttribute('data-mce-style');
+          }
+        });
+
+
+        editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      });
+    };
+
     return {
+      applyListFormat: applyListFormat,
       toggleList: toggleList,
       removeList: removeList,
       mergeWithAdjacentLists: mergeWithAdjacentLists

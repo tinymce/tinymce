@@ -65,7 +65,7 @@ asynctest(
       inputSelection: ['li:nth-child(1)', 0],
       command: 'ApplyUnorderedListStyle',
       listType: 'disc',
-      expectedContent: '<ul style="list-style-type: disc;"><li>a<ul style="list-style-type: disc;"><li>b</li></ul></li></ul>',
+      expectedContent: '<ul style="list-style-type: disc;"><li>a<ul><li>b</li></ul></li></ul>',
       expectedSelection: ['li:nth-child(1)', 0]
     });
 
@@ -74,7 +74,7 @@ asynctest(
       inputSelection: ['li:nth-child(1)', 0],
       command: 'ApplyOrderedListStyle',
       listType: 'lower-roman',
-      expectedContent: '<ol style="list-style-type: lower-roman;"><li>a<ol style="list-style-type: lower-roman;"><li>b</li></ol></li></ol>',
+      expectedContent: '<ol style="list-style-type: lower-roman;"><li>a<ol><li>b</li></ol></li></ol>',
       expectedSelection: ['li:nth-child(1)', 0]
     });
 
@@ -83,7 +83,7 @@ asynctest(
       inputSelection: ['li:nth-child(1)', 0],
       command: 'ApplyUnorderedListStyle',
       listType: 'disc',
-      expectedContent: '<ul style="list-style-type: disc;"><li>a<ul style="list-style-type: disc;"><li>b</li></ul></li></ul>',
+      expectedContent: '<ul style="list-style-type: disc;"><li>a<ol><li>b</li></ol></li></ul>',
       expectedSelection: ['li:nth-child(1)', 0]
     });
 
@@ -92,7 +92,7 @@ asynctest(
       inputSelection: ['li:nth-child(1)', 0],
       command: 'ApplyOrderedListStyle',
       listType: 'lower-roman',
-      expectedContent: '<ol style="list-style-type: lower-roman;"><li>a<ol style="list-style-type: lower-roman;"><li>b</li></ol></li></ol>',
+      expectedContent: '<ol style="list-style-type: lower-roman;"><li>a<ul><li>b</li></ul></li></ol>',
       expectedSelection: ['li:nth-child(1)', 0]
     });
 

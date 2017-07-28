@@ -60,35 +60,11 @@ define(
       ulMenuItems = buildMenuItems('UL', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));
 
       function applyListFormat(listName, styleValue) {
-        editor.undoManager.transact(function () {
-          var list, dom = editor.dom, sel = editor.selection;
+        var detail = {
+          'list-style-type': styleValue
+        };
 
-          // Check for existing list element
-          list = dom.getParent(sel.getNode(), 'ol,ul');
-
-          // Switch/add list type if needed
-          if (!list || list.nodeName != listName || styleValue === false) {
-            var detail = {
-              'list-style-type': styleValue ? styleValue : ''
-            };
-
-            editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
-          }
-
-          list = dom.getParent(sel.getNode(), 'ol,ul');
-          if (list) {
-            Tools.each(dom.select('ol,ul', list).concat([list]), function (list) {
-              if (list.nodeName !== listName && styleValue !== false) {
-                list = dom.rename(list, listName);
-              }
-
-              dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
-              list.removeAttribute('data-mce-style');
-            });
-          }
-
-          editor.focus();
-        });
+        editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
       }
 
       function updateSelection(e) {

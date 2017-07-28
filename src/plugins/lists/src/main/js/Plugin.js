@@ -22,30 +22,6 @@ define(
     'tinymce.plugins.lists.core.Selection'
   ],
   function (PluginManager, Tools, VK, Indent, Outdent, ToggleList, Delete, NodeType, Selection) {
-    var applyListFormat = function (editor, listName) {
-      editor.undoManager.transact(function () {
-        var parentList = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
-
-        if (!parentList || parentList.nodeName !== listName) {
-          editor.execCommand(listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false);
-        }
-
-        var childLists = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
-        if (childLists) {
-          Tools.each(editor.dom.select('ol,ul', childLists).concat([childLists]), function (list) {
-            if (list.nodeName !== listName) {
-              list = editor.dom.rename(list, listName);
-            }
-
-            editor.dom.setStyle(list, 'listStyleType', null);
-            list.removeAttribute('data-mce-style');
-          });
-        }
-
-        editor.focus();
-      });
-    };
-
     var queryListCommandState = function (editor, listName) {
       return function () {
         var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
@@ -75,11 +51,11 @@ define(
       });
 
       editor.addCommand('InsertUnorderedList', function (ui, detail) {
-        ToggleList.toggleList(editor, 'UL', detail);
+        ToggleList.applyListFormat(editor, 'UL', detail);
       });
 
       editor.addCommand('InsertOrderedList', function (ui, detail) {
-        ToggleList.toggleList(editor, 'OL', detail);
+        ToggleList.applyListFormat(editor, 'OL', detail);
       });
 
       editor.addCommand('InsertDefinitionList', function (ui, detail) {
@@ -133,7 +109,7 @@ define(
         editor.addButton('numlist', {
           title: 'Numbered list',
           onclick: function () {
-            applyListFormat(editor, 'OL');
+            ToggleList.applyListFormat(editor, 'OL');
           },
           onPostRender: listState('OL')
         });
@@ -141,7 +117,7 @@ define(
         editor.addButton('bullist', {
           title: 'Bullet list',
           onclick: function () {
-            applyListFormat(editor, 'UL');
+            ToggleList.applyListFormat(editor, 'UL');
           },
           onPostRender: listState('UL')
         });
