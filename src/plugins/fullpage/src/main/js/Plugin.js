@@ -381,7 +381,7 @@ define(
           foot = low(content.substring(endPos));
         } else {
           head = getDefaultHeader();
-          foot = '\n</body>\n</html>';
+          foot = editor.getParam("fullpage_disable_defaultHeaders") ? '': '\n</body>\n</html>';
         }
 
         // Parse header and update iframe
@@ -459,29 +459,31 @@ define(
         }
 
         header += editor.getParam('fullpage_default_doctype', '<!DOCTYPE html>');
-        header += '\n<html>\n<head>\n';
 
-        if ((value = editor.getParam('fullpage_default_title'))) {
-          header += '<title>' + value + '</title>\n';
-        }
+        if(!editor.getParam("fullpage_disable_defaultHeaders")){			
+          header += '\n<html>\n<head>\n';
 
-        if ((value = editor.getParam('fullpage_default_encoding'))) {
-          header += '<meta http-equiv="Content-Type" content="text/html; charset=' + value + '" />\n';
-        }
+          if ((value = editor.getParam('fullpage_default_title'))) {
+            header += '<title>' + value + '</title>\n';
+          }
 
-        if ((value = editor.getParam('fullpage_default_font_family'))) {
-          styles += 'font-family: ' + value + ';';
-        }
+          if ((value = editor.getParam('fullpage_default_encoding'))) {
+            header += '<meta http-equiv="Content-Type" content="text/html; charset=' + value + '" />\n';
+          }
 
-        if ((value = editor.getParam('fullpage_default_font_size'))) {
-          styles += 'font-size: ' + value + ';';
-        }
+          if ((value = editor.getParam('fullpage_default_font_family'))) {
+            styles += 'font-family: ' + value + ';';
+          }
 
-        if ((value = editor.getParam('fullpage_default_text_color'))) {
-          styles += 'color: ' + value + ';';
-        }
+          if ((value = editor.getParam('fullpage_default_font_size'))) {
+            styles += 'font-size: ' + value + ';';
+          }
 
-        header += '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
+          if ((value = editor.getParam('fullpage_default_text_color'))) {
+            styles += 'color: ' + value + ';';
+          }
+          header += '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
+        }        
 
         return header;
       }
