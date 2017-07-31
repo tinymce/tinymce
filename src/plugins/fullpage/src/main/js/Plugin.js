@@ -381,7 +381,7 @@ define(
           foot = low(content.substring(endPos));
         } else {
           head = getDefaultHeader();
-          foot = editor.getParam("fullpage_disable_defaultHeaders") ? '': '\n</body>\n</html>';
+          foot = editor.getParam("fullpage_disable_defaultHeaders") ? '' : '\n</body>\n</html>';
         }
 
         // Parse header and update iframe
@@ -460,7 +460,7 @@ define(
 
         header += editor.getParam('fullpage_default_doctype', '<!DOCTYPE html>');
 
-        if(!editor.getParam("fullpage_disable_defaultHeaders")){			
+        if (!editor.getParam("fullpage_disable_defaultHeaders")) {
           header += '\n<html>\n<head>\n';
 
           if ((value = editor.getParam('fullpage_default_title'))) {
@@ -483,7 +483,7 @@ define(
             styles += 'color: ' + value + ';';
           }
           header += '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
-        }        
+        }
 
         return header;
       }
