@@ -37,7 +37,7 @@ define(
     };
 
     var findIn = function (grid, row, column) {
-      return Option.from(grid[row]).bind(function (r) {
+      return Option.from(grid[row].cells()).bind(function (r) {
         return Option.from(r[column]);
       });
     };

@@ -2,10 +2,11 @@ define(
   'ephox.snooker.operate.ModificationOperations',
 
   [
-    'ephox.compass.Arr'
+    'ephox.compass.Arr',
+    'ephox.snooker.api.Structs'
   ],
 
-  function (Arr) {
+  function (Arr, Structs) {
     // substitution :: (item, comparator) -> item
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
@@ -13,10 +14,12 @@ define(
       var before = grid.slice(0, index);
       var after = grid.slice(index);
 
-      var between = Arr.map(grid[example], function (ex, c) {
-        var withinSpan = index > 0 && index < grid.length && comparator(grid[index - 1][c], grid[index][c]);
-        return withinSpan ? grid[index][c] : substitution(ex, comparator);
+      var betweenCells = Arr.map(grid[example].cells(), function (ex, c) {
+        var withinSpan = index > 0 && index < grid.length && comparator(grid[index - 1].cells()[c], grid[index].cells()[c]);
+        return withinSpan ? grid[index].cells()[c] : substitution(ex, comparator);
       });
+
+      var between = Structs.rowcells(betweenCells, grid[example].section());
 
       return before.concat([ between ]).concat(after);
     };

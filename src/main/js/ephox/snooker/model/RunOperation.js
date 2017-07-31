@@ -33,10 +33,11 @@ define(
       };
 
       return Arr.map(rendered, function (details) {
-        var row = findRow(details);
+        var row = findRow(details.cells());
         return {
           element: Fun.constant(row),
-          cells: Fun.constant(details)
+          cells: Fun.constant(details.cells()),
+          section: details.section()
         };
       });
     };

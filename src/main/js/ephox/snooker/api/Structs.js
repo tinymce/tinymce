@@ -13,7 +13,8 @@ define(
     var detail = Struct.immutable('element', 'rowspan', 'colspan');
     var extended = Struct.immutable('element', 'rowspan', 'colspan', 'row', 'column');
     var context = Struct.immutable('before', 'on', 'after');
-    var rowdata = Struct.immutable('element', 'cells');
+    var rowdata = Struct.immutable('element', 'cells', 'section');
+    var rowcells = Struct.immutable('cells', 'section');
     var bounds = Struct.immutableBag([ 'startRow', 'startCol', 'finishRow', 'finishCol'], []);
     var cell = Struct.immutableBag([ 'row', 'col'], [] );
 
@@ -26,6 +27,7 @@ define(
       detail: detail,
       context: context,
       rowdata: rowdata,
+      rowcells: rowcells,
       bounds: bounds,
       cell: cell
     };

@@ -79,7 +79,7 @@ define(
           currentRow.push(current);
         });
 
-        cells.push(Structs.rowdata(details.element(), currentRow));
+        cells.push(Structs.rowdata(details.element(), currentRow, details.section()));
       });
 
       var grid = Structs.grid(maxRows, maxColumns);
