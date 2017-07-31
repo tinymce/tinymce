@@ -11,20 +11,15 @@
 define(
   'tinymce.core.keyboard.SpaceKey',
   [
-    'ephox.katamari.api.Arr',
     'tinymce.core.keyboard.InsertSpace',
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (Arr, InsertSpace, MatchKeys, VK) {
+  function (InsertSpace, MatchKeys, VK) {
     var executeKeydownOverride = function (editor, evt) {
-      var matches = MatchKeys.match([
+      MatchKeys.execute([
         { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
-      ], evt);
-
-      Arr.find(matches, function (pattern) {
-        return pattern.action();
-      }).each(function (_) {
+      ], evt).each(function (_) {
         evt.preventDefault();
       });
     };

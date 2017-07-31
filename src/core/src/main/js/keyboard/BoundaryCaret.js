@@ -15,11 +15,12 @@ define(
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretContainerInline',
     'tinymce.core.caret.CaretContainerRemove',
+    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
     'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Option, CaretContainer, CaretContainerInline, CaretContainerRemove, CaretPosition, NodeType, InlineUtils) {
+  function (Option, CaretContainer, CaretContainerInline, CaretContainerRemove, CaretFinder, CaretPosition, NodeType, InlineUtils) {
     var insertInlinePos = function (pos, before) {
       if (NodeType.isText(pos.container())) {
         return CaretContainerInline.insertInline(before, pos.container());
@@ -42,7 +43,7 @@ define(
           return Option.some(new CaretPosition(text, text.length - 1));
         },
         function (element) { // Start
-          return InlineUtils.findCaretPositionIn(element, true).map(function (pos) {
+          return CaretFinder.firstPositionIn(element).map(function (pos) {
             if (!isPosCaretContainer(pos, caret)) {
               CaretContainerRemove.remove(caret.get());
               var text = insertInlinePos(pos, true);
@@ -54,7 +55,7 @@ define(
           });
         },
         function (element) { // End
-          return InlineUtils.findCaretPositionIn(element, false).map(function (pos) {
+          return CaretFinder.lastPositionIn(element).map(function (pos) {
             if (!isPosCaretContainer(pos, caret)) {
               CaretContainerRemove.remove(caret.get());
               var text = insertInlinePos(pos, false);

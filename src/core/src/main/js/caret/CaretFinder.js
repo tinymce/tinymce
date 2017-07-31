@@ -95,8 +95,12 @@ define(
 
     return {
       fromPosition: fromPosition,
+      nextPosition: Fun.curry(fromPosition, true),
+      prevPosition: Fun.curry(fromPosition, false),
       navigate: navigate,
-      positionIn: positionIn
+      positionIn: positionIn,
+      firstPositionIn: Fun.curry(positionIn, true),
+      lastPositionIn: Fun.curry(positionIn, false)
     };
   }
 );

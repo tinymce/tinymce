@@ -59,20 +59,12 @@ define(
 
     var isAtInlineEndPoint = function (rootNode, pos) {
       return findRootInline(rootNode, pos).map(function (inline) {
-        return findCaretPosition(inline, false, pos).isNone() || findCaretPosition(inline, true, pos).isNone();
+        return CaretFinder.prevPosition(inline, pos).isNone() || CaretFinder.nextPosition(inline, pos).isNone();
       }).getOr(false);
     };
 
     var isAtZwsp = function (pos) {
       return CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
-    };
-
-    var findCaretPositionIn = function (node, forward) {
-      return CaretFinder.positionIn(forward, node);
-    };
-
-    var findCaretPosition = function (rootNode, forward, from) {
-      return CaretFinder.fromPosition(forward, rootNode, from);
     };
 
     var normalizePosition = function (forward, pos) {
@@ -112,8 +104,6 @@ define(
       isRtl: isRtl,
       isAtInlineEndPoint: isAtInlineEndPoint,
       isAtZwsp: isAtZwsp,
-      findCaretPositionIn: findCaretPositionIn,
-      findCaretPosition: findCaretPosition,
       normalizePosition: normalizePosition,
       normalizeForwards: normalizeForwards,
       normalizeBackwards: normalizeBackwards,

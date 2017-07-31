@@ -16,13 +16,14 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.dom.NodeType',
     'tinymce.core.keyboard.InlineUtils',
     'tinymce.core.util.LazyEvaluator'
   ],
-  function (Adt, Fun, Option, Options, CaretContainer, CaretPosition, CaretUtils, NodeType, InlineUtils, LazyEvaluator) {
+  function (Adt, Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, NodeType, InlineUtils, LazyEvaluator) {
     var Location = Adt.generate([
       { before: [ 'element' ] },
       { start: [ 'element' ] },
@@ -40,7 +41,7 @@ define(
       var scope = rescope(rootNode, nPos.container());
       return InlineUtils.findRootInline(scope, nPos).fold(
         function () {
-          return InlineUtils.findCaretPosition(scope, true, nPos)
+          return CaretFinder.nextPosition(scope, nPos)
             .bind(Fun.curry(InlineUtils.findRootInline, scope))
             .map(function (inline) {
               return Location.before(inline);
@@ -53,7 +54,7 @@ define(
     var start = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeBackwards(pos);
       return InlineUtils.findRootInline(rootNode, nPos).bind(function (inline) {
-        var prevPos = InlineUtils.findCaretPosition(inline, false, nPos);
+        var prevPos = CaretFinder.prevPosition(inline, nPos);
         return prevPos.isNone() ? Option.some(Location.start(inline)) : Option.none();
       });
     };
@@ -61,7 +62,7 @@ define(
     var end = function (rootNode, pos) {
       var nPos = InlineUtils.normalizeForwards(pos);
       return InlineUtils.findRootInline(rootNode, nPos).bind(function (inline) {
-        var nextPos = InlineUtils.findCaretPosition(inline, true, nPos);
+        var nextPos = CaretFinder.nextPosition(inline, nPos);
         return nextPos.isNone() ? Option.some(Location.end(inline)) : Option.none();
       });
     };
@@ -71,7 +72,7 @@ define(
       var scope = rescope(rootNode, nPos.container());
       return InlineUtils.findRootInline(scope, nPos).fold(
         function () {
-          return InlineUtils.findCaretPosition(scope, false, nPos)
+          return CaretFinder.prevPosition(scope, nPos)
             .bind(Fun.curry(InlineUtils.findRootInline, scope))
             .map(function (inline) {
               return Location.after(inline);
@@ -161,7 +162,7 @@ define(
 
     var findLocationTraverse = function (forward, rootNode, fromLocation, pos) {
       var from = InlineUtils.normalizePosition(forward, pos);
-      var to = InlineUtils.findCaretPosition(rootNode, forward, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
+      var to = CaretFinder.fromPosition(forward, rootNode, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
 
       var location = to.fold(
         function () {

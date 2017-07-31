@@ -1,6 +1,7 @@
 asynctest(
   'browser.tinymce.core.delete.BlockRangeDeleteTest',
   [
+    'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -11,7 +12,7 @@ asynctest(
     'tinymce.core.delete.BlockRangeDelete',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, BlockRangeDelete, Theme) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, BlockRangeDelete, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -90,6 +91,20 @@ asynctest(
           sDelete(editor),
           tinyApis.sAssertContent('<p><span style="color: red;">a</span>d</p>'),
           tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        ])),
+        Logger.t('Delete on selection of everything should empty editor', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>a</p><p>b</p>'),
+          tinyApis.sSetSelection([0, 0], 0, [1, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent(''),
+          tinyApis.sAssertSelection([0], 0, [0], 0),
+          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+            return s.element('body', {
+              children: [
+                s.element('p', { children: [ s.element('br', { attrs: { 'data-mce-bogus': str.is('1') } }) ] })
+              ]
+            });
+          }))
         ]))
       ], onSuccess, onFailure);
     }, {
