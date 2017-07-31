@@ -71,13 +71,20 @@ asynctest(
         return Step.sync(function () {
           assertClasses(label, [ALPHA_CLS()], [OMEGA_CLS()]);
         });
-      }
+      };
 
       var testHasOmega = function (label) {
         return Step.sync(function () {
           assertClasses(label, [OMEGA_CLS()], [ALPHA_CLS()]);
         });
-      }
+      };
+
+      var testPredicates = function (label, isAlpha, isOmega) {
+        return Step.sync(function () {
+          Assertions.assertEq(label, isAlpha, Swapping.isAlpha(component));
+          Assertions.assertEq(label, isOmega, Swapping.isOmega(component));
+        });
+      };
 
       var sAlpha = Step.sync(function () {
         Swapping.toAlpha(component);
@@ -93,30 +100,39 @@ asynctest(
 
       return [
         testHasNoClass('no initial class'),
+        testPredicates('isAlpha, isOmega', false, false),
 
         sAlpha,
         testHasAlpha('initial alpha class'),
+        testPredicates('isAlpha, isOmega', true, false),
 
         sOmega,
         testHasOmega('swap to omega class'),
+        testPredicates('isAlpha, isOmega', false, true),
 
         sAlpha,
         testHasAlpha('swap back to alpha class'),
+        testPredicates('isAlpha, isOmega', true, false),
 
         sClear,
         testHasNoClass('clear classes'),
+        testPredicates('isAlpha, isOmega', false, false),
 
         sOmega,
         testHasOmega('initial omega class'),
+        testPredicates('isAlpha, isOmega', false, true),
 
         sAlpha,
         testHasAlpha('swap to alpha class'),
+        testPredicates('isAlpha, isOmega', true, false),
 
         sOmega,
         testHasOmega('swap back to omega class'),
+        testPredicates('isAlpha, isOmega', false, true),
 
         sClear,
-        testHasNoClass('clear classes')
+        testHasNoClass('clear classes'),
+        testPredicates('isAlpha, isOmega', false, false)
       ];
     }, success, failure);
   }
