@@ -15,6 +15,9 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
+    'ephox.katamari.api.Type',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
@@ -22,28 +25,28 @@ define(
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.NodeType',
+    'tinymce.core.EditorSettings',
     'tinymce.core.text.Bidi'
   ],
-  function (Arr, Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, NodeType, Bidi) {
-    var isInlineTarget = function (elm) {
-      return DOMUtils.DOM.is(elm, 'a[href],code,em,strong,sup,sub,span[style*="text-decoration: underline;"],span[style*="text-decoration: line-through;"]');
+  function (
+    Arr, Fun, Option, Options, Type, Element, Selectors, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, NodeType, EditorSettings,
+    Bidi
+  ) {
+    var isInlineTarget = function (editor, elm) {
+      var selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');
+      return Selectors.is(Element.fromDom(elm), selector);
     };
 
     var isRtl = function (element) {
       return DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
     };
 
-    var findInlineParents = function (rootNode, pos) {
+    var findInlineParents = function (isInlineTarget, rootNode, pos) {
       return Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
     };
 
-    var findInline = function (rootNode, pos) {
-      var parents = findInlineParents(rootNode, pos);
-      return Option.from(parents[0]);
-    };
-
-    var findRootInline = function (rootNode, pos) {
-      var parents = findInlineParents(rootNode, pos);
+    var findRootInline = function (isInlineTarget, rootNode, pos) {
+      var parents = findInlineParents(isInlineTarget, rootNode, pos);
       return Option.from(parents[parents.length - 1]);
     };
 
@@ -51,16 +54,6 @@ define(
       var block1 = CaretUtils.getParentBlock(node1, rootNode);
       var block2 = CaretUtils.getParentBlock(node2, rootNode);
       return block1 && block1 === block2;
-    };
-
-    var isInInline = function (rootNode, pos) {
-      return pos ? findRootInline(rootNode, pos).isSome() : false;
-    };
-
-    var isAtInlineEndPoint = function (rootNode, pos) {
-      return findRootInline(rootNode, pos).map(function (inline) {
-        return CaretFinder.prevPosition(inline, pos).isNone() || CaretFinder.nextPosition(inline, pos).isNone();
-      }).getOr(false);
     };
 
     var isAtZwsp = function (pos) {
@@ -98,11 +91,8 @@ define(
 
     return {
       isInlineTarget: isInlineTarget,
-      findInline: findInline,
       findRootInline: findRootInline,
-      isInInline: isInInline,
       isRtl: isRtl,
-      isAtInlineEndPoint: isAtInlineEndPoint,
       isAtZwsp: isAtZwsp,
       normalizePosition: normalizePosition,
       normalizeForwards: normalizeForwards,

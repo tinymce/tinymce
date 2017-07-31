@@ -398,7 +398,7 @@ asynctest(
       LegacyUnit.equal(editor.getContent(), '');
     });
 
-    suite.test('kamer word bounderies', function (editor) {
+    suite.test('kamer word boundaries', function (editor) {
       editor.setContent('<p>!\u200b!\u200b!</p>');
       LegacyUnit.equal(editor.getContent(), '<p>!\u200b!\u200b!</p>');
     });

@@ -21,6 +21,10 @@ asynctest(
     var ZWSP = Zwsp.ZWSP;
     var viewBlock = ViewBlock();
 
+    var isInlineTarget = function (elm) {
+      return Selectors.is(Element.fromDom(elm), 'a[href],code');
+    };
+
     var createViewElement = function (html) {
       viewBlock.update(html);
       return Element.fromDom(viewBlock.get());
@@ -29,7 +33,7 @@ asynctest(
     var createLocation = function (elm, elementPath, offset) {
       var container = Hierarchy.follow(elm, elementPath);
       var pos = new CaretPosition(container.getOrDie().dom(), offset);
-      var location = BoundaryLocation.readLocation(elm.dom(), pos);
+      var location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
       return location;
     };
 
@@ -78,7 +82,7 @@ asynctest(
       return Step.sync(function () {
         var elm = createViewElement(html);
         var position = createPosition(elm, elementPath, offset);
-        var location = forward ? BoundaryLocation.nextLocation(elm.dom(), position) : BoundaryLocation.prevLocation(elm.dom(), position);
+        var location = forward ? BoundaryLocation.nextLocation(isInlineTarget, elm.dom(), position) : BoundaryLocation.prevLocation(isInlineTarget, elm.dom(), position);
 
         Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
         Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
@@ -90,7 +94,7 @@ asynctest(
       return Step.sync(function () {
         var elm = createViewElement(html);
         var position = createPosition(elm, elementPath, offset);
-        var location = forward ? BoundaryLocation.nextLocation(elm.dom(), position) : BoundaryLocation.prevLocation(elm.dom(), position);
+        var location = forward ? BoundaryLocation.nextLocation(isInlineTarget, elm.dom(), position) : BoundaryLocation.prevLocation(isInlineTarget, elm.dom(), position);
         Assertions.assertEq('Should not be a valid location: ' + html, true, location.isNone());
       });
     };

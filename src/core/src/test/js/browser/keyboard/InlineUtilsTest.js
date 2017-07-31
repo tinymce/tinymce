@@ -49,7 +49,26 @@ asynctest(
       });
     };
 
+    var createFakeEditor = function (settings) {
+      return {
+        settings: settings
+      };
+    };
+
     Pipeline.async({}, [
+      Logger.t('isInlineTarget with various editor settings', Step.sync(function () {
+        Assertions.assertEq('Links should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<a href="a">').dom()));
+        Assertions.assertEq('Code should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<code>').dom()));
+        Assertions.assertEq('None link anchor should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<a>').dom()));
+        Assertions.assertEq('Bold should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), Element.fromHtml('<b>').dom()));
+        Assertions.assertEq('Bold should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
+          inline_boundaries_selector: 'b'
+        }), Element.fromHtml('<b>').dom()));
+        Assertions.assertEq('Italic should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
+          inline_boundaries_selector: 'b,i'
+        }), Element.fromHtml('<i>').dom()));
+      })),
+
       Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
         Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
           cCreateElement('<p>' + ZWSP + 'a</p>'),

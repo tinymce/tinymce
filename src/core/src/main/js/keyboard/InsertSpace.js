@@ -14,9 +14,10 @@ define(
     'ephox.katamari.api.Fun',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.keyboard.BoundaryLocation'
+    'tinymce.core.keyboard.BoundaryLocation',
+    'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Fun, CaretPosition, NodeType, BoundaryLocation) {
+  function (Fun, CaretPosition, NodeType, BoundaryLocation, InlineUtils) {
     var isValidInsertPoint = function (location, caretPosition) {
       return isAtStartOrEnd(location) && NodeType.isText(caretPosition.container());
     };
@@ -39,8 +40,9 @@ define(
     };
 
     var insertAtCaret = function (editor) {
+      var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
       var caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
-      var boundaryLocation = BoundaryLocation.readLocation(editor.getBody(), caretPosition);
+      var boundaryLocation = BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition);
       return boundaryLocation.map(Fun.curry(insertAtLocation, editor, caretPosition)).getOr(false);
     };
 
