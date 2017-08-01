@@ -84,11 +84,11 @@ asynctest(
         mNormalizeRange,
         mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ])),
-      Logger.t('Do not normalize webkit tripple click selection between LI:s', GeneralSteps.sequence([
+      Logger.t('Normalize webkit tripple click selection between LI:s', GeneralSteps.sequence([
         sSetContent('<ul><li>a</li></ul><ul><li>b</li></ul>'),
         mCreateRange([0, 0, 0], 0, [1, 0], 0),
         mNormalizeRange,
-        mAssertRange([0, 0, 0], 0, [1, 0], 0)
+        mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ]))
     ], function () {
       viewBlock.detach();

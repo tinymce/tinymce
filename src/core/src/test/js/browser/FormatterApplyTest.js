@@ -2043,6 +2043,19 @@ asynctest(
       LegacyUnit.equal(getContent(editor), '<p><span class="x">a</span></p>');
     });
 
+    suite.test("Apply format to tripple clicked selection (webkit)", function (editor) {
+      editor.setContent('<p>a</p><ul><li>a</li><li>b</li></ul>');
+      editor.formatter.register('format', { inline: 'b' });
+
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+      rng.setEnd(editor.dom.select('li')[0], 0);
+      editor.selection.setRng(rng);
+
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<p><b>a</b></p><ul><li>a</li><li>b</li></ul>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
