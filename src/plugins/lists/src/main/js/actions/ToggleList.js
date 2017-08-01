@@ -301,7 +301,7 @@ define(
 
       detail = detail ? detail : {};
 
-      if (selectedSubLists.length > 0) {
+      if (parentList && selectedSubLists.length > 0) {
         toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
       } else {
         toggleSingleList(editor, parentList, listName, detail);
