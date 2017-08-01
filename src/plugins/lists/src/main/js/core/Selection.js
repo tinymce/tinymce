@@ -16,6 +16,17 @@ define(
     'tinymce.plugins.lists.core.NodeType'
   ],
   function (DomQuery, Tools, NodeType) {
+    var getParentList = function (editor) {
+      return editor.dom.getParent(editor.selection.getStart(true), 'OL,UL,DL');
+    };
+
+    var getSelectedSubLists = function (editor) {
+      var parentList = getParentList(editor);
+      return Tools.grep(editor.selection.getSelectedBlocks(), function (elm) {
+        return NodeType.isListNode(elm) && parentList !== elm;
+      });
+    };
+
     var findParentListItemsNodes = function (elms) {
       var listItemsElms = Tools.map(elms, function (elm) {
         var parentNode = elm.parentNode;
@@ -33,6 +44,8 @@ define(
     };
 
     return {
+      getParentList: getParentList,
+      getSelectedSubLists: getSelectedSubLists,
       getSelectedListItems: getSelectedListItems
     };
   }

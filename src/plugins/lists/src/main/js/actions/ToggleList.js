@@ -248,17 +248,41 @@ define(
       }
     };
 
-    var toggleList = function (editor, listName, detail) {
-      var parentList = editor.dom.getParent(editor.selection.getStart(), 'OL,UL,DL');
+    var updateList = function (dom, list, listName, detail) {
+      if (list.nodeName !== listName) {
+        list = dom.rename(list, listName);
+      }
 
-      detail = detail ? detail : {};
+      updateListWithDetails(dom, list, detail);
+    };
 
+    var toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
+      if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
+        removeList(editor, listName);
+      } else {
+        var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+
+        updateList(editor.dom, parentList, listName, detail);
+
+        Tools.each(lists, function (elm) {
+          updateList(editor.dom, elm, listName, detail);
+        });
+
+        editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      }
+    };
+
+    var hasListStyleDetail = function (detail) {
+      return 'list-style-type' in detail;
+    };
+
+    var toggleSingleList = function (editor, parentList, listName, detail) {
       if (parentList === editor.getBody()) {
         return;
       }
 
       if (parentList) {
-        if (parentList.nodeName === listName) {
+        if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
           removeList(editor, listName);
         } else {
           var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
@@ -271,48 +295,20 @@ define(
       }
     };
 
-    var hasNoSublist = function (editor, list) {
-      var lists = editor.dom.select('ol,ul', list);
+    var toggleList = function (editor, listName, detail) {
+      var parentList = Selection.getParentList(editor);
+      var selectedSubLists = Selection.getSelectedSubLists(editor);
 
-      return lists.length < 1;
-    };
+      detail = detail ? detail : {};
 
-    var applyListFormat = function (editor, listName, detail) {
-      editor.undoManager.transact(function () {
-        editor.focus();
-        var parentList = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
-        var styleValue = detail ? detail['list-style-type'] : '';
-
-        if (
-            !parentList ||
-            parentList.nodeName !== listName ||
-            styleValue === false ||
-            (hasNoSublist(editor, parentList) && styleValue === '')
-          ) {
-          toggleList(editor, listName, detail);
-        }
-
-        var bookmark = Bookmark.createBookmark(editor.selection.getRng());
-
-        var parentList2 = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
-        Tools.each(editor.selection.getSelectedBlocks(parentList2), function (list) {
-          if (NodeType.isListNode(list)) {
-            if (list.nodeName !== listName) {
-              list = editor.dom.rename(list, listName);
-            }
-
-            editor.dom.setStyle(list, 'listStyleType', styleValue ? styleValue : null);
-            list.removeAttribute('data-mce-style');
-          }
-        });
-
-
-        editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
-      });
+      if (selectedSubLists.length > 0) {
+        toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
+      } else {
+        toggleSingleList(editor, parentList, listName, detail);
+      }
     };
 
     return {
-      applyListFormat: applyListFormat,
       toggleList: toggleList,
       removeList: removeList,
       mergeWithAdjacentLists: mergeWithAdjacentLists

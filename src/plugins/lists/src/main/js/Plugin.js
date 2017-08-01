@@ -51,11 +51,11 @@ define(
       });
 
       editor.addCommand('InsertUnorderedList', function (ui, detail) {
-        ToggleList.applyListFormat(editor, 'UL', detail);
+        ToggleList.toggleList(editor, 'UL', detail);
       });
 
       editor.addCommand('InsertOrderedList', function (ui, detail) {
-        ToggleList.applyListFormat(editor, 'OL', detail);
+        ToggleList.toggleList(editor, 'OL', detail);
       });
 
       editor.addCommand('InsertDefinitionList', function (ui, detail) {
@@ -108,17 +108,13 @@ define(
       if (!hasPlugin(editor, 'advlist')) {
         editor.addButton('numlist', {
           title: 'Numbered list',
-          onclick: function () {
-            ToggleList.applyListFormat(editor, 'OL');
-          },
+          cmd: 'InsertOrderedList',
           onPostRender: listState('OL')
         });
 
         editor.addButton('bullist', {
           title: 'Bullet list',
-          onclick: function () {
-            ToggleList.applyListFormat(editor, 'UL');
-          },
+          cmd: 'InsertUnorderedList',
           onPostRender: listState('UL')
         });
       }

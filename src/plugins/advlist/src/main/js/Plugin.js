@@ -64,7 +64,11 @@ define(
           'list-style-type': styleValue
         };
 
-        editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
+        if (detail['list-style-type'] === false) {
+          editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList');
+        } else {
+          editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
+        }
       }
 
       function updateSelection(e) {
@@ -105,7 +109,7 @@ define(
             applyListFormat('OL', e.control.settings.data);
           },
           onclick: function () {
-            applyListFormat('OL', false);
+            editor.execCommand('InsertOrderedList');
           }
         });
 
@@ -119,7 +123,7 @@ define(
             applyListFormat('UL', e.control.settings.data);
           },
           onclick: function () {
-            applyListFormat('UL', false);
+            editor.execCommand('InsertUnorderedList');
           }
         });
       }

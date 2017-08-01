@@ -31,7 +31,7 @@ asynctest(
           tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
         ])),
         Logger.t('ul to ol, selection from parent to sublist', GeneralSteps.sequence([
-          tinyApis.sSetContent('<ul><li>a</li><ul><li>b</li></ul></ul>'),
+          tinyApis.sSetContent('<ul><li>a</li><ol><li>b</li></ol></ul>'),
           tinyApis.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 1),
           tinyUi.sClickOnToolbar('click numlist button', 'div[aria-label="Numbered list"] > button'),
           tinyApis.sAssertContent('<ol><li>a</li><ol><li>b</li></ol></ol>'),
@@ -45,21 +45,21 @@ asynctest(
           tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
         ])),
         Logger.t('ol to ul, selection from parent to sublist', GeneralSteps.sequence([
-          tinyApis.sSetContent('<ol><li>a</li><ol><li>b</li></ol></ol>'),
+          tinyApis.sSetContent('<ol><li>a</li><ul><li>b</li></ul></ol>'),
           tinyApis.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 1),
           tinyUi.sClickOnToolbar('click bullist button', 'div[aria-label="Bullet list"] > button'),
           tinyApis.sAssertContent('<ul><li>a</li><ul><li>b</li></ul></ul>'),
           tinyApis.sAssertSelection([0, 0, 0], 0, [0, 1, 0, 0], 1)
         ])),
         Logger.t('alpha to ol, cursor only in parent', GeneralSteps.sequence([
-          tinyApis.sSetContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>'),
+          tinyApis.sSetContent('<ul style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>'),
           tinyApis.sSetCursor([0, 0, 0], 0),
           tinyUi.sClickOnToolbar('click bullist button', 'div[aria-label="Numbered list"] > button'),
           tinyApis.sAssertContent('<ol><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>'),
           tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
         ])),
         Logger.t('alpha to ol, selection from parent to sublist', GeneralSteps.sequence([
-          tinyApis.sSetContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>'),
+          tinyApis.sSetContent('<ul style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>'),
           tinyApis.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 1),
           tinyUi.sClickOnToolbar('click bullist button', 'div[aria-label="Numbered list"] > button'),
           tinyApis.sAssertContent('<ol><li>a</li><ol><li>b</li></ol></ol>'),
