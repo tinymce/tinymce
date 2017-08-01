@@ -7,6 +7,7 @@ define(
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.perhaps.Options',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Transitions',
@@ -18,7 +19,7 @@ define(
     'ephox.syrup.api.Traverse'
   ],
 
-  function (Arr, Merger, Fun, Option, Options, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {
+  function (Arr, Merger, Fun, Option, Options, Structs, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
       return Transitions.toGrid(warehouse, generators);
     };
@@ -34,11 +35,7 @@ define(
 
       return Arr.map(rendered, function (details) {
         var row = findRow(details.cells());
-        return {
-          element: Fun.constant(row),
-          cells: Fun.constant(details.cells()),
-          section: details.section()
-        };
+        return Structs.rowdata(row, details.cells(), details.section());
       });
     };
 

@@ -148,6 +148,10 @@ define(
       Insert.append(beforeColumn, Element.fromText('Column Before'));
       Insert.append(ephoxUi, beforeColumn);
 
+      var splitCellIntoColumns = Element.fromTag('button');
+      Insert.append(splitCellIntoColumns, Element.fromText('Split Cell Into Columns'));
+      Insert.append(ephoxUi, splitCellIntoColumns);
+
       var eraseRow = Element.fromTag('button');
       Insert.append(eraseRow, Element.fromText('Erase row'));
       Insert.append(ephoxUi, eraseRow);
@@ -221,7 +225,8 @@ define(
             var target = {
               element: Fun.constant(start),
               mergable: Option.none,
-              unmergable: Option.none
+              unmergable: Option.none,
+              selection: Fun.constant([start])
             };
 
             //wire, table, target, generators, direction
@@ -235,8 +240,10 @@ define(
       DomEvent.bind(beforeColumn, 'click', runOperation(TableOperations.insertColumnBefore));
       DomEvent.bind(afterColumn, 'click', runOperation(TableOperations.insertColumnAfter));
 
-      DomEvent.bind(eraseRow, 'click', runOperation(TableOperations.eraseRow));
-      DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumn));
+      DomEvent.bind(eraseRow, 'click', runOperation(TableOperations.eraseRows));
+      DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumns));
+
+      DomEvent.bind(splitCellIntoColumns, 'click', runOperation(TableOperations.splitCellIntoColumns))
 
       DomEvent.bind(makeColumnHeader, 'click', runOperation(TableOperations.makeColumnHeader));
       DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));

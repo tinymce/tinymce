@@ -48,7 +48,7 @@ define(
 
       var renderOrRemoveSection = function (grid, sectionName) {
         var gridSection = Arr.filter(grid, function (row) {
-          return row.section === sectionName;
+          return row.section() === sectionName;
         });
 
         if (gridSection.length > 0) {
