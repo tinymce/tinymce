@@ -61,10 +61,12 @@ define(
       var before = grid.slice(0, index);
       var after = grid.slice(index);
 
-      var between = Arr.map(grid[exampleRow] || [], function (ex, i) {
+      var betweenCells = Arr.map(grid[exampleRow].cells() || [], function (ex, i) {
         var isTargetCell = (i === exampleCol);
         return isTargetCell ? substitution(ex, comparator) : ex;
       });
+
+      var between = Structs.rowcells(betweenCells, grid[exampleRow].section());
 
       return before.concat([ between ]).concat(after);
     };

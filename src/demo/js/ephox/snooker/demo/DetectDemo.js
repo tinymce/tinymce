@@ -152,6 +152,10 @@ define(
       Insert.append(splitCellIntoColumns, Element.fromText('Split Cell Into Columns'));
       Insert.append(ephoxUi, splitCellIntoColumns);
 
+      var splitCellIntoRows = Element.fromTag('button');
+      Insert.append(splitCellIntoRows, Element.fromText('Split Cell Into Rows'));
+      Insert.append(ephoxUi, splitCellIntoRows);
+
       var eraseRow = Element.fromTag('button');
       Insert.append(eraseRow, Element.fromText('Erase row'));
       Insert.append(ephoxUi, eraseRow);
@@ -243,7 +247,8 @@ define(
       DomEvent.bind(eraseRow, 'click', runOperation(TableOperations.eraseRows));
       DomEvent.bind(eraseColumn, 'click', runOperation(TableOperations.eraseColumns));
 
-      DomEvent.bind(splitCellIntoColumns, 'click', runOperation(TableOperations.splitCellIntoColumns))
+      DomEvent.bind(splitCellIntoColumns, 'click', runOperation(TableOperations.splitCellIntoColumns));
+      DomEvent.bind(splitCellIntoRows, 'click', runOperation(TableOperations.splitCellIntoRows));
 
       DomEvent.bind(makeColumnHeader, 'click', runOperation(TableOperations.makeColumnHeader));
       DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
