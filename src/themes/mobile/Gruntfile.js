@@ -125,6 +125,10 @@ module.exports = function (grunt) {
           {
             src: "index.html",
             dest: "deploy-local/index.html"
+          },
+          {
+            src: "index-bootstrap.html",
+            dest: "deploy-local/index-bootstrap.html"
           }
         ]
       }

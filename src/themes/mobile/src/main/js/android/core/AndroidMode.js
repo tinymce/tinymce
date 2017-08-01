@@ -7,11 +7,12 @@ define(
     'tinymce.themes.mobile.android.core.AndroidEvents',
     'tinymce.themes.mobile.android.core.AndroidSetup',
     'tinymce.themes.mobile.ios.core.PlatformEditor',
+    'tinymce.themes.mobile.util.Thor',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.MetaViewport'
   ],
 
-  function (Singleton, Class, AndroidEvents, AndroidSetup, PlatformEditor, Styles, MetaViewport) {
+  function (Singleton, Class, AndroidEvents, AndroidSetup, PlatformEditor, Thor, Styles, MetaViewport) {
     var create = function (platform, mask) {
 
       var meta = MetaViewport.tag();
@@ -34,6 +35,7 @@ define(
         );
 
         PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
+          Thor.clobberStyles(platform.container, editorApi.body());
           androidEvents.set(
             AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy)
           );
@@ -45,6 +47,7 @@ define(
         mask.show();
         Class.remove(platform.container, Styles.resolve('fullscreen-maximized'));
         Class.remove(platform.container, Styles.resolve('android-maximized'));
+        Thor.restoreStyles();
 
         /// TM-48 re-enable swipe/scroll browser refresh on android
         Class.remove(platform.body, Styles.resolve('android-scroll-reload'));

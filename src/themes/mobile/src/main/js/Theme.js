@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
+    'ephox.alloy.api.behaviour.Swapping',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
     'ephox.katamari.api.Cell',
@@ -11,10 +12,12 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
+    'global!document',
     'global!window',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Api',
+    'tinymce.themes.mobile.alien.TinyCodeDupe',
     'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.Orientation',
@@ -33,8 +36,9 @@ define(
 
 
   function (
-    AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, window, DOMUtils, ThemeManager, Api, TinyChannels, Styles, Orientation,
-    AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers, SkinLoaded
+    Swapping, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, ThemeManager, DOMUtils, Api, TinyCodeDupe,
+    TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers,
+    SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -137,11 +141,20 @@ define(
               },
 
               onTapContent: function (evt) {
+                var target = evt.target();
                 // If the user has tapped (touchstart, touchend without movement) on an image, select it.
-                if (Node.name(evt.target()) === 'img') {
-                  editor.selection.select(evt.target().dom());
+                if (Node.name(target) === 'img') {
+                  editor.selection.select(target.dom());
                   // Prevent the default behaviour from firing so that the image stays selected
                   evt.kill();
+                } else if (Node.name(target) === 'a')  {
+                  var component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
+                  component.each(function (container) {
+                    /// view mode
+                    if (Swapping.isAlpha(container)) {
+                      TinyCodeDupe.openLink(target.dom());
+                    }
+                  });
                 }
               }
             },

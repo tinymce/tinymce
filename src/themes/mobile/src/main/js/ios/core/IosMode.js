@@ -16,7 +16,7 @@ define(
     'tinymce.themes.mobile.ios.core.PlatformEditor',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.ios.view.IosKeyboard',
-    'tinymce.themes.mobile.ios.view.Thor',
+    'tinymce.themes.mobile.util.Thor',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.scroll.Scrollable',
     'tinymce.themes.mobile.touch.view.MetaViewport'
