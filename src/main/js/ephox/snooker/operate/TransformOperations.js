@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs'
   ],
 
-  function (Arr, Fun) {
+  function (Arr, Fun, Structs) {
     // substitution :: (item, comparator) -> item
     var replaceIn = function (grid, targets, comparator, substitution) {
       var isTarget = function (elem) {
@@ -14,18 +15,19 @@ define(
       };
 
       return Arr.map(grid, function (row) {
-        return Arr.map(row, function (cell) {
+        var cells = Arr.map(row.cells(), function (cell) {
           return isTarget(cell) ? substitution(cell, comparator) : cell;
         });
+        return Structs.rowcells(cells, row.section());
       });
     };
 
     var notStartRow = function (grid, rowIndex, colIndex, comparator) {
-      return grid[rowIndex][colIndex] !== undefined && (rowIndex > 0 && comparator(grid[rowIndex - 1][colIndex], grid[rowIndex][colIndex]));
+      return grid[rowIndex].cells()[colIndex] !== undefined && (rowIndex > 0 && comparator(grid[rowIndex - 1].cells()[colIndex], grid[rowIndex].cells()[colIndex]));
     };
 
     var notStartColumn = function (row, index, comparator) {
-      return index > 0 && comparator(row[index-1], row[index]);
+      return index > 0 && comparator(row.cells()[index-1], row.cells()[index]);
     };
 
     // substitution :: (item, comparator) -> item
@@ -34,7 +36,7 @@ define(
       var targets = Arr.bind(grid, function (row, i) {
         // check if already added.
         var alreadyAdded = notStartRow(grid, i, index, comparator) || notStartColumn(row, index, comparator);
-        return alreadyAdded ? [] : [ row[index] ];
+        return alreadyAdded ? [] : [ row.cells()[index] ];
       });
 
       return replaceIn(grid, targets, comparator, substitution);
@@ -43,7 +45,7 @@ define(
     // substitution :: (item, comparator) -> item
     var replaceRow = function (grid, index, comparator, substitution) {
       var targetRow = grid[index];
-      var targets = Arr.bind(targetRow, function (item, i) {
+      var targets = Arr.bind(targetRow.cells(), function (item, i) {
         // Check that we haven't already added this one.
         var alreadyAdded = notStartRow(grid, index, i, comparator) || notStartColumn(targetRow, i, comparator);
         return alreadyAdded ? [] : [ item ];
