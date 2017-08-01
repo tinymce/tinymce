@@ -24,9 +24,19 @@ define(
       Class.remove(component.element(), swapConfig.omega());
     };
 
+    var isAlpha = function (component, swapConfig, swapState) {
+      return Class.has(component.element(), swapConfig.alpha());
+    };
+
+    var isOmega = function (component, swapConfig, swapState) {
+      return Class.has(component.element(), swapConfig.omega());
+    };
+
     return {
       toAlpha: toAlpha,
       toOmega: toOmega,
+      isAlpha: isAlpha,
+      isOmega: isOmega,
       clear: clear
     };
   }
