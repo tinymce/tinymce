@@ -8,7 +8,7 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFilter',
     'global!document',
     'global!window',
     'tinymce.core.EditorManager',
@@ -17,7 +17,7 @@ asynctest(
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Attr, Selectors, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
+  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Attr, SelectorFilter, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -135,7 +135,7 @@ asynctest(
     });
 
     var getSkinCssFilenames = function () {
-      return Arr.bind(Selectors.all('link', Element.fromDom(document)), function (link) {
+      return Arr.bind(SelectorFilter.descendants(Element.fromDom(document), 'link'), function (link) {
         var href = Attr.get(link, 'href');
         var fileName = href.split('/').slice(-1).join('');
         var isSkin = href.indexOf('lightgray/') > -1;

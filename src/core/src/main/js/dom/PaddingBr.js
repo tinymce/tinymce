@@ -15,10 +15,10 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.dom.ElementType'
   ],
-  function (Arr, Insert, Remove, Element, Selectors, ElementType) {
+  function (Arr, Insert, Remove, Element, SelectorFilter, ElementType) {
     var getLastChildren = function (elm) {
       var children = [], rawNode = elm.dom();
 
@@ -31,7 +31,7 @@ define(
     };
 
     var removeTrailingBr = function (elm) {
-      var allBrs = Selectors.all('br', elm);
+      var allBrs = SelectorFilter.descendants(elm, 'br');
       var brs = Arr.filter(getLastChildren(elm).slice(-1), ElementType.isBr);
       if (allBrs.length === brs.length) {
         Arr.each(brs, Remove.remove);

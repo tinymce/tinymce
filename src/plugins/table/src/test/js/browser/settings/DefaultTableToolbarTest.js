@@ -11,12 +11,12 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.plugins.table.Plugin',
     'tinymce.plugins.table.test.TableTestUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Fun, TinyApis, TinyLoader, TinyUi, Selectors, TablePlugin, TableTestUtils, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Fun, TinyApis, TinyLoader, TinyUi, SelectorFilter, TablePlugin, TableTestUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -37,7 +37,7 @@ asynctest(
           Chain.asStep({}, [
             tinyUi.cWaitForUi('no context found', 'div[aria-label="Inline toolbar"]'),
             Chain.mapper(function (x) {
-              return Selectors.all('button', x).length;
+              return SelectorFilter.descendants(x, 'button').length;
             }),
             Assertions.cAssertEq('has correct count', 8)
           ])

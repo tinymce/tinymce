@@ -19,7 +19,7 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
     'tinymce.core.Env',
@@ -30,7 +30,7 @@ define(
     'tinymce.core.util.Arr',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, Element, Selectors, DOMUtils, EditorManager, Env, FontInfo, Control, FloatPanel, Widget, Arr, Tools) {
+  function (Fun, Element, SelectorFind, DOMUtils, EditorManager, Env, FontInfo, Control, FloatPanel, Widget, Arr, Tools) {
     var each = Tools.each;
 
     var flatten = function (ar) {
@@ -55,7 +55,7 @@ define(
 
     function setupContainer(editor) {
       if (editor.settings.ui_container) {
-        Env.container = Selectors.one(editor.settings.ui_container, Element.fromDom(document.body)).fold(Fun.constant(null), function (elm) {
+        Env.container = SelectorFind.descendant(Element.fromDom(document.body), editor.settings.ui_container).fold(Fun.constant(null), function (elm) {
           return elm.dom();
         });
       }

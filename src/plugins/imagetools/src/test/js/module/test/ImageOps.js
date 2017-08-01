@@ -1,24 +1,24 @@
 define(
   'tinymce.plugins.imagetools.test.ImageOps',
   [
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.Guard',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Mouse',
-    'ephox.agar.mouse.Clicks',
-    'ephox.agar.api.Guard',
     'ephox.agar.api.UiFinder',
+    'ephox.agar.mouse.Clicks',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyUi',
     'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.view.Visibility',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.PredicateFilter',
     'ephox.sugar.api.search.Selectors',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
-    'ephox.mcagar.api.TinyUi',
-    'ephox.mcagar.api.TinyDom'
+    'ephox.sugar.api.view.Visibility'
   ],
-  function (Pipeline, Step, Chain, Mouse, Clicks, Guard, UiFinder, DomEvent, Visibility, Attr, PredicateFilter, Selectors, Fun, Result, TinyUi, TinyDom) {
+  function (Chain, Guard, Mouse, Pipeline, Step, UiFinder, Clicks, Fun, Result, TinyDom, TinyUi, DomEvent, Attr, PredicateFilter, Selectors, Visibility) {
 
     // IMPORTANT: we match buttons by their aria-label
 

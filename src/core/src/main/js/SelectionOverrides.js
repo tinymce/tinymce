@@ -28,7 +28,8 @@ define(
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
@@ -45,8 +46,8 @@ define(
     'tinymce.core.util.VK'
   ],
   function (
-    Arr, Remove, Element, Attr, Selectors, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint, DragDropOverrides,
-    EditorView, Env, CefUtils, Delay, VK
+    Arr, Remove, Element, Attr, SelectorFilter, SelectorFind, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint,
+    DragDropOverrides, EditorView, Env, CefUtils, Delay, VK
   ) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -436,7 +437,7 @@ define(
           return null;
         }
 
-        $realSelectionContainer = Selectors.one('#' + realSelectionId, Element.fromDom(editor.getBody())).fold(
+        $realSelectionContainer = SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).fold(
           function () {
             return $([]);
           },
@@ -478,7 +479,7 @@ define(
         sel.removeAllRanges();
         sel.addRange(range);
 
-        Arr.each(Selectors.all('*[data-mce-selected]', Element.fromDom(editor.getBody())), function (elm) {
+        Arr.each(SelectorFilter.descendants(Element.fromDom(editor.getBody()), '*[data-mce-selected]'), function (elm) {
           Attr.remove(elm, 'data-mce-selected');
         });
 
@@ -492,7 +493,7 @@ define(
       function removeContentEditableSelection() {
         if (selectedContentEditableNode) {
           selectedContentEditableNode.removeAttribute('data-mce-selected');
-          Selectors.one('#' + realSelectionId, Element.fromDom(editor.getBody())).each(Remove.remove);
+          SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
           selectedContentEditableNode = null;
         }
       }

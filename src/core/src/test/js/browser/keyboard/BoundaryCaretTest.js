@@ -10,13 +10,12 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.keyboard.BoundaryCaret',
     'tinymce.core.text.Zwsp'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Cell, Fun, Hierarchy, Element, Selectors, CaretPosition, BoundaryLocation, BoundaryCaret, Zwsp) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Cell, Fun, Hierarchy, Element, CaretPosition, BoundaryLocation, BoundaryCaret, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var ZWSP = Zwsp.ZWSP;

@@ -16,12 +16,12 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.caret.CaretContainer'
   ],
-  function (Fun, Element, Selectors, CaretContainer) {
+  function (Fun, Element, SelectorFind, CaretContainer) {
     var findBlockCaretContainer = function (editor) {
-      return Selectors.one('*[data-mce-caret]', Element.fromDom(editor.getBody())).fold(Fun.constant(null), function (elm) {
+      return SelectorFind.descendant(Element.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
         return elm.dom();
       });
     };
