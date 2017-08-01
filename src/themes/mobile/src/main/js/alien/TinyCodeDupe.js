@@ -2,15 +2,15 @@ define(
   'tinymce.themes.mobile.alien.TinyCodeDupe',
 
   [
-    
+    'global!document'
   ],
 
-  function () {
+  function (document) {
     /// TODO this code is from the tinymce link plugin, deduplicate when we decide how to share it
-    var openLink = function (document, target) {
+    var openLink = function (target) {
       var link = document.createElement('a');
       link.target = '_blank';
-      link.href = target.dom().href;
+      link.href = target.href;
       link.rel = 'noreferrer noopener';
 
       var nuEvt = document.createEvent('MouseEvents');
