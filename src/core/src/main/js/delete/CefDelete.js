@@ -14,7 +14,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.delete.BlockBoundary',
@@ -24,7 +24,7 @@ define(
     'tinymce.core.delete.MergeBlocks',
     'tinymce.core.dom.NodeType'
   ],
-  function (Arr, Remove, Element, Selectors, CaretPosition, CaretUtils, BlockBoundary, CefDeleteAction, DeleteElement, DeleteUtils, MergeBlocks, NodeType) {
+  function (Arr, Remove, Element, SelectorFilter, CaretPosition, CaretUtils, BlockBoundary, CefDeleteAction, DeleteElement, DeleteUtils, MergeBlocks, NodeType) {
     var deleteElement = function (editor, forward) {
       return function (element) {
         DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
@@ -60,7 +60,7 @@ define(
     };
 
     var deleteOffscreenSelection = function (rootElement) {
-      Arr.each(Selectors.all('.mce-offscreen-selection', rootElement), Remove.remove);
+      Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
     };
 
     var backspaceDeleteRange = function (editor, forward) {
