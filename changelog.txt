@@ -1,3 +1,27 @@
+Version 4.6.5 (2017-08-02)
+    Added new inline_boundaries_selector that allows you to specify the elements that should have boundaries.
+    Added new local upload feature this allows the user to upload images directly from the image dialog.
+    Added a new api for providing meta data for plugins. It will show up in the help dialog if it's provided.
+    Fixed so that the notifications created by the notification manager are more screen reader accessible.
+    Fixed bug where changing the list format on multiple selected lists didn't change all of the lists.
+    Fixed bug where the nonbreaking plugin would insert multiple undo levels when pressing the tab key.
+    Fixed bug where delete/backspace wouldn't render a caret when all editor contents where deleted.
+    Fixed bug where delete/backspace wouldn't render a caret if the deleted element was a single contentEditable false element.
+    Fixed bug where the wordcount plugin wouldn't count words correctly if word where typed after applying a style format.
+    Fixed bug where the wordcount plugin would count mathematical formulas as multiple words for example 1+1=2.
+    Fixed bug where formatting of triple clicked blocks on Chrome/Safari would result in styles being added outside the visual selection.
+    Fixed bug where paste would add the contents to the end of the editor area when inline mode was used.
+    Fixed bug where toggling off bold formatting on text entered in a new paragraph would add an extra line break.
+    Fixed bug where autolink plugin would only produce a link on every other consecutive link on Firefox.
+    Fixed bug where it wasn't possible to select all contents if the content only had one pre element.
+    Fixed bug where sizzle would produce lagging behavior on some sites due to repaints caused by feature detection.
+    Fixed bug where toggling off inline formats wouldn't include the space on selected contents with leading or trailing spaces.
+    Fixed bug where the cut operation in UI wouldn't work in Chrome.
+    Fixed bug where some legacy editor initialization logic would throw exceptions about editor settings not being defined.
+    Fixed bug where it wasn't possible to apply text color to links if they where part of a non collapsed selection.
+    Fixed bug where an exception would be thrown if the user selected a video element and then moved the focus outside the editor.
+    Fixed bug where list operations didn't work if there where block elements inside the list items.
+    Fixed bug where applying block formats to lists wrapped in block elements would apply to all elements in that wrapped block.
 Version 4.6.4 (2017-06-13)
     Fixed bug where the editor would move the caret when clicking on the scrollbar next to a content editable false block.
     Fixed bug where the text color select dropdowns wasn't placed correctly when they didn't fit the width of the screen.
