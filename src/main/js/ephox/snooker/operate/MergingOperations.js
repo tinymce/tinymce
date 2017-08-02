@@ -2,10 +2,10 @@ define(
   'ephox.snooker.operate.MergingOperations',
 
   [
-
+    'ephox.snooker.model.GridRow'
   ],
 
-  function () {
+  function (GridRow) {
     // substitution: () -> item
     var merge = function (grid, bounds, comparator, substitution) {
       // Mutating. Do we care about the efficiency gain?
@@ -13,7 +13,7 @@ define(
       for (var i = bounds.startRow(); i <= bounds.finishRow(); i++) {
         for (var j = bounds.startCol(); j <= bounds.finishCol(); j++) {
           // We can probably simplify this again now that we aren't reusing merge.
-          grid[i].cells()[j] = substitution();
+          GridRow.mutateCell(grid[i], j, substitution());
         }
       }
       return grid;
@@ -28,7 +28,7 @@ define(
           var current = grid[i].cells()[j];
           var isToReplace = comparator(current, target);
 
-          if (isToReplace === true && first === false) grid[i].cells()[j] = substitution();
+          if (isToReplace === true && first === false) GridRow.mutateCell(grid[i], j, substitution());
           else if (isToReplace === true) first = false;
         }
       }

@@ -58,6 +58,7 @@ define(
         }
       };
 
+      // TODO Redo this so that it runs over once
       renderOrRemoveSection(grid, 'thead');
       renderOrRemoveSection(grid, 'tbody');
       renderOrRemoveSection(grid, 'tfoot');
