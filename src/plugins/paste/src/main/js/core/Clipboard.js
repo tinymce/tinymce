@@ -245,7 +245,7 @@ define(
        * @return {String} Get the contents of the paste bin.
        */
       function getPasteBinHtml() {
-        var pasteBinElm, pasteBinClones, i, cleanWrapper;
+        var pasteBinElm, pasteBinClones, i, dirtyWrappers, cleanWrapper;
 
         // Since WebKit/Chrome might clone the paste bin when pasting
         // for example: <img style="float: right"> we need to check if any of them contains some useful html.
@@ -268,7 +268,7 @@ define(
         // Chrome clones paste bin (with styles and attributes) and uses it as a default
         // wrapper for the chunks of the content, here we cycle over the whole paste bin
         // and replace that wrapper with a basic div
-        var dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
+        dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
         for (i = dirtyWrappers.length - 1; i >= 0; i--) {
           cleanWrapper = editor.dom.create('div');
           pasteBinElm.insertBefore(cleanWrapper, dirtyWrappers[i]);
