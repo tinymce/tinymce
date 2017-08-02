@@ -207,6 +207,7 @@ define(
 
     return {
       readLocation: readLocation,
+      findLocation: findLocation,
       prevLocation: Fun.curry(findLocation, false),
       nextLocation: Fun.curry(findLocation, true),
       getElement: getElement,

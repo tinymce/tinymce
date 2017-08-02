@@ -51,7 +51,7 @@ define(
       var rootNode = editor.getBody();
       var from = CaretPosition.fromRangeStart(editor.selection.getRng());
       var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-      var location = forward ? BoundaryLocation.nextLocation(isInlineTarget, rootNode, from) : BoundaryLocation.prevLocation(isInlineTarget, rootNode, from);
+      var location = BoundaryLocation.findLocation(forward, isInlineTarget, rootNode, from);
       return location.bind(function (location) {
         return renderCaretLocation(editor, caret, location);
       });

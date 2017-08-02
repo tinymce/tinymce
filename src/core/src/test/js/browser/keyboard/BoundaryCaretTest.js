@@ -10,6 +10,7 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryCaret',
     'tinymce.core.keyboard.BoundaryLocation',
