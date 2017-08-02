@@ -25,7 +25,7 @@ define(
     var isPlainText = function (text) {
       // so basically any tag that is not one of the "p, div, br", or is one of them, but is followed
       // by some additional characters qualifies the text as not a plain text (having some HTML tags)
-      return !/<(?:(?!\/?(?:div|p|br))[^>]*|(?:div|p|br)\s+\w[^>]+)>/.test(text);
+      return !/<(?:(?!(?:(?:\/?(div|p|br)|span style="white-space:pre"|\/span)))[^>]*|(?:div|p|br)\s+\w[^>]+)>/.test(text);
     };
 
 
