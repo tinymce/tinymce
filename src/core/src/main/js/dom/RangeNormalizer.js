@@ -32,7 +32,7 @@ define(
       return rng;
     };
 
-    // If you tripple click a paragraph in this case:
+    // If you triple click a paragraph in this case:
     //   <blockquote><p>a</p></blockquote><p>b</p>
     // It would become this range in webkit:
     //   <blockquote><p>[a</p></blockquote><p>]b</p>
