@@ -13,13 +13,15 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryLocation',
+    'tinymce.core.keyboard.InlineUtils',
     'tinymce.themes.modern.Theme'
   ],
   function (
-    ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Fun, TinyActions, TinyApis, TinyLoader, Element, CaretPosition, BoundaryLocation,
-    Theme
+    ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Fun, TinyActions, TinyApis, TinyLoader, Element, Selectors, CaretPosition, BoundaryLocation,
+    InlineUtils, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -36,8 +38,9 @@ asynctest(
     };
 
     var readLocation = function (editor) {
+      var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
       return BoundaryLocation
-        .readLocation(editor.getBody(), CaretPosition.fromRangeStart(editor.selection.getRng()))
+        .readLocation(isInlineTarget, editor.getBody(), CaretPosition.fromRangeStart(editor.selection.getRng()))
         .map(locationName)
         .getOr('none');
     };

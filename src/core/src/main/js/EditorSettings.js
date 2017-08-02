@@ -11,9 +11,12 @@
 define(
   'tinymce.core.EditorSettings',
   [
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Type',
     'tinymce.core.util.Tools'
   ],
-  function (Tools) {
+  function (Fun, Option, Type, Tools) {
     var getEditorSettings = function (editor, id, documentBaseUrl, defaultOverrideSettings, settings) {
       settings = Tools.extend(
         // Default settings
@@ -77,8 +80,18 @@ define(
       return settings;
     };
 
+    var get = function (editor, name) {
+      return Option.from(editor.settings[name]);
+    };
+
+    var getFiltered = function (predicate, editor, name) {
+      return Option.from(editor.settings[name]).filter(predicate);
+    };
+
     return {
-      getEditorSettings: getEditorSettings
+      getEditorSettings: getEditorSettings,
+      get: get,
+      getString: Fun.curry(getFiltered, Type.isString)
     };
   }
 );
