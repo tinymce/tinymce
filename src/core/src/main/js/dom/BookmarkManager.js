@@ -39,6 +39,12 @@ define(
       return trimmedOffset;
     };
 
+    var trimEmptyTextNode = function (node) {
+      if (NodeType.isText(node) && node.data.length === 0) {
+        node.parentNode.removeChild(node);
+      }
+    };
+
     /**
      * Constructs a new BookmarkManager instance for a specific selection instance.
      *
@@ -266,12 +272,16 @@ define(
           // Insert end marker
           if (!collapsed) {
             rng2.collapse(false);
-            rng2.insertNode(dom.create('span', { 'data-mce-type': "bookmark", id: id + '_end', style: styles }, chr));
+            var endBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_end', style: styles }, chr);
+            rng2.insertNode(endBookmarkNode);
+            trimEmptyTextNode(endBookmarkNode.nextSibling);
           }
 
           rng = normalizeTableCellSelection(rng);
           rng.collapse(true);
-          rng.insertNode(dom.create('span', { 'data-mce-type': "bookmark", id: id + '_start', style: styles }, chr));
+          var startBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_start', style: styles }, chr);
+          rng.insertNode(startBookmarkNode);
+          trimEmptyTextNode(startBookmarkNode.previousSibling);
         }
 
         selection.moveToBookmark({ id: id, keep: 1 });

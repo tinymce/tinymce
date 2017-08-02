@@ -1160,13 +1160,24 @@ asynctest(
       );
     });
 
+    suite.test('Applying block format to first character in li', function (editor) {
+      editor.setContent('<ul><li>ab</li><li>cd</li>');
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 0, 'li:nth-child(1)', 0);
+      editor.formatter.apply("h1");
+      LegacyUnit.equal(
+        editor.getContent(editor),
+        '<ul><li><h1>ab</h1></li><li>cd</li></ul>',
+        'heading should be applied to first li'
+      );
+    });
+
     suite.test('Applying block format to li wrapped in block', function (editor) {
-      editor.setContent('<div><ul><li>a</li><li>b</li></ul></div>');
+      editor.setContent('<div><ul><li>ab</li><li>cd</li></ul></div>');
       LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1, 'li:nth-child(1)', 1);
       editor.formatter.apply("h1");
       LegacyUnit.equal(
         editor.getContent(editor),
-        '<div><ul><li><h1>a</h1></li><li>b</li></ul></div>',
+        '<div><ul><li><h1>ab</h1></li><li>cd</li></ul></div>',
         'heading should be applied to first li only'
       );
     });
