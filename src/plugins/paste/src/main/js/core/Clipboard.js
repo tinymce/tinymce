@@ -245,27 +245,37 @@ define(
        * @return {String} Get the contents of the paste bin.
        */
       function getPasteBinHtml() {
-        var html = '', pasteBinClones, i, clone, cloneHtml;
+        var pasteBinElm, pasteBinClones, i, cleanWrapper;
 
         // Since WebKit/Chrome might clone the paste bin when pasting
         // for example: <img style="float: right"> we need to check if any of them contains some useful html.
         // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
-        pasteBinClones = editor.dom.select('div[id=mcepastebin]');
-        for (i = 0; i < pasteBinClones.length; i++) {
-          clone = pasteBinClones[i];
 
-          // Pasting plain text produces pastebins in pastebinds makes sence right!?
-          if (clone.firstChild && clone.firstChild.id == 'mcepastebin') {
-            clone = clone.firstChild;
-          }
+        var copyAndRemove = function (toElm, fromElm) {
+          toElm.appendChild(fromElm);
+          editor.dom.remove(fromElm, true); // remove, but keep children
+        };
 
-          cloneHtml = clone.innerHTML;
-          if (html != pasteBinDefaultContent) {
-            html += cloneHtml;
-          }
+        // find only top level elements (there might be more nested inside them as well, see TINY-1162)
+        pasteBinClones = editor.dom.select('body > div[id=mcepastebin]');
+        pasteBinElm = pasteBinClones.shift();
+
+        // if clones were found, move their content into the first bin
+        Tools.each(pasteBinClones, function (pasteBinClone) {
+          copyAndRemove(pasteBinElm, pasteBinClone);
+        });
+
+        // Chrome clones paste bin (with styles and attributes) and uses it as a default
+        // wrapper for the chunks of the content, here we cycle over the whole paste bin
+        // and replace that wrapper with a basic div
+        var dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
+        for (i = dirtyWrappers.length - 1; i >= 0; i--) {
+          cleanWrapper = editor.dom.create('div');
+          pasteBinElm.insertBefore(cleanWrapper, dirtyWrappers[i]);
+          copyAndRemove(cleanWrapper, dirtyWrappers[i]);
         }
 
-        return html;
+        return pasteBinElm.innerHTML;
       }
 
       /**
