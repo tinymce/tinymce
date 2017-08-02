@@ -60,35 +60,35 @@ asynctest(
         mNormalizeRange,
         mAssertRange([0], 0, [0], 0)
       ])),
-      Logger.t('Normalize webkit tripple click selection paragraph', GeneralSteps.sequence([
+      Logger.t('Normalize webkit triple click selection paragraph', GeneralSteps.sequence([
         sSetContent('<blockquote><p>a</p></blockquote><p>b</p>'),
         mCreateRange([0, 0, 0], 0, [1], 0),
         mNormalizeRange,
         mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ])),
-      Logger.t('Normalize webkit tripple click selection heading', GeneralSteps.sequence([
+      Logger.t('Normalize webkit triple click selection heading', GeneralSteps.sequence([
         sSetContent('<blockquote><p>a</p></blockquote><h1>b</h1>'),
         mCreateRange([0, 0, 0], 0, [1], 0),
         mNormalizeRange,
         mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ])),
-      Logger.t('Normalize webkit tripple click selection headings', GeneralSteps.sequence([
+      Logger.t('Normalize webkit triple click selection headings', GeneralSteps.sequence([
         sSetContent('<blockquote><h1>a</h1></blockquote><h1>b</h1>'),
         mCreateRange([0, 0, 0], 0, [1], 0),
         mNormalizeRange,
         mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ])),
-      Logger.t('Normalize webkit tripple click selection divs', GeneralSteps.sequence([
+      Logger.t('Normalize webkit triple click selection divs', GeneralSteps.sequence([
         sSetContent('<blockquote><div>a</div></blockquote><div>b</div>'),
         mCreateRange([0, 0, 0], 0, [1], 0),
         mNormalizeRange,
         mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ])),
-      Logger.t('Do not normalize webkit tripple click selection between LI:s', GeneralSteps.sequence([
+      Logger.t('Normalize webkit triple click selection between LI:s', GeneralSteps.sequence([
         sSetContent('<ul><li>a</li></ul><ul><li>b</li></ul>'),
         mCreateRange([0, 0, 0], 0, [1, 0], 0),
         mNormalizeRange,
-        mAssertRange([0, 0, 0], 0, [1, 0], 0)
+        mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
       ]))
     ], function () {
       viewBlock.detach();

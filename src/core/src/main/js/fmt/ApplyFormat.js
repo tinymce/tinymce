@@ -14,6 +14,7 @@ define(
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.ElementUtils',
     'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeNormalizer',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
@@ -25,7 +26,10 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, ElementUtils, NodeType, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat, Fun, Tools) {
+  function (
+    BookmarkManager, ElementUtils, NodeType, RangeNormalizer, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat,
+    Fun, Tools
+  ) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
@@ -155,7 +159,7 @@ define(
     var adjustSelectionToVisibleSelection = function (ed) {
       // Adjust selection so that a end container with a end offset of zero is not included in the selection
       // as this isn't visible to the user.
-      var rng = ed.selection.getRng();
+      var rng = RangeNormalizer.normalize(ed.selection.getRng());
       var start = rng.startContainer;
       var end = rng.endContainer;
 
