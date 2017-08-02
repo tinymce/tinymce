@@ -245,10 +245,11 @@ define(
 
         // Expand to first wrappable block element or any block element
         if (!node) {
+          var scopeRoot = dom.getParent(container, 'LI,TD,TH');
           node = dom.getParent(container.nodeType === 3 ? container.parentNode : container, function (node) {
             // Fixes #6183 where it would expand to editable parent element in inline mode
             return node !== root && isTextBlock(editor, node);
-          });
+          }, scopeRoot);
         }
 
         // Exclude inner lists from wrapping

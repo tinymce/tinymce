@@ -1160,6 +1160,17 @@ asynctest(
       );
     });
 
+    suite.test('Applying block format to li wrapped in block', function (editor) {
+      editor.setContent('<div><ul><li>a</li><li>b</li></ul></div>');
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1, 'li:nth-child(1)', 1);
+      editor.formatter.apply("h1");
+      LegacyUnit.equal(
+        editor.getContent(editor),
+        '<div><ul><li><h1>a</h1></li><li>b</li></ul></div>',
+        'heading should be applied to first li only'
+      );
+    });
+
     suite.test("Applying formats on a list including child nodes", function (editor) {
       editor.formatter.register('format', { inline: 'strong' });
       editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
