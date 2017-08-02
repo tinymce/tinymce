@@ -20,7 +20,7 @@ define(
   ],
   function (Tools, Env) {
     return function (editor) {
-      var pasteBinElm, lastRng;
+      var lastRng;
       var pasteBinDefaultContent = '%MCEPASTEBIN%';
 
       /**
@@ -31,6 +31,7 @@ define(
       var create = function () {
         var dom = editor.dom, body = editor.getBody();
         var viewport = editor.dom.getViewPort(editor.getWin()), scrollTop = viewport.y, top = 20;
+        var pasteBinElm;
         var scrollContainer;
 
         lastRng = editor.selection.getRng();
@@ -145,28 +146,26 @@ define(
        * Removes the paste bin if it exists.
        */
       var remove = function () {
-        if (pasteBinElm) {
-          var pasteBinClone;
+        var pasteBinClone;
 
-          // WebKit/Blink might clone the div so
-          // lets make sure we remove all clones
-          // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
-          while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
-            editor.dom.remove(pasteBinClone);
-            editor.dom.unbind(pasteBinClone);
-          }
-
-          if (lastRng) {
-            editor.selection.setRng(lastRng);
-          }
+        // WebKit/Blink might clone the div so
+        // lets make sure we remove all clones
+        // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+        while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
+          editor.dom.remove(pasteBinClone);
+          editor.dom.unbind(pasteBinClone);
         }
 
-        pasteBinElm = lastRng = null;
+        if (pasteBinClone && lastRng) {
+          editor.selection.setRng(lastRng);
+        }
+
+        lastRng = null;
       };
 
 
       var getEl = function () {
-        return pasteBinElm;
+        return editor.dom.get('mcepastebin');
       };
 
       /**
@@ -221,11 +220,12 @@ define(
 
 
       var isPasteBin = function (elm) {
-        return pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin';
+        return elm && elm.id === 'mcepastebin';
       };
 
 
       var isDefault = function () {
+        var pasteBinElm = getEl();
         return isPasteBin(pasteBinElm) && isDefaultContent(pasteBinElm.innerHTML);
       };
 
