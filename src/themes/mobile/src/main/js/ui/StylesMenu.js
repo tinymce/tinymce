@@ -3,57 +3,100 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Behaviour, Transitioning, Menu, TieredMenu, Objects, SelectorFind, Width) {
-    var defaultData = TieredMenu.tieredData(
-      'styles',
-      {
-        'styles': makeMenu('Styles', [
-          makeItem('headers', 'Headers'),
-          makeItem('inline', 'Inline'),
-          makeItem('blocks', 'Blocks'),
-          makeItem('alignment', 'Alignment')
-        ]),
+  function (Behaviour, Representing, Transitioning, Menu, TieredMenu, Objects, Arr, Obj, SelectorFind, Width) {
+    // var defaultData = TieredMenu.tieredData(
+    //   'styles',
+    //   {
+    //     'styles': makeMenu('Styles', [
+    //       makeItem('headers', 'Headers'),
+    //       makeItem('inline', 'Inline'),
+    //       makeItem('blocks', 'Blocks'),
+    //       makeItem('alignment', 'Alignment')
+    //     ]),
 
-        'headers': makeMenu('Headers', [
-          makeBack('< Back'),
-          makeItem('h1', 'Header 1'),
-          makeItem('h2', 'Header 2'),
-          makeItem('h3', 'Header 3')
-        ]),
+    //     'headers': makeMenu('Headers', [
+    //       makeBack('< Back'),
+    //       makeItem('h1', 'Header 1'),
+    //       makeItem('h2', 'Header 2'),
+    //       makeItem('h3', 'Header 3')
+    //     ]),
 
-        'inline': makeMenu('Inline', [
-          makeBack('< Back'),
-          makeItem('bold', 'Bold'),
-          makeItem('italic', 'Italic')
-        ]),
+    //     'inline': makeMenu('Inline', [
+    //       makeBack('< Back'),
+    //       makeItem('bold', 'Bold'),
+    //       makeItem('italic', 'Italic')
+    //     ]),
 
-        'blocks': makeMenu('Blocks', [
-          makeBack('< Back'),
-          makeItem('p', 'Paragraph'),
-          makeItem('blockquote', 'Blockquote'),
-          makeItem('div', 'Div')
-        ]),
+    //     'blocks': makeMenu('Blocks', [
+    //       makeBack('< Back'),
+    //       makeItem('p', 'Paragraph'),
+    //       makeItem('blockquote', 'Blockquote'),
+    //       makeItem('div', 'Div')
+    //     ]),
 
-        'alignment': makeMenu('Alignment', [
-          makeBack('< Back'),
-          makeItem('alignleft', 'Left')
-        ])
-      },
-      {
-        'headers': 'headers',
-        'inline': 'inline',
-        'blocks': 'blocks',
-        'alignment': 'alignment'
-      }
-    );
+    //     'alignment': makeMenu('Alignment', [
+    //       makeBack('< Back'),
+    //       makeItem('alignleft', 'Left')
+    //     ])
+    //   },
+    //   {
+    //     'headers': 'headers',
+    //     'inline': 'inline',
+    //     'blocks': 'blocks',
+    //     'alignment': 'alignment'
+    //   }
+    // );
+
+    var convert = function (formats) {
+      var menus = { };
+      var handlers = { };
+
+      Arr.each(formats, function (fm) {
+
+        var items = [ ];
+        var retreat = makeBack('< Back to Styles');
+        Arr.each(fm.items, function (item) {
+          handlers[item.format] = function () {
+            debugger;
+          };
+          items.push(makeItem(item.format, item.title));
+        });
+
+        console.log('items', items);
+
+        menus[fm.title] = makeMenu(fm.title, [ retreat ].concat(items));
+      });
+    
+
+      console.log('menus', menus);
+      var expansions = Obj.map(menus, function (v, k) {
+        return k;
+      });
+      console.log('expansions', expansions);
+
+      var menuKeys = Obj.keys(menus);
+      menus.styles = makeMenu('styles', Arr.map(menuKeys, function (k) {
+        return makeItem(k, k);
+      }));
+
+      var tmenu = TieredMenu.tieredData('styles', menus, expansions);
+
+      return {
+        tmenu: tmenu,
+        handlers: handlers
+      };
+    };
 
     var makeBack = function (text) {
       return {
@@ -134,7 +177,7 @@ define(
     };
 
     var sketch = function (settings) {
-
+      var dataset = convert(settings.formats);
       // Turn settings into a tiered menu data.
 
       return TieredMenu.sketch({
@@ -151,8 +194,9 @@ define(
         // For animations, need things to stay around in the DOM (at least until animation is done)
         stayInDom: true,
 
-        onExecute: function () {
-          console.log('Executing');
+        onExecute: function (tmenu, item) {
+          var v = Representing.getValue(item);
+          settings.handle(v.value);
         },
         onEscape: function () {
           console.log('Escaping');
@@ -184,7 +228,7 @@ define(
         navigateOnHover: false,
 
         openImmediately: true,
-        data: defaultData,
+        data: dataset.tmenu,
 
         markers: {
           backgroundMenu: 'background-menu',

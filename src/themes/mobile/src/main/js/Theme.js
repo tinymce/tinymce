@@ -208,7 +208,10 @@ define(
           };
 
           var styleFormats = StylesMenu.sketch({
-            formats: Objects.readOptFrom(editor.settings, 'style_formats').getOr([ ])
+            formats: Objects.readOptFrom(editor.settings, 'style_formats').getOr([ ]),
+            handle: function (value) {
+              editor.formatter.apply(value);
+            }
           });
 
           var actionGroup = {
