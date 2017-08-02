@@ -45,18 +45,16 @@ define(
       return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, isTextBlock, isBeforeRoot(rootNode)) : Option.none();
     };
 
-    var paddEmptyBody = function (editor) {
-      var dom = editor.dom;
+    var placeCaretInEmptyBody = function (editor) {
       var body = editor.getBody();
+      var node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
+      editor.selection.setCursorLocation(node, 0);
+    };
 
-      if (dom.isEmpty(body)) {
+    var paddEmptyBody = function (editor) {
+      if (editor.dom.isEmpty(editor.getBody())) {
         editor.setContent('');
-
-        if (body.firstChild && dom.isBlock(body.firstChild)) {
-          editor.selection.setCursorLocation(body.firstChild, 0);
-        } else {
-          editor.selection.setCursorLocation(body, 0);
-        }
+        placeCaretInEmptyBody(editor);
       }
     };
 
