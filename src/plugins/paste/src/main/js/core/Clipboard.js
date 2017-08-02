@@ -512,11 +512,6 @@ define(
 
           content = Utils.trimHtml(content);
 
-          // WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
-          // so we need to force plain text mode in this case
-          if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
-            plainTextMode = true;
-          }
 
           removePasteBin();
 
