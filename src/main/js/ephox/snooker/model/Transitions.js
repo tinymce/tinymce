@@ -25,7 +25,7 @@ define(
       };
 
       return Arr.map(grid, function (row, ri) {
-        var cells = Arr.bind(row.cells(), function (cell, ci) {
+        var details = Arr.bind(row.cells(), function (cell, ci) {
           // if we have seen this one, then skip it.
           if (seen[ri][ci] === false) {
             var result = TableGrid.subgrid(grid, ri, ci, comparator);
@@ -35,7 +35,7 @@ define(
             return [];
           }
         });
-        return Structs.rowcells(cells, row.section());
+        return Structs.rowdetails(details, row.section());
       });
     };
 

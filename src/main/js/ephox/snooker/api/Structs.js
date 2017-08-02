@@ -15,6 +15,7 @@ define(
     var context = Struct.immutable('before', 'on', 'after');
     var rowdata = Struct.immutable('element', 'cells', 'section');
     var rowcells = Struct.immutable('cells', 'section');
+    var rowdetails = Struct.immutable('details', 'section');
     var bounds = Struct.immutableBag([ 'startRow', 'startCol', 'finishRow', 'finishCol'], []);
     var cell = Struct.immutableBag([ 'row', 'col'], [] );
 
@@ -28,6 +29,7 @@ define(
       context: context,
       rowdata: rowdata,
       rowcells: rowcells,
+      rowdetails: rowdetails,
       bounds: bounds,
       cell: cell
     };

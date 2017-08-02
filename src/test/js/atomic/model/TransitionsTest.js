@@ -11,6 +11,8 @@ test(
   function (Arr, Fun, Structs, Transitions) {
 
     var d = Structs.detail;
+    var r = Structs.rowcells;
+    var rd = Structs.rowdetails;
 
     var check = function (expected, input) {
       var actual = Transitions.toDetails(input, Fun.tripleEquals);
@@ -26,62 +28,62 @@ test(
 
     check(
       [
-        [ d('td1', 1, 3), d('td2', 1, 1), d('td3', 1, 1) ]
+        rd([ d('td1', 1, 3), d('td2', 1, 1), d('td3', 1, 1) ], 'tbody')
       ], 
       [
-        [ 'td1', 'td1', 'td1', 'td2', 'td3' ]
+        r([ 'td1', 'td1', 'td1', 'td2', 'td3' ], 'tbody')
       ]
     );
 
     check(
       [
-        [ d('td1', 4, 3) ],
-        [ ],
-        [ ],
-        [ ]
+        rd([ d('td1', 4, 3) ], 'tbody'),
+        rd([ ], 'tbody'),
+        rd([ ], 'tbody'),
+        rd([ ], 'tbody')
       ], 
       [
-        [ 'td1', 'td1', 'td1' ],
-        [ 'td1', 'td1', 'td1' ],
-        [ 'td1', 'td1', 'td1' ],
-        [ 'td1', 'td1', 'td1' ]
+        r([ 'td1', 'td1', 'td1' ], 'tbody'),
+        r([ 'td1', 'td1', 'td1' ], 'tbody'),
+        r([ 'td1', 'td1', 'td1' ], 'tbody'),
+        r([ 'td1', 'td1', 'td1' ], 'tbody')
       ]
     );
 
     check(
       [
-        [ d('td1', 2, 3) ],
-        [ ],
+        rd([ d('td1', 2, 3) ], 'tbody'),
+        rd([ ], 'tbody')
       ], 
       [
-        [ 'td1', 'td1', 'td1' ],
-        [ 'td1', 'td1', 'td1' ]
+        r([ 'td1', 'td1', 'td1' ], 'tbody'),
+        r([ 'td1', 'td1', 'td1' ], 'tbody')
       ]
     );
 
     check(
       [
-        [ d('td1', 2, 2), d('td3', 1, 1) ],
-        [ d('td4', 1, 1) ],
+        rd([ d('td1', 2, 2), d('td3', 1, 1) ], 'tbody'),
+        rd([ d('td4', 1, 1) ], 'tbody')
       ], 
       [
-        [ 'td1', 'td1', 'td3' ],
-        [ 'td1', 'td1', 'td4' ]
+        r([ 'td1', 'td1', 'td3' ], 'tbody'),
+        r([ 'td1', 'td1', 'td4' ], 'tbody')
       ]
     );
 
     check(
       [
-        [ d('td1', 2, 2), d('td3', 1, 1) ],
-        [ d('td4', 2, 1) ],
-        [ d('td2', 1, 2) ],
-        [ d('td5', 1, 1), d('td6', 1, 2) ]
+        rd([ d('td1', 2, 2), d('td3', 1, 1) ], 'tbody'),
+        rd([ d('td4', 2, 1) ], 'tbody'),
+        rd([ d('td2', 1, 2) ], 'tbody'),
+        rd([ d('td5', 1, 1), d('td6', 1, 2) ], 'tbody')
       ], 
       [
-        [ 'td1', 'td1', 'td3' ],
-        [ 'td1', 'td1', 'td4' ],
-        [ 'td2', 'td2', 'td4' ],
-        [ 'td5', 'td6', 'td6' ]
+        r([ 'td1', 'td1', 'td3' ], 'tbody'),
+        r([ 'td1', 'td1', 'td4' ], 'tbody'),
+        r([ 'td2', 'td2', 'td4' ], 'tbody'),
+        r([ 'td5', 'td6', 'td6' ], 'tbody')
       ]
     );
   }

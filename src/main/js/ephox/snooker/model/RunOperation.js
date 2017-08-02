@@ -34,8 +34,8 @@ define(
       };
 
       return Arr.map(rendered, function (details) {
-        var row = findRow(details.cells());
-        return Structs.rowdata(row, details.cells(), details.section());
+        var row = findRow(details.details());
+        return Structs.rowdata(row, details.details(), details.section());
       });
     };
 
