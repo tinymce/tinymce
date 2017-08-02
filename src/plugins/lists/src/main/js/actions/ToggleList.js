@@ -250,10 +250,11 @@ define(
 
     var updateList = function (dom, list, listName, detail) {
       if (list.nodeName !== listName) {
-        list = dom.rename(list, listName);
+        var newList = dom.rename(list, listName);
+        updateListWithDetails(dom, newList, detail);
+      } else {
+        updateListWithDetails(dom, list, detail);
       }
-
-      updateListWithDetails(dom, list, detail);
     };
 
     var toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
@@ -262,9 +263,7 @@ define(
       } else {
         var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
-        updateList(editor.dom, parentList, listName, detail);
-
-        Tools.each(lists, function (elm) {
+        Tools.each([parentList].concat(lists), function (elm) {
           updateList(editor.dom, elm, listName, detail);
         });
 

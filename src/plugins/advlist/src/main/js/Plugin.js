@@ -60,15 +60,8 @@ define(
       ulMenuItems = buildMenuItems('UL', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));
 
       function applyListFormat(listName, styleValue) {
-        var detail = {
-          'list-style-type': styleValue
-        };
-
-        if (detail['list-style-type'] === false) {
-          editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList');
-        } else {
-          editor.execCommand(listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList', false, detail);
-        }
+        var cmd = listName == 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';
+        editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
       }
 
       function updateSelection(e) {
