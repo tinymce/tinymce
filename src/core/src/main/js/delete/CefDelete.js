@@ -11,16 +11,20 @@
 define(
   'tinymce.core.delete.CefDelete',
   [
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.delete.BlockBoundary',
     'tinymce.core.delete.CefDeleteAction',
     'tinymce.core.delete.DeleteElement',
+    'tinymce.core.delete.DeleteUtils',
     'tinymce.core.delete.MergeBlocks',
     'tinymce.core.dom.NodeType'
   ],
-  function (Element, CaretPosition, CaretUtils, BlockBoundary, CefDeleteAction, DeleteElement, MergeBlocks, NodeType) {
+  function (Arr, Remove, Element, SelectorFilter, CaretPosition, CaretUtils, BlockBoundary, CefDeleteAction, DeleteElement, DeleteUtils, MergeBlocks, NodeType) {
     var deleteElement = function (editor, forward) {
       return function (element) {
         DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
@@ -55,10 +59,16 @@ define(
       return result.getOr(false);
     };
 
+    var deleteOffscreenSelection = function (rootElement) {
+      Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
+    };
+
     var backspaceDeleteRange = function (editor, forward) {
       var selectedElement = editor.selection.getNode();
       if (NodeType.isContentEditableFalse(selectedElement)) {
+        deleteOffscreenSelection(Element.fromDom(editor.getBody()));
         DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
+        DeleteUtils.paddEmptyBody(editor);
         return true;
       } else {
         return false;

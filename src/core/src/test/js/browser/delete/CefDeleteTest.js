@@ -36,7 +36,7 @@ asynctest(
       ]);
     };
 
-    var sTestDeletePadd = function (editor, tinyApis) {
+    var sTestDeletePadd = function (editor, tinyApis, tinyActions) {
       return GeneralSteps.sequence([
         Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([
           tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'),
@@ -90,15 +90,40 @@ asynctest(
               });
             })
           )
+        ])),
+
+        Logger.t('Should padd editor with paragraph and br if the editor is empty after delete of a cef element', GeneralSteps.sequence([
+          tinyApis.sSetContent('<div contenteditable="false">a</div>'),
+          tinyApis.sSetSelection([], 0, [], 1),
+          tinyActions.sContentKeystroke(Keys.backspace(), {}),
+          tinyApis.sAssertSelection([0], 0, [0], 0),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.element('br', {
+                        attrs: {
+                          'data-mce-bogus': str.is('1')
+                        }
+                      })
+                    ]
+                  })
+                ]
+              });
+            })
+          )
         ]))
       ]);
     };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
+      var tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
-        sTestDeletePadd(editor, tinyApis)
+        sTestDeletePadd(editor, tinyApis, tinyActions)
       ], onSuccess, onFailure);
     }, {
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
