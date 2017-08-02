@@ -99,7 +99,7 @@ test(
     // Test basic delete column
     (function () {
       var check = function (expected, grid, index) {
-        var actual = ModificationOperations.deleteColumnAt(grid, index, Fun.tripleEquals);
+        var actual = ModificationOperations.deleteColumnsAt(grid, index, index);
         assert.eq(expected, actual);
       };
 
@@ -119,7 +119,7 @@ test(
     // Test basic delete row
     (function () {
       var check = function (expected, grid, index) {
-        var actual = ModificationOperations.deleteRowAt(grid, index, Fun.tripleEquals);
+        var actual = ModificationOperations.deleteRowsAt(grid, index, index);
         assert.eq(expected, actual);
       };
 
