@@ -24,6 +24,12 @@
 define(
   'tinymce.core.SelectionOverrides',
   [
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
@@ -40,8 +46,8 @@ define(
     'tinymce.core.util.VK'
   ],
   function (
-    CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint, DragDropOverrides, EditorView, Env, CefUtils, Delay,
-    VK
+    Arr, Remove, Element, Attr, SelectorFilter, SelectorFind, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint,
+    DragDropOverrides, EditorView, Env, CefUtils, Delay, VK
   ) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -431,8 +437,16 @@ define(
           return null;
         }
 
+        $realSelectionContainer = SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).fold(
+          function () {
+            return $([]);
+          },
+          function (elm) {
+            return $([elm.dom()]);
+          }
+        );
+
         targetClone = e.targetClone;
-        $realSelectionContainer = $('#' + realSelectionId);
         if ($realSelectionContainer.length === 0) {
           $realSelectionContainer = $(
             '<div data-mce-bogus="all" class="mce-offscreen-selection"></div>'
@@ -465,7 +479,10 @@ define(
         sel.removeAllRanges();
         sel.addRange(range);
 
-        editor.$('*[data-mce-selected]').removeAttr('data-mce-selected');
+        Arr.each(SelectorFilter.descendants(Element.fromDom(editor.getBody()), '*[data-mce-selected]'), function (elm) {
+          Attr.remove(elm, 'data-mce-selected');
+        });
+
         node.setAttribute('data-mce-selected', 1);
         selectedContentEditableNode = node;
         hideFakeCaret();
@@ -476,7 +493,7 @@ define(
       function removeContentEditableSelection() {
         if (selectedContentEditableNode) {
           selectedContentEditableNode.removeAttribute('data-mce-selected');
-          editor.$('#' + realSelectionId).remove();
+          SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
           selectedContentEditableNode = null;
         }
       }

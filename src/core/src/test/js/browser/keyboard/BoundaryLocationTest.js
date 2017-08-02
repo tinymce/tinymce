@@ -9,13 +9,13 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.test.ViewBlock',
     'tinymce.core.text.Zwsp'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Fun, Hierarchy, Element, Selectors, CaretPosition, BoundaryLocation, ViewBlock, Zwsp) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Fun, Hierarchy, Element, SelectorFind, CaretPosition, BoundaryLocation, ViewBlock, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var ZWSP = Zwsp.ZWSP;
@@ -62,7 +62,7 @@ asynctest(
         var location = createLocation(elm, elementPath, offset);
         Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
         Assertions.assertEq('Should be expected location', expectedLocationName, locationName(location.getOrDie()));
-        Assertions.assertDomEq('Should be expected element', Selectors.one(expectedInline, elm).getOrDie(), locationElement(location.getOrDie()));
+        Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
       });
     };
 
@@ -80,7 +80,7 @@ asynctest(
         var position = createPosition(elm, elementPath, offset);
         var location = forward ? BoundaryLocation.nextLocation(elm.dom(), position) : BoundaryLocation.prevLocation(elm.dom(), position);
 
-        Assertions.assertDomEq('Should be expected element', Selectors.one(expectedInline, elm).getOrDie(), locationElement(location.getOrDie()));
+        Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
         Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
         Assertions.assertEq('Should be expected location', expectedLocationName, locationName(location.getOrDie()));
       });

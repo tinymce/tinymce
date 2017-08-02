@@ -17,17 +17,20 @@
 define(
   'tinymce.core.ui.FormatControls',
   [
-    "tinymce.core.ui.Control",
-    "tinymce.core.ui.Widget",
-    "tinymce.core.ui.FloatPanel",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Arr",
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.EditorManager",
-    "tinymce.core.Env",
-    "tinymce.core.fmt.FontInfo"
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.EditorManager',
+    'tinymce.core.Env',
+    'tinymce.core.fmt.FontInfo',
+    'tinymce.core.ui.Control',
+    'tinymce.core.ui.FloatPanel',
+    'tinymce.core.ui.Widget',
+    'tinymce.core.util.Arr',
+    'tinymce.core.util.Tools'
   ],
-  function (Control, Widget, FloatPanel, Tools, Arr, DOMUtils, EditorManager, Env, FontInfo) {
+  function (Fun, Element, SelectorFind, DOMUtils, EditorManager, Env, FontInfo, Control, FloatPanel, Widget, Arr, Tools) {
     var each = Tools.each;
 
     var flatten = function (ar) {
@@ -52,7 +55,9 @@ define(
 
     function setupContainer(editor) {
       if (editor.settings.ui_container) {
-        Env.container = DOMUtils.DOM.select(editor.settings.ui_container)[0];
+        Env.container = SelectorFind.descendant(Element.fromDom(document.body), editor.settings.ui_container).fold(Fun.constant(null), function (elm) {
+          return elm.dom();
+        });
       }
     }
 
