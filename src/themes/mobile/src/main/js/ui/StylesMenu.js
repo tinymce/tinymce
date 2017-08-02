@@ -12,6 +12,49 @@ define(
   ],
 
   function (Behaviour, Transitioning, Menu, TieredMenu, Objects, SelectorFind, Width) {
+    var defaultData = TieredMenu.tieredData(
+      'styles',
+      {
+        'styles': makeMenu('Styles', [
+          makeItem('headers', 'Headers'),
+          makeItem('inline', 'Inline'),
+          makeItem('blocks', 'Blocks'),
+          makeItem('alignment', 'Alignment')
+        ]),
+
+        'headers': makeMenu('Headers', [
+          makeBack('< Back'),
+          makeItem('h1', 'Header 1'),
+          makeItem('h2', 'Header 2'),
+          makeItem('h3', 'Header 3')
+        ]),
+
+        'inline': makeMenu('Inline', [
+          makeBack('< Back'),
+          makeItem('bold', 'Bold'),
+          makeItem('italic', 'Italic')
+        ]),
+
+        'blocks': makeMenu('Blocks', [
+          makeBack('< Back'),
+          makeItem('p', 'Paragraph'),
+          makeItem('blockquote', 'Blockquote'),
+          makeItem('div', 'Div')
+        ]),
+
+        'alignment': makeMenu('Alignment', [
+          makeBack('< Back'),
+          makeItem('alignleft', 'Left')
+        ])
+      },
+      {
+        'headers': 'headers',
+        'inline': 'inline',
+        'blocks': 'blocks',
+        'alignment': 'alignment'
+      }
+    );
+
     var makeBack = function (text) {
       return {
         data: TieredMenu.collapseItem(text),
@@ -90,7 +133,10 @@ define(
       };
     };
 
-    var sketch = function () {
+    var sketch = function (settings) {
+
+      // Turn settings into a tiered menu data.
+
       return TieredMenu.sketch({
         dom: {
           tag: 'div',
@@ -138,48 +184,7 @@ define(
         navigateOnHover: false,
 
         openImmediately: true,
-        data: TieredMenu.tieredData(
-          'styles',
-          {
-            'styles': makeMenu('Styles', [
-              makeItem('headers', 'Headers'),
-              makeItem('inline', 'Inline'),
-              makeItem('blocks', 'Blocks'),
-              makeItem('alignment', 'Alignment')
-            ]),
-
-            'headers': makeMenu('Headers', [
-              makeBack('< Back'),
-              makeItem('h1', 'Header 1'),
-              makeItem('h2', 'Header 2'),
-              makeItem('h3', 'Header 3')
-            ]),
-
-            'inline': makeMenu('Inline', [
-              makeBack('< Back'),
-              makeItem('bold', 'Bold'),
-              makeItem('italic', 'Italic')
-            ]),
-
-            'blocks': makeMenu('Blocks', [
-              makeBack('< Back'),
-              makeItem('p', 'Paragraph'),
-              makeItem('blockquote', 'Blockquote'),
-              makeItem('div', 'Div')
-            ]),
-
-            'alignment': makeMenu('Alignment', [
-              makeBack('< Back'),
-              makeItem('alignleft', 'Left')
-            ])
-          },
-          {
-            'headers': 'headers',
-            'inline': 'inline',
-            'blocks': 'blocks',
-            'alignment': 'alignment'
-          }
-        ),
+        data: defaultData,
 
         markers: {
           backgroundMenu: 'background-menu',

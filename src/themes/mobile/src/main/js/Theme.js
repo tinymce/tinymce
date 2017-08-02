@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Swapping',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
@@ -14,8 +15,8 @@ define(
     'ephox.sugar.api.node.Node',
     'global!document',
     'global!window',
-    'tinymce.core.ThemeManager',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
     'tinymce.themes.mobile.channels.TinyChannels',
@@ -29,6 +30,7 @@ define(
     'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.ui.LinkButton',
+    'tinymce.themes.mobile.ui.StylesMenu',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
     'tinymce.themes.mobile.util.SkinLoaded'
@@ -36,9 +38,9 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, ThemeManager, DOMUtils, Api, TinyCodeDupe,
-    TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers,
-    SkinLoaded
+    Swapping, AlloyTriggers, Attachment, Objects, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager, Api,
+    TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, StylesMenu,
+    CssUrls, FormatChangers, SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -205,6 +207,10 @@ define(
             ]
           };
 
+          var styleFormats = StylesMenu.sketch({
+            formats: Objects.readOptFrom(editor.settings, 'style_formats').getOr([ ])
+          });
+
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
@@ -226,7 +232,7 @@ define(
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
                     
-                    realm.dropup().appear();
+                    realm.dropup().appear(styleFormats);
                   });
                 }, 1000);
               }, { }),

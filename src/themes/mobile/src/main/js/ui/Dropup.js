@@ -15,8 +15,6 @@ define(
 
   function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Styles, StylesMenu) {
     var build = function (refresh, scrollIntoView) {
-      var menu = Memento.record(StylesMenu.sketch({ }));
-      console.log('scrollIntoView', scrollIntoView);
       var dropup = GuiFactory.build(
         Container.sketch({
           dom: {
@@ -44,14 +42,12 @@ define(
               },
 
               onShrunk: function (component) {
-                console.log('onShrunk');
                 refresh();
                 scrollIntoView();
 
                 Replacing.set(component, [ ]);
               },
               onGrown: function (component) {
-                console.log('onGrown');
                 refresh();
                 scrollIntoView();
 
@@ -61,8 +57,8 @@ define(
         })
       );
 
-      var appear = function () {
-        Replacing.set(dropup, [ menu.asSpec() ]);
+      var appear = function (menu) {
+        Replacing.set(dropup, [ menu ]);
         Sliding.grow(dropup);
       };
 
