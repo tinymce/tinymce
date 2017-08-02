@@ -102,10 +102,10 @@ asynctest(
 
       var focusables = {
         button: { label: 'dropdown-button', 'selector': 'button' },
-        alpha: { label: 'alpha-item', selector: 'li:contains("Alpha")' },
-        beta: { label: 'beta-item', selector: 'li:contains("Beta")' },
-        gamma: { label: 'gamma-item', selector: 'li:contains("Gamma")' },
-        delta: { label: 'delta-item', selector: 'li:contains("Delta")' }
+        alpha: { label: 'alpha-item', selector: 'li:contains(Alpha)' },
+        beta: { label: 'beta-item', selector: 'li:contains(Beta)' },
+        gamma: { label: 'gamma-item', selector: 'li:contains(Gamma)' },
+        delta: { label: 'delta-item', selector: 'li:contains(Delta)' }
       };
 
       return [
@@ -124,7 +124,7 @@ asynctest(
 
         Mouse.sClickOn(gui.element(), focusables.button.selector),
 
-        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains(Alpha)'),
 
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         Waiter.sTryUntil(

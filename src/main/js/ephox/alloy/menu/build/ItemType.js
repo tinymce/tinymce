@@ -48,7 +48,7 @@ define(
         ]),
         events: AlloyEvents.derive([
           // Trigger execute when clicked
-          AlloyEvents.runWithTarget(SystemEvents.tap(), AlloyTriggers.emitExecute),
+          AlloyEvents.runWithTarget(SystemEvents.tapOrClick(), AlloyTriggers.emitExecute),
 
           // Like button, stop mousedown propagating up the DOM tree.
           AlloyEvents.cutter(NativeEvents.mousedown()),

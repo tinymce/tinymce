@@ -56,6 +56,9 @@ define(
 
     var part = function (store) {
       return {
+        dom: {
+          tag: 'div'
+        },
         markers: markers,
         onExecute: function (dropdown, item) {
           var v = Representing.getValue(item);
