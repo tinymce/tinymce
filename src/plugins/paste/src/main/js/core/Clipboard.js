@@ -35,16 +35,17 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
-    'tinymce.plugins.paste.core.CutCopy',
+    'tinymce.plugins.paste.core.PasteBin',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.Newlines',
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (RangeUtils, Env, Delay, Tools, VK, CutCopy, InternalHtml, Newlines, SmartPaste, Utils) {
+  function (RangeUtils, Env, Delay, Tools, VK, PasteBin, InternalHtml, Newlines, SmartPaste, Utils) {
     return function (editor) {
-      var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
-      var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
+      var self = this, keyboardPasteTimeStamp = 0, draggingInternally = false;
+      var pasteBin = new PasteBin(editor);
+      var keyboardPastePlainTextState;
       var mceInternalUrlPrefix = 'data:text/mce-internal,';
       var uniqueId = Utils.createIdGenerator("mceclip");
 
@@ -97,186 +98,6 @@ define(
         pasteHtml(text, false);
       }
 
-      /**
-       * Creates a paste bin element as close as possible to the current caret location and places the focus inside that element
-       * so that when the real paste event occurs the contents gets inserted into this element
-       * instead of the current editor selection element.
-       */
-      function createPasteBin() {
-        var dom = editor.dom, body = editor.getBody();
-        var viewport = editor.dom.getViewPort(editor.getWin()), scrollTop = viewport.y, top = 20;
-        var scrollContainer;
-
-        lastRng = editor.selection.getRng();
-
-        if (editor.inline) {
-          scrollContainer = editor.selection.getScrollContainer();
-
-          // Can't always rely on scrollTop returning a useful value.
-          // It returns 0 if the browser doesn't support scrollTop for the element or is non-scrollable
-          if (scrollContainer && scrollContainer.scrollTop > 0) {
-            scrollTop = scrollContainer.scrollTop;
-          }
-        }
-
-        /**
-         * Returns the rect of the current caret if the caret is in an empty block before a
-         * BR we insert a temporary invisible character that we get the rect this way we always get a proper rect.
-         *
-         * TODO: This might be useful in core.
-         */
-        function getCaretRect(rng) {
-          var rects, textNode, node, container = rng.startContainer;
-
-          rects = rng.getClientRects();
-          if (rects.length) {
-            return rects[0];
-          }
-
-          if (!rng.collapsed || container.nodeType != 1) {
-            return;
-          }
-
-          node = container.childNodes[lastRng.startOffset];
-
-          // Skip empty whitespace nodes
-          while (node && node.nodeType == 3 && !node.data.length) {
-            node = node.nextSibling;
-          }
-
-          if (!node) {
-            return;
-          }
-
-          // Check if the location is |<br>
-          // TODO: Might need to expand this to say |<table>
-          if (node.tagName == 'BR') {
-            textNode = dom.doc.createTextNode('\uFEFF');
-            node.parentNode.insertBefore(textNode, node);
-
-            rng = dom.createRng();
-            rng.setStartBefore(textNode);
-            rng.setEndAfter(textNode);
-
-            rects = rng.getClientRects();
-            dom.remove(textNode);
-          }
-
-          if (rects.length) {
-            return rects[0];
-          }
-        }
-
-        // Calculate top cordinate this is needed to avoid scrolling to top of document
-        // We want the paste bin to be as close to the caret as possible to avoid scrolling
-        if (lastRng.getClientRects) {
-          var rect = getCaretRect(lastRng);
-
-          if (rect) {
-            // Client rects gets us closes to the actual
-            // caret location in for example a wrapped paragraph block
-            top = scrollTop + (rect.top - dom.getPos(body).y);
-          } else {
-            top = scrollTop;
-
-            // Check if we can find a closer location by checking the range element
-            var container = lastRng.startContainer;
-            if (container) {
-              if (container.nodeType == 3 && container.parentNode != body) {
-                container = container.parentNode;
-              }
-
-              if (container.nodeType == 1) {
-                top = dom.getPos(container, scrollContainer || body).y;
-              }
-            }
-          }
-        }
-
-        // Create a pastebin
-        pasteBinElm = dom.add(editor.getBody(), 'div', {
-          id: "mcepastebin",
-          contentEditable: true,
-          "data-mce-bogus": "all",
-          style: 'position: absolute; top: ' + top + 'px;' +
-          'width: 10px; height: 10px; overflow: hidden; opacity: 0'
-        }, pasteBinDefaultContent);
-
-        // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
-        if (Env.ie || Env.gecko) {
-          dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
-        }
-
-        // Prevent focus events from bubbeling fixed FocusManager issues
-        dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', function (e) {
-          e.stopPropagation();
-        });
-
-        pasteBinElm.focus();
-        editor.selection.select(pasteBinElm, true);
-      }
-
-      /**
-       * Removes the paste bin if it exists.
-       */
-      function removePasteBin() {
-        if (pasteBinElm) {
-          var pasteBinClone;
-
-          // WebKit/Blink might clone the div so
-          // lets make sure we remove all clones
-          // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
-          while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
-            editor.dom.remove(pasteBinClone);
-            editor.dom.unbind(pasteBinClone);
-          }
-
-          if (lastRng) {
-            editor.selection.setRng(lastRng);
-          }
-        }
-
-        pasteBinElm = lastRng = null;
-      }
-
-      /**
-       * Returns the contents of the paste bin as a HTML string.
-       *
-       * @return {String} Get the contents of the paste bin.
-       */
-      function getPasteBinHtml() {
-        var pasteBinElm, pasteBinClones, i, dirtyWrappers, cleanWrapper;
-
-        // Since WebKit/Chrome might clone the paste bin when pasting
-        // for example: <img style="float: right"> we need to check if any of them contains some useful html.
-        // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
-
-        var copyAndRemove = function (toElm, fromElm) {
-          toElm.appendChild(fromElm);
-          editor.dom.remove(fromElm, true); // remove, but keep children
-        };
-
-        // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-        pasteBinClones = editor.dom.select('body > div[id=mcepastebin]');
-        pasteBinElm = pasteBinClones.shift();
-
-        // if clones were found, move their content into the first bin
-        Tools.each(pasteBinClones, function (pasteBinClone) {
-          copyAndRemove(pasteBinElm, pasteBinClone);
-        });
-
-        // Chrome clones paste bin (with styles and attributes) and uses it as a default
-        // wrapper for the chunks of the content, here we cycle over the whole paste bin
-        // and replace that wrapper with a basic div
-        dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
-        for (i = dirtyWrappers.length - 1; i >= 0; i--) {
-          cleanWrapper = editor.dom.create('div');
-          pasteBinElm.insertBefore(cleanWrapper, dirtyWrappers[i]);
-          copyAndRemove(cleanWrapper, dirtyWrappers[i]);
-        }
-
-        return pasteBinElm.innerHTML;
-      }
 
       /**
        * Gets various content types out of a datatransfer object.
@@ -455,7 +276,7 @@ define(
           function removePasteBinOnKeyUp(e) {
             // Ctrl+V or Shift+Insert
             if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
-              removePasteBin();
+              pasteBin.remove();
             }
           }
 
@@ -482,8 +303,8 @@ define(
               return;
             }
 
-            removePasteBin();
-            createPasteBin();
+            pasteBin.remove();
+            pasteBin.create();
 
             // Remove pastebin if we get a keyup and no paste event
             // For example pasting a file in IE 11 will not produce a paste event
@@ -501,21 +322,20 @@ define(
           if (hasContentType(clipboardContent, 'text/html')) {
             content = clipboardContent['text/html'];
           } else {
-            content = getPasteBinHtml();
+            content = pasteBin.getHtml();
 
             // If paste bin is empty try using plain text mode
             // since that is better than nothing right
-            if (content == pasteBinDefaultContent) {
+            if (pasteBin.isDefaultContent(content)) {
               plainTextMode = true;
             }
           }
 
           content = Utils.trimHtml(content);
 
+          pasteBin.remove();
 
-          removePasteBin();
-
-          isPlainTextHtml = internal === false && Newlines.isPlainText(content);
+          isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
 
           // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
           // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
@@ -536,7 +356,7 @@ define(
 
           // If the content is the paste bin default HTML then it was
           // impossible to get the cliboard data out.
-          if (content == pasteBinDefaultContent) {
+          if (pasteBin.isDefaultContent(content)) {
             if (!isKeyBoardPaste) {
               editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
             }
@@ -552,7 +372,7 @@ define(
         }
 
         var getLastRng = function () {
-          return lastRng || editor.selection.getRng();
+          return pasteBin.getLastRng() || editor.selection.getRng();
         };
 
         editor.on('paste', function (e) {
@@ -568,12 +388,12 @@ define(
           keyboardPastePlainTextState = false;
 
           if (e.isDefaultPrevented() || isBrokenAndroidClipboardEvent(e)) {
-            removePasteBin();
+            pasteBin.remove();
             return;
           }
 
           if (!hasHtmlOrText(clipboardContent) && pasteImageData(e, getLastRng())) {
-            removePasteBin();
+            pasteBin.remove();
             return;
           }
 
@@ -584,14 +404,14 @@ define(
 
           // Try IE only method if paste isn't a keyboard paste
           if (Env.ie && (!isKeyBoardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
-            createPasteBin();
+            pasteBin.create();
 
-            editor.dom.bind(pasteBinElm, 'paste', function (e) {
+            editor.dom.bind(pasteBin.getEl(), 'paste', function (e) {
               e.stopPropagation();
             });
 
             editor.getDoc().execCommand('Paste', false, null);
-            clipboardContent["text/html"] = getPasteBinHtml();
+            clipboardContent["text/html"] = pasteBin.getHtml();
           }
 
           // If clipboard API has HTML then use that directly
