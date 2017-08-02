@@ -16,7 +16,7 @@ Version 4.6.5 (2017-08-02)
     Fixed bug where it wasn't possible to select all contents if the content only had one pre element.
     Fixed bug where sizzle would produce lagging behavior on some sites due to repaints caused by feature detection.
     Fixed bug where toggling off inline formats wouldn't include the space on selected contents with leading or trailing spaces.
-    Fixed bug where the cut operation in UI wouldn't work in Chrome due to a recent change in Chrome.
+    Fixed bug where the cut operation in UI wouldn't work in Chrome.
     Fixed bug where some legacy editor initialization logic would throw exceptions about editor settings not being defined.
     Fixed bug where it wasn't possible to apply text color to links if they where part of a non collapsed selection.
     Fixed bug where an exception would be thrown if the user selected a video element and then moved the focus outside the editor.
