@@ -35,11 +35,7 @@ define(
           return Structs.detail(cell, rowspan, colspan);
         });
 
-        return {
-          element: Fun.constant(element),
-          section: Fun.constant(parentSection),
-          cells: Fun.constant(cells)
-        };
+        return Structs.rowdata(element, cells, parentSection);
       });
     };
 

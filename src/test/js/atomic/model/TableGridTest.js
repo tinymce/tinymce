@@ -14,9 +14,9 @@ test(
     };
 
     var world = [
-      [ 'a', 'a', 'a' ],
-      [ 'b', 'b', 'c' ],
-      [ 'd', 'e', 'c' ]
+      {cells: Fun.constant([ 'a', 'a', 'a' ]), section: Fun.constant('tbody')},
+      {cells: Fun.constant([ 'b', 'b', 'c' ]), section: Fun.constant('tbody')},
+      {cells: Fun.constant([ 'd', 'e', 'c' ]), section: Fun.constant('tbody')}
     ];
 
     check({ colspan: 3, rowspan: 1 }, 0, 0, world);
