@@ -21,6 +21,7 @@ Version 4.6.5 (2017-08-02)
     Fixed bug where it wasn't possible to apply text color to links if they where part of a non collapsed selection.
     Fixed bug where an exception would be thrown if the user selected a video element and then moved the focus outside the editor.
     Fixed bug where list operations didn't work if there where block elements inside the list items.
+    Fixed bug where applying block formats to lists wrapped in block elements would apply to all elements in that wrapped block.
 Version 4.6.4 (2017-06-13)
     Fixed bug where the editor would move the caret when clicking on the scrollbar next to a content editable false block.
     Fixed bug where the text color select dropdowns wasn't placed correctly when they didn't fit the width of the screen.
