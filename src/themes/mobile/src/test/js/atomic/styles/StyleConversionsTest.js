@@ -12,6 +12,7 @@ test(
       RawAssertions.assertEq('StyleConversions.getAlpha (' + label + ')', expected, output);
     };
 
+      /*
     check(
       'Empty input',
       {
@@ -135,6 +136,46 @@ test(
             { title: 'beta-1' },
             { title: 'beta-2' },
             { title: 'beta-3' }
+          ]
+        },
+        { title: 'gamma' }
+      ]
+    );
+    */
+
+    check(
+      'Input with three flat items, and a menu with three items in between' +
+      ', with last subitem having a menu with no items',
+      {
+        menus: {
+          'beta': [
+            { title: 'beta-1' },
+            { title: 'beta-2' },
+            { title: 'beta-3' }
+          ],
+          'beta-3': [ ]
+        },
+        expansions: {
+          'beta': 'beta',
+          'beta-3': 'beta-3'
+        },
+        items: [
+          { title: 'alpha' },
+          { title: 'beta' },
+          { title: 'gamma' }
+        ]
+      },
+      [
+        { title: 'alpha' },
+        {
+          title: 'beta',
+          items: [
+            { title: 'beta-1' },
+            { title: 'beta-2' },
+            {
+              title: 'beta-3',
+              items: [ ]
+            }
           ]
         },
         { title: 'gamma' }
