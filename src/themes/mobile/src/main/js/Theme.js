@@ -35,14 +35,15 @@ define(
     'tinymce.themes.mobile.ui.StylesMenu',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
-    'tinymce.themes.mobile.util.SkinLoaded'
+    'tinymce.themes.mobile.util.SkinLoaded',
+    'tinymce.themes.mobile.util.StyleFormats'
   ],
 
 
   function (
     Swapping, AlloyTriggers, Attachment, Objects, Arr, Cell, Fun, Id, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager,
     Api, TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton,
-    StylesMenu, CssUrls, FormatChangers, SkinLoaded
+    StylesMenu, CssUrls, FormatChangers, SkinLoaded, StyleFormats
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -209,33 +210,7 @@ define(
             ]
           };
 
-          var styleFormats = (function () {
-            var formats = Objects.readOptFrom(editor.settings, 'style_formats').getOr([ ]);
-            // TODO: Do not assume two level structure
-            var fs = Arr.map(formats, function (f) {
-              var items = Arr.map(f.items !== undefined ? f.items : [ ], function (i) {
-                if (Objects.hasKey(i, 'format')) return i;
-                else {
-                  var newName = Id.generate(i.title);
-                  editor.formatter.register(newName, i);
-                  return { title: i.title, icon: i.icon, format: newName };
-                }
-              });
-              return {
-                title: f.title,
-                items: items
-              };
-            });
-
-            console.log('fs', fs);
-
-            return StylesMenu.sketch({
-              formats: fs,
-              handle: function (value) {
-                editor.formatter.apply(value);
-              }
-            });
-          })();
+          var styleFormats = StyleFormats.register(editor, editor.settings);
 
           var actionGroup = {
             label: 'the action group',
@@ -257,8 +232,8 @@ define(
                 // Hack to make the keyboard disappear first ... there should be a way to detect it. (for Android only maybe)
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
-                    
-                    realm.dropup().appear(styleFormats);
+                    var menu = StyleFormats.ui(editor, styleFormats);
+                    realm.dropup().appear(menu);
                   });
                 }, 1000);
               }, { }),
