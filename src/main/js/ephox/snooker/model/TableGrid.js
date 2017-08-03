@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Fun) {
+  function (Arr, Fun, GridRow) {
     var getColumn = function (grid, index) {
       return Arr.map(grid, function (row) {
-        return row.cells()[index];
+        return GridRow.getCell(grid, index);
       });
     };
 

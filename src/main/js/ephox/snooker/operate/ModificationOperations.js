@@ -28,7 +28,7 @@ define(
     // index is the insert position (at - or after - example) (the column index)
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
-        var withinSpan = index > 0 && index < row.cells().length && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
+        var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
         var sub = withinSpan ? GridRow.getCell(row, index) : substitution(GridRow.getCell(row, example), comparator);
         return GridRow.setCell(row, index, sub);
       });

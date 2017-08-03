@@ -32,12 +32,17 @@ define(
       return gridRow.cells()[index];
     };
 
+    var cellLength = function (gridRow) {
+      return gridRow.cells().length;
+    };
+
     return {
       setCell: setCell,
       setCells: setCells,
       mutateCell: mutateCell,
       getCell: getCell,
-      mapCells: mapCells
+      mapCells: mapCells,
+      cellLength: cellLength
     };
   }
 );

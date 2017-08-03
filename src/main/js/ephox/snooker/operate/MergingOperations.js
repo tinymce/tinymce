@@ -24,7 +24,7 @@ define(
       // Mutating. Do we care about the efficiency gain?
       var first = true;
       for (var i = 0; i < grid.length; i++) {
-        for (var j = 0; j < grid[0].cells().length; j++) {
+        for (var j = 0; j < GridRow.cellLength(grid[0]); j++) {
           var current = GridRow.getCell(grid[i], j);
           var isToReplace = comparator(current, target);
 

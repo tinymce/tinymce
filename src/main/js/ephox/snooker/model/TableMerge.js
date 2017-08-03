@@ -4,10 +4,11 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.snooker.model.Fitment',
+    'ephox.snooker.model.GridRow',
     'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Fun, Fitment, MergingOperations) {
+  function (Fun, Fitment, GridRow, MergingOperations) {
     var isSpanning = function (grid, row, col, comparator) {
       var candidate = grid[row][col];
       var matching = Fun.curry(comparator, candidate);
@@ -33,7 +34,7 @@ define(
       var startRow = startAddress.row();
       var startCol = startAddress.column();
       var mergeHeight = gridB.length;
-      var mergeWidth = gridB[0].length;
+      var mergeWidth = GridRow.cellLength(gridB[0]);
       var endRow = startRow + mergeHeight;
       var endCol = startCol + mergeWidth;
 
@@ -42,9 +43,9 @@ define(
         for (var c = startCol; c < endCol; c++) {
           if (isSpanning(gridA, r, c, comparator)) {
             // mutation within mutation, it's mutatception
-            MergingOperations.unmerge(gridA, gridA[r][c], comparator, generator.cell);
+            MergingOperations.unmerge(gridA, GridRow.getCell(gridA[r], c), comparator, generator.cell);
           }
-          gridA[r][c] = generator.replace(gridB[r - startRow][c - startCol]);
+          GridRow.mutateCell(gridA[r], c, generator.replace(GridRow.getCell(gridB[r - startRow], c - startCol)));
         }
       }
       return gridA;
