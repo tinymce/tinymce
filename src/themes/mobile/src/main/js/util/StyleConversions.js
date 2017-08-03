@@ -10,7 +10,7 @@ define(
   function (Objects, Arr, Merger) {
     // Takes items, and consolidates them into its return value
     var getAlpha = function (items) {
-      return Arr.foldr(items, function (item, acc) {
+      return Arr.foldr(items, function (acc, item) {
         if (item.items !== undefined) {
           // We have a submenu
           var menuName = item.title;

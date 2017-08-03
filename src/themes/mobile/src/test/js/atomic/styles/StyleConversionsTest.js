@@ -1,5 +1,5 @@
 test(
-  'Atomic Test: styles.StyleConversionsTest.js',
+  'Atomic Test: styles.StyleConversionsTest',
 
   [
     'ephox.agar.api.RawAssertions',
@@ -20,6 +20,20 @@ test(
         items: [ ]
       },
       [ ]
+    );
+
+    check(
+      'Input with one item',
+      {
+        menus: { },
+        expansions: { },
+        items: [
+          { title: 'alpha' }
+        ]
+      },
+      [
+        { title: 'alpha' }
+      ]
     );
 
   }
