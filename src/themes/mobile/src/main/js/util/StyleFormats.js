@@ -6,10 +6,12 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
-    'tinymce.themes.mobile.ui.StylesMenu'
+    'ephox.katamari.api.Obj',
+    'tinymce.themes.mobile.ui.StylesMenu',
+    'tinymce.themes.mobile.util.StyleConversions'
   ],
 
-  function (Objects, Arr, Id, Merger, StylesMenu) {
+  function (Objects, Arr, Id, Merger, Obj, StylesMenu, StyleConversions) {
     var register = function (editor, settings) {
 
       var isSelectedFor = function (format) {
@@ -52,7 +54,33 @@ define(
       });
     };
 
+    var prune = function (editor, hack) {
+      // Firstly, prune the items
+      var items = Arr.filter(hack.items, function (item) {
+        return Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
+      });
+
+      var menus = Obj.map(hack.menus, function (items, menuName) {
+        return Arr.filter(items, function (item) {
+          return editor.formatter.canApply(item.format);
+        });
+      });
+
+      var expansions = hack.expansions;
+      return {
+        items: items,
+        menus: menus,
+        expansions: expansions
+      };
+    };
+
     var ui = function (editor, formats, onDone) {
+      var hack = StyleConversions.getAlpha(formats);
+      console.log('hack', hack);
+
+      var result = prune(editor, hack);
+      console.log('prune', result);
+
       return StylesMenu.sketch({
         formats: formats,
         handle: function (value) {
@@ -60,66 +88,6 @@ define(
           onDone();
         }
       });
-    };
-
-    // Takes items, and consolidates them into its return value
-    var getAlpha = function (items) {
-      var menus = { };
-      var expansions = { };
-
-      return Arr.foldr(items, function (item, acc) {
-        if (item.items !== undefined) {
-          // We have a submenu
-          var menuName = item.title;
-          var rest = getAlpha(item.items);
-          var newMenus = Merger.deepMerge(
-            acc.menus,
-            Objects.wrap(menuName, rest.items)
-          );
-          var newExpansions = Merger.deepMerge(
-            acc.expansions,
-            Objects.wrap(menuName, menuName)
-          );
-          var newItems = acc.items;
-          return {
-            menus: newMenus,
-            expansions: newExpansions,
-            items: newItems
-          };
-        } else {
-          // FIX: Remove hoisting
-          var newItems = [ item ].concat(acc.items);
-          var newExpansions = acc.expansions;
-          var newMenus = acc.menus;
-          return {
-            menus: newMenus,
-            expansions: newExpansions,
-            items: newItems
-          };
-        }
-      }, {
-        menus: { },
-        expansions: { },
-        items: [ ]
-      });
-    };
-
-    var getFormats = function (settings) {
-      var formats = Objects.readOptFrom(settings, 'style_formats').getOr([ ]);
-      var menus = [ ];
-      var expansions = { };
-      var primaryMenu = {
-        name: 'styles',
-        items: [ ]
-      };
-
-      Arr.each(formats, function (f) {
-        if (f.items !== undefined) {
-          // we are defining a menu type.
-          var name = f.title;
-          menus[name] = 
-        }
-      }
     };
 
     return {
