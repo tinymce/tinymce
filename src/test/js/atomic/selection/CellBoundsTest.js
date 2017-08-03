@@ -22,7 +22,7 @@ test(
     ];
     var inputA = Warehouse.generate(testTableA);
 
-    var bounds1To3 = Structs.bounds({ startRow: 1, startCol: 1, finishRow: 3, finishCol: 3 });
+    var bounds1To3 = Structs.bounds(1, 1, 3, 3);
     
     var checkWithin = function (expected, warehouse, bounds, row, column) {
       var cell = Warehouse.getAt(warehouse, row, column).getOrDie();
@@ -50,7 +50,7 @@ test(
     ];
     var inputB = Warehouse.generate(testTableB);
 
-    var bounds0To2 = Structs.bounds({ startRow: 0, startCol: 0, finishRow: 2, finishCol: 2 });
+    var bounds0To2 = Structs.bounds(0, 0, 2, 2);
 
     checkWithin(false, inputB, bounds0To2, 3, 0);
     checkWithin(true, inputB, bounds0To2, 0, 1);
@@ -66,7 +66,7 @@ test(
       f('r5', [ s('l',1,1), s('m',1,1), s('n',1,1), s('o',1,1), s('p',1,1) ])
     ];
     var inputC = Warehouse.generate(testTableC);
-    var boundsC = Structs.bounds({ startRow: 1, startCol: 2, finishRow: 4, finishCol: 2 });
+    var boundsC = Structs.bounds(1, 2, 4, 2 );
 
     var cases = [
       { expected: false, label: 'a', row: 0, column: 0 },

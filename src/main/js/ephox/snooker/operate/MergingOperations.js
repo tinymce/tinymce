@@ -25,7 +25,7 @@ define(
       var first = true;
       for (var i = 0; i < grid.length; i++) {
         for (var j = 0; j < grid[0].cells().length; j++) {
-          var current = grid[i].cells()[j];
+          var current = GridRow.getCell(grid[i], j);
           var isToReplace = comparator(current, target);
 
           if (isToReplace === true && first === false) GridRow.mutateCell(grid[i], j, substitution());

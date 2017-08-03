@@ -3,26 +3,25 @@ test(
 
   [
     'ephox.compass.Obj',
-    'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse'
   ],
 
-  function (Obj, Struct, Structs, Warehouse) {
+  function (Obj, Structs, Warehouse) {
     var check = function (expected, input) {
       var actual = Warehouse.generate(input);
       assert.eq(expected, Obj.map(actual.access(), function (x) { return x.element(); }));
     };
 
     var s = Structs.detail; // 'element', 'rowspan', 'colspan'
-    var f = Struct.immutable('element', 'cells');
+    var f = Structs.rowdata;
 
     var testTable = [
-      f('r1', [ s('a', 1,2), s('b',1,1), s('c',1,1), s('d',1,1), s('e',1,1), s('f',1,1) ]),
-      f('r2', [ s('g',1,1), s('h',1,1), s('i',1,1), s('j',1,1), s('k',1,3) ]),
-      f('f3', [ s('l',1,1), s('m',3,2), s('n',1,1), s('o',1,1), s('p',1,1), s('q',1,1) ]),
-      f('f4', [ s('r',2,1), s('s',1,1), s('t',2,1), s('u',1,1), s('v',1,1) ]),
-      f('r5', [ s('w',1,1), s('x',1,1), s('y',1,1) ])
+      f('r1', [ s('a', 1,2), s('b',1,1), s('c',1,1), s('d',1,1), s('e',1,1), s('f',1,1) ], 'tbody'),
+      f('r2', [ s('g',1,1), s('h',1,1), s('i',1,1), s('j',1,1), s('k',1,3) ], 'tbody'),
+      f('f3', [ s('l',1,1), s('m',3,2), s('n',1,1), s('o',1,1), s('p',1,1), s('q',1,1) ], 'tbody'),
+      f('f4', [ s('r',2,1), s('s',1,1), s('t',2,1), s('u',1,1), s('v',1,1) ], 'tbody'),
+      f('r5', [ s('w',1,1), s('x',1,1), s('y',1,1) ], 'tbody')
     ];
 
     check({
@@ -69,7 +68,7 @@ test(
       '0,2': 'a'
     },
       [
-        f('r0', [ s('a', 1, 3) ])
+        f('r0', [ s('a', 1, 3) ], 'tbody')
       ]
     );
 
