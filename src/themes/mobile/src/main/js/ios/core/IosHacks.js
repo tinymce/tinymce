@@ -10,16 +10,6 @@ define(
   ],
 
   function (Focus, Css, WindowSelection, clearInterval, setInterval) {
-    var stopTouchFlicker = function (editorBody) {
-      // TBIO-3691, stop the gray flicker on touch.
-      // the content body will flicker grey when touched and there was no selection, this will make it
-      // flicker the same color as the background
-      var bgColor = Css.get(editorBody, 'background-color');
-      if (bgColor !== undefined && bgColor !== '') {
-        Css.set(editorBody, '-webkit-tap-highlight-color', bgColor);
-      }
-    };
-
     var setSelectionAtTouch = function (editorApi, touchEvent) {
       // shortTextFix, when text is short body height is short too, tapping at the bottom of the editor
       // should set a selection. We don't set body height to 100% because of side effects, so we resort
@@ -55,7 +45,6 @@ define(
     };
 
     return {
-      stopTouchFlicker: stopTouchFlicker,
       setSelectionAtTouch: setSelectionAtTouch,
       onOrientationReady: onOrientationReady
     };

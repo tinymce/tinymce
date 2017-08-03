@@ -11,7 +11,6 @@ define(
     'ephox.sugar.api.properties.Css',
     'global!document',
     'tinymce.themes.mobile.ios.core.IosEvents',
-    'tinymce.themes.mobile.ios.core.IosHacks',
     'tinymce.themes.mobile.ios.core.IosSetup',
     'tinymce.themes.mobile.ios.core.PlatformEditor',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
@@ -23,8 +22,8 @@ define(
   ],
 
   function (
-    Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosHacks, IosSetup, PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable,
-    MetaViewport
+    Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosSetup,
+    PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable, MetaViewport
   ) {
     var create = function (platform, mask) {
       var meta = MetaViewport.tag();
@@ -101,7 +100,6 @@ define(
             }))
           );
 
-          IosHacks.stopTouchFlicker(editorApi.body());
           iosApi.run(function (api) {
             api.syncHeight();
           });
