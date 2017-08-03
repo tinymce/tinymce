@@ -51,14 +51,20 @@ define(
           {
             title: 'Inline',
             items: [
+              { inline: 'span', title: 'Red text', icon: 'red', styles: { color: 'red' } },
+    { title: 'Bold text', inline: 'strong' },
+    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+    { title: 'Badge', inline: 'span', styles: { display: 'inline-block', border: '1px solid #2276d2', 'border-radius': '5px', padding: '2px 5px', margin: '0 2px', color: '#2276d2' } },
+    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' },
               { title: 'Bold', icon: 'bold', format: 'bold' },
               { title: 'Italic', icon: 'italic', format: 'italic' },
               { title: 'Underline', icon: 'underline', format: 'underline' },
               { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
               { title: 'Superscript', icon: 'superscript', format: 'superscript' },
               { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-              { title: 'Code', icon: 'code', format: 'code' },
-              { title: 'Red text', icon: 'red', styles: { color: 'red' } }
+              { title: 'Code', icon: 'code', format: 'code' }
+              
             ]
           },
           {
