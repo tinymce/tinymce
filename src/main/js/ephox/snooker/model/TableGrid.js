@@ -10,7 +10,7 @@ define(
   function (Arr, Fun, GridRow) {
     var getColumn = function (grid, index) {
       return Arr.map(grid, function (row) {
-        return GridRow.getCell(grid, index);
+        return GridRow.getCell(row, index);
       });
     };
 
