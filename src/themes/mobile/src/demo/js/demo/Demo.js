@@ -57,7 +57,8 @@ define(
               { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
               { title: 'Superscript', icon: 'superscript', format: 'superscript' },
               { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-              { title: 'Code', icon: 'code', format: 'code' }
+              { title: 'Code', icon: 'code', format: 'code' },
+              { title: 'Red text', icon: 'red', styles: { color: 'red' } }
             ]
           },
           {

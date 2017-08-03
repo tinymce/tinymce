@@ -6,8 +6,10 @@ define(
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
     'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Id',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',
@@ -38,9 +40,9 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Objects, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager, Api,
-    TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, StylesMenu,
-    CssUrls, FormatChangers, SkinLoaded
+    Swapping, AlloyTriggers, Attachment, Objects, Arr, Cell, Fun, Id, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager,
+    Api, TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton,
+    StylesMenu, CssUrls, FormatChangers, SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -207,12 +209,33 @@ define(
             ]
           };
 
-          var styleFormats = StylesMenu.sketch({
-            formats: Objects.readOptFrom(editor.settings, 'style_formats').getOr([ ]),
-            handle: function (value) {
-              editor.formatter.apply(value);
-            }
-          });
+          var styleFormats = (function () {
+            var formats = Objects.readOptFrom(editor.settings, 'style_formats').getOr([ ]);
+            // TODO: Do not assume two level structure
+            var fs = Arr.map(formats, function (f) {
+              var items = Arr.map(f.items !== undefined ? f.items : [ ], function (i) {
+                if (Objects.hasKey(i, 'format')) return i;
+                else {
+                  var newName = Id.generate(i.title);
+                  editor.formatter.register(newName, i);
+                  return { title: i.title, icon: i.icon, format: newName };
+                }
+              });
+              return {
+                title: f.title,
+                items: items
+              };
+            });
+
+            console.log('fs', fs);
+
+            return StylesMenu.sketch({
+              formats: fs,
+              handle: function (value) {
+                editor.formatter.apply(value);
+              }
+            });
+          })();
 
           var actionGroup = {
             label: 'the action group',
