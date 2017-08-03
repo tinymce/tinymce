@@ -12,7 +12,7 @@ test(
       RawAssertions.assertEq('StyleConversions.getAlpha (' + label + ')', expected, output);
     };
 
-      /*
+
     check(
       'Empty input',
       {
@@ -56,7 +56,7 @@ test(
     );
 
     check(
-      'Input with three flat items, and an empty menu in between',
+      'Input with three items, and an empty menu in the middle',
       {
         menus: {
           'beta': [ ]
@@ -81,7 +81,7 @@ test(
     );
 
     check(
-      'Input with three flat items, and a menu with a single item in between',
+      'Input with three items, and a menu with a single item in the middle',
       {
         menus: {
           'beta': [
@@ -110,7 +110,7 @@ test(
     );
 
     check(
-      'Input with three flat items, and a menu with three items in between',
+      'Input with three items, and a menu with three items in the middle',
       {
         menus: {
           'beta': [
@@ -141,11 +141,10 @@ test(
         { title: 'gamma' }
       ]
     );
-    */
 
     check(
-      'Input with three flat items, and a menu with three items in between' +
-      ', with last subitem having a menu with no items',
+      'Input with three items, and a menu (beta) with three items (beta1,2,3) in the middle' +
+      ', with last subitem having a menu with no items (beta-3)',
       {
         menus: {
           'beta': [
@@ -175,6 +174,61 @@ test(
             {
               title: 'beta-3',
               items: [ ]
+            }
+          ]
+        },
+        { title: 'gamma' }
+      ]
+    );
+
+    check(
+      'Input with three items, and a menu with three items (beta-1,2,3) in the middle' +
+      ', with last subitem having a menu with two items (beta-3-1,2) items, and that first item' +
+      ' having one item (beta-3-1-1)',
+      {
+        menus: {
+          'beta': [
+            { title: 'beta-1' },
+            { title: 'beta-2' },
+            { title: 'beta-3' }
+          ],
+          'beta-3': [
+            { title: 'beta-3-1' },
+            { title: 'beta-3-2' }
+          ],
+          'beta-3-1': [
+            { title: 'beta-3-1-1' }
+          ]
+        },
+        expansions: {
+          'beta': 'beta',
+          'beta-3': 'beta-3',
+          'beta-3-1': 'beta-3-1'
+        },
+        items: [
+          { title: 'alpha' },
+          { title: 'beta' },
+          { title: 'gamma' }
+        ]
+      },
+      [
+        { title: 'alpha' },
+        {
+          title: 'beta',
+          items: [
+            { title: 'beta-1' },
+            { title: 'beta-2' },
+            {
+              title: 'beta-3',
+              items: [
+                {
+                  title: 'beta-3-1',
+                  items: [
+                    { title: 'beta-3-1-1' }
+                  ]
+                },
+                { title: 'beta-3-2' }
+              ]
             }
           ]
         },
