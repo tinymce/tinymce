@@ -29,7 +29,15 @@ define(
           }
         ),
         behaviours: Behaviour.derive([
-          info.toggling().fold(Toggling.revoke, Toggling.config),
+          info.toggling().fold(Toggling.revoke, function (tConfig) {
+            return Toggling.config(
+              Merger.deepMerge({
+                aria: {
+                  mode: 'checked'
+                }
+              }, tConfig)
+            );
+          }),
           Focusing.config({
             ignore: info.ignoreFocus(),
             onFocus: function (component) {
@@ -68,9 +76,7 @@ define(
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
 
-      FieldSchema.optionOf('toggling', [
-        FieldSchema.strict('toggling')
-      ]),
+      FieldSchema.option('toggling'),
 
       FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.defaulted('domModification', { }),
