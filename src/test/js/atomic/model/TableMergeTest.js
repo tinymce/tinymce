@@ -16,20 +16,20 @@ test(
     // Advanced Spans
     var gridAdvancedOne = function () {
       return [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'D', 'B', 'B', 'E' ],
+        [ 'F', 'F', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
       ];
     };
 
     var gridSpanB = function () {
       return [
-        {cells: Fun.constant([ 'alpha', 'alpha'  ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'beta',  'charlie']), section: Fun.constant('tbody')}
+        [ 'alpha', 'alpha'  ],
+        [ 'beta',  'charlie']
       ];
     };
 
@@ -37,26 +37,26 @@ test(
     // merge gridBee into gridAphid
     var gridAphid = function () {
       return [
-        {cells: Fun.constant([ 'a', 'b', 'c' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'd', 'e', 'f' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'g', 'h', 'i' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'j', 'k', 'l' ]), section: Fun.constant('tbody')}
+        [ 'a', 'b', 'c' ],
+        [ 'd', 'e', 'f' ],
+        [ 'g', 'h', 'i' ],
+        [ 'j', 'k', 'l' ]
       ];
     };
 
     var gridBee = function () {
       return [
-        {cells: Fun.constant([ 'bee1' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'bee2' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'bee3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'bee3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'bee3' ]), section: Fun.constant('tbody')}
+        ['bee1'],
+        ['bee2'],
+        ['bee3'],
+        ['bee3'],
+        ['bee3']
       ];
     };
 
     var gridcicada = function () {
       return [
-        {cells: Fun.constant([ 'cic1', 'cic2', 'cic3', 'cic3', 'cic3', 'cic4', 'cic4', 'cic4' ]), section: Fun.constant('tbody')}
+        ['cic1', 'cic2', 'cic3', 'cic3', 'cic3', 'cic4', 'cic4', 'cic4']
       ];
     };
 
@@ -68,24 +68,24 @@ test(
         colDelta: 2
       },
       [
-        {cells: Fun.constant([ 'a', 'b', 'c' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'd', 'e', 'f' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'g', 'h', 'i' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'j', 'k', 'l' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_0', '?_1', '?_2' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_3', '?_4', '?_5' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_6', '?_7', '?_8' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_9', '?_10', '?_11' ]), section: Fun.constant('tbody')}
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i'],
+        ['j', 'k', 'l'],
+        ['?_0', '?_1', '?_2'],
+        ['?_3', '?_4', '?_5'],
+        ['?_6', '?_7', '?_8'],
+        ['?_9', '?_10', '?_11']
       ],
       [
-        {cells: Fun.constant([ 'a',          'b',   'c' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'd',          'e',   'f' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'g',          'h',   'i' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee1)_0', 'k',   'l' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee2)_1', '?_1', '?_2' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee3)_2', '?_4', '?_5' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee3)_3', '?_7', '?_8' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee3)_4', '?_10', '?_11' ]), section: Fun.constant('tbody')}
+        ['a',          'b',   'c'],
+        ['d',          'e',   'f'],
+        ['g',          'h',   'i'],
+        ['h(bee1)_0', 'k',   'l'],
+        ['h(bee2)_1', '?_1', '?_2'],
+        ['h(bee3)_2', '?_4', '?_5'],
+        ['h(bee3)_3', '?_7', '?_8'],
+        ['h(bee3)_4', '?_10', '?_11']
       ]
     );
 
@@ -97,16 +97,16 @@ test(
         colDelta: -5
       },
       [
-        {cells: Fun.constant([ 'a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'd', 'e', 'f', '?_5',  '?_6',  '?_7',  '?_8',  '?_9' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19' ]), section: Fun.constant('tbody')}
+        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
+        ['d', 'e', 'f', '?_5',  '?_6',  '?_7',  '?_8',  '?_9'],
+        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
+        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
       ],
       [
-        {cells: Fun.constant([ 'a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(cic1)_0', 'h(cic2)_1', 'h(cic3)_2', 'h(cic3)_3', 'h(cic3)_4', 'h(cic4)_5',  'h(cic4)_6', 'h(cic4)_7' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19' ]), section: Fun.constant('tbody')}
+        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
+        ['h(cic1)_0', 'h(cic2)_1', 'h(cic3)_2', 'h(cic3)_3', 'h(cic3)_4', 'h(cic4)_5',  'h(cic4)_6', 'h(cic4)_7'],
+        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
+        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
       ]
     );
 
@@ -118,22 +118,22 @@ test(
         colDelta: 2
       },
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'D', 'B', 'B', 'E' ],
+        [ 'F', 'F', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
       ],
       [
-        {cells: Fun.constant([ 'A', 'B', '?_0', 'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(alpha)_0', 'h(alpha)_1', '?_2', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(beta)_2', 'h(charlie)_3', '?_4', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_5', '?_6', '?_7', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_8', '?_9', '?_10', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', '?_0', 'C' ],
+        [ 'h(alpha)_0', 'h(alpha)_1', '?_2', 'E' ],
+        [ 'h(beta)_2', 'h(charlie)_3', '?_4', 'E' ],
+        [ '?_5', '?_6', '?_7', 'G' ],
+        [ '?_8', '?_9', '?_10', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
       ]
     );
 
@@ -145,24 +145,24 @@ test(
         colDelta: -1
       },
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C', '?_0' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E', '?_1' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E', '?_2' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G', '?_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H', '?_4' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K', '?_5' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M', '?_6' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_7', '?_8', '?_9', '?_10', '?_11' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C', '?_0' ],
+        [ 'D', 'B', 'B', 'E', '?_1' ],
+        [ 'F', 'F', 'F', 'E', '?_2' ],
+        [ 'F', 'F', 'F', 'G', '?_3' ],
+        [ 'F', 'F', 'F', 'H', '?_4' ],
+        [ 'I', 'J', 'K', 'K', '?_5' ],
+        [ 'I', 'L', 'L', 'M', '?_6' ],
+        [ '?_7', '?_8', '?_9', '?_10', '?_11' ]
       ],
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C', '?_0' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E', '?_1' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E', '?_2' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G', '?_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H', '?_4' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K', '?_5' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'h(alpha)_0', 'h(alpha)_1' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_7', '?_8', '?_9', 'h(beta)_2', 'h(charlie)_3' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C', '?_0' ],
+        [ 'D', 'B', 'B', 'E', '?_1' ],
+        [ 'F', 'F', 'F', 'E', '?_2' ],
+        [ 'F', 'F', 'F', 'G', '?_3' ],
+        [ 'F', 'F', 'F', 'H', '?_4' ],
+        [ 'I', 'J', 'K', 'K', '?_5' ],
+        [ 'I', 'L', 'L', 'h(alpha)_0', 'h(alpha)_1' ],
+        [ '?_7', '?_8', '?_9', 'h(beta)_2', 'h(charlie)_3' ]
       ]
     );
 
@@ -174,22 +174,22 @@ test(
         colDelta: 0
       },
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'D', 'B', 'B', 'E' ],
+        [ 'F', 'F', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
       ],
       [
-        {cells: Fun.constant([ 'A', 'B', '?_0', 'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', '?_1', 'h(alpha)_0', 'h(alpha)_1' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', '?_4', 'h(beta)_2', 'h(charlie)_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_6', '?_7', '?_8', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_9', '?_10', '?_11', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', '?_0', 'C' ],
+        [ 'D', '?_1', 'h(alpha)_0', 'h(alpha)_1' ],
+        [ 'F', '?_4', 'h(beta)_2', 'h(charlie)_3' ],
+        [ '?_6', '?_7', '?_8', 'G' ],
+        [ '?_9', '?_10', '?_11', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ]
       ]
     );
 
@@ -201,26 +201,26 @@ test(
         colDelta: 3
       },
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_0', '?_1', '?_2', '?_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_4', '?_5', '?_6', '?_7' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C' ],
+        [ 'D', 'B', 'B', 'E' ],
+        [ 'F', 'F', 'F', 'E' ],
+        [ 'F', 'F', 'F', 'G' ],
+        [ 'F', 'F', 'F', 'H' ],
+        [ 'I', 'J', 'K', 'K' ],
+        [ 'I', 'L', 'L', 'M' ],
+        [ '?_0', '?_1', '?_2', '?_3' ],
+        [ '?_4', '?_5', '?_6', '?_7' ]
       ],
       [
-        {cells: Fun.constant([ 'A',         'B',    'B',   'C' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D',         'B',    'B',   'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F',         '?_8',  '?_9', 'E' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ '?_10',      '?_11', '?_12', 'G' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee1)_0', '?_14', '?_15', 'H' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee2)_1', 'J',    'K',   'K' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee3)_2', 'L',    'L',   'M' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee3)_3', '?_1',  '?_2', '?_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(bee3)_4', '?_5',  '?_6', '?_7' ]), section: Fun.constant('tbody')}
+        [ 'A',         'B',    'B',   'C' ],
+        [ 'D',         'B',    'B',   'E' ],
+        [ 'F',         '?_8',  '?_9', 'E' ],
+        [ '?_10',      '?_11', '?_12', 'G' ],
+        [ 'h(bee1)_0', '?_14', '?_15', 'H' ],
+        [ 'h(bee2)_1', 'J',    'K',   'K' ],
+        [ 'h(bee3)_2', 'L',    'L',   'M' ],
+        [ 'h(bee3)_3', '?_1',  '?_2', '?_3' ],
+        [ 'h(bee3)_4', '?_5',  '?_6', '?_7' ]
       ]
     );
 
@@ -232,22 +232,22 @@ test(
         colDelta: -4
       },
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C', '?_0',  '?_1',  '?_2',  '?_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E', '?_4',  '?_5',  '?_6',  '?_7' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E', '?_8',  '?_9',  '?_10', '?_11' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G', '?_12', '?_13', '?_14', '?_15' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H', '?_16', '?_17', '?_18',  '?_19' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K', '?_20', '?_21', '?_22',  '?_23' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'L', 'L', 'M', '?_24', '?_25', '?_26',  '?_27' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C', '?_0',  '?_1',  '?_2',  '?_3' ],
+        [ 'D', 'B', 'B', 'E', '?_4',  '?_5',  '?_6',  '?_7' ],
+        [ 'F', 'F', 'F', 'E', '?_8',  '?_9',  '?_10', '?_11' ],
+        [ 'F', 'F', 'F', 'G', '?_12', '?_13', '?_14', '?_15' ],
+        [ 'F', 'F', 'F', 'H', '?_16', '?_17', '?_18',  '?_19' ],
+        [ 'I', 'J', 'K', 'K', '?_20', '?_21', '?_22',  '?_23' ],
+        [ 'I', 'L', 'L', 'M', '?_24', '?_25', '?_26',  '?_27' ]
       ],
       [
-        {cells: Fun.constant([ 'A', 'B', 'B', 'C', '?_0',  '?_1',  '?_2',  '?_3' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'D', 'B', 'B', 'E', '?_4',  '?_5',  '?_6',  '?_7' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'E', '?_8',  '?_9',  '?_10', '?_11' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'G', '?_12', '?_13', '?_14', '?_15' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'F', 'F', 'F', 'H', '?_16', '?_17', '?_18',  '?_19' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'I', 'J', 'K', 'K', '?_20', '?_21', '?_22',  '?_23' ]), section: Fun.constant('tbody')},
-        {cells: Fun.constant([ 'h(cic1)_0','h(cic2)_1','h(cic3)_2','h(cic3)_3','h(cic3)_4','h(cic4)_5','h(cic4)_6','h(cic4)_7' ]), section: Fun.constant('tbody')}
+        [ 'A', 'B', 'B', 'C', '?_0',  '?_1',  '?_2',  '?_3' ],
+        [ 'D', 'B', 'B', 'E', '?_4',  '?_5',  '?_6',  '?_7' ],
+        [ 'F', 'F', 'F', 'E', '?_8',  '?_9',  '?_10', '?_11' ],
+        [ 'F', 'F', 'F', 'G', '?_12', '?_13', '?_14', '?_15' ],
+        [ 'F', 'F', 'F', 'H', '?_16', '?_17', '?_18',  '?_19' ],
+        [ 'I', 'J', 'K', 'K', '?_20', '?_21', '?_22',  '?_23' ],
+        [ 'h(cic1)_0','h(cic2)_1','h(cic3)_2','h(cic3)_3','h(cic3)_4','h(cic4)_5','h(cic4)_6','h(cic4)_7' ]
       ]
     );
 

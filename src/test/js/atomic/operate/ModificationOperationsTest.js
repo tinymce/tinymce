@@ -7,18 +7,37 @@ test(
   },
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Generators',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Generators, ModificationOperations, TestGenerator) {
+  function (Arr, Fun, Generators, Structs, ModificationOperations, TestGenerator) {
     // Test basic insert column
+    var mapToStructGrid = function (grid) {
+      return Arr.map(grid, function (row) {
+        console.log(row);
+        return Structs.rowcells(row, 'tbody');
+      });
+    };
+
+    var assertGrids = function (expected, actual) {
+      assert.eq(expected.length, actual.length);
+      Arr.each(expected, function (row, i) {
+        assert.eq(row.cells(), actual[i].cells());
+        assert.eq(row.section(), actual[i].section());
+      });
+    };
+
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        assert.eq(expected, actual);
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        var actual = ModificationOperations.insertColumnAt(structGrid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+        assertGrids(structExpected, actual);
       };
 
       check([], [], 0, 0);
@@ -75,8 +94,10 @@ test(
     // Test basic insert row
     (function () {
       var check = function (expected, grid, example, index) {
-        var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        assert.eq(expected, actual);
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        var actual = ModificationOperations.insertRowAt(structGrid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
+        assertGrids(structExpected, actual);
       };
 
       check([[ '?_0' ], [ 'a' ]], [[ 'a' ]], 0, 0);
