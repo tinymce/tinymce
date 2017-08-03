@@ -3,13 +3,12 @@ define(
 
   [
     'ephox.sugar.api.dom.Focus',
-    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.selection.WindowSelection',
     'global!clearInterval',
     'global!setInterval'
   ],
 
-  function (Focus, Css, WindowSelection, clearInterval, setInterval) {
+  function (Focus, WindowSelection, clearInterval, setInterval) {
     var setSelectionAtTouch = function (editorApi, touchEvent) {
       // shortTextFix, when text is short body height is short too, tapping at the bottom of the editor
       // should set a selection. We don't set body height to 100% because of side effects, so we resort
