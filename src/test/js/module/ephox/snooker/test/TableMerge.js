@@ -3,12 +3,11 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
     'ephox.snooker.model.TableMerge',
     'ephox.snooker.test.Fitment'
   ],
 
-  function (Fun, Result, TableMerge, Fitment) {
+  function (Fun, TableMerge, Fitment) {
     var mergeTest = function (expected, startAddress, gridA, gridB, generator, comparator) {
       // The last step, merge cells from gridB into gridA
       var nuGrid = TableMerge.merge(startAddress, gridA(), gridB(), generator(), comparator);
