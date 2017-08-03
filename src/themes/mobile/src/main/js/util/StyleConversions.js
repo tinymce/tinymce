@@ -23,7 +23,7 @@ define(
             acc.expansions,
             Objects.wrap(menuName, menuName)
           );
-          var newItems = acc.items;
+          var newItems = [ Objects.exclude(item, [ 'items' ]) ].concat(acc.items);
           return {
             menus: newMenus,
             expansions: newExpansions,

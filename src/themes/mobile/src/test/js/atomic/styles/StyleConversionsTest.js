@@ -54,5 +54,30 @@ test(
       ]
     );
 
+    check(
+      'Input with three flat items, and an empty menu in between',
+      {
+        menus: {
+          'beta': [ ]
+        },
+        expansions: {
+          'beta': 'beta'
+        },
+        items: [
+          { title: 'alpha' },
+          { title: 'beta' },
+          { title: 'gamma' }
+        ]
+      },
+      [
+        { title: 'alpha' },
+        {
+          title: 'beta',
+          items: [ ]
+        },
+        { title: 'gamma' }
+      ]
+    );
+
   }
 );
