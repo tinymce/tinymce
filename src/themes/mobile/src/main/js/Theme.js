@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Swapping',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.debugging.Debugging',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
@@ -41,9 +42,9 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Objects, Arr, Cell, Fun, Id, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager,
-    Api, TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton,
-    StylesMenu, CssUrls, FormatChangers, SkinLoaded, StyleFormats
+    Swapping, AlloyTriggers, Attachment, Debugging, Objects, Arr, Cell, Fun, Id, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils,
+    ThemeManager, Api, TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm,
+    LinkButton, StylesMenu, CssUrls, FormatChangers, SkinLoaded, StyleFormats
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -176,6 +177,8 @@ define(
             }
           });
 
+          Debugging.registerInspector('remove this', realm.system());
+
           var backToMaskGroup = {
             label: 'The first group',
             scrollable: false,
@@ -232,7 +235,9 @@ define(
                 // Hack to make the keyboard disappear first ... there should be a way to detect it. (for Android only maybe)
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
-                    var menu = StyleFormats.ui(editor, styleFormats);
+                    var menu = StyleFormats.ui(editor, styleFormats, function () {
+                      realm.dropup().disappear();
+                    });
                     realm.dropup().appear(menu);
                   });
                 }, 1000);

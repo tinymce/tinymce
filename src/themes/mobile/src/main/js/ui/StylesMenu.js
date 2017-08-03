@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
@@ -11,10 +12,11 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.search.SelectorFind',
-    'ephox.sugar.api.view.Width'
+    'ephox.sugar.api.view.Width',
+    'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (Behaviour, Representing, Transitioning, Menu, TieredMenu, Objects, Arr, Obj, SelectorFind, Width) {
+  function (Behaviour, Representing, Toggling, Transitioning, Menu, TieredMenu, Objects, Arr, Obj, SelectorFind, Width, Styles) {
     // var defaultData = TieredMenu.tieredData(
     //   'styles',
     //   {
@@ -60,17 +62,13 @@ define(
 
     var convert = function (formats) {
       var menus = { };
-      var handlers = { };
 
       Arr.each(formats, function (fm) {
 
         var items = [ ];
         var retreat = makeBack('< Back to Styles');
         Arr.each(fm.items, function (item) {
-          handlers[item.format] = function () {
-            debugger;
-          };
-          items.push(makeItem(item.format, item.title));
+          items.push(makeItem(item.format, item.title, item.isSelected !== undefined ? item.isSelected() : false));
         });
 
         console.log('items', items);
@@ -87,14 +85,13 @@ define(
 
       var menuKeys = Obj.keys(menus);
       menus.styles = makeMenu('styles', Arr.map(menuKeys, function (k) {
-        return makeItem(k, k);
+        return makeItem(k, k, false);
       }));
 
       var tmenu = TieredMenu.tieredData('styles', menus, expansions);
 
       return {
-        tmenu: tmenu,
-        handlers: handlers
+        tmenu: tmenu
       };
     };
 
@@ -110,7 +107,7 @@ define(
       };
     };
 
-    var makeItem = function (value, text) {
+    var makeItem = function (value, text, selected) {
       return {
         data: {
           value: value,
@@ -120,6 +117,11 @@ define(
         dom: {
           tag: 'div',
           innerHtml: text
+        },
+        toggling: {
+          toggleOnExecute: false,
+          toggleClass: Styles.resolve('format-matches'),
+          selected: selected
         },
         components: [ ]
       };

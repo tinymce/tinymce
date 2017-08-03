@@ -53,10 +53,23 @@
         flex-direction: column;
       }
 
-      .item {
+
+
+      .demo-tiered-menu .item {
         width: 100%;
         cursor: pointer;
         padding: 10px 5px;
+        text-align: center;
+        position: relative;
+
+      }
+
+      .item.tinymce-mobile-format-matches:before {
+        content: "\2714";
+        position: absolute;
+        padding-left: 1em;
+        padding-right: 1em;
+        left: 0px;
       }
 
       .separator {
