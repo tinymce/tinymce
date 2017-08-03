@@ -45,13 +45,13 @@ define(
 
     var rowFill = function (grid, amount, generator) {
       return grid.concat(Util.repeat(amount, function (_row) {
-        return fill(grid[0], generator);
+        return GridRow.setCells(grid[0], fill(grid[0].cells(), generator));
       }));
     };
 
     var colFill = function (grid, amount, generator) {
       return Arr.map(grid, function (row) {
-        return row.concat(fill(Util.range(0, amount), generator));
+        return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
       });
     };
 
