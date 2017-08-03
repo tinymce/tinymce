@@ -7,15 +7,20 @@ test(
   ],
 
   function (RawAssertions, StyleConversions) {
-    var input = [
+    var check = function (label, expected, input) {
+      var output = StyleConversions.getAlpha(input);
+      RawAssertions.assertEq('StyleConversions.getAlpha (' + label + ')', expected, output);
+    };
 
-    ];
+    check(
+      'Empty input',
+      {
+        menus: { },
+        expansions: { },
+        items: [ ]
+      },
+      [ ]
+    );
 
-    var output = StyleConversions.getAlpha(input);
-    RawAssertions.assertEq('Checking input', {
-      menus: { },
-      expansions: { },
-      items: [ ]
-    }, output);
   }
 );
