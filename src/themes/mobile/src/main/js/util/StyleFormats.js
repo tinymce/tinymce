@@ -18,18 +18,28 @@ define(
         };
       };
 
+      var getPreview = function (format) {
+        return function () {
+          var styles = editor.formatter.getCssText(format);
+          return styles;
+        };
+      };
+
       var formats = Objects.readOptFrom(settings, 'style_formats').getOr([ ]);
       // TODO: Do not assume two level structure
       return Arr.map(formats, function (f) {
         var items = Arr.map(f.items !== undefined ? f.items : [ ], function (i) {
           if (Objects.hasKey(i, 'format')) return Merger.deepMerge(i, {
-            isSelected: isSelectedFor(i.format)
+            isSelected: isSelectedFor(i.format),
+            getPreview: getPreview(i.format)
           });
           else {
             var newName = Id.generate(i.title);
             var newItem = Merger.deepMerge(i, {
               format: newName,
-              isSelected: isSelectedFor(newName)
+              isSelected: isSelectedFor(newName),
+              getPreview: getPreview(newName)
+              // isAvailable ?
             });
             editor.formatter.register(newName, newItem);
             return newItem;

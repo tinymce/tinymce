@@ -68,7 +68,14 @@ define(
         var items = [ ];
         var retreat = makeBack('< Back to Styles');
         Arr.each(fm.items, function (item) {
-          items.push(makeItem(item.format, item.title, item.isSelected !== undefined ? item.isSelected() : false));
+          items.push(
+            makeItem(
+              item.format,
+              item.title,
+              item.isSelected !== undefined ? item.isSelected() : false,
+              item.getPreview !== undefined ? item.getPreview() : ''
+            )
+          );
         });
 
         console.log('items', items);
@@ -85,7 +92,7 @@ define(
 
       var menuKeys = Obj.keys(menus);
       menus.styles = makeMenu('styles', Arr.map(menuKeys, function (k) {
-        return makeItem(k, k, false);
+        return makeItem(k, k, false, '');
       }));
 
       var tmenu = TieredMenu.tieredData('styles', menus, expansions);
@@ -107,7 +114,7 @@ define(
       };
     };
 
-    var makeItem = function (value, text, selected) {
+    var makeItem = function (value, text, selected, preview) {
       return {
         data: {
           value: value,
@@ -115,15 +122,24 @@ define(
         },
         type: 'item',
         dom: {
-          tag: 'div',
-          innerHtml: text
+          tag: 'div'
         },
         toggling: {
           toggleOnExecute: false,
           toggleClass: Styles.resolve('format-matches'),
           selected: selected
         },
-        components: [ ]
+        components: [
+          {
+            dom: {
+              tag: 'div',
+              attributes: {
+                style: preview
+              },
+              innerHtml: text
+            }
+          }
+        ]
       };
     };
 
