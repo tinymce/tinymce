@@ -45,8 +45,7 @@ define(
 
     var rowFill = function (grid, amount, generator) {
       return grid.concat(Util.repeat(amount, function (_row) {
-        // TODO: ensure that the filled rows match the correct section of the area they're going into
-        return GridRow.setCells(grid[0], fill(grid[0].cells(), generator));
+        return GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator));
       }));
     };
 
