@@ -210,26 +210,12 @@ module.exports = function (grunt) {
     },
     watch: {
       styles: {
-        files: ['src/main/css/**/*.less'], // which files to watch
-        tasks: ['less', 'copy:standalone', 'uglify:standalone' ],
+        files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
+        tasks: ['less', 'bolt-build', 'copy:standalone', 'uglify:standalone' ],
         options: {
           nospawn: true,
           atBegin: true
         }
-      },
-      build: {
-        files: ['src/**/**.js'],
-        tasks: [ 'bolt-build' ],
-	options: {
-	  atBegin: true
-	}
-      },
-      deploy: {
-        files: ['src/**/**.js'],
-        tasks: [ "copy:standalone", "uglify:standalone" ],
-	options: {
-	  atBegin: true
-	}
       }
       //,
       // tests: {
