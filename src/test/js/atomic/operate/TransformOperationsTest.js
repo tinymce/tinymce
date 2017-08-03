@@ -7,19 +7,37 @@ test(
   },
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Generators',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Generators, TransformOperations, TestGenerator) {
+  function (Arr, Fun, Generators, Structs, TransformOperations, TestGenerator) {
 
+    var mapToStructGrid = function (grid) {
+      return Arr.map(grid, function (row) {
+        return Structs.rowcells(row, 'tbody');
+      });
+    };
+
+    var assertGrids = function (expected, actual) {
+      assert.eq(expected.length, actual.length);
+      Arr.each(expected, function (row, i) {
+        assert.eq(row.cells(), actual[i].cells());
+        assert.eq(row.section(), actual[i].section());
+      });
+    };
+    
     // Test basic changing to header (column)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = TransformOperations.replaceColumn(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity).replaceOrInit);
-        assert.eq(expected, actual);
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        var actual = TransformOperations.replaceColumn(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity).replaceOrInit);
+        assertGrids(structExpected, actual);
       };
 
       check([[]], [[]], 0);
@@ -75,8 +93,10 @@ test(
     // Test basic changing to header (row)
     (function () {
       var check = function (expected, grid, index) {
-        var actual = TransformOperations.replaceRow(grid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity).replaceOrInit);
-        assert.eq(expected, actual);
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        var actual = TransformOperations.replaceRow(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'tag')(TestGenerator(), Fun.identity).replaceOrInit);
+        assertGrids(structExpected, actual);
       };
 
       check([[]], [[]], 0);

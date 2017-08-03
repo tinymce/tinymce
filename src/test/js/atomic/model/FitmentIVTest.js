@@ -59,7 +59,7 @@ test(
     var inVariantRunner = function (label, mvTest, times) {
       for (var i = 1, testSpec; i <= times; i++) {
         testSpec = mvTest();
-        console.log('testing:', label, i + ' / ' + times, ' params: ' + JSON.stringify(testSpec.params));
+        // console.log('testing:', label, i + ' / ' + times, ' params: ' + JSON.stringify(testSpec.params));
         testSpec.test();
       }
     };

@@ -8,7 +8,7 @@ test(
   ],
 
   function (Fun, Structs, TableGrid) {
-    var r = Structs.rowcell;
+    var r = Structs.rowcells;
 
     var check = function (expected, row, column, grid) {
       var actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);
