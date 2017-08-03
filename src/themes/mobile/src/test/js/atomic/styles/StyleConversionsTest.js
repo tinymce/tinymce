@@ -23,7 +23,7 @@ test(
     );
 
     check(
-      'Input with one item',
+      'Input with one flat item',
       {
         menus: { },
         expansions: { },
@@ -33,6 +33,24 @@ test(
       },
       [
         { title: 'alpha' }
+      ]
+    );
+
+    check(
+      'Input with three flat items',
+      {
+        menus: { },
+        expansions: { },
+        items: [
+          { title: 'alpha' },
+          { title: 'beta' },
+          { title: 'gamma' }
+        ]
+      },
+      [
+        { title: 'alpha' },
+        { title: 'beta' },
+        { title: 'gamma' }
       ]
     );
 
