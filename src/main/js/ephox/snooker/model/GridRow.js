@@ -9,8 +9,8 @@ define(
   function (Arr, Structs) {
     var setCell = function (gridRow, index, cell) {
       var cells = gridRow.cells();
-      var r = cells.slice(0, index).concat([ cell ]).concat(cells.slice(index + 1));
-      return Structs.rowcells(r, gridRow.section());
+      var newCells = cells.slice(0, index).concat([ cell ]).concat(cells.slice(index));
+      return setCells(gridRow, newCells);
     };
 
     var mutateCell = function (gridRow, index, cell) {
@@ -20,7 +20,7 @@ define(
 
     var setCells = function (gridRow, cells) {
       return Structs.rowcells(cells, gridRow.section());
-    }
+    };
 
     var mapCells = function (gridRow, f) {
       var cells = gridRow.cells();
@@ -34,7 +34,10 @@ define(
 
     return {
       setCell: setCell,
-      mutateCell: mutateCell
+      setCells: setCells,
+      mutateCell: mutateCell,
+      getCell: getCell,
+      mapCells: mapCells
     };
   }
 );

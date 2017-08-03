@@ -4,10 +4,10 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.snooker.api.Structs'
+    'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Fun, Structs) {
+  function (Arr, Fun, GridRow) {
     // substitution :: (item, comparator) -> item
     var replaceIn = function (grid, targets, comparator, substitution) {
       var isTarget = function (elem) {
@@ -15,19 +15,18 @@ define(
       };
 
       return Arr.map(grid, function (row) {
-        var cells = Arr.map(row.cells(), function (cell) {
+        return GridRow.mapCells(row, function (cell) {
           return isTarget(cell) ? substitution(cell, comparator) : cell;
         });
-        return Structs.rowcells(cells, row.section());
       });
     };
 
     var notStartRow = function (grid, rowIndex, colIndex, comparator) {
-      return grid[rowIndex].cells()[colIndex] !== undefined && (rowIndex > 0 && comparator(grid[rowIndex - 1].cells()[colIndex], grid[rowIndex].cells()[colIndex]));
+      return GridRow.getCell(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCell(grid[rowIndex - 1], colIndex), GridRow.getCell(grid[rowIndex], colIndex)));
     };
 
     var notStartColumn = function (row, index, comparator) {
-      return index > 0 && comparator(row.cells()[index-1], row.cells()[index]);
+      return index > 0 && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
     };
 
     // substitution :: (item, comparator) -> item
@@ -36,7 +35,7 @@ define(
       var targets = Arr.bind(grid, function (row, i) {
         // check if already added.
         var alreadyAdded = notStartRow(grid, i, index, comparator) || notStartColumn(row, index, comparator);
-        return alreadyAdded ? [] : [ row.cells()[index] ];
+        return alreadyAdded ? [] : [ GridRow.getCell(row, index) ];
       });
 
       return replaceIn(grid, targets, comparator, substitution);

@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.snooker.api.Structs'
+    'ephox.snooker.api.Structs',
+    'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Structs) {
+  function (Arr, Structs, GridRow) {
     // substitution :: (item, comparator) -> item
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
@@ -14,12 +15,10 @@ define(
       var before = grid.slice(0, index);
       var after = grid.slice(index);
 
-      var betweenCells = Arr.map(grid[example].cells(), function (ex, c) {
-        var withinSpan = index > 0 && index < grid.length && comparator(grid[index - 1].cells()[c], grid[index].cells()[c]);
-        return withinSpan ? grid[index].cells()[c] : substitution(ex, comparator);
+      var between = GridRow.mapCells(grid[example], function (ex, c) {
+        var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c), GridRow.getCell(grid[index], c));
+        return withinSpan ? GridRow.getCell(grid[index], c) : substitution(ex, comparator);
       });
-
-      var between = Structs.rowcells(betweenCells, grid[example].section());
 
       return before.concat([ between ]).concat(after);
     };
@@ -29,10 +28,9 @@ define(
     // index is the insert position (at - or after - example) (the column index)
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
-        var withinSpan = index > 0 && index < row.length && comparator(row.cells()[index - 1], row.cells()[index]);
-        var sub = withinSpan ? row.cells()[index] : substitution(row.cells()[example], comparator);
-        var cells = row.cells().slice(0, index).concat([ sub ]).concat(row.cells().slice(index));
-        return Structs.rowcells(cells, row.section());
+        var withinSpan = index > 0 && index < row.length && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
+        var sub = withinSpan ? GridRow.getCell(row, index) : substitution(GridRow.getCell(row, example), comparator);
+        return GridRow.setCell(row, index, sub);
       });
     };
 
@@ -45,9 +43,8 @@ define(
       var index = exampleCol + 1; // insert after
       return Arr.map(grid, function (row, i) {
         var isTargetCell = (i === exampleRow);
-        var sub = isTargetCell ? substitution(row.cells()[exampleCol], comparator) : row.cells()[exampleCol];
-        var cells = row.cells().slice(0, index).concat([ sub ]).concat(row.cells().slice(index));
-        return Structs.rowcells(cells, row.section());
+        var sub = isTargetCell ? substitution(GridRow.getCell(row, exampleCol), comparator) : GridRow.getCell(row, exampleCol);
+        return GridRow.setCell(row, index, sub);
       });
     };
 
@@ -61,12 +58,10 @@ define(
       var before = grid.slice(0, index);
       var after = grid.slice(index);
 
-      var betweenCells = Arr.map(grid[exampleRow].cells() || [], function (ex, i) {
+      var between = GridRow.mapCells(grid[exampleRow], function (ex, i) {
         var isTargetCell = (i === exampleCol);
         return isTargetCell ? substitution(ex, comparator) : ex;
       });
-
-      var between = Structs.rowcells(betweenCells, grid[exampleRow].section());
 
       return before.concat([ between ]).concat(after);
     };
