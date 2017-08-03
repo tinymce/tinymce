@@ -10,13 +10,14 @@ define(
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
     'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (Behaviour, Representing, Toggling, Transitioning, Menu, TieredMenu, Objects, Arr, Obj, SelectorFind, Width, Styles) {
+  function (Behaviour, Representing, Toggling, Transitioning, Menu, TieredMenu, Objects, Arr, Merger, Obj, SelectorFind, Width, Styles) {
     // var defaultData = TieredMenu.tieredData(
     //   'styles',
     //   {
@@ -60,42 +61,32 @@ define(
     //   }
     // );
 
+    var getValue = function (item) {
+      return Objects.readOptFrom(item, 'format').getOr(item.title);
+    };
+
     var convert = function (formats) {
-      var menus = { };
-
-      Arr.each(formats, function (fm) {
-
-        var items = [ ];
-        var retreat = makeBack('< Back to Styles');
-        Arr.each(fm.items, function (item) {
-          items.push(
-            makeItem(
-              item.format,
-              item.title,
-              item.isSelected !== undefined ? item.isSelected() : false,
-              item.getPreview !== undefined ? item.getPreview() : ''
-            )
-          );
-        });
-
-        console.log('items', items);
-
-        menus[fm.title] = makeMenu(fm.title, [ retreat ].concat(items));
-      });
-    
-
-      console.log('menus', menus);
-      var expansions = Obj.map(menus, function (v, k) {
-        return k;
-      });
-      console.log('expansions', expansions);
-
-      var menuKeys = Obj.keys(menus);
-      menus.styles = makeMenu('styles', Arr.map(menuKeys, function (k) {
-        return makeItem(k, k, false, '');
+      var mainMenu = makeMenu('styles', Arr.map(formats.items, function (k) {
+        return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview());
       }));
 
-      var tmenu = TieredMenu.tieredData('styles', menus, expansions);
+      var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
+        var retreat = makeBack('< Back to Styles');
+        var items = Arr.map(menuItems, function (item) {
+          return makeItem(
+            getValue(item),
+            item.title,
+            item.isSelected !== undefined ? item.isSelected() : false,
+            item.getPreview !== undefined ? item.getPreview() : ''
+          );
+        });
+        return makeMenu(menuName, [ retreat ].concat(items));
+      });
+
+      var menus = Merger.deepMerge(submenus, Objects.wrap('styles', mainMenu));
+
+
+      var tmenu = TieredMenu.tieredData('styles', menus, formats.expansions);
 
       return {
         tmenu: tmenu

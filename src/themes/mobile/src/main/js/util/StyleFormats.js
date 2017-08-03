@@ -4,6 +4,7 @@ define(
   [
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj',
@@ -11,7 +12,7 @@ define(
     'tinymce.themes.mobile.util.StyleConversions'
   ],
 
-  function (Objects, Arr, Id, Merger, Obj, StylesMenu, StyleConversions) {
+  function (Objects, Arr, Fun, Id, Merger, Obj, StylesMenu, StyleConversions) {
     var register = function (editor, settings) {
 
       var isSelectedFor = function (format) {
@@ -27,46 +28,73 @@ define(
         };
       };
 
-      var formats = Objects.readOptFrom(settings, 'style_formats').getOr([ ]);
-      // TODO: Do not assume two level structure
-      return Arr.map(formats, function (f) {
-        var items = Arr.map(f.items !== undefined ? f.items : [ ], function (i) {
-          if (Objects.hasKey(i, 'format')) return Merger.deepMerge(i, {
-            isSelected: isSelectedFor(i.format),
-            getPreview: getPreview(i.format)
-          });
-          else {
-            var newName = Id.generate(i.title);
-            var newItem = Merger.deepMerge(i, {
-              format: newName,
-              isSelected: isSelectedFor(newName),
-              getPreview: getPreview(newName)
-              // isAvailable ?
-            });
-            editor.formatter.register(newName, newItem);
-            return newItem;
-          }
+      var enrichSupported = function (item) {
+        return Merger.deepMerge(item, {
+          isSelected: isSelectedFor(item.format),
+          getPreview: getPreview(item.format)
         });
-        return {
-          title: f.title,
-          items: items
-        };
+      };
+
+      // Item that triggers a submenu
+      var enrichMenu = function (item) {
+        return Merger.deepMerge(item, {
+          isSelected: Fun.constant(false),
+          getPreview: Fun.constant('')
+        });
+      };
+
+      var enrichCustom = function (item) {
+        var formatName = Id.generate(item.title);
+        var newItem = Merger.deepMerge(item, {
+          format: formatName,
+          isSelected: isSelectedFor(formatName),
+          getPreview: getPreview(formatName)
+          // isAvailable ?
+        });
+        editor.formatter.register(formatName, newItem);
+        return newItem;
+      };
+
+      
+      var formats = Objects.readOptFrom(settings, 'style_formats').getOr([ ]);
+      var flatten = StyleConversions.getAlpha(formats);
+
+      var enrich = function (item) {
+        // If we are a custom format
+        var f = (function () {
+          if (Objects.hasKey(item, 'format')) return enrichSupported;
+          else if (Objects.hasKey(flatten.expansions, item.title)) return enrichMenu;
+          else return enrichCustom;
+        })();
+        return f(item);
+      };
+
+
+      var newItems = Arr.map(flatten.items, enrich);
+      var newMenus = Obj.map(flatten.menus, function (items, menuName) {
+        return Arr.map(items, enrich);
       });
+
+      return {
+        items: newItems,
+        menus: newMenus,
+        expansions: flatten.expansions
+      };
     };
 
-    var prune = function (editor, hack) {
+    var prune = function (editor, formats) {
       // Firstly, prune the items
-      var items = Arr.filter(hack.items, function (item) {
+      var items = Arr.filter(formats.items, function (item) {
         return Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
       });
 
-      var menus = Obj.map(hack.menus, function (items, menuName) {
+      var menus = Obj.map(formats.menus, function (items, menuName) {
         return Arr.filter(items, function (item) {
           return editor.formatter.canApply(item.format);
         });
       });
 
-      var expansions = hack.expansions;
+      var expansions = formats.expansions;
       return {
         items: items,
         menus: menus,
@@ -75,14 +103,11 @@ define(
     };
 
     var ui = function (editor, formats, onDone) {
-      var hack = StyleConversions.getAlpha(formats);
-      console.log('hack', hack);
-
-      var result = prune(editor, hack);
-      console.log('prune', result);
+      var pruned = prune(editor, formats);
+      console.log('prune', pruned);
 
       return StylesMenu.sketch({
-        formats: formats,
+        formats: pruned,
         handle: function (value) {
           editor.formatter.apply(value);
           onDone();
