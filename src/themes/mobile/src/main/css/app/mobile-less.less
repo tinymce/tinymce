@@ -36,7 +36,7 @@
       }
 
       [role="menu"].transitioning {
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.5s ease-in-out;
       }
 
       .demo-tiered-menu {
@@ -48,46 +48,44 @@
       }
 
       .demo-tiered-menu .item {
-        width: 100%;
         cursor: pointer;
-        padding: 10px 5px;
-        text-align: center;
+        padding: 1em 1em;
         position: relative;
         display: flex;
-        justify-content: center;
-
+        border-bottom: 1px solid #ddd;
       }
 
-      .item.collapser:before {
-        content: "<<<"; 
-        position: absolute;
-        padding-left: 1em;
-        padding-right: 1em;
-        left: 0px;
+      .collapser .collapse-icon:before {
+        font-family: 'tinymce-mobile';
+        content: "\e314";
       }
 
       .item.item-is-menu:after {
-        content: ">>>";
+        font-family: 'tinymce-mobile';
+        content: "\e315";
         position: absolute;
         padding-left: 1em;
         padding-right: 1em;
         right: 0px;
       }
 
-      .item.tinymce-mobile-format-matches:before {
+      .item.tinymce-mobile-format-matches:after {
         content: "\2714";
+        font-family: 'tinymce-mobile';
         position: absolute;
         padding-left: 1em;
         padding-right: 1em;
-        left: 0px;
+        right: 0px;
       }
 
-      .separator {
-        text-align: center;
+      .separator, .demo-tiered-menu .collapser {
         border-bottom: 1px solid black;
-        background: #ccc;
+        padding: 1em 1em;
+        background: #eee;
       }
 
+
+   
 
 
       [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {

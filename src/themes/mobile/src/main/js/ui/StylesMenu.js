@@ -7,8 +7,11 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
+    'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
+    'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.boulder.api.Objects',
@@ -24,8 +27,8 @@ define(
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, AlloyEvents, SystemEvents, Menu, TieredMenu, Objects, Arr, Merger, Obj, Css, SelectorFind,
-    Width, Scrollables, Styles, Scrollable
+    AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, GuiFactory, Memento, AlloyEvents, SystemEvents, Button, Menu, TieredMenu, Objects,
+    Arr, Merger, Obj, Css, SelectorFind, Width, Scrollables, Styles, Scrollable
   ) {
     // var defaultData = TieredMenu.tieredData(
     //   'styles',
@@ -74,25 +77,27 @@ define(
       return Objects.readOptFrom(item, 'format').getOr(item.title);
     };
 
-    var convert = function (formats) {
-      var mainMenu = makeMenu('styles', Arr.map(formats.items, function (k) {
-        return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), k.menu === true);
-      }));
+    var convert = function (formats, memMenuThunk) {
+      var mainMenu = makeMenu('Styles', [
+      ].concat(
+        Arr.map(formats.items, function (k) {
+          return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Objects.hasKey(formats.expansions, getValue(k)));
+        })
+      ), memMenuThunk, false);
 
       var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
         var previousMenu = menuItems.length > 0 ? menuItems[0].previousMenu : 'styles';
-        console.log('previousMenu of ', menuName, previousMenu);
-        var retreat = makeBack('Back to ' + previousMenu);
+        console.log('previousMenu of ', menuName, previousMenu, formats.expansions);
         var items = Arr.map(menuItems, function (item) {
           return makeItem(
             getValue(item),
             item.title,
             item.isSelected !== undefined ? item.isSelected() : false,
             item.getPreview !== undefined ? item.getPreview() : '',
-            item.menu === true
+            Objects.hasKey(formats.expansions, getValue(item))
           );
         });
-        return makeMenu(menuName, [ retreat ].concat(items));
+        return makeMenu(menuName, items, memMenuThunk, true);
       });
 
       var menus = Merger.deepMerge(submenus, Objects.wrap('styles', mainMenu));
@@ -111,10 +116,17 @@ define(
         type: 'item',
         dom: {
           tag: 'div',
-          classes: [ 'collapser' ],
-          innerHtml: text
+          classes: [ 'collapser' ]
         },
-        components: [ ]
+        components: [
+          {
+            dom: {
+              tag: 'span',
+              classes: [ 'collapse-icon' ]
+            }
+          },
+          GuiFactory.text(text)
+        ]
       };
     };
 
@@ -166,14 +178,35 @@ define(
       };
     };
 
-    var makeMenu = function (value, items) {
+    var makeMenu = function (value, items, memMenuThunk, collapsable) {
       return {
         value: value,
         dom: {
           tag: 'div'
         },
         components: [
-          Objects.exclude(makeSeparator(value), [ 'type' ]),
+          Button.sketch({
+            dom: {
+              tag: 'div',
+              classes: [ 'collapser' ]
+            },
+            components: collapsable ? [
+              {
+                dom: {
+                  tag: 'span',
+                  classes: [ 'collapse-icon' ]
+                }
+              },
+              GuiFactory.text(value)
+            ] : [ GuiFactory.text(value) ],
+            action: function (item) {
+              if (collapsable) {
+                var comp = memMenuThunk().get(item);
+                TieredMenu.collapseMenu(comp);
+              }
+            }
+          }),
+          // Objects.exclude(makeSeparator(value), [ 'type' ]),
           {
             dom: {
               tag: 'div',
@@ -181,7 +214,23 @@ define(
             },
             components: [
               Menu.parts().items({ })
-            ]
+            ],
+
+            behaviours: Behaviour.derive([
+              AddEventsBehaviour.config('adhoc-scrollable-menu', [
+                AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+                  Css.set(component.element(), 'overflow-y', 'auto');
+                  Css.set(component.element(), '-webkit-overflow-scrolling', 'touch');
+                  Scrollable.register(component.element());
+                }),
+
+                AlloyEvents.runOnDetached(function (component) {
+                  Css.remove(component.element(), 'overflow-y');
+                  Css.remove(component.element(), '-webkit-overflow-scrolling');
+                  Scrollable.deregister(component.element());
+                })
+              ])
+            ])
           }
         ],
         items: items,
@@ -194,33 +243,23 @@ define(
                 transitionClass: 'transitioning'
               }
             })
-          }),
+          })
+        ])
 
-          AddEventsBehaviour.config('adhoc-scrollable-toolbar', [
-            AlloyEvents.runOnAttached(function (component, simulatedEvent) {
-              Css.set(component.element(), 'overflow-y', 'auto');
-              Scrollable.register(component.element());
-            }),
-
-            AlloyEvents.runOnDetached(function (component) {
-              Css.remove(component.element(), 'overflow-y');
-              Scrollable.deregister(component.element());
-            })
-          ])
-        ]),
-
-        eventOrder: Objects.wrap(
-          SystemEvents.attachedToDom(),
-          [ 'adhoc-scrollable-toolbar', Transitioning.name() ]
-        )
+        // eventOrder: Objects.wrap(
+        //   SystemEvents.attachedToDom(),
+        //   [ 'adhoc-scrollable-toolbar', Transitioning.name() ]
+        // )
       };
     };
 
     var sketch = function (settings) {
-      var dataset = convert(settings.formats);
+      var dataset = convert(settings.formats, function () {
+        return memMenu;
+      });
       // Turn settings into a tiered menu data.
 
-      return TieredMenu.sketch({
+      var memMenu = Memento.record(TieredMenu.sketch({
         dom: {
           tag: 'div',
           classes: [ 'demo-tiered-menu' ]
@@ -277,7 +316,9 @@ define(
           item: 'item',
           selectedItem: 'selected-item'
         }
-      });
+      }));
+
+      return memMenu.asSpec();
     };
 
     return {
