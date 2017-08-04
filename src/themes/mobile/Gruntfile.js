@@ -222,7 +222,7 @@ module.exports = function (grunt) {
         files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
         tasks: ['less', 'bolt-build', 'copy:standalone', 'copy:no-uglify' ],
         options: {
-          nospawn: true,
+          nospawn: false,
           atBegin: true
         }
       }
