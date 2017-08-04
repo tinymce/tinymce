@@ -2,22 +2,31 @@ define(
   'tinymce.themes.mobile.ui.StylesMenu',
 
   [
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
+    'ephox.alloy.api.events.AlloyEvents',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
-    'tinymce.themes.mobile.style.Styles'
+    'tinymce.themes.mobile.ios.scroll.Scrollables',
+    'tinymce.themes.mobile.style.Styles',
+    'tinymce.themes.mobile.touch.scroll.Scrollable'
   ],
 
-  function (Behaviour, Representing, Toggling, Transitioning, Menu, TieredMenu, Objects, Arr, Merger, Obj, SelectorFind, Width, Styles) {
+  function (
+    AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, AlloyEvents, SystemEvents, Menu, TieredMenu, Objects, Arr, Merger, Obj, Css, SelectorFind,
+    Width, Scrollables, Styles, Scrollable
+  ) {
     // var defaultData = TieredMenu.tieredData(
     //   'styles',
     //   {
@@ -73,7 +82,7 @@ define(
       var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
         var previousMenu = menuItems.length > 0 ? menuItems[0].previousMenu : 'styles';
         console.log('previousMenu of ', menuName, previousMenu);
-        var retreat = makeBack('< Back to ' + previousMenu);
+        var retreat = makeBack('Back to ' + previousMenu);
         var items = Arr.map(menuItems, function (item) {
           return makeItem(
             getValue(item),
@@ -102,6 +111,7 @@ define(
         type: 'item',
         dom: {
           tag: 'div',
+          classes: [ 'collapser' ],
           innerHtml: text
         },
         components: [ ]
@@ -184,8 +194,25 @@ define(
                 transitionClass: 'transitioning'
               }
             })
-          })
-        ])
+          }),
+
+          AddEventsBehaviour.config('adhoc-scrollable-toolbar', [
+            AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+              Css.set(component.element(), 'overflow-y', 'auto');
+              Scrollable.register(component.element());
+            }),
+
+            AlloyEvents.runOnDetached(function (component) {
+              Css.remove(component.element(), 'overflow-y');
+              Scrollable.deregister(component.element());
+            })
+          ])
+        ]),
+
+        eventOrder: Objects.wrap(
+          SystemEvents.attachedToDom(),
+          [ 'adhoc-scrollable-toolbar', Transitioning.name() ]
+        )
       };
     };
 

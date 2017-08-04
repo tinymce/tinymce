@@ -47,21 +47,31 @@
         min-height: 200px;
       }
 
-      .menu-items-container {
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-      }
-
-
-
       .demo-tiered-menu .item {
         width: 100%;
         cursor: pointer;
         padding: 10px 5px;
         text-align: center;
         position: relative;
+        display: flex;
+        justify-content: center;
 
+      }
+
+      .item.collapser:before {
+        content: "<<<"; 
+        position: absolute;
+        padding-left: 1em;
+        padding-right: 1em;
+        left: 0px;
+      }
+
+      .item.item-is-menu:after {
+        content: ">>>";
+        position: absolute;
+        padding-left: 1em;
+        padding-right: 1em;
+        right: 0px;
       }
 
       .item.tinymce-mobile-format-matches:before {

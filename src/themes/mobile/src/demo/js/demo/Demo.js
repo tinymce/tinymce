@@ -57,7 +57,15 @@ define(
               }
             ]
           },
-          { title: 'gamma', format: 'bold' }
+          { title: 'gamma', format: 'bold' },
+          { title: 'gamma1', format: 'bold' },
+          { title: 'gamma2', format: 'bold' },
+          { title: 'gamma3', format: 'bold' },
+          { title: 'gamma4', format: 'bold' },
+          { title: 'gamma5', format: 'bold' },
+          { title: 'gamma6', format: 'bold' },
+          { title: 'gamma7', format: 'bold' },
+          { title: 'gamma8', format: 'bold' }
         ]
         /*
         style_formats: [
