@@ -2,19 +2,35 @@ define(
   'ephox.snooker.test.TableMerge',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.TableMerge',
     'ephox.snooker.test.Fitment'
   ],
 
-  function (Fun, TableMerge, Fitment) {
+  function (Arr, Fun, Structs, TableMerge, Fitment) {
+    var mapToStructGrid = function (grid) {
+      return Arr.map(grid, function (row) {
+        return Structs.rowcells(row, 'tbody');
+      });
+    };
+    
+    var assertGrids = function (expected, actual) {
+      assert.eq(expected.length, actual.length);
+      Arr.each(expected, function (row, i) {
+        assert.eq(row.cells(), actual[i].cells());
+        assert.eq(row.section(), actual[i].section());
+      });
+    };
+
     var mergeTest = function (expected, startAddress, gridA, gridB, generator, comparator) {
       // The last step, merge cells from gridB into gridA
-      var nuGrid = TableMerge.merge(startAddress, gridA(), gridB(), generator(), comparator);
+      var nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridA()), mapToStructGrid(gridB()), generator(), comparator);
       nuGrid.fold(function (err) {
         assert.eq(expected.error, err);
       }, function (grid) {
-        assert.eq(expected, grid);
+        assertGrids(expected, grid);
       });
     };
 
@@ -25,12 +41,14 @@ define(
     };
 
     var suite = function (label, startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
+      var structGridExpectedTailor = mapToStructGrid(expectedTailor);
+      var structGridExpectedMerged = mapToStructGrid(expectedMergeGrids);
       Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      Fitment.tailorTest(expectedTailor, startAddress, gridA, {
+      Fitment.tailorTest(structGridExpectedTailor, startAddress, gridA, {
         rowDelta: Fun.constant(expectedMeasure.rowDelta),
         colDelta: Fun.constant(expectedMeasure.colDelta)
       }, generator);
-      mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
+      mergeTest(structGridExpectedMerged, startAddress, gridA, gridB, generator, comparator);
     };
 
     return {
