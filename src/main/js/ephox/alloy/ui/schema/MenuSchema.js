@@ -82,6 +82,7 @@ define(
       FieldSchema.strict('items'),
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
+      FieldSchema.defaulted('eventOrder', { }),
       FieldSchema.defaulted('menuBehaviours', { }),
 
 
