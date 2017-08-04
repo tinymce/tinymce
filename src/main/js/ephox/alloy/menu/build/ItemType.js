@@ -28,32 +28,35 @@ define(
             }
           }
         ),
-        behaviours: Behaviour.derive([
-          info.toggling().fold(Toggling.revoke, function (tConfig) {
-            return Toggling.config(
-              Merger.deepMerge({
-                aria: {
-                  mode: 'checked'
-                }
-              }, tConfig)
-            );
-          }),
-          Focusing.config({
-            ignore: info.ignoreFocus(),
-            onFocus: function (component) {
-              ItemEvents.onFocus(component);
-            }
-          }),
-          Keying.config({
-            mode: 'execution'
-          }),
-          Representing.config({
-            store: {
-              mode: 'memory',
-              initialValue: info.data()
-            }
-          })
-        ]),
+        behaviours: Merger.deepMerge(
+          Behaviour.derive([
+            info.toggling().fold(Toggling.revoke, function (tConfig) {
+              return Toggling.config(
+                Merger.deepMerge({
+                  aria: {
+                    mode: 'checked'
+                  }
+                }, tConfig)
+              );
+            }),
+            Focusing.config({
+              ignore: info.ignoreFocus(),
+              onFocus: function (component) {
+                ItemEvents.onFocus(component);
+              }
+            }),
+            Keying.config({
+              mode: 'execution'
+            }),
+            Representing.config({
+              store: {
+                mode: 'memory',
+                initialValue: info.data()
+              }
+            })
+          ]),
+          info.itemBehaviours()
+        ),
         events: AlloyEvents.derive([
           // Trigger execute when clicked
           AlloyEvents.runWithTarget(SystemEvents.tapOrClick(), AlloyTriggers.emitExecute),
@@ -77,6 +80,9 @@ define(
       FieldSchema.strict('dom'),
 
       FieldSchema.option('toggling'),
+
+      // Maybe this needs to have fewer behaviours
+      FieldSchema.defaulted('itemBehaviours', { }),
 
       FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.defaulted('domModification', { }),
