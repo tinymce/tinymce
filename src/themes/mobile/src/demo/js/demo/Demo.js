@@ -37,6 +37,30 @@ define(
         mobile_skin_url: '../../main/css',
 
         style_formats: [
+          { title: 'alpha', format: 'bold' },
+          {
+            title: 'beta',
+            items: [
+              { title: 'beta-1', format: 'bold' },
+              { title: 'beta-2', format: 'bold' },
+              {
+                title: 'beta-3',
+                items: [
+                  {
+                    title: 'beta-3-1',
+                    items: [
+                      { title: 'beta-3-1-1', format: 'bold' }
+                    ]
+                  },
+                  { title: 'beta-3-2' }
+                ]
+              }
+            ]
+          },
+          { title: 'gamma', format: 'bold' }
+        ]
+        /*
+        style_formats: [
           {
             title: 'Headers',
             items: [
@@ -86,6 +110,7 @@ define(
             ]
           }
         ]
+        */
       });
     };
   }

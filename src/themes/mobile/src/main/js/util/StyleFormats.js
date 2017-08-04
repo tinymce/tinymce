@@ -90,7 +90,7 @@ define(
 
       var menus = Obj.map(formats.menus, function (items, menuName) {
         return Arr.filter(items, function (item) {
-          return editor.formatter.canApply(item.format);
+          return Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
         });
       });
 
