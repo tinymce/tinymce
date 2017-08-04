@@ -67,17 +67,20 @@ define(
 
     var convert = function (formats) {
       var mainMenu = makeMenu('styles', Arr.map(formats.items, function (k) {
-        return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview());
+        return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), k.menu === true);
       }));
 
       var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
-        var retreat = makeBack('< Back to ' + menuName);
+        var previousMenu = menuItems.length > 0 ? menuItems[0].previousMenu : 'styles';
+        console.log('previousMenu of ', menuName, previousMenu);
+        var retreat = makeBack('< Back to ' + previousMenu);
         var items = Arr.map(menuItems, function (item) {
           return makeItem(
             getValue(item),
             item.title,
             item.isSelected !== undefined ? item.isSelected() : false,
-            item.getPreview !== undefined ? item.getPreview() : ''
+            item.getPreview !== undefined ? item.getPreview() : '',
+            item.menu === true
           );
         });
         return makeMenu(menuName, [ retreat ].concat(items));
@@ -105,7 +108,7 @@ define(
       };
     };
 
-    var makeItem = function (value, text, selected, preview) {
+    var makeItem = function (value, text, selected, preview, isMenu) {
       return {
         data: {
           value: value,
@@ -113,7 +116,8 @@ define(
         },
         type: 'item',
         dom: {
-          tag: 'div'
+          tag: 'div',
+          classes: isMenu ? [ 'item-is-menu' ] : [ ]
         },
         toggling: {
           toggleOnExecute: false,

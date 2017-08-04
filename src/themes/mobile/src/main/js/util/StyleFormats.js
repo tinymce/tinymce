@@ -57,7 +57,7 @@ define(
 
       
       var formats = Objects.readOptFrom(settings, 'style_formats').getOr([ ]);
-      var flatten = StyleConversions.getAlpha(formats);
+      var flatten = StyleConversions.getAlpha(formats, 'styles');
 
       var enrich = function (item) {
         // If we are a custom format
