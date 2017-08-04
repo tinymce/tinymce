@@ -41,7 +41,7 @@ define(
       // Increase gridA by the row/col delta values
       // The result is a new grid that will perfectly fit gridB into gridA
       var tailoredGrid = Fitment.tailor(startAddress, mapToStructGrid(gridA()), delta, generator());
-      assertGrids(expected, tailoredGrid);
+      assertGrids(mapToStructGrid(expected), tailoredGrid);
     };
 
     var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {

@@ -30,25 +30,23 @@ define(
       nuGrid.fold(function (err) {
         assert.eq(expected.error, err);
       }, function (grid) {
-        assertGrids(expected, grid);
+        assertGrids(mapToStructGrid(expected), grid);
       });
     };
 
     var mergeIVTest = function (asserter, startAddress, gridSpecA, gridSpecB, generator, comparator) {
       // The last step, merge cells from gridB into gridA
-      var nuGrid = TableMerge.merge(startAddress, gridSpecA.grid(), gridSpecB.grid(), generator(), comparator);
+      var nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridSpecA.grid()), mapToStructGrid(gridSpecB.grid()), generator(), comparator);
       asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
     };
 
     var suite = function (label, startAddress, gridA, gridB, generator, comparator, expectedMeasure, expectedTailor, expectedMergeGrids) {
-      var structGridExpectedTailor = mapToStructGrid(expectedTailor);
-      var structGridExpectedMerged = mapToStructGrid(expectedMergeGrids);
       Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB, Fun.noop);
-      Fitment.tailorTest(structGridExpectedTailor, startAddress, gridA, {
+      Fitment.tailorTest(expectedTailor, startAddress, gridA, {
         rowDelta: Fun.constant(expectedMeasure.rowDelta),
         colDelta: Fun.constant(expectedMeasure.colDelta)
       }, generator);
-      mergeTest(structGridExpectedMerged, startAddress, gridA, gridB, generator, comparator);
+      mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
     };
 
     return {
