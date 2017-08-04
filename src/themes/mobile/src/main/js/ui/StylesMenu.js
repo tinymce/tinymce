@@ -71,7 +71,7 @@ define(
       }));
 
       var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
-        var retreat = makeBack('< Back to Styles');
+        var retreat = makeBack('< Back to ' + menuName);
         var items = Arr.map(menuItems, function (item) {
           return makeItem(
             getValue(item),
