@@ -6,10 +6,11 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.ui.single.TieredMenuSpec',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Id'
   ],
 
-  function (Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects) {
+  function (Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects, Id) {
     var tieredData = function (primary, menus, expansions) {
       return {
         primary: primary,
@@ -28,7 +29,7 @@ define(
 
     var collapseItem = function (text) {
       return {
-        value: TieredMenuSpec.collapseItem(),
+        value: Id.generate(TieredMenuSpec.collapseItem()),
         text: text
       };
     };

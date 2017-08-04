@@ -144,7 +144,9 @@ define(
 
       var collapseLeft = function (container, item) {
         var value = getItemValue(item);
+        console.log('value', value);
         return state.collapse(value).bind(function (path) {
+          console.log('path', path);
           return updateMenuPath(container, state, path).map(function (activeMenu) {
             detail.onCollapseMenu()(container, item, activeMenu);
             return activeMenu;
@@ -200,7 +202,7 @@ define(
           var target = simulatedEvent.event().target();
           return sandbox.getSystem().getByDom(target).bind(function (item) {
             var itemValue = getItemValue(item);
-            if (itemValue === 'collapse-item') {
+            if (itemValue.indexOf('collapse-item') === 0) {
               return collapseLeft(sandbox, item);
             }
 

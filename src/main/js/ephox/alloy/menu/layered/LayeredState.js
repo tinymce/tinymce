@@ -59,6 +59,7 @@ define(
       };
 
       var collapse = function (itemValue) {
+        console.log('paths', paths.get());
         // Look up which key has the itemValue
         return Objects.readOptFrom(paths.get(), itemValue).bind(function (path) {
           return path.length > 1 ? Option.some(path.slice(1)) : Option.none();
