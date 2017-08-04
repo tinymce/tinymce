@@ -14,7 +14,13 @@ define(
 
     var retrieveBox = function (container) {
       return CellSelection.getEdges(container).bind(function (edges) {
-        return TablePositions.getBox(edges.table(), edges.first(), edges.last());
+        var firstAncestor = SelectorFind.ancestor(edges.first(), 'thead,tfoot,tbody,table');
+        var lastAncestor = SelectorFind.ancestor(edges.last(), 'thead,tfoot,tbody,table');
+        return firstAncestor.bind(function (fA) {
+          return lastAncestor.bind(function (lA) {
+            return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table(), edges.first(), edges.last()) : Option.none();
+          });
+        });
       });
     };
 
