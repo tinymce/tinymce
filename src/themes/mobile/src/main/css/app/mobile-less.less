@@ -45,6 +45,7 @@
         position: relative;
         width: 100%;
         min-height: 200px;
+        font-family: sans-serif;
       }
 
       .demo-tiered-menu .item {
@@ -53,11 +54,13 @@
         position: relative;
         display: flex;
         border-bottom: 1px solid #ddd;
+        color: @toolstrip-foreground-color;
       }
 
       .collapser .collapse-icon:before {
         font-family: 'tinymce-mobile';
         content: "\e314";
+        color: @toolstrip-foreground-color;
       }
 
       .item.item-is-menu:after {
@@ -67,10 +70,10 @@
         padding-left: 1em;
         padding-right: 1em;
         right: 0px;
+        color: @toolstrip-foreground-color;
       }
 
       .item.tinymce-mobile-format-matches:after {
-        content: "\2714";
         font-family: 'tinymce-mobile';
         position: absolute;
         padding-left: 1em;
@@ -79,9 +82,14 @@
       }
 
       .separator, .demo-tiered-menu .collapser {
-        border-bottom: 1px solid black;
-        padding: 1em 1em;
-        background: #eee;
+        border-top: rgb(69, 90, 100);
+        display: flex;
+        min-height: 2.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        align-items: center;
+        background: @toolstrip-background-color;
+        color: @toolstrip-foreground-color;
       }
 
 

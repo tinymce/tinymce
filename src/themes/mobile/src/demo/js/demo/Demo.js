@@ -37,38 +37,39 @@ define(
         mobile_skin_url: '../../main/css',
 
         style_formats: [
-          { title: 'Alpha', format: 'bold' },
-          {
-            title: 'Beta',
-            items: [
-              { title: 'Beta-1', format: 'bold' },
-              { title: 'Beta-2', format: 'bold' },
-              {
-                title: 'Beta-3',
-                items: [
-                  {
-                    title: 'Beta-3-1',
-                    items: [
-                      { title: 'Beta-3-1-1', format: 'bold' }
-                    ]
-                  },
-                  { title: 'Beta-3-2' }
-                ]
-              }
-            ]
-          },
-          { title: 'Gamma', format: 'bold' },
-          { title: 'Gamma1', format: 'bold' },
-          { title: 'Gamma2', format: 'bold' },
-          { title: 'Gamma3', format: 'bold' },
-          { title: 'Gamma4', format: 'bold' },
-          { title: 'Gamma5', format: 'bold' },
-          { title: 'Gamma6', format: 'bold' },
-          { title: 'Gamma7', format: 'bold' },
-          { title: 'Gamma8', format: 'bold' }
-        ]
-        /*
-        style_formats: [
+        //   { title: 'Alpha', format: 'bold' },
+        //   {
+        //     title: 'Beta',
+        //     items: [
+        //       { title: 'Beta-1', format: 'bold' },
+        //       { title: 'Beta-2', format: 'bold' },
+        //       {
+        //         title: 'Beta-3',
+        //         items: [
+        //           {
+        //             title: 'Beta-3-1',
+        //             items: [
+        //               { title: 'Beta-3-1-1', format: 'bold' }
+        //             ]
+        //           },
+        //           { title: 'Beta-3-2' }
+        //         ]
+        //       }
+        //     ]
+        //   },
+        //   { title: 'Gamma', format: 'bold' },
+        //   { title: 'Gamma1', format: 'bold' },
+        //   { title: 'Gamma2', format: 'bold' },
+        //   { title: 'Gamma3', format: 'bold' },
+        //   { title: 'Gamma4', format: 'bold' },
+        //   { title: 'Gamma5', format: 'bold' },
+        //   { title: 'Gamma6', format: 'bold' },
+        //   { title: 'Gamma7', format: 'bold' },
+        //   { title: 'Gamma8', format: 'bold' }
+        // ]
+        
+        //style_formats: [
+          
           {
             title: 'Headers',
             items: [
@@ -118,7 +119,7 @@ define(
             ]
           }
         ]
-        */
+       // */
       });
     };
   }

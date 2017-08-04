@@ -2,6 +2,7 @@ define(
   'tinymce.themes.mobile.util.StyleFormats',
 
   [
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
@@ -12,7 +13,7 @@ define(
     'tinymce.themes.mobile.util.StyleConversions'
   ],
 
-  function (Objects, Arr, Fun, Id, Merger, Obj, StylesMenu, StyleConversions) {
+  function (Toggling, Objects, Arr, Fun, Id, Merger, Obj, StylesMenu, StyleConversions) {
     var register = function (editor, settings) {
 
       var isSelectedFor = function (format) {
@@ -108,8 +109,11 @@ define(
 
       return StylesMenu.sketch({
         formats: pruned,
-        handle: function (value) {
+        handle: function (item, value) {
           editor.formatter.apply(value);
+          // var selected = editor.formatter.match(value);
+          // var f = selected ? Toggling.on : Toggling.off;
+          // f(item);
           onDone();
         }
       });

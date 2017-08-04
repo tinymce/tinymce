@@ -236,7 +236,7 @@ define(
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
                     var menu = StyleFormats.ui(editor, styleFormats, function () {
-                      realm.dropup().disappear();
+                      // realm.dropup().disappear();
                     });
                     realm.dropup().appear(menu);
                   });
@@ -258,7 +258,6 @@ define(
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
           var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
-
 
           // Investigate ways to keep in sync with the ui
           FormatChangers.init(realm, editor);

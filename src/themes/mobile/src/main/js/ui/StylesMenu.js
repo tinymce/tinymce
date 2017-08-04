@@ -21,14 +21,16 @@ define(
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.touch.scroll.Scrollable'
+    'tinymce.themes.mobile.touch.scroll.Scrollable',
+    'tinymce.themes.mobile.util.FormatChangers'
   ],
 
   function (
     AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, GuiFactory, Memento, AlloyEvents, SystemEvents, Button, Menu, TieredMenu, Objects,
-    Arr, Merger, Obj, Css, SelectorFind, Width, Scrollables, Styles, Scrollable
+    Arr, Merger, Obj, Css, SelectorFind, Width, Receivers, Scrollables, Styles, Scrollable, FormatChangers
   ) {
     // var defaultData = TieredMenu.tieredData(
     //   'styles',
@@ -146,6 +148,12 @@ define(
           toggleClass: Styles.resolve('format-matches'),
           selected: selected
         },
+        itemBehaviours: Behaviour.derive(isMenu ? [ ] : [
+          Receivers.format(value, function (comp, status) {
+            var toggle = status ? Toggling.on : Toggling.off;
+            toggle(comp);
+          })
+        ]),
         components: [
           {
             dom: {
@@ -275,7 +283,7 @@ define(
 
         onExecute: function (tmenu, item) {
           var v = Representing.getValue(item);
-          settings.handle(v.value);
+          settings.handle(item, v.value);
         },
         onEscape: function () {
           console.log('Escaping');
