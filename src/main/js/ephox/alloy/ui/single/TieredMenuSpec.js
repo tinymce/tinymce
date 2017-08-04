@@ -235,6 +235,14 @@ define(
         })
       ] : [ ]));
 
+      var collapseMenuApi = function (container) {
+        Highlighting.getHighlighted(container).each(function (currentMenu) {
+          Highlighting.getHighlighted(currentMenu).each(function (currentItem) {
+            collapseLeft(container, currentItem);
+          });
+        });
+      };
+
       return {
         uid: detail.uid(),
         dom: detail.dom(),
@@ -266,6 +274,9 @@ define(
           detail.tmenuBehaviours()
         ),
         eventOrder: detail.eventOrder(),
+        apis: {
+          collapseMenu: collapseMenuApi
+        },
         events: events
       };
     };

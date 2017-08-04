@@ -67,6 +67,12 @@ define(
         FieldSchema.defaulted('eventOrder', { })
       ],
 
+      apis: {
+        collapseMenu: function (apis, tmenu) {
+          apis.collapseMenu(tmenu);
+        }
+      },
+
       factory: TieredMenuSpec.make,
 
       extraApis: {
