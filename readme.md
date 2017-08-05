@@ -1,5 +1,6 @@
 TinyMCE - The JavaScript Rich Text editor
 ==========================================
+[![CDNJS version](https://img.shields.io/cdnjs/v/tinymce.svg)](https://cdnjs.com/libraries/tinymce)
 
 Building TinyMCE
 -----------------
