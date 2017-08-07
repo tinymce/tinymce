@@ -16,7 +16,6 @@ define(
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeNormalizer',
     'tinymce.core.dom.RangeUtils',
-    'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
@@ -26,10 +25,7 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (
-    BookmarkManager, ElementUtils, NodeType, RangeNormalizer, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat,
-    Fun, Tools
-  ) {
+  function (BookmarkManager, ElementUtils, NodeType, RangeNormalizer, RangeUtils, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat, Fun, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
@@ -139,38 +135,6 @@ define(
       }
 
       return next;
-    };
-
-    var findSelectionEnd = function (start, end) {
-      var walker = new TreeWalker(end), node;
-
-      for (node = walker.prev2(); node; node = walker.prev2()) {
-        if (node.nodeType === 3 && node.data.length > 0) {
-          return node;
-        }
-
-        if (node.childNodes.length > 1 || node === start || node.tagName === 'BR') {
-          return node;
-        }
-      }
-    };
-
-    // This converts: <p>[a</p><p>]b</p> -> <p>[a]</p><p>b</p>
-    var adjustSelectionToVisibleSelection = function (ed) {
-      // Adjust selection so that a end container with a end offset of zero is not included in the selection
-      // as this isn't visible to the user.
-      var rng = RangeNormalizer.normalize(ed.selection.getRng());
-      var start = rng.startContainer;
-      var end = rng.endContainer;
-
-      if (start !== end && rng.endOffset === 0) {
-        var newEnd = findSelectionEnd(start, end);
-        var endOffset = newEnd.nodeType === 3 ? newEnd.data.length : newEnd.childNodes.length;
-
-        rng.setEnd(newEnd, endOffset);
-      }
-
-      return rng;
     };
 
     var applyFormat = function (ed, name, vars, node) {
@@ -523,7 +487,7 @@ define(
             }
 
             // Apply formatting to selection
-            ed.selection.setRng(adjustSelectionToVisibleSelection(ed));
+            ed.selection.setRng(RangeNormalizer.normalize(ed.selection.getRng()));
             bookmark = selection.getBookmark();
             applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(true), formatList), bookmark);
 

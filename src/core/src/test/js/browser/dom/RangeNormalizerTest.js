@@ -89,6 +89,24 @@ asynctest(
         mCreateRange([0, 0, 0], 0, [1, 0], 0),
         mNormalizeRange,
         mAssertRange([0, 0, 0], 0, [0, 0, 0], 1)
+      ])),
+      Logger.t('Normalize from block start to previous block end', GeneralSteps.sequence([
+        sSetContent('<p>a</p><p>b<p>'),
+        mCreateRange([0, 0], 0, [1, 0], 0),
+        mNormalizeRange,
+        mAssertRange([0, 0], 0, [0, 0], 1)
+      ])),
+      Logger.t('Do not normalize when end position has a valid previous position in the block', GeneralSteps.sequence([
+        sSetContent('<p>a</p><p>b<p>'),
+        mCreateRange([0, 0], 0, [1, 0], 1),
+        mNormalizeRange,
+        mAssertRange([0, 0], 0, [1, 0], 1)
+      ])),
+      Logger.t('Do not normalize when selection is on inline elements', GeneralSteps.sequence([
+        sSetContent('<b>a</b><b>b<b>'),
+        mCreateRange([0, 0], 0, [1, 0], 0),
+        mNormalizeRange,
+        mAssertRange([0, 0], 0, [1, 0], 0)
       ]))
     ], function () {
       viewBlock.detach();
