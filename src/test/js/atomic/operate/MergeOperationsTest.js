@@ -24,7 +24,18 @@ test(
       };
 
       check([], [], b(0, 0, 1, 1), 'a');
+      check([r([ 'a', 'a' ], 'thead')], [r([ 'a', 'b' ], 'thead')], b(0, 0, 0, 1), 'a');
       check([r([ 'a', 'a' ], 'tbody')], [r([ 'a', 'b' ], 'tbody')], b(0, 0, 0, 1), 'a');
+      check(
+        [
+          r([ 'a', 'a' ], 'thead'),
+          r([ 'a', 'a' ], 'thead')
+        ],
+        [
+          r([ 'a', 'b' ], 'thead'),
+          r([ 'c', 'd' ], 'thead')
+        ], b(0, 0, 1, 1), 'a'
+      );
       check(
         [
           r([ 'a', 'a' ], 'tbody'),
@@ -36,6 +47,16 @@ test(
         ], b(0, 0, 1, 1), 'a'
       );
 
+      check(
+        [
+          r([ 'a', 'a', 'c' ], 'thead'),
+          r([ 'd', 'e', 'f' ], 'tbody')
+        ],
+        [
+          r([ 'a', 'b', 'c' ], 'thead'),
+          r([ 'd', 'e', 'f' ], 'tbody')
+        ], b(0, 0, 0, 1), 'a'
+      );
       check(
         [
           r([ 'a', 'a', 'c' ], 'tbody'),
@@ -71,6 +92,7 @@ test(
       };
 
       check([], [], 'a');
+      check([r([ 'a', '?' ], 'thead')], [r([ 'a', 'a' ], 'thead')], 'a');
       check([r([ 'a', '?' ], 'tbody')], [r([ 'a', 'a' ], 'tbody')], 'a');
       check(
         [
@@ -83,6 +105,14 @@ test(
         ], 'a'
       );
 
+      check(
+        [
+          r([ 'a', 'b', '?', 'c' ], 'thead')
+        ],
+        [
+          r([ 'a', 'b', 'b', 'c' ], 'thead')
+        ], 'b'
+      );
       check(
         [
           r([ 'a', 'b', '?', 'c' ], 'tbody')

@@ -17,9 +17,9 @@ test(
     };
 
     var world = [
-      r([ 'a', 'a', 'a' ], 'tbody'),
+      r([ 'a', 'a', 'a' ], 'thead'),
       r([ 'b', 'b', 'c' ], 'tbody'),
-      r([ 'd', 'e', 'c' ], 'tbody')
+      r([ 'd', 'e', 'c' ], 'tfoot')
     ];
 
     check({ colspan: 3, rowspan: 1 }, 0, 0, world);

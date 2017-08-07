@@ -37,6 +37,15 @@ test(
 
     check(
       [
+        rd([ d('td1', 1, 3), d('td2', 1, 1), d('td3', 1, 1) ], 'thead')
+      ], 
+      [
+        r([ 'td1', 'td1', 'td1', 'td2', 'td3' ], 'thead')
+      ]
+    );
+
+    check(
+      [
         rd([ d('td1', 4, 3) ], 'tbody'),
         rd([ ], 'tbody'),
         rd([ ], 'tbody'),
@@ -52,12 +61,40 @@ test(
 
     check(
       [
+        rd([ d('td1', 4, 3) ], 'tfoot'),
+        rd([ ], 'tfoot'),
+        rd([ ], 'tfoot'),
+        rd([ ], 'tfoot')
+      ], 
+      [
+        r([ 'td1', 'td1', 'td1' ], 'tfoot'),
+        r([ 'td1', 'td1', 'td1' ], 'tfoot'),
+        r([ 'td1', 'td1', 'td1' ], 'tfoot'),
+        r([ 'td1', 'td1', 'td1' ], 'tfoot')
+      ]
+    );
+
+    check(
+      [
         rd([ d('td1', 2, 3) ], 'tbody'),
         rd([ ], 'tbody')
       ], 
       [
         r([ 'td1', 'td1', 'td1' ], 'tbody'),
         r([ 'td1', 'td1', 'td1' ], 'tbody')
+      ]
+    );
+
+    check(
+      [
+        rd([ d('td1', 1, 1) ], 'thead'),
+        rd([ d('td2', 1, 1) ], 'tbody'),
+        rd([ d('td3', 1, 1) ], 'tfoot')
+      ], 
+      [
+        r([ 'td1' ], 'thead'),
+        r([ 'td2' ], 'tbody'),
+        r([ 'td3' ], 'tfoot')
       ]
     );
 
