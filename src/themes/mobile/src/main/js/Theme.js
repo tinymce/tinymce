@@ -228,13 +228,12 @@ define(
               Buttons.forToolbarStateCommand(editor, 'italic'),
               LinkButton.sketch(realm, editor),
               ImagePicker.sketch(editor),
-              HeadingSlider.sketch(realm, editor),
               // NOTE: Requires "lists" plugin.
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
-
-              Buttons.forToolbar('styles', function () {
+              // HeadingSlider.sketch(realm, editor),
+              Buttons.forToolbar('font-size', function () {
                 editor.fire('toReading');
                 // Hack to make the keyboard disappear first ... there should be a way to detect it. (for Android only maybe)
                 setTimeout(function () {
@@ -247,9 +246,10 @@ define(
                   });
                 }, 1000);
               }, { }),
+              
 
-              FontSizeSlider.sketch(realm, editor),
-              ColorSlider.sketch(realm, editor)
+              // FontSizeSlider.sketch(realm, editor),
+              // ColorSlider.sketch(realm, editor)
             ]
           };
 
