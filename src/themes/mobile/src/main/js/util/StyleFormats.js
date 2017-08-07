@@ -111,9 +111,6 @@ define(
         formats: pruned,
         handle: function (item, value) {
           editor.formatter.apply(value);
-          // var selected = editor.formatter.match(value);
-          // var f = selected ? Toggling.on : Toggling.off;
-          // f(item);
           onDone();
         }
       });

@@ -9,11 +9,12 @@ define(
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.StylesMenu'
   ],
 
-  function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Styles, StylesMenu) {
+  function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Receivers, Styles, StylesMenu) {
     var build = function (refresh, scrollIntoView) {
       var dropup = GuiFactory.build(
         Container.sketch({
@@ -52,6 +53,9 @@ define(
                 scrollIntoView();
 
               }
+            }),
+            Receivers.orientation(function (component, data) {
+              disappear();
             })
           ])
         })

@@ -219,6 +219,9 @@ define(
             label: 'the action group',
             scrollable: true,
             items: [
+              Buttons.forToolbar('scroll', function () {
+                editor.fire('scrollIntoView');
+              }, { }),
               Buttons.forToolbarCommand(editor, 'undo'),
               Buttons.forToolbarStateCommand(editor, 'bold'),
               Buttons.forToolbarStateCommand(editor, 'italic'),
@@ -236,7 +239,8 @@ define(
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
                     var menu = StyleFormats.ui(editor, styleFormats, function () {
-                      // realm.dropup().disappear();
+                      // After a change of formats, scroll into view again.
+                      editor.fire('scrollIntoView');
                     });
                     realm.dropup().appear(menu);
                   });

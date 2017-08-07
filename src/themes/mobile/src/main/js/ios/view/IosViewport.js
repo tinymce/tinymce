@@ -175,7 +175,7 @@ define(
           Css.set(viewport, 'height', newHeight + 'px');
 
           Css.set(dropup, 'bottom', -(newToolbarHeight + newHeight + dropupHeight) + 'px');
-          DeviceZones.updatePadding(contentBody, viewport);
+          DeviceZones.updatePadding(contentBody, viewport, dropup);
         }
       };
 
@@ -186,7 +186,7 @@ define(
         refresh();
       };
 
-      DeviceZones.updatePadding(contentBody, viewport);
+      DeviceZones.updatePadding(contentBody, viewport, dropup);
 
       return {
         setViewportOffset: setViewportOffset,
