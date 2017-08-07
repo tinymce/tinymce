@@ -137,6 +137,10 @@ define(
                 };
               },
 
+              onTouchToolstrip: function () {
+                realm.dropup().disappear();
+              },
+
               onTouchContent: function () {
                 var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
                 // If something in the toolbar had focus, fire an execute on it (execute on tap away)
@@ -219,9 +223,6 @@ define(
             label: 'the action group',
             scrollable: true,
             items: [
-              Buttons.forToolbar('scroll', function () {
-                editor.fire('scrollIntoView');
-              }, { }),
               Buttons.forToolbarCommand(editor, 'undo'),
               Buttons.forToolbarStateCommand(editor, 'bold'),
               Buttons.forToolbarStateCommand(editor, 'italic'),
