@@ -110,7 +110,11 @@ define(
       return StylesMenu.sketch({
         formats: pruned,
         handle: function (item, value) {
-          editor.formatter.apply(value);
+          if (Toggling.isOn(item)) {
+            editor.formatter.remove(value);
+          } else {
+            editor.formatter.apply(value);
+          }
           onDone();
         }
       });
