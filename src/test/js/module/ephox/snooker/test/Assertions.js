@@ -150,13 +150,13 @@ define(
       Bars.destroy(wire);
     };
 
-    var checkUnmerge = function (expPath, expected, input, unmergablePaths, _direction) {
+    var checkUnmerge = function (expected, input, unmergablePaths, _direction) {
       var table = Element.fromHtml(input);
       Insert.append(Body.body(), table);
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
       var unmergables = Arr.map(unmergablePaths, function (path) {
-        return Hierarchy.follow(table, [ 0, path.row, path.column ]);
+        return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
       });
 
       var unmergable = Option.some(Options.cat(unmergables));

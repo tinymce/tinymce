@@ -6,7 +6,7 @@ test(
   ],
 
   function (Assertions) {
-    Assertions.checkUnmerge({ row: 0, column: 0 },
+    Assertions.checkUnmerge(
       '<table><tbody>' +
         '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
         '<tr><th>?</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
@@ -20,11 +20,11 @@ test(
       '</tbody></table>',
 
       [
-        { row: 0, column: 0 }
+        { section: 0, row: 0, column: 0 }
       ]
     );
 
-    Assertions.checkUnmerge({ row: 0, column: 0 },
+    Assertions.checkUnmerge(
       '<table><tbody>' +
         '<tr><th>' +
         '<table><tbody>' +
@@ -48,11 +48,11 @@ test(
       '</tbody></table>',
 
       [
-        { row: 0, column: 0 }
+        { section: 0, row: 0, column: 0 }
       ]
     );
 
-    Assertions.checkUnmerge({ row: 0, column: 0 },
+    Assertions.checkUnmerge(
       '<table><tbody>' +
         '<tr><th>A1</th><td>B1</td><td>C1</td><td>?</td></tr>' +
         '<tr><th>?</th><td>B2</td><td>C2</td><td>?</td></tr>' +
@@ -66,9 +66,53 @@ test(
       '</tbody></table>',
 
       [
-        { row: 0, column: 0 },
-        { row: 0, column: 2 },
-        { row: 1, column: 1 }
+        { section: 0, row: 0, column: 0 },
+        { section: 0, row: 0, column: 2 },
+        { section: 0, row: 1, column: 1 }
+      ]
+    );
+
+    Assertions.checkUnmerge(
+      '<table><thead>' +
+        '<tr><td>A1</td><td>?</td><td>?</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+        '<tr><td>A3</td><td>B3</td><td>C3</td><td>D3</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td colspan="3">A1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+        '<tr><td>A3</td><td>B3</td><td>C3</td><td>D3</td></tr>' +
+      '</tbody></table>',
+
+      [
+        { section: 0, row: 0, column: 0 }
+      ]
+    );
+
+    Assertions.checkUnmerge(
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>?</td><td>?</td><td>D2</td></tr>' +
+        '<tr><td>A3</td><td>B3</td><td>C3</td><td>D3</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td colspan="3">A2</td><td>D2</td></tr>' +
+        '<tr><td>A3</td><td>B3</td><td>C3</td><td>D3</td></tr>' +
+      '</tbody></table>',
+
+      [
+        { section: 1, row: 0, column: 0 }
       ]
     );
   }
