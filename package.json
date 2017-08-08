@@ -18,9 +18,12 @@
     "@ephox/violin": "git+ssh://git@stash:7999/libs/violin.git#master"
   },
   "devDependencies": {
+    "@ephox/bedrock": "*",
     "@ephox/bolt": "*",
+    "chromedriver": "*",
     "grunt": "*",
-    "grunt-npm": "*"
+    "grunt-npm": "*",
+    "@ephox/fred": "git+ssh://git@stash:7999/libs/fred.git#master"
   },
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
