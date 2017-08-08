@@ -7,7 +7,7 @@ test(
   ],
 
   function (TableOperations, Assertions) {
-    Assertions.checkOld({ row: 0, column: 0 },
+    Assertions.checkOld({ section: 0, row: 0, column: 0 },
       '<table><tbody>' +
         '<tr><td>?</td><td>?</td></tr>' +
         '<tr><td>A1</td><td>B1</td></tr>' +
@@ -19,10 +19,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowBefore, 0, 0
+      TableOperations.insertRowBefore, 0, 0, 0
     );
 
-    Assertions.checkOld({ row: 1, column: 0 },
+    Assertions.checkOld({ section: 0, row: 1, column: 0 },
       '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td></tr>' +
         '<tr><td>?</td><td>?</td></tr>' +
@@ -34,10 +34,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowBefore, 1, 0
+      TableOperations.insertRowBefore, 0, 1, 0
     );
 
-    Assertions.checkOld({ row: 0, column: 0 },
+    Assertions.checkOld({ section: 0, row: 0, column: 0 },
       '<table><tbody>' +
         '<tr><td>?</td><td>?</td></tr>' +
         '<tr><td>' +
@@ -59,10 +59,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowBefore, 0, 0
+      TableOperations.insertRowBefore, 0, 0, 0
     );
 
-    Assertions.checkOld({ row: 1, column: 0 },
+    Assertions.checkOld({ section: 0, row: 1, column: 0 },
       '<table><tbody>' +
         '<tr><td>' +
         '<table><tbody>' +
@@ -84,10 +84,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowBefore, 1, 0
+      TableOperations.insertRowBefore, 0, 1, 0
     );
 
-    Assertions.checkOld({ row: 2, column: 0 },
+    Assertions.checkOld({ section: 0, row: 2, column: 0 },
       '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td></tr>' +
         '<tr><td>A2</td><td>B2</td></tr>' +
@@ -99,10 +99,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowAfter, 1, 0
+      TableOperations.insertRowAfter, 0, 1, 0
     );
 
-    Assertions.checkOld({ row: 2, column: 0 },
+    Assertions.checkOld({ section: 0, row: 2, column: 0 },
       '<table><tbody>' +
         '<tr><td>' +
         '<table><tbody>' +
@@ -124,10 +124,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowAfter, 1, 0
+      TableOperations.insertRowAfter, 0, 1, 0
     );
 
-    Assertions.checkOld({ row: 0, column: 0 },
+    Assertions.checkOld({ section: 0, row: 0, column: 0 },
       '<table><tbody>' +
         '<tr><td>?</td><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
         '<tr><td>?</td><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
@@ -138,10 +138,10 @@ test(
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnBefore, 0, 0
+      TableOperations.insertColumnBefore, 0, 0, 0
     );
 
-    Assertions.checkOld({ row: 0, column: 0 },
+    Assertions.checkOld({ section: 0, row: 0, column: 0 },
       '<table><tbody>' +
         '<tr><td>?</td><td>' +
         '<table><tbody>' +
@@ -162,10 +162,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnBefore, 0, 0
+      TableOperations.insertColumnBefore, 0, 0, 0
     );
 
-    Assertions.checkOld({ row: 1, column: 1 },
+    Assertions.checkOld({ section: 0, row: 1, column: 1 },
       '<table><tbody>' +
         '<tr><td>A1</td><td>?</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
         '<tr><td>A2</td><td>?</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
@@ -176,10 +176,10 @@ test(
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnAfter, 1, 0
+      TableOperations.insertColumnAfter, 0, 1, 0
     );
 
-    Assertions.checkOld({ row: 0, column: 1 },
+    Assertions.checkOld({ section: 0, row: 0, column: 1 },
       '<table><tbody>' +
         '<tr><td>A1</td><td>?</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
         '<tr><td>A2</td><td>?</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
@@ -190,10 +190,10 @@ test(
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnAfter, 0, 0
+      TableOperations.insertColumnAfter, 0, 0, 0
     );
 
-    Assertions.checkOld({ row: 0, column: 2 },
+    Assertions.checkOld({ section: 0, row: 0, column: 2 },
       '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td><td>?</td><td>C1</td><td>D1</td></tr>' +
         '<tr><td>A2</td><td>B2</td><td>?</td><td>C2</td><td>D2</td></tr>' +
@@ -204,10 +204,10 @@ test(
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnAfter, 0, 1
+      TableOperations.insertColumnAfter, 0, 0, 1
     );
 
-    Assertions.checkOld({ row: 0, column: 1 },
+    Assertions.checkOld({ section: 0, row: 0, column: 1 },
       '<table><tbody>' +
         '<tr><td>' +
         '<table><tbody>' +
@@ -228,10 +228,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnAfter, 0, 0
+      TableOperations.insertColumnAfter, 0, 0, 0
     );
 
-    Assertions.checkOld({ row: 0, column: 2 },
+    Assertions.checkOld({ section: 0, row: 0, column: 2 },
       '<table><tbody>' +
         '<tr><td>' +
         '<table><tbody>' +
@@ -252,10 +252,10 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertColumnAfter, 0, 1
+      TableOperations.insertColumnAfter, 0, 0, 1
     );
 
-    Assertions.checkStructure({ row: 1, column: 1 },
+    Assertions.checkStructure({ section: 0, row: 1, column: 1 },
       [
         [ 'A', '?', 'B','C' ],
         [ 'D', '?', 'E' ],
@@ -280,11 +280,11 @@ test(
       '</tbody>' +
       '</table>',
 
-      TableOperations.insertColumnAfter, 1, 0
+      TableOperations.insertColumnAfter, 0, 1, 0
     );
 
     // Irregular tables (inserting row where one row has an irregular cell.
-    Assertions.checkOld({ row: 2, column: 0 },
+    Assertions.checkOld({ section: 0, row: 2, column: 0 },
       '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td><td>IRREGULAR CELL</td></tr>' +
         '<tr><td>A2</td><td>B2</td><td>?</td></tr>' +
@@ -296,7 +296,83 @@ test(
         '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.insertRowAfter, 1, 0
+      TableOperations.insertRowAfter, 0, 1, 0
+    );
+
+    Assertions.checkOld({ section: 0, row: 0, column: 0 },
+      '<table><thead>' +
+        '<tr><td>?</td><td>?</td></tr>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.insertRowBefore, 0, 0, 0
+    );
+
+    Assertions.checkOld({ section: 1, row: 0, column: 0 },
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>?</td><td>?</td></tr>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.insertRowBefore, 1, 0, 0
+    );
+
+    Assertions.checkOld({ section: 0, row: 1, column: 0 },
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '<tr><td>?</td><td>?</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.insertRowAfter, 0, 0, 0
+    );
+
+    Assertions.checkOld({ section: 1, row: 1, column: 0 },
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+        '<tr><td>?</td><td>?</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.insertRowAfter, 1, 0, 0
     );
   }
 );
