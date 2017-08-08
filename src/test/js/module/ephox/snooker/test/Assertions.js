@@ -34,15 +34,15 @@ define(
       assert.eq(expected, cleaner);
     };
 
-    var checkOld = function (expCell, expectedHtml, input, operation, row, column, _direction) {
+    var checkOld = function (expCell, expectedHtml, input, operation, section, row, column, _direction) {
       var table = Element.fromHtml(input);
       Insert.append(Body.body(), table);
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ 0, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
+      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
 
       var actualPath = Hierarchy.path(table, cursor.getOrDie()).getOrDie('could not find path');
-      assert.eq([ 0, expCell.row, expCell.column ], actualPath);
+      assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
 
       // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
