@@ -1,7 +1,7 @@
 node("primary") {
   echo "Checkout master branch"
   stage ("Checkout snooker") {
-    git([branch: "master", url:'ssh://git@stash:7999/tbio/snooker.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
+    git([branch: "TBIO-4980", url:'ssh://git@stash:7999/tbio/snooker.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
   }
 
   stage ("Checkout shared pipelines") {
@@ -35,7 +35,7 @@ node("primary") {
     processes[name] = {
       node("bedrock-" + permutation.os) {
         echo "Slave checkout"
-        git([branch: "master", url:'ssh://git@stash:7999/tbio/snooker.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
+        git([branch: "TBIO-4980", url:'ssh://git@stash:7999/tbio/snooker.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
 
         sshagent(credentials: ['8aa93893-84cc-45fc-a029-a42f21197bb3']) {
           echo "Installing tools"
