@@ -83,7 +83,7 @@ define(
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
       var cellz = Arr.map(cells, function (cell) {
-        return Hierarchy.follow(table, [ 0, cell.row, cell.column, 0 ]).getOrDie('Could not find cell');
+        return Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie('Could not find cell');
       });
 
 
@@ -94,7 +94,7 @@ define(
       // The operation might delete the whole table
       optExpCell.each(function (expCell) {
         var actualPath = Hierarchy.path(table, cursor.getOrDie('could not find cursor')).getOrDie('could not find path');
-        assert.eq([ 0, expCell.row, expCell.column ], actualPath);
+        assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
       });
 
 
