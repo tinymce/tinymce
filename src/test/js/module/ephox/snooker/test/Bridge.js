@@ -19,21 +19,19 @@ define(
   function (Arr, Obj, Fun, Option, Options, Attr, Css, Element, Hierarchy, Insert, Node, Replication) {
     // Mock/Stub out helper functions
 
-    var targetStub = function (selection, table) {
+    var targetStub = function (selection, bounds, table) {
       var cells = Options.cat(Arr.map(selection, function (path) {
-        return Hierarchy.follow(table, [ 0, path.row, path.column ]);
+        return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
       }));
 
-      var start = 0;
-      var end = selection.length - 1;
       return {
         mergable: Fun.constant(Option.from({
           cells: Fun.constant(cells),
           bounds: Fun.constant({
-            startRow: Fun.constant(selection[start].row),
-            startCol: Fun.constant(selection[start].col),
-            finishRow: Fun.constant(selection[end].row),
-            finishCol: Fun.constant(selection[end].col)
+            startRow: Fun.constant(bounds.startRow),
+            startCol: Fun.constant(bounds.startCol),
+            finishRow: Fun.constant(bounds.finishRow),
+            finishCol: Fun.constant(bounds.finishCol)
           })
         }))
       };

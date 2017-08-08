@@ -122,7 +122,7 @@ define(
       Bars.destroy(wire);
     };
 
-    var checkMerge = function (label, expected, input, selection, _direction) {
+    var checkMerge = function (label, expected, input, selection, bounds, _direction) {
       var table = Element.fromHtml(input);
       var expectedDom = Element.fromHtml(expected);
 
@@ -131,7 +131,7 @@ define(
 
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-      var target = Bridge.targetStub(selection, table);
+      var target = Bridge.targetStub(selection, bounds, table);
       var generators = Bridge.generators;
 
       TableOperations.mergeCells(wire, table, target, generators, direction);
