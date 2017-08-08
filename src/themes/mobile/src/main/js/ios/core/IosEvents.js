@@ -45,6 +45,7 @@ define(
 
       var scrollToCursor = function () {
         editorApi.getCursorBox().each(function (box) {
+          console.log('scrolling to', box.top(), box.height());
           scrollToY(box.top(), box.height());
         });
       };
@@ -153,6 +154,9 @@ define(
 
           // Then, depending on the keyboard mode, we may need to do something else (like dismiss the keyboard)
           onToolbarTouch(touchEvent);
+
+          // Fire the touchstart event to the theme for things like hiding dropups
+          editorApi.onTouchToolstrip();
         }),
 
         // When the user clicks back into the content, clear any fake selections

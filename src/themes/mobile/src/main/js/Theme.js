@@ -5,8 +5,12 @@ define(
     'ephox.alloy.api.behaviour.Swapping',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.debugging.Debugging',
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Id',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',
@@ -14,8 +18,8 @@ define(
     'ephox.sugar.api.node.Node',
     'global!document',
     'global!window',
-    'tinymce.core.ThemeManager',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
     'tinymce.themes.mobile.channels.TinyChannels',
@@ -29,16 +33,18 @@ define(
     'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.ui.LinkButton',
+    'tinymce.themes.mobile.ui.StylesMenu',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
-    'tinymce.themes.mobile.util.SkinLoaded'
+    'tinymce.themes.mobile.util.SkinLoaded',
+    'tinymce.themes.mobile.util.StyleFormats'
   ],
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, ThemeManager, DOMUtils, Api, TinyCodeDupe,
-    TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers,
-    SkinLoaded
+    Swapping, AlloyTriggers, Attachment, Debugging, Objects, Arr, Cell, Fun, Id, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils,
+    ThemeManager, Api, TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm,
+    LinkButton, StylesMenu, CssUrls, FormatChangers, SkinLoaded, StyleFormats
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -131,6 +137,10 @@ define(
                 };
               },
 
+              onTouchToolstrip: function () {
+                realm.dropup().disappear();
+              },
+
               onTouchContent: function () {
                 var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
                 // If something in the toolbar had focus, fire an execute on it (execute on tap away)
@@ -171,6 +181,8 @@ define(
             }
           });
 
+          Debugging.registerInspector('remove this', realm.system());
+
           var backToMaskGroup = {
             label: 'The first group',
             scrollable: false,
@@ -205,6 +217,8 @@ define(
             ]
           };
 
+          var styleFormats = StyleFormats.register(editor, editor.settings);
+
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
@@ -214,25 +228,28 @@ define(
               Buttons.forToolbarStateCommand(editor, 'italic'),
               LinkButton.sketch(realm, editor),
               ImagePicker.sketch(editor),
-              HeadingSlider.sketch(realm, editor),
               // NOTE: Requires "lists" plugin.
               Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
-
-              Buttons.forToolbar('styles', function () {
+              // HeadingSlider.sketch(realm, editor),
+              Buttons.forToolbar('font-size', function () {
                 editor.fire('toReading');
                 // Hack to make the keyboard disappear first ... there should be a way to detect it. (for Android only maybe)
                 setTimeout(function () {
                   window.requestAnimationFrame(function () {
-                    
-                    realm.dropup().appear();
+                    var menu = StyleFormats.ui(editor, styleFormats, function () {
+                      // After a change of formats, scroll into view again.
+                      editor.fire('scrollIntoView');
+                    });
+                    realm.dropup().appear(menu);
                   });
                 }, 1000);
               }, { }),
+              
 
-              FontSizeSlider.sketch(realm, editor),
-              ColorSlider.sketch(realm, editor)
+              // FontSizeSlider.sketch(realm, editor),
+              // ColorSlider.sketch(realm, editor)
             ]
           };
 
@@ -246,7 +263,6 @@ define(
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
           var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
-
 
           // Investigate ways to keep in sync with the ui
           FormatChangers.init(realm, editor);

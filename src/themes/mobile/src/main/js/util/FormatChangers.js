@@ -4,12 +4,13 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'tinymce.themes.mobile.channels.TinyChannels'
   ],
 
-  function (Arr, Fun, Element, Node, TinyChannels) {
+  function (Arr, Fun, Obj, Element, Node, TinyChannels) {
     var fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
     var fireChange = function (realm, command, state) {
@@ -20,7 +21,8 @@ define(
     };
 
     var init = function (realm, editor) {
-      Arr.each([ 'bold', 'italic', 'h1', 'h2', 'h3' ], function (command) {
+      var allFormats = Obj.keys(editor.formatter.get());
+      Arr.each(allFormats, function (command) {
         editor.formatter.formatChanged(command, function (state) {
           fireChange(realm, command, state);
         });

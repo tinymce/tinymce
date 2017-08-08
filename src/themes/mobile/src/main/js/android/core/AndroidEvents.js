@@ -60,6 +60,10 @@ define(
         tapping.onTouchmove(),
         tapping.onTouchend(),
 
+        DomEvent.bind(toolstrip, 'touchstart', function (evt) {
+          editorApi.onTouchToolstrip();
+        }),
+
         editorApi.onToReading(function () {
           Focus.blur(editorApi.body());
         }),

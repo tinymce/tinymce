@@ -9,14 +9,13 @@ define(
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.StylesMenu'
   ],
 
-  function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Styles, StylesMenu) {
+  function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Receivers, Styles, StylesMenu) {
     var build = function (refresh, scrollIntoView) {
-      var menu = Memento.record(StylesMenu.sketch({ }));
-      console.log('scrollIntoView', scrollIntoView);
       var dropup = GuiFactory.build(
         Container.sketch({
           dom: {
@@ -44,25 +43,26 @@ define(
               },
 
               onShrunk: function (component) {
-                console.log('onShrunk');
                 refresh();
                 scrollIntoView();
 
                 Replacing.set(component, [ ]);
               },
               onGrown: function (component) {
-                console.log('onGrown');
                 refresh();
                 scrollIntoView();
 
               }
+            }),
+            Receivers.orientation(function (component, data) {
+              disappear();
             })
           ])
         })
       );
 
-      var appear = function () {
-        Replacing.set(dropup, [ menu.asSpec() ]);
+      var appear = function (menu) {
+        Replacing.set(dropup, [ menu ]);
         Sliding.grow(dropup);
       };
 

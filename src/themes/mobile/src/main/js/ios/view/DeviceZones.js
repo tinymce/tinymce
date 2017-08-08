@@ -45,15 +45,18 @@ define(
       return (visualScreenHeight - outerWindow.innerHeight) > keyboard ? 0 : keyboard;
     };
 
-    var getGreenzone = function (socket) {
+    var getGreenzone = function (socket, dropup) {
       var outerWindow = Traverse.owner(socket).dom().defaultView;
-      var viewportHeight = Height.get(socket);
-      return viewportHeight - accountableKeyboardHeight(outerWindow);
+      // Include the dropup for this calculation because it represents the total viewable height.
+      var viewportHeight = Height.get(socket) + Height.get(dropup);
+      var acc = accountableKeyboardHeight(outerWindow);
+      console.log('outerwindow', outerWindow, 'viewportHeight', viewportHeight, 'acc', acc);
+      return viewportHeight - acc;
     };
 
-    var updatePadding = function (contentBody, socket) {
-      var greenzoneHeight = getGreenzone(socket);
-      var deltaHeight = Height.get(socket) - greenzoneHeight;
+    var updatePadding = function (contentBody, socket, dropup) {
+      var greenzoneHeight = getGreenzone(socket, dropup);
+      var deltaHeight = (Height.get(socket) + Height.get(dropup)) - greenzoneHeight;
       // TBIO-3878 Changed the element that was receiving the padding from the iframe to the body of the
       // iframe's document. The reasoning for this is that the syncHeight function of IosSetup.js relies on
       // the scrollHeight of the body to set the height of the iframe itself. If we don't set the

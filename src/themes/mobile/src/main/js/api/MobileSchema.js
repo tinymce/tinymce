@@ -32,6 +32,7 @@ define(
 
         FieldSchema.defaulted('onTouchContent', Fun.noop),
         FieldSchema.defaulted('onTapContent', Fun.noop),
+        FieldSchema.defaulted('onTouchToolstrip', Fun.noop),
 
 
         FieldSchema.defaulted('onScrollToCursor', Fun.constant({ unbind: Fun.noop })),
