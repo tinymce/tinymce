@@ -195,5 +195,77 @@ test(
 
       TableOperations.unmakeColumnHeader, 1, 0, 0
     );
+
+    Assertions.checkOld({ section: 0, row: 0, column: 1 },
+      '<table><thead>' +
+        '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeRowHeader, 0, 0, 1
+    );
+
+    Assertions.checkOld({ section: 0, row: 0, column: 1 },
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.unmakeRowHeader, 0, 0, 1
+    );
+
+    Assertions.checkOld({ section: 0, row: 0, column: 1 },
+      '<table><thead>' +
+        '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeRowHeader, 0, 0, 1
+    );
+
+    Assertions.checkOld({ section: 1, row: 0, column: 1 },
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">C2</th><th scope="col">D2</th></tr>' +
+      '</tbody></table>',
+
+      TableOperations.unmakeRowHeader, 1, 0, 1
+    );
   }
 );
