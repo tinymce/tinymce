@@ -46,22 +46,35 @@ define(
         SelectorFind.child(table, sectionName).bind(Remove.remove);
       };
 
-      var renderOrRemoveSection = function (grid, sectionName) {
-        var gridSection = Arr.filter(grid, function (row) {
-          return row.section() === sectionName;
-        });
-
+      var renderOrRemoveSection = function (gridSection, sectionName) {
         if (gridSection.length > 0) {
           renderSection(gridSection, sectionName);
         } else {
           removeSection(sectionName);
         }
       };
+      
+      var headSection = [];
+      var bodySection = [];
+      var footSection = [];
 
-      // TODO Redo this so that it runs over once
-      renderOrRemoveSection(grid, 'thead');
-      renderOrRemoveSection(grid, 'tbody');
-      renderOrRemoveSection(grid, 'tfoot');
+      Arr.each(grid, function (row) {
+        switch (row.section()) {
+          case 'thead':
+            headSection.push(row);
+            break;
+          case 'tbody':
+            bodySection.push(row);
+            break;
+          case 'tfoot':
+            footSection.push(row);
+            break;
+        }
+      });
+
+      renderOrRemoveSection(headSection, 'thead');
+      renderOrRemoveSection(bodySection, 'tbody');
+      renderOrRemoveSection(footSection, 'tfoot');
     };
 
     return {
