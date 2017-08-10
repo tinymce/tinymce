@@ -3,10 +3,13 @@ define(
 
   [
     'ephox.darwin.selection.CellSelection',
-    'ephox.snooker.api.TablePositions'
+    'ephox.perhaps.Option',
+    'ephox.snooker.api.TablePositions',
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.SelectorFind'
   ],
 
-  function (CellSelection, TablePositions) {
+  function (CellSelection, Option, TablePositions, Compare, SelectorFind) {
     // Explictly calling CellSelection.retrieve so that we can see the API signature.
     var retrieve = function (container) {
       return CellSelection.retrieve(container);
@@ -14,8 +17,11 @@ define(
 
     var retrieveBox = function (container) {
       return CellSelection.getEdges(container).bind(function (edges) {
-        var firstAncestor = SelectorFind.ancestor(edges.first(), 'thead,tfoot,tbody,table');
-        var lastAncestor = SelectorFind.ancestor(edges.last(), 'thead,tfoot,tbody,table');
+        var isRoot = function (ancestor) {
+          return Compare.eq(container, ancestor);
+        };
+        var firstAncestor = SelectorFind.ancestor(edges.first(), 'thead,tfoot,tbody,table', isRoot);
+        var lastAncestor = SelectorFind.ancestor(edges.last(), 'thead,tfoot,tbody,table', isRoot);
         return firstAncestor.bind(function (fA) {
           return lastAncestor.bind(function (lA) {
             return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table(), edges.first(), edges.last()) : Option.none();
