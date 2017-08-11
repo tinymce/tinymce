@@ -44,7 +44,7 @@ define(
       var rng = editor.selection.getRng(), isPre, blocks;
 
       function hasPreSibling(pre) {
-        return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) != -1;
+        return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) !== -1;
       }
 
       function joinPre(pre1, pre2) {

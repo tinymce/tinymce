@@ -222,3 +222,11 @@
 
 @table-row-even:                  #fafafa;
 @table-row-hover:                 darken(@table-row-even, 10%);
+
+// Keeps Edge/Gecko from jumping up/down when the NBZWSP gets added/removed on Windows in particular.
+// The documented default seem to be around 1.2 but depending on the font family/browser/os being used.
+// However by comparing the rendering of adding/removing a forced line height 1.3 seems closer to the truth for
+// the default font in tinymce and having a slightly higher value probably improves readability anyway.
+@content-line-height:            1.3;
+@content-font-family:            Verdana, Arial, Helvetica, sans-serif;
+@content-font-size:              14px;

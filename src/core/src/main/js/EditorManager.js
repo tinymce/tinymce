@@ -21,20 +21,21 @@
 define(
   'tinymce.core.EditorManager',
   [
-    "tinymce.core.Editor",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.util.URI",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Promise",
-    "tinymce.core.util.Observable",
-    "tinymce.core.util.I18n",
-    "tinymce.core.FocusManager",
-    "tinymce.core.AddOnManager",
-    "tinymce.core.LegacyInput"
+    'tinymce.core.AddOnManager',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Editor',
+    'tinymce.core.Env',
+    'tinymce.core.ErrorReporter',
+    'tinymce.core.FocusManager',
+    'tinymce.core.LegacyInput',
+    'tinymce.core.util.I18n',
+    'tinymce.core.util.Observable',
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.URI'
   ],
-  function (Editor, $, DOMUtils, URI, Env, Tools, Promise, Observable, I18n, FocusManager, AddOnManager, LegacyInput) {
+  function (AddOnManager, DomQuery, DOMUtils, Editor, Env, ErrorReporter, FocusManager, LegacyInput, I18n, Observable, Promise, Tools, URI) {
     var DOM = DOMUtils.DOM;
     var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
     var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
@@ -52,9 +53,9 @@ define(
     function toggleGlobalEvents(editors, state) {
       if (state !== boundGlobalEvents) {
         if (state) {
-          $(window).on('resize scroll', globalEventDelegate);
+          DomQuery(window).on('resize scroll', globalEventDelegate);
         } else {
-          $(window).off('resize scroll', globalEventDelegate);
+          DomQuery(window).off('resize scroll', globalEventDelegate);
         }
 
         boundGlobalEvents = state;
@@ -107,7 +108,7 @@ define(
        * @property $
        * @type tinymce.dom.DomQuery
        */
-      $: $,
+      $: DomQuery,
 
       /**
        * Major version of TinyMCE build.
@@ -162,6 +163,8 @@ define(
        * tinymce.EditorManager.activeEditor.selection.getContent();
        */
       activeEditor: null,
+
+      settings: {},
 
       setup: function () {
         var self = this, baseURL, documentBaseURL, suffix = "", preInit, src;
@@ -313,13 +316,6 @@ define(
           return settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
         }
 
-        function report(msg, elm) {
-          // Log in a non test environment
-          if (window.console && !window.test) {
-            window.console.log(msg, elm);
-          }
-        }
-
         function createId(elm) {
           var id = elm.id;
 
@@ -356,6 +352,14 @@ define(
 
         function findTargets(settings) {
           var l, targets = [];
+
+          if (Env.ie && Env.ie < 11) {
+            ErrorReporter.initError(
+              'TinyMCE does not support the browser you are using. For a list of supported' +
+              ' browsers please see: https://www.tinymce.com/docs/get-started/system-requirements/'
+            );
+            return [];
+          }
 
           if (settings.types) {
             each(settings.types, function (type) {
@@ -437,7 +441,7 @@ define(
           DOM.unbind(window, 'ready', initEditors);
           execCallback('onpageload');
 
-          targets = $.unique(findTargets(settings));
+          targets = DomQuery.unique(findTargets(settings));
 
           // TODO: Deprecate this one
           if (settings.types) {
@@ -463,13 +467,17 @@ define(
             return !self.get(elm.id);
           });
 
-          each(targets, function (elm) {
-            if (isInvalidInlineTarget(settings, elm)) {
-              report('Could not initialize inline editor on invalid inline target element', elm);
-            } else {
-              createEditor(createId(elm), settings, elm);
-            }
-          });
+          if (targets.length === 0) {
+            provideResults([]);
+          } else {
+            each(targets, function (elm) {
+              if (isInvalidInlineTarget(settings, elm)) {
+                ErrorReporter.initError('Could not initialize inline editor on invalid inline target element', elm);
+              } else {
+                createEditor(createId(elm), settings, elm);
+              }
+            });
+          }
         }
 
         self.settings = settings;

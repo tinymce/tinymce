@@ -20,20 +20,41 @@
 define(
   'tinymce.core.dom.Selection',
   [
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.ControlSelection',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.ScrollIntoView',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.dom.TridentSelection',
     'tinymce.core.Env',
+    'tinymce.core.selection.FragmentReader',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, TreeWalker, TridentSelection, Env, Zwsp, Tools) {
+  function (
+    Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader,
+    Zwsp, Tools
+  ) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
+
+    var isAttachedToDom = function (node) {
+      return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
+    };
+
+    var isValidRange = function (rng) {
+      if (!rng) {
+        return false;
+      } else if (rng.select) { // Native IE range still produced by placeCaretAt
+        return true;
+      } else {
+        return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
+      }
+    };
 
     /**
      * Constructs a new selection instance.
@@ -113,8 +134,7 @@ define(
         }
 
         if (rng.cloneContents) {
-          fragment = rng.cloneContents();
-
+          fragment = args.contextual ? FragmentReader.read(self.editor.getBody(), rng).dom() : rng.cloneContents();
           if (fragment) {
             tmpElm.appendChild(fragment);
           }
@@ -602,7 +622,7 @@ define(
       setRng: function (rng, forward) {
         var self = this, sel, node, evt;
 
-        if (!rng) {
+        if (!isValidRange(rng)) {
           return;
         }
 
@@ -622,7 +642,7 @@ define(
         if (!self.tridentSel) {
           sel = self.getSel();
 
-          evt = self.editor.fire('SetSelectionRange', { range: rng });
+          evt = self.editor.fire('SetSelectionRange', { range: rng, forward: forward });
           rng = evt.range;
 
           if (sel) {
@@ -670,7 +690,7 @@ define(
             }
           }
 
-          self.editor.fire('AfterSetSelectionRange', { range: rng });
+          self.editor.fire('AfterSetSelectionRange', { range: rng, forward: forward });
         } else {
           // Is W3C Range fake range on IE
           if (rng.cloneRange) {
@@ -923,57 +943,7 @@ define(
       },
 
       scrollIntoView: function (elm, alignToTop) {
-        var scrollEvent = { elm: elm, alignToTop: alignToTop };
-        this.editor.fire('scrollIntoView', scrollEvent);
-        if (scrollEvent.isDefaultPrevented()) {
-          return;
-        }
-
-
-        var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH, offsetY = 0;
-
-        function getPos(elm) {
-          var x = 0, y = 0;
-
-          var offsetParent = elm;
-          while (offsetParent && offsetParent.nodeType) {
-            x += offsetParent.offsetLeft || 0;
-            y += offsetParent.offsetTop || 0;
-            offsetParent = offsetParent.offsetParent;
-          }
-
-          return { x: x, y: y };
-        }
-
-        if (!NodeType.isElement(elm)) {
-          return;
-        }
-
-        if (alignToTop === false) {
-          offsetY = elm.offsetHeight;
-        }
-
-        if (root.nodeName != 'BODY') {
-          var scrollContainer = self.getScrollContainer();
-          if (scrollContainer) {
-            y = getPos(elm).y - getPos(scrollContainer).y + offsetY;
-            viewPortH = scrollContainer.clientHeight;
-            viewPortY = scrollContainer.scrollTop;
-            if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
-              scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
-            }
-
-            return;
-          }
-        }
-
-        viewPort = dom.getViewPort(self.editor.getWin());
-        y = dom.getPos(elm).y + offsetY;
-        viewPortY = viewPort.y;
-        viewPortH = viewPort.h;
-        if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
-          self.editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);
-        }
+        ScrollIntoView.scrollIntoView(this.editor, elm, alignToTop);
       },
 
       placeCaretAt: function (clientX, clientY) {

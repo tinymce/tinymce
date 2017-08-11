@@ -11,27 +11,43 @@
 define(
   'tinymce.core.keyboard.InlineUtils',
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
+    'ephox.katamari.api.Type',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.EditorSettings',
     'tinymce.core.text.Bidi'
   ],
-  function (Fun, Option, Options, CaretContainer, CaretPosition, CaretUtils, CaretWalker, DOMUtils, Bidi) {
-    var isInlineTarget = function (elm) {
-      return DOMUtils.DOM.is(elm, 'a[href],code');
+  function (
+    Arr, Fun, Option, Options, Type, Element, Selectors, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, NodeType, EditorSettings,
+    Bidi
+  ) {
+    var isInlineTarget = function (editor, elm) {
+      var selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');
+      return Selectors.is(Element.fromDom(elm), selector);
     };
 
     var isRtl = function (element) {
       return DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
     };
 
-    var findInline = function (rootNode, pos) {
-      return Option.from(DOMUtils.DOM.getParent(pos.container(), isInlineTarget, rootNode));
+    var findInlineParents = function (isInlineTarget, rootNode, pos) {
+      return Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
+    };
+
+    var findRootInline = function (isInlineTarget, rootNode, pos) {
+      var parents = findInlineParents(isInlineTarget, rootNode, pos);
+      return Option.from(parents[parents.length - 1]);
     };
 
     var hasSameParentBlock = function (rootNode, node1, node2) {
@@ -40,38 +56,33 @@ define(
       return block1 && block1 === block2;
     };
 
-    var isInInline = function (rootNode, pos) {
-      return pos ? findInline(rootNode, pos).isSome() : false;
-    };
-
-    var isAtInlineEndPoint = function (rootNode, pos) {
-      return findInline(rootNode, pos).map(function (inline) {
-        return findCaretPosition(inline, false, pos).isNone() || findCaretPosition(inline, true, pos).isNone();
-      }).getOr(false);
-    };
-
     var isAtZwsp = function (pos) {
       return CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
-    };
-
-    var findCaretPositionIn = function (node, forward) {
-      var caretWalker = new CaretWalker(node);
-      var startPos = forward ? CaretPosition.before(node) : CaretPosition.after(node);
-      return Option.from(forward ? caretWalker.next(startPos) : caretWalker.prev(startPos));
-    };
-
-    var findCaretPosition = function (rootNode, forward, from) {
-      var caretWalker = new CaretWalker(rootNode);
-      return Option.from(forward ? caretWalker.next(from) : caretWalker.prev(from));
     };
 
     var normalizePosition = function (forward, pos) {
       var container = pos.container(), offset = pos.offset();
 
       if (forward) {
-        return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
+        if (CaretContainer.isCaretContainerInline(container)) {
+          if (NodeType.isText(container.nextSibling)) {
+            return new CaretPosition(container.nextSibling, 0);
+          } else {
+            return CaretPosition.after(container);
+          }
+        } else {
+          return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
+        }
       } else {
-        return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
+        if (CaretContainer.isCaretContainerInline(container)) {
+          if (NodeType.isText(container.previousSibling)) {
+            return new CaretPosition(container.previousSibling, container.previousSibling.data.length);
+          } else {
+            return CaretPosition.before(container);
+          }
+        } else {
+          return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
+        }
       }
     };
 
@@ -80,13 +91,9 @@ define(
 
     return {
       isInlineTarget: isInlineTarget,
-      findInline: findInline,
-      isInInline: isInInline,
+      findRootInline: findRootInline,
       isRtl: isRtl,
-      isAtInlineEndPoint: isAtInlineEndPoint,
       isAtZwsp: isAtZwsp,
-      findCaretPositionIn: findCaretPositionIn,
-      findCaretPosition: findCaretPosition,
       normalizePosition: normalizePosition,
       normalizeForwards: normalizeForwards,
       normalizeBackwards: normalizeBackwards,

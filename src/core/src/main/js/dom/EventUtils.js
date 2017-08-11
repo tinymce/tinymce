@@ -193,6 +193,12 @@ define(
         return;
       }
 
+      function isDocReady() {
+        // Check complete or interactive state if there is a body
+        // element on some iframes IE 8 will produce a null body
+        return doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body);
+      }
+
       // Gets called when the DOM is ready
       function readyHandler() {
         if (!eventUtils.domLoaded) {
@@ -202,9 +208,7 @@ define(
       }
 
       function waitForDomLoaded() {
-        // Check complete or interactive state if there is a body
-        // element on some iframes IE 8 will produce a null body
-        if (doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body)) {
+        if (isDocReady()) {
           removeEvent(doc, "readystatechange", waitForDomLoaded);
           readyHandler();
         }
@@ -223,9 +227,9 @@ define(
         readyHandler();
       }
 
-      // Use W3C method
-      if (doc.addEventListener) {
-        if (doc.readyState === "complete") {
+      // Use W3C method (exclude IE 9,10 - readyState "interactive" became valid only in IE 11)
+      if (doc.addEventListener && !(Env.ie && Env.ie < 11)) {
+        if (isDocReady()) {
           readyHandler();
         } else {
           addEvent(win, 'DOMContentLoaded', readyHandler);

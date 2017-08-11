@@ -35,8 +35,6 @@ module.exports = function (grunt) {
       registerTask: function (task, tasks) {
         if (task === 'default') {
           tasksToExecute = tasks;
-        } else {
-          throw new Error('registerTask can only be executed on default in sub project.');
         }
       },
 

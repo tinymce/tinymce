@@ -115,7 +115,7 @@ define(
       }
 
       html = filter(html, [
-        /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
+        /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
         /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
         [/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
         /<br class="Apple-interchange-newline">/g,
@@ -134,11 +134,16 @@ define(
       };
     }
 
+    var isMsEdge = function () {
+      return navigator.userAgent.indexOf(' Edge/') !== -1;
+    };
+
     return {
       filter: filter,
       innerText: innerText,
       trimHtml: trimHtml,
-      createIdGenerator: createIdGenerator
+      createIdGenerator: createIdGenerator,
+      isMsEdge: isMsEdge
     };
   }
 );

@@ -8,6 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  *
  * @ignore-file
+ *
+ * Forked changes:
+ * - Disabled all assertions since they are only used for non supported browsers and cause dom repaints see #TINY-1141
  */
 
 /*jshint bitwise:false, expr:true, noempty:false, sub:true, eqnull:true, latedef:false, maxlen:255 */
@@ -341,7 +344,7 @@ define(
      * Support testing using an element
      * @param {Function} fn Passed the created div and expects a boolean result
      */
-    function assert(fn) {
+    /*function assert(fn) {
       var div = document.createElement("div");
 
       try {
@@ -356,7 +359,7 @@ define(
         // release memory in IE
         div = null;
       }
-    }
+    }*/
 
     /**
      * Adds the same handler for all of the specified attrs
@@ -524,19 +527,13 @@ define(
 
       // Support: IE<8
       // Verify that getAttribute really returns attributes and not properties (excepting IE8 booleans)
-      support.attributes = assert(function (div) {
-        div.className = "i";
-        return !div.getAttribute("className");
-      });
+      support.attributes = true;
 
       /* getElement(s)By*
       ---------------------------------------------------------------------- */
 
       // Check if getElementsByTagName("*") returns only elements
-      support.getElementsByTagName = assert(function (div) {
-        div.appendChild(doc.createComment(""));
-        return !div.getElementsByTagName("*").length;
-      });
+      support.getElementsByTagName = true;
 
       // Support: IE<9
       support.getElementsByClassName = rnative.test(doc.getElementsByClassName);
@@ -545,13 +542,10 @@ define(
       // Check if getElementById returns elements by name
       // The broken getElementById methods don't pick up programatically-set names,
       // so use a roundabout getElementsByName test
-      support.getById = assert(function (div) {
-        docElem.appendChild(div).id = expando;
-        return !doc.getElementsByName || !doc.getElementsByName(expando).length;
-      });
+      support.getById = true;
 
       // ID find and filter
-      if (support.getById) {
+      /*if (support.getById) {*/
         Expr.find["ID"] = function (id, context) {
           if (typeof context.getElementById !== strundefined && documentIsHTML) {
             var m = context.getElementById(id);
@@ -566,7 +560,7 @@ define(
             return elem.getAttribute("id") === attrId;
           };
         };
-      } else {
+      /*} else {
         // Support: IE6/7
         // getElementById is not reliable as a find shortcut
         delete Expr.find["ID"];
@@ -578,7 +572,7 @@ define(
             return node && node.value === attrId;
           };
         };
-      }
+      }*/
 
       // Tag
       Expr.find["TAG"] = support.getElementsByTagName ?
@@ -628,6 +622,7 @@ define(
       // See http://bugs.jquery.com/ticket/13378
       rbuggyQSA = [];
 
+      /*
       if ((support.qsa = rnative.test(doc.querySelectorAll))) {
         // Build QSA regex
         // Regex strategy adopted from Diego Perini
@@ -685,7 +680,11 @@ define(
           rbuggyQSA.push(",.*:");
         });
       }
+      */
 
+      support.disconnectedMatch = true;
+
+      /*
       if ((support.matchesSelector = rnative.test((matches = docElem.matches ||
         docElem.webkitMatchesSelector ||
         docElem.mozMatchesSelector ||
@@ -703,6 +702,7 @@ define(
           rbuggyMatches.push("!=", pseudos);
         });
       }
+      */
 
       rbuggyQSA = rbuggyQSA.length && new RegExp(rbuggyQSA.join("|"));
       rbuggyMatches = rbuggyMatches.length && new RegExp(rbuggyMatches.join("|"));
@@ -1998,16 +1998,12 @@ define(
 
     // Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
     // Detached nodes confoundingly follow *each other*
-    support.sortDetached = assert(function (div1) {
-      // Should return 1, but returns 4 (following)
-      return div1.compareDocumentPosition(document.createElement("div")) & 1;
-    }
-    );
+    support.sortDetached = true;
 
     // Support: IE<8
     // Prevent attribute/property "interpolation"
     // http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
-    if (!assert(function (div) {
+    /*if (!assert(function (div) {
       div.innerHTML = "<a href='#'></a>";
       return div.firstChild.getAttribute("href") === "#";
     })) {
@@ -2016,11 +2012,11 @@ define(
           return elem.getAttribute(name, name.toLowerCase() === "type" ? 1 : 2);
         }
       });
-    }
+    }*/
 
     // Support: IE<9
     // Use defaultValue in place of getAttribute("value")
-    if (!support.attributes || !assert(function (div) {
+    /*if (!support.attributes || !assert(function (div) {
       div.innerHTML = "<input/>";
       div.firstChild.setAttribute("value", "");
       return div.firstChild.getAttribute("value") === "";
@@ -2030,11 +2026,11 @@ define(
           return elem.defaultValue;
         }
       });
-    }
+    }*/
 
     // Support: IE<9
     // Use getAttributeNode to fetch booleans when getAttribute lies
-    if (!assert(function (div) {
+    /*if (!assert(function (div) {
       return div.getAttribute("disabled") == null;
     })) {
       addHandle(booleans, function (elem, name, isXML) {
@@ -2046,7 +2042,7 @@ define(
               null;
         }
       });
-    }
+    }*/
 
     // EXPOSE
     return Sizzle;

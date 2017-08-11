@@ -309,6 +309,54 @@ asynctest(
       );
     });
 
+    suite.test('Outdent on li with inner block element', function (editor) {
+      editor.getBody().innerHTML = LegacyUnit.trimBrs(
+        '<ul>' +
+        '<li><p>a</p></li>' +
+        '<li><p>b</p></li>' +
+        '<li><p>c</p></li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'ul li:nth-child(2) p', 0);
+      LegacyUnit.execCommand(editor, 'Outdent');
+
+      LegacyUnit.equal(editor.getContent(),
+        '<ul>' +
+          '<li><p>a</p></li>' +
+        '</ul>' +
+        '<p>b</p>' +
+        '<ul>' +
+          '<li><p>c</p></li>' +
+        '</ul>'
+      );
+    });
+
+    suite.test('Outdent on nested li with inner block element', function (editor) {
+      editor.getBody().innerHTML = LegacyUnit.trimBrs(
+        '<ul>' +
+          '<li>' +
+            '<p>a</p>' +
+            '<ul><li><p>b</p></li></ul>' +
+          '</li>' +
+          '<li><p>c</p></li>' +
+        '</ul>'
+      );
+
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'ul li:nth-child(1) li p', 0);
+      LegacyUnit.execCommand(editor, 'Outdent');
+
+      LegacyUnit.equal(editor.getContent(),
+        '<ul>' +
+        '<li><p>a</p></li>' +
+        '<li><p>b</p></li>' +
+        '<li><p>c</p></li>' +
+        '</ul>'
+      );
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

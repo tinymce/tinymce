@@ -26,4 +26,5 @@ define(
     PluginManager.add('help', Plugin);
 
     return function () {};
-  });
+  }
+);

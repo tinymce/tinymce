@@ -47,7 +47,6 @@
     "no-bitwise": 2,
     "max-depth": [1, 8],
     "max-statements": [2, 150],
-    "max-len": [1, 160, 4],
     "eol-last": 0,
     "quotes": 0,
     "no-trailing-spaces": 2,

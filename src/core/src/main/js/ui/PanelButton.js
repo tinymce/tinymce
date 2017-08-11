@@ -65,7 +65,12 @@ define(
           self.panel.show();
         }
 
-        self.panel.moveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? ['bc-tr', 'bc-tc'] : ['bc-tl', 'bc-tc']));
+        var rel = self.panel.testMoveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? ['bc-tc', 'bc-tl', 'bc-tr'] : ['bc-tc', 'bc-tr', 'bc-tl']));
+
+        self.panel.classes.toggle('start', rel === 'bc-tl');
+        self.panel.classes.toggle('end', rel === 'bc-tr');
+
+        self.panel.moveRel(self.getEl(), rel);
       },
 
       /**

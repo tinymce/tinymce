@@ -12,19 +12,27 @@ asynctest(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretPosition',
-    'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.keyboard.BoundaryCaret',
+    'tinymce.core.keyboard.BoundaryLocation',
+    'tinymce.core.keyboard.InlineUtils',
     'tinymce.core.text.Zwsp'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Cell, Fun, Hierarchy, Element, Selectors, CaretPosition, BoundaryLocation, BoundaryCaret, Zwsp) {
+  function (
+    Assertions, GeneralSteps, Logger, Pipeline, Step, Cell, Fun, Hierarchy, Element, Selectors, CaretPosition, BoundaryCaret, BoundaryLocation, InlineUtils,
+    Zwsp
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var ZWSP = Zwsp.ZWSP;
 
+    var isInlineTarget = function (elm) {
+      return Selectors.is(Element.fromDom(elm), 'a[href],code');
+    };
+
     var createLocation = function (elm, elementPath, offset) {
       var container = Hierarchy.follow(elm, elementPath);
       var pos = new CaretPosition(container.getOrDie().dom(), offset);
-      var location = BoundaryLocation.readLocation(elm.dom(), pos);
+      var location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
       return location;
     };
 

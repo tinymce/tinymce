@@ -99,16 +99,11 @@ define(
           editor.nodeChanged();
         }
 
-        // Fire a TypingUndo event on the first character entered
-        if (isFirstTypedCharacter && self.typing) {
-          // Make it dirty if the content was changed after typing the first character
-          if (!editor.isDirty()) {
-            setDirty(data[0] && !Levels.isEq(Levels.createFromEditor(editor), data[0]));
-
-            // Fire initial change event
-            if (editor.isDirty()) {
-              editor.fire('change', { level: data[0], lastLevel: null });
-            }
+        // Fire a TypingUndo/Change event on the first character entered
+        if (isFirstTypedCharacter && self.typing && Levels.isEq(Levels.createFromEditor(editor), data[0]) === false) {
+          if (editor.isDirty() === false) {
+            setDirty(true);
+            editor.fire('change', { level: data[0], lastLevel: null });
           }
 
           editor.fire('TypingUndo');

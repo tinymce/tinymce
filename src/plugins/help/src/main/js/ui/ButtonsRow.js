@@ -33,7 +33,5 @@ define(
     return {
       makeRow: makeRow
     };
-  });
-
-
-//https://www.tinymce.com/docs/changelog/
+  }
+);

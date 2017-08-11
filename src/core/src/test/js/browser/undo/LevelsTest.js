@@ -134,6 +134,13 @@ asynctest(
       LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel(['a'])), true);
     });
 
+    suite.test('isEq passed undefined', function () {
+      LegacyUnit.strictEqual(Levels.isEq(undefined, Levels.createFragmentedLevel(['a', 'b'])), false);
+      LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), undefined), false);
+      LegacyUnit.strictEqual(Levels.isEq(undefined, undefined), false);
+      LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

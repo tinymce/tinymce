@@ -382,10 +382,12 @@ asynctest(
 
     suite.test('translate', function (editor) {
       EditorManager.addI18n('en_US', {
-        'input i18n': 'output i18n'
+        'input i18n': 'output i18n',
+        "value:{0}{1}": "value translation:{0}{1}"
       });
 
       LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
+      LegacyUnit.equal(editor.translate(["value:{0}{1}", "a", "b"]), "value translation:ab");
     });
 
     suite.test('Treat some paragraphs as empty contents', function (editor) {
@@ -396,7 +398,7 @@ asynctest(
       LegacyUnit.equal(editor.getContent(), '');
     });
 
-    suite.test('kamer word bounderies', function (editor) {
+    suite.test('kamer word boundaries', function (editor) {
       editor.setContent('<p>!\u200b!\u200b!</p>');
       LegacyUnit.equal(editor.getContent(), '<p>!\u200b!\u200b!</p>');
     });

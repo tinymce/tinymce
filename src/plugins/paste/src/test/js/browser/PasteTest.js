@@ -534,9 +534,9 @@ asynctest(
       rng.setStart(editor.dom.select('p')[0].firstChild, 1);
       rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
       editor.selection.setRng(rng);
-      editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc\n' });
+      editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
 
-      LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c<br />xt</p>');
+      LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c xt</p>');
     });
 
     suite.test('paste plain text with double linefeeds', function (editor) {
@@ -694,6 +694,7 @@ asynctest(
       LegacyUnit.equal(Utils.trimHtml('a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'), '\nb\n');
       LegacyUnit.equal(Utils.trimHtml('a<!--StartFragment-->b<!--EndFragment-->c'), 'abc');
       LegacyUnit.equal(Utils.trimHtml('a<body>b</body>c'), 'b');
+      LegacyUnit.equal(Utils.trimHtml('<HTML><HEAD><TITLE>a</TITLE></HEAD><BODY>b</BODY></HTML>'), 'b');
       LegacyUnit.equal(Utils.trimHtml('a<span class="Apple-converted-space">\u00a0<\/span>b'), 'a b');
       LegacyUnit.equal(Utils.trimHtml('<span class="Apple-converted-space">\u00a0<\/span>b'), ' b');
       LegacyUnit.equal(Utils.trimHtml('a<span class="Apple-converted-space">\u00a0<\/span>'), 'a ');

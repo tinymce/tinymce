@@ -59,6 +59,30 @@ define(
       }
     };
 
+    var hasOnlyOneBlockChild = function (dom, elm) {
+      var childNodes = elm.childNodes;
+      return childNodes.length === 1 && !NodeType.isListNode(childNodes[0]) && dom.isBlock(childNodes[0]);
+    };
+
+    var unwrapSingleBlockChild = function (dom, elm) {
+      if (hasOnlyOneBlockChild(dom, elm)) {
+        dom.remove(elm.firstChild, true);
+      }
+    };
+
+    var moveChildren = function (dom, fromElm, toElm) {
+      var node, targetElm;
+
+      targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
+      unwrapSingleBlockChild(dom, fromElm);
+
+      if (!NodeType.isEmpty(dom, fromElm, true)) {
+        while ((node = fromElm.firstChild)) {
+          targetElm.appendChild(node);
+        }
+      }
+    };
+
     var mergeLiElements = function (dom, fromElm, toElm) {
       var node, listNode, ul = fromElm.parentNode;
 
@@ -85,11 +109,7 @@ define(
         dom.$(toElm).empty();
       }
 
-      if (!NodeType.isEmpty(dom, fromElm, true)) {
-        while ((node = fromElm.firstChild)) {
-          toElm.appendChild(node);
-        }
-      }
+      moveChildren(dom, fromElm, toElm);
 
       if (listNode) {
         toElm.appendChild(listNode);
@@ -100,6 +120,30 @@ define(
       if (NodeType.isEmpty(dom, ul) && ul !== dom.getRoot()) {
         dom.remove(ul);
       }
+    };
+
+    var mergeIntoEmptyLi = function (editor, fromLi, toLi) {
+      editor.dom.$(toLi).empty();
+      mergeLiElements(editor.dom, fromLi, toLi);
+      editor.selection.setCursorLocation(toLi);
+    };
+
+    var mergeForward = function (editor, rng, fromLi, toLi) {
+      var dom = editor.dom;
+
+      if (dom.isEmpty(toLi)) {
+        mergeIntoEmptyLi(editor, fromLi, toLi);
+      } else {
+        var bookmark = Bookmark.createBookmark(rng);
+        mergeLiElements(dom, fromLi, toLi);
+        editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      }
+    };
+
+    var mergeBackward = function (editor, rng, fromLi, toLi) {
+      var bookmark = Bookmark.createBookmark(rng);
+      mergeLiElements(editor.dom, fromLi, toLi);
+      editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
     };
 
     var backspaceDeleteFromListToListCaret = function (editor, isForward) {
@@ -116,15 +160,11 @@ define(
         otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
 
         if (otherLi && otherLi !== li) {
-          var bookmark = Bookmark.createBookmark(rng);
-
           if (isForward) {
-            mergeLiElements(dom, otherLi, li);
+            mergeForward(editor, rng, otherLi, li);
           } else {
-            mergeLiElements(dom, li, otherLi);
+            mergeBackward(editor, rng, li, otherLi);
           }
-
-          editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 
           return true;
         } else if (!otherLi) {
@@ -137,6 +177,15 @@ define(
       return false;
     };
 
+    var removeBlock = function (dom, block) {
+      var parentBlock = dom.getParent(block.parentNode, dom.isBlock);
+
+      dom.remove(block);
+      if (parentBlock && dom.isEmpty(parentBlock)) {
+        dom.remove(parentBlock);
+      }
+    };
+
     var backspaceDeleteIntoListCaret = function (editor, isForward) {
       var dom = editor.dom;
       var block = dom.getParent(editor.selection.getStart(), dom.isBlock);
@@ -147,7 +196,7 @@ define(
 
         if (otherLi) {
           editor.undoManager.transact(function () {
-            dom.remove(block);
+            removeBlock(dom, block);
             ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
             editor.selection.select(otherLi, true);
             editor.selection.collapse(isForward);

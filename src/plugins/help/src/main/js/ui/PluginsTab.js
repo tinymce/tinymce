@@ -9,23 +9,33 @@ define(
     'tinymce.plugins.help.data.PluginUrls'
   ],
 function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
-  var maybeUrlize = function (name) {
+  var makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');
+
+  var maybeUrlize = function (editor, key) {
     return Arr.find(PluginUrls.urls, function (x) {
-      return x === name;
-    }).fold(Fun.constant(name), function (pluginName) {
-      return Strings.supplant('<a href="${url}" target="_blank">${name}</a>', {
-        name: pluginName,
-        url: 'https://www.tinymce.com/docs/plugins/' + pluginName
-      });
+      return x.key === key;
+    }).fold(function () {
+      var getMetadata = editor.plugins[key].getMetadata;
+      return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
+    }, function (x) {
+      return makeLink({ name: x.name, url: 'https://www.tinymce.com/docs/plugins/' + x.key });
     });
   };
 
+  var getPluginKeys = function (editor) {
+    var keys = Obj.keys(editor.plugins);
+    return editor.settings.forced_plugins === undefined ?
+      keys :
+      Arr.filter(keys, Fun.not(Fun.curry(Arr.contains, editor.settings.forced_plugins)));
+  };
+
   var pluginLister = function (editor) {
-    var plugins = Obj.mapToArray(editor.plugins, function (plugin, key) {
-      return '<li>' + maybeUrlize(key) + '</li>';
+    var pluginKeys = getPluginKeys(editor);
+    var pluginLis = Arr.map(pluginKeys, function (key) {
+      return '<li>' + maybeUrlize(editor, key) + '</li>';
     });
-    var count = plugins.length;
-    var pluginsString = plugins.join('');
+    var count = pluginLis.length;
+    var pluginsString = pluginLis.join('');
 
     return '<p><b>Plugins installed (' + count + '):</b></p>' +
             '<ul>' + pluginsString + '</ul>';
@@ -34,8 +44,7 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
   var installedPlugins = function (editor) {
     return {
       type: 'container',
-      style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
-      html: '<div style="margin: 10px; padding: 10px;" data-mce-tabstop="1" tabindex="-1">' +
+      html: '<div style="overflow-y: auto; overflow-x: hidden; max-height: 230px; height: 230px;" data-mce-tabstop="1" tabindex="-1">' +
               pluginLister(editor) +
             '</div>',
       flex: 1
@@ -45,8 +54,8 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
   var availablePlugins = function () {
     return {
       type: 'container',
-      html: '<div style="margin: 10px; padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
-              '<p><b>Plugins available:</b></p>' +
+      html: '<div style="padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
+              '<p><b>Premium plugins:</b></p>' +
               '<ul>' +
                 '<li>PowerPaste</li>' +
                 '<li>Spell Checker Pro</li>' +
@@ -65,9 +74,11 @@ function (tinymce, Obj, Arr, Fun, Strings, PluginUrls) {
     return {
       title: 'Plugins',
       type: 'container',
-      style: 'overflow-y: auto; overflow-x: hidden; max-height: 250px',
+      style: 'overflow-y: auto; overflow-x: hidden;',
       layout: 'flex',
-      items:	[
+      padding: 10,
+      spacing: 10,
+      items: [
         installedPlugins(editor),
         availablePlugins()
       ]

@@ -90,10 +90,9 @@ define(
 
       function findSelectedBlob() {
         var blobInfo;
-
         blobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage().src);
         if (blobInfo) {
-          return blobInfo.blob();
+          return Promise.resolve(blobInfo.blob());
         }
 
         return imageToBlob(getSelectedImage());
@@ -111,17 +110,30 @@ define(
 
       function updateSelectedImage(ir, uploadImmediately) {
         return ir.toBlob().then(function (blob) {
-          var id, filename, base64, blobCache, blobInfo, selectedImage;
+          var uri, name, blobCache, blobInfo, selectedImage;
 
-          selectedImage = getSelectedImage();
           blobCache = editor.editorUpload.blobCache;
-          blobInfo = blobCache.getByUri(selectedImage.src);
-          base64 = ir.toBase64();
-          id = createId();
+          selectedImage = getSelectedImage();
+          uri = selectedImage.src;
+
           if (editor.settings.images_reuse_filename) {
-            filename = blobInfo ? blobInfo.filename() : extractFilename(selectedImage.src);
+            blobInfo = blobCache.getByUri(uri);
+            if (blobInfo) {
+              uri = blobInfo.uri();
+              name = blobInfo.name();
+            } else {
+              name = extractFilename(uri);
+            }
           }
-          blobInfo = blobCache.create(id, blob, base64, filename);
+
+          blobInfo = blobCache.create({
+            id: createId(),
+            blob: blob,
+            base64: ir.toBase64(),
+            uri: uri,
+            name: name
+          });
+
           blobCache.add(blobInfo);
 
           editor.undoManager.transact(function () {
@@ -185,6 +197,7 @@ define(
 
       function editImageDialog() {
         var img = getSelectedImage(), originalSize = ImageSize.getNaturalImageSize(img);
+
         var handleDialogBlob = function (blob) {
           return new Promise(function (resolve) {
             BlobConversions.blobToImage(blob).
@@ -203,19 +216,19 @@ define(
           });
         };
 
-        var openDialog = function (blob) {
-          return Dialog.edit(blob).then(handleDialogBlob).
+        var openDialog = function (imageResult) {
+          return Dialog.edit(editor, imageResult).then(handleDialogBlob).
             then(BlobConversions.blobToImageResult).
             then(function (imageResult) {
-              updateSelectedImage(imageResult, true);
+              return updateSelectedImage(imageResult, true);
             }, function () {
               // Close dialog
             });
         };
 
-        if (img) {
-          BlobConversions.imageToImageResult(img).then(openDialog, displayError);
-        }
+        findSelectedBlob().
+          then(BlobConversions.blobToImageResult).
+          then(openDialog, displayError);
       }
 
       function addButtons() {

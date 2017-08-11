@@ -1,29 +1,46 @@
-asynctest('browser.plugin.PluginTest', [
-  'tinymce.plugins.help.Plugin',
-  'ephox.mcagar.api.TinyLoader',
-  'ephox.agar.api.Pipeline',
-  'ephox.mcagar.api.TinyApis',
-  'ephox.mcagar.api.TinyUi',
-  'tinymce.themes.modern.Theme'
-], function (
-	Plugin, TinyLoader, Pipeline, TinyApis, TinyUi, Theme
-) {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+asynctest(
+  'browser.plugin.PluginTest',
+  [
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.UiFinder',
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
+    'ephox.mcagar.api.TinyUi',
+    'ephox.sugar.api.properties.Html',
+    'tinymce.plugins.help.Plugin',
+    'tinymce.plugins.link.Plugin',
+    'tinymce.themes.modern.Theme'
+  ],
+  function (Assertions, Chain, Pipeline, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, Html, HelpPlugin, LinkPlugin, Theme) {
+    var success = arguments[arguments.length - 2];
+    var failure = arguments[arguments.length - 1];
 
-  Theme();
+    Theme();
+    HelpPlugin();
+    LinkPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
-		var tinyApis = TinyApis(editor); // eslint-disable-line
-		var tinyUi = TinyUi(editor); // eslint-disable-line
+    var sAssertPluginList = function (html) {
+      return Chain.asStep(TinyDom.fromDom(document.body), [
+        UiFinder.cWaitFor('Could not find notification', 'div.mce-floatpanel ul'),
+        Chain.mapper(Html.get),
+        Assertions.cAssertHtml('Plugin list html does not match', html)
+      ]);
+    };
 
-    Pipeline.async({}, [
-      tinyUi.sClickOnToolbar('click on button', 'button'),
-      tinyUi.sWaitForPopup('Wait for dialog popup', 'div.mce-title > img')
-    ], onSuccess, onFailure);
-  }, {
-    plugins: 'help',
-    toolbar: 'help',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
-  }, success, failure);
-});
+    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+      var tinyUi = TinyUi(editor);
+
+      Pipeline.async({}, [
+        tinyUi.sClickOnToolbar('click on button', 'button'),
+        sAssertPluginList('<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank" rel="noopener">Help</a></li><li><a href="https://www.tinymce.com/docs/plugins/link" target="_blank" rel="noopener">Link</a></li>')
+      ], onSuccess, onFailure);
+    }, {
+      plugins: 'help link',
+      toolbar: 'help',
+      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    }, success, failure);
+  }
+);
