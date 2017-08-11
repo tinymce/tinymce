@@ -8,9 +8,10 @@ asynctest(
     'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Serializer',
-    'tinymce.core.test.ViewBlock'
+    'tinymce.core.test.ViewBlock',
+    'tinymce.core.text.Zwsp'
   ],
-  function (Pipeline, Step, Arr, LegacyUnit, document, DOMUtils, Serializer, ViewBlock) {
+  function (Pipeline, Step, Arr, LegacyUnit, document, DOMUtils, Serializer, ViewBlock, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -53,12 +54,6 @@ asynctest(
         '<span id="test2"><strong>abc</strong><em>123</em></span>123<a href="file.html">link</a>' +
         '<a name="anchor"></a>no<img src="tinymce/ui/img/raster.gif" border="0" title="mce_0" /></div>', 'Output name and attribute rules');
 
-      ser.setRules('a[href|target<_blank?_top|title:forced value]');
-      DOM.setHTML('test', '<a href="file.htm" data-mce-href="file.htm" target="_blank" title="title">link</a>' +
-        '<a href="#" data-mce-href="#" target="test">test2</a>');
-      LegacyUnit.equal(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value" rel="noopener noreferrer">' +
-        'link</a><a href="#" title="forced value">test2</a>');
-
       ser.setRules('img[src|border=0|alt=]');
       DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" border="0" alt="" />');
       LegacyUnit.equal(ser.serialize(DOM.get('test')), '<img src="tinymce/ui/img/raster.gif" border="0" alt="" />', 'Default attribute with empty value');
@@ -85,6 +80,50 @@ asynctest(
       LegacyUnit.equal(
         ser.serialize(DOM.get('test'), { getInner: true }),
         '<img src="tinymce/ui/img/raster.gif" />'
+      );
+    });
+
+    suite.test('allow_unsafe_link_target (default)', function () {
+      var ser = new Serializer({ });
+
+      DOM.setHTML('test', '<a href="a" target="_blank">a</a><a href="b" target="_blank">b</a>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<a href="a" target="_blank" rel="noopener">a</a><a href="b" target="_blank" rel="noopener">b</a>'
+      );
+
+      DOM.setHTML('test', '<a href="a" rel="lightbox" target="_blank">a</a><a href="b" rel="lightbox" target="_blank">b</a>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<a href="a" target="_blank" rel="lightbox noopener">a</a><a href="b" target="_blank" rel="lightbox noopener">b</a>'
+      );
+
+      DOM.setHTML('test', '<a href="a" rel="lightbox x" target="_blank">a</a><a href="b" rel="lightbox x" target="_blank">b</a>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<a href="a" target="_blank" rel="lightbox noopener x">a</a><a href="b" target="_blank" rel="lightbox noopener x">b</a>'
+      );
+
+      DOM.setHTML('test', '<a href="a" rel="noopener a" target="_blank">a</a>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<a href="a" target="_blank" rel="noopener a">a</a>'
+      );
+
+      DOM.setHTML('test', '<a href="a" rel="a noopener b" target="_blank">a</a>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<a href="a" target="_blank" rel="a noopener b">a</a>'
+      );
+    });
+
+    suite.test('allow_unsafe_link_target (disabled)', function () {
+      var ser = new Serializer({ allow_unsafe_link_target: true });
+
+      DOM.setHTML('test', '<a href="a" target="_blank">a</a><a href="b" target="_blank">b</a>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<a href="a" target="_blank">a</a><a href="b" target="_blank">b</a>'
       );
     });
 
@@ -590,6 +629,16 @@ asynctest(
       LegacyUnit.equal(ser1.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
       LegacyUnit.equal(ser2.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
       LegacyUnit.equal(ser2.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+    });
+
+    suite.test('zwsp should not be treated as contents', function () {
+      var ser = new Serializer({ });
+
+      DOM.setHTML('test', '<p>' + Zwsp.ZWSP + '</p>');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { getInner: true }),
+        '<p>&nbsp;</p>'
+      );
     });
 
     viewBlock.attach();

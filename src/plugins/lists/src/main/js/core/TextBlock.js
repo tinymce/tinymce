@@ -12,9 +12,10 @@ define(
   'tinymce.plugins.lists.core.TextBlock',
   [
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.Env'
+    'tinymce.core.Env',
+    'tinymce.plugins.lists.core.NodeType'
   ],
-  function (DOMUtils, Env) {
+  function (DOMUtils, Env, NodeType) {
     var DOM = DOMUtils.DOM;
 
     var createNewTextBlock = function (editor, contentNode, blockName) {
@@ -32,7 +33,9 @@ define(
           DOM.setAttribs(textBlock, editor.settings.forced_root_block_attrs);
         }
 
-        fragment.appendChild(textBlock);
+        if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {
+          fragment.appendChild(textBlock);
+        }
       }
 
       if (contentNode) {
@@ -43,7 +46,7 @@ define(
             hasContentNode = true;
           }
 
-          if (blockElements[nodeName]) {
+          if (NodeType.isBlock(node, blockElements)) {
             fragment.appendChild(node);
             textBlock = null;
           } else {

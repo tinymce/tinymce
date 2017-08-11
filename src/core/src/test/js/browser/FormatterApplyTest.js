@@ -1,14 +1,16 @@
 asynctest(
   'browser.tinymce.core.FormatterApplyTest',
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
+    'ephox.katamari.api.Obj',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.test.KeyUtils',
     'tinymce.core.test.HtmlUtils',
+    'tinymce.core.test.KeyUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, KeyUtils, HtmlUtils, Theme) {
+  function (Assertions, Pipeline, Obj, LegacyUnit, TinyLoader, HtmlUtils, KeyUtils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -1158,6 +1160,28 @@ asynctest(
       );
     });
 
+    suite.test('Applying block format to first character in li', function (editor) {
+      editor.setContent('<ul><li>ab</li><li>cd</li>');
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 0, 'li:nth-child(1)', 0);
+      editor.formatter.apply("h1");
+      LegacyUnit.equal(
+        editor.getContent(editor),
+        '<ul><li><h1>ab</h1></li><li>cd</li></ul>',
+        'heading should be applied to first li'
+      );
+    });
+
+    suite.test('Applying block format to li wrapped in block', function (editor) {
+      editor.setContent('<div><ul><li>ab</li><li>cd</li></ul></div>');
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1, 'li:nth-child(1)', 1);
+      editor.formatter.apply("h1");
+      LegacyUnit.equal(
+        editor.getContent(editor),
+        '<div><ul><li><h1>ab</h1></li><li>cd</li></ul></div>',
+        'heading should be applied to first li only'
+      );
+    });
+
     suite.test("Applying formats on a list including child nodes", function (editor) {
       editor.formatter.register('format', { inline: 'strong' });
       editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
@@ -1567,6 +1591,17 @@ asynctest(
       LegacyUnit.equal(editor.getContent(editor), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
     });
 
+    suite.test('Format caret with multiple formats', function (editor) {
+      editor.getBody().innerHTML = '<p><br></p>';
+      editor.formatter.register('format1', { inline: 'b' });
+      editor.formatter.register('format2', { inline: 'i' });
+      editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
+      editor.formatter.apply('format1');
+      editor.formatter.apply('format2');
+      LegacyUnit.equal(1, editor.dom.select('b').length, 'Should be one b element');
+      LegacyUnit.equal(1, editor.dom.select('i').length, 'Should be one i element');
+    });
+
     suite.test('Selector format on whole contents', function (editor) {
       editor.setContent('<p>a</p>');
       editor.formatter.register('format', {
@@ -1794,6 +1829,20 @@ asynctest(
       LegacyUnit.equal(editor.getContent(editor), '<p><span style="font-weight: bold;">abc</span></p>');
     });
 
+    suite.test('merge_with_parents', function (editor) {
+      editor.formatter.register('format', {
+        inline: 'span',
+        styles: {
+          fontWeight: 'bold'
+        },
+        merge_with_parents: true
+      });
+      editor.setContent('<p><span style="color: red">a</span></p>');
+      LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(editor.getContent(editor), '<p><span style="color: red; font-weight: bold;">a</span></p>');
+    });
+
     suite.test('Format selection from with end at beginning of block', function (editor) {
       editor.setContent("<div id='a'>one</div><div id='b'>two</div>");
       editor.focus();
@@ -1842,6 +1891,29 @@ asynctest(
       LegacyUnit.equal(getContent(editor), '<p>a <span style="font-size: 36pt;">b</span> c</p>');
     });
 
+    suite.test("Formatter should wrap elements that have data-mce-bogus attribute, rather then attempt to inject styles into it", function (editor) {
+      // add a class to retain bogus element
+      editor.getBody().innerHTML = '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>';
+      editor.selection.select(editor.dom.select('span')[0]);
+
+      editor.formatter.apply('fontname', { value: "verdana" });
+
+      LegacyUnit.equal(editor.getBody().innerHTML,
+        '<p>That is a <span style="font-family: verdana;" data-mce-style="font-family: verdana;"><span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span></span> text</p>');
+
+      LegacyUnit.equal(getContent(editor),
+        '<p>that is a <span style="font-family: verdana;">misespelled</span> text</p>');
+
+      editor.selection.select(editor.dom.select('span')[0]);
+      editor.formatter.remove('fontname', { value: "verdana" });
+
+      LegacyUnit.equal(editor.getBody().innerHTML,
+        '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>');
+
+      LegacyUnit.equal(getContent(editor),
+        '<p>that is a misespelled text</p>');
+    });
+
     suite.test("TINY-782: Can't apply sub/sup to word on own line with large font", function (editor) {
       editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</p>';
       LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
@@ -1882,6 +1954,128 @@ asynctest(
       LegacyUnit.setSelection(editor, 'span', 0, 'span', 4);
       editor.formatter.apply('fontname', { value: "verdana" });
       LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
+    });
+
+    suite.test("Formatter should remove similar styles when clear_child_styles is set to true", function (editor) {
+      editor.getBody().innerHTML = (
+        '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
+        '<del style="font-family: Arial; font-size: 13px">b</del>' +
+        '<span style="font-size: 13px">c</span></p>'
+      );
+
+      editor.selection.select(editor.dom.select('p')[0]);
+
+      editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }, clear_child_styles: true });
+      editor.formatter.apply('format');
+
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-family: arial;">b</del>c</span></p>'
+      );
+    });
+
+    suite.test("If links=true, formatter shouldn't remove similar styles from links even if clear_child_styles=true", function (editor) {
+      editor.getBody().innerHTML = '<p>a<a href="#">b</a>c</p>';
+
+      editor.selection.select(editor.dom.select('p')[0]);
+
+      editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }, links: true, clear_child_styles: true });
+      editor.formatter.apply('format');
+
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="font-size: 14px;">a<a style="font-size: 14px;" href="#">b</a>c</span></p>'
+      );
+    });
+
+    suite.test("Formatter should remove similar styles when clear_child_styles isn't defined", function (editor) {
+      editor.getBody().innerHTML = (
+        '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
+        '<del style="font-family: Arial; font-size: 13px">b</del>' +
+        '<span style="font-size: 13px">c</span></p>'
+      );
+
+      editor.selection.select(editor.dom.select('p')[0]);
+
+      editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' } });
+      editor.formatter.apply('format');
+
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-size: 13px; font-family: arial;">b</del>c</span></p>'
+      );
+    });
+
+    suite.test('register/unregister', function (editor) {
+      editor.formatter.register('format', { inline: 'span' });
+      Assertions.assertEq('Should have format', true, !!editor.formatter.get('format'));
+      editor.formatter.unregister('format');
+      Assertions.assertEq('Should not have format', false, !!editor.formatter.get('format'));
+    });
+
+    suite.test('Get all formats', function (editor) {
+      Assertions.assertEq('Should have a bunch of formats', true, Obj.keys(editor.formatter.get()).length > 0);
+    });
+
+    suite.test("Apply ceFalseOverride format", function (editor) {
+      editor.setContent('<p contenteditable="false">a</p><div contenteditable="false">b</div>');
+      editor.formatter.register('format', { selector: 'div', classes: ['a'], ceFalseOverride: true });
+
+      editor.selection.select(editor.dom.select('p')[0]);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p contenteditable="false">a</p><div contenteditable="false">b</div>'
+      );
+
+      editor.selection.select(editor.dom.select('div')[0]);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p contenteditable="false">a</p><div class="a" contenteditable="false">b</div>'
+      );
+    });
+
+    suite.test("Apply defaultBlock format", function (editor) {
+      editor.getBody().innerHTML = 'a<br>b';
+      editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: ['a'] });
+      editor.selection.setCursorLocation(editor.firstChild, 0);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
+    });
+
+    suite.test("Apply format excluding trailing space", function (editor) {
+      editor.setContent('<p>a b</p>');
+      editor.formatter.register('format', { inline: 'b' });
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 2);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<p><b>a</b> b</p>');
+    });
+
+    suite.test("Apply format with onformat handler", function (editor) {
+      editor.setContent('<p>a</p>');
+      editor.formatter.register('format', {
+        inline: 'span',
+        onformat: function (elm) {
+          elm.className = 'x';
+        }
+      });
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<p><span class="x">a</span></p>');
+    });
+
+    suite.test("Apply format to triple clicked selection (webkit)", function (editor) {
+      editor.setContent('<p>a</p><ul><li>a</li><li>b</li></ul>');
+      editor.formatter.register('format', { inline: 'b' });
+
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+      rng.setEnd(editor.dom.select('li')[0], 0);
+      editor.selection.setRng(rng);
+
+      editor.formatter.apply('format');
+      LegacyUnit.equal(getContent(editor), '<p><b>a</b></p><ul><li>a</li><li>b</li></ul>');
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

@@ -23,29 +23,37 @@ asynctest(
       panel = Factory.create({
         type: 'panel',
         items: [
-					{ type: 'button', name: 'button1', text: 'button1', classes: 'class1', disabled: true },
-					{ type: 'button', name: 'button2', classes: 'class1 class2' },
-					{ type: 'button', name: 'button3', classes: 'class2 class1 class3' },
+          { type: 'button', name: 'button1', text: 'button1', classes: 'class1', disabled: true },
+          { type: 'button', name: 'button2', classes: 'class1 class2' },
+          { type: 'button', name: 'button3', classes: 'class2 class1 class3' },
 
-          { type: 'buttongroup', name: 'buttongroup1', items: [
-						{ type: 'button', name: 'button4' },
-						{ type: 'button', name: 'button5' },
-						{ type: 'button', name: 'button6' }
-          ] },
+          {
+            type: 'buttongroup', name: 'buttongroup1', items: [
+              { type: 'button', name: 'button4' },
+              { type: 'button', name: 'button5' },
+              { type: 'button', name: 'button6' }
+            ]
+          },
 
-          { type: 'buttongroup', name: 'buttongroup2', items: [
-						{ type: 'button', name: 'button7' },
-						{ type: 'button', name: 'button8' },
-						{ type: 'button', name: 'button9' }
-          ] },
+          {
+            type: 'buttongroup', name: 'buttongroup2', items: [
+              { type: 'button', name: 'button7' },
+              { type: 'button', name: 'button8' },
+              { type: 'button', name: 'button9' }
+            ]
+          },
 
-          { type: 'toolbar', name: 'toolbar1', items: [
-            { type: 'buttongroup', name: 'buttongroup3', items: [
-							{ type: 'button', name: 'button10', disabled: true },
-							{ type: 'button', name: 'button11' },
-							{ type: 'button', name: 'button12', classes: 'class4' }
-            ] }
-          ] }
+          {
+            type: 'toolbar', name: 'toolbar1', items: [
+              {
+                type: 'buttongroup', name: 'buttongroup3', items: [
+                  { type: 'button', name: 'button10', disabled: true },
+                  { type: 'button', name: 'button11' },
+                  { type: 'button', name: 'button12', classes: 'class4' }
+                ]
+              }
+            ]
+          }
         ]
       }).renderTo(viewBlock.get());
     };

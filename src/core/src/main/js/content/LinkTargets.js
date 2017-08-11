@@ -17,6 +17,8 @@
 define(
   'tinymce.core.content.LinkTargets',
   [
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.NodeType',
     'tinymce.core.util.Arr',
@@ -24,7 +26,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.Uuid'
   ],
-  function (DOMUtils, NodeType, Arr, Fun, Tools, Uuid) {
+  function (Element, SelectorFilter, DOMUtils, NodeType, Arr, Fun, Tools, Uuid) {
     var trim = Tools.trim;
 
     var create = function (type, title, url, level, attach) {
@@ -49,7 +51,9 @@ define(
     };
 
     var select = function (selector, root) {
-      return DOMUtils.DOM.select(selector, root);
+      return Arr.map(SelectorFilter.descendants(Element.fromDom(root), selector), function (element) {
+        return element.dom();
+      });
     };
 
     var getElementText = function (elm) {

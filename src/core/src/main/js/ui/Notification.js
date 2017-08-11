@@ -25,6 +25,10 @@ define(
     "tinymce.core.util.Delay"
   ],
   function (Control, Movable, Progress, Delay) {
+    var updateLiveRegion = function (ctx, text) {
+      ctx.getEl().lastChild.textContent = text + (ctx.progressBar ? ' ' + ctx.progressBar.value() + '%' : '');
+    };
+
     return Control.extend({
       Mixins: [Movable],
 
@@ -102,6 +106,8 @@ define(
           '<div class="' + prefix + 'notification-inner">' + self.state.get('text') + '</div>' +
           progressBar +
           closeButton +
+          '<div style="clip: rect(1px, 1px, 1px, 1px);height: 1px;overflow: hidden;position: absolute;width: 1px;"' +
+          ' aria-live="assertive" aria-relevant="additions" aria-atomic="true"></div>' +
           '</div>'
         );
       },
@@ -111,7 +117,8 @@ define(
 
         Delay.setTimeout(function () {
           self.$el.addClass(self.classPrefix + 'in');
-        });
+          updateLiveRegion(self, self.state.get('text'));
+        }, 100);
 
         return self._super();
       },
@@ -120,10 +127,14 @@ define(
         var self = this;
 
         self.state.on('change:text', function (e) {
-          self.getEl().childNodes[1].innerHTML = e.value;
+          self.getEl().firstChild.innerHTML = e.value;
+          updateLiveRegion(self, e.value);
         });
         if (self.progressBar) {
           self.progressBar.bindStates();
+          self.progressBar.state.on('change:value', function (e) {
+            updateLiveRegion(self, self.state.get('text'));
+          });
         }
         return self._super();
       },

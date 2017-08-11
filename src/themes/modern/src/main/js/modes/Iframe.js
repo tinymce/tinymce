@@ -11,18 +11,19 @@
 define(
   'tinymce.themes.modern.modes.Iframe',
   [
-    'tinymce.core.util.Tools',
-    'tinymce.core.ui.Factory',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.themes.modern.ui.Toolbar',
-    'tinymce.themes.modern.ui.Menubar',
-    'tinymce.themes.modern.ui.ContextToolbars',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.Tools',
     'tinymce.themes.modern.ui.A11y',
+    'tinymce.themes.modern.ui.Branding',
+    'tinymce.themes.modern.ui.ContextToolbars',
+    'tinymce.themes.modern.ui.Menubar',
+    'tinymce.themes.modern.ui.Resize',
     'tinymce.themes.modern.ui.Sidebar',
     'tinymce.themes.modern.ui.SkinLoaded',
-    'tinymce.themes.modern.ui.Resize'
+    'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (Tools, Factory, DOMUtils, Toolbar, Menubar, ContextToolbars, A11y, Sidebar, SkinLoaded, Resize) {
+  function (DOMUtils, Factory, Tools, A11y, Branding, ContextToolbars, Menubar, Resize, Sidebar, SkinLoaded, Toolbar) {
     var DOM = DOMUtils.DOM;
 
     var switchMode = function (panel) {
@@ -131,6 +132,7 @@ define(
       // Add accesibility shortcuts
       A11y.addKeys(editor, panel);
       ContextToolbars.addContextualToolbars(editor);
+      Branding.setup(editor);
 
       return {
         iframeContainer: panel.find('#iframe')[0].getEl(),

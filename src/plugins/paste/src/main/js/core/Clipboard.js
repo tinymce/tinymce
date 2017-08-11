@@ -33,13 +33,15 @@ define(
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.Env',
     'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.InternalHtml',
+    'tinymce.plugins.paste.core.Newlines',
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (RangeUtils, Env, Delay, VK, CutCopy, InternalHtml, SmartPaste, Utils) {
+  function (RangeUtils, Env, Delay, Tools, VK, CutCopy, InternalHtml, Newlines, SmartPaste, Utils) {
     return function (editor) {
       var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
       var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
@@ -90,32 +92,7 @@ define(
        */
       function pasteText(text) {
         text = editor.dom.encode(text).replace(/\r\n/g, '\n');
-
-        var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
-
-        // Create start block html for example <p attr="value">
-        var forcedRootBlockName = editor.settings.forced_root_block;
-        var forcedRootBlockStartHtml;
-        if (forcedRootBlockName) {
-          forcedRootBlockStartHtml = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs);
-          forcedRootBlockStartHtml = forcedRootBlockStartHtml.substr(0, forcedRootBlockStartHtml.length - 3) + '>';
-        }
-
-        if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !forcedRootBlockName) {
-          text = Utils.filter(text, [
-            [/\n/g, "<br>"]
-          ]);
-        } else {
-          text = Utils.filter(text, [
-            [/\n\n/g, "</p>" + forcedRootBlockStartHtml],
-            [/^(.*<\/p>)(<p>)$/, forcedRootBlockStartHtml + '$1'],
-            [/\n/g, "<br />"]
-          ]);
-
-          if (text.indexOf('<p>') != -1) {
-            text = forcedRootBlockStartHtml + text;
-          }
-        }
+        text = Newlines.convert(text, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
 
         pasteHtml(text, false);
       }
@@ -314,7 +291,11 @@ define(
           if (dataTransfer.types) {
             for (var i = 0; i < dataTransfer.types.length; i++) {
               var contentType = dataTransfer.types[i];
-              items[contentType] = dataTransfer.getData(contentType);
+              try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
+                items[contentType] = dataTransfer.getData(contentType);
+              } catch (ex) {
+                items[contentType] = ""; // useless in general, but for consistency across browsers
+              }
             }
           }
         }
@@ -330,7 +311,10 @@ define(
        * @return {Object} Object with mime types and data for those mime types.
        */
       function getClipboardContent(clipboardEvent) {
-        return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+        var content = getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+
+        // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11877517/
+        return Utils.isMsEdge() ? Tools.extend(content, { 'text/html': '' }) : content;
       }
 
       function hasHtmlOrText(content) {
@@ -352,6 +336,11 @@ define(
         return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
       }
 
+      function extractFilename(str) {
+        var m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
+        return m ? editor.dom.encode(m[1]) : null;
+      }
+
       function pasteImage(rng, reader, blob) {
         if (rng) {
           editor.selection.setRng(rng);
@@ -360,8 +349,10 @@ define(
 
         var dataUri = reader.result;
         var base64 = getBase64FromUri(dataUri);
-
+        var id = uniqueId();
+        var name = editor.settings.images_reuse_filename && blob.name ? extractFilename(blob.name) : id;
         var img = new Image();
+
         img.src = dataUri;
 
         // TODO: Move the bulk of the cache logic to EditorUpload
@@ -374,7 +365,7 @@ define(
           });
 
           if (!existingBlobInfo) {
-            blobInfo = blobCache.create(uniqueId(), blob, base64);
+            blobInfo = blobCache.create(id, blob, base64, name);
             blobCache.add(blobInfo);
           } else {
             blobInfo = existingBlobInfo;
@@ -494,7 +485,7 @@ define(
         });
 
         function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-          var content;
+          var content, isPlainTextHtml;
 
           // Grab HTML from Clipboard API or paste bin as a fallback
           if (hasContentType(clipboardContent, 'text/html')) {
@@ -519,8 +510,11 @@ define(
 
           removePasteBin();
 
-          // If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
-          if (!content.length) {
+          isPlainTextHtml = internal === false && Newlines.isPlainText(content);
+
+          // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
+          // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
+          if (!content.length || isPlainTextHtml) {
             plainTextMode = true;
           }
 
@@ -528,7 +522,7 @@ define(
           if (plainTextMode) {
             // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
             // we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
-            if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+            if (hasContentType(clipboardContent, 'text/plain') && isPlainTextHtml) {
               content = clipboardContent['text/plain'];
             } else {
               content = Utils.innerText(content);

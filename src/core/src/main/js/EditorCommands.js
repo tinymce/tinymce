@@ -17,14 +17,15 @@
 define(
   'tinymce.core.EditorCommands',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.InsertContent",
-    "tinymce.core.dom.NodeType"
+    'tinymce.core.delete.DeleteCommands',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.InsertContent',
+    'tinymce.core.util.Tools'
   ],
-  function (Env, Tools, RangeUtils, TreeWalker, InsertContent, NodeType) {
+  function (DeleteCommands, NodeType, RangeUtils, TreeWalker, Env, InsertContent, Tools) {
     // Added for compression purposes
     var each = Tools.each, extend = Tools.extend;
     var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
@@ -56,6 +57,10 @@ define(
        */
       function execCommand(command, ui, value, args) {
         var func, customCommand, state = 0;
+
+        if (editor.removed) {
+          return;
+        }
 
         if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
           editor.focus();
@@ -117,8 +122,7 @@ define(
       function queryCommandState(command) {
         var func;
 
-        // Is hidden then return undefined
-        if (editor.quirks.isHidden()) {
+        if (editor.quirks.isHidden() || editor.removed) {
           return;
         }
 
@@ -147,8 +151,7 @@ define(
       function queryCommandValue(command) {
         var func;
 
-        // Is hidden then return undefined
-        if (editor.quirks.isHidden()) {
+        if (editor.quirks.isHidden() || editor.removed) {
           return;
         }
 
@@ -569,22 +572,11 @@ define(
         },
 
         "delete": function () {
-          execNativeCommand("Delete");
+          DeleteCommands.deleteCommand(editor);
+        },
 
-          // Check if body is empty after the delete call if so then set the contents
-          // to an empty string and move the caret to any block produced by that operation
-          // this fixes the issue with root blocks not being properly produced after a delete call on IE
-          var body = editor.getBody();
-
-          if (dom.isEmpty(body)) {
-            editor.setContent('');
-
-            if (body.firstChild && dom.isBlock(body.firstChild)) {
-              editor.selection.setCursorLocation(body.firstChild, 0);
-            } else {
-              editor.selection.setCursorLocation(body, 0);
-            }
-          }
+        "forwardDelete": function () {
+          DeleteCommands.forwardDeleteCommand(editor);
         },
 
         mceNewDocument: function () {

@@ -1,39 +1,45 @@
 asynctest(
   'browser.tinymce.core.fmt.FontInfoTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
-    'tinymce.core.fmt.FontInfo',
-    'global!document'
+    'ephox.mcagar.api.LegacyUnit',
+    'ephox.sugar.api.dom.Hierarchy',
+    'ephox.sugar.api.node.Element',
+    'global!document',
+    'tinymce.core.fmt.FontInfo'
   ],
-  function (LegacyUnit, Pipeline, FontInfo, document) {
+  function (Pipeline, LegacyUnit, Hierarchy, Element, document, FontInfo) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
 
-    var assertComputedFontProp = function (fontProp, html, expected) {
+    var assertComputedFontProp = function (fontProp, html, path, expected) {
       var div = document.createElement('div');
       var fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
 
       document.body.appendChild(div);
       div.style[fontProp] = expected;
       div.innerHTML = html;
+      var elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+      var actual = fontGetProp(div, elm.dom());
       LegacyUnit.equal(
-        fontGetProp(div, div.getElementsByTagName('mark')[0]),
+        actual,
         expected,
         'Doesn\'t match the expected computed runtime style'
       );
       div.parentNode.removeChild(div);
     };
 
-    var assertSpecificFontProp = function (fontProp, html, expected) {
+    var assertSpecificFontProp = function (fontProp, html, path, expected) {
       var div = document.createElement('div');
       var fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
 
       document.body.appendChild(div);
       div.innerHTML = html;
+      var elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+      var actual = fontGetProp(div, elm.dom());
       LegacyUnit.equal(
-        fontGetProp(div, div.getElementsByTagName('mark')[0]),
+        actual,
         expected,
         'Doesn\'t match the expected specific element style'
       );
@@ -49,37 +55,40 @@ asynctest(
     });
 
     suite.test('getFontSize', function () {
-      assertComputedFontProp('fontSize', '<mark></mark>', '10px');
-      assertComputedFontProp('fontSize', '<span><mark></mark></span>', '10px');
-      assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', '10px');
-      assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', '14px');
-      assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', '14pt');
-      assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', '14em');
-      assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', '10px');
-      assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', '14px');
-      assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', '10px');
-      assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', '14px');
+      assertComputedFontProp('fontSize', '<mark></mark>', [0], '10px');
+      assertComputedFontProp('fontSize', '<span><mark></mark></span>', [0, 0], '10px');
+      assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', [0], '10px');
+      assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', [0], '14px');
+      assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', [0], '14pt');
+      assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', [0], '14em');
+      assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', [0, 0], '10px');
+      assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', [0, 0], '14px');
+      assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', [0, 0, 0], '10px');
+      assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', [0, 0, 0], '14px');
     });
 
     suite.test('getFontFamily', function () {
-      assertComputedFontProp('fontFamily', '<mark></mark>', 'Arial,Verdana');
-      assertComputedFontProp('fontFamily', '<span><mark></mark></span>', 'Arial,Helvetica,Verdana');
-      assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', 'Arial,Verdana');
-      assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', 'Arial,Helvetica,Verdana');
-      assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', 'Arial,Verdana');
+      assertComputedFontProp('fontFamily', '<mark></mark>', [0], 'Arial,Verdana');
+      assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [0, 0], 'Arial,Helvetica,Verdana');
+      assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [0], 'Arial,Verdana');
+      assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', [0], 'Arial,Helvetica,Verdana');
+      assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', [0, 0], 'Arial,Verdana');
       assertSpecificFontProp(
         'fontFamily',
         '<span style="font-family: Arial, Helvetica, Verdana"><mark></mark></span>',
+        [0, 0],
         'Arial,Helvetica,Verdana'
       );
       assertSpecificFontProp(
         'fontFamily',
         '<span style="font-family: Arial, Verdana"><span><mark></mark></span>',
+        [0, 0, 0],
         'Arial,Verdana'
       );
       assertSpecificFontProp(
         'fontFamily',
         '<span style="font-family: Arial, Helvetica, Verdana"><span><mark></mark></span></span>',
+        [0, 0, 0],
         'Arial,Helvetica,Verdana'
       );
     });
@@ -100,6 +109,13 @@ asynctest(
       iframe.contentDocument.open();
       iframe.contentDocument.write('<html><body><p>a</p></body></html>');
       iframe.contentDocument.close();
+    });
+
+    suite.test('comments should always return empty string', function () {
+      assertComputedFontProp('fontFamily', '<!-- comment -->', [0], '');
+      assertComputedFontProp('fontSize', '<!-- comment -->', [0], '');
+      assertSpecificFontProp('fontFamily', '<!-- comment -->', [0], '');
+      assertSpecificFontProp('fontSize', '<!-- comment -->', [0], '');
     });
 
     Pipeline.async({}, suite.toSteps({}), function () {

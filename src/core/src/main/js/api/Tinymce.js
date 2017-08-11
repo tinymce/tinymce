@@ -11,6 +11,7 @@
 define(
   'tinymce.core.api.Tinymce',
   [
+    'tinymce.core.api.Formatter',
     'tinymce.core.geom.Rect',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Delay',
@@ -37,7 +38,6 @@ define(
     'tinymce.core.dom.ControlSelection',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.Selection',
-    'tinymce.core.Formatter',
     'tinymce.core.UndoManager',
     'tinymce.core.EditorCommands',
     'tinymce.core.util.URI',
@@ -57,86 +57,117 @@ define(
     'tinymce.core.util.JSONRequest',
     'tinymce.core.util.JSONP',
     'tinymce.core.util.LocalStorage',
-    'tinymce.core.api.Compat',
     'tinymce.core.util.Color',
     'tinymce.core.ui.Api'
   ],
   function (
-    Rect, Promise, Delay, Env, EventUtils, Sizzle, Tools, DomQuery, Styles, TreeWalker, Entities, DOMUtils, ScriptLoader, AddOnManager,
+    Formatter, Rect, Promise, Delay, Env, EventUtils, Sizzle, Tools, DomQuery, Styles, TreeWalker, Entities, DOMUtils, ScriptLoader, AddOnManager,
     RangeUtils, Node, Schema, SaxParser, DomParser, Writer, HtmlSerializer, DomSerializer, VK, ControlSelection, BookmarkManager, Selection,
-    Formatter, UndoManager, EditorCommands, URI, Class, EventDispatcher, Observable, WindowManager,
+    UndoManager, EditorCommands, URI, Class, EventDispatcher, Observable, WindowManager,
     NotificationManager, EditorObservable, Shortcuts, Editor, I18n, FocusManager, EditorManager,
-    XHR, JSON, JSONRequest, JSONP, LocalStorage, Compat, Color, Api
+    XHR, JSON, JSONRequest, JSONP, LocalStorage, Color, UiApi
   ) {
     var tinymce = EditorManager;
 
-    var expose = function (target, id, ref) {
-      var i, fragments;
+    /**
+     * @include ../../../../../../tools/docs/tinymce.js
+     */
+    var publicApi = {
+      geom: {
+        Rect: Rect
+      },
 
-      fragments = id.split(/[.\/]/);
-      for (i = 0; i < fragments.length - 1; ++i) {
-        if (target[fragments[i]] === undefined) {
-          target[fragments[i]] = {};
-        }
+      util: {
+        Promise: Promise,
+        Delay: Delay,
+        Tools: Tools,
+        VK: VK,
+        URI: URI,
+        Class: Class,
+        EventDispatcher: EventDispatcher,
+        Observable: Observable,
+        I18n: I18n,
+        XHR: XHR,
+        JSON: JSON,
+        JSONRequest: JSONRequest,
+        JSONP: JSONP,
+        LocalStorage: LocalStorage,
+        Color: Color
+      },
 
-        target = target[fragments[i]];
-      }
+      dom: {
+        EventUtils: EventUtils,
+        Sizzle: Sizzle,
+        DomQuery: DomQuery,
+        TreeWalker: TreeWalker,
+        DOMUtils: DOMUtils,
+        ScriptLoader: ScriptLoader,
+        RangeUtils: RangeUtils,
+        Serializer: DomSerializer,
+        ControlSelection: ControlSelection,
+        BookmarkManager: BookmarkManager,
+        Selection: Selection,
+        Event: EventUtils.Event
+      },
 
-      target[fragments[fragments.length - 1]] = ref;
+      html: {
+        Styles: Styles,
+        Entities: Entities,
+        Node: Node,
+        Schema: Schema,
+        SaxParser: SaxParser,
+        DomParser: DomParser,
+        Writer: Writer,
+        Serializer: HtmlSerializer
+      },
+
+      Env: Env,
+      AddOnManager: AddOnManager,
+      Formatter: Formatter,
+      UndoManager: UndoManager,
+      EditorCommands: EditorCommands,
+      WindowManager: WindowManager,
+      NotificationManager: NotificationManager,
+      EditorObservable: EditorObservable,
+      Shortcuts: Shortcuts,
+      Editor: Editor,
+      FocusManager: FocusManager,
+      EditorManager: EditorManager,
+
+      // Global instances
+      DOM: DOMUtils.DOM,
+      ScriptLoader: ScriptLoader.ScriptLoader,
+      PluginManager: AddOnManager.PluginManager,
+      ThemeManager: AddOnManager.ThemeManager,
+
+      // Global utility functions
+      trim: Tools.trim,
+      isArray: Tools.isArray,
+      is: Tools.is,
+      toArray: Tools.toArray,
+      makeMap: Tools.makeMap,
+      each: Tools.each,
+      map: Tools.map,
+      grep: Tools.grep,
+      inArray: Tools.inArray,
+      extend: Tools.extend,
+      create: Tools.create,
+      walk: Tools.walk,
+      createNS: Tools.createNS,
+      resolve: Tools.resolve,
+      explode: Tools.explode,
+      _addCacheSuffix: Tools._addCacheSuffix,
+
+      // Legacy browser detection
+      isOpera: Env.opera,
+      isWebKit: Env.webkit,
+      isIE: Env.ie,
+      isGecko: Env.gecko,
+      isMac: Env.mac
     };
 
-    expose(tinymce, 'geom.Rect', Rect);
-    expose(tinymce, 'util.Promise', Promise);
-    expose(tinymce, 'util.Delay', Delay);
-    expose(tinymce, 'Env', Env);
-    expose(tinymce, 'dom.EventUtils', EventUtils);
-    expose(tinymce, 'dom.Sizzle', Sizzle);
-    expose(tinymce, 'util.Tools', Tools);
-    expose(tinymce, 'dom.DomQuery', DomQuery);
-    expose(tinymce, 'html.Styles', Styles);
-    expose(tinymce, 'dom.TreeWalker', TreeWalker);
-    expose(tinymce, 'html.Entities', Entities);
-    expose(tinymce, 'dom.DOMUtils', DOMUtils);
-    expose(tinymce, 'dom.ScriptLoader', ScriptLoader);
-    expose(tinymce, 'AddOnManager', AddOnManager);
-    expose(tinymce, 'dom.RangeUtils', RangeUtils);
-    expose(tinymce, 'html.Node', Node);
-    expose(tinymce, 'html.Schema', Schema);
-    expose(tinymce, 'html.SaxParser', SaxParser);
-    expose(tinymce, 'html.DomParser', DomParser);
-    expose(tinymce, 'html.Writer', Writer);
-    expose(tinymce, 'html.Serializer', HtmlSerializer);
-    expose(tinymce, 'dom.Serializer', DomSerializer);
-    expose(tinymce, 'util.VK', VK);
-    expose(tinymce, 'dom.ControlSelection', ControlSelection);
-    expose(tinymce, 'dom.BookmarkManager', BookmarkManager);
-    expose(tinymce, 'dom.Selection', Selection);
-    expose(tinymce, 'Formatter', Formatter);
-    expose(tinymce, 'UndoManager', UndoManager);
-    expose(tinymce, 'EditorCommands', EditorCommands);
-    expose(tinymce, 'util.URI', URI);
-    expose(tinymce, 'util.Class', Class);
-    expose(tinymce, 'util.EventDispatcher', EventDispatcher);
-    expose(tinymce, 'util.Observable', Observable);
-    expose(tinymce, 'WindowManager', WindowManager);
-    expose(tinymce, 'NotificationManager', NotificationManager);
-    expose(tinymce, 'EditorObservable', EditorObservable);
-    expose(tinymce, 'Shortcuts', Shortcuts);
-    expose(tinymce, 'Editor', Editor);
-    expose(tinymce, 'util.I18n', I18n);
-    expose(tinymce, 'FocusManager', FocusManager);
-    expose(tinymce, 'EditorManager', EditorManager);
-    expose(tinymce, 'util.XHR', XHR);
-    expose(tinymce, 'util.JSON', JSON);
-    expose(tinymce, 'util.JSONRequest', JSONRequest);
-    expose(tinymce, 'util.JSONP', JSONP);
-    expose(tinymce, 'util.LocalStorage', LocalStorage);
-    expose(tinymce, 'Compat', Compat);
-    expose(tinymce, 'util.Color', Color);
-
-    Api.appendTo(tinymce);
-
-    Compat.register(tinymce);
+    tinymce = Tools.extend(tinymce, publicApi);
+    UiApi.appendTo(tinymce);
 
     return tinymce;
   }

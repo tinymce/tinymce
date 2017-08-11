@@ -225,6 +225,17 @@ asynctest(
         CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(findElm('span span'), 1));
       });
     */
+
+    suite.test('from after to last element', function () {
+      setupHtml('<input />');
+      CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), CaretPosition(getRoot(), 1));
+    });
+
+    suite.test('from after to last element with br', function () {
+      setupHtml('<input /><br>');
+      CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), CaretPosition(getRoot(), 1));
+    });
+
     suite.test('from inside cE=true in cE=false to after cE=false', function () {
       setupHtml(
         '<p>' +

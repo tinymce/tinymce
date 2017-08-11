@@ -890,6 +890,20 @@ asynctest(
       );
     });
 
+    suite.test('Apply list on paragraphs with list between', function (editor) {
+      editor.getBody().innerHTML = (
+        '<p>a</p>' +
+        '<ol>' +
+        '<li>b</li>' +
+        '</ol>' +
+        '<p>c</p>'
+      );
+
+      editor.execCommand('SelectAll');
+      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a</li></ul><ol><li>b</li></ol><ul><li>c</li></ul>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

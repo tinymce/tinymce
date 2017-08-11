@@ -17,17 +17,18 @@
 define(
   'tinymce.plugins.table.Plugin',
   [
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK',
     'tinymce.plugins.table.model.TableGrid',
-    'tinymce.plugins.table.util.Quirks',
     'tinymce.plugins.table.selection.CellSelection',
     'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.ResizeBars',
-    'tinymce.core.util.Tools',
-    'tinymce.core.dom.TreeWalker',
-    'tinymce.core.Env',
-    'tinymce.core.PluginManager'
+    'tinymce.plugins.table.util.Quirks'
   ],
-  function (TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
+  function (TreeWalker, Env, PluginManager, Tools, VK, TableGrid, CellSelection, Dialogs, ResizeBars, Quirks) {
     var each = Tools.each;
 
     function Plugin(editor) {
@@ -593,9 +594,14 @@ define(
       if (editor.settings.table_tab_navigation !== false) {
         editor.on('keydown', function (e) {
           var cellElm, grid, delta;
+          var selectionStart = editor.selection.getStart();
 
-          if (e.keyCode == 9) {
-            cellElm = editor.dom.getParent(editor.selection.getStart(), 'th,td');
+          if (e.keyCode === VK.TAB) {
+            if (editor.dom.getParent(selectionStart, 'LI,DT,DD')) {
+              return;
+            }
+
+            cellElm = editor.dom.getParent(selectionStart, 'th,td');
 
             if (cellElm) {
               e.preventDefault();

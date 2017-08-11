@@ -18,13 +18,17 @@
 define(
   'tinymce.core.dom.ControlSelection',
   [
-    "tinymce.core.util.VK",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Delay",
-    "tinymce.core.Env",
-    "tinymce.core.dom.NodeType"
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.Selectors',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangePoint',
+    'tinymce.core.Env',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK'
   ],
-  function (VK, Tools, Delay, Env, NodeType) {
+  function (Fun, Element, Selectors, NodeType, RangePoint, Env, Delay, Tools, VK) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
     var isContentEditableTrue = NodeType.isContentEditableTrue;
 
@@ -39,6 +43,23 @@ define(
 
       return null;
     }
+
+    var isImage = function (elm) {
+      return elm && elm.nodeName === 'IMG';
+    };
+
+    var isEventOnImageOutsideRange = function (evt, range) {
+      return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
+    };
+
+    var contextMenuSelectImage = function (editor, evt) {
+      var target = evt.target;
+
+      if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
+        evt.preventDefault();
+        editor.selection.select(target);
+      }
+    };
 
     return function (selection, editor) {
       var dom = editor.dom, each = Tools.each;
@@ -123,7 +144,7 @@ define(
           return false;
         }
 
-        return editor.dom.is(elm, selector);
+        return Selectors.is(Element.fromDom(elm), selector);
       }
 
       function resizeGhostElement(e) {
@@ -575,7 +596,9 @@ define(
               var target = e.target, nodeName = target.nodeName;
 
               if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
-                editor.selection.select(target, nodeName == 'TABLE');
+                if (e.button !== 2) {
+                  editor.selection.select(target, nodeName == 'TABLE');
+                }
 
                 // Only fire once since nodeChange is expensive
                 if (e.type == 'mousedown') {
@@ -627,6 +650,7 @@ define(
         });
 
         editor.on('hide blur', hideResizeRect);
+        editor.on('contextmenu', Fun.curry(contextMenuSelectImage, editor));
 
         // Hide rect on focusout since it would float on top of windows otherwise
         //editor.on('focusout', hideResizeRect);

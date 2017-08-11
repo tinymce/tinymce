@@ -12,15 +12,17 @@ define(
   'tinymce.plugins.paste.core.CutCopy',
   [
     'tinymce.core.Env',
-    'tinymce.plugins.paste.core.InternalHtml'
+    'tinymce.plugins.paste.core.InternalHtml',
+    'tinymce.plugins.paste.core.Utils'
   ],
-  function (Env, InternalHtml) {
+  function (Env, InternalHtml, Utils) {
     var noop = function () {
     };
 
     var hasWorkingClipboardApi = function (clipboardData) {
       // iOS supports the clipboardData API but it doesn't do anything for cut operations
-      return Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function';
+      // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11780845/
+      return Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
     };
 
     var setHtml5Clipboard = function (clipboardData, html, text) {
@@ -79,7 +81,7 @@ define(
 
     var getData = function (editor) {
       return {
-        html: editor.selection.getContent(),
+        html: editor.selection.getContent({ contextual: true }),
         text: editor.selection.getContent({ format: 'text' })
       };
     };
@@ -88,7 +90,11 @@ define(
       return function (evt) {
         if (editor.selection.isCollapsed() === false) {
           setClipboardData(evt, getData(editor), fallback(editor), function () {
-            editor.execCommand('Delete');
+            // Chrome fails to execCommand from another execCommand with this message:
+            // "We don't execute document.execCommand() this time, because it is called recursively.""
+            setTimeout(function () { // detach
+              editor.execCommand('Delete');
+            }, 0);
           });
         }
       };

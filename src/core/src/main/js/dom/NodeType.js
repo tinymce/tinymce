@@ -72,6 +72,12 @@ define(
       };
     }
 
+    function hasAttribute(attrName, attrValue) {
+      return function (node) {
+        return isElement(node) && node.hasAttribute(attrName);
+      };
+    }
+
     function hasAttributeValue(attrName, attrValue) {
       return function (node) {
         return isElement(node) && node.getAttribute(attrName) === attrValue;
@@ -107,6 +113,7 @@ define(
       isContentEditableFalse: hasContentEditableState('false'),
       matchNodeNames: matchNodeNames,
       hasPropValue: hasPropValue,
+      hasAttribute: hasAttribute,
       hasAttributeValue: hasAttributeValue,
       matchStyleValues: matchStyleValues,
       isBogus: isBogus
