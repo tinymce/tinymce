@@ -291,7 +291,6 @@ define(
         },
         function (urls) {
           initEditor(editor);
-          ErrorReporter.contentCssError(editor, urls);
         }
       );
     };
