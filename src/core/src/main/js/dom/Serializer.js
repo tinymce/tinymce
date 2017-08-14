@@ -252,11 +252,11 @@ define(
               node.attr('type', type == 'mce-no/type' ? null : type.replace(/^mce\-/, ''));
             }
 
-            if (value.length > 0) {
+            if (settings.element_format == 'xhtml' && value.length > 0) {
               node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
             }
           } else {
-            if (value.length > 0) {
+            if (settings.element_format == 'xhtml' && value.length > 0) {
               node.firstChild.value = '<!--\n' + trim(value) + '\n-->';
             }
           }
