@@ -129,8 +129,10 @@ define(
                 e.stopPropagation();
                 self.parent().cancel();
 
+                var actions = TableActions(editor);
+
                 editor.undoManager.transact(function () {
-                  TableActions.insert(editor, self.lastX + 1, self.lastY + 1);
+                  actions.insert(editor, self.lastX + 1, self.lastY + 1);
                 });
 
                 editor.addVisual();
