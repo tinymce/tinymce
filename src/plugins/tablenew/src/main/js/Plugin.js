@@ -20,17 +20,18 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeWire',
+    'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.api.TableOperations',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Direction',
     'tinymce.core.PluginManager',
     'tinymce.plugins.tablenew.actions.TableWire',
-    'tinymce.plugins.tablenew.queries.TableDirection',
     'tinymce.plugins.tablenew.queries.TableTargets',
     'tinymce.plugins.tablenew.ui.InsertTable'
   ],
-  function (Fun, Option, ResizeWire, TableFill, TableLookup, TableOperations, Element, PluginManager, TableWire, TableDirection, TableTargets, InsertTable) {
+  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableLookup, TableOperations, Element, Direction, PluginManager, TableWire, TableTargets, InsertTable) {
     function Plugin(editor) {
       var wire = Option.none();
 
@@ -43,11 +44,25 @@ define(
         return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
       };
 
+      var ltr = {
+        isRtl: Fun.constant(false)
+      };
+
+      var rtl = {
+        isRtl: Fun.constant(true)
+      };
+
+      // Get the directionality from the position in the content
+      var directionAt = function (element) {
+        var dir = Direction.getDirection(element);
+        return dir === 'rtl' ? rtl : ltr;
+      };
+
       var execute = function (operation, mutate, lazyWire) {
         return function (table, target) {
           var wire = lazyWire();
           var doc = Element.fromDom(editor.getDoc());
-          var direction = TableDirection();
+          var direction = TableDirection(directionAt);
           var generators = TableFill.cellOperations(mutate, doc);
           return operation(wire, table, target, generators, direction).map(function (cell) {
             //return Range(cell, 0, cell, 0);
