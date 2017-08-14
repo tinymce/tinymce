@@ -5,10 +5,9 @@ test(
     'tinymce.core.file.Conversions',
     'tinymce.core.file.BlobCache',
     'global!Uint8Array',
-    'global!Blob',
-    'global!URL'
+    'global!Blob'
   ],
-  function (Assertions, Conversions, BlobCache, Uint8Array, Blob, URL) {
+  function (Assertions, Conversions, BlobCache, Uint8Array, Blob) {
     var uriToBlob = function (base64, type) {
       var i, str = atob(base64);
       var arr = new Uint8Array(str.length);
