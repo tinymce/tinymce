@@ -15,7 +15,7 @@
  * @private
  */
 define(
-  'tinymce.plugins.tablenew.actions.InsertTable',
+  'tinymce.plugins.tablenew.actions.TableActions',
   [
     'ephox.snooker.api.TableRender',
     'ephox.sugar.api.properties.Attr',
