@@ -30,10 +30,13 @@ define(
     'ephox.sugar.api.properties.Direction',
     'ephox.sugar.api.properties.Html',
     'tinymce.plugins.tablenew.actions.TableWire',
+    'tinymce.plugins.tablenew.selection.Selections',
     'tinymce.plugins.tablenew.queries.TableTargets'
   ],
-  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableLookup, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire, TableTargets) {
+  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableLookup, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire, Selections, TableTargets) {
     return function (editor) {
+
+      var selections = Selections(editor);
 
       var wire = Option.none();
 
@@ -104,33 +107,38 @@ define(
         };
       };
 
-      var actOnSelectedCell = function (execute) {
+      var actOnSelection = function (execute) {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
         var table = TableLookup.table(cell);
-        var targets = TableTargets.forMenu([], table, cell);
-        table.each(function (tab) {
-          execute(tab, targets);
+        table.bind(function (table) {
+          var targets = TableTargets.forMenu(selections, table, cell);
+          execute(table, targets);
         });
       };
 
       var insertRowBefore = function () {
         var f = execute(TableOperations.insertRowBefore, Fun.noop, lazyWire);
-        actOnSelectedCell(f);
+        actOnSelection(f);
       };
 
       var insertRowAfter = function () {
         var f = execute(TableOperations.insertRowAfter, Fun.noop, lazyWire);
-        actOnSelectedCell(f);
+        actOnSelection(f);
       };
 
       var insertColumnBefore = function () {
         var f = execute(TableOperations.insertColumnBefore, Fun.noop, lazyWire);
-        actOnSelectedCell(f);
+        actOnSelection(f);
       };
 
       var insertColumnAfter = function () {
         var f = execute(TableOperations.insertColumnAfter, Fun.noop, lazyWire);
-        actOnSelectedCell(f);
+        actOnSelection(f);
+      };
+
+      var mergeCells = function () {
+        var f = execute(TableOperations.mergeCells, Fun.noop, lazyWire);
+        actOnSelection(f);
       };
 
       return {
@@ -138,7 +146,8 @@ define(
         insertRowBefore: insertRowBefore,
         insertRowAfter: insertRowAfter,
         insertColumnBefore: insertColumnBefore,
-        insertColumnAfter: insertColumnAfter
+        insertColumnAfter: insertColumnAfter,
+        mergeCells: mergeCells
       };
     };
   }

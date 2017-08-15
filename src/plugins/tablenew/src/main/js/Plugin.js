@@ -34,6 +34,8 @@ define(
       editor.addMenuItem('row', menuItems.row);
 
       editor.addMenuItem('column', menuItems.column);
+
+      editor.addMenuItem('cell', menuItems.cell);
     }
 
     PluginManager.add('tablenew', Plugin);

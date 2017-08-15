@@ -4,10 +4,11 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.katamari.api.Struct'
+    'ephox.katamari.api.Struct',
+    'tinymce.plugins.tablenew.queries.CellOperations'
   ],
 
-  function (Fun, Option, Struct) {
+  function (Fun, Option, Struct, CellOperations) {
     var noMenu = function (cell) {
       return {
         element: Fun.constant(cell),
@@ -19,10 +20,10 @@ define(
 
     var forMenu = function (selections, table, cell) {
       return {
-        element: Fun.constant(cell)//,
-        // mergable: Fun.constant(CellOperations.mergable(table, selections)),
-        // unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
-        // selection: Fun.constant(CellOperations.selection(cell, selections))
+        element: Fun.constant(cell),
+        mergable: Fun.constant(CellOperations.mergable(table, selections)),
+        unmergable: Fun.constant(CellOperations.unmergable(cell, selections)),
+        selection: Fun.constant(CellOperations.selection(cell, selections))
       };
     };
 

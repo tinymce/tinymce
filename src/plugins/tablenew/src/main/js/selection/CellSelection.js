@@ -17,9 +17,9 @@ define(
           Compare.eq(element, body);
         };
 
+        // TODO: Remove selection no nodechange with no table parent
         var syncSelection = function () {
           var sel = editor.selection;
-          console.log(sel);
         };
 
         var mouseHandlers = InputHandlers.mouse(win, body, isRoot);

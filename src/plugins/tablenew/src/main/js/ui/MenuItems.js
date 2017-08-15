@@ -27,9 +27,19 @@ define(
         ]
       };
 
+      var cell = {
+        separator: 'before',
+        text: 'Cell',
+        context: 'table',
+        menu: [
+          { text: 'Merge cells', onclick: actions.mergeCells/*, onPostRender: postRenderMergeCell*/ }
+        ]
+      };
+
       return {
         row: row,
-        column: column
+        column: column,
+        cell: cell
       };
     };
   }
