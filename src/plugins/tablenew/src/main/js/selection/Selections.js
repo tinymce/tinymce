@@ -13,7 +13,7 @@ define(
         var body = Element.fromDom(editor.getBody());
 
         return TableSelection.retrieve(body).fold(function () {
-          if (editor.selection.start() === undefined) {
+          if (editor.selection.getStart() === undefined) {
             return SelectionTypes.none();
           } else {
             return SelectionTypes.single(editor.selection);
