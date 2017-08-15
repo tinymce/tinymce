@@ -18,11 +18,15 @@ define(
   'tinymce.plugins.tablenew.Plugin',
   [
     'tinymce.core.PluginManager',
+    'tinymce.plugins.tablenew.selection.CellSelection',
     'tinymce.plugins.tablenew.ui.InsertTable',
     'tinymce.plugins.tablenew.ui.MenuItems'
   ],
-  function (PluginManager, InsertTable, MenuItems) {
+  function (PluginManager, CellSelection, InsertTable, MenuItems) {
     function Plugin(editor) {
+
+      var cellSelection = CellSelection(editor);
+
       var menuItems = MenuItems(editor);
 
       editor.addMenuItem('inserttable', InsertTable.insertTableMenuItem(editor));
