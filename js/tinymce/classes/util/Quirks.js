@@ -1471,7 +1471,7 @@ define("tinymce/util/Quirks", [
 		 * object it's not possible anymore. So we need to hack in a ungly CSS to force the
 		 * body to be at least 150px. If the user clicks the HTML element out side this 150px region
 		 * we simply move the focus into the first paragraph. Not ideal since you loose the
-		 * positioning of the caret but goot enough for most cases.
+		 * positioning of the caret but good enough for most cases.
 		 */
 		function bodyHeight() {
 			if (!editor.inline) {
@@ -1759,11 +1759,11 @@ define("tinymce/util/Quirks", [
 		}
 
 		if (Env.ie >= 11) {
-			bodyHeight();
 			disableBackspaceIntoATable();
 		}
 
 		if (Env.ie) {
+			bodyHeight();
 			selectAll();
 			disableAutoUrlDetect();
 			ieInternalDragAndDrop();
