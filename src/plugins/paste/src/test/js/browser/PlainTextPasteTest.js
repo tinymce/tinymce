@@ -8,12 +8,14 @@ asynctest(
     'tinymce.plugins.paste.Plugin',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
+    'ephox.agar.api.Guard',
+    'ephox.agar.api.Keyboard',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.EditorManager',
     'tinymce.core.test.ViewBlock',
-    'tinymce.plugins.paste.core.Utils',
     'tinymce.plugins.paste.test.MockDataTransfer'
   ],
-  function (Id, Merger, Obj, Assertions, Theme, PastePlugin, Pipeline, Chain, EditorManager, ViewBlock, Utils, MockDataTransfer) {
+  function (Id, Merger, Obj, Assertions, Theme, PastePlugin, Pipeline, Chain, Guard, Keyboard, Element, EditorManager, ViewBlock, MockDataTransfer) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -79,7 +81,10 @@ asynctest(
       Obj.each(data, function (data, label) {
         chains.push(
           cFireFakePasteEvent(data),
-          cAssertEditorContent(label, expected),
+          Chain.control(
+            cAssertEditorContent(label, expected),
+            Guard.tryUntil('Wait for paste to succeed.', 100, 1000)
+          ),
           cClearEditor()
         );
       });
