@@ -417,6 +417,12 @@ define(
           // If clipboard API has HTML then use that directly
           if (hasContentType(clipboardContent, 'text/html')) {
             e.preventDefault();
+
+            // if clipboard lacks internal mime type, inspect html for internal markings
+            if (!internal) {
+              internal = InternalHtml.isMarked(clipboardContent['text/html']);
+            }
+
             insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
           } else {
             Delay.setEditorTimeout(editor, function () {
