@@ -102,7 +102,10 @@ define(
           var direction = TableDirection(directionAt);
           var generators = TableFill.cellOperations(mutate, doc);
           return operation(wire, table, target, generators, direction).map(function (cell) {
-            //return Range(cell, 0, cell, 0);
+            var rng = editor.dom.createRng();
+            rng.setStart(cell.dom(), 0);
+            rng.setEnd(cell.dom(), 0);
+            return rng;
           });
         };
       };
@@ -112,7 +115,10 @@ define(
         var table = TableLookup.table(cell);
         table.bind(function (table) {
           var targets = TableTargets.forMenu(selections, table, cell);
-          execute(table, targets);
+          execute(table, targets).bind(function (rng) {
+            editor.selection.setRng(rng);
+            editor.focus();
+          });
         });
       };
 
