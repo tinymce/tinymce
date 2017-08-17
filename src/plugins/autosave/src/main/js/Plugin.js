@@ -27,7 +27,7 @@ define(
     EditorManager._beforeUnloadHandler = function () {
       var msg;
 
-      Tools.each(EditorManager.editors, function (editor) {
+      Tools.each(EditorManager.get(), function (editor) {
         // Store a draft for each editor instance
         if (editor.plugins.autosave) {
           editor.plugins.autosave.storeDraft();
