@@ -17,9 +17,10 @@
 define(
   'tinymce.core.file.Conversions',
   [
-    "tinymce.core.util.Promise"
+    'ephox.sand.api.Window',
+    'tinymce.core.util.Promise'
   ],
-  function (Promise) {
+  function (Window, Promise) {
     function blobUriToBlob(url) {
       return new Promise(function (resolve, reject) {
 
@@ -77,7 +78,7 @@ define(
 
         // Might throw error if data isn't proper base64
         try {
-          str = atob(uri.data);
+          str = Window.atob(uri.data);
         } catch (e) {
           resolve(new Blob([]));
           return;
