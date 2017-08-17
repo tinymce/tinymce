@@ -1,15 +1,16 @@
 asynctest(
   'browser/core/ActionsTest',
   [
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyApis',
-    'tinymce.themes.inlite.Theme',
-    'tinymce.themes.inlite.core.Actions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.GeneralSteps'
+    'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyLoader',
+    'ephox.sand.api.Window',
+    'tinymce.themes.inlite.core.Actions',
+    'tinymce.themes.inlite.Theme'
   ],
-  function (TinyLoader, TinyApis, Theme, Actions, Pipeline, Step, GeneralSteps) {
+  function (GeneralSteps, Pipeline, Step, TinyApis, TinyLoader, Window, Actions, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -137,7 +138,7 @@ asynctest(
     };
 
     var base64ToBlob = function (base64, type) {
-      var buff = atob(base64);
+      var buff = Window.atob(base64);
       var bytes = new Uint8Array(buff.length);
 
       for (var i = 0; i < bytes.length; i++) {

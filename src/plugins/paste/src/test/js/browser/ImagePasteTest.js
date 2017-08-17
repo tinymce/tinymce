@@ -6,18 +6,15 @@ asynctest(
     'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
-    'global!atob',
-    'global!Blob',
+    'ephox.sand.api.Blob',
+    'ephox.sand.api.Window',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Promise',
     'tinymce.plugins.paste.core.Clipboard',
     'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (
-    Pipeline, Step, Arr, LegacyUnit, TinyLoader, atob, Blob, Delay, Promise, Clipboard,
-    Plugin, Theme
-  ) {
+  function (Pipeline, Step, Arr, LegacyUnit, TinyLoader, Blob, Window, Delay, Promise, Clipboard, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -50,7 +47,7 @@ asynctest(
     };
 
     var base64ToBlob = function (base64, type) {
-      var buff = atob(base64);
+      var buff = Window.atob(base64);
       var bytes = new Uint8Array(buff.length);
 
       for (var i = 0; i < bytes.length; i++) {
