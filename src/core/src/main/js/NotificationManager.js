@@ -22,11 +22,12 @@
 define(
   'tinymce.core.NotificationManager',
   [
-    "tinymce.core.ui.Notification",
-    "tinymce.core.util.Delay",
-    "tinymce.core.util.Tools"
+    'tinymce.core.EditorView',
+    'tinymce.core.ui.Notification',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools'
   ],
-  function (Notification, Delay, Tools) {
+  function (EditorView, Notification, Delay, Tools) {
     return function (editor) {
       var self = this, notifications = [];
 
@@ -34,6 +35,10 @@ define(
         if (notifications.length) {
           return notifications[notifications.length - 1];
         }
+      }
+
+      function getEditorContainer(editor) {
+        return editor.inline ? editor.getElement() : editor.getContentAreaContainer();
       }
 
       self.notifications = notifications;
@@ -56,7 +61,7 @@ define(
       function positionNotifications() {
         if (notifications.length > 0) {
           var firstItem = notifications.slice(0, 1)[0];
-          var container = editor.inline ? editor.getElement() : editor.getContentAreaContainer();
+          var container = getEditorContainer(editor);
           firstItem.moveRel(container, 'tc-tc');
           if (notifications.length > 1) {
             for (var i = 1; i < notifications.length; i++) {
@@ -85,7 +90,7 @@ define(
        */
       self.open = function (args) {
         // Never open notification if editor has been removed.
-        if (editor.removed) {
+        if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
           return;
         }
 
