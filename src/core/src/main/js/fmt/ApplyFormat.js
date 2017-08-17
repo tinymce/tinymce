@@ -12,7 +12,6 @@ define(
   'tinymce.core.fmt.ApplyFormat',
   [
     'tinymce.core.dom.BookmarkManager',
-    'tinymce.core.dom.ElementUtils',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeNormalizer',
     'tinymce.core.dom.RangeUtils',
@@ -21,11 +20,10 @@ define(
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.Hooks',
     'tinymce.core.fmt.MatchFormat',
-    'tinymce.core.fmt.RemoveFormat',
-    'tinymce.core.util.Fun',
+    'tinymce.core.fmt.MergeFormats',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, ElementUtils, NodeType, RangeNormalizer, RangeUtils, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, RemoveFormat, Fun, Tools) {
+  function (BookmarkManager, NodeType, RangeNormalizer, RangeUtils, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
@@ -43,98 +41,6 @@ define(
           }
         }
       });
-    };
-
-    var clearChildStyles = function (dom, format, node) {
-      if (format.clear_child_styles) {
-        var selector = format.links ? '*:not(a)' : '*';
-        each(dom.select(selector, node), function (node) {
-          if (isElementNode(node)) {
-            each(format.styles, function (value, name) {
-              dom.setStyle(node, name, '');
-            });
-          }
-        });
-      }
-    };
-
-    var processUnderlineAndColor = function (dom, node) {
-      var textDecoration;
-      if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
-        textDecoration = FormatUtils.getTextDecoration(dom, node.parentNode);
-        if (dom.getStyle(node, 'color') && textDecoration) {
-          dom.setStyle(node, 'text-decoration', textDecoration);
-        } else if (dom.getStyle(node, 'text-decoration') === textDecoration) {
-          dom.setStyle(node, 'text-decoration', null);
-        }
-      }
-    };
-
-    var hasStyle = function (dom, name) {
-      return Fun.curry(function (name, node) {
-        return !!(node && FormatUtils.getStyle(dom, node, name));
-      }, name);
-    };
-
-    var applyStyle = function (dom, name, value) {
-      return Fun.curry(function (name, value, node) {
-        dom.setStyle(node, name, value);
-      }, name, value);
-    };
-
-    var findElementSibling = function (node, siblingName) {
-      var sibling;
-
-      for (sibling = node; sibling; sibling = sibling[siblingName]) {
-        if (sibling.nodeType === 3 && sibling.nodeValue.length !== 0) {
-          return node;
-        }
-
-        if (sibling.nodeType === 1 && !BookmarkManager.isBookmarkNode(sibling)) {
-          return sibling;
-        }
-      }
-
-      return node;
-    };
-
-    /**
-     * Merges the next/previous sibling element if they match.
-     *
-     * @private
-     * @param {Node} prev Previous node to compare/merge.
-     * @param {Node} next Next node to compare/merge.
-     * @return {Node} Next node if we didn't merge and prev node if we did.
-     */
-    var mergeSiblings = function (dom, prev, next) {
-      var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
-
-      // Check if next/prev exists and that they are elements
-      if (prev && next) {
-        // If previous sibling is empty then jump over it
-        prev = findElementSibling(prev, 'previousSibling');
-        next = findElementSibling(next, 'nextSibling');
-
-        // Compare next and previous nodes
-        if (elementUtils.compare(prev, next)) {
-          // Append nodes between
-          for (sibling = prev.nextSibling; sibling && sibling !== next;) {
-            tmpSibling = sibling;
-            sibling = sibling.nextSibling;
-            prev.appendChild(tmpSibling);
-          }
-
-          dom.remove(next);
-
-          each(Tools.grep(next.childNodes), function (node) {
-            prev.appendChild(node);
-          });
-
-          return prev;
-        }
-      }
-
-      return next;
     };
 
     var applyFormat = function (ed, name, vars, node) {
@@ -347,23 +253,6 @@ define(
             return child;
           };
 
-          var matchNestedWrapper = function (node, filter) {
-            do {
-              if (getChildCount(node) !== 1) {
-                break;
-              }
-
-              node = getChildElementNode(node);
-              if (!node) {
-                break;
-              } else if (filter(node)) {
-                return node;
-              }
-            } while (node);
-
-            return null;
-          };
-
           var mergeStyles = function (node) {
             var child, clone;
 
@@ -397,55 +286,11 @@ define(
               node = mergeStyles(node);
             }
 
-            // Remove/merge children
-            each(formatList, function (format) {
-              // Merge all children of similar type will move styles from child to parent
-              // this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
-              // will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
-              each(dom.select(format.inline, node), function (child) {
-                if (!isElementNode(child)) {
-                  return;
-                }
-
-                RemoveFormat.removeFormat(ed, format, vars, child, format.exact ? child : null);
-              });
-
-              clearChildStyles(dom, format, node);
-            });
-
-            // Remove format if direct parent already has the same format
-            if (MatchFormat.matchNode(ed, node.parentNode, name, vars)) {
-              if (RemoveFormat.removeFormat(ed, format, vars, node)) {
-                node = 0;
-              }
-            }
-
-            // Remove format if any ancestor already has the same format
-            if (format.merge_with_parents) {
-              dom.getParent(node.parentNode, function (parent) {
-                if (MatchFormat.matchNode(ed, parent, name, vars)) {
-                  if (RemoveFormat.removeFormat(ed, format, vars, node)) {
-                    node = 0;
-                  }
-                  return true;
-                }
-              });
-            }
-
-            // fontSize defines the line height for the whole branch of nested style wrappers,
-            // therefore it should be set on the outermost wrapper
-            if (node && !dom.isBlock(node) && !FormatUtils.getStyle(dom, node, 'fontSize')) {
-              var styleNode = matchNestedWrapper(node, hasStyle(dom, 'fontSize'));
-              if (styleNode) {
-                applyFormat(ed, 'fontsize', { value: FormatUtils.getStyle(dom, styleNode, 'fontSize') }, node);
-              }
-            }
-
-            // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
-            if (node && format.merge_siblings !== false) {
-              node = mergeSiblings(dom, FormatUtils.getNonWhiteSpaceSibling(node), node);
-              node = mergeSiblings(dom, node, FormatUtils.getNonWhiteSpaceSibling(node, true));
-            }
+            MergeFormats.mergeWithChildren(ed, formatList, vars, node);
+            MergeFormats.mergeWithParents(ed, format, name, vars, node);
+            MergeFormats.mergeBackgroundColorAndFontSize(dom, format, vars, node);
+            MergeFormats.mergeSubSup(dom, format, vars, node);
+            MergeFormats.mergeSiblings(dom, format, vars, node);
           }
         });
       };
@@ -492,19 +337,8 @@ define(
             applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(true), formatList), bookmark);
 
             if (format.styles) {
-              // Colored nodes should be underlined so that the color of the underline matches the text color.
-              if (format.styles.color || format.styles.textDecoration) {
-                Tools.walk(curSelNode, Fun.curry(processUnderlineAndColor, dom), 'childNodes');
-                processUnderlineAndColor(dom, curSelNode);
-              }
-
-              // nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
-              if (format.styles.backgroundColor) {
-                processChildElements(curSelNode,
-                  hasStyle(dom, 'fontSize'),
-                  applyStyle(dom, 'backgroundColor', FormatUtils.replaceVars(format.styles.backgroundColor, vars))
-                );
-              }
+              MergeFormats.mergeUnderlineAndColor(dom, format, vars, curSelNode);
+              MergeFormats.mergeBackgroundColorAndFontSize(dom, format, vars, curSelNode);
             }
 
             selection.moveToBookmark(bookmark);
