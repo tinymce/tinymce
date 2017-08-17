@@ -23,13 +23,19 @@ define(
   'tinymce.core.NotificationManager',
   [
     'tinymce.core.EditorView',
+    'tinymce.core.ui.DomUtils',
     'tinymce.core.ui.Notification',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools'
   ],
-  function (EditorView, Notification, Delay, Tools) {
+  function (EditorView, DomUtils, Notification, Delay, Tools) {
     return function (editor) {
       var self = this, notifications = [];
+
+      var getContainerWidth = function () {
+        var container = editor.inline ? editor.getElement() : editor.getContentAreaContainer();
+        return DomUtils.getSize(container).width;
+      };
 
       function getLastNotification() {
         if (notifications.length) {
@@ -101,6 +107,9 @@ define(
         var duplicate = findDuplicateMessage(notifications, args);
 
         if (duplicate === null) {
+
+          args = Tools.extend(args, { maxWidth: getContainerWidth() });
+
           notif = new Notification(args);
           notifications.push(notif);
 

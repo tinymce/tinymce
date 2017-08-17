@@ -10,6 +10,7 @@
   border-color: @notification-border;
   transition: transform 100ms ease-in, opacity 150ms ease-in;
   opacity: 0;
+  box-sizing: border-box;
 }
 
 .@{prefix}-notification.@{prefix}-in {
@@ -45,6 +46,7 @@
 }
 
 .@{prefix}-notification-inner {
+  .word-wrap();
   display: inline-block;
   font-size: @notification-font-size;
   margin: 5px 8px 4px 8px;
