@@ -1914,6 +1914,13 @@ asynctest(
         '<p>that is a misespelled text</p>');
     });
 
+    suite.test("TINY-1180: Formatting gets applied outside the currently selected range", function (editor) {
+      editor.getBody().innerHTML = '<p>a <em><em>em</em> </em></p>';
+      LegacyUnit.setSelection(editor, 'p', 0, 'em em', 0);
+      editor.formatter.apply('strikethrough');
+      LegacyUnit.equal(getContent(editor), '<p><span style="text-decoration: line-through;">a </span><em><em>em</em> </em></p>');
+    });
+
     suite.test("TINY-782: Can't apply sub/sup to word on own line with large font", function (editor) {
       editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</p>';
       LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
