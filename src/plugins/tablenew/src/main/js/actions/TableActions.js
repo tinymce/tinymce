@@ -17,6 +17,7 @@
 define(
   'tinymce.plugins.tablenew.actions.TableActions',
   [
+    'ephox.darwin.api.TableSelection',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeWire',
@@ -30,10 +31,10 @@ define(
     'ephox.sugar.api.properties.Direction',
     'ephox.sugar.api.properties.Html',
     'tinymce.plugins.tablenew.actions.TableWire',
-    'tinymce.plugins.tablenew.selection.Selections',
-    'tinymce.plugins.tablenew.queries.TableTargets'
+    'tinymce.plugins.tablenew.queries.TableTargets',
+    'tinymce.plugins.tablenew.selection.Selections'
   ],
-  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableLookup, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire, Selections, TableTargets) {
+  function (TableSelection, Fun, Option, ResizeWire, TableDirection, TableFill, TableLookup, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire, TableTargets, Selections) {
     return function (editor) {
 
       var selections = Selections(editor);
@@ -115,11 +116,22 @@ define(
         var table = TableLookup.table(cell);
         table.bind(function (table) {
           var targets = TableTargets.forMenu(selections, table, cell);
-          execute(table, targets).bind(function (rng) {
+          execute(table, targets).each(function (rng) {
             editor.selection.setRng(rng);
             editor.focus();
+            TableSelection.clear(table);
           });
         });
+      };
+
+      var deleteRow = function () {
+        var f = execute(TableOperations.eraseRows, Fun.noop, lazyWire);
+        actOnSelection(f);
+      };
+
+      var deleteColumn = function () {
+        var f = execute(TableOperations.eraseColumns, Fun.noop, lazyWire);
+        actOnSelection(f);
       };
 
       var insertRowBefore = function () {
@@ -147,13 +159,21 @@ define(
         actOnSelection(f);
       };
 
+      var unmergeCells = function () {
+        var f = execute(TableOperations.unmergeCells, Fun.noop, lazyWire);
+        actOnSelection(f);
+      };
+
       return {
         insert: insert,
+        deleteRow: deleteRow,
+        deleteColumn: deleteColumn,
         insertRowBefore: insertRowBefore,
         insertRowAfter: insertRowAfter,
         insertColumnBefore: insertColumnBefore,
         insertColumnAfter: insertColumnAfter,
-        mergeCells: mergeCells
+        mergeCells: mergeCells,
+        unmergeCells: unmergeCells
       };
     };
   }
