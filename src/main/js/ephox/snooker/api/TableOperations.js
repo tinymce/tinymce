@@ -38,7 +38,7 @@ define(
 
     var findIn = function (grid, row, column) {
       return Option.from(grid[row]).bind(function (r) {
-        return Option.from(r[column]);
+        return Option.from(r.cells()[column]);
       });
     };
 

@@ -5,13 +5,14 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
+    'ephox.snooker.model.GridRow',
     'ephox.snooker.util.Util',
     'global!Array',
     'global!Error',
     'global!Math'
   ],
 
-  function (Arr, Fun, Result, Util, Array, Error, Math) {
+  function (Arr, Fun, Result, GridRow, Util, Array, Error, Math) {
     /*
       Fitment, is a module used to ensure that the Inserted table (gridB) can fit squareley within the Host table (gridA).
         - measure returns a delta of rows and cols, eg:
@@ -26,11 +27,11 @@ define(
     */
 
     var measure = function (startAddress, gridA, gridB) {
-      if (startAddress.row() >= gridA.length || startAddress.column() > gridA[0].length) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
+      if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
       var rowRemainder = gridA.slice(startAddress.row());
-      var colRemainder = rowRemainder[0].slice(startAddress.column());
+      var colRemainder = rowRemainder[0].cells().slice(startAddress.column());
 
-      var colRequired = gridB[0].length;
+      var colRequired = GridRow.cellLength(gridB[0]);
       var rowRequired = gridB.length;
       return Result.value({
         rowDelta: Fun.constant(rowRemainder.length - rowRequired),
@@ -44,13 +45,13 @@ define(
 
     var rowFill = function (grid, amount, generator) {
       return grid.concat(Util.repeat(amount, function (_row) {
-        return fill(grid[0], generator);
+        return GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator));
       }));
     };
 
     var colFill = function (grid, amount, generator) {
       return Arr.map(grid, function (row) {
-        return row.concat(fill(Util.range(0, amount), generator));
+        return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
       });
     };
 

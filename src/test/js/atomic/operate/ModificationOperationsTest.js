@@ -7,25 +7,47 @@ test(
   },
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Generators',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Generators, ModificationOperations, TestGenerator) {
+  function (Arr, Fun, Generators, Structs, ModificationOperations, TestGenerator) {
+    var r = Structs.rowcells;
+    var mapToStructGrid = function (grid) {
+      return Arr.map(grid, function (row) {
+        return Structs.rowcells(row, 'tbody');
+      });
+    };
+
+    var assertGrids = function (expected, actual) {
+      assert.eq(expected.length, actual.length);
+      Arr.each(expected, function (row, i) {
+        assert.eq(row.cells(), actual[i].cells());
+        assert.eq(row.section(), actual[i].section());
+      });
+    };
+
     // Test basic insert column
     (function () {
       var check = function (expected, grid, example, index) {
         var actual = ModificationOperations.insertColumnAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        assert.eq(expected, actual);
+        assertGrids(expected, actual);
+      };
+      var checkBody = function (expected, grid, example, index) {
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        check(structExpected, structGrid, example, index);
       };
 
-      check([], [], 0, 0);
-      check([[ '?_0' ]], [[ ]], 0, 0);
-      check([[ '?_0', 'a' ]], [[ 'a' ]], 0, 0);
-      check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 1);
-      check(
+      checkBody([], [], 0, 0);
+      checkBody([[ '?_0' ]], [[ ]], 0, 0);
+      checkBody([[ '?_0', 'a' ]], [[ 'a' ]], 0, 0);
+      checkBody([[ 'a', '?_0' ]], [[ 'a' ]], 0, 1);
+      checkBody(
         [
           [ 'a', '?_0' ],
           [ 'b', '?_1' ]
@@ -35,7 +57,7 @@ test(
           [ 'b' ]
         ], 0, 1
       );
-      check(
+      checkBody(
         [
           [ '?_0', 'a' ],
           [ '?_1', 'b' ]
@@ -46,7 +68,7 @@ test(
         ], 0, 0
       );
       // Spanning check.
-      check(
+      checkBody(
         [
           [ 'a', 'a', 'a' ],
           [ 'b', '?_0', 'c' ]
@@ -56,7 +78,7 @@ test(
           [ 'b', 'c' ]
         ], 0, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', '?_0' ],
           [ 'c', 'b', '?_0' ],
@@ -69,22 +91,59 @@ test(
         ], 1, 2
       );
 
-      // Copying the target row with a column
+      check(
+        [
+          r([ 'a', '?_0' ], 'thead'),
+          r([ 'b', '?_1' ], 'tbody')
+        ],
+        [
+          r([ 'a' ], 'thead'),
+          r([ 'b' ], 'tbody')
+        ], 0, 1
+      );
+
+      check(
+        [
+          r([ '?_0', 'a' ], 'thead'),
+          r([ '?_1', 'b' ], 'tbody')
+        ],
+        [
+          r([ 'a' ], 'thead'),
+          r([ 'b' ], 'tbody')
+        ], 0, 0
+      );
+
+      check(
+        [
+          r([ 'a', 'a', 'a' ], 'thead'),
+          r([ 'b', '?_0', 'c' ], 'tbody')
+        ],
+        [
+          r([ 'a', 'a' ], 'thead'),
+          r([ 'b', 'c' ], 'tbody')
+        ], 0, 1
+      );
     })();
 
     // Test basic insert row
     (function () {
       var check = function (expected, grid, example, index) {
         var actual = ModificationOperations.insertRowAt(grid, index, example, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        assert.eq(expected, actual);
+        assertGrids(expected, actual);
       };
 
-      check([[ '?_0' ], [ 'a' ]], [[ 'a' ]], 0, 0);
-      check([[ 'a' ], [ '?_0' ]], [[ 'a' ]], 0, 1);
-      check([[ 'a', 'b' ], [ '?_0', '?_1' ]], [[ 'a', 'b' ]], 0, 1);
-      check([[ 'a', 'a' ], [ '?_0', '?_0' ]], [[ 'a', 'a' ]], 0, 1);
+      var checkBody = function (expected, grid, example, index) {
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        check(structExpected, structGrid, example, index);
+      };
 
-      check(
+      checkBody([[ '?_0' ], [ 'a' ]], [[ 'a' ]], 0, 0);
+      checkBody([[ 'a' ], [ '?_0' ]], [[ 'a' ]], 0, 1);
+      checkBody([[ 'a', 'b' ], [ '?_0', '?_1' ]], [[ 'a', 'b' ]], 0, 1);
+      checkBody([[ 'a', 'a' ], [ '?_0', '?_0' ]], [[ 'a', 'a' ]], 0, 1);
+
+      checkBody(
         [
           [ 'a', 'a', 'b' ],
           [ '?_0', '?_0', 'b' ],
@@ -94,18 +153,46 @@ test(
           [ 'a', 'a', 'b' ],
           [ 'c', 'd', 'b' ]
         ], 0, 1);
+
+        check(
+        [
+          r([ 'a', 'b', 'c' ], 'thead'),
+          r([ '?_0', '?_1', '?_2' ], 'thead'),
+          r([ 'd', 'e', 'f' ], 'tbody')
+        ],
+        [
+          r([ 'a', 'b', 'c' ], 'thead'),
+          r([ 'd', 'e', 'f' ], 'tbody')
+        ], 0, 1);
+
+        check(
+        [
+          r([ 'a', 'b', 'c' ], 'thead'),
+          r([ '?_0', '?_1', '?_2' ], 'tbody'),
+          r([ 'd', 'e', 'f' ], 'tbody')
+        ],
+        [
+          r([ 'a', 'b', 'c' ], 'thead'),
+          r([ 'd', 'e', 'f' ], 'tbody')
+        ], 1, 1);
     })();
 
     // Test basic delete column
     (function () {
       var check = function (expected, grid, index) {
-        var actual = ModificationOperations.deleteColumnAt(grid, index, Fun.tripleEquals);
-        assert.eq(expected, actual);
+        var actual = ModificationOperations.deleteColumnsAt(grid, index, index);
+        assertGrids(expected, actual);
       };
 
-      check([[ ]], [[ 'a' ]], 0);
-      check([[ 'b' ]], [[ 'a', 'b' ]], 0);
-      check(
+      var checkBody = function (expected, grid, index) {
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        check(structExpected, structGrid, index);
+      };
+
+      checkBody([[ ]], [[ 'a' ]], 0);
+      checkBody([[ 'b' ]], [[ 'a', 'b' ]], 0);
+      checkBody(
         [
           [ 'a', 'b' ], 
           [ 'c', 'c' ]
@@ -114,18 +201,33 @@ test(
           [ 'a', 'b', 'b' ],
           [ 'c', 'c', 'c' ]
         ], 1);
+      check(
+        [
+          r([ 'a', 'b' ], 'thead'), 
+          r([ 'c', 'c' ], 'tbody')
+        ], 
+        [
+          r([ 'a', 'b', 'b' ], 'thead'),
+          r([ 'c', 'c', 'c' ], 'tbody')
+        ], 1);
     })();
 
     // Test basic delete row
     (function () {
       var check = function (expected, grid, index) {
-        var actual = ModificationOperations.deleteRowAt(grid, index, Fun.tripleEquals);
-        assert.eq(expected, actual);
+        var actual = ModificationOperations.deleteRowsAt(grid, index, index);
+        assertGrids(expected, actual);
       };
 
-      check([], [[ 'a' ]], 0);
-      check([[ 'b' ]], [[ 'a' ], [ 'b' ]], 0);
-      check(
+      var checkBody = function (expected, grid, index) {
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        check(structExpected, structGrid, index);
+      };
+
+      checkBody([], [[ 'a' ]], 0);
+      checkBody([[ 'b' ]], [[ 'a' ], [ 'b' ]], 0);
+      checkBody(
         [
           [ 'a', 'b', 'b' ], 
           [ 'c', 'c', 'c' ]
@@ -135,21 +237,38 @@ test(
           [ 'a', 'b', 'b' ],
           [ 'c', 'c', 'c' ]
         ], 1);
+
+      check(
+        [
+          r([ 'a', 'b', 'b' ], 'thead'), 
+          r([ 'c', 'c', 'c' ], 'tbody')
+        ], 
+        [
+          r([ 'a', 'b', 'b' ], 'thead'),
+          r([ 'a', 'b', 'b' ], 'tbody'),
+          r([ 'c', 'c', 'c' ], 'tbody')
+        ], 1);
     })();
 
     (function () {
       var check = function (expected, grid, exRow, exCol) {
         var actual = ModificationOperations.splitCellIntoColumns(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        assert.eq(expected, actual);
+        assertGrids(expected, actual);
+      };
+
+      var checkBody = function (expected, grid, exRow, exCol) {
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        check(structExpected, structGrid, exRow, exCol);
       };
       
       // splitting simple tables without existing colspans 
-      check([], [], 0, 0); // ?? table without rows
-      check([[ '?_0' ]], [[ ]], 0, 0);
-      check([[ 'a', '?_0' ]], [[ 'a' ]], 0, 0);
-      check([[ 'a', '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
-      check([[ 'a', 'b', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
-      check(
+      checkBody([], [], 0, 0); // ?? table without rows
+      checkBody([[ '?_0' ]], [[ ]], 0, 0);
+      checkBody([[ 'a', '?_0' ]], [[ 'a' ]], 0, 0);
+      checkBody([[ 'a', '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
+      checkBody([[ 'a', 'b', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
+      checkBody(
         [
           [ 'a', 'b', '?_0' ],
           [ 'c', 'd', 'd'   ]
@@ -159,7 +278,7 @@ test(
           [ 'c', 'd' ]
         ], 0, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', '?_0', 'b', 'c'],
           [ 'd', 'd',   'e', 'f'],
@@ -171,7 +290,7 @@ test(
           [ 'g', 'h', 'i']
         ], 0, 0
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'b',   'c'],
           [ 'd', 'e', '?_0', 'f'],
@@ -183,7 +302,7 @@ test(
           [ 'g', 'h', 'i']
         ], 1, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c', 'c'  ],
           [ 'd', 'e', 'f', 'f'  ],
@@ -195,7 +314,7 @@ test(
           [ 'g', 'h', 'i']
         ], 2, 2
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c', '?_0'],
           [ 'd', 'e', 'f', 'f'  ],
@@ -207,7 +326,7 @@ test(
           [ 'g', 'h', 'i']
         ], 0, 2
       );
-      check(
+      checkBody(
         [
           [ 'a', 'a',   'b', 'c'],
           [ 'd', 'd',   'e', 'f'],
@@ -220,7 +339,7 @@ test(
         ], 2, 0
       );
       // Splitting a cell where other cells have colspans
-        check(
+        checkBody(
         [
           [ 'a', 'b', '?_0' ],
           [ 'c', 'c', 'c'   ]
@@ -230,7 +349,7 @@ test(
           [ 'c', 'c' ]
         ], 0, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', '?_0', 'b', 'c'],
           [ 'd', 'd',   'd', 'f'],
@@ -242,7 +361,7 @@ test(
           [ 'g', 'h', 'h']
         ], 0, 0
       );
-      check(
+      checkBody(
         [
           [ 'a', 'a', 'a',   'a'],
           [ 'd', 'e', '?_0', 'f'],
@@ -254,7 +373,7 @@ test(
           [ 'g', 'h', 'h']
         ], 1, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', 'a', 'c', 'c'  ],
           [ 'd', 'd', 'd', 'd'  ],
@@ -266,7 +385,7 @@ test(
           [ 'g', 'h', 'i']
         ], 2, 2
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c', '?_0'],
           [ 'd', 'e', 'e', 'e'  ],
@@ -278,7 +397,7 @@ test(
           [ 'g', 'g', 'i']
         ], 0, 2
       );
-      check(
+      checkBody(
         [
           [ 'a', 'a',   'a', 'c'],
           [ 'a', 'a',   'a', 'a'],
@@ -291,7 +410,7 @@ test(
         ], 2, 0
       );
       // splitting a cell which is already merged
-      check(
+      checkBody(
         [
           [ 'a', 'a',   'a', 'a'],
           [ 'a', 'a',   '?_0', 'a'],
@@ -303,23 +422,54 @@ test(
           [ 'a', 'a', 'a']
         ], 1, 1
       );
+      check(
+        [
+          r([ 'a', 'b', 'c', '?_0'], 'thead'),
+          r([ 'd', 'e', 'e', 'e'  ], 'tbody'),
+          r([ 'g', 'g', 'i', 'i'  ], 'tbody')
+        ], 
+        [
+          r([ 'a', 'b', 'c'], 'thead'),
+          r([ 'd', 'e', 'e'], 'tbody'),
+          r([ 'g', 'g', 'i'], 'tbody')
+        ], 0, 2
+      );
+
+      check(
+        [
+          r([ 'a', 'a',   'a', 'c'], 'thead'),
+          r([ 'a', 'a',   'a', 'a'], 'tbody'),
+          r([ 'g', '?_0', 'h', 'i'], 'tbody')
+        ], 
+        [
+          r([ 'a', 'a', 'c'], 'thead'),
+          r([ 'a', 'a', 'a'], 'tbody'),
+          r([ 'g', 'h', 'i'], 'tbody')
+        ], 2, 0
+      );
     })();
 
 
     (function () {
       var check = function (expected, grid, exRow, exCol) {
         var actual = ModificationOperations.splitCellIntoRows(grid, exRow, exCol, Fun.tripleEquals, Generators.modification(TestGenerator(), Fun.identity).getOrInit);
-        assert.eq(expected, actual);
+        assertGrids(expected, actual);
+      };
+
+      var checkBody = function (expected, grid, exRow, exCol) {
+        var structExpected = mapToStructGrid(expected);
+        var structGrid = mapToStructGrid(grid);
+        check(structExpected, structGrid, exRow, exCol);
       };
       
       // splitting simple tables without existing rowspans 
-      // check([], [], 0, 0); // ?? table without rows will fail - a problem?
-      check([[]], [], 0, 0);
-      check([[], []], [[ ]], 0, 0); 
-      check([[ 'a'], ['?_0' ]], [[ 'a' ]], 0, 0);
-      check([[ 'a', 'b' ], [ '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
-      check([[ 'a', 'b' ], [ 'a', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
-      check(
+      // checkBody([], [], 0, 0); // ?? table without rows will fail - a problem?
+      // checkBody([[]], [], 0, 0); // This case shouldn't come up?
+      checkBody([[], []], [[ ]], 0, 0); 
+      checkBody([[ 'a'], ['?_0' ]], [[ 'a' ]], 0, 0);
+      checkBody([[ 'a', 'b' ], [ '?_0', 'b' ]], [[ 'a', 'b' ]], 0, 0);
+      checkBody([[ 'a', 'b' ], [ 'a', '?_0' ]], [[ 'a', 'b' ]], 0, 1);
+      checkBody(
         [
           [ 'a', 'b'   ],
           [ 'a', '?_0' ],
@@ -330,7 +480,7 @@ test(
           [ 'c', 'd' ]
         ], 0, 1
       );
-      check(
+      checkBody(
         [
           [ 'a',   'b', 'c'],
           [ '?_0', 'b', 'c'],
@@ -343,7 +493,7 @@ test(
           [ 'g', 'h', 'i']
         ], 0, 0
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b',   'c'],
           [ 'd', 'e',   'f'],
@@ -356,7 +506,7 @@ test(
           [ 'g', 'h', 'i']
         ], 1, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c'  ],
           [ 'd', 'e', 'f'  ],
@@ -369,7 +519,7 @@ test(
           [ 'g', 'h', 'i']
         ], 2, 2
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c'   ],
           [ 'a', 'b', '?_0' ],
@@ -382,7 +532,7 @@ test(
           [ 'g', 'h', 'i']
         ], 0, 2
       );
-      check(
+      checkBody(
         [
           [ 'a',   'b', 'c'],
           [ 'd',   'e', 'f'],
@@ -396,7 +546,7 @@ test(
         ], 2, 0
       );
       // Splitting a cell where other cells have rowspans
-      check(
+      checkBody(
         [
           [ 'a', 'b'   ],
           [ 'a', '?_0' ],
@@ -407,7 +557,7 @@ test(
           [ 'a', 'c' ]
         ], 0, 1
       );
-      check(
+      checkBody(
         [
           [ 'a',   'b', 'c'],
           [ '?_0', 'b', 'c'],
@@ -420,7 +570,7 @@ test(
           [ 'g', 'h', 'f']
         ], 0, 0
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b',   'c'],
           [ 'a', 'e',   'c'],
@@ -433,7 +583,7 @@ test(
           [ 'a', 'e', 'f']
         ], 1, 1
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c'  ],
           [ 'a', 'b', 'i'  ],
@@ -446,7 +596,7 @@ test(
           [ 'a', 'h', 'i']
         ], 2, 2
       );
-      check(
+      checkBody(
         [
           [ 'a', 'b', 'c'  ],
           [ 'a', 'b', '?_0'],
@@ -459,7 +609,7 @@ test(
           [ 'd', 'e', 'i']
         ], 0, 2
       );
-      check(
+      checkBody(
         [
           [ 'a',   'a', 'b'],
           [ 'a',   'a', 'a'],
@@ -473,7 +623,7 @@ test(
         ], 2, 0
       );
       // splitting a cell which is already merged
-      check(
+      checkBody(
         [
           [ 'a', 'a',   'a'],
           [ 'a', 'a',   'a'],
@@ -485,6 +635,18 @@ test(
           [ 'a', 'a', 'a'],
           [ 'a', 'a', 'a']
         ], 1, 1
+      );
+
+      check(
+        [
+          r([ 'a', 'b'   ], 'thead'),
+          r([ 'a', '?_0' ], 'thead'),
+          r([ 'c', 'd'   ], 'tbody')
+        ], 
+        [
+          r([ 'a', 'b' ], 'thead'),
+          r([ 'c', 'd' ], 'tbody')
+        ], 0, 1
       );
     })();
   }

@@ -2,19 +2,19 @@ test(
   'BlocksTest',
 
   [
-    'ephox.scullion.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.Warehouse'
   ],
 
-  function (Struct, Structs, Blocks, Warehouse) {
+  function (Structs, Blocks, Warehouse) {
     var s = Structs.detail;
-    var f = Struct.immutable('element', 'cells');
+    var f = Structs.rowdata;
     var warehouse = Warehouse.generate([
-      f('r1', [ s('a', 1, 1), s('b', 1, 2) ]),
-      f('r2', [ s('c', 2, 1), s('d', 1, 1), s('e', 1, 1) ]),
-      f('r3', [ s('f', 1, 2) ])
+      f('r1', [ s('a', 1, 1), s('b', 1, 2) ], 'thead'),
+      f('r2', [ s('c', 2, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),
+      f('r2', [ s('f', 1, 1), s('g', 1, 1) ], 'tbody'),
+      f('r3', [ s('h', 1, 1), s('i', 1, 2) ], 'tfoot')
     ]);
   
     assert.eq(['a', 'd', 'e'], Blocks.columns(warehouse).map(function (c) { return c.getOrDie(); }));

@@ -11,12 +11,12 @@ define(
 
   function (Structs, Warehouse, CellBounds, Compare, Math) {
     var getBounds = function (detailA, detailB) {
-      return Structs.bounds({
-        startCol: Math.min(detailA.column(), detailB.column()),
-        finishCol: Math.max(detailA.column() + detailA.colspan() - 1, detailB.column() + detailB.colspan() - 1),
-        startRow: Math.min(detailA.row(), detailB.row()),
-        finishRow: Math.max(detailA.row() + detailA.rowspan() - 1 , detailB.row() + detailB.rowspan() - 1)
-      });
+      return Structs.bounds(
+        Math.min(detailA.row(), detailB.row()),
+        Math.min(detailA.column(), detailB.column()),
+        Math.max(detailA.row() + detailA.rowspan() - 1 , detailB.row() + detailB.rowspan() - 1),
+        Math.max(detailA.column() + detailA.colspan() - 1, detailB.column() + detailB.colspan() - 1)
+      );
     };
 
     var getAnyBox = function (warehouse, startCell, finishCell) {

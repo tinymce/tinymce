@@ -3,10 +3,13 @@ test(
 
   [
     'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.TableGrid'
   ],
 
-  function (Fun, TableGrid) {
+  function (Fun, Structs, TableGrid) {
+    var r = Structs.rowcells;
+
     var check = function (expected, row, column, grid) {
       var actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);
       assert.eq(expected.rowspan, actual.rowspan());
@@ -14,9 +17,9 @@ test(
     };
 
     var world = [
-      [ 'a', 'a', 'a' ],
-      [ 'b', 'b', 'c' ],
-      [ 'd', 'e', 'c' ]
+      r([ 'a', 'a', 'a' ], 'thead'),
+      r([ 'b', 'b', 'c' ], 'tbody'),
+      r([ 'd', 'e', 'c' ], 'tfoot')
     ];
 
     check({ colspan: 3, rowspan: 1 }, 0, 0, world);

@@ -4,26 +4,27 @@ define(
   [
     'ephox.peanut.Fun',
     'ephox.snooker.model.Fitment',
+    'ephox.snooker.model.GridRow',
     'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Fun, Fitment, MergingOperations) {
+  function (Fun, Fitment, GridRow, MergingOperations) {
     var isSpanning = function (grid, row, col, comparator) {
-      var candidate = grid[row][col];
+      var candidate = GridRow.getCell(grid[row], col);
       var matching = Fun.curry(comparator, candidate);
-      var rowArray = grid[row];
+      var currentRow = grid[row];
 
       // sanity check, 1x1 has no spans
-      return grid.length > 1 && rowArray.length > 1 &&
+      return grid.length > 1 && GridRow.cellLength(currentRow) > 1 &&
       (
         // search left, if we're not on the left edge
-        (col > 0 && matching(rowArray[col-1])) ||
+        (col > 0 && matching(GridRow.getCell(currentRow, col-1))) ||
         // search right, if we're not on the right edge
-        (col < rowArray.length - 1 && matching(rowArray[col+1])) ||
+        (col < currentRow.length - 1 && matching(GridRow.getCell(currentRow, col+1))) ||
         // search up, if we're not on the top edge
-        (row > 0 && matching(grid[row-1][col])) ||
+        (row > 0 && matching(GridRow.getCell(grid[row-1], col))) ||
         // search down, if we're not on the bottom edge
-        (row < grid.length - 1 && matching(grid[row+1][col]))
+        (row < grid.length - 1 && matching(GridRow.getCell(grid[row+1], col)))
       );
     };
 
@@ -33,7 +34,7 @@ define(
       var startRow = startAddress.row();
       var startCol = startAddress.column();
       var mergeHeight = gridB.length;
-      var mergeWidth = gridB[0].length;
+      var mergeWidth = GridRow.cellLength(gridB[0]);
       var endRow = startRow + mergeHeight;
       var endCol = startCol + mergeWidth;
 
@@ -42,9 +43,9 @@ define(
         for (var c = startCol; c < endCol; c++) {
           if (isSpanning(gridA, r, c, comparator)) {
             // mutation within mutation, it's mutatception
-            MergingOperations.unmerge(gridA, gridA[r][c], comparator, generator.cell);
+            MergingOperations.unmerge(gridA, GridRow.getCell(gridA[r], c), comparator, generator.cell);
           }
-          gridA[r][c] = generator.replace(gridB[r - startRow][c - startCol]);
+          GridRow.mutateCell(gridA[r], c, generator.replace(GridRow.getCell(gridB[r - startRow], c - startCol)));
         }
       }
       return gridA;

@@ -3,13 +3,14 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.peanut.Fun',
+    'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Fun) {
+  function (Arr, Fun, GridRow) {
     var getColumn = function (grid, index) {
       return Arr.map(grid, function (row) {
-        return row[index];
+        return GridRow.getCell(row, index);
       });
     };
 
@@ -37,7 +38,7 @@ define(
      *   rowspan: row span of the cell at (row, column)
      */
     var subgrid = function (grid, row, column, comparator) {
-      var restOfRow = getRow(grid, row).slice(column);
+      var restOfRow = getRow(grid, row).cells().slice(column);
       var endColIndex = findDiff(restOfRow, comparator);
 
       var restOfColumn = getColumn(grid, column).slice(row);
