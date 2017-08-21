@@ -89,7 +89,6 @@ define(
 
       var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
         var previousMenu = menuItems.length > 0 ? menuItems[0].previousMenu : 'styles';
-        console.log('previousMenu of ', menuName, previousMenu, formats.expansions);
         var items = Arr.map(menuItems, function (item) {
           return makeItem(
             getValue(item),
@@ -286,7 +285,6 @@ define(
           settings.handle(item, v.value);
         },
         onEscape: function () {
-          console.log('Escaping');
         },
         onOpenMenu: function (container, menu) {
           var w = Width.get(container.element());

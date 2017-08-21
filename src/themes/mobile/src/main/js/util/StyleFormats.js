@@ -105,7 +105,6 @@ define(
 
     var ui = function (editor, formats, onDone) {
       var pruned = prune(editor, formats);
-      console.log('prune', pruned);
 
       return StylesMenu.sketch({
         formats: pruned,

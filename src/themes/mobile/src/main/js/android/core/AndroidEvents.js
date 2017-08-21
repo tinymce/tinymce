@@ -72,7 +72,6 @@ define(
         // Scroll to cursor and update the iframe height
         editorApi.onScrollToCursor(function (tinyEvent) {
           tinyEvent.preventDefault();
-          console.log("scrolling to cursor')")
           editorApi.getCursorBox().each(function (bounds) {
             var cWin = editorApi.win();
             // The goal here is to shift as little as required.

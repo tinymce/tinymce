@@ -2,7 +2,10 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Swapping',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.debugging.Debugging',
@@ -11,9 +14,11 @@ define(
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
+    'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'global!document',
@@ -22,6 +27,7 @@ define(
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
+    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.Orientation',
@@ -42,9 +48,12 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Debugging, Objects, Arr, Cell, Fun, Id, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils,
-    ThemeManager, Api, TinyCodeDupe, TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm,
-    LinkButton, StylesMenu, CssUrls, FormatChangers, SkinLoaded, StyleFormats
+    Behaviour, Swapping, Toggling, Memento, AlloyTriggers, Attachment, Debugging, Objects,
+    Arr, Cell, Fun, Id, Option, PlatformDetection, Focus, Insert, DomEvent, Element, Node,
+    document, window, DOMUtils, ThemeManager, Api, TinyCodeDupe, Receivers, TinyChannels,
+    Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider,
+    ImagePicker, IosRealm, LinkButton, StylesMenu, CssUrls, FormatChangers, SkinLoaded,
+    StyleFormats
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -58,7 +67,6 @@ define(
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
         var doScrollIntoView = function () {
-          console.log('scrolling into view');
           editor.fire('scrollIntoView');
         };
 
@@ -121,9 +129,7 @@ define(
               },
 
               onScrollToCursor: function (handler) {
-                console.log('onScrollToCursor binding');
                 editor.on('scrollIntoView', function (tinyEvent) {
-                  console.log("handing scroll into view");
                   handler(tinyEvent);
                 });
 
@@ -138,7 +144,7 @@ define(
               },
 
               onTouchToolstrip: function () {
-                realm.dropup().disappear();
+                hideDropup();
               },
 
               onTouchContent: function () {
@@ -147,7 +153,7 @@ define(
                 // Perhaps it will be clearer later what is a better way of doing this.
                 findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
                 realm.restoreToolbar();
-                realm.dropup().disappear();
+                hideDropup();
               },
 
               onTapContent: function (evt) {
@@ -180,6 +186,14 @@ define(
               setReadOnly(readOnlyGroups, mainGroups, ro);
             }
           });
+
+          var hideDropup = function () {
+            styleFormatsButton.getOpt(realm.system().root()).fold(function () {
+              realm.dropup().disappear(Fun.noop, {});
+            }, function (button) {
+              realm.dropup().disappear(Toggling.off, button);
+            });
+          };
 
           Debugging.registerInspector('remove this', realm.system());
 
@@ -219,6 +233,29 @@ define(
 
           var styleFormats = StyleFormats.register(editor, editor.settings);
 
+          var styleFormatsMenu = function () {
+            return StyleFormats.ui(editor, styleFormats, function () {
+              editor.fire('scrollIntoView');
+            });
+          };
+
+          var styleFormatsButton = Memento.record(Buttons.forToolbar('font-size', function (button) {
+              editor.fire('toReading');
+              realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
+            }, Behaviour.derive([
+              Toggling.config({
+                toggleClass: Styles.resolve('toolbar-button-selected'),
+                toggleOnExecute: false,
+                aria: {
+                  mode: 'pressed'
+                }
+              }),
+              Receivers.orientation(function (button) {
+                Toggling.off(button);
+              })
+            ])
+          ));
+
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
@@ -233,20 +270,7 @@ define(
                 editor.execCommand('InsertUnorderedList', null, false);
               }),
               // HeadingSlider.sketch(realm, editor),
-              Buttons.forToolbar('font-size', function () {
-                editor.fire('toReading');
-                // Hack to make the keyboard disappear first ... there should be a way to detect it. (for Android only maybe)
-                setTimeout(function () {
-                  window.requestAnimationFrame(function () {
-                    var menu = StyleFormats.ui(editor, styleFormats, function () {
-                      // After a change of formats, scroll into view again.
-                      editor.fire('scrollIntoView');
-                    });
-                    realm.dropup().appear(menu);
-                  });
-                }, 1000);
-              }, { }),
-              
+              styleFormatsButton.asSpec()
 
               // FontSizeSlider.sketch(realm, editor),
               // ColorSlider.sketch(realm, editor)

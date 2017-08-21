@@ -44,8 +44,12 @@
         outline: 4px solid black;
         position: relative;
         width: 100%;
-        min-height: 200px;
         font-family: sans-serif;
+      }
+
+      /* size for device size and orientation */
+      .tinymce-mobile-ios-container .demo-tiered-menu {
+        min-height: 200px;
       }
 
       .demo-tiered-menu .item {
@@ -92,10 +96,6 @@
         color: @toolstrip-foreground-color;
       }
 
-
-   
-
-
       [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {
         transform: translate(-100%);
       }
@@ -134,8 +134,16 @@
 }
 
 
-.dropup-shrinking, .dropup-growing {
-  transition: height 0.1s ease;
+.dropup-shrinking {
+  transition: height 0.3s ease-out;
+}
+
+.dropup-growing {
+  transition: height 0.3s ease-in;
+}
+
+.tinymce-mobile-dropup {
+  background: @dropup-background-color;
 }
 
 .tinymce-mobile-dropup.dropup-closed {

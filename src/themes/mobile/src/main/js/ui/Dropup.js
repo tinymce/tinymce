@@ -6,15 +6,13 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
     'tinymce.themes.mobile.channels.Receivers',
-    'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.ui.StylesMenu'
+    'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (Behaviour, Replacing, Sliding, GuiFactory, Memento, Container, Fun, Receivers, Styles, StylesMenu) {
+  function (Behaviour, Replacing, Sliding, GuiFactory, Container, Fun, Receivers, Styles) {
     var build = function (refresh, scrollIntoView) {
       var dropup = GuiFactory.build(
         Container.sketch({
@@ -22,7 +20,6 @@ define(
             tag: 'div',
             classes: Styles.resolve('dropup'),
             styles: {
-              // background: 'blue',
               display: 'flex',
               'width': '100%',
               'overflow': 'hidden'
@@ -41,7 +38,6 @@ define(
               dimension: {
                 property: 'height'
               },
-
               onShrunk: function (component) {
                 refresh();
                 scrollIntoView();
@@ -51,23 +47,30 @@ define(
               onGrown: function (component) {
                 refresh();
                 scrollIntoView();
-
               }
             }),
             Receivers.orientation(function (component, data) {
-              disappear();
+              disappear(Fun.noop, {});
             })
           ])
         })
       );
 
-      var appear = function (menu) {
-        Replacing.set(dropup, [ menu ]);
-        Sliding.grow(dropup);
+      var appear = function (menu, update, component) {
+        if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {
+          window.requestAnimationFrame(function () {
+            update(component);
+            Replacing.set(dropup, [ menu() ]);
+            Sliding.grow(dropup);
+          });
+        }
       };
 
-      var disappear = function () {
-        Sliding.shrink(dropup);
+      var disappear = function (update, component) {
+        window.requestAnimationFrame(function () {
+          update(component);
+          Sliding.shrink(dropup);
+        });
       };
 
       return {

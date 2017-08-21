@@ -60,7 +60,6 @@ define(
          */
         scroller.idle(function () {
           IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (/* _ */) {
-            console.log("updating positions");
             var extraScroll = scrollBounds();
             extraScroll.each(function (extra) {
               // TODO: Smoothly animate this in a way that doesn't conflict with anything else.

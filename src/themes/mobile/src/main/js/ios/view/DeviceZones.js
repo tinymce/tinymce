@@ -50,7 +50,6 @@ define(
       // Include the dropup for this calculation because it represents the total viewable height.
       var viewportHeight = Height.get(socket) + Height.get(dropup);
       var acc = accountableKeyboardHeight(outerWindow);
-      console.log('outerwindow', outerWindow, 'viewportHeight', viewportHeight, 'acc', acc);
       return viewportHeight - acc;
     };
 
