@@ -22,6 +22,9 @@ define(
   ],
 
   function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
+    var resizeBar = Styles.resolve('resizer-bar');
+    var resizeBarDragging = Styles.resolve('resizer-bar-dragging');
+
     return function (wire, direction, hdirection) {
       var mutation = BarMutation();
       var resizing = Dragger.transform(mutation, {});
@@ -77,7 +80,7 @@ define(
         events.trigger.startAdjust();
         mutation.assign(target);
         Attr.set(target, 'data-initial-' + direction, parseInt(Css.get(target, direction), 10));
-        Class.add(target, Styles.resolve('resizer-bar-dragging'));
+        Class.add(target, resizeBarDragging);
         Css.set(target, 'opacity', '0.2');
         resizing.go(wire.parent());
       };
@@ -99,10 +102,11 @@ define(
         }
       });
 
-      /* When the mouse moves out of the table, hide the bars */
+      /* When the mouse moves out of the table (or a resizer div that is not dragging), remove the bars */
       var mouseout = DomEvent.bind(wire.view(), 'mouseout', function (event) {
-        if (Node.name(event.target()) === 'table') {
-          Bars.hide(wire);
+        if (Node.name(event.target()) === 'table' || (Node.name(event.target()) === 'div' &&
+            Class.has(event.target(), resizeBar) && !Class.has(event.target(), resizeBarDragging))) {
+          Bars.destroy(wire);
         }
       });
 
