@@ -17,27 +17,21 @@
 define(
   'tinymce.plugins.tablenew.actions.TableActions',
   [
-    'ephox.darwin.api.TableSelection',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
-    'ephox.snooker.api.TableLookup',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableRender',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Direction',
     'ephox.sugar.api.properties.Html',
-    'tinymce.plugins.tablenew.actions.TableWire',
-    'tinymce.plugins.tablenew.queries.TableTargets',
-    'tinymce.plugins.tablenew.selection.Selections'
+    'tinymce.plugins.tablenew.actions.TableWire'
   ],
-  function (TableSelection, Fun, Option, ResizeWire, TableDirection, TableFill, TableLookup, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire, TableTargets, Selections) {
+  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire) {
     return function (editor) {
-
-      var selections = Selections(editor);
 
       var wire = Option.none();
 
@@ -111,58 +105,21 @@ define(
         };
       };
 
-      var actOnSelection = function (execute) {
-        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-        var table = TableLookup.table(cell);
-        table.bind(function (table) {
-          var targets = TableTargets.forMenu(selections, table, cell);
-          execute(table, targets).each(function (rng) {
-            editor.selection.setRng(rng);
-            editor.focus();
-            TableSelection.clear(table);
-          });
-        });
-      };
+      var deleteRow = execute(TableOperations.eraseRows, Fun.noop, lazyWire);
 
-      var deleteRow = function () {
-        var f = execute(TableOperations.eraseRows, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var deleteColumn = execute(TableOperations.eraseColumns, Fun.noop, lazyWire);
 
-      var deleteColumn = function () {
-        var f = execute(TableOperations.eraseColumns, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var insertRowBefore = execute(TableOperations.insertRowBefore, Fun.noop, lazyWire);
 
-      var insertRowBefore = function () {
-        var f = execute(TableOperations.insertRowBefore, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var insertRowAfter = execute(TableOperations.insertRowAfter, Fun.noop, lazyWire);
 
-      var insertRowAfter = function () {
-        var f = execute(TableOperations.insertRowAfter, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var insertColumnBefore = execute(TableOperations.insertColumnBefore, Fun.noop, lazyWire);
 
-      var insertColumnBefore = function () {
-        var f = execute(TableOperations.insertColumnBefore, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var insertColumnAfter = execute(TableOperations.insertColumnAfter, Fun.noop, lazyWire);
 
-      var insertColumnAfter = function () {
-        var f = execute(TableOperations.insertColumnAfter, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var mergeCells = execute(TableOperations.mergeCells, Fun.noop, lazyWire);
 
-      var mergeCells = function () {
-        var f = execute(TableOperations.mergeCells, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
-
-      var unmergeCells = function () {
-        var f = execute(TableOperations.unmergeCells, Fun.noop, lazyWire);
-        actOnSelection(f);
-      };
+      var unmergeCells = execute(TableOperations.unmergeCells, Fun.noop, lazyWire);
 
       return {
         insert: insert,

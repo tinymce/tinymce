@@ -2,75 +2,96 @@ define(
   'tinymce.plugins.tablenew.ui.MenuItems',
 
   [
-    'tinymce.plugins.tablenew.actions.TableActions'
+    'ephox.darwin.api.TableSelection',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
+    'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.node.Element',
+    'tinymce.plugins.tablenew.actions.TableActions',
+    'tinymce.plugins.tablenew.queries.TableTargets',
+    'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableActions) {
+  function (TableSelection, Arr, Option, TableLookup, Element, TableActions, TableTargets, Selections) {
     return function (editor) {
       var actions = TableActions(editor);
+      var selections = Selections(editor);
 
-      var handleDisabledState = function (ctrl, selector, sameParts) {
-        function bindStateListener() {
-          console.log('state listener fired');
-          var selectedElm, selectedCells, parts = {}, sum = 0, state;
+      var targets = Option.none();
 
-          selectedCells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
-          selectedElm = selectedCells[0];
-          if (!selectedElm) {
-            selectedElm = editor.selection.getStart();
-          }
-
-          // Make sure that we don't have a selection inside thead and tbody at the same time
-          if (sameParts && selectedCells.length > 0) {
-            each(selectedCells, function (cell) {
-              return parts[cell.parentNode.parentNode.nodeName] = 1;
+      var actOnSelection = function (execute) {
+        return function () {
+          var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+          var table = TableLookup.table(cell);
+          table.bind(function (table) {
+            var targets = TableTargets.forMenu(selections, table, cell);
+            execute(table, targets).each(function (rng) {
+              editor.selection.setRng(rng);
+              editor.focus();
+              TableSelection.clear(table);
             });
-
-            each(parts, function (value) {
-              sum += value;
-            });
-
-            state = sum !== 1;
-          } else {
-            state = !editor.dom.getParent(selectedElm, selector);
-          }
-
-          ctrl.disabled(state);
-
-          editor.selection.selectorChanged(selector, function (state) {
-            ctrl.disabled(!state);
           });
-        }
-
-        if (editor.initialized) {
-          bindStateListener();
-        } else {
-          editor.on('init', bindStateListener);
-        }
+        };
       };
 
-      var postRender = function () {
-        /*jshint validthis:true*/
-        handleDisabledState(this, 'table');
+      var cellCtrls = [];
+      var mergeCtrls = [];
+      var unmergeCtrls = [];
+
+      var pushCell = function () {
+        cellCtrls.push(this);
       };
 
-      var postRenderCell = function () {
-        /*jshint validthis:true*/
-        handleDisabledState(this, 'td,th');
+      var pushMerge = function () {
+        mergeCtrls.push(this);
       };
 
-      var postRenderMergeCell = function () {
-        /*jshint validthis:true*/
-        handleDisabledState(this, 'td,th', true);
+      var pushUnmerge = function () {
+        unmergeCtrls.push(this);
       };
+
+      editor.on('init', function () {
+        editor.on('nodechange', function (e) {
+          var cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+          targets = cellOpt.bind(function (cellDom) {
+            var cell = Element.fromDom(cellDom);
+            var table = TableLookup.table(cell);
+            return table.map(function (table) {
+              return TableTargets.forMenu(selections, table, cell);
+            });
+          });
+
+          targets.fold(function () {
+            Arr.each(cellCtrls, function (cellCtrl) {
+              cellCtrl.disabled(true);
+            });
+            Arr.each(mergeCtrls, function (mergeCtrl) {
+              mergeCtrl.disabled(true);
+            });
+            Arr.each(unmergeCtrls, function (unmergeCtrl) {
+              unmergeCtrl.disabled(true);
+            });
+          }, function (targets) {
+            Arr.each(cellCtrls, function (cellCtrl) {
+              cellCtrl.disabled(false);
+            });
+            Arr.each(mergeCtrls, function (mergeCtrl) {
+              mergeCtrl.disabled(targets.mergable().isNone());
+            });
+            Arr.each(unmergeCtrls, function (unmergeCtrl) {
+              unmergeCtrl.disabled(targets.unmergable().isNone());
+            });
+          });
+        });
+      });
 
       var row = {
         text: 'Row',
         context: 'table',
         menu: [
-          { text: 'Insert row before', onclick: actions.insertRowBefore, onPostRender: postRenderCell },
-          { text: 'Insert row after', onclick: actions.insertRowAfter, onPostRender: postRenderCell },
-          { text: 'Delete row', onclick: actions.deleteRow, onPostRender: postRenderCell }
+          { text: 'Insert row before', onclick: actOnSelection(actions.insertRowBefore), onPostRender: pushCell },
+          { text: 'Insert row after', onclick: actOnSelection(actions.insertRowAfter), onPostRender: pushCell },
+          { text: 'Delete row', onclick: actOnSelection(actions.deleteRow), onPostRender: pushCell }
         ]
       };
 
@@ -78,9 +99,9 @@ define(
         text: 'Column',
         context: 'table',
         menu: [
-          { text: 'Insert column before', onclick: actions.insertColumnBefore, onPostRender: postRenderCell },
-          { text: 'Insert column after', onclick: actions.insertColumnAfter, onPostRender: postRenderCell },
-          { text: 'Delete column', onclick: actions.deleteColumn, onPostRender: postRenderCell }
+          { text: 'Insert column before', onclick: actOnSelection(actions.insertColumnBefore), onPostRender: pushCell },
+          { text: 'Insert column after', onclick: actOnSelection(actions.insertColumnAfter), onPostRender: pushCell },
+          { text: 'Delete column', onclick: actOnSelection(actions.deleteColumn), onPostRender: pushCell }
         ]
       };
 
@@ -89,8 +110,8 @@ define(
         text: 'Cell',
         context: 'table',
         menu: [
-          { text: 'Merge cells', onclick: actions.mergeCells/*, onPostRender: postRenderMergeCell*/ },
-          { text: 'Split cell', onclick: actions.unmergeCells/*, onPostRender: postRenderCell*/ }
+          { text: 'Merge cells', onclick: actOnSelection(actions.mergeCells), onPostRender: pushMerge },
+          { text: 'Split cell', onclick: actOnSelection(actions.unmergeCells), onPostRender: pushUnmerge }
         ]
       };
 
