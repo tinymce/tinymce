@@ -17,16 +17,17 @@
 define(
   'tinymce.plugins.tablenew.Plugin',
   [
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableResize',
     'tinymce.core.PluginManager',
     'tinymce.plugins.tablenew.actions.TableWire',
+    'tinymce.plugins.tablenew.queries.Direction',
     'tinymce.plugins.tablenew.selection.CellSelection',
     'tinymce.plugins.tablenew.ui.InsertTable',
-    'tinymce.plugins.tablenew.ui.MenuItems',
-    'tinymce.plugins.tablenew.queries.Direction'
+    'tinymce.plugins.tablenew.ui.MenuItems'
   ],
-  function (TableDirection, TableResize, PluginManager, TableWire, CellSelection, InsertTable, MenuItems, Direction) {
+  function (Option, TableDirection, TableResize, PluginManager, TableWire, Direction, CellSelection, InsertTable, MenuItems) {
     function Plugin(editor) {
       var cellSelection = CellSelection(editor);
 
@@ -40,11 +41,25 @@ define(
 
       editor.addMenuItem('cell', menuItems.cell);
 
+      var selection = Option.none();
+
       editor.on('init', function () {
         var direction = TableDirection(Direction.directionAt);
         var rawWire = TableWire.get(editor);
         var sz = TableResize(rawWire, direction);
         sz.on();
+        sz.events.startDrag.bind(function () {
+          selection = Option.some(editor.selection.getRng());
+        });
+        sz.events.afterResize.bind(function () {
+          editor.focus();
+          selection.each(function (rng) {
+            editor.selection.setRng(rng);
+          });
+        });
+        editor.on('remove', function() {
+          sz.destroy();
+        });
       });
 
     }
