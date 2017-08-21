@@ -7,13 +7,14 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
     'tinymce.core.selection.SimpleTableModel'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Fun, Hierarchy, Insert, Element, Html, SimpleTableModel) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Fun, Result, Hierarchy, Insert, Element, Html, SimpleTableModel) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -24,11 +25,14 @@ asynctest(
     };
 
     var cFromDomSubSection = function (html, startPath, endPath) {
-      return Chain.mapper(function (_) {
+      return Chain.binder(function (_) {
         var tableElm = Element.fromHtml(html);
         var startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
         var endElm = Hierarchy.follow(tableElm, endPath).getOrDie();
-        return SimpleTableModel.subsection(SimpleTableModel.fromDom(tableElm), startElm, endElm).getOrDie();
+        return SimpleTableModel.subsection(SimpleTableModel.fromDom(tableElm), startElm, endElm).fold(
+          Fun.constant(Result.error('Failed to get the subsection')),
+          Result.value
+        );
       });
     };
 
