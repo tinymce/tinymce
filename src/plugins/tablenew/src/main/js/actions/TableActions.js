@@ -26,11 +26,11 @@ define(
     'ephox.snooker.api.TableRender',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Direction',
     'ephox.sugar.api.properties.Html',
-    'tinymce.plugins.tablenew.actions.TableWire'
+    'tinymce.plugins.tablenew.actions.TableWire',
+    'tinymce.plugins.tablenew.queries.Direction'
   ],
-  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableOperations, TableRender, Element, Attr, Direction, Html, TableWire) {
+  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableOperations, TableRender, Element, Attr, Html, TableWire, Direction) {
     return function (editor) {
 
       var wire = Option.none();
@@ -42,20 +42,6 @@ define(
 
       var lazyWire = function () {
         return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
-      };
-
-      var ltr = {
-        isRtl: Fun.constant(false)
-      };
-
-      var rtl = {
-        isRtl: Fun.constant(true)
-      };
-
-      // Get the directionality from the position in the content
-      var directionAt = function (element) {
-        var dir = Direction.getDirection(element);
-        return dir === 'rtl' ? rtl : ltr;
       };
 
       var insert = function (editor, rows, columns) {
@@ -94,7 +80,7 @@ define(
         return function (table, target) {
           var wire = lazyWire();
           var doc = Element.fromDom(editor.getDoc());
-          var direction = TableDirection(directionAt);
+          var direction = TableDirection(Direction.directionAt);
           var generators = TableFill.cellOperations(mutate, doc);
           return operation(wire, table, target, generators, direction).map(function (cell) {
             var rng = editor.dom.createRng();

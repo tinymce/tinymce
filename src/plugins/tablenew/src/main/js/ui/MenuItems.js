@@ -38,20 +38,63 @@ define(
       var mergeCtrls = [];
       var unmergeCtrls = [];
 
+      var noTargetDisable = function (ctrl) {
+        ctrl.disabled(true);
+      };
+
+      var cellCtrlEnable = function (ctrl) {
+        ctrl.disabled(false);
+      };
+
       var pushCell = function () {
-        cellCtrls.push(this);
+        var self = this;
+        cellCtrls.push(self);
+        targets.fold(function () {
+          noTargetDisable(self);
+        }, function (targets) {
+          cellCtrlEnable(self);
+        });
       };
 
       var pushMerge = function () {
-        mergeCtrls.push(this);
+        var self = this;
+        mergeCtrls.push(self);
+        targets.fold(function () {
+          noTargetDisable(self);
+        }, function (targets) {
+          self.disabled(targets.mergable().isNone());
+        });
       };
 
       var pushUnmerge = function () {
-        unmergeCtrls.push(this);
+        var self = this;
+        unmergeCtrls.push(self);
+        targets.fold(function () {
+          noTargetDisable(self);
+        }, function (targets) {
+          self.disabled(targets.unmergable().isNone());
+        });
+      };
+
+      var setDisabledCtrls = function () {
+        targets.fold(function () {
+          Arr.each(cellCtrls, noTargetDisable);
+          Arr.each(mergeCtrls, noTargetDisable);
+          Arr.each(unmergeCtrls, noTargetDisable);
+        }, function (targets) {
+          Arr.each(cellCtrls, cellCtrlEnable);
+          Arr.each(mergeCtrls, function (mergeCtrl) {
+            mergeCtrl.disabled(targets.mergable().isNone());
+          });
+          Arr.each(unmergeCtrls, function (unmergeCtrl) {
+            unmergeCtrl.disabled(targets.unmergable().isNone());
+          });
+        });
       };
 
       editor.on('init', function () {
         editor.on('nodechange', function (e) {
+          console.log('nodechange');
           var cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
           targets = cellOpt.bind(function (cellDom) {
             var cell = Element.fromDom(cellDom);
@@ -61,27 +104,7 @@ define(
             });
           });
 
-          targets.fold(function () {
-            Arr.each(cellCtrls, function (cellCtrl) {
-              cellCtrl.disabled(true);
-            });
-            Arr.each(mergeCtrls, function (mergeCtrl) {
-              mergeCtrl.disabled(true);
-            });
-            Arr.each(unmergeCtrls, function (unmergeCtrl) {
-              unmergeCtrl.disabled(true);
-            });
-          }, function (targets) {
-            Arr.each(cellCtrls, function (cellCtrl) {
-              cellCtrl.disabled(false);
-            });
-            Arr.each(mergeCtrls, function (mergeCtrl) {
-              mergeCtrl.disabled(targets.mergable().isNone());
-            });
-            Arr.each(unmergeCtrls, function (unmergeCtrl) {
-              unmergeCtrl.disabled(targets.unmergable().isNone());
-            });
-          });
+          setDisabledCtrls();
         });
       });
 
