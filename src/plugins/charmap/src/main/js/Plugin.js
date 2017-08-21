@@ -439,13 +439,16 @@ define(
                   minHeight: 80
                 },
                 {
+                  type: 'spacer',
+                  minHeight: 20
+                },
+                {
                   type: 'label',
                   name: 'previewTitle',
                   text: ' ',
-                  style: 'text-align: center',
+                  style: 'white-space: pre-wrap;',
                   border: 1,
-                  minWidth: 140,
-                  minHeight: 80
+                  minWidth: 140
                 }
               ]
             }

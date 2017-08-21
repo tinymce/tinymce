@@ -772,37 +772,35 @@ define(
         });
       }
 
-      if (!settings.allow_unsafe_link_target) {
-        self.addAttributeFilter('href', function (nodes) {
-          var i = nodes.length, node, rel;
-          var rules = 'noopener noreferrer';
 
-          function addTargetRules(rel) {
-            rel = removeTargetRules(rel);
-            return rel ? [rel, rules].join(' ') : rules;
+      self.addAttributeFilter('href', function (nodes) {
+        var i = nodes.length, node;
+
+        var appendRel = function (rel) {
+          var parts = rel.split(' ').filter(function (p) {
+            return p.length > 0;
+          });
+          return parts.concat(['noopener']).sort().join(' ');
+        };
+
+        var addNoOpener = function (rel) {
+          var newRel = rel ? Tools.trim(rel) : '';
+          if (!/\b(noopener)\b/g.test(newRel)) {
+            return appendRel(newRel);
+          } else {
+            return newRel;
           }
+        };
 
-          function removeTargetRules(rel) {
-            var regExp = new RegExp('(' + rules.replace(' ', '|') + ')', 'g');
-            if (rel) {
-              rel = Tools.trim(rel.replace(regExp, ''));
-            }
-            return rel ? rel : null;
-          }
-
-          function toggleTargetRules(rel, isUnsafe) {
-            return isUnsafe ? addTargetRules(rel) : removeTargetRules(rel);
-          }
-
+        if (!settings.allow_unsafe_link_target) {
           while (i--) {
             node = nodes[i];
-            rel = node.attr('rel');
-            if (node.name === 'a') {
-              node.attr('rel', toggleTargetRules(rel, node.attr('target') == '_blank'));
+            if (node.name === 'a' && node.attr('target') === '_blank') {
+              node.attr('rel', addNoOpener(node.attr('rel')));
             }
           }
-        });
-      }
+        }
+      });
 
       // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
       if (!settings.allow_html_in_named_anchor) {

@@ -69,11 +69,23 @@ define(
       displayError(editor, 'Failed to load content css: ' + urls[0]);
     };
 
+    var initError = function (message) {
+      var console = window.console;
+      if (console && !window.test) { // Skip test env
+        if (console.error) {
+          console.error.apply(console, arguments);
+        } else {
+          console.log.apply(console, arguments);
+        }
+      }
+    };
+
     return {
       pluginLoadError: pluginLoadError,
       uploadError: uploadError,
       displayError: displayError,
-      contentCssError: contentCssError
+      contentCssError: contentCssError,
+      initError: initError
     };
   }
 );

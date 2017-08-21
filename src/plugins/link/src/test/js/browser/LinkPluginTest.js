@@ -89,7 +89,7 @@ asynctest(
 
       LegacyUnit.equal(
         cleanHtml(editor.getContent()),
-        '<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">text</a></p>'
+        '<p><a title="title" href="href" target="_blank" rel="noopener">text</a></p>'
       );
     });
 
@@ -113,7 +113,7 @@ asynctest(
 
       LegacyUnit.equal(
         cleanHtml(editor.getContent()),
-        '<p>a<a title="title" href="href" target="_blank" rel="noopener noreferrer">b</a>c</p>'
+        '<p>a<a title="title" href="href" target="_blank" rel="noopener">b</a>c</p>'
       );
     });
 
@@ -136,8 +136,8 @@ asynctest(
 
       LegacyUnit.equal(
         cleanHtml(editor.getContent()),
-        '<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">a</a></p>' +
-        '<p><a title="title" href="href" target="_blank" rel="noopener noreferrer">bc</a></p>'
+        '<p><a title="title" href="href" target="_blank" rel="noopener">a</a></p>' +
+        '<p><a title="title" href="href" target="_blank" rel="noopener">bc</a></p>'
       );
     });
 

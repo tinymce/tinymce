@@ -29,6 +29,10 @@ define(
   function (CaretContainer, CaretContainerRemove, CaretPosition, DomQuery, NodeType, RangeUtils, ClientRect, Delay) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
 
+    var isTableCell = function (node) {
+      return node && /^(TD|TH)$/i.test(node.nodeName);
+    };
+
     return function (rootNode, isBlock) {
       var cursorInterval, $lastVisualCaret, caretContainerNode;
 
@@ -103,6 +107,10 @@ define(
         var clientRect, rng;
 
         hide();
+
+        if (isTableCell(node)) {
+          return null;
+        }
 
         if (isBlock(node)) {
           caretContainerNode = CaretContainer.insertBlock('p', node, before);

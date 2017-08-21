@@ -37,7 +37,13 @@ asynctest(
         editorContainer.appendChild(iframeContainer);
         targetnode.parentNode.insertBefore(editorContainer, targetnode);
 
-        editor.fire('SkinLoaded');
+        if (editor.initialized) {
+          editor.fire('SkinLoaded');
+        } else {
+          editor.on('init', function () {
+            editor.fire('SkinLoaded');
+          });
+        }
 
         return {
           iframeContainer: iframeContainer,

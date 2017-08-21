@@ -9,17 +9,22 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Selectors',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryLocation',
     'tinymce.core.test.ViewBlock',
     'tinymce.core.text.Zwsp'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Fun, Hierarchy, Element, Selectors, CaretPosition, BoundaryLocation, ViewBlock, Zwsp) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Fun, Hierarchy, Element, SelectorFind, Selectors, CaretPosition, BoundaryLocation, ViewBlock, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var ZWSP = Zwsp.ZWSP;
     var viewBlock = ViewBlock();
+
+    var isInlineTarget = function (elm) {
+      return Selectors.is(Element.fromDom(elm), 'a[href],code');
+    };
 
     var createViewElement = function (html) {
       viewBlock.update(html);
@@ -29,7 +34,7 @@ asynctest(
     var createLocation = function (elm, elementPath, offset) {
       var container = Hierarchy.follow(elm, elementPath);
       var pos = new CaretPosition(container.getOrDie().dom(), offset);
-      var location = BoundaryLocation.readLocation(elm.dom(), pos);
+      var location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
       return location;
     };
 
@@ -62,7 +67,7 @@ asynctest(
         var location = createLocation(elm, elementPath, offset);
         Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
         Assertions.assertEq('Should be expected location', expectedLocationName, locationName(location.getOrDie()));
-        Assertions.assertDomEq('Should be expected element', Selectors.one(expectedInline, elm).getOrDie(), locationElement(location.getOrDie()));
+        Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
       });
     };
 
@@ -78,8 +83,9 @@ asynctest(
       return Step.sync(function () {
         var elm = createViewElement(html);
         var position = createPosition(elm, elementPath, offset);
-        var location = forward ? BoundaryLocation.nextLocation(elm.dom(), position) : BoundaryLocation.prevLocation(elm.dom(), position);
-        Assertions.assertDomEq('Should be expected element', Selectors.one(expectedInline, elm).getOrDie(), locationElement(location.getOrDie()));
+        var location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom(), position);
+
+        Assertions.assertDomEq('Should be expected element', SelectorFind.descendant(elm, expectedInline).getOrDie(), locationElement(location.getOrDie()));
         Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
         Assertions.assertEq('Should be expected location', expectedLocationName, locationName(location.getOrDie()));
       });
@@ -89,7 +95,7 @@ asynctest(
       return Step.sync(function () {
         var elm = createViewElement(html);
         var position = createPosition(elm, elementPath, offset);
-        var location = forward ? BoundaryLocation.nextLocation(elm.dom(), position) : BoundaryLocation.prevLocation(elm.dom(), position);
+        var location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom(), position);
         Assertions.assertEq('Should not be a valid location: ' + html, true, location.isNone());
       });
     };
@@ -100,18 +106,36 @@ asynctest(
     var sTestNextLocationInvalid = Fun.curry(sTestFindLocationInvalid, true);
 
     var sTestValidLocations = Logger.t('sTestValidLocations', GeneralSteps.sequence([
-      sTestValidLocation('<p><a href="a">a</a></p>', [0], 0, 'before', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'start', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'end', 'a'),
-      sTestValidLocation('<p><a href="a">a</a></p>', [0], 1, 'after', 'a'),
-      sTestValidLocation('<p>a<a href="a">a</a></p>', [0, 0], 1, 'before', 'a'),
-      sTestValidLocation('<p><a href="a">a</a>a</p>', [0, 1], 0, 'after', 'a'),
-      sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 0, 'start', 'a'),
-      sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 2, 'end', 'a'),
-      sTestValidLocation('<p><img src="a"><a href="a">a</a></p>', [0], 1, 'before', 'a'),
-      sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 0, 'start', 'a'),
-      sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 1, 'end', 'a'),
-      sTestValidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 1, 'after', 'a')
+      Logger.t('anchor locations', GeneralSteps.sequence([
+        sTestValidLocation('<p><a href="a">a</a></p>', [0], 0, 'before', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'end', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p>', [0], 1, 'after', 'a'),
+        sTestValidLocation('<p>a<a href="a">a</a></p>', [0, 0], 1, 'before', 'a'),
+        sTestValidLocation('<p><a href="a">a</a>a</p>', [0, 1], 0, 'after', 'a'),
+        sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="a">ab</a></p>', [0, 0, 0], 2, 'end', 'a'),
+        sTestValidLocation('<p><img src="a"><a href="a">a</a></p>', [0], 1, 'before', 'a'),
+        sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="a"><img src="a"></a></p>', [0, 0], 1, 'end', 'a'),
+        sTestValidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 1, 'after', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0], 1, 'after', 'a'),
+        sTestValidLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1], 0, 'before', 'p:nth-child(2) a')
+      ])),
+
+      Logger.t('code locations', GeneralSteps.sequence([
+        sTestValidLocation('<p><code>a</code></p>', [0], 0, 'before', 'code'),
+        sTestValidLocation('<p><code>a</code></p>', [0, 0], 0, 'start', 'code'),
+        sTestValidLocation('<p><code>a</code></p>', [0, 0], 1, 'end', 'code'),
+        sTestValidLocation('<p><code>a</code></p>', [0], 1, 'after', 'code')
+      ])),
+
+      Logger.t('anchor + code locations', GeneralSteps.sequence([
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0], 0, 'before', 'a'),
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0, 0, 0], 0, 'start', 'a'),
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0, 0, 0], 1, 'end', 'a'),
+        sTestValidLocation('<p><a href="#"><code>a</code></a></p>', [0], 1, 'after', 'a')
+      ]))
     ]));
 
     var sTestValidZwspLocations = Logger.t('sTestValidZwspLocations', GeneralSteps.sequence([
@@ -131,22 +155,30 @@ asynctest(
       sTestInvalidLocation('<p><a href="a">a</a><img src="a"></p>', [0], 2),
       sTestInvalidLocation('<p><a href="a"><img src="a"><img src="a"></a><img src="a"></p>', [0, 0], 1),
       sTestInvalidLocation('<p dir="rtl"><a href="a">a</a></p>', [0, 0, 0], 0),
-      sTestInvalidLocation('<p><a href="a">\u05D4</a></p>', [0, 0, 0], 0)
+      sTestInvalidLocation('<p><a href="a">\u05D4</a></p>', [0, 0, 0], 0),
+
+      Logger.t('anchor + code locations', GeneralSteps.sequence([
+        sTestInvalidLocation('<p><a href="#">a<code>b</code>c</a></p>', [0, 0, 0], 1),
+        sTestInvalidLocation('<p><a href="#">a<code>b</code>c</a></p>', [0, 0, 2], 0)
+      ]))
     ]));
 
     var sTestPrevLocations = Logger.t('sTestPrevLocations', GeneralSteps.sequence([
       sTestPrevLocation('<p><a href="a">a</a>b</p>', [0, 1], 1, 'after', 'a'),
       sTestPrevLocation('<p><a href="a">a</a></p>', [0], 1, 'end', 'a'),
       sTestPrevLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'start', 'a'),
-      sTestPrevLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'before', 'a')
+      sTestPrevLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'before', 'a'),
+      sTestPrevLocation('<p><a href="a"><img src="about:blank"></a></p>', [0], 1, 'end', 'a'),
+      sTestPrevLocation('<p><a href="a"><img src="about:blank"></a></p>', [0, 0], 1, 'start', 'a'),
+      sTestPrevLocation('<p><a href="a"><img src="about:blank"></a></p>', [0, 0], 0, 'before', 'a')
     ]));
 
     var sTestPrevLocationsBetweenInlines = Logger.t('sTestPrevLocationsBetweenInlines', GeneralSteps.sequence([
-      sTestPrevLocation('<p><a href="a">a</a><a href="b">b</a></p>', [0, 1, 0], 0, 'after', 'a:nth-child(1)')
+      sTestPrevLocation('<p><a href="a">a</a><a href="b">b</a></p>', [0, 1, 0], 0, 'before', 'a:nth-child(2)')
     ]));
 
     var sTestPrevLocationsBetweenBlocks = Logger.t('sTestPrevLocationsBetweenBlocks', GeneralSteps.sequence([
-      sTestPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1], 0, 'after', 'p:nth-child(1) a'),
+      sTestPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1], 0, 'end', 'p:nth-child(1) a'),
       sTestPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [1, 0, 0], 0, 'before', 'p:nth-child(2) a'),
       sTestPrevLocation('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [1, 0, 0], 0, 'before', 'p:nth-child(2) a'),
       sTestPrevLocation('<p><a href="a">a</a><br /></p><p><a href="c">c</a></p>', [1], 0, 'after', 'p:nth-child(1) a'),
@@ -165,7 +197,10 @@ asynctest(
       sTestNextLocation('<p>a<a href="a">b</a></p>', [0, 0], 0, 'before', 'a'),
       sTestNextLocation('<p><a href="a">a</a></p>', [0], 0, 'start', 'a'),
       sTestNextLocation('<p><a href="a">a</a></p>', [0, 0, 0], 0, 'end', 'a'),
-      sTestNextLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'after', 'a')
+      sTestNextLocation('<p><a href="a">a</a></p>', [0, 0, 0], 1, 'after', 'a'),
+      sTestNextLocation('<p><a href="a"><img src="about:blank"></a></p>', [0], 0, 'start', 'a'),
+      sTestNextLocation('<p><a href="a"><img src="about:blank"></a></p>', [0, 0], 0, 'end', 'a'),
+      sTestNextLocation('<p><a href="a"><img src="about:blank"></a></p>', [0, 0], 1, 'after', 'a')
     ]));
 
     var sTestNextLocationsBetweenInlines = Logger.t('sTestNextLocationsBetweenInlines', GeneralSteps.sequence([
@@ -173,7 +208,7 @@ asynctest(
     ]));
 
     var sTestNextLocationsBetweenBlocks = Logger.t('sTestNextLocationsBetweenBlocks', GeneralSteps.sequence([
-      sTestNextLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0], 1, 'before', 'p:nth-child(2) a'),
+      sTestNextLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0], 1, 'start', 'p:nth-child(2) a'),
       sTestNextLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [0, 0, 0], 1, 'after', 'p:nth-child(1) a'),
       sTestNextLocationInvalid('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [0, 1], 0),
       sTestNextLocationInvalid('<p><a href="a">a</a></p><p>b<a href="c">c</a></p>', [0], 1)

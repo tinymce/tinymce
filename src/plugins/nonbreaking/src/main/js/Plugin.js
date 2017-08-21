@@ -22,14 +22,23 @@ define(
   function (PluginManager) {
     PluginManager.add('nonbreaking', function (editor) {
       var setting = editor.getParam('nonbreaking_force_tab');
+      var stringRepeat = function (string, repeats) {
+        var str = '';
+        for (var index = 0; index < repeats; index++) {
+          str += string;
+        }
+        return str;
+      };
+
+      var insertNbsp = function (times) {
+        var nbsp = (editor.plugins.visualchars && editor.plugins.visualchars.state) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
+
+        editor.insertContent(stringRepeat(nbsp, times));
+        editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
+      };
 
       editor.addCommand('mceNonBreaking', function () {
-        editor.insertContent(
-          (editor.plugins.visualchars && editor.plugins.visualchars.state) ?
-            '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;'
-        );
-
-        editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
+        insertNbsp(1);
       });
 
       editor.addButton('nonbreaking', {
@@ -54,9 +63,7 @@ define(
             }
 
             e.preventDefault();
-            for (var i = 0; i < spaces; i++) {
-              editor.execCommand('mceNonBreaking');
-            }
+            insertNbsp(spaces);
           }
         });
       }

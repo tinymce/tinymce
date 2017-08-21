@@ -21,9 +21,10 @@ define(
     'tinymce.core.html.Node',
     'tinymce.core.html.Serializer',
     'tinymce.core.PluginManager',
-    'tinymce.core.util.Tools'
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.fullpage.Protect'
   ],
-  function (DomParser, Node, Serializer, PluginManager, Tools) {
+  function (DomParser, Node, Serializer, PluginManager, Tools, Protect) {
     PluginManager.add('fullpage', function (editor) {
       var each = Tools.each;
       var head, foot;
@@ -335,7 +336,7 @@ define(
       }
 
       function setContent(evt) {
-        var startPos, endPos, content = evt.content, headerFragment, styles = '', dom = editor.dom, elm;
+        var startPos, endPos, content, headerFragment, styles = '', dom = editor.dom, elm;
 
         if (evt.selection) {
           return;
@@ -346,6 +347,8 @@ define(
             return a.toLowerCase();
           });
         }
+
+        content = Protect.protectHtml(editor.settings.protect, evt.content);
 
         // Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate
         if (evt.format == 'raw' && head) {
@@ -374,7 +377,7 @@ define(
             endPos = content.length;
           }
 
-          evt.content = content.substring(startPos + 1, endPos);
+          evt.content = Tools.trim(content.substring(startPos + 1, endPos));
           foot = low(content.substring(endPos));
         } else {
           head = getDefaultHeader();
@@ -485,7 +488,7 @@ define(
 
       function getContent(evt) {
         if (!evt.selection && (!evt.source_view || !editor.getParam('fullpage_hide_in_source_view'))) {
-          evt.content = Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot);
+          evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
         }
       }
 

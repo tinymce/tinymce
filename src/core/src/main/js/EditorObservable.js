@@ -66,7 +66,7 @@ define(
      * @param {String} eventName Name of the event for example "click".
      */
     function bindEventDelegate(editor, eventName) {
-      var eventRootElm = getEventTarget(editor, eventName), delegate;
+      var eventRootElm, delegate;
 
       function isListening(editor) {
         return !editor.hidden && !editor.readonly;
@@ -76,9 +76,11 @@ define(
         editor.delegates = {};
       }
 
-      if (editor.delegates[eventName]) {
+      if (editor.delegates[eventName] || editor.removed) {
         return;
       }
+
+      eventRootElm = getEventTarget(editor, eventName);
 
       if (editor.settings.event_root) {
         if (!customEventRootDelegates) {

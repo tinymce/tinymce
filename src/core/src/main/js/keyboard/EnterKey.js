@@ -33,9 +33,29 @@ define(
       return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
     };
 
+    var hasFirstChild = function (elm, name) {
+      return elm.firstChild && elm.firstChild.nodeName == name;
+    };
+
+    var hasParent = function (elm, parentName) {
+      return elm && elm.parentNode && elm.parentNode.nodeName === parentName;
+    };
+
     var emptyBlock = function (elm) {
       // BR is needed in empty blocks on non IE browsers
       elm.innerHTML = !isIE ? '<br data-mce-bogus="1">' : '';
+    };
+
+    var containerAndSiblingName = function (container, nodeName) {
+      return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+    };
+
+    var isListBlock = function (elm) {
+      return elm && /^(OL|UL|LI)$/.test(elm.nodeName);
+    };
+
+    var isNestedList = function (elm) {
+      return isListBlock(elm) && isListBlock(elm.parentNode);
     };
 
     // Returns true if the block can be split into two blocks or not
@@ -228,7 +248,7 @@ define(
         function createNewBlock(name) {
           var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
 
-          if (name || parentBlockName == "TABLE") {
+          if (name || parentBlockName == "TABLE" || parentBlockName == "HR") {
             block = dom.create(name || newBlockName);
             setForcedBlockAttrs(block);
           } else {
@@ -292,8 +312,8 @@ define(
             return true;
           }
 
-          // Caret can be before/after a table
-          if (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {
+          // Caret can be before/after a table or a hr
+          if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
             return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
           }
 
@@ -422,16 +442,14 @@ define(
             return;
           }
 
-          // Check if we are in an nested list
-          var containerBlockParentName = containerBlock.parentNode.nodeName;
-          if (/^(OL|UL|LI)$/.test(containerBlockParentName)) {
+          if (isNestedList(containerBlock)) {
             newBlockName = 'LI';
           }
 
           newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
 
           if (isFirstOrLastLi(true) && isFirstOrLastLi()) {
-            if (containerBlockParentName == 'LI') {
+            if (hasParent(containerBlock, 'LI')) {
               // Nested list is inside a LI
               dom.insertAfter(newBlock, getContainerBlock());
             } else {
@@ -439,7 +457,7 @@ define(
               dom.replace(newBlock, containerBlock);
             }
           } else if (isFirstOrLastLi(true)) {
-            if (containerBlockParentName == 'LI') {
+            if (hasParent(containerBlock, 'LI')) {
               // List nested in an LI then move the list to a new sibling LI
               dom.insertAfter(newBlock, getContainerBlock());
               newBlock.appendChild(dom.doc.createTextNode(' ')); // Needed for IE so the caret can be placed
@@ -461,7 +479,7 @@ define(
             tmpRng.setEndAfter(containerBlock);
             fragment = tmpRng.extractContents();
 
-            if (newBlockName == 'LI' && fragment.firstChild.nodeName == 'LI') {
+            if (newBlockName === 'LI' && hasFirstChild(fragment, 'LI')) {
               newBlock = fragment.firstChild;
               dom.insertAfter(fragment, containerBlock);
             } else {
@@ -614,6 +632,7 @@ define(
         // Enter inside block contained within a LI then split or insert before/after LI
         if (containerBlockName == 'LI' && !evt.ctrlKey) {
           parentBlock = containerBlock;
+          containerBlock = containerBlock.parentNode;
           parentBlockName = containerBlockName;
         }
 
@@ -671,7 +690,9 @@ define(
           // Insert new block before
           newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
           renderBlockOnIE(dom, selection, newBlock);
-          moveToCaretPosition(parentBlock);
+
+          // Adjust caret position if HR
+          containerAndSiblingName(parentBlock, 'HR') ? moveToCaretPosition(newBlock) : moveToCaretPosition(parentBlock);
         } else {
           // Extract after fragment and insert it after the current block
           tmpRng = includeZwspInRange(rng).cloneRange();

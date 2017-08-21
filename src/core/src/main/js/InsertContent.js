@@ -17,16 +17,17 @@
 define(
   'tinymce.core.InsertContent',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.html.Serializer",
-    "tinymce.core.caret.CaretWalker",
-    "tinymce.core.caret.CaretPosition",
-    "tinymce.core.dom.ElementUtils",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.InsertList"
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.caret.CaretWalker',
+    'tinymce.core.dom.ElementUtils',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeNormalizer',
+    'tinymce.core.Env',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.InsertList',
+    'tinymce.core.util.Tools'
   ],
-  function (Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType, InsertList) {
+  function (CaretPosition, CaretWalker, ElementUtils, NodeType, RangeNormalizer, Env, Serializer, InsertList, Tools) {
     var isTableCell = NodeType.matchNodeNames('td th');
 
     var validInsertion = function (editor, value, parentNode) {
@@ -269,7 +270,7 @@ define(
       if (!selection.isCollapsed()) {
         // Fix for #2595 seems that delete removes one extra character on
         // WebKit for some odd reason if you double click select a word
-        editor.selection.setRng(editor.selection.getRng());
+        editor.selection.setRng(RangeNormalizer.normalize(editor.selection.getRng()));
         editor.getDoc().execCommand('Delete', false, null);
         trimNbspAfterDeleteAndPaddValue();
       }

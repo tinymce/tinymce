@@ -432,11 +432,56 @@ asynctest(
       LegacyUnit.equal(editor.getContent(editor), '<p><b><i>a</i></b><i>b</i></p>');
     });
 
+    suite.test('Remove format with classes', function (editor) {
+      editor.formatter.register('format', { inline: 'span', classes: ['a', 'b'] });
+      editor.getBody().innerHTML = '<p><span class="a b c">a</span></p>';
+      LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
+      editor.formatter.remove('format');
+      LegacyUnit.equal(getContent(editor), '<p><span class="c">a</span></p>', 'Element should only have c left');
+    });
+
+    suite.test('Remove format on specified node', function (editor) {
+      editor.formatter.register('format', { inline: 'b' });
+      editor.getBody().innerHTML = '<p><b>a</b></p>';
+      editor.formatter.remove('format', {}, editor.dom.select('b')[0]);
+      LegacyUnit.equal(getContent(editor), '<p>a</p>', 'B should be removed');
+    });
+
+    suite.test("Remove ceFalseOverride format", function (editor) {
+      editor.setContent('<p class="a" contenteditable="false">a</p><div class="a" contenteditable="false">b</div>');
+      editor.formatter.register('format', [
+        { selector: 'div', classes: ['a'], ceFalseOverride: true },
+        { selector: 'p', classes: ['a'], ceFalseOverride: true }
+      ]);
+      editor.selection.select(editor.dom.select('div')[0]);
+      editor.formatter.remove('format');
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p class="a" contenteditable="false">a</p><div contenteditable="false">b</div>'
+      );
+      editor.selection.select(editor.dom.select('p')[0]);
+      editor.formatter.remove('format');
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p contenteditable="false">a</p><div contenteditable="false">b</div>'
+      );
+    });
+
+    suite.test('Remove block format from first block with forced_root_block: false', function (editor) {
+      editor.settings.forced_root_block = false;
+      editor.formatter.register('format', { block: 'h1' });
+      editor.getBody().innerHTML = '<h1>a</h1>b';
+      LegacyUnit.setSelection(editor, 'h1', 0, 'h1', 1);
+      editor.formatter.remove('format');
+      LegacyUnit.equal(getContent(editor), 'a<br />b', 'Lines should be separated with br');
+      editor.settings.forced_root_block = 'p';
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       indent: false,
-      extended_valid_elements: 'b,i,span[style|contenteditable]',
+      extended_valid_elements: 'b,i,span[style|contenteditable|class]',
       entities: 'raw',
       valid_styles: {
         '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +

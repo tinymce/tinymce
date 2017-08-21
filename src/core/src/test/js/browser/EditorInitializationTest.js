@@ -1,16 +1,23 @@
 asynctest(
   'browser.tinymce.core.EditorInitializationTest',
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
+    'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter',
     'global!document',
     'global!window',
     'tinymce.core.EditorManager',
+    'tinymce.core.Env',
     'tinymce.core.test.ViewBlock',
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, document, window, EditorManager, ViewBlock, Tools, Theme) {
+  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Attr, SelectorFilter, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -79,6 +86,31 @@ asynctest(
       });
     });
 
+    suite.asyncTest("selector on non existing targets", function (_, done) {
+      EditorManager.init({
+        selector: '#non-existing-id',
+        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      }).then(function (result) {
+        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
+        teardown(done);
+      });
+    });
+
+    suite.asyncTest("selector on an unsupported browser", function (_, done) {
+      // Fake IE 8
+      var oldIeValue = Env.ie;
+      Env.ie = 8;
+
+      EditorManager.init({
+        selector: '#elm-2',
+        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      }).then(function (result) {
+        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
+        Env.ie = oldIeValue;
+        teardown(done);
+      });
+    });
+
     suite.asyncTest("target (each editor should have a different target)", function (_, done) {
       var maxCount = document.querySelectorAll('.elm-even').length;
       var elm1 = document.getElementById('elm-1');
@@ -102,9 +134,48 @@ asynctest(
       });
     });
 
-    setup();
-    Pipeline.async({}, suite.toSteps({}), function () {
+    var getSkinCssFilenames = function () {
+      return Arr.bind(SelectorFilter.descendants(Element.fromDom(document), 'link'), function (link) {
+        var href = Attr.get(link, 'href');
+        var fileName = href.split('/').slice(-1).join('');
+        var isSkin = href.indexOf('lightgray/') > -1;
+        return isSkin ? [ fileName ] : [ ];
+      });
+    };
+
+    var mCreateInlineModeMultipleInstances = Step.stateful(function (value, next, die) {
+      viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
+
+      EditorManager.init({
+        selector: '.tinymce-editor',
+        inline: true,
+        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      }).then(next, die);
+    });
+
+    var mAssertEditors = Step.stateful(function (editors, next, die) {
+      Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
+      Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
+
+      Assertions.assertEq(
+        'Should only be two skin files the skin and the content for inline mode',
+        ["skin.min.css", "content.inline.min.css"],
+        getSkinCssFilenames()
+      );
+
+      next({});
+    });
+
+    var sRemoveAllEditors = Step.sync(function () {
       EditorManager.remove();
+    });
+
+    setup();
+    Pipeline.async({}, ([
+      mCreateInlineModeMultipleInstances,
+      mAssertEditors,
+      sRemoveAllEditors
+    ]), function () {
       viewBlock.detach();
       success();
     }, failure);

@@ -18,21 +18,6 @@ module.exports = function (grunt) {
         dest: "dist/lightgray"
       },
 
-      ie7: {
-        options: {
-          compress: true,
-          strictImports: true,
-          ieCompat: true
-        },
-
-        expand: true,
-        rename: function () {
-          return "dist/lightgray/skin.ie7.min.css";
-        },
-        src: ["src/main/less/Skin.ie7.less"],
-        dest: "dist/lightgray"
-      },
-
       content: {
         options: {
           cleancss: true,

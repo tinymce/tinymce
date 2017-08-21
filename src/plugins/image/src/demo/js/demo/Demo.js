@@ -29,7 +29,10 @@ define(
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "image code",
-        toolbar: "image code",
+        toolbar: "undo redo | image code",
+        image_caption: true,
+        image_advtab: true,
+        images_upload_url: 'postAcceptor.php',
         height: 600
       });
     };

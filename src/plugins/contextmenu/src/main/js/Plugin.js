@@ -21,9 +21,10 @@ define(
     'tinymce.core.Env',
     'tinymce.core.PluginManager',
     'tinymce.core.ui.Menu',
-    'tinymce.core.util.Tools'
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.contextmenu.RangePoint'
   ],
-  function (DOMUtils, Env, PluginManager, Menu, Tools) {
+  function (DOMUtils, Env, PluginManager, Menu, Tools, RangePoint) {
     var DOM = DOMUtils.DOM;
 
     PluginManager.add('contextmenu', function (editor) {
@@ -41,6 +42,14 @@ define(
         return visibleState === true;
       };
 
+      var isImage = function (elm) {
+        return elm && elm.nodeName === 'IMG';
+      };
+
+      var isEventOnImageOutsideRange = function (evt, range) {
+        return isImage(evt.target) && RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range) === false;
+      };
+
       /**
        * This takes care of a os x native issue where it expands the selection
        * to the word at the caret position to do "lookups". Since we are overriding
@@ -48,12 +57,12 @@ define(
        * normalized. Firefox on os x doesn't expand to the word when using the context menu.
        */
       editor.on('mousedown', function (e) {
-        if (isMacWebKit() && e.button === 2 && !isNativeOverrideKeyEvent(e)) {
-          if (editor.selection.isCollapsed()) {
-            editor.once('contextmenu', function (e) {
-              editor.selection.placeCaretAt(e.clientX, e.clientY);
-            });
-          }
+        if (isMacWebKit() && e.button === 2 && !isNativeOverrideKeyEvent(e) && editor.selection.isCollapsed()) {
+          editor.once('contextmenu', function (e2) {
+            if (!isImage(e2.target)) {
+              editor.selection.placeCaretAt(e2.clientX, e2.clientY);
+            }
+          });
         }
       });
 
@@ -62,6 +71,10 @@ define(
 
         if (isNativeOverrideKeyEvent(e)) {
           return;
+        }
+
+        if (isEventOnImageOutsideRange(e, editor.selection.getRng())) {
+          editor.selection.select(e.target);
         }
 
         e.preventDefault();

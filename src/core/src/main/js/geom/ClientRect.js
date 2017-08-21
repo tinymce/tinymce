@@ -66,7 +66,7 @@ define(
     }
 
     function isAbove(clientRect1, clientRect2) {
-      if (clientRect1.bottom < clientRect2.top) {
+      if ((clientRect1.bottom - clientRect1.height / 2) < clientRect2.top) {
         return true;
       }
 

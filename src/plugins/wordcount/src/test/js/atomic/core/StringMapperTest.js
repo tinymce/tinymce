@@ -32,6 +32,7 @@ test('atomic.core.StringMapperTest', [
       assert.eq([OTHER, KATAKANA, KATAKANA], classify('愛ラブ'));
       assert.eq([OTHER, OTHER], classify('ねこ'));
       assert.eq([MIDLETTER], classify('·'));
+      assert.eq([MIDNUM, MIDNUM, MIDNUM, MIDNUM, MIDNUM, MIDNUM], classify('=-+*/⋉'));
       assert.eq([CR], classify('\r'));
       assert.eq([EXTEND], classify('̀'));
       assert.eq([NEWLINE], classify('\x0B'));

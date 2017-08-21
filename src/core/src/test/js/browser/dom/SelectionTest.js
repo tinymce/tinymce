@@ -54,6 +54,15 @@ asynctest(
       editor.off('GetContent', handler);
     });
 
+    suite.test('getContent contextual', function (editor) {
+      editor.setContent('<p><em>text</em></p>');
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('em')[0].firstChild, 1);
+      rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
+      editor.selection.setRng(rng);
+      LegacyUnit.equal(editor.selection.getContent({ contextual: true }), '<em>ex</em>', 'Get selected contents');
+    });
+
     suite.test('getContent of zwsp', function (editor) {
       editor.setContent('<p>a' + Zwsp.ZWSP + 'b</p>');
       var rng = editor.dom.createRng();
@@ -755,6 +764,25 @@ asynctest(
         LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
       });
 
+      suite.test('normalize to before/after pre', function (editor) {
+        var rng;
+
+        editor.getBody().innerHTML = '<pre>a<pre>';
+        rng = editor.dom.createRng();
+        rng.setStart(editor.getBody(), 0);
+        rng.setEnd(editor.getBody(), 1);
+        editor.selection.setRng(rng);
+        editor.selection.normalize();
+
+        rng = editor.selection.getRng(true);
+        LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
+        LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+        LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
+        LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+      });
+
       suite.test('normalize to text node inside P', function (editor) {
         var rng;
 
@@ -1078,6 +1106,47 @@ asynctest(
       LegacyUnit.equal(rng.startOffset, 0);
       LegacyUnit.equal(rng.endContainer.nodeName, '#text');
       LegacyUnit.equal(rng.endOffset, 1);
+    });
+
+    suite.test('setRng invalid range', function (editor) {
+      var rng = editor.dom.createRng();
+
+      editor.setContent('<p>x</p>');
+
+      rng.setStart(editor.$('p')[0].firstChild, 0);
+      rng.setEnd(editor.$('p')[0].firstChild, 1);
+      editor.selection.setRng(rng);
+
+      var tmpNode = document.createTextNode('y');
+      var invalidRng = rng.cloneRange();
+      invalidRng.setStart(tmpNode, 0);
+      invalidRng.setEnd(tmpNode, 0);
+      editor.selection.setRng(invalidRng);
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.startContainer.data, 'x');
+      LegacyUnit.equal(rng.startOffset, 0);
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.endOffset, 1);
+    });
+
+    suite.test('setRng invalid range removed parent context', function (editor) {
+      editor.setContent('<p><strong><em>x</em></strong></p>');
+      var textNode = editor.$('em')[0].firstChild;
+
+      editor.setContent('');
+
+      var rng = editor.dom.createRng();
+      rng.setStart(textNode, 0);
+      rng.setEnd(textNode, 1);
+      editor.selection.setRng(rng);
+
+      var curRng = editor.selection.getRng(true);
+      LegacyUnit.equal(curRng.startContainer.nodeName, 'BODY');
+      LegacyUnit.equal(curRng.startOffset, 0);
+      LegacyUnit.equal(curRng.endContainer.nodeName, 'BODY');
+      LegacyUnit.equal(curRng.endOffset, 0);
     });
 
     suite.test('getRng should return null if win.document is not defined or null', function (editor) {

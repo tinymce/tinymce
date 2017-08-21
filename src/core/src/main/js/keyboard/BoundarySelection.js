@@ -50,15 +50,16 @@ define(
     var findLocation = function (editor, caret, forward) {
       var rootNode = editor.getBody();
       var from = CaretPosition.fromRangeStart(editor.selection.getRng());
-      var location = forward ? BoundaryLocation.nextLocation(rootNode, from) : BoundaryLocation.prevLocation(rootNode, from);
+      var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+      var location = BoundaryLocation.findLocation(forward, isInlineTarget, rootNode, from);
       return location.bind(function (location) {
         return renderCaretLocation(editor, caret, location);
       });
     };
 
-    var toggleInlines = function (dom, elms) {
-      var selectedInlines = dom.select('a[href][data-mce-selected],code[data-mce-selected]');
-      var targetInlines = Arr.filter(elms, InlineUtils.isInlineTarget);
+    var toggleInlines = function (isInlineTarget, dom, elms) {
+      var selectedInlines = Arr.filter(dom.select('*[data-mce-selected]'), isInlineTarget);
+      var targetInlines = Arr.filter(elms, isInlineTarget);
       Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));
       Arr.each(Arr.difference(targetInlines, selectedInlines), Fun.curry(setSelected, true));
     };
@@ -73,12 +74,12 @@ define(
       }
     };
 
-    var renderInsideInlineCaret = function (editor, caret, elms) {
+    var renderInsideInlineCaret = function (isInlineTarget, editor, caret, elms) {
       if (editor.selection.isCollapsed()) {
-        var inlines = Arr.filter(elms, InlineUtils.isInlineTarget);
+        var inlines = Arr.filter(elms, isInlineTarget);
         Arr.each(inlines, function (inline) {
           var pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-          BoundaryLocation.readLocation(editor.getBody(), pos).bind(function (location) {
+          BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), pos).bind(function (location) {
             return renderCaretLocation(editor, caret, location);
           });
         });
@@ -93,12 +94,13 @@ define(
 
     var setupSelectedState = function (editor) {
       var caret = new Cell(null);
+      var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
       editor.on('NodeChange', function (e) {
         if (isFeatureEnabled(editor)) {
-          toggleInlines(editor.dom, e.parents);
+          toggleInlines(isInlineTarget, editor.dom, e.parents);
           safeRemoveCaretContainer(editor, caret);
-          renderInsideInlineCaret(editor, caret, e.parents);
+          renderInsideInlineCaret(isInlineTarget, editor, caret, e.parents);
         }
       });
 

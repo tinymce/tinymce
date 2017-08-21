@@ -11,13 +11,14 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.InternalHtml',
+    'tinymce.plugins.paste.core.Utils',
     'tinymce.plugins.paste.Plugin',
     'tinymce.plugins.paste.test.MockDataTransfer',
     'tinymce.themes.modern.Theme'
   ],
   function (
     GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter, TinyApis, TinyLoader,
-    CutCopy, InternalHtml, Plugin, MockDataTransfer, Theme
+    CutCopy, InternalHtml, Utils, Plugin, MockDataTransfer, Theme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -110,32 +111,36 @@ asynctest(
     };
 
     var sTestCut = function (editor, tinyApis) {
+      var sWaitUntilAssertContent = function (expected) {
+        return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected), 100, 1000);
+      };
+
       return Logger.t('Cut tests', GeneralSteps.sequence([
         Logger.t('Cut simple text', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>text</p>', [0, 0], 0, [0, 0], 4),
           sAssertClipboardData('text', 'text'),
-          tinyApis.sAssertContent(''),
+          sWaitUntilAssertContent(''),
           tinyApis.sAssertSelection([0], 0, [0], 0)
         ])),
 
         Logger.t('Cut inline elements', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>te<em>x</em>t</p>', [0, 0], 0, [0, 2], 1),
           sAssertClipboardData('te<em>x</em>t', 'text'),
-          tinyApis.sAssertContent(''),
+          sWaitUntilAssertContent(''),
           tinyApis.sAssertSelection([0], 0, [0], 0)
         ])),
 
         Logger.t('Cut partialy selected inline elements', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>a<em>cd</em>e</p>', [0, 0], 0, [0, 1, 0], 1),
           sAssertClipboardData('a<em>c</em>', 'ac'),
-          tinyApis.sAssertContent('<p><em>d</em>e</p>'),
+          sWaitUntilAssertContent('<p><em>d</em>e</p>'),
           tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
         ])),
 
         Logger.t('Cut collapsed selection', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>abc</p>', [0, 0], 1, [0, 0], 1),
           sAssertClipboardData('', ''),
-          tinyApis.sAssertContent('<p>abc</p>'),
+          sWaitUntilAssertContent('<p>abc</p>'),
           tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
         ]))
       ]));
@@ -165,8 +170,15 @@ asynctest(
         Logger.t('Paste external content', GeneralSteps.sequence([
           sPaste(editor, tinyApis, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [0, 0], 0, [0, 0], 3),
           sWaitForProcessEvents,
-          sAssertLastPreProcessEvent({ internal: false, content: '<p>X</p>' }),
-          sAssertLastPostProcessEvent({ internal: false, content: '<p>X</p>' })
+          sAssertLastPreProcessEvent({ internal: false, content: 'X' }),
+          sAssertLastPostProcessEvent({ internal: false, content: 'X' })
+        ])),
+
+        Logger.t('Paste external content treated as plain text', GeneralSteps.sequence([
+          sPaste(editor, tinyApis, '<p>abc</p>', { 'text/html': '<p>X</p>' }, [0, 0], 0, [0, 0], 3),
+          sWaitForProcessEvents,
+          sAssertLastPreProcessEvent({ internal: false, content: 'X' }),
+          sAssertLastPostProcessEvent({ internal: false, content: 'X' })
         ])),
 
         Logger.t('Paste internal content with mark', GeneralSteps.sequence([
@@ -191,9 +203,8 @@ asynctest(
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
 
-      CutCopy.register(editor);
-
-      Pipeline.async({}, [
+      // Disabled tests on Edge 15 due to broken clipboard API
+      Pipeline.async({}, Utils.isMsEdge() ? [ ] : [
         sTestCopy(editor, tinyApis),
         sTestCut(editor, tinyApis),
         sTestPaste(editor, tinyApis)

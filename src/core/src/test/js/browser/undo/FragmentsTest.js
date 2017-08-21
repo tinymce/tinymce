@@ -29,6 +29,12 @@ asynctest(
       LegacyUnit.deepEqual(Fragments.read(div('a<!--b--><b>c</b>')), ['a', '<!--b-->', '<b>c</b>']);
     });
 
+    suite.test('read and exclude zero length text nodes', function () {
+      var elm = div('<p>a</p><p>b</p>');
+      elm.insertBefore(document.createTextNode(''), elm.lastChild);
+      LegacyUnit.deepEqual(Fragments.read(elm), ['<p>a</p>', '<p>b</p>']);
+    });
+
     suite.test('write', function () {
       LegacyUnit.deepEqual(html(Fragments.write([], div(''))), '');
       LegacyUnit.deepEqual(html(Fragments.write([], div('a'))), '');
