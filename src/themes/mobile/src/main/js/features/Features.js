@@ -28,13 +28,10 @@ define(
     };
 
     var identify = function (settings) {
-      console.log('blah', settings);
       // Firstly, flatten the toolbar
       var toolbar = settings.toolbar !== undefined ? settings.toolbar : [ ];
       return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
     };
-
-    
 
     var setup = function (realm, editor) {
       var c = function (name) {
@@ -49,15 +46,12 @@ define(
       var link = LinkButton.sketch(realm, editor);
       var unlink = c('unlink');
       var image = ImagePicker.sketch(editor);
-      // NOTE: Requires "lists" plugin.
       var bullist = Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
         editor.execCommand('InsertUnorderedList', null, false);
-        editor.nodeChanged();
       });
 
       var numlist = Buttons.forToolbarStateAction(editor, 'ordered-list', 'ol', function () {
         editor.execCommand('InsertOrderedList', null, false);
-        editor.nodeChanged();
       });
 
       var fontsizeselect = FontSizeSlider.sketch(realm, editor);
@@ -66,7 +60,7 @@ define(
       var feature = function (prereq, spec) {
         return {
           isSupported: function () {
-            // forall is true for none
+            // NOTE: forall is true for none
             return prereq.forall(function (p) {
               return Objects.hasKey(editor.buttons, p);
             });
@@ -84,6 +78,7 @@ define(
         link: feature(Option.none(), link),
         unlink: feature(Option.none(), unlink),
         image: feature(Option.none(), image),
+        // NOTE: Requires "lists" plugin.
         bullist: feature(Option.some('bullist'), bullist),
         numlist: feature(Option.some('numlist'), numlist),
         fontsizeselect: feature(Option.none(), fontsizeselect),
@@ -97,9 +92,6 @@ define(
 
       // Now, generates the different features
       var features = setup(realm, editor);
-
-      console.log('itemNames', itemNames);
-      console.log('features', features);
 
       // Now, if each feature is supported, return it
       return Arr.bind(itemNames, function (iName) {
