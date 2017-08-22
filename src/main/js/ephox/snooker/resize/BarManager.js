@@ -115,12 +115,12 @@ define(
       // mouseout of both tables and resize bars:
       //  if 'view' is 'parent' or its ancestor then we only need a handler on 'view', otherwise both need handlers
       var nodes = [ wire.view() ].concat( (Compare.eq(wire.view(), wire.parent()) || Compare.contains(wire.view(), wire.parent())) ? [] : [ wire.parent() ]);
-      var arrMouseout = Arr.map(nodes, function (node) { DomEvent.bind(node, 'mouseout', hMouseout); });
+      var arrMouseout = Arr.map(nodes, function (node) { return DomEvent.bind(node, 'mouseout', hMouseout); });
 
       var destroy = function () {
         mousedown.unbind();
         mouseover.unbind();
-        Arr.map(arrMouseout, function (h) { h.unbind(); } );
+        Arr.map(arrMouseout, function (h) { h.unbind(); });
         firefoxDrag.unbind();
         resizing.destroy();
         Bars.destroy(wire);
