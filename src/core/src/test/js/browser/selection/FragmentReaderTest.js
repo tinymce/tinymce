@@ -34,7 +34,7 @@ asynctest(
         rng.setStart(sc.dom(), startOffset);
         rng.setEnd(ec.dom(), endOffset);
 
-        return FragmentReader.read(viewBlock.get(), rng);
+        return FragmentReader.read(Element.fromDom(viewBlock.get()), rng);
       });
     };
 
@@ -168,6 +168,18 @@ asynctest(
           cSetHtml('<ul><li><b>a<br></b></li></ul>'),
           cReadFragment([0, 0, 0, 0], 0, [0, 0, 0, 0], 1),
           cAssertFragmentHtml('<ul><li><b>a</b></li></ul>')
+        ]))
+      ])),
+      Logger.t('Fragments from tables', GeneralSteps.sequence([
+        Logger.t('Get table fragment from table 2x2 with selection (1,1)-(1,2)', Chain.asStep(viewBlock, [
+          cSetHtml('<table><tbody><tr><td data-mce-selected="1">A</td><td>B</td></tr><tr><td data-mce-selected="1">C</td><td>D</td></tr></tbody></table>'),
+          cReadFragment([0], 0, [0], 1),
+          cAssertFragmentHtml('<table><tbody><tr><td data-mce-selected="1">A</td></tr><tr><td data-mce-selected="1">C</td></tr></tbody></table>')
+        ])),
+        Logger.t('Get table fragment from table 2x2 with selection (1,1)-(2,1)', Chain.asStep(viewBlock, [
+          cSetHtml('<table><tbody><tr><td data-mce-selected="1">A</td><td data-mce-selected="1">B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>'),
+          cReadFragment([0], 0, [0], 1),
+          cAssertFragmentHtml('<table><tbody><tr><td data-mce-selected="1">A</td><td data-mce-selected="1">B</td></tr></tbody></table>')
         ]))
       ]))
     ], function () {
