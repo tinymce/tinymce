@@ -28,6 +28,13 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
+    /*
+     * PURPOSE
+     *
+     * There are three buttons. Two have toggling, and one toggling button has a custom action.
+     * Ensure that they all fire the right actions and get updated appropriately based on broadcasts.
+     */
+
     var realm = IosRealm();
 
     var body = Body.body();
@@ -45,6 +52,7 @@ asynctest(
       Attachment.detachSystem(realm.system());
     };
 
+    /* The test editor puts execCommand and insertContent calls into the store */
     var tEditor = TestEditor();
 
     var memAlpha = Memento.record(
@@ -82,6 +90,10 @@ asynctest(
       }
     ]);
 
+    /*
+     * Alpha has no toggling, so just check that when the user clicks on the button, the 
+     * editor fires execCommand with alpha
+     */
     var sTestAlpha = GeneralSteps.sequence([
       tEditor.sAssertEq('Initially empty', [ ]),
       sClickAlpha,
@@ -96,6 +108,11 @@ asynctest(
       tEditor.sClear
     ]);
 
+    /*
+     * Beta has toggling, so check:
+     *  - when the user clicks on the button, execCommand is fired
+     *  - when the format change is broadcast, the toggled state changes
+     */
     var sTestBeta = GeneralSteps.sequence([
       tEditor.sAssertEq('before beta, store is empty', [ ]),
       sClickBeta,
@@ -115,6 +132,11 @@ asynctest(
       tEditor.sClear
     ]);
 
+    /*
+     * Gamma has toggling, and a custom action, so check:
+     *  - when the user clicks on the button, the custom action is fired
+     *  - when the format change is broadcast, the toggled state changes
+     */
     var sTestGamma = GeneralSteps.sequence([
       tEditor.sAssertEq('before gamma, store is empty', [ ]),
       sClickGamma,
