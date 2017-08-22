@@ -36,7 +36,6 @@ define(
         Container.sketch({
           dom: UiDomFactory.dom('<div class="${prefix}-editor-socket"></div>'),
           components: [ ],
-
           containerBehaviours: Behaviour.derive([
             Replacing.config({ })
           ])

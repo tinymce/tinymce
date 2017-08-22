@@ -3,8 +3,10 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Swapping',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
+    'ephox.alloy.debugging.Debugging',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection',
@@ -12,8 +14,6 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'global!document',
-    'global!window',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
@@ -24,12 +24,7 @@ define(
     'tinymce.themes.mobile.touch.view.Orientation',
     'tinymce.themes.mobile.ui.AndroidRealm',
     'tinymce.themes.mobile.ui.Buttons',
-    'tinymce.themes.mobile.ui.ColorSlider',
-    'tinymce.themes.mobile.ui.FontSizeSlider',
-    'tinymce.themes.mobile.ui.HeadingSlider',
-    'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosRealm',
-    'tinymce.themes.mobile.ui.LinkButton',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
     'tinymce.themes.mobile.util.SkinLoaded'
@@ -37,9 +32,10 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager, Api, TinyCodeDupe,
-    TinyChannels, Features, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls,
-    FormatChangers, SkinLoaded
+    Swapping, Toggling, AlloyTriggers, Attachment, Debugging, Cell, Fun, PlatformDetection,
+    Focus, Insert, Element, Node, DOMUtils, ThemeManager, Api, TinyCodeDupe, TinyChannels,
+    Features, Styles, Orientation, AndroidRealm, Buttons, IosRealm, CssUrls, FormatChangers,
+    SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -52,8 +48,12 @@ define(
         editor.contentCSS.push(cssUrls.content);
         DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
 
+        var doScrollIntoView = function () {
+          editor.fire('scrollIntoView');
+        };
+
         var wrapper = Element.fromTag('div');
-        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm() : IosRealm();
+        var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
         var original = Element.fromDom(args.targetNode);
         Insert.after(original, wrapper);
         Attachment.attachSystem(wrapper, realm.system());
@@ -125,12 +125,17 @@ define(
                 };
               },
 
+              onTouchToolstrip: function () {
+                hideDropup();
+              },
+
               onTouchContent: function () {
                 var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
                 // If something in the toolbar had focus, fire an execute on it (execute on tap away)
                 // Perhaps it will be clearer later what is a better way of doing this.
                 findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
                 realm.restoreToolbar();
+                hideDropup();
               },
 
               onTapContent: function (evt) {
@@ -155,6 +160,7 @@ define(
             socket: Element.fromDom(editor.contentAreaContainer),
             toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
             toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
+            dropup: realm.dropup(),
             alloy: realm.system(),
             translate: Fun.noop,
 
@@ -162,6 +168,16 @@ define(
               setReadOnly(readOnlyGroups, mainGroups, ro);
             }
           });
+
+          var hideDropup = function () {
+            features.styleselect.lookup(realm.system().root()).fold(function () {
+              realm.dropup().disappear(Fun.noop, {});
+            }, function (button) {
+              realm.dropup().disappear(Toggling.off, button);
+            });
+          };
+
+          Debugging.registerInspector('remove this', realm.system());
 
           var backToMaskGroup = {
             label: 'The first group',
@@ -197,7 +213,8 @@ define(
             ]
           };
 
-          var items = Features.detect(realm, editor, editor.settings);
+          var features = Features.setup(realm, editor);
+          var items = Features.detect(realm, editor, editor.settings, features);
           
           var actionGroup = {
             label: 'the action group',
@@ -215,7 +232,6 @@ define(
 
           var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
           var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
-
 
           // Investigate ways to keep in sync with the ui
           FormatChangers.init(realm, editor);

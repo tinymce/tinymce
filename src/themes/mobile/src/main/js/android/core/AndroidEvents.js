@@ -15,10 +15,8 @@ define(
     'tinymce.themes.mobile.util.TappingEvent'
   ],
 
-  function (
-    Toggling, Arr, Fun, PlatformDetection, Compare, Focus, DomEvent, Element, Node, Traverse,
-    TappingEvent
-  ) {
+  function (Toggling, Arr, Fun, PlatformDetection, Compare, Focus, DomEvent, Element, Node, Traverse, TappingEvent) {
+
     var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
     /*
 
@@ -62,9 +60,28 @@ define(
         tapping.onTouchmove(),
         tapping.onTouchend(),
 
-        editorApi.onToReading(Fun.noop),
-        editorApi.onToEditing(Fun.noop)
+        DomEvent.bind(toolstrip, 'touchstart', function (evt) {
+          editorApi.onTouchToolstrip();
+        }),
 
+        editorApi.onToReading(function () {
+          Focus.blur(editorApi.body());
+        }),
+        editorApi.onToEditing(Fun.noop),
+
+        // Scroll to cursor and update the iframe height
+        editorApi.onScrollToCursor(function (tinyEvent) {
+          tinyEvent.preventDefault();
+          editorApi.getCursorBox().each(function (bounds) {
+            var cWin = editorApi.win();
+            // The goal here is to shift as little as required.
+            var isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
+            var cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50/*EXTRA_SPACING*/ : 0;
+            if (cScrollBy !== 0) {
+              cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
+            }         
+          });
+        })
       ].concat(
         isAndroid6 === true ? [ ] : [
           DomEvent.bind(Element.fromDom(editorApi.win()), 'blur', function () {

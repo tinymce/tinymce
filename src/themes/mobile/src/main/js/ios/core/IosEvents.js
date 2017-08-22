@@ -13,7 +13,7 @@ define(
   ],
 
   function (TapEvent, Arr, Throttler, Compare, DomEvent, Height, Location, TappingEvent) {
-    var initEvents = function (editorApi, iosApi, toolstrip, socket) {
+    var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
       var saveSelectionFirst = function () {
         iosApi.run(function (api) {
           api.highlightSelection();
@@ -153,6 +153,9 @@ define(
 
           // Then, depending on the keyboard mode, we may need to do something else (like dismiss the keyboard)
           onToolbarTouch(touchEvent);
+
+          // Fire the touchstart event to the theme for things like hiding dropups
+          editorApi.onTouchToolstrip();
         }),
 
         // When the user clicks back into the content, clear any fake selections

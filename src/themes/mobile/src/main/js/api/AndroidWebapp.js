@@ -50,6 +50,8 @@ define(
 
       return {
         setReadOnly: mobile.setReadOnly,
+        // Not used.
+        refreshStructure: Fun.noop,
         enter: mode.enter,
         exit: mode.exit,
         destroy: Fun.noop
