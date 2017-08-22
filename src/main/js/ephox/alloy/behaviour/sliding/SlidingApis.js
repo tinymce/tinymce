@@ -32,7 +32,6 @@ define(
     var setShrunk = function (component, slideConfig) {
       Class.remove(component.element(), slideConfig.openClass());
       Class.add(component.element(), slideConfig.closedClass());
-
       Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
       Css.reflow(component.element());
     };
@@ -49,7 +48,7 @@ define(
       Class.remove(component.element(), slideConfig.closedClass());
       Class.add(component.element(), slideConfig.openClass());
       Css.remove(component.element(), getDimensionProperty(slideConfig));
-      // Reflow?
+      Css.reflow(component.element());
     };
 
     var doImmediateShrink = function (component, slideConfig, slideState) {
@@ -89,7 +88,9 @@ define(
       Class.add(root, slideConfig.growingClass());
 
       setGrown(component, slideConfig);
+
       Css.set(component.element(), getDimensionProperty(slideConfig), fullSize);
+
       slideState.setExpanded();
       slideConfig.onStartGrow()(component);
     };
@@ -110,6 +111,24 @@ define(
       return slideState.isExpanded();
     };
 
+    var hasShrunk = function (component, slideConfig, slideState) {
+      return slideState.isCollapsed();
+    };
+
+    var isGrowing = function (component, slideConfig, slideState) {
+      var root = getAnimationRoot(component, slideConfig);
+      return Class.has(root, slideConfig.growingClass()) === true;
+    };
+
+    var isShrinking = function (component, slideConfig, slideState) {
+      var root = getAnimationRoot(component, slideConfig);
+      return Class.has(root, slideConfig.shrinkingClass()) === true;
+    };
+
+    var isTransitioning = function (component, slideConfig, slideState) {
+      return isGrowing(component, slideConfig, slideState) === true || isShrinking(component, slideConfig, slideState) === true;
+    };
+
     var toggleGrow = function (component, slideConfig, slideState) {
       var f = slideState.isExpanded() ? doStartShrink : doStartGrow;
       f(component, slideConfig, slideState);
@@ -120,6 +139,10 @@ define(
       shrink: shrink,
       immediateShrink: immediateShrink,
       hasGrown: hasGrown,
+      hasShrunk: hasShrunk,
+      isGrowing: isGrowing,
+      isShrinking: isShrinking,
+      isTransitioning: isTransitioning,
       toggleGrow: toggleGrow,
       disableTransitions: disableTransitions
     };

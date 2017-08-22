@@ -144,9 +144,7 @@ define(
 
       var collapseLeft = function (container, item) {
         var value = getItemValue(item);
-        console.log('value', value);
         return state.collapse(value).bind(function (path) {
-          console.log('path', path);
           return updateMenuPath(container, state, path).map(function (activeMenu) {
             detail.onCollapseMenu()(container, item, activeMenu);
             return activeMenu;
