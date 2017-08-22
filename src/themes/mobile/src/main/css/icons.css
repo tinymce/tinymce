@@ -55,6 +55,11 @@
 .tinymce-mobile-icon-undo:before {
   content: "\e166";
 }
+
+.tinymce-mobile-icon-redo:before {
+  content: "\e15a";
+}
+
 .tinymce-mobile-icon-small-font:before {
   content: "\e906";
 }

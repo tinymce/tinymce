@@ -625,6 +625,60 @@
     {
       "icon": {
         "paths": [
+          "M512 470l342-214h-684zM854 768v-426l-342 212-342-212v426h684zM854 170c46 0 84 40 84 86v512c0 46-38 86-84 86h-684c-46 0-84-40-84-86v-512c0-46 38-86 84-86h684z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "mail_outline"
+        ],
+        "defaultCode": 57569,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "mail_outline",
+        "id": 485,
+        "order": 100,
+        "prevSize": 24,
+        "code": 57569,
+        "name": "mail"
+      },
+      "setIdx": 2,
+      "setId": 8,
+      "iconIdx": 485
+    },
+    {
+      "icon": {
+        "paths": [
+          "M786 452l152-154v384h-384l156-154c-60-50-136-80-220-80-152 0-280 98-324 234l-100-32c58-178 226-308 424-308 114 0 218 42 296 110z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "redo"
+        ],
+        "defaultCode": 57690,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "redo",
+        "id": 615,
+        "order": 101,
+        "prevSize": 24,
+        "code": 57690,
+        "name": "redo"
+      },
+      "setIdx": 2,
+      "setId": 8,
+      "iconIdx": 615
+    },
+    {
+      "icon": {
+        "paths": [
           "M512 426h-86v86h-42v-86h-86v-42h86v-86h42v86h86v42zM406 598c106 0 192-86 192-192s-86-192-192-192-192 86-192 192 86 192 192 192zM662 598l212 212-64 64-212-212v-34l-12-12c-48 42-112 66-180 66-154 0-278-122-278-276s124-278 278-278 276 124 276 278c0 68-24 132-66 180l12 12h34z"
         ],
         "attrs": [],
