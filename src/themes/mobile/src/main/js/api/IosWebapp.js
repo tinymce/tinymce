@@ -46,6 +46,7 @@ define(
 
       return {
         setReadOnly: mobile.setReadOnly,
+        refreshStructure: mode.refreshStructure,
         enter: mode.enter,
         exit: mode.exit,
         destroy: Fun.noop

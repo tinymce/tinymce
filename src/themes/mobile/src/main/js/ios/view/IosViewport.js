@@ -18,11 +18,13 @@ define(
 
   function (Adt, Arr, Fun, Attr, Css, SelectorFilter, Traverse, Height, DeviceZones, Styles, Scrollable, DataAttributes) {
     var fixture = Adt.generate([
-      { 'fixed': [ 'element', 'offsetY' ] },
+      { 'fixed': [ 'element', 'property', 'offsetY' ] },
+      // Not supporting property yet
       { 'scroller' :[ 'element', 'offsetY' ] }
     ]);
 
     var yFixedData = 'data-' + Styles.resolve('position-y-fixed');
+    var yFixedProperty = 'data-' + Styles.resolve('y-property');
     var yScrollingData = 'data-' + Styles.resolve('scrolling');
     var windowSizeData = 'data-' + Styles.resolve('last-window-height');
 
@@ -30,14 +32,27 @@ define(
       return DataAttributes.safeParse(element, yFixedData);
     };
 
+    var getYFixedProperty = function (element) {
+      return Attr.get(element, yFixedProperty);
+    };
+
     var getLastWindowSize = function (element) {
       return DataAttributes.safeParse(element, windowSizeData);
     };
 
+    var classifyFixed = function (element, offsetY) {
+      var prop = getYFixedProperty(element);
+      return fixture.fixed(element, prop, offsetY);
+    };
+
+    var classifyScrolling = function (element, offsetY) {
+      return fixture.scroller(element, offsetY);
+    };
+
     var classify = function (element) {
       var offsetY = getYFixedData(element);
-      var type = Attr.get(element, yScrollingData) === 'true' ? fixture.scroller : fixture.fixed;
-      return type(element, offsetY);
+      var classifier = Attr.get(element, yScrollingData) === 'true' ? classifyScrolling : classifyFixed;
+      return classifier(element, offsetY);
     };
 
     var findFixtures = function (container) {
@@ -53,10 +68,12 @@ define(
       });
 
       Attr.set(toolbar, yFixedData, '0px');
+      Attr.set(toolbar, yFixedProperty, 'top');
 
       var restore = function () {
         Attr.set(toolbar, 'style', oldToolbarStyle || '');
         Attr.remove(toolbar, yFixedData);
+        Attr.remove(toolbar, yFixedProperty);
       };
 
       return {
@@ -78,12 +95,14 @@ define(
 
       Attr.set(viewport, yFixedData, toolbarHeight + 'px');
       Attr.set(viewport, yScrollingData, 'true');
+      Attr.set(viewport, yFixedProperty, 'top');
 
       var restore = function () {
         Scrollable.deregister(viewport);
         Attr.set(viewport, 'style', oldViewportStyle || '');
         Attr.remove(viewport, yFixedData);
         Attr.remove(viewport, yScrollingData);
+        Attr.remove(viewport, yFixedProperty);
       };
 
       return {
@@ -91,22 +110,46 @@ define(
       };
     };
 
-    var deriveViewportHeight = function (viewport, toolbarHeight) {
+    var takeoverDropup = function (dropup, toolbarHeight, viewportHeight) {
+      var oldDropupStyle = Attr.get(dropup, 'style');
+      Css.setAll(dropup, {
+        position: 'absolute',
+        bottom: '0px'
+      });
+
+      Attr.set(dropup, yFixedData, '0px');
+      Attr.set(dropup, yFixedProperty, 'bottom');
+
+      var restore = function () {
+        Attr.set(dropup, 'style', oldDropupStyle || '');
+        Attr.remove(dropup, yFixedData);
+        Attr.remove(dropup, yFixedProperty);
+      };
+
+      return {
+        restore: restore
+      };
+    };
+
+    var deriveViewportHeight = function (viewport, toolbarHeight, dropupHeight) {
       // Note, Mike thinks this value changes when the URL address bar grows and shrinks. If this value is too high
       // the main problem is that scrolling into the greenzone may not scroll into an area that is viewable. Investigate.
       var outerWindow = Traverse.owner(viewport).dom().defaultView;
       var winH = outerWindow.innerHeight;
       Attr.set(viewport, windowSizeData, winH + 'px');
-      return winH - toolbarHeight;
+      return winH - toolbarHeight - dropupHeight;
     };
 
-    var takeover = function (viewport, contentBody, toolbar) {
+    var takeover = function (viewport, contentBody, toolbar, dropup) {
       var outerWindow = Traverse.owner(viewport).dom().defaultView;
       var toolbarSetup = takeoverToolbar(toolbar);
       var toolbarHeight = Height.get(toolbar);
-      var viewportHeight = deriveViewportHeight(viewport, toolbarHeight);
+      var dropupHeight = Height.get(dropup);
+      var viewportHeight = deriveViewportHeight(viewport, toolbarHeight, dropupHeight);
 
       var viewportSetup = takeoverViewport(toolbarHeight, viewportHeight, viewport);
+
+      var dropupSetup = takeoverDropup(dropup, toolbarHeight, viewportHeight);
 
       var isActive = true;
 
@@ -114,6 +157,7 @@ define(
         isActive = false;
         toolbarSetup.restore();
         viewportSetup.restore();
+        dropupSetup.restore();
       };
 
       var isExpanding = function () {
@@ -125,10 +169,13 @@ define(
       var refresh = function () {
         if (isActive) {
           var newToolbarHeight = Height.get(toolbar);
-          var newHeight = deriveViewportHeight(viewport, newToolbarHeight);
+          var dropupHeight = Height.get(dropup);
+          var newHeight = deriveViewportHeight(viewport, newToolbarHeight, dropupHeight);
           Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
           Css.set(viewport, 'height', newHeight + 'px');
-          DeviceZones.updatePadding(contentBody, viewport);
+
+          Css.set(dropup, 'bottom', -(newToolbarHeight + newHeight + dropupHeight) + 'px');
+          DeviceZones.updatePadding(contentBody, viewport, dropup);
         }
       };
 
@@ -139,7 +186,7 @@ define(
         refresh();
       };
 
-      DeviceZones.updatePadding(contentBody, viewport);
+      DeviceZones.updatePadding(contentBody, viewport, dropup);
 
       return {
         setViewportOffset: setViewportOffset,

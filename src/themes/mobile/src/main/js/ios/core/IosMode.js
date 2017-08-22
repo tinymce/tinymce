@@ -11,7 +11,6 @@ define(
     'ephox.sugar.api.properties.Css',
     'global!document',
     'tinymce.themes.mobile.ios.core.IosEvents',
-    'tinymce.themes.mobile.ios.core.IosHacks',
     'tinymce.themes.mobile.ios.core.IosSetup',
     'tinymce.themes.mobile.ios.core.PlatformEditor',
     'tinymce.themes.mobile.ios.scroll.Scrollables',
@@ -23,8 +22,8 @@ define(
   ],
 
   function (
-    Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosHacks, IosSetup, PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable,
-    MetaViewport
+    Fun, Singleton, Struct, Focus, Element, Class, Css, document, IosEvents, IosSetup,
+    PlatformEditor, Scrollables, IosKeyboard, Thor, Styles, Scrollable, MetaViewport
   ) {
     var create = function (platform, mask) {
       var meta = MetaViewport.tag();
@@ -71,6 +70,7 @@ define(
             'socket',
             'toolstrip',
             'toolbar',
+            'dropup',
             'contentElement',
             'cursor',
             'keyboardType',
@@ -86,6 +86,7 @@ define(
               'socket': platform.socket,
               'toolstrip': platform.toolstrip,
               'toolbar': platform.toolbar,
+              'dropup': platform.dropup.element(),
               'contentElement': editorApi.frame(),
               'cursor': Fun.noop,
               'outerBody': platform.body,
@@ -99,14 +100,13 @@ define(
             }))
           );
 
-          IosHacks.stopTouchFlicker(editorApi.body());
           iosApi.run(function (api) {
             api.syncHeight();
           });
 
 
           iosEvents.set(
-            IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket)
+            IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket, platform.dropup)
           );
         });
       };
@@ -150,8 +150,16 @@ define(
         });
       };
 
+      // dropup
+      var refreshStructure = function () {
+        iosApi.run(function (api) {
+          api.refreshStructure();
+        });
+      };
+
       return {
         enter: enter,
+        refreshStructure: refreshStructure,
         exit: exit
       };
     };

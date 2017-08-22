@@ -10,14 +10,13 @@ define(
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.toolbar.ScrollingToolbar',
     'tinymce.themes.mobile.ui.CommonRealm',
+    'tinymce.themes.mobile.ui.Dropup',
     'tinymce.themes.mobile.ui.OuterContainer'
   ],
 
-  function (
-    Replacing, Swapping, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm,
-    OuterContainer
-  ) {
-    return function () {
+
+  function (Replacing, Swapping, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm, Dropup, OuterContainer) {
+    return function (scrollIntoView) {
       var alloy = OuterContainer({
         classes: [ Styles.resolve('android-container') ]
       });
@@ -30,8 +29,11 @@ define(
 
       var socket = CommonRealm.makeSocket();
 
+      var dropup = Dropup.build(Fun.noop, scrollIntoView);
+
       alloy.add(toolbar.wrapper());
       alloy.add(socket);
+      alloy.add(dropup.component());
 
       var setToolbarGroups = function (rawGroups) {
         var groups = toolbar.createGroups(rawGroups);
@@ -79,7 +81,8 @@ define(
         focusToolbar: focusToolbar,
         restoreToolbar: restoreToolbar,
         updateMode: updateMode,
-        socket: Fun.constant(socket)
+        socket: Fun.constant(socket),
+        dropup: Fun.constant(dropup)
       };
     };
   }

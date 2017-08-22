@@ -131,6 +131,15 @@ module.exports = function (grunt) {
             dest: "deploy-local/index-bootstrap.html"
           }
         ]
+      },
+
+      "no-uglify": {
+        files: [
+          {
+            src: "deploy-local/themes/mobile/theme.js",
+            dest: "deploy-local/themes/mobile/theme.min.js"
+          }
+        ]
       }
     },
 
@@ -210,21 +219,18 @@ module.exports = function (grunt) {
     },
     watch: {
       styles: {
-        files: ['src/main/css/**/*.less'], // which files to watch
-        tasks: ['less'],
+        files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
+        tasks: ['less', 'bolt-build', 'copy:standalone', 'copy:no-uglify' ],
         options: {
-          nospawn: true,
+          nospawn: false,
           atBegin: true
         }
-      },
-      build: {
-        files: ['src/**/**.js'],
-        tasks: [ 'bolt-build' ]
-      },
-      tests: {
-        files: ['src/**/**.js'],
-        tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]
       }
+      //,
+      // tests: {
+      //   files: ['src/**/**.js'],
+      //   tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]
+      // }
     }
   });
 

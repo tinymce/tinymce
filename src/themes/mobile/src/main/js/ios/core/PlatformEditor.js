@@ -132,6 +132,7 @@ define(
               onToolbarScrollStart: editor.onToolbarScrollStart,
               onTouchContent: editor.onTouchContent,
               onTapContent: editor.onTapContent,
+              onTouchToolstrip: editor.onTouchToolstrip,
 
               getCursorBox: getCursorBox
             };

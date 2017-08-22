@@ -67,7 +67,7 @@
   content: "\e906";
 }
 
-.tinymce-mobile-icon-readonly-back:before {
+.tinymce-mobile-icon-readonly-back:before, .tinymce-mobile-format-matches:after {
   content: "\e5ca";
 }
 

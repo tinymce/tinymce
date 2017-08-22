@@ -2,6 +2,9 @@ define(
   'tinymce.themes.mobile.features.Features',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.Memento',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
@@ -9,15 +12,21 @@ define(
     'ephox.katamari.api.Type',
     'global!setTimeout',
     'global!window',
+    'tinymce.themes.mobile.channels.Receivers',
+    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
     'tinymce.themes.mobile.ui.FontSizeSlider',
     'tinymce.themes.mobile.ui.ImagePicker',
-    'tinymce.themes.mobile.ui.LinkButton'
+    'tinymce.themes.mobile.ui.LinkButton',
+    'tinymce.themes.mobile.util.StyleFormats'
   ],
 
-  function (Objects, Arr, Fun, Option, Type, setTimeout, window, Buttons, ColorSlider, FontSizeSlider, ImagePicker, LinkButton) {
-    var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist' ];
+  function (
+    Behaviour, Toggling, Memento, Objects, Arr, Fun, Option, Type, setTimeout, window,
+    Receivers, Styles, Buttons, ColorSlider, FontSizeSlider, ImagePicker, LinkButton, StyleFormats
+  ) {
+    var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
     var extract = function (toolbar) {
       return toolbar.length > 0 ? toolbar.split(/\s+/) : [ ];
@@ -59,7 +68,32 @@ define(
       var fontsizeselect = FontSizeSlider.sketch(realm, editor);
       var forecolor = ColorSlider.sketch(realm, editor);
 
-      var feature = function (prereq, spec) {
+      var styleFormats = StyleFormats.register(editor, editor.settings);
+
+      var styleFormatsMenu = function () {
+        return StyleFormats.ui(editor, styleFormats, function () {
+          editor.fire('scrollIntoView');
+        });
+      };
+
+      var styleselect = Memento.record(Buttons.forToolbar('font-size', function (button) {
+          editor.fire('toReading');
+          realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
+        }, Behaviour.derive([
+          Toggling.config({
+            toggleClass: Styles.resolve('toolbar-button-selected'),
+            toggleOnExecute: false,
+            aria: {
+              mode: 'pressed'
+            }
+          }),
+          Receivers.orientation(function (button) {
+            Toggling.off(button);
+          })
+        ])
+      ));
+
+      var feature = function (prereq, spec, lookup) {
         return {
           isSupported: function () {
             // NOTE: forall is true for none
@@ -67,33 +101,35 @@ define(
               return Objects.hasKey(editor.buttons, p);
             });
           },
-          spec: Fun.constant(spec)
+          spec: Fun.constant(spec),
+          lookup: lookup
         };
       };
 
       return {
-        undo: feature(Option.none(), undo),
-        redo: feature(Option.none(), redo),
-        bold: feature(Option.none(), bold),
-        italic: feature(Option.none(), italic),
-        underline: feature(Option.none(), underline),
-        link: feature(Option.none(), link),
-        unlink: feature(Option.none(), unlink),
-        image: feature(Option.none(), image),
+        undo: feature(Option.none(), undo, Option.none),
+        redo: feature(Option.none(), redo, Option.none),
+        bold: feature(Option.none(), bold, Option.none),
+        italic: feature(Option.none(), italic, Option.none),
+        underline: feature(Option.none(), underline, Option.none),
+        link: feature(Option.none(), link, Option.none),
+        unlink: feature(Option.none(), unlink, Option.none),
+        image: feature(Option.none(), image, Option.none),
         // NOTE: Requires "lists" plugin.
-        bullist: feature(Option.some('bullist'), bullist),
-        numlist: feature(Option.some('numlist'), numlist),
-        fontsizeselect: feature(Option.none(), fontsizeselect),
-        forecolor: feature(Option.none(), forecolor)
+        bullist: feature(Option.some('bullist'), bullist, Option.none),
+        numlist: feature(Option.some('numlist'), numlist, Option.none),
+        fontsizeselect: feature(Option.none(), fontsizeselect, Option.none),
+        forecolor: feature(Option.none(), forecolor, Option.none),
+        styleselect: feature(Option.none(), styleselect.asSpec(), styleselect.getOpt)
       };
     };
 
-    var detect = function (realm, editor, settings) {
+    var detect = function (realm, editor, settings, features) {
       // Firstly, work out which items are in the toolbar
       var itemNames = identify(settings);
 
       // Now, generates the different features
-      var features = setup(realm, editor);
+      // var features = setup(realm, editor);
 
       // Now, build the list only including supported features
       return Arr.bind(itemNames, function (iName) {
