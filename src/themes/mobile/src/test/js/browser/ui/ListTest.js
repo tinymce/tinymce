@@ -15,11 +15,13 @@ asynctest(
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
     'ephox.alloy.log.AlloyLogger',
+    'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.Traverse',
     'tinymce.core.ThemeManager',
     'tinymce.themes.mobile.features.Features',
     'tinymce.themes.mobile.Theme',
@@ -27,8 +29,8 @@ asynctest(
   ],
 
   function (
-    Assertions, Logger, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger, Fun, TinyApis, TinyLoader,
-    Body, Attr, ThemeManager, Features, Theme, FormatChangers
+    Assertions, Logger, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger, GuiSetup, Fun, TinyApis, TinyLoader,
+    Body, Attr, Traverse, ThemeManager, Features, Theme, FormatChangers
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -115,20 +117,29 @@ asynctest(
       };
 
       Pipeline.async({}, [
+        GuiSetup.mAddStyles(Traverse.owner(body), [
+          '.tinymce-mobile-toolbar-button { padding: 2px; border: 1px solid black; background: white; }',
+          '.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected { background: #cadbee; }',
+          '.tinymce-mobile-icon-unordered-list:before { content: "ul"; }',
+          '.tinymce-mobile-icon-ordered-list:before { content: "ol"; }'
+        ]),
         apis.sFocus,
         apis.sSetContent(
           '<ol><li>This is an ordered list</li></ol><p>Normal paragraph</p><ul><li>Bullet list</li></ul>'
         ),
         sSetP1,
-        sAssertListIs('numlist: initial selection in p1', memNumlist, false),
-        sAssertListIs('bullist: initial selection in ol', memBullist, false),
+        sAssertListIs('checking numlist: initial selection in p1', memNumlist, false),
+        sAssertListIs('checking bullist: initial selection in ol', memBullist, false),
         sSetP2,
-        sAssertListIs('numlist: ol >>> p', memNumlist, false),
-        sAssertListIs('bullist: ol >>> p', memBullist, false),
+        sAssertListIs('checking numlist: ol >>> p', memNumlist, false),
+        sAssertListIs('checking bullist: ol >>> p', memBullist, false),
         sSetP3,
-        sAssertListIs('numlist: p >>> ul', memNumlist, false),
-        sAssertListIs('bullist: p >>> ul', memBullist, true),
-        Step.fail('Just checking toolbar')
+        sAssertListIs('checking numlist: p >>> ul', memNumlist, false),
+        sAssertListIs('checking bullist: p >>> ul', memBullist, true),
+        sSetP1,
+        sAssertListIs('checking numlist: ul >>> ol', memNumlist, true),
+        sAssertListIs('checking bullist: ul >>> ol', memBullist, false),
+        GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }, {
       theme: 'headlesstest'
