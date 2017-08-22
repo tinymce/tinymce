@@ -31,7 +31,7 @@ define(
       // });
 
       editor.selection.selectorChanged('ol,ul', function (state, data) {
-        // console.log('selector changing:ol');
+        console.log('selector changing', data, 'state', state);
         var elem = Element.fromDom(data.node);
         var messages = state === false ? [
           { command: 'ol', state: false },
