@@ -17,7 +17,7 @@ define(
         }
       );
 
-      var rest = getAlpha(item.items, item.title);
+      var rest = expand(item.items, item.title);
 
       var newMenus = Merger.deepMerge(
         rest.menus,
@@ -52,7 +52,7 @@ define(
     };
 
     // Takes items, and consolidates them into its return value
-    var getAlpha = function (items, currentMenu) {
+    var expand = function (items, currentMenu) {
       return Arr.foldr(items, function (acc, item) {
         var newData = getFromItem(item, currentMenu);
         return {
@@ -68,7 +68,7 @@ define(
     };
 
     return {
-      getAlpha: getAlpha
+      expand: expand
     };
   }
 );

@@ -8,22 +8,18 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
+    'global!window',
     'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.style.Styles'
   ],
 
-  function (Behaviour, Replacing, Sliding, GuiFactory, Container, Fun, Receivers, Styles) {
+  function (Behaviour, Replacing, Sliding, GuiFactory, Container, Fun, window, Receivers, Styles) {
     var build = function (refresh, scrollIntoView) {
       var dropup = GuiFactory.build(
         Container.sketch({
           dom: {
             tag: 'div',
-            classes: Styles.resolve('dropup'),
-            styles: {
-              display: 'flex',
-              'width': '100%',
-              'overflow': 'hidden'
-            }
+            classes: Styles.resolve('dropup')
           },
           components: [
             

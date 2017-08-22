@@ -1,5 +1,10 @@
 Mobile theme changelog
 
+v5
+
+- added dropup wiget
+- implement style formats, using dropup for ui
+
 v4
 
 - support custom toolbar configuration

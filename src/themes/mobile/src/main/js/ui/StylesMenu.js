@@ -169,7 +169,6 @@ define(
               }
             }
           }),
-          // Objects.exclude(makeSeparator(value), [ 'type' ]),
           {
             dom: {
               tag: 'div',
@@ -208,11 +207,6 @@ define(
             })
           })
         ])
-
-        // eventOrder: Objects.wrap(
-        //   SystemEvents.attachedToDom(),
-        //   [ 'adhoc-scrollable-toolbar', Transitioning.name() ]
-        // )
       };
     };
 
