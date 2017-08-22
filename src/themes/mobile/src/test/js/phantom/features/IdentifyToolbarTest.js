@@ -12,7 +12,7 @@ test(
       Assertions.assertEq(label, expected, actual);
     };
 
-    check('Default toolbar', [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist' ], { });
+    check('Default toolbar', [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ], { });
     check('Empty toolbar', [ ], { toolbar: '' });
     check('Empty toolbar (array)', [ ], { toolbar: [ ] });
 
