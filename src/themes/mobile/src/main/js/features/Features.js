@@ -45,17 +45,14 @@ define(
     };
 
     var setup = function (realm, editor) {
-      var c = function (name) {
-        return Buttons.forToolbarCommand(editor, name);
-      };
-
-      var undo = c('undo');
-      var redo = c('redo');
-      var bold = c('bold');
-      var italic = c('italic');
-      var underline = c('underline');
+      var undo = Buttons.forToolbarCommand(editor, 'undo');
+      var redo = Buttons.forToolbarCommand(editor, 'redo');
+      var bold = Buttons.forToolbarStateCommand(editor, 'bold');
+      var italic = Buttons.forToolbarStateCommand(editor, 'italic');
+      var underline = Buttons.forToolbarStateCommand(editor, 'underline');
       var link = LinkButton.sketch(realm, editor);
-      var unlink = c('unlink');
+      // WRITE A TEST FOR THIS
+      var unlink = Buttons.forToolbarStateCommand(editor, 'unlink');
       var image = ImagePicker.sketch(editor);
       var bullist = Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
         editor.execCommand('InsertUnorderedList', null, false);
