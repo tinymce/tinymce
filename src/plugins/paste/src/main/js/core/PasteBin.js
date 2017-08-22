@@ -146,18 +146,20 @@ define(
        * Removes the paste bin if it exists.
        */
       var remove = function () {
-        var pasteBinClone;
+        if (getEl()) {
+          var pasteBinClone;
 
-        // WebKit/Blink might clone the div so
-        // lets make sure we remove all clones
-        // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
-        while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
-          editor.dom.remove(pasteBinClone);
-          editor.dom.unbind(pasteBinClone);
-        }
+          // WebKit/Blink might clone the div so
+          // lets make sure we remove all clones
+          // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+          while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
+            editor.dom.remove(pasteBinClone);
+            editor.dom.unbind(pasteBinClone);
+          }
 
-        if (pasteBinClone && lastRng) {
-          editor.selection.setRng(lastRng);
+          if (lastRng) {
+            editor.selection.setRng(lastRng);
+          }
         }
 
         lastRng = null;
