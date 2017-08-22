@@ -5,12 +5,11 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Cell',
     'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Fields, FieldSchema, ValueSchema, Cell, Height, Width) {
+  function (Fields, FieldSchema, ValueSchema, Height, Width) {
     return [
       FieldSchema.strict('closedClass'),
       FieldSchema.strict('openClass'),

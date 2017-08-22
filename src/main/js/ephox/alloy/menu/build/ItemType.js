@@ -28,27 +28,38 @@ define(
             }
           }
         ),
-        behaviours: Behaviour.derive([
-          info.toggling().fold(Toggling.revoke, Toggling.config),
-          Focusing.config({
-            ignore: info.ignoreFocus(),
-            onFocus: function (component) {
-              ItemEvents.onFocus(component);
-            }
-          }),
-          Keying.config({
-            mode: 'execution'
-          }),
-          Representing.config({
-            store: {
-              mode: 'memory',
-              initialValue: info.data()
-            }
-          })
-        ]),
+        behaviours: Merger.deepMerge(
+          Behaviour.derive([
+            info.toggling().fold(Toggling.revoke, function (tConfig) {
+              return Toggling.config(
+                Merger.deepMerge({
+                  aria: {
+                    mode: 'checked'
+                  }
+                }, tConfig)
+              );
+            }),
+            Focusing.config({
+              ignore: info.ignoreFocus(),
+              onFocus: function (component) {
+                ItemEvents.onFocus(component);
+              }
+            }),
+            Keying.config({
+              mode: 'execution'
+            }),
+            Representing.config({
+              store: {
+                mode: 'memory',
+                initialValue: info.data()
+              }
+            })
+          ]),
+          info.itemBehaviours()
+        ),
         events: AlloyEvents.derive([
           // Trigger execute when clicked
-          AlloyEvents.runWithTarget(NativeEvents.click(), AlloyTriggers.emitExecute),
+          AlloyEvents.runWithTarget(SystemEvents.tapOrClick(), AlloyTriggers.emitExecute),
 
           // Like button, stop mousedown propagating up the DOM tree.
           AlloyEvents.cutter(NativeEvents.mousedown()),
@@ -68,9 +79,10 @@ define(
       FieldSchema.strict('components'),
       FieldSchema.strict('dom'),
 
-      FieldSchema.optionOf('toggling', [
-        FieldSchema.strict('toggling')
-      ]),
+      FieldSchema.option('toggling'),
+
+      // Maybe this needs to have fewer behaviours
+      FieldSchema.defaulted('itemBehaviours', { }),
 
       FieldSchema.defaulted('ignoreFocus', false),
       FieldSchema.defaulted('domModification', { }),

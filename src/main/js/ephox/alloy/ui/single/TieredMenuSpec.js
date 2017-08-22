@@ -108,16 +108,20 @@ define(
           if (! Body.inBody(activeMenu.element())) {
             Replacing.append(container, GuiFactory.premade(activeMenu));
           }
+
+          // Remove the background-menu class from the active menu
+          Classes.remove(activeMenu.element(), [ detail.markers().backgroundMenu() ]);
           setActiveMenu(container, activeMenu);
           var others = getMenus(state, state.otherMenus(path));
           Arr.each(others, function (o) {
             // May not need to do the active menu thing.
             Classes.remove(o.element(), [ detail.markers().backgroundMenu() ]);
-            Replacing.remove(container, o);
+            if (! detail.stayInDom()) Replacing.remove(container, o);
           });
-
-          return true;
+          
+          return activeMenu;
         });
+
       };
 
       var expandRight = function (container, item) {
@@ -128,12 +132,10 @@ define(
             // DUPE with above. Fix later.
             if (! Body.inBody(activeMenu.element())) {
               Replacing.append(container, GuiFactory.premade(activeMenu));
-              detail.onOpenSubmenu()(container, item, activeMenu);
             }
 
+            detail.onOpenSubmenu()(container, item, activeMenu);
             Highlighting.highlightFirst(activeMenu);
-
-
           });
 
           return updateMenuPath(container, state, path);
@@ -143,7 +145,10 @@ define(
       var collapseLeft = function (container, item) {
         var value = getItemValue(item);
         return state.collapse(value).bind(function (path) {
-          return updateMenuPath(container, state, path);
+          return updateMenuPath(container, state, path).map(function (activeMenu) {
+            detail.onCollapseMenu()(container, item, activeMenu);
+            return activeMenu;
+          });
         });
       };
 
@@ -188,20 +193,18 @@ define(
           Highlighting.highlight(sandbox, menu);
         }),
 
-        // Hide any irrelevant submenus and expand any submenus based
-        // on hovered item
-        AlloyEvents.run(ItemEvents.hover(), function (sandbox, simulatedEvent) {
-          var item = simulatedEvent.event().item();
-          updateView(sandbox, item);
-          expandRight(sandbox, item);
-          detail.onHover()(sandbox, item);
-        }),
-
+        
         AlloyEvents.runOnExecute(function (sandbox, simulatedEvent) {
           // Trigger on execute on the targeted element
           // I.e. clicking on menu item
           var target = simulatedEvent.event().target();
           return sandbox.getSystem().getByDom(target).bind(function (item) {
+            var itemValue = getItemValue(item);
+            if (itemValue.indexOf('collapse-item') === 0) {
+              return collapseLeft(sandbox, item);
+            }
+
+
             return expandRight(sandbox, item).orThunk(function () {
               return detail.onExecute()(sandbox, item);
             });
@@ -219,14 +222,28 @@ define(
             }
           });
         })
-      ]);
+      ].concat(detail.navigateOnHover() ? [
+        // Hide any irrelevant submenus and expand any submenus based
+        // on hovered item
+        AlloyEvents.run(ItemEvents.hover(), function (sandbox, simulatedEvent) {
+          var item = simulatedEvent.event().item();
+          updateView(sandbox, item);
+          expandRight(sandbox, item);
+          detail.onHover()(sandbox, item);
+        })
+      ] : [ ]));
+
+      var collapseMenuApi = function (container) {
+        Highlighting.getHighlighted(container).each(function (currentMenu) {
+          Highlighting.getHighlighted(currentMenu).each(function (currentItem) {
+            collapseLeft(container, currentItem);
+          });
+        });
+      };
 
       return {
         uid: detail.uid(),
-        dom: {
-          tag: 'div',
-          classes: [ 'main-menu' ]
-        },
+        dom: detail.dom(),
         behaviours: Merger.deepMerge(
           Behaviour.derive([
             Keying.config({
@@ -255,12 +272,16 @@ define(
           detail.tmenuBehaviours()
         ),
         eventOrder: detail.eventOrder(),
+        apis: {
+          collapseMenu: collapseMenuApi
+        },
         events: events
       };
     };
 
     return {
-      make: make
+      make: make,
+      collapseItem: Fun.constant('collapse-item')
     };
   }
 );

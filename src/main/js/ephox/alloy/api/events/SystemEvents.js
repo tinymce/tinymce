@@ -2,10 +2,14 @@ define(
   'ephox.alloy.api.events.SystemEvents',
 
   [
-    'ephox.katamari.api.Fun'
+    'ephox.alloy.api.events.NativeEvents',
+    'ephox.katamari.api.Fun',
+    'ephox.sand.api.PlatformDetection'
   ],
 
-  function (Fun) {
+  function (NativeEvents, Fun, PlatformDetection) {
+    var alloy = { tap: Fun.constant('alloy.tap') };
+
     return {
       // This is used to pass focus to a component. A component might interpret
       // this event and pass the DOM focus to one of its children, depending on its
@@ -29,7 +33,10 @@ define(
 
       // This event represents a touchstart and touchend on the same location, and fires on
       // the touchend
-      tap: Fun.constant('alloy.tap'),
+      tap: alloy.tap,
+
+      // Tap event for touch device, otherwise click event
+      tapOrClick: PlatformDetection.detect().deviceType.isTouch() ? alloy.tap : NativeEvents.click,
 
       // This event represents a longpress on the same location
       longpress: Fun.constant('alloy.longpress'),

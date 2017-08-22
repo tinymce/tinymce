@@ -23,13 +23,6 @@ define(
         Fun.constant([ ])
       );
 
-      // var toMenuValues = function (sMenus) {
-      //   return Obj.map(sMenus, function (menu) {
-      //     var menuItems = SelectorFilter.descendants(menu.element(), itemType.get());
-      //     return Arr.map(menuItems, function (mi) { return Attr.get(mi, itemValue.get()); });
-      //   });
-      // };
-
       var clear = function () {
         expansions.set({});
         menus.set({});

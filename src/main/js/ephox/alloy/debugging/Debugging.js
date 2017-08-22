@@ -55,7 +55,7 @@ define(
     };
 
     var monitorEvent = function (eventName, initialTarget, f) {
-      var logger = debugging && Arr.contains(eventsMonitored, eventName) ? (function () {
+      var logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (function () {
         var sequence = [ ];
 
         return {

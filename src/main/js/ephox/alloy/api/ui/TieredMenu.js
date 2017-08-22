@@ -6,10 +6,11 @@ define(
     'ephox.alloy.data.Fields',
     'ephox.alloy.ui.single.TieredMenuSpec',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects'
+    'ephox.boulder.api.Objects',
+    'ephox.katamari.api.Id'
   ],
 
-  function (Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects) {
+  function (Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects, Id) {
     var tieredData = function (primary, menus, expansions) {
       return {
         primary: primary,
@@ -26,6 +27,13 @@ define(
       };
     };
 
+    var collapseItem = function (text) {
+      return {
+        value: Id.generate(TieredMenuSpec.collapseItem()),
+        text: text
+      };
+    };
+
     return Sketcher.single({
       name: 'TieredMenu',
       configFields: [
@@ -34,6 +42,7 @@ define(
 
         Fields.onStrictHandler('onOpenMenu'),
         Fields.onStrictHandler('onOpenSubmenu'),
+        Fields.onHandler('onCollapseMenu'),
 
         FieldSchema.defaulted('openImmediately', true),
 
@@ -48,15 +57,28 @@ define(
         Fields.onHandler('onHover'),
         Fields.tieredMenuMarkers(),
 
+
+        FieldSchema.strict('dom'),
+
+        FieldSchema.defaulted('navigateOnHover', true),
+        FieldSchema.defaulted('stayInDom', false),
+
         FieldSchema.defaulted('tmenuBehaviours', { }),
         FieldSchema.defaulted('eventOrder', { })
       ],
+
+      apis: {
+        collapseMenu: function (apis, tmenu) {
+          apis.collapseMenu(tmenu);
+        }
+      },
 
       factory: TieredMenuSpec.make,
 
       extraApis: {
         tieredData: tieredData,
-        singleData: singleData
+        singleData: singleData,
+        collapseItem: collapseItem
       }
     });
   }
