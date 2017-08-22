@@ -10,7 +10,6 @@ define(
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyEvents',
-    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Menu',
     'ephox.alloy.api.ui.TieredMenu',
@@ -22,15 +21,14 @@ define(
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Width',
     'tinymce.themes.mobile.channels.Receivers',
-    'tinymce.themes.mobile.ios.scroll.Scrollables',
     'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.touch.scroll.Scrollable',
-    'tinymce.themes.mobile.util.FormatChangers'
+    'tinymce.themes.mobile.touch.scroll.Scrollable'
   ],
 
   function (
-    AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, GuiFactory, Memento, AlloyEvents, SystemEvents, Button, Menu, TieredMenu, Objects,
-    Arr, Merger, Obj, Css, SelectorFind, Width, Receivers, Scrollables, Styles, Scrollable, FormatChangers
+    AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, GuiFactory, Memento,
+    AlloyEvents, Button, Menu, TieredMenu, Objects, Arr, Merger, Obj, Css, SelectorFind,
+    Width, Receivers, Styles, Scrollable
   ) {
 
     var getValue = function (item) {
