@@ -52,10 +52,12 @@ define(
       // NOTE: Requires "lists" plugin.
       var bullist = Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
         editor.execCommand('InsertUnorderedList', null, false);
+        editor.nodeChanged();
       });
 
       var numlist = Buttons.forToolbarStateAction(editor, 'ordered-list', 'ol', function () {
         editor.execCommand('InsertOrderedList', null, false);
+        editor.nodeChanged();
       });
 
       var fontsizeselect = FontSizeSlider.sketch(realm, editor);
