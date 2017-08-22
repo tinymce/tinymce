@@ -3,8 +3,10 @@ asynctest(
 
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
@@ -30,8 +32,8 @@ asynctest(
   ],
 
   function (
-    Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger, GuiSetup, Fun,
-    TinyApis, TinyLoader, Body, Attr, Traverse, ThemeManager, Features, Theme, FormatChangers
+    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger,
+    GuiSetup, Fun, TinyApis, TinyLoader, Body, Attr, Traverse, ThemeManager, Features, Theme, FormatChangers
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -85,8 +87,6 @@ asynctest(
 
       var apis = TinyApis(editor);
 
-      console.log('features', features);
-
       var memBullist = Memento.record(
         features.bullist.spec()
       );
@@ -117,27 +117,54 @@ asynctest(
         );
       };
 
+      var sCheckInNumlist = function (situation) {
+        return GeneralSteps.sequence([
+          sAssertListIs('checking numlist: ' + situation, memNumlist, true),
+          sAssertListIs('checking bullist: ' + situation, memBullist, false)
+        ]);
+      };
+
+      var sCheckInBullist = function (situation) {
+        return GeneralSteps.sequence([
+          sAssertListIs('checking numlist: ' + situation, memNumlist, false),
+          sAssertListIs('checking bullist: ' + situation, memBullist, true)
+        ]);
+      };
+
+      var sCheckInNoList = function (situation) {
+        return GeneralSteps.sequence([
+          sAssertListIs('checking numlist: ' + situation, memNumlist, false),
+          sAssertListIs('checking bullist: ' + situation, memBullist, false)
+        ]);
+      };
+
       var sCheckP1 = function (situation) {
         return GeneralSteps.sequence([
           sSetP1,
-          sAssertListIs('checking numlist: ' + situation, memNumlist, true),
-          sAssertListIs('checking bullist: ' + situation, memBullist, false)
+          sCheckInNumlist(situation)
         ]);
       };
 
       var sCheckP2 = function (situation) {
         return GeneralSteps.sequence([
           sSetP2,
-          sAssertListIs('checking numlist: ' + situation, memNumlist, false),
-          sAssertListIs('checking bullist: ' + situation, memBullist, false)
+          sCheckInNoList(situation)
         ]);
       };
 
       var sCheckP3 = function (situation) {
         return GeneralSteps.sequence([
           sSetP3,
-          sAssertListIs('checking numlist: ' + situation, memNumlist, false),
-          sAssertListIs('checking bullist: ' + situation, memBullist, true)
+          sCheckInBullist(situation)
+        ]);
+      };
+
+      var sClickButton = function (mem) {
+        return Chain.asStep(alloy.element(), [
+          Chain.mapper(function () {
+            return mem.get(socket).element();
+          }),
+          Mouse.cClick
         ]);
       };
 
@@ -155,15 +182,18 @@ asynctest(
         sCheckP1('initial selection in ol'),
         sCheckP2('ol >>> p'),
         sCheckP3('p >>> ul'),
-        // sCheckP1('ul >>> ol'),
+        sCheckP1('ul >>> ol'),
+
+        sClickButton(memBullist),
+        sCheckInBullist('ol converted to ul'),
+        sClickButton(memNumlist),
+        sCheckInNumlist('ul converted back to ol'),
+        sClickButton(memNumlist),
+        sCheckInNoList('ol converted to p'),
         GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }, {
       theme: 'headlesstest'
-      // toolbar: 'bullist numlist undo',
-      // setup: function (ed) {
-      //   ed.addButton('bullist', { });
-      // }
     }, function () {
       success();
     }, failure);

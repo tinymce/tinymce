@@ -4,12 +4,10 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.node.Node',
     'tinymce.themes.mobile.channels.TinyChannels'
   ],
 
-  function (Arr, Fun, Element, Node, TinyChannels) {
+  function (Arr, Fun, TinyChannels) {
     var fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
     var fireChange = function (realm, command, state) {
@@ -26,23 +24,9 @@ define(
         });
       });
 
-      // editor.selection.selectorChanged('ul', function (state, data) {
-      //   console.log('selector changing:ul');
-      // });
-
-      editor.selection.selectorChanged('ol,ul', function (state, data) {
-        console.log('selector changing', data, 'state', state);
-        var elem = Element.fromDom(data.node);
-        var messages = state === false ? [
-          { command: 'ol', state: false },
-          { command: 'ul', state: false }
-        ] : [
-          { command: 'ol', state: Node.name(elem) === 'ol' },
-          { command: 'ul', state: Node.name(elem) === 'ul' }
-        ];
-
-        Arr.each(messages, function (message) {
-          realm.system().broadcastOn([ TinyChannels.formatChanged() ], message);
+      Arr.each([ 'ul', 'ol' ], function (command) {
+        editor.selection.selectorChanged(command, function (state, data) {
+          fireChange(realm, command, state);
         });
       });
     };
