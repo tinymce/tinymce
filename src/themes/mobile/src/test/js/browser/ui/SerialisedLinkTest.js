@@ -230,7 +230,7 @@ asynctest(
       Step.sync(function () {
         realm.restoreToolbar();
       }),
-      
+
       sTestScenario({
         label: 'Testing hitting ENTER after just setting URL',
         fields: {
@@ -249,7 +249,7 @@ asynctest(
           }
         ]
       }),
-   
+
       sTestScenario({
         label: 'Testing hitting ENTER after filling in URL and text',
         fields: {
