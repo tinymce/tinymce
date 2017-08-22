@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.darwin.api.TableSelection',
-    'ephox.katamari.api.Option',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
@@ -14,7 +13,7 @@ define(
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableSelection, Option, TableLookup, Insert, Remove, Element, Tools, TableActions, TableTargets, Selections) {
+  function (TableSelection, TableLookup, Insert, Remove, Element, Tools, TableActions, TableTargets, Selections) {
     var each = Tools.each;
 
     var registerCommands = function (editor, dialogs) {

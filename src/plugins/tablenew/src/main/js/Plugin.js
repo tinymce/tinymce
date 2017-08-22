@@ -47,20 +47,22 @@ define(
       editor.on('init', function () {
         var direction = TableDirection(Direction.directionAt);
         var rawWire = TableWire.get(editor);
-
-        var sz = TableResize(rawWire, direction);
-        sz.on();
-        sz.events.startDrag.bind(function () {
-          selection = Option.some(editor.selection.getRng());
-        });
-        sz.events.afterResize.bind(function () {
-          editor.focus();
-          selection.each(function (rng) {
-            editor.selection.setRng(rng);
+        if (editor.settings.object_resizing && editor.settings.table_resize_bars !== false &&
+          (editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
+          var sz = TableResize(rawWire, direction);
+          sz.on();
+          sz.events.startDrag.bind(function () {
+            selection = Option.some(editor.selection.getRng());
           });
-        });
+          sz.events.afterResize.bind(function () {
+            editor.focus();
+            selection.each(function (rng) {
+              editor.selection.setRng(rng);
+            });
+          });
 
-        resize = Option.some(sz);
+          resize = Option.some(sz);
+        }
       });
 
       editor.on('remove', function () {
