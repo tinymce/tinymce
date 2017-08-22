@@ -5,6 +5,8 @@ define(
     'ephox.darwin.api.TableSelection',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
     'tinymce.plugins.tablenew.actions.TableActions',
@@ -12,13 +14,27 @@ define(
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableSelection, Option, TableLookup, Element, Tools, TableActions, TableTargets, Selections) {
+  function (TableSelection, Option, TableLookup, Insert, Remove, Element, Tools, TableActions, TableTargets, Selections) {
     var each = Tools.each;
 
     var registerCommands = function (editor, dialogs) {
 
       var actions = TableActions(editor);
       var selections = Selections(editor);
+
+      var eraseTable = function () {
+        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+        var table = TableLookup.table(cell);
+        table.bind(function (table) {
+          var cursor = Element.fromText('');
+          Insert.after(table, cursor);
+          Remove.remove(table);
+          var rng = editor.dom.createRng();
+          rng.setStart(cursor.dom(), 0);
+          rng.setEnd(cursor.dom(), 0);
+          editor.selection.setRng(rng);
+        });
+      };
 
       var actOnSelection = function (execute) {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
@@ -91,12 +107,7 @@ define(
         //   grid.splitCols(false);
         // },
 
-        mceTableDelete: function (grid) {
-          if (resizeBars) {
-            resizeBars.clearBars();
-          }
-          grid.deleteTable();
-        }
+        mceTableDelete: eraseTable
       }, function (func, name) {
         editor.addCommand(name, func);
       });

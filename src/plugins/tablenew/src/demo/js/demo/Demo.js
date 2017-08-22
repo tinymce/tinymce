@@ -28,8 +28,8 @@ define(
         selector: "textarea.tinymce",
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "tablenew code",
-        toolbar: "tablenew code",
+        plugins: "table code",
+        toolbar: "table code",
         media_dimensions: false,
         // media_live_embeds: false,
         // media_url_resolver: function (data, resolve) {

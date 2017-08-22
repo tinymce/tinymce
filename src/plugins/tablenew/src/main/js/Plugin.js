@@ -25,10 +25,11 @@ define(
     'tinymce.plugins.tablenew.actions.TableWire',
     'tinymce.plugins.tablenew.queries.Direction',
     'tinymce.plugins.tablenew.selection.CellSelection',
+    'tinymce.plugins.tablenew.ui.Buttons',
     'tinymce.plugins.tablenew.ui.MenuItems',
     'tinymce.plugins.tablenew.ui.Dialogs'
   ],
-  function (Option, TableDirection, TableResize, PluginManager, TableCommands, TableWire, Direction, CellSelection, MenuItems, Dialogs) {
+  function (Option, TableDirection, TableResize, PluginManager, TableCommands, TableWire, Direction, CellSelection, Buttons, MenuItems, Dialogs) {
     function Plugin(editor) {
       var cellSelection = CellSelection(editor);
 
@@ -36,15 +37,9 @@ define(
 
       TableCommands.registerCommands(editor, dialogs);
 
-      var menuItems = MenuItems(editor);
-
-      editor.addMenuItem('inserttable', menuItems.insertTable);
-
-      editor.addMenuItem('row', menuItems.row);
-
-      editor.addMenuItem('column', menuItems.column);
-
-      editor.addMenuItem('cell', menuItems.cell);
+      MenuItems.addMenuItems(editor);
+      Buttons.addButtons(editor);
+      Buttons.addToolbars(editor);
 
       var resize = Option.none();
       var selection = Option.none();
@@ -75,7 +70,7 @@ define(
       });
     }
 
-    PluginManager.add('tablenew', Plugin);
+    PluginManager.add('table', Plugin);
 
     return function () { };
   }

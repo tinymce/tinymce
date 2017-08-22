@@ -2,7 +2,6 @@ define(
   'tinymce.plugins.tablenew.ui.MenuItems',
 
   [
-    'ephox.darwin.api.TableSelection',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.TableLookup',
@@ -12,13 +11,14 @@ define(
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableSelection, Arr, Option, TableLookup, Element, TableActions, TableTargets, Selections) {
-    return function (editor) {
+  function (Arr, Option, TableLookup, Element, TableActions, TableTargets, Selections) {
+    var addMenuItems = function (editor) {
       var actions = TableActions(editor);
       var selections = Selections(editor);
 
       var targets = Option.none();
 
+      var tableCtrls = [];
       var cellCtrls = [];
       var mergeCtrls = [];
       var unmergeCtrls = [];
@@ -27,8 +27,18 @@ define(
         ctrl.disabled(true);
       };
 
-      var cellCtrlEnable = function (ctrl) {
+      var ctrlEnable = function (ctrl) {
         ctrl.disabled(false);
+      };
+
+      var pushTable = function () {
+        var self = this;
+        tableCtrls.push(self);
+        targets.fold(function () {
+          noTargetDisable(self);
+        }, function (targets) {
+          ctrlEnable(self);
+        });
       };
 
       var pushCell = function () {
@@ -37,7 +47,7 @@ define(
         targets.fold(function () {
           noTargetDisable(self);
         }, function (targets) {
-          cellCtrlEnable(self);
+          ctrlEnable(self);
         });
       };
 
@@ -63,11 +73,13 @@ define(
 
       var setDisabledCtrls = function () {
         targets.fold(function () {
+          Arr.each(tableCtrls, noTargetDisable);
           Arr.each(cellCtrls, noTargetDisable);
           Arr.each(mergeCtrls, noTargetDisable);
           Arr.each(unmergeCtrls, noTargetDisable);
         }, function (targets) {
-          Arr.each(cellCtrls, cellCtrlEnable);
+          Arr.each(tableCtrls, ctrlEnable);
+          Arr.each(cellCtrls, ctrlEnable);
           Arr.each(mergeCtrls, function (mergeCtrl) {
             mergeCtrl.disabled(targets.mergable().isNone());
           });
@@ -216,6 +228,13 @@ define(
         };
       }
 
+      var deleteTable = {
+        text: 'Delete table',
+        context: 'table',
+        onPostRender: pushTable,
+        cmd: 'mceTableDelete'
+      };
+
       var row = {
         text: 'Row',
         context: 'table',
@@ -246,12 +265,14 @@ define(
         ]
       };
 
-      return {
-        insertTable: insertTable,
-        row: row,
-        column: column,
-        cell: cell
-      };
+      editor.addMenuItem('inserttable', insertTable);
+      editor.addMenuItem('deletetable', deleteTable);
+      editor.addMenuItem('row', row);
+      editor.addMenuItem('column', column);
+      editor.addMenuItem('cell', cell);
+    };
+    return {
+      addMenuItems: addMenuItems
     };
   }
 );
