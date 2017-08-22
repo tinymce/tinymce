@@ -3,6 +3,7 @@ asynctest(
 
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
@@ -29,8 +30,8 @@ asynctest(
   ],
 
   function (
-    Assertions, Logger, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger, GuiSetup, Fun, TinyApis, TinyLoader,
-    Body, Attr, Traverse, ThemeManager, Features, Theme, FormatChangers
+    Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger, GuiSetup, Fun,
+    TinyApis, TinyLoader, Body, Attr, Traverse, ThemeManager, Features, Theme, FormatChangers
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -116,6 +117,30 @@ asynctest(
         );
       };
 
+      var sCheckP1 = function (situation) {
+        return GeneralSteps.sequence([
+          sSetP1,
+          sAssertListIs('checking numlist: ' + situation, memNumlist, true),
+          sAssertListIs('checking bullist: ' + situation, memBullist, false)
+        ]);
+      };
+
+      var sCheckP2 = function (situation) {
+        return GeneralSteps.sequence([
+          sSetP2,
+          sAssertListIs('checking numlist: ' + situation, memNumlist, false),
+          sAssertListIs('checking bullist: ' + situation, memBullist, false)
+        ]);
+      };
+
+      var sCheckP3 = function (situation) {
+        return GeneralSteps.sequence([
+          sSetP3,
+          sAssertListIs('checking numlist: ' + situation, memNumlist, false),
+          sAssertListIs('checking bullist: ' + situation, memBullist, true)
+        ]);
+      };
+
       Pipeline.async({}, [
         GuiSetup.mAddStyles(Traverse.owner(body), [
           '.tinymce-mobile-toolbar-button { padding: 2px; border: 1px solid black; background: white; }',
@@ -127,18 +152,10 @@ asynctest(
         apis.sSetContent(
           '<ol><li>This is an ordered list</li></ol><p>Normal paragraph</p><ul><li>Bullet list</li></ul>'
         ),
-        sSetP1,
-        sAssertListIs('checking numlist: initial selection in p1', memNumlist, false),
-        sAssertListIs('checking bullist: initial selection in ol', memBullist, false),
-        sSetP2,
-        sAssertListIs('checking numlist: ol >>> p', memNumlist, false),
-        sAssertListIs('checking bullist: ol >>> p', memBullist, false),
-        sSetP3,
-        sAssertListIs('checking numlist: p >>> ul', memNumlist, false),
-        sAssertListIs('checking bullist: p >>> ul', memBullist, true),
-        sSetP1,
-        sAssertListIs('checking numlist: ul >>> ol', memNumlist, true),
-        sAssertListIs('checking bullist: ul >>> ol', memBullist, false),
+        sCheckP1('initial selection in ol'),
+        sCheckP2('ol >>> p'),
+        sCheckP3('p >>> ul'),
+        // sCheckP1('ul >>> ol'),
         GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }, {
