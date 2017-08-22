@@ -188,7 +188,9 @@ define(
         };
 
         // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-        pasteBinClones = editor.dom.select('body > div[id=mcepastebin]');
+        pasteBinClones = Tools.grep(editor.getBody().childNodes, function (elm) {
+          return elm.id === 'mcepastebin';
+        });
         pasteBinElm = pasteBinClones.shift();
 
         // if clones were found, move their content into the first bin
