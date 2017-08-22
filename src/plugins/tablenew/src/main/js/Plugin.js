@@ -41,11 +41,13 @@ define(
 
       editor.addMenuItem('cell', menuItems.cell);
 
+      var resize = Option.none();
       var selection = Option.none();
 
       editor.on('init', function () {
         var direction = TableDirection(Direction.directionAt);
         var rawWire = TableWire.get(editor);
+
         var sz = TableResize(rawWire, direction);
         sz.on();
         sz.events.startDrag.bind(function () {
@@ -57,11 +59,15 @@ define(
             editor.selection.setRng(rng);
           });
         });
-        editor.on('remove', function() {
+
+        resize = Option.some(sz);
+      });
+
+      editor.on('remove', function () {
+        resize.each(function (sz) {
           sz.destroy();
         });
       });
-
     }
 
     PluginManager.add('tablenew', Plugin);
