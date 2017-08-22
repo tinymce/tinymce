@@ -61,7 +61,6 @@ asynctest(
       })
     );
 
-
     realm.setToolbarGroups([
       {
         label: 'group1',
@@ -75,7 +74,7 @@ asynctest(
 
     var sTestAlpha = GeneralSteps.sequence([
       tEditor.sAssertEq('Initially empty', [ ]),
-      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-alpha'),
+      TestUi.sClickComponent(realm, memAlpha),
       tEditor.sAssertEq('After clicking on alpha', [
         {
           method: 'execCommand',
@@ -89,7 +88,7 @@ asynctest(
 
     var sTestBeta = GeneralSteps.sequence([
       tEditor.sAssertEq('before beta, store is empty', [ ]),
-      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-beta'),
+      TestUi.sClickComponent(realm, memBeta),
       tEditor.sAssertEq('After clicking on beta', [
         {
           method: 'execCommand',

@@ -4,6 +4,7 @@ define(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
@@ -16,7 +17,7 @@ define(
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Assertions, Chain, Step, UiControls, UiFinder, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Traverse) {
+  function (Assertions, Chain, Mouse, Step, UiControls, UiFinder, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Traverse) {
     var cGetFocused = Chain.binder(function () {
       return Focus.active().fold(function () {
         return Result.error('Could not find focused element');
@@ -59,6 +60,15 @@ define(
       });
     };
 
+    var sClickComponent = function (realm, memento) {
+      return Chain.asStep({ }, [
+        Chain.mapper(function () {
+          return memento.get(realm.socket()).element();
+        }),
+        Mouse.cClick
+      ]);
+    };
+
     return {
       cGetFocused: cGetFocused,
       cGetParent: cGetParent,
@@ -66,6 +76,7 @@ define(
       sSetFieldOptValue: sSetFieldOptValue,
 
       sTogglingIs: sTogglingIs,
+      sClickComponent: sClickComponent,
       sStartEditor: sStartEditor
     };
   }
