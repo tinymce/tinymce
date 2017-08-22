@@ -20,7 +20,7 @@ define(
     var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist' ];
 
     var extract = function (toolbar) {
-      return toolbar.split(/\s+/);
+      return toolbar.length > 0 ? toolbar.split(/\s+/) : [ ];
     };
 
     var identifyFromArray = function (toolbar) {
@@ -89,13 +89,13 @@ define(
     };
 
     var detect = function (realm, editor, settings) {
-      // Firstly, work out what items are in the toolbar
+      // Firstly, work out which items are in the toolbar
       var itemNames = identify(settings);
 
       // Now, generates the different features
       var features = setup(realm, editor);
 
-      // Now, if each feature is supported, return it
+      // Now, build the list only including supported features
       return Arr.bind(itemNames, function (iName) {
         return features[iName].isSupported() ? [ features[iName].spec() ] : [];
       });
