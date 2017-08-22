@@ -2,6 +2,8 @@ asynctest(
   'Browser Test: ui.ListTest',
 
   [
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
@@ -13,7 +15,7 @@ asynctest(
     'tinymce.themes.mobile.Theme'
   ],
 
-  function (GuiFactory, Attachment, Gui, Fun, TinyLoader, Body, ThemeManager, Features, Theme) {
+  function (Behaviour, Replacing, GuiFactory, Attachment, Gui, Fun, TinyLoader, Body, ThemeManager, Features, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -23,17 +25,30 @@ asynctest(
     var body = Body.body();
     Attachment.attachSystem(body, alloy);
 
+    var toolbar = GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'test-toolbar' ]
+      },
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    });
+
     var socket = GuiFactory.build({
       dom: {
-        tag: 'div'
+        tag: 'div',
+        classes: [ 'test-socket' ]
       }
     });
 
+    alloy.add(toolbar);
     alloy.add(socket);
     
     ThemeManager.add('headlesstest', function (editor) {
       return {
         renderUI: function (args) {
+          editor.fire('SkinLoaded');
           return {
             iframeContainer: socket.element().dom(),
             editorContainer: alloy.element().dom()
@@ -47,15 +62,22 @@ asynctest(
     };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      // var features = Features.setup(realm, editor);
-      // console.log('features', features);
-      // onFailure('no');
+      var features = Features.setup(realm, editor);
+      console.log('features', features);
+
+      Replacing.set(toolbar, [
+        features.bullist.spec(),
+        features.numlist.spec()
+      ]);
+
+
+      onFailure('no');
     }, {
-      theme: 'headlesstest',
-      toolbar: 'bullist numlist undo',
-      setup: function (ed) {
-        ed.addButton('bullist', { });
-      }
+      theme: 'headlesstest'
+      // toolbar: 'bullist numlist undo',
+      // setup: function (ed) {
+      //   ed.addButton('bullist', { });
+      // }
     }, function () {
       success();
     }, failure);
