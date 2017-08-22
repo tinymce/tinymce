@@ -21,19 +21,24 @@ define(
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableResize',
     'tinymce.core.PluginManager',
+    'tinymce.plugins.tablenew.actions.TableCommands',
     'tinymce.plugins.tablenew.actions.TableWire',
     'tinymce.plugins.tablenew.queries.Direction',
     'tinymce.plugins.tablenew.selection.CellSelection',
-    'tinymce.plugins.tablenew.ui.InsertTable',
-    'tinymce.plugins.tablenew.ui.MenuItems'
+    'tinymce.plugins.tablenew.ui.MenuItems',
+    'tinymce.plugins.tablenew.ui.Dialogs'
   ],
-  function (Option, TableDirection, TableResize, PluginManager, TableWire, Direction, CellSelection, InsertTable, MenuItems) {
+  function (Option, TableDirection, TableResize, PluginManager, TableCommands, TableWire, Direction, CellSelection, MenuItems, Dialogs) {
     function Plugin(editor) {
       var cellSelection = CellSelection(editor);
 
+      var dialogs = new Dialogs(editor);
+
+      TableCommands.registerCommands(editor, dialogs);
+
       var menuItems = MenuItems(editor);
 
-      editor.addMenuItem('inserttable', InsertTable.insertTableMenuItem(editor));
+      editor.addMenuItem('inserttable', menuItems.insertTable);
 
       editor.addMenuItem('row', menuItems.row);
 
