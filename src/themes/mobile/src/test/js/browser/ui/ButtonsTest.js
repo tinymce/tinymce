@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.node.Body',
@@ -20,7 +21,10 @@ asynctest(
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (GeneralSteps, Logger, Mouse, Pipeline, Step, Attachment, GuiSetup, Body, Class, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons, IosRealm) {
+  function (
+    GeneralSteps, Logger, Mouse, Pipeline, Step, Memento, Attachment, GuiSetup, Body, Class, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons,
+    IosRealm
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -35,7 +39,7 @@ asynctest(
     var doc = Traverse.owner(body);
 
     TestStyles.addStyles();
-    
+
     var unload = function () {
       TestStyles.removeStyles();
       Attachment.detachSystem(realm.system());
@@ -43,16 +47,28 @@ asynctest(
 
     var tEditor = TestEditor();
 
+    var memAlpha = Memento.record(
+      Buttons.forToolbarCommand(tEditor.editor(), 'alpha')
+    );
+
+    var memBeta = Memento.record(
+      Buttons.forToolbarStateCommand(tEditor.editor(), 'beta')
+    );
+
+    var memGamma = Memento.record(
+      Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
+        tEditor.adder('gamma-action')();
+      })
+    );
+
 
     realm.setToolbarGroups([
       {
         label: 'group1',
         items: [
-          Buttons.forToolbarCommand(tEditor.editor(), 'alpha'),
-          Buttons.forToolbarStateCommand(tEditor.editor(), 'beta'),
-          Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
-            tEditor.adder('gamma-action')();
-          })
+          memAlpha.asSpec(),
+          memBeta.asSpec(),
+          memGamma.asSpec()
         ]
       }
     ]);
