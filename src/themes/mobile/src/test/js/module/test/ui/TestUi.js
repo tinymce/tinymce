@@ -8,16 +8,18 @@ define(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.log.AlloyLogger',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Assertions, Chain, Mouse, Step, UiControls, UiFinder, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Traverse) {
+  function (Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Attr, Traverse) {
     var cGetFocused = Chain.binder(function () {
       return Focus.active().fold(function () {
         return Result.error('Could not find focused element');
@@ -43,15 +45,6 @@ define(
       }, sSetFieldValue);
     };
 
-    var sTogglingIs = function (alloy, selector, state) {
-      return Step.sync(function () {
-        var comp = UiFinder.findIn(alloy.element(), selector).bind(function (el) {
-          return alloy.getByDom(el);
-        }).getOrDie();
-        Assertions.assertEq('Checking toggling of ' + AlloyLogger.element(comp.element()), state, Toggling.isOn(comp));
-      });
-    };
-
     var sStartEditor = function (alloy) {
       return Step.sync(function () {
         var button = UiFinder.findIn(alloy.element(), '[role="button"]').getOrDie();
@@ -69,13 +62,29 @@ define(
       ]);
     };
 
+    var sWaitForToggledState = function (label, state, realm, memento) {
+      return Waiter.sTryUntil(
+        label,
+        Step.sync(function () {
+          var component = memento.get(realm.socket());
+          Assertions.assertEq(
+            'Selected/Pressed state of component: (' + Attr.get(component.element(), 'class') + ')',
+            state,
+            Toggling.isOn(component)
+          );
+        }),
+        100,
+        1000
+      );
+    };
+
     return {
       cGetFocused: cGetFocused,
       cGetParent: cGetParent,
       sSetFieldValue: sSetFieldValue,
       sSetFieldOptValue: sSetFieldOptValue,
 
-      sTogglingIs: sTogglingIs,
+      sWaitForToggledState: sWaitForToggledState,
       sClickComponent: sClickComponent,
       sStartEditor: sStartEditor
     };

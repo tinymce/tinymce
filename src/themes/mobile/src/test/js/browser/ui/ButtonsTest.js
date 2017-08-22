@@ -65,6 +65,12 @@ asynctest(
     var sClickBeta = TestUi.sClickComponent(realm, memBeta);
     var sClickGamma = TestUi.sClickComponent(realm, memGamma);
 
+    var sCheckComponent = function (label, state) {
+      return function (memento) {
+        return TestUi.sWaitForToggledState(label, state, realm, memento);
+      };
+    };
+
     realm.setToolbarGroups([
       {
         label: 'group1',
@@ -102,7 +108,7 @@ asynctest(
         }
       ]),
       tEditor.sClear,
-      TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', false),
+      sCheckComponent('Initially, beta should be unselected', false)(memBeta),
       // Fire a format change
       Step.sync(function () {
         realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
@@ -110,10 +116,7 @@ asynctest(
           state: true
         });
       }),
-      Logger.t(
-        'Checking toggle after broadcasting event for beta',
-        TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', true)
-      ),
+      sCheckComponent('After broadcast, beta should be selected', true)(memBeta),
       tEditor.sClear
     ]);
 
@@ -122,7 +125,7 @@ asynctest(
       sClickGamma,
       tEditor.sAssertEq('After clicking on gamma', [ 'gamma-action' ]),
       tEditor.sClear,
-      TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', false),
+      sCheckComponent('Initially, gamma should be unselected', false)(memGamma),
       // Fire a format change
       Step.sync(function () {
         realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
@@ -130,10 +133,7 @@ asynctest(
           state: true
         });
       }),
-      Logger.t(
-        'Checking toggle after broadcasting event for gamma',
-        TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', true)
-      )
+      sCheckComponent('After broadcast, gamma should be selected', true)(memGamma)
     ]);
 
     Pipeline.async({}, [
