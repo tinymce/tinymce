@@ -61,6 +61,10 @@ asynctest(
       })
     );
 
+    var sClickAlpha = TestUi.sClickComponent(realm, memAlpha);
+    var sClickBeta = TestUi.sClickComponent(realm, memBeta);
+    var sClickGamma = TestUi.sClickComponent(realm, memGamma);
+
     realm.setToolbarGroups([
       {
         label: 'group1',
@@ -74,7 +78,7 @@ asynctest(
 
     var sTestAlpha = GeneralSteps.sequence([
       tEditor.sAssertEq('Initially empty', [ ]),
-      TestUi.sClickComponent(realm, memAlpha),
+      sClickAlpha,
       tEditor.sAssertEq('After clicking on alpha', [
         {
           method: 'execCommand',
@@ -88,7 +92,7 @@ asynctest(
 
     var sTestBeta = GeneralSteps.sequence([
       tEditor.sAssertEq('before beta, store is empty', [ ]),
-      TestUi.sClickComponent(realm, memBeta),
+      sClickBeta,
       tEditor.sAssertEq('After clicking on beta', [
         {
           method: 'execCommand',
@@ -115,7 +119,7 @@ asynctest(
 
     var sTestGamma = GeneralSteps.sequence([
       tEditor.sAssertEq('before gamma, store is empty', [ ]),
-      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-gamma-class'),
+      sClickGamma,
       tEditor.sAssertEq('After clicking on gamma', [ 'gamma-action' ]),
       tEditor.sClear,
       TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', false),
