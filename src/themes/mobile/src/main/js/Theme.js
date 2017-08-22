@@ -14,11 +14,12 @@ define(
     'ephox.sugar.api.node.Node',
     'global!document',
     'global!window',
-    'tinymce.core.ThemeManager',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
     'tinymce.themes.mobile.channels.TinyChannels',
+    'tinymce.themes.mobile.features.Features',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.Orientation',
     'tinymce.themes.mobile.ui.AndroidRealm',
@@ -36,9 +37,9 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, ThemeManager, DOMUtils, Api, TinyCodeDupe,
-    TinyChannels, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls, FormatChangers,
-    SkinLoaded
+    Swapping, AlloyTriggers, Attachment, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, document, window, DOMUtils, ThemeManager, Api, TinyCodeDupe,
+    TinyChannels, Features, Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider, ImagePicker, IosRealm, LinkButton, CssUrls,
+    FormatChangers, SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -196,24 +197,12 @@ define(
             ]
           };
 
+          var items = Features.detect(realm, editor, editor.settings);
+          
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
-            items: [
-              Buttons.forToolbarCommand(editor, 'undo'),
-              Buttons.forToolbarStateCommand(editor, 'bold'),
-              Buttons.forToolbarStateCommand(editor, 'italic'),
-              LinkButton.sketch(realm, editor),
-              ImagePicker.sketch(editor),
-              HeadingSlider.sketch(realm, editor),
-              // NOTE: Requires "lists" plugin.
-              Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
-                editor.execCommand('InsertUnorderedList', null, false);
-              }),
-
-              FontSizeSlider.sketch(realm, editor),
-              ColorSlider.sketch(realm, editor)
-            ]
+            items: items
           };
 
           var extraGroup = {

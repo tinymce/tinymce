@@ -29,6 +29,7 @@ define(
       EditorManager.init({
         selector: '.tiny-text',
         theme: 'mobile',
+        toolbar: [ 'undo', 'redo', 'bold', 'italic', 'underline', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
         plugins: [
           'lists', // Required for list functionality (commands),
           'autolink', // Required for turning pasted text into hyperlinks

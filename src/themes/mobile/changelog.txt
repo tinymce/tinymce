@@ -1,0 +1,11 @@
+Mobile theme changelog
+
+v4
+
+- support custom toolbar configuration
+- added support for: redo, unlink, and numlist
+- only load numlist and bullist if lists plugin is present
+
+v3
+
+...
