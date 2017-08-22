@@ -1,6 +1,6 @@
 {
   "name": "@ephox/alloy",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Ui Framework",
   "main": "index.js",
   "dependencies": {

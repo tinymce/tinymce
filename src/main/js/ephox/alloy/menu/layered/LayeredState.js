@@ -23,13 +23,6 @@ define(
         Fun.constant([ ])
       );
 
-      // var toMenuValues = function (sMenus) {
-      //   return Obj.map(sMenus, function (menu) {
-      //     var menuItems = SelectorFilter.descendants(menu.element(), itemType.get());
-      //     return Arr.map(menuItems, function (mi) { return Attr.get(mi, itemValue.get()); });
-      //   });
-      // };
-
       var clear = function () {
         expansions.set({});
         menus.set({});
@@ -59,7 +52,6 @@ define(
       };
 
       var collapse = function (itemValue) {
-        console.log('paths', paths.get());
         // Look up which key has the itemValue
         return Objects.readOptFrom(paths.get(), itemValue).bind(function (path) {
           return path.length > 1 ? Option.some(path.slice(1)) : Option.none();

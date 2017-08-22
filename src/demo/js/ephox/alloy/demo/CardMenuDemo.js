@@ -206,18 +206,7 @@ define(
       var menu = HtmlDisplay.section(
         gui,
         'This menu is a card menu',
-        // {
-        //   dom: {
-        //     tag: 'div',
-        //     styles: {
-        //       // overflow: 'hidden',
-        //       // width: '800px'
-        //     }
-        //   },
-        //   components: [
-            tieredMenu
-        //   ]
-        // }
+        tieredMenu
       );
     };
   }
