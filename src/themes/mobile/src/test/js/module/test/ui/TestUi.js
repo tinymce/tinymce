@@ -16,10 +16,11 @@ define(
     'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.search.Traverse'
+    'ephox.sugar.api.search.Traverse',
+    'tinymce.themes.mobile.channels.TinyChannels'
   ],
 
-  function (Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Attr, Traverse) {
+  function (Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter, Toggling, AlloyTriggers, NativeEvents, AlloyLogger, Result, Focus, Attr, Traverse, TinyChannels) {
     var cGetFocused = Chain.binder(function () {
       return Focus.active().fold(function () {
         return Result.error('Could not find focused element');
@@ -78,6 +79,15 @@ define(
       );
     };
 
+    var sBroadcastState = function (realm, channels, command, state) {
+      return Step.sync(function () {
+        realm.system().broadcastOn(channels, {
+          command: 'beta',
+          state: true
+        });
+      });
+    };
+
     return {
       cGetFocused: cGetFocused,
       cGetParent: cGetParent,
@@ -86,7 +96,9 @@ define(
 
       sWaitForToggledState: sWaitForToggledState,
       sClickComponent: sClickComponent,
-      sStartEditor: sStartEditor
+      sStartEditor: sStartEditor,
+
+      sBroadcastState: sBroadcastState
     };
   }
 );
