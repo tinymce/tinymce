@@ -2,6 +2,7 @@ define(
   'ephox.snooker.resize.BarManager',
 
   [
+    'ephox.compass.Arr',
     'ephox.dragster.api.Dragger',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
@@ -13,6 +14,7 @@ define(
     'ephox.snooker.util.CellUtils',
     'ephox.syrup.api.Attr',
     'ephox.syrup.api.Class',
+    'ephox.syrup.api.Compare',
     'ephox.syrup.api.Css',
     'ephox.syrup.api.DomEvent',
     'ephox.syrup.api.Node',
@@ -21,7 +23,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Attr, Class, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
+  function (Arr, Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Attr, Class, Compare, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
     var resizeBar = Styles.resolve('resizer-bar');
     var resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
@@ -85,14 +87,14 @@ define(
         resizing.go(wire.parent());
       };
 
-      /* Start the dragging when the bar is clicked, storing the initial position. */
+      /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
       var mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
         if (Bars.isRowBar(event.target())) handler(event.target(), 'top');
 
         if (Bars.isColBar(event.target())) handler(event.target(), 'left');
       });
 
-      /* When the mouse moves within the table, refresh the bars. */
+      /* mouseover on table: When the mouse moves within the table, refresh the bars. */
       var mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
@@ -103,17 +105,22 @@ define(
       });
 
       /* When the mouse moves out of the table (or a resizer div that is not dragging), remove the bars */
-      var mouseout = DomEvent.bind(wire.view(), 'mouseout', function (event) {
+      var hMouseout = function (event) {
         if (Node.name(event.target()) === 'table' || (Node.name(event.target()) === 'div' &&
             Class.has(event.target(), resizeBar) && !Class.has(event.target(), resizeBarDragging))) {
           Bars.destroy(wire);
         }
-      });
+      };
+
+      // mouseout of both tables and resize bars:
+      //  if 'view' is 'parent' or its ancestor then we only need a handler on 'view', otherwise both need handlers
+      var nodes = [ wire.view() ].concat( (Compare.eq(wire.view(), wire.parent()) || Compare.contains(wire.view(), wire.parent())) ? [] : [ wire.parent() ]);
+      var arrMouseout = Arr.map(nodes, function (node) { DomEvent.bind(node, 'mouseout', hMouseout); });
 
       var destroy = function () {
         mousedown.unbind();
         mouseover.unbind();
-        mouseout.unbind();
+        Arr.map(arrMouseout, function (h) { h.unbind(); } );
         firefoxDrag.unbind();
         resizing.destroy();
         Bars.destroy(wire);
