@@ -82,8 +82,8 @@ define(
         link: feature(Option.none(), link),
         unlink: feature(Option.none(), unlink),
         image: feature(Option.none(), image),
-        bullist: feature(Option.none(), bullist),
-        numlist: feature(Option.none(), numlist),
+        bullist: feature(Option.some('bullist'), bullist),
+        numlist: feature(Option.some('numlist'), numlist),
         fontsizeselect: feature(Option.none(), fontsizeselect),
         forecolor: feature(Option.none(), forecolor)
       };
