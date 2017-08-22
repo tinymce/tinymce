@@ -17,6 +17,8 @@ define(
   ],
 
   function (Objects, Arr, Fun, Option, Type, setTimeout, window, Buttons, ColorSlider, FontSizeSlider, ImagePicker, LinkButton) {
+    var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist' ];
+
     var extract = function (toolbar) {
       return toolbar.split(/\s+/);
     };
@@ -29,7 +31,7 @@ define(
 
     var identify = function (settings) {
       // Firstly, flatten the toolbar
-      var toolbar = settings.toolbar !== undefined ? settings.toolbar : [ ];
+      var toolbar = settings.toolbar !== undefined ? settings.toolbar : defaults;
       return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
     };
 

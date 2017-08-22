@@ -1,0 +1,10 @@
+Mobile theme changelog
+
+v4
+
+- support custom toolbar configuration
+- added support for: redo, unlink, and numlist
+
+v3
+
+...
