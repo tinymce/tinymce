@@ -2,58 +2,40 @@ define(
   'tinymce.themes.mobile.Theme',
 
   [
-    'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Swapping',
     'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.debugging.Debugging',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Id',
-    'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'global!document',
-    'global!window',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
     'tinymce.core.ui.Api',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
-    'tinymce.themes.mobile.channels.Receivers',
     'tinymce.themes.mobile.channels.TinyChannels',
+    'tinymce.themes.mobile.features.Features',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.touch.view.Orientation',
     'tinymce.themes.mobile.ui.AndroidRealm',
     'tinymce.themes.mobile.ui.Buttons',
-    'tinymce.themes.mobile.ui.ColorSlider',
-    'tinymce.themes.mobile.ui.FontSizeSlider',
-    'tinymce.themes.mobile.ui.HeadingSlider',
-    'tinymce.themes.mobile.ui.ImagePicker',
     'tinymce.themes.mobile.ui.IosRealm',
-    'tinymce.themes.mobile.ui.LinkButton',
-    'tinymce.themes.mobile.ui.StylesMenu',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
-    'tinymce.themes.mobile.util.SkinLoaded',
-    'tinymce.themes.mobile.util.StyleFormats'
+    'tinymce.themes.mobile.util.SkinLoaded'
   ],
 
 
   function (
-    Behaviour, Swapping, Toggling, Memento, AlloyTriggers, Attachment, Debugging, Objects,
-    Arr, Cell, Fun, Id, Option, PlatformDetection, Focus, Insert, DomEvent, Element, Node,
-    document, window, DOMUtils, ThemeManager, Api, TinyCodeDupe, Receivers, TinyChannels,
-    Styles, Orientation, AndroidRealm, Buttons, ColorSlider, FontSizeSlider, HeadingSlider,
-    ImagePicker, IosRealm, LinkButton, StylesMenu, CssUrls, FormatChangers, SkinLoaded,
-    StyleFormats
+    Swapping, Toggling, AlloyTriggers, Attachment, Debugging, Cell, Fun, PlatformDetection,
+    Focus, Insert, Element, Node, DOMUtils, ThemeManager, Api, TinyCodeDupe, TinyChannels,
+    Features, Styles, Orientation, AndroidRealm, Buttons, IosRealm, CssUrls, FormatChangers,
+    SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -188,7 +170,7 @@ define(
           });
 
           var hideDropup = function () {
-            styleFormatsButton.getOpt(realm.system().root()).fold(function () {
+            features.styleselect.lookup(realm.system().root()).fold(function () {
               realm.dropup().disappear(Fun.noop, {});
             }, function (button) {
               realm.dropup().disappear(Toggling.off, button);
@@ -231,50 +213,13 @@ define(
             ]
           };
 
-          var styleFormats = StyleFormats.register(editor, editor.settings);
-
-          var styleFormatsMenu = function () {
-            return StyleFormats.ui(editor, styleFormats, function () {
-              editor.fire('scrollIntoView');
-            });
-          };
-
-          var styleFormatsButton = Memento.record(Buttons.forToolbar('font-size', function (button) {
-              editor.fire('toReading');
-              realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
-            }, Behaviour.derive([
-              Toggling.config({
-                toggleClass: Styles.resolve('toolbar-button-selected'),
-                toggleOnExecute: false,
-                aria: {
-                  mode: 'pressed'
-                }
-              }),
-              Receivers.orientation(function (button) {
-                Toggling.off(button);
-              })
-            ])
-          ));
-
+          var features = Features.setup(realm, editor);
+          var items = Features.detect(realm, editor, editor.settings, features);
+          
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
-            items: [
-              Buttons.forToolbarCommand(editor, 'undo'),
-              Buttons.forToolbarStateCommand(editor, 'bold'),
-              Buttons.forToolbarStateCommand(editor, 'italic'),
-              LinkButton.sketch(realm, editor),
-              ImagePicker.sketch(editor),
-              // NOTE: Requires "lists" plugin.
-              Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
-                editor.execCommand('InsertUnorderedList', null, false);
-              }),
-              // HeadingSlider.sketch(realm, editor),
-              styleFormatsButton.asSpec()
-
-              // FontSizeSlider.sketch(realm, editor),
-              // ColorSlider.sketch(realm, editor)
-            ]
+            items: items
           };
 
           var extraGroup = {
