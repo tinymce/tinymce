@@ -40,6 +40,9 @@
 .tinymce-mobile-icon-link:before {
   content: "\e157";
 }
+.tinymce-mobile-icon-unlink:before {
+  content: "\eca2";
+}
 .tinymce-mobile-icon-color:before {
   content: "\e891";
 }
