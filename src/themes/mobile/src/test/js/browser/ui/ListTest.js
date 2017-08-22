@@ -5,7 +5,6 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
@@ -17,7 +16,6 @@ asynctest(
     'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.system.Gui',
-    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun',
     'ephox.mcagar.api.TinyApis',
@@ -25,15 +23,14 @@ asynctest(
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.Traverse',
-    'tinymce.core.ThemeManager',
     'tinymce.themes.mobile.features.Features',
-    'tinymce.themes.mobile.Theme',
+    'tinymce.themes.mobile.test.theme.TestTheme',
     'tinymce.themes.mobile.util.FormatChangers'
   ],
 
   function (
-    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, AlloyLogger,
-    GuiSetup, Fun, TinyApis, TinyLoader, Body, Attr, Traverse, ThemeManager, Features, Theme, FormatChangers
+    Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, Waiter, Behaviour, Replacing, Toggling, GuiFactory, Memento, Attachment, Gui, GuiSetup, Fun, TinyApis,
+    TinyLoader, Body, Attr, Traverse, Features, TestTheme, FormatChangers
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -63,18 +60,8 @@ asynctest(
 
     alloy.add(toolbar);
     alloy.add(socket);
-    
-    ThemeManager.add('headlesstest', function (editor) {
-      return {
-        renderUI: function (args) {
-          editor.fire('SkinLoaded');
-          return {
-            iframeContainer: socket.element().dom(),
-            editorContainer: alloy.element().dom()
-          };
-        }
-      };
-    });
+
+    TestTheme.setup(alloy, socket);
 
     var realm = {
       system: Fun.constant(alloy)
@@ -193,7 +180,7 @@ asynctest(
         GuiSetup.mRemoveStyles
       ], onSuccess, onFailure);
     }, {
-      theme: 'headlesstest'
+      theme: TestTheme.name()
     }, function () {
       success();
     }, failure);
