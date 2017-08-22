@@ -31,10 +31,10 @@ define(
           containerBehaviours: Behaviour.derive([
             Replacing.config({ }),
             Sliding.config({
-              closedClass: 'dropup-closed',
-              openClass: 'dropup-open',
-              shrinkingClass: 'dropup-shrinking',
-              growingClass: 'dropup-growing',
+              closedClass: Styles.resolve('dropup-closed'),
+              openClass: Styles.resolve('dropup-open'),
+              shrinkingClass: Styles.resolve('dropup-shrinking'),
+              growingClass: Styles.resolve('dropup-growing'),
               dimension: {
                 property: 'height'
               },

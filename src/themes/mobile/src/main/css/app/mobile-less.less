@@ -4,6 +4,8 @@
 @import "mask.less";
 @import "android.less";
 @import "../toolstrip/toolstrip.less";
+@import "../menu/dropup.less";
+@import "../menu/styles-menu.less";
 
 @font-face {
   font-family: 'tinymce-mobile';
@@ -24,98 +26,6 @@
   }
 }
 
-/* NEW */
-
-      [role="menu"] {
-        /*display: inline-block;*/
-        height: 100%;
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-
-      [role="menu"].transitioning {
-        transition: transform 0.5s ease-in-out;
-      }
-
-      .demo-tiered-menu {
-        overflow: hidden;
-        outline: 4px solid black;
-        position: relative;
-        width: 100%;
-        font-family: sans-serif;
-      }
-
-      /* size for device size and orientation */
-      .tinymce-mobile-ios-container .demo-tiered-menu {
-        min-height: 200px;
-      }
-
-      .demo-tiered-menu .item {
-        cursor: pointer;
-        padding: 1em 1em;
-        position: relative;
-        display: flex;
-        border-bottom: 1px solid #ddd;
-        color: @toolstrip-foreground-color;
-      }
-
-      .collapser .collapse-icon:before {
-        font-family: 'tinymce-mobile';
-        content: "\e314";
-        color: @toolstrip-foreground-color;
-      }
-
-      .item.item-is-menu:after {
-        font-family: 'tinymce-mobile';
-        content: "\e315";
-        position: absolute;
-        padding-left: 1em;
-        padding-right: 1em;
-        right: 0px;
-        color: @toolstrip-foreground-color;
-      }
-
-      .item.tinymce-mobile-format-matches:after {
-        font-family: 'tinymce-mobile';
-        position: absolute;
-        padding-left: 1em;
-        padding-right: 1em;
-        right: 0px;
-      }
-
-      .separator, .demo-tiered-menu .collapser {
-        border-top: rgb(69, 90, 100);
-        display: flex;
-        min-height: 2.5em;
-        padding-left: 1em;
-        padding-right: 1em;
-        align-items: center;
-        background: @toolstrip-background-color;
-        color: @toolstrip-foreground-color;
-      }
-
-      [data-transitioning-destination="before"][data-transitioning-state], [data-transitioning-state="before"] {
-        transform: translate(-100%);
-      }
-
-      [data-transitioning-destination="current"][data-transitioning-state], [data-transitioning-state="current"] { 
-        transform: translate(0%);
-      }
-
-      [data-transitioning-destination="after"][data-transitioning-state], [data-transitioning-state="after"] {
-        transform: translate(100%);
-      }
-
-      .background-menu {
-        /*display: inline-block;
-        overflow: hidden;
-        color: transparent;
-        background: #cadbee;*/
-      }
-
-
 
 .tinymce-mobile-icon {
   font-family: 'tinymce-mobile';
@@ -132,28 +42,6 @@
   align-items: center;
   height: 100%;
 }
-
-
-.dropup-shrinking {
-  transition: height 0.3s ease-out;
-}
-
-.dropup-growing {
-  transition: height 0.3s ease-in;
-}
-
-.tinymce-mobile-dropup {
-  background: @dropup-background-color;
-}
-
-.tinymce-mobile-dropup.dropup-closed {
-  flex-grow: 0;
-}
-
-.tinymce-mobile-dropup.dropup-open:not(.dropup-growing) {
-  flex-grow: 1;
-}
-
 
 
 .tinymce-mobile-outer-container:not(.tinymce-mobile-fullscreen-maximized) {

@@ -32,48 +32,6 @@ define(
     AddEventsBehaviour, Behaviour, Representing, Toggling, Transitioning, GuiFactory, Memento, AlloyEvents, SystemEvents, Button, Menu, TieredMenu, Objects,
     Arr, Merger, Obj, Css, SelectorFind, Width, Receivers, Scrollables, Styles, Scrollable, FormatChangers
   ) {
-    // var defaultData = TieredMenu.tieredData(
-    //   'styles',
-    //   {
-    //     'styles': makeMenu('Styles', [
-    //       makeItem('headers', 'Headers'),
-    //       makeItem('inline', 'Inline'),
-    //       makeItem('blocks', 'Blocks'),
-    //       makeItem('alignment', 'Alignment')
-    //     ]),
-
-    //     'headers': makeMenu('Headers', [
-    //       makeBack('< Back'),
-    //       makeItem('h1', 'Header 1'),
-    //       makeItem('h2', 'Header 2'),
-    //       makeItem('h3', 'Header 3')
-    //     ]),
-
-    //     'inline': makeMenu('Inline', [
-    //       makeBack('< Back'),
-    //       makeItem('bold', 'Bold'),
-    //       makeItem('italic', 'Italic')
-    //     ]),
-
-    //     'blocks': makeMenu('Blocks', [
-    //       makeBack('< Back'),
-    //       makeItem('p', 'Paragraph'),
-    //       makeItem('blockquote', 'Blockquote'),
-    //       makeItem('div', 'Div')
-    //     ]),
-
-    //     'alignment': makeMenu('Alignment', [
-    //       makeBack('< Back'),
-    //       makeItem('alignleft', 'Left')
-    //     ])
-    //   },
-    //   {
-    //     'headers': 'headers',
-    //     'inline': 'inline',
-    //     'blocks': 'blocks',
-    //     'alignment': 'alignment'
-    //   }
-    // );
 
     var getValue = function (item) {
       return Objects.readOptFrom(item, 'format').getOr(item.title);
@@ -117,13 +75,13 @@ define(
         type: 'item',
         dom: {
           tag: 'div',
-          classes: [ 'collapser' ]
+          classes: [ Styles.resolve('styles-collapser') ]
         },
         components: [
           {
             dom: {
               tag: 'span',
-              classes: [ 'collapse-icon' ]
+              classes: [ Styles.resolve('styles-collapse-icon') ]
             }
           },
           GuiFactory.text(text)
@@ -140,7 +98,7 @@ define(
         type: 'item',
         dom: {
           tag: 'div',
-          classes: isMenu ? [ 'item-is-menu' ] : [ ]
+          classes: isMenu ? [ Styles.resolve('styles-item-is-menu') ] : [ ]
         },
         toggling: {
           toggleOnExecute: false,
@@ -172,7 +130,7 @@ define(
         type: 'separator',
         dom: {
           tag: 'div',
-          classes: [ 'separator' ]
+          classes: [ Styles.resolve('styles-separator') ]
         },
         components: [
           {
@@ -195,13 +153,13 @@ define(
           Button.sketch({
             dom: {
               tag: 'div',
-              classes: [ 'collapser' ]
+              classes: [ Styles.resolve('styles-collapser') ]
             },
             components: collapsable ? [
               {
                 dom: {
                   tag: 'span',
-                  classes: [ 'collapse-icon' ]
+                  classes: [ Styles.resolve('styles-collapse-icon') ]
                 }
               },
               GuiFactory.text(value)
@@ -217,7 +175,7 @@ define(
           {
             dom: {
               tag: 'div',
-              classes: [ 'menu-items-container' ]
+              classes: [ Styles.resolve('styles-menu-items-container') ]
             },
             components: [
               Menu.parts().items({ })
@@ -269,7 +227,7 @@ define(
       var memMenu = Memento.record(TieredMenu.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'demo-tiered-menu' ]
+          classes: [ Styles.resolve('styles-menu') ]
         },
         components: [
           
@@ -316,11 +274,11 @@ define(
         data: dataset.tmenu,
 
         markers: {
-          backgroundMenu: 'background-menu',
-          menu: 'menu',
-          selectedMenu: 'selected-menu',
-          item: 'item',
-          selectedItem: 'selected-item'
+          backgroundMenu: Styles.resolve('styles-background-menu'),
+          menu: Styles.resolve('styles-menu'),
+          selectedMenu: Styles.resolve('styles-selected-menu'),
+          item: Styles.resolve('styles-item'),
+          selectedItem: Styles.resolve('styles-selected-item')
         }
       }));
 
