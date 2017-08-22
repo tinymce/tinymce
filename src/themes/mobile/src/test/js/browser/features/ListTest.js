@@ -1,5 +1,5 @@
 asynctest(
-  'Browser Test: ui.ListTest',
+  'Browser Test: features.ListTest',
 
   [
     'ephox.agar.api.GeneralSteps',

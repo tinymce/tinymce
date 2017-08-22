@@ -48,7 +48,7 @@ module.exports = function (grunt) {
           /* 'src/test/js/browser/ui/SerialisedLinkTest.js', */
           'src/test/js/phantom/**/*Test.js',
           'src/test/js/browser/ui/ButtonsTest.js',
-          'src/test/js/browser/ui/ListTest.js'
+          'src/test/js/browser/features/ListTest.js'
         ],
         projectdir: '../../..',
         browser: 'phantomjs',
