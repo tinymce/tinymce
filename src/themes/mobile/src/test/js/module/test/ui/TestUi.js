@@ -82,8 +82,8 @@ define(
     var sBroadcastState = function (realm, channels, command, state) {
       return Step.sync(function () {
         realm.system().broadcastOn(channels, {
-          command: 'beta',
-          state: true
+          command: command,
+          state: state
         });
       });
     };
