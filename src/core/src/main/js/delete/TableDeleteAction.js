@@ -17,7 +17,7 @@ define(
   function (Adt, Arr, Fun, Option, Options, Struct, Compare, Element, SelectorFilter, SelectorFind) {
     var tableCellRng = Struct.immutable('start', 'end');
     var tableSelection = Struct.immutable('rng', 'table', 'cells');
-    var DeleteAction = Adt.generate([
+    var deleteAction = Adt.generate([
       { removeTable: [ 'element' ] },
       { emptyCells: [ 'cells' ] }
     ]);
@@ -61,17 +61,13 @@ define(
         });
     };
 
-    var getTableSelectionFromRng = function (rng, isRoot) {
+    var getTableSelectionFromRng = function (rootNode, rng) {
+      var isRoot = Fun.curry(Compare.eq, rootNode);
+
       return getCellRng(rng, isRoot)
         .map(function (cellRng) {
           return getTableSelectionFromCellRng(cellRng, isRoot);
         });
-    };
-
-    var getTableSelection = function (rootNode, rng) {
-      var isRoot = Fun.curry(Compare.eq, rootNode);
-
-      return getTableSelectionFromRng(rng, isRoot);
     };
 
     var getCellIndex = function (cellArray, cell) {
@@ -91,19 +87,19 @@ define(
 
     var getAction = function (tableSelection) {
       return getSelectedCells(tableSelection)
-        .bind(function (sliced) {
+        .bind(function (selected) {
           var cells = tableSelection.cells();
 
-          return sliced.length === cells.length ? DeleteAction.removeTable(tableSelection.table()) : DeleteAction.emptyCells(sliced);
+          return selected.length === cells.length ? deleteAction.removeTable(tableSelection.table()) : deleteAction.emptyCells(selected);
         });
     };
 
     var getActionFromCells = function (cells) {
-      return DeleteAction.emptyCells(cells);
+      return deleteAction.emptyCells(cells);
     };
 
     var getActionFromRange = function (rootNode, rng) {
-      return getTableSelection(rootNode, rng)
+      return getTableSelectionFromRng(rootNode, rng)
         .map(getAction);
     };
 
