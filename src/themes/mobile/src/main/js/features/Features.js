@@ -51,7 +51,6 @@ define(
       var italic = Buttons.forToolbarStateCommand(editor, 'italic');
       var underline = Buttons.forToolbarStateCommand(editor, 'underline');
       var link = LinkButton.sketch(realm, editor);
-      // WRITE A TEST FOR THIS
       var unlink = Buttons.forToolbarStateAction(editor, 'unlink', 'link', function () {
         editor.execCommand('unlink', null, false);
       });

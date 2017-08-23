@@ -1,5 +1,10 @@
 Mobile theme changelog
 
+v6
+
+- fixed regression where formatting buttons were not showing selected state
+- implemented selected state for link buttons
+
 v5
 
 - added dropup wiget
