@@ -1,5 +1,9 @@
 Mobile theme changelog
 
+v7
+
+- fixed dropup height in landscape on various devices 
+
 v6
 
 - fixed regression where formatting buttons were not showing selected state
