@@ -31,7 +31,12 @@ define(
   ],
   function (Option, TableDirection, TableResize, PluginManager, TableCommands, TableWire, Direction, CellSelection, Buttons, MenuItems, Dialogs) {
     function Plugin(editor) {
-      var cellSelection = CellSelection(editor);
+
+      var lazyResize = function () {
+        return resize;
+      };
+
+      var cellSelection = CellSelection(editor, lazyResize);
 
       var dialogs = new Dialogs(editor);
 
