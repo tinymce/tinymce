@@ -209,8 +209,16 @@ asynctest(
       editor.setContent('<h1>abcd</h1><p>efgh</p>');
       LegacyUnit.setSelection(editor, 'h1', 2, 'p', 2);
       pressEnter(editor);
-      LegacyUnit.equal(editor.getContent(), '<h1>abgh</h1>');
+      LegacyUnit.equal(editor.getContent(), '<h1>ab</h1><h1>gh</h1>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
+    });
+
+    suite.test('Enter at a range between LI elements', function (editor) {
+      editor.setContent('<ul><li>abcd</li><li>efgh</li></ul>');
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 2, 'li:nth-child(2)', 2);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<ul><li>ab</li><li>gh</li></ul>');
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
     });
 
     suite.test('Enter at end of H1 in HGROUP', function (editor) {
