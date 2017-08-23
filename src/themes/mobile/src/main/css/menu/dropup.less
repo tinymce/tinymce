@@ -4,6 +4,18 @@
     min-height: 200px;
 }
 
+@media @landscape {
+    .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+        min-height: 200px;
+    }
+}
+
+@media @iphone-small-landscape {
+    .tinymce-mobile-ios-container .tinymce-mobile-dropup:not(.tinymce-mobile-dropup-closed) {
+        min-height: 150px;
+    }
+}
+
 .tinymce-mobile-dropup {
     background: @dropup-background-color;
     display: flex;
