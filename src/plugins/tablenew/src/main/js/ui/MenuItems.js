@@ -252,7 +252,8 @@ define(
         menu: [
           { text: 'Insert row before', onclick: cmd('mceTableInsertRowBefore'), onPostRender: pushCell },
           { text: 'Insert row after', onclick: cmd('mceTableInsertRowAfter'), onPostRender: pushCell },
-          { text: 'Delete row', onclick: cmd('mceTableDeleteRow'), onPostRender: pushCell }
+          { text: 'Delete row', onclick: cmd('mceTableDeleteRow'), onPostRender: pushCell },
+          { text: 'Row properties', onclick: cmd('mceTableRowProps'), onPostRender: pushCell }
         ]
       };
 
