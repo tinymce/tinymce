@@ -45,17 +45,15 @@ define(
     };
 
     var setup = function (realm, editor) {
-      var c = function (name) {
-        return Buttons.forToolbarCommand(editor, name);
-      };
-
-      var undo = c('undo');
-      var redo = c('redo');
-      var bold = c('bold');
-      var italic = c('italic');
-      var underline = c('underline');
+      var undo = Buttons.forToolbarCommand(editor, 'undo');
+      var redo = Buttons.forToolbarCommand(editor, 'redo');
+      var bold = Buttons.forToolbarStateCommand(editor, 'bold');
+      var italic = Buttons.forToolbarStateCommand(editor, 'italic');
+      var underline = Buttons.forToolbarStateCommand(editor, 'underline');
       var link = LinkButton.sketch(realm, editor);
-      var unlink = c('unlink');
+      var unlink = Buttons.forToolbarStateAction(editor, 'unlink', 'link', function () {
+        editor.execCommand('unlink', null, false);
+      });
       var image = ImagePicker.sketch(editor);
       var bullist = Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
         editor.execCommand('InsertUnorderedList', null, false);
@@ -76,7 +74,8 @@ define(
         });
       };
 
-      var styleselect = Memento.record(Buttons.forToolbar('font-size', function (button) {
+      var styleselect = Memento.record(
+        Buttons.forToolbar('font-size', function (button) {
           editor.fire('toReading');
           realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
         }, Behaviour.derive([

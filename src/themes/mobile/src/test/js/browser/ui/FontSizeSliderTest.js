@@ -7,10 +7,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.alloy.api.system.Attachment',
     'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.search.Traverse',
-    'tinymce.themes.mobile.test.ui.TestEditor',
     'tinymce.themes.mobile.test.ui.TestFrameEditor',
     'tinymce.themes.mobile.test.ui.TestSelectors',
     'tinymce.themes.mobile.test.ui.TestStyles',
@@ -18,7 +15,7 @@ asynctest(
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (Mouse, Pipeline, Step, Attachment, Body, Element, Class, Traverse, TestEditor, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
+  function (Mouse, Pipeline, Step, Attachment, Body, Class, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -29,10 +26,8 @@ asynctest(
     var body = Body.body();
     Attachment.attachSystem(body, realm.system());
 
-    var doc = Traverse.owner(body);
-
     TestStyles.addStyles();
-    
+
     var unload = function () {
       TestStyles.removeStyles();
       Attachment.detachSystem(realm.system());
@@ -58,7 +53,7 @@ asynctest(
         tEditor.editor().focus();
       }),
       Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
-      tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ]),
+      tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
 
       // Think about how to do the slider events
     ], function () {

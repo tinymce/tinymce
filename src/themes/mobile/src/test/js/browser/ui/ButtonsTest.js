@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.alloy.api.component.Memento',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.test.GuiSetup',
     'ephox.sugar.api.node.Body',
@@ -20,9 +21,19 @@ asynctest(
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (GeneralSteps, Logger, Mouse, Pipeline, Step, Attachment, GuiSetup, Body, Class, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons, IosRealm) {
+  function (
+    GeneralSteps, Logger, Mouse, Pipeline, Step, Memento, Attachment, GuiSetup, Body, Class, Traverse, TinyChannels, TestEditor, TestStyles, TestUi, Buttons,
+    IosRealm
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    /*
+     * PURPOSE
+     *
+     * There are three buttons. Two have toggling, and one toggling button has a custom action.
+     * Ensure that they all fire the right actions and get updated appropriately based on broadcasts.
+     */
 
     var realm = IosRealm();
 
@@ -35,31 +46,57 @@ asynctest(
     var doc = Traverse.owner(body);
 
     TestStyles.addStyles();
-    
+
     var unload = function () {
       TestStyles.removeStyles();
       Attachment.detachSystem(realm.system());
     };
 
+    /* The test editor puts execCommand and insertContent calls into the store */
     var tEditor = TestEditor();
 
+    var memAlpha = Memento.record(
+      Buttons.forToolbarCommand(tEditor.editor(), 'alpha')
+    );
+
+    var memBeta = Memento.record(
+      Buttons.forToolbarStateCommand(tEditor.editor(), 'beta')
+    );
+
+    var memGamma = Memento.record(
+      Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
+        tEditor.adder('gamma-action')();
+      })
+    );
+
+    var sClickAlpha = TestUi.sClickComponent(realm, memAlpha);
+    var sClickBeta = TestUi.sClickComponent(realm, memBeta);
+    var sClickGamma = TestUi.sClickComponent(realm, memGamma);
+
+    var sCheckComponent = function (label, state) {
+      return function (memento) {
+        return TestUi.sWaitForToggledState(label, state, realm, memento);
+      };
+    };
 
     realm.setToolbarGroups([
       {
         label: 'group1',
         items: [
-          Buttons.forToolbarCommand(tEditor.editor(), 'alpha'),
-          Buttons.forToolbarStateCommand(tEditor.editor(), 'beta'),
-          Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
-            tEditor.adder('gamma-action')();
-          })
+          memAlpha.asSpec(),
+          memBeta.asSpec(),
+          memGamma.asSpec()
         ]
       }
     ]);
 
+    /*
+     * Alpha has no toggling, so just check that when the user clicks on the button, the 
+     * editor fires execCommand with alpha
+     */
     var sTestAlpha = GeneralSteps.sequence([
       tEditor.sAssertEq('Initially empty', [ ]),
-      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-alpha'),
+      sClickAlpha,
       tEditor.sAssertEq('After clicking on alpha', [
         {
           method: 'execCommand',
@@ -71,9 +108,14 @@ asynctest(
       tEditor.sClear
     ]);
 
+    /*
+     * Beta has toggling, so check:
+     *  - when the user clicks on the button, execCommand is fired
+     *  - when the format change is broadcast, the toggled state changes
+     */
     var sTestBeta = GeneralSteps.sequence([
       tEditor.sAssertEq('before beta, store is empty', [ ]),
-      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-beta'),
+      sClickBeta,
       tEditor.sAssertEq('After clicking on beta', [
         {
           method: 'execCommand',
@@ -83,38 +125,27 @@ asynctest(
         }
       ]),
       tEditor.sClear,
-      TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', false),
+      sCheckComponent('Initially, beta should be unselected', false)(memBeta),
       // Fire a format change
-      Step.sync(function () {
-        realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
-          command: 'beta',
-          state: true
-        });
-      }),
-      Logger.t(
-        'Checking toggle after broadcasting event for beta',
-        TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-beta', true)
-      ),
+      TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged() ], 'beta', true),
+      sCheckComponent('After broadcast, beta should be selected', true)(memBeta),
       tEditor.sClear
     ]);
 
+    /*
+     * Gamma has toggling, and a custom action, so check:
+     *  - when the user clicks on the button, the custom action is fired
+     *  - when the format change is broadcast, the toggled state changes
+     */
     var sTestGamma = GeneralSteps.sequence([
       tEditor.sAssertEq('before gamma, store is empty', [ ]),
-      Mouse.sClickOn(realm.system().element(), '.tinymce-mobile-icon-gamma-class'),
+      sClickGamma,
       tEditor.sAssertEq('After clicking on gamma', [ 'gamma-action' ]),
       tEditor.sClear,
-      TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', false),
+      sCheckComponent('Initially, gamma should be unselected', false)(memGamma),
       // Fire a format change
-      Step.sync(function () {
-        realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
-          command: 'gamma-query',
-          state: true
-        });
-      }),
-      Logger.t(
-        'Checking toggle after broadcasting event for gamma',
-        TestUi.sTogglingIs(realm.system(), '.tinymce-mobile-icon-gamma-class', true)
-      )
+      TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged() ], 'gamma-query', true),
+      sCheckComponent('After broadcast, gamma should be selected', true)(memGamma)
     ]);
 
     Pipeline.async({}, [
