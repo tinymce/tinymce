@@ -153,7 +153,12 @@ define(
         return focusCell.parentNode;
       };
 
-      var insertTable = {
+      var insertTable = editor.settings.table_grid === false ? {
+        text: 'Table',
+        icon: 'table',
+        context: 'table',
+        onclick: dialogs.table
+      } : {
         text: 'Table',
         icon: 'table',
         context: 'table',

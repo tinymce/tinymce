@@ -31,6 +31,7 @@ define(
         plugins: "table code",
         toolbar: "table code",
         media_dimensions: false,
+        table_grid: false,
         // media_live_embeds: false,
         // media_url_resolver: function (data, resolve) {
         // resolve({

@@ -215,7 +215,7 @@ define(
 
           editor.undoManager.transact(function () {
             if (!tableElm) {
-              tableElm = InsertTable.insert(data.cols || 1, data.rows || 1);
+              tableElm = InsertTable.insert(editor, data.cols || 1, data.rows || 1);
             }
 
             editor.dom.setAttribs(tableElm, {
