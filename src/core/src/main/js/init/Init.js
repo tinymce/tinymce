@@ -247,11 +247,6 @@ define(
         });
       }
 
-      // Load specified content CSS last
-      if (settings.content_style) {
-        editor.contentStyles.push(settings.content_style);
-      }
-
       // Content editable mode ends here
       if (settings.content_editable) {
         return InitContentBody.initContentBody(editor);
