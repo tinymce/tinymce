@@ -37,8 +37,8 @@ define(
 
       TableCommands.registerCommands(editor, dialogs);
 
-      MenuItems.addMenuItems(editor);
-      Buttons.addButtons(editor);
+      MenuItems.addMenuItems(editor, dialogs);
+      Buttons.addButtons(editor, dialogs);
       Buttons.addToolbars(editor);
 
       var resize = Option.none();

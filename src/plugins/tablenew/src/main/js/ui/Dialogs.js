@@ -430,23 +430,6 @@ define(
         }
       };
 
-      self.merge = function (grid, cell) {
-        editor.windowManager.open({
-          title: "Merge cells",
-          body: [
-            { label: 'Cols', name: 'cols', type: 'textbox', value: '1', size: 10 },
-            { label: 'Rows', name: 'rows', type: 'textbox', value: '1', size: 10 }
-          ],
-          onsubmit: function () {
-            var data = this.toJSON();
-
-            editor.undoManager.transact(function () {
-              grid.merge(cell, data.cols, data.rows);
-            });
-          }
-        });
-      };
-
       self.cell = function () {
         var dom = editor.dom, cellElm, data, classListCtrl, cells = [];
 

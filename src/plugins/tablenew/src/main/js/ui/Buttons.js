@@ -8,7 +8,7 @@ define(
   function (Tools) {
     var each = Tools.each;
 
-    var addButtons = function (editor) {
+    var addButtons = function (editor, dialogs) {
       var menuItems = [];
       each("inserttable tableprops deletetable | cell row column".split(' '), function (name) {
         if (name == '|') {
@@ -30,11 +30,11 @@ define(
         };
       }
 
-      // editor.addButton('tableprops', {
-      //   title: 'Table properties',
-      //   onclick: dialogs.tableProps,
-      //   icon: 'table'
-      // });
+      editor.addButton('tableprops', {
+        title: 'Table properties',
+        onclick: dialogs.tableProps,
+        icon: 'table'
+      });
 
       editor.addButton('tabledelete', {
         title: 'Delete table',

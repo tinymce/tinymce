@@ -12,7 +12,7 @@ define(
   ],
 
   function (Arr, Option, TableLookup, Element, TableActions, TableTargets, Selections) {
-    var addMenuItems = function (editor) {
+    var addMenuItems = function (editor, dialogs) {
       var actions = TableActions(editor);
       var selections = Selections(editor);
 
@@ -228,6 +228,13 @@ define(
         };
       }
 
+      var tableProperties = {
+        text: 'Table properties',
+        context: 'table',
+        onPostRender: pushTable,
+        onclick: dialogs.tableProps
+      };
+
       var deleteTable = {
         text: 'Delete table',
         context: 'table',
@@ -260,12 +267,14 @@ define(
         text: 'Cell',
         context: 'table',
         menu: [
+          { text: 'Cell properties', onclick: cmd('mceTableCellProps'), onPostRender: pushCell },
           { text: 'Merge cells', onclick: cmd('mceTableMergeCells'), onPostRender: pushMerge },
           { text: 'Split cell', onclick: cmd('mceTableSplitCells'), onPostRender: pushUnmerge }
         ]
       };
 
       editor.addMenuItem('inserttable', insertTable);
+      editor.addMenuItem('tableprops', tableProperties);
       editor.addMenuItem('deletetable', deleteTable);
       editor.addMenuItem('row', row);
       editor.addMenuItem('column', column);
