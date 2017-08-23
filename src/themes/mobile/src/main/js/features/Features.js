@@ -52,7 +52,9 @@ define(
       var underline = Buttons.forToolbarStateCommand(editor, 'underline');
       var link = LinkButton.sketch(realm, editor);
       // WRITE A TEST FOR THIS
-      var unlink = Buttons.forToolbarStateCommand(editor, 'unlink');
+      var unlink = Buttons.forToolbarStateAction(editor, 'unlink', 'link', function () {
+        editor.execCommand('unlink', null, false);
+      });
       var image = ImagePicker.sketch(editor);
       var bullist = Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
         editor.execCommand('InsertUnorderedList', null, false);
@@ -73,7 +75,8 @@ define(
         });
       };
 
-      var styleselect = Memento.record(Buttons.forToolbar('font-size', function (button) {
+      var styleselect = Memento.record(
+        Buttons.forToolbar('font-size', function (button) {
           editor.fire('toReading');
           realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
         }, Behaviour.derive([

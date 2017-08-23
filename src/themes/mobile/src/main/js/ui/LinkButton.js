@@ -48,7 +48,7 @@ define(
     });
 
     var sketch = function (realm, editor) {
-      return Buttons.forToolbar('link', function () {
+      return Buttons.forToolbarStateAction(editor, 'link', 'link', function () {
         var groups = getGroups(realm, editor);
         
         realm.setContextToolbar(groups);
@@ -65,7 +65,7 @@ define(
         LinkBridge.query(editor).each(function (link) {
           editor.selection.select(link.dom());
         });
-      }, { });
+      });
     };
 
     return {
