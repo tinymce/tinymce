@@ -6,14 +6,13 @@ define(
     'ephox.katamari.api.Option',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.node.Element',
-    'tinymce.plugins.tablenew.actions.TableActions',
+    'tinymce.plugins.tablenew.actions.InsertTable',
     'tinymce.plugins.tablenew.queries.TableTargets',
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (Arr, Option, TableLookup, Element, TableActions, TableTargets, Selections) {
+  function (Arr, Option, TableLookup, Element, InsertTable, TableTargets, Selections) {
     var addMenuItems = function (editor, dialogs) {
-      var actions = TableActions(editor);
       var selections = Selections(editor);
 
       var targets = Option.none();
@@ -212,7 +211,7 @@ define(
                 self.parent().cancel();
 
                 editor.undoManager.transact(function () {
-                  actions.insert(editor, self.lastX + 1, self.lastY + 1);
+                  InsertTable.insert(editor, self.lastX + 1, self.lastY + 1);
                 });
 
                 editor.addVisual();

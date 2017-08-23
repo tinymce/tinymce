@@ -20,9 +20,10 @@ define(
   'tinymce.plugins.tablenew.ui.Dialogs',
   [
     'tinymce.core.util.Tools',
-    'tinymce.core.Env'
+    'tinymce.core.Env',
+    'tinymce.plugins.tablenew.actions.InsertTable'
   ],
-  function (Tools, Env) {
+  function (Tools, Env, InsertTable) {
     var each = Tools.each;
 
     return function (editor) {
@@ -214,7 +215,7 @@ define(
 
           editor.undoManager.transact(function () {
             if (!tableElm) {
-              tableElm = editor.plugins.table.insertTable(data.cols || 1, data.rows || 1);
+              tableElm = InsertTable.insert(data.cols || 1, data.rows || 1);
             }
 
             editor.dom.setAttribs(tableElm, {

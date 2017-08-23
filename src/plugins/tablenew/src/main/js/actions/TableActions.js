@@ -23,14 +23,11 @@ define(
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableOperations',
-    'ephox.snooker.api.TableRender',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Html',
     'tinymce.plugins.tablenew.actions.TableWire',
     'tinymce.plugins.tablenew.queries.Direction'
   ],
-  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableOperations, TableRender, Element, Attr, Html, TableWire, Direction) {
+  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableOperations, Element, TableWire, Direction) {
     return function (editor) {
 
       var wire = Option.none();
@@ -42,38 +39,6 @@ define(
 
       var lazyWire = function () {
         return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
-      };
-
-      var insert = function (editor, rows, columns) {
-        var tableElm;
-
-        var renderedHtml = TableRender.render(rows, columns, 0, 0);
-
-        Attr.set(renderedHtml, 'id', '__mce');
-
-        var html = Html.getOuter(renderedHtml);
-
-        editor.insertContent(html);
-
-        tableElm = editor.dom.get('__mce');
-        editor.dom.setAttrib(tableElm, 'id', null);
-
-        editor.$('tr', tableElm).each(function (index, row) {
-          editor.fire('newrow', {
-            node: row
-          });
-
-          editor.$('th,td', row).each(function (index, cell) {
-            editor.fire('newcell', {
-              node: cell
-            });
-          });
-        });
-
-        editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
-        editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
-
-        return tableElm;
       };
 
       var execute = function (operation, mutate, lazyWire) {
@@ -108,7 +73,6 @@ define(
       var unmergeCells = execute(TableOperations.unmergeCells, Fun.noop, lazyWire);
 
       return {
-        insert: insert,
         deleteRow: deleteRow,
         deleteColumn: deleteColumn,
         insertRowBefore: insertRowBefore,
