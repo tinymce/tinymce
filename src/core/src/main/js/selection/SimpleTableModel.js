@@ -29,7 +29,7 @@ define(
 
     var getSpan = function (td, key) {
       var value = parseInt(Attr.get(td, key), 10);
-      return Number.isNaN(value) ? 1 : value;
+      return isNaN(value) ? 1 : value;
     };
 
     var fillout = function (table, x, y, tr, td) {
