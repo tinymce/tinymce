@@ -5,12 +5,15 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sand.api.PlatformDetection',
     'tinymce.core.EditorSettings',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Pipeline, Step, TinyLoader, EditorSettings, Theme) {
+  function (Assertions, Pipeline, Step, TinyLoader, PlatformDetection, EditorSettings, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+    var detection = PlatformDetection.detect();
+    var isTouch = detection.deviceType.isTouch();
 
     Theme();
 
@@ -39,15 +42,28 @@ asynctest(
         }),
 
         Step.sync(function () {
-          var fakeEditor = {
-            settings: {
+          var settings = EditorSettings.getEditorSettings(
+            {},
+            'id',
+            'documentBaseUrl',
+            {
+              plugins: ['a']
+            },
+            {
               string: 'a',
               number: 1,
               boolTrue: true,
               boolFalse: false,
               null: null,
-              undef: undefined
+              undef: undefined,
+              mobile: {
+                mobileSettingA: true
+              }
             }
+          );
+
+          var fakeEditor = {
+            settings: settings
           };
 
           Assertions.assertEq('Should be none for non existing setting', true, EditorSettings.get(fakeEditor, 'non_existing').isNone());
@@ -61,6 +77,8 @@ asynctest(
           Assertions.assertEq('Should be some for existing string setting', 'a', EditorSettings.getString(fakeEditor, 'string').getOrDie());
           Assertions.assertEq('Should be none for existing number setting', true, EditorSettings.getString(fakeEditor, 'number').isNone());
           Assertions.assertEq('Should be none for existing bool setting', true, EditorSettings.getString(fakeEditor, 'boolTrue').isNone());
+          Assertions.assertEq('Should only have the mobile setting on touch', EditorSettings.get(fakeEditor, 'mobileSettingA').getOr(false), isTouch);
+          Assertions.assertEq('Should not have a mobile setting on desktop', EditorSettings.get(fakeEditor, 'mobileSettingA').isNone(), !isTouch);
         })
       ], onSuccess, onFailure);
     }, {
