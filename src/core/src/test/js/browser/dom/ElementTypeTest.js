@@ -72,6 +72,14 @@ asynctest(
         sCheckElement('br', ElementType.isBr, true),
         sCheckElement('b', ElementType.isBr, false),
         sCheckText(ElementType.isBr)
+      ])),
+      Logger.t('Check list elements', GeneralSteps.sequence([
+        sCheckElement('br', ElementType.isListItem, false),
+        sCheckElement('div', ElementType.isListItem, false),
+        sCheckElement('li', ElementType.isListItem, true),
+        sCheckElement('dd', ElementType.isListItem, true),
+        sCheckElement('dt', ElementType.isListItem, true),
+        sCheckText(ElementType.isListItem)
       ]))
     ], function () {
       success();
