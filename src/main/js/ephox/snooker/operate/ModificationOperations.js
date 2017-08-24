@@ -58,7 +58,9 @@ define(
     var insertColumnsAt = function (grid, index, columns, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
         var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
-        var sub = withinSpan ? GridRow.getCell(row, index) : substitution(GridRow.getCell(row, example), comparator);
+        var sub = withinSpan ? function() { return GridRow.getCell(row, index); } : function () {
+          return substitution(GridRow.getCell(row, example));
+        };
         return GridRow.addCells(row, index, columns, sub);
       });
     };

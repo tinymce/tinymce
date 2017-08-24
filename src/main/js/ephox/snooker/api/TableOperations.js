@@ -99,8 +99,8 @@ define(
       var example = details[0].column();
       var targetIndex = details[0].column();
       var columns = uniqueColumns(details);
-      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.getOrInit);
-      return bundle(newGrid, detail.row(), targetIndex);
+      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.add);
+      return bundle(newGrid, details[0].row(), targetIndex);
     };
 
     var insertColumnAfter = function (grid, detail, comparator, genWrappers) {
@@ -110,12 +110,12 @@ define(
       return bundle(newGrid, detail.row(), targetIndex);
     };
 
-    var insertColumnsAfter = function (grid, detail, comparator, genWrappers) {
+    var insertColumnsAfter = function (grid, details, comparator, genWrappers) {
       var example = details[details.length - 1].column();
       var targetIndex = details[details.length - 1].column()  + details[details.length - 1].colspan();
       var columns = uniqueColumns(details);
-      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.getOrInit);
-      return bundle(newGrid, detail.row(), targetIndex);
+      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.add);
+      return bundle(newGrid, details[0].row(), targetIndex);
     };
 
     var makeRowHeader = function (grid, detail, comparator, genWrappers) {

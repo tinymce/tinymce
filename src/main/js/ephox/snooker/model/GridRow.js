@@ -4,21 +4,23 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.util.Util'
+    'ephox.snooker.util.Util',
+    'ephox.syrup.api.Compare'
   ],
 
-  function (Arr, Structs, Util) {
+  function (Arr, Structs, Util, Compare) {
     var addCell = function (gridRow, index, cell) {
       var cells = gridRow.cells();
       var newCells = cells.slice(0, index).concat([ cell ]).concat(cells.slice(index));
       return setCells(gridRow, newCells);
     };
 
-    var addCells = function (gridRow, index, count, cell) {
+    var addCells = function (gridRow, index, count, subsitution) {
       var cells = gridRow.cells();
       var newCellz = Util.repeat(count, function () {
-        return cell;
+        return subsitution();
       });
+      console.log(Compare.eq(newCellz[0], newCellz[1]));
       var newCells = cells.slice(0, index).concat( newCellz ).concat(cells.slice(index));
       return setCells(gridRow, newCells);
     };
