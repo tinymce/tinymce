@@ -58,16 +58,23 @@ define(
     };
 
     var removeEmptyRoot = function (rootNode, block) {
-      return Arr.find(Parents.parentsAndSelf(block, rootNode), Empty.isEmpty).each(Remove.remove);
+      var parents = Parents.parentsAndSelf(block, rootNode);
+      return Arr.find(parents.reverse(), Empty.isEmpty).each(Remove.remove);
+    };
+
+    var findParentInsertPoint = function (toBlock, block) {
+      var parents = Traverse.parents(block, function (elm) {
+        return Compare.eq(elm, toBlock);
+      });
+
+      return Option.from(parents[parents.length - 2]);
     };
 
     var getInsertionPoint = function (fromBlock, toBlock) {
       if (Compare.contains(toBlock, fromBlock)) {
-        var parents = Traverse.parents(fromBlock, function (elm) {
-          return Compare.eq(elm, toBlock);
+        return Traverse.parent(fromBlock).bind(function (parent) {
+          return Compare.eq(parent, toBlock) ? Option.some(fromBlock) : findParentInsertPoint(toBlock, fromBlock);
         });
-
-        return Option.from(parents[0]);
       } else {
         return Option.none();
       }

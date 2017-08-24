@@ -110,6 +110,20 @@ asynctest(
           cMergeBlocks(true, [0], [1]),
           cAssertPosition([0, 1, 0], 1),
           cAssertHtml('<h1>a<b>b</b></h1>')
+        ])),
+
+        Logger.t('Merge two list items', Chain.asStep(viewBlock, [
+          cSetHtml('<ul><li>a<b>b</b></li><li>c<b>d</b></li></ul>'),
+          cMergeBlocks(true, [0, 0], [0, 1]),
+          cAssertPosition([0, 0, 1, 0], 1),
+          cAssertHtml('<ul><li>a<b>b</b>c<b>d</b></li></ul>')
+        ])),
+
+        Logger.t('Merge paragraph into list item', Chain.asStep(viewBlock, [
+          cSetHtml('<ul><li>a<b>b</b></li></ul><p>c<b>d</b></p>'),
+          cMergeBlocks(true, [0, 0], [1]),
+          cAssertPosition([0, 0, 1, 0], 1),
+          cAssertHtml('<ul><li>a<b>b</b>c<b>d</b></li></ul>')
         ]))
       ])),
 
@@ -175,6 +189,41 @@ asynctest(
           cMergeBlocks(false, [1], [0]),
           cAssertPosition([0, 0], 0),
           cAssertHtml('<h2>a<b>b</b></h2>')
+        ])),
+
+        Logger.t('Merge two list items', Chain.asStep(viewBlock, [
+          cSetHtml('<ul><li>a<b>b</b></li><li>c<b>d</b></li></ul>'),
+          cMergeBlocks(false, [0, 1], [0, 0]),
+          cAssertPosition([0, 0, 1, 0], 1),
+          cAssertHtml('<ul><li>a<b>b</b>c<b>d</b></li></ul>')
+        ])),
+
+        Logger.t('Merge list item into paragraph', Chain.asStep(viewBlock, [
+          cSetHtml('<p>a<b>b</b></p><ul><li>c<b>d</b></li></ul>'),
+          cMergeBlocks(false, [1, 0], [0]),
+          cAssertPosition([0, 1, 0], 1),
+          cAssertHtml('<p>a<b>b</b>c<b>d</b></p>')
+        ])),
+
+        Logger.t('Merge h1 into parent wrapper div', Chain.asStep(viewBlock, [
+          cSetHtml('<div>a<h1>b</h1></div>'),
+          cMergeBlocks(false, [0, 1], [0]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<div>ab</div>')
+        ])),
+
+        Logger.t('Merge h1 inside a div into parent wrapper div', Chain.asStep(viewBlock, [
+          cSetHtml('<div>a<div><h1>b</h1></div></div>'),
+          cMergeBlocks(false, [0, 1, 0], [0]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<div>ab</div>')
+        ])),
+
+        Logger.t('Merge div > div > div > h1 into root div', Chain.asStep(viewBlock, [
+          cSetHtml('<div>a<div><div><h1>b</h1></div></div></div>'),
+          cMergeBlocks(false, [0, 1, 0, 0], [0]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<div>ab</div>')
         ]))
       ]))
     ], function () {

@@ -117,7 +117,7 @@ asynctest(
           tinyApis.sSetContent('<ul><li>ab<ul><li>cd<ul><li>ef</li></li></ul></li></ul>'),
           tinyApis.sSetSelection([0, 0, 0], 1, [0, 0, 1, 0, 1, 0, 0], 1),
           sDelete(editor),
-          tinyApis.sAssertContent('<ul><li>a<ul><li>f</li></ul></li></ul>'),
+          tinyApis.sAssertContent('<ul><li>af</li></ul>'),
           tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
         ])),
         Logger.t('Delete on selection of everything should empty editor', GeneralSteps.sequence([
