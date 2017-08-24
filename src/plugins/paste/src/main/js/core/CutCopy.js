@@ -53,7 +53,10 @@ define(
     var fallback = function (editor) {
       return function (html, done) {
         var markedHtml = InternalHtml.mark(html);
-        var outer = editor.dom.create('div', { contenteditable: "false" });
+        var outer = editor.dom.create('div', {
+          contenteditable: "false",
+          "data-mce-bogus": "all"
+        });
         var inner = editor.dom.create('div', { contenteditable: "true" }, markedHtml);
         editor.dom.setStyles(outer, {
           position: 'fixed',
