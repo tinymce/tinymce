@@ -15,15 +15,26 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Strings',
     'ephox.katamari.api.Struct',
     'ephox.katamari.api.Type',
     'ephox.sand.api.PlatformDetection',
     'tinymce.core.util.Tools'
   ],
-  function (Arr, Fun, Obj, Option, Struct, Type, PlatformDetection, Tools) {
+  function (Arr, Fun, Obj, Option, Strings, Struct, Type, PlatformDetection, Tools) {
     var sectionResult = Struct.immutable('sections', 'settings');
     var detection = PlatformDetection.detect();
     var isTouch = detection.deviceType.isTouch();
+    var mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
+
+    var normalizePlugins = function (plugins) {
+      return Type.isArray(plugins) ? plugins.join(' ') : plugins;
+    };
+
+    var filterMobilePlugins = function (plugins) {
+      var timmedPlugins = Arr.map(normalizePlugins(plugins).split(' '), Strings.trim);
+      return Arr.filter(timmedPlugins, Fun.curry(Arr.contains, mobilePlugins)).join(' ');
+    };
 
     var extractSections = function (keys, settings) {
       var result = Obj.bifilter(settings, function (value, key) {
@@ -36,6 +47,10 @@ define(
     var getSection = function (sectionResult, name) {
       var sections = sectionResult.sections();
       return sections.hasOwnProperty(name) ? sections[name] : { };
+    };
+
+    var hasSection = function (sectionResult, name) {
+      return sectionResult.sections().hasOwnProperty(name);
     };
 
     var getDefaultSettings = function (id, documentBaseUrl, editor) {
@@ -91,6 +106,8 @@ define(
 
     var combineSettings = function (defaultSettings, defaultOverrideSettings, settings) {
       var sectionResult = extractSections(['mobile'], settings);
+      var plugins = sectionResult.settings().plugins;
+
       var extendedSettings = Tools.extend(
         // Default settings
         defaultSettings,
@@ -109,7 +126,10 @@ define(
           validate: true,
           content_editable: sectionResult.settings().inline,
           external_plugins: getExternalPlugins(defaultOverrideSettings, sectionResult.settings())
-        }
+        },
+
+        // TODO: Remove this once we fix each plugin with a mobile version
+        isTouch && plugins && hasSection(sectionResult, 'mobile') ? { plugins: filterMobilePlugins(plugins) } : { }
       );
 
       return extendedSettings;
@@ -131,7 +151,10 @@ define(
     return {
       getEditorSettings: getEditorSettings,
       get: get,
-      getString: Fun.curry(getFiltered, Type.isString)
+      getString: Fun.curry(getFiltered, Type.isString),
+
+      // TODO: Remove this once we have proper mobile plugins
+      filterMobilePlugins: filterMobilePlugins
     };
   }
 );
