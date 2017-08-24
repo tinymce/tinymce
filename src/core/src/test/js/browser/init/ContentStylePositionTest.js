@@ -4,10 +4,14 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.katamari.api.Arr',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Pipeline, Step, TinyLoader, ModernTheme) {
+  function (Assertions, Pipeline, Step, Arr, TinyLoader, Compare, Element, Node, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -19,9 +23,15 @@ asynctest(
 
       Pipeline.async({}, [
         Step.sync(function () {
-          var head = editor.getDoc().head;
+          var headStuff = editor.getDoc().head.querySelectorAll('link, style');
+          var linkIndex = Arr.findIndex(headStuff, function (elm) {
+            return Node.name(Element.fromDom(elm)) === 'link';
+          }).getOrDie('could not find link elemnt');
+          var styleIndex = Arr.findIndex(headStuff, function (elm) {
+            return elm.innerText === contentStyle;
+          }).getOrDie('could not find content style tag');
 
-          Assertions.assertEq('last element in head should be content_style', contentStyle, head.lastChild.innerText);
+          Assertions.assertEq('style tag should be after link tag', linkIndex < styleIndex, true);
         })
       ], onSuccess, onFailure);
     }, {
