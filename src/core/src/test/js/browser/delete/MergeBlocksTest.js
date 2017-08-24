@@ -33,7 +33,7 @@ asynctest(
       return Chain.mapper(function (viewBlock) {
         var block1 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block1Path).getOrDie();
         var block2 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block2Path).getOrDie();
-        return MergeBlocks.mergeBlocks(forward, block1, block2);
+        return MergeBlocks.mergeBlocks(Element.fromDom(viewBlock.get()), forward, block1, block2);
       });
     };
 

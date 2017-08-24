@@ -233,6 +233,31 @@ define(
       }
     };
 
+    var getContainerBlock = function (containerBlock) {
+      var containerBlockParent = containerBlock.parentNode;
+
+      if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
+        return containerBlockParent;
+      }
+
+      return containerBlock;
+    };
+
+    var isFirstOrLastLi = function (containerBlock, parentBlock, first) {
+      var node = containerBlock[first ? 'firstChild' : 'lastChild'];
+
+      // Find first/last element since there might be whitespace there
+      while (node) {
+        if (node.nodeType == 1) {
+          break;
+        }
+
+        node = node[first ? 'nextSibling' : 'previousSibling'];
+      }
+
+      return node === parentBlock;
+    };
+
     var insert = function (editor, evt) {
       var tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
       var newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
@@ -416,31 +441,6 @@ define(
 
       // Inserts a block or br before/after or in the middle of a split list of the LI is empty
       function handleEmptyListItem() {
-        function isFirstOrLastLi(first) {
-          var node = containerBlock[first ? 'firstChild' : 'lastChild'];
-
-          // Find first/last element since there might be whitespace there
-          while (node) {
-            if (node.nodeType == 1) {
-              break;
-            }
-
-            node = node[first ? 'nextSibling' : 'previousSibling'];
-          }
-
-          return node === parentBlock;
-        }
-
-        function getContainerBlock() {
-          var containerBlockParent = containerBlock.parentNode;
-
-          if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
-            return containerBlockParent;
-          }
-
-          return containerBlock;
-        }
-
         if (containerBlock == editor.getBody()) {
           return;
         }
@@ -451,31 +451,31 @@ define(
 
         newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
 
-        if (isFirstOrLastLi(true) && isFirstOrLastLi()) {
+        if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
           if (hasParent(containerBlock, 'LI')) {
             // Nested list is inside a LI
-            dom.insertAfter(newBlock, getContainerBlock());
+            dom.insertAfter(newBlock, getContainerBlock(containerBlock));
           } else {
             // Is first and last list item then replace the OL/UL with a text block
             dom.replace(newBlock, containerBlock);
           }
-        } else if (isFirstOrLastLi(true)) {
+        } else if (isFirstOrLastLi(containerBlock, parentBlock, true)) {
           if (hasParent(containerBlock, 'LI')) {
             // List nested in an LI then move the list to a new sibling LI
-            dom.insertAfter(newBlock, getContainerBlock());
+            dom.insertAfter(newBlock, getContainerBlock(containerBlock));
             newBlock.appendChild(dom.doc.createTextNode(' ')); // Needed for IE so the caret can be placed
             newBlock.appendChild(containerBlock);
           } else {
             // First LI in list then remove LI and add text block before list
             containerBlock.parentNode.insertBefore(newBlock, containerBlock);
           }
-        } else if (isFirstOrLastLi()) {
+        } else if (isFirstOrLastLi(containerBlock, parentBlock, false)) {
           // Last LI in list then remove LI and add text block after list
-          dom.insertAfter(newBlock, getContainerBlock());
+          dom.insertAfter(newBlock, getContainerBlock(containerBlock));
         } else {
           // Middle LI in list the split the list and insert a text block in the middle
           // Extract after fragment and insert it after the current block
-          containerBlock = getContainerBlock();
+          containerBlock = getContainerBlock(containerBlock);
           tmpRng = rng.cloneRange();
           tmpRng.setStartAfter(parentBlock);
           tmpRng.setEndAfter(containerBlock);
