@@ -3,13 +3,23 @@ define(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.snooker.api.Structs'
+    'ephox.snooker.api.Structs',
+    'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Structs) {
-    var setCell = function (gridRow, index, cell) {
+  function (Arr, Structs, Util) {
+    var addCell = function (gridRow, index, cell) {
       var cells = gridRow.cells();
       var newCells = cells.slice(0, index).concat([ cell ]).concat(cells.slice(index));
+      return setCells(gridRow, newCells);
+    };
+
+    var addCells = function (gridRow, index, count, cell) {
+      var cells = gridRow.cells();
+      var newCellz = Util.repeat(count, function () {
+        return cell;
+      });
+      var newCells = cells.slice(0, index).concat( newCellz ).concat(cells.slice(index));
       return setCells(gridRow, newCells);
     };
 
@@ -37,7 +47,8 @@ define(
     };
 
     return {
-      setCell: setCell,
+      addCell: addCell,
+      addCells: addCells,
       setCells: setCells,
       mutateCell: mutateCell,
       getCell: getCell,

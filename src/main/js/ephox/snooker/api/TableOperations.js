@@ -46,11 +46,31 @@ define(
       return outcome(grid, findIn(grid, row, column));
     };
 
+    var uniqueRows = function (details) {
+      return Arr.foldl(details, function (rest, detail) {
+          return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
+      }, []).sort();
+    };
+
+    var uniqueColumns = function (details) {
+      return Arr.foldl(details, function (rest, detail) {
+          return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
+      }, []).sort();
+    };
+
     var insertRowBefore = function (grid, detail, comparator, genWrappers) {
       var example = detail.row();
       var targetIndex = detail.row();
       var newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
       return bundle(newGrid, targetIndex, detail.column());
+    };
+
+    var insertRowsBefore = function (grid, details, comparator, genWrappers) {
+      var example = details[0].row();
+      var targetIndex = details[0].row();
+      var rows = uniqueRows(details);
+      var newGrid = ModificationOperations.insertRowsAt(grid, targetIndex, rows.length, example, comparator, genWrappers.getOrInit);
+      return bundle(newGrid, targetIndex, details[0].column());
     };
 
     var insertRowAfter = function (grid, detail, comparator, genWrappers) {
@@ -60,6 +80,29 @@ define(
       return bundle(newGrid, targetIndex, detail.column());
     };
 
+    var insertRowsAfter = function (grid, details, comparator, genWrappers) {
+      var example = details[details.length - 1].row();
+      var targetIndex = details[details.length - 1].row() + details[details.length - 1].rowspan();
+      var rows = uniqueRows(details);
+      var newGrid = ModificationOperations.insertRowsAt(grid, targetIndex, rows.length, example, comparator, genWrappers.getOrInit);
+      return bundle(newGrid, targetIndex, details[0].column());
+    };
+
+    var insertColumnBefore = function (grid, detail, comparator, genWrappers) {
+      var example = detail.column();
+      var targetIndex = detail.column();
+      var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
+      return bundle(newGrid, details[0].row(), targetIndex);
+    };
+
+    var insertColumnsBefore = function (grid, details, comparator, genWrappers) {
+      var example = details[0].column();
+      var targetIndex = details[0].column();
+      var columns = uniqueColumns(details);
+      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.getOrInit);
+      return bundle(newGrid, detail.row(), targetIndex);
+    };
+
     var insertColumnAfter = function (grid, detail, comparator, genWrappers) {
       var example = detail.column();
       var targetIndex = detail.column() + detail.colspan();
@@ -67,10 +110,11 @@ define(
       return bundle(newGrid, detail.row(), targetIndex);
     };
 
-    var insertColumnBefore = function (grid, detail, comparator, genWrappers) {
-      var example = detail.column();
-      var targetIndex = detail.column();
-      var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
+    var insertColumnsAfter = function (grid, detail, comparator, genWrappers) {
+      var example = details[details.length - 1].column();
+      var targetIndex = details[details.length - 1].column()  + details[details.length - 1].colspan();
+      var columns = uniqueColumns(details);
+      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.getOrInit);
       return bundle(newGrid, detail.row(), targetIndex);
     };
 
@@ -105,21 +149,17 @@ define(
     };
 
     var eraseColumns = function (grid, details, comparator, _genWrappers) {
-      var uniqueColumns = Arr.foldl(details, function (rest, detail) {
-          return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
-      }, []).sort();
+      var columns = uniqueColumns(details);
 
-      var newGrid = ModificationOperations.deleteColumnsAt(grid, uniqueColumns[0], uniqueColumns[uniqueColumns.length - 1]);
+      var newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0], columns[columns.length - 1]);
       var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
 
     var eraseRows = function (grid, details, comparator, _genWrappers) {
-      var uniqueRows = Arr.foldl(details, function (rest, detail) {
-          return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
-      }, []).sort();
+      var rows = uniqueRows(details);
 
-      var newGrid = ModificationOperations.deleteRowsAt(grid, uniqueRows[0], uniqueRows[uniqueRows.length - 1]);
+      var newGrid = ModificationOperations.deleteRowsAt(grid, rows[0], rows[rows.length - 1]);
       var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
@@ -160,9 +200,13 @@ define(
 
     return {
       insertRowBefore: RunOperation.run(insertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
+      insertRowsBefore: RunOperation.run(insertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
       insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
+      insertRowsAfter: RunOperation.run(insertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
       insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.modification),
+      insertColumnsBefore: RunOperation.run(insertColumnsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
       insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
+      insertColumnsAfter: RunOperation.run(insertColumnsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
       splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       splitCellIntoRows:  RunOperation.run(splitCellIntoRows, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       eraseColumns:  RunOperation.run(eraseColumns, RunOperation.onCells, resize, prune, Generators.modification),

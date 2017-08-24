@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.model.GridRow'
+    'ephox.snooker.model.GridRow',
+    'ephox.snooker.util.Util'
   ],
 
-  function (Arr, Structs, GridRow) {
+  function (Arr, Structs, GridRow, Util) {
     // substitution :: (item, comparator) -> item
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
@@ -24,13 +25,41 @@ define(
     };
 
     // substitution :: (item, comparator) -> item
+    // example is the location of the cursor (the row index)
+    // index is the insert position (at - or after - example) (the row index)
+    var insertRowsAt = function (grid, index, rows, example, comparator, substitution) {
+      var before = grid.slice(0, index);
+      var after = grid.slice(index);
+
+      var between = Util.repeat(rows, function () {
+        return GridRow.mapCells(grid[example], function (ex, c) {
+          var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c), GridRow.getCell(grid[index], c));
+          return withinSpan ? GridRow.getCell(grid[index], c) : substitution(ex, comparator);
+        });
+      });
+
+      return before.concat(between).concat(after);
+    };
+
+    // substitution :: (item, comparator) -> item
     // example is the location of the cursor (the column index)
     // index is the insert position (at - or after - example) (the column index)
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
         var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
         var sub = withinSpan ? GridRow.getCell(row, index) : substitution(GridRow.getCell(row, example), comparator);
-        return GridRow.setCell(row, index, sub);
+        return GridRow.addCell(row, index, sub);
+      });
+    };
+
+    // substitution :: (item, comparator) -> item
+    // example is the location of the cursor (the column index)
+    // index is the insert position (at - or after - example) (the column index)
+    var insertColumnsAt = function (grid, index, columns, example, comparator, substitution) {
+      return Arr.map(grid, function (row) {
+        var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
+        var sub = withinSpan ? GridRow.getCell(row, index) : substitution(GridRow.getCell(row, example), comparator);
+        return GridRow.addCells(row, index, columns, sub);
       });
     };
 
@@ -44,7 +73,7 @@ define(
       return Arr.map(grid, function (row, i) {
         var isTargetCell = (i === exampleRow);
         var sub = isTargetCell ? substitution(GridRow.getCell(row, exampleCol), comparator) : GridRow.getCell(row, exampleCol);
-        return GridRow.setCell(row, index, sub);
+        return GridRow.addCell(row, index, sub);
       });
     };
 
@@ -79,7 +108,9 @@ define(
 
     return {
       insertRowAt: insertRowAt,
+      insertRowsAt: insertRowsAt,
       insertColumnAt: insertColumnAt,
+      insertColumnsAt: insertColumnsAt,
       splitCellIntoColumns: splitCellIntoColumns,
       splitCellIntoRows: splitCellIntoRows,
       deleteRowsAt: deleteRowsAt,
