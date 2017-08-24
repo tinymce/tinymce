@@ -60,13 +60,13 @@ define(
 
       var deleteColumn = execute(TableOperations.eraseColumns, Fun.noop, lazyWire);
 
-      var insertRowBefore = execute(TableOperations.insertRowBefore, Fun.noop, lazyWire);
+      var insertRowsBefore = execute(TableOperations.insertRowsBefore, Fun.noop, lazyWire);
 
-      var insertRowAfter = execute(TableOperations.insertRowAfter, Fun.noop, lazyWire);
+      var insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.noop, lazyWire);
 
-      var insertColumnBefore = execute(TableOperations.insertColumnBefore, Fun.noop, lazyWire);
+      var insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.noop, lazyWire);
 
-      var insertColumnAfter = execute(TableOperations.insertColumnAfter, Fun.noop, lazyWire);
+      var insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.noop, lazyWire);
 
       var mergeCells = execute(TableOperations.mergeCells, Fun.noop, lazyWire);
 
@@ -75,10 +75,10 @@ define(
       return {
         deleteRow: deleteRow,
         deleteColumn: deleteColumn,
-        insertRowBefore: insertRowBefore,
-        insertRowAfter: insertRowAfter,
-        insertColumnBefore: insertColumnBefore,
-        insertColumnAfter: insertColumnAfter,
+        insertRowsBefore: insertRowsBefore,
+        insertRowsAfter: insertRowsAfter,
+        insertColumnsBefore: insertColumnsBefore,
+        insertColumnsAfter: insertColumnsAfter,
         mergeCells: mergeCells,
         unmergeCells: unmergeCells
       };

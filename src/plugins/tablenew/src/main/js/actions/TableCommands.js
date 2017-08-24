@@ -59,19 +59,19 @@ define(
         },
 
         mceTableInsertRowBefore: function () {
-          actOnSelection(actions.insertRowBefore);
+          actOnSelection(actions.insertRowsBefore);
         },
 
         mceTableInsertRowAfter: function () {
-          actOnSelection(actions.insertRowAfter);
+          actOnSelection(actions.insertRowsAfter);
         },
 
         mceTableInsertColBefore: function () {
-          actOnSelection(actions.insertColumnBefore);
+          actOnSelection(actions.insertColumnsBefore);
         },
 
         mceTableInsertColAfter: function () {
-          actOnSelection(actions.insertColumnAfter);
+          actOnSelection(actions.insertColumnsAfter);
         },
 
         mceTableDeleteCol: function () {
