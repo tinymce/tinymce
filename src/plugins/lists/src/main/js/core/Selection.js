@@ -29,7 +29,7 @@ define(
 
     var findParentListItemsNodes = function (editor, elms) {
       var listItemsElms = Tools.map(elms, function (elm) {
-        var parentLi = editor.dom.getParent(elm, 'li', editor.getBody());
+        var parentLi = editor.dom.getParent(elm, 'li,dd,dt', editor.getBody());
 
         return parentLi ? parentLi : elm;
       });
