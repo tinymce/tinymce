@@ -224,6 +224,13 @@ asynctest(
           cMergeBlocks(false, [0, 1, 0, 0], [0]),
           cAssertPosition([0, 0], 1),
           cAssertHtml('<div>ab</div>')
+        ])),
+
+        Logger.t('Merge children until we find a block', Chain.asStep(viewBlock, [
+          cSetHtml('<div>a</div><div>b<h1>c</h1></div>'),
+          cMergeBlocks(false, [1], [0]),
+          cAssertPosition([0, 0], 1),
+          cAssertHtml('<div>ab</div><div><h1>c</h1></div>')
         ]))
       ]))
     ], function () {
