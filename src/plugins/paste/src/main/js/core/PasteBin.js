@@ -146,18 +146,20 @@ define(
        * Removes the paste bin if it exists.
        */
       var remove = function () {
-        var pasteBinClone;
+        if (getEl()) {
+          var pasteBinClone;
 
-        // WebKit/Blink might clone the div so
-        // lets make sure we remove all clones
-        // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
-        while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
-          editor.dom.remove(pasteBinClone);
-          editor.dom.unbind(pasteBinClone);
-        }
+          // WebKit/Blink might clone the div so
+          // lets make sure we remove all clones
+          // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+          while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
+            editor.dom.remove(pasteBinClone);
+            editor.dom.unbind(pasteBinClone);
+          }
 
-        if (pasteBinClone && lastRng) {
-          editor.selection.setRng(lastRng);
+          if (lastRng) {
+            editor.selection.setRng(lastRng);
+          }
         }
 
         lastRng = null;
@@ -186,7 +188,9 @@ define(
         };
 
         // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-        pasteBinClones = editor.dom.select('body > div[id=mcepastebin]');
+        pasteBinClones = Tools.grep(editor.getBody().childNodes, function (elm) {
+          return elm.id === 'mcepastebin';
+        });
         pasteBinElm = pasteBinClones.shift();
 
         // if clones were found, move their content into the first bin
