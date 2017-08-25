@@ -41,7 +41,7 @@ define(
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
     var EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
 
-    ThemeManager.add('mobile', function (editor) {
+    ThemeManager.add('betamobile', function (editor) {
       var renderUI = function (args) {
         var cssUrls = CssUrls.derive(editor);
 

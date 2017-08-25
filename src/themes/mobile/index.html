@@ -10,46 +10,14 @@
   var run = function () {
     tinymce.init({
       selector: 'textarea',
-      theme: 'mobile',
+      theme: 'beta-mobile',
       plugins: [
         'lists', // Required for list functionality (commands),
         'autolink', // Required for turning pasted text into hyperlinks
         'autosave' // Required to prevent users losing content when they press back
       ],
       style_formats: [
-        //   { title: 'Alpha', format: 'bold' },
-        //   {
-        //     title: 'Beta',
-        //     items: [
-        //       { title: 'Beta-1', format: 'bold' },
-        //       { title: 'Beta-2', format: 'bold' },
-        //       {
-        //         title: 'Beta-3',
-        //         items: [
-        //           {
-        //             title: 'Beta-3-1',
-        //             items: [
-        //               { title: 'Beta-3-1-1', format: 'bold' }
-        //             ]
-        //           },
-        //           { title: 'Beta-3-2' }
-        //         ]
-        //       }
-        //     ]
-        //   },
-        //   { title: 'Gamma', format: 'bold' },
-        //   { title: 'Gamma1', format: 'bold' },
-        //   { title: 'Gamma2', format: 'bold' },
-        //   { title: 'Gamma3', format: 'bold' },
-        //   { title: 'Gamma4', format: 'bold' },
-        //   { title: 'Gamma5', format: 'bold' },
-        //   { title: 'Gamma6', format: 'bold' },
-        //   { title: 'Gamma7', format: 'bold' },
-        //   { title: 'Gamma8', format: 'bold' }
-        // ]
-        
-        //style_formats: [
-          
+       
           {
             title: 'Headers',
             items: [
@@ -65,11 +33,11 @@
             title: 'Inline',
             items: [
               { inline: 'span', title: 'Red text', icon: 'red', styles: { color: 'red' } },
-    { title: 'Bold text', inline: 'strong' },
-    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
-    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
-    { title: 'Badge', inline: 'span', styles: { display: 'inline-block', border: '1px solid #2276d2', 'border-radius': '5px', padding: '2px 5px', margin: '0 2px', color: '#2276d2' } },
-    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' },
+              { title: 'Bold text', inline: 'strong' },
+              { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+              { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+              { title: 'Badge', inline: 'span', styles: { display: 'inline-block', border: '1px solid #2276d2', 'border-radius': '5px', padding: '2px 5px', margin: '0 2px', color: '#2276d2' } },
+              { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' },
               { title: 'Bold', icon: 'bold', format: 'bold' },
               { title: 'Italic', icon: 'italic', format: 'italic' },
               { title: 'Underline', icon: 'underline', format: 'underline' },
@@ -141,17 +109,12 @@
 <p><br/></p>
 
     </textarea>
-<h1>Using MUI Framework</h1>
-    <p><a class="mui-btn mui-btn--large mui-btn--primary" href="index-bootstrap.html">Bootstrap &rArr;</a> <a href="tiny3.html">Tiny 3 </a>
-    <h1>heading</h1>
-    <p>
-    One or two
-    </p>
-    <p>
-    <a href="link.test">
-            <!-- <img src='http://google.com/google.jpg' > -->
-         </a>
-    </p>
+<hr />
+<p>Using MUI Framework</p>
+   
+@@MOBILE_THEME_CHANGELOG
+
+<div>
 
 
 </body>

@@ -41,10 +41,8 @@ node("aws-tools") {
     dir("src/themes/mobile") {
       echo "Building CSS"
       sh "grunt less"
-    }
-
-    dir("src/themes/autochooser") {  
-      def version = readFile '../mobile/version.txt'
+    
+      def version = readFile 'version.txt'
       echo version
       
       sh "grunt standalone"
