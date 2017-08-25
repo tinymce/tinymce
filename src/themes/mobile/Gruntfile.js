@@ -96,20 +96,6 @@ module.exports = function (grunt) {
             dest: 'deploy-local/skins',
             expand: true
           },
-          // {
-          //   expand: true,
-          //   flatten: true,
-          //   src: ['src/main/css/**'],
-          //   dest: 'deploy-local/skins/lightgray/',
-          //   filter: 'isFile'
-          // },
-          // {
-          //   expand: true,
-          //   flatten: true,
-          //   src: ['src/main/icons/**'],
-          //   dest: 'deploy-local/skins/icons/',
-          //   filter: 'isFile'
-          // },
           {
             src: "../../../js/tinymce/tinymce.min.js",
             dest: "deploy-local/tinymce.min.js"
