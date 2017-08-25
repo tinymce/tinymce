@@ -95,6 +95,23 @@ asynctest(
       closeTopMostWindow(editor);
     });
 
+    suite.test("Caption should always stay the firstChild of the table (see TINY-1167)", function (editor) {
+      editor.setContent('<table><caption>CAPTION</caption><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>');
+      LegacyUnit.setSelection(editor, 'td', 0);
+      editor.execCommand('mceTableRowProps');
+
+      fillAndSubmitWindowForm(editor, {
+        "type": "thead"
+      });
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+        '<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>'
+      );
+
+      closeTopMostWindow(editor);
+    });
+
     suite.test("Table row properties dialog update multiple rows", function (editor) {
       editor.getBody().innerHTML = (
         '<table>' +
