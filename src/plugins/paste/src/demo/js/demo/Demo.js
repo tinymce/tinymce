@@ -29,7 +29,7 @@ define(
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "paste code",
-        toolbar: "pastetext code",
+        toolbar: "undo redo | pastetext code",
         init_instance_callback: function (editor) {
           editor.on('PastePreProcess', function (evt) {
             console.log(evt);

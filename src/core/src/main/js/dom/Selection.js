@@ -134,7 +134,7 @@ define(
         }
 
         if (rng.cloneContents) {
-          fragment = args.contextual ? FragmentReader.read(self.editor.getBody(), rng).dom() : rng.cloneContents();
+          fragment = args.contextual ? FragmentReader.read(Element.fromDom(self.editor.getBody()), rng).dom() : rng.cloneContents();
           if (fragment) {
             tmpElm.appendChild(fragment);
           }

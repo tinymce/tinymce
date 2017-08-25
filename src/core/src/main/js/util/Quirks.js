@@ -808,7 +808,11 @@ define(
         // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
         editor.on('keyup focusin mouseup', function (e) {
           if (e.keyCode != 65 || !VK.metaKeyPressed(e)) {
-            selection.normalize();
+            // We can't normalize on non collapsed ranges on keyboard events since that would cause
+            // issues with moving the selection over empty paragraphs. See #TINY-1130
+            if (e.type !== 'keyup' || editor.selection.isCollapsed()) {
+              selection.normalize();
+            }
           }
         }, true);
       }

@@ -1858,18 +1858,6 @@ asynctest(
       LegacyUnit.equal(getContent(editor), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
     });
 
-    suite.test("Wrapper with fontSize should retain priority within a branch of nested inline format wrappers", function (editor) {
-      editor.setContent("<p>abc</p>");
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
-
-      editor.formatter.apply('fontsize', { value: '18px' });
-      editor.formatter.apply('bold');
-      editor.formatter.apply('underline');
-      editor.formatter.apply('forecolor', { value: '#ff0000' });
-
-      LegacyUnit.equal(getContent(editor), '<p><span style="color: #ff0000; font-size: 18px; text-decoration: underline;"><strong>abc</strong></span></p>');
-    });
-
     suite.test("Child wrapper having the same format as the immediate parent, shouldn't be removed if it also has other formats merged", function (editor) {
       editor.getBody().innerHTML = '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>';
       LegacyUnit.setSelection(editor, 'span span', 0, 'span span', 1);
@@ -1914,18 +1902,56 @@ asynctest(
         '<p>that is a misespelled text</p>');
     });
 
+    suite.test("TINY-1180: Formatting gets applied outside the currently selected range", function (editor) {
+      editor.getBody().innerHTML = '<p>a <em><em>em</em> </em></p>';
+      LegacyUnit.setSelection(editor, 'p', 0, 'em em', 0);
+      editor.formatter.apply('strikethrough');
+      LegacyUnit.equal(getContent(editor), '<p><span style="text-decoration: line-through;">a </span><em><em>em</em> </em></p>');
+    });
+
+    suite.test("Superscript on subscript removes the subscript element", function (editor) {
+      editor.getBody().innerHTML = '<p><sub>a</sub></p>';
+      LegacyUnit.setSelection(editor, 'sub', 0, 'sub', 1);
+      editor.formatter.apply('superscript');
+      LegacyUnit.equal(getContent(editor), '<p><sup>a</sup></p>');
+    });
+
+    suite.test("Subscript on superscript removes the superscript element", function (editor) {
+      editor.getBody().innerHTML = '<p><sup>a</sup></p>';
+      LegacyUnit.setSelection(editor, 'sup', 0, 'sup', 1);
+      editor.formatter.apply('subscript');
+      LegacyUnit.equal(getContent(editor), '<p><sub>a</sub></p>');
+    });
+
     suite.test("TINY-782: Can't apply sub/sup to word on own line with large font", function (editor) {
-      editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</p>';
+      editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</span></p>';
       LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
       editor.formatter.apply('superscript');
-      LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 18px;"><sup>abc</sup></span></p>');
+      LegacyUnit.equal(getContent(editor), '<p><sup>abc</sup></p>');
+    });
+
+    suite.test("TINY-782: Apply sub/sup to range with multiple font sizes", function (editor) {
+      editor.getBody().innerHTML = '<p>a<span style="font-size: 18px;">b</span><span style="font-size: 24px;">c</span></p>';
+      LegacyUnit.setSelection(editor, 'p', 0, 'span:nth-child(2)', 1);
+      editor.formatter.apply('superscript');
+      LegacyUnit.equal(getContent(editor), '<p><sup>abc</sup></p>');
     });
 
     suite.test("TINY-671: Background color on nested font size bug", function (editor) {
       editor.getBody().innerHTML = '<p><strong><span style="font-size: 18px;">abc</span></strong></p>';
       LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
       editor.formatter.apply('hilitecolor', { value: '#ff0000' });
-      LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 18px; background-color: #ff0000;"><strong>abc</strong></span></p>');
+      LegacyUnit.equal(getContent(editor), '<p><span style="background-color: #ff0000;"><strong><span style="font-size: 18px; background-color: #ff0000;">abc</span></strong></span></p>');
+    });
+
+    suite.test("Background color over range of font sizes", function (editor) {
+      editor.getBody().innerHTML = '<p>a<span style="font-size: 18px;">b</span><span style="font-size: 24px;">c</span></p>';
+      LegacyUnit.setSelection(editor, 'p', 0, 'span:nth-child(2)', 1);
+      editor.formatter.apply('hilitecolor', { value: '#ff0000' });
+      LegacyUnit.equal(
+        getContent(editor),
+        '<p><span style="background-color: #ff0000;">a<span style="font-size: 18px; background-color: #ff0000;">b</span><span style="font-size: 24px; background-color: #ff0000;">c</span></span></p>'
+      );
     });
 
     suite.test("TINY-865: Font size removed when changing background color", function (editor) {

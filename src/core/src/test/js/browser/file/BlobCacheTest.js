@@ -2,15 +2,15 @@ test(
   'browser.tinymce.core.file.BlobCacheTest',
   [
     'ephox.agar.api.Assertions',
-    'tinymce.core.file.Conversions',
+    'ephox.sand.api.Blob',
+    'ephox.sand.api.Uint8Array',
+    'ephox.sand.api.Window',
     'tinymce.core.file.BlobCache',
-    'global!Uint8Array',
-    'global!Blob',
-    'global!URL'
+    'tinymce.core.file.Conversions'
   ],
-  function (Assertions, Conversions, BlobCache, Uint8Array, Blob, URL) {
+  function (Assertions, Blob, Uint8Array, Window, BlobCache, Conversions) {
     var uriToBlob = function (base64, type) {
-      var i, str = atob(base64);
+      var i, str = Window.atob(base64);
       var arr = new Uint8Array(str.length);
 
       for (i = 0; i < arr.length; i++) {
