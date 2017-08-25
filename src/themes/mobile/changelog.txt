@@ -1,5 +1,10 @@
 Mobile theme changelog
 
+v9
+
+- fix styles on serialised link dialog input fields
+- made link dialog dot colours consistent with iOS and Material guidelines
+
 v8
 - added support for removeformat
 
