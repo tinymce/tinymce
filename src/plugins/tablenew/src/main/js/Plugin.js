@@ -47,7 +47,7 @@ define(
       Buttons.addToolbars(editor);
 
       var resize = Option.none();
-      var selection = Option.none();
+      var selectionRng = Option.none();
 
       editor.on('init', function () {
         var direction = TableDirection(Direction.directionAt);
@@ -57,11 +57,11 @@ define(
           var sz = TableResize(rawWire, direction);
           sz.on();
           sz.events.startDrag.bind(function () {
-            selection = Option.some(editor.selection.getRng());
+            selectionRng = Option.some(editor.selection.getRng());
           });
           sz.events.afterResize.bind(function () {
             editor.focus();
-            selection.each(function (rng) {
+            selectionRng.each(function (rng) {
               editor.selection.setRng(rng);
             });
           });
@@ -74,6 +74,7 @@ define(
         resize.each(function (sz) {
           sz.destroy();
         });
+        cellSelection.destroy();
       });
     }
 
