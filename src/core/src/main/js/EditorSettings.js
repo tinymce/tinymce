@@ -32,8 +32,8 @@ define(
     };
 
     var filterMobilePlugins = function (plugins) {
-      var timmedPlugins = Arr.map(normalizePlugins(plugins).split(' '), Strings.trim);
-      return Arr.filter(timmedPlugins, Fun.curry(Arr.contains, mobilePlugins)).join(' ');
+      var trimmedPlugins = Arr.map(normalizePlugins(plugins).split(' '), Strings.trim);
+      return Arr.filter(trimmedPlugins, Fun.curry(Arr.contains, mobilePlugins)).join(' ');
     };
 
     var extractSections = function (keys, settings) {
