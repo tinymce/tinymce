@@ -1,6 +1,8 @@
 asynctest(
-  'Browser Test: .TableInListTest',
+  'browser.tinymce.plugins.lists.TableInListTest',
   [
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
@@ -9,7 +11,7 @@ asynctest(
     'tinymce.plugins.lists.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, Step, TinyApis, TinyLoader, TinyUi, ListsPlugin, ModernTheme) {
+  function (GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TinyUi, ListsPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -21,12 +23,14 @@ asynctest(
       var tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
-        tinyApis.sSetContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0, 0, 0], 0),
-        tinyUi.sClickOnToolbar('click list button', 'div[aria-label="Bullet list"] button'),
-        tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-        tinyUi.sClickOnToolbar('click list button', 'div[aria-label="Bullet list"] button'),
-        tinyApis.sAssertContent('<table><tbody><tr><td><ul><li>a</li></ul></td><td>b</td></tr></tbody></table>')
+        Logger.t('unlist table in list then add list inside table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>'),
+          tinyApis.sSetCursor([0, 0, 0, 0, 0, 0, 0], 0),
+          tinyUi.sClickOnToolbar('click list button', 'div[aria-label="Bullet list"] button'),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyUi.sClickOnToolbar('click list button', 'div[aria-label="Bullet list"] button'),
+          tinyApis.sAssertContent('<table><tbody><tr><td><ul><li>a</li></ul></td><td>b</td></tr></tbody></table>')
+        ]))
       ], onSuccess, onFailure);
     }, {
       plugins: 'lists',
