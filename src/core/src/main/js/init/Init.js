@@ -49,11 +49,16 @@ define(
       }
     };
 
+    var trimLegacyPrefix = function (name) {
+      // Themes and plugins can be prefixed with - to prevent them from being lazy loaded
+      return name.replace(/^\-/, '');
+    };
+
     var initPlugins = function (editor) {
       var initializedPlugins = [];
 
-      Tools.each(editor.settings.plugins.replace(/\-/g, '').split(/[ ,]/), function (name) {
-        initPlugin(editor, initializedPlugins, name);
+      Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
+        initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
       });
     };
 
@@ -62,7 +67,8 @@ define(
 
       if (settings.theme) {
         if (typeof settings.theme != "function") {
-          settings.theme = settings.theme.replace(/-/, '');
+          settings.theme = trimLegacyPrefix(settings.theme);
+
           Theme = ThemeManager.get(settings.theme);
           editor.theme = new Theme(editor, ThemeManager.urls[settings.theme]);
 
