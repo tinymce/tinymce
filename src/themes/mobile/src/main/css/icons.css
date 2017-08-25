@@ -63,6 +63,10 @@
   content: "\e15a";
 }
 
+.tinymce-mobile-icon-removeformat:before {
+  content: "\e239";
+}
+
 .tinymce-mobile-icon-small-font:before {
   content: "\e906";
 }

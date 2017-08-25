@@ -50,6 +50,8 @@ define(
       var bold = Buttons.forToolbarStateCommand(editor, 'bold');
       var italic = Buttons.forToolbarStateCommand(editor, 'italic');
       var underline = Buttons.forToolbarStateCommand(editor, 'underline');
+      var removeformat = Buttons.forToolbarCommand(editor, 'removeformat');
+
       var link = LinkButton.sketch(realm, editor);
       var unlink = Buttons.forToolbarStateAction(editor, 'unlink', 'link', function () {
         editor.execCommand('unlink', null, false);
@@ -111,6 +113,7 @@ define(
         bold: feature(Option.none(), bold, Option.none),
         italic: feature(Option.none(), italic, Option.none),
         underline: feature(Option.none(), underline, Option.none),
+        removeformat: feature(Option.none(), removeformat, Option.none),
         link: feature(Option.none(), link, Option.none),
         unlink: feature(Option.none(), unlink, Option.none),
         image: feature(Option.none(), image, Option.none),

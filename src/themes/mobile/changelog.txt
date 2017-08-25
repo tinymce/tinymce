@@ -1,5 +1,8 @@
 Mobile theme changelog
 
+v8
+- added support for removeformat
+
 v7
 
 - fixed dropup height in landscape on various devices 
