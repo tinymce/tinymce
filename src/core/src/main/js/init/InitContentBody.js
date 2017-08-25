@@ -11,6 +11,9 @@
 define(
   'tinymce.core.init.InitContentBody',
   [
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
     'global!document',
     'global!window',
     'tinymce.core.api.Formatter',
@@ -33,10 +36,18 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    document, window, Formatter, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, DomParser, Node, Schema, KeyboardOverrides,
-    NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
+    Insert, Element, Attr, document, window, Formatter, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, DomParser,
+    Node, Schema, KeyboardOverrides, NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
   ) {
     var DOM = DOMUtils.DOM;
+
+    var appendStyle = function (editor, text) {
+      var head = Element.fromDom(editor.getDoc().head);
+      var tag = Element.fromTag('style');
+      Attr.set(tag, 'type', 'text/css');
+      Insert.append(tag, Element.fromText(text));
+      Insert.append(head, tag);
+    };
 
     var createParser = function (editor) {
       var parser = new DomParser(editor.settings, editor.schema);
@@ -293,6 +304,11 @@ define(
           initEditor(editor);
         }
       );
+
+      // Append specified content CSS last
+      if (settings.content_style) {
+        appendStyle(editor, settings.content_style);
+      }
     };
 
     return {
