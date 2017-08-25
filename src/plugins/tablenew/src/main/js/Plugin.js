@@ -18,22 +18,29 @@ define(
   'tinymce.plugins.tablenew.Plugin',
   [
     'ephox.katamari.api.Option',
+    'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableResize',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.PluginManager',
     'tinymce.plugins.tablenew.actions.TableCommands',
     'tinymce.plugins.tablenew.actions.TableWire',
     'tinymce.plugins.tablenew.queries.Direction',
+    'tinymce.plugins.tablenew.queries.TabContext',
     'tinymce.plugins.tablenew.selection.CellSelection',
     'tinymce.plugins.tablenew.ui.Buttons',
-    'tinymce.plugins.tablenew.ui.MenuItems',
-    'tinymce.plugins.tablenew.ui.Dialogs'
+    'tinymce.plugins.tablenew.ui.Dialogs',
+    'tinymce.plugins.tablenew.ui.MenuItems'
   ],
-  function (Option, TableDirection, TableResize, PluginManager, TableCommands, TableWire, Direction, CellSelection, Buttons, MenuItems, Dialogs) {
+  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, TableCommands, TableWire, Direction, TabContext, CellSelection, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
 
       var lazyResize = function () {
         return resize;
+      };
+
+      var lazyWire = function () {
+        return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
       };
 
       var cellSelection = CellSelection(editor, lazyResize);
@@ -47,11 +54,14 @@ define(
       Buttons.addToolbars(editor);
 
       var resize = Option.none();
+      var wire = Option.none();
       var selectionRng = Option.none();
+
 
       editor.on('init', function () {
         var direction = TableDirection(Direction.directionAt);
         var rawWire = TableWire.get(editor);
+        wire = Option.some(rawWire);
         if (editor.settings.object_resizing && editor.settings.table_resize_bars !== false &&
           (editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
           var sz = TableResize(rawWire, direction);
@@ -69,6 +79,13 @@ define(
           resize = Option.some(sz);
         }
       });
+
+      // Enable tab key cell navigation
+      if (editor.settings.table_tab_navigation !== false) {
+        editor.on('keydown', function (e) {
+          TabContext.handle(e, editor, lazyWire);
+        });
+      }
 
       editor.on('remove', function () {
         resize.each(function (sz) {
