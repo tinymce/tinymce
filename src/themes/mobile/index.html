@@ -10,12 +10,15 @@
   var run = function () {
     tinymce.init({
       selector: 'textarea',
-      theme: 'beta-mobile',
       plugins: [
         'lists', // Required for list functionality (commands),
         'autolink', // Required for turning pasted text into hyperlinks
         'autosave' // Required to prevent users losing content when they press back
       ],
+      mobile: {
+        theme: 'beta-mobile'
+        // toolbar: ''
+      },
       style_formats: [
        
           {
@@ -111,8 +114,10 @@
     </textarea>
 <hr />
 <p>Using MUI Framework</p>
-   
-@@MOBILE_THEME_CHANGELOG
+
+<div style="margin: 20px;">
+  @@MOBILE_THEME_CHANGELOG
+</div>
 
 <div>
 

@@ -91,19 +91,25 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            expand: true,
-            flatten: true,
-            src: ['src/main/css/**'],
-            dest: 'deploy-local/skins/lightgray/',
-            filter: 'isFile'
+            cwd: '../../../js/tinymce/skins',
+            src: '**/*',
+            dest: 'deploy-local/skins',
+            expand: true
           },
-          {
-            expand: true,
-            flatten: true,
-            src: ['src/main/icons/**'],
-            dest: 'deploy-local/skins/icons/',
-            filter: 'isFile'
-          },
+          // {
+          //   expand: true,
+          //   flatten: true,
+          //   src: ['src/main/css/**'],
+          //   dest: 'deploy-local/skins/lightgray/',
+          //   filter: 'isFile'
+          // },
+          // {
+          //   expand: true,
+          //   flatten: true,
+          //   src: ['src/main/icons/**'],
+          //   dest: 'deploy-local/skins/icons/',
+          //   filter: 'isFile'
+          // },
           {
             src: "../../../js/tinymce/tinymce.min.js",
             dest: "deploy-local/tinymce.min.js"
@@ -119,6 +125,10 @@ module.exports = function (grunt) {
           {
             src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
             dest: "deploy-local/plugins/autosave/plugin.min.js"
+          },
+          {
+            src: "../../../js/tinymce/themes/modern/theme.min.js",
+            dest: "deploy-local/themes/modern/theme.min.js"
           },
           {
             src: "scratch/inline/theme.js",
