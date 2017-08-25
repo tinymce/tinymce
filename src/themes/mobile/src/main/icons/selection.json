@@ -625,6 +625,33 @@
     {
       "icon": {
         "paths": [
+          "M256 214h598v128h-248l-68 160-90-88 30-72h-102l-120-120v-8zM140 214l12 10 616 618-54 54-242-242-66 156h-128l104-246-296-296z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "format_clear"
+        ],
+        "defaultCode": 57913,
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "format_clear",
+        "id": 325,
+        "order": 106,
+        "prevSize": 24,
+        "code": 57913,
+        "name": "remove-format"
+      },
+      "setIdx": 2,
+      "setId": 8,
+      "iconIdx": 325
+    },
+    {
+      "icon": {
+        "paths": [
           "M512 470l342-214h-684zM854 768v-426l-342 212-342-212v426h684zM854 170c46 0 84 40 84 86v512c0 46-38 86-84 86h-684c-46 0-84-40-84-86v-512c0-46 38-86 84-86h684z"
         ],
         "attrs": [],

@@ -83,7 +83,8 @@ asynctest(
         socket: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-editor-socket')),
         toolstrip: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-toolstrip')),
         toolbar: Element.fromDom(realm.element().dom().querySelector('.tinymce-mobile-toolbar')),
-        alloy: realm.system()
+        alloy: realm.system(),
+        dropup: realm.dropup()
       });
     });
 
