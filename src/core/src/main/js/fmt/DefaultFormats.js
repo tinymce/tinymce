@@ -45,7 +45,14 @@ define(
             preview: false,
             defaultBlock: 'div'
           },
-          { selector: 'img,table', collapsed: false, styles: { 'float': 'left' }, preview: 'font-family font-size' }
+          {
+            selector: 'img,table',
+            collapsed: false,
+            styles: {
+              'float': 'left'
+            },
+            preview: 'font-family font-size'
+          }
         ],
 
         aligncenter: [
@@ -55,7 +62,7 @@ define(
               textAlign: 'center'
             },
             inherit: false,
-            preview: false,
+            preview: 'font-family font-size',
             defaultBlock: 'div'
           },
           {
