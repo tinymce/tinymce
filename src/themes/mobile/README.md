@@ -1,15 +1,10 @@
 # TinyMCE mobile theme
 
-There are two themes being used for mobile: `mobile` and `autochooser`. 
+The theme being used for mobile is `beta-mobile`.
 
 ## Mobile
 
 The mobile theme will always load the mobile experience, regardless of the device. For best results, you will need to enable the Mobile mode of your browser of choice (or use a simulator/device).
-
-
-## Autochooser
-
-The autochooser theme will only load the mobile theme when it detects a user agent that is a mobile device. Otherwise, it will load the usual modern theme.
 
 ## Development
 
@@ -82,9 +77,9 @@ aws_secret_access_key = {get from lastpass}
 
 The key is stored in `staging-aws-keys` and gives you access to the `morgan` account on aws. See the account's namesake if you need access.
 
-3. Edit the `index.html` file in the project directory (of either `mobile` or `autochooser`) to match your desired setup.
+3. Edit the `index.html` file in the theme directory to match your desired setup.
 
-4. Run `$ grunt standalone` from either the `autochooser` theme project root or the mobile theme project root. The `autochooser` will create a theme that will still run `modern` on desktop, whereas `mobile` will always be the `mobile` theme. This task will create a `deploy-local` directory which can be tested before uploading. It is what is going to be uploaded to aws.
+4. Run `$ grunt standalone` from the mobile theme project root. This task will create a `deploy-local` directory which can be tested before uploading. It is what is going to be uploaded to aws.
 
 5. Run `$ aws --profile tinymce-mobile-aws s3 sync deploy-local s3://ephox-tinymce-mobile/${SUBDIRECTORY_NAME}` where `$SUBDIRECTORY_NAME` can be blank or any other subdirectory that you would like (typically JIRA issues). Once uploaded, the build will be available at http://ephox-tinymce-mobile.s3-website-us-east-1.amazonaws.com/${SUBDIRECTORY_NAME}/index.html
 

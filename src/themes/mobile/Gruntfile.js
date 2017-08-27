@@ -3,6 +3,7 @@
 module.exports = function (grunt) {
   var fs = require('fs');
   var version = fs.readFileSync('./version.txt', "UTF-8");
+  var changelog = fs.readFileSync('./changelog.txt', 'UTF-8');
 
   grunt.option('stack', true);
   grunt.initConfig({
@@ -90,18 +91,10 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            expand: true,
-            flatten: true,
-            src: ['src/main/css/**'],
-            dest: 'deploy-local/skins/lightgray/',
-            filter: 'isFile'
-          },
-          {
-            expand: true,
-            flatten: true,
-            src: ['src/main/icons/**'],
-            dest: 'deploy-local/skins/icons/',
-            filter: 'isFile'
+            cwd: '../../../js/tinymce/skins',
+            src: '**/*',
+            dest: 'deploy-local/skins',
+            expand: true
           },
           {
             src: "../../../js/tinymce/tinymce.min.js",
@@ -120,8 +113,12 @@ module.exports = function (grunt) {
             dest: "deploy-local/plugins/autosave/plugin.min.js"
           },
           {
+            src: "../../../js/tinymce/themes/modern/theme.min.js",
+            dest: "deploy-local/themes/modern/theme.min.js"
+          },
+          {
             src: "scratch/inline/theme.js",
-            dest: "deploy-local/themes/mobile/theme.js"
+            dest: "deploy-local/themes/beta-mobile/theme.js"
           },
           {
             src: "index.html",
@@ -137,15 +134,15 @@ module.exports = function (grunt) {
       "no-uglify": {
         files: [
           {
-            src: "deploy-local/themes/mobile/theme.js",
-            dest: "deploy-local/themes/mobile/theme.min.js"
+            src: "deploy-local/themes/beta-mobile/theme.js",
+            dest: "deploy-local/themes/beta-mobile/theme.min.js"
           }
         ]
       }
     },
 
     replace: {
-      "standalone": {
+      "mobile-version": {
         options: {
           patterns: [
             {
@@ -156,11 +153,27 @@ module.exports = function (grunt) {
         },
         files: [
           {
-            src: "deploy-local/themes/mobile/theme.js",
-            dest: "deploy-local/themes/mobile/theme.js"
+            src: "deploy-local/themes/beta-mobile/theme.js",
+            dest: "deploy-local/themes/beta-mobile/theme.js"
           }
         ]
 
+      },
+      "mobile-changelog": {
+        options: {
+          patterns: [
+            {
+              match: 'MOBILE_THEME_CHANGELOG',
+              replacement: changelog
+            }
+          ]
+        },
+        files: [
+          {
+            src: 'deploy-local/index.html',
+            dest: 'deploy-local/index.html'
+          }
+        ]
       }
     },
 
@@ -189,8 +202,8 @@ module.exports = function (grunt) {
       "standalone": {
         files: [
           {
-            src: "deploy-local/themes/mobile/theme.js",
-            dest: "deploy-local/themes/mobile/theme.min.js"
+            src: "deploy-local/themes/beta-mobile/theme.js",
+            dest: "deploy-local/themes/beta-mobile/theme.min.js"
           }
         ]
       },
@@ -250,5 +263,5 @@ module.exports = function (grunt) {
   grunt.registerTask("chrome-tests", ["bedrock-auto:chrome"]);
   grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("browser-tests", ["bedrock-manual"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace:standalone", "uglify:standalone"]);
+  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace", "uglify:standalone"]);
 };
