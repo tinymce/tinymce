@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         config: 'config/bolt/browser.js',
         testfiles: [
           // NOTE: This one is temperamental on phantom with focus.
-          /* 'src/test/js/browser/ui/SerialisedLinkTest.js', */
+          // 'src/test/js/browser/ui/SerialisedLinkTest.js',
           'src/test/js/phantom/**/*Test.js',
           'src/test/js/browser/ui/ButtonsTest.js',
           'src/test/js/browser/features/**/*Test.js'
