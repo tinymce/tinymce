@@ -216,8 +216,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          'src/main/css/skin.mobile.css': 'src/main/css/app/mobile-less.less', // destination file and source file
-          'src/main/css/icons.mobile.css': 'src/main/css/app/mobile-icons.less'
+          'src/main/css/skin.mobile.css': 'src/main/css/app/mobile-less.less' // destination file and source file
         }
       }
     },
