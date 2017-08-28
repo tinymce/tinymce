@@ -104,8 +104,8 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            src: ['src/main/icons/tinymce-mobile.woff'],
-            dest: 'dist/skins/icons/',
+            src: ['src/main/css/fonts/tinymce-mobile.woff'],
+            dest: 'dist/skins/lightgray/fonts/',
             filter: 'isFile'
           }
         ]
