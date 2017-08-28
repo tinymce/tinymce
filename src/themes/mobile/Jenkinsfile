@@ -23,9 +23,9 @@ node("primary") {
     sh "grunt"
   }
 
-  stage ("Build Mobile styles") {
+  stage ("Build Mobile theme") {
     dir("src/themes/mobile") {
-      sh "grunt less"
+      sh "grunt dist"
     }
   }
 
@@ -35,7 +35,7 @@ node("primary") {
     }
   }
 
-  stage ("Publishing Mobile theme") {
+  stage ("Publish Mobile theme") {
     dir ("src/themes/mobile") {
       step([$class: 'ArtifactArchiver', artifacts: 'dist/**'])
       publishBuild "dist"
