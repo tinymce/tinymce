@@ -18,37 +18,71 @@ define(
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 
-      var fontSlider = GuiFactory.build(
-        Container.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
-          },
-          components: FontSizeSlider.makeItems({
-            onChange: Fun.noop,
-            getInitialValue: Fun.constant(2)
-          })
-        })
-      );
+      var fontSlider = Container.sketch({
+        dom: {
+          tag: 'div',
+          classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
+        },
+        components: [
+          {
+            dom: {
+              tag: 'div',
+              classes: [ Styles.resolve('toolbar-group') ]
+            },
+            components: FontSizeSlider.makeItems({
+              onChange: Fun.noop,
+              getInitialValue: Fun.constant(2)
+            })
+          }
+        ]
+      });
 
-      var colorSlider = GuiFactory.build(
-        Container.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
-          },
-          components: ColorSlider.makeItems({
-            onChange: Fun.noop,
-            getInitialValue: Fun.constant(-1)
-          })
-        })
-      );
+      var colorSlider = Container.sketch({
+        dom: {
+          tag: 'div',
+          classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
+        },
+        components: [
+          {
+            dom: {
+              tag: 'div',
+              classes: [ Styles.resolve('toolbar-group') ]
+            },
+            components: ColorSlider.makeItems({
+              onChange: Fun.noop,
+              getInitialValue: Fun.constant(-1)
+            })
+          }
+        ]
+      });
 
       var gui = Gui.create();
       Attachment.attachSystem(ephoxUi, gui);
 
-      gui.add(fontSlider);
-      gui.add(colorSlider);
+      var container = GuiFactory.build({
+        dom: {
+          tag: 'div',
+          classes: [ Styles.resolve('outer-container'), Styles.resolve('fullscreen-maximized') ]
+        },
+        components: [
+          {
+            dom: {
+              tag: 'div',
+              classes: [ Styles.resolve('toolstrip') ]
+            },
+            components: [ fontSlider ]
+          },
+          {
+            dom: {
+              tag: 'div',
+              classes: [ Styles.resolve('toolstrip') ]
+            },
+            components: [ colorSlider ]
+          }
+        ]
+      });
+
+      gui.add(container);
     };
   }
 );
