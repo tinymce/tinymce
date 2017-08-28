@@ -15,7 +15,7 @@ define(
   function (TableSelection, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
     var each = Tools.each;
 
-    var registerCommands = function (editor, dialogs, actions) {
+    var registerCommands = function (editor, dialogs, actions, cellSelection) {
 
       var selections = Selections(editor);
 
@@ -41,7 +41,7 @@ define(
           execute(table, targets).each(function (rng) {
             editor.selection.setRng(rng);
             editor.focus();
-            TableSelection.clear(table);
+            cellSelection.clear(table);
           });
         });
       };

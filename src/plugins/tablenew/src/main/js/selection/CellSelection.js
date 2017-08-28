@@ -4,7 +4,6 @@ define(
   [
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionKeys',
-    'ephox.darwin.api.TableSelection',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection',
     'ephox.katamari.api.Arr',
@@ -16,12 +15,37 @@ define(
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.events.MouseEvent',
     'ephox.sugar.api.node.Element',
-    'tinymce.plugins.tablenew.queries.Direction'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter',
+    'tinymce.plugins.tablenew.queries.Direction',
+    'tinymce.plugins.tablenew.selection.Ephemera'
   ],
 
-  function (InputHandlers, SelectionKeys, TableSelection, SelectionRange, WindowSelection, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Direction) {
+  function (InputHandlers, SelectionKeys, SelectionRange, WindowSelection, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Attr, SelectorFilter, Direction, Ephemera) {
     return function (editor, lazyResize) {
       var inputHandlers = Cell([]);
+
+      var removeSelectionAttributes = function (element) {
+        Attr.remove(element, Ephemera.selected());
+        Attr.remove(element, Ephemera.firstSelected());
+        Attr.remove(element, Ephemera.lastSelected());
+      };
+
+      var addSelectionAttribute = function (element) {
+        Attr.set(element, Ephemera.selected(), '1');
+      };
+
+      var clear = function (container) {
+        var sels = SelectorFilter.descendants(container, Ephemera.selected());
+        Arr.each(sels, removeSelectionAttributes);
+      };
+
+      var selectRange = function (container, cells, start, finish) {
+        clear(container);
+        Arr.each(cells, addSelectionAttribute);
+        Attr.set(start, Ephemera.firstSelected(), '1');
+        Attr.set(finish, Ephemera.lastSelected(), '1');
+      };
 
       editor.on('init', function (e) {
         var win = editor.getWin();
@@ -42,12 +66,12 @@ define(
             });
           });
           sameTable.fold(function () {
-            TableSelection.clear(body);
+            clear(body);
           }, Fun.noop);
         };
 
-        var mouseHandlers = InputHandlers.mouse(win, body, isRoot);
-        var keyHandlers = InputHandlers.keyboard(win, body, isRoot);
+        var mouseHandlers = InputHandlers.mouse(win, body, isRoot, clear, selectRange);
+        var keyHandlers = InputHandlers.keyboard(win, body, isRoot, clear);
 
         var handleResponse = function (event, response) {
           if (response.kill()) {
@@ -107,6 +131,7 @@ define(
       };
 
       return {
+        clear: clear,
         destroy: destroy
       };
     };

@@ -50,7 +50,7 @@ define(
 
       var actions = TableActions(editor, lazyWire);
 
-      TableCommands.registerCommands(editor, dialogs, actions);
+      TableCommands.registerCommands(editor, dialogs, actions, cellSelection);
 
       MenuItems.addMenuItems(editor, dialogs);
       Buttons.addButtons(editor, dialogs);
