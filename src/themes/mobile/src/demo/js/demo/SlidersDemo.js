@@ -8,27 +8,21 @@ define(
     'ephox.alloy.api.ui.Container',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.SelectorFind',
-    'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.ColorSlider',
-    'tinymce.themes.mobile.ui.FontSizeSlider'
+    'tinymce.themes.mobile.ui.FontSizeSlider',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (GuiFactory, Attachment, Gui, Container, Fun, SelectorFind, Styles, ColorSlider, FontSizeSlider) {
+  function (GuiFactory, Attachment, Gui, Container, Fun, SelectorFind, ColorSlider, FontSizeSlider, UiDomFactory) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 
       var fontSlider = Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-toolbar ${prefix}-context-toolbar"></div>'),
         components: [
           {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('toolbar-group') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-toolbar-group"></div>'),
             components: FontSizeSlider.makeItems({
               onChange: Fun.noop,
               getInitialValue: Fun.constant(2)
@@ -38,16 +32,10 @@ define(
       });
 
       var colorSlider = Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('toolbar'), Styles.resolve('context-toolbar') ]
-        },
+        dom: UiDomFactory.dom('<div class="${prefix}-toolbar ${prefix}-context-toolbar"></div>'),
         components: [
           {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('toolbar-group') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-toolbar-group"></div>'),
             components: ColorSlider.makeItems({
               onChange: Fun.noop,
               getInitialValue: Fun.constant(-1)
@@ -60,23 +48,14 @@ define(
       Attachment.attachSystem(ephoxUi, gui);
 
       var container = GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('outer-container'), Styles.resolve('fullscreen-maximized') ]
-        },
+        dom: UiDomFactory.dom('<div class="{prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
         components: [
           {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('toolstrip') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-toolstrip"></div>'),
             components: [ fontSlider ]
           },
           {
-            dom: {
-              tag: 'div',
-              classes: [ Styles.resolve('toolstrip') ]
-            },
+            dom: UiDomFactory.dom('<div class="${prefix}-toolstrip"></div>'),
             components: [ colorSlider ]
           }
         ]
