@@ -241,14 +241,18 @@ module.exports = function (grunt) {
   grunt.task.loadTasks('../../../node_modules/grunt-contrib-watch/tasks');
   grunt.task.loadTasks('../../../node_modules/grunt-replace/tasks');
 
-  grunt.registerTask('copy-dist', ['copy-dist-mobile-theme', 'copy:dist-mobile-css']);
+  grunt.registerTask('copy-dist', ['copy:dist-mobile-theme', 'copy:dist-mobile-css']);
+  grunt.registerTask('build-dist', [ 'bolt-init', 'bolt-build', 'replace:mobile-version' ]);
+  grunt.registerTask('minify-dist', [ 'uglify:theme' ]);
 
-  grunt.registerTask('dist', ['bolt-init', 'bolt-build', 'replace:mobile-version', 'copy:dist-mobile-theme', 'copy:dist-mobile-css', /*'eslint',*/ 'uglify:theme']);
+  grunt.registerTask('dist', ['build-dist', 'copy-dist', /*'eslint',*/ 'minify-dist']);
+
   grunt.registerTask('atomic-tests', ['bolt-build', 'bolt-test:atomic']);
   grunt.registerTask('phantom-tests', ['bedrock-auto:phantomjs']);
   grunt.registerTask('chrome-tests', ['bedrock-auto:chrome']);
   grunt.registerTask('tests', ['bolt-test:atomic', 'bedrock-auto:phantomjs', 'bedrock-auto:chrome']);
   grunt.registerTask('browser-tests', ['bedrock-manual']);
+
   grunt.registerTask('standalone', [ 'dist', 'copy:standalone', 'replace:mobile-changelog']);
 
   grunt.registerTask('default', ['dist']);

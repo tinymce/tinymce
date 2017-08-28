@@ -2,6 +2,11 @@
 
 <h3>Mobile Changelog</h3>
 
+<h4>v11</h4>
+<ul>
+  <li>Streamlined package structure and renamed CSS files</li>
+</ul>
+
 <h4>v10</h4>
 <ul>
   <li>Removed autochooser theme</li>
