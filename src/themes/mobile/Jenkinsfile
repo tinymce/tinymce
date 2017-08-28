@@ -16,8 +16,7 @@ node("primary") {
 
   stage ("Fetch dependencies") {
     echo "Fetching npm dependencies"
-    sh "rm -rf node_modules"
-    sh "npm install"
+    sh "npm install && npm update --dev"
   }
   
   stage ("Build TinyMCE project") {
@@ -37,7 +36,9 @@ node("primary") {
   }
 
   stage ("Publishing Mobile theme") {
-    step([$class: 'ArtifactArchiver', artifacts: 'dist/**'])
-    publishBuild "dist"
+    dir ("src/themes/mobile") {
+      step([$class: 'ArtifactArchiver', artifacts: 'dist/**'])
+      publishBuild "dist"
+    }
   }
 }
