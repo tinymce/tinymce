@@ -69,6 +69,8 @@ define(
               }
             }),
             AddEventsBehaviour.config(clearInputBehaviour, [
+              // INVESTIGATE: Because this only happens on input,
+              // it won't reset unless it has an initial value
               AlloyEvents.run(NativeEvents.input(), function (iContainer) {
                 var input = inputSpec.get(iContainer);
                 var val = Representing.getValue(input);

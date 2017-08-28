@@ -15,8 +15,8 @@ define(
       });
 
       return {
-        content: base + '/content.css',
-        ui: base + '/mobile.css'
+        content: base + '/content.mobile.css',
+        ui: base + '/skin.mobile.css'
       };
     };
 

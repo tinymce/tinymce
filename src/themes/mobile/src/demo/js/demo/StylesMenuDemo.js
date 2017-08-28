@@ -7,10 +7,11 @@ define(
     'ephox.alloy.api.system.Gui',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.search.SelectorFind',
-    'tinymce.themes.mobile.ui.StylesMenu'
+    'tinymce.themes.mobile.ui.StylesMenu',
+    'tinymce.themes.mobile.util.UiDomFactory'
   ],
 
-  function (GuiFactory, Attachment, Gui, Fun, SelectorFind, StylesMenu) {
+  function (GuiFactory, Attachment, Gui, Fun, SelectorFind, StylesMenu, UiDomFactory) {
     return function () {
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
@@ -41,7 +42,19 @@ define(
       var gui = Gui.create();
       Attachment.attachSystem(ephoxUi, gui);
 
-      gui.add(GuiFactory.build(menu));
+      var container = GuiFactory.build({
+        dom: UiDomFactory.dom('<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
+        components: [
+          {
+            dom: UiDomFactory.dom('<div class="${prefix}-dropup" style="height: 500px;"></div>'),
+            components: [
+              menu
+            ]
+          }
+        ]
+      });
+
+      gui.add(container);
     }
   }
 );

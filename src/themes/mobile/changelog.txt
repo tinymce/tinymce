@@ -2,42 +2,48 @@
 
 <h3>Mobile Changelog</h3>
 
-<h4>v10</h4>
+<h4>0.0.11</h4>
+<ul>
+  <li>Streamlined package structure and renamed CSS files</li>
+  <li>Changed icon for applying styles</li>
+</ul>
+
+<h4>0.0.10</h4>
 <ul>
   <li>Removed autochooser theme</li>
   <li>Renamed theme to beta-mobile</li>
 </ul>
 
-<h4>v9</h4>
+<h4>0.0.9</h4>
 
 <ul>
   <li>fix styles on serialised link dialog input fields</li>
   <li>made link dialog dot colours consistent with iOS and Material guidelines</li>
 </ul>
 
-<h4>v8</h4>
+<h4>0.0.8</h4>
 <ul>
   <li>added support for removeformat</li>
 </ul>
 
-<h4>v7</h4>
+<h4>0.0.7</h4>
 <ul>
   <li>fixed dropup height in landscape on various devices</li>
 </ul>
 
-<h4>v6</h4>
+<h4>0.0.6</h4>
 <ul>
   <li>fixed regression where formatting buttons were not showing selected state</li>
   <li>implemented selected state for link buttons</li>
 </ul>
 
-<h4>v5</h4>
+<h4>0.0.5</h4>
 <ul>
   <li>added dropup widget</li>
   <li>implement style formats, using dropup for ui</li>
 </ul>
 
-<h4>v4</h4>
+<h4>0.0.4</h4>
 <ul>
   <li>support custom toolbar configuration</li>
   <li>added support for: redo, unlink, and numlist</li>

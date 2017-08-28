@@ -2,46 +2,49 @@
 
 module.exports = function (grunt) {
   var fs = require('fs');
-  var version = fs.readFileSync('./version.txt', "UTF-8");
+
+  var packageData = grunt.file.readJSON('package.json');
+  var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
+
   var changelog = fs.readFileSync('./changelog.txt', 'UTF-8');
 
   grunt.option('stack', true);
   grunt.initConfig({
-    "bolt-init": {
-      "theme": {
-        config_dir: "config/bolt"
+    'bolt-init': {
+      'theme': {
+        config_dir: 'config/bolt'
       }
     },
 
-    "bolt-build": {
-      "theme": {
-        config_js: "config/bolt/prod.js",
-        output_dir: "scratch",
-        main: "tinymce.themes.mobile.Theme",
-        filename: "theme",
+    'bolt-build': {
+      'theme': {
+        config_js: 'config/bolt/prod.js',
+        output_dir: 'scratch',
+        main: 'tinymce.themes.mobile.Theme',
+        filename: 'theme',
 
         generate_inline: true,
         minimise_module_names: true,
 
         files: {
-          src: ["src/main/js/Theme.js"]
+          src: ['src/main/js/Theme.js']
         }
       }
     },
 
-    "bedrock-manual": {
-      "all": {
-        config: "config/bolt/browser.js",
-        testfiles: "src/test/js/browser/**/*Test.js",
-        projectdir: "../../..",
-        browser: "chrome",
+    'bedrock-manual': {
+      'all': {
+        config: 'config/bolt/browser.js',
+        testfiles: 'src/test/js/browser/**/*Test.js',
+        projectdir: '../../..',
+        browser: 'chrome',
         options: {
           stopOnFailure: true
         }
       }
     },
 
-    "bedrock-auto": {
+    'bedrock-auto': {
       phantomjs: {
         config: 'config/bolt/browser.js',
         testfiles: [
@@ -58,108 +61,103 @@ module.exports = function (grunt) {
         }
       },
 
-      "chrome": {
-        config: "config/bolt/browser.js",
-        testfiles: "src/test/js/browser/**/*Test.js",
-        projectdir: "../../..",
-        browser: "chrome",
+      'chrome': {
+        config: 'config/bolt/browser.js',
+        testfiles: 'src/test/js/browser/**/*Test.js',
+        projectdir: '../../..',
+        browser: 'chrome',
         options: {
           stopOnFailure: true
         }
       }
     },
 
-    "bolt-test": {
-      "atomic" :{
-        config: "config/bolt/atomic.js",
+    'bolt-test': {
+      'atomic' :{
+        config: 'config/bolt/atomic.js',
         files: {
-          src: [ "src/test/js/atomic/smooth/*Test.js" ]
+          src: [ 'src/test/js/atomic/smooth/*Test.js' ]
         }
       }
     },
 
     copy: {
-      "theme": {
+      'dist-mobile-theme': {
         files: [
+          /* Other theme.js is handled by uglify */
           {
-            src: "scratch/inline/theme.raw.js",
-            dest: "dist/inline/theme.js"
+            src: 'scratch/inline/theme.raw.js',
+            dest: 'dist/themes/beta-mobile/theme.js'
           }
         ]
       },
 
-      "standalone": {
+      'dist-mobile-css': {
         files: [
           {
-            cwd: '../../../js/tinymce/skins',
+            expand: true,
+            flatten: true,
+            src: ['src/main/css/*.css'],
+            dest: 'dist/skins/lightgray/',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['src/main/css/fonts/tinymce-mobile.woff'],
+            dest: 'dist/skins/lightgray/fonts/',
+            filter: 'isFile'
+          }
+        ]
+      },
+
+      'standalone': {
+        files: [
+          {
+            cwd: '../../../js/tinymce',
             src: '**/*',
-            dest: 'deploy-local/skins',
+            dest: 'deploy-local/',
             expand: true
           },
           {
-            src: "../../../js/tinymce/tinymce.min.js",
-            dest: "deploy-local/tinymce.min.js"
+            cwd: 'dist',
+            src: '**/*',
+            dest: 'deploy-local',
+            expand: true
           },
           {
-            src: "../../../js/tinymce/plugins/lists/plugin.min.js",
-            dest: "deploy-local/plugins/lists/plugin.min.js"
-          },
-          {
-            src: "../../../js/tinymce/plugins/autolink/plugin.min.js",
-            dest: "deploy-local/plugins/autolink/plugin.min.js"
-          },
-          {
-            src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
-            dest: "deploy-local/plugins/autosave/plugin.min.js"
-          },
-          {
-            src: "../../../js/tinymce/themes/modern/theme.min.js",
-            dest: "deploy-local/themes/modern/theme.min.js"
-          },
-          {
-            src: "scratch/inline/theme.js",
-            dest: "deploy-local/themes/beta-mobile/theme.js"
-          },
-          {
-            src: "index.html",
-            dest: "deploy-local/index.html"
-          },
-          {
-            src: "index-bootstrap.html",
-            dest: "deploy-local/index-bootstrap.html"
-          }
-        ]
-      },
-
-      "no-uglify": {
-        files: [
-          {
-            src: "deploy-local/themes/beta-mobile/theme.js",
-            dest: "deploy-local/themes/beta-mobile/theme.min.js"
+            cwd: 'src/resources/html',
+            src: '*.html',
+            dest: 'deploy-local',
+            expand: true
           }
         ]
       }
     },
 
     replace: {
-      "mobile-version": {
+      'mobile-version': {
         options: {
           patterns: [
             {
               match: 'MOBILE_THEME_VERSION',
-              replacement: version.trim()
+              replacement: BUILD_VERSION
             }
           ]
         },
         files: [
           {
-            src: "deploy-local/themes/beta-mobile/theme.js",
-            dest: "deploy-local/themes/beta-mobile/theme.js"
+            src: 'scratch/inline/theme.js',
+            dest: 'scratch/inline/theme.js'
+          },
+          {
+            src: 'scratch/inline/theme.raw.js',
+            dest: 'scratch/inline/theme.raw.js'
           }
         ]
-
       },
-      "mobile-changelog": {
+
+      'mobile-changelog': {
         options: {
           patterns: [
             {
@@ -179,11 +177,11 @@ module.exports = function (grunt) {
 
     eslint: {
       options: {
-        config: "../../../.eslintrc"
+        config: '../../../.eslintrc'
       },
 
       src: [
-        "src"
+        'src'
       ]
     },
 
@@ -199,20 +197,11 @@ module.exports = function (grunt) {
         }
       },
 
-      "standalone": {
+      'theme': {
         files: [
           {
-            src: "deploy-local/themes/beta-mobile/theme.js",
-            dest: "deploy-local/themes/beta-mobile/theme.min.js"
-          }
-        ]
-      },
-
-      "theme": {
-        files: [
-          {
-            src: "scratch/inline/theme.js",
-            dest: "dist/inline/theme.min.js"
+            src: 'scratch/inline/theme.js',
+            dest: 'dist/themes/beta-mobile/theme.min.js'
           }
         ]
       }
@@ -220,48 +209,56 @@ module.exports = function (grunt) {
     less: {
       development: {
         options: {
-          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ "last 2 versions", /* for phantom */"safari >= 4" ]}) ],
+          plugins : [ new (require('less-plugin-autoprefix'))({browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ]}) ],
           compress: true,
           yuicompress: true,
           sourceMap: true,
           optimization: 2
         },
         files: {
-          "src/main/css/mobile.css": "src/main/css/app/mobile-less.less" // destination file and source file
+          'src/main/css/skin.mobile.css': 'src/main/css/app/mobile-less.less' // destination file and source file
         }
       }
     },
     watch: {
       styles: {
         files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
-        tasks: ['less', 'bolt-build', 'copy:standalone', 'copy:no-uglify' ],
+        tasks: ['dist' ],
         options: {
           nospawn: false,
           atBegin: true
         }
       }
-      //,
-      // tests: {
-      //   files: ['src/**/**.js'],
-      //   tasks: [ 'bolt-test:atomic', 'bedrock-auto:phantomjs' ]
-      // }
     }
   });
 
-  grunt.task.loadTasks("../../../node_modules/@ephox/bolt/tasks");
-  grunt.task.loadTasks("../../../node_modules/@ephox/bedrock/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-contrib-less/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-replace/tasks");
+  grunt.registerTask('version', 'Creates a version file', function () {
+    grunt.file.write('dist/version.txt', BUILD_VERSION);
+  });
 
-  grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify:theme"]);
-  grunt.registerTask("atomic-tests", ["bolt-build", "bolt-test:atomic"]);
-  grunt.registerTask("phantom-tests", ["bedrock-auto:phantomjs"]);
-  grunt.registerTask("chrome-tests", ["bedrock-auto:chrome"]);
-  grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
-  grunt.registerTask("browser-tests", ["bedrock-manual"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace", "uglify:standalone"]);
+  grunt.task.loadTasks('../../../node_modules/@ephox/bolt/tasks');
+  grunt.task.loadTasks('../../../node_modules/@ephox/bedrock/tasks');
+  grunt.task.loadTasks('../../../node_modules/grunt-contrib-copy/tasks');
+  grunt.task.loadTasks('../../../node_modules/grunt-contrib-uglify/tasks');
+  grunt.task.loadTasks('../../../node_modules/grunt-eslint/tasks');
+  grunt.task.loadTasks('../../../node_modules/grunt-contrib-less/tasks');
+  grunt.task.loadTasks('../../../node_modules/grunt-contrib-watch/tasks');
+  grunt.task.loadTasks('../../../node_modules/grunt-replace/tasks');
+
+  grunt.registerTask('copy-dist', ['copy:dist-mobile-theme', 'copy:dist-mobile-css']);
+  grunt.registerTask('build-dist', [ 'bolt-init', 'bolt-build', 'replace:mobile-version', 'version' ]);
+  grunt.registerTask('minify-dist', [ 'uglify:theme' ]);
+
+  // TODO: Re-enable eslint
+  grunt.registerTask('dist', ['build-dist', 'less', 'copy-dist', /*'eslint',*/ 'minify-dist']);
+
+  grunt.registerTask('atomic-tests', ['bolt-build', 'bolt-test:atomic']);
+  grunt.registerTask('phantom-tests', ['bedrock-auto:phantomjs']);
+  grunt.registerTask('chrome-tests', ['bedrock-auto:chrome']);
+  grunt.registerTask('tests', ['bolt-test:atomic', 'bedrock-auto:phantomjs', 'bedrock-auto:chrome']);
+  grunt.registerTask('browser-tests', ['bedrock-manual']);
+
+  grunt.registerTask('standalone', [ 'dist', 'copy:standalone', 'replace:mobile-changelog']);
+
+  grunt.registerTask('default', ['dist']);
 };
