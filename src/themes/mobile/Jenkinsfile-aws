@@ -1,0 +1,25 @@
+node("aws-tools") {
+  stage ("Deployment") {
+    echo "Git checkout"
+    git([branch: "master", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
+    
+    echo "Fetching npm dependencies"
+    sh "rm -rf node_modules"
+    sh "npm install"
+    
+    echo "Grunt"
+    sh "grunt"
+  
+    dir("src/themes/mobile") {
+      echo "Building CSS"
+      sh "grunt less"
+    
+      def version = readFile 'version.txt'
+      echo version
+      
+      sh "grunt standalone"
+      
+      sh "aws --profile staging s3 sync deploy-local s3://ephox-tinymce-mobile/versions/m" + version
+    }
+  }
+}

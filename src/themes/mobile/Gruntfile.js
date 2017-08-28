@@ -2,7 +2,10 @@
 
 module.exports = function (grunt) {
   var fs = require('fs');
-  var version = fs.readFileSync('./version.txt', 'UTF-8');
+
+  var packageData = grunt.file.readJSON('package.json');
+  var BUILD_VERSION = packageData.version + '-' + (process.env.BUILD_NUMBER ? process.env.BUILD_NUMBER : '0');
+
   var changelog = fs.readFileSync('./changelog.txt', 'UTF-8');
 
   grunt.option('stack', true);
@@ -141,7 +144,7 @@ module.exports = function (grunt) {
           patterns: [
             {
               match: 'MOBILE_THEME_VERSION',
-              replacement: version.trim()
+              replacement: BUILD_VERSION
             }
           ]
         },
@@ -232,6 +235,10 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('version', 'Creates a version file', function () {
+    grunt.file.write('dist/version.txt', BUILD_VERSION);
+  });
+
   grunt.task.loadTasks('../../../node_modules/@ephox/bolt/tasks');
   grunt.task.loadTasks('../../../node_modules/@ephox/bedrock/tasks');
   grunt.task.loadTasks('../../../node_modules/grunt-contrib-copy/tasks');
@@ -242,7 +249,7 @@ module.exports = function (grunt) {
   grunt.task.loadTasks('../../../node_modules/grunt-replace/tasks');
 
   grunt.registerTask('copy-dist', ['copy:dist-mobile-theme', 'copy:dist-mobile-css']);
-  grunt.registerTask('build-dist', [ 'bolt-init', 'bolt-build', 'replace:mobile-version' ]);
+  grunt.registerTask('build-dist', [ 'bolt-init', 'bolt-build', 'replace:mobile-version', 'version' ]);
   grunt.registerTask('minify-dist', [ 'uglify:theme' ]);
 
   grunt.registerTask('dist', ['build-dist', 'copy-dist', /*'eslint',*/ 'minify-dist']);

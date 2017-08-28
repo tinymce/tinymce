@@ -1,6 +1,8 @@
 def credentialsId = '8aa93893-84cc-45fc-a029-a42f21197bb3'
 
 node("primary") {
+  def publishBuild = load("jenkins-plumbing/publish-build.groovy")
+
   stage ("Checkout project") {
     git([branch: "master", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
   }
@@ -11,43 +13,24 @@ node("primary") {
     sh "npm install"
   }
   
-  stage ("Build project") {
+  stage ("Build TinyMCE project") {
     sh "grunt"
+  }
 
+  stage ("Build Mobile styles") {
     dir("src/themes/mobile") {
       sh "grunt less"
     }
   }
 
-  stage ("Run tests") {
+  stage ("Run Mobile tests") {
     dir("src/themes/mobile") {
       sh "grunt atomic-tests phantom-tests"
     }
   }
-}
 
-node("aws-tools") {
-  stage ("Deployment") {
-    echo "Git checkout"
-    git([branch: "master", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
-    
-    echo "Fetching npm dependencies"
-    sh "rm -rf node_modules"
-    sh "npm install"
-    
-    echo "Grunt"
-    sh "grunt"
-  
-    dir("src/themes/mobile") {
-      echo "Building CSS"
-      sh "grunt less"
-    
-      def version = readFile 'version.txt'
-      echo version
-      
-      sh "grunt standalone"
-      
-      sh "aws --profile staging s3 sync deploy-local s3://ephox-tinymce-mobile/versions/m" + version
-    }
+  stage ("Publishing Mobile theme") {
+    step([$class: 'ArtifactArchiver', artifacts: 'dist/**'])
+    publishBuild "dist"
   }
 }
