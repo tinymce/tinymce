@@ -18,29 +18,14 @@ define(
   'tinymce.plugins.tablenew.actions.TableActions',
   [
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableOperations',
     'ephox.sugar.api.node.Element',
-    'tinymce.plugins.tablenew.actions.TableWire',
     'tinymce.plugins.tablenew.queries.Direction'
   ],
-  function (Fun, Option, ResizeWire, TableDirection, TableFill, TableOperations, Element, TableWire, Direction) {
-    return function (editor) {
-
-      var wire = Option.none();
-
-      editor.on('init', function (e) {
-        var rawWire = TableWire.get(editor);
-        wire = Option.some(rawWire);
-      });
-
-      var lazyWire = function () {
-        return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
-      };
-
+  function (Fun, TableDirection, TableFill, TableOperations, Element, Direction) {
+    return function (editor, lazyWire) {
       var execute = function (operation, mutate, lazyWire) {
         return function (table, target) {
           var wire = lazyWire();

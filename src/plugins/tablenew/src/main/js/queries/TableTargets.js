@@ -14,7 +14,7 @@ define(
         element: Fun.constant(cell),
         mergable: Option.none,
         unmergable: Option.none,
-        selection: Fun.constant([])
+        selection: Fun.constant([cell])
       };
     };
 

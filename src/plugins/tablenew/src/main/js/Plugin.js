@@ -23,6 +23,7 @@ define(
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.node.Element',
     'tinymce.core.PluginManager',
+    'tinymce.plugins.tablenew.actions.TableActions',
     'tinymce.plugins.tablenew.actions.TableCommands',
     'tinymce.plugins.tablenew.actions.TableWire',
     'tinymce.plugins.tablenew.queries.Direction',
@@ -32,7 +33,7 @@ define(
     'tinymce.plugins.tablenew.ui.Dialogs',
     'tinymce.plugins.tablenew.ui.MenuItems'
   ],
-  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, TableCommands, TableWire, Direction, TabContext, CellSelection, Buttons, Dialogs, MenuItems) {
+  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
 
       var lazyResize = function () {
@@ -47,7 +48,9 @@ define(
 
       var dialogs = new Dialogs(editor);
 
-      TableCommands.registerCommands(editor, dialogs);
+      var actions = TableActions(editor, lazyWire);
+
+      TableCommands.registerCommands(editor, dialogs, actions);
 
       MenuItems.addMenuItems(editor, dialogs);
       Buttons.addButtons(editor, dialogs);
@@ -83,7 +86,7 @@ define(
       // Enable tab key cell navigation
       if (editor.settings.table_tab_navigation !== false) {
         editor.on('keydown', function (e) {
-          TabContext.handle(e, editor, lazyWire);
+          TabContext.handle(e, editor, actions, lazyWire);
         });
       }
 

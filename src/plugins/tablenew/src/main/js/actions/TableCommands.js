@@ -8,17 +8,15 @@ define(
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.tablenew.actions.TableActions',
     'tinymce.plugins.tablenew.queries.TableTargets',
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableSelection, TableLookup, Insert, Remove, Element, Tools, TableActions, TableTargets, Selections) {
+  function (TableSelection, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
     var each = Tools.each;
 
-    var registerCommands = function (editor, dialogs) {
+    var registerCommands = function (editor, dialogs, actions) {
 
-      var actions = TableActions(editor);
       var selections = Selections(editor);
 
       var eraseTable = function () {
