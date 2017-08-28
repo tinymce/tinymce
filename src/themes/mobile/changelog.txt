@@ -5,6 +5,7 @@
 <h4>0.0.11</h4>
 <ul>
   <li>Streamlined package structure and renamed CSS files</li>
+  <li>Changed icon for applying styles</li>
 </ul>
 
 <h4>0.0.10</h4>

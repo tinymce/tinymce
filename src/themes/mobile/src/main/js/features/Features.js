@@ -77,7 +77,7 @@ define(
       };
 
       var styleselect = Memento.record(
-        Buttons.forToolbar('font-size', function (button) {
+        Buttons.forToolbar('style-formats', function (button) {
           editor.fire('toReading');
           realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
         }, Behaviour.derive([
