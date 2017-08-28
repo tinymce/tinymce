@@ -38,7 +38,9 @@ node("primary") {
   stage ("Publish Mobile theme") {
     dir ("src/themes/mobile") {
       step([$class: 'ArtifactArchiver', artifacts: 'dist/**'])
-      publishBuild "dist"
     }
+
+    /* NOTE: Does not consider the current directory, instead uses Workspace */
+    publishBuild "src/themes/mobile/dist"
   }
 }
