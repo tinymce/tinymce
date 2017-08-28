@@ -79,7 +79,7 @@ module.exports = function (grunt) {
     },
 
     copy: {
-      "theme": {
+      "mobile-theme": {
         files: [
           {
             src: "scratch/inline/theme.raw.js",
@@ -88,38 +88,38 @@ module.exports = function (grunt) {
         ]
       },
 
-      "standalone": {
+      "mobile-css": {
         files: [
           {
-            cwd: '../../../js/tinymce/skins',
+            expand: true,
+            flatten: true,
+            src: ['src/main/css/*.css'],
+            dest: 'deploy-local/skins/lightgray/',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['src/main/icons/tinymce-mobile.woff'],
+            dest: 'deploy-local/skins/icons/',
+            filter: 'isFile'
+          }
+        ]
+      },
+
+      "tinymce-main": {
+        files: [
+          {
+            cwd: '../../../js/tinymce',
             src: '**/*',
-            dest: 'deploy-local/skins',
+            dest: 'deploy-local/',
             expand: true
-          },
-          {
-            src: "../../../js/tinymce/tinymce.min.js",
-            dest: "deploy-local/tinymce.min.js"
-          },
-          {
-            src: "../../../js/tinymce/plugins/lists/plugin.min.js",
-            dest: "deploy-local/plugins/lists/plugin.min.js"
-          },
-          {
-            src: "../../../js/tinymce/plugins/autolink/plugin.min.js",
-            dest: "deploy-local/plugins/autolink/plugin.min.js"
-          },
-          {
-            src: "../../../js/tinymce/plugins/autosave/plugin.min.js",
-            dest: "deploy-local/plugins/autosave/plugin.min.js"
-          },
-          {
-            src: "../../../js/tinymce/themes/modern/theme.min.js",
-            dest: "deploy-local/themes/modern/theme.min.js"
-          },
-          {
-            src: "scratch/inline/theme.js",
-            dest: "deploy-local/themes/beta-mobile/theme.js"
-          },
+          }
+        ]
+      },
+      
+      "mobile-demo-pages": {
+        files: [
           {
             src: "index.html",
             dest: "deploy-local/index.html"
@@ -227,14 +227,14 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          "src/main/css/mobile.css": "src/main/css/app/mobile-less.less" // destination file and source file
+          "src/main/css/skin.mobile.css": "src/main/css/app/mobile-less.less" // destination file and source file
         }
       }
     },
     watch: {
       styles: {
         files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
-        tasks: ['less', 'bolt-build', 'copy:standalone', 'copy:no-uglify' ],
+        tasks: ['less', 'bolt-build', 'copy:mobile-theme', 'copy:mobile-css', 'copy:tinymce-main', 'copy:mobile-demo-pages', 'copy:no-uglify' ],
         options: {
           nospawn: false,
           atBegin: true
@@ -263,5 +263,5 @@ module.exports = function (grunt) {
   grunt.registerTask("chrome-tests", ["bedrock-auto:chrome"]);
   grunt.registerTask("tests", ["bolt-test:atomic", "bedrock-auto:phantomjs", "bedrock-auto:chrome"]);
   grunt.registerTask("browser-tests", ["bedrock-manual"]);
-  grunt.registerTask("standalone", [ "bolt-build", "copy:standalone", "replace", "uglify:standalone"]);
+  grunt.registerTask("standalone", [ "bolt-build", 'copy:mobile-theme', 'copy:mobile-css', 'copy:tinymce-main', 'copy:mobile-demo-pages', "replace", "uglify:standalone"]);
 };

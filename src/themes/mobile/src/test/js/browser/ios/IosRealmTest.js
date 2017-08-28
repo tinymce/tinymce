@@ -51,7 +51,7 @@ asynctest(
 
       var css = Element.fromTag('link');
       Attr.setAll(css, {
-        href: '/project/src/themes/mobile/src/main/css/mobile.css',
+        href: '/project/src/themes/mobile/src/main/css/skin.mobile.css',
         rel: 'Stylesheet',
         type: 'text/css'
       });
