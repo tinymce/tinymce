@@ -84,13 +84,10 @@ module.exports = function (grunt) {
     copy: {
       'dist-mobile-theme': {
         files: [
-          {
-            src: 'scratch/inline/theme.js',
-            dest: 'dist/themes/beta-mobile/theme.js'
-          },
+          /* Other theme.js is handled by uglify */
           {
             src: 'scratch/inline/theme.raw.js',
-            dest: 'dist/themes/beta-mobile/theme.debugging.js'
+            dest: 'dist/themes/beta-mobile/theme.js'
           }
         ]
       },
@@ -226,7 +223,7 @@ module.exports = function (grunt) {
     watch: {
       styles: {
         files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
-        tasks: ['less', 'bolt-build', 'copy:mobile-theme', 'copy:mobile-css', 'copy:tinymce-main', 'copy:mobile-demo-pages', 'copy:no-uglify' ],
+        tasks: ['dist' ],
         options: {
           nospawn: false,
           atBegin: true
@@ -252,7 +249,8 @@ module.exports = function (grunt) {
   grunt.registerTask('build-dist', [ 'bolt-init', 'bolt-build', 'replace:mobile-version', 'version' ]);
   grunt.registerTask('minify-dist', [ 'uglify:theme' ]);
 
-  grunt.registerTask('dist', ['build-dist', 'copy-dist', /*'eslint',*/ 'minify-dist']);
+  // TODO: Re-enable eslint
+  grunt.registerTask('dist', ['build-dist', 'less', 'copy-dist', /*'eslint',*/ 'minify-dist']);
 
   grunt.registerTask('atomic-tests', ['bolt-build', 'bolt-test:atomic']);
   grunt.registerTask('phantom-tests', ['bedrock-auto:phantomjs']);
