@@ -2,7 +2,7 @@ def credentialsId = '8aa93893-84cc-45fc-a029-a42f21197bb3'
 
 node("primary") {
   stage ("Checkout project") {
-    git([branch: "TM-86", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
+    git([branch: "master", url:'ssh://git@stash:7999/tinymce/tinymce-mobile.git', credentialsId: credentialsId])
   }
 
   stage ("Checkout shared pipelines") {
