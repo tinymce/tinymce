@@ -36,7 +36,7 @@ define(
       };
 
       var clear = function (container) {
-        var sels = SelectorFilter.descendants(container, Ephemera.selected());
+        var sels = SelectorFilter.descendants(container, Ephemera.selectedSelector());
         Arr.each(sels, removeSelectionAttributes);
       };
 
@@ -71,7 +71,7 @@ define(
         };
 
         var mouseHandlers = InputHandlers.mouse(win, body, isRoot, clear, selectRange);
-        var keyHandlers = InputHandlers.keyboard(win, body, isRoot, clear);
+        var keyHandlers = InputHandlers.keyboard(win, body, isRoot, clear, selectRange, Ephemera.selectedSelector(), Ephemera.firstSelectedSelector(), Ephemera.lastSelectedSelector());
 
         var handleResponse = function (event, response) {
           if (response.kill()) {
