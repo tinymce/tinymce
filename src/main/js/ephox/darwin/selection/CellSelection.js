@@ -8,14 +8,14 @@ define(
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
-    'ephox.syrup.api.Class',
     'ephox.syrup.api.Compare',
     'ephox.syrup.api.OnNode',
     'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.syrup.api.SelectorFind',
+    'ephox.syrup.api.Selectors'
   ],
 
-  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, Compare, OnNode, SelectorFilter, SelectorFind) {
+  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Compare, OnNode, SelectorFilter, SelectorFind, Selectors) {
     // var selectedClass = '.' + Ephemera.selectedClass();
     // var addSelectionClass = OnNode.addClass(Ephemera.selectedClass());
     // var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
@@ -63,14 +63,16 @@ define(
       return sels.length > 0 ? Option.some(sels) : Option.none();
     };
 
-    var getLast = function (boxes) {
-      var raw = Arr.find(boxes, OnNode.hasClass(Ephemera.lastSelectedClass()));
+    var getLast = function (boxes, lastSelectedSelector) {
+      var raw = Arr.find(boxes, function (box) {
+        return Selectors.is(box, lastSelectedSelector);
+      });
       return Option.from(raw);
     };
 
-    var getEdges = function (container) {
-      return SelectorFind.descendant(container, '.' + Ephemera.firstSelectedClass()).bind(function (first) {
-        return SelectorFind.descendant(container, '.' + Ephemera.lastSelectedClass()).bind(function (last) {
+    var getEdges = function (container, firstSelectedSelector, lastSelectedSelector) {
+      return SelectorFind.descendant(container, firstSelectedSelector).bind(function (first) {
+        return SelectorFind.descendant(container, lastSelectedSelector).bind(function (last) {
           return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
             return {
               first: Fun.constant(first),
@@ -82,9 +84,9 @@ define(
       });
     };
 
-    var expandTo = function (finish) {
+    var expandTo = function (finish, firstSelectedSelector) {
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
-        return SelectorFind.descendant(table, '.' + Ephemera.firstSelectedClass()).bind(function (start) {
+        return SelectorFind.descendant(table, firstSelectedSelector).bind(function (start) {
           return identify(start, finish).map(function (boxes) {
             return {
               boxes: Fun.constant(boxes),
@@ -96,29 +98,18 @@ define(
       });
     };
 
-    var shiftSelection = function (boxes, deltaRow, deltaColumn) {
-      return getLast(boxes).bind(function (last) {
-        return TablePositions.moveBy(last, deltaRow, deltaColumn).bind(expandTo);
+    var shiftSelection = function (boxes, deltaRow, deltaColumn, firstSelectedSelector, lastSelectedSelector) {
+      return getLast(boxes, lastSelectedSelector).bind(function (last) {
+        return TablePositions.moveBy(last, deltaRow, deltaColumn).bind(function (finish) {
+          return expandTo(finish, firstSelectedSelector);
+        });
       });
-    };
-
-    var isSelected = function (cell) {
-      return Class.has(cell, Ephemera.selectedClass());
-    };
-
-    var selectRange = function (container, cells, start, finish) {
-      clear(container);
-      select(cells);
-      Class.add(start, Ephemera.firstSelectedClass());
-      Class.add(finish, Ephemera.lastSelectedClass());
     };
 
     return {
       identify: identify,
       retrieve: retrieve,
       shiftSelection: shiftSelection,
-      isSelected: isSelected,
-      selectRange: selectRange,
       getEdges: getEdges
     };
   }

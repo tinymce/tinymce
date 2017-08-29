@@ -15,11 +15,11 @@ define(
 
   function (Responses, CellSelection, SelectionRange, Situ, WindowSelection, Awareness, Option, Compare, SelectorFind) {
     // Based on a start and finish, select the appropriate box of cells
-    var sync = function (container, isRoot, start, soffset, finish, foffset) {
+    var sync = function (container, isRoot, start, soffset, finish, foffset, selectRange) {
       if (! WindowSelection.isCollapsed(start, soffset, finish, foffset)) {
         return SelectorFind.closest(start, 'td,th', isRoot).bind(function (s) {
           return SelectorFind.closest(finish, 'td,th', isRoot).bind(function (f) {
-            return detect(container, isRoot, s, f);
+            return detect(container, isRoot, s, f, selectRange);
           });
         });
       } else {
@@ -28,11 +28,11 @@ define(
     };
 
     // If the cells are different, and there is a rectangle to connect them, select the cells.
-    var detect = function (container, isRoot, start, finish) {
+    var detect = function (container, isRoot, start, finish, selectRange) {
       if (! Compare.eq(start, finish)) {
         var boxes = CellSelection.identify(start, finish, isRoot).getOr([]);
         if (boxes.length > 0) {
-          CellSelection.selectRange(container, boxes, start, finish);
+          selectRange(container, boxes, start, finish);
           return Option.some(Responses.response(
             Option.some(SelectionRange.write(Situ.on(start, 0), Situ.on(start, Awareness.getEnd(start)))),
             true
@@ -43,14 +43,14 @@ define(
       return Option.none();
     };
 
-    var update = function (rows, columns, container, selected) {
+    var update = function (rows, columns, container, selected, clear, selectRange, firstSelectedSelector, lastSelectedSelector) {
       var updateSelection = function (newSels) {
-        CellSelection.clear(container);
-        CellSelection.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
+        clear(container);
+        selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
         return newSels.boxes();
       };
 
-      return CellSelection.shiftSelection(selected, rows, columns).map(updateSelection);
+      return CellSelection.shiftSelection(selected, rows, columns, firstSelectedSelector, lastSelectedSelector).map(updateSelection);
     };
 
     return {
