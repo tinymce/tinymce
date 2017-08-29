@@ -223,7 +223,7 @@ module.exports = function (grunt) {
     watch: {
       styles: {
         files: ['src/main/css/**/*.less', 'src/**/*.js'], // which files to watch
-        tasks: ['dist' ],
+        tasks: ['dist', 'bolt-test:atomic', 'bedrock-auto:phantomjs' ],
         options: {
           nospawn: false,
           atBegin: true

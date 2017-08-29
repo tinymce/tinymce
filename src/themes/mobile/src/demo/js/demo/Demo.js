@@ -29,7 +29,7 @@ define(
       EditorManager.init({ 
         selector: '.tiny-text',
         theme: 'beta-mobile',
-        toolbar: [ 'undo', 'redo', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
         plugins: [
           'lists', // Required for list functionality (commands),
           'autolink', // Required for turning pasted text into hyperlinks

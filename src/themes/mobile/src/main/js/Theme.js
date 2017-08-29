@@ -214,7 +214,7 @@ define(
           };
 
           var features = Features.setup(realm, editor);
-          var items = Features.detect(realm, editor, editor.settings, features);
+          var items = Features.detect(editor.settings, features);
           
           var actionGroup = {
             label: 'the action group',

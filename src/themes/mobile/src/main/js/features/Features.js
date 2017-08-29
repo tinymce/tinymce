@@ -128,16 +128,13 @@ define(
       };
     };
 
-    var detect = function (realm, editor, settings, features) {
+    var detect = function (settings, features) {
       // Firstly, work out which items are in the toolbar
       var itemNames = identify(settings);
 
-      // Now, generates the different features
-      // var features = setup(realm, editor);
-
       // Now, build the list only including supported features
       return Arr.bind(itemNames, function (iName) {
-        return features[iName].isSupported() ? [ features[iName].spec() ] : [];
+        return Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].spec() ] : [];
       });
     };
 

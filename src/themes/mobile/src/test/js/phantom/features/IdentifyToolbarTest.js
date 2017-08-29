@@ -24,5 +24,10 @@ test(
     check('Mixed toolbar (array)', [ 'undo', 'bold', 'redo', 'italic' ], { toolbar: [ [ 'undo' ], [ ], [ 'bold redo', 'italic' ] ] });
 
     check('Toolbar with pipes', [ 'undo', 'bold', 'italic', 'bullist', 'styleselect' ], { toolbar: [ [ 'undo | bold | italic' ], [ 'bullist styleselect' ] ] });
+
+    check('Unknown commands', [
+      'undo', 'redo', 'styleselect', 'bold', 'italic', 'alignleft', 'aligncenter', 'alignright', 'alignjustify',
+      'bullist', 'numlist', 'outdent', 'indent', 'link', 'image'
+    ], { toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image' });
   }
 );
