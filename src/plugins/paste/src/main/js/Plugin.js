@@ -21,10 +21,9 @@ define(
     'tinymce.plugins.paste.api.Events',
     'tinymce.plugins.paste.core.Clipboard',
     'tinymce.plugins.paste.core.CutCopy',
-    'tinymce.plugins.paste.core.Quirks',
-    'tinymce.plugins.paste.core.WordFilter'
+    'tinymce.plugins.paste.core.Quirks'
   ],
-  function (PluginManager, Events, Clipboard, CutCopy, Quirks, WordFilter) {
+  function (PluginManager, Events, Clipboard, CutCopy, Quirks) {
     var userIsInformed;
 
     PluginManager.add('paste', function (editor) {
@@ -78,8 +77,7 @@ define(
       }
 
       self.clipboard = clipboard = new Clipboard(editor);
-      self.quirks = new Quirks(editor);
-      self.wordFilter = new WordFilter(editor);
+      self.quirks = Quirks.setup(editor);
 
       if (editor.settings.paste_as_text) {
         self.clipboard.pasteFormat = "text";

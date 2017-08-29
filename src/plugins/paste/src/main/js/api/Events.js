@@ -13,12 +13,12 @@ define(
   [
   ],
   function () {
-    var firePastePreProcess = function (editor, html, internal) {
-      return editor.fire('PastePreProcess', { content: html, internal: internal });
+    var firePastePreProcess = function (editor, html, internal, isWordHtml) {
+      return editor.fire('PastePreProcess', { content: html, internal: internal, wordContent: isWordHtml });
     };
 
-    var firePastePostProcess = function (editor, node, internal) {
-      return editor.fire('PastePostProcess', { node: node, internal: internal });
+    var firePastePostProcess = function (editor, node, internal, isWordHtml) {
+      return editor.fire('PastePostProcess', { node: node, internal: internal, wordContent: isWordHtml });
     };
 
     var firePastePlainTextToggle = function (editor, state) {
