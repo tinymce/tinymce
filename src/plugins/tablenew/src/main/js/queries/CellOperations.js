@@ -7,10 +7,11 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr',
+    'tinymce.plugins.tablenew.selection.Ephemera',
     'tinymce.plugins.tablenew.selection.SelectionTypes'
   ],
 
-  function (TableSelection, Arr, Fun, Option, Attr, SelectionTypes) {
+  function (TableSelection, Arr, Fun, Option, Attr, Ephemera, SelectionTypes) {
     // Return an array of the selected elements
     var selection = function (cell, selections) {
       return SelectionTypes.cata(selections.get(),
@@ -38,7 +39,7 @@ define(
           if (cells.length === 0) {
             return Option.none();
           }
-          return TableSelection.retrieveBox(table).bind(function (bounds) {
+          return TableSelection.retrieveBox(table, Ephemera.firstSelectedSelector(), Ephemera.lastSelectedSelector()).bind(function (bounds) {
             return cells.length > 1 ? Option.some({
               bounds: Fun.constant(bounds),
               cells: Fun.constant(cells)

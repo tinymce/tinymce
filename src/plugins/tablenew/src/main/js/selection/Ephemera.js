@@ -16,8 +16,8 @@ define(
       selected: Fun.constant(selected),
       selectedSelector: Fun.constant(selectedSelector),
       firstSelected: Fun.constant(firstSelected),
-      lastSelected: Fun.constant(lastSelected),
       firstSelectedSelector: Fun.constant(firstSelectedSelector),
+      lastSelected: Fun.constant(lastSelected),
       lastSelectedSelector: Fun.constant(lastSelectedSelector)
     };
   }
