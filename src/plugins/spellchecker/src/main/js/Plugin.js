@@ -17,16 +17,16 @@
 define(
   'tinymce.plugins.spellchecker.Plugin',
   [
-    'tinymce.plugins.spellchecker.core.DomTextMatcher',
-    'tinymce.core.PluginManager',
-    'tinymce.core.util.Tools',
-    'tinymce.core.ui.Menu',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.util.XHR',
+    'tinymce.core.PluginManager',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.JSON',
+    'tinymce.core.util.Tools',
     'tinymce.core.util.URI',
-    'tinymce.core.util.JSON'
+    'tinymce.core.util.XHR',
+    'tinymce.plugins.spellchecker.core.DomTextMatcher'
   ],
-  function (DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, XHR, URI, JSON) {
+  function (DOMUtils, PluginManager, Factory, JSON, Tools, URI, XHR, DomTextMatcher) {
     PluginManager.add('spellchecker', function (editor, url) {
       var languageMenuItems, self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;
       var hasDictionarySupport;
@@ -130,7 +130,7 @@ define(
         ]);
 
         // Render menu
-        suggestionsMenu = new Menu({
+        suggestionsMenu = Factory.create('menu', {
           items: items,
           context: 'contextmenu',
           onautohide: function (e) {

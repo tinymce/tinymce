@@ -20,11 +20,11 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.Env',
     'tinymce.core.PluginManager',
-    'tinymce.core.ui.Menu',
+    'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
     'tinymce.plugins.contextmenu.RangePoint'
   ],
-  function (DOMUtils, Env, PluginManager, Menu, Tools, RangePoint) {
+  function (DOMUtils, Env, PluginManager, Factory, Tools, RangePoint) {
     var DOM = DOMUtils.DOM;
 
     PluginManager.add('contextmenu', function (editor) {
@@ -105,7 +105,7 @@ define(
             }
           }
 
-          menu = new Menu({
+          menu = Factory.create('menu', {
             items: items,
             context: 'contextmenu',
             classes: 'contextmenu'

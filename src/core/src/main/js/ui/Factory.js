@@ -49,6 +49,17 @@ define(
       },
 
       /**
+       * Returns ui control module by name.
+       *
+       * @method get
+       * @param {String} type Type get.
+       * @return {Object} Module or undefined.
+       */
+      get: function (type) {
+        return types[type.toLowerCase()];
+      },
+
+      /**
        * Creates a new control instance based on the settings provided. The instance created will be
        * based on the specified type property it can also create whole structures of components out of
        * the specified JSON object.

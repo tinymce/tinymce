@@ -12,7 +12,9 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
     Theme();
+    Plugin();
 
     var teardown = function (editor) {
       delete editor.settings.image_dimensions;
