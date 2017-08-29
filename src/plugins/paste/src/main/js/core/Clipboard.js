@@ -35,13 +35,14 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
-    'tinymce.plugins.paste.core.PasteBin',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.Newlines',
+    'tinymce.plugins.paste.core.PasteBin',
+    'tinymce.plugins.paste.core.ProcessFilters',
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (RangeUtils, Env, Delay, Tools, VK, PasteBin, InternalHtml, Newlines, SmartPaste, Utils) {
+  function (RangeUtils, Env, Delay, Tools, VK, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
     return function (editor) {
       var self = this, keyboardPasteTimeStamp = 0, draggingInternally = false;
       var pasteBin = new PasteBin(editor);
@@ -58,30 +59,11 @@ define(
        * @param {Boolean?} internalFlag Optional true/false flag if the contents is internal or external.
        */
       function pasteHtml(html, internalFlag) {
-        var args, dom = editor.dom, internal;
+        var internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
+        var args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
 
-        internal = internalFlag || InternalHtml.isMarked(html);
-        html = InternalHtml.unmark(html);
-
-        args = editor.fire('BeforePastePreProcess', { content: html, internal: internal }); // Internal event used by Quirks
-        args = editor.fire('PastePreProcess', args);
-        html = args.content;
-
-        if (!args.isDefaultPrevented()) {
-          // User has bound PastePostProcess events then we need to pass it through a DOM node
-          // This is not ideal but we don't want to let the browser mess up the HTML for example
-          // some browsers add &nbsp; to P tags etc
-          if (editor.hasEventListeners('PastePostProcess') && !args.isDefaultPrevented()) {
-            // We need to attach the element to the DOM so Sizzle selectors work on the contents
-            var tempBody = dom.add(editor.getBody(), 'div', { style: 'display:none' }, html);
-            args = editor.fire('PastePostProcess', { node: tempBody, internal: internal });
-            dom.remove(tempBody);
-            html = args.node.innerHTML;
-          }
-
-          if (!args.isDefaultPrevented()) {
-            SmartPaste.insertContent(editor, html);
-          }
+        if (args.cancelled === false) {
+          SmartPaste.insertContent(editor, args.content);
         }
       }
 
@@ -323,6 +305,7 @@ define(
             content = clipboardContent['text/html'];
           } else {
             content = pasteBin.getHtml();
+            internal = internal ? internal : InternalHtml.isMarked(content);
 
             // If paste bin is empty try using plain text mode
             // since that is better than nothing right
