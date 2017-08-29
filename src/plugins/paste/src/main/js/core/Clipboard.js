@@ -305,6 +305,7 @@ define(
             content = clipboardContent['text/html'];
           } else {
             content = pasteBin.getHtml();
+            internal = internal ? internal : InternalHtml.isMarked(content);
 
             // If paste bin is empty try using plain text mode
             // since that is better than nothing right
