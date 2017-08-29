@@ -3,32 +3,17 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.darwin.api.Ephemera',
     'ephox.peanut.Fun',
     'ephox.perhaps.Option',
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
     'ephox.syrup.api.Compare',
-    'ephox.syrup.api.OnNode',
     'ephox.syrup.api.SelectorFilter',
     'ephox.syrup.api.SelectorFind',
     'ephox.syrup.api.Selectors'
   ],
 
-  function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Compare, OnNode, SelectorFilter, SelectorFind, Selectors) {
-    // var selectedClass = '.' + Ephemera.selectedClass();
-    // var addSelectionClass = OnNode.addClass(Ephemera.selectedClass());
-    // var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
-
-    // var clear = function (container) {
-    //   var sels = SelectorFilter.descendants(container, selectedClass);
-    //   Arr.each(sels, removeSelectionClasses);
-    // };
-
-    // var select = function (cells) {
-    //   Arr.each(cells, addSelectionClass);
-    // };
-
+  function (Arr, Fun, Option, DomParent, TablePositions, Compare, SelectorFilter, SelectorFind, Selectors) {
     var lookupTable = function (container, isRoot) {
       return SelectorFind.ancestor(container, 'table');
     };

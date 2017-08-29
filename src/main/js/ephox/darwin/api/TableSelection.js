@@ -15,8 +15,8 @@ define(
       return CellSelection.retrieve(container, selector);
     };
 
-    var retrieveBox = function (container) {
-      return CellSelection.getEdges(container).bind(function (edges) {
+    var retrieveBox = function (container, firstSelectedSelector, lastSelectedSelector) {
+      return CellSelection.getEdges(container, firstSelectedSelector, lastSelectedSelector).bind(function (edges) {
         var isRoot = function (ancestor) {
           return Compare.eq(container, ancestor);
         };
