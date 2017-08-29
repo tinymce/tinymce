@@ -28,7 +28,9 @@ define(
   ) {
     var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
-    var extract = function (toolbar) {
+    var extract = function (rawToolbar) {
+      // Ignoring groups
+      var toolbar = rawToolbar.replace(/\|/g, ' ').trim();
       return toolbar.length > 0 ? toolbar.split(/\s+/) : [ ];
     };
 

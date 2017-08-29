@@ -22,5 +22,7 @@ test(
     check('Nested toolbar (array)', [ 'undo', 'bold', 'italic' ], { toolbar: [ [ 'undo' ], [ 'bold', 'italic' ] ] });
 
     check('Mixed toolbar (array)', [ 'undo', 'bold', 'redo', 'italic' ], { toolbar: [ [ 'undo' ], [ ], [ 'bold redo', 'italic' ] ] });
+
+    check('Toolbar with pipes', [ 'undo', 'bold', 'italic', 'bullist', 'styleselect' ], { toolbar: [ [ 'undo | bold | italic' ], [ 'bullist styleselect' ] ] });
   }
 );
