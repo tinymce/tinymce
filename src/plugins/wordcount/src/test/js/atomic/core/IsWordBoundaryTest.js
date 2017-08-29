@@ -28,6 +28,7 @@ test(
       // shouldn't break on punctuation in number sequences
       assert.eq(false, iwb('3.14', 1));
       assert.eq(false, iwb('1,024', 1));
+      assert.eq(false, iwb('5-1', 1));
 
       // should extend characters
       assert.eq(false, iwb('foo\u00ADbar', 2));
