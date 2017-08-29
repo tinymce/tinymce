@@ -11,15 +11,16 @@
 define(
   'tinymce.core.delete.BlockBoundaryDelete',
   [
+    'ephox.sugar.api.node.Element',
     'tinymce.core.delete.BlockBoundary',
     'tinymce.core.delete.MergeBlocks'
   ],
-  function (BlockBoundary, MergeBlocks) {
+  function (Element, BlockBoundary, MergeBlocks) {
     var backspaceDelete = function (editor, forward) {
-      var position;
+      var position, rootNode = Element.fromDom(editor.getBody());
 
-      position = BlockBoundary.read(editor.getBody(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
-        return MergeBlocks.mergeBlocks(forward, blockBoundary.from().block(), blockBoundary.to().block());
+      position = BlockBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
+        return MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block());
       });
 
       position.each(function (pos) {

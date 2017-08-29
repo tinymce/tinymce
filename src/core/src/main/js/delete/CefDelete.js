@@ -16,15 +16,12 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.caret.CaretPosition',
-    'tinymce.core.caret.CaretUtils',
-    'tinymce.core.delete.BlockBoundary',
     'tinymce.core.delete.CefDeleteAction',
     'tinymce.core.delete.DeleteElement',
     'tinymce.core.delete.DeleteUtils',
-    'tinymce.core.delete.MergeBlocks',
     'tinymce.core.dom.NodeType'
   ],
-  function (Arr, Remove, Element, SelectorFilter, CaretPosition, CaretUtils, BlockBoundary, CefDeleteAction, DeleteElement, DeleteUtils, MergeBlocks, NodeType) {
+  function (Arr, Remove, Element, SelectorFilter, CaretPosition, CefDeleteAction, DeleteElement, DeleteUtils, NodeType) {
     var deleteElement = function (editor, forward) {
       return function (element) {
         DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
