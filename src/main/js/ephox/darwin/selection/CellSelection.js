@@ -16,18 +16,18 @@ define(
   ],
 
   function (Arr, Ephemera, Fun, Option, DomParent, TablePositions, Class, Compare, OnNode, SelectorFilter, SelectorFind) {
-    var selectedClass = '.' + Ephemera.selectedClass();
-    var addSelectionClass = OnNode.addClass(Ephemera.selectedClass());
-    var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
+    // var selectedClass = '.' + Ephemera.selectedClass();
+    // var addSelectionClass = OnNode.addClass(Ephemera.selectedClass());
+    // var removeSelectionClasses = OnNode.removeClasses([ Ephemera.selectedClass(), Ephemera.lastSelectedClass(), Ephemera.firstSelectedClass() ]);
 
-    var clear = function (container) {
-      var sels = SelectorFilter.descendants(container, selectedClass);
-      Arr.each(sels, removeSelectionClasses);
-    };
+    // var clear = function (container) {
+    //   var sels = SelectorFilter.descendants(container, selectedClass);
+    //   Arr.each(sels, removeSelectionClasses);
+    // };
 
-    var select = function (cells) {
-      Arr.each(cells, addSelectionClass);
-    };
+    // var select = function (cells) {
+    //   Arr.each(cells, addSelectionClass);
+    // };
 
     var lookupTable = function (container, isRoot) {
       return SelectorFind.ancestor(container, 'table');
@@ -58,8 +58,8 @@ define(
       }
     };
 
-    var retrieve = function (container) {
-      var sels = SelectorFilter.descendants(container, selectedClass);
+    var retrieve = function (container, selector) {
+      var sels = SelectorFilter.descendants(container, selector);
       return sels.length > 0 ? Option.some(sels) : Option.none();
     };
 
@@ -114,7 +114,6 @@ define(
     };
 
     return {
-      clear: clear,
       identify: identify,
       retrieve: retrieve,
       shiftSelection: shiftSelection,

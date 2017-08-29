@@ -20,10 +20,10 @@ define(
   function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Situ, Fun, Option, Options, Struct) {
     var rc = Struct.immutable('rows', 'cols');
 
-    var mouse = function (win, container, isRoot) {
+    var mouse = function (win, container, isRoot, clear, selectRange) {
       var bridge = WindowBridge(win);
 
-      var handlers = MouseSelection(bridge, container, isRoot);
+      var handlers = MouseSelection(bridge, container, isRoot, clear, selectRange);
 
       return {
         mousedown: handlers.mousedown,
@@ -32,11 +32,11 @@ define(
       };
     };
 
-    var keyboard = function (win, container, isRoot) {
+    var keyboard = function (win, container, isRoot, clear, selectRange, selectedSelector) {
       var bridge = WindowBridge(win);
 
       var clearToNavigate = function () {
-        CellSelection.clear(container);
+        clear(container);
         return Option.none();
       };
 
@@ -44,7 +44,7 @@ define(
         var keycode = event.raw().which;
         var shiftKey = event.raw().shiftKey === true;
 
-        var handler = CellSelection.retrieve(container).fold(function () {
+        var handler = CellSelection.retrieve(container, selectedSelector).fold(function () {
           // Shift down should predict the movement and set the selection.
           if (SelectionKeys.isDown(keycode) && shiftKey) return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start);
           // Shift up should predict the movement and set the selection.

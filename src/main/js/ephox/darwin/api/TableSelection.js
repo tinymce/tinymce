@@ -11,8 +11,8 @@ define(
 
   function (CellSelection, Option, TablePositions, Compare, SelectorFind) {
     // Explictly calling CellSelection.retrieve so that we can see the API signature.
-    var retrieve = function (container) {
-      return CellSelection.retrieve(container);
+    var retrieve = function (container, selector) {
+      return CellSelection.retrieve(container, selector);
     };
 
     var retrieveBox = function (container) {
@@ -30,14 +30,9 @@ define(
       });
     };
 
-    var clear = function (container) {
-      CellSelection.clear(container);
-    };
-
     return {
       retrieve: retrieve,
-      retrieveBox: retrieveBox,
-      clear: clear
+      retrieveBox: retrieveBox
     };
   }
 );
