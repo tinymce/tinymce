@@ -62,9 +62,9 @@ define(
         }
       };
 
-      var disappear = function (onDone) {
+      var disappear = function (onReadyToShrink) {
         window.requestAnimationFrame(function () {
-          onDone();
+          onReadyToShrink();
           Sliding.shrink(dropup);
         });
       };
