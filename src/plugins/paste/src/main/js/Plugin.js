@@ -18,12 +18,12 @@ define(
   'tinymce.plugins.paste.Plugin',
   [
     'tinymce.core.PluginManager',
+    'tinymce.plugins.paste.api.Events',
     'tinymce.plugins.paste.core.Clipboard',
     'tinymce.plugins.paste.core.CutCopy',
-    'tinymce.plugins.paste.core.Quirks',
-    'tinymce.plugins.paste.core.WordFilter'
+    'tinymce.plugins.paste.core.Quirks'
   ],
-  function (PluginManager, Clipboard, CutCopy, Quirks, WordFilter) {
+  function (PluginManager, Events, Clipboard, CutCopy, Quirks) {
     var userIsInformed;
 
     PluginManager.add('paste', function (editor) {
@@ -36,10 +36,10 @@ define(
       function togglePlainTextPaste() {
         if (clipboard.pasteFormat == "text") {
           clipboard.pasteFormat = "html";
-          editor.fire('PastePlainTextToggle', { state: false });
+          Events.firePastePlainTextToggle(editor, false);
         } else {
           clipboard.pasteFormat = "text";
-          editor.fire('PastePlainTextToggle', { state: true });
+          Events.firePastePlainTextToggle(editor, true);
 
           if (!isUserInformedAboutPlainText()) {
             var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
@@ -77,8 +77,7 @@ define(
       }
 
       self.clipboard = clipboard = new Clipboard(editor);
-      self.quirks = new Quirks(editor);
-      self.wordFilter = new WordFilter(editor);
+      self.quirks = Quirks.setup(editor);
 
       if (editor.settings.paste_as_text) {
         self.clipboard.pasteFormat = "text";

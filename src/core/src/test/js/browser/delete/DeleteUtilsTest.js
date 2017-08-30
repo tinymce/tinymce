@@ -26,7 +26,7 @@ asynctest(
     var cGetParentTextBlock = function (elementPath) {
       return Chain.mapper(function (viewBlock) {
         var element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-        return DeleteUtils.getParentTextBlock(Element.fromDom(viewBlock.get()), element);
+        return DeleteUtils.getParentBlock(Element.fromDom(viewBlock.get()), element);
       });
     };
 

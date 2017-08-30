@@ -12,11 +12,13 @@ define(
   'tinymce.core.EditorView',
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.Traverse'
   ],
-  function (Fun, Element, Css, Traverse) {
+  function (Fun, Option, Compare, Element, Css, Traverse) {
     var getProp = function (propName, elm) {
       var rawElm = elm.dom();
       return rawElm[propName];
@@ -61,8 +63,21 @@ define(
       return isInsideElementContentArea(targetElm, transposedPoint.x, transposedPoint.y);
     };
 
+    var fromDomSafe = function (node) {
+      return Option.from(node).map(Element.fromDom);
+    };
+
+    var isEditorAttachedToDom = function (editor) {
+      var rawContainer = editor.inline ? editor.getBody() : editor.getContentAreaContainer();
+
+      return fromDomSafe(rawContainer).map(function (container) {
+        return Compare.contains(Traverse.owner(container), container);
+      }).getOr(false);
+    };
+
     return {
-      isXYInContentArea: isXYInContentArea
+      isXYInContentArea: isXYInContentArea,
+      isEditorAttachedToDom: isEditorAttachedToDom
     };
   }
 );

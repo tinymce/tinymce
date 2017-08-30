@@ -30,8 +30,8 @@ asynctest(
       var api = TinyApis(editor);
       var ui = TinyUi(editor);
 
-      // Cut doesn't seem to work in webdriver mode on ie, firefox is producing moveto not supported
-      Pipeline.async({}, (platform.browser.isIE() || platform.browser.isFirefox()) ? [] : [
+      // Cut doesn't seem to work in webdriver mode on ie, firefox is producing moveto not supported, edge fails if it's not observed
+      Pipeline.async({}, (platform.browser.isIE() || platform.browser.isFirefox() || platform.browser.isEdge()) ? [] : [
         api.sSetContent('<p>abc</p>'),
         api.sSetSelection([0, 0], 1, [0, 0], 2),
         ui.sClickOnMenu("Click Edit menu", 'button:contains("Edit")'),

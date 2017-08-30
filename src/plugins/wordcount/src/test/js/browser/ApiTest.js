@@ -51,10 +51,10 @@ asynctest(
       LegacyUnit.equal(result, 6);
     });
 
-    suite.test("Counts hyphenated words as two words", function (editor) {
+    suite.test("Counts hyphenated words as one word", function (editor) {
       editor.setContent('<p>Hello some-word here.</p>');
       var result = editor.plugins.wordcount.getCount();
-      LegacyUnit.equal(result, 4);
+      LegacyUnit.equal(result, 3);
     });
 
     suite.test("Counts words between blocks as two words", function (editor) {

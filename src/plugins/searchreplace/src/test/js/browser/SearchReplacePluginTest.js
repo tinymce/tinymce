@@ -58,6 +58,20 @@ asynctest(
       LegacyUnit.equal("<p>x b a</p>", editor.getContent());
     });
 
+    suite.test('Find and replace two consecutive spaces', function (editor) {
+      editor.setContent('a&nbsp; b');
+      editor.plugins.searchreplace.find('a  ');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
+      LegacyUnit.equal("<p>xb</p>", editor.getContent());
+    });
+
+    suite.test('Find and replace consecutive spaces', function (editor) {
+      editor.setContent('a&nbsp; &nbsp;b');
+      editor.plugins.searchreplace.find('a   ');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
+      LegacyUnit.equal("<p>xb</p>", editor.getContent());
+    });
+
     suite.test('Find and replace all in multiple matches', function (editor) {
       editor.setContent('a b a');
       editor.plugins.searchreplace.find('a');

@@ -34,7 +34,7 @@ define(
     var getBlockPosition = function (rootNode, pos) {
       var rootElm = Element.fromDom(rootNode);
       var containerElm = Element.fromDom(pos.container());
-      return DeleteUtils.getParentTextBlock(rootElm, containerElm).map(function (block) {
+      return DeleteUtils.getParentBlock(rootElm, containerElm).map(function (block) {
         return BlockPosition(block, pos);
       });
     };

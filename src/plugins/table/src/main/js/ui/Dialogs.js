@@ -714,7 +714,12 @@ define(
                 if (!parentElm) {
                   parentElm = dom.create(toType);
                   if (tableElm.firstChild) {
-                    tableElm.insertBefore(parentElm, tableElm.firstChild);
+                    // caption tag should be the first descendant of the table tag (see TINY-1167)
+                    if (tableElm.firstChild.nodeName === 'CAPTION') {
+                      dom.insertAfter(parentElm, tableElm.firstChild);
+                    } else {
+                      tableElm.insertBefore(parentElm, tableElm.firstChild);
+                    }
                   } else {
                     tableElm.appendChild(parentElm);
                   }

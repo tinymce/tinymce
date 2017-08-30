@@ -21,13 +21,14 @@
     "@ephox/katamari": "^1.1.0",
     "@ephox/sugar": "^3.1.0",
     "@ephox/snooker": "git+ssh://git@stash:7999/tbio/snooker.git#master",
-    "@ephox/darwin": "git+ssh://git@stash:7999/tbio/darwin.git#master"
+    "@ephox/darwin": "git+ssh://git@stash:7999/tbio/darwin.git#master",
+    "@ephox/sand": "^1.1.1"
   },
   "devDependencies": {
+    "@ephox/bedrock": "^1.5.0",
     "@ephox/bolt": "^1.6.0",
     "@ephox/imagetools": "2.0.0",
     "@ephox/mcagar": "^1.1.1",
-    "@ephox/bedrock": "^1.5.0",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
