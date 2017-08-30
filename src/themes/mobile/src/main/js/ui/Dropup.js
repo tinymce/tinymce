@@ -46,7 +46,7 @@ define(
               }
             }),
             Receivers.orientation(function (component, data) {
-              disappear(Fun.noop, {});
+              disappear(Fun.noop);
             })
           ])
         })
@@ -62,9 +62,9 @@ define(
         }
       };
 
-      var disappear = function (update, component) {
+      var disappear = function (onDone) {
         window.requestAnimationFrame(function () {
-          update(component);
+          onDone();
           Sliding.shrink(dropup);
         });
       };

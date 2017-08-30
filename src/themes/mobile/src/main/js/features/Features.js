@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Receiving',
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.Memento',
     'ephox.boulder.api.Objects',
@@ -13,6 +14,7 @@ define(
     'global!setTimeout',
     'global!window',
     'tinymce.themes.mobile.channels.Receivers',
+    'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.style.Styles',
     'tinymce.themes.mobile.ui.Buttons',
     'tinymce.themes.mobile.ui.ColorSlider',
@@ -23,8 +25,8 @@ define(
   ],
 
   function (
-    Behaviour, Toggling, Memento, Objects, Arr, Fun, Option, Type, setTimeout, window,
-    Receivers, Styles, Buttons, ColorSlider, FontSizeSlider, ImagePicker, LinkButton, StyleFormats
+    Behaviour, Receiving, Toggling, Memento, Objects, Arr, Fun, Option, Type, setTimeout, window, Receivers, TinyChannels, Styles, Buttons, ColorSlider, FontSizeSlider,
+    ImagePicker, LinkButton, StyleFormats
   ) {
     var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
@@ -47,28 +49,57 @@ define(
     };
 
     var setup = function (realm, editor) {
-      var undo = Buttons.forToolbarCommand(editor, 'undo');
-      var redo = Buttons.forToolbarCommand(editor, 'redo');
-      var bold = Buttons.forToolbarStateCommand(editor, 'bold');
-      var italic = Buttons.forToolbarStateCommand(editor, 'italic');
-      var underline = Buttons.forToolbarStateCommand(editor, 'underline');
-      var removeformat = Buttons.forToolbarCommand(editor, 'removeformat');
+      var commandSketch = function (name) {
+        return function () {
+          return Buttons.forToolbarCommand(editor, name);
+        };
+      };
 
-      var link = LinkButton.sketch(realm, editor);
-      var unlink = Buttons.forToolbarStateAction(editor, 'unlink', 'link', function () {
+      var stateCommandSketch = function (name) {
+        return function () {
+          return Buttons.forToolbarStateCommand(editor, name);
+        };
+      };
+
+      var actionSketch = function (name, query, action) {
+        return function () {
+          return Buttons.forToolbarStateAction(editor, name, query, action);
+        };
+      };
+
+      var undo = commandSketch('undo');
+      var redo = commandSketch('redo');
+      var bold = stateCommandSketch('bold');
+      var italic = stateCommandSketch('italic');
+      var underline = stateCommandSketch('underline');
+      var removeformat = commandSketch('removeformat');
+
+      var link = function () {
+        return LinkButton.sketch(realm, editor);
+      };
+      
+      var unlink = actionSketch('unlink', 'link', function () {
         editor.execCommand('unlink', null, false);
       });
-      var image = ImagePicker.sketch(editor);
-      var bullist = Buttons.forToolbarStateAction(editor, 'unordered-list', 'ul', function () {
+      var image = function () {
+        return ImagePicker.sketch(editor);
+      };
+
+      var bullist = actionSketch('unordered-list', 'ul', function () {
         editor.execCommand('InsertUnorderedList', null, false);
       });
 
-      var numlist = Buttons.forToolbarStateAction(editor, 'ordered-list', 'ol', function () {
+      var numlist = actionSketch('ordered-list', 'ol', function () {
         editor.execCommand('InsertOrderedList', null, false);
       });
 
-      var fontsizeselect = FontSizeSlider.sketch(realm, editor);
-      var forecolor = ColorSlider.sketch(realm, editor);
+      var fontsizeselect = function () {
+        return FontSizeSlider.sketch(realm, editor);
+      };
+
+      var forecolor = function () {
+        return ColorSlider.sketch(realm, editor);
+      };
 
       var styleFormats = StyleFormats.register(editor, editor.settings);
 
@@ -78,8 +109,8 @@ define(
         });
       };
 
-      var styleselect = Memento.record(
-        Buttons.forToolbar('style-formats', function (button) {
+      var styleselect = function () {
+        return Buttons.forToolbar('style-formats', function (button) {
           editor.fire('toReading');
           realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
         }, Behaviour.derive([
@@ -90,13 +121,16 @@ define(
               mode: 'pressed'
             }
           }),
-          Receivers.orientation(function (button) {
-            Toggling.off(button);
+          Receiving.config({
+            channels: Objects.wrapAll([
+              Receivers.receive(TinyChannels.orientationChanged(), Toggling.off),
+              Receivers.receive(TinyChannels.dropupDismissed(), Toggling.off)
+            ])
           })
-        ])
-      ));
+        ]));
+      };
 
-      var feature = function (prereq, spec, lookup) {
+      var feature = function (prereq, sketch, lookup) {
         return {
           isSupported: function () {
             // NOTE: forall is true for none
@@ -104,7 +138,7 @@ define(
               return Objects.hasKey(editor.buttons, p);
             });
           },
-          spec: Fun.constant(spec),
+          sketch: sketch,
           lookup: lookup
         };
       };
@@ -124,7 +158,7 @@ define(
         numlist: feature(Option.some('numlist'), numlist, Option.none),
         fontsizeselect: feature(Option.none(), fontsizeselect, Option.none),
         forecolor: feature(Option.none(), forecolor, Option.none),
-        styleselect: feature(Option.none(), styleselect.asSpec(), styleselect.getOpt)
+        styleselect: feature(Option.none(), styleselect, Option.none)
       };
     };
 
@@ -134,7 +168,7 @@ define(
 
       // Now, build the list only including supported features
       return Arr.bind(itemNames, function (iName) {
-        return Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].spec() ] : [];
+        return Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
       });
     };
 

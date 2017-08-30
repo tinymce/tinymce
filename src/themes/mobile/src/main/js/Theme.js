@@ -170,10 +170,8 @@ define(
           });
 
           var hideDropup = function () {
-            features.styleselect.lookup(realm.system().root()).fold(function () {
-              realm.dropup().disappear(Fun.noop, {});
-            }, function (button) {
-              realm.dropup().disappear(Toggling.off, button);
+            realm.dropup().disappear(function () {
+              realm.system().broadcastOn([ TinyChannels.dropupDismissed() ], { });
             });
           };
 

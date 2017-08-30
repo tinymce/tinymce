@@ -29,7 +29,7 @@ define(
       EditorManager.init({ 
         selector: '.tiny-text',
         theme: 'beta-mobile',
-        toolbar: [ 'undo', 'redo', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
+        toolbar: [ 'styleselect', 'undo', 'redo', 'bold', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
         plugins: [
           'lists', // Required for list functionality (commands),
           'autolink', // Required for turning pasted text into hyperlinks
@@ -75,11 +75,18 @@ define(
             title: 'Headers',
             items: [
               { title: 'Header 1', format: 'h1' },
+              { title: 'Header 1', format: 'h1' },
               { title: 'Header 2', format: 'h2' },
               { title: 'Header 3', format: 'h3' },
               { title: 'Header 4', format: 'h4' },
               { title: 'Header 5', format: 'h5' },
               { title: 'Header 6', format: 'h6' }
+            ]
+          },
+          {
+            title: 'Headers',
+            items: [
+              { title: 'Header 7', format: 'h7' }
             ]
           },
           {
