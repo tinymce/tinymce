@@ -130,7 +130,7 @@ define(
         ]));
       };
 
-      var feature = function (prereq, sketch, lookup) {
+      var feature = function (prereq, sketch) {
         return {
           isSupported: function () {
             // NOTE: forall is true for none
@@ -138,27 +138,26 @@ define(
               return Objects.hasKey(editor.buttons, p);
             });
           },
-          sketch: sketch,
-          lookup: lookup
+          sketch: sketch
         };
       };
 
       return {
-        undo: feature(Option.none(), undo, Option.none),
-        redo: feature(Option.none(), redo, Option.none),
-        bold: feature(Option.none(), bold, Option.none),
-        italic: feature(Option.none(), italic, Option.none),
-        underline: feature(Option.none(), underline, Option.none),
-        removeformat: feature(Option.none(), removeformat, Option.none),
-        link: feature(Option.none(), link, Option.none),
-        unlink: feature(Option.none(), unlink, Option.none),
-        image: feature(Option.none(), image, Option.none),
+        undo: feature(Option.none(), undo),
+        redo: feature(Option.none(), redo),
+        bold: feature(Option.none(), bold),
+        italic: feature(Option.none(), italic),
+        underline: feature(Option.none(), underline),
+        removeformat: feature(Option.none(), removeformat),
+        link: feature(Option.none(), link),
+        unlink: feature(Option.none(), unlink),
+        image: feature(Option.none(), image),
         // NOTE: Requires "lists" plugin.
-        bullist: feature(Option.some('bullist'), bullist, Option.none),
-        numlist: feature(Option.some('numlist'), numlist, Option.none),
-        fontsizeselect: feature(Option.none(), fontsizeselect, Option.none),
-        forecolor: feature(Option.none(), forecolor, Option.none),
-        styleselect: feature(Option.none(), styleselect, Option.none)
+        bullist: feature(Option.some('bullist'), bullist),
+        numlist: feature(Option.some('numlist'), numlist),
+        fontsizeselect: feature(Option.none(), fontsizeselect),
+        forecolor: feature(Option.none(), forecolor),
+        styleselect: feature(Option.none(), styleselect)
       };
     };
 

@@ -4,11 +4,10 @@ test(
   [
     'ephox.agar.api.Assertions',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
     'tinymce.themes.mobile.features.Features'
   ],
 
-  function (Assertions, Fun, Option, Features) {
+  function (Assertions, Fun, Features) {
     /*
      * Check that if the feature is not known, it skips over it
      *
@@ -16,8 +15,7 @@ test(
     var testFeature = function (name, supported) {
       return {
         isSupported: Fun.constant(supported),
-        spec: Fun.constant(name),
-        lookup: Option.non
+        sketch: Fun.constant(name)
       };
     };
 
