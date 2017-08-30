@@ -1,0 +1,19 @@
+{
+  "name": "tinymce",
+  "version": "4.5.5",
+  "description": "Shopify fork of TinyMCE",
+  "main": "tinymce.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/tinymce.git"
+  },
+  "author": "Shopify <dev@shopify.com>",
+  "license": "LGPL-2.1",
+  "bugs": {
+    "url": "https://github.com/Shopify/tinymce/issues"
+  },
+  "homepage": "https://github.com/Shopify/tinymce#readme"
+}
