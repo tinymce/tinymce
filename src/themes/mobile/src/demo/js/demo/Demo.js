@@ -29,14 +29,13 @@ define(
       EditorManager.init({ 
         selector: '.tiny-text',
         theme: 'beta-mobile',
-        toolbar: [ 'undo', 'redo', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
+        toolbar: [ 'styleselect', 'undo', 'redo', 'bold', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
         plugins: [
           'lists', // Required for list functionality (commands),
           'autolink', // Required for turning pasted text into hyperlinks
           'autosave' // Required to prevent users losing content when they press back
         ],
         mobile_skin_url: '../../main/css'
-       // */
       });
     };
   }

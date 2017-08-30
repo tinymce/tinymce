@@ -78,7 +78,7 @@ define(
             var buttons = { };
             Arr.each(info.items, function (item) {
               // For each item in the toolbar, make a lookup
-              buttons[item] = Memento.record(features[item].spec());
+              buttons[item] = Memento.record(features[item].sketch());
             });
 
             var toolbarItems = Arr.map(info.items, function (item) {
