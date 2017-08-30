@@ -20,10 +20,10 @@
   "devDependencies": {
     "@ephox/bedrock": "*",
     "@ephox/bolt": "*",
+    "@ephox/fred": "git+ssh://git@stash:7999/libs/fred.git#master",
     "chromedriver": "*",
     "grunt": "*",
-    "grunt-npm": "*",
-    "@ephox/fred": "git+ssh://git@stash:7999/libs/fred.git#master"
+    "grunt-npm": "*"
   },
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"
