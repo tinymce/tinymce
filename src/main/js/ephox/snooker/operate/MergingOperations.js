@@ -2,10 +2,12 @@ define(
   'ephox.snooker.operate.MergingOperations',
 
   [
+    'ephox.compass.Arr',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow'
   ],
 
-  function (GridRow) {
+  function (Arr, Structs, GridRow) {
     // substitution: () -> item
     var merge = function (grid, bounds, comparator, substitution) {
       // Mutating. Do we care about the efficiency gain?
@@ -16,7 +18,12 @@ define(
           GridRow.mutateCell(grid[i], j, substitution());
         }
       }
-      return grid;
+      var mappedGrid = Arr.map(grid, function (row) {
+        return GridRow.mapCells(row, function (cell) {
+          return Structs.elementnew(cell, false);
+        });
+      });
+      return mappedGrid;
     };
 
     // substitution: () -> item
@@ -28,8 +35,15 @@ define(
           var current = GridRow.getCell(grid[i], j);
           var isToReplace = comparator(current, target);
 
-          if (isToReplace === true && first === false) GridRow.mutateCell(grid[i], j, substitution());
-          else if (isToReplace === true) first = false;
+          if (isToReplace === true && first === false) {
+            GridRow.mutateCell(grid[i], j, Structs.elementnew(substitution(), true));
+          }
+          else if (isToReplace === true) {
+            first = false;
+            GridRow.mutateCell(grid[i], j, Structs.elementnew(GridRow.getCell(grid[i], j), false));
+          } else {
+            GridRow.mutateCell(grid[i], j, Structs.elementnew(GridRow.getCell(grid[i], j), false));
+          }
         }
       }
       return grid;
