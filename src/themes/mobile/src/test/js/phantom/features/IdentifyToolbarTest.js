@@ -25,7 +25,7 @@ test(
 
     check('Toolbar with pipes', [ 'undo', 'bold', 'italic', 'bullist', 'styleselect' ], { toolbar: [ [ 'undo | bold | italic' ], [ 'bullist styleselect' ] ] });
 
-    check('Unknown commands', [
+    check('Unknown identifiers', [
       'undo', 'redo', 'styleselect', 'bold', 'italic', 'alignleft', 'aligncenter', 'alignright', 'alignjustify',
       'bullist', 'numlist', 'outdent', 'indent', 'link', 'image'
     ], { toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image' });
