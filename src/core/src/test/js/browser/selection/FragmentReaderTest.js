@@ -168,6 +168,16 @@ asynctest(
           cSetHtml('<ul><li><b>a<br></b></li></ul>'),
           cReadFragment([0, 0, 0, 0], 0, [0, 0, 0, 0], 1),
           cAssertFragmentHtml('<ul><li><b>a</b></li></ul>')
+        ])),
+        Logger.t('Get fragment from two partially selected li:s', Chain.asStep(viewBlock, [
+          cSetHtml('<ol><li>ab</li><li>cd</li></ol>'),
+          cReadFragment([0, 0, 0], 1, [0, 1, 0], 1),
+          cAssertFragmentHtml('<ol><li>b</li><li>c</li></ol>')
+        ])),
+        Logger.t('Get fragment from two partially selected li:s in nested structure', Chain.asStep(viewBlock, [
+          cSetHtml('<ol><li>ab<ol><li>cd</li></ol></li></ol>'),
+          cReadFragment([0, 0, 0], 1, [0, 0, 1, 0, 0], 1),
+          cAssertFragmentHtml('<ol><li>b<ol><li>c</li></ol></li></ol>')
         ]))
       ])),
       Logger.t('Fragments from tables', GeneralSteps.sequence([
