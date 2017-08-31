@@ -43,6 +43,12 @@ define(
     var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
     var legacyEditors = [], editors = [];
 
+    var isValidLegacyKey = function (id) {
+      // In theory we could filter out any editor id:s that clash
+      // with array prototype items but that could break existing integrations
+      return id !== 'length';
+    };
+
     function globalEventDelegate(e) {
       each(EditorManager.get(), function (editor) {
         if (e.type === 'scroll') {
@@ -552,7 +558,10 @@ define(
         if (self.get(editor.id) === null) {
           // Add to legacy editors array, this is what breaks in HTML5 where ID:s with numbers are valid
           // We can't get rid of this strange object and array at the same time since it seems to be used all over the web
-          legacyEditors[editor.id] = editor;
+          if (isValidLegacyKey(editor.id)) {
+            legacyEditors[editor.id] = editor;
+          }
+
           legacyEditors.push(editor);
 
           editors.push(editor);
