@@ -8,10 +8,12 @@ define(
   function (Fun) {
     var formatChanged = 'formatChanged';
     var orientationChanged = 'orientationChanged';
+    var dropupDismissed = 'dropupDismissed';
 
     return {
       formatChanged: Fun.constant(formatChanged),
-      orientationChanged: Fun.constant(orientationChanged)
+      orientationChanged: Fun.constant(orientationChanged),
+      dropupDismissed: Fun.constant(dropupDismissed)
     };
   }
 );

@@ -9,11 +9,12 @@ define(
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj',
+    'tinymce.themes.mobile.features.DefaultStyleFormats',
     'tinymce.themes.mobile.ui.StylesMenu',
     'tinymce.themes.mobile.util.StyleConversions'
   ],
 
-  function (Toggling, Objects, Arr, Fun, Id, Merger, Obj, StylesMenu, StyleConversions) {
+  function (Toggling, Objects, Arr, Fun, Id, Merger, Obj, DefaultStyleFormats, StylesMenu, StyleConversions) {
     var register = function (editor, settings) {
 
       var isSelectedFor = function (format) {
@@ -57,7 +58,7 @@ define(
       };
 
       
-      var formats = Objects.readOptFrom(settings, 'style_formats').getOr([ ]);
+      var formats = Objects.readOptFrom(settings, 'style_formats').getOr(DefaultStyleFormats);
       var flatten = StyleConversions.expand(formats, 'styles');
 
       var enrich = function (item) {

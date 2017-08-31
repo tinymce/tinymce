@@ -34,9 +34,19 @@ define(
       });
     };
 
+    var receive = function (channel, onReceive) {
+      return {
+        key: channel,
+        value: {
+          onReceive: onReceive
+        }
+      };
+    };
+
     return {
       format: format,
-      orientation: orientation
+      orientation: orientation,
+      receive: receive
     };
   }
 );
