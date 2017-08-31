@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Fun, GridRow) {
+  function (Arr, Fun, Structs, GridRow) {
     // substitution :: (item, comparator) -> item
     var replaceIn = function (grid, targets, comparator, substitution) {
       var isTarget = function (elem) {
@@ -16,7 +17,7 @@ define(
 
       return Arr.map(grid, function (row) {
         return GridRow.mapCells(row, function (cell) {
-          return isTarget(cell) ? substitution(cell, comparator) : cell;
+          return isTarget(cell) ? Structs.elementnew(substitution(cell, comparator), true) : Structs.elementnew(cell, false);
         });
       });
     };
