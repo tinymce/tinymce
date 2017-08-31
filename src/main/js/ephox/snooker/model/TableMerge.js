@@ -2,13 +2,15 @@ define(
   'ephox.snooker.model.TableMerge',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.Fitment',
     'ephox.snooker.model.GridRow',
     'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Fun, Fitment, GridRow, MergingOperations) {
+  function (Arr, Fun, Structs, Fitment, GridRow, MergingOperations) {
     var isSpanning = function (grid, row, col, comparator) {
       var candidate = GridRow.getCell(grid[row], col);
       var matching = Fun.curry(comparator, candidate);
@@ -37,18 +39,21 @@ define(
       var mergeWidth = GridRow.cellLength(gridB[0]);
       var endRow = startRow + mergeHeight;
       var endCol = startCol + mergeWidth;
-
+      var elementNewGrid = Arr.map(gridA, function (row) {
+        return GridRow.mapCells(row, function (cell) {
+          return Structs.elementnew(cell, false);
+        });
+      });
       // embrace the mutation - I think this is easier to follow? To discuss.
       for (var r = startRow; r < endRow; r++) {
         for (var c = startCol; c < endCol; c++) {
           if (isSpanning(gridA, r, c, comparator)) {
             // mutation within mutation, it's mutatception
-            MergingOperations.unmerge(gridA, GridRow.getCell(gridA[r], c), comparator, generator.cell);
+            MergingOperations.unmergeInner(elementNewGrid, GridRow.getCell(elementNewGrid[r], c).element(), comparator, generator.cell);
           }
-          GridRow.mutateCell(gridA[r], c, generator.replace(GridRow.getCell(gridB[r - startRow], c - startCol)));
         }
       }
-      return gridA;
+      return elementNewGrid;
     };
 
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
