@@ -27,15 +27,19 @@ define(
     var deriveRows = function (rendered, generators) {
       // The row is either going to be a new row, or the row of any of the cells.
       var findRow = function (details) {
-        var rowOfCells = Options.findMap(details, function (detail) { return Traverse.parent(detail.element()); });
+        var rowOfCells = Options.findMap(details, function (detail) {
+          return Traverse.parent(detail.element()).bind(function (row) {
+            return Option.some(Structs.elementnew(row, false));
+          });
+        });
         return rowOfCells.getOrThunk(function () {
-          return generators.row();
+          return Structs.elementnew(generators.row(), true);
         });
       };
 
       return Arr.map(rendered, function (details) {
         var row = findRow(details.details());
-        return Structs.rowdata(row, details.details(), details.section());
+        return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
       });
     };
 
@@ -53,7 +57,7 @@ define(
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {
-      return function (wire, table, target, generators, direction) {
+      return function (wire, table, target, generators, direction, newRowF, newCellF) {
         var input = DetailsList.fromTable(table);
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
@@ -69,7 +73,7 @@ define(
         return output.fold(function () {
           return Option.none();
         }, function (out) {
-          Redraw.render(table, out.grid());
+          Redraw.render(table, out.grid(), newRowF, newCellF);
           adjustment(out.grid(), direction);
           postAction(table);
           Bars.refresh(wire, table, BarPositions.height, direction);

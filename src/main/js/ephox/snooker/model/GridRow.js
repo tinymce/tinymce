@@ -8,18 +8,27 @@ define(
   ],
 
   function (Arr, Structs, Util) {
+    var nonNewCells = function (cells) {
+      return Arr.map(cells, function(cell, i) {
+        return Structs.elementnew(cell, false);
+      });
+    };
     var addCell = function (gridRow, index, cell) {
       var cells = gridRow.cells();
-      var newCells = cells.slice(0, index).concat([ cell ]).concat(cells.slice(index));
+      var before = nonNewCells(cells.slice(0, index));
+      var after = nonNewCells(cells.slice(index));
+      var newCells = before.concat([ Structs.elementnew(cell, true) ]).concat(after);
       return setCells(gridRow, newCells);
     };
 
     var addCells = function (gridRow, index, count, subsitution) {
       var cells = gridRow.cells();
       var newCellz = Util.repeat(count, function () {
-        return subsitution();
+        return Structs.elementnew(subsitution(), true);
       });
-      var newCells = cells.slice(0, index).concat( newCellz ).concat(cells.slice(index));
+      var before = nonNewCells(cells.slice(0, index));
+      var after = nonNewCells(cells.slice(index));
+      var newCells = before.concat( newCellz ).concat(after);
       return setCells(gridRow, newCells);
     };
 

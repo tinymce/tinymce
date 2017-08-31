@@ -18,7 +18,7 @@ define(
       else Attr.set(element, property, value);
     };
 
-    var render = function (table, grid) {
+    var render = function (table, grid, newRowF, newCellF) {
       var renderSection = function (gridSection, sectionName) {
         var section = SelectorFind.child(table, sectionName).getOrThunk(function () {
           var tb = Element.fromTag(sectionName, Traverse.owner(table).dom());
@@ -40,6 +40,17 @@ define(
         });
 
         InsertAll.append(section, rows);
+
+        Arr.each(gridSection, function (row) {
+          if (row.isNew()) {
+            newRowF(row.element());
+          }
+          Arr.each(row.cells(), function (cell) {
+            if (cell.isNew()) {
+              newCellF(cell.element());
+            }
+          });
+        });
       };
 
       var removeSection = function (sectionName) {
@@ -53,7 +64,7 @@ define(
           removeSection(sectionName);
         }
       };
-      
+
       var headSection = [];
       var bodySection = [];
       var footSection = [];

@@ -30,7 +30,7 @@ define(
           if (seen[ri][ci] === false) {
             var result = TableGrid.subgrid(grid, ri, ci, comparator);
             updateSeen(ri, ci, result.rowspan(), result.colspan());
-            return [ Structs.detail(cell, result.rowspan(), result.colspan()) ];
+            return [ Structs.detailnew(cell.element(), result.rowspan(), result.colspan(), cell.isNew()) ];
           } else {
             return [];
           }

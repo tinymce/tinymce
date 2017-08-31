@@ -9,16 +9,21 @@ define(
   ],
 
   function (Arr, Structs, GridRow, Util) {
+    var nonNewCell = function (row) {
+      return GridRow.mapCells(row, function(cell, i) {
+        return Structs.elementnew(GridRow.getCell(row, i), false);
+      });
+    };
     // substitution :: (item, comparator) -> item
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
     var insertRowAt = function (grid, index, example, comparator, substitution) {
-      var before = grid.slice(0, index);
-      var after = grid.slice(index);
+      var before = Arr.map(grid.slice(0, index), nonNewCell);
+      var after = Arr.map(grid.slice(index), nonNewCell);
 
       var between = GridRow.mapCells(grid[example], function (ex, c) {
         var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c), GridRow.getCell(grid[index], c));
-        return withinSpan ? GridRow.getCell(grid[index], c) : substitution(ex, comparator);
+        return withinSpan ? Structs.elementnew(GridRow.getCell(grid[index], c), false) : Structs.elementnew(substitution(ex, comparator), true);
       });
 
       return before.concat([ between ]).concat(after);
@@ -28,13 +33,13 @@ define(
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
     var insertRowsAt = function (grid, index, rows, example, comparator, substitution) {
-      var before = grid.slice(0, index);
-      var after = grid.slice(index);
+      var before = Arr.map(grid.slice(0, index), nonNewCell);
+      var after = Arr.map(grid.slice(index), nonNewCell);
 
       var between = Util.repeat(rows, function () {
         return GridRow.mapCells(grid[example], function (ex, c) {
           var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c), GridRow.getCell(grid[index], c));
-          return withinSpan ? GridRow.getCell(grid[index], c) : substitution(ex, comparator);
+          return withinSpan ? Structs.elementnew(GridRow.getCell(grid[index], c), false) : Structs.elementnew(substitution(ex, comparator), true);
         });
       });
 

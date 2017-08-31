@@ -93,10 +93,9 @@ define(
       Css.remove(table, 'height');
     };
 
-    var extract = function (table, selectedClass) {
-      var selected = '.' + selectedClass;
+    var extract = function (table, selectedSelector) {
       var isSelected = function (detail) {
-        return Selectors.is(detail.element(), selected);
+        return Selectors.is(detail.element(), selectedSelector);
       };
 
       var list = DetailsList.fromTable(table);
@@ -105,7 +104,7 @@ define(
       var stats = findSelectedStats(house, isSelected);
 
       // remove unselected cells
-      var selector = 'th:not(' + selected + ')' + ',td:not(' + selected + ')';
+      var selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
       var unselectedCells = LayerSelector.filterFirstLayer(table, 'th,td', function (cell) {
         return Selectors.is(cell, selector);
       });
