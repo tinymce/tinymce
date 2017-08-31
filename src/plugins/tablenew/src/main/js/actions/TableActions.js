@@ -26,13 +26,29 @@ define(
   ],
   function (Fun, TableDirection, TableFill, TableOperations, Element, Direction) {
     return function (editor, lazyWire) {
+      var fireNewRow = function (node) {
+        editor.fire('newrow', {
+          node: node.dom()
+        });
+        console.log('new row', node.dom());
+        return node.dom();
+      };
+
+      var fireNewCell = function (node) {
+        editor.fire('newcell', {
+          node: node.dom()
+        });
+        console.log('new cell', node.dom());
+        return node.dom();
+      };
+
       var execute = function (operation, mutate, lazyWire) {
         return function (table, target) {
           var wire = lazyWire();
           var doc = Element.fromDom(editor.getDoc());
           var direction = TableDirection(Direction.directionAt);
           var generators = TableFill.cellOperations(mutate, doc);
-          return operation(wire, table, target, generators, direction).map(function (cell) {
+          return operation(wire, table, target, generators, direction, fireNewRow, fireNewCell).map(function (cell) {
             var rng = editor.dom.createRng();
             rng.setStart(cell.dom(), 0);
             rng.setEnd(cell.dom(), 0);

@@ -29,11 +29,12 @@ define(
     'tinymce.plugins.tablenew.queries.Direction',
     'tinymce.plugins.tablenew.queries.TabContext',
     'tinymce.plugins.tablenew.selection.CellSelection',
+    'tinymce.plugins.tablenew.selection.Ephemera',
     'tinymce.plugins.tablenew.ui.Buttons',
     'tinymce.plugins.tablenew.ui.Dialogs',
     'tinymce.plugins.tablenew.ui.MenuItems'
   ],
-  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Buttons, Dialogs, MenuItems) {
+  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
 
       var lazyResize = function () {
@@ -81,6 +82,20 @@ define(
 
           resize = Option.some(sz);
         }
+      });
+
+      editor.on('PreInit', function () {
+        // Remove internal data attributes
+        var attributes = Ephemera.firstSelected() + ',' + Ephemera.lastSelected();
+        editor.serializer.addAttributeFilter(attributes,
+          function (nodes, name) {
+
+            var i = nodes.length;
+
+            while (i--) {
+              nodes[i].attr(name, null);
+            }
+          });
       });
 
       // Enable tab key cell navigation
