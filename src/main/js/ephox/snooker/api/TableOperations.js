@@ -38,7 +38,9 @@ define(
 
     var findIn = function (grid, row, column) {
       return Option.from(grid[row]).bind(function (r) {
-        return Option.from(r.cells()[column].element());
+        return Option.from(r.cells()[column]).bind(function (c) {
+          return Option.from(c.element());
+        });
       });
     };
 
@@ -92,7 +94,7 @@ define(
       var example = detail.column();
       var targetIndex = detail.column();
       var newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
-      return bundle(newGrid, details[0].row(), targetIndex);
+      return bundle(newGrid, detail.row(), targetIndex);
     };
 
     var insertColumnsBefore = function (grid, details, comparator, genWrappers) {

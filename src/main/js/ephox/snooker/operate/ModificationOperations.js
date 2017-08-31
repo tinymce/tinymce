@@ -9,7 +9,7 @@ define(
   ],
 
   function (Arr, Structs, GridRow, Util) {
-    var nonNewCell = function (row) {
+    var nonNewCells = function (row) {
       return GridRow.mapCells(row, function(cell, i) {
         return Structs.elementnew(GridRow.getCell(row, i), false);
       });
@@ -18,8 +18,8 @@ define(
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
     var insertRowAt = function (grid, index, example, comparator, substitution) {
-      var before = Arr.map(grid.slice(0, index), nonNewCell);
-      var after = Arr.map(grid.slice(index), nonNewCell);
+      var before = Arr.map(grid.slice(0, index), nonNewCells);
+      var after = Arr.map(grid.slice(index), nonNewCells);
 
       var between = GridRow.mapCells(grid[example], function (ex, c) {
         var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c), GridRow.getCell(grid[index], c));
@@ -33,8 +33,8 @@ define(
     // example is the location of the cursor (the row index)
     // index is the insert position (at - or after - example) (the row index)
     var insertRowsAt = function (grid, index, rows, example, comparator, substitution) {
-      var before = Arr.map(grid.slice(0, index), nonNewCell);
-      var after = Arr.map(grid.slice(index), nonNewCell);
+      var before = Arr.map(grid.slice(0, index), nonNewCells);
+      var after = Arr.map(grid.slice(index), nonNewCells);
 
       var between = Util.repeat(rows, function () {
         return GridRow.mapCells(grid[example], function (ex, c) {
@@ -91,26 +91,36 @@ define(
     // - the other cells in that row set to span the split cell.
     var splitCellIntoRows = function (grid, exampleRow, exampleCol, comparator, substitution) {
       var index = exampleRow + 1; // insert after
-      var before = grid.slice(0, index);
-      var after = grid.slice(index);
+      var before = Arr.map(grid.slice(0, index), nonNewCells);
+      var after = Arr.map(grid.slice(index), nonNewCells);
 
       var between = GridRow.mapCells(grid[exampleRow], function (ex, i) {
         var isTargetCell = (i === exampleCol);
-        return isTargetCell ? substitution(ex, comparator) : ex;
+        return isTargetCell ? Structs.elementnew(substitution(ex, comparator), true) : Structs.elementnew(ex, false);
       });
 
       return before.concat([ between ]).concat(after);
     };
 
     var deleteColumnsAt = function (grid, start, finish) {
-      return Arr.map(grid, function (row) {
+      var rows = Arr.map(grid, function (row) {
         var cells = row.cells().slice(0, start).concat(row.cells().slice(finish + 1));
-        return Structs.rowcells(cells, row.section());
+        var newCells = Arr.map(cells, function (cell) {
+          return Structs.elementnew(cell, false);
+        });
+        return Structs.rowcells(newCells, row.section());
+      });
+      // We should filter out rows that have no columns for easy deletion
+      return Arr.filter(rows, function (row) {
+        return row.cells().length > 0;
       });
     };
 
     var deleteRowsAt = function (grid, start, finish) {
-      return grid.slice(0, start).concat(grid.slice(finish + 1));
+      var rows = grid.slice(0, start).concat(grid.slice(finish + 1));
+      return Arr.map(rows, function (row) {
+        return GridRow.mapCells(row, function (cell) { return Structs.elementnew(cell, false); });
+      });
     };
 
     return {
