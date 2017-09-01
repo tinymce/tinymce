@@ -13,6 +13,7 @@ define(
   [
     'tinymce.core.AddOnManager',
     'tinymce.core.api.Formatter',
+    'tinymce.core.api.NotificationManager',
     'tinymce.core.api.WindowManager',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.ControlSelection',
@@ -40,7 +41,6 @@ define(
     'tinymce.core.html.Serializer',
     'tinymce.core.html.Styles',
     'tinymce.core.html.Writer',
-    'tinymce.core.NotificationManager',
     'tinymce.core.Shortcuts',
     'tinymce.core.ui.Api',
     'tinymce.core.UndoManager',
@@ -61,10 +61,10 @@ define(
     'tinymce.core.util.XHR'
   ],
   function (
-    AddOnManager, Formatter, WindowManager, BookmarkManager, ControlSelection, DomQuery, DOMUtils, EventUtils, RangeUtils, ScriptLoader, Selection, DomSerializer,
-    Sizzle, TreeWalker, Editor, EditorCommands, EditorManager, EditorObservable, Env, FocusManager, Rect, DomParser, Entities, Node, SaxParser, Schema, HtmlSerializer,
-    Styles, Writer, NotificationManager, Shortcuts, UiApi, UndoManager, Class, Color, Delay, EventDispatcher, I18n, JSON, JSONP, JSONRequest, LocalStorage, Observable,
-    Promise, Tools, URI, VK, XHR
+    AddOnManager, Formatter, NotificationManager, WindowManager, BookmarkManager, ControlSelection, DomQuery, DOMUtils, EventUtils, RangeUtils, ScriptLoader,
+    Selection, DomSerializer, Sizzle, TreeWalker, Editor, EditorCommands, EditorManager, EditorObservable, Env, FocusManager, Rect, DomParser, Entities, Node,
+    SaxParser, Schema, HtmlSerializer, Styles, Writer, Shortcuts, UiApi, UndoManager, Class, Color, Delay, EventDispatcher, I18n, JSON, JSONP, JSONRequest, LocalStorage,
+    Observable, Promise, Tools, URI, VK, XHR
   ) {
     var tinymce = EditorManager;
 
