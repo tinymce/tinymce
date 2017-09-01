@@ -56,7 +56,13 @@ define(
        * @return {Object} Module or undefined.
        */
       get: function (type) {
-        return types[type.toLowerCase()];
+        var lctype = type.toLowerCase();
+        var controlType = types.hasOwnProperty(lctype) ? types[lctype] : null;
+        if (controlType === null) {
+          throw new Error("Could not find module for type: " + type);
+        }
+
+        return controlType;
       },
 
       /**
