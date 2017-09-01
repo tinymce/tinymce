@@ -17,15 +17,15 @@
 define(
   'tinymce.core.ui.FilePicker',
   [
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'global!window',
     'tinymce.core.content.LinkTargets',
     'tinymce.core.EditorManager',
     'tinymce.core.ui.ComboBox',
-    'tinymce.core.util.Arr',
-    'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (window, LinkTargets, EditorManager, ComboBox, Arr, Fun, Tools) {
+  function (Arr, Fun, window, LinkTargets, EditorManager, ComboBox, Tools) {
     "use strict";
 
     var getActiveEditor = function () {
@@ -62,7 +62,7 @@ define(
     };
 
     var isUniqueUrl = function (url, targets) {
-      var foundTarget = Arr.find(targets, function (target) {
+      var foundTarget = Arr.exists(targets, function (target) {
         return target.url === url;
       });
 
@@ -78,7 +78,8 @@ define(
       var separator = { title: '-' };
 
       var fromHistoryMenuItems = function (history) {
-        var uniqueHistory = Arr.filter(history[fileType], function (url) {
+        var historyItems = history.hasOwnProperty(fileType) ? history[fileType] : [ ];
+        var uniqueHistory = Arr.filter(historyItems, function (url) {
           return isUniqueUrl(url, targets);
         });
 
@@ -96,7 +97,7 @@ define(
 
       var fromMenuItems = function (type) {
         var filteredTargets = Arr.filter(targets, function (target) {
-          return target.type == type;
+          return target.type === type;
         });
 
         return toMenuItems(filteredTargets);
@@ -119,7 +120,7 @@ define(
       };
 
       var join = function (items) {
-        return Arr.reduce(items, function (a, b) {
+        return Arr.foldl(items, function (a, b) {
           var bothEmpty = a.length === 0 || b.length === 0;
           return bothEmpty ? a.concat(b) : a.concat(separator, b);
         }, []);
