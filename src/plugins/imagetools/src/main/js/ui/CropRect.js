@@ -12,13 +12,13 @@ define(
   'tinymce.plugins.imagetools.ui.CropRect',
   [
     'tinymce.core.dom.DomQuery',
-    'tinymce.core.ui.DragHelper',
     'tinymce.core.geom.Rect',
-    'tinymce.core.util.Tools',
+    'tinymce.core.ui.Factory',
     'tinymce.core.util.Observable',
+    'tinymce.core.util.Tools',
     'tinymce.core.util.VK'
   ],
-  function ($, DragHelper, Rect, Tools, Observable, VK) {
+  function (DomQuery, Rect, Factory, Observable, Tools, VK) {
     var count = 0;
 
     return function (currentRect, viewPortRect, clampRect, containerElm, action) {
@@ -87,6 +87,7 @@ define(
       function render() {
         function createDragHelper(handle) {
           var startRect;
+          var DragHelper = Factory.get('DragHelper');
 
           return new DragHelper(id, {
             document: containerElm.ownerDocument,
@@ -102,19 +103,19 @@ define(
           });
         }
 
-        $(
+        DomQuery(
           '<div id="' + id + '" class="' + prefix + 'croprect-container"' +
           ' role="grid" aria-dropeffect="execute">'
         ).appendTo(containerElm);
 
         Tools.each(blockers, function (blocker) {
-          $('#' + id, containerElm).append(
+          DomQuery('#' + id, containerElm).append(
             '<div id="' + id + '-' + blocker + '"class="' + prefix + 'croprect-block" style="display: none" data-mce-bogus="all">'
           );
         });
 
         Tools.each(handles, function (handle) {
-          $('#' + id, containerElm).append(
+          DomQuery('#' + id, containerElm).append(
             '<div id="' + id + '-' + handle.name + '" class="' + prefix +
             'croprect-handle ' + prefix + 'croprect-handle-' + handle.name + '"' +
             'style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1"' +
@@ -126,11 +127,11 @@ define(
 
         repaint(currentRect);
 
-        $(containerElm).on('focusin focusout', function (e) {
-          $(e.target).attr('aria-grabbed', e.type === 'focus');
+        DomQuery(containerElm).on('focusin focusout', function (e) {
+          DomQuery(e.target).attr('aria-grabbed', e.type === 'focus');
         });
 
-        $(containerElm).on('keydown', function (e) {
+        DomQuery(containerElm).on('keydown', function (e) {
           var activeHandle;
 
           Tools.each(handles, function (handle) {
@@ -183,9 +184,9 @@ define(
         })).join(',');
 
         if (state) {
-          $(selectors, containerElm).show();
+          DomQuery(selectors, containerElm).show();
         } else {
-          $(selectors, containerElm).hide();
+          DomQuery(selectors, containerElm).hide();
         }
       }
 
@@ -199,7 +200,7 @@ define(
             rect.w = 0;
           }
 
-          $('#' + id + '-' + name, containerElm).css({
+          DomQuery('#' + id + '-' + name, containerElm).css({
             left: rect.x,
             top: rect.y,
             width: rect.w,
@@ -208,7 +209,7 @@ define(
         }
 
         Tools.each(handles, function (handle) {
-          $('#' + id + '-' + handle.name, containerElm).css({
+          DomQuery('#' + id + '-' + handle.name, containerElm).css({
             left: rect.w * handle.xMul + rect.x,
             top: rect.h * handle.yMul + rect.y
           });

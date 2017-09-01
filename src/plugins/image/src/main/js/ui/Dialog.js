@@ -15,18 +15,18 @@
 define(
   'tinymce.plugins.image.ui.Dialog',
   [
+    'global!document',
+    'global!Math',
+    'global!RegExp',
     'tinymce.core.Env',
+    'tinymce.core.ui.Factory',
     'tinymce.core.util.JSON',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
-    'tinymce.core.ui.Throbber',
     'tinymce.plugins.image.core.Uploader',
-    'tinymce.plugins.image.core.Utils',
-    'global!Math',
-    'global!RegExp',
-    'global!document'
+    'tinymce.plugins.image.core.Utils'
   ],
-  function (Env, JSON, Tools, XHR, Throbber, Uploader, Utils, Math, RegExp, document) {
+  function (document, Math, RegExp, Env, Factory, JSON, Tools, XHR, Uploader, Utils) {
 
     return function (editor) {
       function createImageList(callback) {
@@ -52,6 +52,7 @@ define(
 
 
         function onFileInput() {
+          var Throbber = Factory.get('Throbber');
           var throbber = new Throbber(win.getEl());
           var file = this.value();
 

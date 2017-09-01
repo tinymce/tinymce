@@ -8,11 +8,11 @@ asynctest(
     'tinymce.core.dom.ScriptLoader',
     'tinymce.core.EditorManager',
     'tinymce.core.InsertContent',
-    'tinymce.core.ui.Control',
+    'tinymce.core.ui.Factory',
     'tinymce.core.util.I18n',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, document, ScriptLoader, EditorManager, InsertContent, Control, I18n, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, ScriptLoader, EditorManager, InsertContent, Factory, I18n, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -22,7 +22,7 @@ asynctest(
     var teardown = function () {
       I18n.rtl = false;
       I18n.setCode('en');
-      Control.rtl = false;
+      Factory.get('Control').rtl = false;
     };
 
     suite.test('UI rendered in RTL mode', function () {
