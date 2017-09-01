@@ -40,6 +40,7 @@ define(
 
     var headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
     var listItems = ['li', 'dd', 'dt'];
+    var lists = ['ul', 'ol', 'dl'];
 
     var lazyLookup = function (items) {
       var lookup;
@@ -66,6 +67,7 @@ define(
       isInline: isInline,
       isHeading: isHeading,
       isTextBlock: lazyLookup(textBlocks),
+      isList: lazyLookup(lists),
       isListItem: lazyLookup(listItems),
       isVoid: lazyLookup(voids),
       isTableCell: lazyLookup(tableCells),

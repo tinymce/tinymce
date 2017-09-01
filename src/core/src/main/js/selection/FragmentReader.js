@@ -21,12 +21,13 @@ define(
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.Parents',
     'tinymce.core.selection.SelectionUtils',
     'tinymce.core.selection.SimpleTableModel'
   ],
-  function (Arr, Fun, Compare, Insert, Replication, Element, Fragment, Node, SelectorFilter, SelectorFind, ElementType, Parents, SelectionUtils, SimpleTableModel) {
+  function (Arr, Fun, Compare, Insert, Replication, Element, Fragment, Node, SelectorFilter, SelectorFind, Traverse, ElementType, Parents, SelectionUtils, SimpleTableModel) {
     var findParentListContainer = function (parents) {
       return Arr.find(parents, function (elm) {
         return Node.name(elm) === 'ul' || Node.name(elm) === 'ol';
@@ -57,13 +58,28 @@ define(
       return elms.length > 0 ? Fragment.fromElements([wrapped]) : wrapped;
     };
 
+    var directListWrappers = function (commonAnchorContainer) {
+      if (ElementType.isListItem(commonAnchorContainer)) {
+        return Traverse.parent(commonAnchorContainer).filter(ElementType.isList).fold(
+          Fun.constant([]),
+          function (listElm) {
+            return [ commonAnchorContainer, listElm ];
+          }
+        );
+      } else {
+        return ElementType.isList(commonAnchorContainer) ? [ commonAnchorContainer ] : [ ];
+      }
+    };
+
     var getWrapElements = function (rootNode, rng) {
-      var parents = Parents.parentsAndSelf(Element.fromDom(rng.commonAncestorContainer), rootNode);
+      var commonAnchorContainer = Element.fromDom(rng.commonAncestorContainer);
+      var parents = Parents.parentsAndSelf(commonAnchorContainer, rootNode);
       var wrapElements = Arr.filter(parents, function (elm) {
         return ElementType.isInline(elm) || ElementType.isHeading(elm);
       });
-      var fullWrappers = getFullySelectedListWrappers(parents, rng);
-      return Arr.map(wrapElements.concat(fullWrappers), Replication.shallow);
+      var listWrappers = getFullySelectedListWrappers(parents, rng);
+      var allWrappers = wrapElements.concat(listWrappers.length ? listWrappers : directListWrappers(commonAnchorContainer));
+      return Arr.map(allWrappers, Replication.shallow);
     };
 
     var emptyFragment = function () {
