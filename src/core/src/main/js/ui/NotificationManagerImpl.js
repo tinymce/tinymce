@@ -18,21 +18,21 @@ define(
   ],
   function (Arr, DomUtils, Notification, Tools) {
     return function (editor) {
-      var getContainerWidth = function () {
-        var container = editor.inline ? editor.getElement() : editor.getContentAreaContainer();
-        return DomUtils.getSize(container).width;
-      };
-
       var getEditorContainer = function (editor) {
         return editor.inline ? editor.getElement() : editor.getContentAreaContainer();
+      };
+
+      var getContainerWidth = function () {
+        var container = getEditorContainer(editor);
+        return DomUtils.getSize(container).width;
       };
 
       // Since the viewport will change based on the present notifications, we need to move them all to the
       // top left of the viewport to give an accurate size measurement so we can position them later.
       var prePositionNotifications = function (notifications) {
-        for (var i = 0; i < notifications.length; i++) {
-          notifications[i].moveTo(0, 0);
-        }
+        Arr.each(notifications, function (notification) {
+          notification.moveTo(0, 0);
+        });
       };
 
       var positionNotifications = function (notifications) {
@@ -40,11 +40,11 @@ define(
           var firstItem = notifications.slice(0, 1)[0];
           var container = getEditorContainer(editor);
           firstItem.moveRel(container, 'tc-tc');
-          if (notifications.length > 1) {
-            for (var i = 1; i < notifications.length; i++) {
-              notifications[i].moveRel(notifications[i - 1].getEl(), 'bc-tc');
+          Arr.each(notifications, function (notification, index) {
+            if (index > 0) {
+              notification.moveRel(notifications[index - 1].getEl(), 'bc-tc');
             }
-          }
+          });
         }
       };
 
@@ -54,21 +54,16 @@ define(
       };
 
       var open = function (args, closeCallback) {
-        var notif;
-
-        editor.editorManager.setActive(editor);
-
-        args = Tools.extend(args, { maxWidth: getContainerWidth() });
-
-        notif = new Notification(args);
-        notif.args = args;
+        var extendedArgs = Tools.extend(args, { maxWidth: getContainerWidth() });
+        var notif = new Notification(extendedArgs);
+        notif.args = extendedArgs;
 
         //If we have a timeout value
-        if (args.timeout > 0) {
+        if (extendedArgs.timeout > 0) {
           notif.timer = setTimeout(function () {
             notif.close();
             closeCallback();
-          }, args.timeout);
+          }, extendedArgs.timeout);
         }
 
         notif.on('close', function () {
