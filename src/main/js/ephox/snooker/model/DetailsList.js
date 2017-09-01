@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
     'ephox.syrup.api.Attr',
@@ -11,7 +10,7 @@ define(
     'ephox.syrup.api.Traverse'
   ],
 
-  function (Arr, Fun, Structs, TableLookup, Attr, Node, Traverse) {
+  function (Arr, Structs, TableLookup, Attr, Node, Traverse) {
 
     /*
      * Takes a DOM table and returns a list of list of:

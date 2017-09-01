@@ -197,6 +197,18 @@ define(
       });
     };
 
+    var pasteRows = function (grid, pasteDetails, comparator, genWrappers) {
+      var gridify = function (details, generators) {
+        var wh = Warehouse.generate(details);
+        return Transitions.toGrid(wh, generators);
+      };
+      var example = pasteDetails.cells[0].row();
+      var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
+      var mergedGrid = TableMerge.insert(example, grid, gridB, pasteDetails.generators(), comparator);
+      var cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
+      return outcome(mergedGrid, cursor);
+    };
+
     // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
     var resize = Adjustments.adjustWidthTo;
 
@@ -219,7 +231,8 @@ define(
       unmakeRowHeader:  RunOperation.run(unmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td')),
       mergeCells: RunOperation.run(mergeCells, RunOperation.onMergable, Fun.noop, Fun.noop, Generators.merging),
       unmergeCells: RunOperation.run(unmergeCells, RunOperation.onUnmergable, resize, Fun.noop, Generators.merging),
-      pasteCells: RunOperation.run(pasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification)
+      pasteCells: RunOperation.run(pasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification),
+      pasteRowsBefore: RunOperation.run(pasteRows, RunOperation.onPasteRows, Fun.noop, Fun.noop, Generators.modification)
     };
   }
 );

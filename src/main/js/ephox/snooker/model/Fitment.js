@@ -5,6 +5,7 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.perhaps.Result',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow',
     'ephox.snooker.util.Util',
     'global!Array',
@@ -12,7 +13,7 @@ define(
     'global!Math'
   ],
 
-  function (Arr, Fun, Result, GridRow, Util, Array, Error, Math) {
+  function (Arr, Fun, Result, Structs, GridRow, Util, Array, Error, Math) {
     /*
       Fitment, is a module used to ensure that the Inserted table (gridB) can fit squareley within the Host table (gridA).
         - measure returns a delta of rows and cols, eg:
@@ -39,8 +40,14 @@ define(
       });
     };
 
+    var measureWidth = function (gridA, gridB) {
+
+    };
+
     var fill = function (cells, generator) {
-      return Arr.map(cells, generator.cell);
+      return Arr.map(cells, function () {
+        return Structs.elementnew(generator.cell(), true)
+      });
     };
 
     var rowFill = function (grid, amount, generator) {

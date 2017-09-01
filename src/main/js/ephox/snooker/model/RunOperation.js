@@ -99,6 +99,19 @@ define(
       });
     };
 
+    var onPasteRows = function (warehouse, target) {
+      var details = Arr.map(target.selection(), function (cell) {
+        return TableLookup.cell(cell).bind(function (lc) {
+          return findInWarehouse(warehouse, lc);
+        });
+      });
+      var cells = Options.cat(details);
+      return cells.length > 0 ? Option.some(Merger.merge({cells: cells}, {
+        generators: target.generators,
+        clipboard: target.clipboard
+      })) : Option.none();
+    };
+
     var onMergable = function (warehouse, target) {
       return target.mergable();
     };
@@ -122,6 +135,7 @@ define(
       onCell: onCell,
       onCells: onCells,
       onPaste: onPaste,
+      onPasteRows: onPasteRows,
       onMergable: onMergable,
       onUnmergable: onUnmergable
     };
