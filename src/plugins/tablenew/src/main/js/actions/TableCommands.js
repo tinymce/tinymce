@@ -3,6 +3,8 @@ define(
 
   [
     'ephox.darwin.api.TableSelection',
+    'ephox.snooker.api.CopyRows',
+    'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
@@ -12,8 +14,10 @@ define(
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableSelection, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
+  function (TableSelection, CopyRows, TableFill, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
     var each = Tools.each;
+
+    var clipboardRows;
 
     var registerCommands = function (editor, dialogs, actions, cellSelection) {
 
@@ -38,6 +42,30 @@ define(
         var table = TableLookup.table(cell);
         table.bind(function (table) {
           var targets = TableTargets.forMenu(selections, table, cell);
+          execute(table, targets).each(function (rng) {
+            editor.selection.setRng(rng);
+            editor.focus();
+            cellSelection.clear(table);
+          });
+        });
+      };
+
+      var doOnSelection = function (execute) {
+        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+        var table = TableLookup.table(cell);
+        return table.bind(function (table) {
+          var targets = TableTargets.forMenu(selections, table, cell);
+          return CopyRows.copyRows(table, targets);
+        });
+      };
+
+      var pasteOnSelection = function (execute) {
+        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+        var table = TableLookup.table(cell);
+        table.bind(function (table) {
+          var doc = Element.fromDom(editor.getDoc());
+          var generators = TableFill.paste(doc);
+          var targets = TableTargets.pasteRows(selections, table, cell, clipboardRows, generators);
           execute(table, targets).each(function (rng) {
             editor.selection.setRng(rng);
             editor.focus();
@@ -84,13 +112,14 @@ define(
         //   clipboardRows = grid.cutRows();
         // },
 
-        // mceTableCopyRow: function (grid) {
-        //   clipboardRows = grid.copyRows();
-        // },
+        mceTableCopyRow: function (grid) {
+          clipboardRows = doOnSelection();
+          console.log(clipboardRows);
+        },
 
-        // mceTablePasteRowBefore: function (grid) {
-        //   grid.pasteRows(clipboardRows, true);
-        // },
+        mceTablePasteRowBefore: function (grid) {
+          pasteOnSelection(actions.pasteRowsBefore);
+        },
 
         // mceTablePasteRowAfter: function (grid) {
         //   grid.pasteRows(clipboardRows);

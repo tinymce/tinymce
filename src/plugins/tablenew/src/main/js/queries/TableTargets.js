@@ -33,11 +33,23 @@ define(
 
     var paste = Struct.immutable('element', 'clipboard', 'generators');
 
+    var pasteRows = function (selections, table, cell, clipboard, generators) {
+      return {
+        element: Fun.constant(cell),
+        mergable: Option.none,
+        unmergable: Option.none,
+        selection: Fun.constant([cell]),
+        clipboard: Fun.constant(clipboard),
+        generators: Fun.constant(generators)
+      };
+    };
+
     return {
       noMenu: noMenu,
       forMenu: forMenu,
       notCell: notCell,
-      paste: paste
+      paste: paste,
+      pasteRows: pasteRows
     };
   }
 );
