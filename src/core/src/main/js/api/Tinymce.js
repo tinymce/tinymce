@@ -42,7 +42,7 @@ define(
     'tinymce.core.html.Styles',
     'tinymce.core.html.Writer',
     'tinymce.core.Shortcuts',
-    'tinymce.core.ui.Api',
+    'tinymce.core.ui.Factory',
     'tinymce.core.UndoManager',
     'tinymce.core.util.Class',
     'tinymce.core.util.Color',
@@ -63,8 +63,8 @@ define(
   function (
     AddOnManager, Formatter, NotificationManager, WindowManager, BookmarkManager, ControlSelection, DomQuery, DOMUtils, EventUtils, RangeUtils, ScriptLoader,
     Selection, DomSerializer, Sizzle, TreeWalker, Editor, EditorCommands, EditorManager, EditorObservable, Env, FocusManager, Rect, DomParser, Entities, Node,
-    SaxParser, Schema, HtmlSerializer, Styles, Writer, Shortcuts, UiApi, UndoManager, Class, Color, Delay, EventDispatcher, I18n, JSON, JSONP, JSONRequest, LocalStorage,
-    Observable, Promise, Tools, URI, VK, XHR
+    SaxParser, Schema, HtmlSerializer, Styles, Writer, Shortcuts, Factory, UndoManager, Class, Color, Delay, EventDispatcher, I18n, JSON, JSONP, JSONRequest,
+    LocalStorage, Observable, Promise, Tools, URI, VK, XHR
   ) {
     var tinymce = EditorManager;
 
@@ -120,6 +120,10 @@ define(
         Serializer: HtmlSerializer
       },
 
+      ui: {
+        Factory: Factory
+      },
+
       Env: Env,
       AddOnManager: AddOnManager,
       Formatter: Formatter,
@@ -166,7 +170,6 @@ define(
     };
 
     tinymce = Tools.extend(tinymce, publicApi);
-    UiApi.appendTo(tinymce);
 
     return tinymce;
   }

@@ -11,7 +11,7 @@
 define(
   'tinymce.themes.modern.ui.ProgressState',
   [
-    'tinymce.core.ui.Throbber'
+    'tinymce.ui.Throbber'
   ],
   function (Throbber) {
     var setup = function (editor, theme) {
