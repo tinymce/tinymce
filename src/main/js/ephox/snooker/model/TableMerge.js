@@ -48,7 +48,7 @@ define(
           }
         }
       }
-      return elementNewGrid;
+      return gridA;
     };
 
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
@@ -59,12 +59,12 @@ define(
             return Structs.elementnew(cell, false);
           });
         });
-        var fittedGrid = Fitment.tailor(startAddress, elementNewGrid, delta, generator);
+        var fittedGrid = Fitment.tailor(elementNewGrid, delta, generator);
         return mergeTables(startAddress, fittedGrid, gridB, generator, comparator);
       });
     };
 
-    var insert = function (index, gridA, gridB, generators, comparator) {
+    var insert = function (index, gridA, gridB, generator, comparator) {
       var elementOldGrid = Arr.map(gridA, function (row) {
         return GridRow.mapCells(row, function (cell) {
           return Structs.elementnew(cell, false);
@@ -75,7 +75,14 @@ define(
           return Structs.elementnew(cell, true);
         });
       });
-      return elementOldGrid.slice(0, index).concat(elementNewGrid).concat(elementOldGrid.slice(index, gridA.length));
+
+      var delta = Fitment.measureWidth(elementNewGrid, elementOldGrid);
+      var fittedNewGrid = Fitment.tailor(elementNewGrid, delta, generator);
+
+      var secondDelta = Fitment.measureWidth(elementOldGrid, fittedNewGrid);
+      var fittedOldGrid = Fitment.tailor(elementOldGrid, secondDelta, generator);
+
+      return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, gridA.length));
     };
 
     return {

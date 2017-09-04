@@ -41,7 +41,13 @@ define(
     };
 
     var measureWidth = function (gridA, gridB) {
+      var colLengthA = GridRow.cellLength(gridA[0]);
+      var colLengthB = GridRow.cellLength(gridB[0]);
 
+      return {
+        rowDelta: Fun.constant(0),
+        colDelta: Fun.constant(colLengthA - colLengthB)
+      };
     };
 
     var fill = function (cells, generator) {
@@ -62,7 +68,7 @@ define(
       });
     };
 
-    var tailor = function (startAddress, gridA, delta, generator) {
+    var tailor = function (gridA, delta, generator) {
       var fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
       var fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
 
@@ -73,6 +79,7 @@ define(
 
     return {
       measure: measure,
+      measureWidth: measureWidth,
       tailor: tailor
     };
   }
