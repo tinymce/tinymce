@@ -38,7 +38,7 @@ define(
         element: Fun.constant(cell),
         mergable: Option.none,
         unmergable: Option.none,
-        selection: Fun.constant([cell]),
+        selection: Fun.constant(CellOperations.selection(cell, selections)),
         clipboard: Fun.constant(clipboard),
         generators: Fun.constant(generators)
       };

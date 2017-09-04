@@ -30,6 +30,7 @@ define(
         editor.fire('newrow', {
           node: node.dom()
         });
+        console.log('newrow', node.dom());
         return node.dom();
       };
 
@@ -37,6 +38,7 @@ define(
         editor.fire('newcell', {
           node: node.dom()
         });
+        console.log('new cell', node.dom());
         return node.dom();
       };
 
@@ -73,6 +75,8 @@ define(
 
       var pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.noop, lazyWire);
 
+      var pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.noop, lazyWire);
+
       return {
         deleteRow: deleteRow,
         deleteColumn: deleteColumn,
@@ -82,7 +86,8 @@ define(
         insertColumnsAfter: insertColumnsAfter,
         mergeCells: mergeCells,
         unmergeCells: unmergeCells,
-        pasteRowsBefore: pasteRowsBefore
+        pasteRowsBefore: pasteRowsBefore,
+        pasteRowsAfter: pasteRowsAfter
       };
     };
   }

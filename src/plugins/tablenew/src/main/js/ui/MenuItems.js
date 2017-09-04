@@ -254,8 +254,11 @@ define(
           { text: 'Insert row after', onclick: cmd('mceTableInsertRowAfter'), onPostRender: pushCell },
           { text: 'Delete row', onclick: cmd('mceTableDeleteRow'), onPostRender: pushCell },
           { text: 'Row properties', onclick: cmd('mceTableRowProps'), onPostRender: pushCell },
+          { text: '-' },
+          { text: 'Cut row', onclick: cmd('mceTableCutRow'), onPostRender: pushCell },
           { text: 'Copy row', onclick: cmd('mceTableCopyRow'), onPostRender: pushCell },
-          { text: 'Paste row before', onclick: cmd('mceTablePasteRowBefore'), onPostRender: pushCell }
+          { text: 'Paste row before', onclick: cmd('mceTablePasteRowBefore'), onPostRender: pushCell },
+          { text: 'Paste row after', onclick: cmd('mceTablePasteRowAfter'), onPostRender: pushCell }
         ]
       };
 

@@ -2,7 +2,6 @@ define(
   'tinymce.plugins.tablenew.actions.TableCommands',
 
   [
-    'ephox.darwin.api.TableSelection',
     'ephox.snooker.api.CopyRows',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableLookup',
@@ -14,7 +13,7 @@ define(
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (TableSelection, CopyRows, TableFill, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
+  function (CopyRows, TableFill, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
     var each = Tools.each;
 
     var clipboardRows;
@@ -37,9 +36,17 @@ define(
         });
       };
 
+      var getSelectionStartCell = function () {
+        return Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+      };
+
+      var getTableFromCell = function (cell) {
+        return TableLookup.table(cell);
+      };
+
       var actOnSelection = function (execute) {
-        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-        var table = TableLookup.table(cell);
+        var cell = getSelectionStartCell();
+        var table = getTableFromCell(cell);
         table.bind(function (table) {
           var targets = TableTargets.forMenu(selections, table, cell);
           execute(table, targets).each(function (rng) {
@@ -50,9 +57,9 @@ define(
         });
       };
 
-      var doOnSelection = function (execute) {
-        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-        var table = TableLookup.table(cell);
+      var copyRowSelection = function (execute) {
+        var cell = getSelectionStartCell();
+        var table = getTableFromCell(cell);
         return table.bind(function (table) {
           var targets = TableTargets.forMenu(selections, table, cell);
           return CopyRows.copyRows(table, targets);
@@ -60,8 +67,8 @@ define(
       };
 
       var pasteOnSelection = function (execute) {
-        var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-        var table = TableLookup.table(cell);
+        var cell = getSelectionStartCell();
+        var table = getTableFromCell(cell);
         table.bind(function (table) {
           var doc = Element.fromDom(editor.getDoc());
           var generators = TableFill.paste(doc);
@@ -108,22 +115,23 @@ define(
           actOnSelection(actions.deleteRow);
         },
 
-        // mceTableCutRow: function (grid) {
-        //   clipboardRows = grid.cutRows();
-        // },
+        mceTableCutRow: function (grid) {
+          clipboardRows = copyRowSelection();
+          console.log(clipboardRows);
+          actOnSelection(actions.deleteRow);
+        },
 
         mceTableCopyRow: function (grid) {
-          clipboardRows = doOnSelection();
-          console.log(clipboardRows);
+          clipboardRows = copyRowSelection();
         },
 
         mceTablePasteRowBefore: function (grid) {
           pasteOnSelection(actions.pasteRowsBefore);
         },
 
-        // mceTablePasteRowAfter: function (grid) {
-        //   grid.pasteRows(clipboardRows);
-        // },
+        mceTablePasteRowAfter: function (grid) {
+          pasteOnSelection(actions.pasteRowsAfter);
+        },
 
         // mceSplitColsBefore: function (grid) {
         //   grid.splitCols(true);

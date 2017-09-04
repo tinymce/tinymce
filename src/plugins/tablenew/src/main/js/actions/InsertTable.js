@@ -8,7 +8,7 @@ define(
   ],
 
   function (TableRender, Attr, Html) {
-    var insert = function (editor, rows, columns) {
+    var insert = function (editor, columns, rows) {
       var tableElm;
 
       var renderedHtml = TableRender.render(rows, columns, 0, 0);
