@@ -31,6 +31,7 @@ define(
     ];
 
     var tableCells = ['td', 'th'];
+    var tableSections = ['thead', 'tbody', 'tfoot'];
 
     var textBlocks = [
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'address', 'pre', 'form',
@@ -70,6 +71,7 @@ define(
       isList: lazyLookup(lists),
       isListItem: lazyLookup(listItems),
       isVoid: lazyLookup(voids),
+      isTableSection: lazyLookup(tableSections),
       isTableCell: lazyLookup(tableCells),
       isBr: isBr
     };

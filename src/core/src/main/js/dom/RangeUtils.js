@@ -667,7 +667,7 @@ define(
     };
 
     RangeUtils.getNode = function (container, offset) {
-      if (container.nodeType == 1 && container.hasChildNodes()) {
+      if (container.nodeType === 1 && container.hasChildNodes()) {
         if (offset >= container.childNodes.length) {
           offset = container.childNodes.length - 1;
         }

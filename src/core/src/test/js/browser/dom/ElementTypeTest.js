@@ -88,6 +88,14 @@ asynctest(
         sCheckElement('ol', ElementType.isList, true),
         sCheckElement('dl', ElementType.isList, true),
         sCheckText(ElementType.isList)
+      ])),
+      Logger.t('Check table section elements', GeneralSteps.sequence([
+        sCheckElement('br', ElementType.isTableSection, false),
+        sCheckElement('div', ElementType.isTableSection, false),
+        sCheckElement('thead', ElementType.isTableSection, true),
+        sCheckElement('tbody', ElementType.isTableSection, true),
+        sCheckElement('tfoot', ElementType.isTableSection, true),
+        sCheckText(ElementType.isTableSection)
       ]))
     ], function () {
       success();
