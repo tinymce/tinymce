@@ -3,49 +3,64 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.perhaps.Option',
+    'ephox.perhaps.Options',
     'ephox.snooker.api.Structs',
-    'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
+    'ephox.snooker.model.GridRow',
     'ephox.snooker.model.RunOperation',
+    'ephox.snooker.model.Transitions',
     'ephox.snooker.model.Warehouse',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Replication'
+    'ephox.snooker.operate.Redraw',
+    'ephox.syrup.api.Compare',
+    'ephox.syrup.api.Traverse'
   ],
 
-  function (Arr, Structs, TableLookup, DetailsList, RunOperation, Warehouse, Attr, Replication) {
-    var uniqueRows = function (details) {
-      return Arr.foldl(details, function (rest, detail) {
-          return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
-      }, []).sort();
+  function (Arr, Option, Options, Structs, DetailsList, GridRow, RunOperation, Transitions, Warehouse, Redraw, Compare, Traverse) {
+    var deriveRows = function (rendered, generators) {
+      // The row is either going to be a new row, or the row of any of the cells.
+      var findRow = function (details) {
+        var rowOfCells = Options.findMap(details, function (detail) {
+          return Traverse.parent(detail.element()).bind(function (row) {
+            // If the row has a parent, it's within the existing table, otherwise it's a copied row
+            return Traverse.parent(row).fold(function () {
+                return Option.some(Structs.elementnew(row, true));
+              },
+              function (_section) {
+                return Option.some(Structs.elementnew(row, false));
+            });
+          });
+        });
+        return rowOfCells.getOrThunk(function () {
+          return Structs.elementnew(generators.row(), true);
+        });
+      };
+
+      return Arr.map(rendered, function (details) {
+        var row = findRow(details.details());
+        return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
+      });
     };
 
-    var copyRows = function (table, target) {
-      var fixRowSpan = function (cell, rows, rowIndex) {
-        // 3
-        var rowSpan = parseInt(Attr.get(cell, 'rowspan'), 10);
-        // 2
-        var rows = rows.slice(rowIndex).length;
-        var delta = rowSpan - rows;
-        return rowSpan - delta;
-      };
+    var toDetailList = function (grid, generators) {
+      var rendered = Transitions.toDetails(grid, Compare.eq);
+      return deriveRows(rendered, generators);
+    };
+
+    var copyRows = function (table, target, generators) {
       var list = DetailsList.fromTable(table);
       var house = Warehouse.generate(list);
       var details = RunOperation.onCells(house, target);
       return details.bind(function (selectedCells) {
-        var rows = uniqueRows(selectedCells);
-        return Arr.map(rows, function (rowIndex) {
-          var listRow = list[rowIndex];
-          var clonedRow = Replication.deep(listRow.element());
-          var clonedCells = Arr.map(TableLookup.cells(clonedRow), function (cell) {
-            // Shorten rowspan length if it's longer
-            var rowspan = Attr.has(cell, 'rowspan') ? fixRowSpan(cell, rows, rowIndex) : 1;
-            var colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
-            return Structs.detail(cell, rowspan, colspan);
+        var grid = Transitions.toGrid(house, generators);
+        var slicedGrid = grid.slice(selectedCells[0].row(), selectedCells[selectedCells.length - 1].row() + selectedCells[selectedCells.length - 1].rowspan());
+        var elementNewGrid = Arr.map(slicedGrid, function (row) {
+          return GridRow.mapCells(row, function (cell) {
+            return Structs.elementnew(cell, false);
           });
-
-          // Make duplicates of the element and cells
-          return Structs.rowdata(clonedRow, clonedCells, listRow.section());
         });
+        var slicedDetails = toDetailList(elementNewGrid, generators);
+        return Option.some(Redraw.copy(slicedDetails));
       });
     };
     return {

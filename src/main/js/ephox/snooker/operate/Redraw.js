@@ -8,11 +8,12 @@ define(
     'ephox.syrup.api.Insert',
     'ephox.syrup.api.InsertAll',
     'ephox.syrup.api.Remove',
+    'ephox.syrup.api.Replication',
     'ephox.syrup.api.SelectorFind',
     'ephox.syrup.api.Traverse'
   ],
 
-  function (Arr, Attr, Element, Insert, InsertAll, Remove, SelectorFind, Traverse) {
+  function (Arr, Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse) {
     var setIfNot = function (element, property, value, ignore) {
       if (value === ignore) Attr.remove(element, property);
       else Attr.set(element, property, value);
@@ -88,8 +89,24 @@ define(
       renderOrRemoveSection(footSection, 'tfoot');
     };
 
+    var copy = function (grid) {
+      var rows = Arr.map(grid, function (row) {
+        // Shallow copy the row element
+        var tr = Replication.shallow(row.element());
+        Arr.each(row.cells(), function (cell) {
+          var clonedCell = Replication.deep(cell.element());
+          setIfNot(clonedCell, 'colspan', cell.colspan(), 1);
+          setIfNot(clonedCell, 'rowspan', cell.rowspan(), 1);
+          Insert.append(tr, clonedCell);
+        });
+        return tr;
+      });
+      return rows;
+    };
+
     return {
-      render: render
+      render: render,
+      copy: copy
     };
   }
 );

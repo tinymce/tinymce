@@ -29,7 +29,13 @@ define(
       var findRow = function (details) {
         var rowOfCells = Options.findMap(details, function (detail) {
           return Traverse.parent(detail.element()).bind(function (row) {
-            return Option.some(Structs.elementnew(row, false));
+            // If the row has a parent, it's within the existing table, otherwise it's a copied row
+            return Traverse.parent(row).fold(function () {
+                return Option.some(Structs.elementnew(row, true));
+              },
+              function (_section) {
+                return Option.some(Structs.elementnew(row, false));
+            });
           });
         });
         return rowOfCells.getOrThunk(function () {

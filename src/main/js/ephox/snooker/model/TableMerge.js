@@ -76,13 +76,15 @@ define(
         });
       });
 
+      MergingOperations.splitRows(elementOldGrid, index, comparator, generator.cell);
+
       var delta = Fitment.measureWidth(elementNewGrid, elementOldGrid);
       var fittedNewGrid = Fitment.tailor(elementNewGrid, delta, generator);
 
       var secondDelta = Fitment.measureWidth(elementOldGrid, fittedNewGrid);
       var fittedOldGrid = Fitment.tailor(elementOldGrid, secondDelta, generator);
 
-      return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, gridA.length));
+      return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
     };
 
     return {

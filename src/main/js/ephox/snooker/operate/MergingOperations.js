@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.perhaps.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Structs, GridRow) {
+  function (Arr, Option, Structs, GridRow) {
     // substitution: () -> item
     var merge = function (grid, bounds, comparator, substitution) {
       // Mutating. Do we care about the efficiency gain?
@@ -55,10 +56,48 @@ define(
       return grid;
     };
 
+    var uniqueCells = function (row, comparator) {
+      return Arr.foldl(row, function (rest, cell) {
+          return Arr.exists(rest, function (currentCell){
+            return comparator(currentCell.element(), cell.element());
+          }) ? rest : rest.concat([cell]);
+      }, []);
+    };
+
+    var splitRows = function (grid, index, comparator, substitution) {
+      // We don't need to split rows if we're inserting at the first or last row of the old table
+      if (index > 0 && index < grid.length) {
+        var rowPrevCells = grid[index - 1].cells();
+        var cells = uniqueCells(rowPrevCells, comparator);
+        Arr.each(cells, function (cell) {
+          // only make a sub when we have to
+          var replacement = Option.none();
+          for (var i = index; i < grid.length; i++) {
+            for (var j = 0; j < GridRow.cellLength(grid[0]); j++) {
+              var current = grid[i].cells()[j].element();
+              var isToReplace = comparator(current, cell.element());
+
+              if (isToReplace) {
+                if (replacement.isNone()) {
+                  replacement = Option.some(substitution());
+                }
+                replacement.each(function (sub) {
+                  GridRow.mutateCell(grid[i], j, Structs.elementnew(sub, true));
+                });
+              }
+            }
+          }
+        });
+      }
+
+      return grid;
+    };
+
     return {
       merge: merge,
       unmerge: unmerge,
-      unmergeInner: unmergeInner
+      unmergeInner: unmergeInner,
+      splitRows: splitRows
     };
   }
 );
