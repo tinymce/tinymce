@@ -138,6 +138,7 @@ define(
 
     return {
       run: run,
+      toDetailList: toDetailList,
       onCell: onCell,
       onCells: onCells,
       onPaste: onPaste,

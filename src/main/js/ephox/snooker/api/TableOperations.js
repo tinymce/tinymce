@@ -19,11 +19,10 @@ define(
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.Replication'
+    'ephox.syrup.api.Remove'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove, Replication) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -198,27 +197,25 @@ define(
       });
     };
 
+    var gridifyRows = function (rows, generators, example) {
+      var pasteDetails = DetailsList.fromPastedRows(rows, example);
+      var wh = Warehouse.generate(pasteDetails);
+      return Transitions.toGrid(wh, generators);
+    };
+
     var pasteRowsBefore = function (grid, pasteDetails, comparator, genWrappers) {
-      var gridify = function (rows, generators, example) {
-        var pasteDetails = DetailsList.fromPastedRows(rows, example);
-        var wh = Warehouse.generate(pasteDetails);
-        return Transitions.toGrid(wh, generators);
-      };
       var example = grid[pasteDetails.cells[0].row()];
       var index = pasteDetails.cells[0].row();
-      var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators(), example);
+      var gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
       var mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
       var cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
       return outcome(mergedGrid, cursor);
     };
 
     var pasteRowsAfter = function (grid, pasteDetails, comparator, genWrappers) {
-      var gridify = function (details, generators) {
-        var wh = Warehouse.generate(details);
-        return Transitions.toGrid(wh, generators);
-      };
+      var example = grid[pasteDetails.cells.length - 1];
       var index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].colspan();
-      var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
+      var gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
       var mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
       var cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
       return outcome(mergedGrid, cursor);
