@@ -2,18 +2,21 @@ define(
   'tinymce.plugins.tablenew.actions.TableCommands',
 
   [
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.CopyRows',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.dom.Replication',
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
     'tinymce.plugins.tablenew.queries.TableTargets',
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (CopyRows, TableFill, TableLookup, Insert, Remove, Element, Tools, TableTargets, Selections) {
+  function (Arr, Fun, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets, Selections) {
     var each = Tools.each;
 
     var clipboardRows;
@@ -61,22 +64,30 @@ define(
         var cell = getSelectionStartCell();
         var table = getTableFromCell(cell);
         return table.bind(function (table) {
+          var doc = Element.fromDom(editor.getDoc());
           var targets = TableTargets.forMenu(selections, table, cell);
-          return CopyRows.copyRows(table, targets);
+          var generators = TableFill.cellOperations(Fun.noop, doc);
+          return CopyRows.copyRows(table, targets, generators);
         });
       };
 
       var pasteOnSelection = function (execute) {
-        var cell = getSelectionStartCell();
-        var table = getTableFromCell(cell);
-        table.bind(function (table) {
-          var doc = Element.fromDom(editor.getDoc());
-          var generators = TableFill.paste(doc);
-          var targets = TableTargets.pasteRows(selections, table, cell, clipboardRows, generators);
-          execute(table, targets).each(function (rng) {
-            editor.selection.setRng(rng);
-            editor.focus();
-            cellSelection.clear(table);
+        // If we have clipboard rows to paste
+        clipboardRows.each(function (rows) {
+          var clonedRows = Arr.map(rows, function (row) {
+            return Replication.deep(row);
+          });
+          var cell = getSelectionStartCell();
+          var table = getTableFromCell(cell);
+          table.bind(function (table) {
+            var doc = Element.fromDom(editor.getDoc());
+            var generators = TableFill.paste(doc);
+            var targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
+            execute(table, targets).each(function (rng) {
+              editor.selection.setRng(rng);
+              editor.focus();
+              cellSelection.clear(table);
+            });
           });
         });
       };
@@ -117,7 +128,6 @@ define(
 
         mceTableCutRow: function (grid) {
           clipboardRows = copyRowSelection();
-          console.log(clipboardRows);
           actOnSelection(actions.deleteRow);
         },
 
