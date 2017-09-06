@@ -119,7 +119,6 @@ define(
       EditorManager.init({
         skin_url: '../../../../skins/lightgray/dist/lightgray',
         codesample_content_css: '../../../../plugins/codesample/dist/codesample/css/prism.css',
-        language_url: 'sv_SE.js',
         images_upload_url: 'd',
         selector: "textarea",
         link_list: [
@@ -131,9 +130,8 @@ define(
           { title: 'My page 2', value: 'http://www.moxiecode.com' }
         ],
         image_class_list: [
-          {
-            title: 'sdfasdf', value: 'asdfasdf'
-          }
+          { title: 'None', value: '' },
+          { title: 'Some class', value: 'class-name' }
         ],
         image_caption: true,
         theme: "modern",
