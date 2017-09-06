@@ -11,6 +11,7 @@ test(
   function (Arr, Fun, Structs, MergingOperations) {
     var b = Structs.bounds;
     var r = Structs.rowcells;
+    var en = Structs.elementnew;
 
     // Test basic merge.
     (function () {
@@ -18,18 +19,21 @@ test(
         var actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead));
         assert.eq(expected.length, actual.length);
         Arr.each(expected, function (row, i) {
-          assert.eq(row.cells(), actual[i].cells());
+          Arr.each(row.cells(), function (cell, j) {
+            assert.eq(cell.element(), actual[i].cells()[j].element());
+            assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+          });
           assert.eq(row.section(), actual[i].section());
         });
       };
 
       check([], [], b(0, 0, 1, 1), 'a');
-      check([r([ 'a', 'a' ], 'thead')], [r([ 'a', 'b' ], 'thead')], b(0, 0, 0, 1), 'a');
-      check([r([ 'a', 'a' ], 'tbody')], [r([ 'a', 'b' ], 'tbody')], b(0, 0, 0, 1), 'a');
+      check([r([ en('a', false), en('a', false) ], 'thead')], [r([ 'a', 'b' ], 'thead')], b(0, 0, 0, 1), 'a');
+      check([r([ en('a', false), en('a', false) ], 'tbody')], [r([ 'a', 'b' ], 'tbody')], b(0, 0, 0, 1), 'a');
       check(
         [
-          r([ 'a', 'a' ], 'thead'),
-          r([ 'a', 'a' ], 'thead')
+          r([ en('a', false), en('a', false) ], 'thead'),
+          r([ en('a', false), en('a', false) ], 'thead')
         ],
         [
           r([ 'a', 'b' ], 'thead'),
@@ -38,8 +42,8 @@ test(
       );
       check(
         [
-          r([ 'a', 'a' ], 'tbody'),
-          r([ 'a', 'a' ], 'tbody')
+          r([ en('a', false), en('a', false) ], 'tbody'),
+          r([ en('a', false), en('a', false) ], 'tbody')
         ],
         [
           r([ 'a', 'b' ], 'tbody'),
@@ -49,8 +53,8 @@ test(
 
       check(
         [
-          r([ 'a', 'a', 'c' ], 'thead'),
-          r([ 'd', 'e', 'f' ], 'tbody')
+          r([ en('a', false), en('a', false), en('c', false) ], 'thead'),
+          r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
         ],
         [
           r([ 'a', 'b', 'c' ], 'thead'),
@@ -59,8 +63,8 @@ test(
       );
       check(
         [
-          r([ 'a', 'a', 'c' ], 'tbody'),
-          r([ 'd', 'e', 'f' ], 'tbody')
+          r([ en('a', false), en('a', false), en('c', false) ], 'tbody'),
+          r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
         ],
         [
           r([ 'a', 'b', 'c' ], 'tbody'),
@@ -70,8 +74,8 @@ test(
 
       check(
         [
-          r([ 'a', 'a', 'a' ], 'tbody'),
-          r([ 'a', 'a', 'a' ], 'tbody')
+          r([ en('a', false), en('a', false), en('a', false) ], 'tbody'),
+          r([ en('a', false), en('a', false), en('a', false) ], 'tbody')
         ],
         [
           r([ 'a', 'b', 'c' ], 'tbody'),
@@ -86,7 +90,10 @@ test(
         var actual = MergingOperations.unmerge(grid, target, Fun.tripleEquals, Fun.constant('?'));
         assert.eq(expected.length, actual.length);
         Arr.each(expected, function (row, i) {
-          assert.eq(row.cells(), actual[i].cells());
+          Arr.each(row, function (cell, j) {
+            assert.eq(cell.element(), actual[i].cells()[j].element());
+            assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+          });
           assert.eq(row.section(), actual[i].section());
         });
       };

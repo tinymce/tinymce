@@ -15,11 +15,14 @@ define(
         return Structs.rowcells(row, 'tbody');
       });
     };
-    
+
     var assertGrids = function (expected, actual) {
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
-        assert.eq(row.cells(), actual[i].cells());
+        Arr.each(row.cells(), function (cell, j) {
+          assert.eq(cell.element(), actual[i].cells()[j].element());
+          assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+        });
         assert.eq(row.section(), actual[i].section());
       });
     };

@@ -46,43 +46,43 @@ define(
             // mutation within mutation, it's mutatception
             MergingOperations.unmergeInner(gridA, GridRow.getCell(gridA[r], c).element(), comparator, generator.cell);
           }
+          var newCell = GridRow.getCell(gridB[r - startRow], c - startCol).element();
+          var replacement = generator.replace(newCell);
+          GridRow.mutateCell(gridA[r], c, Structs.elementnew(replacement, true));
         }
       }
       return gridA;
     };
 
+    var getElementNewGrid = function (grid, isNew) {
+      return Arr.map(grid, function (row) {
+        return GridRow.mapCells(row, function (cell) {
+          return Structs.elementnew(cell, isNew);
+        });
+      });
+    };
+
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
       var result = Fitment.measure(startAddress, gridA, gridB);
       return result.map(function (delta) {
-        var elementNewGrid = Arr.map(gridA, function (row) {
-          return GridRow.mapCells(row, function (cell) {
-            return Structs.elementnew(cell, false);
-          });
-        });
-        var fittedGrid = Fitment.tailor(elementNewGrid, delta, generator);
-        return mergeTables(startAddress, fittedGrid, gridB, generator, comparator);
+        var elementNewGridA = getElementNewGrid(gridA, false);
+        var elementNewGridB = getElementNewGrid(gridB, true);
+        var fittedGrid = Fitment.tailor(elementNewGridA, delta, generator);
+        return mergeTables(startAddress, fittedGrid, elementNewGridB, generator, comparator);
       });
     };
 
     var insert = function (index, gridA, gridB, generator, comparator) {
-      var elementOldGrid = Arr.map(gridA, function (row) {
-        return GridRow.mapCells(row, function (cell) {
-          return Structs.elementnew(cell, false);
-        });
-      });
-      var elementNewGrid = Arr.map(gridB, function (row) {
-        return GridRow.mapCells(row, function (cell) {
-          return Structs.elementnew(cell, true);
-        });
-      });
+      var elementNewGridA = getElementNewGrid(gridA, false);
+      var elementNewGridB = getElementNewGrid(gridB, true);
 
-      MergingOperations.splitRows(elementOldGrid, index, comparator, generator.cell);
+      MergingOperations.splitRows(elementNewGridA, index, comparator, generator.cell);
 
-      var delta = Fitment.measureWidth(elementNewGrid, elementOldGrid);
-      var fittedNewGrid = Fitment.tailor(elementNewGrid, delta, generator);
+      var delta = Fitment.measureWidth(elementNewGridB, elementNewGridA);
+      var fittedNewGrid = Fitment.tailor(elementNewGridB, delta, generator);
 
-      var secondDelta = Fitment.measureWidth(elementOldGrid, fittedNewGrid);
-      var fittedOldGrid = Fitment.tailor(elementOldGrid, secondDelta, generator);
+      var secondDelta = Fitment.measureWidth(elementNewGridA, fittedNewGrid);
+      var fittedOldGrid = Fitment.tailor(elementNewGridA, secondDelta, generator);
 
       return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
     };

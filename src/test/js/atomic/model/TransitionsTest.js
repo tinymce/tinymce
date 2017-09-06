@@ -13,6 +13,7 @@ test(
     var d = Structs.detail;
     var r = Structs.rowcells;
     var rd = Structs.rowdetails;
+    var en = Structs.elementnew;
 
     var check = function (expected, input) {
       var actual = Transitions.toDetails(input, Fun.tripleEquals);
@@ -28,99 +29,99 @@ test(
 
     check(
       [
-        rd([ d('td1', 1, 3), d('td2', 1, 1), d('td3', 1, 1) ], 'tbody')
-      ], 
+        rd([ d(en('td1', false), 1, 3), d(en('td2', false), 1, 1), d(en('td3', false), 1, 1) ], 'tbody')
+      ],
       [
-        r([ 'td1', 'td1', 'td1', 'td2', 'td3' ], 'tbody')
+        r([ en('td1', false), en('td1', false), en('td1', false), en('td2', false), en('td3', false) ], 'tbody')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 1, 3), d('td2', 1, 1), d('td3', 1, 1) ], 'thead')
-      ], 
+        rd([ d(en('td1', false), 1, 3), d(en('td2', false), 1, 1), d(en('td3', false), 1, 1) ], 'thead')
+      ],
       [
-        r([ 'td1', 'td1', 'td1', 'td2', 'td3' ], 'thead')
+        r([ en('td1', false), en('td1', false), en('td1', false), en('td2', false), en('td3', false) ], 'thead')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 4, 3) ], 'tbody'),
+        rd([ d(en('td1', false), 4, 3) ], 'tbody'),
         rd([ ], 'tbody'),
         rd([ ], 'tbody'),
         rd([ ], 'tbody')
-      ], 
+      ],
       [
-        r([ 'td1', 'td1', 'td1' ], 'tbody'),
-        r([ 'td1', 'td1', 'td1' ], 'tbody'),
-        r([ 'td1', 'td1', 'td1' ], 'tbody'),
-        r([ 'td1', 'td1', 'td1' ], 'tbody')
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tbody'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tbody'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tbody'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tbody')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 4, 3) ], 'tfoot'),
+        rd([ d(en('td1', false), 4, 3) ], 'tfoot'),
         rd([ ], 'tfoot'),
         rd([ ], 'tfoot'),
         rd([ ], 'tfoot')
-      ], 
+      ],
       [
-        r([ 'td1', 'td1', 'td1' ], 'tfoot'),
-        r([ 'td1', 'td1', 'td1' ], 'tfoot'),
-        r([ 'td1', 'td1', 'td1' ], 'tfoot'),
-        r([ 'td1', 'td1', 'td1' ], 'tfoot')
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tfoot'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tfoot'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tfoot'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tfoot')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 2, 3) ], 'tbody'),
+        rd([ d(en('td1', false), 2, 3) ], 'tbody'),
         rd([ ], 'tbody')
-      ], 
+      ],
       [
-        r([ 'td1', 'td1', 'td1' ], 'tbody'),
-        r([ 'td1', 'td1', 'td1' ], 'tbody')
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tbody'),
+        r([ en('td1', false), en('td1', false), en('td1', false) ], 'tbody')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 1, 1) ], 'thead'),
-        rd([ d('td2', 1, 1) ], 'tbody'),
-        rd([ d('td3', 1, 1) ], 'tfoot')
-      ], 
+        rd([ d(en('td1', false), 1, 1) ], 'thead'),
+        rd([ d(en('td2', false), 1, 1) ], 'tbody'),
+        rd([ d(en('td3', false), 1, 1) ], 'tfoot')
+      ],
       [
-        r([ 'td1' ], 'thead'),
-        r([ 'td2' ], 'tbody'),
-        r([ 'td3' ], 'tfoot')
+        r([ en('td1', false) ], 'thead'),
+        r([ en('td2', false) ], 'tbody'),
+        r([ en('td3', false) ], 'tfoot')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 2, 2), d('td3', 1, 1) ], 'tbody'),
-        rd([ d('td4', 1, 1) ], 'tbody')
-      ], 
+        rd([ d(en('td1', false), 2, 2), d(en('td3', false), 1, 1) ], 'tbody'),
+        rd([ d(en('td4', false), 1, 1) ], 'tbody')
+      ],
       [
-        r([ 'td1', 'td1', 'td3' ], 'tbody'),
-        r([ 'td1', 'td1', 'td4' ], 'tbody')
+        r([ en('td1', false), en('td1', false), en('td3', false) ], 'tbody'),
+        r([ en('td1', false), en('td1', false), en('td4', false) ], 'tbody')
       ]
     );
 
     check(
       [
-        rd([ d('td1', 2, 2), d('td3', 1, 1) ], 'tbody'),
-        rd([ d('td4', 2, 1) ], 'tbody'),
-        rd([ d('td2', 1, 2) ], 'tbody'),
-        rd([ d('td5', 1, 1), d('td6', 1, 2) ], 'tbody')
-      ], 
+        rd([ d(en('td1', false), 2, 2), d(en('td3', false), 1, 1) ], 'tbody'),
+        rd([ d(en('td4', false), 2, 1) ], 'tbody'),
+        rd([ d(en('td2', false), 1, 2) ], 'tbody'),
+        rd([ d(en('td5', false), 1, 1), d(en('td6', false), 1, 2) ], 'tbody')
+      ],
       [
-        r([ 'td1', 'td1', 'td3' ], 'tbody'),
-        r([ 'td1', 'td1', 'td4' ], 'tbody'),
-        r([ 'td2', 'td2', 'td4' ], 'tbody'),
-        r([ 'td5', 'td6', 'td6' ], 'tbody')
+        r([ en('td1', false), en('td1', false), en('td3', false) ], 'tbody'),
+        r([ en('td1', false), en('td1', false), en('td4', false) ], 'tbody'),
+        r([ en('td2', false), en('td2', false), en('td4', false) ], 'tbody'),
+        r([ en('td5', false), en('td6', false), en('td6', false) ], 'tbody')
       ]
     );
   }
