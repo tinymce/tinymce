@@ -88,6 +88,18 @@ asynctest(
       assertSelection(editor, 'li:nth-child(3) strong', 1);
     });
 
+    suite.test('insertAtCaret - ul with trailing empty block in middle of li', function (editor) {
+      editor.setContent('<ul><li>a</li><li>d</li></ul>');
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1);
+      InsertContent.insertAtCaret(editor, { content: '<ul><li>b</li><li>c</li></ul><p>\u00a0</p>', paste: true });
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul><li>a</li><li>b</li><li>c</li><li>d</li></ul>'
+      );
+      assertSelection(editor, 'li:nth-child(4)', 1);
+    });
+
     suite.test('insertAtCaret - ul at beginning of li with empty end li', function (editor) {
       editor.setContent('<ul><li>12</li></ul>');
       editor.focus();

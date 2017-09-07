@@ -282,7 +282,7 @@ define(
       fragment = parser.parse(value, parserArgs);
 
       // Custom handling of lists
-      if (details.paste === true && InsertList.isListFragment(fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
+      if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
         rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(true), fragment);
         editor.selection.setRng(rng);
         editor.fire('SetContent', args);
