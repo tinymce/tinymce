@@ -44,7 +44,7 @@ define(
         for (var c = startCol; c < endCol; c++) {
           if (isSpanning(gridA, r, c, comparator)) {
             // mutation within mutation, it's mutatception
-            MergingOperations.unmergeInner(gridA, GridRow.getCell(gridA[r], c).element(), comparator, generator.cell);
+            MergingOperations.unmerge(gridA, GridRow.getCell(gridA[r], c).element(), comparator, generator.cell);
           }
           var newCell = GridRow.getCell(gridB[r - startRow], c - startCol).element();
           var replacement = generator.replace(newCell);

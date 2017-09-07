@@ -11,6 +11,7 @@ define(
     'ephox.snooker.api.TableContent',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
+    'ephox.snooker.model.GridRow',
     'ephox.snooker.model.RunOperation',
     'ephox.snooker.model.TableMerge',
     'ephox.snooker.model.Transitions',
@@ -22,7 +23,7 @@ define(
     'ephox.syrup.api.Remove'
   ],
 
-  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove) {
+  function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, GridRow, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove) {
     var prune = function (table) {
       var cells = TableLookup.cells(table);
       if (cells.length === 0) Remove.remove(table);
@@ -174,9 +175,14 @@ define(
     };
 
     var unmergeCells = function (grid, unmergable, comparator, genWrappers) {
+      var elementNewGrid = Arr.map(grid, function (row) {
+        return GridRow.mapCells(row, function (cell) {
+          return Structs.elementnew(cell, false);
+        });
+      });
       var newGrid = Arr.foldr(unmergable, function (b, cell) {
         return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
-      }, grid);
+      }, elementNewGrid);
       return outcome(newGrid, Option.from(unmergable[0]));
     };
 

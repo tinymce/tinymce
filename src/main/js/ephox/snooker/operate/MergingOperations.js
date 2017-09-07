@@ -29,15 +29,6 @@ define(
 
     // substitution: () -> item
     var unmerge = function (grid, target, comparator, substitution) {
-      var elementNewGrid = Arr.map(grid, function (row) {
-        return GridRow.mapCells(row, function (cell) {
-          return Structs.elementnew(cell, false);
-        });
-      });
-      return unmergeInner(elementNewGrid, target, comparator, substitution);
-    };
-
-    var unmergeInner = function (grid, target, comparator, substitution) {
       // Mutating. Do we care about the efficiency gain?
       var first = true;
       for (var i = 0; i < grid.length; i++) {
@@ -96,7 +87,6 @@ define(
     return {
       merge: merge,
       unmerge: unmerge,
-      unmergeInner: unmergeInner,
       splitRows: splitRows
     };
   }
