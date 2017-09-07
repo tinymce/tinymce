@@ -105,6 +105,18 @@ asynctest(
       LegacyUnit.equal(editor.getContent(), '<p><strong><em>a123bc</em></strong></p>');
     });
 
+    suite.test('insertAtCaret - list into empty table cell with invalid contents #TINY-1231', function (editor) {
+      editor.getBody().innerHTML = '<table class="mce-item-table"><tbody><tr><td><br></td></tr></tbody></table>';
+      editor.focus();
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('td')[0], 0);
+      rng.setEnd(editor.dom.select('td')[0], 0);
+      editor.selection.setRng(rng);
+      InsertContent.insertAtCaret(editor, { content: '<meta http-equiv="content-type" content="text/html; charset=utf-8"><ul><li>a</li></ul>', paste: true });
+      LegacyUnit.equal(editor.getBody().innerHTML, '<table class="mce-item-table"><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table>');
+      assertSelection(editor, 'li', 1);
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

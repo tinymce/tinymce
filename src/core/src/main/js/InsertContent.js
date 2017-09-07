@@ -17,17 +17,20 @@
 define(
   'tinymce.core.InsertContent',
   [
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.ElementUtils',
     'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.PaddingBr',
     'tinymce.core.dom.RangeNormalizer',
     'tinymce.core.Env',
     'tinymce.core.html.Serializer',
     'tinymce.core.InsertList',
     'tinymce.core.util.Tools'
   ],
-  function (CaretPosition, CaretWalker, ElementUtils, NodeType, RangeNormalizer, Env, Serializer, InsertList, Tools) {
+  function (Option, Element, CaretPosition, CaretWalker, ElementUtils, NodeType, PaddingBr, RangeNormalizer, Env, Serializer, InsertList, Tools) {
     var isTableCell = NodeType.matchNodeNames('td th');
 
     var validInsertion = function (editor, value, parentNode) {
@@ -45,6 +48,10 @@ define(
           editor.selection.setContent(value);
         }
       }
+    };
+
+    var trimBrsFromTableCell = function (dom, elm) {
+      Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
     };
 
     var insertHtmlAtCaret = function (editor, value, details) {
@@ -356,6 +363,8 @@ define(
       reduceInlineTextElements();
       moveSelectionToMarker(dom.get('mce_marker'));
       umarkFragmentElements(editor.getBody());
+      trimBrsFromTableCell(editor.dom, editor.selection.getStart());
+
       editor.fire('SetContent', args);
       editor.addVisual();
     };
