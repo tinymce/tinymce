@@ -27,16 +27,16 @@ test(
     // gridB into gridA with different start points
     var gridA = function () {
       return [
-        [ 'a', 'b', 'c' ],
-        [ 'd', 'e', 'f' ],
-        [ 'g', 'h', 'i' ]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ];
     };
 
     var gridB = function () {
       return [
-        [1, 2],
-        [3, 4]
+        [en(1, true), en(2, true)],
+        [en(3, true), en(4, true)]
       ];
     };
 

@@ -8,15 +8,6 @@ define(
   ],
 
   function (Arr, Structs, Fitment) {
-
-    var convertToElementOldGrid = function (grid) {
-      return Arr.map(grid, function (row) {
-        return Arr.map(row, function (cell) {
-          return Structs.elementnew(cell, false);
-        });
-      });
-    };
-
     var mapToStructGrid = function (grid) {
       return Arr.map(grid, function (row) {
         return Structs.rowcells(row, 'tbody');
@@ -52,7 +43,7 @@ define(
       // Based on the Fitment.measure
       // Increase gridA by the row/col delta values
       // The result is a new grid that will perfectly fit gridB into gridA
-      var tailoredGrid = Fitment.tailor(mapToStructGrid(convertToElementOldGrid(gridA())), delta, generator());
+      var tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
       assertGrids(mapToStructGrid(expected), tailoredGrid);
     };
 

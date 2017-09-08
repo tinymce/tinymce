@@ -18,20 +18,20 @@ test(
     // Advanced Spans
     var gridAdvancedOne = function () {
       return [
-        [ 'A', 'B', 'B', 'C' ],
-        [ 'D', 'B', 'B', 'E' ],
-        [ 'F', 'F', 'F', 'E' ],
-        [ 'F', 'F', 'F', 'G' ],
-        [ 'F', 'F', 'F', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ]
       ];
     };
 
     var gridSpanB = function () {
       return [
-        [ 'alpha', 'alpha'  ],
-        [ 'beta',  'charlie']
+        [ en('alpha', true), en('alpha', true) ],
+        [ en('beta', true),  en('charlie', true) ]
       ];
     };
 
@@ -39,26 +39,26 @@ test(
     // merge gridBee into gridAphid
     var gridAphid = function () {
       return [
-        [ 'a', 'b', 'c' ],
-        [ 'd', 'e', 'f' ],
-        [ 'g', 'h', 'i' ],
-        [ 'j', 'k', 'l' ]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ],
+        [ en('j', false), en('k', false), en('l', false) ]
       ];
     };
 
     var gridBee = function () {
       return [
-        ['bee1'],
-        ['bee2'],
-        ['bee3'],
-        ['bee3'],
-        ['bee3']
+        [ en('bee1', true) ],
+        [ en('bee2', true) ],
+        [ en('bee3', true) ],
+        [ en('bee3', true) ],
+        [ en('bee3', true) ]
       ];
     };
 
     var gridcicada = function () {
       return [
-        ['cic1', 'cic2', 'cic3', 'cic3', 'cic3', 'cic4', 'cic4', 'cic4']
+        [ en('cic1', true), en('cic2', true), en('cic3', true), en('cic3', true), en('cic3', true), en('cic4', true), en('cic4', true), en('cic4', true)]
       ];
     };
 
