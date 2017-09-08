@@ -17,6 +17,7 @@
 define(
   'tinymce.plugins.tablenew.actions.TableActions',
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
@@ -24,7 +25,7 @@ define(
     'ephox.sugar.api.node.Element',
     'tinymce.plugins.tablenew.queries.Direction'
   ],
-  function (Fun, TableDirection, TableFill, TableOperations, Element, Direction) {
+  function (Arr, Fun, TableDirection, TableFill, TableOperations, Element, Direction) {
     return function (editor, lazyWire) {
       var fireNewRow = function (node) {
         editor.fire('newrow', {
@@ -48,11 +49,19 @@ define(
           var doc = Element.fromDom(editor.getDoc());
           var direction = TableDirection(Direction.directionAt);
           var generators = TableFill.cellOperations(mutate, doc);
-          return operation(wire, table, target, generators, direction, fireNewRow, fireNewCell).map(function (cell) {
-            var rng = editor.dom.createRng();
-            rng.setStart(cell.dom(), 0);
-            rng.setEnd(cell.dom(), 0);
-            return rng;
+          return operation(wire, table, target, generators, direction).bind(function (result) {
+            Arr.each(result.newRows(), function (row) {
+              fireNewRow(row);
+            });
+            Arr.each(result.newCells(), function (cell) {
+              fireNewCell(cell);
+            });
+            return result.cursor().map(function (cell) {
+              var rng = editor.dom.createRng();
+              rng.setStart(cell.dom(), 0);
+              rng.setEnd(cell.dom(), 0);
+              return rng;
+            });
           });
         };
       };

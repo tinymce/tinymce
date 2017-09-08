@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.darwin.api.InputHandlers',
+    'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
     'ephox.fussy.api.SelectionRange',
     'ephox.fussy.api.WindowSelection',
@@ -15,37 +16,15 @@ define(
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.events.MouseEvent',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.plugins.tablenew.queries.Direction',
     'tinymce.plugins.tablenew.selection.Ephemera'
   ],
 
-  function (InputHandlers, SelectionKeys, SelectionRange, WindowSelection, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Attr, SelectorFilter, Direction, Ephemera) {
+  function (InputHandlers, SelectionAnnotation, SelectionKeys, SelectionRange, WindowSelection, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Direction, Ephemera) {
     return function (editor, lazyResize) {
       var inputHandlers = Cell([]);
 
-      var removeSelectionAttributes = function (element) {
-        Attr.remove(element, Ephemera.selected());
-        Attr.remove(element, Ephemera.firstSelected());
-        Attr.remove(element, Ephemera.lastSelected());
-      };
-
-      var addSelectionAttribute = function (element) {
-        Attr.set(element, Ephemera.selected(), '1');
-      };
-
-      var clear = function (container) {
-        var sels = SelectorFilter.descendants(container, Ephemera.selectedSelector());
-        Arr.each(sels, removeSelectionAttributes);
-      };
-
-      var selectRange = function (container, cells, start, finish) {
-        clear(container);
-        Arr.each(cells, addSelectionAttribute);
-        Attr.set(start, Ephemera.firstSelected(), '1');
-        Attr.set(finish, Ephemera.lastSelected(), '1');
-      };
+      var annotations = SelectionAnnotation.byAttr(Ephemera);
 
       editor.on('init', function (e) {
         var win = editor.getWin();
@@ -66,12 +45,12 @@ define(
             });
           });
           sameTable.fold(function () {
-            clear(body);
+            annotations.clear(body);
           }, Fun.noop);
         };
 
-        var mouseHandlers = InputHandlers.mouse(win, body, isRoot, clear, selectRange);
-        var keyHandlers = InputHandlers.keyboard(win, body, isRoot, clear, selectRange, Ephemera.selectedSelector(), Ephemera.firstSelectedSelector(), Ephemera.lastSelectedSelector());
+        var mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
+        var keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
 
         var handleResponse = function (event, response) {
           if (response.kill()) {
@@ -131,7 +110,7 @@ define(
       };
 
       return {
-        clear: clear,
+        clear: annotations.clear,
         destroy: destroy
       };
     };

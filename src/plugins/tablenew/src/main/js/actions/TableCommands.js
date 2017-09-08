@@ -4,6 +4,7 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.CopyRows',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableLookup',
@@ -16,10 +17,10 @@ define(
     'tinymce.plugins.tablenew.selection.Selections'
   ],
 
-  function (Arr, Fun, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets, Selections) {
+  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets, Selections) {
     var each = Tools.each;
 
-    var clipboardRows;
+    var clipboardRows = Option.none();
 
     var registerCommands = function (editor, dialogs, actions, cellSelection) {
 
