@@ -43,14 +43,14 @@ define(
       return Option.none();
     };
 
-    var update = function (rows, columns, container, selected, clear, selectRange, firstSelectedSelector, lastSelectedSelector) {
+    var update = function (rows, columns, container, selected, annotations) {
       var updateSelection = function (newSels) {
-        clear(container);
-        selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
+        annotations.clear(container);
+        annotations.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
         return newSels.boxes();
       };
 
-      return CellSelection.shiftSelection(selected, rows, columns, firstSelectedSelector, lastSelectedSelector).map(updateSelection);
+      return CellSelection.shiftSelection(selected, rows, columns, annotations.firstSelectedSelector(), annotations.lastSelectedSelector()).map(updateSelection);
     };
 
     return {

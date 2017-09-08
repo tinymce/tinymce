@@ -13,7 +13,7 @@ define(
       return SelectorFind.closest(target, 'td,th', isRoot);
     };
 
-    return function (bridge, container, isRoot, clear, selectRange) {
+    return function (bridge, container, isRoot, annotations) {
       var cursor = Option.none();
       var clearState = function () {
         cursor = Option.none();
@@ -21,21 +21,21 @@ define(
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mousedown = function (event) {
-        clear(container);
+        annotations.clear(container);
         cursor = findCell(event.target(), isRoot);
       };
 
       /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
       var mouseover = function (event) {
         cursor.each(function (start) {
-          clear(container);
+          annotations.clear(container);
           findCell(event.target(), isRoot).each(function (finish) {
             var boxes = CellSelection.identify(start, finish, isRoot).getOr([]);
             // Wait until we have more than one, otherwise you can't do text selection inside a cell.
             // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
             // we can assume that the user is trying to make a one cell selection in two different tables which should be possible.
             if (boxes.length > 1 || (boxes.length === 1 && !Compare.eq(start, finish))) {
-              selectRange(container, boxes, start, finish);
+              annotations.selectRange(container, boxes, start, finish);
 
               // stop the browser from creating a big text selection, select the cell where the cursor is
               bridge.selectContents(finish);

@@ -3,7 +3,9 @@ define(
 
   [
     'ephox.compass.Arr',
+    'ephox.darwin.api.Ephemera',
     'ephox.darwin.api.InputHandlers',
+    'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
     'ephox.fred.PlatformDetection',
     'ephox.fussy.api.WindowSelection',
@@ -11,12 +13,14 @@ define(
     'ephox.perhaps.Option',
     'ephox.syrup.api.Attr',
     'ephox.syrup.api.Body',
+    'ephox.syrup.api.Class',
     'ephox.syrup.api.Compare',
     'ephox.syrup.api.Direction',
     'ephox.syrup.api.DomEvent',
     'ephox.syrup.api.Element',
     'ephox.syrup.api.Insert',
     'ephox.syrup.api.Node',
+    'ephox.syrup.api.OnNode',
     'ephox.syrup.api.Replication',
     'ephox.syrup.api.SelectorFilter',
     'ephox.syrup.api.SelectorFind',
@@ -25,7 +29,7 @@ define(
     'global!document'
   ],
 
-  function (Arr, InputHandlers, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Compare, Direction, DomEvent, Element, Insert, Node, Replication, SelectorFilter, SelectorFind, Traverse, Math, document) {
+  function (Arr, Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Class, Compare, Direction, DomEvent, Element, Insert, Node, OnNode, Replication, SelectorFilter, SelectorFind, Traverse, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -107,8 +111,11 @@ define(
         document.querySelector('#coords').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
       });
 
-      var mouseHandlers = InputHandlers.mouse(window, ephoxUi);
-      var keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table));
+      //Compare.eq(Body.body(), )
+
+      var annotations = SelectionAnnotation.byClass(Ephemera);
+      var mouseHandlers = InputHandlers.mouse(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
+      var keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
 
       DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
       DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
@@ -137,7 +144,7 @@ define(
         WindowSelection.get(window).each(function (sel) {
           var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
           var direction = target.map(Direction.getDirection).getOr('ltr');
-          keyHandlers.keydown(event, sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
+          keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
             handleResponse(event, response);
           });
         });
