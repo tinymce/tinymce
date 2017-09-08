@@ -34,6 +34,10 @@ define(
       return gridRow.cells()[index];
     };
 
+    var getCellElement = function (gridRow, index) {
+      return getCell(gridRow, index).element();
+    };
+
     var cellLength = function (gridRow) {
       return gridRow.cells().length;
     };
@@ -43,6 +47,7 @@ define(
       setCells: setCells,
       mutateCell: mutateCell,
       getCell: getCell,
+      getCellElement: getCellElement,
       mapCells: mapCells,
       cellLength: cellLength
     };

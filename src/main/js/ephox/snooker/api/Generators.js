@@ -54,7 +54,6 @@ define(
       };
 
       return {
-        add: add,
         getOrInit: getOrInit,
         cursor: position.get
       } ;

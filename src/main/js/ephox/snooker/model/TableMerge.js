@@ -19,13 +19,13 @@ define(
       return grid.length > 1 && GridRow.cellLength(currentRow) > 1 &&
       (
         // search left, if we're not on the left edge
-        (col > 0 && matching(GridRow.getCell(currentRow, col-1).element())) ||
+        (col > 0 && matching(GridRow.getCellElement(currentRow, col-1))) ||
         // search right, if we're not on the right edge
-        (col < currentRow.length - 1 && matching(GridRow.getCell(currentRow, col+1).element())) ||
+        (col < currentRow.length - 1 && matching(GridRow.getCellElement(currentRow, col+1))) ||
         // search up, if we're not on the top edge
-        (row > 0 && matching(GridRow.getCell(grid[row-1], col).element())) ||
+        (row > 0 && matching(GridRow.getCellElement(grid[row-1], col))) ||
         // search down, if we're not on the bottom edge
-        (row < grid.length - 1 && matching(GridRow.getCell(grid[row+1], col).element()))
+        (row < grid.length - 1 && matching(GridRow.getCellElement(grid[row+1], col)))
       );
     };
 
@@ -43,9 +43,9 @@ define(
         for (var c = startCol; c < endCol; c++) {
           if (isSpanning(gridA, r, c, comparator)) {
             // mutation within mutation, it's mutatception
-            MergingOperations.unmerge(gridA, GridRow.getCell(gridA[r], c).element(), comparator, generator.cell);
+            MergingOperations.unmerge(gridA, GridRow.getCellElement(gridA[r], c), comparator, generator.cell);
           }
-          var newCell = GridRow.getCell(gridB[r - startRow], c - startCol).element();
+          var newCell = GridRow.getCellElement(gridB[r - startRow], c - startCol);
           var replacement = generator.replace(newCell);
           GridRow.mutateCell(gridA[r], c, Structs.elementnew(replacement, true));
         }

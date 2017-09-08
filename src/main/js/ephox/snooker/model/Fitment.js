@@ -52,7 +52,7 @@ define(
 
     var fill = function (cells, generator) {
       return Arr.map(cells, function () {
-        return Structs.elementnew(generator.cell(), true)
+        return Structs.elementnew(generator.cell(), true);
       });
     };
 

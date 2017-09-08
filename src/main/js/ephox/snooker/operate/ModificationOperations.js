@@ -16,7 +16,7 @@ define(
       var after = grid.slice(index);
 
       var between = GridRow.mapCells(grid[example], function (ex, c) {
-        var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c).element(), GridRow.getCell(grid[index], c).element());
+        var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCellElement(grid[index - 1], c), GridRow.getCellElement(grid[index], c));
         var ret = withinSpan ? GridRow.getCell(grid[index], c) : Structs.elementnew(substitution(ex.element(), comparator), true);
         return ret;
       });
@@ -29,8 +29,8 @@ define(
     // index is the insert position (at - or after - example) (the column index)
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
-        var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCell(row, index - 1).element(), GridRow.getCell(row, index).element());
-        var sub = withinSpan ? GridRow.getCell(row, index) : Structs.elementnew(substitution(GridRow.getCell(row, example).element(), comparator), true);
+        var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
+        var sub = withinSpan ? GridRow.getCell(row, index) : Structs.elementnew(substitution(GridRow.getCellElement(row, example), comparator), true);
         return GridRow.addCell(row, index, sub);
       });
     };
@@ -44,7 +44,7 @@ define(
       var index = exampleCol + 1; // insert after
       return Arr.map(grid, function (row, i) {
         var isTargetCell = (i === exampleRow);
-        var sub = isTargetCell ? Structs.elementnew(substitution(GridRow.getCell(row, exampleCol).element(), comparator), true) : GridRow.getCell(row, exampleCol);
+        var sub = isTargetCell ? Structs.elementnew(substitution(GridRow.getCellElement(row, exampleCol), comparator), true) : GridRow.getCell(row, exampleCol);
         return GridRow.addCell(row, index, sub);
       });
     };

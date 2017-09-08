@@ -28,14 +28,10 @@ define(
       // The row is either going to be a new row, or the row of any of the cells.
       var findRow = function (details) {
         var rowOfCells = Options.findMap(details, function (detail) {
-          return Traverse.parent(detail.element()).bind(function (row) {
+          return Traverse.parent(detail.element()).map(function (row) {
             // If the row has a parent, it's within the existing table, otherwise it's a copied row
-            return Traverse.parent(row).fold(function () {
-                return Option.some(Structs.elementnew(row, true));
-              },
-              function (_section) {
-                return Option.some(Structs.elementnew(row, false));
-            });
+            var isNew = Traverse.parent(row).isNone();
+            return Structs.elementnew(row, isNew);
           });
         });
         return rowOfCells.getOrThunk(function () {
@@ -63,7 +59,7 @@ define(
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {
-      return function (wire, table, target, generators, direction, newRowF, newCellF) {
+      return function (wire, table, target, generators, direction) {
         var input = DetailsList.fromTable(table);
         var warehouse = Warehouse.generate(input);
         var output = extract(warehouse, target).map(function (info) {
@@ -79,11 +75,15 @@ define(
         return output.fold(function () {
           return Option.none();
         }, function (out) {
-          Redraw.render(table, out.grid(), newRowF, newCellF);
+          var newElements = Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
           Bars.refresh(wire, table, BarPositions.height, direction);
-          return out.cursor();
+          return Option.some({
+            cursor: out.cursor,
+            newRows: newElements.newRows,
+            newCells: newElements.newCells
+          });
         });
       };
     };

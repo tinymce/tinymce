@@ -24,11 +24,11 @@ define(
     };
 
     var notStartRow = function (grid, rowIndex, colIndex, comparator) {
-      return GridRow.getCell(grid[rowIndex], colIndex).element() !== undefined && (rowIndex > 0 && comparator(GridRow.getCell(grid[rowIndex - 1], colIndex).element(), GridRow.getCell(grid[rowIndex], colIndex).element()));
+      return GridRow.getCellElement(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCellElement(grid[rowIndex - 1], colIndex), GridRow.getCellElement(grid[rowIndex], colIndex)));
     };
 
     var notStartColumn = function (row, index, comparator) {
-      return index > 0 && comparator(GridRow.getCell(row, index - 1).element(), GridRow.getCell(row, index).element());
+      return index > 0 && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
     };
 
     // substitution :: (item, comparator) -> item
