@@ -3,32 +3,15 @@ define(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.snooker.api.Structs',
-    'ephox.snooker.util.Util'
+    'ephox.snooker.api.Structs'
   ],
 
-  function (Arr, Structs, Util) {
-    var nonNewCells = function (cells) {
-      return Arr.map(cells, function(cell, i) {
-        return Structs.elementnew(cell, false);
-      });
-    };
+  function (Arr, Structs) {
     var addCell = function (gridRow, index, cell) {
       var cells = gridRow.cells();
-      var before = nonNewCells(cells.slice(0, index));
-      var after = nonNewCells(cells.slice(index));
-      var newCells = before.concat([ Structs.elementnew(cell, true) ]).concat(after);
-      return setCells(gridRow, newCells);
-    };
-
-    var addCells = function (gridRow, index, count, subsitution) {
-      var cells = gridRow.cells();
-      var newCellz = Util.repeat(count, function () {
-        return Structs.elementnew(subsitution(), true);
-      });
-      var before = nonNewCells(cells.slice(0, index));
-      var after = nonNewCells(cells.slice(index));
-      var newCells = before.concat( newCellz ).concat(after);
+      var before = cells.slice(0, index);
+      var after = cells.slice(index);
+      var newCells = before.concat([ cell ]).concat(after);
       return setCells(gridRow, newCells);
     };
 
@@ -57,7 +40,6 @@ define(
 
     return {
       addCell: addCell,
-      addCells: addCells,
       setCells: setCells,
       mutateCell: mutateCell,
       getCell: getCell,

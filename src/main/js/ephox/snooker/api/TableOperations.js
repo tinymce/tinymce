@@ -51,14 +51,22 @@ define(
 
     var uniqueRows = function (details) {
       return Arr.foldl(details, function (rest, detail) {
-          return Arr.contains(rest, detail.row()) ? rest : rest.concat([detail.row()]);
-      }, []).sort();
+        return Arr.exists(rest, function (currentDetail){
+            return currentDetail.row() === detail.row();
+          }) ? rest : rest.concat([detail]);
+        }, []).sort(function (detailA, detailB) {
+        return detailA.row() - detailB.row();
+      });
     };
 
     var uniqueColumns = function (details) {
       return Arr.foldl(details, function (rest, detail) {
-          return Arr.contains(rest, detail.column()) ? rest : rest.concat([detail.column()]);
-      }, []).sort();
+        return Arr.exists(rest, function (currentDetail){
+            return currentDetail.column() === detail.column();
+          }) ? rest : rest.concat([detail]);
+        }, []).sort(function (detailA, detailB) {
+        return detailA.column() - detailB.column();
+      });
     };
 
     var insertRowBefore = function (grid, detail, comparator, genWrappers) {
@@ -72,7 +80,9 @@ define(
       var example = details[0].row();
       var targetIndex = details[0].row();
       var rows = uniqueRows(details);
-      var newGrid = ModificationOperations.insertRowsAt(grid, targetIndex, rows.length, example, comparator, genWrappers.getOrInit);
+      var newGrid = Arr.foldl(rows, function (newGrid, _row) {
+        return ModificationOperations.insertRowAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+      }, grid);
       return bundle(newGrid, targetIndex, details[0].column());
     };
 
@@ -84,10 +94,12 @@ define(
     };
 
     var insertRowsAfter = function (grid, details, comparator, genWrappers) {
-      var example = details[details.length - 1].row();
-      var targetIndex = details[details.length - 1].row() + details[details.length - 1].rowspan();
       var rows = uniqueRows(details);
-      var newGrid = ModificationOperations.insertRowsAt(grid, targetIndex, rows.length, example, comparator, genWrappers.getOrInit);
+      var example = rows[rows.length - 1].row();
+      var targetIndex = rows[rows.length - 1].row() + rows[rows.length - 1].rowspan();
+      var newGrid = Arr.foldl(rows, function (newGrid, _row) {
+        return ModificationOperations.insertRowAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+      }, grid);
       return bundle(newGrid, targetIndex, details[0].column());
     };
 
@@ -99,10 +111,12 @@ define(
     };
 
     var insertColumnsBefore = function (grid, details, comparator, genWrappers) {
-      var example = details[0].column();
-      var targetIndex = details[0].column();
       var columns = uniqueColumns(details);
-      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.add);
+      var example = columns[0].column();
+      var targetIndex = columns[0].column();
+      var newGrid = Arr.foldl(columns, function (newGrid, _row) {
+        return ModificationOperations.insertColumnAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+      }, grid);
       return bundle(newGrid, details[0].row(), targetIndex);
     };
 
@@ -117,7 +131,9 @@ define(
       var example = details[details.length - 1].column();
       var targetIndex = details[details.length - 1].column() + details[details.length - 1].colspan();
       var columns = uniqueColumns(details);
-      var newGrid = ModificationOperations.insertColumnsAt(grid, targetIndex, columns.length, example, comparator, genWrappers.add);
+      var newGrid = Arr.foldl(columns, function (newGrid, _row) {
+        return ModificationOperations.insertColumnAt(newGrid, targetIndex, example, comparator, genWrappers.getOrInit);
+      }, grid);
       return bundle(newGrid, details[0].row(), targetIndex);
     };
 
@@ -154,7 +170,7 @@ define(
     var eraseColumns = function (grid, details, comparator, _genWrappers) {
       var columns = uniqueColumns(details);
 
-      var newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0], columns[columns.length - 1]);
+      var newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0].column(), columns[columns.length - 1].column());
       var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
@@ -162,7 +178,7 @@ define(
     var eraseRows = function (grid, details, comparator, _genWrappers) {
       var rows = uniqueRows(details);
 
-      var newGrid = ModificationOperations.deleteRowsAt(grid, rows[0], rows[rows.length - 1]);
+      var newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row(), rows[rows.length - 1].row());
       var cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
       return outcome(newGrid, cursor);
     };
@@ -175,14 +191,9 @@ define(
     };
 
     var unmergeCells = function (grid, unmergable, comparator, genWrappers) {
-      var elementNewGrid = Arr.map(grid, function (row) {
-        return GridRow.mapCells(row, function (cell) {
-          return Structs.elementnew(cell, false);
-        });
-      });
       var newGrid = Arr.foldr(unmergable, function (b, cell) {
         return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
-      }, elementNewGrid);
+      }, grid);
       return outcome(newGrid, Option.from(unmergable[0]));
     };
 
@@ -190,7 +201,7 @@ define(
       var gridify = function (table, generators) {
         var list = DetailsList.fromTable(table);
         var wh = Warehouse.generate(list);
-        return Transitions.toGrid(wh, generators);
+        return Transitions.toGrid(wh, generators, true);
       };
       var gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
       var startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
@@ -206,7 +217,7 @@ define(
     var gridifyRows = function (rows, generators, example) {
       var pasteDetails = DetailsList.fromPastedRows(rows, example);
       var wh = Warehouse.generate(pasteDetails);
-      return Transitions.toGrid(wh, generators);
+      return Transitions.toGrid(wh, generators, true);
     };
 
     var pasteRowsBefore = function (grid, pasteDetails, comparator, genWrappers) {

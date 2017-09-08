@@ -2,7 +2,6 @@ define(
   'ephox.snooker.model.TableMerge',
 
   [
-    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Fitment',
@@ -10,7 +9,7 @@ define(
     'ephox.snooker.operate.MergingOperations'
   ],
 
-  function (Arr, Fun, Structs, Fitment, GridRow, MergingOperations) {
+  function (Fun, Structs, Fitment, GridRow, MergingOperations) {
     var isSpanning = function (grid, row, col, comparator) {
       var candidate = GridRow.getCell(grid[row], col);
       var matching = Fun.curry(comparator, candidate.element());
@@ -54,35 +53,22 @@ define(
       return gridA;
     };
 
-    var getElementNewGrid = function (grid, isNew) {
-      return Arr.map(grid, function (row) {
-        return GridRow.mapCells(row, function (cell) {
-          return Structs.elementnew(cell, isNew);
-        });
-      });
-    };
-
     var merge = function (startAddress, gridA, gridB, generator, comparator) {
       var result = Fitment.measure(startAddress, gridA, gridB);
       return result.map(function (delta) {
-        var elementNewGridA = getElementNewGrid(gridA, false);
-        var elementNewGridB = getElementNewGrid(gridB, true);
-        var fittedGrid = Fitment.tailor(elementNewGridA, delta, generator);
-        return mergeTables(startAddress, fittedGrid, elementNewGridB, generator, comparator);
+        var fittedGrid = Fitment.tailor(gridA, delta, generator);
+        return mergeTables(startAddress, fittedGrid, gridB, generator, comparator);
       });
     };
 
     var insert = function (index, gridA, gridB, generator, comparator) {
-      var elementNewGridA = getElementNewGrid(gridA, false);
-      var elementNewGridB = getElementNewGrid(gridB, true);
+      MergingOperations.splitRows(gridA, index, comparator, generator.cell);
 
-      MergingOperations.splitRows(elementNewGridA, index, comparator, generator.cell);
+      var delta = Fitment.measureWidth(gridB, gridA);
+      var fittedNewGrid = Fitment.tailor(gridB, delta, generator);
 
-      var delta = Fitment.measureWidth(elementNewGridB, elementNewGridA);
-      var fittedNewGrid = Fitment.tailor(elementNewGridB, delta, generator);
-
-      var secondDelta = Fitment.measureWidth(elementNewGridA, fittedNewGrid);
-      var fittedOldGrid = Fitment.tailor(elementNewGridA, secondDelta, generator);
+      var secondDelta = Fitment.measureWidth(gridA, fittedNewGrid);
+      var fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
 
       return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
     };

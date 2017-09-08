@@ -16,15 +16,10 @@ define(
       for (var i = bounds.startRow(); i <= bounds.finishRow(); i++) {
         for (var j = bounds.startCol(); j <= bounds.finishCol(); j++) {
           // We can probably simplify this again now that we aren't reusing merge.
-          GridRow.mutateCell(grid[i], j, substitution());
+          GridRow.mutateCell(grid[i], j, Structs.elementnew(substitution(), false));
         }
       }
-      var mappedGrid = Arr.map(grid, function (row) {
-        return GridRow.mapCells(row, function (cell) {
-          return Structs.elementnew(cell, false);
-        });
-      });
-      return mappedGrid;
+      return grid;
     };
 
     // substitution: () -> item
@@ -65,8 +60,8 @@ define(
           var replacement = Option.none();
           for (var i = index; i < grid.length; i++) {
             for (var j = 0; j < GridRow.cellLength(grid[0]); j++) {
-              var current = grid[i].cells()[j].element();
-              var isToReplace = comparator(current, cell.element());
+              var current = grid[i].cells()[j];
+              var isToReplace = comparator(current.element(), cell.element());
 
               if (isToReplace) {
                 if (replacement.isNone()) {

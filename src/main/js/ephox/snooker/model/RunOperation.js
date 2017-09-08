@@ -21,7 +21,7 @@ define(
 
   function (Arr, Merger, Fun, Option, Options, Structs, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
-      return Transitions.toGrid(warehouse, generators);
+      return Transitions.toGrid(warehouse, generators, false);
     };
 
     var deriveRows = function (rendered, generators) {
