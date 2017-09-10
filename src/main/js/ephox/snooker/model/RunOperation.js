@@ -21,21 +21,27 @@ define(
 
   function (Arr, Merger, Fun, Option, Options, Structs, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {
     var fromWarehouse = function (warehouse, generators) {
-      return Transitions.toGrid(warehouse, generators);
+      return Transitions.toGrid(warehouse, generators, false);
     };
 
     var deriveRows = function (rendered, generators) {
       // The row is either going to be a new row, or the row of any of the cells.
       var findRow = function (details) {
-        var rowOfCells = Options.findMap(details, function (detail) { return Traverse.parent(detail.element()); });
+        var rowOfCells = Options.findMap(details, function (detail) {
+          return Traverse.parent(detail.element()).map(function (row) {
+            // If the row has a parent, it's within the existing table, otherwise it's a copied row
+            var isNew = Traverse.parent(row).isNone();
+            return Structs.elementnew(row, isNew);
+          });
+        });
         return rowOfCells.getOrThunk(function () {
-          return generators.row();
+          return Structs.elementnew(generators.row(), true);
         });
       };
 
       return Arr.map(rendered, function (details) {
         var row = findRow(details.details());
-        return Structs.rowdata(row, details.details(), details.section());
+        return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
       });
     };
 
@@ -69,11 +75,15 @@ define(
         return output.fold(function () {
           return Option.none();
         }, function (out) {
-          Redraw.render(table, out.grid());
+          var newElements = Redraw.render(table, out.grid());
           adjustment(out.grid(), direction);
           postAction(table);
           Bars.refresh(wire, table, BarPositions.height, direction);
-          return out.cursor();
+          return Option.some({
+            cursor: out.cursor,
+            newRows: newElements.newRows,
+            newCells: newElements.newCells
+          });
         });
       };
     };
@@ -93,6 +103,19 @@ define(
           });
         });
       });
+    };
+
+    var onPasteRows = function (warehouse, target) {
+      var details = Arr.map(target.selection(), function (cell) {
+        return TableLookup.cell(cell).bind(function (lc) {
+          return findInWarehouse(warehouse, lc);
+        });
+      });
+      var cells = Options.cat(details);
+      return cells.length > 0 ? Option.some(Merger.merge({cells: cells}, {
+        generators: target.generators,
+        clipboard: target.clipboard
+      })) : Option.none();
     };
 
     var onMergable = function (warehouse, target) {
@@ -115,9 +138,11 @@ define(
 
     return {
       run: run,
+      toDetailList: toDetailList,
       onCell: onCell,
       onCells: onCells,
       onPaste: onPaste,
+      onPasteRows: onPasteRows,
       onMergable: onMergable,
       onUnmergable: onUnmergable
     };

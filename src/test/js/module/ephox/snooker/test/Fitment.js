@@ -13,15 +13,18 @@ define(
         return Structs.rowcells(row, 'tbody');
       });
     };
-    
+
     var assertGrids = function (expected, actual) {
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
-        assert.eq(row.cells(), actual[i].cells());
+        Arr.each(row.cells(), function (cell, j) {
+          assert.eq(cell.element(), actual[i].cells()[j].element());
+          assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+        });
         assert.eq(row.section(), actual[i].section());
       });
     };
-    
+
     var measureTest = function (expected, startAddress, gridA, gridB) {
       // Try put gridB into gridA at the startAddress
       // returns a delta,
@@ -40,12 +43,12 @@ define(
       // Based on the Fitment.measure
       // Increase gridA by the row/col delta values
       // The result is a new grid that will perfectly fit gridB into gridA
-      var tailoredGrid = Fitment.tailor(startAddress, mapToStructGrid(gridA()), delta, generator());
+      var tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
       assertGrids(mapToStructGrid(expected), tailoredGrid);
     };
 
     var tailorIVTest = function (expected, startAddress, gridA, delta, generator) {
-      var tailoredGrid = Fitment.tailor(startAddress, mapToStructGrid(gridA()), delta, generator());
+      var tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
       var rows = tailoredGrid.length;
       var cols = tailoredGrid[0].cells().length;
       assert.eq(expected.rows, rows);

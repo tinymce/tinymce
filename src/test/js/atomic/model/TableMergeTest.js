@@ -13,23 +13,25 @@ test(
     var start = Structs.address;
     var suite = TableMerge.suite;
 
+    var en = Structs.elementnew;
+
     // Advanced Spans
     var gridAdvancedOne = function () {
       return [
-        [ 'A', 'B', 'B', 'C' ],
-        [ 'D', 'B', 'B', 'E' ],
-        [ 'F', 'F', 'F', 'E' ],
-        [ 'F', 'F', 'F', 'G' ],
-        [ 'F', 'F', 'F', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ]
       ];
     };
 
     var gridSpanB = function () {
       return [
-        [ 'alpha', 'alpha'  ],
-        [ 'beta',  'charlie']
+        [ en('alpha', true), en('alpha', true) ],
+        [ en('beta', true),  en('charlie', true) ]
       ];
     };
 
@@ -37,26 +39,26 @@ test(
     // merge gridBee into gridAphid
     var gridAphid = function () {
       return [
-        [ 'a', 'b', 'c' ],
-        [ 'd', 'e', 'f' ],
-        [ 'g', 'h', 'i' ],
-        [ 'j', 'k', 'l' ]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ],
+        [ en('j', false), en('k', false), en('l', false) ]
       ];
     };
 
     var gridBee = function () {
       return [
-        ['bee1'],
-        ['bee2'],
-        ['bee3'],
-        ['bee3'],
-        ['bee3']
+        [ en('bee1', true) ],
+        [ en('bee2', true) ],
+        [ en('bee3', true) ],
+        [ en('bee3', true) ],
+        [ en('bee3', true) ]
       ];
     };
 
     var gridcicada = function () {
       return [
-        ['cic1', 'cic2', 'cic3', 'cic3', 'cic3', 'cic4', 'cic4', 'cic4']
+        [ en('cic1', true), en('cic2', true), en('cic3', true), en('cic3', true), en('cic3', true), en('cic4', true), en('cic4', true), en('cic4', true)]
       ];
     };
 
@@ -68,24 +70,24 @@ test(
         colDelta: 2
       },
       [
-        ['a', 'b', 'c'],
-        ['d', 'e', 'f'],
-        ['g', 'h', 'i'],
-        ['j', 'k', 'l'],
-        ['?_0', '?_1', '?_2'],
-        ['?_3', '?_4', '?_5'],
-        ['?_6', '?_7', '?_8'],
-        ['?_9', '?_10', '?_11']
+        [en('a', false), en('b', false), en('c', false)],
+        [en('d', false), en('e', false), en('f', false)],
+        [en('g', false), en('h', false), en('i', false)],
+        [en('j', false), en('k', false), en('l', false)],
+        [en('?_0', true), en('?_1', true), en('?_2', true)],
+        [en('?_3', true), en('?_4', true), en('?_5', true)],
+        [en('?_6', true), en('?_7', true), en('?_8', true)],
+        [en('?_9', true), en('?_10', true), en('?_11', true)]
       ],
       [
-        ['a',          'b',   'c'],
-        ['d',          'e',   'f'],
-        ['g',          'h',   'i'],
-        ['h(bee1)_0', 'k',   'l'],
-        ['h(bee2)_1', '?_1', '?_2'],
-        ['h(bee3)_2', '?_4', '?_5'],
-        ['h(bee3)_3', '?_7', '?_8'],
-        ['h(bee3)_4', '?_10', '?_11']
+        [en('a', false),          en('b', false),   en('c', false)],
+        [en('d', false),          en('e', false),   en('f', false)],
+        [en('g', false),          en('h', false),   en('i', false)],
+        [en('h(bee1)_0', true), en('k', false),   en('l', false)],
+        [en('h(bee2)_1', true), en('?_1', true), en('?_2', true)],
+        [en('h(bee3)_2', true), en('?_4', true), en('?_5', true)],
+        [en('h(bee3)_3', true), en('?_7', true), en('?_8', true)],
+        [en('h(bee3)_4', true), en('?_10', true), en('?_11', true)]
       ]
     );
 
@@ -97,16 +99,16 @@ test(
         colDelta: -5
       },
       [
-        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
-        ['d', 'e', 'f', '?_5',  '?_6',  '?_7',  '?_8',  '?_9'],
-        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
-        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
+        [en('a', false), en('b', false), en('c', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true),  en('?_4', true)],
+        [en('d', false), en('e', false), en('f', false), en('?_5', true),  en('?_6', true),  en('?_7', true),  en('?_8', true),  en('?_9', true)],
+        [en('g', false), en('h', false), en('i', false), en('?_10', true), en('?_11', true), en('?_12', true), en('?_13', true), en('?_14', true)],
+        [en('j', false), en('k', false), en('l', false), en('?_15', true), en('?_16', true), en('?_17', true), en('?_18', true), en('?_19', true)]
       ],
       [
-        ['a', 'b', 'c', '?_0',  '?_1',  '?_2',  '?_3',  '?_4'],
-        ['h(cic1)_0', 'h(cic2)_1', 'h(cic3)_2', 'h(cic3)_3', 'h(cic3)_4', 'h(cic4)_5',  'h(cic4)_6', 'h(cic4)_7'],
-        ['g', 'h', 'i', '?_10', '?_11', '?_12', '?_13', '?_14'],
-        ['j', 'k', 'l', '?_15', '?_16', '?_17', '?_18', '?_19']
+        [en('a', false), en('b', false), en('c', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true),  en('?_4', true)],
+        [en('h(cic1)_0', true), en('h(cic2)_1', true), en('h(cic3)_2', true), en('h(cic3)_3', true), en('h(cic3)_4', true), en('h(cic4)_5', true),  en('h(cic4)_6', true), en('h(cic4)_7', true)],
+        [en('g', false), en('h', false), en('i', false), en('?_10', true), en('?_11', true), en('?_12', true), en('?_13', true), en('?_14', true)],
+        [en('j', false), en('k', false), en('l', false), en('?_15', true), en('?_16', true), en('?_17', true), en('?_18', true), en('?_19', true)]
       ]
     );
 
@@ -118,22 +120,22 @@ test(
         colDelta: 2
       },
       [
-        [ 'A', 'B', 'B', 'C' ],
-        [ 'D', 'B', 'B', 'E' ],
-        [ 'F', 'F', 'F', 'E' ],
-        [ 'F', 'F', 'F', 'G' ],
-        [ 'F', 'F', 'F', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ]
       ],
       [
-        [ 'A', 'B', '?_0', 'C' ],
-        [ 'h(alpha)_0', 'h(alpha)_1', '?_2', 'E' ],
-        [ 'h(beta)_2', 'h(charlie)_3', '?_4', 'E' ],
-        [ '?_5', '?_6', '?_7', 'G' ],
-        [ '?_8', '?_9', '?_10', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ]
+        [ en('A', false), en('B', false), en('?_0', true), en('C', false) ],
+        [ en('h(alpha)_0', true), en('h(alpha)_1', true), en('?_2', true), en('E', false) ],
+        [ en('h(beta)_2', true), en('h(charlie)_3', true), en('?_4', true), en('E', false) ],
+        [ en('?_5', true), en('?_6', true), en('?_7', true), en('G', false) ],
+        [ en('?_8', true), en('?_9', true), en('?_10', true), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ]
       ]
     );
 
@@ -145,24 +147,24 @@ test(
         colDelta: -1
       },
       [
-        [ 'A', 'B', 'B', 'C', '?_0' ],
-        [ 'D', 'B', 'B', 'E', '?_1' ],
-        [ 'F', 'F', 'F', 'E', '?_2' ],
-        [ 'F', 'F', 'F', 'G', '?_3' ],
-        [ 'F', 'F', 'F', 'H', '?_4' ],
-        [ 'I', 'J', 'K', 'K', '?_5' ],
-        [ 'I', 'L', 'L', 'M', '?_6' ],
-        [ '?_7', '?_8', '?_9', '?_10', '?_11' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false), en('?_1', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false), en('?_2', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false), en('?_3', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false), en('?_4', true) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false), en('?_5', true) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false), en('?_6', true) ],
+        [ en('?_7', true), en('?_8', true), en('?_9', true), en('?_10', true), en('?_11', true) ]
       ],
       [
-        [ 'A', 'B', 'B', 'C', '?_0' ],
-        [ 'D', 'B', 'B', 'E', '?_1' ],
-        [ 'F', 'F', 'F', 'E', '?_2' ],
-        [ 'F', 'F', 'F', 'G', '?_3' ],
-        [ 'F', 'F', 'F', 'H', '?_4' ],
-        [ 'I', 'J', 'K', 'K', '?_5' ],
-        [ 'I', 'L', 'L', 'h(alpha)_0', 'h(alpha)_1' ],
-        [ '?_7', '?_8', '?_9', 'h(beta)_2', 'h(charlie)_3' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false), en('?_1', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false), en('?_2', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false), en('?_3', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false), en('?_4', true) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false), en('?_5', true) ],
+        [ en('I', false), en('L', false), en('L', false), en('h(alpha)_0', true), en('h(alpha)_1', true) ],
+        [ en('?_7', true), en('?_8', true), en('?_9', true), en('h(beta)_2', true), en('h(charlie)_3', true) ]
       ]
     );
 
@@ -174,22 +176,22 @@ test(
         colDelta: 0
       },
       [
-        [ 'A', 'B', 'B', 'C' ],
-        [ 'D', 'B', 'B', 'E' ],
-        [ 'F', 'F', 'F', 'E' ],
-        [ 'F', 'F', 'F', 'G' ],
-        [ 'F', 'F', 'F', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ]
       ],
       [
-        [ 'A', 'B', '?_0', 'C' ],
-        [ 'D', '?_1', 'h(alpha)_0', 'h(alpha)_1' ],
-        [ 'F', '?_4', 'h(beta)_2', 'h(charlie)_3' ],
-        [ '?_6', '?_7', '?_8', 'G' ],
-        [ '?_9', '?_10', '?_11', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ]
+        [ en('A', false), en('B', false), en('?_0', true), en('C', false) ],
+        [ en('D', false), en('?_1', true), en('h(alpha)_0', true), en('h(alpha)_1', true) ],
+        [ en('F', false), en('?_4', true), en('h(beta)_2', true), en('h(charlie)_3', true) ],
+        [ en('?_6', true), en('?_7', true), en('?_8', true), en('G', false) ],
+        [ en('?_9', true), en('?_10', true), en('?_11', true), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ]
       ]
     );
 
@@ -201,26 +203,26 @@ test(
         colDelta: 3
       },
       [
-        [ 'A', 'B', 'B', 'C' ],
-        [ 'D', 'B', 'B', 'E' ],
-        [ 'F', 'F', 'F', 'E' ],
-        [ 'F', 'F', 'F', 'G' ],
-        [ 'F', 'F', 'F', 'H' ],
-        [ 'I', 'J', 'K', 'K' ],
-        [ 'I', 'L', 'L', 'M' ],
-        [ '?_0', '?_1', '?_2', '?_3' ],
-        [ '?_4', '?_5', '?_6', '?_7' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false) ],
+        [ en('?_0', true), en('?_1', true), en('?_2', true), en('?_3', true) ],
+        [ en('?_4', true), en('?_5', true), en('?_6', true), en('?_7', true) ]
       ],
       [
-        [ 'A',         'B',    'B',   'C' ],
-        [ 'D',         'B',    'B',   'E' ],
-        [ 'F',         '?_8',  '?_9', 'E' ],
-        [ '?_10',      '?_11', '?_12', 'G' ],
-        [ 'h(bee1)_0', '?_14', '?_15', 'H' ],
-        [ 'h(bee2)_1', 'J',    'K',   'K' ],
-        [ 'h(bee3)_2', 'L',    'L',   'M' ],
-        [ 'h(bee3)_3', '?_1',  '?_2', '?_3' ],
-        [ 'h(bee3)_4', '?_5',  '?_6', '?_7' ]
+        [ en('A', false),         en('B', false),    en('B', false),   en('C', false) ],
+        [ en('D', false),         en('B', false),    en('B', false),   en('E', false) ],
+        [ en('F', false),         en('?_8', true),  en('?_9', true), en('E', false) ],
+        [ en('?_10', true),      en('?_11', true), en('?_12', true), en('G', false) ],
+        [ en('h(bee1)_0', true), en('?_14', true), en('?_15', true), en('H', false) ],
+        [ en('h(bee2)_1', true), en('J', false),    en('K', false),   en('K', false) ],
+        [ en('h(bee3)_2', true), en('L', false),    en('L', false),   en('M', false) ],
+        [ en('h(bee3)_3', true), en('?_1', true),  en('?_2', true), en('?_3', true) ],
+        [ en('h(bee3)_4', true), en('?_5', true),  en('?_6', true), en('?_7', true) ]
       ]
     );
 
@@ -232,22 +234,22 @@ test(
         colDelta: -4
       },
       [
-        [ 'A', 'B', 'B', 'C', '?_0',  '?_1',  '?_2',  '?_3' ],
-        [ 'D', 'B', 'B', 'E', '?_4',  '?_5',  '?_6',  '?_7' ],
-        [ 'F', 'F', 'F', 'E', '?_8',  '?_9',  '?_10', '?_11' ],
-        [ 'F', 'F', 'F', 'G', '?_12', '?_13', '?_14', '?_15' ],
-        [ 'F', 'F', 'F', 'H', '?_16', '?_17', '?_18',  '?_19' ],
-        [ 'I', 'J', 'K', 'K', '?_20', '?_21', '?_22',  '?_23' ],
-        [ 'I', 'L', 'L', 'M', '?_24', '?_25', '?_26',  '?_27' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false), en('?_4', true),  en('?_5', true),  en('?_6', true),  en('?_7', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false), en('?_8', true),  en('?_9', true),  en('?_10', true), en('?_11', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false), en('?_12', true), en('?_13', true), en('?_14', true), en('?_15', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false), en('?_16', true), en('?_17', true), en('?_18', true),  en('?_19', true) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false), en('?_20', true), en('?_21', true), en('?_22', true),  en('?_23', true) ],
+        [ en('I', false), en('L', false), en('L', false), en('M', false), en('?_24', true), en('?_25', true), en('?_26', true),  en('?_27', true) ]
       ],
       [
-        [ 'A', 'B', 'B', 'C', '?_0',  '?_1',  '?_2',  '?_3' ],
-        [ 'D', 'B', 'B', 'E', '?_4',  '?_5',  '?_6',  '?_7' ],
-        [ 'F', 'F', 'F', 'E', '?_8',  '?_9',  '?_10', '?_11' ],
-        [ 'F', 'F', 'F', 'G', '?_12', '?_13', '?_14', '?_15' ],
-        [ 'F', 'F', 'F', 'H', '?_16', '?_17', '?_18',  '?_19' ],
-        [ 'I', 'J', 'K', 'K', '?_20', '?_21', '?_22',  '?_23' ],
-        [ 'h(cic1)_0','h(cic2)_1','h(cic3)_2','h(cic3)_3','h(cic3)_4','h(cic4)_5','h(cic4)_6','h(cic4)_7' ]
+        [ en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true) ],
+        [ en('D', false), en('B', false), en('B', false), en('E', false), en('?_4', true),  en('?_5', true),  en('?_6', true),  en('?_7', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('E', false), en('?_8', true),  en('?_9', true),  en('?_10', true), en('?_11', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('G', false), en('?_12', true), en('?_13', true), en('?_14', true), en('?_15', true) ],
+        [ en('F', false), en('F', false), en('F', false), en('H', false), en('?_16', true), en('?_17', true), en('?_18', true),  en('?_19', true) ],
+        [ en('I', false), en('J', false), en('K', false), en('K', false), en('?_20', true), en('?_21', true), en('?_22', true),  en('?_23', true) ],
+        [ en('h(cic1)_0', true),en('h(cic2)_1', true),en('h(cic3)_2', true),en('h(cic3)_3', true),en('h(cic3)_4', true),en('h(cic4)_5', true),en('h(cic4)_6', true),en('h(cic4)_7', true) ]
       ]
     );
 

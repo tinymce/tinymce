@@ -3,30 +3,32 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow'
   ],
 
-  function (Arr, Fun, GridRow) {
+  function (Arr, Structs, GridRow) {
     // substitution :: (item, comparator) -> item
     var replaceIn = function (grid, targets, comparator, substitution) {
-      var isTarget = function (elem) {
-        return Arr.exists(targets, Fun.curry(comparator, elem));
+      var isTarget = function (cell) {
+        return Arr.exists(targets, function (target) {
+          return comparator(cell.element(), target.element());
+        });
       };
 
       return Arr.map(grid, function (row) {
         return GridRow.mapCells(row, function (cell) {
-          return isTarget(cell) ? substitution(cell, comparator) : cell;
+          return isTarget(cell) ? Structs.elementnew(substitution(cell.element(), comparator), true) : cell;
         });
       });
     };
 
     var notStartRow = function (grid, rowIndex, colIndex, comparator) {
-      return GridRow.getCell(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCell(grid[rowIndex - 1], colIndex), GridRow.getCell(grid[rowIndex], colIndex)));
+      return GridRow.getCellElement(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCellElement(grid[rowIndex - 1], colIndex), GridRow.getCellElement(grid[rowIndex], colIndex)));
     };
 
     var notStartColumn = function (row, index, comparator) {
-      return index > 0 && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
+      return index > 0 && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
     };
 
     // substitution :: (item, comparator) -> item

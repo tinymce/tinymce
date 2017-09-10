@@ -23,7 +23,7 @@ define(
       if (xs.length === 0) return 0;
       var first = xs[0];
       var index = Arr.findIndex(xs, function (x) {
-        return !comp(first, x);
+        return !comp(first.element(), x.element());
       });
       return index === -1 ? xs.length : index;
     };

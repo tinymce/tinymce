@@ -54,9 +54,9 @@ test(
 
     Assertions.checkUnmerge(
       '<table><tbody>' +
-        '<tr><th>A1</th><td>B1</td><td>C1</td><td>?</td></tr>' +
-        '<tr><th>?</th><td>B2</td><td>C2</td><td>?</td></tr>' +
-        '<tr><th>?</th><td>B3</td><td>?</td><td>?</td></tr>' +
+      '<tr><th rowspan="3">A1</th><td>B1</td><td colspan="2">C1</td></tr>' +
+      '<tr><td>B2</td><td>C2</td><td>?</td></tr>' +
+      '<tr><td>B3</td><td>?</td><td>?</td></tr>' +
       '</tbody></table>',
 
       '<table><tbody>' +
@@ -66,8 +66,6 @@ test(
       '</tbody></table>',
 
       [
-        { section: 0, row: 0, column: 0 },
-        { section: 0, row: 0, column: 2 },
         { section: 0, row: 1, column: 1 }
       ]
     );

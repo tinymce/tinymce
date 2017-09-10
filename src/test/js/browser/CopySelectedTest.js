@@ -68,7 +68,7 @@ test(
     var check = function (label, expected, input) {
       var table = generateInput(input);
 
-      CopySelected.extract(table, SEL_CLASS);
+      CopySelected.extract(table, '.' + SEL_CLASS);
 
       // Now verify that the table matches the nested array structure of expected
       var htmlForError = ', test "' + label + '". Output HTML:\n' + Html.getOuter(table);

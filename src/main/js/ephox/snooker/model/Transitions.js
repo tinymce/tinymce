@@ -30,7 +30,7 @@ define(
           if (seen[ri][ci] === false) {
             var result = TableGrid.subgrid(grid, ri, ci, comparator);
             updateSeen(ri, ci, result.rowspan(), result.colspan());
-            return [ Structs.detail(cell, result.rowspan(), result.colspan()) ];
+            return [ Structs.detailnew(cell.element(), result.rowspan(), result.colspan(), cell.isNew()) ];
           } else {
             return [];
           }
@@ -39,15 +39,17 @@ define(
       });
     };
 
-    var toGrid = function (warehouse, generators) {
+    var toGrid = function (warehouse, generators, isNew) {
       var grid = [];
       for (var i = 0; i < warehouse.grid().rows(); i++) {
         var rowCells = [];
         for (var j = 0; j < warehouse.grid().columns(); j++) {
           // The element is going to be the element at that position, or a newly generated gap.
           var element = Warehouse.getAt(warehouse, i, j).map(function (item) {
-            return item.element();
-          }).getOrThunk(generators.gap);
+            return Structs.elementnew(item.element(), isNew);
+          }).getOrThunk(function () {
+            return Structs.elementnew(generators.gap(), true);
+          });
           rowCells.push(element);
         }
         var row = Structs.rowcells(rowCells, warehouse.all()[i].section());

@@ -43,11 +43,11 @@ test(
       };
     };
 
-    var grid = function (rows, cols, _prefix) {
+    var grid = function (isNew, rows, cols, _prefix) {
       var prefix = _prefix ? _prefix : '';
       return Arr.map(new Array(rows), function (row, r) {
         return Arr.map(new Array(cols), function (cols, c) {
-          return prefix + '-' + r + '-' + c;
+          return Structs.elementnew(prefix + '-' + r + '-' + c, isNew);
         });
       });
     };
@@ -64,13 +64,13 @@ test(
       }
     };
 
-    var gridGen = function (_prefix) {
+    var gridGen = function (isNew, _prefix) {
       var cols = rand(GRID_MIN, GRID_MAX);
       var rows = rand(GRID_MIN, GRID_MAX);
       return {
         rows: Fun.constant(rows),
         cols: Fun.constant(cols),
-        grid: Fun.constant(grid(rows, cols, _prefix))
+        grid: Fun.constant(grid(isNew, rows, cols, _prefix))
       };
     };
 
@@ -91,8 +91,8 @@ test(
     };
 
     var measureIVTest = function () {
-      var gridSpecA = gridGen();
-      var gridSpecB = gridGen();
+      var gridSpecA = gridGen(false);
+      var gridSpecB = gridGen(true);
       var start = startGen(gridSpecA);
 
       var rowDelta = (gridSpecA.rows() - start.row()) - gridSpecB.rows();
@@ -125,7 +125,7 @@ test(
     };
 
     var tailorTestIVTest = function () {
-      var gridSpecA = gridGen();
+      var gridSpecA = gridGen(false);
       var start = startGen(gridSpecA);
       var delta = deltaGen();
       var expectedRows = delta.rowDelta() < 0 ? Math.abs(delta.rowDelta()) + gridSpecA.rows() : gridSpecA.rows();
@@ -162,8 +162,8 @@ test(
     };
 
     var mergeGridsIVTest = function () {
-      var gridSpecA = gridGen('a');
-      var gridSpecB = gridGen('b');
+      var gridSpecA = gridGen(false, 'a');
+      var gridSpecB = gridGen(true, 'b');
       var start = startGen(gridSpecA);
       var info = {
         start: {

@@ -16,8 +16,9 @@ define(
       var after = grid.slice(index);
 
       var between = GridRow.mapCells(grid[example], function (ex, c) {
-        var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCell(grid[index - 1], c), GridRow.getCell(grid[index], c));
-        return withinSpan ? GridRow.getCell(grid[index], c) : substitution(ex, comparator);
+        var withinSpan = index > 0 && index < grid.length && comparator(GridRow.getCellElement(grid[index - 1], c), GridRow.getCellElement(grid[index], c));
+        var ret = withinSpan ? GridRow.getCell(grid[index], c) : Structs.elementnew(substitution(ex.element(), comparator), true);
+        return ret;
       });
 
       return before.concat([ between ]).concat(after);
@@ -28,9 +29,9 @@ define(
     // index is the insert position (at - or after - example) (the column index)
     var insertColumnAt = function (grid, index, example, comparator, substitution) {
       return Arr.map(grid, function (row) {
-        var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCell(row, index - 1), GridRow.getCell(row, index));
-        var sub = withinSpan ? GridRow.getCell(row, index) : substitution(GridRow.getCell(row, example), comparator);
-        return GridRow.setCell(row, index, sub);
+        var withinSpan = index > 0 && index < GridRow.cellLength(row) && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
+        var sub = withinSpan ? GridRow.getCell(row, index) : Structs.elementnew(substitution(GridRow.getCellElement(row, example), comparator), true);
+        return GridRow.addCell(row, index, sub);
       });
     };
 
@@ -43,8 +44,8 @@ define(
       var index = exampleCol + 1; // insert after
       return Arr.map(grid, function (row, i) {
         var isTargetCell = (i === exampleRow);
-        var sub = isTargetCell ? substitution(GridRow.getCell(row, exampleCol), comparator) : GridRow.getCell(row, exampleCol);
-        return GridRow.setCell(row, index, sub);
+        var sub = isTargetCell ? Structs.elementnew(substitution(GridRow.getCellElement(row, exampleCol), comparator), true) : GridRow.getCell(row, exampleCol);
+        return GridRow.addCell(row, index, sub);
       });
     };
 
@@ -60,16 +61,20 @@ define(
 
       var between = GridRow.mapCells(grid[exampleRow], function (ex, i) {
         var isTargetCell = (i === exampleCol);
-        return isTargetCell ? substitution(ex, comparator) : ex;
+        return isTargetCell ? Structs.elementnew(substitution(ex.element(), comparator), true) : ex;
       });
 
       return before.concat([ between ]).concat(after);
     };
 
     var deleteColumnsAt = function (grid, start, finish) {
-      return Arr.map(grid, function (row) {
+      var rows = Arr.map(grid, function (row) {
         var cells = row.cells().slice(0, start).concat(row.cells().slice(finish + 1));
         return Structs.rowcells(cells, row.section());
+      });
+      // We should filter out rows that have no columns for easy deletion
+      return Arr.filter(rows, function (row) {
+        return row.cells().length > 0;
       });
     };
 

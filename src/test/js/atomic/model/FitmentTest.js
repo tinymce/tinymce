@@ -2,6 +2,7 @@ test(
   'FitmentTest',
 
   [
+    'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.test.Fitment',
@@ -9,12 +10,14 @@ test(
     'ephox.snooker.test.TestGenerator'
   ],
 
-  function (Fun, Structs, Fitment, TableMerge, TestGenerator) {
+  function (Arr, Fun, Structs, Fitment, TableMerge, TestGenerator) {
     var generator = TestGenerator;
     var start = Structs.address;
     var measureTest = Fitment.measureTest;
     var tailorTest = Fitment.tailorTest;
     var mergeGridsTest = TableMerge.mergeTest;
+
+    var en = Structs.elementnew;
 
     var check = function (test, expected, startAddress, gridA, gridB, generator, comparator) {
       test(expected, startAddress, gridA, gridB, generator, comparator);
@@ -24,16 +27,16 @@ test(
     // gridB into gridA with different start points
     var gridA = function () {
       return [
-        [ 'a', 'b', 'c' ],
-        [ 'd', 'e', 'f' ],
-        [ 'g', 'h', 'i' ]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ];
     };
 
     var gridB = function () {
       return [
-        [1, 2],
-        [3, 4]
+        [en(1, true), en(2, true)],
+        [en(3, true), en(4, true)]
       ];
     };
 
@@ -69,9 +72,9 @@ test(
     check(
       tailorTest,
       [
-        ['a', 'b', 'c'],
-        ['d', 'e', 'f'],
-        ['g', 'h', 'i']
+        [en('a', false), en('b', false), en('c', false)],
+        [en('d', false), en('e', false), en('f', false)],
+        [en('g', false), en('h', false), en('i', false)]
       ], start(0, 0), gridA, {
         rowDelta: Fun.constant(1),
         colDelta: Fun.constant(1)
@@ -80,9 +83,9 @@ test(
     check(
       tailorTest,
       [
-        ['a', 'b', 'c'],
-        ['d', 'e', 'f'],
-        ['g', 'h', 'i']
+        [en('a', false), en('b', false), en('c', false)],
+        [en('d', false), en('e', false), en('f', false)],
+        [en('g', false), en('h', false), en('i', false)]
       ], start(1, 1), gridA, {
         rowDelta: Fun.constant(0),
         colDelta: Fun.constant(0)
@@ -91,10 +94,10 @@ test(
     check(
       tailorTest,
       [
-        ['a',   'b',   'c',   '?_0'],
-        ['d',   'e',   'f',   '?_1'],
-        ['g',   'h',   'i',   '?_2'],
-        ['?_3', '?_4', '?_5', '?_6']
+        [en('a', false),   en('b', false),   en('c', false),   en('?_0', true)],
+        [en('d', false),   en('e', false),   en('f', false),   en('?_1', true)],
+        [en('g', false),   en('h', false),   en('i', false),   en('?_2', true)],
+        [en('?_3', true), en('?_4', true), en('?_5', true), en('?_6', true)]
       ], start(2, 2), gridA, {
         rowDelta: Fun.constant(-1),
         colDelta: Fun.constant(-1)
@@ -103,9 +106,9 @@ test(
     check(
       tailorTest,
       [
-        ['a', 'b', 'c', '?_0'],
-        ['d', 'e', 'f', '?_1'],
-        ['g', 'h', 'i', '?_2']
+        [en('a', false), en('b', false), en('c', false), en('?_0', true)],
+        [en('d', false), en('e', false), en('f', false), en('?_1', true)],
+        [en('g', false), en('h', false), en('i', false), en('?_2', true)]
       ], start(0, 2), gridA, {
         rowDelta: Fun.constant(1),
         colDelta: Fun.constant(-1)
@@ -114,34 +117,34 @@ test(
     check(
       mergeGridsTest,
       [
-        ['h(1)_0', 'h(2)_1', 'c'],
-        ['h(3)_2', 'h(4)_3', 'f'],
-        ['g', 'h', 'i']
+        [en('h(1)_0', true), en('h(2)_1', true), en('c', false)],
+        [en('h(3)_2', true), en('h(4)_3', true), en('f', false)],
+        [en('g', false), en('h', false), en('i', false)]
       ], start(0, 0), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
       [
-        ['a', 'b', 'c'],
-        ['d', 'h(1)_0', 'h(2)_1'],
-        ['g', 'h(3)_2', 'h(4)_3']
+        [en('a', false), en('b', false), en('c', false)],
+        [en('d', false), en('h(1)_0', true), en('h(2)_1', true)],
+        [en('g', false), en('h(3)_2', true), en('h(4)_3', true)]
       ], start(1, 1), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
       [
-        ['a',   'b',   'c',        '?_0'],
-        ['d',   'e',   'f',        '?_1'],
-        ['g',   'h',   'h(1)_0',   'h(2)_1'],
-        ['?_3', '?_4', 'h(3)_2',   'h(4)_3']
+        [en('a', false),   en('b', false),   en('c', false),        en('?_0', true)],
+        [en('d', false),   en('e', false),   en('f', false),        en('?_1', true)],
+        [en('g', false),   en('h', false),   en('h(1)_0', true),   en('h(2)_1', true)],
+        [en('?_3', true), en('?_4', true), en('h(3)_2', true),   en('h(4)_3', true)]
       ], start(2, 2), gridA, gridB, generator, Fun.tripleEquals);
 
     check(
       mergeGridsTest,
       [
-        ['a', 'b', 'h(1)_0', 'h(2)_1'],
-        ['d', 'e', 'h(3)_2', 'h(4)_3'],
-        ['g', 'h', 'i', '?_2']
+        [en('a', false), en('b', false), en('h(1)_0', true), en('h(2)_1', true)],
+        [en('d', false), en('e', false), en('h(3)_2', true), en('h(4)_3', true)],
+        [en('g', false), en('h', false), en('i', false), en('?_2', true)]
       ], start(0, 2), gridA, gridB, generator, Fun.tripleEquals);
 
     check(

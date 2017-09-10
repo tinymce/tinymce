@@ -17,6 +17,8 @@ test(
 
   function (Arr, Fun, Generators, Structs, TransformOperations, TestGenerator) {
 
+    var en = Structs.elementnew;
+
     var mapToStructGrid = function (grid) {
       return Arr.map(grid, function (row) {
         return Structs.rowcells(row, 'tbody');
@@ -26,11 +28,14 @@ test(
     var assertGrids = function (expected, actual) {
       assert.eq(expected.length, actual.length);
       Arr.each(expected, function (row, i) {
-        assert.eq(row.cells(), actual[i].cells());
+        Arr.each(row.cells(), function (cell, j) {
+          assert.eq(cell.element(), actual[i].cells()[j].element());
+          assert.eq(cell.isNew(), actual[i].cells()[j].isNew());
+        });
         assert.eq(row.section(), actual[i].section());
       });
     };
-    
+
     // Test basic changing to header (column)
     (function () {
       var check = function (expected, grid, index) {
@@ -40,53 +45,52 @@ test(
         assertGrids(structExpected, actual);
       };
 
-      check([[]], [[]], 0);
       check([
-        [ 'h(a)_0' ]
+        [ en('h(a)_0', true) ]
       ], [
-        [ 'a' ]
+        [ en('a', false) ]
       ], 0);
 
       check([
-        [ 'a', 'a', 'a' ],
-        [ 'b', 'h(c)_0', 'd' ],
-        [ 'e', 'h(f)_1', 'h(f)_1' ]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('h(c)_0', true), en('d', false) ],
+        [ en('e', false), en('h(f)_1', true), en('h(f)_1', true) ]
       ], [
-        [ 'a', 'a', 'a' ],
-        [ 'b', 'c', 'd' ],
-        [ 'e', 'f', 'f' ]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('c', false), en('d', false) ],
+        [ en('e', false), en('f', false), en('f', false) ]
       ], 1);
 
       check([
-        [ 'a', 'a', 'a' ],
-        [ 'b', 'h(c)_0', 'd' ],
-        [ 'f', 'f', 'f' ]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('h(c)_0', true), en('d', false) ],
+        [ en('f', false), en('f', false), en('f', false) ]
       ], [
-        [ 'a', 'a', 'a' ],
-        [ 'b', 'c', 'd' ],
-        [ 'f', 'f', 'f' ]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('c', false), en('d', false) ],
+        [ en('f', false), en('f', false), en('f', false) ]
       ], 1);
 
       check([
-        [ 'h(a)_0', 'h(a)_0', 'h(a)_0' ],
-        [ 'h(b)_1', 'c', 'd' ],
-        [ 'h(f)_2', 'h(f)_2', 'h(f)_2' ]
+        [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
+        [ en('h(b)_1', true), en('c', false), en('d', false) ],
+        [ en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true) ]
       ], [
-        [ 'a', 'a', 'a' ],
-        [ 'b', 'c', 'd' ],
-        [ 'f', 'f', 'f' ]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('c', false), en('d', false) ],
+        [ en('f', false), en('f', false), en('f', false) ]
       ], 0);
 
       check([
-        [ 'h(a)_0', 'h(a)_0', 'h(a)_0' ],
-        [ 'h(a)_0', 'h(a)_0', 'h(a)_0' ],
-        [ 'h(b)_1', 'c', 'd' ],
-        [ 'h(f)_2', 'h(f)_2', 'h(f)_2' ]
+        [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
+        [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
+        [ en('h(b)_1', true), en('c', false), en('d', false) ],
+        [ en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true) ]
       ], [
-        [ 'a', 'a', 'a' ],
-        [ 'a', 'a', 'a' ],
-        [ 'b', 'c', 'd' ],
-        [ 'f', 'f', 'f' ]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('c', false), en('d', false) ],
+        [ en('f', false), en('f', false), en('f', false) ]
       ], 0);
     })();
 
@@ -101,49 +105,49 @@ test(
 
       check([[]], [[]], 0);
       check([
-        [ 'h(a)_0' ]
+        [ en('h(a)_0', true) ]
       ], [
-        [ 'a' ]
+        [ en('a', false) ]
       ], 0);
 
       check([
-        [ 'a', 'b', 'e' ],
-        [ 'a', 'h(c)_0', 'h(f)_1' ],
-        [ 'a', 'd', 'h(f)_1' ]
+        [ en('a', false), en('b', false), en('e', false) ],
+        [ en('a', false), en('h(c)_0', true), en('h(f)_1', true) ],
+        [ en('a', false), en('d', false), en('h(f)_1', true) ]
       ], [
-        [ 'a', 'b', 'e' ],
-        [ 'a', 'c', 'f' ],
-        [ 'a', 'd', 'f' ]
+        [ en('a', false), en('b', false), en('e', false) ],
+        [ en('a', false), en('c', false), en('f', false) ],
+        [ en('a', false), en('d', false), en('f', false) ]
       ], 1);
 
       check([
-        [ 'a', 'b', 'f' ],
-        [ 'a', 'h(c)_0', 'f' ],
-        [ 'a', 'd', 'f' ]
+        [ en('a', false), en('b', false), en('f', false) ],
+        [ en('a', false), en('h(c)_0', true), en('f', false) ],
+        [ en('a', false), en('d', false), en('f', false) ]
       ], [
-        [ 'a', 'b', 'f' ],
-        [ 'a', 'c', 'f' ],
-        [ 'a', 'd', 'f' ]
+        [ en('a', false), en('b', false), en('f', false) ],
+        [ en('a', false), en('c', false), en('f', false) ],
+        [ en('a', false), en('d', false), en('f', false) ]
       ], 1);
 
      check([
-        [ 'h(a)_0', 'h(b)_1', 'h(f)_2' ],
-        [ 'h(a)_0', 'c', 'h(f)_2' ],
-        [ 'h(a)_0', 'd', 'h(f)_2' ]
+        [ en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true) ],
+        [ en('h(a)_0', true), en('c', false), en('h(f)_2', true) ],
+        [ en('h(a)_0', true), en('d', false), en('h(f)_2', true) ]
       ], [
-        [ 'a', 'b', 'f' ],
-        [ 'a', 'c', 'f' ],
-        [ 'a', 'd', 'f' ]
+        [ en('a', false), en('b', false), en('f', false) ],
+        [ en('a', false), en('c', false), en('f', false) ],
+        [ en('a', false), en('d', false), en('f', false) ]
       ], 0);
 
       check([
-        [ 'h(a)_0', 'h(a)_0', 'h(b)_1', 'h(f)_2' ],
-        [ 'h(a)_0', 'h(a)_0', 'c', 'h(f)_2' ],
-        [ 'h(a)_0', 'h(a)_0', 'd', 'h(f)_2' ]
+        [ en('h(a)_0', true), en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true) ],
+        [ en('h(a)_0', true), en('h(a)_0', true), en('c', false), en('h(f)_2', true) ],
+        [ en('h(a)_0', true), en('h(a)_0', true), en('d', false), en('h(f)_2', true) ]
       ], [
-        [ 'a', 'a', 'b', 'f' ],
-        [ 'a', 'a', 'c', 'f' ],
-        [ 'a', 'a', 'd', 'f' ]
+        [ en('a', false), en('a', false), en('b', false), en('f', false) ],
+        [ en('a', false), en('a', false), en('c', false), en('f', false) ],
+        [ en('a', false), en('a', false), en('d', false), en('f', false) ]
       ], 0);
     })();
   }

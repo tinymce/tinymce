@@ -9,6 +9,7 @@ test(
 
   function (Fun, Structs, TableGrid) {
     var r = Structs.rowcells;
+    var en = Structs.elementnew;
 
     var check = function (expected, row, column, grid) {
       var actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);
@@ -17,9 +18,9 @@ test(
     };
 
     var world = [
-      r([ 'a', 'a', 'a' ], 'thead'),
-      r([ 'b', 'b', 'c' ], 'tbody'),
-      r([ 'd', 'e', 'c' ], 'tfoot')
+      r([ en('a', false), en('a', false), en('a', false) ], 'thead'),
+      r([ en('b', false), en('b', false), en('c', false) ], 'tbody'),
+      r([ en('d', false), en('e', false), en('c', false) ], 'tfoot')
     ];
 
     check({ colspan: 3, rowspan: 1 }, 0, 0, world);

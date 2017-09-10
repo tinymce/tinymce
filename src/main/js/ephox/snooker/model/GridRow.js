@@ -7,9 +7,11 @@ define(
   ],
 
   function (Arr, Structs) {
-    var setCell = function (gridRow, index, cell) {
+    var addCell = function (gridRow, index, cell) {
       var cells = gridRow.cells();
-      var newCells = cells.slice(0, index).concat([ cell ]).concat(cells.slice(index));
+      var before = cells.slice(0, index);
+      var after = cells.slice(index);
+      var newCells = before.concat([ cell ]).concat(after);
       return setCells(gridRow, newCells);
     };
 
@@ -32,15 +34,20 @@ define(
       return gridRow.cells()[index];
     };
 
+    var getCellElement = function (gridRow, index) {
+      return getCell(gridRow, index).element();
+    };
+
     var cellLength = function (gridRow) {
       return gridRow.cells().length;
     };
 
     return {
-      setCell: setCell,
+      addCell: addCell,
       setCells: setCells,
       mutateCell: mutateCell,
       getCell: getCell,
+      getCellElement: getCellElement,
       mapCells: mapCells,
       cellLength: cellLength
     };

@@ -39,7 +39,7 @@ define(
       Insert.append(Body.body(), table);
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
+      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
 
       var actualPath = Hierarchy.path(table, cursor.getOrDie()).getOrDie('could not find path');
       assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
@@ -61,7 +61,7 @@ define(
       Insert.append(Body.body(), table);
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction);
+      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
 
       var actualPath = Hierarchy.path(table, cursor.getOrDie()).getOrDie('could not find path');
       assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
@@ -89,7 +89,7 @@ define(
 
       var cursor = operation(wire, table, {
           selection: Fun.constant(cellz)
-      }, Bridge.generators, direction);
+      }, Bridge.generators, direction, Fun.noop, Fun.noop);
 
       // The operation might delete the whole table
       optExpCell.each(function (expCell) {
@@ -161,7 +161,7 @@ define(
 
       var unmergable = Option.some(Options.cat(unmergables));
 
-      TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction);
+      TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction, Fun.noop, Fun.noop);
       // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
       // Let's get rid of size information.

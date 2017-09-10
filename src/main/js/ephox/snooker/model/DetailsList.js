@@ -3,7 +3,6 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.peanut.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
     'ephox.syrup.api.Attr',
@@ -11,7 +10,7 @@ define(
     'ephox.syrup.api.Traverse'
   ],
 
-  function (Arr, Fun, Structs, TableLookup, Attr, Node, Traverse) {
+  function (Arr, Structs, TableLookup, Attr, Node, Traverse) {
 
     /*
      * Takes a DOM table and returns a list of list of:
@@ -39,8 +38,21 @@ define(
       });
     };
 
+    var fromPastedRows = function (rows, example) {
+      return Arr.map(rows, function (row) {
+        var cells = Arr.map(TableLookup.cells(row), function (cell) {
+          var rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
+          var colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
+          return Structs.detail(cell, rowspan, colspan);
+        });
+
+        return Structs.rowdata(row, cells, example.section());
+      });
+    };
+
     return {
-      fromTable: fromTable
+      fromTable: fromTable,
+      fromPastedRows: fromPastedRows
     };
   }
 );
