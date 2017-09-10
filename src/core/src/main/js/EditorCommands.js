@@ -308,8 +308,9 @@ define(
           // Present alert message about clipboard access not being available
           if (failed || !doc.queryCommandSupported(command)) {
             var msg = editor.translate(
-              "Your browser doesn't support direct access to the clipboard. " +
-              "Please use the Ctrl+X/C/V keyboard shortcuts instead."
+                "Your browser doesn't support direct access to the clipboard. " +
+                "Please use the keyboard shortcuts instead:<br><br>" +
+                "Ctrl+c to copy, Ctrl+v to paste and Ctrl+x to cut."
             );
 
             if (Env.mac) {
