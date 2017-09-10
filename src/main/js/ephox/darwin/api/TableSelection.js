@@ -11,12 +11,12 @@ define(
 
   function (CellSelection, Option, TablePositions, Compare, SelectorFind) {
     // Explictly calling CellSelection.retrieve so that we can see the API signature.
-    var retrieve = function (container) {
-      return CellSelection.retrieve(container);
+    var retrieve = function (container, selector) {
+      return CellSelection.retrieve(container, selector);
     };
 
-    var retrieveBox = function (container) {
-      return CellSelection.getEdges(container).bind(function (edges) {
+    var retrieveBox = function (container, firstSelectedSelector, lastSelectedSelector) {
+      return CellSelection.getEdges(container, firstSelectedSelector, lastSelectedSelector).bind(function (edges) {
         var isRoot = function (ancestor) {
           return Compare.eq(container, ancestor);
         };
@@ -30,14 +30,9 @@ define(
       });
     };
 
-    var clear = function (container) {
-      CellSelection.clear(container);
-    };
-
     return {
       retrieve: retrieve,
-      retrieveBox: retrieveBox,
-      clear: clear
+      retrieveBox: retrieveBox
     };
   }
 );

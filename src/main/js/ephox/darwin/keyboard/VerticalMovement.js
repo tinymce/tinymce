@@ -61,9 +61,9 @@ define(
       });
     };
 
-    var select = function (bridge, container, isRoot, direction, initial, anchor) {
+    var select = function (bridge, container, isRoot, direction, initial, anchor, selectRange) {
       return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
-        return KeySelection.detect(container, isRoot, info.start(), info.finish());
+        return KeySelection.detect(container, isRoot, info.start(), info.finish(), selectRange);
       });
     };
 
