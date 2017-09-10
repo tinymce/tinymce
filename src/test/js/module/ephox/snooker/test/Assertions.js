@@ -39,9 +39,9 @@ define(
       Insert.append(Body.body(), table);
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
+      var result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
 
-      var actualPath = Hierarchy.path(table, cursor.getOrDie()).getOrDie('could not find path');
+      var actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
       assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
 
       // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
@@ -61,9 +61,9 @@ define(
       Insert.append(Body.body(), table);
       var wire = ResizeWire.only(Body.body());
       var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
-      var cursor = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
+      var result = operation(wire, table, { element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()) }, Bridge.generators, direction, Fun.noop, Fun.noop);
 
-      var actualPath = Hierarchy.path(table, cursor.getOrDie()).getOrDie('could not find path');
+      var actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
       assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
 
       // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
@@ -87,13 +87,13 @@ define(
       });
 
 
-      var cursor = operation(wire, table, {
+      var result = operation(wire, table, {
           selection: Fun.constant(cellz)
       }, Bridge.generators, direction, Fun.noop, Fun.noop);
 
       // The operation might delete the whole table
       optExpCell.each(function (expCell) {
-        var actualPath = Hierarchy.path(table, cursor.getOrDie('could not find cursor')).getOrDie('could not find path');
+        var actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie('could not find cursor')).getOrDie('could not find path');
         assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
       });
 
