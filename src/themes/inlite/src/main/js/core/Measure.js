@@ -12,10 +12,9 @@ define(
   'tinymce.themes.inlite.core.Measure',
   [
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.geom.Rect',
     'tinymce.themes.inlite.core.Convert'
   ],
-  function (DOMUtils, Rect, Convert) {
+  function (DOMUtils, Convert) {
     var toAbsolute = function (rect) {
       var vp = DOMUtils.DOM.getViewPort();
 
