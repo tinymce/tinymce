@@ -19,15 +19,15 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Fragment',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.Parents',
     'tinymce.core.selection.SelectionUtils',
-    'tinymce.core.selection.SimpleTableModel'
+    'tinymce.core.selection.SimpleTableModel',
+    'tinymce.core.selection.TableCellSelection'
   ],
-  function (Arr, Fun, Compare, Insert, Replication, Element, Fragment, Node, SelectorFilter, SelectorFind, Traverse, ElementType, Parents, SelectionUtils, SimpleTableModel) {
+  function (Arr, Fun, Compare, Insert, Replication, Element, Fragment, Node, SelectorFind, Traverse, ElementType, Parents, SelectionUtils, SimpleTableModel, TableCellSelection) {
     var findParentListContainer = function (parents) {
       return Arr.find(parents, function (elm) {
         return Node.name(elm) === 'ul' || Node.name(elm) === 'ol';
@@ -90,10 +90,6 @@ define(
       return wrap(Element.fromDom(rng.cloneContents()), getWrapElements(rootNode, rng));
     };
 
-    var getTableCellSelection = function (rootNode) {
-      return SelectorFilter.descendants(rootNode, 'td[data-mce-selected],th[data-mce-selected]');
-    };
-
     var getParentTable = function (rootElm, cell) {
       return SelectorFind.ancestor(cell, 'table', Fun.curry(Compare.eq, rootElm));
     };
@@ -110,13 +106,13 @@ define(
       }).getOrThunk(emptyFragment);
     };
 
-    var getSelectionFragment = function (rootNode, rng) {
-      return rng.collapsed ? emptyFragment() : getFragmentFromRange(rootNode, rng);
+    var getSelectionFragment = function (rootNode, ranges) {
+      return ranges.length > 0 && ranges[0].collapsed ? emptyFragment() : getFragmentFromRange(rootNode, ranges[0]);
     };
 
-    var read = function (rootNode, rng) {
-      var selectedTableCells = getTableCellSelection(rootNode, rng);
-      return selectedTableCells.length > 0 ? getTableFragment(rootNode, selectedTableCells) : getSelectionFragment(rootNode, rng);
+    var read = function (rootNode, ranges) {
+      var selectedCells = TableCellSelection.getCellsFromElementOrRanges(ranges, rootNode);
+      return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
     };
 
     return {

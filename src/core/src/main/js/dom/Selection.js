@@ -20,6 +20,7 @@
 define(
   'tinymce.core.dom.Selection',
   [
+    'ephox.katamari.api.Arr',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'tinymce.core.caret.CaretPosition',
@@ -32,12 +33,13 @@ define(
     'tinymce.core.dom.TridentSelection',
     'tinymce.core.Env',
     'tinymce.core.selection.FragmentReader',
+    'tinymce.core.selection.MultiRange',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
   function (
-    Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader,
-    Zwsp, Tools
+    Arr, Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader,
+    MultiRange, Zwsp, Tools
   ) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
@@ -54,6 +56,13 @@ define(
       } else {
         return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
       }
+    };
+
+    var eventProcessRanges = function (editor, ranges) {
+      return Arr.map(ranges, function (range) {
+        var evt = editor.fire('GetSelectionRange', { range: range });
+        return evt.range !== range ? evt.range : range;
+      });
     };
 
     /**
@@ -121,6 +130,7 @@ define(
       getContent: function (args) {
         var self = this, rng = self.getRng(), tmpElm = self.dom.create("body");
         var se = self.getSel(), whiteSpaceBefore, whiteSpaceAfter, fragment;
+        var ranges = eventProcessRanges(self.editor, MultiRange.getRanges(this.getSel()));
 
         args = args || {};
         whiteSpaceBefore = whiteSpaceAfter = '';
@@ -134,7 +144,7 @@ define(
         }
 
         if (rng.cloneContents) {
-          fragment = args.contextual ? FragmentReader.read(Element.fromDom(self.editor.getBody()), rng).dom() : rng.cloneContents();
+          fragment = args.contextual ? FragmentReader.read(Element.fromDom(self.editor.getBody()), ranges).dom() : rng.cloneContents();
           if (fragment) {
             tmpElm.appendChild(fragment);
           }
@@ -501,7 +511,7 @@ define(
        * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
        */
       getRng: function (w3c) {
-        var self = this, selection, rng, elm, doc, ieRng, evt;
+        var self = this, selection, rng, elm, doc, ieRng;
 
         function tryCompareBoundaryPoints(how, sourceRange, destinationRange) {
           try {
@@ -560,10 +570,7 @@ define(
           // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
         }
 
-        evt = self.editor.fire('GetSelectionRange', { range: rng });
-        if (evt.range !== rng) {
-          return evt.range;
-        }
+        rng = eventProcessRanges(self.editor, [ rng ])[0];
 
         // We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
         // IE 11 doesn't support the selection object so we check for that as well
@@ -860,7 +867,7 @@ define(
       normalize: function () {
         var self = this, rng = self.getRng();
 
-        if (Env.range && new RangeUtils(self.dom).normalize(rng)) {
+        if (new RangeUtils(self.dom).normalize(rng) && !MultiRange.hasMultipleRanges(self.getSel())) {
           self.setRng(rng, self.isForward());
         }
 
