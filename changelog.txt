@@ -438,7 +438,7 @@ Version 4.3.0 (2015-11-23)
     Added new setMode method to Editor instances that lets you dynamically switch between design/readonly.
     Added new core support for contentEditable=false elements within the editor overrides the browsers broken behavior.
     Rewrote the noneditable plugin to use the new contentEditable false core logic.
-    Fixed so the dirty state doesn't set set to false automatically when the undo index is set to 0.
+    Fixed so the dirty state doesn't set to false automatically when the undo index is set to 0.
     Fixed the Selection.placeCaretAt so it works better on IE when the coordinate is between paragraphs.
     Fixed bug where data-mce-bogus="all" element contents where counted by the word count plugin.
     Fixed bug where contentEditable=false elements would be indented by the indent buttons.
@@ -627,7 +627,7 @@ Version 4.1.7 (2014-11-27)
     Added new paste_convert_word_fake_lists option to enable users to disable the fake lists convert logic.
     Fixed so advlist style changes adds undo levels for each change.
     Fixed bug where WebKit would sometimes produce an exception when the autolink plugin where looking for URLs.
-    Fixed bug where IE 7 wouldn't be rendered properly due to to aggressive css compression.
+    Fixed bug where IE 7 wouldn't be rendered properly due to aggressive css compression.
     Fixed bug where DomQuery wouldn't accept window as constructor element.
     Fixed bug where the color picker in 3.x dialogs wouldn't work properly. Patch contributed by Callidior.
     Fixed bug where the image plugin wouldn't respect the document_base_url.
