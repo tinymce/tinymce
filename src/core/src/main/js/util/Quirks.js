@@ -849,7 +849,7 @@ define(
 
       /**
        * IE 11 has an annoying issue where you can't move focus into the editor
-       * by clicking on the white area HTML element. We used to be able to to fix this with
+       * by clicking on the white area HTML element. We used to be able to fix this with
        * the fixCaretSelectionOfDocumentElementOnIe fix. But since M$ removed the selection
        * object it's not possible anymore. So we need to hack in a ungly CSS to force the
        * body to be at least 150px. If the user clicks the HTML element out side this 150px region
