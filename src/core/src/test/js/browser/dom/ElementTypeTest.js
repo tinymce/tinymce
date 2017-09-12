@@ -73,13 +73,29 @@ asynctest(
         sCheckElement('b', ElementType.isBr, false),
         sCheckText(ElementType.isBr)
       ])),
-      Logger.t('Check list elements', GeneralSteps.sequence([
+      Logger.t('Check list item elements', GeneralSteps.sequence([
         sCheckElement('br', ElementType.isListItem, false),
         sCheckElement('div', ElementType.isListItem, false),
         sCheckElement('li', ElementType.isListItem, true),
         sCheckElement('dd', ElementType.isListItem, true),
         sCheckElement('dt', ElementType.isListItem, true),
         sCheckText(ElementType.isListItem)
+      ])),
+      Logger.t('Check list elements', GeneralSteps.sequence([
+        sCheckElement('br', ElementType.isList, false),
+        sCheckElement('div', ElementType.isList, false),
+        sCheckElement('ul', ElementType.isList, true),
+        sCheckElement('ol', ElementType.isList, true),
+        sCheckElement('dl', ElementType.isList, true),
+        sCheckText(ElementType.isList)
+      ])),
+      Logger.t('Check table section elements', GeneralSteps.sequence([
+        sCheckElement('br', ElementType.isTableSection, false),
+        sCheckElement('div', ElementType.isTableSection, false),
+        sCheckElement('thead', ElementType.isTableSection, true),
+        sCheckElement('tbody', ElementType.isTableSection, true),
+        sCheckElement('tfoot', ElementType.isTableSection, true),
+        sCheckText(ElementType.isTableSection)
       ]))
     ], function () {
       success();

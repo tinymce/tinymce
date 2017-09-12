@@ -17,6 +17,7 @@
 define(
   'tinymce.core.ui.FormatControls',
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.SelectorFind',
@@ -27,14 +28,13 @@ define(
     'tinymce.core.ui.Control',
     'tinymce.core.ui.FloatPanel',
     'tinymce.core.ui.Widget',
-    'tinymce.core.util.Arr',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, Element, SelectorFind, DOMUtils, EditorManager, Env, FontInfo, Control, FloatPanel, Widget, Arr, Tools) {
+  function (Arr, Fun, Element, SelectorFind, DOMUtils, EditorManager, Env, FontInfo, Control, FloatPanel, Widget, Tools) {
     var each = Tools.each;
 
     var flatten = function (ar) {
-      return Arr.reduce(ar, function (result, item) {
+      return Arr.foldl(ar, function (result, item) {
         return result.concat(item);
       }, []);
     };

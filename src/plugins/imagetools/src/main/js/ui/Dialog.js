@@ -13,19 +13,15 @@ define(
   [
     'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'global!Math',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.ui.Container',
-    'tinymce.core.ui.Form',
+    'tinymce.core.ui.Factory',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.imagetools.ui.ImagePanel',
     'tinymce.plugins.imagetools.core.UndoStack',
-    'global!Math'
+    'tinymce.plugins.imagetools.ui.ImagePanel'
   ],
-  function (
-    BlobConversions, ImageTransformations, DOMUtils, Container, Form, Promise,
-    Tools, ImagePanel, UndoStack, Math
-  ) {
+  function (BlobConversions, ImageTransformations, Math, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
     function createState(blob) {
       return {
         blob: blob,
@@ -227,7 +223,7 @@ define(
       }
 
       function createPanel(items) {
-        return new Form({
+        return Factory.create('Form', {
           layout: 'flex',
           direction: 'row',
           labelGap: 5,
@@ -436,12 +432,12 @@ define(
         //{text: 'More', onclick: switchPanel(filtersPanel)}
       ]);
 
-      imagePanel = new ImagePanel({
+      imagePanel = ImagePanel.create({
         flex: 1,
         imageSrc: currentState.url
       });
 
-      sidePanel = new Container({
+      sidePanel = Factory.create('Container', {
         layout: 'flex',
         direction: 'column',
         border: '0 1 0 0',
@@ -455,7 +451,7 @@ define(
         ]
       });
 
-      mainViewContainer = new Container({
+      mainViewContainer = Factory.create('Container', {
         type: 'container',
         layout: 'flex',
         direction: 'row',

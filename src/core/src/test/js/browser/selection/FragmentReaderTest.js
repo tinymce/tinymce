@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.Insert',
@@ -14,7 +15,7 @@ asynctest(
     'tinymce.core.selection.FragmentReader',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Fun, Hierarchy, Insert, Element, Html, FragmentReader, ViewBlock) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Arr, Fun, Hierarchy, Insert, Element, Html, FragmentReader, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = ViewBlock();
@@ -34,7 +35,20 @@ asynctest(
         rng.setStart(sc.dom(), startOffset);
         rng.setEnd(ec.dom(), endOffset);
 
-        return FragmentReader.read(Element.fromDom(viewBlock.get()), rng);
+        return FragmentReader.read(Element.fromDom(viewBlock.get()), [rng]);
+      });
+    };
+
+    var cReadFragmentCells = function (paths) {
+      return Chain.mapper(function (viewBlock) {
+        var ranges = Arr.map(paths, function (path) {
+          var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+          var rng = document.createRange();
+          rng.selectNode(container.dom());
+          return rng;
+        });
+
+        return FragmentReader.read(Element.fromDom(viewBlock.get()), ranges);
       });
     };
 
@@ -168,6 +182,16 @@ asynctest(
           cSetHtml('<ul><li><b>a<br></b></li></ul>'),
           cReadFragment([0, 0, 0, 0], 0, [0, 0, 0, 0], 1),
           cAssertFragmentHtml('<ul><li><b>a</b></li></ul>')
+        ])),
+        Logger.t('Get fragment from two partially selected li:s', Chain.asStep(viewBlock, [
+          cSetHtml('<ol><li>ab</li><li>cd</li></ol>'),
+          cReadFragment([0, 0, 0], 1, [0, 1, 0], 1),
+          cAssertFragmentHtml('<ol><li>b</li><li>c</li></ol>')
+        ])),
+        Logger.t('Get fragment from two partially selected li:s in nested structure', Chain.asStep(viewBlock, [
+          cSetHtml('<ol><li>ab<ol><li>cd</li></ol></li></ol>'),
+          cReadFragment([0, 0, 0], 1, [0, 0, 1, 0, 0], 1),
+          cAssertFragmentHtml('<ol><li>b<ol><li>c</li></ol></li></ol>')
         ]))
       ])),
       Logger.t('Fragments from tables', GeneralSteps.sequence([
@@ -180,6 +204,16 @@ asynctest(
           cSetHtml('<table><tbody><tr><td data-mce-selected="1">A</td><td data-mce-selected="1">B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>'),
           cReadFragment([0], 0, [0], 1),
           cAssertFragmentHtml('<table><tbody><tr><td data-mce-selected="1">A</td><td data-mce-selected="1">B</td></tr></tbody></table>')
+        ])),
+        Logger.t('Get table fragment from table 2x2 with multi range selection (1,1)-(2,2)', Chain.asStep(viewBlock, [
+          cSetHtml('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>'),
+          cReadFragmentCells([[0, 0, 0, 0], [0, 0, 1, 1]]),
+          cAssertFragmentHtml('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>')
+        ])),
+        Logger.t('Get table fragment from table 2x2 with multi range selection (2,1)-(2,2)', Chain.asStep(viewBlock, [
+          cSetHtml('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>'),
+          cReadFragmentCells([[0, 0, 0, 1], [0, 0, 1, 1]]),
+          cAssertFragmentHtml('<table><tbody><tr><td>B</td></tr><tr><td>D</td></tr></tbody></table>')
         ]))
       ]))
     ], function () {

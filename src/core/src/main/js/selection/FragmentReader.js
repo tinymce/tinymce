@@ -19,14 +19,15 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Fragment',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.Parents',
     'tinymce.core.selection.SelectionUtils',
-    'tinymce.core.selection.SimpleTableModel'
+    'tinymce.core.selection.SimpleTableModel',
+    'tinymce.core.selection.TableCellSelection'
   ],
-  function (Arr, Fun, Compare, Insert, Replication, Element, Fragment, Node, SelectorFilter, SelectorFind, ElementType, Parents, SelectionUtils, SimpleTableModel) {
+  function (Arr, Fun, Compare, Insert, Replication, Element, Fragment, Node, SelectorFind, Traverse, ElementType, Parents, SelectionUtils, SimpleTableModel, TableCellSelection) {
     var findParentListContainer = function (parents) {
       return Arr.find(parents, function (elm) {
         return Node.name(elm) === 'ul' || Node.name(elm) === 'ol';
@@ -57,13 +58,28 @@ define(
       return elms.length > 0 ? Fragment.fromElements([wrapped]) : wrapped;
     };
 
+    var directListWrappers = function (commonAnchorContainer) {
+      if (ElementType.isListItem(commonAnchorContainer)) {
+        return Traverse.parent(commonAnchorContainer).filter(ElementType.isList).fold(
+          Fun.constant([]),
+          function (listElm) {
+            return [ commonAnchorContainer, listElm ];
+          }
+        );
+      } else {
+        return ElementType.isList(commonAnchorContainer) ? [ commonAnchorContainer ] : [ ];
+      }
+    };
+
     var getWrapElements = function (rootNode, rng) {
-      var parents = Parents.parentsAndSelf(Element.fromDom(rng.commonAncestorContainer), rootNode);
+      var commonAnchorContainer = Element.fromDom(rng.commonAncestorContainer);
+      var parents = Parents.parentsAndSelf(commonAnchorContainer, rootNode);
       var wrapElements = Arr.filter(parents, function (elm) {
         return ElementType.isInline(elm) || ElementType.isHeading(elm);
       });
-      var fullWrappers = getFullySelectedListWrappers(parents, rng);
-      return Arr.map(wrapElements.concat(fullWrappers), Replication.shallow);
+      var listWrappers = getFullySelectedListWrappers(parents, rng);
+      var allWrappers = wrapElements.concat(listWrappers.length ? listWrappers : directListWrappers(commonAnchorContainer));
+      return Arr.map(allWrappers, Replication.shallow);
     };
 
     var emptyFragment = function () {
@@ -72,10 +88,6 @@ define(
 
     var getFragmentFromRange = function (rootNode, rng) {
       return wrap(Element.fromDom(rng.cloneContents()), getWrapElements(rootNode, rng));
-    };
-
-    var getTableCellSelection = function (rootNode) {
-      return SelectorFilter.descendants(rootNode, 'td[data-mce-selected],th[data-mce-selected]');
     };
 
     var getParentTable = function (rootElm, cell) {
@@ -94,13 +106,13 @@ define(
       }).getOrThunk(emptyFragment);
     };
 
-    var getSelectionFragment = function (rootNode, rng) {
-      return rng.collapsed ? emptyFragment() : getFragmentFromRange(rootNode, rng);
+    var getSelectionFragment = function (rootNode, ranges) {
+      return ranges.length > 0 && ranges[0].collapsed ? emptyFragment() : getFragmentFromRange(rootNode, ranges[0]);
     };
 
-    var read = function (rootNode, rng) {
-      var selectedTableCells = getTableCellSelection(rootNode, rng);
-      return selectedTableCells.length > 0 ? getTableFragment(rootNode, selectedTableCells) : getSelectionFragment(rootNode, rng);
+    var read = function (rootNode, ranges) {
+      var selectedCells = TableCellSelection.getCellsFromElementOrRanges(ranges, rootNode);
+      return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
     };
 
     return {

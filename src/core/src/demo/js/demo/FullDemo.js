@@ -31,6 +31,7 @@ define(
     'tinymce.plugins.emoticons.Plugin',
     'tinymce.plugins.fullpage.Plugin',
     'tinymce.plugins.fullscreen.Plugin',
+    'tinymce.plugins.help.Plugin',
     'tinymce.plugins.hr.Plugin',
     'tinymce.plugins.image.Plugin',
     'tinymce.plugins.imagetools.Plugin',
@@ -62,10 +63,10 @@ define(
   ],
   function (
     window, EditorManager, PluginManager, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin, CharMapPlugin, CodePlugin,
-    CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin, ImageToolsPlugin,
-    ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin, PastePlugin,
-    PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin,
-    TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+    CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HelpPlugin, HrPlugin, ImagePlugin,
+    ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin,
+    PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin,
+    TextColorPlugin, TextPatternPlugin, TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
   ) {
     AdvListPlugin();
     AnchorPlugin();
@@ -110,6 +111,7 @@ define(
     VisualCharsPlugin();
     WordCountPlugin();
     ModernTheme();
+    HelpPlugin();
 
     return function () {
       PluginManager.urls.emoticons = '../../../../plugins/emoticons/dist/emoticons';
@@ -117,12 +119,26 @@ define(
       EditorManager.init({
         skin_url: '../../../../skins/lightgray/dist/lightgray',
         codesample_content_css: '../../../../plugins/codesample/dist/codesample/css/prism.css',
+        images_upload_url: 'd',
         selector: "textarea",
+        link_list: [
+          { title: 'My page 1', value: 'http://www.tinymce.com' },
+          { title: 'My page 2', value: 'http://www.moxiecode.com' }
+        ],
+        image_list: [
+          { title: 'My page 1', value: 'http://www.tinymce.com' },
+          { title: 'My page 2', value: 'http://www.moxiecode.com' }
+        ],
+        image_class_list: [
+          { title: 'None', value: '' },
+          { title: 'Some class', value: 'class-name' }
+        ],
+        image_caption: true,
         theme: "modern",
         plugins: [
           "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-          "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
+          "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample help"
         ],
         add_unload_trigger: false,
         toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
