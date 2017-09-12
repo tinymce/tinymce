@@ -31,7 +31,6 @@ define(
         editor.fire('newrow', {
           node: node.dom()
         });
-        console.log('newrow', node.dom());
         return node.dom();
       };
 
@@ -39,7 +38,6 @@ define(
         editor.fire('newcell', {
           node: node.dom()
         });
-        console.log('new cell', node.dom());
         return node.dom();
       };
 
