@@ -19,20 +19,22 @@
 define(
   'tinymce.core.util.Quirks',
   [
-    "tinymce.core.util.VK",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.NodePath",
-    "tinymce.core.html.Node",
-    "tinymce.core.html.Entities",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Delay",
-    "tinymce.core.caret.CaretContainer",
-    "tinymce.core.caret.CaretPosition",
-    "tinymce.core.caret.CaretWalker"
+    'global!document',
+    'global!window',
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.caret.CaretWalker',
+    'tinymce.core.dom.NodePath',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.html.Entities',
+    'tinymce.core.html.Node',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK'
   ],
-  function (VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools, Delay, CaretContainer, CaretPosition, CaretWalker) {
+  function (document, window, CaretContainer, CaretPosition, CaretWalker, NodePath, RangeUtils, TreeWalker, Env, Entities, Node, Delay, Tools, VK) {
     return function (editor) {
       var each = Tools.each;
       var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,

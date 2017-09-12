@@ -38,10 +38,11 @@
 define(
   'tinymce.core.dom.ScriptLoader',
   [
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.util.Tools"
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.Tools'
   ],
-  function (DOMUtils, Tools) {
+  function (document, DOMUtils, Tools) {
     var DOM = DOMUtils.DOM;
     var each = Tools.each, grep = Tools.grep;
 

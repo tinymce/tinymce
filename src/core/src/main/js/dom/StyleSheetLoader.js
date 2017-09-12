@@ -22,10 +22,11 @@ define(
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Futures',
     'ephox.katamari.api.Result',
+    'global!navigator',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools'
   ],
-  function (Arr, Fun, Future, Futures, Result, Delay, Tools) {
+  function (Arr, Fun, Future, Futures, Result, navigator, Delay, Tools) {
     "use strict";
 
     return function (document, settings) {

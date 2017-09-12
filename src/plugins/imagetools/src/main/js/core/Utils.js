@@ -11,10 +11,12 @@
 define(
   'tinymce.plugins.imagetools.core.Utils',
   [
+    'ephox.sand.api.FileReader',
+    'ephox.sand.api.XMLHttpRequest',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools'
   ],
-  function (Promise, Tools) {
+  function (FileReader, XMLHttpRequest, Promise, Tools) {
     var isValue = function (obj) {
       return obj !== null && obj !== undefined;
     };

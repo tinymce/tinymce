@@ -4,12 +4,13 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.plugins.link.Plugin',
     'tinymce.plugins.fullscreen.Plugin',
+    'tinymce.plugins.link.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, DOMUtils, LinkPlugin, Plugin, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, DOMUtils, Plugin, LinkPlugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();

@@ -19,8 +19,13 @@
 define(
   'tinymce.core.Env',
   [
+    'ephox.sand.api.URL',
+    'global!document',
+    'global!matchMedia',
+    'global!navigator',
+    'global!window'
   ],
-  function () {
+  function (URL, document, matchMedia, navigator, window) {
     var nav = navigator, userAgent = nav.userAgent;
     var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet, windowsPhone;
 

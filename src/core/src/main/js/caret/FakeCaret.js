@@ -17,6 +17,7 @@
 define(
   'tinymce.core.caret.FakeCaret',
   [
+    'global!clearInterval',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretContainerRemove',
     'tinymce.core.caret.CaretPosition',
@@ -26,7 +27,7 @@ define(
     'tinymce.core.geom.ClientRect',
     'tinymce.core.util.Delay'
   ],
-  function (CaretContainer, CaretContainerRemove, CaretPosition, DomQuery, NodeType, RangeUtils, ClientRect, Delay) {
+  function (clearInterval, CaretContainer, CaretContainerRemove, CaretPosition, DomQuery, NodeType, RangeUtils, ClientRect, Delay) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
 
     var isTableCell = function (node) {

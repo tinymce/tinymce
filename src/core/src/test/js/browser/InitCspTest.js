@@ -6,11 +6,14 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'global!document',
+    'global!navigator',
+    'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.test.ViewBlock',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, EditorManager, ViewBlock, Theme) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, document, navigator, window, EditorManager, ViewBlock, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = new ViewBlock();

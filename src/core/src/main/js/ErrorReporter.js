@@ -17,9 +17,10 @@
 define(
   'tinymce.core.ErrorReporter',
   [
+    'global!window',
     'tinymce.core.AddOnManager'
   ],
-  function (AddOnManager) {
+  function (window, AddOnManager) {
     var PluginManager = AddOnManager.PluginManager;
 
     var resolvePluginName = function (targetUrl, suffix) {

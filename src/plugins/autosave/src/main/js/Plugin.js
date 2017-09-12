@@ -17,13 +17,15 @@
 define(
   'tinymce.plugins.autosave.Plugin',
   [
+    'global!document',
+    'global!setInterval',
+    'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.PluginManager',
     'tinymce.core.util.LocalStorage',
-    'tinymce.core.util.Tools',
-    'global!window'
+    'tinymce.core.util.Tools'
   ],
-  function (EditorManager, PluginManager, LocalStorage, Tools, window) {
+  function (document, setInterval, window, EditorManager, PluginManager, LocalStorage, Tools) {
     EditorManager._beforeUnloadHandler = function () {
       var msg;
 

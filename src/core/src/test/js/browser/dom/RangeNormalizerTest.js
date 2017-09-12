@@ -9,10 +9,11 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.dom.RangeNormalizer',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Hierarchy, Element, RangeNormalizer, ViewBlock) {
+  function (Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Hierarchy, Element, document, RangeNormalizer, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = ViewBlock();

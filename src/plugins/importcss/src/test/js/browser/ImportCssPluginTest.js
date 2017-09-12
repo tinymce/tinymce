@@ -6,11 +6,12 @@ asynctest(
     'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
     'tinymce.core.ui.Factory',
     'tinymce.plugins.importcss.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, Step, Arr, LegacyUnit, TinyLoader, Factory, ImportCssPlugin, ModernTheme) {
+  function (Pipeline, Step, Arr, LegacyUnit, TinyLoader, document, Factory, ImportCssPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();

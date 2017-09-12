@@ -11,14 +11,15 @@
 define(
   'tinymce.themes.modern.ui.ContextToolbars',
   [
+    'global!document',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.util.Tools',
-    'tinymce.core.util.Delay',
-    'tinymce.core.ui.Factory',
     'tinymce.core.geom.Rect',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
     'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (DOMUtils, Tools, Delay, Factory, Rect, Toolbar) {
+  function (document, DOMUtils, Rect, Factory, Delay, Tools, Toolbar) {
     var DOM = DOMUtils.DOM;
 
     var toClientRect = function (geomRect) {

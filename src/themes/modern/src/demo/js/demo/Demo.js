@@ -13,6 +13,8 @@
 define(
   'tinymce.themes.modern.demo.Demo',
   [
+    'global!console',
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
@@ -61,12 +63,11 @@ define(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    EditorManager, Factory, Tools, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin,
-    CharMapPlugin, CodePlugin, CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin,
-    FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin, ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin,
-    LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin,
-    SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin,
-    TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+    console, document, EditorManager, Factory, Tools, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin, CharMapPlugin,
+    CodePlugin, CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin,
+    ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin,
+    PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin,
+    TextColorPlugin, TextPatternPlugin, TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
   ) {
     AdvListPlugin();
     AnchorPlugin();

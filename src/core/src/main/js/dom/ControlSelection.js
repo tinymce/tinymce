@@ -21,6 +21,7 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.Selectors',
+    'global!document',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangePoint',
     'tinymce.core.Env',
@@ -28,7 +29,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK'
   ],
-  function (Fun, Element, Selectors, NodeType, RangePoint, Env, Delay, Tools, VK) {
+  function (Fun, Element, Selectors, document, NodeType, RangePoint, Env, Delay, Tools, VK) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
     var isContentEditableTrue = NodeType.isContentEditableTrue;
 

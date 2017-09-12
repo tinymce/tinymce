@@ -17,6 +17,8 @@
 define(
   'tinymce.plugins.spellchecker.Plugin',
   [
+    'global!document',
+    'global!window',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.PluginManager',
     'tinymce.core.ui.Factory',
@@ -26,7 +28,7 @@ define(
     'tinymce.core.util.XHR',
     'tinymce.plugins.spellchecker.core.DomTextMatcher'
   ],
-  function (DOMUtils, PluginManager, Factory, JSON, Tools, URI, XHR, DomTextMatcher) {
+  function (document, window, DOMUtils, PluginManager, Factory, JSON, Tools, URI, XHR, DomTextMatcher) {
     PluginManager.add('spellchecker', function (editor, url) {
       var languageMenuItems, self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;
       var hasDictionarySupport;
@@ -56,8 +58,8 @@ define(
       // draw back if power version is requested and registered
       if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(settings.plugins) && PluginManager.get('tinymcespellchecker')) {
         /*eslint no-console:0 */
-        if (typeof console !== "undefined" && console.log) {
-          console.log(
+        if (typeof window.console !== "undefined" && window.console.log) {
+          window.console.log(
             "Spell Checker Pro is incompatible with Spell Checker plugin! " +
             "Remove 'spellchecker' from the 'plugins' option."
           );

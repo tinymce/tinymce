@@ -12,10 +12,11 @@ asynctest(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
+    'global!document',
     'tinymce.core.selection.FragmentReader',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Arr, Fun, Hierarchy, Insert, Element, Html, FragmentReader, ViewBlock) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Arr, Fun, Hierarchy, Insert, Element, Html, document, FragmentReader, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = ViewBlock();
