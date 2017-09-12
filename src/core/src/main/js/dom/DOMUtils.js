@@ -24,7 +24,6 @@ define(
   [
     'tinymce.core.dom.DomQuery',
     'tinymce.core.dom.EventUtils',
-    'tinymce.core.dom.Range',
     'tinymce.core.dom.Sizzle',
     'tinymce.core.dom.StyleSheetLoader',
     'tinymce.core.dom.TreeWalker',
@@ -34,7 +33,7 @@ define(
     'tinymce.core.html.Styles',
     'tinymce.core.util.Tools'
   ],
-  function (DomQuery, EventUtils, Range, Sizzle, StyleSheetLoader, TreeWalker, Env, Entities, Schema, Styles, Tools) {
+  function (DomQuery, EventUtils, Sizzle, StyleSheetLoader, TreeWalker, Env, Entities, Schema, Styles, Tools) {
     // Shorten names
     var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
     var isIE = Env.ie;
@@ -1543,9 +1542,7 @@ define(
        * alert(rng.startContainer + "," + rng.startOffset);
        */
       createRng: function () {
-        var doc = this.doc;
-
-        return doc.createRange ? doc.createRange() : new Range(this);
+        return this.doc.createRange();
       },
 
       /**

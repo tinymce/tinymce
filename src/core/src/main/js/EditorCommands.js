@@ -549,25 +549,11 @@ define(
         },
 
         selectAll: function () {
-          var root = dom.getRoot(), rng;
-
-          if (selection.getRng().setStart) {
-            var editingHost = dom.getParent(selection.getStart(), NodeType.isContentEditableTrue);
-            if (editingHost) {
-              rng = dom.createRng();
-              rng.selectNodeContents(editingHost);
-              selection.setRng(rng);
-            }
-          } else {
-            // IE will render it's own root level block elements and sometimes
-            // even put font elements in them when the user starts typing. So we need to
-            // move the selection to a more suitable element from this:
-            // <body>|<p></p></body> to this: <body><p>|</p></body>
-            rng = selection.getRng();
-            if (!rng.item) {
-              rng.moveToElementText(root);
-              rng.select();
-            }
+          var editingHost = dom.getParent(selection.getStart(), NodeType.isContentEditableTrue);
+          if (editingHost) {
+            var rng = dom.createRng();
+            rng.selectNodeContents(editingHost);
+            selection.setRng(rng);
           }
         },
 
