@@ -13,10 +13,11 @@
 define(
   'tinymce.core.demo.TinyMceDemo',
   [
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, ModernTheme) {
+  function (document, EditorManager, ModernTheme) {
     ModernTheme();
 
     return function () {

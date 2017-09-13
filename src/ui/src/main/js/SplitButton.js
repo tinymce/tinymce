@@ -18,11 +18,12 @@
 define(
   'tinymce.ui.SplitButton',
   [
-    "tinymce.ui.MenuButton",
-    "tinymce.ui.DomUtils",
-    "tinymce.core.dom.DomQuery"
+    'global!window',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.ui.DomUtils',
+    'tinymce.ui.MenuButton'
   ],
-  function (MenuButton, DomUtils, $) {
+  function (window, DomQuery, DomUtils, MenuButton) {
     return MenuButton.extend({
       Defaults: {
         classes: "widget btn splitbtn",
@@ -42,12 +43,12 @@ define(
         mainButtonElm = elm.firstChild;
         menuButtonElm = elm.lastChild;
 
-        $(mainButtonElm).css({
+        DomQuery(mainButtonElm).css({
           width: rect.w - DomUtils.getSize(menuButtonElm).width,
           height: rect.h - 2
         });
 
-        $(menuButtonElm).css({
+        DomQuery(menuButtonElm).css({
           height: rect.h - 2
         });
 
@@ -62,7 +63,7 @@ define(
       activeMenu: function (state) {
         var self = this;
 
-        $(self.getEl().lastChild).toggleClass(self.classPrefix + 'active', state);
+        DomQuery(self.getEl().lastChild).toggleClass(self.classPrefix + 'active', state);
       },
 
       /**

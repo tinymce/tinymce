@@ -22,6 +22,8 @@
 define(
   'tinymce.core.dom.DOMUtils',
   [
+    'global!document',
+    'global!window',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.dom.EventUtils',
     'tinymce.core.dom.Sizzle',
@@ -33,7 +35,7 @@ define(
     'tinymce.core.html.Styles',
     'tinymce.core.util.Tools'
   ],
-  function (DomQuery, EventUtils, Sizzle, StyleSheetLoader, TreeWalker, Env, Entities, Schema, Styles, Tools) {
+  function (document, window, DomQuery, EventUtils, Sizzle, StyleSheetLoader, TreeWalker, Env, Entities, Schema, Styles, Tools) {
     // Shorten names
     var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
     var isIE = Env.ie;

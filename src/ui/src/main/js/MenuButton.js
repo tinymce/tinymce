@@ -18,11 +18,12 @@
 define(
   'tinymce.ui.MenuButton',
   [
-    "tinymce.ui.Button",
-    "tinymce.core.ui.Factory",
-    "tinymce.ui.MenuBar"
+    'global!window',
+    'tinymce.core.ui.Factory',
+    'tinymce.ui.Button',
+    'tinymce.ui.MenuBar'
   ],
-  function (Button, Factory, MenuBar) {
+  function (window, Factory, Button, MenuBar) {
     "use strict";
 
     // TODO: Maybe add as some global function

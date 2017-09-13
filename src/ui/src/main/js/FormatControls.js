@@ -17,20 +17,21 @@
 define(
   'tinymce.ui.FormatControls',
   [
-    'tinymce.ui.Control',
-    'tinymce.ui.Widget',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.SelectorFind',
+    'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
     'tinymce.core.Env',
     'tinymce.core.util.Tools',
+    'tinymce.ui.Control',
     'tinymce.ui.FloatPanel',
-    'tinymce.ui.fmt.FontInfo'
+    'tinymce.ui.fmt.FontInfo',
+    'tinymce.ui.Widget'
   ],
-  function (Control, Widget, Arr, Fun, Element, SelectorFind, DOMUtils, EditorManager, Env, Tools, FloatPanel, FontInfo) {
+  function (Arr, Fun, Element, SelectorFind, document, DOMUtils, EditorManager, Env, Tools, Control, FloatPanel, FontInfo, Widget) {
     var each = Tools.each;
 
     var flatten = function (ar) {

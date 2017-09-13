@@ -14,13 +14,14 @@ define(
   'tinymce.plugins.imagetools.demo.Demo',
   [
     'global!console',
+    'global!setTimeout',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.imagetools.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (console, DomQuery, EditorManager, CodePlugin, ImageToolsPlugin, ModernTheme) {
+  function (console, setTimeout, DomQuery, EditorManager, CodePlugin, ImageToolsPlugin, ModernTheme) {
     return function () {
       var $ = DomQuery;
       var imgSrc = '../img/dogleft.jpg';

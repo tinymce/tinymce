@@ -11,13 +11,15 @@
 define(
   'tinymce.plugins.imagetools.ui.ImagePanel',
   [
+    'global!document',
+    'global!Image',
     'tinymce.core.geom.Rect',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
     'tinymce.plugins.imagetools.ui.CropRect'
   ],
-  function (Rect, Factory, Promise, Tools, CropRect) {
+  function (document, Image, Rect, Factory, Promise, Tools, CropRect) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {

@@ -18,10 +18,13 @@
 define(
   'tinymce.plugins.table.ui.ResizeBars',
   [
+    'global!clearTimeout',
+    'global!document',
+    'global!setTimeout',
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK'
   ],
-  function (Tools, VK) {
+  function (clearTimeout, document, setTimeout, Tools, VK) {
     var hoverTable;
 
     return function (editor) {

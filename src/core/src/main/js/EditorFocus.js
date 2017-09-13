@@ -14,12 +14,13 @@ define(
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.Env'
   ],
-  function (Option, Compare, Element, CaretFinder, ElementType, RangeUtils, Env) {
+  function (Option, Compare, Element, document, CaretFinder, ElementType, RangeUtils, Env) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";

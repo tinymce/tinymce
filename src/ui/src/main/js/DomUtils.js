@@ -17,11 +17,12 @@
 define(
   'tinymce.ui.DomUtils',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.dom.DOMUtils"
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.util.Tools'
   ],
-  function (Env, Tools, DOMUtils) {
+  function (document, DOMUtils, Env, Tools) {
     "use strict";
 
     var count = 0;

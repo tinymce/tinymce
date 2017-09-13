@@ -20,11 +20,12 @@
 define(
   'tinymce.core.FocusManager',
   [
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.util.Delay",
-    "tinymce.core.Env"
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.util.Delay'
   ],
-  function (DOMUtils, Delay, Env) {
+  function (document, DOMUtils, Env, Delay) {
     var selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;
 
     var isUIElement = function (editor, elm) {

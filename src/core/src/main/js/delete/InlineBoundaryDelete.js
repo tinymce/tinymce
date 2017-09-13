@@ -15,6 +15,7 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
@@ -26,7 +27,7 @@ define(
     'tinymce.core.keyboard.InlineUtils'
   ],
   function (
-    Fun, Option, Options, Element, CaretContainer, CaretFinder, CaretPosition, CaretUtils, DeleteElement, BoundaryCaret, BoundaryLocation, BoundarySelection,
+    Fun, Option, Options, Element, document, CaretContainer, CaretFinder, CaretPosition, CaretUtils, DeleteElement, BoundaryCaret, BoundaryLocation, BoundarySelection,
     InlineUtils
   ) {
     var isFeatureEnabled = function (editor) {

@@ -20,14 +20,16 @@
 define(
   'tinymce.ui.FloatPanel',
   [
-    "tinymce.ui.Panel",
-    "tinymce.ui.Movable",
-    "tinymce.ui.Resizable",
-    "tinymce.ui.DomUtils",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.core.util.Delay"
+    'global!document',
+    'global!window',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.util.Delay',
+    'tinymce.ui.DomUtils',
+    'tinymce.ui.Movable',
+    'tinymce.ui.Panel',
+    'tinymce.ui.Resizable'
   ],
-  function (Panel, Movable, Resizable, DomUtils, $, Delay) {
+  function (document, window, DomQuery, Delay, DomUtils, Movable, Panel, Resizable) {
     "use strict";
 
     var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
@@ -78,7 +80,7 @@ define(
           skipOrHidePanels(e);
         };
 
-        $(document).on('click touchstart', documentClickHandler);
+        DomQuery(document).on('click touchstart', documentClickHandler);
       }
     }
 
@@ -93,7 +95,7 @@ define(
           }
         };
 
-        $(window).on('scroll', documentScrollHandler);
+        DomQuery(window).on('scroll', documentScrollHandler);
       }
     }
 
@@ -110,7 +112,7 @@ define(
           }
         };
 
-        $(window).on('resize', windowResizeHandler);
+        DomQuery(window).on('resize', windowResizeHandler);
       }
     }
 
@@ -182,10 +184,10 @@ define(
         }
       }
 
-      var modalBlockEl = $('#' + ctrl.classPrefix + 'modal-block', ctrl.getContainerElm())[0];
+      var modalBlockEl = DomQuery('#' + ctrl.classPrefix + 'modal-block', ctrl.getContainerElm())[0];
 
       if (topModal) {
-        $(modalBlockEl).css('z-index', topModal.zIndex - 1);
+        DomQuery(modalBlockEl).css('z-index', topModal.zIndex - 1);
       } else if (modalBlockEl) {
         modalBlockEl.parentNode.removeChild(modalBlockEl);
         hasModal = false;
@@ -232,16 +234,16 @@ define(
             var $modalBlockEl, prefix = self.classPrefix;
 
             if (self.modal && !hasModal) {
-              $modalBlockEl = $('#' + prefix + 'modal-block', self.getContainerElm());
+              $modalBlockEl = DomQuery('#' + prefix + 'modal-block', self.getContainerElm());
               if (!$modalBlockEl[0]) {
-                $modalBlockEl = $(
+                $modalBlockEl = DomQuery(
                   '<div id="' + prefix + 'modal-block" class="' + prefix + 'reset ' + prefix + 'fade"></div>'
                 ).appendTo(self.getContainerElm());
               }
 
               Delay.setTimeout(function () {
                 $modalBlockEl.addClass(prefix + 'in');
-                $(self.getEl()).addClass(prefix + 'in');
+                DomQuery(self.getEl()).addClass(prefix + 'in');
               });
 
               hasModal = true;

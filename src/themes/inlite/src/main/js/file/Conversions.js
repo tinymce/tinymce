@@ -11,9 +11,10 @@
 define(
   'tinymce.themes.inlite.file.Conversions',
   [
+    'ephox.sand.api.FileReader',
     'tinymce.core.util.Promise'
   ],
-  function (Promise) {
+  function (FileReader, Promise) {
     var blobToBase64 = function (blob) {
       return new Promise(function (resolve) {
         var reader = new FileReader();

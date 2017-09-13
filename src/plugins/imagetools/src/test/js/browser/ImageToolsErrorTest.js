@@ -15,6 +15,7 @@ asynctest(
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.properties.Html',
+    'global!document',
     'tinymce.core.util.URI',
     'tinymce.plugins.imagetools.Plugin',
     'tinymce.plugins.imagetools.test.ImageOps',
@@ -22,8 +23,8 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, RawAssertions, Step, UiFinder, Arr, TinyApis, TinyDom, TinyLoader, Html, URI, Plugin, ImageOps,
-    ImageUtils, ModernTheme
+    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, RawAssertions, Step, UiFinder, Arr, TinyApis, TinyDom, TinyLoader, Html, document, URI, Plugin,
+    ImageOps, ImageUtils, ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

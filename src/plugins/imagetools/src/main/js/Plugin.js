@@ -13,6 +13,8 @@ define(
   [
     'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'ephox.sand.api.URL',
+    'global!clearTimeout',
     'tinymce.core.Env',
     'tinymce.core.PluginManager',
     'tinymce.core.util.Delay',
@@ -23,10 +25,7 @@ define(
     'tinymce.plugins.imagetools.core.Proxy',
     'tinymce.plugins.imagetools.ui.Dialog'
   ],
-  function (
-    BlobConversions, ImageTransformations, Env, PluginManager, Delay, Promise, Tools,
-    URI, ImageSize, Proxy, Dialog
-  ) {
+  function (BlobConversions, ImageTransformations, URL, clearTimeout, Env, PluginManager, Delay, Promise, Tools, URI, ImageSize, Proxy, Dialog) {
     var plugin = function (editor) {
       var count = 0, imageUploadTimer, lastSelectedImage;
 

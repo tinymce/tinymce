@@ -19,14 +19,15 @@
 define(
   'tinymce.ui.ComboBox',
   [
-    "tinymce.ui.Widget",
-    "tinymce.core.ui.Factory",
-    "tinymce.ui.DomUtils",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.core.util.VK",
-    "tinymce.core.util.Tools"
+    'global!document',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK',
+    'tinymce.ui.DomUtils',
+    'tinymce.ui.Widget'
   ],
-  function (Widget, Factory, DomUtils, $, VK, Tools) {
+  function (document, DomQuery, Factory, Tools, VK, DomUtils, Widget) {
     "use strict";
 
     return Widget.extend({
@@ -56,7 +57,7 @@ define(
         self.on('click', function (e) {
           var elm = e.target, root = self.getEl();
 
-          if (!$.contains(root, elm) && elm != root) {
+          if (!DomQuery.contains(root, elm) && elm != root) {
             return;
           }
 
@@ -227,7 +228,7 @@ define(
           lineHeight = (self.layoutRect().h - 2) + 'px';
         }
 
-        $(inputElm).css({
+        DomQuery(inputElm).css({
           width: width - innerPadding,
           lineHeight: lineHeight
         });
@@ -246,7 +247,7 @@ define(
       postRender: function () {
         var self = this;
 
-        $(this.getEl('inp')).on('change', function (e) {
+        DomQuery(this.getEl('inp')).on('change', function (e) {
           self.state.set('value', e.target.value);
           self.fire('change', e);
         });
@@ -458,7 +459,7 @@ define(
       },
 
       remove: function () {
-        $(this.getEl('inp')).off();
+        DomQuery(this.getEl('inp')).off();
 
         if (this.menu) {
           this.menu.remove();

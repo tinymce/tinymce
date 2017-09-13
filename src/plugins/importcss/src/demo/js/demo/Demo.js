@@ -13,12 +13,13 @@
 define(
   'tinymce.plugins.importcss.demo.Demo',
   [
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.importcss.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, ImportCssPlugin, ModernTheme) {
+  function (document, EditorManager, CodePlugin, ImportCssPlugin, ModernTheme) {
     return function () {
       CodePlugin();
       ImportCssPlugin();

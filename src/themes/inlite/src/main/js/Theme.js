@@ -11,8 +11,7 @@
 define(
   'tinymce.themes.inlite.Theme',
   [
-    'tinymce.ui.NotificationManagerImpl',
-    'tinymce.ui.WindowManagerImpl',
+    'global!window',
     'tinymce.core.ThemeManager',
     'tinymce.core.util.Delay',
     'tinymce.themes.inlite.alien.Arr',
@@ -25,11 +24,13 @@ define(
     'tinymce.themes.inlite.ui.Buttons',
     'tinymce.themes.inlite.ui.Panel',
     'tinymce.ui.Api',
-    'tinymce.ui.FormatControls'
+    'tinymce.ui.FormatControls',
+    'tinymce.ui.NotificationManagerImpl',
+    'tinymce.ui.WindowManagerImpl'
   ],
   function (
-    NotificationManagerImpl, WindowManagerImpl, ThemeManager, Delay, Arr, EditorSettings, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader,
-    Buttons, Panel, Api, FormatControls
+    window, ThemeManager, Delay, Arr, EditorSettings, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader, Buttons, Panel, Api, FormatControls,
+    NotificationManagerImpl, WindowManagerImpl
   ) {
     var getSelectionElements = function (editor) {
       var node = editor.selection.getNode();

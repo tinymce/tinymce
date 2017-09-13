@@ -23,11 +23,6 @@ define(
     PluginManager.add('visualblocks', function (editor, url) {
       var cssId, visualBlocksMenuItem, enabled;
 
-      // We don't support older browsers like IE6/7 and they don't provide prototypes for DOM objects
-      if (!window.NodeList) {
-        return;
-      }
-
       function toggleActiveState() {
         var self = this;
 

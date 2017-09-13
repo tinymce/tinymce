@@ -17,12 +17,13 @@
 define(
   'tinymce.plugins.textcolor.Plugin',
   [
+    'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.PluginManager',
     'tinymce.core.util.I18n',
     'tinymce.core.util.Tools'
   ],
-  function (DOMUtils, PluginManager, I18n, Tools) {
+  function (document, DOMUtils, PluginManager, I18n, Tools) {
     var translate = I18n.translate;
 
     PluginManager.add('textcolor', function (editor) {

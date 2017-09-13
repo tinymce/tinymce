@@ -11,11 +11,12 @@
 define(
   'tinymce.plugins.paste.core.CutCopy',
   [
+    'global!setTimeout',
     'tinymce.core.Env',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (Env, InternalHtml, Utils) {
+  function (setTimeout, Env, InternalHtml, Utils) {
     var noop = function () {
     };
 

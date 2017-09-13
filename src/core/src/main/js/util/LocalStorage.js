@@ -30,14 +30,16 @@
 define(
   'tinymce.core.util.LocalStorage',
   [
+    'global!document',
+    'global!window'
   ],
-  function () {
+  function (document, window) {
     var LocalStorage, storageElm, items, keys, userDataKey, hasOldIEDataSupport;
 
     // Check for native support
     try {
       if (window.localStorage) {
-        return localStorage;
+        return window.localStorage;
       }
     } catch (ex) {
       // Ignore

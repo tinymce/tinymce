@@ -30,11 +30,13 @@
 define(
   'tinymce.core.file.Uploader',
   [
-    "tinymce.core.util.Promise",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Fun"
+    'ephox.sand.api.XMLHttpRequest',
+    'global!window',
+    'tinymce.core.util.Fun',
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools'
   ],
-  function (Promise, Tools, Fun) {
+  function (XMLHttpRequest, window, Fun, Promise, Tools) {
     return function (uploadStatus, settings) {
       var pendingPromises = {};
 
@@ -79,7 +81,7 @@ define(
           success(pathJoin(settings.basePath, json.location));
         };
 
-        formData = new FormData();
+        formData = new window.FormData(); // TODO: Stick this in sand
         formData.append('file', blobInfo.blob(), blobInfo.filename());
 
         xhr.send(formData);

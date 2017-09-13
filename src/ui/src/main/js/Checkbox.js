@@ -26,9 +26,10 @@
 define(
   'tinymce.ui.Checkbox',
   [
-    "tinymce.ui.Widget"
+    'global!document',
+    'tinymce.ui.Widget'
   ],
-  function (Widget) {
+  function (document, Widget) {
     "use strict";
 
     return Widget.extend({

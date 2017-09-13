@@ -18,11 +18,12 @@
 define(
   'tinymce.ui.TextBox',
   [
-    "tinymce.ui.Widget",
-    "tinymce.core.util.Tools",
-    "tinymce.ui.DomUtils"
+    'global!document',
+    'tinymce.core.util.Tools',
+    'tinymce.ui.DomUtils',
+    'tinymce.ui.Widget'
   ],
-  function (Widget, Tools, DomUtils) {
+  function (document, Tools, DomUtils, Widget) {
     return Widget.extend({
       /**
        * Constructs a instance with the specified settings.

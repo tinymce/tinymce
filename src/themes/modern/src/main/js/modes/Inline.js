@@ -11,17 +11,17 @@
 define(
   'tinymce.themes.modern.modes.Inline',
   [
-    'tinymce.core.util.Tools',
-    'tinymce.core.ui.Factory',
+    'global!document',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.ui.Factory',
     'tinymce.ui.FloatPanel',
-    'tinymce.themes.modern.ui.Toolbar',
-    'tinymce.themes.modern.ui.Menubar',
-    'tinymce.themes.modern.ui.ContextToolbars',
     'tinymce.themes.modern.ui.A11y',
-    'tinymce.themes.modern.ui.SkinLoaded'
+    'tinymce.themes.modern.ui.ContextToolbars',
+    'tinymce.themes.modern.ui.Menubar',
+    'tinymce.themes.modern.ui.SkinLoaded',
+    'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (Tools, Factory, DOMUtils, FloatPanel, Toolbar, Menubar, ContextToolbars, A11y, SkinLoaded) {
+  function (document, DOMUtils, Factory, FloatPanel, A11y, ContextToolbars, Menubar, SkinLoaded, Toolbar) {
     var render = function (editor, theme, args) {
       var panel, inlineToolbarContainer, settings = editor.settings;
       var DOM = DOMUtils.DOM;

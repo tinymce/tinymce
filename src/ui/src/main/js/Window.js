@@ -18,23 +18,26 @@
 define(
   'tinymce.ui.Window',
   [
-    "tinymce.ui.FloatPanel",
-    "tinymce.ui.Panel",
-    "tinymce.ui.DomUtils",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.ui.DragHelper",
-    "tinymce.ui.BoxUtils",
-    "tinymce.core.Env",
-    "tinymce.core.util.Delay"
+    'global!document',
+    'global!setTimeout',
+    'global!window',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.Env',
+    'tinymce.core.util.Delay',
+    'tinymce.ui.BoxUtils',
+    'tinymce.ui.DomUtils',
+    'tinymce.ui.DragHelper',
+    'tinymce.ui.FloatPanel',
+    'tinymce.ui.Panel'
   ],
-  function (FloatPanel, Panel, DomUtils, $, DragHelper, BoxUtils, Env, Delay) {
+  function (document, setTimeout, window, DomQuery, Env, Delay, BoxUtils, DomUtils, DragHelper, FloatPanel, Panel) {
     "use strict";
 
     var windows = [], oldMetaValue = '';
 
     function toggleFullScreenState(state) {
       var noScaleMetaValue = 'width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0',
-        viewport = $("meta[name=viewport]")[0],
+        viewport = DomQuery("meta[name=viewport]")[0],
         contentValue;
 
       if (Env.overrideViewPort === false) {
@@ -57,7 +60,7 @@ define(
 
     function toggleBodyFullScreenClasses(classPrefix, state) {
       if (checkFullscreenWindows() && state === false) {
-        $([document.documentElement, document.body]).removeClass(classPrefix + 'fullscreen');
+        DomQuery([document.documentElement, document.body]).removeClass(classPrefix + 'fullscreen');
       }
     }
 
@@ -87,7 +90,7 @@ define(
               h: h
             };
 
-            $(window).trigger('resize');
+            DomQuery(window).trigger('resize');
           }
         }, 100);
       }
@@ -105,7 +108,7 @@ define(
         }
       }
 
-      $(window).on('resize', reposition);
+      DomQuery(window).on('resize', reposition);
     }
 
     var Window = FloatPanel.extend({
@@ -330,7 +333,7 @@ define(
         var self = this, documentElement = document.documentElement, slowRendering, prefix = self.classPrefix, layoutRect;
 
         if (state != self._fullscreen) {
-          $(window).on('resize', function () {
+          DomQuery(window).on('resize', function () {
             var time;
 
             if (self._fullscreen) {
@@ -364,7 +367,7 @@ define(
             self.borderBox = BoxUtils.parseBox(self.settings.border);
             self.getEl('head').style.display = '';
             layoutRect.deltaH += layoutRect.headerH;
-            $([documentElement, document.body]).removeClass(prefix + 'fullscreen');
+            DomQuery([documentElement, document.body]).removeClass(prefix + 'fullscreen');
             self.classes.remove('fullscreen');
             self.moveTo(self._initial.x, self._initial.y).resizeTo(self._initial.w, self._initial.h);
           } else {
@@ -373,7 +376,7 @@ define(
             self.borderBox = BoxUtils.parseBox('0');
             self.getEl('head').style.display = 'none';
             layoutRect.deltaH -= layoutRect.headerH + 2;
-            $([documentElement, document.body]).addClass(prefix + 'fullscreen');
+            DomQuery([documentElement, document.body]).addClass(prefix + 'fullscreen');
             self.classes.add('fullscreen');
 
             var rect = DomUtils.getWindowSize();

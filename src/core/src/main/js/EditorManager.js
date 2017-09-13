@@ -23,6 +23,8 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Type',
+    'global!document',
+    'global!window',
     'tinymce.core.AddOnManager',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.dom.DOMUtils',
@@ -37,7 +39,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.URI'
   ],
-  function (Arr, Type, AddOnManager, DomQuery, DOMUtils, Editor, Env, ErrorReporter, FocusManager, LegacyInput, I18n, Observable, Promise, Tools, URI) {
+  function (Arr, Type, document, window, AddOnManager, DomQuery, DOMUtils, Editor, Env, ErrorReporter, FocusManager, LegacyInput, I18n, Observable, Promise, Tools, URI) {
     var DOM = DOMUtils.DOM;
     var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
     var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;

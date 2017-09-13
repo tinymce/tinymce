@@ -13,7 +13,9 @@ define(
   [
     'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'ephox.sand.api.URL',
     'global!Math',
+    'global!setTimeout',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Promise',
@@ -21,7 +23,7 @@ define(
     'tinymce.plugins.imagetools.core.UndoStack',
     'tinymce.plugins.imagetools.ui.ImagePanel'
   ],
-  function (BlobConversions, ImageTransformations, Math, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
+  function (BlobConversions, ImageTransformations, URL, Math, setTimeout, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
     function createState(blob) {
       return {
         blob: blob,

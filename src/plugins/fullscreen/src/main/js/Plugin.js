@@ -17,10 +17,12 @@
 define(
   'tinymce.plugins.fullscreen.Plugin',
   [
+    'global!document',
+    'global!window',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.PluginManager'
   ],
-  function (DOMUtils, PluginManager) {
+  function (document, window, DOMUtils, PluginManager) {
     var DOM = DOMUtils.DOM;
 
     PluginManager.add('fullscreen', function (editor) {

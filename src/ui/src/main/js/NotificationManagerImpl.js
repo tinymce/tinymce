@@ -12,11 +12,12 @@ define(
   'tinymce.ui.NotificationManagerImpl',
   [
     'ephox.katamari.api.Arr',
+    'global!setTimeout',
+    'tinymce.core.util.Tools',
     'tinymce.ui.DomUtils',
-    'tinymce.ui.Notification',
-    'tinymce.core.util.Tools'
+    'tinymce.ui.Notification'
   ],
-  function (Arr, DomUtils, Notification, Tools) {
+  function (Arr, setTimeout, Tools, DomUtils, Notification) {
     return function (editor) {
       var getEditorContainer = function (editor) {
         return editor.inline ? editor.getElement() : editor.getContentAreaContainer();

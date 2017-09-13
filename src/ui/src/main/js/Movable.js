@@ -16,9 +16,11 @@
 define(
   'tinymce.ui.Movable',
   [
-    "tinymce.ui.DomUtils"
+    'global!document',
+    'global!window',
+    'tinymce.ui.DomUtils'
   ],
-  function (DomUtils) {
+  function (document, window, DomUtils) {
     "use strict";
 
     function calculateRelativePosition(ctrl, targetElm, rel) {

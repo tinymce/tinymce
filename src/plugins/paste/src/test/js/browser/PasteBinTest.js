@@ -1,19 +1,20 @@
 asynctest(
   'tinymce.plugins.paste.browser.PasteBin', [
-    'ephox.katamari.api.Obj',
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.Pipeline',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Chain',
-    'tinymce.themes.modern.Theme',
-    'tinymce.plugins.paste.Plugin',
+    'ephox.katamari.api.Obj',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.paste.core.PasteBin',
+    'global!setTimeout',
     'tinymce.core.EditorManager',
-    'tinymce.core.test.ViewBlock'
+    'tinymce.core.test.ViewBlock',
+    'tinymce.plugins.paste.core.PasteBin',
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Obj, Id, Merger, Assertions, Pipeline, Chain, Theme, PastePlugin, TinyLoader, PasteBin, EditorManager, ViewBlock) {
+  function (Assertions, Chain, Pipeline, Id, Merger, Obj, TinyLoader, setTimeout, EditorManager, ViewBlock, PasteBin, PastePlugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

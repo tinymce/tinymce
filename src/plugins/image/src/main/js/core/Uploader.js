@@ -18,11 +18,13 @@
 define(
   'tinymce.plugins.image.core.Uploader',
   [
+    'ephox.sand.api.XMLHttpRequest',
+    'global!document',
+    'global!window',
     'tinymce.core.util.Promise',
-    'tinymce.core.util.Tools',
-    'global!document'
+    'tinymce.core.util.Tools'
   ],
-  function (Promise, Tools, document) {
+  function (XMLHttpRequest, document, window, Promise, Tools) {
     return function (settings) {
       var noop = function () {};
 
@@ -67,7 +69,7 @@ define(
           success(pathJoin(settings.basePath, json.location));
         };
 
-        formData = new FormData();
+        formData = new window.FormData();
         formData.append('file', blobInfo.blob(), blobInfo.filename());
 
         xhr.send(formData);

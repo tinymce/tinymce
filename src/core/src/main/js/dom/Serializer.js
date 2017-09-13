@@ -17,18 +17,19 @@
 define(
   'tinymce.core.dom.Serializer',
   [
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.html.DomParser",
-    "tinymce.core.html.SaxParser",
-    "tinymce.core.html.Entities",
-    "tinymce.core.html.Serializer",
-    "tinymce.core.html.Node",
-    "tinymce.core.html.Schema",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.text.Zwsp"
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.Env',
+    'tinymce.core.html.DomParser',
+    'tinymce.core.html.Entities',
+    'tinymce.core.html.Node',
+    'tinymce.core.html.SaxParser',
+    'tinymce.core.html.Schema',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.text.Zwsp',
+    'tinymce.core.util.Tools'
   ],
-  function (DOMUtils, DomParser, SaxParser, Entities, Serializer, Node, Schema, Env, Tools, Zwsp) {
+  function (document, DOMUtils, Env, DomParser, Entities, Node, SaxParser, Schema, Serializer, Zwsp, Tools) {
     var each = Tools.each, trim = Tools.trim;
     var DOM = DOMUtils.DOM;
 

@@ -15,6 +15,7 @@
 define(
   'tinymce.plugins.image.ui.Dialog',
   [
+    'ephox.sand.api.URL',
     'global!document',
     'global!Math',
     'global!RegExp',
@@ -26,7 +27,7 @@ define(
     'tinymce.plugins.image.core.Uploader',
     'tinymce.plugins.image.core.Utils'
   ],
-  function (document, Math, RegExp, Env, Factory, JSON, Tools, XHR, Uploader, Utils) {
+  function (URL, document, Math, RegExp, Env, Factory, JSON, Tools, XHR, Uploader, Utils) {
 
     return function (editor) {
       function createImageList(callback) {

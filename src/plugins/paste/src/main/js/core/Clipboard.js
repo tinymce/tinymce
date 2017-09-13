@@ -30,6 +30,9 @@
 define(
   'tinymce.plugins.paste.core.Clipboard',
   [
+    'global!Image',
+    'global!navigator',
+    'global!window',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.Env',
     'tinymce.core.util.Delay',
@@ -42,7 +45,7 @@ define(
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (RangeUtils, Env, Delay, Tools, VK, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
+  function (Image, navigator, window, RangeUtils, Env, Delay, Tools, VK, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
     return function (editor) {
       var self = this, keyboardPasteTimeStamp = 0, draggingInternally = false;
       var pasteBin = new PasteBin(editor);
@@ -211,7 +214,7 @@ define(
               if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
                 var blob = item.getAsFile ? item.getAsFile() : item;
 
-                reader = new FileReader();
+                reader = new window.FileReader();
                 reader.onload = pasteImage.bind(null, rng, reader, blob);
                 reader.readAsDataURL(blob);
 

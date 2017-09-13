@@ -11,11 +11,12 @@
 define(
   'tinymce.core.dom.RangeNormalizer',
   [
+    'global!document',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils'
   ],
-  function (CaretFinder, CaretPosition, CaretUtils) {
+  function (document, CaretFinder, CaretPosition, CaretUtils) {
     var createRange = function (sc, so, ec, eo) {
       var rng = document.createRange();
       rng.setStart(sc, so);

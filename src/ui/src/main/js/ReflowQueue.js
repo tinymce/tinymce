@@ -19,9 +19,10 @@
 define(
   'tinymce.ui.ReflowQueue',
   [
-    "tinymce.core.util.Delay"
+    'global!document',
+    'tinymce.core.util.Delay'
   ],
-  function (Delay) {
+  function (document, Delay) {
     var dirtyCtrls = {}, animationFrameRequested;
 
     return {
