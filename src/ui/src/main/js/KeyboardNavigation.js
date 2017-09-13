@@ -16,8 +16,9 @@
 define(
   'tinymce.ui.KeyboardNavigation',
   [
+    'global!document'
   ],
-  function () {
+  function (document) {
     "use strict";
 
     var hasTabstopData = function (elm) {

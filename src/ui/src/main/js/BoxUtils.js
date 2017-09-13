@@ -17,8 +17,9 @@
 define(
   'tinymce.ui.BoxUtils',
   [
+    'global!document'
   ],
-  function () {
+  function (document) {
     "use strict";
 
     return {

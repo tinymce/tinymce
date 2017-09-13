@@ -17,9 +17,10 @@
 define(
   'tinymce.ui.MessageBox',
   [
-    "tinymce.ui.Window"
+    'global!document',
+    'tinymce.ui.Window'
   ],
-  function (Window) {
+  function (document, Window) {
     "use strict";
 
     var MessageBox = Window.extend({

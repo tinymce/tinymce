@@ -25,9 +25,11 @@
 define(
   'tinymce.ui.Button',
   [
-    "tinymce.ui.Widget"
+    'global!document',
+    'global!window',
+    'tinymce.ui.Widget'
   ],
-  function (Widget) {
+  function (document, window, Widget) {
     "use strict";
 
     return Widget.extend({

@@ -13,7 +13,7 @@
  *
  * @example
  * var dragHelper = new tinymce.ui.DragHelper('mydiv', {
- *     start: function(evt) {
+ *     start: function(document, window, evt) {
  *     },
  *
  *     drag: function(evt) {
@@ -28,9 +28,11 @@
 define(
   'tinymce.ui.DragHelper',
   [
-    "tinymce.core.dom.DomQuery"
+    'global!document',
+    'global!window',
+    'tinymce.core.dom.DomQuery'
   ],
-  function ($) {
+  function (document, window, DomQuery) {
     "use strict";
 
     function getDocumentSize(doc) {
@@ -92,7 +94,7 @@ define(
           cursor = handleElm.runtimeStyle.cursor;
         }
 
-        $eventOverlay = $('<div></div>').css({
+        $eventOverlay = DomQuery('<div></div>').css({
           position: "absolute",
           top: 0, left: 0,
           width: docSize.width,
@@ -102,7 +104,7 @@ define(
           cursor: cursor
         }).appendTo(doc.body);
 
-        $(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
+        DomQuery(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
 
         settings.start(e);
       };
@@ -124,7 +126,7 @@ define(
       stop = function (e) {
         updateWithTouchData(e);
 
-        $(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
+        DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
 
         $eventOverlay.remove();
 
@@ -139,10 +141,10 @@ define(
        * @method destroy
        */
       this.destroy = function () {
-        $(getHandleElm()).off();
+        DomQuery(getHandleElm()).off();
       };
 
-      $(getHandleElm()).on('mousedown touchstart', start);
+      DomQuery(getHandleElm()).on('mousedown touchstart', start);
     };
   }
 );

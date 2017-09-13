@@ -19,18 +19,19 @@
 define(
   'tinymce.ui.Control',
   [
-    "tinymce.core.util.Class",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.EventDispatcher",
-    "tinymce.ui.data.ObservableObject",
-    "tinymce.ui.Collection",
-    "tinymce.ui.DomUtils",
-    "tinymce.core.dom.DomQuery",
-    "tinymce.ui.BoxUtils",
-    "tinymce.ui.ClassList",
-    "tinymce.ui.ReflowQueue"
+    'global!document',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.util.Class',
+    'tinymce.core.util.EventDispatcher',
+    'tinymce.core.util.Tools',
+    'tinymce.ui.BoxUtils',
+    'tinymce.ui.ClassList',
+    'tinymce.ui.Collection',
+    'tinymce.ui.data.ObservableObject',
+    'tinymce.ui.DomUtils',
+    'tinymce.ui.ReflowQueue'
   ],
-  function (Class, Tools, EventDispatcher, ObservableObject, Collection, DomUtils, $, BoxUtils, ClassList, ReflowQueue) {
+  function (document, DomQuery, Class, EventDispatcher, Tools, BoxUtils, ClassList, Collection, ObservableObject, DomUtils, ReflowQueue) {
     "use strict";
 
     var hasMouseWheelEventSupport = "onmousewheel" in document;
@@ -90,7 +91,7 @@ define(
         self._id = settings.id || ('mceu_' + (idCounter++));
         self._aria = { role: settings.role };
         self._elmCache = {};
-        self.$ = $;
+        self.$ = DomQuery;
 
         self.state = new ObservableObject({
           visible: true,
@@ -637,7 +638,7 @@ define(
         var id = suffix ? this._id + '-' + suffix : this._id;
 
         if (!this._elmCache[id]) {
-          this._elmCache[id] = $('#' + id)[0];
+          this._elmCache[id] = DomQuery('#' + id)[0];
         }
 
         return this._elmCache[id];
@@ -810,7 +811,7 @@ define(
         }
 
         if (self._eventsRoot && self._eventsRoot == self) {
-          $(elm).off();
+          DomQuery(elm).off();
         }
 
         var lookup = self.getRoot().controlIdLookup;
@@ -838,7 +839,7 @@ define(
        * @return {tinymce.ui.Control} Current control instance.
        */
       renderBefore: function (elm) {
-        $(elm).before(this.renderHtml());
+        DomQuery(elm).before(this.renderHtml());
         this.postRender();
         return this;
       },
@@ -851,7 +852,7 @@ define(
        * @return {tinymce.ui.Control} Current control instance.
        */
       renderTo: function (elm) {
-        $(elm || this.getContainerElm()).append(this.renderHtml());
+        DomQuery(elm || this.getContainerElm()).append(this.renderHtml());
         this.postRender();
         return this;
       },
@@ -875,7 +876,7 @@ define(
       postRender: function () {
         var self = this, settings = self.settings, elm, box, parent, name, parentEventsRoot;
 
-        self.$el = $(self.getEl());
+        self.$el = DomQuery(self.getEl());
         self.state.set('rendered', true);
 
         // Bind on<event> settings
@@ -1274,9 +1275,9 @@ define(
 
           if (name === "wheel" && !hasWheelEventSupport) {
             if (hasMouseWheelEventSupport) {
-              $(eventCtrl.getEl()).on("mousewheel", fixWheelEvent);
+              DomQuery(eventCtrl.getEl()).on("mousewheel", fixWheelEvent);
             } else {
-              $(eventCtrl.getEl()).on("DOMMouseScroll", fixWheelEvent);
+              DomQuery(eventCtrl.getEl()).on("DOMMouseScroll", fixWheelEvent);
             }
 
             continue;
@@ -1286,11 +1287,11 @@ define(
           if (name === "mouseenter" || name === "mouseleave") {
             // Fake mousenter/mouseleave
             if (!eventRootCtrl._hasMouseEnter) {
-              $(eventRootCtrl.getEl()).on("mouseleave", mouseLeaveHandler).on("mouseover", mouseEnterHandler);
+              DomQuery(eventRootCtrl.getEl()).on("mouseleave", mouseLeaveHandler).on("mouseover", mouseEnterHandler);
               eventRootCtrl._hasMouseEnter = 1;
             }
           } else if (!eventRootDelegates[name]) {
-            $(eventRootCtrl.getEl()).on(name, delegate);
+            DomQuery(eventRootCtrl.getEl()).on(name, delegate);
             eventRootDelegates[name] = true;
           }
 

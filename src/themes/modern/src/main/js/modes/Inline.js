@@ -13,7 +13,7 @@ define(
   [
     'global!document',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.ui.Factory',
+    'tinymce.core.ui.Factory',
     'tinymce.ui.FloatPanel',
     'tinymce.themes.modern.ui.A11y',
     'tinymce.themes.modern.ui.ContextToolbars',
