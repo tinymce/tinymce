@@ -16,12 +16,13 @@ asynctest(
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
+    'global!document',
     'tinymce.plugins.image.Plugin',
     'tinymce.themes.modern.Theme'
   ],
   function (
-    Chain, GeneralSteps, Logger, Mouse, NamedChain, Pipeline, RawAssertions, Step, UiControls, UiFinder, Waiter, TinyApis, TinyDom, TinyLoader, TinyUi, ImagePlugin,
-    ModernTheme
+    Chain, GeneralSteps, Logger, Mouse, NamedChain, Pipeline, RawAssertions, Step, UiControls, UiFinder, Waiter, TinyApis, TinyDom, TinyLoader, TinyUi, document,
+    ImagePlugin, ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
