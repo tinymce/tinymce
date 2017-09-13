@@ -23,6 +23,7 @@ define(
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.node.Element',
     'tinymce.core.PluginManager',
+    'tinymce.plugins.tablenew.actions.Clipboard',
     'tinymce.plugins.tablenew.actions.TableActions',
     'tinymce.plugins.tablenew.actions.TableCommands',
     'tinymce.plugins.tablenew.actions.TableWire',
@@ -30,11 +31,12 @@ define(
     'tinymce.plugins.tablenew.queries.TabContext',
     'tinymce.plugins.tablenew.selection.CellSelection',
     'tinymce.plugins.tablenew.selection.Ephemera',
+    'tinymce.plugins.tablenew.selection.Selections',
     'tinymce.plugins.tablenew.ui.Buttons',
     'tinymce.plugins.tablenew.ui.Dialogs',
     'tinymce.plugins.tablenew.ui.MenuItems'
   ],
-  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Buttons, Dialogs, MenuItems) {
+  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, Clipboard, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
 
       var lazyResize = function () {
@@ -51,9 +53,13 @@ define(
 
       var actions = TableActions(editor, lazyWire);
 
-      TableCommands.registerCommands(editor, dialogs, actions, cellSelection);
+      var selections = Selections(editor);
 
-      MenuItems.addMenuItems(editor, dialogs);
+      TableCommands.registerCommands(editor, dialogs, actions, cellSelection, selections);
+
+      Clipboard.registerEvents(editor, selections, actions, cellSelection);
+
+      MenuItems.addMenuItems(editor, dialogs, selections);
       Buttons.addButtons(editor, dialogs);
       Buttons.addToolbars(editor);
 

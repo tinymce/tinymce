@@ -7,14 +7,11 @@ define(
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.node.Element',
     'tinymce.plugins.tablenew.actions.InsertTable',
-    'tinymce.plugins.tablenew.queries.TableTargets',
-    'tinymce.plugins.tablenew.selection.Selections'
+    'tinymce.plugins.tablenew.queries.TableTargets'
   ],
 
-  function (Arr, Option, TableLookup, Element, InsertTable, TableTargets, Selections) {
-    var addMenuItems = function (editor, dialogs) {
-      var selections = Selections(editor);
-
+  function (Arr, Option, TableLookup, Element, InsertTable, TableTargets) {
+    var addMenuItems = function (editor, dialogs, selections) {
       var targets = Option.none();
 
       var tableCtrls = [];

@@ -13,19 +13,15 @@ define(
     'ephox.sugar.api.dom.Replication',
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.tablenew.queries.TableTargets',
-    'tinymce.plugins.tablenew.selection.Selections'
+    'tinymce.plugins.tablenew.queries.TableTargets'
   ],
 
-  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets, Selections) {
+  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets) {
     var each = Tools.each;
 
     var clipboardRows = Option.none();
 
-    var registerCommands = function (editor, dialogs, actions, cellSelection) {
-
-      var selections = Selections(editor);
-
+    var registerCommands = function (editor, dialogs, actions, cellSelection, selections) {
       var eraseTable = function () {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
         var table = TableLookup.table(cell);

@@ -84,6 +84,8 @@ define(
 
       var pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.noop, lazyWire);
 
+      var pasteCells = execute(TableOperations.pasteCells, Fun.noop, lazyWire);
+
       return {
         deleteRow: deleteRow,
         deleteColumn: deleteColumn,
@@ -94,7 +96,8 @@ define(
         mergeCells: mergeCells,
         unmergeCells: unmergeCells,
         pasteRowsBefore: pasteRowsBefore,
-        pasteRowsAfter: pasteRowsAfter
+        pasteRowsAfter: pasteRowsAfter,
+        pasteCells: pasteCells
       };
     };
   }

@@ -17,20 +17,22 @@ define(
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.tablenew.Plugin',
     'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, TablePlugin, ContextMenuPlugin, ModernTheme) {
+  function (EditorManager, CodePlugin, TablePlugin, ContextMenuPlugin, PastePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       TablePlugin();
       ContextMenuPlugin();
       ModernTheme();
+      PastePlugin();
 
       EditorManager.init({
         selector: "textarea.tinymce",
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "table code, contextmenu",
+        plugins: "table code, contextmenu paste",
         toolbar: "table code",
         media_dimensions: false,
         // media_live_embeds: false,
