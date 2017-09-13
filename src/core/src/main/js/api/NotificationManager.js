@@ -34,7 +34,7 @@ define(
 
       var getImplementation = function () {
         var theme = editor.theme;
-        return theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl(editor);
+        return theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
       };
 
       var getTopNotification = function () {

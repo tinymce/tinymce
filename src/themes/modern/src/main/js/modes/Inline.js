@@ -14,7 +14,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.ui.Factory',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.ui.FloatPanel',
+    'tinymce.ui.FloatPanel',
     'tinymce.themes.modern.ui.Toolbar',
     'tinymce.themes.modern.ui.Menubar',
     'tinymce.themes.modern.ui.ContextToolbars',

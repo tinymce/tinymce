@@ -27,11 +27,6 @@
  * tinymce.activeEditor.windowManager.alert('Hello world!');
  *
  * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
- * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s, ) {
- *    if (s)
- *       tinymce.activeEditor.windowManager.alert("Ok");
- *    else
- *       tinymce.activeEditor.windowManager.alert("Cancel");
  * });
  */
 define(
@@ -47,7 +42,7 @@ define(
 
       var getImplementation = function () {
         var theme = editor.theme;
-        return theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl(editor);
+        return theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
       };
 
       var funcBind = function (scope, f) {
