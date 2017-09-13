@@ -32,14 +32,16 @@ define(
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.dom.TridentSelection',
     'tinymce.core.Env',
+    'tinymce.core.selection.EventProcessRanges',
     'tinymce.core.selection.FragmentReader',
+    'tinymce.core.selection.GetSelectionContent',
     'tinymce.core.selection.MultiRange',
-    'tinymce.core.text.Zwsp',
+    'tinymce.core.selection.SetSelectionContent',
     'tinymce.core.util.Tools'
   ],
   function (
-    Arr, Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, FragmentReader,
-    MultiRange, Zwsp, Tools
+    Arr, Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, EventProcessRanges,
+    FragmentReader, GetSelectionContent, MultiRange, SetSelectionContent, Tools
   ) {
     var each = Tools.each, trim = Tools.trim;
     var isIE = Env.ie;
@@ -56,13 +58,6 @@ define(
       } else {
         return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
       }
-    };
-
-    var eventProcessRanges = function (editor, ranges) {
-      return Arr.map(ranges, function (range) {
-        var evt = editor.fire('GetSelectionRange', { range: range });
-        return evt.range !== range ? evt.range : range;
-      });
     };
 
     /**
@@ -128,51 +123,7 @@ define(
        * alert(tinymce.activeEditor.selection.getContent({format: 'text'}));
        */
       getContent: function (args) {
-        var self = this, rng = self.getRng(), tmpElm = self.dom.create("body");
-        var se = self.getSel(), whiteSpaceBefore, whiteSpaceAfter, fragment;
-        var ranges = eventProcessRanges(self.editor, MultiRange.getRanges(this.getSel()));
-
-        args = args || {};
-        whiteSpaceBefore = whiteSpaceAfter = '';
-        args.get = true;
-        args.format = args.format || 'html';
-        args.selection = true;
-        self.editor.fire('BeforeGetContent', args);
-
-        if (args.format === 'text') {
-          return self.isCollapsed() ? '' : Zwsp.trim(rng.text || (se.toString ? se.toString() : ''));
-        }
-
-        if (rng.cloneContents) {
-          fragment = args.contextual ? FragmentReader.read(Element.fromDom(self.editor.getBody()), ranges).dom() : rng.cloneContents();
-          if (fragment) {
-            tmpElm.appendChild(fragment);
-          }
-        } else if (rng.item !== undefined || rng.htmlText !== undefined) {
-          // IE will produce invalid markup if elements are present that
-          // it doesn't understand like custom elements or HTML5 elements.
-          // Adding a BR in front of the contents and then remoiving it seems to fix it though.
-          tmpElm.innerHTML = '<br>' + (rng.item ? rng.item(0).outerHTML : rng.htmlText);
-          tmpElm.removeChild(tmpElm.firstChild);
-        } else {
-          tmpElm.innerHTML = rng.toString();
-        }
-
-        // Keep whitespace before and after
-        if (/^\s/.test(tmpElm.innerHTML)) {
-          whiteSpaceBefore = ' ';
-        }
-
-        if (/\s+$/.test(tmpElm.innerHTML)) {
-          whiteSpaceAfter = ' ';
-        }
-
-        args.getInner = true;
-
-        args.content = self.isCollapsed() ? '' : whiteSpaceBefore + self.serializer.serialize(tmpElm, args) + whiteSpaceAfter;
-        self.editor.fire('GetContent', args);
-
-        return args.content;
+        return GetSelectionContent.getContent(this.editor, args);
       },
 
       /**
@@ -188,87 +139,7 @@ define(
        * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
        */
       setContent: function (content, args) {
-        var self = this, rng = self.getRng(), caretNode, doc = self.win.document, frag, temp;
-
-        args = args || { format: 'html' };
-        args.set = true;
-        args.selection = true;
-        args.content = content;
-
-        // Dispatch before set content event
-        if (!args.no_events) {
-          self.editor.fire('BeforeSetContent', args);
-        }
-
-        content = args.content;
-
-        if (rng.insertNode) {
-          // Make caret marker since insertNode places the caret in the beginning of text after insert
-          content += '<span id="__caret">_</span>';
-
-          // Delete and insert new node
-          if (rng.startContainer == doc && rng.endContainer == doc) {
-            // WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
-            doc.body.innerHTML = content;
-          } else {
-            rng.deleteContents();
-
-            if (doc.body.childNodes.length === 0) {
-              doc.body.innerHTML = content;
-            } else {
-              // createContextualFragment doesn't exists in IE 9 DOMRanges
-              if (rng.createContextualFragment) {
-                rng.insertNode(rng.createContextualFragment(content));
-              } else {
-                // Fake createContextualFragment call in IE 9
-                frag = doc.createDocumentFragment();
-                temp = doc.createElement('div');
-
-                frag.appendChild(temp);
-                temp.outerHTML = content;
-
-                rng.insertNode(frag);
-              }
-            }
-          }
-
-          // Move to caret marker
-          caretNode = self.dom.get('__caret');
-
-          // Make sure we wrap it compleatly, Opera fails with a simple select call
-          rng = doc.createRange();
-          rng.setStartBefore(caretNode);
-          rng.setEndBefore(caretNode);
-          self.setRng(rng);
-
-          // Remove the caret position
-          self.dom.remove('__caret');
-
-          try {
-            self.setRng(rng);
-          } catch (ex) {
-            // Might fail on Opera for some odd reason
-          }
-        } else {
-          if (rng.item) {
-            // Delete content and get caret text selection
-            doc.execCommand('Delete', false, null);
-            rng = self.getRng();
-          }
-
-          // Explorer removes spaces from the beginning of pasted contents
-          if (/^\s+/.test(content)) {
-            rng.pasteHTML('<span id="__mce_tmp">_</span>' + content);
-            self.dom.remove('__mce_tmp');
-          } else {
-            rng.pasteHTML(content);
-          }
-        }
-
-        // Dispatch set content event
-        if (!args.no_events) {
-          self.editor.fire('SetContent', args);
-        }
+        SetSelectionContent.setContent(this.editor, content, args);
       },
 
       /**
@@ -570,7 +441,7 @@ define(
           // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
         }
 
-        rng = eventProcessRanges(self.editor, [ rng ])[0];
+        rng = EventProcessRanges.processRanges(self.editor, [ rng ])[0];
 
         // We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
         // IE 11 doesn't support the selection object so we check for that as well
