@@ -11,16 +11,17 @@
 define(
   'tinymce.themes.inlite.ui.Panel',
   [
-    'tinymce.core.util.Tools',
-    'tinymce.core.ui.Factory',
+    'global!document',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.themes.inlite.ui.Toolbar',
-    'tinymce.themes.inlite.ui.Forms',
-    'tinymce.themes.inlite.core.Measure',
+    'tinymce.core.ui.Factory',
+    'tinymce.core.util.Tools',
+    'tinymce.themes.inlite.alien.EditorSettings',
     'tinymce.themes.inlite.core.Layout',
-    'tinymce.themes.inlite.alien.EditorSettings'
+    'tinymce.themes.inlite.core.Measure',
+    'tinymce.themes.inlite.ui.Forms',
+    'tinymce.themes.inlite.ui.Toolbar'
   ],
-  function (Tools, Factory, DOMUtils, Toolbar, Forms, Measure, Layout, EditorSettings) {
+  function (document, DOMUtils, Factory, Tools, EditorSettings, Layout, Measure, Forms, Toolbar) {
     return function () {
       var DEFAULT_TEXT_SELECTION_ITEMS = ['bold', 'italic', '|', 'quicklink', 'h2', 'h3', 'blockquote'];
       var DEFAULT_INSERT_TOOLBAR_ITEMS = ['quickimage', 'quicktable'];

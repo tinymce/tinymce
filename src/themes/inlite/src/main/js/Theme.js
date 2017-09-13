@@ -11,8 +11,8 @@
 define(
   'tinymce.themes.inlite.Theme',
   [
+    'global!window',
     'tinymce.core.ThemeManager',
-    'tinymce.core.ui.Api',
     'tinymce.core.util.Delay',
     'tinymce.themes.inlite.alien.Arr',
     'tinymce.themes.inlite.alien.EditorSettings',
@@ -22,11 +22,15 @@ define(
     'tinymce.themes.inlite.core.SelectionMatcher',
     'tinymce.themes.inlite.core.SkinLoader',
     'tinymce.themes.inlite.ui.Buttons',
-    'tinymce.themes.inlite.ui.Panel'
+    'tinymce.themes.inlite.ui.Panel',
+    'tinymce.ui.Api',
+    'tinymce.ui.FormatControls',
+    'tinymce.ui.NotificationManagerImpl',
+    'tinymce.ui.WindowManagerImpl'
   ],
   function (
-    ThemeManager, Api, Delay, Arr, EditorSettings, ElementMatcher, Matcher,
-    PredicateId, SelectionMatcher, SkinLoader, Buttons, Panel
+    window, ThemeManager, Delay, Arr, EditorSettings, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader, Buttons, Panel, Api, FormatControls,
+    NotificationManagerImpl, WindowManagerImpl
   ) {
     var getSelectionElements = function (editor) {
       var node = editor.selection.getNode();
@@ -153,6 +157,7 @@ define(
     ThemeManager.add('inlite', function (editor) {
       var panel = new Panel();
 
+      FormatControls.setup(editor);
       Buttons.addToEditor(editor, panel);
 
       var renderUI = function () {
@@ -160,7 +165,13 @@ define(
       };
 
       return {
-        renderUI: renderUI
+        renderUI: renderUI,
+        getNotificationManagerImpl: function () {
+          return NotificationManagerImpl(editor);
+        },
+        getWindowManagerImpl: function () {
+          return WindowManagerImpl(editor);
+        }
       };
     });
 

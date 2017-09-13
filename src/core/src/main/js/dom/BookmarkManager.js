@@ -192,10 +192,6 @@ define(
             return { name: name, index: findIndex(name, element) };
           }
 
-          if (selection.tridentSel) {
-            return selection.tridentSel.getBookmark(type);
-          }
-
           element = findAdjacentContentEditableFalseElm(rng);
           if (element) {
             name = element.tagName;
@@ -223,66 +219,28 @@ define(
         id = dom.uniqueId();
         collapsed = selection.isCollapsed();
         styles = 'overflow:hidden;line-height:0px';
-
-        // Explorer method
-        if (rng.duplicate || rng.item) {
-          // Text selection
-          if (!rng.item) {
-            rng2 = rng.duplicate();
-
-            try {
-              // Insert start marker
-              rng.collapse();
-              rng.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
-
-              // Insert end marker
-              if (!collapsed) {
-                rng2.collapse(false);
-
-                // Detect the empty space after block elements in IE and move the
-                // end back one character <p></p>] becomes <p>]</p>
-                rng.moveToElementText(rng2.parentElement());
-                if (rng.compareEndPoints('StartToEnd', rng2) === 0) {
-                  rng2.move('character', -1);
-                }
-
-                rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
-              }
-            } catch (ex) {
-              // IE might throw unspecified error so lets ignore it
-              return null;
-            }
-          } else {
-            // Control selection
-            element = rng.item(0);
-            name = element.nodeName;
-
-            return { name: name, index: findIndex(name, element) };
-          }
-        } else {
-          element = selection.getNode();
-          name = element.nodeName;
-          if (name == 'IMG') {
-            return { name: name, index: findIndex(name, element) };
-          }
-
-          // W3C method
-          rng2 = normalizeTableCellSelection(rng.cloneRange());
-
-          // Insert end marker
-          if (!collapsed) {
-            rng2.collapse(false);
-            var endBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_end', style: styles }, chr);
-            rng2.insertNode(endBookmarkNode);
-            trimEmptyTextNode(endBookmarkNode.nextSibling);
-          }
-
-          rng = normalizeTableCellSelection(rng);
-          rng.collapse(true);
-          var startBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_start', style: styles }, chr);
-          rng.insertNode(startBookmarkNode);
-          trimEmptyTextNode(startBookmarkNode.previousSibling);
+        element = selection.getNode();
+        name = element.nodeName;
+        if (name == 'IMG') {
+          return { name: name, index: findIndex(name, element) };
         }
+
+        // W3C method
+        rng2 = normalizeTableCellSelection(rng.cloneRange());
+
+        // Insert end marker
+        if (!collapsed) {
+          rng2.collapse(false);
+          var endBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_end', style: styles }, chr);
+          rng2.insertNode(endBookmarkNode);
+          trimEmptyTextNode(endBookmarkNode.nextSibling);
+        }
+
+        rng = normalizeTableCellSelection(rng);
+        rng.collapse(true);
+        var startBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_start', style: styles }, chr);
+        rng.insertNode(startBookmarkNode);
+        trimEmptyTextNode(startBookmarkNode.previousSibling);
 
         selection.moveToBookmark({ id: id, keep: 1 });
 
@@ -437,10 +395,6 @@ define(
           if (Tools.isArray(bookmark.start)) {
             rng = dom.createRng();
             root = dom.getRoot();
-
-            if (selection.tridentSel) {
-              return selection.tridentSel.moveToBookmark(bookmark);
-            }
 
             if (setEndPoint(true) && setEndPoint()) {
               selection.setRng(rng);

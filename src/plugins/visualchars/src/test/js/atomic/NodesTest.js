@@ -1,13 +1,12 @@
 test(
   'atomic.tinymce.plugins.visualchars.NodesTest',
   [
-    'tinymce.plugins.visualchars.core.Nodes',
     'ephox.agar.api.Assertions',
-    'ephox.sugar.api.node.Element'
+    'ephox.sugar.api.node.Element',
+    'global!document',
+    'tinymce.plugins.visualchars.core.Nodes'
   ],
-  function (
-    Nodes, Assertions, Element
-  ) {
+  function (Assertions, Element, document, Nodes) {
     var nbsp = '\u00a0';
     var shy = '\u00AD';
 

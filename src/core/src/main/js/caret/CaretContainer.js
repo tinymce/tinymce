@@ -18,10 +18,11 @@
 define(
   'tinymce.core.caret.CaretContainer',
   [
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.text.Zwsp"
+    'global!document',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.text.Zwsp'
   ],
-  function (NodeType, Zwsp) {
+  function (document, NodeType, Zwsp) {
     var isElement = NodeType.isElement,
       isText = NodeType.isText;
 

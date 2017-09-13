@@ -16,11 +16,12 @@
 define(
   'tinymce.plugins.paste.core.Utils',
   [
-    'tinymce.core.util.Tools',
+    'global!navigator',
     'tinymce.core.html.DomParser',
-    'tinymce.core.html.Schema'
+    'tinymce.core.html.Schema',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools, DomParser, Schema) {
+  function (navigator, DomParser, Schema, Tools) {
     function filter(content, items) {
       Tools.each(items, function (v) {
         if (v.constructor == RegExp) {

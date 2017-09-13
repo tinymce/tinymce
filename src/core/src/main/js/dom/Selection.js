@@ -30,7 +30,6 @@ define(
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.ScrollIntoView',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.dom.TridentSelection',
     'tinymce.core.Env',
     'tinymce.core.selection.EventProcessRanges',
     'tinymce.core.selection.FragmentReader',
@@ -40,11 +39,10 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    Arr, Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, TridentSelection, Env, EventProcessRanges,
+    Arr, Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, Env, EventProcessRanges,
     FragmentReader, GetSelectionContent, MultiRange, SetSelectionContent, Tools
   ) {
     var each = Tools.each, trim = Tools.trim;
-    var isIE = Env.ie;
 
     var isAttachedToDom = function (node) {
       return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
@@ -79,11 +77,6 @@ define(
       self.editor = editor;
       self.bookmarkManager = new BookmarkManager(self);
       self.controlSelection = new ControlSelection(self, editor);
-
-      // No W3C Range support
-      if (!self.win.getSelection) {
-        self.tridentSel = new TridentSelection(self);
-      }
     }
 
     Selection.prototype = {
@@ -151,34 +144,7 @@ define(
        * @return {Element} Start element of selection range.
        */
       getStart: function (real) {
-        var self = this, rng = self.getRng(), startElement, parentElement, checkRng, node;
-
-        if (rng.duplicate || rng.item) {
-          // Control selection, return first item
-          if (rng.item) {
-            return rng.item(0);
-          }
-
-          // Get start element
-          checkRng = rng.duplicate();
-          checkRng.collapse(1);
-          startElement = checkRng.parentElement();
-          if (startElement.ownerDocument !== self.dom.doc) {
-            startElement = self.dom.getRoot();
-          }
-
-          // Check if range parent is inside the start element, then return the inner parent element
-          // This will fix issues when a single element is selected, IE would otherwise return the wrong start element
-          parentElement = node = rng.parentElement();
-          while ((node = node.parentNode)) {
-            if (node == startElement) {
-              startElement = parentElement;
-              break;
-            }
-          }
-
-          return startElement;
-        }
+        var self = this, rng = self.getRng(), startElement;
 
         startElement = rng.startContainer;
 
@@ -205,25 +171,6 @@ define(
        */
       getEnd: function (real) {
         var self = this, rng = self.getRng(), endElement, endOffset;
-
-        if (rng.duplicate || rng.item) {
-          if (rng.item) {
-            return rng.item(0);
-          }
-
-          rng = rng.duplicate();
-          rng.collapse(0);
-          endElement = rng.parentElement();
-          if (endElement.ownerDocument !== self.dom.doc) {
-            endElement = self.dom.getRoot();
-          }
-
-          if (endElement && endElement.nodeName == 'BODY') {
-            return endElement.lastChild || endElement;
-          }
-
-          return endElement;
-        }
 
         endElement = rng.endContainer;
         endOffset = rng.endOffset;
@@ -347,14 +294,7 @@ define(
        * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to false.
        */
       collapse: function (toStart) {
-        var self = this, rng = self.getRng(), node;
-
-        // Control range on IE
-        if (rng.item) {
-          node = rng.item(0);
-          rng = self.win.document.body.createTextRange();
-          rng.moveToElementText(node);
-        }
+        var self = this, rng = self.getRng();
 
         rng.collapse(!!toStart);
         self.setRng(rng);
@@ -382,7 +322,7 @@ define(
        * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
        */
       getRng: function (w3c) {
-        var self = this, selection, rng, elm, doc, ieRng;
+        var self = this, selection, rng, elm, doc;
 
         function tryCompareBoundaryPoints(how, sourceRange, destinationRange) {
           try {
@@ -424,11 +364,6 @@ define(
           return rng;
         }
 
-        // Found tridentSel object then we need to use that one
-        if (w3c && self.tridentSel) {
-          return self.tridentSel.getRangeAt(0);
-        }
-
         try {
           if ((selection = self.getSel())) {
             if (selection.rangeCount > 0) {
@@ -442,24 +377,6 @@ define(
         }
 
         rng = EventProcessRanges.processRanges(self.editor, [ rng ])[0];
-
-        // We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-        // IE 11 doesn't support the selection object so we check for that as well
-        if (isIE && rng && rng.setStart && doc.selection) {
-          try {
-            // IE will sometimes throw an exception here
-            ieRng = doc.selection.createRange();
-          } catch (ex) {
-            // Ignore
-          }
-
-          if (ieRng && ieRng.item) {
-            elm = ieRng.item(0);
-            rng = doc.createRange();
-            rng.setStartBefore(elm);
-            rng.setEndAfter(elm);
-          }
-        }
 
         // No range found then create an empty one
         // This can occur when the editor is placed in a hidden container element on Gecko
@@ -517,68 +434,57 @@ define(
           return;
         }
 
-        if (!self.tridentSel) {
-          sel = self.getSel();
+        sel = self.getSel();
 
-          evt = self.editor.fire('SetSelectionRange', { range: rng, forward: forward });
-          rng = evt.range;
+        evt = self.editor.fire('SetSelectionRange', { range: rng, forward: forward });
+        rng = evt.range;
 
-          if (sel) {
-            self.explicitRange = rng;
+        if (sel) {
+          self.explicitRange = rng;
 
-            try {
-              sel.removeAllRanges();
-              sel.addRange(rng);
-            } catch (ex) {
-              // IE might throw errors here if the editor is within a hidden container and selection is changed
-            }
-
-            // Forward is set to false and we have an extend function
-            if (forward === false && sel.extend) {
-              sel.collapse(rng.endContainer, rng.endOffset);
-              sel.extend(rng.startContainer, rng.startOffset);
-            }
-
-            // adding range isn't always successful so we need to check range count otherwise an exception can occur
-            self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+          try {
+            sel.removeAllRanges();
+            sel.addRange(rng);
+          } catch (ex) {
+            // IE might throw errors here if the editor is within a hidden container and selection is changed
           }
 
-          // WebKit egde case selecting images works better using setBaseAndExtent when the image is floated
-          if (!rng.collapsed && rng.startContainer === rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
-            if (rng.endOffset - rng.startOffset < 2) {
-              if (rng.startContainer.hasChildNodes()) {
-                node = rng.startContainer.childNodes[rng.startOffset];
-                if (node && node.tagName === 'IMG') {
-                  sel.setBaseAndExtent(
-                    rng.startContainer,
-                    rng.startOffset,
-                    rng.endContainer,
-                    rng.endOffset
-                  );
+          // Forward is set to false and we have an extend function
+          if (forward === false && sel.extend) {
+            sel.collapse(rng.endContainer, rng.endOffset);
+            sel.extend(rng.startContainer, rng.startOffset);
+          }
 
-                  // Since the setBaseAndExtent is fixed in more recent Blink versions we
-                  // need to detect if it's doing the wrong thing and falling back to the
-                  // crazy incorrect behavior api call since that seems to be the only way
-                  // to get it to work on Safari WebKit as of 2017-02-23
-                  if (sel.anchorNode !== rng.startContainer || sel.focusNode !== rng.endContainer) {
-                    sel.setBaseAndExtent(node, 0, node, 1);
-                  }
+          // adding range isn't always successful so we need to check range count otherwise an exception can occur
+          self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+        }
+
+        // WebKit egde case selecting images works better using setBaseAndExtent when the image is floated
+        if (!rng.collapsed && rng.startContainer === rng.endContainer && sel.setBaseAndExtent && !Env.ie) {
+          if (rng.endOffset - rng.startOffset < 2) {
+            if (rng.startContainer.hasChildNodes()) {
+              node = rng.startContainer.childNodes[rng.startOffset];
+              if (node && node.tagName === 'IMG') {
+                sel.setBaseAndExtent(
+                  rng.startContainer,
+                  rng.startOffset,
+                  rng.endContainer,
+                  rng.endOffset
+                );
+
+                // Since the setBaseAndExtent is fixed in more recent Blink versions we
+                // need to detect if it's doing the wrong thing and falling back to the
+                // crazy incorrect behavior api call since that seems to be the only way
+                // to get it to work on Safari WebKit as of 2017-02-23
+                if (sel.anchorNode !== rng.startContainer || sel.focusNode !== rng.endContainer) {
+                  sel.setBaseAndExtent(node, 0, node, 1);
                 }
               }
             }
           }
-
-          self.editor.fire('AfterSetSelectionRange', { range: rng, forward: forward });
-        } else {
-          // Is W3C Range fake range on IE
-          if (rng.cloneRange) {
-            try {
-              self.tridentSel.addRange(rng);
-            } catch (ex) {
-              //IE9 throws an error here if called before selection is placed in the editor
-            }
-          }
         }
+
+        self.editor.fire('AfterSetSelectionRange', { range: rng, forward: forward });
       },
 
       /**
@@ -631,57 +537,45 @@ define(
         endContainer = rng.endContainer;
         startOffset = rng.startOffset;
         endOffset = rng.endOffset;
+        elm = rng.commonAncestorContainer;
 
-        if (rng.setStart) {
-          elm = rng.commonAncestorContainer;
-
-          // Handle selection a image or other control like element such as anchors
-          if (!rng.collapsed) {
-            if (startContainer == endContainer) {
-              if (endOffset - startOffset < 2) {
-                if (startContainer.hasChildNodes()) {
-                  elm = startContainer.childNodes[startOffset];
-                }
-              }
-            }
-
-            // If the anchor node is a element instead of a text node then return this element
-            //if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
-            // return sel.anchorNode.childNodes[sel.anchorOffset];
-
-            // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
-            // This happens when you double click an underlined word in FireFox.
-            if (startContainer.nodeType === 3 && endContainer.nodeType === 3) {
-              if (startContainer.length === startOffset) {
-                startContainer = skipEmptyTextNodes(startContainer.nextSibling, true);
-              } else {
-                startContainer = startContainer.parentNode;
-              }
-
-              if (endOffset === 0) {
-                endContainer = skipEmptyTextNodes(endContainer.previousSibling, false);
-              } else {
-                endContainer = endContainer.parentNode;
-              }
-
-              if (startContainer && startContainer === endContainer) {
-                return startContainer;
+        // Handle selection a image or other control like element such as anchors
+        if (!rng.collapsed) {
+          if (startContainer == endContainer) {
+            if (endOffset - startOffset < 2) {
+              if (startContainer.hasChildNodes()) {
+                elm = startContainer.childNodes[startOffset];
               }
             }
           }
 
-          if (elm && elm.nodeType == 3) {
-            return elm.parentNode;
-          }
+          // If the anchor node is a element instead of a text node then return this element
+          //if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
+          // return sel.anchorNode.childNodes[sel.anchorOffset];
 
-          return elm;
+          // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
+          // This happens when you double click an underlined word in FireFox.
+          if (startContainer.nodeType === 3 && endContainer.nodeType === 3) {
+            if (startContainer.length === startOffset) {
+              startContainer = skipEmptyTextNodes(startContainer.nextSibling, true);
+            } else {
+              startContainer = startContainer.parentNode;
+            }
+
+            if (endOffset === 0) {
+              endContainer = skipEmptyTextNodes(endContainer.previousSibling, false);
+            } else {
+              endContainer = endContainer.parentNode;
+            }
+
+            if (startContainer && startContainer === endContainer) {
+              return startContainer;
+            }
+          }
         }
 
-        elm = rng.item ? rng.item(0) : rng.parentElement();
-
-        // IE 7 might return elements outside the iframe
-        if (elm.ownerDocument !== self.win.document) {
-          elm = root;
+        if (elm && elm.nodeType == 3) {
+          return elm.parentNode;
         }
 
         return elm;

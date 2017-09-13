@@ -14,12 +14,13 @@ define(
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.Env'
   ],
-  function (Option, Compare, Element, CaretFinder, ElementType, RangeUtils, Env) {
+  function (Option, Compare, Element, document, CaretFinder, ElementType, RangeUtils, Env) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";
@@ -70,14 +71,8 @@ define(
     };
 
     var focusEditor = function (editor) {
-      var selection = editor.selection, contentEditable = editor.settings.content_editable, rng;
-      var controlElm, doc = editor.getDoc(), body = editor.getBody(), contentEditableHost;
-
-      // Get selected control element
-      rng = selection.getRng();
-      if (rng.item) {
-        controlElm = rng.item(0);
-      }
+      var selection = editor.selection, contentEditable = editor.settings.content_editable;
+      var body = editor.getBody(), contentEditableHost, rng = selection.getRng();
 
       editor.quirks.refreshContentEditable();
 
@@ -111,15 +106,6 @@ define(
 
         focusBody(body);
         normalizeSelection(editor, rng);
-      }
-
-      // Restore selected control element
-      // This is needed when for example an image is selected within a
-      // layer a call to focus will then remove the control selection
-      if (controlElm && controlElm.ownerDocument === doc) {
-        rng = doc.body.createControlRange();
-        rng.addElement(controlElm);
-        rng.select();
       }
 
       activateEditor(editor);

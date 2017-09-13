@@ -21,9 +21,10 @@
 define(
   'tinymce.core.html.Entities',
   [
-    "tinymce.core.util.Tools"
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools) {
+  function (Element, Tools) {
     var makeMap = Tools.makeMap;
 
     var namedEntities, baseEntities, reverseEntities,
@@ -62,7 +63,7 @@ define(
     function nativeDecode(text) {
       var elm;
 
-      elm = document.createElement("div");
+      elm = Element.fromTag("div").dom();
       elm.innerHTML = text;
 
       return elm.textContent || elm.innerText || text;

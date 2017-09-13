@@ -11,10 +11,11 @@ asynctest(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
+    'global!document',
     'tinymce.core.selection.SelectionUtils',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Fun, Hierarchy, Insert, Element, Html, SelectionUtils, ViewBlock) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Fun, Hierarchy, Insert, Element, Html, document, SelectionUtils, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = ViewBlock();

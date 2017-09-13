@@ -13,9 +13,10 @@
 define(
   'tinymce.core.demo.CustomThemeDemo',
   [
-    "tinymce.core.api.Tinymce"
+    'global!document',
+    'tinymce.core.api.Tinymce'
   ],
-  function (tinymce) {
+  function (document, tinymce) {
     return function () {
       var textarea = document.createElement('textarea');
       textarea.rows = 20;

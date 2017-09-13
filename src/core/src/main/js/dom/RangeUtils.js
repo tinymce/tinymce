@@ -16,13 +16,12 @@
 define(
   'tinymce.core.dom.RangeUtils',
   [
-    "tinymce.core.util.Tools",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.Range",
-    "tinymce.core.caret.CaretContainer"
+    'tinymce.core.util.Tools',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.caret.CaretContainer'
   ],
-  function (Tools, TreeWalker, NodeType, Range, CaretContainer) {
+  function (Tools, TreeWalker, NodeType, CaretContainer) {
     var each = Tools.each,
       isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -554,25 +553,9 @@ define(
      * @return {Boolean} true/false if the ranges are equal.
      */
     RangeUtils.compareRanges = function (rng1, rng2) {
-      if (rng1 && rng2) {
-        // Compare native IE ranges
-        if (rng1.item || rng1.duplicate) {
-          // Both are control ranges and the selected element matches
-          if (rng1.item && rng2.item && rng1.item(0) === rng2.item(0)) {
-            return true;
-          }
-
-          // Both are text ranges and the range matches
-          if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1)) {
-            return true;
-          }
-        } else {
-          // Compare w3c ranges
-          return rng1.startContainer == rng2.startContainer && rng1.startOffset == rng2.startOffset;
-        }
-      }
-
-      return false;
+      return rng1 && rng2 &&
+        (rng1.startContainer === rng2.startContainer && rng1.startOffset === rng2.startOffset) &&
+        (rng1.endContainer === rng2.endContainer && rng1.endOffset === rng2.endOffset);
     };
 
     /**

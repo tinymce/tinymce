@@ -10,11 +10,12 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'ephox.sugar.api.properties.Html',
+    'global!document',
     'tinymce.plugins.help.Plugin',
     'tinymce.plugins.link.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, Pipeline, Step, UiFinder, TinyDom, TinyLoader, TinyUi, Html, HelpPlugin, LinkPlugin, Theme) {
+  function (Assertions, Chain, Pipeline, Step, UiFinder, TinyDom, TinyLoader, TinyUi, Html, document, HelpPlugin, LinkPlugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

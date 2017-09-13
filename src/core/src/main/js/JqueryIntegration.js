@@ -17,8 +17,10 @@
 define(
   'tinymce.core.JqueryIntegration',
   [
+    'global!document',
+    'global!window'
   ],
-  function () {
+  function (document, window) {
     return function (global) {
       var undef, lazyLoading, patchApplied;
       var delayedInits = [], $, win;

@@ -17,13 +17,14 @@
 define(
   'tinymce.plugins.paste.Plugin',
   [
+    'global!window',
     'tinymce.core.PluginManager',
     'tinymce.plugins.paste.api.Events',
     'tinymce.plugins.paste.core.Clipboard',
     'tinymce.plugins.paste.core.CutCopy',
     'tinymce.plugins.paste.core.Quirks'
   ],
-  function (PluginManager, Events, Clipboard, CutCopy, Quirks) {
+  function (window, PluginManager, Events, Clipboard, CutCopy, Quirks) {
     var userIsInformed;
 
     PluginManager.add('paste', function (editor) {
@@ -70,8 +71,8 @@ define(
       // draw back if power version is requested and registered
       if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins) && PluginManager.get('powerpaste')) {
         /*eslint no-console:0 */
-        if (typeof console !== "undefined" && console.log) {
-          console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
+        if (typeof window.console !== "undefined" && window.console.log) {
+          window.console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
         }
         return;
       }

@@ -17,10 +17,14 @@
 define(
   'tinymce.core.file.Conversions',
   [
+    'ephox.sand.api.Blob',
+    'ephox.sand.api.FileReader',
+    'ephox.sand.api.Uint8Array',
     'ephox.sand.api.Window',
+    'ephox.sand.api.XMLHttpRequest',
     'tinymce.core.util.Promise'
   ],
-  function (Window, Promise) {
+  function (Blob, FileReader, Uint8Array, Window, XMLHttpRequest, Promise) {
     function blobUriToBlob(url) {
       return new Promise(function (resolve, reject) {
 

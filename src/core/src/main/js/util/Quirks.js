@@ -19,24 +19,26 @@
 define(
   'tinymce.core.util.Quirks',
   [
-    "tinymce.core.util.VK",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.NodePath",
-    "tinymce.core.html.Node",
-    "tinymce.core.html.Entities",
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Delay",
-    "tinymce.core.caret.CaretContainer",
-    "tinymce.core.caret.CaretPosition",
-    "tinymce.core.caret.CaretWalker"
+    'global!document',
+    'global!window',
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.caret.CaretWalker',
+    'tinymce.core.dom.NodePath',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.html.Entities',
+    'tinymce.core.html.Node',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK'
   ],
-  function (VK, RangeUtils, TreeWalker, NodePath, Node, Entities, Env, Tools, Delay, CaretContainer, CaretPosition, CaretWalker) {
+  function (document, window, CaretContainer, CaretPosition, CaretWalker, NodePath, RangeUtils, TreeWalker, Env, Entities, Node, Delay, Tools, VK) {
     return function (editor) {
       var each = Tools.each;
       var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
-        settings = editor.settings, parser = editor.parser, serializer = editor.serializer;
+        settings = editor.settings, parser = editor.parser;
       var isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
       var mceInternalUrlPrefix = 'data:text/mce-internal,';
       var mceInternalDataType = isIE ? 'Text' : 'URL';
@@ -50,15 +52,6 @@ define(
         } catch (ex) {
           // Ignore
         }
-      }
-
-      /**
-       * Returns current IE document mode.
-       */
-      function getDocumentMode() {
-        var documentMode = editor.getDoc().documentMode;
-
-        return documentMode ? documentMode : 6;
       }
 
       /**
@@ -163,16 +156,6 @@ define(
         }
 
         function allContentsSelected(rng) {
-          if (!rng.setStart) {
-            if (rng.item) {
-              return false;
-            }
-
-            var bodyRng = rng.duplicate();
-            bodyRng.moveToElementText(editor.getBody());
-            return RangeUtils.compareRanges(rng, bodyRng);
-          }
-
           var selection = serializeRng(rng);
 
           var allRng = dom.createRng();
@@ -412,13 +395,6 @@ define(
       }
 
       /**
-       * Screen readers on IE needs to have the role application set on the body.
-       */
-      function ensureBodyHasRoleApplication() {
-        document.body.setAttribute("role", "application");
-      }
-
-      /**
        * Backspacing into a table behaves differently depending upon browser type.
        * Therefore, disable Backspace when cursor immediately follows a table.
        */
@@ -431,85 +407,6 @@ define(
                 e.preventDefault();
                 return false;
               }
-            }
-          }
-        });
-      }
-
-      /**
-       * Old IE versions can't properly render BR elements in PRE tags white in contentEditable mode. So this
-       * logic adds a \n before the BR so that it will get rendered.
-       */
-      function addNewLinesBeforeBrInPre() {
-        // IE8+ rendering mode does the right thing with BR in PRE
-        if (getDocumentMode() > 7) {
-          return;
-        }
-
-        // Enable display: none in area and add a specific class that hides all BR elements in PRE to
-        // avoid the caret from getting stuck at the BR elements while pressing the right arrow key
-        setEditorCommandState('RespectVisibilityInDesign', true);
-        editor.contentStyles.push('.mceHideBrInPre pre br {display: none}');
-        dom.addClass(editor.getBody(), 'mceHideBrInPre');
-
-        // Adds a \n before all BR elements in PRE to get them visual
-        parser.addNodeFilter('pre', function (nodes) {
-          var i = nodes.length, brNodes, j, brElm, sibling;
-
-          while (i--) {
-            brNodes = nodes[i].getAll('br');
-            j = brNodes.length;
-            while (j--) {
-              brElm = brNodes[j];
-
-              // Add \n before BR in PRE elements on older IE:s so the new lines get rendered
-              sibling = brElm.prev;
-              if (sibling && sibling.type === 3 && sibling.value.charAt(sibling.value - 1) != '\n') {
-                sibling.value += '\n';
-              } else {
-                brElm.parent.insert(new Node('#text', 3), brElm, true).value = '\n';
-              }
-            }
-          }
-        });
-
-        // Removes any \n before BR elements in PRE since other browsers and in contentEditable=false mode they will be visible
-        serializer.addNodeFilter('pre', function (nodes) {
-          var i = nodes.length, brNodes, j, brElm, sibling;
-
-          while (i--) {
-            brNodes = nodes[i].getAll('br');
-            j = brNodes.length;
-            while (j--) {
-              brElm = brNodes[j];
-              sibling = brElm.prev;
-              if (sibling && sibling.type == 3) {
-                sibling.value = sibling.value.replace(/\r?\n$/, '');
-              }
-            }
-          }
-        });
-      }
-
-      /**
-       * Moves style width/height to attribute width/height when the user resizes an image on IE.
-       */
-      function removePreSerializedStylesWhenSelectingControls() {
-        dom.bind(editor.getBody(), 'mouseup', function () {
-          var value, node = selection.getNode();
-
-          // Moved styles to attributes on IMG eements
-          if (node.nodeName == 'IMG') {
-            // Convert style width to width attribute
-            if ((value = dom.getStyle(node, 'width'))) {
-              dom.setAttrib(node, 'width', value.replace(/[^0-9%]+/g, ''));
-              dom.setStyle(node, 'width', '');
-            }
-
-            // Convert style height to height attribute
-            if ((value = dom.getStyle(node, 'height'))) {
-              dom.setAttrib(node, 'height', value.replace(/[^0-9%]+/g, ''));
-              dom.setStyle(node, 'height', '');
             }
           }
         });
@@ -627,177 +524,6 @@ define(
             setEditorCommandState('DefaultParagraphSeparator', settings.forced_root_block);
           });
         }
-      }
-
-      /**
-       * Deletes the selected image on IE instead of navigating to previous page.
-       */
-      function deleteControlItemOnBackSpace() {
-        editor.on('keydown', function (e) {
-          var rng;
-
-          if (!isDefaultPrevented(e) && e.keyCode == BACKSPACE) {
-            rng = editor.getDoc().selection.createRange();
-            if (rng && rng.item) {
-              e.preventDefault();
-              editor.undoManager.beforeChange();
-              dom.remove(rng.item(0));
-              editor.undoManager.add();
-            }
-          }
-        });
-      }
-
-      /**
-       * IE10 doesn't properly render block elements with the right height until you add contents to them.
-       * This fixes that by adding a padding-right to all empty text block elements.
-       * See: https://connect.microsoft.com/IE/feedback/details/743881
-       */
-      function renderEmptyBlocksFix() {
-        var emptyBlocksCSS;
-
-        // IE10+
-        if (getDocumentMode() >= 10) {
-          emptyBlocksCSS = '';
-          each('p div h1 h2 h3 h4 h5 h6'.split(' '), function (name, i) {
-            emptyBlocksCSS += (i > 0 ? ',' : '') + name + ':empty';
-          });
-
-          editor.contentStyles.push(emptyBlocksCSS + '{padding-right: 1px !important}');
-        }
-      }
-
-      /**
-       * Old IE versions can't retain contents within noscript elements so this logic will store the contents
-       * as a attribute and the insert that value as it's raw text when the DOM is serialized.
-       */
-      function keepNoScriptContents() {
-        if (getDocumentMode() < 9) {
-          parser.addNodeFilter('noscript', function (nodes) {
-            var i = nodes.length, node, textNode;
-
-            while (i--) {
-              node = nodes[i];
-              textNode = node.firstChild;
-
-              if (textNode) {
-                node.attr('data-mce-innertext', textNode.value);
-              }
-            }
-          });
-
-          serializer.addNodeFilter('noscript', function (nodes) {
-            var i = nodes.length, node, textNode, value;
-
-            while (i--) {
-              node = nodes[i];
-              textNode = nodes[i].firstChild;
-
-              if (textNode) {
-                textNode.value = Entities.decode(textNode.value);
-              } else {
-                // Old IE can't retain noscript value so an attribute is used to store it
-                value = node.attributes.map['data-mce-innertext'];
-                if (value) {
-                  node.attr('data-mce-innertext', null);
-                  textNode = new Node('#text', 3);
-                  textNode.value = value;
-                  textNode.raw = true;
-                  node.append(textNode);
-                }
-              }
-            }
-          });
-        }
-      }
-
-      /**
-       * IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode.
-       */
-      function fixCaretSelectionOfDocumentElementOnIe() {
-        var doc = dom.doc, body = doc.body, started, startRng, htmlElm;
-
-        // Return range from point or null if it failed
-        function rngFromPoint(x, y) {
-          var rng = body.createTextRange();
-
-          try {
-            rng.moveToPoint(x, y);
-          } catch (ex) {
-            // IE sometimes throws and exception, so lets just ignore it
-            rng = null;
-          }
-
-          return rng;
-        }
-
-        // Fires while the selection is changing
-        function selectionChange(e) {
-          var pointRng;
-
-          // Check if the button is down or not
-          if (e.button) {
-            // Create range from mouse position
-            pointRng = rngFromPoint(e.x, e.y);
-
-            if (pointRng) {
-              // Check if pointRange is before/after selection then change the endPoint
-              if (pointRng.compareEndPoints('StartToStart', startRng) > 0) {
-                pointRng.setEndPoint('StartToStart', startRng);
-              } else {
-                pointRng.setEndPoint('EndToEnd', startRng);
-              }
-
-              pointRng.select();
-            }
-          } else {
-            endSelection();
-          }
-        }
-
-        // Removes listeners
-        function endSelection() {
-          var rng = doc.selection.createRange();
-
-          // If the range is collapsed then use the last start range
-          if (startRng && !rng.item && rng.compareEndPoints('StartToEnd', rng) === 0) {
-            startRng.select();
-          }
-
-          dom.unbind(doc, 'mouseup', endSelection);
-          dom.unbind(doc, 'mousemove', selectionChange);
-          startRng = started = 0;
-        }
-
-        // Make HTML element unselectable since we are going to handle selection by hand
-        doc.documentElement.unselectable = true;
-
-        // Detect when user selects outside BODY
-        dom.bind(doc, 'mousedown contextmenu', function (e) {
-          if (e.target.nodeName === 'HTML') {
-            if (started) {
-              endSelection();
-            }
-
-            // Detect vertical scrollbar, since IE will fire a mousedown on the scrollbar and have target set as HTML
-            htmlElm = doc.documentElement;
-            if (htmlElm.scrollHeight > htmlElm.clientHeight) {
-              return;
-            }
-
-            started = 1;
-            // Setup start position
-            startRng = rngFromPoint(e.x, e.y);
-            if (startRng) {
-              // Listen for selection change events
-              dom.bind(doc, 'mouseup', endSelection);
-              dom.bind(doc, 'mousemove', selectionChange);
-
-              dom.getRoot().focus();
-              startRng.select();
-            }
-          }
-        });
       }
 
       /**
@@ -1081,18 +807,6 @@ define(
         } else {
           selectAll();
         }
-      }
-
-      // IE
-      if (isIE && Env.ie < 11) {
-        removeHrOnBackspace();
-        ensureBodyHasRoleApplication();
-        addNewLinesBeforeBrInPre();
-        removePreSerializedStylesWhenSelectingControls();
-        deleteControlItemOnBackSpace();
-        renderEmptyBlocksFix();
-        keepNoScriptContents();
-        fixCaretSelectionOfDocumentElementOnIe();
       }
 
       if (Env.ie >= 11) {

@@ -9,10 +9,11 @@ asynctest(
     'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
     'tinymce.plugins.tabfocus.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Keys, Pipeline, RawAssertions, Step, Waiter, TinyActions, TinyApis, TinyLoader, TabfocusPlugin, ModernTheme) {
+  function (Keys, Pipeline, RawAssertions, Step, Waiter, TinyActions, TinyApis, TinyLoader, document, TabfocusPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

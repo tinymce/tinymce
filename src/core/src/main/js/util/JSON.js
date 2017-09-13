@@ -23,8 +23,9 @@
 define(
   'tinymce.core.util.JSON',
   [
+    'global!window'
   ],
-  function () {
+  function (window) {
     function serialize(o, quote) {
       var i, v, t, name;
 

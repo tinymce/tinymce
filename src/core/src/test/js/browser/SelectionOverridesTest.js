@@ -6,6 +6,7 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.Env',
@@ -15,10 +16,7 @@ asynctest(
     'tinymce.core.util.VK',
     'tinymce.themes.modern.Theme'
   ],
-  function (
-    Keyboard, Pipeline, LegacyUnit, TinyDom, TinyLoader, CaretContainer, CaretPosition,
-    Env, HtmlUtils, KeyUtils, Zwsp, VK, Theme
-  ) {
+  function (Keyboard, Pipeline, LegacyUnit, TinyDom, TinyLoader, document, CaretContainer, CaretPosition, Env, HtmlUtils, KeyUtils, Zwsp, VK, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();

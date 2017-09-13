@@ -503,6 +503,7 @@ module.exports = function (grunt) {
 
     subgrunt: {
       'core': { path: 'src/core' },
+      'ui': { path: 'src/ui' },
       'advlist-plugin': { path: 'src/plugins/advlist' },
       'anchor-plugin': { path: 'src/plugins/anchor' },
       'autolink-plugin': { path: 'src/plugins/autolink' },

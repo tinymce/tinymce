@@ -249,7 +249,12 @@ define(
 
       // Run beforeSetContent handlers on the HTML to be inserted
       args = { content: value, format: 'html', selection: true };
-      editor.fire('BeforeSetContent', args);
+      args = editor.fire('BeforeSetContent', args);
+      if (args.isDefaultPrevented()) {
+        editor.fire('SetContent', { content: args.content, format: 'html', selection: true });
+        return;
+      }
+
       value = args.content;
 
       // Add caret at end of contents if it's missing

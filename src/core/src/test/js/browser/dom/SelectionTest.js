@@ -105,18 +105,10 @@ asynctest(
 
       // Check the caret is left in the correct position.
       rng = editor.selection.getRng(true);
-      if (document.createRange) {
-        LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
-        LegacyUnit.equal(rng.startOffset, 2, 'Selection start offset');
-        LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
-        LegacyUnit.equal(rng.endOffset, 2, 'Selection end offset');
-      } else {
-        // TridentSelection resolves indexed text nodes
-        LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
-        LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-        LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
-        LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
-      }
+      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
+      LegacyUnit.equal(rng.startOffset, 2, 'Selection start offset');
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
+      LegacyUnit.equal(rng.endOffset, 2, 'Selection end offset');
 
       editor.setContent('<p>text</p>');
       rng = editor.dom.createRng();
@@ -645,327 +637,380 @@ asynctest(
       LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
     });
 
-    // Only run on browser with W3C DOM Range support
-    if (Env.range) {
-      suite.test('normalize with contentEditable:false element', function (editor) {
-        var rng;
+    suite.test('normalize with contentEditable:false element', function (editor) {
+      var rng;
 
-        editor.setContent('<p>a<b contentEditable="false">b</b>c</p>');
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody().firstChild.lastChild, 0);
-        rng.setEnd(editor.getBody().firstChild.lastChild, 0);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
+      editor.setContent('<p>a<b contentEditable="false">b</b>c</p>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody().firstChild.lastChild, 0);
+      rng.setEnd(editor.getBody().firstChild.lastChild, 0);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
 
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.collapsed, true);
-        LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
-      });
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.collapsed, true);
+      LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
+    });
 
-      suite.test('normalize with contentEditable:false parent and contentEditable:true child element', function (editor) {
-        editor.setContent('<p contentEditable="false">a<em contentEditable="true">b</em></p>');
+    suite.test('normalize with contentEditable:false parent and contentEditable:true child element', function (editor) {
+      editor.setContent('<p contentEditable="false">a<em contentEditable="true">b</em></p>');
+      LegacyUnit.setSelection(editor, 'em', 0);
+      editor.selection.normalize();
+
+      var rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.collapsed, true);
+      LegacyUnit.equal(rng.startContainer.nodeType, 3);
+      LegacyUnit.equal(rng.startContainer.data, 'b');
+
+      // WebKit is in some state state here, so lets restore it
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 0);
+      editor.selection.setRng(rng);
+    });
+
+    suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
+      if (Env.ie && Env.ie < 12) {
+        editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
         LegacyUnit.setSelection(editor, 'em', 0);
         editor.selection.normalize();
 
         var rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.collapsed, true);
-        LegacyUnit.equal(rng.startContainer.nodeType, 3);
-        LegacyUnit.equal(rng.startContainer.data, 'b');
 
-        // WebKit is in some state state here, so lets restore it
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 0);
-        editor.selection.setRng(rng);
-      });
-
-      suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
-        if (Env.ie && Env.ie < 12) {
-          editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-          LegacyUnit.setSelection(editor, 'em', 0);
-          editor.selection.normalize();
-
-          var rng = editor.selection.getRng(true);
-
-          LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
-          LegacyUnit.equal(rng.startOffset, 0);
-        }
-      });
-
-      suite.test('normalize to text node from body', function (editor) {
-        var rng;
-
-        editor.setContent('<p>text</p>');
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 0);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeType, 3, 'startContainer node type');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeType, 3, 'endContainer node type');
-        LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
-      });
-
-      suite.test('normalize to br from body', function (editor) {
-        var rng;
-
-        editor.setContent('<p><br /></p>');
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 0);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-        LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-        LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
-      });
-
-      suite.test('normalize ignore img', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<img src="about:blank " />';
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 1);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
-        LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
-        LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
-      });
-
-      suite.test('normalize to before/after img', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 1);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-        LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-        LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
-      });
-
-      suite.test('normalize to before/after pre', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<pre>a<pre>';
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 1);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
-        LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
-        LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
-        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
-      });
-
-      suite.test('normalize to text node inside P', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p>abc</p>';
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 1);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
-        LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
-      });
-
-      suite.test('normalize lean left if at the start of text node', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
-        LegacyUnit.setSelection(editor, 'i', 0);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-        LegacyUnit.equal(rng.startContainer.parentNode.nodeName, 'B');
-        LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, '#text');
-        LegacyUnit.equal(rng.endContainer.parentNode.nodeName, 'B');
-        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
-      });
-
-      suite.test('normalize lean start to the right if at end of text node', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
-        LegacyUnit.setSelection(editor, 'b', 1, 'i', 1);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
-        LegacyUnit.equal(rng.startContainer.parentNode.nodeName, 'I');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, '#text');
-        LegacyUnit.equal(rng.endContainer.parentNode.nodeName, 'I');
-        LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
-      });
-
-      suite.test('normalize lean left but break before br', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p>a<br><b>b</b></p>';
-        LegacyUnit.setSelection(editor, 'b', 0);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+        LegacyUnit.equal(rng.startContainer.parentNode.contentEditable !== 'false', true);
         LegacyUnit.equal(rng.startOffset, 0);
-      });
+      }
+    });
 
-      suite.test('normalize lean left but break before img', function (editor) {
+    suite.test('normalize to text node from body', function (editor) {
+      var rng;
+
+      editor.setContent('<p>text</p>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 0);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeType, 3, 'startContainer node type');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeType, 3, 'endContainer node type');
+      LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
+    });
+
+    suite.test('normalize to br from body', function (editor) {
+      var rng;
+
+      editor.setContent('<p><br /></p>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 0);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+      LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+      LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
+    });
+
+    suite.test('normalize ignore img', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<img src="about:blank " />';
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
+      LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
+      LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+      LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+    });
+
+    suite.test('normalize to before/after img', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+      LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+      LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+      LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+    });
+
+    suite.test('normalize to before/after pre', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<pre>a<pre>';
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
+      LegacyUnit.equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
+      LegacyUnit.equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+      LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+    });
+
+    suite.test('normalize to text node inside P', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p>abc</p>';
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+      LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
+    });
+
+    suite.test('normalize lean left if at the start of text node', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
+      LegacyUnit.setSelection(editor, 'i', 0);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+      LegacyUnit.equal(rng.startContainer.parentNode.nodeName, 'B');
+      LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.endContainer.parentNode.nodeName, 'B');
+      LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+    });
+
+    suite.test('normalize lean start to the right if at end of text node', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
+      LegacyUnit.setSelection(editor, 'b', 1, 'i', 1);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+      LegacyUnit.equal(rng.startContainer.parentNode.nodeName, 'I');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.endContainer.parentNode.nodeName, 'I');
+      LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+    });
+
+    suite.test('normalize lean left but break before br', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p>a<br><b>b</b></p>';
+      LegacyUnit.setSelection(editor, 'b', 0);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+      LegacyUnit.equal(rng.startOffset, 0);
+    });
+
+    suite.test('normalize lean left but break before img', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p>a<img><b>b</b></p>';
+      LegacyUnit.setSelection(editor, 'b', 0);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+      LegacyUnit.equal(rng.startOffset, 0);
+    });
+
+    suite.test('normalize lean left but don\'t walk out the parent block', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p>a</p><p><b>b</b></p>';
+      LegacyUnit.setSelection(editor, 'b', 0);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
+      LegacyUnit.equal(rng.startOffset, 0);
+    });
+
+    suite.test('normalize lean left into empty inline elements when caret is before br', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
+      rng = editor.dom.createRng();
+      rng.setStartBefore(editor.getBody().firstChild.lastChild);
+      rng.setEndBefore(editor.getBody().firstChild.lastChild);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'B');
+      LegacyUnit.equal(rng.startOffset, 0);
+    });
+
+    suite.test('normalize lean left from br into formatter caret container', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
+      rng = editor.dom.createRng();
+      rng.setStartBefore(editor.getBody().firstChild.lastChild);
+      rng.setEndBefore(editor.getBody().firstChild.lastChild);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeType, 3);
+      LegacyUnit.equal(rng.startOffset, 1);
+    });
+
+    suite.test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
+      rng = editor.dom.createRng();
+      rng.setStartBefore(editor.getBody().firstChild.lastChild);
+      rng.setEndBefore(editor.getBody().firstChild.lastChild);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+      LegacyUnit.equal(rng.startOffset, 2);
+    });
+
+    suite.test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
+      rng = editor.dom.createRng();
+      rng.setStartBefore(editor.getBody().firstChild.lastChild);
+      rng.setEndBefore(editor.getBody().firstChild.lastChild);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'P');
+      LegacyUnit.equal(rng.startOffset, 1);
+    });
+
+    suite.test('normalize don\'t move start/end if it\'s before/after table', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
+      rng = editor.dom.createRng();
+      rng.setStartBefore(editor.getBody().firstChild);
+      rng.setEndAfter(editor.getBody().lastChild);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'BODY');
+      LegacyUnit.equal(rng.startOffset, 0);
+      LegacyUnit.equal(rng.endContainer.nodeName, 'BODY');
+      LegacyUnit.equal(rng.endOffset, 1);
+    });
+
+    suite.test('normalize after paragraph', function (editor) {
+      var rng;
+
+      editor.getBody().innerHTML = '<p>a</p>';
+      rng = editor.dom.createRng();
+      rng.setStartAfter(editor.getBody().firstChild);
+      rng.setEndAfter(editor.getBody().lastChild);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.startOffset, 1);
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text');
+      LegacyUnit.equal(rng.endOffset, 1);
+    });
+
+    suite.test('normalize caret after trailing BR', function (editor) {
+      var rng;
+
+      editor.setContent('<p>a<br /></p>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody().firstChild, 2);
+      rng.setEnd(editor.getBody().firstChild, 2);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+      LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+      LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
+    });
+
+    suite.test('normalize caret after bogus block BR', function (editor) {
+      var rng;
+
+      editor.setContent('<p><br /></p>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody().firstChild, 1);
+      rng.setEnd(editor.getBody().firstChild, 1);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+      LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+      LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
+    });
+
+    suite.test('normalize after table should not move', function (editor) {
+      var rng;
+
+      // if (tinymce.isOpera || tinymce.isIE) {
+      //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
+      //  return;
+      // }
+
+      editor.setContent('a<table><tr><td>b</td></tr></table>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody(), 0);
+      rng.setEnd(editor.getBody(), 1);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
+
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equalDom(rng.endContainer, editor.getBody());
+      LegacyUnit.equal(rng.endOffset, 1);
+    });
+
+    /*
+      suite.test('normalize caret after last BR in block', function(editor) {
         var rng;
 
-        editor.getBody().innerHTML = '<p>a<img><b>b</b></p>';
-        LegacyUnit.setSelection(editor, 'b', 0);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
-        LegacyUnit.equal(rng.startOffset, 0);
-      });
-
-      suite.test('normalize lean left but don\'t walk out the parent block', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p>a</p><p><b>b</b></p>';
-        LegacyUnit.setSelection(editor, 'b', 0);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
-        LegacyUnit.equal(rng.startOffset, 0);
-      });
-
-      suite.test('normalize lean left into empty inline elements when caret is before br', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
-        rng = editor.dom.createRng();
-        rng.setStartBefore(editor.getBody().firstChild.lastChild);
-        rng.setEndBefore(editor.getBody().firstChild.lastChild);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'B');
-        LegacyUnit.equal(rng.startOffset, 0);
-      });
-
-      suite.test('normalize lean left from br into formatter caret container', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
-        rng = editor.dom.createRng();
-        rng.setStartBefore(editor.getBody().firstChild.lastChild);
-        rng.setEndBefore(editor.getBody().firstChild.lastChild);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeType, 3);
-        LegacyUnit.equal(rng.startOffset, 1);
-      });
-
-      suite.test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
-        rng = editor.dom.createRng();
-        rng.setStartBefore(editor.getBody().firstChild.lastChild);
-        rng.setEndBefore(editor.getBody().firstChild.lastChild);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'P');
-        LegacyUnit.equal(rng.startOffset, 2);
-      });
-
-      suite.test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
-        rng = editor.dom.createRng();
-        rng.setStartBefore(editor.getBody().firstChild.lastChild);
-        rng.setEndBefore(editor.getBody().firstChild.lastChild);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'P');
-        LegacyUnit.equal(rng.startOffset, 1);
-      });
-
-      suite.test('normalize don\'t move start/end if it\'s before/after table', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
-        rng = editor.dom.createRng();
-        rng.setStartBefore(editor.getBody().firstChild);
-        rng.setEndAfter(editor.getBody().lastChild);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'BODY');
-        LegacyUnit.equal(rng.startOffset, 0);
-        LegacyUnit.equal(rng.endContainer.nodeName, 'BODY');
-        LegacyUnit.equal(rng.endOffset, 1);
-      });
-
-      suite.test('normalize after paragraph', function (editor) {
-        var rng;
-
-        editor.getBody().innerHTML = '<p>a</p>';
-        rng = editor.dom.createRng();
-        rng.setStartAfter(editor.getBody().firstChild);
-        rng.setEndAfter(editor.getBody().lastChild);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, '#text');
-        LegacyUnit.equal(rng.startOffset, 1);
-        LegacyUnit.equal(rng.endContainer.nodeName, '#text');
-        LegacyUnit.equal(rng.endOffset, 1);
-      });
-
-      suite.test('normalize caret after trailing BR', function (editor) {
-        var rng;
-
-        editor.setContent('<p>a<br /></p>');
+        editor.setContent('<p><br /><br /></p>');
         rng = editor.dom.createRng();
         rng.setStart(editor.getBody().firstChild, 2);
         rng.setEnd(editor.getBody().firstChild, 2);
@@ -973,85 +1018,29 @@ asynctest(
         editor.selection.normalize();
 
         rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+        LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
         LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+        LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
         LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
       });
+    */
 
-      suite.test('normalize caret after bogus block BR', function (editor) {
-        var rng;
+    suite.test('normalize caret after double BR', function (editor) {
+      var rng;
 
-        editor.setContent('<p><br /></p>');
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody().firstChild, 1);
-        rng.setEnd(editor.getBody().firstChild, 1);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
+      editor.setContent('<p>a<br /><br /></p>');
+      rng = editor.dom.createRng();
+      rng.setStart(editor.getBody().firstChild, 3);
+      rng.setEnd(editor.getBody().firstChild, 3);
+      editor.selection.setRng(rng);
+      editor.selection.normalize();
 
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-        LegacyUnit.equal(rng.startOffset, 0, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-        LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
-      });
-
-      suite.test('normalize after table should not move', function (editor) {
-        var rng;
-
-        // if (tinymce.isOpera || tinymce.isIE) {
-        //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-        //  return;
-        // }
-
-        editor.setContent('a<table><tr><td>b</td></tr></table>');
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody(), 0);
-        rng.setEnd(editor.getBody(), 1);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equalDom(rng.endContainer, editor.getBody());
-        LegacyUnit.equal(rng.endOffset, 1);
-      });
-
-      /*
-        suite.test('normalize caret after last BR in block', function(editor) {
-          var rng;
-
-          editor.setContent('<p><br /><br /></p>');
-          rng = editor.dom.createRng();
-          rng.setStart(editor.getBody().firstChild, 2);
-          rng.setEnd(editor.getBody().firstChild, 2);
-          editor.selection.setRng(rng);
-          editor.selection.normalize();
-
-          rng = editor.selection.getRng(true);
-          LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-          LegacyUnit.equal(rng.startOffset, 1, 'startContainer offset');
-          LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-          LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
-        });
-      */
-
-      suite.test('normalize caret after double BR', function (editor) {
-        var rng;
-
-        editor.setContent('<p>a<br /><br /></p>');
-        rng = editor.dom.createRng();
-        rng.setStart(editor.getBody().firstChild, 3);
-        rng.setEnd(editor.getBody().firstChild, 3);
-        editor.selection.setRng(rng);
-        editor.selection.normalize();
-
-        rng = editor.selection.getRng(true);
-        LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
-        LegacyUnit.equal(rng.startOffset, 3, 'startContainer offset');
-        LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
-        LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
-      });
-    }
+      rng = editor.selection.getRng(true);
+      LegacyUnit.equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+      LegacyUnit.equal(rng.startOffset, 3, 'startContainer offset');
+      LegacyUnit.equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+      LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
+    });
 
     suite.test('custom elements', function (editor) {
       var rng;

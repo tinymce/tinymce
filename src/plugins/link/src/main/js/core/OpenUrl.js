@@ -11,10 +11,12 @@
 define(
   'tinymce.plugins.link.core.OpenUrl',
   [
+    'global!document',
+    'global!window',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.Env'
   ],
-  function (DOMUtils, Env) {
+  function (document, window, DOMUtils, Env) {
     var appendClickRemove = function (link, evt) {
       document.body.appendChild(link);
       link.dispatchEvent(evt);

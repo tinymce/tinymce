@@ -12,9 +12,10 @@ define(
   'tinymce.core.api.Main',
   [
     'ephox.katamari.api.Fun',
+    'global!window',
     'tinymce.core.api.Tinymce'
   ],
-  function (Fun, Tinymce) {
+  function (Fun, window, Tinymce) {
     /*eslint consistent-this: 0 */
     var context = this || window;
 

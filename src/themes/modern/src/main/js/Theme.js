@@ -15,20 +15,26 @@ define(
     'tinymce.core.AddOnManager',
     'tinymce.core.EditorManager',
     'tinymce.core.Env',
-    'tinymce.core.ui.Api',
     'tinymce.themes.modern.modes.Iframe',
     'tinymce.themes.modern.modes.Inline',
     'tinymce.themes.modern.ui.ProgressState',
-    'tinymce.themes.modern.ui.Resize'
+    'tinymce.themes.modern.ui.Resize',
+    'tinymce.ui.Api',
+    'tinymce.ui.FormatControls',
+    'tinymce.ui.NotificationManagerImpl',
+    'tinymce.ui.WindowManagerImpl'
   ],
-  function (window, AddOnManager, EditorManager, Env, Api, Iframe, Inline, ProgressState, Resize) {
+  function (window, AddOnManager, EditorManager, Env, Iframe, Inline, ProgressState, Resize, Api, FormatControls, NotificationManagerImpl, WindowManagerImpl) {
     var ThemeManager = AddOnManager.ThemeManager;
 
+    Api.registerToFactory();
     Api.appendTo(window.tinymce ? window.tinymce : {});
 
     var renderUI = function (editor, theme, args) {
       var settings = editor.settings;
       var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
+
+      FormatControls.setup(editor);
 
       if (skin) {
         var skinUrl = settings.skin_url;
@@ -64,6 +70,12 @@ define(
         },
         resizeBy: function (dw, dh) {
           return Resize.resizeBy(editor, dw, dh);
+        },
+        getNotificationManagerImpl: function () {
+          return NotificationManagerImpl(editor);
+        },
+        getWindowManagerImpl: function () {
+          return WindowManagerImpl(editor);
         }
       };
     });
