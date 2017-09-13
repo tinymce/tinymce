@@ -253,9 +253,15 @@ define(
           editor.undoManager.transact(function () {
             if (!data.src) {
               if (imgElm) {
-                dom.remove(imgElm);
+                var elm = dom.is(imgElm.parentNode, 'figure.image') ? imgElm.parentNode : imgElm;
+                dom.remove(elm);
                 editor.focus();
                 editor.nodeChanged();
+
+                if (dom.isEmpty(editor.getBody())) {
+                  editor.setContent('');
+                  editor.selection.setCursorLocation();
+                }
               }
 
               return;
@@ -280,8 +286,11 @@ define(
             if (data.caption === false) {
               if (dom.is(imgElm.parentNode, 'figure.image')) {
                 figureElm = imgElm.parentNode;
+                dom.setAttrib(imgElm, 'contenteditable', null);
                 dom.insertAfter(imgElm, figureElm);
                 dom.remove(figureElm);
+                editor.selection.select(imgElm);
+                editor.nodeChanged();
               }
             }
 
@@ -289,6 +298,7 @@ define(
               if (!dom.is(imgElm.parentNode, 'figure.image')) {
                 oldImg = imgElm;
                 imgElm = imgElm.cloneNode(true);
+                imgElm.contentEditable = true;
                 figureElm = dom.create('figure', { 'class': 'image' });
                 figureElm.appendChild(imgElm);
                 figureElm.appendChild(dom.create('figcaption', { contentEditable: true }, 'Caption'));
