@@ -8,35 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class contains all core logic for the hr plugin.
- *
- * @class tinymce.hr.Plugin
- * @private
- */
 define(
   'tinymce.plugins.hr.Plugin',
   [
-    'tinymce.core.PluginManager'
+    'tinymce.core.PluginManager',
+    'tinymce.plugins.hr.api.Commands',
+    'tinymce.plugins.hr.ui.Buttons'
   ],
-  function (PluginManager) {
+  function (PluginManager, Commands, Buttons) {
     PluginManager.add('hr', function (editor) {
-      editor.addCommand('InsertHorizontalRule', function () {
-        editor.execCommand('mceInsertContent', false, '<hr />');
-      });
-
-      editor.addButton('hr', {
-        icon: 'hr',
-        tooltip: 'Horizontal line',
-        cmd: 'InsertHorizontalRule'
-      });
-
-      editor.addMenuItem('hr', {
-        icon: 'hr',
-        text: 'Horizontal line',
-        cmd: 'InsertHorizontalRule',
-        context: 'insert'
-      });
+      Commands.register(editor);
+      Buttons.register(editor);
     });
 
     return function () { };
