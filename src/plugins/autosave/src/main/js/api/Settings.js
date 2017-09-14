@@ -11,20 +11,10 @@
 define(
   'tinymce.plugins.autosave.api.Settings',
   [
-    'global!document'
+    'global!document',
+    'tinymce.plugins.autosave.core.Time'
   ],
-  function (document) {
-    var parseTime = function (time, defaultTime) {
-      var multipels = {
-        s: 1000,
-        m: 60000
-      };
-
-      time = /^(\d+)([ms]?)$/.exec('' + (time || defaultTime));
-
-      return (time[2] ? multipels[time[2]] : 1) * parseInt(time, 10);
-    };
-
+  function (document, Time) {
     var shouldAskBeforeUnload = function (editor) {
       return editor.getParam("autosave_ask_before_unload", true);
     };
@@ -44,11 +34,11 @@ define(
     };
 
     var getAutoSaveInterval = function (editor) {
-      return parseTime(editor.settings.autosave_interval, '30s');
+      return Time.parse(editor.settings.autosave_interval, '30s');
     };
 
     var getAutoSaveRetention = function (editor) {
-      return parseTime(editor.settings.autosave_retention, '20m');
+      return Time.parse(editor.settings.autosave_retention, '20m');
     };
 
     return {

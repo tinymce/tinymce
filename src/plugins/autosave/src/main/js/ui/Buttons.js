@@ -24,6 +24,9 @@ define(
           ctrl.disabled(!Storage.hasDraft(editor));
         });
 
+        // TODO: Investigate why this is only done on postrender that would
+        // make the feature broken if only the menu item was rendered since
+        // it is rendered when the menu appears
         Storage.startStoreDraft(editor, started);
       };
     };
