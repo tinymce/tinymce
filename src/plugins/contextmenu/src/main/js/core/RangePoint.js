@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.plugins.contextmenu.RangePoint',
+  'tinymce.plugins.contextmenu.core.RangePoint',
   [
     'ephox.katamari.api.Arr'
   ],
