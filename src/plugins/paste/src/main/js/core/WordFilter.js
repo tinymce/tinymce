@@ -187,7 +187,7 @@ define(
       for (var i = 0; i < elements.length; i++) {
         node = elements[i];
 
-        if (node.name == 'p' && node.firstChild) {
+        if (node.name === 'p' && node.firstChild) {
           // Find first text node in paragraph
           var nodeText = getText(node);
 
@@ -296,7 +296,7 @@ define(
         }
 
         // Output only valid styles
-        if (editor.settings.paste_retain_style_properties == "all" || (validStyles && validStyles[name])) {
+        if (editor.settings.paste_retain_style_properties === "all" || (validStyles && validStyles[name])) {
           outputStyles[name] = value;
         }
       });
@@ -403,7 +403,7 @@ define(
           node.attr('style', filterStyles(editor, validStyles, node, node.attr('style')));
 
           // Remove pointess spans
-          if (node.name == 'span' && node.parent && !node.attributes.length) {
+          if (node.name === 'span' && node.parent && !node.attributes.length) {
             node.unwrap();
           }
         }

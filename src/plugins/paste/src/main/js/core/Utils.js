@@ -24,7 +24,7 @@ define(
   function (navigator, DomParser, Schema, Tools) {
     function filter(content, items) {
       Tools.each(items, function (v) {
-        if (v.constructor == RegExp) {
+        if (v.constructor === RegExp) {
           content = content.replace(v, '');
         } else {
           content = content.replace(v[0], v[1]);
@@ -66,7 +66,7 @@ define(
           return;
         }
 
-        if (node.type == 3) {
+        if (node.type === 3) {
           text += node.value;
         }
 
@@ -83,7 +83,7 @@ define(
         if (blockElements[name] && currentNode.next) {
           text += '\n';
 
-          if (name == 'p') {
+          if (name === 'p') {
             text += '\n';
           }
         }

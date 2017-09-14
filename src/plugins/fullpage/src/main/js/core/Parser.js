@@ -42,7 +42,7 @@ define(
 
       // Parse XML PI
       elm = headerFragment.firstChild;
-      if (elm.type == 7) {
+      if (elm.type === 7) {
         data.xml_pi = true;
         matches = /encoding="([^"]+)"/.exec(elm.value);
         if (matches) {
@@ -68,7 +68,7 @@ define(
 
         if (name) {
           data[name.toLowerCase()] = meta.attr('content');
-        } else if (httpEquiv == "Content-Type") {
+        } else if (httpEquiv === "Content-Type") {
           matches = /charset\s*=\s*(.*)\s*/gi.exec(meta.attr('content'));
 
           if (matches) {
@@ -86,7 +86,7 @@ define(
       // Parse stylesheets
       data.stylesheets = [];
       Tools.each(headerFragment.getAll('link'), function (link) {
-        if (link.attr('rel') == 'stylesheet') {
+        if (link.attr('rel') === 'stylesheet') {
           data.stylesheets.push(link.attr('href'));
         }
       });
@@ -147,7 +147,7 @@ define(
         }
 
         elm.value = value;
-      } else if (elm && elm.type == 7) {
+      } else if (elm && elm.type === 7) {
         elm.remove();
       }
 
@@ -172,7 +172,7 @@ define(
       // Add meta encoding
       elm = null;
       Tools.each(headerFragment.getAll('meta'), function (meta) {
-        if (meta.attr('http-equiv') == 'Content-Type') {
+        if (meta.attr('http-equiv') === 'Content-Type') {
           elm = meta;
         }
       });
@@ -212,7 +212,7 @@ define(
         for (i = 0; i < nodes.length; i++) {
           meta = nodes[i];
 
-          if (meta.attr('name') == name) {
+          if (meta.attr('name') === name) {
             if (value) {
               meta.attr('content', value);
             } else {
@@ -235,7 +235,7 @@ define(
 
       var currentStyleSheetsMap = {};
       Tools.each(headerFragment.getAll('link'), function (stylesheet) {
-        if (stylesheet.attr('rel') == 'stylesheet') {
+        if (stylesheet.attr('rel') === 'stylesheet') {
           currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
         }
       });

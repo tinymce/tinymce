@@ -23,14 +23,14 @@ define(
     var createLinkList = function (editor, callback) {
       var linkList = Settings.getLinkList(editor.settings);
 
-      if (typeof linkList == "string") {
+      if (typeof linkList === "string") {
         XHR.send({
           url: linkList,
           success: function (text) {
             callback(editor, JSON.parse(text));
           }
         });
-      } else if (typeof linkList == "function") {
+      } else if (typeof linkList === "function") {
         linkList(function (list) {
           callback(editor, list);
         });
@@ -84,7 +84,7 @@ define(
       var linkListChangeHandler = function (e) {
         var textCtrl = win.find('#text');
 
-        if (!textCtrl.value() || (e.lastControl && textCtrl.value() == e.lastControl.text())) {
+        if (!textCtrl.value() || (e.lastControl && textCtrl.value() === e.lastControl.text())) {
           textCtrl.value(e.control.text());
         }
 
@@ -318,7 +318,7 @@ define(
           }
 
           // Is email and not //user@domain.com
-          if (href.indexOf('@') > 0 && href.indexOf('//') == -1 && href.indexOf('mailto:') == -1) {
+          if (href.indexOf('@') > 0 && href.indexOf('//') === -1 && href.indexOf('mailto:') === -1) {
             delayedConfirm(
               editor,
               'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',

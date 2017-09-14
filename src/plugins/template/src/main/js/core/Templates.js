@@ -12,12 +12,12 @@ define(
       return function () {
         var templateList = editorSettings.templates;
 
-        if (typeof templateList == "function") {
+        if (typeof templateList === "function") {
           templateList(callback);
           return;
         }
 
-        if (typeof templateList == "string") {
+        if (typeof templateList === "string") {
           XHR.send({
             url: templateList,
             success: function (text) {
@@ -48,7 +48,7 @@ define(
       Tools.each(dom.select('*', e), function (e) {
         Tools.each(vl, function (v, k) {
           if (dom.hasClass(e, k)) {
-            if (typeof vl[k] == 'function') {
+            if (typeof vl[k] === 'function') {
               vl[k](e);
             }
           }

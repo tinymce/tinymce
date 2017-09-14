@@ -56,7 +56,7 @@ define(
         var spaces = +setting > 1 ? +setting : 3;  // defaults to 3 spaces if setting is true (or 1)
 
         editor.on('keydown', function (e) {
-          if (e.keyCode == 9) {
+          if (e.keyCode === 9) {
 
             if (e.shiftKey) {
               return;

@@ -35,7 +35,7 @@ define(
       }
 
       function togglePlainTextPaste() {
-        if (clipboard.pasteFormat == "text") {
+        if (clipboard.pasteFormat === "text") {
           clipboard.pasteFormat = "html";
           Events.firePastePlainTextToggle(editor, false);
         } else {

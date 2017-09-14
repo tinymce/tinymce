@@ -44,7 +44,7 @@ define(
         editor.dom.getParents(editor.selection.getStart(), function (elm) {
           var value;
 
-          if ((value = elm.style[format == 'forecolor' ? 'color' : 'background-color'])) {
+          if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
             color = value;
           }
         });
@@ -116,7 +116,7 @@ define(
         type = self.settings.origin;
 
         function getColorCellHtml(color, title) {
-          var isNoColor = color == 'transparent';
+          var isNoColor = color === 'transparent';
 
           return (
             '<td class="mce-grid-cell' + (isNoColor ? ' mce-colorbtn-trans' : '') + '">' +
@@ -242,7 +242,7 @@ define(
 
             // Shift colors to the right
             // TODO: Might need to be the left on RTL
-            if (i == cols[type]) {
+            if (i === cols[type]) {
               for (i = 0; i < cols[type] - 1; i++) {
                 setDivColor(customColorCells[i], customColorCells[i + 1].getAttribute('data-mce-color'));
               }
@@ -262,7 +262,7 @@ define(
           e.target.setAttribute('aria-selected', true);
           this.lastId = e.target.id;
 
-          if (value == 'transparent') {
+          if (value === 'transparent') {
             resetColor();
           } else {
             selectColor(value);

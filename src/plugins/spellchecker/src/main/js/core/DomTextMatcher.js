@@ -14,7 +14,7 @@ define(
   ],
   function () {
     function isContentEditableFalse(node) {
-      return node && node.nodeType == 1 && node.contentEditable === "false";
+      return node && node.nodeType === 1 && node.contentEditable === "false";
     }
 
     // Based on work developed by: James Padolsey http://james.padolsey.com
@@ -247,7 +247,7 @@ define(
       function getWrappersByIndex(index) {
         var elements = node.getElementsByTagName('*'), wrappers = [];
 
-        index = typeof index == "number" ? "" + index : null;
+        index = typeof index === "number" ? "" + index : null;
 
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i], dataIndex = element.getAttribute('data-mce-index');

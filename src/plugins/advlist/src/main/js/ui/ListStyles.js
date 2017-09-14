@@ -23,7 +23,7 @@ define(
     var toMenuItems = function (styles) {
       return Tools.map(styles, function (styleValue) {
         var text = styleValueToText(styleValue);
-        var data = styleValue == 'default' ? '' : styleValue;
+        var data = styleValue === 'default' ? '' : styleValue;
 
         return { text: text, data: data };
       });

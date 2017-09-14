@@ -77,7 +77,7 @@ define(
           h = 20;
         }
 
-        rect = currentRect = Rect.clamp({ x: x, y: y, w: w, h: h }, clampRect, handle.name == 'move');
+        rect = currentRect = Rect.clamp({ x: x, y: y, w: w, h: h }, clampRect, handle.name === 'move');
         rect = getRelativeRect(clampRect, rect);
 
         instance.fire('updateRect', { rect: rect });
@@ -135,7 +135,7 @@ define(
           var activeHandle;
 
           Tools.each(handles, function (handle) {
-            if (e.target.id == id + '-' + handle.name) {
+            if (e.target.id === id + '-' + handle.name) {
               activeHandle = handle;
               return false;
             }

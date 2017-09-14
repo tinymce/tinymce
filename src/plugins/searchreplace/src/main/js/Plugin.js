@@ -67,7 +67,7 @@ define(
               return;
             }
 
-            if (last.text == text && last.caseState == caseState && last.wholeWord == wholeWord) {
+            if (last.text === text && last.caseState === caseState && last.wholeWord === wholeWord) {
               if (findSpansByIndex(currentIndex + 1).length === 0) {
                 notFoundAlert();
                 return;
@@ -166,7 +166,7 @@ define(
       function getElmIndex(elm) {
         var value = elm.getAttribute('data-mce-index');
 
-        if (typeof value == "number") {
+        if (typeof value === "number") {
           return "" + value;
         }
 

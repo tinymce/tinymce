@@ -30,7 +30,7 @@ define(
       function removeCacheSuffix(url) {
         var cacheSuffix = Env.cacheSuffix;
 
-        if (typeof url == 'string') {
+        if (typeof url === 'string') {
           url = url.replace('?' + cacheSuffix, '').replace('&' + cacheSuffix, '');
         }
 
@@ -56,7 +56,7 @@ define(
       }
 
       function compileFilter(filter) {
-        if (typeof filter == "string") {
+        if (typeof filter === "string") {
           return function (value) {
             return value.indexOf(filter) !== -1;
           };

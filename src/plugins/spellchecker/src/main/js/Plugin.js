@@ -154,7 +154,7 @@ define(
         var root = editor.dom.getRoot();
 
         // Adjust targetPos for scrolling in the editor
-        if (root.nodeName == 'BODY') {
+        if (root.nodeName === 'BODY') {
           targetPos.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;
           targetPos.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;
         } else {
@@ -183,7 +183,7 @@ define(
       function defaultSpellcheckCallback(method, text, doneCallback, errorCallback) {
         var data = { method: method, lang: settings.spellchecker_language }, postData = '';
 
-        data[method == "addToDictionary" ? "word" : "text"] = text;
+        data[method === "addToDictionary" ? "word" : "text"] = text;
 
         Tools.each(data, function (value, key) {
           if (postData) {
@@ -264,7 +264,7 @@ define(
 
         if (all) {
           Tools.each(editor.dom.select('span.mce-spellchecker-word'), function (span) {
-            if (span.getAttribute('data-mce-word') == word) {
+            if (span.getAttribute('data-mce-word') === word) {
               editor.dom.remove(span, true);
             }
           });
@@ -289,7 +289,7 @@ define(
       function getElmIndex(elm) {
         var value = elm.getAttribute('data-mce-index');
 
-        if (typeof value == "number") {
+        if (typeof value === "number") {
           return "" + value;
         }
 
@@ -320,7 +320,7 @@ define(
       editor.on('click', function (e) {
         var target = e.target;
 
-        if (target.className == "mce-spellchecker-word") {
+        if (target.className === "mce-spellchecker-word") {
           e.preventDefault();
 
           var spans = findSpansByIndex(getElmIndex(target));

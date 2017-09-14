@@ -74,7 +74,7 @@ define(
 
     var isOnlyTextSelected = function (html) {
       // Partial html and not a fully selected anchor element
-      if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
+      if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
         return false;
       }
 
@@ -102,7 +102,7 @@ define(
           };
 
           if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-            linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
+            linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
           }
 
           if (data.href === attachState.href) {

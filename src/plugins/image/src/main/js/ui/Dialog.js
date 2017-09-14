@@ -33,14 +33,14 @@ define(
       function createImageList(callback) {
         var imageList = editor.settings.image_list;
 
-        if (typeof imageList == "string") {
+        if (typeof imageList === "string") {
           XHR.send({
             url: imageList,
             success: function (text) {
               callback(JSON.parse(text));
             }
           });
-        } else if (typeof imageList == "function") {
+        } else if (typeof imageList === "function") {
           imageList(callback);
         } else {
           callback(imageList);
@@ -404,7 +404,7 @@ define(
             onselect: function (e) {
               var altCtrl = win.find('#alt');
 
-              if (!altCtrl.value() || (e.lastControl && altCtrl.value() == e.lastControl.text())) {
+              if (!altCtrl.value() || (e.lastControl && altCtrl.value() === e.lastControl.text())) {
                 altCtrl.value(e.control.text());
               }
 

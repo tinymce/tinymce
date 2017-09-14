@@ -56,7 +56,7 @@ define(
           }
 
           Tools.each(el, function (e, i) {
-            if (e.id == editor.id) {
+            if (e.id === editor.id) {
               x = i;
               return false;
             }
@@ -80,20 +80,20 @@ define(
 
         v = Tools.explode(editor.getParam('tab_focus', editor.getParam('tabfocus_elements', ':prev,:next')));
 
-        if (v.length == 1) {
+        if (v.length === 1) {
           v[1] = v[0];
           v[0] = ':prev';
         }
 
         // Find element to focus
         if (e.shiftKey) {
-          if (v[0] == ':prev') {
+          if (v[0] === ':prev') {
             el = find(-1);
           } else {
             el = DOM.get(v[0]);
           }
         } else {
-          if (v[1] == ':next') {
+          if (v[1] === ':next') {
             el = find(1);
           } else {
             el = DOM.get(v[1]);

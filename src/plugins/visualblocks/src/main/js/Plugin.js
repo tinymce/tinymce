@@ -50,7 +50,7 @@ define(
         // Toggle on/off visual blocks while computing previews
         editor.on("PreviewFormats AfterPreviewFormats", function (e) {
           if (enabled) {
-            dom.toggleClass(editor.getBody(), 'mce-visualblocks', e.type == "afterpreviewformats");
+            dom.toggleClass(editor.getBody(), 'mce-visualblocks', e.type === "afterpreviewformats");
           }
         });
 

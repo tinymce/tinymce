@@ -96,7 +96,7 @@ define(
       if (textBlockElm) {
         walker = new TreeWalker(textBlockElm, textBlockElm);
         while ((node = walker.next())) {
-          if (node.nodeType == 3) {
+          if (node.nodeType === 3) {
             firstTextNode = node;
             break;
           }
@@ -112,11 +112,11 @@ define(
           container = rng.startContainer;
           offset = rng.startOffset;
 
-          if (firstTextNode == container) {
+          if (firstTextNode === container) {
             offset = Math.max(0, offset - pattern.start.length);
           }
 
-          if (Tools.trim(firstTextNode.data).length == pattern.start.length) {
+          if (Tools.trim(firstTextNode.data).length === pattern.start.length) {
             return;
           }
 

@@ -60,7 +60,7 @@ define(
         }
 
         // Don't replace the variables when raw is used for example on undo/redo
-        if (e.format == "raw") {
+        if (e.format === "raw") {
           return;
         }
 

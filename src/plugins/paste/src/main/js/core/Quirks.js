@@ -98,7 +98,7 @@ define(
       // Filter away styles that isn't matching the target node
       var webKitStyles = editor.settings.paste_webkit_styles;
 
-      if (editor.settings.paste_remove_styles_if_webkit === false || webKitStyles == "all") {
+      if (editor.settings.paste_remove_styles_if_webkit === false || webKitStyles === "all") {
         return content;
       }
 

@@ -74,7 +74,7 @@ define(
                   name = this.name();
                   value = this.value();
 
-                  if (name == "hex") {
+                  if (name === "hex") {
                     value = '#' + value;
                     setColor(win, value);
                     colorPickerCtrl.value(value);

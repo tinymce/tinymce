@@ -75,7 +75,7 @@ define(
           rng = sel.getRng();
           node = rng.startContainer;
           // ignore cursor positions at the beginning/end (to make context toolbar less noisy)
-          if (node.nodeType == 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
+          if (node.nodeType === 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
             return true;
           }
         }

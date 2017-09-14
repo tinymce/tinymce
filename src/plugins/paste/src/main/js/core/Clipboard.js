@@ -98,7 +98,7 @@ define(
           if (dataTransfer.getData) {
             var legacyText = dataTransfer.getData('Text');
             if (legacyText && legacyText.length > 0) {
-              if (legacyText.indexOf(mceInternalUrlPrefix) == -1) {
+              if (legacyText.indexOf(mceInternalUrlPrefix) === -1) {
                 items['text/plain'] = legacyText;
               }
             }
@@ -253,7 +253,7 @@ define(
       }
 
       function isKeyboardPasteEvent(e) {
-        return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
+        return (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
       }
 
       function registerEventHandlers() {
@@ -267,7 +267,7 @@ define(
 
           // Ctrl+V or Shift+Insert
           if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
-            keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
+            keyboardPastePlainTextState = e.shiftKey && e.keyCode === 86;
 
             // Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
             // it fires the keydown but no paste or keyup so we are left with a paste bin
@@ -368,7 +368,7 @@ define(
           var clipboardDelay = new Date().getTime() - clipboardTimer;
 
           var isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
-          var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
+          var plainTextMode = self.pasteFormat === "text" || keyboardPastePlainTextState;
           var internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
           keyboardPastePlainTextState = false;
@@ -418,7 +418,7 @@ define(
         });
 
         editor.on('dragstart dragend', function (e) {
-          draggingInternally = e.type == 'dragstart';
+          draggingInternally = e.type === 'dragstart';
         });
 
         function isPlainTextFileUrl(content) {

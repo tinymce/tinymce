@@ -23,7 +23,7 @@ define(
       Tools.each(contextmenu.split(/[ ,]/), function (name) {
         var item = editor.menuItems[name];
 
-        if (name == '|') {
+        if (name === '|') {
           item = { text: name };
         }
 
@@ -34,8 +34,8 @@ define(
       });
 
       for (var i = 0; i < items.length; i++) {
-        if (items[i].text == '|') {
-          if (i === 0 || i == items.length - 1) {
+        if (items[i].text === '|') {
+          if (i === 0 || i === items.length - 1) {
             items.splice(i, 1);
           }
         }

@@ -177,7 +177,7 @@ define(
           items.push({
             text: { raw: font[0] },
             value: font[1],
-            textStyle: font[1].indexOf('dings') == -1 ? 'font-family:' + font[1] : ''
+            textStyle: font[1].indexOf('dings') === -1 ? 'font-family:' + font[1] : ''
           });
         });
 

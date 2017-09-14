@@ -111,7 +111,7 @@ define(
           }
 
           // do not proceed if we have reached absolute minimum
-          if (minLevel == 1) {
+          if (minLevel === 1) {
             return minLevel;
           }
         }

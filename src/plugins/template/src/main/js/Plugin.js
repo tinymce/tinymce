@@ -29,7 +29,7 @@ define(
   function (Fun, DOMUtils, PluginManager, JSON, Tools, XHR, DateTimeHelper, Templates) {
 
     var insertIframeHtml = function (editor, win, html) {
-      if (html.indexOf('<html>') == -1) {
+      if (html.indexOf('<html>') === -1) {
         var contentCssLinks = '';
 
         Tools.each(editor.contentCSS, function (url) {

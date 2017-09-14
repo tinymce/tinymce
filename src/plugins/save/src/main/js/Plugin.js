@@ -46,7 +46,7 @@ define(
           editor.setDirty(false);
 
           if (!formObj.onsubmit || formObj.onsubmit()) {
-            if (typeof formObj.submit == "function") {
+            if (typeof formObj.submit === "function") {
               formObj.submit();
             } else {
               displayErrorMessage(editor.translate("Error: Form submit field collision."));
