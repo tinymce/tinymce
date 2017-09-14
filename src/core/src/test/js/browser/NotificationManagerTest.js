@@ -15,7 +15,7 @@ asynctest(
     Theme();
 
     var teardown = function (editor) {
-      var notifications = [].concat(editor.notificationManager.notifications);
+      var notifications = [].concat(editor.notificationManager.getNotifications());
 
       Tools.each(notifications, function (notification) {
         notification.close();
@@ -27,7 +27,7 @@ asynctest(
       var testMsg2 = { type: 'warning', text: 'test warning message' };
       var testMsg3 = { type: 'error', text: 'test error message' };
       var testMsg4 = { type: 'info', text: 'test info message' };
-      var notifications = editor.notificationManager.notifications;
+      var notifications = editor.notificationManager.getNotifications();
 
       editor.notificationManager.open(testMsg1);
 
@@ -54,7 +54,7 @@ asynctest(
 
     suite.test('Should add duplicate progressBar messages', function (editor) {
       var testMsg1 = { text: 'test progressBar message', progressBar: true };
-      var notifications = editor.notificationManager.notifications;
+      var notifications = editor.notificationManager.getNotifications();
 
       editor.notificationManager.open(testMsg1);
 
@@ -77,7 +77,7 @@ asynctest(
         }
       };
       var testMsg1 = { text: 'test timeout message', timeout: 1 };
-      var notifications = editor.notificationManager.notifications;
+      var notifications = editor.notificationManager.getNotifications();
 
       editor.notificationManager.open(testMsg1).on('close', checkClosed);
 

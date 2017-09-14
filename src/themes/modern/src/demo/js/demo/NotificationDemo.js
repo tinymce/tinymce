@@ -45,6 +45,19 @@ define(
       console.log(notification);
     };
 
+    var notifyExtraLong = function (len) {
+      var longTextMessage = ['this is text '];
+
+      for (var i = 0; i < len; i++) {
+        longTextMessage.push('bla');
+      }
+
+      var notification = EditorManager.activeEditor.notificationManager.open({
+        text: longTextMessage.join('')
+      });
+      console.log(notification);
+    };
+
     var notifyProgress = function (percent) {
       var notification = EditorManager.activeEditor.notificationManager.open({
         text: 'Progress text',
@@ -82,6 +95,7 @@ define(
       { title: 'info', action: notifyShort, value: 'info' },
       { title: 'blank', action: notifyShort },
       { title: 'notifyLong', action: notifyLong, value: 100 },
+      { title: 'notifyExtraLong', action: notifyExtraLong, value: 100 },
       { title: 'notifyProgress', action: notifyProgress, value: 50 },
       { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
       { title: 'notifyIcon', action: notifyIcon }
@@ -96,6 +110,13 @@ define(
 
     EditorManager.init({
       selector: 'textarea.tinymce',
+      skin_url: '../../../../../skins/lightgray/dist/lightgray',
+      codesample_content_css: '../../../../../plugins/codesample/dist/codesample/css/prism.css'
+    });
+
+    EditorManager.init({
+      selector: 'div.tinymce',
+      inline: true,
       skin_url: '../../../../../skins/lightgray/dist/lightgray',
       codesample_content_css: '../../../../../plugins/codesample/dist/codesample/css/prism.css'
     });

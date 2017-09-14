@@ -13,18 +13,9 @@ define(
   [
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
-    'tinymce.core.caret.CaretUtils',
-    'tinymce.core.dom.NodeType'
+    'tinymce.core.caret.CaretUtils'
   ],
-  function (CaretFinder, CaretPosition, CaretUtils, NodeType) {
-    var isTextBlockLike = function (elm) {
-      return NodeType.isElement(elm) && /^(P|H[1-6]|DIV|LI|DT|DD)$/.test(elm.nodeName);
-    };
-
-    var matchEndContainer = function (rng, predicate) {
-      return predicate(rng.endContainer);
-    };
-
+  function (CaretFinder, CaretPosition, CaretUtils) {
     var createRange = function (sc, so, ec, eo) {
       var rng = document.createRange();
       rng.setStart(sc, so);
@@ -54,12 +45,8 @@ define(
         }).getOr(rng);
     };
 
-    var isEndAtStartOfTextLikeBlock = function (rng) {
-      return matchEndContainer(rng, isTextBlockLike) && rng.endOffset === 0;
-    };
-
     var normalizeBlockSelection = function (rng) {
-      return rng.collapsed && isEndAtStartOfTextLikeBlock(rng) ? rng : normalizeBlockSelectionRange(rng);
+      return rng.collapsed ? rng : normalizeBlockSelectionRange(rng);
     };
 
     var normalize = function (rng) {

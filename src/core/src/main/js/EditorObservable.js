@@ -105,7 +105,7 @@ define(
         }
 
         delegate = function (e) {
-          var target = e.target, editors = editor.editorManager.editors, i = editors.length;
+          var target = e.target, editors = editor.editorManager.get(), i = editors.length;
 
           while (i--) {
             var body = editors[i].getBody();

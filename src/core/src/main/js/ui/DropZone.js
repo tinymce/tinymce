@@ -68,7 +68,7 @@ define(
           hidefocus: '1'
         };
 
-        elm = DomUtils.create('div', attrs, '<span>' + cfg.text + '</span>');
+        elm = DomUtils.create('div', attrs, '<span>' + this.translate(cfg.text) + '</span>');
 
         if (cfg.height) {
           DomUtils.css(elm, 'height', cfg.height + 'px');

@@ -92,6 +92,34 @@ asynctest(
           tinyApis.sAssertContent('<p><span style="color: red;">a</span>d</p>'),
           tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
         ])),
+        Logger.t('Delete from li to li should merge', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li>ab</li><li>cd</li></ul>'),
+          tinyApis.sSetSelection([0, 0, 0], 1, [0, 1, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<ul><li>ad</li></ul>'),
+          tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        ])),
+        Logger.t('Delete from nested li to li should merge', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li>ab<ul><li>cd</li></ul></li></ul>'),
+          tinyApis.sSetSelection([0, 0, 0], 1, [0, 0, 1, 0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<ul><li>ad</li></ul>'),
+          tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        ])),
+        Logger.t('Delete from li to nested li should merge', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li>ab<ul><li>cd</li></ul></li><li>ef</li></ul>'),
+          tinyApis.sSetSelection([0, 0, 1, 0, 0], 1, [0, 1, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<ul><li>ab<ul><li>cf</li></ul></li></ul>'),
+          tinyApis.sAssertSelection([0, 0, 1, 0, 0], 1, [0, 0, 1, 0, 0], 1)
+        ])),
+        Logger.t('Delete from deep nested li to li should merge', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li>ab<ul><li>cd<ul><li>ef</li></li></ul></li></ul>'),
+          tinyApis.sSetSelection([0, 0, 0], 1, [0, 0, 1, 0, 1, 0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<ul><li>af</li></ul>'),
+          tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        ])),
         Logger.t('Delete on selection of everything should empty editor', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p><p>b</p>'),
           tinyApis.sSetSelection([0, 0], 0, [1, 0], 1),

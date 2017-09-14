@@ -22,7 +22,25 @@ define(
     "tinymce.core.caret.CaretPosition"
   ],
   function (Tools, CaretWalker, CaretPosition) {
-    var isListFragment = function (fragment) {
+    var hasOnlyOneChild = function (node) {
+      return node.firstChild && node.firstChild === node.lastChild;
+    };
+
+    var isPaddingNode = function (node) {
+      return node.name === 'br' || node.value === '\u00a0';
+    };
+
+    var isPaddedEmptyBlock = function (schema, node) {
+      var blockElements = schema.getBlockElements();
+      return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild);
+    };
+
+    var isEmptyFragmentElement = function (schema, node) {
+      var nonEmptyElements = schema.getNonEmptyElements();
+      return node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
+    };
+
+    var isListFragment = function (schema, fragment) {
       var firstChild = fragment.firstChild;
       var lastChild = fragment.lastChild;
 
@@ -33,6 +51,11 @@ define(
 
       // Skip mce_marker since it's likely <ul>..</ul><span id="mce_marker"></span>
       if (lastChild && lastChild.attr('id') === 'mce_marker') {
+        lastChild = lastChild.prev;
+      }
+
+      // Skip last child if it's an empty block
+      if (isEmptyFragmentElement(schema, lastChild)) {
         lastChild = lastChild.prev;
       }
 

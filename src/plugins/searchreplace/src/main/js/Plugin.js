@@ -254,6 +254,7 @@ define(
 
       self.find = function (text, matchCase, wholeWord) {
         text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        text = text.replace(/\s/g, '\\s');
         text = wholeWord ? '\\b' + text + '\\b' : text;
 
         var count = markAllMatches(new RegExp(text, matchCase ? 'g' : 'gi'));

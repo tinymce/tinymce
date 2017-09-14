@@ -43,6 +43,7 @@ asynctest(
           LegacyUnit.equal(EditorManager.get(undefined), null);
           LegacyUnit.equal(EditorManager.get()[0] === EditorManager.activeEditor, true);
           LegacyUnit.equal(EditorManager.get(EditorManager.activeEditor.id) === EditorManager.activeEditor, true);
+          LegacyUnit.equal(EditorManager.get() !== EditorManager.get(), true);
 
           // Trigger save
           var saveCount = 0;

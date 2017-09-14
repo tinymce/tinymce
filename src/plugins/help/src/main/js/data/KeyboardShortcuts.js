@@ -11,7 +11,7 @@ define(
       { shortcut: meta + ' + B', action: 'Bold' },
       { shortcut: meta + ' + I', action: 'Italic' },
       { shortcut: meta + ' + U', action: 'Underline' },
-      { shortcut: meta + ' + A', action: 'Select All' },
+      { shortcut: meta + ' + A', action: 'Select all' },
       { shortcut: meta + ' + Y or ' + meta + ' + Shift + Z', action: 'Redo' },
       { shortcut: meta + ' + Z', action: 'Undo' },
       { shortcut: access + ' + 1', action: 'Header 1' },

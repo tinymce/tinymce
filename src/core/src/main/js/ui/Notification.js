@@ -41,6 +41,8 @@ define(
 
         self._super(settings);
 
+        self.maxWidth = settings.maxWidth;
+
         if (settings.text) {
           self.text(settings.text);
         }
@@ -88,9 +90,7 @@ define(
           icon = '<i class="' + prefix + 'ico' + ' ' + prefix + 'i-' + self.icon + '"></i>';
         }
 
-        if (self.color) {
-          notificationStyle = ' style="background-color: ' + self.color + '"';
-        }
+        notificationStyle = ' style="max-width: ' + self.maxWidth + 'px;' + (self.color ? 'background-color: ' + self.color + ';"' : '"');
 
         if (self.closeButton) {
           closeButton = '<button type="button" class="' + prefix + 'close" aria-hidden="true">\u00d7</button>';

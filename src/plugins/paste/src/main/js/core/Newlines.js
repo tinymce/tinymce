@@ -23,9 +23,10 @@ define(
   function (Tools, Entities) {
 
     var isPlainText = function (text) {
-      // so basically any tag that is not one of the "p, div, br", or is one of them, but is followed
+      // so basically any tag that is not one of the "p, div, span, br", or is one of them, but is followed
       // by some additional characters qualifies the text as not a plain text (having some HTML tags)
-      return !/<(?:(?!\/?(?:div|p|br))[^>]*|(?:div|p|br)\s+\w[^>]+)>/.test(text);
+      // <span style="white-space:pre"> and <br /> are added as separate exceptions to the rule
+      return !/<(?:\/?(?!(?:div|p|br|span)>)\w+|(?:(?!(?:span style="white-space:\s?pre;?">)|br\s?\/>))\w+\s[^>]+)>/i.test(text);
     };
 
 

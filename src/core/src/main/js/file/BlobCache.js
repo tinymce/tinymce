@@ -17,12 +17,12 @@
 define(
   'tinymce.core.file.BlobCache',
   [
+    'ephox.sand.api.URL',
     'tinymce.core.util.Arr',
     'tinymce.core.util.Fun',
-    'tinymce.core.util.Uuid',
-    'global!URL'
+    'tinymce.core.util.Uuid'
   ],
-  function (Arr, Fun, Uuid, URL) {
+  function (URL, Arr, Fun, Uuid) {
     return function () {
       var cache = [], constant = Fun.constant;
 
