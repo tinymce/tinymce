@@ -248,10 +248,10 @@ define(
       bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
       // Run beforeSetContent handlers on the HTML to be inserted
-      args = { content: value, format: 'html', selection: true };
+      args = { content: value, format: 'html', selection: true, paste: details.paste };
       args = editor.fire('BeforeSetContent', args);
       if (args.isDefaultPrevented()) {
-        editor.fire('SetContent', { content: args.content, format: 'html', selection: true });
+        editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste });
         return;
       }
 
