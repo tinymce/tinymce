@@ -40,7 +40,7 @@ define(
       });
 
       editor.on('BeforeSetContent', function (e) {
-        if (e.selection === true) {
+        if (e.selection === true && e.paste === true) {
           var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
           var table = TableLookup.table(cell);
           table.bind(function (table) {
