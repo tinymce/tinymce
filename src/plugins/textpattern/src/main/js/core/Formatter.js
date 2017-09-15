@@ -1,12 +1,20 @@
+/**
+ * Formatter.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.textpattern.core.Formatter',
-
   [
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.util.Tools',
     'tinymce.plugins.textpattern.core.Patterns'
   ],
-
   function (TreeWalker, Tools, Patterns) {
     var splitContainer = function (container, pattern, offset, startOffset, delta) {
 

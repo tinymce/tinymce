@@ -119,6 +119,7 @@ define(
       EditorManager.init({
         skin_url: '../../../../skins/lightgray/dist/lightgray',
         codesample_content_css: '../../../../plugins/codesample/dist/codesample/css/prism.css',
+        visualblocks_content_css: '../../../../plugins/visualblocks/dist/visualblocks/css/visualblocks.css',
         images_upload_url: 'd',
         selector: "textarea",
         link_list: [
@@ -138,11 +139,12 @@ define(
         plugins: [
           "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-          "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample help"
+          "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern",
+          "codesample help noneditable"
         ],
         add_unload_trigger: false,
         toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
-        "bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code"
+        "bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl"
       });
 
       window.tinymce = EditorManager;
