@@ -276,7 +276,11 @@ define(
 
           // No scripts are currently loading then execute all pending queue loaded callbacks
           if (!loading) {
-            each(queueLoadedCallbacks, function (callback) {
+            // We need to clone the notifications and empty the pending callbacks so that callbacks can load more resources
+            var notifyCallbacks = queueLoadedCallbacks.slice(0);
+            queueLoadedCallbacks.length = 0;
+
+            each(notifyCallbacks, function (callback) {
               if (failures.length === 0) {
                 if (isFunction(callback.success)) {
                   callback.success.call(callback.scope);
@@ -287,8 +291,6 @@ define(
                 }
               }
             });
-
-            queueLoadedCallbacks.length = 0;
           }
         };
 
