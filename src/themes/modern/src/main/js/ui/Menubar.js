@@ -27,7 +27,7 @@ define(
     var createMenuItem = function (menuItems, name) {
       var menuItem;
 
-      if (name == '|') {
+      if (name === '|') {
         return { text: '|' };
       }
 
@@ -65,8 +65,8 @@ define(
         // Added though context
         if (!isUserDefined) {
           Tools.each(editorMenuItems, function (menuItem) {
-            if (menuItem.context == context) {
-              if (menuItem.separator == 'before') {
+            if (menuItem.context === context) {
+              if (menuItem.separator === 'before') {
                 menuItems.push({ text: '|' });
               }
 
@@ -76,7 +76,7 @@ define(
                 menuItems.push(menuItem);
               }
 
-              if (menuItem.separator == 'after') {
+              if (menuItem.separator === 'after') {
                 menuItems.push({ text: '|' });
               }
             }
@@ -84,8 +84,8 @@ define(
         }
 
         for (var i = 0; i < menuItems.length; i++) {
-          if (menuItems[i].text == '|') {
-            if (i === 0 || i == menuItems.length - 1) {
+          if (menuItems[i].text === '|') {
+            if (i === 0 || i === menuItems.length - 1) {
               menuItems.splice(i, 1);
             }
           }
@@ -115,7 +115,7 @@ define(
         }
       }
 
-      var enabledMenuNames = typeof settings.menubar == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
+      var enabledMenuNames = typeof settings.menubar === "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
       for (var i = 0; i < enabledMenuNames.length; i++) {
         var menu = enabledMenuNames[i];
         menu = createMenu(editor.menuItems, editor.settings, menu);

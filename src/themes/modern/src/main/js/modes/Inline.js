@@ -14,14 +14,15 @@ define(
     'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
-    'tinymce.ui.FloatPanel',
+    'tinymce.themes.modern.api.Events',
     'tinymce.themes.modern.ui.A11y',
     'tinymce.themes.modern.ui.ContextToolbars',
     'tinymce.themes.modern.ui.Menubar',
     'tinymce.themes.modern.ui.SkinLoaded',
-    'tinymce.themes.modern.ui.Toolbar'
+    'tinymce.themes.modern.ui.Toolbar',
+    'tinymce.ui.FloatPanel'
   ],
-  function (document, DOMUtils, Factory, FloatPanel, A11y, ContextToolbars, Menubar, SkinLoaded, Toolbar) {
+  function (document, DOMUtils, Factory, Events, A11y, ContextToolbars, Menubar, SkinLoaded, Toolbar, FloatPanel) {
     var render = function (editor, theme, args) {
       var panel, inlineToolbarContainer, settings = editor.settings;
       var DOM = DOMUtils.DOM;
@@ -101,7 +102,7 @@ define(
           ]});
         }*/
 
-        editor.fire('BeforeRenderUI');
+        Events.fireBeforeRenderUI(editor);
         panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
         A11y.addKeys(editor, panel);

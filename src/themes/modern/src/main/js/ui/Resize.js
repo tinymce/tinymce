@@ -11,9 +11,10 @@
 define(
   'tinymce.themes.modern.ui.Resize',
   [
-    'tinymce.core.dom.DOMUtils'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.themes.modern.api.Events'
   ],
-  function (DOMUtils) {
+  function (DOMUtils, Events) {
     var DOM = DOMUtils.DOM;
     var getSize = function (elm) {
       return {
@@ -42,7 +43,7 @@ define(
       height = Math.min(settings.max_height || 0xFFFF, height);
       DOM.setStyle(iframeElm, 'height', height);
 
-      editor.fire('ResizeEditor');
+      Events.fireResizeEditor(editor);
     };
 
     var resizeBy = function (editor, dw, dh) {

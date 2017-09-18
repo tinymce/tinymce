@@ -14,6 +14,7 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
+    'tinymce.themes.modern.api.Events',
     'tinymce.themes.modern.ui.A11y',
     'tinymce.themes.modern.ui.Branding',
     'tinymce.themes.modern.ui.ContextToolbars',
@@ -23,7 +24,7 @@ define(
     'tinymce.themes.modern.ui.SkinLoaded',
     'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (DOMUtils, Factory, Tools, A11y, Branding, ContextToolbars, Menubar, Resize, Sidebar, SkinLoaded, Toolbar) {
+  function (DOMUtils, Factory, Tools, Events, A11y, Branding, ContextToolbars, Menubar, Resize, Sidebar, SkinLoaded, Toolbar) {
     var DOM = DOMUtils.DOM;
 
     var switchMode = function (panel) {
@@ -111,7 +112,7 @@ define(
         });
       }
 
-      editor.fire('BeforeRenderUI');
+      Events.fireBeforeRenderUI(editor);
       editor.on('SwitchMode', switchMode(panel));
       panel.renderBefore(args.targetNode).reflow();
 

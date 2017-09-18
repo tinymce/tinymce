@@ -44,7 +44,7 @@ define(
           }
         };
 
-        if (item == "|") {
+        if (item === "|") {
           buttonGroup = null;
         } else {
           if (!buttonGroup) {
@@ -57,7 +57,7 @@ define(
             itemName = item;
             item = editor.buttons[itemName];
 
-            if (typeof item == "function") {
+            if (typeof item === "function") {
               item = item();
             }
 
