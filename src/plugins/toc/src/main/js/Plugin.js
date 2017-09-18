@@ -146,6 +146,10 @@ define(
 
         for (i = 0; i < headers.length; i++) {
           h = headers[i];
+          
+          if (!/\S/.test(h.title))
+            continue;
+          
           nextLevel = headers[i + 1] && headers[i + 1].level;
 
           if (prevLevel === h.level) {
