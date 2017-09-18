@@ -14,10 +14,10 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
-    'tinymce.plugins.link.core.Utils',
-    'tinymce.plugins.link.core.Settings'
+    'tinymce.plugins.link.api.Settings',
+    'tinymce.plugins.link.core.Utils'
   ],
-  function (Delay, Tools, XHR, Utils, Settings) {
+  function (Delay, Tools, XHR, Settings, Utils) {
     var attachState = {};
 
     var createLinkList = function (editor, callback) {

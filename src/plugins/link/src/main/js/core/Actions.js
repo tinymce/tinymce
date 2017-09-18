@@ -12,12 +12,12 @@ define(
   'tinymce.plugins.link.core.Actions',
   [
     'tinymce.core.util.VK',
-    'tinymce.plugins.link.ui.Dialog',
+    'tinymce.plugins.link.api.Settings',
     'tinymce.plugins.link.core.OpenUrl',
     'tinymce.plugins.link.core.Utils',
-    'tinymce.plugins.link.core.Settings'
+    'tinymce.plugins.link.ui.Dialog'
   ],
-  function (VK, Dialog, OpenUrl, Utils, Settings) {
+  function (VK, Settings, OpenUrl, Utils, Dialog) {
     var getLink = function (editor, elm) {
       return editor.dom.getParent(elm, 'a[href]');
     };
