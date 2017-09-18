@@ -2,7 +2,7 @@ define(
   'ephox.polaris.array.Split',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.polaris.api.Splitting'
   ],
 

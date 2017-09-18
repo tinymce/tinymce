@@ -2,9 +2,9 @@ define(
   'ephox.polaris.test.Parrays',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.polaris.api.PositionArray'
   ],
 

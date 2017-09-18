@@ -2,7 +2,7 @@ test(
   'CharsTest',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.polaris.pattern.Chars',
     'global!RegExp'
   ],

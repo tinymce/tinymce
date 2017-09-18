@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.bud.Unicode',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Unicode, Fun) {

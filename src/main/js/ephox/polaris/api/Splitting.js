@@ -2,7 +2,7 @@ define(
   'ephox.polaris.api.Splitting',
 
   [
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt'
   ],
 
   function (Adt) {

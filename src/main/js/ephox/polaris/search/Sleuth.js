@@ -2,8 +2,8 @@ define(
   'ephox.polaris.search.Sleuth',
 
   [
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
     'ephox.polaris.search.Find',
     'global!Array'
   ],

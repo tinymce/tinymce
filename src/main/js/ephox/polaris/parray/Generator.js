@@ -2,8 +2,8 @@ define(
   'ephox.polaris.parray.Generator',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Arr, Fun) {

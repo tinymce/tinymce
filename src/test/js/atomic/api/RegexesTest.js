@@ -2,8 +2,8 @@ test(
   'RegexesTest',
 
   [
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.polaris.api.Regexes'
   ],
 

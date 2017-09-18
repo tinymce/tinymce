@@ -2,7 +2,7 @@ define(
   'ephox.polaris.array.Slice',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

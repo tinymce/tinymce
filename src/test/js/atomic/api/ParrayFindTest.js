@@ -2,7 +2,7 @@ test(
   'api.PositionArray.find',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.polaris.api.PositionArray',
     'ephox.polaris.test.Parrays'
   ],

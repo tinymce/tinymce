@@ -2,7 +2,7 @@ test(
   'api.Arrays.splitby',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.polaris.api.Arrays',
     'ephox.polaris.api.Splitting'
   ],

@@ -2,9 +2,9 @@ define(
   'ephox.polaris.parray.Translate',
 
   [
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Arr, Merger, Fun) {

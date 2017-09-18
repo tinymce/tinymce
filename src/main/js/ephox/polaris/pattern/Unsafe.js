@@ -2,8 +2,8 @@ define(
   'ephox.polaris.pattern.Unsafe',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.polaris.pattern.Chars',
     'ephox.polaris.pattern.Custom'
   ],
