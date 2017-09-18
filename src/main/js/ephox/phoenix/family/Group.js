@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.family.Group',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.extract.TypedItem',
     'ephox.polaris.api.Arrays',

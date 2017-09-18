@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.wrap.Wrapper',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Split',
     'ephox.phoenix.util.Contiguous',

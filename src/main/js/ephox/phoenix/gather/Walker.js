@@ -2,9 +2,9 @@ define(
   'ephox.phoenix.gather.Walker',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct'
   ],
 
   function (Arr, Option, Struct) {

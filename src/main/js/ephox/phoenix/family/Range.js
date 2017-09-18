@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.family.Range',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.family.Parents',
     'ephox.phoenix.wrap.OrphanText'

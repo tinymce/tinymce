@@ -2,11 +2,11 @@ define(
   'ephox.phoenix.test.Page',
 
   [
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Element, Insert, InsertAll, Remove, SelectorFind) {

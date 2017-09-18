@@ -2,14 +2,14 @@ define(
   'ephox.phoenix.demo.ReuseDemo',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.phoenix.api.dom.DomWrapping',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Arr, DomWrapping, Css, DomEvent, Element, Insert, Node, SelectorFind) {

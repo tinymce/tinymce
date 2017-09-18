@@ -2,16 +2,16 @@ define(
   'ephox.phoenix.demo.LatinDemo',
 
   [
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
     'ephox.phoenix.api.dom.DomSearch',
     'ephox.phoenix.api.dom.DomWrapping',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Text'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Text'
   ],
 
   function (Arr, Obj, DomSearch, DomWrapping, Attr, Css, DomEvent, Element, Insert, Text) {

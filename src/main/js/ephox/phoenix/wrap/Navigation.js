@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.wrap.Navigation',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot'
   ],
 

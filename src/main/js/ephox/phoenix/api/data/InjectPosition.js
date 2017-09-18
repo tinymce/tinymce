@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.api.data.InjectPosition',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

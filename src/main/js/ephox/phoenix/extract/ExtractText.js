@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.extract.ExtractText',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.extract.Extract'
   ],
 

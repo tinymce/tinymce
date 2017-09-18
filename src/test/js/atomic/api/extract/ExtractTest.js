@@ -5,7 +5,7 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.phoenix.api.general.Extract',
     'ephox.phoenix.test.Finder',
     'ephox.phoenix.test.TestRenders'

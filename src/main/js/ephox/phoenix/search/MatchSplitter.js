@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.search.MatchSplitter',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.search.Splitter',
     'ephox.polaris.api.PositionArray'
   ],

@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.extract.TypedItem',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   /**

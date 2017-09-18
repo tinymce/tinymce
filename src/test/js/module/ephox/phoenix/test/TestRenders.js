@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.test.TestRenders',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

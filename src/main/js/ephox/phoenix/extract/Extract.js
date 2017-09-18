@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.extract.Extract',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.extract.TypedItem',
     'ephox.phoenix.extract.TypedList'

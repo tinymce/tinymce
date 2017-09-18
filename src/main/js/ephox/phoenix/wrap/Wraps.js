@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.wrap.Wraps',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

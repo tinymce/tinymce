@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.injection.Injection',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.api.data.InjectPosition',
     'ephox.phoenix.api.general.Split'
   ],

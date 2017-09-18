@@ -2,9 +2,9 @@ define(
   'ephox.phoenix.extract.TypedList',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.polaris.api.Arrays'
   ],

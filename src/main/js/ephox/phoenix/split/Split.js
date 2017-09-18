@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.split.Split',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.TextSplit',
     'ephox.polaris.api.Strings'
   ],
