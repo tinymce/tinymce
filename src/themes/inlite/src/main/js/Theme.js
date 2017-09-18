@@ -175,6 +175,7 @@ define(
       };
     });
 
+    Api.registerToFactory();
     Api.appendTo(window.tinymce ? window.tinymce : {});
 
     return function () { };
