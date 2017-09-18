@@ -211,7 +211,8 @@ define(
           bookmark = editor.selection.getBookmark();
 
           editor.selection.setRng(rng);
-          editor.execCommand('createlink', false, matches[1] + matches[2]);
+          // `skip_focus` is needed for inline editors because focusing breaks the `createlink` command
+          editor.execCommand('createlink', false, matches[1] + matches[2], { skip_focus: true });
 
           if (editor.settings.default_link_target) {
             editor.dom.setAttrib(editor.selection.getNode(), 'target', editor.settings.default_link_target);
