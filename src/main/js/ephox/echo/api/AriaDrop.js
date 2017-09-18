@@ -2,7 +2,7 @@ define(
   'ephox.echo.api.AriaDrop',
 
   [
-    'ephox.syrup.api.Attr'
+    'ephox.sugar.api.properties.Attr'
   ],
 
   function (Attr) {

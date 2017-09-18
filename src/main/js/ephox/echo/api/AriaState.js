@@ -2,8 +2,8 @@ define(
   'ephox.echo.api.AriaState',
 
   [
-    'ephox.compass.Arr',
-    'ephox.syrup.api.Attr',
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.properties.Attr',
     'global!String'
   ],
 

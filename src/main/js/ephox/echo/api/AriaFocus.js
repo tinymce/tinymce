@@ -2,11 +2,11 @@ define(
   'ephox.echo.api.AriaFocus',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Focus',
-    'ephox.syrup.api.PredicateFind',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.search.PredicateFind',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Option, Compare, Focus, PredicateFind, Traverse) {

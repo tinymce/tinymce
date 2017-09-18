@@ -2,18 +2,18 @@ define(
   'ephox.echo.api.AriaRegister',
 
   [
-    'ephox.classify.Type',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Type',
+    'ephox.katamari.api.Arr',
     'ephox.echo.api.Styles',
-    'ephox.epithet.Id',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll'
   ],
 
   function (Type, Arr, Styles, Id, Merger, Fun, Option, Attr, Class, Element, Insert, InsertAll) {
