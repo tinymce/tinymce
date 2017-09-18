@@ -198,7 +198,7 @@ define(
           setEnd(endContainer, start - 1);
         }
 
-        text = rng.toString();
+        text = rng.toString().replace(/^[\u200B-\u200F\uFEFF]/g, '');
         matches = text.match(AutoLinkPattern);
 
         if (matches) {
