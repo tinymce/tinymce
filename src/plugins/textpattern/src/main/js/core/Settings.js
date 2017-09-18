@@ -17,14 +17,25 @@ define(
       { start: '- ', cmd: 'InsertUnorderedList' }
     ];
 
+    var defaultForcedRootBlock = 'p';
+
     var getPatterns = function (editorSettings) {
       return editorSettings.textpattern_patterns !== undefined ?
         editorSettings.textpattern_patterns :
         defaultPatterns;
     };
 
+    var getForcedRootBlock = function (editorSettings) {
+      if (editorSettings.forced_root_block === 'div') {
+        return editorSettings.forced_root_block;
+      } else {
+        return defaultForcedRootBlock;
+      }
+    };
+
     return {
-      getPatterns: getPatterns
+      getPatterns: getPatterns,
+      getForcedRootBlock: getForcedRootBlock
     };
   }
 );
