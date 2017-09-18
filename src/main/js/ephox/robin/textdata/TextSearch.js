@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.bud.Unicode',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'global!RegExp'
   ],
 

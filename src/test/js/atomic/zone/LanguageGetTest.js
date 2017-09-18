@@ -6,7 +6,7 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.robin.zone.LanguageZones'
   ],
 

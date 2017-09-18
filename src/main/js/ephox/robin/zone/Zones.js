@@ -2,10 +2,10 @@ define(
   'ephox.robin.zone.Zones',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.robin.words.Identify',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Arr, Fun, Identify, Struct) {

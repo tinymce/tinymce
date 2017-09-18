@@ -2,7 +2,7 @@ define(
   'ephox.robin.smartselect.Selection',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.robin.smartselect.EndofWord',
     'ephox.robin.util.CurrentWord'
   ],

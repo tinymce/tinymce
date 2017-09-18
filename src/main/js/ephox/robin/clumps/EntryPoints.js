@@ -4,7 +4,7 @@ define(
   [
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.api.general.Split',
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt'
   ],
 
   function (Gather, Split, Adt) {

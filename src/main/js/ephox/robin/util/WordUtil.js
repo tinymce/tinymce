@@ -2,8 +2,8 @@ define(
   'ephox.robin.util.WordUtil',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
     'global!RegExp'

@@ -2,12 +2,12 @@ define(
   'ephox.robin.zone.ZoneWalker',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.api.general.ZonePosition',
     'ephox.robin.util.Trampoline',
     'ephox.robin.zone.LanguageZones',
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt'
   ],
 
   function (Option, Gather, ZonePosition, Trampoline, LanguageZones, Adt) {

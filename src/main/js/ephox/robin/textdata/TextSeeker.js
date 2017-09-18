@@ -2,14 +2,14 @@ define(
   'ephox.robin.textdata.TextSeeker',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.gather.Seeker',
     'ephox.robin.api.general.Structure',
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt'
   ],
 
   function (Fun, Option, Spot, Descent, Gather, Seeker, Structure, Adt) {

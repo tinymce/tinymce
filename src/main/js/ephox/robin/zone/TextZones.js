@@ -2,8 +2,8 @@ define(
   'ephox.robin.zone.TextZones',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.robin.api.general.Parent',
     'ephox.robin.words.Clustering',
     'ephox.robin.words.WordDecision',

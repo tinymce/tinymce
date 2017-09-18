@@ -2,7 +2,7 @@ define(
   'ephox.robin.util.CurrentWord',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.robin.data.BeforeAfter',
     'ephox.robin.util.WordUtil'
   ],

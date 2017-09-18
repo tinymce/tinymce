@@ -2,8 +2,8 @@ define(
   'ephox.robin.api.general.LeftBlock',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.leftblock.Walks'
   ],

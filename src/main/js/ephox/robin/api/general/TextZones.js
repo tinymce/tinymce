@@ -2,7 +2,7 @@ define(
   'ephox.robin.api.general.TextZones',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.api.general.Descent',
     'ephox.robin.zone.TextZones'
   ],

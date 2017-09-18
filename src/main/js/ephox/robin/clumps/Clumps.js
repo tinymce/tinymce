@@ -2,14 +2,14 @@ define(
   'ephox.robin.clumps.Clumps',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.api.general.Structure',
-    'ephox.scullion.ADT',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Struct'
   ],
 
   function (Arr, Option, Spot, Descent, Gather, Structure, Adt, Struct) {

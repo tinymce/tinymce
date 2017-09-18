@@ -2,8 +2,8 @@ define(
   'ephox.robin.zone.LanguageZones',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Fun, Option) {

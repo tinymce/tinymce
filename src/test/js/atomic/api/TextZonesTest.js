@@ -7,7 +7,7 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.robin.api.general.TextZones',
     'ephox.robin.api.general.ZoneViewports',
     'ephox.robin.test.Arbitraries',

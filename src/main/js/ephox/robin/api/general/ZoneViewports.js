@@ -2,7 +2,7 @@ define(
   'ephox.robin.api.general.ZoneViewports',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.robin.api.general.ZonePosition'
   ],
 

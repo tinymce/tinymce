@@ -2,10 +2,10 @@ define(
   'ephox.robin.parent.Breaker',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct'
   ],
 
   function (Arr, Fun, Option, Struct) {

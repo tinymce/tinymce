@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.bud.Unicode',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.robin.util.WordUtil'
   ],
 

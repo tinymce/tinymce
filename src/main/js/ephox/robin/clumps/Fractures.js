@@ -2,9 +2,9 @@
   'ephox.robin.clumps.Fractures',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.robin.api.general.Parent',
     'ephox.robin.parent.Breaker',
     'ephox.robin.parent.Subset'

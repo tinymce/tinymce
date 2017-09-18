@@ -2,7 +2,7 @@ define(
   'ephox.robin.words.ClusterSearch',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.words.WordDecision',
     'ephox.robin.words.WordWalking'

@@ -3,9 +3,9 @@ define(
 
   [
     'ephox.bud.Unicode',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.robin.data.WordRange',
     'ephox.robin.words.Clustering'
   ],

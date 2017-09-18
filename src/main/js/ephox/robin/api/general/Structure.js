@@ -2,7 +2,7 @@ define(
   'ephox.robin.api.general.Structure',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

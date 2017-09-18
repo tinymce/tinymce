@@ -2,8 +2,8 @@ define(
   'ephox.robin.api.general.Clumps',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.general.Split',
     'ephox.robin.clumps.Clumps',
     'ephox.robin.clumps.EntryPoints',

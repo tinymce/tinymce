@@ -2,7 +2,7 @@ define(
   'ephox.robin.leftblock.Walks',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.general.Gather'
   ],
 

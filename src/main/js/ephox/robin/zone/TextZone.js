@@ -2,7 +2,7 @@ define(
   'ephox.robin.zone.TextZone',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.general.Descent',
     'ephox.robin.api.general.ZoneViewports',
     'ephox.robin.words.Clustering',

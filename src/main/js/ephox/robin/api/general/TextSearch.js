@@ -2,13 +2,13 @@ define(
   'ephox.robin.api.general.TextSearch',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.textdata.TextSearch',
     'ephox.robin.textdata.TextSeeker',
-    'ephox.scullion.Contracts'
+    'ephox.katamari.api.Contracts'
   ],
 
   // Refer to: robin/readme.md

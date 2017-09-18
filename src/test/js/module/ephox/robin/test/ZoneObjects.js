@@ -4,7 +4,7 @@ define(
   [
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.numerosity.api.JSON',
     'ephox.robin.zone.LanguageZones'
   ],

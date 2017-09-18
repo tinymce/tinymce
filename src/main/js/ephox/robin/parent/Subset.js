@@ -2,9 +2,9 @@ define(
   'ephox.robin.parent.Subset',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'global!Math'
   ],
 

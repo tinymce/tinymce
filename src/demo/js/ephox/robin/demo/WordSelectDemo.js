@@ -2,12 +2,12 @@ define(
   'ephox.robin.demo.WordSelectDemo',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.robin.api.dom.DomSmartSelect',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.SelectorFind',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.search.SelectorFind',
     'global!console',
     'global!document',
     'global!window'

@@ -2,7 +2,7 @@ define(
   'ephox.robin.words.WordDecision',
 
   [
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Struct) {
