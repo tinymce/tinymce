@@ -6,7 +6,7 @@ test(
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Logger',
     'ephox.boss.mutant.Tracks',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Detach, Locator, Logger, Tracks, Option) {

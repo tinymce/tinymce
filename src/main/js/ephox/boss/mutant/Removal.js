@@ -5,8 +5,8 @@ define(
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Detach',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Comparator, Detach, Up, Arr, Option) {

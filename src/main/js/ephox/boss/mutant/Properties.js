@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boss.common.TagBoundaries',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (TagBoundaries, Arr) {

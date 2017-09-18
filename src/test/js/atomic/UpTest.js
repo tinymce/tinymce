@@ -5,8 +5,8 @@ test(
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Tracks',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Locator, Tracks, Up, Arr, Option) {

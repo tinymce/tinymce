@@ -4,8 +4,8 @@ define(
   [
     'ephox.boss.mutant.Properties',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Properties, Up, Arr, Option) {

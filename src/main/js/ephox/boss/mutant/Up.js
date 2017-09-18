@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.boss.mutant.Comparator',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Comparator, Fun, Option) {

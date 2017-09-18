@@ -2,9 +2,9 @@ define(
   'ephox.boss.mutant.Tracks',
 
   [
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option'
   ],
 
   function (Arr, Merger, Option) {

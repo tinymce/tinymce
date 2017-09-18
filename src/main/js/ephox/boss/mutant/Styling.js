@@ -2,8 +2,8 @@ define(
   'ephox.boss.mutant.Styling',
 
   [
-    'ephox.highway.Merger',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option'
   ],
 
   function (Merger, Option) {

@@ -3,8 +3,8 @@ define(
 
   [
     'ephox.boss.api.TextGene',
-    'ephox.highway.Merger',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option',
     'global!Math'
   ],
 

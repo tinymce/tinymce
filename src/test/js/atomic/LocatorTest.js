@@ -5,7 +5,7 @@ test(
     'ephox.boss.mutant.Creator',
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Tracks',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Creator, Locator, Tracks, Option) {

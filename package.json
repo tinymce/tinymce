@@ -3,11 +3,8 @@
   "description": "Generic wrapper to document models - DomUniverse vs TestUniverse",
   "version": "2.0.0",
   "dependencies": {
-    "@ephox/syrup": "git+ssh://git@stash:7999/tbio/syrup.git#master",
-    "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
-    "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
-    "@ephox/perhaps": "git+ssh://git@stash:7999/libs/perhaps.git#master",
-    "@ephox/highway": "git+ssh://git@stash:7999/libs/highway.git#master"
+    "@ephox/katamari": "latest",
+    "@ephox/sugar": "latest"
   },
   "devDependencies": {
     "@ephox/bolt": "*",

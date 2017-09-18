@@ -4,9 +4,9 @@ define(
   [
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Creator',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Comparator, Creator, Arr, Fun, Option) {

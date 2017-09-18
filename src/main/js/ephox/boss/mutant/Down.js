@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boss.mutant.Comparator',
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Comparator, Arr) {

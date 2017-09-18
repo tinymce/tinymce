@@ -6,8 +6,8 @@ test(
     'ephox.boss.mutant.Down',
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Tracks',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Gene, Down, Locator, Tracks, Arr, Option) {

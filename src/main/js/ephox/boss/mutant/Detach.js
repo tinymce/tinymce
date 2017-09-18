@@ -4,8 +4,8 @@ define(
   [
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Locator',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Comparator, Locator, Arr, Option) {
