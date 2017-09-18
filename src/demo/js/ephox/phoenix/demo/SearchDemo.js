@@ -12,7 +12,7 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.InsertAll',
-    'ephox.syrup.api.Value',
+    'ephox.sugar.api.properties.Value',
     'text!html/content.html'
   ],
 
