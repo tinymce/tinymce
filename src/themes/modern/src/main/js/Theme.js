@@ -34,8 +34,6 @@ define(
       var settings = editor.settings;
       var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
 
-      FormatControls.setup(editor);
-
       if (skin) {
         var skinUrl = settings.skin_url;
 
@@ -61,6 +59,8 @@ define(
     };
 
     ThemeManager.add('modern', function (editor) {
+      FormatControls.setup(editor);
+
       return {
         renderUI: function (args) {
           return renderUI(editor, this, args);

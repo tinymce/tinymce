@@ -244,6 +244,10 @@ define(
         element.parentNode.removeChild(element);
       }
 
+      function hasClass(elm) {
+        return elm.className.indexOf('mce-spellchecker-word') !== -1;
+      }
+
       function getWrappersByIndex(index) {
         var elements = node.getElementsByTagName('*'), wrappers = [];
 
@@ -252,7 +256,7 @@ define(
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i], dataIndex = element.getAttribute('data-mce-index');
 
-          if (dataIndex !== null && dataIndex.length) {
+          if (dataIndex !== null && dataIndex.length && hasClass(element)) {
             if (dataIndex === index || index === null) {
               wrappers.push(element);
             }
