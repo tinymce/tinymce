@@ -2,8 +2,8 @@ define(
   'ephox.porkbun.Event',
 
   [
-    'ephox.compass.Arr',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Struct'
   ],
   function (Arr, Struct) {
 

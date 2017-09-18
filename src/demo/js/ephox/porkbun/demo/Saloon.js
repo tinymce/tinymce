@@ -5,7 +5,7 @@ define(
     'ephox.wrap.JQuery',
     'ephox.porkbun.Binder',
     'ephox.porkbun.Events',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function ($, Binder, Events, Struct) {

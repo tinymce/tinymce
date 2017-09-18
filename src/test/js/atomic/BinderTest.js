@@ -5,7 +5,7 @@ test(
     'ephox.porkbun.Binder',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Binder, Event, Events, Struct) {

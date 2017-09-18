@@ -2,7 +2,7 @@ define(
   'ephox.porkbun.Events',
 
   [
-    'ephox.compass.Obj'
+    'ephox.katamari.api.Obj'
   ],
 
   function (Obj) {
