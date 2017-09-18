@@ -2,18 +2,18 @@ define(
   'ephox.dragster.demo.Sizers',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.photon.OuterPosition',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Height',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Location',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFind',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Location',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFind',
     'ephox.syrup.api.Visibility',
-    'ephox.syrup.api.Width'
+    'ephox.sugar.api.view.Width'
   ],
 
   function (Arr, Fun, OuterPosition, Css, Element, Height, InsertAll, Location, Remove, SelectorFind, Visibility, Width) {
