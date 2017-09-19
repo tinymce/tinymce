@@ -25,7 +25,7 @@ define(
 
       HtmlDisplay.section(gui,
         '<p>Inspect away! "Alloy" will appear in the elements panel in Chrome Developer Tools</p>' +
-        '<p>Get the inspector from: <a href="http://stash/projects/VAN/repos/alloy-inspector/browse">alloy-inspector</a></p>',
+        '<p>Note, the inspector is not publically available yet.</p>',
         {
           dom: {
             tag: 'div'

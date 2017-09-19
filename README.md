@@ -1,6 +1,6 @@
 # Description
 
-`alloy` is a UI library that specialises in creating reusable behaviours and components that are not opinionated about DOM structure and styling.
+`alloy` is a UI library that specialises in creating reusable behaviours and components that are not opinionated about DOM structure and styling. It is a very low-level library.
 
 # Installation
 
@@ -50,4 +50,4 @@ For example, to run the tests on Chrome:
 
 ## Alloy APIs
 
-We are currently working on documenting the alloy APIs. For now, there are many demos available in `src/demo/html` that demonstrate how to use `alloy`.
+We are currently working on documenting the alloy APIs. For now, there are many demos available in `src/demo/html` that demonstrate how to use `alloy`. Be aware that the library is still in a state of constant adjustment.

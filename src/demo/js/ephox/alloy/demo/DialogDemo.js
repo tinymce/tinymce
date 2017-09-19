@@ -109,7 +109,7 @@ define(
 
       HtmlDisplay.section(
         gui,
-        'This dialog is customised (uses TinyMCE styles)',
+        'This dialog is customised',
         GuiFactory.premade(sink)
       );
 

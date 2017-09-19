@@ -75,7 +75,10 @@ define(
 
           parts: {
             menu: {
-              markers: DemoRenders.tieredMarkers()
+              markers: DemoRenders.tieredMarkers(),
+              dom: {
+                tag: 'div'
+              }
             }
           },
 
@@ -101,7 +104,7 @@ define(
               { type: 'separator', text: 'No items' }
             ];
 
-            var future = Future.pure(matches);
+            var future = Future.pure(matches.slice(0, 5));
             return future.map(function (items) {
               var menu = DemoRenders.menu({
                 value: 'blah.value',
