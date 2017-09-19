@@ -10,7 +10,6 @@ define(
 
   function (Arr, Node, Text, Traverse) {
     var getEnd = function (element) {
-      // INVESTIGATE: How many other things should just be 1?
       return Node.name(element) === 'img' ? 1 : Text.getOption(element).fold(function () {
         return Traverse.children(element).length;
       }, function (v) {
@@ -26,12 +25,20 @@ define(
       return offset === 0;
     };
 
-    // TODO: Standardise the things that can take a cursor position.
-    var emptyTags = [ 'img', 'br' ];
+    var NBSP = '\u00A0';
 
+    var isTextNodeWithCursorPosition = function (el) {
+      return Text.getOption(el).filter(function (text) {
+        // For the purposes of finding cursor positions only allow text nodes with content,
+        // but trim removes &nbsp; and that's allowed
+        return text.trim().length !== 0 || text.indexOf(NBSP) > -1;
+      }).isSome();
+    };
+
+    var elementsWithCursorPosition = [ 'img', 'br' ];
     var isCursorPosition = function (elem) {
-      var isText = Node.isText(elem) && Text.get(elem).length;
-      return isText || Arr.contains(emptyTags, Node.name(elem));
+      var hasCursorPosition = isTextNodeWithCursorPosition(elem);
+      return hasCursorPosition || Arr.contains(elementsWithCursorPosition, Node.name(elem));
     };
 
     return {
