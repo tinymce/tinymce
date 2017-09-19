@@ -13,6 +13,10 @@
   "scripts": {
     "test": "bolt test config/bolt/atomic.js src/test/js/atomic/**/**Test.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/boulder"
+  },
   "keywords": [
     "validation"
   ],
