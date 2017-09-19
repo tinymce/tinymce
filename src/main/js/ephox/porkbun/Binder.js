@@ -2,28 +2,39 @@ define(
   'ephox.porkbun.Binder',
 
   [
-    'ephox.flute.AssocArray'
+    'ephox.katamari.api.Arr'
   ],
 
-  function (AssocArray) {
+  function (Arr) {
     var create = function() {
-      var registrations = AssocArray();
+      var registrations = [];
+      var handlers = [];
 
       var bind = function (registration, handler) {
-        registrations.put(registration, handler);
-        registration.bind(handler);
+        if (!Arr.contains(registrations, registration)) {
+          registrations.push(registration);
+          handlers.push(handler);
+          registration.bind(handler);
+        }
       };
 
       var unbind = function (registration) {
-        var handler = registrations.remove(registration);
-        registration.unbind(handler);
+        var index = Arr.indexOf(registrations, registration);
+        index.each(function (ind) {
+          registrations.splice(ind, 1);
+          var handler = handlers.splice(ind, 1)[0];
+          registration.unbind(handler);
+        });
       };
 
       var unbindAll = function () {
-        registrations.each(function (handler, registration) {
+        Arr.each(registrations, function (registration, i) {
+          var handler = handlers[i];
           registration.unbind(handler);
         });
-        registrations.reset();
+
+        registrations.splice(0, registrations.length);
+        handlers.splice(0, handlers.length);
       };
 
       return {

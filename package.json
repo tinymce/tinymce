@@ -3,7 +3,6 @@
   "description": "Event framework for JavaScript",
   "version": "3.0.0",
   "dependencies": {
-    "@ephox/flute": "git+ssh://git@stash:7999/libs/flute.git#master",
     "@ephox/katamari": "latest"
   },
   "devDependencies": {
