@@ -208,7 +208,7 @@ test(
           RawAssertions.assertEq(
             'The text nodes should be one after the other',
             +1,
-            Arr.indexOf(textIds, current) - Arr.indexOf(textIds, prev)
+            textIds.indexOf(current) - textIds.indexOf(prev)
           );
         }
       });
@@ -246,7 +246,7 @@ test(
     };
 
     testSanity();
-    
+
     propertyTest(
       'Testing with no languages at all',
       TestUniverse(
@@ -272,7 +272,7 @@ test(
               TextGene('para', 'para'),
               TextGene('graph', 'graph')
             ])
-          ]),    
+          ]),
           Gene('p3', 'p', [
             Gene('p3s1', 'span', [
               Gene('p3s2', 'span', [
