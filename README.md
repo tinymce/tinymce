@@ -47,6 +47,7 @@ For example, to run the tests on Chrome:
 
 `$ bedrock-auto -b chrome --testdir src/test/js/webdriver`
 
+Note, `webdriver` tests are still rather fragile.
 
 ## Alloy APIs
 

@@ -11,17 +11,21 @@ asynctest(
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
+    'ephox.alloy.test.dropdown.TestDropdownMenu',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
-    'ephox.alloy.test.typeahead.TestTypeaheadList',
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Value',
     'global!Math'
   ],
 
-  function (FocusTools, Keyboard, Keys, RealKeys, UiControls, GuiFactory, Container, TieredMenu, Typeahead, GuiSetup, Sinks, TestTypeaheadList, TestTypeaheadSteps, Future, Result, Value, Math) {
+  function (
+    FocusTools, Keyboard, Keys, RealKeys, UiControls, GuiFactory, Container, TieredMenu, Typeahead, TestDropdownMenu, GuiSetup, Sinks, TestTypeaheadSteps, Arr,
+    Future, Result, Value, Math
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -59,14 +63,18 @@ asynctest(
                   var items = text === 'no-data' ? [
                     { type: 'separator', text: 'No data' }
                   ] : f;
-                  return TieredMenu.simpleData('blah', 'Blah', items);
+                  var menu = TestDropdownMenu.renderMenu({
+                    value: 'blah',
+                    items: Arr.map(items, TestDropdownMenu.renderItem)
+                  });
+                  return TieredMenu.singleData('blah.overall', menu);
                 });
               },
 
               lazySink: function () { return Result.value(sink); },
 
               parts: {
-                menu: TestTypeaheadList
+                menu: TestDropdownMenu.part(store)
               }
             })
           ]

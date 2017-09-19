@@ -48,9 +48,6 @@ define(
       Class.remove(component.element(), slideConfig.closedClass());
       Class.add(component.element(), slideConfig.openClass());
       Css.remove(component.element(), getDimensionProperty(slideConfig));
-      // TODO: Remove this Css.reflow and put it elsewhere. I think it has broken the sliding demo, because
-      // it makes it jump to full size and doesn't transition
-      Css.reflow(component.element());
     };
 
     var doImmediateShrink = function (component, slideConfig, slideState) {
@@ -92,6 +89,8 @@ define(
       setGrown(component, slideConfig);
 
       Css.set(component.element(), getDimensionProperty(slideConfig), fullSize);
+      // We might need to consider having a Css.reflow here. We can't have it in setGrown because
+      // it stops the transition immediately because it jumps to the final size.
 
       slideState.setExpanded();
       slideConfig.onStartGrow()(component);
