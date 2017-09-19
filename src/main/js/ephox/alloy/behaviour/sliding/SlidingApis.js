@@ -48,6 +48,8 @@ define(
       Class.remove(component.element(), slideConfig.closedClass());
       Class.add(component.element(), slideConfig.openClass());
       Css.remove(component.element(), getDimensionProperty(slideConfig));
+      // TODO: Remove this Css.reflow and put it elsewhere. I think it has broken the sliding demo, because
+      // it makes it jump to full size and doesn't transition
       Css.reflow(component.element());
     };
 
