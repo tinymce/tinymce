@@ -1,1 +1,11 @@
-No production dependencies as of 2016-12-14
+Dependency:
+  name: sizzle
+  version: 2.3.3
+  repository: https://github.com/jquery/sizzle.git
+  licenses: MIT
+
+Dependency:
+  name: jsverify
+  version: 0.7.4
+  repository: git://github.com/jsverify/jsverify.git
+  licenses: MIT
