@@ -24,14 +24,14 @@ define(
     'tinymce.core.util.JSON',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
+    'tinymce.plugins.image.api.Settings',
     'tinymce.plugins.image.core.Uploader',
     'tinymce.plugins.image.core.Utils'
   ],
-  function (URL, document, Math, RegExp, Env, Factory, JSON, Tools, XHR, Uploader, Utils) {
-
+  function (URL, document, Math, RegExp, Env, Factory, JSON, Tools, XHR, Settings, Uploader, Utils) {
     return function (editor) {
       function createImageList(callback) {
-        var imageList = editor.settings.image_list;
+        var imageList = Settings.getImageList(editor);
 
         if (typeof imageList === "string") {
           XHR.send({
@@ -49,8 +49,7 @@ define(
 
       function showDialog(imageList) {
         var win, data = {}, imgElm, figureElm, dom = editor.dom, settings = editor.settings;
-        var width, height, imageListCtrl, classListCtrl, imageDimensions = settings.image_dimensions !== false;
-
+        var width, height, imageListCtrl, classListCtrl, imageDimensions = Settings.hasDimensions(editor);
 
         function onFileInput() {
           var Throbber = Factory.get('Throbber');
@@ -129,7 +128,7 @@ define(
         }
 
         function updateStyle() {
-          if (!editor.settings.image_advtab) {
+          if (!Settings.hasAdvTab(editor)) {
             return;
           }
 
@@ -152,7 +151,7 @@ define(
         }
 
         function updateVSpaceHSpaceBorder() {
-          if (!editor.settings.image_advtab) {
+          if (!Settings.hasAdvTab(editor)) {
             return;
           }
 
@@ -337,7 +336,7 @@ define(
             srcURL = editor.convertURL(this.value(), 'src');
 
             // Pattern test the src url and make sure we haven't already prepended the url
-            prependURL = editor.settings.image_prepend_url;
+            prependURL = Settings.getPrependUrl(editor);
             absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i');
             if (prependURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, prependURL.length) !== prependURL) {
               srcURL = prependURL + srcURL;
@@ -417,13 +416,13 @@ define(
           };
         }
 
-        if (editor.settings.image_class_list) {
+        if (Settings.getClassList(editor)) {
           classListCtrl = {
             name: 'class',
             type: 'listbox',
             label: 'Class',
             values: Utils.buildListItems(
-              editor.settings.image_class_list,
+              Settings.getClassList(editor),
               function (item) {
                 if (item.value) {
                   item.textStyle = function () {
@@ -449,11 +448,11 @@ define(
           imageListCtrl
         ];
 
-        if (editor.settings.image_description !== false) {
+        if (Settings.hasDescription(editor)) {
           generalFormItems.push({ name: 'alt', type: 'textbox', label: 'Image description' });
         }
 
-        if (editor.settings.image_title) {
+        if (Settings.hasImageTitle(editor)) {
           generalFormItems.push({ name: 'title', type: 'textbox', label: 'Image Title' });
         }
 
@@ -476,11 +475,11 @@ define(
 
         generalFormItems.push(classListCtrl);
 
-        if (editor.settings.image_caption && Env.ceFalse) {
+        if (Settings.hasImageCaption(editor) && Env.ceFalse) {
           generalFormItems.push({ name: 'caption', type: 'checkbox', label: 'Caption' });
         }
 
-        if (editor.settings.image_advtab || editor.settings.images_upload_url) {
+        if (Settings.hasAdvTab(editor) || editor.settings.images_upload_url) {
           var body = [
             {
               title: 'General',
@@ -489,7 +488,7 @@ define(
             }
           ];
 
-          if (editor.settings.image_advtab) {
+          if (Settings.hasAdvTab(editor)) {
             // Parse styles from img
             if (imgElm) {
               if (imgElm.style.marginLeft && imgElm.style.marginRight && imgElm.style.marginLeft === imgElm.style.marginRight) {

@@ -23,9 +23,9 @@ define(
       return function (nodes) {
         var i = nodes.length, node;
 
-        function toggleContentEditable(node) {
+        var toggleContentEditable = function (node) {
           node.attr('contenteditable', state ? 'true' : null);
-        }
+        };
 
         while (i--) {
           node = nodes[i];

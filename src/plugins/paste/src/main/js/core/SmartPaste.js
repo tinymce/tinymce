@@ -19,9 +19,10 @@
 define(
   'tinymce.plugins.paste.core.SmartPaste',
   [
-    'tinymce.core.util.Tools'
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.paste.api.Settings'
   ],
-  function (Tools) {
+  function (Tools, Settings) {
     var isAbsoluteUrl = function (url) {
       return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
     };
@@ -60,7 +61,7 @@ define(
 
     var pasteHtml = function (editor, html) {
       editor.insertContent(html, {
-        merge: editor.settings.paste_merge_formats !== false,
+        merge: Settings.shouldMergeFormats(editor),
         paste: true
       });
 
@@ -78,7 +79,7 @@ define(
     };
 
     var insertContent = function (editor, html) {
-      if (editor.settings.smart_paste === false) {
+      if (Settings.isSmartPasteEnabled(editor) === false) {
         pasteHtml(editor, html);
       } else {
         smartInsertContent(editor, html);

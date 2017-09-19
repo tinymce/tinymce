@@ -25,10 +25,15 @@ define(
       return editor.fire('PastePlainTextToggle', { state: state });
     };
 
+    var firePaste = function (editor, ieFake) {
+      return editor.fire('paste', { ieFake: ieFake });
+    };
+
     return {
       firePastePreProcess: firePastePreProcess,
       firePastePostProcess: firePastePostProcess,
-      firePastePlainTextToggle: firePastePlainTextToggle
+      firePastePlainTextToggle: firePastePlainTextToggle,
+      firePaste: firePaste
     };
   }
 );

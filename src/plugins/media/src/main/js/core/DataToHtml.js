@@ -11,20 +11,21 @@
 define(
   'tinymce.plugins.media.core.DataToHtml',
   [
-    'tinymce.plugins.media.core.Mime',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.media.api.Settings',
     'tinymce.plugins.media.core.HtmlToData',
-    'tinymce.plugins.media.core.UrlPatterns',
-    'tinymce.plugins.media.core.VideoScript',
+    'tinymce.plugins.media.core.Mime',
     'tinymce.plugins.media.core.UpdateHtml',
-    'tinymce.core.util.Tools'
+    'tinymce.plugins.media.core.UrlPatterns',
+    'tinymce.plugins.media.core.VideoScript'
   ],
-  function (Mime, HtmlToData, UrlPatterns, VideoScript, UpdateHtml, Tools) {
+  function (Tools, Settings, HtmlToData, Mime, UpdateHtml, UrlPatterns, VideoScript) {
     var dataToHtml = function (editor, dataIn) {
       var html = '';
       var data = Tools.extend({}, dataIn);
 
       if (!data.source1) {
-        Tools.extend(data, HtmlToData.htmlToData(editor.settings.media_scripts, data.embed));
+        Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));
         if (!data.source1) {
           return '';
         }
@@ -72,12 +73,15 @@ define(
       if (data.embed) {
         html = UpdateHtml.updateHtml(data.embed, data, true);
       } else {
-        var videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, data.source1);
+        var videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source1);
         if (videoScript) {
           data.type = 'script';
           data.width = videoScript.width;
           data.height = videoScript.height;
         }
+
+        var audioTemplateCallback = Settings.getAudioTemplateCallback(editor);
+        var videoTemplateCallback = Settings.getVideoTemplateCallback(editor);
 
         data.width = data.width || 300;
         data.height = data.height || 150;
@@ -106,8 +110,8 @@ define(
 
           html += '</object>';
         } else if (data.source1mime.indexOf('audio') !== -1) {
-          if (editor.settings.audio_template_callback) {
-            html = editor.settings.audio_template_callback(data);
+          if (audioTemplateCallback) {
+            html = audioTemplateCallback(data);
           } else {
             html += (
               '<audio controls="controls" src="' + data.source1 + '">' +
@@ -122,8 +126,8 @@ define(
         } else if (data.type === "script") {
           html += '<script src="' + data.source1 + '"></script>';
         } else {
-          if (editor.settings.video_template_callback) {
-            html = editor.settings.video_template_callback(data);
+          if (videoTemplateCallback) {
+            html = videoTemplateCallback(data);
           } else {
             html = (
               '<video width="' + data.width +

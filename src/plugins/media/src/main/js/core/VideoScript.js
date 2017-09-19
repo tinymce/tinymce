@@ -14,7 +14,7 @@ define(
   ],
   function () {
     var getVideoScriptMatch = function (prefixes, src) {
-      // var prefixes = editor.settings.media_scripts;
+      // var prefixes = Settings.getScripts(editor);
       if (prefixes) {
         for (var i = 0; i < prefixes.length; i++) {
           if (src.indexOf(prefixes[i].filter) !== -1) {

@@ -33,11 +33,11 @@ define(
     'global!Image',
     'global!navigator',
     'global!window',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.Env',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
+    'tinymce.plugins.paste.api.Events',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.Newlines',
     'tinymce.plugins.paste.core.PasteBin',
@@ -45,9 +45,9 @@ define(
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (Image, navigator, window, RangeUtils, Env, Delay, Tools, VK, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
+  function (Image, navigator, window, Env, Delay, Tools, VK, Events, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
     return function (editor) {
-      var self = this, keyboardPasteTimeStamp = 0, draggingInternally = false;
+      var self = this, keyboardPasteTimeStamp = 0;
       var pasteBin = new PasteBin(editor);
       var keyboardPastePlainTextState;
       var mceInternalUrlPrefix = 'data:text/mce-internal,';
@@ -244,10 +244,6 @@ define(
         return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
       }
 
-      function getCaretRangeFromEvent(e) {
-        return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
-      }
-
       function hasContentType(clipboardContent, mimeType) {
         return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
       }
@@ -284,7 +280,7 @@ define(
             // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
             if (Env.ie && keyboardPastePlainTextState) {
               e.preventDefault();
-              editor.fire('paste', { ieFake: true });
+              Events.firePaste(editor, true);
               return;
             }
 
@@ -416,70 +412,14 @@ define(
             }, 0);
           }
         });
-
-        editor.on('dragstart dragend', function (e) {
-          draggingInternally = e.type === 'dragstart';
-        });
-
-        function isPlainTextFileUrl(content) {
-          var plainTextContent = content['text/plain'];
-          return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
-        }
-
-        editor.on('drop', function (e) {
-          var dropContent, rng;
-
-          rng = getCaretRangeFromEvent(e);
-
-          if (e.isDefaultPrevented() || draggingInternally) {
-            return;
-          }
-
-          dropContent = getDataTransferItems(e.dataTransfer);
-          var internal = hasContentType(dropContent, InternalHtml.internalHtmlMime());
-
-          if ((!hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && pasteImageData(e, rng)) {
-            return;
-          }
-
-          if (rng && editor.settings.paste_filter_drop !== false) {
-            var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
-
-            if (content) {
-              e.preventDefault();
-
-              // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
-              Delay.setEditorTimeout(editor, function () {
-                editor.undoManager.transact(function () {
-                  if (dropContent['mce-internal']) {
-                    editor.execCommand('Delete');
-                  }
-
-                  editor.selection.setRng(rng);
-
-                  content = Utils.trimHtml(content);
-
-                  if (!dropContent['text/html']) {
-                    pasteText(content);
-                  } else {
-                    pasteHtml(content, internal);
-                  }
-                });
-              });
-            }
-          }
-        });
-
-        editor.on('dragover dragend', function (e) {
-          if (editor.settings.paste_data_images) {
-            e.preventDefault();
-          }
-        });
       }
 
       self.pasteHtml = pasteHtml;
       self.pasteText = pasteText;
       self.pasteImageData = pasteImageData;
+      self.getDataTransferItems = getDataTransferItems;
+      self.hasHtmlOrText = hasHtmlOrText;
+      self.hasContentType = hasContentType;
 
       editor.on('preInit', function () {
         registerEventHandlers();

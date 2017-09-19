@@ -32,6 +32,9 @@ define(
     window, ThemeManager, Delay, Arr, EditorSettings, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader, Buttons, Panel, Api, FormatControls,
     NotificationManagerImpl, WindowManagerImpl
   ) {
+    Api.registerToFactory();
+    Api.appendTo(window.tinymce ? window.tinymce : {});
+
     var getSelectionElements = function (editor) {
       var node = editor.selection.getNode();
       var elms = editor.dom.getParents(node);
@@ -174,9 +177,6 @@ define(
         }
       };
     });
-
-    Api.registerToFactory();
-    Api.appendTo(window.tinymce ? window.tinymce : {});
 
     return function () { };
   }

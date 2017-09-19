@@ -11,14 +11,15 @@
 define(
   'tinymce.themes.inlite.core.SkinLoader',
   [
+    'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
-    'tinymce.core.dom.DOMUtils'
+    'tinymce.themes.inlite.api.Events'
   ],
-  function (EditorManager, DOMUtils) {
+  function (DOMUtils, EditorManager, Events) {
     var fireSkinLoaded = function (editor, callback) {
       var done = function () {
         editor._skinLoaded = true;
-        editor.fire('SkinLoaded');
+        Events.fireSkinLoaded(editor);
         callback();
       };
 

@@ -17,24 +17,10 @@ define(
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
+    'tinymce.plugins.imagetools.core.LoadImage',
     'tinymce.plugins.imagetools.ui.CropRect'
   ],
-  function (document, Image, Rect, Factory, Promise, Tools, CropRect) {
-    function loadImage(image) {
-      return new Promise(function (resolve) {
-        function loaded() {
-          image.removeEventListener('load', loaded);
-          resolve(image);
-        }
-
-        if (image.complete) {
-          resolve(image);
-        } else {
-          image.addEventListener('load', loaded);
-        }
-      });
-    }
-
+  function (document, Image, Rect, Factory, Promise, Tools, LoadImage, CropRect) {
     var create = function (settings) {
       var Control = Factory.get('Control');
       var ImagePanel = Control.extend({
@@ -69,7 +55,7 @@ define(
 
           img.src = url;
 
-          loadImage(img).then(function () {
+          LoadImage.loadImage(img).then(function () {
             var rect, $img, lastRect = self.state.get('viewRect');
 
             $img = self.$el.find('img');
