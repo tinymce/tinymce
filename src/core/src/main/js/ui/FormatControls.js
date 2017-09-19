@@ -63,9 +63,7 @@ define(
 
     function setupRtlMode(editor) {
       editor.on('ScriptsLoaded', function () {
-        if (editor.rtl) {
-          Control.rtl = true;
-        }
+        Control.rtl = editor.rtl || false;
       });
     }
 
