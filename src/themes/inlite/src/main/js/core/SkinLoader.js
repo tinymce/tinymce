@@ -13,9 +13,10 @@ define(
   [
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorManager',
-    'tinymce.themes.inlite.api.Events'
+    'tinymce.themes.inlite.api.Events',
+    'tinymce.themes.inlite.api.Settings'
   ],
-  function (DOMUtils, EditorManager, Events) {
+  function (DOMUtils, EditorManager, Events, Settings) {
     var fireSkinLoaded = function (editor, callback) {
       var done = function () {
         editor._skinLoaded = true;
@@ -30,18 +31,8 @@ define(
       }
     };
 
-    var urlFromName = function (name) {
-      var prefix = EditorManager.baseURL + '/skins/';
-      return name ? prefix + name : prefix + 'lightgray';
-    };
-
-    var toAbsoluteUrl = function (editor, url) {
-      return editor.documentBaseURI.toAbsolute(url);
-    };
-
     var load = function (editor, callback) {
-      var settings = editor.settings;
-      var skinUrl = settings.skin_url ? toAbsoluteUrl(editor, settings.skin_url) : urlFromName(settings.skin);
+      var skinUrl = Settings.getSkinUrl(editor);
 
       var done = function () {
         fireSkinLoaded(editor, callback);

@@ -475,7 +475,7 @@ define(
 
         generalFormItems.push(classListCtrl);
 
-        if (Settings.hasImageCaption(editor) && Env.ceFalse) {
+        if (Settings.hasImageCaption(editor)) {
           generalFormItems.push({ name: 'caption', type: 'checkbox', label: 'Caption' });
         }
 

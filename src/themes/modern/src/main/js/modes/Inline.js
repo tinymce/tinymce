@@ -15,6 +15,7 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
     'tinymce.themes.modern.api.Events',
+    'tinymce.themes.modern.api.Settings',
     'tinymce.themes.modern.ui.A11y',
     'tinymce.themes.modern.ui.ContextToolbars',
     'tinymce.themes.modern.ui.Menubar',
@@ -22,13 +23,14 @@ define(
     'tinymce.themes.modern.ui.Toolbar',
     'tinymce.ui.FloatPanel'
   ],
-  function (document, DOMUtils, Factory, Events, A11y, ContextToolbars, Menubar, SkinLoaded, Toolbar, FloatPanel) {
+  function (document, DOMUtils, Factory, Events, Settings, A11y, ContextToolbars, Menubar, SkinLoaded, Toolbar, FloatPanel) {
     var render = function (editor, theme, args) {
-      var panel, inlineToolbarContainer, settings = editor.settings;
+      var panel, inlineToolbarContainer;
       var DOM = DOMUtils.DOM;
 
-      if (settings.fixed_toolbar_container) {
-        inlineToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];
+      var fixedToolbarContainer = Settings.getFixedToolbarContainer(editor);
+      if (fixedToolbarContainer) {
+        inlineToolbarContainer = DOM.select(fixedToolbarContainer)[0];
       }
 
       var reposition = function () {
@@ -90,8 +92,8 @@ define(
           fixed: !!inlineToolbarContainer,
           border: 1,
           items: [
-            settings.menubar === false ? null : { type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor) },
-            Toolbar.createToolbars(editor, settings.toolbar_items_size)
+            Settings.hasMenubar(editor) === false ? null : { type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor) },
+            Toolbar.createToolbars(editor, Settings.getToolbarSize(editor))
           ]
         });
 
@@ -116,7 +118,7 @@ define(
         editor.nodeChanged();
       };
 
-      settings.content_editable = true;
+      editor.settings.content_editable = true;
 
       editor.on('focus', function () {
         // Render only when the CSS file has been loaded

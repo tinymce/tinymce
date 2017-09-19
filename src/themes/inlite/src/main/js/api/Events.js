@@ -17,8 +17,13 @@ define(
       editor.fire('SkinLoaded');
     };
 
+    var fireBeforeRenderUI = function (editor) {
+      return editor.fire('BeforeRenderUI');
+    };
+
     return {
-      fireSkinLoaded: fireSkinLoaded
+      fireSkinLoaded: fireSkinLoaded,
+      fireBeforeRenderUI: fireBeforeRenderUI
     };
   }
 );
