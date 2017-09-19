@@ -21,9 +21,11 @@ define(
           return Comparator.eq(sibling, item);
         });
 
-        var lefts = index > -1 ? parent.children.slice(0, index) : parent.children;
-        var rights = index > -1 ? parent.children.slice(index + 1) : [];
-        parent.children = lefts.concat(children).concat(rights);
+        index.fold(function () {
+          parent.children = parent.children.concat(children);
+        }, function (ind) {
+          parent.children.slice(0, index).concat(children).concat(parent.children.slice(index + 1));
+        });
       });
     };
 

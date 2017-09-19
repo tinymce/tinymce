@@ -4,11 +4,10 @@ define(
   [
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Locator',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Option'
+    'ephox.katamari.api.Arr'
   ],
 
-  function (Comparator, Locator, Arr, Option) {
+  function (Comparator, Locator, Arr) {
     var detach = function (root, target) {
       return Locator.byItem(root, target).bind(function (item) {
         return item.parent.bind(function (parent) {
@@ -16,12 +15,10 @@ define(
             return Comparator.eq(child, item);
           });
 
-          if (index > -1) {
+          return index.map(function (ind) {
             parent.children = parent.children.slice(0, index).concat(parent.children.slice(index + 1));
-            return Option.some(item);
-          } else {
-            return Option.none();
-          }
+            return item;
+          });
         });
       });
     };
