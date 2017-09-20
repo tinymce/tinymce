@@ -49,19 +49,18 @@ define(
     var go = function (universe, item, mode, direction, _rules) {
       var rules = _rules !== undefined ? _rules : successors;
       // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
-      var rule = Arr.find(rules, function (succ) {
+      var ruleOpt = Arr.find(rules, function (succ) {
         return succ.current === mode;
       });
 
-      if (rule === undefined || rule === null) return Option.none();
-      else {
+      return ruleOpt.bind(function (rule) {
         // Attempt the current mode. If not, use the fallback and try again.
         return rule.current(universe, item, direction, rule.next).orThunk(function () {
           return rule.fallback.bind(function (fb) {
             return go(universe, item, fb, direction)
           });
         });
-      }
+      });
     };
 
     return {

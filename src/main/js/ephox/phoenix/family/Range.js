@@ -32,7 +32,11 @@ define(
         var items = [ parent ].concat(Extract.all(universe, parent, Fun.constant(false)));
         var start = index(universe, items, item1);
         var finish = index(universe, items, item2);
-        var result = start > -1 && finish > -1 ? order(items, start, delta1, finish, delta2) : [];
+        var result = start.bind(function (startIndex) {
+          return finish.map(function (finishIndex) {
+            return order(items, startIndex, delta1, finishIndex, delta2);
+          });
+        }).getOr([]);
         var orphanText = OrphanText(universe);
         return Arr.filter(result, orphanText.validateText);
       });
