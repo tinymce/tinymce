@@ -62,7 +62,7 @@ define(
             background: 'black',
             color: 'white'
           },
-          innerHtml: spec.data.text
+          innerHtml: spec.text !== undefined ? spec.text : spec.data.text
         },
         components: [ ]
       };

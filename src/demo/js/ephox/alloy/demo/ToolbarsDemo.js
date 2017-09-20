@@ -99,7 +99,7 @@ define(
 
       var subject = HtmlDisplay.section(
         gui,
-        'This demo plays around with skinning for TinyMCE Ui',
+        'This demo plays around with skinning for the Ui',
         Container.sketch({
           dom: {
             classes: [ 'mce-container' ]

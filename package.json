@@ -1,16 +1,15 @@
 {
   "name": "@ephox/alloy",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Ui Framework",
-  "main": "index.js",
   "dependencies": {
-    "@ephox/boulder": "git+ssh://git@stash:7999/van/boulder.git",
-    "@ephox/sugar": "git+ssh://git@stash:7999/libs/sugar.git",
-    "@ephox/katamari": "git+ssh://git@stash:7999/van/katamari.git",
-    "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
+    "@ephox/boulder": "^1.1.0",
+    "@ephox/sugar": "^3.1.1",
+    "@ephox/katamari": "^1.1.2",
+    "@ephox/sand": "^1.1.1"
   },
   "devDependencies": {
-    "@ephox/agar": "git+ssh://git@stash:7999/van/agar.git",
+    "@ephox/agar": "^2.1.3",
     "@ephox/bedrock": "^1.5.0",
     "@ephox/bolt": "^1.8.1",
     "grunt": "^1.0.1",
@@ -21,11 +20,11 @@
     "load-grunt-tasks": "^3.5.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt tests"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@stash:7999/van/alloy.git"
+    "url": "https://github.com/ephox/alloy"
   },
   "keywords": [
     "ui"

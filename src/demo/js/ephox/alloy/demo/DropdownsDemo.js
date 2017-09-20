@@ -113,7 +113,10 @@ define(
           },
           parts: {
             menu: {
-              markers: menuMarkers
+              markers: menuMarkers,
+              dom: {
+                tag: 'div'
+              }
             }
           }
         })
@@ -134,7 +137,10 @@ define(
 
           parts: {
             menu: {
-              markers: menuMarkers
+              markers: menuMarkers,
+              dom: {
+                tag: 'div'
+              }
             }
           },
 
@@ -167,7 +173,10 @@ define(
 
           parts: {
             menu: {
-              markers: menuMarkers
+              markers: menuMarkers,
+              dom: {
+                tag: 'div'
+              }
             }
           },
           fetch: function () {
@@ -211,7 +220,10 @@ define(
 
           parts: {
             menu: {
-              markers: menuMarkers
+              markers: menuMarkers,
+              dom: {
+                tag: 'div'
+              }
             }
           },
           lazySink: lazySink,
@@ -256,7 +268,10 @@ define(
           lazySink: lazySink,
           parts: {
             menu: {
-              markers: menuMarkers
+              markers: menuMarkers,
+              dom: {
+                tag: 'div'
+              }
             }
           },
 
