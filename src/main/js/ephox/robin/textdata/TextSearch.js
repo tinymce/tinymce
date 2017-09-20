@@ -2,7 +2,7 @@ define(
   'ephox.robin.textdata.TextSearch',
 
   [
-    'ephox.bud.Unicode',
+    'ephox.katamari.api.Unicode',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Struct',

@@ -2,7 +2,7 @@ define(
   'ephox.robin.smartselect.EndofWord',
 
   [
-    'ephox.bud.Unicode',
+    'ephox.katamari.api.Unicode',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',

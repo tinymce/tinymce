@@ -73,7 +73,7 @@ define(
       var addEmpty = function (empty) {
         var lang = getLang(Option.none());
         spawn(lang);
-      };  
+      };
 
       var openBoundary = function (optLang, elem) {
         push(optLang);
@@ -124,7 +124,7 @@ define(
     var softBounder = function (optLang) {
       return function (universe, item) {
         var itemLang = calculate(universe, item);
-        return !Option.equals(optLang, itemLang);
+        return !optLang.equals(itemLang);
       };
     };
 

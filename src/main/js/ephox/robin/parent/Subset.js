@@ -23,7 +23,7 @@ define(
         var topDown = Arr.reverse(ps);
 
         // find the child of common in the ps array
-        var index = Arr.findIndex(topDown, eq(universe, common));
+        var index = Arr.findIndex(topDown, eq(universe, common)).getOr(-1);
         var item = index < topDown.length - 1 ? topDown[index + 1] : topDown[index];
 
         // find the index of that child in the common children
@@ -33,12 +33,16 @@ define(
       var startIndex = finder(ps1);
       var endIndex = finder(ps2);
 
-      // This is required because the range could be backwards.
-      var first = Math.min(startIndex, endIndex);
-      var last = Math.max(startIndex, endIndex);
-
       // Return all common children between first and last
-      return startIndex > -1 && endIndex > -1 ? Option.some(children.slice(first, last + 1)) : Option.none();
+      return startIndex.bind(function (sIndex) {
+        return endIndex.map(function (eIndex) {
+          // This is required because the range could be backwards.
+          var first = Math.min(sIndex, eIndex);
+          var last = Math.max(sIndex, eIndex);
+
+          return children.slice(first, last + 1);
+        });
+      });
     };
 
     // Note: this can be exported if it is required in the future.
@@ -52,7 +56,11 @@ define(
 
       var prune = function (path) {
         var index = Arr.findIndex(path, isRoot);
-        return index > -1 ? path.slice(0, index + 1) : path;
+        return index.fold(function () {
+          return path;
+        }, function (ind) {
+          return path.slice(0, ind + 1);
+        });
       };
 
       var pruned1 = prune(ps1);
@@ -62,12 +70,10 @@ define(
         return Arr.exists(pruned2, eq(universe, x));
       });
 
-      var optShared = Option.from(shared);
-
       return {
         firstpath: Fun.constant(pruned1),
         secondpath: Fun.constant(pruned2),
-        shared: Fun.constant(optShared)
+        shared: Fun.constant(shared)
       };
     };
 

@@ -14,14 +14,16 @@ define(
     var bisect = function (universe, parent, child) {
       var children = universe.property().children(parent);
       var index = Arr.findIndex(children, Fun.curry(universe.eq, child));
-      return index > -1 ? Option.some({
-        before: Fun.constant(children.slice(0, index)),
-        after: Fun.constant(children.slice(index + 1))
-      }) : Option.none();
+      return index.map(function (ind) {
+        return {
+          before: Fun.constant(children.slice(0, ind)),
+          after: Fun.constant(children.slice(ind + 1))
+        };
+      });
     };
 
     /**
-     * Clone parent to the RIGHT and move everything after child in the parent element into 
+     * Clone parent to the RIGHT and move everything after child in the parent element into
      * a clone of the parent (placed after parent).
      */
     var breakToRight = function (universe, parent, child) {
@@ -39,7 +41,7 @@ define(
      */
     var breakToLeft = function (universe, parent, child) {
       return bisect(universe, parent, child).map(function (parts) {
-        var prior = universe.create().clone(parent);        
+        var prior = universe.create().clone(parent);
         universe.insert().appendAll(prior, parts.before().concat([ child ]));
         universe.insert().appendAll(parent, parts.after());
         universe.insert().before(parent, prior);

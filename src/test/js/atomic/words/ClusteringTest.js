@@ -33,7 +33,7 @@ test(
           RawAssertions.assertEq('start: ' + id + ', check right()', expRight,  checkWords(universe, act.right()));
           RawAssertions.assertEq(
             'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
-            true, Option.equals(expLang, act.lang())
+            true, expLang.equals(act.lang())
           );
           // .all() is:  tfel + middle + right
           RawAssertions.assertEq('start: ' + id + ', check all()', expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));

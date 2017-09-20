@@ -17,7 +17,7 @@ test(
       RawAssertions.assertEq(
         'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
         true,
-        Option.equals(lang, itemLang)
+        lang.equals(itemLang)
       );
     };
 
