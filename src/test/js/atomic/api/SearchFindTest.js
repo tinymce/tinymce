@@ -2,7 +2,7 @@ test(
   'api.Search.findall (using api.Pattern)',
 
   [
-    'ephox.bud.Unicode',
+    'ephox.katamari.api.Unicode',
     'ephox.katamari.api.Arr',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',

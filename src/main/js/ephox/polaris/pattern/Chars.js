@@ -2,7 +2,7 @@ define(
   'ephox.polaris.pattern.Chars',
 
   [
-    'ephox.bud.Unicode',
+    'ephox.katamari.api.Unicode',
     'ephox.katamari.api.Fun'
   ],
 
