@@ -101,7 +101,7 @@ define(
             anchorList.push({
               text: id,
               value: '#' + id,
-              selected: url.indexOf('#' + id) != -1
+              selected: url.indexOf('#' + id) !== -1
             });
           }
         });

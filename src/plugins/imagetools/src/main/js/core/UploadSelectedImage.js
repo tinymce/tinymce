@@ -21,7 +21,7 @@ define(
         // If the last node we selected was an image
         // And had a source that doesn't match the current blob url
         // We need to attempt to upload it
-        if (lastSelectedImage && lastSelectedImage.src != e.element.src) {
+        if (lastSelectedImage && lastSelectedImage.src !== e.element.src) {
           Actions.cancelTimedUpload(imageUploadTimerState);
           editor.editorUpload.uploadImagesAuto();
           lastSelectedImageState.set(null);

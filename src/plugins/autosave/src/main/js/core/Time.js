@@ -14,14 +14,14 @@ define(
   ],
   function () {
     var parse = function (time, defaultTime) {
-      var multipels = {
+      var multiples = {
         s: 1000,
         m: 60000
       };
 
       time = /^(\d+)([ms]?)$/.exec('' + (time || defaultTime));
 
-      return (time[2] ? multipels[time[2]] : 1) * parseInt(time, 10);
+      return (time[2] ? multiples[time[2]] : 1) * parseInt(time, 10);
     };
 
     return {

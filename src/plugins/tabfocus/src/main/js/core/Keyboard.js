@@ -41,13 +41,13 @@ define(
           el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
           function canSelectRecursive(e) {
-            return e.nodeName === "BODY" || (e.type != 'hidden' &&
-              e.style.display != "none" &&
-              e.style.visibility != "hidden" && canSelectRecursive(e.parentNode));
+            return e.nodeName === "BODY" || (e.type !== 'hidden' &&
+              e.style.display !== "none" &&
+              e.style.visibility !== "hidden" && canSelectRecursive(e.parentNode));
           }
 
           function canSelect(el) {
-            return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex != -1 && canSelectRecursive(el);
+            return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex !== -1 && canSelectRecursive(el);
           }
 
           Tools.each(el, function (e, i) {

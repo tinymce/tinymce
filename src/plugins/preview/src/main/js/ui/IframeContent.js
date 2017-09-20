@@ -24,13 +24,13 @@ define(
       });
 
       var bodyId = editor.settings.body_id || 'tinymce';
-      if (bodyId.indexOf('=') != -1) {
+      if (bodyId.indexOf('=') !== -1) {
         bodyId = editor.getParam('body_id', '', 'hash');
         bodyId = bodyId[editor.id] || bodyId;
       }
 
       var bodyClass = editor.settings.body_class || '';
-      if (bodyClass.indexOf('=') != -1) {
+      if (bodyClass.indexOf('=') !== -1) {
         bodyClass = editor.getParam('body_class', '', 'hash');
         bodyClass = bodyClass[editor.id] || '';
       }

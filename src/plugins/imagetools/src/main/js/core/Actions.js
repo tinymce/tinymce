@@ -211,7 +211,7 @@ define(
               then(function (newImage) {
                 var newSize = ImageSize.getNaturalImageSize(newImage);
 
-                if (originalSize.w != newSize.w || originalSize.h != newSize.h) {
+                if (originalSize.w !== newSize.w || originalSize.h !== newSize.h) {
                   if (ImageSize.getImageSize(img)) {
                     ImageSize.setImageSize(img, newSize);
                   }

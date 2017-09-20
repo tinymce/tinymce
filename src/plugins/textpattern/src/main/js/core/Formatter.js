@@ -44,7 +44,7 @@ define(
       text = container.data;
       delta = space === true ? 1 : 0;
 
-      if (container.nodeType != 3) {
+      if (container.nodeType !== 3) {
         return;
       }
 

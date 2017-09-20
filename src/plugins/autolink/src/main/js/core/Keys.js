@@ -49,7 +49,7 @@ define(
     };
 
     var setStart = function (rng, container, offset) {
-      if (container.nodeType != 1 || container.hasChildNodes()) {
+      if (container.nodeType !== 1 || container.hasChildNodes()) {
         rng.setStart(container, scopeIndex(container, offset));
       } else {
         rng.setStartBefore(container);
@@ -57,7 +57,7 @@ define(
     };
 
     var setEnd = function (rng, container, offset) {
-      if (container.nodeType != 1 || container.hasChildNodes()) {
+      if (container.nodeType !== 1 || container.hasChildNodes()) {
         rng.setEnd(container, scopeIndex(container, offset));
       } else {
         rng.setEndAfter(container);
@@ -103,8 +103,8 @@ define(
         endContainer = rng.endContainer;
 
         // Get a text node
-        if (endContainer.nodeType != 3 && endContainer.firstChild) {
-          while (endContainer.nodeType != 3 && endContainer.firstChild) {
+        if (endContainer.nodeType !== 3 && endContainer.firstChild) {
+          while (endContainer.nodeType !== 3 && endContainer.firstChild) {
             endContainer = endContainer.firstChild;
           }
 
@@ -132,7 +132,7 @@ define(
         rngText = rng.toString();
 
         // Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
-      } while (rngText != ' ' && rngText !== '' && rngText.charCodeAt(0) != 160 && (end - 2) >= 0 && rngText != delimiter);
+      } while (rngText !== ' ' && rngText !== '' && rngText.charCodeAt(0) !== 160 && (end - 2) >= 0 && rngText !== delimiter);
 
       if (rangeEqualsDelimiterOrSpace(rng.toString(), delimiter)) {
         setStart(rng, endContainer, end);

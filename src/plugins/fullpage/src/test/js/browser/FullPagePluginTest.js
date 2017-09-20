@@ -88,7 +88,7 @@ asynctest(
         var links = editor.getDoc().getElementsByTagName('link');
 
         for (var i = 0; i < links.length; i++) {
-          if (links[i].href.indexOf('/' + href) != -1) {
+          if (links[i].href.indexOf('/' + href) !== -1) {
             return true;
           }
         }

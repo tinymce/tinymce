@@ -14,12 +14,12 @@ define(
   ],
   function () {
     var getKeyboardSpaces = function (editor) {
-      var tabs = editor.getParam('nonbreaking_force_tab', 0);
+      var spaces = editor.getParam('nonbreaking_force_tab', 0);
 
       if (typeof tabs === 'boolean') {
-        return tabs === true ? 3 : 0;
+        return spaces === true ? 3 : 0;
       } else {
-        return tabs;
+        return spaces;
       }
     };
 

@@ -95,7 +95,7 @@ define(
       function switchPanel(targetPanel) {
         return function () {
           var hidePanels = Tools.grep(panels, function (panel) {
-            return panel.settings.name != targetPanel;
+            return panel.settings.name !== targetPanel;
           });
 
           Tools.each(hidePanels, function (panel) {

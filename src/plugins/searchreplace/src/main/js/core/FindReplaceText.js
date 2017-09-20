@@ -172,7 +172,7 @@ define(
       function genReplacer(nodeName) {
         var makeReplacementNode;
 
-        if (typeof nodeName != 'function') {
+        if (typeof nodeName !== 'function') {
           var stencilNode = nodeName.nodeType ? nodeName : doc.createElement(nodeName);
 
           makeReplacementNode = function (fill, matchIndex) {

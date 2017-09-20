@@ -52,7 +52,7 @@ define(
       content = content.replace(/<(\/?)BODY/gi, '<$1body');
       startPos = content.indexOf('<body');
 
-      if (startPos != -1) {
+      if (startPos !== -1) {
         startPos = content.indexOf('>', startPos);
         headState.set(low(content.substring(0, startPos + 1)));
 

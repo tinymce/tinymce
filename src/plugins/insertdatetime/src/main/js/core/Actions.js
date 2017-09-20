@@ -55,8 +55,17 @@ define(
       return fmt;
     };
 
+    var updateElement = function (editor, timeElm, computerTime, userTime) {
+      var newTimeElm = editor.dom.create('time', { datetime: computerTime }, userTime);
+      timeElm.parentNode.insertBefore(newTimeElm, timeElm);
+      editor.dom.remove(timeElm);
+      editor.selection.select(newTimeElm, true);
+      editor.selection.collapse(false);
+    };
+
     var insertDateTime = function (editor, format) {
       if (Settings.shouldInsertTimeElement(editor)) {
+        var userTime = getDateTime(editor, format);
         var computerTime;
 
         if (/%[HMSIp]/.test(format)) {
@@ -65,13 +74,12 @@ define(
           computerTime = getDateTime(editor, '%Y-%m-%d');
         }
 
-        var html = '<time datetime="' + computerTime + '">' + html + '</time>';
         var timeElm = editor.dom.getParent(editor.selection.getStart(), 'time');
 
         if (timeElm) {
-          editor.dom.setOuterHTML(timeElm, html);
+          updateElement(editor, timeElm, computerTime, userTime);
         } else {
-          editor.insertContent(html);
+          editor.insertContent('<time datetime="' + computerTime + '">' + userTime + '</time>');
         }
       } else {
         editor.insertContent(getDateTime(editor, format));

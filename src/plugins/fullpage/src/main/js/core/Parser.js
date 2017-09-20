@@ -141,7 +141,7 @@ define(
           value += ' encoding="' + data.docencoding + '"';
         }
 
-        if (elm.type != 7) {
+        if (elm.type !== 7) {
           elm = new Node('xml', 7);
           headerFragment.insert(elm, headerFragment.firstChild, true);
         }

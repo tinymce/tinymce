@@ -28,11 +28,7 @@ define(
 
       ProgressState.setup(editor, theme);
 
-      if (Settings.isInline(editor)) {
-        return Inline.render(editor, theme, args);
-      }
-
-      return Iframe.render(editor, theme, args);
+      return Settings.isInline(editor) ? Inline.render(editor, theme, args) : Iframe.render(editor, theme, args);
     };
 
     return {

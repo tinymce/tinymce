@@ -58,7 +58,7 @@ define(
 
           json = JSON.parse(xhr.responseText);
 
-          if (!json || typeof json.location != 'string') {
+          if (!json || typeof json.location !== 'string') {
             failure('Invalid JSON: ' + xhr.responseText);
             return;
           }

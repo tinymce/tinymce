@@ -29,7 +29,7 @@ define(
         });
 
         var bodyClass = editor.settings.body_class || '';
-        if (bodyClass.indexOf('=') != -1) {
+        if (bodyClass.indexOf('=') !== -1) {
           bodyClass = editor.getParam('body_class', '', 'hash');
           bodyClass = bodyClass[editor.id] || '';
         }

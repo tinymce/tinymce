@@ -127,7 +127,7 @@ define(
               currentValue = dom.toHex(currentValue);
             }
 
-            if (currentValue != inputValue) {
+            if (currentValue !== inputValue) {
               outputStyles[webKitStyles[i]] = inputValue;
             }
           }

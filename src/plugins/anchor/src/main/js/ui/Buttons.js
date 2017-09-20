@@ -13,17 +13,11 @@ define(
   [
   ],
   function () {
-    var mceAnchorCommand = function (editor) {
-      return function () {
-        editor.execCommand('mceAnchor');
-      };
-    };
-
     var register = function (editor) {
       editor.addButton('anchor', {
         icon: 'anchor',
         tooltip: 'Anchor',
-        onclick: mceAnchorCommand(editor),
+        cmd: 'mceAnchor',
         stateSelector: 'a:not([href])'
       });
 
@@ -31,7 +25,7 @@ define(
         icon: 'anchor',
         text: 'Anchor',
         context: 'insert',
-        onclick: mceAnchorCommand(editor)
+        cmd: 'mceAnchor'
       });
     };
 

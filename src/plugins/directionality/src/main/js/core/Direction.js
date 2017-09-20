@@ -18,16 +18,12 @@ define(
       var dom = editor.dom, curDir, blocks = editor.selection.getSelectedBlocks();
 
       if (blocks.length) {
-        curDir = dom.getAttrib(blocks[0], "dir");
+        curDir = dom.getAttrib(blocks[0], 'dir');
 
         Tools.each(blocks, function (block) {
           // Add dir to block if the parent block doesn't already have that dir
-          if (!dom.getParent(block.parentNode, "*[dir='" + dir + "']", dom.getRoot())) {
-            if (curDir != dir) {
-              dom.setAttrib(block, "dir", dir);
-            } else {
-              dom.setAttrib(block, "dir", null);
-            }
+          if (!dom.getParent(block.parentNode, '*[dir="' + dir + '"]', dom.getRoot())) {
+            dom.setAttrib(block, 'dir', curDir !== dir ? dir : null);
           }
         });
 

@@ -129,7 +129,7 @@ define(
         var level = paragraphNode._listLevel || lastLevel;
 
         // Handle list nesting
-        if (level != lastLevel) {
+        if (level !== lastLevel) {
           if (level < lastLevel) {
             // Move to parent list
             if (currentListNode) {
@@ -142,7 +142,7 @@ define(
           }
         }
 
-        if (!currentListNode || currentListNode.name != listName) {
+        if (!currentListNode || currentListNode.name !== listName) {
           prevListNode = prevListNode || currentListNode;
           currentListNode = new Node(listName, 1);
 
@@ -271,7 +271,7 @@ define(
 
           case "font-weight":
           case "font-style":
-            if (value != "normal") {
+            if (value !== "normal") {
               outputStyles[name] = value;
             }
             return;
@@ -437,7 +437,7 @@ define(
           href = node.attr('href');
           name = node.attr('name');
 
-          if (href && href.indexOf('#_msocom_') != -1) {
+          if (href && href.indexOf('#_msocom_') !== -1) {
             node.remove();
             continue;
           }

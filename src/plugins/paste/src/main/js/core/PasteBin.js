@@ -60,7 +60,7 @@ define(
             return rects[0];
           }
 
-          if (!rng.collapsed || container.nodeType != 1) {
+          if (!rng.collapsed || container.nodeType !== 1) {
             return;
           }
 
@@ -109,7 +109,7 @@ define(
             // Check if we can find a closer location by checking the range element
             var container = lastRng.startContainer;
             if (container) {
-              if (container.nodeType === 3 && container.parentNode != body) {
+              if (container.nodeType === 3 && container.parentNode !== body) {
                 container = container.parentNode;
               }
 

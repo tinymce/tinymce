@@ -8,12 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class contains all core logic for the anchor plugin.
- *
- * @class tinymce.anchor.Plugin
- * @private
- */
 define(
   'tinymce.plugins.anchor.Plugin',
   [

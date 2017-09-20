@@ -72,7 +72,7 @@ define(
             self.state.set('viewRect', rect);
             self.state.set('rect', Rect.inflate(rect, -20, -20));
 
-            if (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {
+            if (!lastRect || lastRect.w !== rect.w || lastRect.h !== rect.h) {
               self.zoomFit();
             }
 

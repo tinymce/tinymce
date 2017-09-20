@@ -65,7 +65,7 @@ define(
         items: items,
         context: 'contextmenu',
         onautohide: function (e) {
-          if (e.target.className.indexOf('spellchecker') != -1) {
+          if (e.target.className.indexOf('spellchecker') !== -1) {
             e.preventDefault();
           }
         },

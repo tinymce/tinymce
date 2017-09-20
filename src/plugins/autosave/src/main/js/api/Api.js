@@ -14,6 +14,7 @@ define(
     'tinymce.plugins.autosave.core.Storage'
   ],
   function (Storage) {
+    // Inlined the curry function since adding Fun without tree shaking to every plugin would produce a lot of bloat
     var curry = function (f, editor) {
       return function () {
         var args = Array.prototype.slice.call(arguments);

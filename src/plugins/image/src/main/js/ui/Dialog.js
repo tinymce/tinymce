@@ -108,7 +108,7 @@ define(
           newHeight = heightCtrl.value();
 
           if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
-            if (width != newWidth) {
+            if (width !== newWidth) {
               newHeight = Math.round((newWidth / width) * newHeight);
 
               if (!isNaN(newHeight)) {
@@ -367,7 +367,7 @@ define(
         }
 
         if (imgElm &&
-          (imgElm.nodeName != 'IMG' ||
+          (imgElm.nodeName !== 'IMG' ||
             imgElm.getAttribute('data-mce-object') ||
             imgElm.getAttribute('data-mce-placeholder'))) {
           imgElm = null;

@@ -241,7 +241,7 @@ define(
       function isBrokenAndroidClipboardEvent(e) {
         var clipboardData = e.clipboardData;
 
-        return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
+        return navigator.userAgent.indexOf('Android') !== -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
       }
 
       function hasContentType(clipboardContent, mimeType) {
@@ -267,7 +267,7 @@ define(
 
             // Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
             // it fires the keydown but no paste or keyup so we are left with a paste bin
-            if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') != -1) {
+            if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') !== -1) {
               return;
             }
 
