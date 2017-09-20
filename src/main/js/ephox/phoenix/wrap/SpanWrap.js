@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.wrap.SpanWrap',
 
   [
-    'ephox.bud.Unicode',
+    'ephox.katamari.api.Unicode',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
