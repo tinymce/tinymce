@@ -135,7 +135,7 @@ figure.image figcaption {
 }
 
 .mce-spellchecker-word {
-  border-bottom: 2px solid #F00;
+  border-bottom: 2px solid rgba(208, 2, 27, 0.5);
   cursor: default;
 }
 
@@ -149,7 +149,7 @@ figure.image figcaption {
 }
 
 td[data-mce-selected], th[data-mce-selected] {
-  background-color: #3399ff !important;
+  background-color: @content-selection-bg !important;
 }
 
 .mce-edit-focus {
@@ -157,26 +157,30 @@ td[data-mce-selected], th[data-mce-selected] {
 }
 
 .mce-resize-bar-dragging {
-  background-color: blue;
+  background-color: @content-selection-bg;
   .opacity(0.25);
 }
 
 .mce-content-body {
   *[contentEditable=false] *[contentEditable=true]:focus {
-    outline: 2px solid #2d8ac7;
+    outline: 2px solid @content-block-focus;
   }
 
   *[contentEditable=false] *[contentEditable=true]:hover {
-    outline: 2px solid #7ACAFF;
+    outline: 2px solid @content-block-hover;
   }
 
   *[contentEditable=false][data-mce-selected] {
-    outline: 2px solid #2d8ac7;
+    outline: 2px solid @content-block-selected;
   }
 
   a[data-mce-selected], code[data-mce-selected], b[data-mce-selected], i[data-mce-selected],
   em[data-mce-selected], strong[data-mce-selected], sup[data-mce-selected], sub[data-mce-selected] {
-    background: #bfe6ff;
+    background: @content-boundary-bg;
+  }
+
+  .mce-item-anchor[data-mce-selected] {
+    background: #D5D5D5 url(img/anchor.gif) no-repeat center;
   }
 
   hr {

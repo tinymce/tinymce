@@ -2,7 +2,7 @@
 
 .@{prefix}-menu-item {
   display: block;
-  padding: 6px 15px 6px 12px;
+  padding: 6px 4px 6px 4px;
   clear: both;
   font-weight: normal;
   line-height: 20px;
@@ -12,92 +12,83 @@
   line-height: normal;
   border-left: 4px solid transparent;
   margin-bottom: 1px;
-}
 
-.@{prefix}-menu-item .@{prefix}-ico, .@{prefix}-menu-item .@{prefix}-text {
-  color: @menuitem-text;
-}
+  .@{prefix}-caret {
+    margin-top: 4px;
+    margin-right: 6px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid @menuitem-chevron;
+  }
 
-.@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-ico {
-  color: mix(@menuitem-text, @menu-bg, 40%);
-}
+  .@{prefix}-menu-shortcut {
+    display: inline-block;
+    padding: 0 10px 0 20px;
+    color: @menuitem-shortcut;
+  }
 
-.@{prefix}-menu-item:hover .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-text, .@{prefix}-menu-item:focus .@{prefix}-text {
-  color: @menuitem-text-inverse;
-}
+  .@{prefix}-ico {
+    padding-right: 4px;
+  }
 
-.@{prefix}-menu-item:hover .@{prefix}-ico, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-ico, .@{prefix}-menu-item:focus .@{prefix}-ico {
-  color: @menuitem-text-inverse;
-}
+  &:hover, &:focus {
+    background: @menuitem-bg-hover;
 
-.@{prefix}-menu-item.@{prefix}-disabled:hover {
-  background: @menuitem-bg-disabled;
-}
+    .@{prefix}-menu-shortcut {
+      color: @menuitem-shortcut;
+    }
 
-.@{prefix}-menu-shortcut {
-  display: inline-block;
-  color: mix(@menuitem-text, @menu-bg, 40%);
-}
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-hover;
+    }
+  }
 
-.@{prefix}-menu-shortcut {
-  .inline-block();
-  padding: 0 15px 0 20px;
-}
+  &.@{prefix}-selected {
+    background: @menuitem-bg-selected;
 
-.@{prefix}-menu-item:hover .@{prefix}-menu-shortcut, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-menu-shortcut, .@{prefix}-menu-item:focus .@{prefix}-menu-shortcut {
-  color: @menuitem-text-inverse;
-}
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-selected;
+    }
+  }
 
-.@{prefix}-menu-item .@{prefix}-caret {
-  margin-top: 4px;
-  *margin-top: 3px;
-  margin-right: 6px;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 4px solid @menuitem-caret;
-}
+  &.@{prefix}-active.@{prefix}-menu-item-normal {
+    background: @menuitem-bg-active;
 
-.@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-menu-item:hover .@{prefix}-caret {
-  border-left-color: @menuitem-caret-selected;
-}
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-active;
+    }
+  }
 
-.@{prefix}-menu-align .@{prefix}-menu-shortcut {
-  *margin-top: -2px;
-}
+  &.@{prefix}-active.@{prefix}-menu-item-checkbox {
+    .@{prefix}-ico {
+      visibility: visible;
+    }
+  }
 
-.@{prefix}-menu-align .@{prefix}-menu-shortcut, .@{prefix}-menu-align .@{prefix}-caret {
-  position: absolute;
-  right: 0;
-}
+  &.@{prefix}-disabled, &.@{prefix}-disabled:hover {
+    background: @menuitem-bg-disabled;
 
-.@{prefix}-menu-item.@{prefix}-active i {
-  visibility: visible;
-}
+    &:focus {
+      background: @menuitem-bg-hover;
+    }
 
-.@{prefix}-menu-item-normal.@{prefix}-active {
-  background-color: @menuitem-bg-active;
-}
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-disabled;
+    }
+  }
 
-.@{prefix}-menu-item-preview.@{prefix}-active {
-  border-left: 5px solid @menuitem-preview-border-active;
-}
+  &.@{prefix}-menu-item-preview.@{prefix}-active {
+    border-left: 5px solid @menuitem-preview-border-active;
+    background: @menuitem-bg;
 
-.@{prefix}-menu-item-normal.@{prefix}-active .@{prefix}-text {
-  color: @menuitem-text-active;
-}
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text;
+    }
 
-.@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-ico {
-  color: @menuitem-text-inverse;
-}
-
-.@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-ico {
-  color: @menuitem-text-inverse;
-}
-
-.@{prefix}-menu-item:hover, .@{prefix}-menu-item.@{prefix}-selected, .@{prefix}-menu-item:focus {
-  text-decoration: none;
-  color: @menuitem-text-inverse;
-  .vertical-gradient(@menuitem-bg-selected, @menuitem-bg-selected-hlight);
+    &:hover {
+      background: @menuitem-bg-hover;
+    }
+  }
 }
 
 .@{prefix}-menu-item-link {
@@ -158,19 +149,21 @@ div.@{prefix}-menu .@{prefix}-menu-item b {
   padding: 6px 12px 6px 15px;
 }
 
-.@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-menu-shortcut, .@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-caret {
-  right: auto;
-  left: 0;
-}
-
 .@{prefix}-rtl .@{prefix}-menu-item .@{prefix}-caret {
   margin-left: 6px;
   margin-right: 0;
-  border-right: 4px solid @menuitem-caret;
+  border-right: 4px solid @menuitem-chevron;
   border-left: 0;
 }
 
 .@{prefix}-rtl .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:hover .@{prefix}-caret {
   border-left-color: transparent;
-  border-right-color: @menuitem-caret-selected;
+  border-right-color: @menuitem-chevron-selected;
+}
+
+.@{prefix}-rtl {
+  .@{prefix}-menu-item .@{prefix}-ico {
+    padding-right: 0;
+    padding-left: 4px;
+  }
 }

@@ -18,12 +18,14 @@
 define(
   'tinymce.ui.Menu',
   [
-    "tinymce.ui.FloatPanel",
-    "tinymce.ui.MenuItem",
-    "tinymce.ui.Throbber",
-    "tinymce.core.util.Tools"
+    'tinymce.core.Env',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
+    'tinymce.ui.FloatPanel',
+    'tinymce.ui.MenuItem',
+    'tinymce.ui.Throbber'
   ],
-  function (FloatPanel, MenuItem, Throbber, Tools) {
+  function (Env, Delay, Tools, FloatPanel, MenuItem, Throbber) {
     "use strict";
 
     return FloatPanel.extend({
@@ -63,6 +65,11 @@ define(
 
         self._super(settings);
         self.classes.add('menu');
+
+        if (settings.animate && Env.ie !== 11) {
+          // IE 11 can't handle transforms it looks horrible and blurry so lets disable that
+          self.classes.add('animate');
+        }
       },
 
       /**
@@ -191,6 +198,18 @@ define(
             }
           });
         }
+
+        self.on('show hide', function (e) {
+          if (e.control === self) {
+            if (e.type === 'show') {
+              Delay.setTimeout(function () {
+                self.classes.add('in');
+              }, 0);
+            } else {
+              self.classes.remove('in');
+            }
+          }
+        });
 
         return self._super();
       }

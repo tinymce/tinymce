@@ -37,6 +37,7 @@ define(
        */
       init: function (settings) {
         this._super(settings);
+        this.classes.add('splitbtn');
         this.classes.add('colorbutton');
       },
 
@@ -109,7 +110,7 @@ define(
         var self = this, onClickHandler = self.settings.onclick;
 
         self.on('click', function (e) {
-          if (e.aria && e.aria.key == 'down') {
+          if (e.aria && e.aria.key === 'down') {
             return;
           }
 

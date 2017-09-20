@@ -5,16 +5,22 @@
   border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
   position: relative;
   text-shadow: @text-shadow;
+  background: @btn-bg;
 
   .inline-block();
   .border-radius(3px);
   .box-shadow(@btn-box-shadow);
-  .vertical-gradient(@btn-bg, @btn-bg-hlight);
 
-  &:hover, &:focus {
-    color: @btn-text;
-    .vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));
+  &:hover, &:active {
+    background: @btn-bg-hover;
+    color: @btn-text-hover;
     border-color: @btn-border-hover;
+  }
+
+  &:focus {
+    background: @btn-bg-focus;
+    color: @btn-text-focus;
+    border-color: @btn-border-focus;
   }
 
   &.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
@@ -23,17 +29,27 @@
     .opacity(@btn-box-disabled-opacity);
   }
 
-  &.@{prefix}-active, &.@{prefix}-active:hover {
-    .vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));
+  &.@{prefix}-active,
+  &.@{prefix}-active:hover,
+  &.@{prefix}-active:focus,
+  &.@{prefix}-active:active {
     .box-shadow(@btn-box-shadow-active);
-    border-color: darken(@btn-bg, 20%);
+    background: @btn-bg-active;
+    color: @btn-text-active;
+    border-color: @btn-border-active;
   }
 
-  &:active {
-    .vertical-gradient(darken(@btn-bg, 7%), darken(@btn-bg-hlight, 5%));
-    .box-shadow(@btn-box-shadow-active);
-    border-color: @btn-border-active;
+  &.@{prefix}-active button, &.@{prefix}-active:hover button,
+  &.@{prefix}-active i, &.@{prefix}-active:hover i {
+    color: @btn-text-active;
+  }
 
+  &:hover .@{prefix}-caret {
+    border-top-color: @btn-chevron-hover;
+  }
+
+  &.@{prefix}-active .@{prefix}-caret, &.@{prefix}-active:hover .@{prefix}-caret {
+    border-top-color: @btn-chevron-active;
   }
 }
 
@@ -67,10 +83,10 @@
   color: @btn-primary-text;
   border: 1px solid transparent;
   border-color: @btn-primary-border;
-  .vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
+  background-color: @btn-primary-bg;
 
   &:hover, &:focus {
-    .vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));
+    background-color: @btn-primary-bg-hover;
     border-color: @btn-primary-border-hover;
   }
 
@@ -81,7 +97,7 @@
   }
 
   &.@{prefix}-active, &.@{prefix}-active:hover, &:not(.@{prefix}-disabled):active {
-    .vertical-gradient(darken(@btn-primary-bg, 10%), darken(@btn-primary-bg-hlight, 10%));
+    background-color: @btn-primary-bg-active;
     .box-shadow(@btn-box-shadow-active);
   }
 }
@@ -134,7 +150,7 @@
   .inline-block();
   width: 0; height: 0;
   vertical-align: top;
-  border-top: 4px solid @btn-caret-border;
+  border-top: 4px solid @btn-chevron;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -145,7 +161,7 @@
 }
 
 .@{prefix}-caret.@{prefix}-up {
-  border-bottom: 4px solid @btn-caret-border;
+  border-bottom: 4px solid @btn-chevron;
   border-top: 0;
 }
 

@@ -38,7 +38,7 @@ asynctest(
     suite.test("splitbutton text, size large", function () {
       var splitButton = createSplitButton({ text: 'X', size: 'large' });
 
-      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 44, 39], 4);
+      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 57, 39], 4);
     });
 
     suite.test("splitbutton text, size small", function () {
@@ -69,7 +69,7 @@ asynctest(
     suite.test("splitbutton icon, size large", function () {
       var splitButton = createSplitButton({ icon: 'test', size: 'large' });
 
-      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 49, 40], 4);
+      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 63, 40], 4);
     });
 
     suite.test("splitbutton icon, width 100, height 100", function () {
@@ -88,7 +88,7 @@ asynctest(
     suite.test("splitbutton text & icon, size large", function () {
       var splitButton = createSplitButton({ text: 'X', icon: 'test', size: 'large' });
 
-      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 64, 40], 4);
+      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 78, 40], 4);
     });
 
     suite.test("splitbutton text & icon, size small", function () {

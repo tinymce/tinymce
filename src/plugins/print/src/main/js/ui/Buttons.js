@@ -18,6 +18,12 @@ define(
         title: 'Print',
         cmd: 'mcePrint'
       });
+
+      editor.addMenuItem('print', {
+        text: 'Print',
+        cmd: 'mcePrint',
+        icon: 'print'
+      });
     };
 
     return {

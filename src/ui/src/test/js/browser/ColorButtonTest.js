@@ -38,7 +38,7 @@ asynctest(
     suite.test("colorbutton text, size large", function () {
       var colorButton = createColorButton({ text: 'X', size: 'large' });
 
-      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, colorButton), [0, 0, 44, 39], 4);
+      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, colorButton), [0, 0, 57, 39], 4);
     });
 
     suite.test("colorbutton text, size small", function () {
@@ -69,7 +69,7 @@ asynctest(
     suite.test("colorbutton icon, size large", function () {
       var colorButton = createColorButton({ icon: 'test', size: 'large' });
 
-      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, colorButton), [0, 0, 49, 40], 4);
+      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, colorButton), [0, 0, 63, 40], 4);
     });
 
     suite.test("colorbutton icon, width 100, height 100", function () {
@@ -88,7 +88,7 @@ asynctest(
     suite.test("colorbutton text & icon, size large", function () {
       var colorButton = createColorButton({ text: 'X', icon: 'test', size: 'large' });
 
-      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, colorButton), [0, 0, 64, 40], 4);
+      UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, colorButton), [0, 0, 78, 40], 4);
     });
 
     suite.test("colorbutton text & icon, size small", function () {

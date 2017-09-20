@@ -31,10 +31,13 @@
   border: 0 solid @panel-border;
   border-left-width: 1px;
 
+  .@{prefix}-btn {
+    border-left: 0;
+    border-right: 0;
+  }
+
   .@{prefix}-btn.@{prefix}-active, .@{prefix}-btn.@{prefix}-active:hover {
-    border: 1px solid transparent;
-    border-color: @btn-primary-border;
-    .vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);
+    background-color: @btn-bg-active;
 
     button, button i {
       color: @btn-primary-text;

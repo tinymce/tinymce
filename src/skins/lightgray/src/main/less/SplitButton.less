@@ -1,31 +1,31 @@
 // SplitButton
 
-.@{prefix}-splitbtn .@{prefix}-open {
-  border-left: 1px solid transparent;
-}
+.@{prefix}-splitbtn {
+  &:hover .@{prefix}-open {
+    border-left: 1px solid @splitbtn-delimiter-hover;
+  }
 
-.@{prefix}-splitbtn:hover .@{prefix}-open {
-  border-left-color: darken(@btn-bg, 20%);
-}
+  .@{prefix}-open {
+    border-left: 1px solid @splitbtn-delimiter;
+    padding-right: 4px;
+    padding-left: 4px;
+  }
 
-.@{prefix}-splitbtn button when (@has-button-borders = false) {
-  padding-right: 6px;
-  padding-left: 6px;
-}
+  .@{prefix}-open:focus {
+    border-left: 1px solid @splitbtn-delimiter-focus;
+  }
 
-.@{prefix}-splitbtn button when (@has-button-borders = true) {
-  padding-right: 4px;
-  padding-left: 8px;
-}
+  .@{prefix}-open:hover, .@{prefix}-open:active {
+    border-left: 1px solid @splitbtn-delimiter-hover;
+  }
 
-.@{prefix}-splitbtn .@{prefix}-open {
-  padding-right: 4px;
-  padding-left: 4px;
-}
+  &.@{prefix}-active:hover .@{prefix}-open {
+    border-left: 1px solid @splitbtn-delimiter-active;
+  }
 
-.@{prefix}-splitbtn .@{prefix}-open.@{prefix}-active {
-  .vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));
-  outline: 1px solid darken(@btn-bg, 20%);
+  &.@{prefix}-opened {
+    border-color: @btn-border-hover;
+  }
 }
 
 .@{prefix}-splitbtn.@{prefix}-btn-small .@{prefix}-open {

@@ -36,7 +36,7 @@ asynctest(
       return Step.sync(function () {
         var countEl = DOMUtils.DOM.select('.mce-wordcount')[0];
         var value = countEl ? countEl.innerText : '';
-        Assertions.assertEq('wordcount', 'Words: ' + num, value);
+        Assertions.assertEq('wordcount', num + ' WORDS', value.toUpperCase());
       });
     };
 

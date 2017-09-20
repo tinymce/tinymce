@@ -34,7 +34,7 @@ define(
 
       var getImplementation = function () {
         var theme = editor.theme;
-        return theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
+        return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
       };
 
       var getTopNotification = function () {
@@ -46,7 +46,9 @@ define(
       };
 
       var reposition = function () {
-        getImplementation().reposition(notifications);
+        if (notifications.length > 0) {
+          getImplementation().reposition(notifications);
+        }
       };
 
       var addNotification = function (notification) {

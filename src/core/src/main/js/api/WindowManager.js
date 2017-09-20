@@ -42,7 +42,7 @@ define(
 
       var getImplementation = function () {
         var theme = editor.theme;
-        return theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
+        return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
       };
 
       var funcBind = function (scope, f) {
@@ -85,7 +85,7 @@ define(
       };
 
       var getTopWindow = function () {
-        return Option.from(windows[0]);
+        return Option.from(windows[windows.length - 1]);
       };
 
       var open = function (args, params) {
