@@ -24,7 +24,7 @@ define(
         index.fold(function () {
           parent.children = parent.children.concat(children);
         }, function (ind) {
-          parent.children.slice(0, index).concat(children).concat(parent.children.slice(index + 1));
+          parent.children = parent.children.slice(0, ind).concat(children).concat(parent.children.slice(ind + 1));
         });
       });
     };

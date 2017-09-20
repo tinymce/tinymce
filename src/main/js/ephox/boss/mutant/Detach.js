@@ -16,7 +16,7 @@ define(
           });
 
           return index.map(function (ind) {
-            parent.children = parent.children.slice(0, index).concat(parent.children.slice(index + 1));
+            parent.children = parent.children.slice(0, ind).concat(parent.children.slice(ind + 1));
             return item;
           });
         });

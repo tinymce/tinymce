@@ -30,7 +30,7 @@ test(
     assert.eq(true, Locator.byId(family, 'Z').isNone());
 
 
-    assert.eq(1, Locator.index(Locator.byId(family, 'C').getOrDie()));
+    assert.eq(1, Locator.index(Locator.byId(family, 'C').getOrDie()).getOrDie());
 
   }
 );

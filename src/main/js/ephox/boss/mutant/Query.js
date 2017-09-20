@@ -35,7 +35,7 @@ define(
       var kin = parent.map(Properties.children).getOr([]);
       var itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
       return itemIndex.bind(function (iIndex) {
-        return iIndex > 0 ? Option.some(kin[itemIndex - 1]) : Option.none();
+        return iIndex > 0 ? Option.some(kin[iIndex - 1]) : Option.none();
       });
     };
 
@@ -44,7 +44,7 @@ define(
       var kin = parent.map(Properties.children).getOr([]);
       var itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
       return itemIndex.bind(function (iIndex) {
-        return iIndex < kin.length - 1 ? Option.some(kin[itemIndex + 1]) : Option.none();
+        return iIndex < kin.length - 1 ? Option.some(kin[iIndex + 1]) : Option.none();
       });
     };
 
