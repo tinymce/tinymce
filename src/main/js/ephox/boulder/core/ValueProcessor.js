@@ -134,6 +134,14 @@ define(
       };      
     };
 
+    // This is because Obj.keys can return things where the key is set to undefined.
+    var getSetKeys = function (obj) {
+      var keys = Obj.keys(obj);
+      return Arr.filter(keys, function (k) {
+        return Objects.hasKey(obj, k);
+      });
+    };
+
     var objOnly = function (fields) {
       var delegate = obj(fields);
 
@@ -144,7 +152,7 @@ define(
       }, { });
 
       var extract = function (path, strength, o) {
-        var keys = Type.isBoolean(o) ? [ ] : Arr.filter(Obj.keys(o), function (kv) { return o[kv] !== undefined; });
+        var keys = Type.isBoolean(o) ? [ ] : getSetKeys(o);
         var extra = Arr.filter(keys, function (k) {
           return !Objects.hasKey(fieldNames, k);
         });

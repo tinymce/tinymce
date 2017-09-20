@@ -110,8 +110,6 @@ define(
 
       field: field,
       state: state
-
-      // snapshot?
     };
   }
 );
