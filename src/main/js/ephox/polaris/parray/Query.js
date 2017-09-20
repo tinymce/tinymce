@@ -19,11 +19,9 @@ define(
      * Finds the unit in the PositionArray that contains this offset (if there is one)
      */
     var get = function (parray, offset) {
-      var unit = Arr.find(parray, function (x) {
+      return Arr.find(parray, function (x) {
         return inUnit(x, offset);
       });
-
-      return Option.from(unit);
     };
 
     var startindex = function (parray, offset) {
@@ -44,13 +42,14 @@ define(
     var sublist = function (parray, start, finish) {
       var first = startindex(parray, start);
       var rawlast = startindex(parray, finish);
-      var last = rawlast > -1 ? rawlast : tryend(parray, finish);
-
-      return first > -1 && last > -1 ? parray.slice(first, last) : [];
+      return first.bind(function (fIndex) {
+        var last = rawlast.getOr(tryend(parray, finish));
+        return last > -1 ? Option.some(parray.slice(fIndex, last)) : Option.none();
+      }).getOr([]);
     };
 
     var find = function (parray, pred) {
-      return Option.from(Arr.find(parray, pred));
+      return Arr.find(parray, pred);
     };
 
     return {
