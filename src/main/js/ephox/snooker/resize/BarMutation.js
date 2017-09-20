@@ -2,7 +2,7 @@ define(
   'ephox.snooker.resize.BarMutation',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.snooker.resize.Mutation'

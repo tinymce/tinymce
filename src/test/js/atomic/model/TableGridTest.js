@@ -2,7 +2,7 @@ test(
   'TableGrid.subgrid test',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.TableGrid'
   ],

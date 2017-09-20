@@ -2,18 +2,18 @@ define(
   'ephox.snooker.lookup.TagLookup',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
-    'ephox.syrup.api.Compare'
+    'ephox.sugar.api.dom.Compare'
   ],
 
   function (Arr, Fun, Structs, TableLookup, Compare) {
     var detect = function (cell) {
 
       var getIndex = function (getChildren, elem) {
-        return getChildren(elem).map(function (children) {
+        return getChildren(elem).bind(function (children) {
           return Arr.findIndex(children, function (child) {
             return Compare.eq(child, elem);
           });

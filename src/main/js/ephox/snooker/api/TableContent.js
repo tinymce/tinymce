@@ -2,20 +2,20 @@ define(
   'ephox.snooker.api.TableContent',
 
   [
-    'ephox.compass.Arr',
-    'ephox.oath.navigation.Descend',
+    'ephox.katamari.api.Arr',
     'ephox.robin.api.dom.DomStructure',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.PredicateFind',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.Text',
-    'ephox.syrup.api.Traverse'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.PredicateFind',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.CursorPosition'
   ],
 
-  function (Arr, Descend, DomStructure, Compare, Element, InsertAll, Node, PredicateFind, Remove, Text, Traverse) {
+  function (Arr, DomStructure, Compare, InsertAll, Remove, Element, Node, Text, PredicateFind, Traverse, CursorPosition) {
     var merge = function (cells) {
       var isBr = function (el) {
         return Node.name(el) === 'br';
@@ -41,7 +41,7 @@ define(
       };
 
       var markCell = function (cell) {
-        return Descend.lastCursor(cell).bind(function (rightEdge) {
+        return CursorPosition.last(cell).bind(function (rightEdge) {
           var rightSiblingIsBlock = siblingIsBlock(rightEdge);
           return Traverse.parent(rightEdge).map(function (parent) {
             return rightSiblingIsBlock === true || isListItem(parent) || isBr(rightEdge) || (DomStructure.isBlock(parent) && !Compare.eq(cell, parent)) ? [] :  [ Element.fromTag('br') ];

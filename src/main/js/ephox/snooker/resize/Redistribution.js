@@ -2,11 +2,11 @@ define(
   'ephox.snooker.resize.Redistribution',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.scullion.ADT',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Adt',
     'ephox.snooker.util.Util',
-    'ephox.violin.Strings',
+    'ephox.katamari.api.Strings',
     'global!Math',
     'global!parseFloat',
     'global!parseInt'

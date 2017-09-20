@@ -2,13 +2,13 @@ test(
   'TransformOperationsTest',
 
   {
-    'ephox.syrup.api.Css': '../mock/ephox/syrup/api/Css',
-    'ephox.syrup.api.Attr': '../mock/ephox/syrup/api/Attr'
+    'ephox.sugar.api.properties.Css': '../mock/ephox/syrup/api/Css',
+    'ephox.sugar.api.properties.Attr': '../mock/ephox/syrup/api/Attr'
   },
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Generators',
     'ephox.snooker.api.Structs',
     'ephox.snooker.operate.TransformOperations',

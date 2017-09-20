@@ -2,9 +2,9 @@ define(
   'ephox.snooker.resize.Bar',
 
   [
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element'
   ],
 
   function (Attr, Css, Element) {

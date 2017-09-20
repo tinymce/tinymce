@@ -2,7 +2,7 @@ define(
   'ephox.snooker.resize.Adjustments',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.calc.Deltas',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
@@ -10,7 +10,7 @@ define(
     'ephox.snooker.resize.Recalculations',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
-    'ephox.syrup.api.SelectorFind',
+    'ephox.sugar.api.search.SelectorFind',
     'global!Math'
   ],
 

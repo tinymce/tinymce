@@ -2,8 +2,8 @@ define(
   'ephox.snooker.model.TableGrid',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.model.GridRow'
   ],
 
@@ -25,7 +25,11 @@ define(
       var index = Arr.findIndex(xs, function (x) {
         return !comp(first.element(), x.element());
       });
-      return index === -1 ? xs.length : index;
+      return index.fold(function () {
+        return xs.length;
+      }, function (ind) {
+        return ind;
+      });
     };
 
     /*

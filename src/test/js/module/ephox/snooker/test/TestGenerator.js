@@ -2,7 +2,7 @@ define(
   'ephox.snooker.test.TestGenerator',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

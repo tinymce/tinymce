@@ -2,7 +2,7 @@ test(
   'CellBounds.isWithin Test',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellBounds'

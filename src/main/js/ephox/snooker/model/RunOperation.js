@@ -2,11 +2,11 @@ define(
   'ephox.snooker.model.RunOperation',
 
   [
-    'ephox.compass.Arr',
-    'ephox.highway.Merger',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
     'ephox.snooker.model.DetailsList',
@@ -15,8 +15,8 @@ define(
     'ephox.snooker.operate.Redraw',
     'ephox.snooker.resize.BarPositions',
     'ephox.snooker.resize.Bars',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Traverse'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Arr, Merger, Fun, Option, Options, Structs, TableLookup, DetailsList, Transitions, Warehouse, Redraw, BarPositions, Bars, Compare, Traverse) {
@@ -52,10 +52,9 @@ define(
 
     var findInWarehouse = function (warehouse, element) {
       var all = Arr.flatten(Arr.map(warehouse.all(), function (r) { return r.cells(); }));
-      var raw = Arr.find(all, function (e) {
+      return Arr.find(all, function (e) {
         return Compare.eq(element, e.element());
       });
-      return Option.from(raw);
     };
 
     var run = function (operation, extract, adjustment, postAction, genWrappers) {

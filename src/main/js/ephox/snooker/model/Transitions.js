@@ -2,7 +2,7 @@ define(
   'ephox.snooker.model.Transitions',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.TableGrid',
     'ephox.snooker.model.Warehouse'

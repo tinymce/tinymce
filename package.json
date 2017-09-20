@@ -3,19 +3,13 @@
   "description": "This project implements the table model.",
   "version": "3.0.0",
   "dependencies": {
-    "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
     "@ephox/dragster": "git+ssh://git@stash:7999/tbio/dragster.git#master",
     "@ephox/echo": "git+ssh://git@stash:7999/tbio/echo.git#master",
     "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
-    "@ephox/highway": "git+ssh://git@stash:7999/libs/highway.git#master",
-    "@ephox/oath": "git+ssh://git@stash:7999/tbio/oath.git#master",
-    "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
-    "@ephox/perhaps": "git+ssh://git@stash:7999/libs/perhaps.git#master",
+    "@ephox/katamari": "latest",
     "@ephox/porkbun": "git+ssh://git@stash:7999/libs/porkbun.git#master",
     "@ephox/robin": "git+ssh://git@stash:7999/tbio/robin.git#master",
-    "@ephox/scullion": "git+ssh://git@stash:7999/libs/scullion.git#master",
-    "@ephox/syrup": "git+ssh://git@stash:7999/tbio/syrup.git#master",
-    "@ephox/violin": "git+ssh://git@stash:7999/libs/violin.git#master"
+    "@ephox/sugar": "latest"
   },
   "devDependencies": {
     "@ephox/bedrock": "*",

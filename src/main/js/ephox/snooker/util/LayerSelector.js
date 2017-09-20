@@ -2,10 +2,10 @@ define(
   'ephox.snooker.util.LayerSelector',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.syrup.api.Selectors',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Arr, Fun, Selectors, Traverse) {

@@ -1,8 +1,8 @@
 define(
-  'ephox.syrup.api.Css',
+  'ephox.sugar.api.properties.Css',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

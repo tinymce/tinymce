@@ -2,13 +2,13 @@ define(
   'ephox.snooker.api.Generators',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Cell',
-    'ephox.scullion.Contracts',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Cell',
+    'ephox.katamari.api.Contracts',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
     'global!parseInt'
   ],
 
@@ -66,8 +66,7 @@ define(
         var list = [];
 
         var find = function (element, comparator) {
-          var raw = Arr.find(list, function (x) { return comparator(x.item, element); });
-          return Option.from(raw);
+          return Arr.find(list, function (x) { return comparator(x.item, element); });
         };
 
         var makeNew = function (element) {

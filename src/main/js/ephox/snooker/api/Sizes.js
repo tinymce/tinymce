@@ -2,8 +2,8 @@ define(
   'ephox.snooker.api.Sizes',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.BarPositions',
@@ -11,9 +11,9 @@ define(
     'ephox.snooker.resize.Redistribution',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Height',
-    'ephox.syrup.api.Width'
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (Arr, Fun, DetailsList, Warehouse, BarPositions, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {

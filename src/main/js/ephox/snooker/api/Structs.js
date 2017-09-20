@@ -2,7 +2,7 @@ define(
   'ephox.snooker.api.Structs',
 
   [
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Struct) {

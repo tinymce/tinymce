@@ -2,7 +2,7 @@ define(
   'ephox.snooker.picker.PickerStyles',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.style.Styles'
   ],
 

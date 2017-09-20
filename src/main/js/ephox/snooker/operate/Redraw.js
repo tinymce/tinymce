@@ -2,16 +2,16 @@ define(
   'ephox.snooker.operate.Redraw',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.Replication',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Arr, Fun, Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse) {

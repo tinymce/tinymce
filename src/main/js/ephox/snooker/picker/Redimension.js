@@ -4,10 +4,10 @@ define(
   [
     'ephox.snooker.api.Structs',
     'ephox.snooker.picker.Sizing',
-    'ephox.syrup.api.Focus',
-    'ephox.syrup.api.Height',
-    'ephox.syrup.api.Location',
-    'ephox.syrup.api.Width',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.dom.Location',
+    'ephox.sugar.api.view.Width',
     'global!Math'
   ],
 

@@ -2,7 +2,7 @@ define(
   'ephox.snooker.api.PickerDirection',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.picker.CellPosition'
   ],
 

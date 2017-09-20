@@ -2,7 +2,7 @@ test(
   'WarehouseTest',
 
   [
-    'ephox.compass.Obj',
+    'ephox.katamari.api.Obj',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse'
   ],

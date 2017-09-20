@@ -2,16 +2,16 @@ test(
   'RecalculationsTest',
 
   {
-    'ephox.syrup.api.Css': '../mock/ephox/syrup/api/Css',
-    'ephox.syrup.api.Attr': '../mock/ephox/syrup/api/Attr',
-    'ephox.syrup.api.SelectorFind': '../mock/ephox/syrup/api/SelectorFind',
+    'ephox.sugar.api.properties.Css': '../mock/ephox/syrup/api/Css',
+    'ephox.sugar.api.properties.Attr': '../mock/ephox/syrup/api/Attr',
+    'ephox.sugar.api.search.SelectorFind': '../mock/ephox/syrup/api/SelectorFind',
     'ephox.snooker.model.DetailsList': '../mock/ephox/snooker/model/DetailsList',
     'ephox.snooker.resize.Sizes': '../mock/ephox/snooker/resize/Sizes'
   },
 
   [
-    'ephox.compass.Arr',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Struct',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Recalculations'
@@ -55,9 +55,9 @@ test(
 
     // 2x2 grid
     check([assertParts(
-      [{ element: 'a00', width: 20 }, { element: 'a01', width: 20 }, 
-       { element: 'a10', width: 20 }, { element: 'a11', width: 20 }], 
-      [{ element: 'a00', height: 15 }, { element: 'a01', height: 15 }, 
+      [{ element: 'a00', width: 20 }, { element: 'a01', width: 20 },
+       { element: 'a10', width: 20 }, { element: 'a11', width: 20 }],
+      [{ element: 'a00', height: 15 }, { element: 'a01', height: 15 },
        { element: 'a10', height:  9 }, { element: 'a11', height:  9 }])], [
         r('r0', [ d('a00', 1, 1), d('a01', 1, 1) ], 'tbody'),
         r('r1', [ d('a10', 1, 1), d('a11', 1, 1) ], 'tbody')
@@ -65,7 +65,7 @@ test(
 
     // 2x2 grid merged into a single cell with total dimensions double the width and height
     check([assertParts(
-      [{ element: 'a', width: 40 }], 
+      [{ element: 'a', width: 40 }],
       [{ element: 'a', height: 60 }])], [
         r('r0', [ d('a', 2, 2) ], 'tbody'),
         r('r1', [], 'tbody') // optional
@@ -73,16 +73,16 @@ test(
 
     // 2x3 grid merged into a single cell with total dimensions double the width and height
     check([assertParts(
-      [{ element: 'a', width:  40 }, { element: 'b', width:  15 }, { element: 'c', width:  15 } ], 
-      [{ element: 'a', height: 60 }, { element: 'b', height: 30 }, { element: 'c', height: 30 }])], 
+      [{ element: 'a', width:  40 }, { element: 'b', width:  15 }, { element: 'c', width:  15 } ],
+      [{ element: 'a', height: 60 }, { element: 'b', height: 30 }, { element: 'c', height: 30 }])],
       [
         r('r0', [ d('a', 2, 2), d('b', 1, 1)], 'tbody'),
         r('r1', [               d('c', 1, 1)], 'tbody')
       ], dimensions([20, 20, 15, 99999], [30, 30, 999999]));
 
     check([assertParts(
-      [{ element: 'a', width:  30 }, { element: 'b', width:  11 }, { element: 'c', width:  11 }], 
-      [{ element: 'a', height: 28 }, { element: 'b', height: 15 }, { element: 'c', height: 13 }])], 
+      [{ element: 'a', width:  30 }, { element: 'b', width:  11 }, { element: 'c', width:  11 }],
+      [{ element: 'a', height: 28 }, { element: 'b', height: 15 }, { element: 'c', height: 13 }])],
       [
         r('r0', [ d('a', 2, 2), d('b', 1, 1) ], 'tbody'),
         r('r1', [               d('c', 1, 1) ], 'tbody')

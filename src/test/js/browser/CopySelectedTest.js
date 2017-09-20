@@ -2,13 +2,13 @@ test(
   'CopySelectedTest',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.CopySelected',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Html',
-    'ephox.syrup.api.InsertAll',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.InsertAll',
     'global!String'
   ],
 

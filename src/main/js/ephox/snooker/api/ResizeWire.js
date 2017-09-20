@@ -2,11 +2,11 @@ define(
   'ephox.snooker.api.ResizeWire',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.syrup.alien.Position',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Location'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Location'
   ],
 
   function (Fun, Option, Position, Element, Location) {

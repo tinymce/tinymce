@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.fred.PlatformDetection',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.test.Assertions'
   ],

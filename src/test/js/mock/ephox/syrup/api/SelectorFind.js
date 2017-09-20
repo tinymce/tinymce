@@ -1,9 +1,9 @@
 define(
-  'ephox.syrup.api.SelectorFind',
+  'ephox.sugar.api.search.SelectorFind',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Fun, Option) {

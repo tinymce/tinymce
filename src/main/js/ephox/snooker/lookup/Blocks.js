@@ -2,9 +2,9 @@ define(
   'ephox.snooker.lookup.Blocks',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.util.Util'
   ],
@@ -46,7 +46,7 @@ define(
       var inBlock = getBlock();
       var singleInBlock = Arr.find(inBlock, isSingle);
 
-      var detailOption = Option.from(singleInBlock).orThunk(function () {
+      var detailOption = singleInBlock.orThunk(function () {
         return Option.from(inBlock[0]).orThunk(getFallback);
       });
 

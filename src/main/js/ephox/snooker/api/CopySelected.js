@@ -2,18 +2,18 @@ define(
   'ephox.snooker.api.CopySelected',
 
   [
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Struct',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.util.LayerSelector',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.Selectors'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.Selectors'
   ],
 
   function (Arr, Obj, Struct, DetailsList, Warehouse, LayerSelector, Attr, Css, Element, Insert, Remove, Selectors) {

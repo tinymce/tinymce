@@ -2,7 +2,7 @@ define(
   'ephox.snooker.test.Stringify',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

@@ -2,13 +2,13 @@ test(
   'TableMergeContentTest',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.TableContent',
-    'ephox.syrup.api.Body',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Html',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Remove'
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove'
   ],
 
   function (Arr, TableContent, Body, Element, Html, Insert, Remove) {
