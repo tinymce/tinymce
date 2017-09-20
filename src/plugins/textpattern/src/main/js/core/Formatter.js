@@ -1,12 +1,20 @@
+/**
+ * Formatter.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.textpattern.core.Formatter',
-
   [
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.util.Tools',
     'tinymce.plugins.textpattern.core.Patterns'
   ],
-
   function (TreeWalker, Tools, Patterns) {
     var splitContainer = function (container, pattern, offset, startOffset, delta) {
 
@@ -36,7 +44,7 @@ define(
       text = container.data;
       delta = space === true ? 1 : 0;
 
-      if (container.nodeType != 3) {
+      if (container.nodeType !== 3) {
         return;
       }
 
@@ -96,7 +104,7 @@ define(
       if (textBlockElm) {
         walker = new TreeWalker(textBlockElm, textBlockElm);
         while ((node = walker.next())) {
-          if (node.nodeType == 3) {
+          if (node.nodeType === 3) {
             firstTextNode = node;
             break;
           }
@@ -112,11 +120,11 @@ define(
           container = rng.startContainer;
           offset = rng.startOffset;
 
-          if (firstTextNode == container) {
+          if (firstTextNode === container) {
             offset = Math.max(0, offset - pattern.start.length);
           }
 
-          if (Tools.trim(firstTextNode.data).length == pattern.start.length) {
+          if (Tools.trim(firstTextNode.data).length === pattern.start.length) {
             return;
           }
 

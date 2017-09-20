@@ -52,7 +52,7 @@
           argsMap = argsMap.split(" ");
         }
 
-        if (argsMap && typeof argsMap != "function") {
+        if (argsMap && typeof argsMap !== "function") {
           for (var i = 0; i < argsMap.length; i++) {
             callbackArgs.push(e[argsMap[i]]);
           }

@@ -149,7 +149,7 @@ define(
       ],
 
       spellchecker_callback: function (method, data, success) {
-        if (method == "spellcheck") {
+        if (method === "spellcheck") {
           var words = data.match(this.getWordCharPattern());
           var suggestions = {};
 
@@ -160,7 +160,7 @@ define(
           success({ words: suggestions, dictionary: true });
         }
 
-        if (method == "addToDictionary") {
+        if (method === "addToDictionary") {
           success();
         }
       }

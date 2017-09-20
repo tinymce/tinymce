@@ -31,7 +31,7 @@ define(
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "legacyoutput code",
-        toolbar: "legacyoutput code",
+        toolbar: "legacyoutput fontselect fontsizeselect code",
         height: 600
       });
     };

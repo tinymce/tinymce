@@ -11,10 +11,11 @@
 define(
   'tinymce.plugins.media.core.Service',
   [
-    'tinymce.plugins.media.core.DataToHtml',
-    'tinymce.core.util.Promise'
+    'tinymce.core.util.Promise',
+    'tinymce.plugins.media.api.Settings',
+    'tinymce.plugins.media.core.DataToHtml'
   ],
-  function (DataToHtml, Promise) {
+  function (Promise, Settings, DataToHtml) {
     var embedPromise = function (data, dataToHtml, handler) {
       var cache = {};
       return new Promise(function (res, rej) {
@@ -48,7 +49,7 @@ define(
     };
 
     var getEmbedHtml = function (editor, data) {
-      var embedHandler = editor.settings.media_url_resolver;
+      var embedHandler = Settings.getUrlResolver(editor);
 
       return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
     };
