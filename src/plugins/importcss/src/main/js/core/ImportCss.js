@@ -32,7 +32,7 @@ define(
       var settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
 
       if (skin) {
-        var skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(skinUrl) : EditorManager.baseURL + '/skins/' + skin;
+        var skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/' + skin;
         return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css';
       }
 
