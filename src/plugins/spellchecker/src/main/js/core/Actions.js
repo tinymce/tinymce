@@ -88,14 +88,18 @@ define(
         return;
       }
 
-      function errorCallback(message) {
+      var errorCallback = function (message) {
         editor.notificationManager.open({ text: message, type: 'error' });
         editor.setProgressState(false);
         finish(editor, startedState, textMatcherState);
-      }
+      };
+
+      var successCallback = function (data) {
+        markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
+      };
 
       editor.setProgressState(true);
-      sendRpcCall(editor, pluginUrl, currentLanguageState, "spellcheck", getTextMatcher(editor, textMatcherState).text, editor.plugins.spellchecker.markErrors, lastSuggestionsState, errorCallback);
+      sendRpcCall(editor, pluginUrl, currentLanguageState, "spellcheck", getTextMatcher(editor, textMatcherState).text, successCallback, errorCallback);
       editor.focus();
     };
 
