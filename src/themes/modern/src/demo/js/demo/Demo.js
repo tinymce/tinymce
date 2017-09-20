@@ -13,6 +13,8 @@
 define(
   'tinymce.themes.modern.demo.Demo',
   [
+    'global!console',
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
@@ -61,12 +63,11 @@ define(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    EditorManager, Factory, Tools, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin,
-    CharMapPlugin, CodePlugin, CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin,
-    FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin, ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin,
-    LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin,
-    SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin,
-    TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+    console, document, EditorManager, Factory, Tools, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin, CharMapPlugin,
+    CodePlugin, CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin,
+    ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin,
+    PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin,
+    TextColorPlugin, TextPatternPlugin, TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
   ) {
     AdvListPlugin();
     AnchorPlugin();
@@ -119,6 +120,22 @@ define(
         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
         "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
       ],
+      /*
+      menubar: 'file edit insert view format table tools',
+      menu: {
+        file: { title: 'File', items: 'newdocument' },
+        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+        insert: { title: 'Insert', items: 'link media | template hr' },
+        view: { title: 'View', items: 'visualaid' },
+        format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+        tools: { title: 'Tools', items: 'spellchecker code' }
+      },
+      removed_menuitems: 'undo',
+      */
+      //resize: 'both',
+      //statusbar: false,
+      //menubar: false,
       add_unload_trigger: false,
       toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
       "bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",

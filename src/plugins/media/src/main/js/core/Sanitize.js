@@ -11,14 +11,15 @@
 define(
   'tinymce.plugins.media.core.Sanitize',
   [
-    'tinymce.core.util.Tools',
-    'tinymce.core.html.Writer',
     'tinymce.core.html.SaxParser',
-    'tinymce.core.html.Schema'
+    'tinymce.core.html.Schema',
+    'tinymce.core.html.Writer',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.media.api.Settings'
   ],
-  function (Tools, Writer, SaxParser, Schema) {
+  function (SaxParser, Schema, Writer, Tools, Settings) {
     var sanitize = function (editor, html) {
-      if (editor.settings.media_filter_html === false) {
+      if (Settings.shouldFilterHtml(editor) === false) {
         return html;
       }
 

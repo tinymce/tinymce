@@ -11,12 +11,11 @@
 define(
   'tinymce.plugins.link.core.Utils',
   [
+    'global!RegExp',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.link.core.Settings',
-    'global!RegExp'
+    'tinymce.plugins.link.api.Settings'
   ],
-  function (Tools, Settings, RegExp) {
-
+  function (RegExp, Tools, Settings) {
     var toggleTargetRules = function (rel, isUnsafe) {
       var rules = ['noopener'];
       var newRel = rel ? rel.split(/\s+/) : [];
@@ -40,11 +39,9 @@ define(
       return newRel.length ? toString(newRel) : null;
     };
 
-
     var trimCaretContainers = function (text) {
       return text.replace(/\uFEFF/g, '');
     };
-
 
     var getAnchorElement = function (editor, selectedElm) {
       selectedElm = selectedElm || editor.selection.getStart();
@@ -56,12 +53,10 @@ define(
       }
     };
 
-
     var getAnchorText = function (selection, anchorElm) {
       var text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
       return trimCaretContainers(text);
     };
-
 
     var isLink = function (elm) {
       return elm && elm.nodeName === 'A' && elm.href;
@@ -71,21 +66,18 @@ define(
       return Tools.grep(elements, isLink).length > 0;
     };
 
-
     var isOnlyTextSelected = function (html) {
       // Partial html and not a fully selected anchor element
-      if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
+      if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
         return false;
       }
 
       return true;
     };
 
-
     var isImageFigure = function (node) {
       return node && node.nodeName === 'FIGURE' && /\bimage\b/i.test(node.className);
     };
-
 
     var link = function (editor, attachState) {
       return function (data) {
@@ -102,7 +94,7 @@ define(
           };
 
           if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-            linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
+            linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
           }
 
           if (data.href === attachState.href) {
@@ -138,7 +130,6 @@ define(
       };
     };
 
-
     var unlink = function (editor) {
       return function () {
         editor.undoManager.transact(function () {
@@ -152,7 +143,6 @@ define(
       };
     };
 
-
     var unlinkImageFigure = function (editor, fig) {
       var a, img;
       img = editor.dom.select('img', fig)[0];
@@ -164,7 +154,6 @@ define(
         }
       }
     };
-
 
     var linkImageFigure = function (editor, fig, attrs) {
       var a, img;

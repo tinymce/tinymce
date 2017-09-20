@@ -7,10 +7,11 @@ asynctest(
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
+    'global!document',
     'tinymce.plugins.link.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, LinkPlugin, ModernTheme) {
+  function (Pipeline, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, document, LinkPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

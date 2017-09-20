@@ -6,11 +6,12 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sand.api.Uint8Array',
     'ephox.sand.api.Window',
     'tinymce.themes.inlite.core.Actions',
     'tinymce.themes.inlite.Theme'
   ],
-  function (GeneralSteps, Pipeline, Step, TinyApis, TinyLoader, Window, Actions, Theme) {
+  function (GeneralSteps, Pipeline, Step, TinyApis, TinyLoader, Uint8Array, Window, Actions, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -129,6 +129,36 @@ asynctest(
       assertSelection(editor, 'li', 1);
     });
 
+    suite.test('insertAtCaret prevent default of beforeSetContent', function (editor) {
+      var args;
+
+      var handler = function (e) {
+        if (e.selection === true) {
+          e.preventDefault();
+          e.content = '<h1>b</h1>';
+          editor.getBody().innerHTML = '<h1>c</h1>';
+        }
+      };
+
+      var collector = function (e) {
+        args = e;
+      };
+
+      editor.on('BeforeSetContent', handler);
+      editor.on('SetContent', collector);
+
+      editor.setContent('<p>a</p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      InsertContent.insertAtCaret(editor, { content: '<p>b</p>', paste: true });
+      LegacyUnit.equal(editor.getContent(), '<h1>c</h1>');
+      LegacyUnit.equal(args.content, '<h1>b</h1>');
+      LegacyUnit.equal(args.type, 'setcontent');
+      LegacyUnit.equal(args.paste, true);
+
+      editor.off('BeforeSetContent', handler);
+      editor.on('BeforeSetContent', collector);
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

@@ -2,7 +2,7 @@ test(
   'atomic.tinymce.plugins.fullpage.ProtectTest',
   [
     'ephox.agar.api.Assertions',
-    'tinymce.plugins.fullpage.Protect'
+    'tinymce.plugins.fullpage.core.Protect'
   ],
   function (Assertions, Protect) {
     var testProtect = function () {

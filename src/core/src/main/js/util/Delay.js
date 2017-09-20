@@ -16,9 +16,15 @@
 define(
   'tinymce.core.util.Delay',
   [
-    "tinymce.core.util.Promise"
+    'global!clearInterval',
+    'global!clearTimeout',
+    'global!document',
+    'global!setInterval',
+    'global!setTimeout',
+    'global!window',
+    'tinymce.core.util.Promise'
   ],
-  function (Promise) {
+  function (clearInterval, clearTimeout, document, setInterval, setTimeout, window, Promise) {
     var requestAnimationFramePromise;
 
     function requestAnimationFrame(callback, element) {

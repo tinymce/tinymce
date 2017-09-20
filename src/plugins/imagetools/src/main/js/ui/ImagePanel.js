@@ -11,28 +11,16 @@
 define(
   'tinymce.plugins.imagetools.ui.ImagePanel',
   [
+    'global!document',
+    'global!Image',
     'tinymce.core.geom.Rect',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
+    'tinymce.plugins.imagetools.core.LoadImage',
     'tinymce.plugins.imagetools.ui.CropRect'
   ],
-  function (Rect, Factory, Promise, Tools, CropRect) {
-    function loadImage(image) {
-      return new Promise(function (resolve) {
-        function loaded() {
-          image.removeEventListener('load', loaded);
-          resolve(image);
-        }
-
-        if (image.complete) {
-          resolve(image);
-        } else {
-          image.addEventListener('load', loaded);
-        }
-      });
-    }
-
+  function (document, Image, Rect, Factory, Promise, Tools, LoadImage, CropRect) {
     var create = function (settings) {
       var Control = Factory.get('Control');
       var ImagePanel = Control.extend({
@@ -67,7 +55,7 @@ define(
 
           img.src = url;
 
-          loadImage(img).then(function () {
+          LoadImage.loadImage(img).then(function () {
             var rect, $img, lastRect = self.state.get('viewRect');
 
             $img = self.$el.find('img');
@@ -84,7 +72,7 @@ define(
             self.state.set('viewRect', rect);
             self.state.set('rect', Rect.inflate(rect, -20, -20));
 
-            if (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {
+            if (!lastRect || lastRect.w !== rect.w || lastRect.h !== rect.h) {
               self.zoomFit();
             }
 

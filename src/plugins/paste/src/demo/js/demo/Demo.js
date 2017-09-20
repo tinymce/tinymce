@@ -13,12 +13,13 @@
 define(
   'tinymce.plugins.paste.demo.Demo',
   [
+    'global!console',
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, PastePlugin, ModernTheme) {
+  function (console, EditorManager, CodePlugin, PastePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       PastePlugin();

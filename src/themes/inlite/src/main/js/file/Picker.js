@@ -11,9 +11,10 @@
 define(
   'tinymce.themes.inlite.file.Picker',
   [
+    'global!document',
     'tinymce.core.util.Promise'
   ],
-  function (Promise) {
+  function (document, Promise) {
     var pickFile = function () {
       return new Promise(function (resolve) {
         var fileInput;

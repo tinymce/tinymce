@@ -13,7 +13,9 @@ define(
   [
     'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'ephox.sand.api.URL',
     'global!Math',
+    'global!setTimeout',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Promise',
@@ -21,7 +23,7 @@ define(
     'tinymce.plugins.imagetools.core.UndoStack',
     'tinymce.plugins.imagetools.ui.ImagePanel'
   ],
-  function (BlobConversions, ImageTransformations, Math, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
+  function (BlobConversions, ImageTransformations, URL, Math, setTimeout, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
     function createState(blob) {
       return {
         blob: blob,
@@ -56,7 +58,7 @@ define(
         newHeight = parseInt(heightCtrl.value(), 10);
 
         if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
-          if (e.control.settings.name == 'w') {
+          if (e.control.settings.name === 'w') {
             newHeight = Math.round(newWidth * ratioW);
             heightCtrl.value(newHeight);
           } else {
@@ -93,7 +95,7 @@ define(
       function switchPanel(targetPanel) {
         return function () {
           var hidePanels = Tools.grep(panels, function (panel) {
-            return panel.settings.name != targetPanel;
+            return panel.settings.name !== targetPanel;
           });
 
           Tools.each(hidePanels, function (panel) {
@@ -355,7 +357,7 @@ define(
         { type: 'spacer', flex: 1 },
         { text: 'Apply', subtype: 'primary', onclick: crop }
       ]).hide().on('show hide', function (e) {
-        imagePanel.toggleCropRect(e.type == 'show');
+        imagePanel.toggleCropRect(e.type === 'show');
       }).on('show', disableUndoRedo);
 
       function toggleConstrain(e) {

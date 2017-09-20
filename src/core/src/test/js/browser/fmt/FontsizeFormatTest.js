@@ -6,9 +6,10 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
+    'global!document',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, RawAssertions, Step, TinyLoader, TinyUi, ModernTheme) {
+  function (Pipeline, RawAssertions, Step, TinyLoader, TinyUi, document, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

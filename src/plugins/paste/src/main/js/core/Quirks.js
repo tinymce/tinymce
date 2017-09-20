@@ -21,10 +21,11 @@ define(
   [
     'tinymce.core.Env',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.paste.core.WordFilter',
-    'tinymce.plugins.paste.core.Utils'
+    'tinymce.plugins.paste.api.Settings',
+    'tinymce.plugins.paste.core.Utils',
+    'tinymce.plugins.paste.core.WordFilter'
   ],
-  function (Env, Tools, WordFilter, Utils) {
+  function (Env, Tools, Settings, Utils, WordFilter) {
     function addPreProcessFilter(editor, filterFunc) {
       editor.on('PastePreProcess', function (e) {
         e.content = filterFunc(editor, e.content, e.internal, e.wordContent);
@@ -96,9 +97,9 @@ define(
       }
 
       // Filter away styles that isn't matching the target node
-      var webKitStyles = editor.settings.paste_webkit_styles;
+      var webKitStyles = Settings.getWebkitStyles(editor);
 
-      if (editor.settings.paste_remove_styles_if_webkit === false || webKitStyles == "all") {
+      if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStyles === "all") {
         return content;
       }
 
@@ -126,7 +127,7 @@ define(
               currentValue = dom.toHex(currentValue);
             }
 
-            if (currentValue != inputValue) {
+            if (currentValue !== inputValue) {
               outputStyles[webKitStyles[i]] = inputValue;
             }
           }

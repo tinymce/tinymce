@@ -11,10 +11,11 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
+    'global!window',
     'tinymce.core.dom.ScrollIntoView',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Cell, TinyApis, TinyLoader, Element, ScrollIntoView, Theme) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter, Cell, TinyApis, TinyLoader, Element, window, ScrollIntoView, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -17,10 +17,11 @@
 define(
   'tinymce.core.util.Tools',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Arr"
+    'global!window',
+    'tinymce.core.Env',
+    'tinymce.core.util.Arr'
   ],
-  function (Env, Arr) {
+  function (window, Env, Arr) {
     /**
      * Removes whitespace from the beginning and end of a string.
      *

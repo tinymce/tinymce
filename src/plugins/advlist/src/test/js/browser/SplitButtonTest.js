@@ -21,9 +21,7 @@ asynctest(
 
     suite.test("Replace splitbutton control with button when advlist_number_styles/advlist_bullet_styles are empty", function (editor) {
       LegacyUnit.equal(editor.buttons.numlist.type, 'button');
-      LegacyUnit.deepEqual(editor.buttons.numlist.menu.length, 0);
       LegacyUnit.equal(editor.buttons.bullist.type, 'button');
-      LegacyUnit.deepEqual(editor.buttons.bullist.menu.length, 0);
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

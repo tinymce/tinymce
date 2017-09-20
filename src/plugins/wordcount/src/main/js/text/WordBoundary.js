@@ -1,5 +1,5 @@
 /**
- * IsWordBoundary.js
+ * WordBoundary.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
@@ -11,7 +11,7 @@
 define(
   'tinymce.plugins.wordcount.text.WordBoundary',
   [
-    "tinymce.plugins.wordcount.text.UnicodeData"
+    'tinymce.plugins.wordcount.text.UnicodeData'
   ],
   function (UnicodeData) {
     var ci = UnicodeData.characterIndices;

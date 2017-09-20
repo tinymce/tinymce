@@ -1,22 +1,23 @@
 asynctest(
   'browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest',
   [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Assertions',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Merger',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
+    'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.plugins.link.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Arr, Merger, GeneralSteps, Logger, Pipeline, Step, Chain, Assertions, TinyApis, TinyLoader, TinyUi, DOMUtils, LinkPlugin, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Arr, Merger, TinyApis, TinyLoader, TinyUi, document, DOMUtils, LinkPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -30,11 +30,14 @@
 define(
   'tinymce.plugins.paste.core.Clipboard',
   [
-    'tinymce.core.dom.RangeUtils',
+    'global!Image',
+    'global!navigator',
+    'global!window',
     'tinymce.core.Env',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
+    'tinymce.plugins.paste.api.Events',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.Newlines',
     'tinymce.plugins.paste.core.PasteBin',
@@ -42,9 +45,9 @@ define(
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (RangeUtils, Env, Delay, Tools, VK, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
+  function (Image, navigator, window, Env, Delay, Tools, VK, Events, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
     return function (editor) {
-      var self = this, keyboardPasteTimeStamp = 0, draggingInternally = false;
+      var self = this, keyboardPasteTimeStamp = 0;
       var pasteBin = new PasteBin(editor);
       var keyboardPastePlainTextState;
       var mceInternalUrlPrefix = 'data:text/mce-internal,';
@@ -95,7 +98,7 @@ define(
           if (dataTransfer.getData) {
             var legacyText = dataTransfer.getData('Text');
             if (legacyText && legacyText.length > 0) {
-              if (legacyText.indexOf(mceInternalUrlPrefix) == -1) {
+              if (legacyText.indexOf(mceInternalUrlPrefix) === -1) {
                 items['text/plain'] = legacyText;
               }
             }
@@ -211,7 +214,7 @@ define(
               if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
                 var blob = item.getAsFile ? item.getAsFile() : item;
 
-                reader = new FileReader();
+                reader = new window.FileReader();
                 reader.onload = pasteImage.bind(null, rng, reader, blob);
                 reader.readAsDataURL(blob);
 
@@ -238,11 +241,7 @@ define(
       function isBrokenAndroidClipboardEvent(e) {
         var clipboardData = e.clipboardData;
 
-        return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
-      }
-
-      function getCaretRangeFromEvent(e) {
-        return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
+        return navigator.userAgent.indexOf('Android') !== -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
       }
 
       function hasContentType(clipboardContent, mimeType) {
@@ -250,7 +249,7 @@ define(
       }
 
       function isKeyboardPasteEvent(e) {
-        return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
+        return (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
       }
 
       function registerEventHandlers() {
@@ -264,11 +263,11 @@ define(
 
           // Ctrl+V or Shift+Insert
           if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
-            keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
+            keyboardPastePlainTextState = e.shiftKey && e.keyCode === 86;
 
             // Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
             // it fires the keydown but no paste or keyup so we are left with a paste bin
-            if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') != -1) {
+            if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') !== -1) {
               return;
             }
 
@@ -281,7 +280,7 @@ define(
             // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
             if (Env.ie && keyboardPastePlainTextState) {
               e.preventDefault();
-              editor.fire('paste', { ieFake: true });
+              Events.firePaste(editor, true);
               return;
             }
 
@@ -365,7 +364,7 @@ define(
           var clipboardDelay = new Date().getTime() - clipboardTimer;
 
           var isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
-          var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
+          var plainTextMode = self.pasteFormat === "text" || keyboardPastePlainTextState;
           var internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
           keyboardPastePlainTextState = false;
@@ -413,70 +412,14 @@ define(
             }, 0);
           }
         });
-
-        editor.on('dragstart dragend', function (e) {
-          draggingInternally = e.type == 'dragstart';
-        });
-
-        function isPlainTextFileUrl(content) {
-          var plainTextContent = content['text/plain'];
-          return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
-        }
-
-        editor.on('drop', function (e) {
-          var dropContent, rng;
-
-          rng = getCaretRangeFromEvent(e);
-
-          if (e.isDefaultPrevented() || draggingInternally) {
-            return;
-          }
-
-          dropContent = getDataTransferItems(e.dataTransfer);
-          var internal = hasContentType(dropContent, InternalHtml.internalHtmlMime());
-
-          if ((!hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && pasteImageData(e, rng)) {
-            return;
-          }
-
-          if (rng && editor.settings.paste_filter_drop !== false) {
-            var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
-
-            if (content) {
-              e.preventDefault();
-
-              // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
-              Delay.setEditorTimeout(editor, function () {
-                editor.undoManager.transact(function () {
-                  if (dropContent['mce-internal']) {
-                    editor.execCommand('Delete');
-                  }
-
-                  editor.selection.setRng(rng);
-
-                  content = Utils.trimHtml(content);
-
-                  if (!dropContent['text/html']) {
-                    pasteText(content);
-                  } else {
-                    pasteHtml(content, internal);
-                  }
-                });
-              });
-            }
-          }
-        });
-
-        editor.on('dragover dragend', function (e) {
-          if (editor.settings.paste_data_images) {
-            e.preventDefault();
-          }
-        });
       }
 
       self.pasteHtml = pasteHtml;
       self.pasteText = pasteText;
       self.pasteImageData = pasteImageData;
+      self.getDataTransferItems = getDataTransferItems;
+      self.hasHtmlOrText = hasHtmlOrText;
+      self.hasContentType = hasContentType;
 
       editor.on('preInit', function () {
         registerEventHandlers();

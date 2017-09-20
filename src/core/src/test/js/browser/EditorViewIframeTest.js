@@ -11,10 +11,11 @@ asynctest(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
+    'global!window',
     'tinymce.core.EditorView',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, Element, Css, SelectorFind, EditorView, Theme) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, Element, Css, SelectorFind, window, EditorView, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
