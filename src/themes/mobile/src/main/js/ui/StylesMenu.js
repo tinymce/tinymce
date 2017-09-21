@@ -44,7 +44,6 @@ define(
       ), memMenuThunk, false);
 
       var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
-        var previousMenu = menuItems.length > 0 ? menuItems[0].previousMenu : 'styles';
         var items = Arr.map(menuItems, function (item) {
           return makeItem(
             getValue(item),
@@ -64,26 +63,6 @@ define(
 
       return {
         tmenu: tmenu
-      };
-    };
-
-    var makeBack = function (text) {
-      return {
-        data: TieredMenu.collapseItem(text),
-        type: 'item',
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('styles-collapser') ]
-        },
-        components: [
-          {
-            dom: {
-              tag: 'span',
-              classes: [ Styles.resolve('styles-collapse-icon') ]
-            }
-          },
-          GuiFactory.text(text)
-        ]
       };
     };
 
@@ -116,24 +95,6 @@ define(
               attributes: {
                 style: preview
               },
-              innerHtml: text
-            }
-          }
-        ]
-      };
-    };
-
-    var makeSeparator = function (text) {
-      return {
-        type: 'separator',
-        dom: {
-          tag: 'div',
-          classes: [ Styles.resolve('styles-separator') ]
-        },
-        components: [
-          {
-            dom: {
-              tag: 'strong',
               innerHtml: text
             }
           }
@@ -221,9 +182,7 @@ define(
           tag: 'div',
           classes: [ Styles.resolve('styles-menu') ]
         },
-        components: [
-          
-        ],
+        components: [ ],
 
         // Focus causes issues when the things being focused are offscreen.
         fakeFocus: true,

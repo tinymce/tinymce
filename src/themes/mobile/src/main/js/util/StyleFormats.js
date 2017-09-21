@@ -8,13 +8,12 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Obj',
     'tinymce.themes.mobile.features.DefaultStyleFormats',
     'tinymce.themes.mobile.ui.StylesMenu',
     'tinymce.themes.mobile.util.StyleConversions'
   ],
 
-  function (Toggling, Objects, Arr, Fun, Id, Merger, Obj, DefaultStyleFormats, StylesMenu, StyleConversions) {
+  function (Toggling, Objects, Arr, Fun, Id, Merger, DefaultStyleFormats, StylesMenu, StyleConversions) {
     var register = function (editor, settings) {
 
       var isSelectedFor = function (format) {
@@ -51,58 +50,52 @@ define(
           format: formatName,
           isSelected: isSelectedFor(formatName),
           getPreview: getPreview(formatName)
-          // isAvailable ?
         });
         editor.formatter.register(formatName, newItem);
         return newItem;
       };
 
-      
       var formats = Objects.readOptFrom(settings, 'style_formats').getOr(DefaultStyleFormats);
-      var flatten = StyleConversions.expand(formats, 'styles');
 
-      var enrich = function (item) {
-        // If we are a custom format
-        var f = (function () {
-          if (Objects.hasKey(item, 'format')) return enrichSupported;
-          else if (Objects.hasKey(flatten.expansions, item.title)) return enrichMenu;
-          else return enrichCustom;
-        })();
-        return f(item);
+      var doEnrich = function (items) {
+        return Arr.map(items, function (item) {
+          if (Objects.hasKey(item, 'items')) {
+            var newItems = doEnrich(item.items);
+            return Merger.deepMerge(
+              enrichMenu(item),
+              {
+                items: newItems
+              }
+            );
+          } else if (Objects.hasKey(item, 'format')) {
+            return enrichSupported(item);
+          } else {
+            return enrichCustom(item);
+          }
+        });
       };
 
-
-      var newItems = Arr.map(flatten.items, enrich);
-      var newMenus = Obj.map(flatten.menus, function (items, menuName) {
-        return Arr.map(items, enrich);
-      });
-
-      return {
-        items: newItems,
-        menus: newMenus,
-        expansions: flatten.expansions
-      };
+      return doEnrich(formats);
     };
 
     var prune = function (editor, formats) {
-      // Firstly, prune the items
-      var items = Arr.filter(formats.items, function (item) {
-        return Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
-      });
 
-      var menus = Obj.map(formats.menus, function (items, menuName) {
-        return Arr.filter(items, function (item) {
-          return Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
+      var doPrune = function (items) {
+        return Arr.bind(items, function (item) {
+          if (item.items !== undefined) {
+            var newItems = doPrune(item.items);
+            return newItems.length > 0 ? [ item ] : [ ];
+          } else {
+            var keep = Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
+            return keep ? [ item ] : [ ];
+          }
         });
-      });
-
-      var expansions = formats.expansions;
-      return {
-        items: items,
-        menus: menus,
-        expansions: expansions
       };
+
+      var prunedItems = doPrune(formats);
+      return StyleConversions.expand(prunedItems);
     };
+
 
     var ui = function (editor, formats, onDone) {
       var pruned = prune(editor, formats);
