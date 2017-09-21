@@ -2,34 +2,34 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
-    'ephox.compass.Arr',
     'ephox.darwin.api.Ephemera',
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
-    'ephox.fred.PlatformDetection',
-    'ephox.fussy.api.WindowSelection',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Body',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Direction',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Node',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Direction',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.WindowSelection',
     'ephox.syrup.api.OnNode',
-    'ephox.syrup.api.Replication',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Traverse',
     'global!Math',
     'global!document'
   ],
 
-  function (Arr, Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Class, Compare, Direction, DomEvent, Element, Insert, Node, OnNode, Replication, SelectorFilter, SelectorFind, Traverse, Math, document) {
+  function (Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, Arr, Fun, Option, PlatformDetection, Compare, Insert, Replication, DomEvent, Body, Element, Node, Attr, Class, Direction, SelectorFilter, SelectorFind, Traverse, WindowSelection, OnNode, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -124,7 +124,9 @@ define(
       var handleResponse = function (event, response) {
         if (response.kill()) event.kill();
         response.selection().each(function (ns) {
-          WindowSelection.set(window, ns);
+          ns.fold(Fun.noop, function (start, finish) {
+            WindowSelection.setRelative(window, start, finish);
+          }, Fun.noop);
         });
       };
 
@@ -132,8 +134,10 @@ define(
         // Note, this is an optimisation.
         if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
           WindowSelection.get(window).each(function (sel) {
-            keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
-              handleResponse(event, response);
+            sel.fold(Fun.noop, Fun.noop, function (start, soffset, finish, foffset) {
+              keyHandlers.keyup(event, start, soffset, finish, foffset).each(function (response) {
+                handleResponse(event, response);
+              });
             });
           }, Fun.noop);
         }
@@ -142,10 +146,12 @@ define(
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
         WindowSelection.get(window).each(function (sel) {
-          var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
-          var direction = target.map(Direction.getDirection).getOr('ltr');
-          keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
-            handleResponse(event, response);
+          sel.fold(Fun.noop, Fun.noop, function (start, soffset, finish, foffset) {
+            var target = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
+            var direction = target.map(Direction.getDirection).getOr('ltr');
+            keyHandlers.keydown(event, start, soffset, finish, foffset, direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
+              handleResponse(event, response);
+            });
           });
         });
       });

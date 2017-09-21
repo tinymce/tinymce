@@ -2,7 +2,7 @@ define(
   'ephox.darwin.api.Responses',
 
   [
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Struct) {

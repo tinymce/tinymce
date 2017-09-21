@@ -3,18 +3,18 @@ define(
 
   [
     'ephox.darwin.navigation.BeforeAfter',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.Situ',
-    'ephox.oath.proximity.Awareness',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.syrup.api.ElementFind',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.Text',
-    'ephox.syrup.api.Traverse'
+    'ephox.sugar.api.dom.DocumentPosition',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Awareness',
+    'ephox.sugar.api.selection.Situ',
+    'ephox.syrup.api.ElementFind'
   ],
 
-  function (BeforeAfter, SelectionRange, Situ, Awareness, Option, Spot, ElementFind, Node, Text, Traverse) {
+  function (BeforeAfter, Option, Spot, DocumentPosition, Node, Text, Traverse, Awareness, Situ, ElementFind) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -64,7 +64,7 @@ define(
       // 2. the element is the br itself,
       var target = isBr(element) ? handleBr(isRoot, element, direction) : handleParent(isRoot, element, offset, direction);
       return target.map(function (tgt) {
-        return SelectionRange.write(tgt, tgt);
+        return DocumentPosition.makeRange(tgt.element(), tgt.offset(), tgt.element(), tgt.offset());
       });
     };
 

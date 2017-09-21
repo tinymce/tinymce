@@ -2,11 +2,11 @@ define(
   'ephox.darwin.api.SelectionAnnotation',
 
   [
-    'ephox.compass.Arr',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Class',
+    'ephox.katamari.api.Arr',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
     'ephox.syrup.api.OnNode',
-    'ephox.syrup.api.SelectorFilter'
+    'ephox.sugar.api.search.SelectorFilter'
   ],
 
   function (Arr, Attr, Class, OnNode, SelectorFilter) {

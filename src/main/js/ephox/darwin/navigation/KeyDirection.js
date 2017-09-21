@@ -4,12 +4,12 @@ define(
   [
     'ephox.darwin.keyboard.Retries',
     'ephox.darwin.navigation.BeforeAfter',
-    'ephox.fussy.api.Situ',
     'ephox.phoenix.api.dom.DomGather',
-    'ephox.syrup.api.Traverse'
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Situ'
   ],
 
-  function (Retries, BeforeAfter, Situ, DomGather, Traverse) {
+  function (Retries, BeforeAfter, DomGather, Traverse, Situ) {
     return {
       down: {
         traverse: Traverse.nextSibling,

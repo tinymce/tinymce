@@ -2,19 +2,19 @@ define(
   'ephox.darwin.api.WindowBridge',
 
   [
-    'ephox.fussy.api.Point',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.WindowSelection'
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Point, SelectionRange, WindowSelection) {
+  function (Selection, WindowSelection) {
     return function (win) {
       var getRect = function (element) {
         return element.dom().getBoundingClientRect();
       };
 
       var getRangedRect = function (start, soffset, finish, foffset) {
-        return WindowSelection.rectangleAt(win, start, soffset, finish, foffset);
+        var sel = Selection.exact(start, soffset, finish, foffset);
+        return WindowSelection.getFirstRect(win, sel);
       };
 
       var getSelection = function () {
@@ -22,19 +22,19 @@ define(
       };
 
       var fromSitus = function (situs) {
-        return WindowSelection.deriveExact(win, situs);
+        return Selection.exact(situs.start(), situs.soffset(), situs.finish(), situs.foffset());
       };
 
       var situsFromPoint = function (x, y) {
-        return Point.find(win, x, y);
+        return WindowSelection.getAtPoint(win, x, y);
       };
 
       var clearSelection = function () {
-        WindowSelection.clearAll(win);
+        WindowSelection.clear(win);
       };
 
       var selectContents = function (element) {
-        WindowSelection.selectElementContents(win, element);
+        WindowSelection.setToElement(win, element);
       };
 
       var setSelection = function (sel) {
@@ -42,7 +42,7 @@ define(
       };
 
       var setRelativeSelection = function (start, finish) {
-        WindowSelection.set(win, SelectionRange.write(start, finish));
+        WindowSelection.setRelative(win, start, finish);
       };
 
       var getInnerHeight = function () {

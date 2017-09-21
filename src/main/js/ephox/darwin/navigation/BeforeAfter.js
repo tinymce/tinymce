@@ -2,14 +2,14 @@ define(
   'ephox.darwin.navigation.BeforeAfter',
 
   [
-    'ephox.oath.proximity.Awareness',
+    'ephox.katamari.api.Adt',
     'ephox.robin.api.dom.DomParent',
-    'ephox.scullion.ADT',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.selection.Awareness'
   ],
 
-  function (Awareness, DomParent, Adt, Compare, SelectorFind) {
+  function (Adt, DomParent, Compare, SelectorFind, Awareness) {
     var adt = Adt.generate([
       { 'none' : [ 'message'] },
       { 'success': [ ] },

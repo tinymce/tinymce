@@ -3,18 +3,13 @@
   "description": "This project's purpose is to handle selection and cursor navigation.",
   "version": "2.0.0",
   "dependencies": {
-    "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
     "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
-    "@ephox/fred": "git+ssh://git@stash:7999/libs/fred.git#master",
-    "@ephox/fussy": "git+ssh://git@stash:7999/tbio/fussy.git#master",
-    "@ephox/oath": "git+ssh://git@stash:7999/tbio/oath.git#master",
-    "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
-    "@ephox/perhaps": "git+ssh://git@stash:7999/libs/perhaps.git#master",
+    "@ephox/sand": "latest",
+    "@ephox/katamari": "latest",
     "@ephox/phoenix": "git+ssh://git@stash:7999/tbio/phoenix.git#master",
     "@ephox/robin": "git+ssh://git@stash:7999/tbio/robin.git#master",
-    "@ephox/scullion": "git+ssh://git@stash:7999/libs/scullion.git#master",
     "@ephox/snooker": "git+ssh://git@stash:7999/tbio/snooker.git#master",
-    "@ephox/syrup": "git+ssh://git@stash:7999/tbio/syrup.git#master"
+    "@ephox/sugar": "latest"
   },
   "devDependencies": {
     "@ephox/bolt": "*",

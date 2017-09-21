@@ -5,18 +5,16 @@ define(
     'ephox.darwin.api.Responses',
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
-    'ephox.fred.PlatformDetection',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.Situ',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.PredicateExists',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.syrup.api.PredicateExists'
   ],
 
-  function (Responses, KeySelection, TableKeys, PlatformDetection, SelectionRange, Situ, Fun, Option, Compare, PredicateExists, SelectorFind, Traverse) {
+  function (Responses, KeySelection, TableKeys, Fun, Option, PlatformDetection, Compare, SelectorFind, Traverse, PredicateExists) {
     var detection = PlatformDetection.detect();
 
     var inSameTable = function (elem, table) {
@@ -52,10 +50,7 @@ define(
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         var range = info.range();
         return Responses.response(
-          Option.some(SelectionRange.write(
-            Situ.on(range.start(), range.soffset()),
-            Situ.on(range.finish(), range.foffset())
-          )),
+          Option.some(range),
           true
         );
       });

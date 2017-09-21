@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.darwin.style.Styles',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Styles, Fun) {
