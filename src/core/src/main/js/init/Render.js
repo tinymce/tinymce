@@ -47,9 +47,7 @@ define(
     var loadTheme = function (scriptLoader, editor, suffix, callback) {
       var settings = editor.settings, theme = settings.theme;
 
-      if (Type.isFunction(theme)) {
-        callback();
-      } else {
+      if (Type.isString(theme)) {
         if (!hasSkipLoadPrefix(theme) && !ThemeManager.urls.hasOwnProperty(theme)) {
           var themeUrl = settings.theme_url;
 
@@ -63,6 +61,8 @@ define(
         scriptLoader.loadQueue(function () {
           ThemeManager.waitFor(theme, callback);
         });
+      } else {
+        callback();
       }
     };
 

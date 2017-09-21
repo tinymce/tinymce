@@ -11,6 +11,7 @@
 define(
   'tinymce.core.init.Init',
   [
+    'ephox.katamari.api.Type',
     'global!document',
     'global!window',
     'tinymce.core.dom.DOMUtils',
@@ -21,7 +22,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.Uuid'
   ],
-  function (document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
+  function (Type, document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
     var DOM = DOMUtils.DOM;
 
     var initPlugin = function (editor, initializedPlugins, plugin) {
@@ -63,21 +64,20 @@ define(
     };
 
     var initTheme = function (editor) {
-      var Theme, settings = editor.settings;
+      var Theme, theme = editor.settings.theme;
 
-      if (settings.theme) {
-        if (typeof settings.theme != "function") {
-          settings.theme = trimLegacyPrefix(settings.theme);
+      if (Type.isString(theme)) {
+        editor.settings.theme = trimLegacyPrefix(theme);
 
-          Theme = ThemeManager.get(settings.theme);
-          editor.theme = new Theme(editor, ThemeManager.urls[settings.theme]);
+        Theme = ThemeManager.get(theme);
+        editor.theme = new Theme(editor, ThemeManager.urls[theme]);
 
-          if (editor.theme.init) {
-            editor.theme.init(editor, ThemeManager.urls[settings.theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
-          }
-        } else {
-          editor.theme = settings.theme;
+        if (editor.theme.init) {
+          editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
         }
+      } else {
+        // Theme set to false or null doesn't produce a theme api
+        editor.theme = {};
       }
     };
 
