@@ -165,9 +165,13 @@ define(
       // Firstly, work out which items are in the toolbar
       var itemNames = identify(settings);
 
-      // Now, build the list only including supported features
+      // Now, build the list only including supported features and no duplicates.
+      var present = { };
       return Arr.bind(itemNames, function (iName) {
-        return Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
+        var r = !Objects.hasKey(present, iName) && Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
+        // NOTE: Could use fold to avoid mutation, but it might be overkill and not performant
+        present[iName] = true;
+        return r;
       });
     };
 
