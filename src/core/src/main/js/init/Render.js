@@ -30,7 +30,7 @@ define(
     var loadScripts = function (editor, suffix) {
       var settings = editor.settings, scriptLoader = ScriptLoader.ScriptLoader;
 
-      if (settings.language && settings.language != 'en' && !settings.language_url) {
+      if (settings.language && settings.language != 'en' && settings.language != 'en_US' && !settings.language_url) {
         settings.language_url = editor.editorManager.baseURL + '/langs/' + settings.language + '.js';
       }
 
