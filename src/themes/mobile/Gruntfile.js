@@ -76,7 +76,7 @@ module.exports = function (grunt) {
       'atomic' :{
         config: 'config/bolt/atomic.js',
         files: {
-          src: [ 'src/test/js/atomic/smooth/*Test.js' ]
+          src: [ 'src/test/js/atomic/**/*Test.js' ]
         }
       }
     },

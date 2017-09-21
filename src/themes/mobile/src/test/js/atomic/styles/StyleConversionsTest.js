@@ -8,8 +8,8 @@ test(
 
   function (RawAssertions, StyleConversions) {
     var check = function (label, expected, input) {
-      var output = StyleConversions.getAlpha(input);
-      RawAssertions.assertEq('StyleConversions.getAlpha (' + label + ')', expected, output);
+      var output = StyleConversions.expand(input);
+      RawAssertions.assertEq('StyleConversions.expand (' + label + ')', expected, output);
     };
 
 
@@ -66,7 +66,7 @@ test(
         },
         items: [
           { title: 'alpha' },
-          { title: 'beta' },
+          { title: 'beta', menu: true },
           { title: 'gamma' }
         ]
       },
@@ -93,7 +93,7 @@ test(
         },
         items: [
           { title: 'alpha' },
-          { title: 'beta' },
+          { title: 'beta', menu: true },
           { title: 'gamma' }
         ]
       },
@@ -124,7 +124,7 @@ test(
         },
         items: [
           { title: 'alpha' },
-          { title: 'beta' },
+          { title: 'beta', menu: true },
           { title: 'gamma' }
         ]
       },
@@ -150,7 +150,7 @@ test(
           'beta': [
             { title: 'beta-1' },
             { title: 'beta-2' },
-            { title: 'beta-3' }
+            { title: 'beta-3', menu: true }
           ],
           'beta-3': [ ]
         },
@@ -160,7 +160,7 @@ test(
         },
         items: [
           { title: 'alpha' },
-          { title: 'beta' },
+          { title: 'beta', menu: true },
           { title: 'gamma' }
         ]
       },
@@ -190,10 +190,10 @@ test(
           'beta': [
             { title: 'beta-1' },
             { title: 'beta-2' },
-            { title: 'beta-3' }
+            { title: 'beta-3', menu: true }
           ],
           'beta-3': [
-            { title: 'beta-3-1' },
+            { title: 'beta-3-1', menu: true },
             { title: 'beta-3-2' }
           ],
           'beta-3-1': [
@@ -207,7 +207,7 @@ test(
         },
         items: [
           { title: 'alpha' },
-          { title: 'beta' },
+          { title: 'beta', menu: true },
           { title: 'gamma' }
         ]
       },

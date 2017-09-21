@@ -9,7 +9,7 @@ define(
 
   function (Objects, Arr, Merger) {
 
-    var getFromExpandingItem = function (item, currentMenu) {
+    var getFromExpandingItem = function (item) {
       var newItem = Merger.deepMerge(
         Objects.exclude(item, [ 'items' ]),
         {
@@ -23,12 +23,7 @@ define(
         rest.menus,
         Objects.wrap(
           item.title,
-          Arr.map(
-            rest.items,
-            function (i) {
-              return Merger.deepMerge(i, { previousMenu: currentMenu });
-            }
-          )
+          rest.items
         )
       );
       var newExpansions = Merger.deepMerge(
@@ -43,18 +38,19 @@ define(
       };
     };
 
-    var getFromItem = function (item, currentMenu) {
-      return Objects.hasKey(item, 'items') ? getFromExpandingItem(item, currentMenu) : {
+    var getFromItem = function (item) {
+      return Objects.hasKey(item, 'items') ? getFromExpandingItem(item) : {
         item: item,
         menus: { },
         expansions: { }
       };
     };
 
+  
     // Takes items, and consolidates them into its return value
-    var expand = function (items, currentMenu) {
+    var expand = function (items) {
       return Arr.foldr(items, function (acc, item) {
-        var newData = getFromItem(item, currentMenu);
+        var newData = getFromItem(item);
         return {
           menus: Merger.deepMerge(acc.menus, newData.menus),
           items: [ newData.item ].concat(acc.items),
