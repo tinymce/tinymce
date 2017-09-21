@@ -3,6 +3,7 @@ define(
 
   [
     'ephox.darwin.navigation.BeforeAfter',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.sugar.api.dom.DocumentPosition',
@@ -10,11 +11,12 @@ define(
     'ephox.sugar.api.node.Text',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Awareness',
+    'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
     'ephox.syrup.api.ElementFind'
   ],
 
-  function (BeforeAfter, Option, Spot, DocumentPosition, Node, Text, Traverse, Awareness, Situ, ElementFind) {
+  function (BeforeAfter, Fun, Option, Spot, DocumentPosition, Node, Text, Traverse, Awareness, Selection, Situ, ElementFind) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -64,7 +66,11 @@ define(
       // 2. the element is the br itself,
       var target = isBr(element) ? handleBr(isRoot, element, direction) : handleParent(isRoot, element, offset, direction);
       return target.map(function (tgt) {
-        return DocumentPosition.makeRange(tgt.element(), tgt.offset(), tgt.element(), tgt.offset());
+        return tgt.fold(function (element) {
+          return Selection.range(element, Awareness.getEnd(element), element, Awareness.getEnd(element));
+        }, Fun.noop, function (element, offset) {
+          return Selection.range(element, offset, element, offset);
+        });
       });
     };
 
