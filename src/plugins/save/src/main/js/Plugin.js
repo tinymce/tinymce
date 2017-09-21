@@ -19,10 +19,9 @@ define(
   [
     'tinymce.core.PluginManager',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.EditorManager',
     'tinymce.core.util.Tools'
   ],
-  function (PluginManager, DOMUtils, EditorManager, Tools) {
+  function (PluginManager, DOMUtils, Tools) {
     PluginManager.add('save', function (editor) {
       function save() {
         var formObj;
@@ -33,7 +32,7 @@ define(
           return;
         }
 
-        EditorManager.triggerSave();
+        editor.save();
 
         // Use callback instead
         if (editor.getParam("save_onsavecallback")) {
