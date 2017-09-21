@@ -103,11 +103,13 @@ define(
       return StylesMenu.sketch({
         formats: pruned,
         handle: function (item, value) {
-          if (Toggling.isOn(item)) {
-            editor.formatter.remove(value);
-          } else {
-            editor.formatter.apply(value);
-          }
+          editor.undoManager.transact(function () {
+            if (Toggling.isOn(item)) {
+              editor.formatter.remove(value);
+            } else {
+              editor.formatter.apply(value);
+            }
+          });
           onDone();
         }
       });
