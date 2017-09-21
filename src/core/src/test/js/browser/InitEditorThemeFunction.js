@@ -17,7 +17,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
-        Logger.t('Tests if the editor is responsive after setting theme to false', GeneralSteps.sequence([
+        Logger.t('Tests if the editor is responsive after setting theme to a function', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sAssertContent('<p>a</p>')
         ]))
