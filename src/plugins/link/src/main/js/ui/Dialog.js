@@ -238,7 +238,14 @@ define(
           name: 'rel',
           type: 'listbox',
           label: 'Rel',
-          values: buildListItems(Settings.getRelList(editor.settings))
+          values: buildListItems(
+            Settings.getRelList(editor.settings),
+            function (item) {
+              if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
+                item.value = Utils.toggleTargetRules(item.value, data.target === '_blank');
+              }
+            }
+          )
         };
       }
 

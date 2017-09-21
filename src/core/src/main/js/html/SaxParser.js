@@ -64,6 +64,10 @@ define(
       return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
     };
 
+    var trimComments = function (text) {
+      return text.replace(/<!--|-->/g, '');
+    };
+
     /**
      * Returns the index of the end tag for a specific start tag. This can be
      * used to skip all children of a parent element from being processed.
@@ -142,7 +146,7 @@ define(
         var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name;
         var isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
         var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-        var attributesRequired, attributesDefault, attributesForced;
+        var attributesRequired, attributesDefault, attributesForced, processHtml;
         var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
         var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
         var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
@@ -232,6 +236,11 @@ define(
             }
           }
 
+          // Block data or event attributes on elements marked as internal
+          if (isInternalElement && (name in filteredUrlAttrs || name.indexOf('on') === 0)) {
+            return;
+          }
+
           // Add attribute to list and map
           attrList.map[name] = value;
           attrList.push({
@@ -260,8 +269,9 @@ define(
         removeInternalElements = settings.remove_internals;
         fixSelfClosing = settings.fix_self_closing;
         specialElements = schema.getSpecialElements();
+        processHtml = html + '>';
 
-        while ((matches = tokenRegExp.exec(html + '>'))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
+        while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
           // Text
           if (index < matches.index) {
             self.text(decode(html.substr(index, matches.index - index)));
@@ -457,7 +467,7 @@ define(
 
             self.comment(value);
           } else if ((value = matches[2])) { // CDATA
-            self.cdata(value);
+            self.cdata(trimComments(value));
           } else if ((value = matches[3])) { // DOCTYPE
             self.doctype(value);
           } else if ((value = matches[4])) { // PI

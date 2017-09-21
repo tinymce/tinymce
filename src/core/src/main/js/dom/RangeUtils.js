@@ -466,13 +466,13 @@ define(
                     break;
                   }
 
-                  // Found a BR/IMG element that we can place the caret before
+                  // Found a BR/IMG/PRE element that we can place the caret before
                   if (nonEmptyElementsMap[node.nodeName.toLowerCase()] && !isTableCell(node)) {
                     offset = dom.nodeIndex(node);
                     container = node.parentNode;
 
-                    // Put caret after image when moving the end point
-                    if (node.nodeName == "IMG" && !directionLeft) {
+                    // Put caret after image and pre tag when moving the end point
+                    if ((node.nodeName === "IMG" || node.nodeName === "PRE") && !directionLeft) {
                       offset++;
                     }
 
@@ -667,7 +667,7 @@ define(
     };
 
     RangeUtils.getNode = function (container, offset) {
-      if (container.nodeType == 1 && container.hasChildNodes()) {
+      if (container.nodeType === 1 && container.hasChildNodes()) {
         if (offset >= container.childNodes.length) {
           offset = container.childNodes.length - 1;
         }

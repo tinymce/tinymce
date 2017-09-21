@@ -76,10 +76,10 @@ asynctest(
     });
 
     suite.test('Delete from empty P with style span inside into H1', function (editor) {
-      editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red"><br></span></p>';
+      editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
       LegacyUnit.setSelection(editor, 'span', 0);
       editor.execCommand('Delete');
-      LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;"><br /></span></h1>');
+      LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
     });
 
@@ -297,7 +297,7 @@ asynctest(
       LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>a</p><p><b><i><br></i></b></p>');
       LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'I');
     });
-*/
+
     suite.test('Type over all contents', function (editor) {
       editor.getBody().innerHTML = '<p>abc</p>';
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
@@ -306,7 +306,7 @@ asynctest(
       LegacyUnit.equal(editor.selection.getRng().startContainer.data, 'a');
       LegacyUnit.equal(editor.selection.getRng().startOffset, 1);
     });
-
+*/
     suite.test('ForwardDelete all contents', function (editor) {
       editor.getBody().innerHTML = '<p>abc</p>';
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);

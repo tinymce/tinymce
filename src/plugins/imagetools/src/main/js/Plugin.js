@@ -90,10 +90,9 @@ define(
 
       function findSelectedBlob() {
         var blobInfo;
-
         blobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage().src);
         if (blobInfo) {
-          return blobInfo.blob();
+          return Promise.resolve(blobInfo.blob());
         }
 
         return imageToBlob(getSelectedImage());
@@ -198,6 +197,7 @@ define(
 
       function editImageDialog() {
         var img = getSelectedImage(), originalSize = ImageSize.getNaturalImageSize(img);
+
         var handleDialogBlob = function (blob) {
           return new Promise(function (resolve) {
             BlobConversions.blobToImage(blob).
@@ -216,19 +216,19 @@ define(
           });
         };
 
-        var openDialog = function (blob) {
-          return Dialog.edit(blob).then(handleDialogBlob).
+        var openDialog = function (imageResult) {
+          return Dialog.edit(editor, imageResult).then(handleDialogBlob).
             then(BlobConversions.blobToImageResult).
             then(function (imageResult) {
-              updateSelectedImage(imageResult, true);
+              return updateSelectedImage(imageResult, true);
             }, function () {
               // Close dialog
             });
         };
 
-        if (img) {
-          BlobConversions.imageToImageResult(img).then(openDialog, displayError);
-        }
+        findSelectedBlob().
+          then(BlobConversions.blobToImageResult).
+          then(openDialog, displayError);
       }
 
       function addButtons() {

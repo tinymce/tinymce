@@ -419,9 +419,10 @@ define(
        * @method isEmpty
        * @param {Object} elements Name/value object with elements that are automatically treated as non empty elements.
        * @param {Object} whitespace Name/value object with elements that are automatically treated whitespace preservables.
+       * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
        * @return {Boolean} true/false if the node is empty or not.
        */
-      isEmpty: function (elements, whitespace) {
+      isEmpty: function (elements, whitespace, predicate) {
         var self = this, node = self.firstChild, i, name;
 
         whitespace = whitespace || {};
@@ -461,6 +462,11 @@ define(
 
             // Keep whitespace preserve elements
             if (node.type === 3 && node.parent && whitespace[node.parent.name] && whiteSpaceRegExp.test(node.value)) {
+              return false;
+            }
+
+            // Predicate tells that the node is contents
+            if (predicate && predicate(node)) {
               return false;
             }
           } while ((node = walk(node, self)));

@@ -17,21 +17,24 @@
 define(
   'tinymce.core.ui.FormatControls',
   [
-    "tinymce.core.ui.Control",
-    "tinymce.core.ui.Widget",
-    "tinymce.core.ui.FloatPanel",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Arr",
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.EditorManager",
-    "tinymce.core.Env",
-    "tinymce.core.fmt.FontInfo"
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.EditorManager',
+    'tinymce.core.Env',
+    'tinymce.core.fmt.FontInfo',
+    'tinymce.core.ui.Control',
+    'tinymce.core.ui.FloatPanel',
+    'tinymce.core.ui.Widget',
+    'tinymce.core.util.Tools'
   ],
-  function (Control, Widget, FloatPanel, Tools, Arr, DOMUtils, EditorManager, Env, FontInfo) {
+  function (Arr, Fun, Element, SelectorFind, DOMUtils, EditorManager, Env, FontInfo, Control, FloatPanel, Widget, Tools) {
     var each = Tools.each;
 
     var flatten = function (ar) {
-      return Arr.reduce(ar, function (result, item) {
+      return Arr.foldl(ar, function (result, item) {
         return result.concat(item);
       }, []);
     };
@@ -52,7 +55,9 @@ define(
 
     function setupContainer(editor) {
       if (editor.settings.ui_container) {
-        Env.container = DOMUtils.DOM.select(editor.settings.ui_container)[0];
+        Env.container = SelectorFind.descendant(Element.fromDom(document.body), editor.settings.ui_container).fold(Fun.constant(null), function (elm) {
+          return elm.dom();
+        });
       }
     }
 
@@ -110,7 +115,7 @@ define(
             return fontFamily ? fontFamily.split(',')[0] : '';
           };
 
-          editor.on('nodeChange', function (e) {
+          editor.on('init nodeChange', function (e) {
             var fontFamily, value = null;
 
             fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
@@ -140,7 +145,7 @@ define(
         return function () {
           var self = this;
 
-          editor.on('nodeChange', function (e) {
+          editor.on('init nodeChange', function (e) {
             var px, pt, value = null;
 
             px = FontInfo.getFontSize(editor.getBody(), e.element);

@@ -38,12 +38,12 @@ define(
             }
           },
           onPostRender: function () {
-            var previewHtml, headHtml = '';
+            var previewHtml, headHtml = '', encode = editor.dom.encode;
 
-            headHtml += '<base href="' + editor.documentBaseURI.getURI() + '">';
+            headHtml += '<base href="' + encode(editor.documentBaseURI.getURI()) + '">';
 
             Tools.each(editor.contentCSS, function (url) {
-              headHtml += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
+              headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '">';
             });
 
             var bodyId = settings.body_id || 'tinymce';
@@ -78,7 +78,7 @@ define(
               '<head>' +
               headHtml +
               '</head>' +
-              '<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '"' + dirAttr + '>' +
+              '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + encode(dirAttr) + '>' +
               editor.getContent() +
               preventClicksOnLinksScript +
               '</body>' +

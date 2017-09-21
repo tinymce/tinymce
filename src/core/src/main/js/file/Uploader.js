@@ -64,7 +64,7 @@ define(
         xhr.onload = function () {
           var json;
 
-          if (xhr.status != 200) {
+          if (xhr.status < 200 || xhr.status >= 300) {
             failure("HTTP Error: " + xhr.status);
             return;
           }

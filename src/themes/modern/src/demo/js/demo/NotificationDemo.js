@@ -23,8 +23,12 @@ define(
     var notifyShort = function (type) {
       var notification = EditorManager.activeEditor.notificationManager.open({
         type: type,
-        text: 'Short text message'
+        text: 'This is an example ' + (type ? type : 'blank') + ' message.'
       });
+
+      setTimeout(function () {
+        notification.text('Message changed.');
+      }, 5000);
       console.log(notification);
     };
 
@@ -41,6 +45,19 @@ define(
       console.log(notification);
     };
 
+    var notifyExtraLong = function (len) {
+      var longTextMessage = ['this is text '];
+
+      for (var i = 0; i < len; i++) {
+        longTextMessage.push('bla');
+      }
+
+      var notification = EditorManager.activeEditor.notificationManager.open({
+        text: longTextMessage.join('')
+      });
+      console.log(notification);
+    };
+
     var notifyProgress = function (percent) {
       var notification = EditorManager.activeEditor.notificationManager.open({
         text: 'Progress text',
@@ -48,6 +65,10 @@ define(
       });
 
       notification.progressBar.value(percent);
+
+      setTimeout(function () {
+        notification.progressBar.value(90);
+      }, 5000);
       console.log(notification);
     };
 
@@ -68,8 +89,13 @@ define(
     };
 
     Arr.each([
-      { title: 'notifyShort', action: notifyShort },
+      { title: 'success', action: notifyShort, value: 'success' },
+      { title: 'error', action: notifyShort, value: 'error' },
+      { title: 'warn', action: notifyShort, value: 'warning' },
+      { title: 'info', action: notifyShort, value: 'info' },
+      { title: 'blank', action: notifyShort },
       { title: 'notifyLong', action: notifyLong, value: 100 },
+      { title: 'notifyExtraLong', action: notifyExtraLong, value: 100 },
       { title: 'notifyProgress', action: notifyProgress, value: 50 },
       { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
       { title: 'notifyIcon', action: notifyIcon }
@@ -84,6 +110,13 @@ define(
 
     EditorManager.init({
       selector: 'textarea.tinymce',
+      skin_url: '../../../../../skins/lightgray/dist/lightgray',
+      codesample_content_css: '../../../../../plugins/codesample/dist/codesample/css/prism.css'
+    });
+
+    EditorManager.init({
+      selector: 'div.tinymce',
+      inline: true,
       skin_url: '../../../../../skins/lightgray/dist/lightgray',
       codesample_content_css: '../../../../../plugins/codesample/dist/codesample/css/prism.css'
     });

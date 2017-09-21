@@ -11,8 +11,12 @@
 define(
   'tinymce.core.init.InitContentBody',
   [
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
     'global!document',
     'global!window',
+    'tinymce.core.api.Formatter',
     'tinymce.core.caret.CaretContainerInput',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Selection',
@@ -20,7 +24,6 @@ define(
     'tinymce.core.EditorUpload',
     'tinymce.core.ErrorReporter',
     'tinymce.core.ForceBlocks',
-    'tinymce.core.Formatter',
     'tinymce.core.html.DomParser',
     'tinymce.core.html.Node',
     'tinymce.core.html.Schema',
@@ -33,10 +36,18 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    document, window, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, Formatter, DomParser, Node, Schema, KeyboardOverrides,
-    NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
+    Insert, Element, Attr, document, window, Formatter, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, DomParser,
+    Node, Schema, KeyboardOverrides, NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
   ) {
     var DOM = DOMUtils.DOM;
+
+    var appendStyle = function (editor, text) {
+      var head = Element.fromDom(editor.getDoc().head);
+      var tag = Element.fromTag('style');
+      Attr.set(tag, 'type', 'text/css');
+      Insert.append(tag, Element.fromText(text));
+      Insert.append(head, tag);
+    };
 
     var createParser = function (editor) {
       var parser = new DomParser(editor.settings, editor.schema);
@@ -141,6 +152,10 @@ define(
       editor.nodeChanged({ initial: true });
       editor.execCallback('init_instance_callback', editor);
       autoFocus(editor);
+    };
+
+    var getStyleSheetLoader = function (editor) {
+      return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
     };
 
     var initContentBody = function (editor, skipWrite) {
@@ -280,16 +295,20 @@ define(
         editor.dom.addStyle(contentCssText);
       }
 
-      editor.dom.styleSheetLoader.loadAll(
+      getStyleSheetLoader(editor).loadAll(
         editor.contentCSS,
         function (_) {
           initEditor(editor);
         },
         function (urls) {
           initEditor(editor);
-          ErrorReporter.contentCssError(editor, urls);
         }
       );
+
+      // Append specified content CSS last
+      if (settings.content_style) {
+        appendStyle(editor, settings.content_style);
+      }
     };
 
     return {

@@ -12,19 +12,19 @@ define(
   'tinymce.core.init.Render',
   [
     'global!window',
+    'tinymce.core.api.NotificationManager',
+    'tinymce.core.api.WindowManager',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.EventUtils',
     'tinymce.core.dom.ScriptLoader',
     'tinymce.core.Env',
     'tinymce.core.ErrorReporter',
     'tinymce.core.init.Init',
-    'tinymce.core.NotificationManager',
     'tinymce.core.PluginManager',
     'tinymce.core.ThemeManager',
-    'tinymce.core.util.Tools',
-    'tinymce.core.WindowManager'
+    'tinymce.core.util.Tools'
   ],
-  function (window, DOMUtils, EventUtils, ScriptLoader, Env, ErrorReporter, Init, NotificationManager, PluginManager, ThemeManager, Tools, WindowManager) {
+  function (window, NotificationManager, WindowManager, DOMUtils, EventUtils, ScriptLoader, Env, ErrorReporter, Init, PluginManager, ThemeManager, Tools) {
     var DOM = DOMUtils.DOM;
 
     var loadScripts = function (editor, suffix) {

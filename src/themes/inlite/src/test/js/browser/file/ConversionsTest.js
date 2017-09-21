@@ -1,17 +1,19 @@
 asynctest(
   'atomic.core.ConvertTest',
   [
-    'tinymce.themes.inlite.file.Conversions',
-    'ephox.agar.api.Step',
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Assertions'
+    'ephox.agar.api.Step',
+    'ephox.sand.api.Uint8Array',
+    'ephox.sand.api.Window',
+    'tinymce.themes.inlite.file.Conversions'
   ],
-  function (Conversions, Step, Pipeline, Assertions) {
+  function (Assertions, Pipeline, Step, Uint8Array, Window, Conversions) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var base64ToBlob = function (base64, type) {
-      var buff = atob(base64);
+      var buff = Window.atob(base64);
       var bytes = new Uint8Array(buff.length);
 
       for (var i = 0; i < bytes.length; i++) {

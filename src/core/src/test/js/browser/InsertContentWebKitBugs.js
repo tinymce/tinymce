@@ -18,7 +18,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
-        Logger.t('Insert contents on a tripple click selection should not produce odd spans', GeneralSteps.sequence([
+        Logger.t('Insert contents on a triple click selection should not produce odd spans', GeneralSteps.sequence([
           tinyApis.sSetContent('<blockquote><p>a</p></blockquote><p>b</p>'),
           tinyApis.sSetSelection([0, 0, 0], 0, [1], 0),
           tinyApis.sExecCommand('mceInsertContent', '<p>c</p>'),

@@ -72,7 +72,7 @@ define(
     };
 
     var isEq = function (level1, level2) {
-      return getLevelContent(level1) === getLevelContent(level2);
+      return !!level1 && !!level2 && getLevelContent(level1) === getLevelContent(level2);
     };
 
     return {

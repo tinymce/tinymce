@@ -53,7 +53,10 @@ define(
     var fallback = function (editor) {
       return function (html, done) {
         var markedHtml = InternalHtml.mark(html);
-        var outer = editor.dom.create('div', { contenteditable: "false" });
+        var outer = editor.dom.create('div', {
+          contenteditable: "false",
+          "data-mce-bogus": "all"
+        });
         var inner = editor.dom.create('div', { contenteditable: "true" }, markedHtml);
         editor.dom.setStyles(outer, {
           position: 'fixed',
@@ -81,7 +84,7 @@ define(
 
     var getData = function (editor) {
       return {
-        html: editor.selection.getContent(),
+        html: editor.selection.getContent({ contextual: true }),
         text: editor.selection.getContent({ format: 'text' })
       };
     };
@@ -90,7 +93,11 @@ define(
       return function (evt) {
         if (editor.selection.isCollapsed() === false) {
           setClipboardData(evt, getData(editor), fallback(editor), function () {
-            editor.execCommand('Delete');
+            // Chrome fails to execCommand from another execCommand with this message:
+            // "We don't execute document.execCommand() this time, because it is called recursively.""
+            setTimeout(function () { // detach
+              editor.execCommand('Delete');
+            }, 0);
           });
         }
       };

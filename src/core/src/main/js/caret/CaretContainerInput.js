@@ -15,11 +15,15 @@ define(
   'tinymce.core.caret.CaretContainerInput',
   [
     'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.caret.CaretContainer'
   ],
-  function (Fun, CaretContainer) {
+  function (Fun, Element, SelectorFind, CaretContainer) {
     var findBlockCaretContainer = function (editor) {
-      return editor.dom.select('*[data-mce-caret]')[0];
+      return SelectorFind.descendant(Element.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
+        return elm.dom();
+      });
     };
 
     var removeIeControlRect = function (editor) {

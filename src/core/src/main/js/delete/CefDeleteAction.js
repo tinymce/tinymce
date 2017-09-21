@@ -36,7 +36,7 @@ define(
 
     var deleteEmptyBlockOrMoveToCef = function (rootNode, forward, from, to) {
       var toCefElm = to.getNode(forward === false);
-      return DeleteUtils.getParentTextBlock(Element.fromDom(rootNode), Element.fromDom(from.getNode())).map(function (blockElm) {
+      return DeleteUtils.getParentBlock(Element.fromDom(rootNode), Element.fromDom(from.getNode())).map(function (blockElm) {
         return Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom()) : DeleteAction.moveToElement(toCefElm);
       }).orThunk(function () {
         return Option.some(DeleteAction.moveToElement(toCefElm));

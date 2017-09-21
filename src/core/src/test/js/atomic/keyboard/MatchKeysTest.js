@@ -57,21 +57,44 @@ asynctest(
       });
     };
 
+    var sTestExecute = function (patterns, event, expectedData, expectedMatch) {
+      return Step.sync(function () {
+        state.set([]);
+
+        var result = MatchKeys.execute(patterns, event);
+        Assertions.assertEq('Should be expected match', expectedMatch, result.getOr());
+        Assertions.assertEq('Should have the expected state', expectedData, state.get());
+      });
+    };
+
+    var actionA = handleAction('a');
+    var actionB = handleAction('b');
+
     Pipeline.async({}, [
       sTestMatchNone([], {}),
       sTestMatchNone([], event({ keyCode: 65 })),
-      sTestMatchNone([{ keyCode: 65, action: handleAction('a') }], event({ keyCode: 13 })),
-      sTestMatch([{ keyCode: 65, action: handleAction('a') }], event({ keyCode: 65 }), ['a']),
-      sTestMatch([{ keyCode: 65, shiftKey: true, action: handleAction('a') }], event({ keyCode: 65, shiftKey: true }), ['a']),
-      sTestMatch([{ keyCode: 65, altKey: true, action: handleAction('a') }], event({ keyCode: 65, altKey: true }), ['a']),
-      sTestMatch([{ keyCode: 65, ctrlKey: true, action: handleAction('a') }], event({ keyCode: 65, ctrlKey: true }), ['a']),
-      sTestMatch([{ keyCode: 65, metaKey: true, action: handleAction('a') }], event({ keyCode: 65, metaKey: true }), ['a']),
+      sTestMatchNone([{ keyCode: 65, action: actionA }], event({ keyCode: 13 })),
+      sTestMatch([{ keyCode: 65, action: actionA }], event({ keyCode: 65 }), ['a']),
+      sTestMatch([{ keyCode: 65, shiftKey: true, action: actionA }], event({ keyCode: 65, shiftKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, altKey: true, action: actionA }], event({ keyCode: 65, altKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, ctrlKey: true, action: actionA }], event({ keyCode: 65, ctrlKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, metaKey: true, action: actionA }], event({ keyCode: 65, metaKey: true }), ['a']),
       sTestMatch(
         [
-          { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: handleAction('a') },
-          { keyCode: 65, ctrlKey: true, metaKey: true, action: handleAction('b') }
+          { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: actionA },
+          { keyCode: 65, ctrlKey: true, metaKey: true, action: actionB }
         ],
-        event({ keyCode: 65, metaKey: true, ctrlKey: true }), ['b']
+        event({ keyCode: 65, metaKey: true, ctrlKey: true }),
+        ['b']
+      ),
+      sTestExecute(
+        [
+          { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: actionA },
+          { keyCode: 65, ctrlKey: true, metaKey: true, action: actionB }
+        ],
+        event({ keyCode: 65, metaKey: true, ctrlKey: true }),
+        ['b'],
+        { "shiftKey": false, "altKey": false, "ctrlKey": true, "metaKey": true, keyCode: 65, action: actionB }
       ),
       Logger.t('Action wrapper helper', Step.sync(function () {
         var action = MatchKeys.action(function () {

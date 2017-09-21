@@ -16,10 +16,11 @@ asynctest(
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var uploadHandlerState = ImageUtils.createStateContainer();
-    var sourceImageUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
 
-    Plugin();
+    var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
+
     ModernTheme();
+    Plugin();
 
     var sAssertUploadFilename = function (expected) {
       return Step.sync(function () {
@@ -36,46 +37,47 @@ asynctest(
       });
     };
 
-    var sTestGenerateFileName = function (tinyApis, editor) {
-      return GeneralSteps.sequence([
-        uploadHandlerState.sResetState,
-        tinyApis.sSetSetting('images_reuse_filename', false),
-        ImageUtils.sLoadImage(editor, sourceImageUrl),
-        tinyApis.sSelect('img', []),
-        ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-        ImageUtils.sWaitForBlobImage(editor),
-        ImageUtils.sUploadImages(editor),
-        uploadHandlerState.sWaitForState,
-        sAssertUploadFilename('imagetools0.jpg')
-      ]);
-    };
-
-    var sTestReuseFilename = function (tinyApis, editor) {
-      return GeneralSteps.sequence([
-        uploadHandlerState.sResetState,
-        tinyApis.sSetSetting('images_reuse_filename', true),
-        ImageUtils.sLoadImage(editor, sourceImageUrl),
-        tinyApis.sSelect('img', []),
-        ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-        ImageUtils.sWaitForBlobImage(editor),
-        ImageUtils.sUploadImages(editor),
-        uploadHandlerState.sWaitForState,
-        sAssertUploadFilename('dogleft.jpg'),
-        sAssertUri(sourceImageUrl)
-      ]);
-    };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
 
+      var sTestGenerateFileName = function () {
+        return GeneralSteps.sequence([
+          uploadHandlerState.sResetState,
+          tinyApis.sSetSetting('images_reuse_filename', false),
+          ImageUtils.sLoadImage(editor, srcUrl),
+          tinyApis.sSelect('img', []),
+          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
+          ImageUtils.sWaitForBlobImage(editor),
+          ImageUtils.sUploadImages(editor),
+          uploadHandlerState.sWaitForState,
+          sAssertUploadFilename('imagetools0.jpg')
+        ]);
+      };
+
+      var sTestReuseFilename = function () {
+        return GeneralSteps.sequence([
+          uploadHandlerState.sResetState,
+          tinyApis.sSetSetting('images_reuse_filename', true),
+          ImageUtils.sLoadImage(editor, srcUrl),
+          tinyApis.sSelect('img', []),
+          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
+          ImageUtils.sWaitForBlobImage(editor),
+          ImageUtils.sUploadImages(editor),
+          uploadHandlerState.sWaitForState,
+          sAssertUploadFilename('dogleft.jpg'),
+          sAssertUri(srcUrl)
+        ]);
+      };
+
       Pipeline.async({}, [
-        sTestGenerateFileName(tinyApis, editor),
-        sTestReuseFilename(tinyApis, editor)
+        sTestGenerateFileName(),
+        sTestReuseFilename()
       ], onSuccess, onFailure);
     }, {
       plugins: 'imagetools',
       automatic_uploads: false,
-      images_upload_handler: uploadHandlerState.handler(sourceImageUrl),
+      images_upload_handler: uploadHandlerState.handler(srcUrl),
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
   }

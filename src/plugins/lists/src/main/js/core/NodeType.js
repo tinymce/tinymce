@@ -41,6 +41,10 @@ define(
       return node && !!editor.schema.getTextBlockElements()[node.nodeName];
     };
 
+    var isBlock = function (node, blockElements) {
+      return node && node.nodeName in blockElements;
+    };
+
     var isBogusBr = function (dom, node) {
       if (!isBr(node)) {
         return false;
@@ -75,6 +79,7 @@ define(
       isFirstChild: isFirstChild,
       isLastChild: isLastChild,
       isTextBlock: isTextBlock,
+      isBlock: isBlock,
       isBogusBr: isBogusBr,
       isEmpty: isEmpty,
       isChildOfBody: isChildOfBody

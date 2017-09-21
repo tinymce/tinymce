@@ -114,7 +114,8 @@ define(
           }
 
           function moveCursorToStartOfElement(n) {
-            editor.selection.setCursorLocation(n, 0);
+            editor.selection.select(n, true);
+            editor.selection.collapse(true);
           }
 
           function isVerticalMovement() {

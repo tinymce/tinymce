@@ -8,12 +8,14 @@ asynctest(
     'tinymce.plugins.paste.Plugin',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
+    'ephox.agar.api.Guard',
+    'ephox.agar.api.Keyboard',
+    'ephox.sugar.api.node.Element',
     'tinymce.core.EditorManager',
     'tinymce.core.test.ViewBlock',
-    'tinymce.plugins.paste.core.Utils',
     'tinymce.plugins.paste.test.MockDataTransfer'
   ],
-  function (Id, Merger, Obj, Assertions, Theme, PastePlugin, Pipeline, Chain, EditorManager, ViewBlock, Utils, MockDataTransfer) {
+  function (Id, Merger, Obj, Assertions, Theme, PastePlugin, Pipeline, Chain, Guard, Keyboard, Element, EditorManager, ViewBlock, MockDataTransfer) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -79,7 +81,10 @@ asynctest(
       Obj.each(data, function (data, label) {
         chains.push(
           cFireFakePasteEvent(data),
-          cAssertEditorContent(label, expected),
+          Chain.control(
+            cAssertEditorContent(label, expected),
+            Guard.tryUntil('Wait for paste to succeed.', 100, 1000)
+          ),
           cClearEditor()
         );
       });
@@ -88,30 +93,30 @@ asynctest(
     };
 
 
-    var srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\n\r\nfour';
+    var srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\nfour\r\n\r\n\r\n\r\n.';
 
     var pasteData = {
       'Firefox': {
         'text/plain': srcText,
-        'text/html': 'one<br>two<br><br>three<br><br><br><br>four'
+        'text/html': 'one<br>two<br><br>three<br><br><br>four<br><br><br><br>.'
       },
       'Chrome': {
         'text/plain': srcText,
-        'text/html': '<div>one</div><div>two</div><div><br></div><div>three</div><div><br></div><div><br></div><div><br></div><div>four</div>'
+        'text/html': '<div>one</div><div>two</div><div><br></div><div>three</div><div><br></div><div><br></div><div>four</div><div><br></div><div><br></div><div><br></div><div>.'
       },
       'Edge': {
         'text/plain': srcText,
-        'text/html': '<div>one<br>two</div><div>three</div><div><br></div><div>four</div><div><br></div>'
+        'text/html': '<div>one<br>two</div><div>three</div><div><br>four</div><div><br></div><div>.</div>'
       },
       'IE': {
         'text/plain': srcText,
-        'text/html': '<p>one<br>two</p><p>three</p><p><br></p><p>four</p><p><br></p>'
+        'text/html': '<p>one<br>two</p><p>three</p><p><br>four</p><p><br></p><p>.</p>'
       }
     };
 
-    var expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p>&nbsp;</p><p>four</p>';
-    var expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr">&nbsp;</p><p class="attr">four</p>';
-    var expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br /><br />four';
+    var expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p><br />four</p><p>&nbsp;</p><p>.</p>';
+    var expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
+    var expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
 
     Theme();

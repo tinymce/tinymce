@@ -111,32 +111,36 @@ asynctest(
     };
 
     var sTestCut = function (editor, tinyApis) {
+      var sWaitUntilAssertContent = function (expected) {
+        return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected), 100, 1000);
+      };
+
       return Logger.t('Cut tests', GeneralSteps.sequence([
         Logger.t('Cut simple text', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>text</p>', [0, 0], 0, [0, 0], 4),
           sAssertClipboardData('text', 'text'),
-          tinyApis.sAssertContent(''),
+          sWaitUntilAssertContent(''),
           tinyApis.sAssertSelection([0], 0, [0], 0)
         ])),
 
         Logger.t('Cut inline elements', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>te<em>x</em>t</p>', [0, 0], 0, [0, 2], 1),
           sAssertClipboardData('te<em>x</em>t', 'text'),
-          tinyApis.sAssertContent(''),
+          sWaitUntilAssertContent(''),
           tinyApis.sAssertSelection([0], 0, [0], 0)
         ])),
 
         Logger.t('Cut partialy selected inline elements', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>a<em>cd</em>e</p>', [0, 0], 0, [0, 1, 0], 1),
           sAssertClipboardData('a<em>c</em>', 'ac'),
-          tinyApis.sAssertContent('<p><em>d</em>e</p>'),
+          sWaitUntilAssertContent('<p><em>d</em>e</p>'),
           tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
         ])),
 
         Logger.t('Cut collapsed selection', GeneralSteps.sequence([
           sCut(editor, tinyApis, '<p>abc</p>', [0, 0], 1, [0, 0], 1),
           sAssertClipboardData('', ''),
-          tinyApis.sAssertContent('<p>abc</p>'),
+          sWaitUntilAssertContent('<p>abc</p>'),
           tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
         ]))
       ]));
@@ -198,8 +202,6 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
-
-      CutCopy.register(editor);
 
       // Disabled tests on Edge 15 due to broken clipboard API
       Pipeline.async({}, Utils.isMsEdge() ? [ ] : [

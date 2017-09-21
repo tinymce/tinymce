@@ -17,17 +17,19 @@
 define(
   'tinymce.plugins.table.Plugin',
   [
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.Env',
+    'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.VK',
     'tinymce.plugins.table.model.TableGrid',
-    'tinymce.plugins.table.util.Quirks',
     'tinymce.plugins.table.selection.CellSelection',
     'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.ResizeBars',
-    'tinymce.core.util.Tools',
-    'tinymce.core.dom.TreeWalker',
-    'tinymce.core.Env',
-    'tinymce.core.PluginManager'
+    'tinymce.plugins.table.util.Utils',
+    'tinymce.plugins.table.util.Quirks'
   ],
-  function (TableGrid, Quirks, CellSelection, Dialogs, ResizeBars, Tools, TreeWalker, Env, PluginManager) {
+  function (TreeWalker, Env, PluginManager, Tools, VK, TableGrid, CellSelection, Dialogs, ResizeBars, Utils, Quirks) {
     var each = Tools.each;
 
     function Plugin(editor) {
@@ -129,6 +131,25 @@ define(
         /*jshint validthis:true*/
         handleDisabledState(this, 'table');
       }
+
+      var hasMergedCellsSelected = function (node) {
+        var cell = editor.dom.getParent(node, 'th,td');
+        var selectedCells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]').concat(cell ? [cell] : []);
+        var mergedCellsSelected = Tools.grep(selectedCells, function (elm) {
+          return Utils.getColSpan(elm) > 1 || Utils.getRowSpan(elm) > 1;
+        });
+
+        return mergedCellsSelected.length > 0;
+      };
+
+      var postRenderSplitCell = function (e) {
+        var ctrl = e.control;
+
+        ctrl.disabled(!hasMergedCellsSelected(editor.selection.getStart()));
+        editor.on('nodechange', function (e) {
+          ctrl.disabled(!hasMergedCellsSelected(e.element));
+        });
+      };
 
       function postRenderCell() {
         /*jshint validthis:true*/
@@ -288,7 +309,7 @@ define(
         menu: [
           { text: 'Cell properties', onclick: cmd('mceTableCellProps'), onPostRender: postRenderCell },
           { text: 'Merge cells', onclick: cmd('mceTableMergeCells'), onPostRender: postRenderMergeCell },
-          { text: 'Split cell', onclick: cmd('mceTableSplitCells'), onPostRender: postRenderCell }
+          { text: 'Split cell', disabled: true, onclick: cmd('mceTableSplitCells'), onPostRender: postRenderSplitCell }
         ]
       });
 
@@ -593,9 +614,14 @@ define(
       if (editor.settings.table_tab_navigation !== false) {
         editor.on('keydown', function (e) {
           var cellElm, grid, delta;
+          var selectionStart = editor.selection.getStart();
 
-          if (e.keyCode == 9) {
-            cellElm = editor.dom.getParent(editor.selection.getStart(), 'th,td');
+          if (e.keyCode === VK.TAB) {
+            if (editor.dom.getParent(selectionStart, 'LI,DT,DD')) {
+              return;
+            }
+
+            cellElm = editor.dom.getParent(selectionStart, 'th,td');
 
             if (cellElm) {
               e.preventDefault();

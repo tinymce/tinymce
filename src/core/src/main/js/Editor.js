@@ -42,7 +42,9 @@ define(
     'tinymce.core.dom.DomQuery',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorCommands',
+    'tinymce.core.EditorFocus',
     'tinymce.core.EditorObservable',
+    'tinymce.core.EditorSettings',
     'tinymce.core.Env',
     'tinymce.core.html.Serializer',
     'tinymce.core.init.Render',
@@ -54,14 +56,14 @@ define(
     'tinymce.core.util.Uuid'
   ],
   function (
-    AddOnManager, DomQuery, DOMUtils, EditorCommands, EditorObservable, Env, Serializer, Render, Mode,
-    Shortcuts, Sidebar, Tools, URI, Uuid
+    AddOnManager, DomQuery, DOMUtils, EditorCommands, EditorFocus, EditorObservable, EditorSettings, Env, Serializer, Render, Mode, Shortcuts, Sidebar, Tools,
+    URI, Uuid
   ) {
     // Shorten these names
     var DOM = DOMUtils.DOM;
     var extend = Tools.extend, each = Tools.each;
     var trim = Tools.trim, resolve = Tools.resolve;
-    var isGecko = Env.gecko, ie = Env.ie;
+    var ie = Env.ie;
 
     /**
      * Include Editor API docs.
@@ -79,11 +81,10 @@ define(
      * @param {tinymce.EditorManager} editorManager EditorManager instance.
      */
     function Editor(id, settings, editorManager) {
-      var self = this, documentBaseUrl, baseUri, defaultSettings;
+      var self = this, documentBaseUrl, baseUri;
 
       documentBaseUrl = self.documentBaseUrl = editorManager.documentBaseURL;
       baseUri = editorManager.baseURI;
-      defaultSettings = editorManager.defaultSettings;
 
       /**
        * Name/value collection with editor settings.
@@ -94,52 +95,9 @@ define(
        * // Get the value of the theme setting
        * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
        */
-      settings = extend({
-        id: id,
-        theme: 'modern',
-        delta_width: 0,
-        delta_height: 0,
-        popup_css: '',
-        plugins: '',
-        document_base_url: documentBaseUrl,
-        add_form_submit_trigger: true,
-        submit_patch: true,
-        add_unload_trigger: true,
-        convert_urls: true,
-        relative_urls: true,
-        remove_script_host: true,
-        object_resizing: true,
-        doctype: '<!DOCTYPE html>',
-        visual: true,
-        font_size_style_values: 'xx-small,x-small,small,medium,large,x-large,xx-large',
-
-        // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
-        font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
-        forced_root_block: 'p',
-        hidden_input: true,
-        padd_empty_editor: true,
-        render_ui: true,
-        indentation: '30px',
-        inline_styles: true,
-        convert_fonts_to_spans: true,
-        indent: 'simple',
-        indent_before: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
-        'tfoot,tbody,tr,section,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
-        indent_after: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
-        'tfoot,tbody,tr,section,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
-        validate: true,
-        entity_encoding: 'named',
-        url_converter: self.convertURL,
-        url_converter_scope: self,
-        ie7_compat: true
-      }, defaultSettings, settings);
-
-      // Merge external_plugins
-      if (defaultSettings && defaultSettings.external_plugins && settings.external_plugins) {
-        settings.external_plugins = extend({}, defaultSettings.external_plugins, settings.external_plugins);
-      }
-
+      settings = EditorSettings.getEditorSettings(self, id, documentBaseUrl, editorManager.defaultSettings, settings);
       self.settings = settings;
+
       AddOnManager.language = settings.language || 'en';
       AddOnManager.languageLoad = settings.language_load;
       AddOnManager.baseURL = editorManager.baseURL;
@@ -150,7 +108,7 @@ define(
        * @property id
        * @type String
        */
-      self.id = settings.id = id;
+      self.id = id;
 
       /**
        * State to force the editor to return false on a isDirty call.
@@ -184,7 +142,7 @@ define(
        * // Get absolute URL from the location of document_base_url
        * tinymce.activeEditor.documentBaseURI.toAbsolute('somefile.htm');
        */
-      self.documentBaseURI = new URI(settings.document_base_url || documentBaseUrl, {
+      self.documentBaseURI = new URI(settings.document_base_url, {
         base_uri: baseUri
       });
 
@@ -225,7 +183,6 @@ define(
       self.suffix = editorManager.suffix;
       self.editorManager = editorManager;
       self.inline = settings.inline;
-      self.settings.content_editable = self.inline;
 
       if (settings.cache_suffix) {
         Env.cacheSuffix = settings.cache_suffix.replace(/^[\?\&]+/, '');
@@ -274,74 +231,7 @@ define(
        * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
        */
       focus: function (skipFocus) {
-        var self = this, selection = self.selection, contentEditable = self.settings.content_editable, rng;
-        var controlElm, doc = self.getDoc(), body = self.getBody(), contentEditableHost;
-
-        function getContentEditableHost(node) {
-          return self.dom.getParent(node, function (node) {
-            return self.dom.getContentEditable(node) === "true";
-          });
-        }
-
-        if (!skipFocus) {
-          // Get selected control element
-          rng = selection.getRng();
-          if (rng.item) {
-            controlElm = rng.item(0);
-          }
-
-          self.quirks.refreshContentEditable();
-
-          // Move focus to contentEditable=true child if needed
-          contentEditableHost = getContentEditableHost(selection.getNode());
-          if (self.$.contains(body, contentEditableHost)) {
-            contentEditableHost.focus();
-            selection.normalize();
-            self.editorManager.setActive(self);
-            return;
-          }
-
-          // Focus the window iframe
-          if (!contentEditable) {
-            // WebKit needs this call to fire focusin event properly see #5948
-            // But Opera pre Blink engine will produce an empty selection so skip Opera
-            if (!Env.opera) {
-              self.getBody().focus();
-            }
-
-            self.getWin().focus();
-          }
-
-          // Focus the body as well since it's contentEditable
-          if (isGecko || contentEditable) {
-            // Check for setActive since it doesn't scroll to the element
-            if (body.setActive) {
-              // IE 11 sometimes throws "Invalid function" then fallback to focus
-              try {
-                body.setActive();
-              } catch (ex) {
-                body.focus();
-              }
-            } else {
-              body.focus();
-            }
-
-            if (contentEditable) {
-              selection.normalize();
-            }
-          }
-
-          // Restore selected control element
-          // This is needed when for example an image is selected within a
-          // layer a call to focus will then remove the control selection
-          if (controlElm && controlElm.ownerDocument == doc) {
-            rng = doc.body.createControlRange();
-            rng.addElement(controlElm);
-            rng.select();
-          }
-        }
-
-        self.editorManager.setActive(self);
+        EditorFocus.focus(this, skipFocus);
       },
 
       /**
@@ -385,15 +275,13 @@ define(
        * @return {String} Translated string.
        */
       translate: function (text) {
-        var lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
+        if (text && Tools.is(text, 'string')) {
+          var lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
 
-        if (!text) {
-          return '';
+          text = i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function (a, b) {
+            return i18n.data[lang + '.' + b] || '{#' + b + '}';
+          });
         }
-
-        text = i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function (a, b) {
-          return i18n.data[lang + '.' + b] || '{#' + b + '}';
-        });
 
         return this.editorManager.translate(text);
       },
@@ -831,6 +719,10 @@ define(
       load: function (args) {
         var self = this, elm = self.getElement(), html;
 
+        if (self.removed) {
+          return '';
+        }
+
         if (elm) {
           args = args || {};
           args.load = true;
@@ -860,7 +752,7 @@ define(
       save: function (args) {
         var self = this, elm = self.getElement(), html, form;
 
-        if (!elm || !self.initialized) {
+        if (!elm || !self.initialized || self.removed) {
           return;
         }
 
@@ -1022,6 +914,10 @@ define(
        */
       getContent: function (args) {
         var self = this, content, body = self.getBody();
+
+        if (self.removed) {
+          return '';
+        }
 
         // Setup args object
         args = args || {};

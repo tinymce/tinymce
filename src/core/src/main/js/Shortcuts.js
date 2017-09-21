@@ -9,20 +9,20 @@
  */
 
 /**
- * Contains all logic for handling of keyboard shortcuts.
+ * Contains logic for handling keyboard shortcuts.
  *
  * @class tinymce.Shortcuts
  * @example
- * editor.shortcuts.add('ctrl+a', function() {});
- * editor.shortcuts.add('meta+a', function() {}); // "meta" maps to Command on Mac and Ctrl on PC
- * editor.shortcuts.add('ctrl+alt+a', function() {});
- * editor.shortcuts.add('access+a', function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
+ * editor.shortcuts.add('ctrl+a', "description of the shortcut", function() {});
+ * editor.shortcuts.add('meta+a', "description of the shortcut", function() {}); // "meta" maps to Command on Mac and Ctrl on PC
+ * editor.shortcuts.add('ctrl+alt+a', "description of the shortcut", function() {});
+ * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
  */
 define(
   'tinymce.core.Shortcuts',
   [
-    "tinymce.core.util.Tools",
-    "tinymce.core.Env"
+    'tinymce.core.util.Tools',
+    'tinymce.core.Env'
   ],
   function (Tools, Env) {
     var each = Tools.each, explode = Tools.explode;

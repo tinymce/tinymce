@@ -14,21 +14,23 @@ define(
     'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'tinymce.core.caret.CaretFinder',
+    'tinymce.core.caret.CaretPosition',
     'tinymce.core.delete.DeleteUtils',
     'tinymce.core.delete.MergeBlocks'
   ],
-  function (Options, Compare, Element, DeleteUtils, MergeBlocks) {
-    var deleteRange = function (rootNode, selection) {
+  function (Options, Compare, Element, CaretFinder, CaretPosition, DeleteUtils, MergeBlocks) {
+    var deleteRangeMergeBlocks = function (rootNode, selection) {
       var rng = selection.getRng();
 
       return Options.liftN([
-        DeleteUtils.getParentTextBlock(rootNode, Element.fromDom(rng.startContainer)),
-        DeleteUtils.getParentTextBlock(rootNode, Element.fromDom(rng.endContainer))
+        DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
+        DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer))
       ], function (block1, block2) {
         if (Compare.eq(block1, block2) === false) {
           rng.deleteContents();
 
-          MergeBlocks.mergeBlocks(true, block1, block2).each(function (pos) {
+          MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
             selection.setRng(pos.toRange());
           });
 
@@ -39,14 +41,26 @@ define(
       }).getOr(false);
     };
 
-    var backspaceDelete = function (editor, forward) {
-      var rootNode = Element.fromDom(editor.getBody());
+    var isEverythingSelected = function (rootNode, rng) {
+      var noPrevious = CaretFinder.prevPosition(rootNode.dom(), CaretPosition.fromRangeStart(rng)).isNone();
+      var noNext = CaretFinder.nextPosition(rootNode.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
+      return noPrevious && noNext;
+    };
 
-      if (editor.selection.isCollapsed() === false) {
-        return deleteRange(rootNode, editor.selection);
-      } else {
-        return false;
-      }
+    var emptyEditor = function (editor) {
+      editor.setContent('');
+      editor.selection.setCursorLocation();
+      return true;
+    };
+
+    var deleteRange = function (editor) {
+      var rootNode = Element.fromDom(editor.getBody());
+      var rng = editor.selection.getRng();
+      return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
+    };
+
+    var backspaceDelete = function (editor, forward) {
+      return editor.selection.isCollapsed() ? false : deleteRange(editor, editor.selection.getRng());
     };
 
     return {

@@ -13,19 +13,15 @@ define(
   [
     'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'global!Math',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.ui.Container',
     'tinymce.core.ui.Factory',
-    'tinymce.core.ui.Form',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.imagetools.ui.ImagePanel',
-    'tinymce.plugins.imagetools.core.UndoStack'
+    'tinymce.plugins.imagetools.core.UndoStack',
+    'tinymce.plugins.imagetools.ui.ImagePanel'
   ],
-  function (
-    BlobConversions, ImageTransformations, DOMUtils, Container, Factory, Form, Promise,
-    Tools, ImagePanel, UndoStack
-  ) {
+  function (BlobConversions, ImageTransformations, Math, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
     function createState(blob) {
       return {
         blob: blob,
@@ -43,7 +39,7 @@ define(
       Tools.each(states, destroyState);
     }
 
-    function open(currentState, resolve, reject) {
+    function open(editor, currentState, resolve, reject) {
       var win, undoStack = new UndoStack(), mainPanel, filtersPanel, tempState,
         cropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,
         invertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,
@@ -166,10 +162,26 @@ define(
         updateButtonUndoStates();
       }
 
+      function waitForTempState(times, applyCall) {
+        if (tempState) {
+          applyCall();
+        } else {
+          setTimeout(function () {
+            if (times-- > 0) {
+              waitForTempState(times, applyCall);
+            } else {
+              editor.windowManager.alert('Error: failed to apply image operation.');
+            }
+          }, 10);
+        }
+      }
+
       function applyTempState() {
         if (tempState) {
           addBlobState(tempState.blob);
           cancel();
+        } else {
+          waitForTempState(100, applyTempState);
         }
       }
 
@@ -211,7 +223,7 @@ define(
       }
 
       function createPanel(items) {
-        return new Form({
+        return Factory.create('Form', {
           layout: 'flex',
           direction: 'row',
           labelGap: 5,
@@ -302,7 +314,12 @@ define(
           g = win.find('#g')[0].value();
           b = win.find('#b')[0].value();
 
-          filter(currentState.blob, r, g, b).then(function (blob) {
+          BlobConversions.blobToImageResult(currentState.blob).
+          then(function (ir) {
+            return filter(ir, r, g, b);
+          }).
+          then(imageResultToBlob).
+          then(function (blob) {
             var newTempState = createState(blob);
             displayState(newTempState);
             destroyState(tempState);
@@ -415,12 +432,12 @@ define(
         //{text: 'More', onclick: switchPanel(filtersPanel)}
       ]);
 
-      imagePanel = new ImagePanel({
+      imagePanel = ImagePanel.create({
         flex: 1,
         imageSrc: currentState.url
       });
 
-      sidePanel = new Container({
+      sidePanel = Factory.create('Container', {
         layout: 'flex',
         direction: 'column',
         border: '0 1 0 0',
@@ -434,7 +451,7 @@ define(
         ]
       });
 
-      mainViewContainer = new Container({
+      mainViewContainer = Factory.create('Container', {
         type: 'container',
         layout: 'flex',
         direction: 'row',
@@ -463,7 +480,7 @@ define(
         exposurePanel
       ];
 
-      win = Factory.create('window', {
+      win = editor.windowManager.open({
         layout: 'flex',
         direction: 'column',
         align: 'stretch',
@@ -476,8 +493,6 @@ define(
           { text: 'Cancel', onclick: 'close' }
         ]
       });
-
-      win.renderTo(document.body).reflow();
 
       win.on('close', function () {
         reject();
@@ -502,10 +517,10 @@ define(
       imagePanel.on('crop', crop);
     }
 
-    function edit(imageResult) {
+    function edit(editor, imageResult) {
       return new Promise(function (resolve, reject) {
         return imageResult.toBlob().then(function (blob) {
-          open(createState(blob), resolve, reject);
+          open(editor, createState(blob), resolve, reject);
         });
       });
     }

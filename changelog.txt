@@ -1,3 +1,105 @@
+Version 4.6.7 (2017-09-18)
+    Fixed bug where paste wasn't working in IOS.
+    Fixed bug where the Word Count Plugin didn't count some mathematical operators correctly.
+    Fixed bug where inserting a list in a table caused the cell to expand in height.
+    Fixed bug where pressing enter in a list located inside of a table deleted list items instead of inserting new list item.
+    Fixed bug where copy and pasting table cells produced inconsistent results.
+    Fixed bug where initializing an editor with an ID of 'length' would throw an exception.
+    Fixed bug where it was possible to split a non merged table cell.
+    Fixed bug where copy and pasting a list with a very specific selection into another list would produce a nested list.
+    Fixed bug where copy and pasting ordered lists sometimes produced unordered lists.
+    Fixed bug where padded elements inside other elements would be treated as empty.
+    Added some missing translations to Image, Link and Help plugins.
+    Fixed so you can resize images inside a figure element.
+    Fixed bug where an inline TinyMCE editor initialized on a table did not set selection on load in Chrome.
+    Fixed the positioning of the inlite toolbar when the target element wasn't big enough to fit the toolbar.
+Version 4.6.6 (2017-08-30)
+    Fixed so that notifications wrap long text content instead of bleeding outside the notification element.
+    Fixed so the content_style css is added after the skin and custom stylesheets.
+    Fixed bug where it wasn't possible to remove a table with the Cut button.
+    Fixed bug where the center format wasn't getting the same font size as the other formats in the format preview.
+    Fixed bug where the wordcount plugin wasn't counting hyphenated words correctly.
+    Fixed bug where all content pasted into the editor was added to the end of the editor.
+    Fixed bug where enter keydown on list item selection only deleted content and didn't create a new line.
+    Fixed bug where destroying the editor while the content css was still loading caused error notifications on Firefox.
+    Fixed bug where undoing cut operation in IE11 left some unwanted html in the editor content.
+    Fixed bug where enter keydown would throw an error in IE11.
+    Fixed bug where duplicate instances of an editor were added to the editors array when using the createEditor API.
+    Fixed bug where the formatter applied formats on the wrong content when spellchecker was activated.
+    Fixed bug where switching formats would reset font size on child nodes.
+    Fixed bug where the table caption element weren't always the first descendant to the table tag.
+    Fixed bug where pasting some content into the editor on chrome some newlines were removed.
+    Fixed bug where it wasn't possible to remove a list if a list item was a table element.
+    Fixed bug where copy/pasting partial selections of tables wouldn't produce a proper table.
+    Fixed bug where the searchreplace plugin could not find consecutive spaces.
+    Fixed bug where background color wasn't applied correctly on some partially selected contents.
+Version 4.6.5 (2017-08-02)
+    Added new inline_boundaries_selector that allows you to specify the elements that should have boundaries.
+    Added new local upload feature this allows the user to upload images directly from the image dialog.
+    Added a new api for providing meta data for plugins. It will show up in the help dialog if it's provided.
+    Fixed so that the notifications created by the notification manager are more screen reader accessible.
+    Fixed bug where changing the list format on multiple selected lists didn't change all of the lists.
+    Fixed bug where the nonbreaking plugin would insert multiple undo levels when pressing the tab key.
+    Fixed bug where delete/backspace wouldn't render a caret when all editor contents where deleted.
+    Fixed bug where delete/backspace wouldn't render a caret if the deleted element was a single contentEditable false element.
+    Fixed bug where the wordcount plugin wouldn't count words correctly if word where typed after applying a style format.
+    Fixed bug where the wordcount plugin would count mathematical formulas as multiple words for example 1+1=2.
+    Fixed bug where formatting of triple clicked blocks on Chrome/Safari would result in styles being added outside the visual selection.
+    Fixed bug where paste would add the contents to the end of the editor area when inline mode was used.
+    Fixed bug where toggling off bold formatting on text entered in a new paragraph would add an extra line break.
+    Fixed bug where autolink plugin would only produce a link on every other consecutive link on Firefox.
+    Fixed bug where it wasn't possible to select all contents if the content only had one pre element.
+    Fixed bug where sizzle would produce lagging behavior on some sites due to repaints caused by feature detection.
+    Fixed bug where toggling off inline formats wouldn't include the space on selected contents with leading or trailing spaces.
+    Fixed bug where the cut operation in UI wouldn't work in Chrome.
+    Fixed bug where some legacy editor initialization logic would throw exceptions about editor settings not being defined.
+    Fixed bug where it wasn't possible to apply text color to links if they where part of a non collapsed selection.
+    Fixed bug where an exception would be thrown if the user selected a video element and then moved the focus outside the editor.
+    Fixed bug where list operations didn't work if there where block elements inside the list items.
+    Fixed bug where applying block formats to lists wrapped in block elements would apply to all elements in that wrapped block.
+Version 4.6.4 (2017-06-13)
+    Fixed bug where the editor would move the caret when clicking on the scrollbar next to a content editable false block.
+    Fixed bug where the text color select dropdowns wasn't placed correctly when they didn't fit the width of the screen.
+    Fixed bug where the default editor line height wasn't working for mixed font size contents.
+    Fixed bug where the content css files for inline editors were loaded multiple times for multiple editor instances.
+    Fixed bug where the initial value of the font size/font family dropdowns wasn't displayed.
+    Fixed bug where the I18n api was not supporting arrays as the translation replacement values.
+    Fixed bug where chrome would display "The given range isn't in document." errors for invalid ranges passed to setRng.
+    Fixed bug where the compat3x plugin wasn't working since the global tinymce references wasn't resolved correctly.
+    Fixed bug where the preview plugin wasn't encoding the base url passed into the iframe contents producing a xss bug.
+    Fixed bug where the dom parser/serializer wasn't handling some special elements like noframes, title and xmp.
+    Fixed bug where the dom parser/serializer wasn't handling cdata sections with comments inside.
+    Fixed bug where the editor would scroll to the top of the editable area if a dialog was closed in inline mode.
+    Fixed bug where the link dialog would not display the right rel value if rel_list was configured.
+    Fixed bug where the context menu would select images on some platforms but not others.
+    Fixed bug where the filenames of images were not retained on dragged and drop into the editor from the desktop.
+    Fixed bug where the paste plugin would misrepresent newlines when pasting plain text and having forced_root_block configured.
+    Fixed so that the error messages for the imagetools plugin is more human readable.
+    Fixed so the internal validate setting for the parser/serializer can't be set from editor initialization settings.
+Version 4.6.3 (2017-05-30)
+    Fixed bug where the arrow keys didn't work correctly when navigating on nested inline boundary elements.
+    Fixed bug where delete/backspace didn't work correctly on nested inline boundary elements.
+    Fixed bug where image editing didn't work on subsequent edits of the same image.
+    Fixed bug where charmap descriptions wouldn't properly wrap if they exceeded the width of the box.
+    Fixed bug where the default image upload handler only accepted 200 as a valid http status code.
+    Fixed so rel on target=_blank links gets forced with only noopener instead of both noopener and noreferrer.
+Version 4.6.2 (2017-05-23)
+    Fixed bug where the SaxParser would run out of memory on very large documents.
+    Fixed bug with formatting like font size wasn't applied to del elements.
+    Fixed bug where various api calls would be throwing exceptions if they where invoked on a removed editor instance.
+    Fixed bug where the branding position would be incorrect if the editor was inside a hidden tab and then later showed.
+    Fixed bug where the color levels feature in the imagetools dialog wasn't working properly.
+    Fixed bug where imagetools dialog wouldn't pre-load images from CORS domains, before trying to prepare them for editing.
+    Fixed bug where the tab key would move the caret to the next table cell if being pressed inside a list inside a table.
+    Fixed bug where the cut/copy operations would loose parent context like the current format etc.
+    Fixed bug with format preview not working on invalid elements excluded by valid_elements.
+    Fixed bug where blocks would be merged in incorrect order on backspace/delete.
+    Fixed bug where zero length text nodes would cause issues with the undo logic if there where iframes present.
+    Fixed bug where the font size/family select lists would throw errors if the first node was a comment.
+    Fixed bug with csp having to allow local script evaluation since it was used to detect global scope.
+    Fixed bug where CSP required a relaxed option for javascript: URLs in unsupported legacy browsers.
+    Fixed bug where a fake caret would be rendered for td with the contenteditable=false.
+    Fixed bug where typing would be blocked on IE 11 when within a nested contenteditable=true/false structure.
 Version 4.6.1 (2017-05-10)
     Added configuration option to list plugin to disable tab indentation.
     Fixed bug where format change on very specific content could cause the selection to change.

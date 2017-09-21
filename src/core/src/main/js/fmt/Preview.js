@@ -56,7 +56,7 @@ define(
       function getRequiredParent(elm, candidate) {
         var name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
         var elmRule = schema.getElementRule(name);
-        var parentsRequired = elmRule.parentsRequired;
+        var parentsRequired = elmRule && elmRule.parentsRequired;
 
         if (parentsRequired && parentsRequired.length) {
           return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
@@ -67,13 +67,13 @@ define(
 
       function wrapInHtml(elm, ancestry, siblings) {
         var parent, parentCandidate, parentRequired;
-        var ancestor = ancestry.length && ancestry[0];
+        var ancestor = ancestry.length > 0 && ancestry[0];
         var ancestorName = ancestor && ancestor.name;
 
         parentRequired = getRequiredParent(elm, ancestorName);
 
         if (parentRequired) {
-          if (ancestorName == parentRequired) {
+          if (ancestorName === parentRequired) {
             parentCandidate = ancestry[0];
             ancestry = ancestry.slice(1);
           } else {
@@ -153,7 +153,7 @@ define(
           }
 
           // atribute matched
-          if ($3 == '[') {
+          if ($3 === '[') {
             var m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
             if (m) {
               obj.attrs[m[1]] = m[2];
@@ -217,7 +217,7 @@ define(
       }
 
       // Create block/inline element to use for preview
-      if (typeof format == "string") {
+      if (typeof format === "string") {
         format = editor.formatter.get(format);
         if (!format) {
           return;
@@ -291,26 +291,26 @@ define(
         var value = dom.getStyle(previewElm, name, true);
 
         // If background is transparent then check if the body has a background color we can use
-        if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
+        if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
           value = dom.getStyle(editor.getBody(), name, true);
 
           // Ignore white since it's the default color, not the nicest fix
           // TODO: Fix this by detecting runtime style
-          if (dom.toHex(value).toLowerCase() == '#ffffff') {
+          if (dom.toHex(value).toLowerCase() === '#ffffff') {
             return;
           }
         }
 
-        if (name == 'color') {
+        if (name === 'color') {
           // Ignore black since it's the default color, not the nicest fix
           // TODO: Fix this by detecting runtime style
-          if (dom.toHex(value).toLowerCase() == '#000000') {
+          if (dom.toHex(value).toLowerCase() === '#000000') {
             return;
           }
         }
 
         // Old IE won't calculate the font size so we need to do that manually
-        if (name == 'font-size') {
+        if (name === 'font-size') {
           if (/em|%$/.test(value)) {
             if (parentFontSize === 0) {
               return;
@@ -322,7 +322,7 @@ define(
           }
         }
 
-        if (name == "border" && value) {
+        if (name === "border" && value) {
           previewCss += 'padding:0 2px;';
         }
 

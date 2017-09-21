@@ -414,18 +414,13 @@ define(
           }
 
           // Parse HTML
-          rootNode = htmlParser.parse(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args);
+          content = Zwsp.trim(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)));
+          rootNode = htmlParser.parse(content, args);
           trimTrailingBr(rootNode);
 
           // Serialize HTML
           htmlSerializer = new Serializer(settings, schema);
           args.content = htmlSerializer.serialize(rootNode);
-
-          // Replace all BOM characters for now until we can find a better solution
-          if (!args.cleanup) {
-            args.content = Zwsp.trim(args.content);
-            args.content = args.content.replace(/\uFEFF/g, '');
-          }
 
           // Post process
           if (!args.no_events) {

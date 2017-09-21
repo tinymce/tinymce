@@ -16,9 +16,10 @@ define(
   [
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
+    'tinymce.plugins.imagetools.core.Errors',
     'tinymce.plugins.imagetools.core.Utils'
   ],
-  function (Promise, Tools, Utils) {
+  function (Promise, Tools, Errors, Utils) {
     var appendApiKey = function (url, apiKey) {
       var separator = url.indexOf('?') === -1 ? '?' : '&';
       if (/[?&]apiKey=/.test(url) || !apiKey) {
@@ -28,43 +29,20 @@ define(
       }
     };
 
-    var isServiceErrorCode = function (code) {
-      return code === 400 || code === 403 || code === 500;
-    };
-
-    var handleHttpError = function (status) {
-      return Promise.reject("ImageProxy HTTP error: " + status);
-    };
-
-    var proxyServiceError = function (error) {
-      Promise.reject("ImageProxy Service error: " + error);
-    };
-
-    var handleServiceError = function (status, blob) {
-      return Utils.readBlob(blob).then(function (text) {
-        var serviceError = Utils.parseJson(text);
-        var errorType = Utils.traverse(serviceError, ['error', 'type']);
-        return errorType ? proxyServiceError(errorType) : proxyServiceError('Invalid JSON');
-      });
-    };
-
-    var handleServiceErrorResponse = function (status, blob) {
-      return isServiceErrorCode(status) ? handleServiceError(status, blob) : handleHttpError(status);
-    };
-
     var requestServiceBlob = function (url, apiKey) {
       return Utils.requestUrlAsBlob(appendApiKey(url, apiKey), {
         'Content-Type': 'application/json;charset=UTF-8',
         'tiny-api-key': apiKey
       }).then(function (result) {
-        return result.status >= 400 ? handleServiceErrorResponse(result.status, result.blob) : Promise.resolve(result.blob);
+        return result.status < 200 || result.status >= 300 ? Errors.handleServiceErrorResponse(result.status, result.blob) : Promise.resolve(result.blob);
       });
     };
 
     function requestBlob(url) {
-      return Utils.requestUrlAsBlob(url, {}).then(function (result) {
-        return result.status >= 400 ? handleHttpError(result.status) : Promise.resolve(result.blob);
-      });
+      return Utils.requestUrlAsBlob(url, {})
+        .then(function (result) {
+          return result.status < 200 || result.status >= 300 ? Errors.handleHttpError(result.status) : Promise.resolve(result.blob);
+        });
     }
 
     var getUrl = function (url, apiKey) {

@@ -13,18 +13,20 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.PredicateFind',
+    'ephox.sugar.api.search.Traverse',
     'tinymce.core.caret.CaretCandidate',
+    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.Empty',
-    'tinymce.core.dom.NodeType',
-    'tinymce.core.keyboard.InlineUtils'
+    'tinymce.core.dom.NodeType'
   ],
-  function (Fun, Option, Insert, Remove, Element, Node, PredicateFind, CaretCandidate, CaretPosition, Empty, NodeType, InlineUtils) {
+  function (Fun, Option, Options, Insert, Remove, Element, Node, PredicateFind, Traverse, CaretCandidate, CaretFinder, CaretPosition, Empty, NodeType) {
     var needsReposition = function (pos, elm) {
       var container = pos.container();
       var offset = pos.offset();
@@ -47,7 +49,7 @@ define(
       if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
         return Option.some(afterOrEndOf(elm.previousSibling));
       } else {
-        return elm.previousSibling ? InlineUtils.findCaretPositionIn(elm.previousSibling, false) : Option.none();
+        return elm.previousSibling ? CaretFinder.lastPositionIn(elm.previousSibling) : Option.none();
       }
     };
 
@@ -55,24 +57,24 @@ define(
       if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
         return Option.some(beforeOrStartOf(elm.nextSibling));
       } else {
-        return elm.nextSibling ? InlineUtils.findCaretPositionIn(elm.nextSibling, true) : Option.none();
+        return elm.nextSibling ? CaretFinder.firstPositionIn(elm.nextSibling) : Option.none();
       }
     };
 
     var findCaretPositionBackwardsFromElm = function (rootElement, elm) {
       var startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
-      return InlineUtils.findCaretPosition(rootElement, false, startPosition).fold(
+      return CaretFinder.prevPosition(rootElement, startPosition).fold(
         function () {
-          return InlineUtils.findCaretPosition(rootElement, true, CaretPosition.after(elm));
+          return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm));
         },
         Option.some
       );
     };
 
     var findCaretPositionForwardsFromElm = function (rootElement, elm) {
-      return InlineUtils.findCaretPosition(rootElement, true, CaretPosition.after(elm)).fold(
+      return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
         function () {
-          return InlineUtils.findCaretPosition(rootElement, false, CaretPosition.before(elm));
+          return CaretFinder.prevPosition(rootElement, CaretPosition.before(elm));
         },
         Option.some
       );
@@ -134,15 +136,39 @@ define(
       }
     };
 
+    // When deleting an element between two text nodes IE 11 doesn't automatically merge the adjacent text nodes
+    var deleteNormalized = function (elm, afterDeletePosOpt) {
+      return Options.liftN([Traverse.prevSibling(elm), Traverse.nextSibling(elm), afterDeletePosOpt], function (prev, next, afterDeletePos) {
+        var offset, prevNode = prev.dom(), nextNode = next.dom();
+
+        if (NodeType.isText(prevNode) && NodeType.isText(nextNode)) {
+          offset = prevNode.data.length;
+          prevNode.appendData(nextNode.data);
+          Remove.remove(next);
+          Remove.remove(elm);
+          if (afterDeletePos.container() === nextNode) {
+            return new CaretPosition(prevNode, offset);
+          } else {
+            return afterDeletePos;
+          }
+        } else {
+          Remove.remove(elm);
+          return afterDeletePos;
+        }
+      }).orThunk(function () {
+        Remove.remove(elm);
+        return afterDeletePosOpt;
+      });
+    };
+
     var deleteElement = function (editor, forward, elm) {
       var afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
       var parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-
-      Remove.remove(elm);
+      var normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);
 
       parentBlock.bind(paddEmptyBlock).fold(
         function () {
-          setSelection(editor, forward, afterDeletePos);
+          setSelection(editor, forward, normalizedAfterDeletePos);
         },
         function (paddPos) {
           setSelection(editor, forward, Option.some(paddPos));

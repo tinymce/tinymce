@@ -11,42 +11,41 @@
 define(
   'tinymce.core.delete.DeleteUtils',
   [
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.search.PredicateFind'
+    'ephox.sugar.api.search.PredicateFind',
+    'tinymce.core.dom.ElementType'
   ],
-  function (Arr, Option, Compare, Element, Node, PredicateFind) {
-    var toLookup = function (names) {
-      var lookup = Arr.foldl(names, function (acc, name) {
-        acc[name] = true;
-        return acc;
-      }, { });
-
-      return function (elm) {
-        return lookup[Node.name(elm)] === true;
-      };
-    };
-
-    var isTextBlock = toLookup([
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'address', 'pre', 'form', 'blockquote', 'center',
-      'dir', 'fieldset', 'header', 'footer', 'article', 'section', 'hgroup', 'aside', 'nav', 'figure'
-    ]);
-
+  function (Option, Compare, Element, PredicateFind, ElementType) {
     var isBeforeRoot = function (rootNode) {
       return function (elm) {
         return Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
       };
     };
 
-    var getParentTextBlock = function (rootNode, elm) {
-      return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, isTextBlock, isBeforeRoot(rootNode)) : Option.none();
+    var getParentBlock = function (rootNode, elm) {
+      return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, function (element) {
+        return ElementType.isTextBlock(element) || ElementType.isListItem(element);
+      }, isBeforeRoot(rootNode)) : Option.none();
+    };
+
+    var placeCaretInEmptyBody = function (editor) {
+      var body = editor.getBody();
+      var node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
+      editor.selection.setCursorLocation(node, 0);
+    };
+
+    var paddEmptyBody = function (editor) {
+      if (editor.dom.isEmpty(editor.getBody())) {
+        editor.setContent('');
+        placeCaretInEmptyBody(editor);
+      }
     };
 
     return {
-      getParentTextBlock: getParentTextBlock
+      getParentBlock: getParentBlock,
+      paddEmptyBody: paddEmptyBody
     };
   }
 );
