@@ -78,7 +78,7 @@ define(
         }
 
         e.preventDefault();
-        contextmenu = editor.settings.contextmenu || 'link openlink image inserttable | cell row column deletetable';
+        contextmenu = editor.settings.contextmenu || 'copy cut paste | link image inserttable | teamuplinknewtab';
 
         // Render menu
         if (!menu) {
