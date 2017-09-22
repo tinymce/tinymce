@@ -60,14 +60,14 @@ define(
             return rects[0];
           }
 
-          if (!rng.collapsed || container.nodeType != 1) {
+          if (!rng.collapsed || container.nodeType !== 1) {
             return;
           }
 
           node = container.childNodes[lastRng.startOffset];
 
           // Skip empty whitespace nodes
-          while (node && node.nodeType == 3 && !node.data.length) {
+          while (node && node.nodeType === 3 && !node.data.length) {
             node = node.nextSibling;
           }
 
@@ -77,7 +77,7 @@ define(
 
           // Check if the location is |<br>
           // TODO: Might need to expand this to say |<table>
-          if (node.tagName == 'BR') {
+          if (node.tagName === 'BR') {
             textNode = dom.doc.createTextNode('\uFEFF');
             node.parentNode.insertBefore(textNode, node);
 
@@ -109,11 +109,11 @@ define(
             // Check if we can find a closer location by checking the range element
             var container = lastRng.startContainer;
             if (container) {
-              if (container.nodeType == 3 && container.parentNode != body) {
+              if (container.nodeType === 3 && container.parentNode !== body) {
                 container = container.parentNode;
               }
 
-              if (container.nodeType == 1) {
+              if (container.nodeType === 1) {
                 top = dom.getPos(container, scrollContainer || body).y;
               }
             }
@@ -130,7 +130,7 @@ define(
 
         // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
         if (Env.ie || Env.gecko) {
-          dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
+          dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) === 'rtl' ? 0xFFFF : -0xFFFF);
         }
 
         // Prevent focus events from bubbeling fixed FocusManager issues
@@ -209,7 +209,7 @@ define(
           copyAndRemove(cleanWrapper, dirtyWrappers[i]);
         }
 
-        return pasteBinElm.innerHTML;
+        return pasteBinElm ? pasteBinElm.innerHTML : '';
       };
 
 

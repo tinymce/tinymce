@@ -11,12 +11,13 @@
 define(
   'tinymce.plugins.media.core.Nodes',
   [
-    'tinymce.plugins.media.core.Sanitize',
-    'tinymce.plugins.media.core.VideoScript',
+    'tinymce.core.Env',
     'tinymce.core.html.Node',
-    'tinymce.core.Env'
+    'tinymce.plugins.media.api.Settings',
+    'tinymce.plugins.media.core.Sanitize',
+    'tinymce.plugins.media.core.VideoScript'
   ],
-  function (Sanitize, VideoScript, Node, Env) {
+  function (Env, Node, Settings, Sanitize, VideoScript) {
     var createPlaceholderNode = function (editor, node) {
       var placeHolder;
       var name = node.name;
@@ -132,7 +133,7 @@ define(
           }
 
           if (node.name === 'script') {
-            videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, node.attr('src'));
+            videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), node.attr('src'));
             if (!videoScript) {
               continue;
             }
@@ -148,7 +149,7 @@ define(
             }
           }
 
-          if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && Env.ceFalse) {
+          if (node.name === 'iframe' && Settings.hasLiveEmbeds(editor) && Env.ceFalse) {
             if (!isWithinEphoxEmbed(node)) {
               node.replace(createPreviewIframeNode(editor, node));
             }

@@ -11,9 +11,10 @@
 define(
   'tinymce.themes.modern.ui.Menubar',
   [
-    'tinymce.core.util.Tools'
+    'tinymce.core.util.Tools',
+    'tinymce.themes.modern.api.Settings'
   ],
-  function (Tools) {
+  function (Tools, Settings) {
     var defaultMenus = {
       file: { title: 'File', items: 'newdocument' },
       edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -27,7 +28,7 @@ define(
     var createMenuItem = function (menuItems, name) {
       var menuItem;
 
-      if (name == '|') {
+      if (name === '|') {
         return { text: '|' };
       }
 
@@ -36,14 +37,12 @@ define(
       return menuItem;
     };
 
-    var createMenu = function (editorMenuItems, settings, context) {
-      var menuButton, menu, menuItems, isUserDefined, removedMenuItems;
-
-      removedMenuItems = Tools.makeMap((settings.removed_menuitems || '').split(/[ ,]/));
+    var createMenu = function (editorMenuItems, menus, removedMenuItems, context) {
+      var menuButton, menu, menuItems, isUserDefined;
 
       // User defined menu
-      if (settings.menu) {
-        menu = settings.menu[context];
+      if (menus) {
+        menu = menus[context];
         isUserDefined = true;
       } else {
         menu = defaultMenus[context];
@@ -65,8 +64,8 @@ define(
         // Added though context
         if (!isUserDefined) {
           Tools.each(editorMenuItems, function (menuItem) {
-            if (menuItem.context == context) {
-              if (menuItem.separator == 'before') {
+            if (menuItem.context === context) {
+              if (menuItem.separator === 'before') {
                 menuItems.push({ text: '|' });
               }
 
@@ -76,7 +75,7 @@ define(
                 menuItems.push(menuItem);
               }
 
-              if (menuItem.separator == 'after') {
+              if (menuItem.separator === 'after') {
                 menuItems.push({ text: '|' });
               }
             }
@@ -84,8 +83,8 @@ define(
         }
 
         for (var i = 0; i < menuItems.length; i++) {
-          if (menuItems[i].text == '|') {
-            if (i === 0 || i == menuItems.length - 1) {
+          if (menuItems[i].text === '|') {
+            if (i === 0 || i === menuItems.length - 1) {
               menuItems.splice(i, 1);
             }
           }
@@ -101,12 +100,12 @@ define(
       return menuButton;
     };
 
-    var createMenuButtons = function (editor) {
-      var name, menuButtons = [], settings = editor.settings;
+    var getDefaultMenubar = function (editor) {
+      var name, defaultMenuBar = [];
+      var menu = Settings.getMenu(editor);
 
-      var defaultMenuBar = [];
-      if (settings.menu) {
-        for (name in settings.menu) {
+      if (menu) {
+        for (name in menu) {
           defaultMenuBar.push(name);
         }
       } else {
@@ -115,11 +114,19 @@ define(
         }
       }
 
-      var enabledMenuNames = typeof settings.menubar == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
-      for (var i = 0; i < enabledMenuNames.length; i++) {
-        var menu = enabledMenuNames[i];
-        menu = createMenu(editor.menuItems, editor.settings, menu);
+      return defaultMenuBar;
+    };
 
+    var createMenuButtons = function (editor) {
+      var menuButtons = [];
+      var defaultMenuBar = getDefaultMenubar(editor);
+      var removedMenuItems = Tools.makeMap(Settings.getRemovedMenuItems(editor).split(/[ ,]/));
+
+      var menubar = Settings.getMenubar(editor);
+      var enabledMenuNames = typeof menubar === "string" ? menubar.split(/[ ,]/) : defaultMenuBar;
+      for (var i = 0; i < enabledMenuNames.length; i++) {
+        var menuItems = enabledMenuNames[i];
+        var menu = createMenu(editor.menuItems, Settings.getMenu(editor), removedMenuItems, menuItems);
         if (menu) {
           menuButtons.push(menu);
         }

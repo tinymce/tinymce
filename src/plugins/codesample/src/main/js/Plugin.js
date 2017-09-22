@@ -8,111 +8,29 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class contains all core logic for the codesample plugin.
- *
- * @class tinymce.codesample.Plugin
- * @private
- */
 define(
   'tinymce.plugins.codesample.Plugin',
   [
-    'tinymce.core.Env',
+    'ephox.katamari.api.Cell',
     'tinymce.core.PluginManager',
-    'tinymce.plugins.codesample.core.Prism',
-    'tinymce.plugins.codesample.ui.Dialog',
-    'tinymce.plugins.codesample.util.Utils'
+    'tinymce.plugins.codesample.api.Commands',
+    'tinymce.plugins.codesample.core.FilterContent',
+    'tinymce.plugins.codesample.core.LoadCss',
+    'tinymce.plugins.codesample.ui.Buttons'
   ],
-  function (Env, PluginManager, Prism, Dialog, Utils) {
-    var addedInlineCss, trimArg = Utils.trimArg;
+  function (Cell, PluginManager, Commands, FilterContent, LoadCss, Buttons) {
+    var addedInlineCss = Cell(false);
 
     PluginManager.add('codesample', function (editor, pluginUrl) {
-      var $ = editor.$, addedCss;
+      var addedCss = Cell(false);
 
-      if (!Env.ceFalse) {
-        return;
-      }
+      FilterContent.setup(editor);
+      Buttons.register(editor);
+      Commands.register(editor);
 
-      // Todo: use a proper css loader here
-      function loadCss() {
-        var linkElm, contentCss = editor.settings.codesample_content_css;
-
-        if (editor.inline && addedInlineCss) {
-          return;
-        }
-
-        if (!editor.inline && addedCss) {
-          return;
-        }
-
-        if (editor.inline) {
-          addedInlineCss = true;
-        } else {
-          addedCss = true;
-        }
-
-        if (contentCss !== false) {
-          linkElm = editor.dom.create('link', {
-            rel: 'stylesheet',
-            href: contentCss ? contentCss : pluginUrl + '/css/prism.css'
-          });
-
-          editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
-        }
-      }
-
-      editor.on('PreProcess', function (e) {
-        $('pre[contenteditable=false]', e.node).
-          filter(trimArg(Utils.isCodeSample)).
-          each(function (idx, elm) {
-            var $elm = $(elm), code = elm.textContent;
-
-            $elm.attr('class', $.trim($elm.attr('class')));
-            $elm.removeAttr('contentEditable');
-
-            $elm.empty().append($('<code></code>').each(function () {
-              // Needs to be textContent since innerText produces BR:s
-              this.textContent = code;
-            }));
-          });
+      editor.on('init', function () {
+        LoadCss.loadCss(editor, pluginUrl, addedInlineCss, addedCss);
       });
-
-      editor.on('SetContent', function () {
-        var unprocessedCodeSamples = $('pre').filter(trimArg(Utils.isCodeSample)).filter(function (idx, elm) {
-          return elm.contentEditable !== "false";
-        });
-
-        if (unprocessedCodeSamples.length) {
-          editor.undoManager.transact(function () {
-            unprocessedCodeSamples.each(function (idx, elm) {
-              $(elm).find('br').each(function (idx, elm) {
-                elm.parentNode.replaceChild(editor.getDoc().createTextNode('\n'), elm);
-              });
-
-              elm.contentEditable = false;
-              elm.innerHTML = editor.dom.encode(elm.textContent);
-              Prism.highlightElement(elm);
-              elm.className = $.trim(elm.className);
-            });
-          });
-        }
-      });
-
-      editor.addCommand('codesample', function () {
-        var node = editor.selection.getNode();
-        if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
-          Dialog.open(editor);
-        } else {
-          editor.formatter.toggle('code');
-        }
-      });
-
-      editor.addButton('codesample', {
-        cmd: 'codesample',
-        title: 'Insert/Edit code sample'
-      });
-
-      editor.on('init', loadCss);
     });
 
     return function () { };

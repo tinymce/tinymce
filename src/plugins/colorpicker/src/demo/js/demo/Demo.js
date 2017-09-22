@@ -13,13 +13,14 @@
 define(
   'tinymce.plugins.colorpicker.demo.Demo',
   [
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.colorpicker.Plugin',
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, ColorPickerPlugin, TablePlugin, ModernTheme) {
+  function (document, EditorManager, CodePlugin, ColorPickerPlugin, TablePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       ColorPickerPlugin();

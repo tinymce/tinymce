@@ -1,3 +1,38 @@
+Version 4.6.7 (2017-09-18)
+    Fixed bug where paste wasn't working in IOS.
+    Fixed bug where the Word Count Plugin didn't count some mathematical operators correctly.
+    Fixed bug where inserting a list in a table caused the cell to expand in height.
+    Fixed bug where pressing enter in a list located inside of a table deleted list items instead of inserting new list item.
+    Fixed bug where copy and pasting table cells produced inconsistent results.
+    Fixed bug where initializing an editor with an ID of 'length' would throw an exception.
+    Fixed bug where it was possible to split a non merged table cell.
+    Fixed bug where copy and pasting a list with a very specific selection into another list would produce a nested list.
+    Fixed bug where copy and pasting ordered lists sometimes produced unordered lists.
+    Fixed bug where padded elements inside other elements would be treated as empty.
+    Added some missing translations to Image, Link and Help plugins.
+    Fixed so you can resize images inside a figure element.
+    Fixed bug where an inline TinyMCE editor initialized on a table did not set selection on load in Chrome.
+    Fixed the positioning of the inlite toolbar when the target element wasn't big enough to fit the toolbar.
+Version 4.6.6 (2017-08-30)
+    Fixed so that notifications wrap long text content instead of bleeding outside the notification element.
+    Fixed so the content_style css is added after the skin and custom stylesheets.
+    Fixed bug where it wasn't possible to remove a table with the Cut button.
+    Fixed bug where the center format wasn't getting the same font size as the other formats in the format preview.
+    Fixed bug where the wordcount plugin wasn't counting hyphenated words correctly.
+    Fixed bug where all content pasted into the editor was added to the end of the editor.
+    Fixed bug where enter keydown on list item selection only deleted content and didn't create a new line.
+    Fixed bug where destroying the editor while the content css was still loading caused error notifications on Firefox.
+    Fixed bug where undoing cut operation in IE11 left some unwanted html in the editor content.
+    Fixed bug where enter keydown would throw an error in IE11.
+    Fixed bug where duplicate instances of an editor were added to the editors array when using the createEditor API.
+    Fixed bug where the formatter applied formats on the wrong content when spellchecker was activated.
+    Fixed bug where switching formats would reset font size on child nodes.
+    Fixed bug where the table caption element weren't always the first descendant to the table tag.
+    Fixed bug where pasting some content into the editor on chrome some newlines were removed.
+    Fixed bug where it wasn't possible to remove a list if a list item was a table element.
+    Fixed bug where copy/pasting partial selections of tables wouldn't produce a proper table.
+    Fixed bug where the searchreplace plugin could not find consecutive spaces.
+    Fixed bug where background color wasn't applied correctly on some partially selected contents.
 Version 4.6.5 (2017-08-02)
     Added new inline_boundaries_selector that allows you to specify the elements that should have boundaries.
     Added new local upload feature this allows the user to upload images directly from the image dialog.

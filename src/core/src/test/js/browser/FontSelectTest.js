@@ -13,9 +13,10 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.TextContent',
+    'global!document',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder, Fun, Strings, TinyApis, TinyLoader, Element, TextContent, Theme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder, Fun, Strings, TinyApis, TinyLoader, Element, TextContent, document, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

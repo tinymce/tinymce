@@ -338,7 +338,6 @@ define(
 
             if (format.styles) {
               MergeFormats.mergeUnderlineAndColor(dom, format, vars, curSelNode);
-              MergeFormats.mergeBackgroundColorAndFontSize(dom, format, vars, curSelNode);
             }
 
             selection.moveToBookmark(bookmark);

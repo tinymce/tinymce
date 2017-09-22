@@ -25,8 +25,8 @@ define(
       var schema = editor.schema, blockElements = schema.getBlockElements();
       var node = selection.getStart(), rootNode = editor.getBody(), rng;
       var startContainer, startOffset, endContainer, endOffset, rootBlockNode;
-      var tempNode, offset = -0xFFFFFF, wrapped, restoreSelection;
-      var tmpRng, rootNodeName, forcedRootBlock;
+      var tempNode, wrapped, restoreSelection;
+      var rootNodeName, forcedRootBlock;
 
       forcedRootBlock = settings.forced_root_block;
 
@@ -45,35 +45,15 @@ define(
 
       // Get current selection
       rng = selection.getRng();
-      if (rng.setStart) {
-        startContainer = rng.startContainer;
-        startOffset = rng.startOffset;
-        endContainer = rng.endContainer;
-        endOffset = rng.endOffset;
+      startContainer = rng.startContainer;
+      startOffset = rng.startOffset;
+      endContainer = rng.endContainer;
+      endOffset = rng.endOffset;
 
-        try {
-          restoreSelection = editor.getDoc().activeElement === rootNode;
-        } catch (ex) {
-          // IE throws unspecified error here sometimes
-        }
-      } else {
-        // Force control range into text range
-        if (rng.item) {
-          node = rng.item(0);
-          rng = editor.getDoc().body.createTextRange();
-          rng.moveToElementText(node);
-        }
-
-        restoreSelection = rng.parentElement().ownerDocument === editor.getDoc();
-        tmpRng = rng.duplicate();
-        tmpRng.collapse(true);
-        startOffset = tmpRng.move('character', offset) * -1;
-
-        if (!tmpRng.collapsed) {
-          tmpRng = rng.duplicate();
-          tmpRng.collapse(false);
-          endOffset = (tmpRng.move('character', offset) * -1) - startOffset;
-        }
+      try {
+        restoreSelection = editor.getDoc().activeElement === rootNode;
+      } catch (ex) {
+        // IE throws unspecified error here sometimes
       }
 
       // Wrap non block elements and text nodes
@@ -107,28 +87,9 @@ define(
       }
 
       if (wrapped && restoreSelection) {
-        if (rng.setStart) {
-          rng.setStart(startContainer, startOffset);
-          rng.setEnd(endContainer, endOffset);
-          selection.setRng(rng);
-        } else {
-          // Only select if the previous selection was inside the document to prevent auto focus in quirks mode
-          try {
-            rng = editor.getDoc().body.createTextRange();
-            rng.moveToElementText(rootNode);
-            rng.collapse(true);
-            rng.moveStart('character', startOffset);
-
-            if (endOffset > 0) {
-              rng.moveEnd('character', endOffset);
-            }
-
-            rng.select();
-          } catch (ex) {
-            // Ignore
-          }
-        }
-
+        rng.setStart(startContainer, startOffset);
+        rng.setEnd(endContainer, endOffset);
+        selection.setRng(rng);
         editor.nodeChanged();
       }
     };

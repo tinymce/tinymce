@@ -30,24 +30,25 @@ define(
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
+    'tinymce.core.DragDropOverrides',
+    'tinymce.core.EditorView',
+    'tinymce.core.Env',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.caret.FakeCaret',
     'tinymce.core.caret.LineUtils',
+    'tinymce.core.dom.ElementType',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangePoint',
-    'tinymce.core.DragDropOverrides',
-    'tinymce.core.EditorView',
-    'tinymce.core.Env',
     'tinymce.core.keyboard.CefUtils',
     'tinymce.core.util.Delay',
     'tinymce.core.util.VK'
   ],
   function (
-    Arr, Remove, Element, Attr, SelectorFilter, SelectorFind, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret, LineUtils, NodeType, RangePoint,
-    DragDropOverrides, EditorView, Env, CefUtils, Delay, VK
+    Arr, Remove, Element, Attr, SelectorFilter, SelectorFind, DragDropOverrides, EditorView, Env, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret,
+    LineUtils, ElementType, NodeType, RangePoint, CefUtils, Delay, VK
   ) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -245,7 +246,7 @@ define(
 
               // Check that we're not attempting a shift + click select within a contenteditable='true' element
               if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !RangePoint.isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
-                editor.selection.placeCaretAt(e.clientX, e.clientY);
+                ElementType.isVoid(Element.fromDom(e.target)) ? editor.selection.select(e.target) : editor.selection.placeCaretAt(e.clientX, e.clientY);
               }
             }
           } else {

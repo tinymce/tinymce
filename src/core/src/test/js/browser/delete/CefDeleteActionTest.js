@@ -10,10 +10,11 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.delete.CefDeleteAction',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Fun, Hierarchy, Element, CefDeleteAction, ViewBlock) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Fun, Hierarchy, Element, document, CefDeleteAction, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = ViewBlock();

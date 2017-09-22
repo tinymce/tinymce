@@ -19,8 +19,8 @@ asynctest(
 
     var srcUrl = '/project/src/plugins/imagetools/src/demo/img/dogleft.jpg';
 
-    Plugin();
     ModernTheme();
+    Plugin();
 
     var sAssertUploadFilename = function (expected) {
       return Step.sync(function () {

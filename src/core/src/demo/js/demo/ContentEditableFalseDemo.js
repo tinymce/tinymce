@@ -13,13 +13,14 @@
 define(
   'tinymce.core.demo.ContentEditableFalseDemo',
   [
+    'global!console',
     'global!window',
     'tinymce.core.EditorManager',
     'tinymce.core.util.Tools',
-    'tinymce.themes.modern.Theme',
-    'tinymce.plugins.paste.Plugin'
+    'tinymce.plugins.paste.Plugin',
+    'tinymce.themes.modern.Theme'
   ],
-  function (window, EditorManager, Tools, ModernTheme, PastePlugin) {
+  function (console, window, EditorManager, Tools, PastePlugin, ModernTheme) {
     ModernTheme();
     PastePlugin();
 

@@ -16,10 +16,11 @@
 define(
   'tinymce.core.AddOnManager',
   [
-    "tinymce.core.dom.ScriptLoader",
-    "tinymce.core.util.Tools"
+    'ephox.katamari.api.Arr',
+    'tinymce.core.dom.ScriptLoader',
+    'tinymce.core.util.Tools'
   ],
-  function (ScriptLoader, Tools) {
+  function (Arr, ScriptLoader, Tools) {
     var each = Tools.each;
 
     function AddOnManager() {
@@ -28,6 +29,7 @@ define(
       self.items = [];
       self.urls = {};
       self.lookup = {};
+      self._listeners = [];
     }
 
     AddOnManager.prototype = {
@@ -111,6 +113,15 @@ define(
       add: function (id, addOn, dependencies) {
         this.items.push(addOn);
         this.lookup[id] = { instance: addOn, dependencies: dependencies };
+        var result = Arr.partition(this._listeners, function (listener) {
+          return listener.name === id;
+        });
+
+        this._listeners = result.fail;
+
+        each(result.pass, function (listener) {
+          listener.callback();
+        });
 
         return addOn;
       },
@@ -203,6 +214,14 @@ define(
           loadDependencies();
         } else {
           ScriptLoader.ScriptLoader.add(url, loadDependencies, scope, failure);
+        }
+      },
+
+      waitFor: function (name, callback) {
+        if (this.lookup.hasOwnProperty(name)) {
+          callback();
+        } else {
+          this._listeners.push({ name: name, callback: callback });
         }
       }
     };

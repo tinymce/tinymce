@@ -1,9 +1,20 @@
+/**
+ * ButtonsRow.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.help.ui.ButtonsRow',
   [
-    'tinymce.core.EditorManager'
+    'tinymce.core.EditorManager',
+    'tinymce.core.util.I18n'
   ],
-  function (EditorManager) {
+  function (EditorManager, I18n) {
     var getVersion = function (major, minor) {
       return major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
     };
@@ -15,7 +26,7 @@ define(
       return [
         {
           type: 'label',
-          html: 'You are using ' + changeLogLink
+          html: I18n.translate(['You are using {0}', changeLogLink])
         },
         {
           type: 'spacer',

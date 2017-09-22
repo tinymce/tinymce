@@ -43,6 +43,17 @@ define(
       return node && node.firstChild === node.lastChild && node.firstChild.name === name;
     };
 
+    var isPadded = function (schema, node) {
+      var rule = schema.getElementRule(node.name);
+      return rule && rule.paddEmpty;
+    };
+
+    var isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
+      return node.isEmpty(nonEmptyElements, whitespaceElements, function (node) {
+        return isPadded(schema, node);
+      });
+    };
+
     /**
      * Constructs a new DomParser instance.
      *
@@ -132,7 +143,7 @@ define(
               currentNode = tempNode;
             }
 
-            if (!newParent.isEmpty(nonEmptyElements, whitespaceElements)) {
+            if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
               parent.insert(newParent, parents[0], true);
               parent.insert(node, newParent);
             } else {
@@ -141,7 +152,7 @@ define(
 
             // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
             parent = parents[0];
-            if (parent.isEmpty(nonEmptyElements, whitespaceElements) || hasOnlyChild(parent, 'br')) {
+            if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
               parent.empty().remove();
             }
           } else if (node.parent) {
@@ -600,7 +611,7 @@ define(
 
               // Handle empty nodes
               if (elementRule.removeEmpty || elementRule.paddEmpty) {
-                if (node.isEmpty(nonEmptyElements, whiteSpaceElements)) {
+                if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
                   if (elementRule.paddEmpty) {
                     paddEmptyNode(settings, node);
                   } else {
@@ -735,7 +746,7 @@ define(
                 node.remove();
 
                 // Is the parent to be considered empty after we removed the BR
-                if (parent.isEmpty(nonEmptyElements, whiteSpaceElements)) {
+                if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, parent)) {
                   elementRule = schema.getElementRule(parent.name);
 
                   // Remove or padd the element depending on schema rule

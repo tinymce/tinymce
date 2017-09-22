@@ -311,6 +311,15 @@ asynctest(
       LegacyUnit.equal(ser.serialize(DOM.get('test')), '<p>a</p><table><tr><td><br /></td></tr></table>');
     });
 
+    suite.test('Do not padd empty elements with padded children', function () {
+      var ser = new Serializer({ fix_list_elements : true });
+
+      ser.setRules('#p,#span,b');
+
+      DOM.setHTML('test', '<p><span></span></p><p><b><span></span></b></p>');
+      LegacyUnit.equal(ser.serialize(DOM.get('test')), '<p><span>&nbsp;</span></p><p><b><span>&nbsp;</span></b></p>');
+    });
+
     suite.test('Remove empty elements', function () {
       var ser = new Serializer({ fix_list_elements : true });
 

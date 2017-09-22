@@ -2104,6 +2104,13 @@ asynctest(
       LegacyUnit.equal(getContent(editor), '<p><b>a</b></p><ul><li>a</li><li>b</li></ul>');
     });
 
+    suite.test("Applying background color to partically selected contents", function (editor) {
+      editor.setContent('<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">cd</span><strong>ef</strong></span></p>');
+      LegacyUnit.setSelection(editor, 'span span', 1, 'strong', 1);
+      editor.formatter.apply('hilitecolor', { value: "#00ff00" });
+      LegacyUnit.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: #00ff00;">d</span></span><strong><span style="background-color: #00ff00;">e</span>f</strong></span></p>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

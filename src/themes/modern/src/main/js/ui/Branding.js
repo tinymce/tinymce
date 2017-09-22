@@ -11,9 +11,10 @@
 define(
   'tinymce.themes.modern.ui.Branding',
   [
-    'tinymce.core.dom.DOMUtils'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.themes.modern.api.Settings'
   ],
-  function (DOMUtils) {
+  function (DOMUtils, Settings) {
     var DOM = DOMUtils.DOM;
 
     var reposition = function (editor, poweredByElm, hasStatusbar) {
@@ -67,7 +68,7 @@ define(
     };
 
     var setup = function (editor) {
-      if (editor.settings.branding !== false) {
+      if (Settings.isBrandingEnabled(editor)) {
         setupEventListeners(editor);
       }
     };

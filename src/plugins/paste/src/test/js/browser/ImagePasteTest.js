@@ -7,6 +7,7 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sand.api.Blob',
+    'ephox.sand.api.Uint8Array',
     'ephox.sand.api.Window',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Promise',
@@ -14,7 +15,7 @@ asynctest(
     'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, Step, Arr, LegacyUnit, TinyLoader, Blob, Window, Delay, Promise, Clipboard, Plugin, Theme) {
+  function (Pipeline, Step, Arr, LegacyUnit, TinyLoader, Blob, Uint8Array, Window, Delay, Promise, Clipboard, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();

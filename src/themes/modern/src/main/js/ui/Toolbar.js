@@ -11,13 +11,11 @@
 define(
   'tinymce.themes.modern.ui.Toolbar',
   [
+    'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
-    'tinymce.core.ui.Factory'
+    'tinymce.themes.modern.api.Settings'
   ],
-  function (Tools, Factory) {
-    var defaultToolbar = "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
-      "bullist numlist outdent indent | link image";
-
+  function (Factory, Tools, Settings) {
     var createToolbar = function (editor, items, size) {
       var toolbarItems = [], buttonGroup;
 
@@ -44,7 +42,7 @@ define(
           }
         };
 
-        if (item == "|") {
+        if (item === "|") {
           buttonGroup = null;
         } else {
           if (!buttonGroup) {
@@ -57,7 +55,7 @@ define(
             itemName = item;
             item = editor.buttons[itemName];
 
-            if (typeof item == "function") {
+            if (typeof item === "function") {
               item = item();
             }
 
@@ -90,40 +88,17 @@ define(
      * @return {Array} Array with toolbars.
      */
     var createToolbars = function (editor, size) {
-      var toolbars = [], settings = editor.settings;
+      var toolbars = [];
 
       var addToolbar = function (items) {
         if (items) {
           toolbars.push(createToolbar(editor, items, size));
-          return true;
         }
       };
 
-      // Convert toolbar array to multiple options
-      if (Tools.isArray(settings.toolbar)) {
-        // Empty toolbar array is the same as a disabled toolbar
-        if (settings.toolbar.length === 0) {
-          return;
-        }
-
-        Tools.each(settings.toolbar, function (toolbar, i) {
-          settings["toolbar" + (i + 1)] = toolbar;
-        });
-
-        delete settings.toolbar;
-      }
-
-      // Generate toolbar<n>
-      for (var i = 1; i < 10; i++) {
-        if (!addToolbar(settings["toolbar" + i])) {
-          break;
-        }
-      }
-
-      // Generate toolbar or default toolbar unless it's disabled
-      if (!toolbars.length && settings.toolbar !== false) {
-        addToolbar(settings.toolbar || defaultToolbar);
-      }
+      Tools.each(Settings.getToolbars(editor), function (toolbar) {
+        addToolbar(toolbar);
+      });
 
       if (toolbars.length) {
         return {

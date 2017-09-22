@@ -29,8 +29,15 @@ define(
     var calcByPositions = function (testPositions1, testPositions2, targetRect, contentAreaRect, panelRect) {
       var relPos, relRect, outputPanelRect;
 
-      relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, testPositions1);
-      targetRect = Rect.clamp(targetRect, contentAreaRect);
+      var paddedContentRect = {
+        x: contentAreaRect.x,
+        y: contentAreaRect.y,
+        w: contentAreaRect.w + (contentAreaRect.w < (panelRect.w + targetRect.w) ? panelRect.w : 0),
+        h: contentAreaRect.h + (contentAreaRect.h < (panelRect.h + targetRect.h) ? panelRect.h : 0)
+      };
+
+      relPos = Rect.findBestRelativePosition(panelRect, targetRect, paddedContentRect, testPositions1);
+      targetRect = Rect.clamp(targetRect, paddedContentRect);
 
       if (relPos) {
         relRect = Rect.relativePosition(panelRect, targetRect, relPos);
@@ -38,9 +45,10 @@ define(
         return result(outputPanelRect, relPos);
       }
 
-      targetRect = Rect.intersect(contentAreaRect, targetRect);
+      targetRect = Rect.intersect(paddedContentRect, targetRect);
       if (targetRect) {
-        relPos = Rect.findBestRelativePosition(panelRect, targetRect, contentAreaRect, testPositions2);
+        relPos = Rect.findBestRelativePosition(panelRect, targetRect, paddedContentRect, testPositions2);
+
         if (relPos) {
           relRect = Rect.relativePosition(panelRect, targetRect, relPos);
           outputPanelRect = moveTo(panelRect, relRect);
@@ -66,8 +74,8 @@ define(
 
     var calc = function (targetRect, contentAreaRect, panelRect) {
       return calcByPositions(
-        ['tc-bc', 'bc-tc', 'tl-bl', 'bl-tl', 'tr-br', 'br-tr'],
-        ['bc-tc', 'bl-tl', 'br-tr'],
+        ['tc-bc', 'bc-tc', 'tl-bl', 'bl-tl', 'tr-br', 'br-tr', 'cr-cl', 'cl-cr'],
+        ['bc-tc', 'bl-tl', 'br-tr', 'cr-cl'],
         targetRect,
         contentAreaRect,
         panelRect

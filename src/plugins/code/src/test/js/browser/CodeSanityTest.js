@@ -8,11 +8,12 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
+    'global!document',
     'tinymce.plugins.code.Plugin',
     'tinymce.themes.modern.Theme'
   ],
 
-  function (Pipeline, RawAssertions, Step, TinyApis, TinyLoader, TinyUi, CodePlugin, ModernTheme) {
+  function (Pipeline, RawAssertions, Step, TinyApis, TinyLoader, TinyUi, document, CodePlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

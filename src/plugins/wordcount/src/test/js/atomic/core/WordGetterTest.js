@@ -29,6 +29,9 @@ test(
       assert.eq(['http://www.google.com', 'abc'], getWords('http://www.google.com abc'));
       assert.eq(['ab'], getWords('a\ufeffb'));
       assert.eq(['1+1*1/1⋉1=1'], getWords('1+1*1/1⋉1=1'));
+      assert.eq(['50-10'], getWords('50-10'));
+      assert.eq(['jack-in-the-box'], getWords('jack-in-the-box'));
+      assert.eq(['n=13'], getWords('n=13'));
     };
 
     testGetWords();

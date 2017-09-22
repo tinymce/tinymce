@@ -109,6 +109,15 @@ test(
       assert.eq(userConstrainedPanelRect, rect(1, 2, 3, 4));
     };
 
+    var testCalcSmallContentRect = function () {
+      var contentAreaRect = rect(0, 0, 25, 25);
+      var targetRect = rect(40, 0, 10, 10);
+      var panelRect = rect(0, 20, 50, 50);
+
+      var foundRect = Layout.calc(targetRect, contentAreaRect, panelRect);
+      assert.eq(foundRect, { rect: rect(20, 10, 50, 50), position: 'bc-tc' });
+    };
+
     testCalcPanelAtBottomLeft();
     testCalcPanelAtBottomRight();
     testCalcPanelAtTopLeft();
@@ -116,5 +125,6 @@ test(
     testCalcPanelAtTopCenter();
     testCalcPanelAtBottomCenter();
     testUserConstrain();
+    testCalcSmallContentRect();
   }
 );

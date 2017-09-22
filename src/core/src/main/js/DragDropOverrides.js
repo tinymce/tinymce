@@ -17,16 +17,15 @@
 define(
   'tinymce.core.DragDropOverrides',
   [
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.util.Arr",
-    "tinymce.core.util.Fun",
-    "tinymce.core.util.Delay",
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.dom.MousePosition"
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.MousePosition',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.util.Arr',
+    'tinymce.core.util.Delay',
+    'tinymce.core.util.Fun'
   ],
-  function (
-    NodeType, Arr, Fun, Delay, DOMUtils, MousePosition
-  ) {
+  function (document, DOMUtils, MousePosition, NodeType, Arr, Delay, Fun) {
     var isContentEditableFalse = NodeType.isContentEditableFalse,
       isContentEditableTrue = NodeType.isContentEditableTrue;
 

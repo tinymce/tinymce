@@ -24,13 +24,13 @@ define(
       var rng = selection.getRng();
 
       return Options.liftN([
-        DeleteUtils.getParentTextBlock(rootNode, Element.fromDom(rng.startContainer)),
-        DeleteUtils.getParentTextBlock(rootNode, Element.fromDom(rng.endContainer))
+        DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
+        DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer))
       ], function (block1, block2) {
         if (Compare.eq(block1, block2) === false) {
           rng.deleteContents();
 
-          MergeBlocks.mergeBlocks(true, block1, block2).each(function (pos) {
+          MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
             selection.setRng(pos.toRange());
           });
 

@@ -32,12 +32,13 @@
 define(
   'tinymce.core.dom.DomQuery',
   [
-    "tinymce.core.dom.EventUtils",
-    "tinymce.core.dom.Sizzle",
-    "tinymce.core.util.Tools",
-    "tinymce.core.Env"
+    'global!document',
+    'tinymce.core.dom.EventUtils',
+    'tinymce.core.dom.Sizzle',
+    'tinymce.core.Env',
+    'tinymce.core.util.Tools'
   ],
-  function (EventUtils, Sizzle, Tools, Env) {
+  function (document, EventUtils, Sizzle, Env, Tools) {
     var doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
     var rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
     var Event = EventUtils.Event, undef;

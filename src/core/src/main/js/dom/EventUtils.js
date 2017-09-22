@@ -19,10 +19,12 @@
 define(
   'tinymce.core.dom.EventUtils',
   [
-    "tinymce.core.util.Delay",
-    "tinymce.core.Env"
+    'global!document',
+    'global!window',
+    'tinymce.core.Env',
+    'tinymce.core.util.Delay'
   ],
-  function (Delay, Env) {
+  function (document, window, Env, Delay) {
     "use strict";
 
     var eventExpandoPrefix = "mce-data-";

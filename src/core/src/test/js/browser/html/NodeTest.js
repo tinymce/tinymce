@@ -414,6 +414,18 @@ asynctest(
       root = new Node('#frag', 11);
       node1 = root.append(new Node('a', 1)).attr('name', 'x');
       ok(!root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
+
+      var isSpan = function (node) {
+        return node.name === 'span';
+      };
+
+      root = new Node('#frag', 11);
+      node1 = root.append(new Node('span', 1));
+      LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), false, 'Should be false since the predicate says true.');
+
+      root = new Node('#frag', 11);
+      node1 = root.append(new Node('b', 1));
+      LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
     });
 
     Pipeline.async({}, suite.toSteps({}), function () {

@@ -13,10 +13,11 @@ asynctest(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Html',
+    'global!document',
     'tinymce.core.delete.TableDeleteAction'
   ],
 
-  function (Assertions, Chain, Logger, Pipeline, Arr, Fun, Result, Hierarchy, Element, Node, Html, TableDeleteAction) {
+  function (Assertions, Chain, Logger, Pipeline, Arr, Fun, Result, Hierarchy, Element, Node, Html, document, TableDeleteAction) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

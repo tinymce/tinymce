@@ -14,10 +14,13 @@ define(
   'tinymce.themes.modern.demo.NotificationDemo',
   [
     'ephox.katamari.api.Arr',
+    'global!console',
+    'global!document',
+    'global!setTimeout',
     'tinymce.core.EditorManager',
     'tinymce.themes.modern.Theme'
   ],
-  function (Arr, EditorManager, ModernTheme) {
+  function (Arr, console, document, setTimeout, EditorManager, ModernTheme) {
     ModernTheme();
 
     var notifyShort = function (type) {
