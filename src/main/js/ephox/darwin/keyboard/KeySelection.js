@@ -34,7 +34,7 @@ define(
         if (boxes.length > 0) {
           selectRange(container, boxes, start, finish);
           return Option.some(Responses.response(
-            Option.some(Selection.relative(Situ.on(start, 0), Situ.on(start, Awareness.getEnd(start)))),
+            Option.some(Selection.range(Situ.on(start, 0), 0, Situ.on(start, Awareness.getEnd(start)), Awareness.getEnd(start))),
             true
           ));
         }

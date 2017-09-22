@@ -124,9 +124,7 @@ define(
       var handleResponse = function (event, response) {
         if (response.kill()) event.kill();
         response.selection().each(function (ns) {
-          ns.fold(Fun.noop, function (start, finish) {
-            WindowSelection.setRelative(window, start, finish);
-          }, Fun.noop);
+          WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
         });
       };
 

@@ -26,8 +26,7 @@ define(
           return BrTags.tryBr(isRoot, finish, foffset, direction).fold(function () {
             return Option.some(Spot.point(finish, foffset));
           }, function (brNeighbour) {
-            var range = bridge.fromSitus(brNeighbour);
-            var analysis = BeforeAfter.verify(bridge, finish, foffset, finish, foffset, direction.failure, isRoot);
+            var analysis = BeforeAfter.verify(bridge, finish, foffset, brNeighbour.finish(), brNeighbour.foffset(), direction.failure, isRoot);
             return BrTags.process(analysis);
           });
         });
@@ -38,25 +37,22 @@ define(
       if (numRetries === 0) return Option.none();
       // Firstly, move the (x, y) and see what element we end up on.
       return tryCursor(bridge, isRoot, element, offset, direction).bind(function (situs) {
-        var range = bridge.fromSitus(situs);
-        return range.fold(Fun.noop, Fun.noop, function (start, soffset, finish, foffset) {
-          // Now, check to see if the element is a new cell.
-          var analysis = BeforeAfter.verify(bridge, element, offset, finish, foffset, direction.failure, isRoot);
-          return BeforeAfter.cata(analysis, function () {
-            return Option.none();
-          }, function () {
-            // We have a new cell, so we stop looking.
-            return Option.some(situs);
-          }, function (cell) {
-            if (Compare.eq(element, cell) && offset === 0) return tryAgain(bridge, element, offset, Carets.moveUp, direction);
-            // We need to look again from the start of our current cell
-            else return scan(bridge, isRoot, cell, 0, direction, numRetries - 1);
-          }, function (cell) {
-            // If we were here last time, move and try again.
-            if (Compare.eq(element, cell) && offset === Awareness.getEnd(cell)) return tryAgain(bridge, element, offset, Carets.moveDown, direction);
-            // We need to look again from the end of our current cell
-            else return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, numRetries - 1);
-          });
+        // Now, check to see if the element is a new cell.
+        var analysis = BeforeAfter.verify(bridge, element, offset, situs.finish(), situs.foffset(), direction.failure, isRoot);
+        return BeforeAfter.cata(analysis, function () {
+          return Option.none();
+        }, function () {
+          // We have a new cell, so we stop looking.
+          return Option.some(situs);
+        }, function (cell) {
+          if (Compare.eq(element, cell) && offset === 0) return tryAgain(bridge, element, offset, Carets.moveUp, direction);
+          // We need to look again from the start of our current cell
+          else return scan(bridge, isRoot, cell, 0, direction, numRetries - 1);
+        }, function (cell) {
+          // If we were here last time, move and try again.
+          if (Compare.eq(element, cell) && offset === Awareness.getEnd(cell)) return tryAgain(bridge, element, offset, Carets.moveDown, direction);
+          // We need to look again from the end of our current cell
+          else return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, numRetries - 1);
         });
       });
     };
@@ -83,7 +79,7 @@ define(
     var handle = function (bridge, isRoot, direction) {
       return findSpot(bridge, isRoot, direction).bind(function (spot) {
         // There is a point to start doing box-hitting from
-        return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES).map(bridge.fromSitus);
+        return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES);
       });
     };
 

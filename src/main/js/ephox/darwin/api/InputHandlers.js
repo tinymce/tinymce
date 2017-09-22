@@ -106,7 +106,9 @@ define(
           var keycode = event.raw().which;
           var shiftKey = event.raw().shiftKey === true;
           if (shiftKey === false) return Option.none();
-          if (SelectionKeys.isNavigation(keycode)) return KeySelection.sync(container, isRoot, start, soffset, finish, foffset, annotations.selectRange);
+          if (SelectionKeys.isNavigation(keycode))  {
+            return KeySelection.sync(container, isRoot, start, soffset, finish, foffset, annotations.selectRange);
+          }
           else return Option.none();
         }, Option.none);
       };

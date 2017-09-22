@@ -6,7 +6,6 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',
     'ephox.sugar.api.search.Traverse',
@@ -16,7 +15,7 @@ define(
     'ephox.syrup.api.ElementFind'
   ],
 
-  function (BeforeAfter, Fun, Option, Spot, DocumentPosition, Node, Text, Traverse, Awareness, Selection, Situ, ElementFind) {
+  function (BeforeAfter, Fun, Option, Spot, Node, Text, Traverse, Awareness, Selection, Situ, ElementFind) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -67,9 +66,9 @@ define(
       var target = isBr(element) ? handleBr(isRoot, element, direction) : handleParent(isRoot, element, offset, direction);
       return target.map(function (tgt) {
         return tgt.fold(function (element) {
-          return Selection.range(element, Awareness.getEnd(element), element, Awareness.getEnd(element));
+          return Selection.range(Situ.on(element, Awareness.getEnd(element)), Awareness.getEnd(element), Situ.on(element, Awareness.getEnd(element)), Awareness.getEnd(element));
         }, Fun.noop, function (element, offset) {
-          return Selection.range(element, offset, element, offset);
+          return Selection.range(Situ.on(element, offset), offset, Situ.on(element, offset), offset);
         });
       });
     };
