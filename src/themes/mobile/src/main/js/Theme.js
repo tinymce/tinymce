@@ -16,7 +16,6 @@ define(
     'ephox.sugar.api.node.Node',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
-    'tinymce.core.ui.Api',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
     'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.features.Features',
@@ -27,15 +26,14 @@ define(
     'tinymce.themes.mobile.ui.IosRealm',
     'tinymce.themes.mobile.util.CssUrls',
     'tinymce.themes.mobile.util.FormatChangers',
-    'tinymce.themes.mobile.util.SkinLoaded'
+    'tinymce.themes.mobile.util.SkinLoaded',
+    'tinymce.ui.Api'
   ],
 
 
   function (
-    Swapping, Toggling, AlloyTriggers, Attachment, Debugging, Cell, Fun, PlatformDetection,
-    Focus, Insert, Element, Node, DOMUtils, ThemeManager, Api, TinyCodeDupe, TinyChannels,
-    Features, Styles, Orientation, AndroidRealm, Buttons, IosRealm, CssUrls, FormatChangers,
-    SkinLoaded
+    Swapping, Toggling, AlloyTriggers, Attachment, Debugging, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, DOMUtils, ThemeManager, TinyCodeDupe,
+    TinyChannels, Features, Styles, Orientation, AndroidRealm, Buttons, IosRealm, CssUrls, FormatChangers, SkinLoaded, Api
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -242,6 +240,14 @@ define(
       };
 
       return {
+        getNotificationManagerImpl: function () {
+          return {
+            open: Fun.identity,
+            close: function () { },
+            reposition: function () { },
+            getArgs: Fun.identity
+          };
+        },
         renderUI: renderUI
       };
     });

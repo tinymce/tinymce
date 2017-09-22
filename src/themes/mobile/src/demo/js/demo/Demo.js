@@ -37,6 +37,16 @@ define(
         ],
         mobile_skin_url: '../../main/css',
 
+        setup: function (ed) {
+          ed.on('skinLoaded', function () {
+            // Notification fields for equality: type, text, progressBar, timeout
+            ed.notificationManager.open({
+              text: 'You will not see this because the mobile theme has no notifications',
+              type: 'info'
+            });
+          });
+        },
+
         style_formats: [
           {
             title: 'Headings', items: [
