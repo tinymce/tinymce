@@ -56,6 +56,12 @@ define(
     };
 
 
+    /*
+     Before: (...) -> Option { start(): Situ, finish(): Situ }
+
+     After: (...) ->
+     */
+
     var tryBr = function (isRoot, element, offset, direction) {
       // Three different situations
       // 1. the br is the child, and it has a previous sibling. Use parent, index-1)
@@ -65,11 +71,10 @@ define(
       // 2. the element is the br itself,
       var target = isBr(element) ? handleBr(isRoot, element, direction) : handleParent(isRoot, element, offset, direction);
       return target.map(function (tgt) {
-        return tgt.fold(function (element) {
-          return Selection.range(Situ.on(element, Awareness.getEnd(element)), Awareness.getEnd(element), Situ.on(element, Awareness.getEnd(element)), Awareness.getEnd(element));
-        }, Fun.noop, function (element, offset) {
-          return Selection.range(Situ.on(element, offset), offset, Situ.on(element, offset), offset);
-        });
+        return {
+          start: Fun.constant(tgt),
+          finish: Fun.constant(tgt)
+        };
       });
     };
 

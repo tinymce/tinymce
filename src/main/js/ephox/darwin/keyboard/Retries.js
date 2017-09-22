@@ -88,16 +88,18 @@ define(
     var adjustTil = function (bridge, movement, original, caret, numRetries) {
       if (numRetries === 0) return Option.some(caret);
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
-        return Rectangles.getEntireBox(bridge, guess.start(), guess.soffset()).bind(function (guessBox) {
-          return movement.adjuster(bridge, guess.start(), guessBox, original, caret).fold(
-            Option.none,
-            function (newCaret) {
-              return adjustTil(bridge, movement, original, newCaret, numRetries-1);
-            }
-          );
-        }).orThunk(function () {
-          return Option.some(caret);
-        });
+        return guess.start().fold(Option.none, function (element, offset) {
+          return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {
+            return movement.adjuster(bridge, element, guessBox, original, caret).fold(
+              Option.none,
+              function (newCaret) {
+                return adjustTil(bridge, movement, original, newCaret, numRetries-1);
+              }
+            );
+          }).orThunk(function () {
+            return Option.some(caret);
+          });
+        }, Option.none);
       });
     };
 

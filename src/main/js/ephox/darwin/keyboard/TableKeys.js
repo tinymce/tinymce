@@ -26,6 +26,7 @@ define(
           return BrTags.tryBr(isRoot, finish, foffset, direction).fold(function () {
             return Option.some(Spot.point(finish, foffset));
           }, function (brNeighbour) {
+            var range = bridge.fromSitus(brNeighbour);
             var analysis = BeforeAfter.verify(bridge, finish, foffset, brNeighbour.finish(), brNeighbour.foffset(), direction.failure, isRoot);
             return BrTags.process(analysis);
           });
