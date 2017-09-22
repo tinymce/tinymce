@@ -6,14 +6,13 @@ define(
     'ephox.darwin.selection.CellSelection',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.selection.Awareness',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ'
   ],
 
-  function (Responses, CellSelection, Option, Compare, DocumentPosition, SelectorFind, Awareness, Selection, Situ) {
+  function (Responses, CellSelection, Option, Compare, SelectorFind, Awareness, Selection, Situ) {
     // Based on a start and finish, select the appropriate box of cells
     var sync = function (container, isRoot, start, soffset, finish, foffset, selectRange) {
       if (!(Compare.eq(start, finish) && soffset === foffset)) {
