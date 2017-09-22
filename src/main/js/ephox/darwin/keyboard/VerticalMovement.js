@@ -5,6 +5,7 @@ define(
     'ephox.darwin.api.Responses',
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
+    'ephox.darwin.selection.Util',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
@@ -14,7 +15,7 @@ define(
     'ephox.syrup.api.PredicateExists'
   ],
 
-  function (Responses, KeySelection, TableKeys, Fun, Option, PlatformDetection, Compare, SelectorFind, Traverse, PredicateExists) {
+  function (Responses, KeySelection, TableKeys, Util, Fun, Option, PlatformDetection, Compare, SelectorFind, Traverse, PredicateExists) {
     var detection = PlatformDetection.detect();
 
     var inSameTable = function (elem, table) {
@@ -50,7 +51,7 @@ define(
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         var range = info.range();
         return Responses.response(
-          Option.some(range),
+          Option.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
           true
         );
       });

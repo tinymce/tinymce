@@ -2,6 +2,7 @@ define(
   'ephox.darwin.api.WindowBridge',
 
   [
+    'ephox.darwin.selection.Util',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.selection.Selection',
@@ -10,7 +11,7 @@ define(
     'ephox.sugar.selection.core.SelectionDirection'
   ],
 
-  function (Fun, Obj, Selection, Situ, WindowSelection, SelectionDirection) {
+  function (Util, Fun, Obj, Selection, Situ, WindowSelection, SelectionDirection) {
     // TODO: Move out of API
 
 
@@ -33,17 +34,6 @@ define(
         });
       };
 
-      var convertToRange = function (win, selection) {
-        // TODO: Use API packages of sugar
-        var rng = SelectionDirection.asLtrRange(win, selection);
-        return {
-          start: Fun.constant(rng.startContainer),
-          soffset: Fun.constant(rng.startOffset),
-          finish: Fun.constant(rng.endContainer),
-          foffset: Fun.constant(rng.endOffset)
-        };
-      };
-
       /*
        Before :() -> Option (start(), soffset(), finish(), foffset())
 
@@ -52,7 +42,7 @@ define(
       */
       var getSelection = function () {
         return WindowSelection.get(win).map(function (exactAdt) {
-          return convertToRange(win, exactAdt);
+          return Util.convertToRange(win, exactAdt);
         });
       };
 
@@ -65,7 +55,7 @@ define(
        */
       var fromSitus = function (situs) {
         var relative = Selection.relative(situs.start(), situs.finish());
-        return convertToRange(relative);
+        return Util.convertToRange(relative);
       };
 
       // INVESTIGATE BEFORE MERGING

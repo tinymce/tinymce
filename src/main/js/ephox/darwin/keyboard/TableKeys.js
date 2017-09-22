@@ -7,7 +7,6 @@ define(
     'ephox.darwin.keyboard.Retries',
     'ephox.darwin.navigation.BeforeAfter',
     'ephox.darwin.navigation.BrTags',
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.sand.api.PlatformDetection',
@@ -15,21 +14,19 @@ define(
     'ephox.sugar.api.selection.Awareness'
   ],
 
-  function (Carets, Rectangles, Retries, BeforeAfter, BrTags, Fun, Option, Spot, PlatformDetection, Compare, Awareness) {
+  function (Carets, Rectangles, Retries, BeforeAfter, BrTags, Option, Spot, PlatformDetection, Compare, Awareness) {
     var MAX_RETRIES = 20;
 
     var platform = PlatformDetection.detect();
 
     var findSpot = function (bridge, isRoot, direction) {
       return bridge.getSelection().bind(function (sel) {
-        return sel.fold(Fun.noop, Fun.noop, function (start, soffset, finish, foffset) {
-          return BrTags.tryBr(isRoot, finish, foffset, direction).fold(function () {
-            return Option.some(Spot.point(finish, foffset));
-          }, function (brNeighbour) {
-            var range = bridge.fromSitus(brNeighbour);
-            var analysis = BeforeAfter.verify(bridge, finish, foffset, brNeighbour.finish(), brNeighbour.foffset(), direction.failure, isRoot);
-            return BrTags.process(analysis);
-          });
+        return BrTags.tryBr(isRoot, sel.finish(), sel.foffset(), direction).fold(function () {
+          return Option.some(Spot.point(sel.finish(), sel.foffset()));
+        }, function (brNeighbour) {
+          var range = bridge.fromSitus(brNeighbour);
+          var analysis = BeforeAfter.verify(bridge, sel.finish(), sel.foffset(), range.finish(), range.foffset(), direction.failure, isRoot);
+          return BrTags.process(analysis);
         });
       });
     };
@@ -38,8 +35,9 @@ define(
       if (numRetries === 0) return Option.none();
       // Firstly, move the (x, y) and see what element we end up on.
       return tryCursor(bridge, isRoot, element, offset, direction).bind(function (situs) {
+        var range = bridge.fromSitus(situs);
         // Now, check to see if the element is a new cell.
-        var analysis = BeforeAfter.verify(bridge, element, offset, situs.finish(), situs.foffset(), direction.failure, isRoot);
+        var analysis = BeforeAfter.verify(bridge, element, offset, range.finish(), range.foffset(), direction.failure, isRoot);
         return BeforeAfter.cata(analysis, function () {
           return Option.none();
         }, function () {
@@ -80,7 +78,7 @@ define(
     var handle = function (bridge, isRoot, direction) {
       return findSpot(bridge, isRoot, direction).bind(function (spot) {
         // There is a point to start doing box-hitting from
-        return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES);
+        return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES).map(bridge.fromSitus);
       });
     };
 

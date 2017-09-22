@@ -4,6 +4,7 @@ define(
   [
     'ephox.darwin.api.Responses',
     'ephox.darwin.selection.CellSelection',
+    'ephox.darwin.selection.Util',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
@@ -13,7 +14,7 @@ define(
     'ephox.sugar.api.selection.Situ'
   ],
 
-  function (Responses, CellSelection, Fun, Option, Compare, SelectorFind, Awareness, Selection, Situ) {
+  function (Responses, CellSelection, Util, Fun, Option, Compare, SelectorFind, Awareness, Selection, Situ) {
     // Based on a start and finish, select the appropriate box of cells
     var sync = function (container, isRoot, start, soffset, finish, foffset, selectRange) {
       if (!(Compare.eq(start, finish) && soffset === foffset)) {
@@ -41,10 +42,7 @@ define(
           selectRange(container, boxes, start, finish);
           return Option.some(Responses.response(
             // INVESTIGATE
-            Option.some({
-              start: Fun.constant(Situ.on(start, 0)),
-              finish: Fun.constant(Situ.on(start, Awareness.getEnd(start)))
-            }),
+            Option.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
             true
           ));
         }
