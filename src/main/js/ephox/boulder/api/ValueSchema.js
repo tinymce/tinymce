@@ -76,6 +76,10 @@ define(
       return ChoiceProcessor.choose(key, branches);
     };
 
+    var thunk = function (schema) {
+      return ValueProcessor.thunk(schema);
+    };
+
     return {
       anyValue: Fun.constant(anyValue),
 
@@ -98,7 +102,9 @@ define(
       getOrDie: getOrDie,
       formatError: formatError,
 
-      choose: choose
+      choose: choose,
+
+      thunk: thunk
     };
   }
 );

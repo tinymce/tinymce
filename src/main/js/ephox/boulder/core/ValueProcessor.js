@@ -16,10 +16,11 @@ define(
     'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
+    'ephox.katamari.api.Thunk',
     'ephox.katamari.api.Type'
   ],
 
-  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Adt, Arr, Fun, Merger, Obj, Option, Result, Type) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -257,6 +258,30 @@ define(
       };
     };
 
+    var thunk = function (processor) {
+      var getP = Thunk.cached(function () {
+        return processor();
+      });
+
+      var extract = function (path, strength, val) {
+        return getP().extract(path, strength, val);
+      };
+
+      var toString = function () {
+        return getP().toString();
+      };
+
+      var toDsl = function () {
+        return getP().toDsl();
+      };
+
+      return {
+        extract: extract,
+        toString: toString,
+        toDsl: toDsl
+      };      
+    }
+
     var anyValue = value(Result.value);
 
     var arrOfObj = Fun.compose(arr, obj);
@@ -277,7 +302,9 @@ define(
       field: adt.field,
       
       output: output,
-      snapshot: snapshot
+      snapshot: snapshot,
+
+      thunk: thunk
     };
   }
 );
