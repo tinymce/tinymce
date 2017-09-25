@@ -22,6 +22,7 @@ define(
       FieldSchema.defaulted('inputStyles', { }),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
+      FieldSchema.defaulted('inputClasses', [ ]),
       Fields.onHandler('onSetValue'),
       FieldSchema.defaulted('styles', { }),
       FieldSchema.option('placeholder'),
@@ -82,7 +83,8 @@ define(
           }).toArray())),
           detail.inputAttributes()
         ),
-        styles: detail.inputStyles()
+        styles: detail.inputStyles(),
+        classes: detail.inputClasses()
       };
     };
 
