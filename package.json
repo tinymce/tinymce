@@ -5,7 +5,7 @@
   "dependencies": {
     "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#master",
     "@ephox/bud": "git+ssh://git@stash:7999/libs/bud.git#master",
-    "@ephox/katamari": "latest",
+    "@ephox/katamari": "*",
     "@ephox/phoenix": "git+ssh://git@stash:7999/tbio/phoenix.git#master",
     "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master"
   },
@@ -14,7 +14,7 @@
     "@ephox/bedrock": "*",
     "@ephox/bolt": "*",
     "@ephox/numerosity": "git+ssh://git@stash:7999/tbio/numerosity.git#master",
-    "@ephox/sugar": "latest",
+    "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",
     "chromedriver": "*",
     "grunt": "*",
