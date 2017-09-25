@@ -5,18 +5,17 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.photon.OuterPosition',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.view.Height',
     'ephox.sugar.api.dom.InsertAll',
-    'ephox.sugar.api.dom.Location',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
-    'ephox.syrup.api.Visibility',
-    'ephox.sugar.api.view.Width'
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Width',
+    'ephox.syrup.api.Visibility'
   ],
 
-  function (Arr, Fun, OuterPosition, Css, Element, Height, InsertAll, Location, Remove, SelectorFind, Visibility, Width) {
+  function (Arr, Fun, OuterPosition, InsertAll, Remove, Element, Css, SelectorFind, Height, Width, Visibility) {
     return function () {
       var box = function () {
         var r = Element.fromTag('div');

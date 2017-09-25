@@ -5,7 +5,7 @@ define(
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.dom.Location'
+    'ephox.sugar.api.view.Location'
   ],
 
   function (Event, Events, Css, Location) {
