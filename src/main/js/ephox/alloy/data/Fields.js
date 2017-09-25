@@ -82,12 +82,22 @@ define(
       return FieldSchema.state(name, Fun.identity);
     };
 
+    var sketchBehaviours = function (name, forbidden) {
+      return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, function (f) {
+        return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
+      }).concat([
+        FieldSchema.state('extra', Fun.identity)
+      ]));
+    };
+
     return {
       initSize: Fun.constant(initSize),
       itemMarkers: itemMarkers,
       menuMarkers: menuMarkers,
       tieredMenuMarkers: tieredMenuMarkers,
       markers: markers,
+
+      sketchBehaviours: sketchBehaviours,
 
       onHandler: onHandler,
       onKeyboardHandler: onKeyboardHandler,

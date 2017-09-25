@@ -27,34 +27,38 @@ define(
         components: components,
         'debug.sketcher': 'Tabbar',
 
-        behaviours: Behaviour.derive([
-          Highlighting.config({
-            highlightClass: detail.markers().selectedClass(),
-            itemClass: detail.markers().tabClass(),
+        behaviours: Merger.deepMerge(
+          Behaviour.derive([
+            Highlighting.config({
+              highlightClass: detail.markers().selectedClass(),
+              itemClass: detail.markers().tabClass(),
 
-            // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
-            // Consider a more seam-less way of combining highlighting and toggling
-            onHighlight: function (tabbar, tab) {
-              // TODO: Integrate highlighting and toggling in a nice way
-              Attr.set(tab.element(), 'aria-selected', 'true');
-            },
-            onDehighlight: function (tabbar, tab) {
-              Attr.set(tab.element(), 'aria-selected', 'false');
-            }
-          }),
+              // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
+              // Consider a more seam-less way of combining highlighting and toggling
+              onHighlight: function (tabbar, tab) {
+                // TODO: Integrate highlighting and toggling in a nice way
+                Attr.set(tab.element(), 'aria-selected', 'true');
+              },
+              onDehighlight: function (tabbar, tab) {
+                Attr.set(tab.element(), 'aria-selected', 'false');
+              }
+            }),
 
-          Keying.config({
-            mode: 'flow',
-            getInitial: function (tabbar) {
-              // Restore focus to the previously highlighted tab.
-              return Highlighting.getHighlighted(tabbar).map(function (tab) {
-                return tab.element();
-              });
-            },
-            selector: '.' + detail.markers().tabClass(),
-            executeOnMove: true
-          })
-        ])
+            Keying.config({
+              mode: 'flow',
+              getInitial: function (tabbar) {
+                // Restore focus to the previously highlighted tab.
+                return Highlighting.getHighlighted(tabbar).map(function (tab) {
+                  return tab.element();
+                });
+              },
+              selector: '.' + detail.markers().tabClass(),
+              executeOnMove: true
+            })
+          ]),
+          // Add the permitted fields.
+          detail.tabbarBehaviours().extra()
+        )
       };
     };
 
