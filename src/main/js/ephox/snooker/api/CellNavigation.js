@@ -4,13 +4,12 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
     'ephox.snooker.api.CellLocation',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Compare'
   ],
 
-  function (Arr, Fun, Option, CellLocation, TableLookup, Compare) {
+  function (Arr, Fun, CellLocation, TableLookup, Compare) {
     /*
      * Identify the index of the current cell within all the cells, and
      * a list of the cells within its table.
