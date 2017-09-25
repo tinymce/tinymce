@@ -5,6 +5,7 @@ define(
     'ephox.alloy.alien.Cycles',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'ephox.katamari.api.Result',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.search.SelectorFilter',
@@ -12,7 +13,7 @@ define(
     'global!Error'
   ],
 
-  function (Cycles, Arr, Option, Result, Class, SelectorFilter, SelectorFind, Error) {
+  function (Cycles, Arr, Option, Options, Result, Class, SelectorFilter, SelectorFind, Error) {
     var dehighlightAll = function (component, hConfig, hState) {
       var highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass());
       Arr.each(highlighted, function (h) {
@@ -57,6 +58,19 @@ define(
         throw new Error(err);
       }, function (firstComp) {
         highlight(component, hConfig, hState, firstComp);
+      });
+    };
+
+    var highlightBy = function (component, hConfig, hState, predicate) {
+      var items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass());
+      var itemComps = Options.cat(
+        Arr.map(items, function (i) {
+          return component.getSystem().getByDom(i).toOption();
+        })
+      );
+      var targetComp = Arr.find(itemComps, predicate);
+      targetComp.each(function (c) {
+        highlight(component, hConfig, hState, c);
       });
     };
 
@@ -116,6 +130,7 @@ define(
       highlightFirst: highlightFirst,
       highlightLast: highlightLast,
       highlightAt: highlightAt,
+      highlightBy: highlightBy,
       isHighlighted: isHighlighted,
       getHighlighted: getHighlighted,
       getFirst: getFirst,
