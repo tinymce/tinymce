@@ -4,14 +4,17 @@ define(
   [
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
-    'ephox.sugar.api.selection.WindowSelection'
+    'ephox.sugar.api.selection.WindowSelection',
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.dom.DOMUtils'
   ],
 
-  function (Option, Compare, Node, Text, Traverse, Selection, WindowSelection) {
+  function (Option, Compare, Element, Node, Text, Traverse, Selection, WindowSelection, CaretContainer, DOMUtils) {
     var clamp = function (offset, element) {
       var max = Node.isText(element) ? Text.get(element).length : Traverse.children(element).length + 1;
 
@@ -43,6 +46,14 @@ define(
       };
     };
 
+    // var dumpRng = function (rng) {
+    //   console.log('start', rng.start().dom());
+    //   console.log('soffset', rng.soffset());
+    //   console.log('finish', rng.finish().dom());
+    //   console.log('foffset', rng.foffset());
+    //   return rng;
+    // };
+
     var getBookmark = function (root) {
       var win = Traverse.defaultView(root);
 
@@ -73,11 +84,16 @@ define(
       return Option.some(rng);
     };
 
+    var hasSelection = function (root) {
+      return getBookmark(root).isSome();
+    };
+
     return {
       getBookmark: getBookmark,
       setBookmark: setBookmark,
       validate: validate,
-      bookmarkToNativeRng: bookmarkToNativeRng
+      bookmarkToNativeRng: bookmarkToNativeRng,
+      hasSelection: hasSelection
     };
   }
 );

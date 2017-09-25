@@ -11,16 +11,17 @@
 define(
   'tinymce.core.EditorFocus',
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
-    'global!document',
+    'tinymce.core.Env',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.RangeUtils',
-    'tinymce.core.Env'
+    'tinymce.core.selection.SelectionBookmark'
   ],
-  function (Option, Compare, Element, document, CaretFinder, ElementType, RangeUtils, Env) {
+  function (Fun, Option, Compare, Element, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";
@@ -96,14 +97,18 @@ define(
         editor.getWin().focus();
       }
 
+      if (editor.bookmark && SelectionBookmark.hasSelection(Element.fromDom(editor.getBody())) === false) {
+        rng = editor.bookmark
+          .bind(Fun.curry(SelectionBookmark.validate, Element.fromDom(editor.getBody())))
+          .bind(SelectionBookmark.bookmarkToNativeRng)
+          .getOrThunk(function () {
+            return CaretFinder.firstPositionIn(editor.getBody());
+          });
+
+        editor.selection.setRng(rng);
+      }
       // Focus the body as well since it's contentEditable
       if (Env.gecko || contentEditable) {
-        // Restore previous selection before focus to prevent Chrome from
-        // jumping to the top of the document in long inline editors
-        if (contentEditable && document.activeElement !== body) {
-          editor.selection.setRng(editor.lastRng);
-        }
-
         focusBody(body);
         normalizeSelection(editor, rng);
       }
