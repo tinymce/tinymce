@@ -2,7 +2,7 @@
   "name": "@shopify/tinymce",
   "version": "4.5.5-public",
   "description": "Shopify fork of TinyMCE",
-  "main": "tinymce.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Shopify/tinymce/issues"
   },
-  "homepage": "https://github.com/Shopify/tinymce#readme"
+  "homepage": "https://github.com/Shopify/tinymce#readme",
+  "dependencies": {
+    "@types/tinymce": "^4.5.14"
+  }
 }
