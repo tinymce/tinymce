@@ -7,26 +7,15 @@ define(
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
-    'ephox.sugar.api.selection.WindowSelection',
-    'ephox.sugar.selection.core.SelectionDirection'
+    'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Util, Fun, Obj, Selection, Situ, WindowSelection, SelectionDirection) {
-    // TODO: Move out of API
-
-
+  function (Util, Fun, Obj, Selection, Situ, WindowSelection) {
     return function (win) {
       var getRect = function (element) {
         return element.dom().getBoundingClientRect();
       };
 
-      // INVESTIGATE
-      /*
-       Before: (Elem, Int, Elem, Int) -> Option NativeRect
-
-       After: (Elem, Int, Elem, Int) ->  Option (Structified NativeRect)
-          now: Option NativeRect
-       */
       var getRangedRect = function (start, soffset, finish, foffset) {
         var sel = Selection.exact(start, soffset, finish, foffset);
         return WindowSelection.getFirstRect(win, sel).map(function (structRect) {
@@ -34,36 +23,17 @@ define(
         });
       };
 
-      /*
-       Before :() -> Option (start(), soffset(), finish(), foffset())
-
-       After : () -> Option (ExactADT: start(), soffset(), finish(), foffset())
-          no: Option (start(), soffset(), finish(), foffset())
-      */
       var getSelection = function () {
         return WindowSelection.get(win).map(function (exactAdt) {
           return Util.convertToRange(win, exactAdt);
         });
       };
 
-      /*
-       Before: ({start: Situ, finish: Situ}) -> Option (start(), soffset(), finish(), foffset())
-
-       After:  ({start: Situ, finish: Situ}) -> Option (start(), soffset(), finish(), foffset())
-
-
-       */
       var fromSitus = function (situs) {
         var relative = Selection.relative(situs.start(), situs.finish());
         return Util.convertToRange(win, relative);
       };
 
-      // INVESTIGATE BEFORE MERGING
-      /*
-        Before: (Int, Int) -> Option { start(): Situ, finish(): Situ }
-
-        After: (Int, Int) -> Option { start(): Situ, finish(): Situ }
-      */
       var situsFromPoint = function (x, y) {
         return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
           return {

@@ -28,12 +28,6 @@ define(
       }
     };
 
-    /*
-     * Before: (...) -> Option (Response (Option { start(): Situ, finish(): Situ })))
-     *
-     * After (...) -> Same.
-     */
-
     // If the cells are different, and there is a rectangle to connect them, select the cells.
     var detect = function (container, isRoot, start, finish, selectRange) {
       if (! Compare.eq(start, finish)) {
@@ -41,7 +35,6 @@ define(
         if (boxes.length > 0) {
           selectRange(container, boxes, start, finish);
           return Option.some(Responses.response(
-            // INVESTIGATE
             Option.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
             true
           ));

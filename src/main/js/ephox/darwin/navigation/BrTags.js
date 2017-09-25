@@ -55,13 +55,6 @@ define(
       });
     };
 
-
-    /*
-     Before: (...) -> Option { start(): Situ, finish(): Situ }
-
-     After: (...) ->
-     */
-
     var tryBr = function (isRoot, element, offset, direction) {
       // Three different situations
       // 1. the br is the child, and it has a previous sibling. Use parent, index-1)
