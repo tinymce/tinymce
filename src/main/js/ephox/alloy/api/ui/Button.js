@@ -8,12 +8,16 @@ define(
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
+    'ephox.boulder.api.Objects',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Focusing, Keying, Sketcher, ButtonBase, FieldSchema, Merger) {
+  function (Behaviour, Focusing, Keying, Sketcher, ButtonBase, FieldSchema, Objects, Merger) {
     var factory = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
+
+      var optType = Objects.readOptFrom(detail.dom(), 'attributes').bind(Objects.readOpt('type'));
+      var optTag = Objects.readOptFrom(detail.dom(), 'tag');
 
       return {
         uid: detail.uid(),
@@ -32,10 +36,16 @@ define(
           detail.buttonBehaviours()
         ),
         domModification: {
-          attributes: {
-            type: 'button',
-            role: detail.role().getOr('button')
-          }
+          attributes: Merger.deepMerge(
+            optType.fold(function () {
+              return optTag.is('button') ? { type: 'button' } : { };
+            }, function (t) {
+              return { };
+            }),
+            {
+              role: detail.role().getOr('button')
+            }
+          )
         },
         eventOrder: detail.eventOrder()
       };
