@@ -12,11 +12,12 @@ asynctest(
     'ephox.alloy.api.ui.FormField',
     'ephox.alloy.api.ui.HtmlSelect',
     'ephox.alloy.api.ui.Input',
+    'ephox.alloy.test.form.TestForm',
     'ephox.alloy.test.GuiSetup',
-    'ephox.alloy.test.form.TestForm'
+    'ephox.sugar.api.properties.Value'
   ],
 
-  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Form, FormField, HtmlSelect, Input, GuiSetup, TestForm) {
+  function (ApproxStructure, Assertions, GeneralSteps, Logger, Step, GuiFactory, Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, Value) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -158,6 +159,16 @@ asynctest(
             }),
 
             sAssertDisplay('ant-value', 'select-b-other')
+          ])
+        ),
+
+        Logger.t(
+          'Retrieve the bull field directly and check its value',
+          GeneralSteps.sequence([
+            Step.sync(function () {
+              var field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
+              Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
+            })
           ])
         )
       ];

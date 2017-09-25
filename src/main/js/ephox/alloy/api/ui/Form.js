@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.parts.PartType',
@@ -14,7 +15,7 @@ define(
     'ephox.katamari.api.Obj'
   ],
 
-  function (Behaviour, Composing, Representing, UiSketcher, AlloyParts, PartType, FieldSchema, Arr, Merger, Obj) {
+  function (Behaviour, Composing, Representing, GuiTypes, UiSketcher, AlloyParts, PartType, FieldSchema, Arr, Merger, Obj) {
     var owner = 'form';
 
     var schema = [
@@ -87,12 +88,22 @@ define(
               })
             ]),
             detail.formBehaviours()
-          )
+          ),
+
+          apis: {
+            getField: function (form, key) {
+              // Returns an Option (not a result);
+              return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
+            }
+          }
         }
       );
     };
 
     return {
+      getField: GuiTypes.makeApi(function (apis, component, key) {
+        return apis.getField(component, key);
+      }),
       sketch: sketch
     };
   }
