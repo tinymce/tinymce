@@ -7,7 +7,6 @@ define(
     'ephox.alloy.behaviour.common.NoState',
     'ephox.alloy.keying.KeyingType',
     'ephox.alloy.keying.KeyingTypes',
-    'ephox.alloy.log.AlloyLogger',
     'ephox.alloy.navigation.KeyMatch',
     'ephox.alloy.navigation.KeyRules',
     'ephox.boulder.api.FieldSchema',
@@ -15,11 +14,12 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (EditableFields, Keys, NoState, KeyingType, KeyingTypes, AlloyLogger, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
+  function (EditableFields, Keys, NoState, KeyingType, KeyingTypes, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
     var schema = [
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('useSpace', false),
       FieldSchema.defaulted('useEnter', true),
+      FieldSchema.defaulted('useControlEnter', false),
       FieldSchema.defaulted('useDown', false)
     ];
 
@@ -35,7 +35,9 @@ define(
 
       return [
         KeyRules.rule(KeyMatch.inSet(execKeys), execute)
-      ];
+      ].concat(executeConfig.useControlEnter() ? [
+        KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
+      ] : [ ]);
     };
 
     var getEvents = Fun.constant({ });

@@ -34,6 +34,7 @@ define(
       configFields: [
         FieldSchema.defaulted('components', [ ]),
         FieldSchema.defaulted('containerBehaviours', { }),
+        // TODO: Deprecate
         FieldSchema.defaulted('events', { }),
         FieldSchema.defaulted('domModification', { }),
         FieldSchema.defaulted('eventOrder', { })
