@@ -7,25 +7,17 @@ define(
     'ephox.alloy.positioning.layout.LinkedLayout',
     'ephox.alloy.positioning.layout.Origins',
     'ephox.alloy.positioning.mode.Anchoring',
+    'ephox.alloy.positioning.mode.AnchorLayouts',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.properties.Direction'
+    'ephox.katamari.api.Option'
   ],
 
-  function (Fields, Bubble, LinkedLayout, Origins, Anchoring, FieldSchema, Fun, Option, Direction) {
+  function (Fields, Bubble, LinkedLayout, Origins, Anchoring, AnchorLayouts, FieldSchema, Fun, Option) {
     var placement = function (component, posInfo, submenuInfo, origin) {
       var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
-      var ltr = submenuInfo.layouts().map(function (ls) {
-        return ls.onLtr();
-      }).getOr(LinkedLayout.all());
-
-      var rtl = submenuInfo.layouts().map(function (ls) {
-        return ls.onRtl();
-      }).getOr(LinkedLayout.allRtl());
-
-      var layouts = Direction.onDirection(ltr, rtl)(component.element());
+      var layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
 
       return Option.some(
         Anchoring({
@@ -41,10 +33,7 @@ define(
 
     return [
       FieldSchema.strict('item'),
-      FieldSchema.optionObjOf('layouts', [
-        FieldSchema.strict('onLtr'),
-        FieldSchema.strict('onRtl')
-      ]),
+      AnchorLayouts.schema(),
       Fields.output('placement', placement)
     ];
   }
