@@ -2,14 +2,14 @@ define(
   'ephox.robin.textdata.TextSearch',
 
   [
-    'ephox.katamari.api.Unicode',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Struct',
+    'ephox.katamari.api.Unicode',
     'global!RegExp'
   ],
 
-  function (Unicode, Arr, Option, Struct, RegExp) {
+  function (Arr, Option, Struct, Unicode, RegExp) {
     var charpos = Struct.immutable('ch', 'offset');
 
     var locate = function (text, offset) {

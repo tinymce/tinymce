@@ -4,11 +4,11 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
-    'ephox.robin.words.Identify',
-    'ephox.katamari.api.Struct'
+    'ephox.katamari.api.Struct',
+    'ephox.robin.words.Identify'
   ],
 
-  function (Arr, Fun, Identify, Struct) {
+  function (Arr, Fun, Struct, Identify) {
     var nu = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
 
     var fromWalking = function (universe, groups) {
@@ -25,7 +25,7 @@ define(
         });
 
         var words = Identify.words(line);
-        
+
         return nu({
           lang: lang,
           words: words,

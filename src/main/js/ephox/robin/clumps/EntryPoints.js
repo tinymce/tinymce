@@ -2,12 +2,12 @@ define(
   'ephox.robin.clumps.EntryPoints',
 
   [
+    'ephox.katamari.api.Adt',
     'ephox.phoenix.api.general.Gather',
-    'ephox.phoenix.api.general.Split',
-    'ephox.katamari.api.Adt'
+    'ephox.phoenix.api.general.Split'
   ],
 
-  function (Gather, Split, Adt) {
+  function (Adt, Gather, Split) {
     var adt = Adt.generate([
       { leftEdge: [ 'element' ] },
       { between: [ 'before', 'after' ] },
@@ -48,7 +48,7 @@ define(
         // We are splitting an element, so take the right side
         return a;
       }, function (e) {
-        // We are at the right edge of the starting element, so gather the next element to the 
+        // We are at the right edge of the starting element, so gather the next element to the
         // right.
         return Gather.after(universe, e, isRoot).getOr(e);
       });

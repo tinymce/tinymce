@@ -2,17 +2,17 @@ define(
   'ephox.robin.textdata.TextSeeker',
 
   [
+    'ephox.katamari.api.Adt',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
     'ephox.phoenix.gather.Seeker',
-    'ephox.robin.api.general.Structure',
-    'ephox.katamari.api.Adt'
+    'ephox.robin.api.general.Structure'
   ],
 
-  function (Fun, Option, Spot, Descent, Gather, Seeker, Structure, Adt) {
+  function (Adt, Fun, Option, Spot, Descent, Gather, Seeker, Structure) {
     var walkLeft = Gather.walkers().left();
     var walkRight = Gather.walkers().right();
 

@@ -9,11 +9,10 @@ test(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.robin.words.WordDecision',
-    'ephox.robin.words.WordWalking',
-    'ephox.katamari.api.Struct'
+    'ephox.robin.words.WordWalking'
   ],
 
-  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, WordDecision, WordWalking, Struct) {
+  function (Gene, TestUniverse, TextGene, Arr, Fun, Option, WordDecision, WordWalking) {
     var universe = TestUniverse(
       Gene('root', 'root', [
         Gene('p1', 'p', [
@@ -31,7 +30,7 @@ test(
         ])
       ])
     );
-    
+
     var check = function (items, abort, id, slicer, currLanguage) {
       var isCustomBoundary = Fun.constant(false);
       var actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, isCustomBoundary);
