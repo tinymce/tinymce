@@ -11,8 +11,8 @@ define(
       { arrOf: [ 'valueType' ] },
       { objOf: [ 'fields' ] },
       { itemOf: [ 'validator' ] },
-      { choiceOf: [ 'key', 'branches' ] }
-
+      { choiceOf: [ 'key', 'branches' ] },
+      { recursive: [ ] }
     ]);
 
     var fieldAdt = Adt.generate([

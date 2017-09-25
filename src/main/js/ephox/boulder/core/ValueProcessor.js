@@ -272,7 +272,7 @@ define(
       };
 
       var toDsl = function () {
-        return getP().toDsl();
+        return TypeTokens.typeAdt.recursive();
       };
 
       return {
