@@ -81,12 +81,31 @@ define(
             // You don't want it to change when something else has triggered the change.
             if (focusInInput) {
               if (Value.get(component.element()).length >= detail.minChars()) {
+
+                var previousValue = Composing.getCurrent(sandbox).bind(function (menu) {
+                  return Highlighting.getHighlighted(menu).map(Representing.getValue);
+                });
+
                 detail.previewing().set(true);
                 DropdownUtils.open(detail, {
                   anchor: 'hotspot',
                   hotspot: component
                 }, component, sandbox, externals).get(function () {
-                  Composing.getCurrent(sandbox).each(Highlighting.highlightFirst);
+                  // This is going to highlight the first one, on a delay, which will cause a flicker.
+                  Composing.getCurrent(sandbox).each(function (menu) {
+                    previousValue.fold(function () {
+                      Highlighting.highlightFirst(menu);
+                    }, function (pv) {
+                      Highlighting.highlightBy(menu, function (item) {
+                        return Representing.getValue(item).value === pv.value;
+                      });
+
+                      // Highlight first if could not find it?
+                      Highlighting.getHighlighted(menu).orThunk(function () {
+                        Highlighting.highlightFirst(menu);
+                      });
+                    });
+                  });
                 });
               }
             }

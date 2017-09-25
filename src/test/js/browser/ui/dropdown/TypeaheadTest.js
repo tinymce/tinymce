@@ -6,8 +6,13 @@ asynctest(
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Mouse',
+    'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
+    'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.TieredMenu',
     'ephox.alloy.api.ui.Typeahead',
@@ -20,14 +25,17 @@ asynctest(
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Value',
+    'ephox.sugar.api.search.SelectorFind',
     'global!Math'
   ],
 
   function (
-    FocusTools, Keyboard, Keys, Mouse, UiControls, GuiFactory, Container, TieredMenu, Typeahead, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils,
-    Sinks, TestBroadcasts, TestTypeaheadSteps, Arr, Future, Result, Value, Math
+    FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter, GuiFactory, AlloyTriggers, NativeEvents, Container, TieredMenu, Typeahead, DropdownAssertions,
+    TestDropdownMenu, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadSteps, Arr, Future, Merger, Result, Attr, Value, SelectorFind, Math
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -184,6 +192,27 @@ asynctest(
           gui.element()
         ),
         steps.sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
+
+        // Trigger menu again
+        UiControls.sSetValue(typeahead.element(), 'neo'),
+        Keyboard.sKeydown(doc, Keys.down(), { }),
+        steps.sWaitForMenu('Waiting for menu to appear for "neo"'),
+        NavigationUtils.highlights(gui.element(), Keys.down(), {}, [
+          item('neo2')
+        ]),
+
+        TestDropdownMenu.mStoreMenuUid(component),
+        UiControls.sSetValue(typeahead.element(), 'neo'),
+        Step.sync(function () {
+          AlloyTriggers.emit(typeahead, NativeEvents.input());
+        }),
+        TestDropdownMenu.mWaitForNewMenu(component),
+        Waiter.sTryUntil(
+          'Selection should stay on neo2 if possible',
+          UiFinder.sExists(gui.element(), item('neo2').selector),
+          100,
+          1000
+        ),
 
         GuiSetup.mRemoveStyles
 
