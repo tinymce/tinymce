@@ -3,8 +3,8 @@
   "description": "This project handles dragging.",
   "version": "3.0.0",
   "dependencies": {
-    "@ephox/katamari": "latest",
-    "@ephox/sugar": "latest",
+    "@ephox/katamari": "*",
+    "@ephox/sugar": "*",
     "@ephox/porkbun": "git+ssh://git@stash:7999/libs/porkbun.git#master",
     "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master"
   },
