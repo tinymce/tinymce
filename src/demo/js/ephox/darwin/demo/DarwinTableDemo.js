@@ -6,6 +6,7 @@ define(
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
+    'ephox.darwin.selection.Util',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
@@ -23,13 +24,14 @@ define(
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection',
     'ephox.syrup.api.OnNode',
     'global!Math',
     'global!document'
   ],
 
-  function (Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, Arr, Fun, Option, PlatformDetection, Compare, Insert, Replication, DomEvent, Body, Element, Node, Attr, Class, Direction, SelectorFilter, SelectorFind, Traverse, WindowSelection, OnNode, Math, document) {
+  function (Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, Util, Arr, Fun, Option, PlatformDetection, Compare, Insert, Replication, DomEvent, Body, Element, Node, Attr, Class, Direction, SelectorFilter, SelectorFind, Traverse, Selection, WindowSelection, OnNode, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -124,32 +126,32 @@ define(
       var handleResponse = function (event, response) {
         if (response.kill()) event.kill();
         response.selection().each(function (ns) {
-          WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
+          // ns is {start(): Situ, finish(): Situ}
+          var relative = Selection.relative(ns.start(), ns.finish());
+          var range = Util.convertToRange(window, relative);
+          WindowSelection.setExact(window, range.start(), range.soffset(), range.finish(), range.foffset());
+          // WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
         });
       };
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
         // Note, this is an optimisation.
         if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
-          WindowSelection.get(window).each(function (sel) {
-            sel.fold(Fun.noop, Fun.noop, function (start, soffset, finish, foffset) {
-              keyHandlers.keyup(event, start, soffset, finish, foffset).each(function (response) {
-                handleResponse(event, response);
-              });
+          WindowSelection.getExact(window).each(function (sel) {
+            keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
+              handleResponse(event, response);
             });
-          }, Fun.noop);
+          });
         }
       });
 
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
-        WindowSelection.get(window).each(function (sel) {
-          sel.fold(Fun.noop, Fun.noop, function (start, soffset, finish, foffset) {
-            var target = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
-            var direction = target.map(Direction.getDirection).getOr('ltr');
-            keyHandlers.keydown(event, start, soffset, finish, foffset, direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
-              handleResponse(event, response);
-            });
+        WindowSelection.getExact(window).each(function (sel) {
+          var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
+          var direction = target.map(Direction.getDirection).getOr('ltr');
+          keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
+            handleResponse(event, response);
           });
         });
       });

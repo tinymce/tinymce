@@ -55,7 +55,7 @@ define(
        */
       var fromSitus = function (situs) {
         var relative = Selection.relative(situs.start(), situs.finish());
-        return Util.convertToRange(relative);
+        return Util.convertToRange(win, relative);
       };
 
       // INVESTIGATE BEFORE MERGING

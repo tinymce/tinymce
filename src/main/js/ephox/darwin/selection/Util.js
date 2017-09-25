@@ -3,19 +3,20 @@ define(
 
   [
     'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Situ',
     'ephox.sugar.selection.core.SelectionDirection'
   ],
 
-  function (Fun, Situ, SelectionDirection) {
+  function (Fun, Element, Situ, SelectionDirection) {
 
     var convertToRange = function (win, selection) {
       // TODO: Use API packages of sugar
       var rng = SelectionDirection.asLtrRange(win, selection);
       return {
-        start: Fun.constant(rng.startContainer),
+        start: Fun.constant(Element.fromDom(rng.startContainer)),
         soffset: Fun.constant(rng.startOffset),
-        finish: Fun.constant(rng.endContainer),
+        finish: Fun.constant(Element.fromDom(rng.endContainer)),
         foffset: Fun.constant(rng.endOffset)
       };
     };
