@@ -9,6 +9,7 @@ define(
     return Contracts.exactly([
       'getSystem',
       'config',
+      'hasConfigured',
       'spec',
       'connect',
       'disconnect',

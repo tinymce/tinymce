@@ -81,6 +81,7 @@ define(
       var me = ComponentApi({
         getSystem: systemApi.get,
         config: Option.none,
+        hasConfigured: Fun.constant(false),
         connect: connect,
         disconnect: disconnect,
         element: Fun.constant(extSpec.element()),

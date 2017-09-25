@@ -100,6 +100,10 @@ define(
         // });
       };
 
+      var hasConfigured = function (behaviour) {
+        return Type.isFunction(bData[behaviour.name()]);
+      };
+
       var readState = function (behaviourName) {
         return bData[behaviourName]().map(function (b) {
           return b.state.readState();
@@ -109,6 +113,7 @@ define(
       var me = ComponentApi({
         getSystem: systemApi.get,
         config: config,
+        hasConfigured: hasConfigured,
         spec: Fun.constant(spec),
         readState: readState,
 
