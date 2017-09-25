@@ -32,7 +32,7 @@ define(
       };
 
       var siblingIsBlock = function (el) {
-        return Traverse.nextSibling(el).each(function (rightSibling) {
+        return Traverse.nextSibling(el).map(function (rightSibling) {
           if (DomStructure.isBlock(rightSibling)) return true;
           if (DomStructure.isEmptyTag(rightSibling)) {
             return Node.name(rightSibling) === 'img' ? false : true;

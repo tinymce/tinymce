@@ -24,7 +24,7 @@ define(
 
         return index.map(function (ind) {
           return {
-            index: Fun.constant(index),
+            index: Fun.constant(ind),
             all: Fun.constant(all)
           };
         });

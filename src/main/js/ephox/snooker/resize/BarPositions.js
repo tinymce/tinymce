@@ -6,7 +6,7 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Struct',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.dom.Location',
+    'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Width'
   ],
 

@@ -8,17 +8,17 @@ define(
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Bar',
     'ephox.snooker.style.Styles',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Location',
-    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
+  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Insert, Remove, Class, Css, SelectorFilter, Height, Location, Width) {
     var resizeBar = Styles.resolve('resizer-bar');
     var resizeRowBar = Styles.resolve('resizer-rows');
     var resizeColBar = Styles.resolve('resizer-cols');

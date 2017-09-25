@@ -6,7 +6,7 @@ define(
     'ephox.snooker.picker.Sizing',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.dom.Location',
+    'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Width',
     'global!Math'
   ],
