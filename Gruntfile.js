@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 
       'phantomjs-current': {
         config: 'config/bolt/browser.js',
-        testfiles: 'src/test/js/browser/ui/button/ButtonTypeTest.js',
+        testfiles: 'src/test/js/browser/ui/form/HtmlSelectTest.js',
         browser: driver,
         options: {
           stopOnFailure: true
