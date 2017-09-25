@@ -3,7 +3,7 @@
   "description": "Event framework for JavaScript",
   "version": "3.0.0",
   "dependencies": {
-    "@ephox/katamari": "latest"
+    "@ephox/katamari": "*"
   },
   "devDependencies": {
     "@ephox/bolt": "*",
