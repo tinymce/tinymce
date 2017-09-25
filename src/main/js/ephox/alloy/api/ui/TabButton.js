@@ -8,27 +8,19 @@ define(
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.common.ButtonBase',
+    'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Id',
-    'ephox.katamari.api.Merger'
+    'ephox.boulder.api.ValueSchema',
+    'ephox.katamari.api.Id'
   ],
 
-  function (Behaviour, Focusing, Keying, Representing, Sketcher, ButtonBase, FieldSchema, Id, Merger) {
+  function (Behaviour, Focusing, Keying, Representing, Sketcher, ButtonBase, FieldPresence, FieldSchema, ValueSchema, Id) {
     var factory = function (detail, spec) {
       var events = ButtonBase.events(detail.action());
 
       return {
-        dom: Merger.deepMerge(
-          detail.dom(),
-          {
-            attributes: {
-              // Really (type=button?)
-              type: 'button',
-              id: Id.generate('aria'),
-              role: detail.role().getOr('tab')
-            }
-          }
-        ),
+        uid: detail.uid(),
+        dom: detail.dom(),
         components: detail.components(),
         events: events,
         behaviours: Behaviour.derive([
@@ -53,14 +45,22 @@ define(
     return Sketcher.single({
       name: 'TabButton',
       configFields: [
+        FieldSchema.defaulted('uid', undefined),
         FieldSchema.strict('value'),
-        FieldSchema.strict('dom'),
+        FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(function (spec) {
+          return {
+            attributes: {
+              role: 'tab',
+              // NOTE: This is used in TabSection to connect "labelledby"
+              id: Id.generate('aria'),
+              'aria-selected': 'false'
+            }
+          };
+        }), ValueSchema.anyValue()),
         FieldSchema.option('action'),
-        FieldSchema.option('role'),
         FieldSchema.defaulted('domModification', { }),
 
-        // TODO: Move view out of the resultant object.
-        FieldSchema.strict('view')         
+        FieldSchema.strict('view')
       ],
       factory: factory
     });
