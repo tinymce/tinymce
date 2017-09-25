@@ -4,11 +4,10 @@ test(
   [
     'ephox.porkbun.Binder',
     'ephox.porkbun.Event',
-    'ephox.porkbun.Events',
-    'ephox.katamari.api.Struct'
+    'ephox.porkbun.Events'
   ],
 
-  function (Binder, Event, Events, Struct) {
+  function (Binder, Event, Events) {
     var events = Events.create({
       myEvent: Event([ ]),
       secondEvent: Event([ ])
