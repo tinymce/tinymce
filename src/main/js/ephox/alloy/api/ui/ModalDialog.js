@@ -58,13 +58,17 @@ define(
           getBody: getDialogBody
         },
 
-        behaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'cyclic',
-            onEnter: detail.onExecute(),
-            onEscape: detail.onEscape()
-          })
-        ])
+        behaviours: Merger.deepMerge(
+          Behaviour.derive([
+            Keying.config({
+              mode: 'cyclic',
+              onEnter: detail.onExecute(),
+              onEscape: detail.onEscape(),
+              useTabstopAt: detail.useTabstopAt()
+            })
+          ]),
+          detail.modalBehaviours().extra()
+        )
       };
     };
 

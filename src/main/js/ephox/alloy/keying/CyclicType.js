@@ -68,7 +68,7 @@ define(
 
     var goFromTabstop = function (component, tabstops, stopIndex, cyclicConfig, cycle) {
       return cycle(tabstops, stopIndex, function (elem) {
-        return isVisible(cyclicConfig, elem) && cyclicConfig.useTabstopAt(elem);
+        return isVisible(cyclicConfig, elem) && cyclicConfig.useTabstopAt()(elem);
       }).fold(function () {
         // Even if there is only one, still capture the event.
         // logFailed(index, tabstops);

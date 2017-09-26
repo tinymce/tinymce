@@ -11,20 +11,24 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
+    'ephox.alloy.api.behaviour.AddEventsBehaviour',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ModalDialog',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.Sinks',
-    'ephox.katamari.api.Result'
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.properties.Class'
   ],
 
   function (
-    ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, Behaviour, Focusing, Tabstopping, GuiFactory, Container, ModalDialog,
-    GuiSetup, Sinks, Result
+    ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, AddEventsBehaviour, Behaviour, Focusing, Tabstopping, Toggling, GuiFactory,
+    AlloyEvents, Container, ModalDialog, GuiSetup, Sinks, Result, Class
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -73,8 +77,19 @@ asynctest(
           tag: 'div',
           classes: [ 'test-dialog-body' ]
         },
+        behaviours: Behaviour.derive([
+          Tabstopping.config({ }),
+          Focusing.config({ }),
+          Toggling.config({
+            toggleClass: 'untabbable'
+          })
+        ]),
         components: [
-          Container.sketch({ dom: { innerHtml: '<p>This is something else</p>' } })
+          Container.sketch({
+            dom: {
+              innerHtml: '<p>This is something else</p>'
+            }
+          })
         ]
       });
 
@@ -96,7 +111,10 @@ asynctest(
         ModalDialog.sketch({
           dom: {
             tag: 'div',
-            classes: [ 'test-dialog' ]
+            classes: [ 'test-dialog' ],
+            styles: {
+              background: 'white'
+            }
           },
           components: [
             pDraghandle,
@@ -111,6 +129,16 @@ asynctest(
             return Result.value(sink);
           },
 
+          useTabstopAt: function (elem) {
+            return !Class.has(elem, 'untabbable');
+          },
+
+          modalBehaviours: Behaviour.derive([
+            AddEventsBehaviour.config('modal-events', [
+              AlloyEvents.runOnAttached(store.adder('modal.attached'))
+            ])
+          ]),
+
           onEscape: store.adderH('dialog.escape'),
           onExecute: store.adderH('dialog.execute'),
 
@@ -119,8 +147,7 @@ asynctest(
               dom: {
                 styles: {
                   'z-index': '1000000000',
-                  background: 'blue',
-                  opacity: '0.5'
+                  background: 'rgba(0, 0, 100, 0.5)'
                 },
                 classes: [ 'test-dialog-blocker' ]
               }
@@ -149,6 +176,9 @@ asynctest(
           ModalDialog.show(dialog);
         }),
         Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
+        store.sAssertEq('Attached event should have fired', [ 'modal.attached' ]),
+        store.sClear,
+
         Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
         sCheckDialogStructure('After showing', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
@@ -174,7 +204,21 @@ asynctest(
 
         FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
         Keyboard.sKeydown(doc, Keys.tab(), { }),
+        FocusTools.sTryOnSelector('Focus should be on body now', doc, '.test-dialog-body'),
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should be on footer now', doc, '.test-dialog-footer'),
+        Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+        FocusTools.sTryOnSelector('Focus should be back to body now', doc, '.test-dialog-body'),
+        Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+        FocusTools.sTryOnSelector('Focus should be back to title now', doc, '.test-dialog-title'),
+
+        Step.sync(function () {
+          var body = ModalDialog.getBody(dialog);
+          Toggling.on(body);
+        }),
+
+        Keyboard.sKeydown(doc, Keys.tab(), { }),
+        FocusTools.sTryOnSelector('Focus should skip untabbable body', doc, '.test-dialog-footer'),
 
         store.sAssertEq('Should be clear before <esc> and <enter>', [ ]),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
