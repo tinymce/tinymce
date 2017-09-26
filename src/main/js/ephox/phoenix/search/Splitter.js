@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.search.Splitter',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
     'ephox.polaris.api.PositionArray',
     'ephox.polaris.api.Strings'

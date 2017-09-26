@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.api.data.SplitPosition',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

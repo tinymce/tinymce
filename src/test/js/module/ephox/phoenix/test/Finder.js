@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.test.Finder',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

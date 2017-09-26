@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.gather.Walkers',
 
   [
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Option) {

@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.gather.Seeker',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.gather.Walker',
     'ephox.phoenix.gather.Walkers'
   ],

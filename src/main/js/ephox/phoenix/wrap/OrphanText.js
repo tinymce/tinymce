@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.wrap.OrphanText',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

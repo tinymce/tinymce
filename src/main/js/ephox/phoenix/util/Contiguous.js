@@ -2,8 +2,8 @@ define(
   'ephox.phoenix.util.Contiguous',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Arr, Option) {

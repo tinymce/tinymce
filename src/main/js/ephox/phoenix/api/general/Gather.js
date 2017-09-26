@@ -2,7 +2,7 @@ define(
   'ephox.phoenix.api.general.Gather',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.phoenix.gather.Seeker',
     'ephox.phoenix.gather.Walker',
     'ephox.phoenix.gather.Walkers'

@@ -4,8 +4,8 @@ test(
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.gather.Walker',
     'ephox.phoenix.gather.Walkers',
     'ephox.phoenix.test.Finder'

@@ -2,17 +2,17 @@ define(
   'ephox.phoenix.demo.SearchDemo',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.phoenix.api.dom.DomSearch',
     'ephox.phoenix.api.dom.DomWrapping',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Value',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.properties.Value',
     'text!html/content.html'
   ],
 
