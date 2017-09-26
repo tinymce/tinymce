@@ -13,6 +13,13 @@ define(
     var adaptable = function (fn, rate) {
       var timer = null;
       var args = null;
+      var cancel = function() {
+        if (timer !== null) {
+          clearTimeout(timer);
+          timer = null;
+          args = null;
+        }
+      };
       var throttle = function () {
         args = arguments;
         if (timer === null) {
@@ -25,6 +32,7 @@ define(
       };
 
       return {
+        cancel: cancel,
         throttle: throttle
       };
     };
@@ -33,6 +41,13 @@ define(
     // during the time it is waiting, ignore it completely.
     var first = function (fn, rate) {
       var timer = null;
+      var cancel = function() {
+        if (timer !== null) {
+          clearTimeout(timer);
+          timer = null;
+          args = null;
+        }
+      };
       var throttle = function () {
         var args = arguments;
         if (timer === null) {
@@ -45,6 +60,7 @@ define(
       };
 
       return {
+        cancel: cancel,
         throttle: throttle
       };
     };
@@ -54,6 +70,13 @@ define(
     // with the new arguments.
     var last = function (fn, rate) {
       var timer = null;
+      var cancel = function() {
+        if (timer !== null) {
+          clearTimeout(timer);
+          timer = null;
+          args = null;
+        }
+      };
       var throttle = function () {
         var args = arguments;
         if (timer !== null) clearTimeout(timer);
@@ -65,6 +88,7 @@ define(
       };
 
       return {
+        cancel: cancel,
         throttle: throttle
       };
     };
