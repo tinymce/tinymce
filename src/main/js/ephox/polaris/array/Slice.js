@@ -2,7 +2,7 @@ define(
   'ephox.polaris.array.Slice',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {
@@ -10,7 +10,7 @@ define(
      * Slice an array at the first item matched by the predicate
      */
     var sliceby = function (list, pred) {
-      var index = Arr.findIndex(list, pred);
+      var index = Arr.findIndex(list, pred).getOr(-1);
       return list.slice(0, index);
     };
 

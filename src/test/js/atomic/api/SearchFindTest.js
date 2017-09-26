@@ -2,12 +2,12 @@ test(
   'api.Search.findall (using api.Pattern)',
 
   [
-    'ephox.bud.Unicode',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Unicode',
+    'ephox.katamari.api.Arr',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
     'ephox.polaris.pattern.Safe',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Unicode, Arr, Pattern, Search, Safe, Struct) {

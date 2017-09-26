@@ -2,7 +2,7 @@ define(
   'ephox.polaris.search.Find',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

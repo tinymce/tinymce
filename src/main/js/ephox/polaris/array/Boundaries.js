@@ -2,16 +2,18 @@ define(
   'ephox.polaris.array.Boundaries',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Arr, Fun) {
     var boundAt = function (xs, left, right, comparator) {
       var leftIndex = Arr.findIndex(xs, Fun.curry(comparator, left));
-      var first = leftIndex > -1 ?  leftIndex : 0;
+      var first = leftIndex.getOr(0);
       var rightIndex = Arr.findIndex(xs, Fun.curry(comparator, right));
-      var last = rightIndex > -1  ? rightIndex + 1 : xs.length;
+      var last = rightIndex.map(function (rIndex) {
+        return rIndex + 1;
+      }).getOr(xs.length);
       return xs.slice(first, last);
     };
 
