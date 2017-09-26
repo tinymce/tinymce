@@ -45,7 +45,6 @@ define(
         if (timer !== null) {
           clearTimeout(timer);
           timer = null;
-          args = null;
         }
       };
       var throttle = function () {
@@ -74,7 +73,6 @@ define(
         if (timer !== null) {
           clearTimeout(timer);
           timer = null;
-          args = null;
         }
       };
       var throttle = function () {
