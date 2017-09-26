@@ -29,8 +29,5 @@ test(
     assert.eq(false, Locator.byItem(family, Locator.byId(family, '?_cattle').getOrDie()).isNone());
     assert.eq(true, Locator.byId(family, 'Z').isNone());
 
-
-    assert.eq(1, Locator.index(Locator.byId(family, 'C').getOrDie()).getOrDie());
-
   }
 );
