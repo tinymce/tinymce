@@ -1,5 +1,5 @@
 define(
-  'ephox.alloy.keying.CyclicType',
+  'ephox.alloy.keying.AcyclicType',
 
   [
     'ephox.alloy.keying.TabbingTypes',
@@ -9,7 +9,7 @@ define(
 
   function (TabbingTypes, FieldSchema, Fun) {
     return TabbingTypes.create(
-      FieldSchema.state('cyclic', Fun.constant(true))
+      FieldSchema.state('cyclic', Fun.constant(false))
     );
   }
 );
