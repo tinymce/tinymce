@@ -97,7 +97,7 @@ define(
         editor.getWin().focus();
       }
 
-      if (editor.bookmark && SelectionBookmark.hasSelection(Element.fromDom(editor.getBody())) === false) {
+      if (editor.bookmark !== undefined && SelectionBookmark.hasSelection(Element.fromDom(editor.getBody())) === false) {
         rng = editor.bookmark
           .bind(Fun.curry(SelectionBookmark.validate, Element.fromDom(editor.getBody())))
           .bind(SelectionBookmark.bookmarkToNativeRng)

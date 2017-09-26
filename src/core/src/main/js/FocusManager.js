@@ -20,13 +20,13 @@
 define(
   'tinymce.core.FocusManager',
   [
-    'global!document',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.util.Delay'
   ],
-  function (document, Element, DOMUtils, SelectionBookmark, Delay) {
+  function (Element, document, DOMUtils, SelectionBookmark, Delay) {
     var selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;
 
     var isUIElement = function (editor, elm) {
@@ -62,7 +62,8 @@ define(
 
         editor.on('init', function () {
           editor.on('keyup execcommand mouseup', function (e) {
-            editor.bookmark = SelectionBookmark.getBookmark(Element.fromDom(editor.getBody()));
+            var newBookmark = SelectionBookmark.getBookmark(Element.fromDom(editor.getBody()));
+            editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
           });
         });
 

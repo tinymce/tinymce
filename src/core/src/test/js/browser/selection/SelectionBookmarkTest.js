@@ -4,27 +4,20 @@ asynctest(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
-    'ephox.agar.api.Cursors',
     'ephox.agar.api.Logger',
-    'ephox.agar.api.NamedChain',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
-    'ephox.katamari.api.Result',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.test.ViewBlock'
   ],
 
-  function (
-    Assertions, Chain, Cursors, Logger, NamedChain, Pipeline, RawAssertions, Result, Hierarchy, Remove, Element, Traverse, Selection, WindowSelection, DOMUtils,
-    SelectionBookmark, ViewBlock
-  ) {
+  function (Assertions, Chain, Logger, Pipeline, RawAssertions, Hierarchy, Remove, Element, Traverse, Selection, WindowSelection, SelectionBookmark, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -132,15 +125,7 @@ asynctest(
 
     viewBlock.attach();
     Pipeline.async({}, [
-      Logger.t('unattached element returns none', Chain.asStep(viewBlock, [
-        cDetach,
-        cSetHtml('hello'),
-        cSetSelection([0], 0, [0], 1),
-        cGetBookmark([]),
-        cAssertNone
-      ])),
       Logger.t('attached element returns some', Chain.asStep(viewBlock, [
-        cAttach,
         cSetHtml('hello'),
         cSetSelection([0], 0, [0], 1),
         cGetBookmark([]),
@@ -180,7 +165,7 @@ asynctest(
         cSetSelectionFromBookmark,
         cAssertSelection([0], 5, [0], 5)
       ])),
-      Logger.t('two p tags', Chain.asStep(viewBlock, [
+      Logger.t('two p tags offsets too big', Chain.asStep(viewBlock, [
         cSetHtml('<p>abc</p><p>123</p>'),
         cSetSelection([0, 0], 0, [1, 0], 1),
         cGetBookmark([]),
@@ -189,7 +174,7 @@ asynctest(
         cSetSelectionFromBookmark,
         cAssertSelection([0, 0], 3, [1, 0], 3)
       ])),
-      Logger.t('two p tags', Chain.asStep(viewBlock, [
+      Logger.t('two p tags, delete one and should be none', Chain.asStep(viewBlock, [
         cSetHtml('<p>abc</p><p>123</p>'),
         cSetSelection([0, 0], 0, [1, 0], 1),
         cGetBookmark([]),
@@ -198,7 +183,7 @@ asynctest(
         cValidateBookmark([]),
         cAssertNone
       ])),
-      Logger.t('two p tags', Chain.asStep(viewBlock, [
+      Logger.t('three p tags, delete middle and should be none', Chain.asStep(viewBlock, [
         cSetHtml('<p>abc</p><p>xyz</p><p>123</p>'),
         cSetSelection([0, 0], 0, [2, 0], 1),
         cGetBookmark([]),
