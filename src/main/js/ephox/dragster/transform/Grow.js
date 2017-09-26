@@ -2,11 +2,11 @@ define(
   'ephox.dragster.transform.Grow',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.syrup.api.Height',
-    'ephox.syrup.api.Width'
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (Fun, Event, Events, Height, Width) {

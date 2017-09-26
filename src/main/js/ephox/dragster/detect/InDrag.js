@@ -2,7 +2,7 @@ define(
   'ephox.dragster.detect.InDrag',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events'
   ],

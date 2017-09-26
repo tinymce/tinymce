@@ -2,7 +2,7 @@ define(
   'ephox.dragster.api.DragApis',
 
   [
-    'ephox.scullion.Contracts'
+    'ephox.katamari.api.Contracts'
   ],
 
   function (Contracts) {

@@ -2,7 +2,7 @@ define(
   'ephox.dragster.detect.NoDrag',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

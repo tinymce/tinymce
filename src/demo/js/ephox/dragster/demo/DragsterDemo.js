@@ -6,11 +6,11 @@ define(
     'ephox.dragster.demo.Sizers',
     'ephox.dragster.transform.Grow',
     'ephox.dragster.transform.Relocate',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Dragger, Sizers, Grow, Relocate, Css, DomEvent, Element, Insert, SelectorFind) {
