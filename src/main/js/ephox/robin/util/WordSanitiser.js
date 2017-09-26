@@ -2,8 +2,8 @@ define(
   'ephox.robin.util.WordSanitiser',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.robin.data.WordScope'
   ],
 

@@ -2,8 +2,8 @@ define(
   'ephox.robin.words.Clustering',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.robin.words.ClusterSearch',
     'ephox.robin.words.WordDecision',
     'ephox.robin.zone.LanguageZones'

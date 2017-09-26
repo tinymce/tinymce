@@ -2,8 +2,8 @@ test(
   'words :: Identify',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.robin.data.WordScope',
     'ephox.robin.words.Identify'
   ],

@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.agar.api.RawAssertions',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.robin.util.CurrentWord'
   ],
 

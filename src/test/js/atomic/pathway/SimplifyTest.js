@@ -4,7 +4,7 @@ test(
   [
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.robin.pathway.Simplify'
   ],
 

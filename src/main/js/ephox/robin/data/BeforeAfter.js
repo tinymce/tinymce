@@ -2,7 +2,7 @@ define(
   'ephox.robin.data.BeforeAfter',
 
   [
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function (Struct) {

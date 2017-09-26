@@ -2,7 +2,7 @@ define(
   'ephox.robin.api.general.ZonePosition',
 
   [
-    'ephox.scullion.ADT'
+    'ephox.katamari.api.Adt'
   ],
 
   function (Adt) {

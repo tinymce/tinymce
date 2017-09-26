@@ -2,13 +2,13 @@ define(
   'ephox.robin.zone.Zones',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.robin.words.Identify',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Struct',
+    'ephox.robin.words.Identify'
   ],
 
-  function (Arr, Fun, Identify, Struct) {
+  function (Arr, Fun, Struct, Identify) {
     var nu = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
 
     var fromWalking = function (universe, groups) {
@@ -25,7 +25,7 @@ define(
         });
 
         var words = Identify.words(line);
-        
+
         return nu({
           lang: lang,
           words: words,

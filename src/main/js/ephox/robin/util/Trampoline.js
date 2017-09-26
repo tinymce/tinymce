@@ -2,7 +2,7 @@ define(
   'ephox.robin.util.Trampoline',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

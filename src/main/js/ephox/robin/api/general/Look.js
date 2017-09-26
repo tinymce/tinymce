@@ -2,7 +2,7 @@ define(
   'ephox.robin.api.general.Look',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.robin.look.Look'
   ],
 

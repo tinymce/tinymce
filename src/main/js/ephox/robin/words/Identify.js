@@ -2,8 +2,8 @@ define(
   'ephox.robin.words.Identify',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.polaris.api.Pattern',
     'ephox.polaris.api.Search',
     'ephox.robin.data.WordScope',

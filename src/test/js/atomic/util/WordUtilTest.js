@@ -2,8 +2,8 @@ test(
   'Word Util',
 
   [
-    'ephox.bud.Unicode',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Unicode',
+    'ephox.katamari.api.Option',
     'ephox.robin.util.WordUtil'
   ],
 

@@ -4,20 +4,16 @@
   "version": "6.0.0",
   "dependencies": {
     "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#master",
-    "@ephox/bud": "git+ssh://git@stash:7999/libs/bud.git#master",
-    "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
-    "@ephox/peanut": "git+ssh://git@stash:7999/libs/peanut.git#master",
-    "@ephox/perhaps": "git+ssh://git@stash:7999/libs/perhaps.git#master",
+    "@ephox/katamari": "*",
     "@ephox/phoenix": "git+ssh://git@stash:7999/tbio/phoenix.git#master",
-    "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master",
-    "@ephox/scullion": "git+ssh://git@stash:7999/libs/scullion.git#master"
+    "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master"
   },
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
     "@ephox/bolt": "*",
     "@ephox/numerosity": "git+ssh://git@stash:7999/tbio/numerosity.git#master",
-    "@ephox/syrup": "git+ssh://git@stash:7999/tbio/syrup.git#master",
+    "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",
     "chromedriver": "*",
     "grunt": "*",

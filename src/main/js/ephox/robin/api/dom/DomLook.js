@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boss.api.DomUniverse',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.robin.api.general.Look'
   ],
 

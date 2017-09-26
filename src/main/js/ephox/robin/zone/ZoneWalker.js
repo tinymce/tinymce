@@ -2,15 +2,15 @@ define(
   'ephox.robin.zone.ZoneWalker',
 
   [
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.general.Gather',
     'ephox.robin.api.general.ZonePosition',
     'ephox.robin.util.Trampoline',
-    'ephox.robin.zone.LanguageZones',
-    'ephox.scullion.ADT'
+    'ephox.robin.zone.LanguageZones'
   ],
 
-  function (Option, Gather, ZonePosition, Trampoline, LanguageZones, Adt) {
+  function (Adt, Option, Gather, ZonePosition, Trampoline, LanguageZones) {
     var adt = Adt.generate([
       // an inline element, so use the lang to identify if a new zone is needed
       { inline: [ 'item', 'mode', 'lang' ] },
@@ -22,8 +22,8 @@ define(
       // hit the starting tag
       { concluded: [ 'item', 'mode' ]}
     ]);
-      
-      
+
+
     var _rules = undefined;
 
     var analyse = function (universe, item, mode, stopOn) {
@@ -35,7 +35,7 @@ define(
       else if (universe.property().isBoundary(item)) return adt.boundary(item, mode, currentLang);
 
       else if (universe.property().isEmptyTag(item)) return adt.empty(item, mode);
-      
+
       else return adt.inline(item, mode, currentLang);
     };
 
@@ -44,7 +44,7 @@ define(
         return adt.concluded(item, mode);
       }, function (n) {
         return analyse(universe, n.item(), n.mode(), stopOn);
-      });  
+      });
     };
 
     var process = function (universe, outcome, stopOn, stack, transform, viewport) {
@@ -65,7 +65,7 @@ define(
             // empty (aItem, aMode)
             stack.addEmpty(aItem);
             return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
-                  
+
           }, function (aItem, aMode, aLang) {
             // Use boundary positions to assess whether we have moved out of the viewport.
             var position = viewport.assess(aItem);

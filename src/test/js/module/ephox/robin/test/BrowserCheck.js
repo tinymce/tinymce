@@ -2,12 +2,12 @@ define(
   'ephox.robin.test.BrowserCheck',
 
   [
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Option, Element, Insert, Remove, SelectorFind, Traverse) {

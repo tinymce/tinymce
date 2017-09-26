@@ -7,8 +7,8 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.words.Clustering',
     'ephox.robin.zone.LanguageZones',
@@ -33,7 +33,7 @@ test(
           RawAssertions.assertEq('start: ' + id + ', check right()', expRight,  checkWords(universe, act.right()));
           RawAssertions.assertEq(
             'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang().toString(),
-            true, Option.equals(expLang, act.lang())
+            true, expLang.equals(act.lang())
           );
           // .all() is:  tfel + middle + right
           RawAssertions.assertEq('start: ' + id + ', check all()', expLeft.reverse().concat(expMiddle).concat(expRight), checkWords(universe, act.all()));
@@ -208,7 +208,7 @@ test(
           RawAssertions.assertEq(
             'The text nodes should be one after the other',
             +1,
-            Arr.indexOf(textIds, current) - Arr.indexOf(textIds, prev)
+            textIds.indexOf(current) - textIds.indexOf(prev)
           );
         }
       });
@@ -246,7 +246,7 @@ test(
     };
 
     testSanity();
-    
+
     propertyTest(
       'Testing with no languages at all',
       TestUniverse(
@@ -272,7 +272,7 @@ test(
               TextGene('para', 'para'),
               TextGene('graph', 'graph')
             ])
-          ]),    
+          ]),
           Gene('p3', 'p', [
             Gene('p3s1', 'span', [
               Gene('p3s2', 'span', [

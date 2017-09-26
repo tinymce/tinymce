@@ -2,7 +2,7 @@ define(
   'ephox.robin.look.Look',
 
   [
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Option) {

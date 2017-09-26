@@ -2,8 +2,8 @@ define(
   'ephox.robin.pathway.Simplify',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun'
   ],
 
   function (Arr, Fun) {

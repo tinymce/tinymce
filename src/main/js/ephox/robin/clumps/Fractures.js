@@ -2,9 +2,9 @@
   'ephox.robin.clumps.Fractures',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.robin.api.general.Parent',
     'ephox.robin.parent.Breaker',
     'ephox.robin.parent.Subset'
@@ -16,8 +16,7 @@
       var children = universe.property().children(parent);
 
       var finder = function (elem) {
-        var index = Arr.findIndex(children, Fun.curry(universe.eq, elem));
-        return index > -1 ? Option.some(index) : Option.none();
+        return Arr.findIndex(children, Fun.curry(universe.eq, elem));
       };
 
       // Default to the start of the common parent.
@@ -37,13 +36,13 @@
 
       return Parent.breakPath(universe, element, isTop, breaker);
     };
-    
+
     var breakLeft = function (universe, element, common) {
       // If we are the top and we are the left, use default value
       if (universe.eq(common, element)) return Option.none();
       else {
         var breakage = breakPath(universe, element, common, Breaker.breakToLeft);
-        // Move the first element into the second section of the split because we want to include element in the section.        
+        // Move the first element into the second section of the split because we want to include element in the section.
         if (breakage.splits().length > 0) universe.insert().prepend(breakage.splits()[0].second(), element);
         return Option.some(breakage.second().getOr(element));
       }
@@ -92,7 +91,7 @@
 
     var fracture = function (universe, isRoot, start, finish, _ceiling) {
       var ceiling = _ceiling !== undefined ? _ceiling : Fun.identity;
-      return universe.eq(start, finish) ? same(universe, isRoot, start, ceiling) : diff(universe, isRoot, start, finish, ceiling);     
+      return universe.eq(start, finish) ? same(universe, isRoot, start, ceiling) : diff(universe, isRoot, start, finish, ceiling);
     };
 
     return {

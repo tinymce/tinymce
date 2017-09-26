@@ -6,7 +6,7 @@ test(
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
     'ephox.boss.mutant.Logger',
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.robin.parent.Breaker'
   ],
 

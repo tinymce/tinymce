@@ -2,7 +2,7 @@ define(
   'ephox.robin.test.Arbitraries',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.wrap-jsverify.Jsc'
   ],
 

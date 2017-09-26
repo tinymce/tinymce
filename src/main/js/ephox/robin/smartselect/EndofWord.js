@@ -2,15 +2,15 @@ define(
   'ephox.robin.smartselect.EndofWord',
 
   [
-    'ephox.bud.Unicode',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Unicode',
     'ephox.robin.data.WordRange',
     'ephox.robin.words.Clustering'
   ],
 
-  function (Unicode, Arr, Fun, Option, WordRange, Clustering) {
+  function (Arr, Fun, Option, Unicode, WordRange, Clustering) {
     var toEnd = function (cluster, start, soffset) {
       if (cluster.length === 0) return Option.none();
       var last = cluster[cluster.length - 1];
@@ -58,7 +58,7 @@ define(
 
 
     // There was only a break in the node before the current position, so
-    // as long as we are not already at the right edge of the node AND cluster, we extend to the 
+    // as long as we are not already at the right edge of the node AND cluster, we extend to the
     // end of the cluster.
     var before = function (universe, item, offset, bindex, optimise) {
       var info = scan(universe, item, offset, optimise);
@@ -73,13 +73,13 @@ define(
       return info.leftEdge() ? Option.none() : fromStart(info.all(), item, aindex);
     };
 
-    // We don't need to use the cluster, because we are in the middle of two breaks. Only return something 
+    // We don't need to use the cluster, because we are in the middle of two breaks. Only return something
     // if the breaks aren't at the same position.
     var both = function (universe, item, offset, bindex, aindex, _optimise) {
       return bindex === aindex ? Option.none() : Option.some(WordRange(item, bindex, item, aindex));
     };
 
-    // There are no breaks in the current node, so as long as we aren't at either edge of node/cluster, 
+    // There are no breaks in the current node, so as long as we aren't at either edge of node/cluster,
     // then we extend the length of the cluster.
     var neither = function (universe, item, offset, optimise) {
       var info = scan(universe, item, offset, optimise);

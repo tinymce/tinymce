@@ -2,17 +2,17 @@ define(
   'ephox.robin.clumps.Clumps',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'ephox.phoenix.api.data.Spot',
     'ephox.phoenix.api.general.Descent',
     'ephox.phoenix.api.general.Gather',
-    'ephox.robin.api.general.Structure',
-    'ephox.scullion.ADT',
-    'ephox.scullion.Struct'
+    'ephox.robin.api.general.Structure'
   ],
 
-  function (Arr, Option, Spot, Descent, Gather, Structure, Adt, Struct) {
+  function (Adt, Arr, Option, Struct, Spot, Descent, Gather, Structure) {
     var adt = Adt.generate([
       { none: [ 'last', 'mode' ] },
       { running: [ 'next', 'mode' ] },
@@ -170,7 +170,7 @@ define(
 
     var collect = function (universe, isRoot, start, soffset, finish, foffset) {
       return universe.eq(start, finish) ?
-        single(universe, isRoot, start, soffset, foffset) : 
+        single(universe, isRoot, start, soffset, foffset) :
         doCollect(universe, isRoot, start, soffset, finish, foffset);
     };
 
