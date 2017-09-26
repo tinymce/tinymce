@@ -8,14 +8,13 @@ define(
     'ephox.phoenix.api.data.Spot',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.ElementAddress',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Awareness',
-    'ephox.sugar.api.selection.Selection',
-    'ephox.sugar.api.selection.Situ',
-    'ephox.syrup.api.ElementFind'
+    'ephox.sugar.api.selection.Situ'
   ],
 
-  function (BeforeAfter, Fun, Option, Spot, Node, Text, Traverse, Awareness, Selection, Situ, ElementFind) {
+  function (BeforeAfter, Fun, Option, Spot, Node, Text, ElementAddress, Traverse, Awareness, Situ) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -48,7 +47,7 @@ define(
         return direction.traverse(br).fold(function () {
           return gatherer(br, direction.gather, isRoot).map(direction.relative);
         }, function (adjacent) {
-          return ElementFind.indexInParent(adjacent).map(function (info) {
+          return ElementAddress.indexInParent(adjacent).map(function (info) {
             return Situ.on(info.parent(), info.index());
           });
         });

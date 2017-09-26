@@ -5,7 +5,7 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
-    'ephox.syrup.api.OnNode',
+    'ephox.sugar.api.properties.OnNode',
     'ephox.sugar.api.search.SelectorFilter'
   ],
 

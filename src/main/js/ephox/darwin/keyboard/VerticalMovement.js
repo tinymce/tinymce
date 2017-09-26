@@ -10,12 +10,12 @@ define(
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.PredicateExists',
     'ephox.sugar.api.search.SelectorFind',
-    'ephox.sugar.api.search.Traverse',
-    'ephox.syrup.api.PredicateExists'
+    'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Responses, KeySelection, TableKeys, Util, Fun, Option, PlatformDetection, Compare, SelectorFind, Traverse, PredicateExists) {
+  function (Responses, KeySelection, TableKeys, Util, Fun, Option, PlatformDetection, Compare, PredicateExists, SelectorFind, Traverse) {
     var detection = PlatformDetection.detect();
 
     var inSameTable = function (elem, table) {

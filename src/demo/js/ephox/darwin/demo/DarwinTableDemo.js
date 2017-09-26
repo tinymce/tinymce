@@ -7,7 +7,6 @@ define(
     'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
     'ephox.darwin.selection.Util',
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
@@ -19,19 +18,16 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Direction',
-    'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection',
-    'ephox.syrup.api.OnNode',
     'global!Math',
     'global!document'
   ],
 
-  function (Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, Util, Arr, Fun, Option, PlatformDetection, Compare, Insert, Replication, DomEvent, Body, Element, Node, Attr, Class, Direction, SelectorFilter, SelectorFind, Traverse, Selection, WindowSelection, OnNode, Math, document) {
+  function (Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, Util, Fun, Option, PlatformDetection, Compare, Insert, Replication, DomEvent, Body, Element, Node, Attr, Direction, SelectorFind, Traverse, Selection, WindowSelection, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
