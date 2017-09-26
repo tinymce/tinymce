@@ -4,7 +4,6 @@
   "version": "4.0.0",
   "dependencies": {
     "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#master",
-    "@ephox/bud": "git+ssh://git@stash:7999/libs/bud.git#master",
     "@ephox/katamari": "*",
     "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master"
   },
