@@ -4,8 +4,10 @@ asynctest(
     'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Keys',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
@@ -19,11 +21,11 @@ asynctest(
     'tinymce.plugins.paste.Plugin',
     'tinymce.plugins.table.Plugin',
     'tinymce.plugins.textpattern.Plugin',
-    'tinymce.themes.inlite.test.Toolbar',
-    'tinymce.themes.inlite.Theme'
+    'tinymce.themes.inlite.Theme',
+    'tinymce.themes.inlite.test.Toolbar'
   ], function (
-    Chain, FocusTools, GeneralSteps, Mouse, Pipeline, UiControls, UiFinder, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, ContextMenuPlugin, ImagePlugin,
-    LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, Toolbar, InliteTheme
+    Chain, FocusTools, GeneralSteps, Keys, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, ContextMenuPlugin,
+    ImagePlugin, LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, InliteTheme, Toolbar
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -116,11 +118,12 @@ asynctest(
       Toolbar.cClickButton('Remove link')
     ]);
 
-    var sLinkTests = function (tinyApis) {
+    var sLinkTests = function (tinyApis, tinyActions) {
       var sContentActionTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml, sAction) {
         return GeneralSteps.sequence([
           tinyApis.sSetContent(inputHtml),
           tinyApis.sSetSelection(spath, soffset, fpath, foffset),
+          tinyActions.sContentKeystroke(Keys.space(), {}),
           sAction,
           tinyApis.sAssertContent(expectedHtml)
         ]);
@@ -194,7 +197,7 @@ asynctest(
         tinyApis.sFocus,
         sBoldTests(tinyApis),
         sH2Tests(tinyApis),
-        sLinkTests(tinyApis),
+        sLinkTests(tinyApis, tinyActions),
         sInsertTableTests(tinyApis),
         sAriaTests(tinyApis, tinyActions)
       ], onSuccess, onFailure);
