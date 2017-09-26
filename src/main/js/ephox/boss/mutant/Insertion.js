@@ -5,8 +5,8 @@ define(
     'ephox.boss.mutant.Detach',
     'ephox.boss.mutant.Locator',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Detach, Locator, Up, Arr, Option) {
@@ -16,7 +16,9 @@ define(
 
         var detached = Detach.detach(Up.top(anchor), item).getOr(item);
         detached.parent = Option.some(parent);
-        if (index > -1) parent.children = parent.children.slice(0, index).concat([detached]).concat(parent.children.slice(index));
+        index.each(function (ind) {
+          parent.children = parent.children.slice(0, ind).concat([detached]).concat(parent.children.slice(ind));
+        });
       });
     };
 
@@ -26,7 +28,9 @@ define(
 
         var detached = Detach.detach(Up.top(anchor), item).getOr(item);
         detached.parent = Option.some(parent);
-        if (index > -1) parent.children = parent.children.slice(0, index + 1).concat([detached]).concat(parent.children.slice(index + 1));
+        index.each(function (ind) {
+          parent.children = parent.children.slice(0, ind + 1).concat([detached]).concat(parent.children.slice(ind + 1));
+        });
       });
     };
 
@@ -52,7 +56,9 @@ define(
           ditem.parent = Option.some(parent);
           return ditem;
         });
-        if (index > -1) parent.children = parent.children.slice(0, index + 1).concat(detached).concat(parent.children.slice(index + 1));
+        index.each(function (ind) {
+          parent.children = parent.children.slice(0, ind + 1).concat(detached).concat(parent.children.slice(ind + 1));
+        });
       });
     };
 

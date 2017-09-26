@@ -2,7 +2,7 @@ define(
   'ephox.boss.mutant.Attribution',
 
   [
-    'ephox.highway.Merger'
+    'ephox.katamari.api.Merger'
   ],
 
   function (Merger) {

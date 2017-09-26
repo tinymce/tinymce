@@ -15,8 +15,8 @@ define(
     'ephox.boss.mutant.Styling',
     'ephox.boss.mutant.Tracks',
     'ephox.boss.mutant.Up',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Attribution, Comparator, Creator, Down, Insertion, Locator, Logger, Properties, Query, Removal, Styling, Tracks, Up, Fun, Option) {

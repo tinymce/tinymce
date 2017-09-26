@@ -4,9 +4,9 @@ define(
   [
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Creator',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
 
   function (Comparator, Creator, Arr, Fun, Option) {
@@ -36,12 +36,6 @@ define(
       }
     };
 
-    var index = function (item) {
-      return item.parent.fold(Fun.constant(-1), function (parent) {
-        return indexIn(parent, item);
-      });
-    };
-
     var indexIn = function (parent, item) {
       return Arr.findIndex(parent.children, function (x) {
         return Comparator.eq(x, item);
@@ -51,7 +45,6 @@ define(
     return {
       byId: byId,
       byItem: byItem,
-      index: index,
       indexIn: indexIn
     };
   }

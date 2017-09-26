@@ -5,8 +5,8 @@ define(
     'ephox.boss.mutant.Comparator',
     'ephox.boss.mutant.Detach',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Comparator, Detach, Up, Arr, Option) {
@@ -21,9 +21,11 @@ define(
           return Comparator.eq(sibling, item);
         });
 
-        var lefts = index > -1 ? parent.children.slice(0, index) : parent.children;
-        var rights = index > -1 ? parent.children.slice(index + 1) : [];
-        parent.children = lefts.concat(children).concat(rights);
+        index.fold(function () {
+          parent.children = parent.children.concat(children);
+        }, function (ind) {
+          parent.children = parent.children.slice(0, ind).concat(children).concat(parent.children.slice(ind + 1));
+        });
       });
     };
 

@@ -2,10 +2,10 @@ define(
   'ephox.boss.api.BasicPage',
 
   [
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll'
   ],
 
   function (Attr, Element, Insert, InsertAll) {

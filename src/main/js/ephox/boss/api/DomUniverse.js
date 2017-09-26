@@ -3,22 +3,22 @@ define(
 
   [
     'ephox.boss.common.TagBoundaries',
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.PredicateFilter',
-    'ephox.syrup.api.PredicateFind',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Text',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.PredicateFilter',
+    'ephox.sugar.api.search.PredicateFind',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (TagBoundaries, Arr, Fun, Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse) {

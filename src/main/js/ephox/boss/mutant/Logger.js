@@ -2,7 +2,7 @@ define(
   'ephox.boss.mutant.Logger',
 
   [
-    'ephox.compass.Arr'
+    'ephox.katamari.api.Arr'
   ],
 
   function (Arr) {

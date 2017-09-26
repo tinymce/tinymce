@@ -4,8 +4,8 @@ define(
   [
     'ephox.boss.mutant.Properties',
     'ephox.boss.mutant.Up',
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option'
   ],
 
   function (Properties, Up, Arr, Option) {
@@ -22,27 +22,30 @@ define(
 
       var itemIndex = Arr.findIndex(all, function (x) { return item.id === x; });
       var otherIndex = Arr.findIndex(all, function (x) { return other.id === x; });
-      if (itemIndex > -1 && otherIndex > -1) {
-        if (itemIndex < otherIndex) return 4;
-        else return 2;
-      }
-      return 0;
+      return itemIndex.bind(function (iIndex) {
+        return otherIndex.map(function (oIndex) {
+          if (iIndex < oIndex) return 4;
+          else return 2;
+        });
+      }).getOr(0);
     };
 
     var prevSibling = function (item) {
       var parent = Properties.parent(item);
       var kin = parent.map(Properties.children).getOr([]);
       var itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
-      if (itemIndex > 0) return Option.some(kin[itemIndex - 1]);
-      else return Option.none();
+      return itemIndex.bind(function (iIndex) {
+        return iIndex > 0 ? Option.some(kin[iIndex - 1]) : Option.none();
+      });
     };
 
     var nextSibling = function (item) {
       var parent = Properties.parent(item);
       var kin = parent.map(Properties.children).getOr([]);
       var itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
-      if (itemIndex < kin.length - 1) return Option.some(kin[itemIndex + 1]);
-      else return Option.none();
+      return itemIndex.bind(function (iIndex) {
+        return iIndex < kin.length - 1 ? Option.some(kin[iIndex + 1]) : Option.none();
+      });
     };
 
     return {

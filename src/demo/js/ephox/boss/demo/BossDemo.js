@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.boss.api.BasicPage',
-    'ephox.syrup.api.Element'
+    'ephox.sugar.api.node.Element'
   ],
 
   function (BasicPage, Element) {

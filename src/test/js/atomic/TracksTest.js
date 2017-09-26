@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.boss.mutant.Tracks',
-    'ephox.perhaps.Option'
+    'ephox.katamari.api.Option'
   ],
 
   function (Tracks, Option) {
