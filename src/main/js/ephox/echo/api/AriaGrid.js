@@ -4,12 +4,12 @@ define(
   [
     'ephox.echo.api.AriaRegister',
     'ephox.echo.api.Styles',
-    'ephox.epithet.Id',
-    'ephox.scullion.Struct',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert'
+    'ephox.katamari.api.Id',
+    'ephox.katamari.api.Struct',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert'
   ],
 
   function (AriaRegister, Styles, Id, Struct, Attr, Class, Element, Insert) {

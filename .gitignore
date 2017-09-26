@@ -4,3 +4,4 @@
 *.sublime-workspace
 /node_modules
 /config/bolt/bootstrap*.js
+/scratch

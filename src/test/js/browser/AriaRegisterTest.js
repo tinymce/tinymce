@@ -5,8 +5,8 @@ test(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.echo.api.AriaRegister',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Html'
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html'
   ],
  
   function (ApproxStructure, Assertions, AriaRegister, Element, Html) {
