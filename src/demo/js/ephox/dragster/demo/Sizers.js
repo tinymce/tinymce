@@ -11,11 +11,11 @@ define(
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Width',
-    'ephox.syrup.api.Visibility'
+    'ephox.sugar.api.view.Visibility',
+    'ephox.sugar.api.view.Width'
   ],
 
-  function (Arr, Fun, OuterPosition, InsertAll, Remove, Element, Css, SelectorFind, Height, Width, Visibility) {
+  function (Arr, Fun, OuterPosition, InsertAll, Remove, Element, Css, SelectorFind, Height, Visibility, Width) {
     return function () {
       var box = function () {
         var r = Element.fromTag('div');
