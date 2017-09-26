@@ -21,9 +21,10 @@ test(
       called = true;
     });
 
-    // No longer throws when adding an event twice, just doesn't add it
-    binder.bind(events.registry.myEvent, function(event) {
-      called = true;
+    assert.throws(function () {
+      binder.bind(events.registry.myEvent, function(event) {
+        called = true;
+      });
     });
 
     events.trigger.myEvent();
@@ -36,8 +37,9 @@ test(
     events.trigger.myEvent();
     assert.eq(false, called);
 
-    // No longer throws when removing an event that no longer exists, just doesn't remove it
-    binder.unbind(events.registry.myEvent);
+    assert.throws(function () {
+      binder.unbind(events.registry.myEvent);
+    });
 
     var count = 0;
 

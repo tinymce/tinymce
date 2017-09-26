@@ -11,7 +11,9 @@ define(
       var handlers = [];
 
       var bind = function (registration, handler) {
-        if (!Arr.contains(registrations, registration)) {
+        if (Arr.contains(registrations, registration)) {
+          throw 'Invalid key, key already exists.';
+        } else {
           registrations.push(registration);
           handlers.push(handler);
           registration.bind(handler);
@@ -20,7 +22,9 @@ define(
 
       var unbind = function (registration) {
         var index = Arr.indexOf(registrations, registration);
-        index.each(function (ind) {
+        index.fold(function () {
+          throw 'Invalid key, does not exist.';
+        }, function (ind) {
           registrations.splice(ind, 1);
           var handler = handlers.splice(ind, 1)[0];
           registration.unbind(handler);
