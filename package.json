@@ -3,7 +3,6 @@
   "description": "This project does data manipulation on arrays and strings.",
   "version": "2.0.0",
   "dependencies": {
-    "@ephox/bud": "git+ssh://git@stash:7999/libs/bud.git#master",
     "@ephox/katamari": "*"
   },
   "devDependencies": {
