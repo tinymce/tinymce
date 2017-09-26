@@ -2,12 +2,12 @@ define(
   'ephox.snooker.api.CellProperties',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.Replication'
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.dom.Replication'
   ],
 
   function (Fun, Attr, Css, Insert, Remove, Replication) {

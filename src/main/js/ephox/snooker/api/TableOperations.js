@@ -2,10 +2,10 @@ define(
   'ephox.snooker.api.TableOperations',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.scullion.Struct',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'ephox.snooker.api.Generators',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableContent',
@@ -20,7 +20,7 @@ define(
     'ephox.snooker.operate.ModificationOperations',
     'ephox.snooker.operate.TransformOperations',
     'ephox.snooker.resize.Adjustments',
-    'ephox.syrup.api.Remove'
+    'ephox.sugar.api.dom.Remove'
   ],
 
   function (Arr, Fun, Option, Struct, Generators, Structs, TableContent, TableLookup, DetailsList, GridRow, RunOperation, TableMerge, Transitions, Warehouse, MergingOperations, ModificationOperations, TransformOperations, Adjustments, Remove) {

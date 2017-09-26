@@ -2,23 +2,23 @@ define(
   'ephox.snooker.demo.DetectDemo',
 
   [
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.api.TableResize',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Direction',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Ready',
-    'ephox.syrup.api.Replication',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.properties.Direction',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.events.Ready',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Obj, Fun, Option, ResizeDirection, ResizeWire, TableOperations, TableResize, Attr, Css, Direction, DomEvent, Element, Insert, InsertAll, Ready, Replication, SelectorFind) {

@@ -2,15 +2,14 @@ define(
   'ephox.snooker.api.CellNavigation',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.CellLocation',
     'ephox.snooker.api.TableLookup',
-    'ephox.syrup.api.Compare'
+    'ephox.sugar.api.dom.Compare'
   ],
 
-  function (Arr, Fun, Option, CellLocation, TableLookup, Compare) {
+  function (Arr, Fun, CellLocation, TableLookup, Compare) {
     /*
      * Identify the index of the current cell within all the cells, and
      * a list of the cells within its table.
@@ -22,9 +21,11 @@ define(
           return Compare.eq(current, x);
         });
 
-        return index < 0 ? Option.none() : Option.some({
-          index: Fun.constant(index),
-          all: Fun.constant(all)
+        return index.map(function (ind) {
+          return {
+            index: Fun.constant(ind),
+            all: Fun.constant(all)
+          };
         });
       });
     };

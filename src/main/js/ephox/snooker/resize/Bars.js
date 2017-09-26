@@ -2,23 +2,23 @@ define(
   'ephox.snooker.resize.Bars',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.model.DetailsList',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.resize.Bar',
     'ephox.snooker.style.Styles',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Height',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Location',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.Width'
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width'
   ],
 
-  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width) {
+  function (Arr, Blocks, DetailsList, Warehouse, Bar, Styles, Insert, Remove, Class, Css, SelectorFilter, Height, Location, Width) {
     var resizeBar = Styles.resolve('resizer-bar');
     var resizeRowBar = Styles.resolve('resizer-rows');
     var resizeColBar = Styles.resolve('resizer-cols');

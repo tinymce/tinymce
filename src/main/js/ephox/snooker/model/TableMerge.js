@@ -2,7 +2,7 @@ define(
   'ephox.snooker.model.TableMerge',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.Fitment',
     'ephox.snooker.model.GridRow',

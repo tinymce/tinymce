@@ -1,8 +1,8 @@
 define(
-  'ephox.syrup.api.Attr',
+  'ephox.sugar.api.properties.Attr',
 
   [
-    'ephox.peanut.Fun'
+    'ephox.katamari.api.Fun'
   ],
 
   function (Fun) {

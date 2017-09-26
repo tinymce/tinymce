@@ -2,15 +2,15 @@ test(
   'TableLookupTest',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.TableLookup',
-    'ephox.syrup.api.Body',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (Arr, TableLookup, Body, Compare, Element, Insert, Remove, SelectorFilter, SelectorFind) {

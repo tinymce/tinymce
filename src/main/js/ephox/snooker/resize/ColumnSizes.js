@@ -2,13 +2,13 @@ define(
   'ephox.snooker.resize.ColumnSizes',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.lookup.Blocks',
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.snooker.util.Util',
-    'ephox.syrup.api.Css'
+    'ephox.sugar.api.properties.Css'
   ],
 
   function (Arr, Fun, Blocks, Sizes, CellUtils, Util, Css) {

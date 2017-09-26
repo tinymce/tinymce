@@ -2,18 +2,18 @@ test(
   'Table Sizes Test (fusebox)',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeDirection',
     'ephox.snooker.api.Sizes',
-    'ephox.syrup.api.Body',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Html',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.InsertAll',
-    'ephox.syrup.api.Remove',
-    'ephox.syrup.api.SelectorFilter',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.InsertAll',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.search.SelectorFilter',
     'global!String',
     'global!document',
     'global!setTimeout'
@@ -28,7 +28,7 @@ test(
                         '<tr><td style="width: 100%;" colspan="5">A0</td></tr>' +
                         '</tbody>' +
                         '</table>';
-    
+
     var pixelTable = '<table style="width: 500px;">' +
                       '<tbody>' +
                       '<tr><td style="width: 50px;">A0</td><td style="width: 150px;">B0</td><td style="width: 100px;">C0</td><td style="width: 125px;">D0</td><td style="width: 75px;">E0</td></tr>' +

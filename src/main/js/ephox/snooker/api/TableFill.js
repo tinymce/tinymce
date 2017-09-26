@@ -2,14 +2,14 @@ define(
   'ephox.snooker.api.TableFill',
 
   [
-    'ephox.compass.Obj',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.Replication',
-    'ephox.syrup.api.Traverse'
+    'ephox.katamari.api.Obj',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Obj, Attr, Css, Element, Insert, Node, Replication, Traverse) {

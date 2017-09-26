@@ -2,12 +2,12 @@ define(
   'ephox.snooker.selection.CellFinder',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.model.Warehouse',
     'ephox.snooker.selection.CellBounds',
     'ephox.snooker.selection.CellGroup',
-    'ephox.syrup.api.Compare'
+    'ephox.sugar.api.dom.Compare'
   ],
 
   function (Arr, Fun, Warehouse, CellBounds, CellGroup, Compare) {

@@ -2,8 +2,8 @@ define(
   'ephox.snooker.test.TableMerge',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.TableMerge',
     'ephox.snooker.test.Fitment'

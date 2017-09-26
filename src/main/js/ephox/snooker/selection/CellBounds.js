@@ -2,8 +2,8 @@ define(
   'ephox.snooker.selection.CellBounds',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.model.Warehouse'
   ],
 

@@ -2,7 +2,7 @@ test(
   'TableMergeTest',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Structs',
     'ephox.snooker.test.TableMerge',
     'ephox.snooker.test.TestGenerator'

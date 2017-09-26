@@ -2,7 +2,7 @@ define(
   'ephox.snooker.operate.ModificationOperations',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow'
   ],

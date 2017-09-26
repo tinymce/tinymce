@@ -2,14 +2,14 @@ define(
   'ephox.snooker.api.ResizeWire',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.syrup.alien.Position',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Location'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Position'
   ],
 
-  function (Fun, Option, Position, Element, Location) {
+  function (Fun, Option, Element, Location, Position) {
     // parent: the container where the resize bars are appended
     //         this gets mouse event handlers only if it is not a child of 'view' (eg, detached/inline mode)
     // view: the container who listens to mouse events from content tables (eg, detached/inline mode)

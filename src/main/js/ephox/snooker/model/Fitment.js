@@ -2,9 +2,9 @@ define(
   'ephox.snooker.model.Fitment',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Result',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Result',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow',
     'ephox.snooker.util.Util',

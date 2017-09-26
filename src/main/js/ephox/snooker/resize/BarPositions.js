@@ -2,12 +2,12 @@ define(
   'ephox.snooker.resize.BarPositions',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.scullion.Struct',
-    'ephox.syrup.api.Height',
-    'ephox.syrup.api.Location',
-    'ephox.syrup.api.Width'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Struct',
+    'ephox.sugar.api.view.Height',
+    'ephox.sugar.api.view.Location',
+    'ephox.sugar.api.view.Width'
   ],
 
   function (Arr, Fun, Struct, Height, Location, Width) {

@@ -2,9 +2,9 @@ define(
   'ephox.snooker.model.Warehouse',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.Structs',
     'global!Math'
   ],

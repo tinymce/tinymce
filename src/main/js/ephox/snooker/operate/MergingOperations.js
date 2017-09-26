@@ -2,8 +2,8 @@ define(
   'ephox.snooker.operate.MergingOperations',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.model.GridRow'
   ],

@@ -2,18 +2,18 @@ define(
   'ephox.snooker.test.Bridge',
 
   [
-    'ephox.compass.Arr',
-    'ephox.compass.Obj',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Hierarchy',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.Replication'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.dom.Hierarchy',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.dom.Replication'
   ],
 
   function (Arr, Obj, Fun, Option, Options, Attr, Css, Element, Hierarchy, Insert, Node, Replication) {

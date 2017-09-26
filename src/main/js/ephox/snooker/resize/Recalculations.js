@@ -2,8 +2,8 @@ define(
   'ephox.snooker.resize.Recalculations',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.model.Warehouse',
     'global!parseInt'
   ],
@@ -21,7 +21,7 @@ define(
       return r;
     };
 
-    // Returns an array of all cells in warehouse with updated cell-widths, using 
+    // Returns an array of all cells in warehouse with updated cell-widths, using
     // the array 'widths' of the representative widths of each column of the table 'warehouse'
     var recalculateWidth = function (warehouse, widths) {
       var all = Warehouse.justCells(warehouse);

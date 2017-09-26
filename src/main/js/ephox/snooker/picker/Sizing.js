@@ -2,7 +2,7 @@ define(
   'ephox.snooker.picker.Sizing',
 
   [
-    'ephox.peanut.Fun',
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.Structs',
     'global!Math'
   ],

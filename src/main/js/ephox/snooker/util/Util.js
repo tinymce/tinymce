@@ -2,9 +2,9 @@ define(
   'ephox.snooker.util.Util',
 
   [
-    'ephox.compass.Arr',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'global!Math'
   ],
 

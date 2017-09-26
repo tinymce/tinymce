@@ -2,9 +2,9 @@ define(
   'ephox.snooker.util.CellUtils',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Css',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
     'global!parseInt'
   ],
 

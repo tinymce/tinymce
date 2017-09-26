@@ -2,17 +2,17 @@ define(
   'ephox.snooker.api.TableLookup',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.Structs',
     'ephox.snooker.util.LayerSelector',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Selectors',
-    'ephox.syrup.api.Traverse',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Selectors',
+    'ephox.sugar.api.search.Traverse',
     'global!parseInt'
   ],
 

@@ -2,12 +2,12 @@ define(
   'ephox.snooker.model.DetailsList',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.snooker.api.Structs',
     'ephox.snooker.api.TableLookup',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.Traverse'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.search.Traverse'
   ],
 
   function (Arr, Structs, TableLookup, Attr, Node, Traverse) {
