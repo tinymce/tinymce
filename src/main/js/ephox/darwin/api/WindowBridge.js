@@ -2,39 +2,53 @@ define(
   'ephox.darwin.api.WindowBridge',
 
   [
-    'ephox.fussy.api.Point',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.WindowSelection'
+    'ephox.darwin.selection.Util',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.api.selection.Situ',
+    'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Point, SelectionRange, WindowSelection) {
+  function (Util, Fun, Obj, Selection, Situ, WindowSelection) {
     return function (win) {
       var getRect = function (element) {
         return element.dom().getBoundingClientRect();
       };
 
       var getRangedRect = function (start, soffset, finish, foffset) {
-        return WindowSelection.rectangleAt(win, start, soffset, finish, foffset);
+        var sel = Selection.exact(start, soffset, finish, foffset);
+        return WindowSelection.getFirstRect(win, sel).map(function (structRect) {
+          return Obj.map(structRect, Fun.apply);
+        });
       };
 
       var getSelection = function () {
-        return WindowSelection.get(win);
+        return WindowSelection.get(win).map(function (exactAdt) {
+          return Util.convertToRange(win, exactAdt);
+        });
       };
 
       var fromSitus = function (situs) {
-        return WindowSelection.deriveExact(win, situs);
+        var relative = Selection.relative(situs.start(), situs.finish());
+        return Util.convertToRange(win, relative);
       };
 
       var situsFromPoint = function (x, y) {
-        return Point.find(win, x, y);
+        return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
+          return {
+            start: Fun.constant(Situ.on(exact.start(), exact.soffset())),
+            finish: Fun.constant(Situ.on(exact.finish(), exact.foffset()))
+          };
+        });
       };
 
       var clearSelection = function () {
-        WindowSelection.clearAll(win);
+        WindowSelection.clear(win);
       };
 
       var selectContents = function (element) {
-        WindowSelection.selectElementContents(win, element);
+        WindowSelection.setToElement(win, element);
       };
 
       var setSelection = function (sel) {
@@ -42,7 +56,7 @@ define(
       };
 
       var setRelativeSelection = function (start, finish) {
-        WindowSelection.set(win, SelectionRange.write(start, finish));
+        WindowSelection.setRelative(win, start, finish);
       };
 
       var getInnerHeight = function () {

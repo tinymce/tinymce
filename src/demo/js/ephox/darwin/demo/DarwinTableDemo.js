@@ -2,34 +2,32 @@ define(
   'ephox.darwin.demo.DarwinTableDemo',
 
   [
-    'ephox.compass.Arr',
     'ephox.darwin.api.Ephemera',
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
-    'ephox.fred.PlatformDetection',
-    'ephox.fussy.api.WindowSelection',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Attr',
-    'ephox.syrup.api.Body',
-    'ephox.syrup.api.Class',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Direction',
-    'ephox.syrup.api.DomEvent',
-    'ephox.syrup.api.Element',
-    'ephox.syrup.api.Insert',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.OnNode',
-    'ephox.syrup.api.Replication',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Traverse',
+    'ephox.darwin.selection.Util',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Direction',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.api.selection.WindowSelection',
     'global!Math',
     'global!document'
   ],
 
-  function (Arr, Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, PlatformDetection, WindowSelection, Fun, Option, Attr, Body, Class, Compare, Direction, DomEvent, Element, Insert, Node, OnNode, Replication, SelectorFilter, SelectorFind, Traverse, Math, document) {
+  function (Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, Util, Fun, Option, PlatformDetection, Compare, Insert, Replication, DomEvent, Body, Element, Node, Attr, Direction, SelectorFind, Traverse, Selection, WindowSelection, Math, document) {
     return function () {
 
       var detection = PlatformDetection.detect();
@@ -124,24 +122,28 @@ define(
       var handleResponse = function (event, response) {
         if (response.kill()) event.kill();
         response.selection().each(function (ns) {
-          WindowSelection.set(window, ns);
+          // ns is {start(): Situ, finish(): Situ}
+          var relative = Selection.relative(ns.start(), ns.finish());
+          var range = Util.convertToRange(window, relative);
+          WindowSelection.setExact(window, range.start(), range.soffset(), range.finish(), range.foffset());
+          // WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
         });
       };
 
       DomEvent.bind(ephoxUi, 'keyup', function (event) {
         // Note, this is an optimisation.
         if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
-          WindowSelection.get(window).each(function (sel) {
+          WindowSelection.getExact(window).each(function (sel) {
             keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
               handleResponse(event, response);
             });
-          }, Fun.noop);
+          });
         }
       });
 
       DomEvent.bind(ephoxUi, 'keydown', function (event) {
         // This might get expensive.
-        WindowSelection.get(window).each(function (sel) {
+        WindowSelection.getExact(window).each(function (sel) {
           var target = Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start());
           var direction = target.map(Direction.getDirection).getOr('ltr');
           keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {

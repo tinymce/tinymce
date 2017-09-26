@@ -7,15 +7,14 @@ define(
     'ephox.darwin.keyboard.Retries',
     'ephox.darwin.navigation.BeforeAfter',
     'ephox.darwin.navigation.BrTags',
-    'ephox.fred.PlatformDetection',
-    'ephox.oath.proximity.Awareness',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.Node'
+    'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.selection.Awareness'
   ],
 
-  function (Carets, Rectangles, Retries, BeforeAfter, BrTags, PlatformDetection, Awareness, Option, Spot, Compare, Node) {
+  function (Carets, Rectangles, Retries, BeforeAfter, BrTags, Option, Spot, PlatformDetection, Compare, Awareness) {
     var MAX_RETRIES = 20;
 
     var platform = PlatformDetection.detect();

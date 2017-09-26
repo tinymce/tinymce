@@ -4,12 +4,12 @@ define(
   [
     'ephox.darwin.keyboard.Carets',
     'ephox.darwin.keyboard.Rectangles',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.dom.DomGather',
     'ephox.robin.api.dom.DomStructure',
-    'ephox.scullion.ADT',
-    'ephox.syrup.api.PredicateFind',
+    'ephox.katamari.api.Adt',
+    'ephox.sugar.api.search.PredicateFind',
     'global!Math'
   ],
 

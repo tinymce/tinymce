@@ -2,15 +2,15 @@ define(
   'ephox.darwin.selection.CellSelection',
 
   [
-    'ephox.compass.Arr',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.SelectorFilter',
-    'ephox.syrup.api.SelectorFind',
-    'ephox.syrup.api.Selectors'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.search.Selectors'
   ],
 
   function (Arr, Fun, Option, DomParent, TablePositions, Compare, SelectorFilter, SelectorFind, Selectors) {
@@ -49,10 +49,9 @@ define(
     };
 
     var getLast = function (boxes, lastSelectedSelector) {
-      var raw = Arr.find(boxes, function (box) {
+      return Arr.find(boxes, function (box) {
         return Selectors.is(box, lastSelectedSelector);
       });
-      return Option.from(raw);
     };
 
     var getEdges = function (container, firstSelectedSelector, lastSelectedSelector) {

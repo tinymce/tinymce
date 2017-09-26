@@ -10,14 +10,14 @@ define(
     'ephox.darwin.mouse.MouseSelection',
     'ephox.darwin.navigation.KeyDirection',
     'ephox.darwin.selection.CellSelection',
-    'ephox.fussy.api.Situ',
-    'ephox.peanut.Fun',
-    'ephox.perhaps.Option',
-    'ephox.perhaps.Options',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
+    'ephox.katamari.api.Struct',
+    'ephox.sugar.api.selection.Situ'
   ],
 
-  function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Situ, Fun, Option, Options, Struct) {
+  function (Responses, SelectionKeys, WindowBridge, KeySelection, VerticalMovement, MouseSelection, KeyDirection, CellSelection, Fun, Option, Options, Struct, Situ) {
     var rc = Struct.immutable('rows', 'cols');
 
     var mouse = function (win, container, isRoot, annotations) {

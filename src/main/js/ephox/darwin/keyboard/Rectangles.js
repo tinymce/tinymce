@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.darwin.keyboard.Carets',
-    'ephox.oath.proximity.Awareness',
-    'ephox.perhaps.Option',
-    'ephox.syrup.api.Node'
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.selection.Awareness'
   ],
 
-  function (Carets, Awareness, Option, Node) {
+  function (Carets, Option, Node, Awareness) {
     var getPartialBox = function (bridge, element, offset) {
       if (offset >= 0 && offset < Awareness.getEnd(element)) return bridge.getRangedRect(element, offset, element, offset+1);
       else if (offset > 0) return bridge.getRangedRect(element, offset - 1, element, offset);

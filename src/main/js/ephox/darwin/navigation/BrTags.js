@@ -3,18 +3,18 @@ define(
 
   [
     'ephox.darwin.navigation.BeforeAfter',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.Situ',
-    'ephox.oath.proximity.Awareness',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.phoenix.api.data.Spot',
-    'ephox.syrup.api.ElementFind',
-    'ephox.syrup.api.Node',
-    'ephox.syrup.api.Text',
-    'ephox.syrup.api.Traverse'
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.search.ElementAddress',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Awareness',
+    'ephox.sugar.api.selection.Situ'
   ],
 
-  function (BeforeAfter, SelectionRange, Situ, Awareness, Option, Spot, ElementFind, Node, Text, Traverse) {
+  function (BeforeAfter, Fun, Option, Spot, Node, Text, ElementAddress, Traverse, Awareness, Situ) {
     var isBr = function (elem) {
       return Node.name(elem) === 'br';
     };
@@ -47,13 +47,12 @@ define(
         return direction.traverse(br).fold(function () {
           return gatherer(br, direction.gather, isRoot).map(direction.relative);
         }, function (adjacent) {
-          return ElementFind.indexInParent(adjacent).map(function (info) {
+          return ElementAddress.indexInParent(adjacent).map(function (info) {
             return Situ.on(info.parent(), info.index());
           });
         });
       });
     };
-
 
     var tryBr = function (isRoot, element, offset, direction) {
       // Three different situations
@@ -64,7 +63,10 @@ define(
       // 2. the element is the br itself,
       var target = isBr(element) ? handleBr(isRoot, element, direction) : handleParent(isRoot, element, offset, direction);
       return target.map(function (tgt) {
-        return SelectionRange.write(tgt, tgt);
+        return {
+          start: Fun.constant(tgt),
+          finish: Fun.constant(tgt)
+        };
       });
     };
 

@@ -3,10 +3,10 @@ define(
 
   [
     'ephox.darwin.selection.CellSelection',
-    'ephox.perhaps.Option',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.TablePositions',
-    'ephox.syrup.api.Compare',
-    'ephox.syrup.api.SelectorFind'
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
   function (CellSelection, Option, TablePositions, Compare, SelectorFind) {
