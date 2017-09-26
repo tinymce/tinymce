@@ -4,11 +4,10 @@ test(
   [
     'ephox.porkbun.Binder',
     'ephox.porkbun.Event',
-    'ephox.porkbun.Events',
-    'ephox.scullion.Struct'
+    'ephox.porkbun.Events'
   ],
 
-  function (Binder, Event, Events, Struct) {
+  function (Binder, Event, Events) {
     var events = Events.create({
       myEvent: Event([ ]),
       secondEvent: Event([ ])
@@ -41,8 +40,6 @@ test(
     assert.throws(function () {
       binder.unbind(events.registry.myEvent);
     });
-
-
 
     var count = 0;
 

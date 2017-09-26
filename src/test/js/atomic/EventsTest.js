@@ -5,7 +5,7 @@ test(
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.porkbun.SourceEvent',
-    'ephox.scullion.Struct'
+    'ephox.katamari.api.Struct'
   ],
 
   function(Event, Events, SourceEvent, Struct) {

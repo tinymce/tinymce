@@ -3,9 +3,7 @@
   "description": "Event framework for JavaScript",
   "version": "3.0.0",
   "dependencies": {
-    "@ephox/compass": "git+ssh://git@stash:7999/libs/compass.git#master",
-    "@ephox/flute": "git+ssh://git@stash:7999/libs/flute.git#master",
-    "@ephox/scullion": "git+ssh://git@stash:7999/libs/scullion.git#master"
+    "@ephox/katamari": "*"
   },
   "devDependencies": {
     "@ephox/bolt": "*",
