@@ -4,13 +4,13 @@ define(
   [
     'ephox.dragster.api.DragApis',
     'ephox.dragster.detect.Movement',
-    'ephox.peanut.DelayedFunction',
+    'ephox.katamari.api.Throttler',
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'global!Array'
   ],
 
-  function (DragApis, Movement, DelayedFunction, Event, Events, Array) {
+  function (DragApis, Movement, Throttler, Event, Events, Array) {
     var setup = function (mutation, mode, settings) {
       var active = false;
 
@@ -29,7 +29,7 @@ define(
         }
       };
 
-      var delayDrop = DelayedFunction(drop, 200);
+      var throttledDrop = Throttler.last(drop, 200);
 
       var go = function (parent) {
         sink.start(parent);
@@ -42,7 +42,7 @@ define(
       };
 
       var mousemove = function (event, ui) {
-        delayDrop.cancel();
+        throttledDrop.cancel();
         movement.onEvent(event, mode);
       };
 
@@ -74,9 +74,9 @@ define(
         forceDrop: drop,
         drop: runIfActive(drop),
         move: runIfActive(mousemove),
-        delayDrop: runIfActive(delayDrop.schedule)
+        delayDrop: runIfActive(throttledDrop.throttle)
       }), settings);
-    
+
       var destroy = function () {
         sink.destroy();
       };
