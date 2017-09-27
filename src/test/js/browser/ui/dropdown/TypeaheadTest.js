@@ -10,6 +10,8 @@ asynctest(
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
@@ -25,17 +27,16 @@ asynctest(
     'ephox.alloy.test.typeahead.TestTypeaheadSteps',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Merger',
     'ephox.katamari.api.Result',
-    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.properties.Value',
-    'ephox.sugar.api.search.SelectorFind',
     'global!Math'
   ],
 
   function (
-    FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter, GuiFactory, AlloyTriggers, NativeEvents, Container, TieredMenu, Typeahead, DropdownAssertions,
-    TestDropdownMenu, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadSteps, Arr, Future, Merger, Result, Attr, Value, SelectorFind, Math
+    FocusTools, Keyboard, Keys, Mouse, Step, UiControls, UiFinder, Waiter, Behaviour, Focusing, GuiFactory, AlloyTriggers, NativeEvents, Container, TieredMenu,
+    Typeahead, DropdownAssertions, TestDropdownMenu, GuiSetup, NavigationUtils, Sinks, TestBroadcasts, TestTypeaheadSteps, Arr, Future, Result, Focus, Value,
+    Math
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -90,7 +91,11 @@ asynctest(
                 menu: TestDropdownMenu.part(store)
               }
             })
-          ]
+          ],
+
+          containerBehaviours: Behaviour.derive([
+            Focusing.config({ })
+          ])
         })
       );
 
@@ -213,6 +218,12 @@ asynctest(
           100,
           1000
         ),
+
+        // Focus something else.
+        Step.sync(function () {
+          Focus.focus(component.element());
+        }),
+        steps.sWaitForNoMenu('Blurring should dismiss popup'),
 
         GuiSetup.mRemoveStyles
 

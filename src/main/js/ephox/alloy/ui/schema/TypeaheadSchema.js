@@ -24,6 +24,7 @@ define(
 
       Fields.onKeyboardHandler('onExecute'),
       FieldSchema.defaulted('matchWidth', true),
+      FieldSchema.defaulted('dismissOnBlur', true),
       Fields.markers([ 'openClass' ]),
 
       FieldSchema.state('previewing', function () {

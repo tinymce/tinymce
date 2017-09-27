@@ -177,13 +177,13 @@ define(
               var anchor = { anchor: 'hotspot', hotspot: comp };
               var onOpenSync = Fun.noop;
               DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
-            }),
-
+            })
+          ].concat(detail.dismissOnBlur() ? [
             AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
               var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
               Sandboxing.close(sandbox);
             })
-          ])
+          ] : [ ]))
         }
       );
     };
