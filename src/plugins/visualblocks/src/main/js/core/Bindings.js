@@ -15,16 +15,17 @@ define(
     'tinymce.plugins.visualblocks.core.VisualBlocks'
   ],
   function (Settings, VisualBlocks) {
-    var setup = function (editor, pluginUrl) {
+    var setup = function (editor, pluginUrl, enabledState) {
+      // Prevents the visualblocks from being presented in the preview of formats when that is computed
       editor.on('PreviewFormats AfterPreviewFormats', function (e) {
-        if (VisualBlocks.isEnabled(editor)) {
+        if (enabledState.get()) {
           editor.dom.toggleClass(editor.getBody(), 'mce-visualblocks', e.type === 'afterpreviewformats');
         }
       });
 
       editor.on('init', function () {
         if (Settings.isEnabledByDefault(editor)) {
-          VisualBlocks.toggleVisualBlocks(editor, pluginUrl);
+          VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
         }
       });
 
