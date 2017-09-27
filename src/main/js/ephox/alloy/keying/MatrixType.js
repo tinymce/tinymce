@@ -43,7 +43,7 @@ define(
       });
 
       focused.each(function (cell) {
-        component.getSystem().triggerFocus(cell, component.element());
+        matrixConfig.focusManager().set(component, cell);
       });
     };
 

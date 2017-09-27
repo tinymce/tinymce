@@ -56,8 +56,8 @@ asynctest(
       };
     };
 
-    var makeItems = function (tag, prefix, haveTabstop) {
-      return Arr.map([ '1', '2', '3' ], function (num) {
+    var makeItems = function (tag, prefix, haveTabstop, firstNum) {
+      return Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], function (num) {
         return {
           dom: {
             tag: tag,
@@ -77,7 +77,7 @@ asynctest(
         tag: 'div',
         classes: [ 'acyclic' ]
       },
-      components: makeItems('span', 'acyclic', true),
+      components: makeItems('span', 'acyclic', true, 1),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'acyclic',
@@ -92,7 +92,7 @@ asynctest(
         tag: 'div',
         classes: [ 'cyclic' ]
       },
-      components: makeItems('span', 'cyclic', true),
+      components: makeItems('span', 'cyclic', true, 1),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'cyclic',
@@ -107,7 +107,7 @@ asynctest(
         tag: 'div',
         classes: [ 'flatgrid' ]
       },
-      components: makeItems('span', 'flatgrid', false),
+      components: makeItems('span', 'flatgrid', false, 1),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'flatgrid',
@@ -127,12 +127,40 @@ asynctest(
         tag: 'div',
         classes: [ 'flow' ]
       },
-      components: makeItems('span', 'flow', false),
+      components: makeItems('span', 'flow', false, 1),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'flow',
           selector: 'span',
           focusManager: flowManager
+        })
+      ])
+    });
+
+    var matrixManager = manager('matrix');
+    var memMatrix = Memento.record({
+      dom: {
+        tag: 'table',
+        classes: [ 'matrix' ]
+      },
+      components: [
+        {
+          dom: { tag: 'tr' },
+          components: makeItems('td', 'matrix', false, 1)
+        },
+        {
+          dom: { tag: 'tr' },
+          components: makeItems('td', 'matrix', false, 4)
+        }
+      ],
+      behaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'matrix',
+          selectors: {
+            row: 'tr',
+            cell: 'td'
+          },
+          focusManager: matrixManager
         })
       ])
     });
@@ -148,7 +176,8 @@ asynctest(
             memAcyclic.asSpec(),
             memCyclic.asSpec(),
             memFlatgrid.asSpec(),
-            memFlow.asSpec()
+            memFlow.asSpec(),
+            memMatrix.asSpec()
           ],
 
           behaviours: Behaviour.derive([
@@ -185,6 +214,7 @@ asynctest(
         var cyclic = memCyclic.get(component);
         var flatgrid = memFlatgrid.get(component);
         var flow = memFlow.get(component);
+        var matrix = memMatrix.get(component);
 
         var sTestKeying = function (label, comp, manager, keyName) {
           return Logger.t(
@@ -235,6 +265,13 @@ asynctest(
             'flow',
             flow,
             flowManager,
+            'right'
+          ),
+
+          sTestKeying(
+            'matrix',
+            matrix,
+            matrixManager,
             'right'
           )
         ];
