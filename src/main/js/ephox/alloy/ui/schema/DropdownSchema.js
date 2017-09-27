@@ -2,6 +2,11 @@ define(
   'ephox.alloy.ui.schema.DropdownSchema',
 
   [
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -9,13 +14,13 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Fields, InternalSink, PartType, FieldSchema, Fun) {
+  function (Coupling, Focusing, Keying, Toggling, SketchBehaviours, Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('dom'),
       FieldSchema.strict('fetch'),
       Fields.onHandler('onOpen'),
       Fields.onKeyboardHandler('onExecute'),
-      FieldSchema.defaulted('dropdownBehaviours', { }),
+      SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
       FieldSchema.strict('toggleClass'),
       FieldSchema.defaulted('displayer', Fun.identity),
       FieldSchema.option('lazySink'),

@@ -2,13 +2,16 @@ define(
   'ephox.alloy.ui.slider.SliderSchema',
 
   [
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.PlatformDetection'
   ],
 
-  function (FieldSchema, Cell, Fun, PlatformDetection) {
+  function (Keying, Representing, SketchBehaviours, FieldSchema, Cell, Fun, PlatformDetection) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
 
     return [
@@ -22,7 +25,7 @@ define(
       FieldSchema.defaulted('snapToGrid', false),
       FieldSchema.option('snapStart'),
       FieldSchema.strict('getInitialValue'),
-      FieldSchema.defaulted('sliderBehaviours', { }),
+      SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
 
       FieldSchema.state('value', function (spec) { return Cell(spec.min); })
     ].concat(! isTouch ? [

@@ -2,12 +2,14 @@ define(
   'ephox.alloy.api.ui.Container',
 
   [
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
+    'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Sketcher, FieldSchema, Merger) {
+  function (SketchBehaviours, Sketcher, Fields, FieldSchema, Merger) {
     var factory = function (detail, spec) {
       return {
         uid: detail.uid(),
@@ -21,7 +23,7 @@ define(
           detail.dom()
         ),
         components: detail.components(),
-        behaviours: detail.containerBehaviours(),
+        behaviours: SketchBehaviours.get(detail.containerBehaviours()),
         events: detail.events(),
         domModification: detail.domModification(),
         eventOrder: detail.eventOrder()
@@ -33,7 +35,7 @@ define(
       factory: factory,
       configFields: [
         FieldSchema.defaulted('components', [ ]),
-        FieldSchema.defaulted('containerBehaviours', { }),
+        SketchBehaviours.field('containerBehaviours', [ ]),
         // TODO: Deprecate
         FieldSchema.defaulted('events', { }),
         FieldSchema.defaulted('domModification', { }),

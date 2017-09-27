@@ -10,6 +10,7 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
@@ -32,8 +33,8 @@ define(
   ],
 
   function (
-    EditableFields, Behaviour, Composing, Highlighting, Keying, Replacing, Representing, GuiFactory, AlloyEvents, AlloyTriggers, SystemEvents, FocusManagers,
-    Menu, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Fun, Merger, Obj, Option, Options, Body, Class, Classes, SelectorFind
+    EditableFields, Behaviour, Composing, Highlighting, Keying, Replacing, Representing, GuiFactory, SketchBehaviours, AlloyEvents, AlloyTriggers, SystemEvents,
+    FocusManagers, Menu, LayeredState, ItemEvents, MenuEvents, Objects, Arr, Fun, Merger, Obj, Option, Options, Body, Class, Classes, SelectorFind
   ) {
     var make = function (detail, rawUiSpec) {
       var buildMenus = function (container, menus) {
@@ -269,7 +270,7 @@ define(
             }),
             Replacing.config({ })
           ]),
-          detail.tmenuBehaviours()
+          SketchBehaviours.get(detail.tmenuBehaviours())
         ),
         eventOrder: detail.eventOrder(),
         apis: {

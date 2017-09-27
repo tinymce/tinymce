@@ -138,10 +138,6 @@ asynctest(
 
           toggleClass: 'alloy-selected',
 
-          dropdownBehaviours: Behaviour.derive([
-            Focusing.config({ })
-          ]),
-
           components: [ ],
 
           lazySink: function () {

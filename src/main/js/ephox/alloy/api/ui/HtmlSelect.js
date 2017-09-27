@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -14,7 +14,7 @@ define(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, Focusing, Representing, Tabstopping, Sketcher, FieldSchema, Objects, Arr, Merger, Value) {
+  function (Behaviour, Focusing, Representing, SketchBehaviours, Sketcher, FieldSchema, Objects, Arr, Merger, Value) {
     var factory = function (detail, spec) {
       var options = Arr.map(detail.options(), function (option) {
         return {
@@ -57,10 +57,9 @@ define(
                   },
                   initialValues
                 )
-              }),
-              detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()
+              })
             ]),
-            detail.selectBehaviours()
+            SketchBehaviours.get(detail.selectBehaviours())
           )
         }
       );
@@ -70,9 +69,8 @@ define(
       name: 'HtmlSelect',
       configFields: [
         FieldSchema.strict('options'),
-        FieldSchema.defaulted('selectBehaviours', { }),
-        FieldSchema.option('data'),
-        FieldSchema.defaulted('hasTabstop', true)
+        SketchBehaviours.field('selectBehaviours', [ Focusing, Representing ]),
+        FieldSchema.option('data')
       ],
       factory: factory
     });

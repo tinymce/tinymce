@@ -313,7 +313,9 @@ define(
                                 width: '50px'
                               }
                             },
-                            hasTabstop: true
+                            inputBehaviours: Behaviour.derive([
+                              Tabstopping.config({ })
+                            ])
                           }),
                           Container.sketch({
                             components: [
@@ -322,20 +324,14 @@ define(
                                 dom: {
                                   tag: 'button',
                                   innerHtml: '-'
-                                },
-                                buttonBehaviours: Behaviour.derive([
-                                  Tabstopping.revoke()
-                                ])
+                                }
                               }),
                               Button.sketch({
                                 action: function () { console.log('clicked on a button', arguments); },
                                 dom: {
                                   tag: 'button',
                                   innerHtml: '+'
-                                },
-                                buttonBehaviours: Behaviour.derive([
-                                  Tabstopping.revoke()
-                                ])
+                                }
                               })
                             ],
                             containerBehaviours: Behaviour.derive([

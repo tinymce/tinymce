@@ -2,6 +2,7 @@ define(
   'ephox.alloy.ui.schema.TabSectionSchema',
 
   [
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Tabbar',
     'ephox.alloy.api.ui.Tabview',
     'ephox.alloy.data.Fields',
@@ -10,12 +11,13 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Tabbar, Tabview, Fields, PartType, FieldSchema, Fun) {
+  function (SketchBehaviours, Tabbar, Tabview, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('selectFirst', true),
       Fields.onHandler('onChangeTab'),
       Fields.onHandler('onDismissTab'),
-      FieldSchema.defaulted('tabs', [ ])
+      FieldSchema.defaulted('tabs', [ ]),
+      SketchBehaviours.field('tabSectionBehaviours', [ ])
     ];
 
     var barPart = PartType.required({

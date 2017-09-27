@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Dragging',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
@@ -14,13 +15,13 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Dragging, Keying, Fields, PartType, FieldSchema, Fun, Json, SelectorFind, Error) {
+  function (Behaviour, Dragging, Keying, SketchBehaviours, Fields, PartType, FieldSchema, Fun, Json, SelectorFind, Error) {
     var schema = [
       FieldSchema.strict('lazySink'),
       FieldSchema.option('dragBlockClass'),
       FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
 
-      Fields.sketchBehaviours('modalBehaviours', [ Keying ]),
+      SketchBehaviours.field('modalBehaviours', [ Keying ]),
 
       Fields.onKeyboardHandler('onExecute'),
       Fields.onStrictKeyboardHandler('onEscape')

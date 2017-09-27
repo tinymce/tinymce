@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.menu.util.ItemEvents',
@@ -16,7 +17,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Composing, Highlighting, Keying, Representing, AlloyEvents, AlloyTriggers, ItemEvents, MenuEvents, Fun, Merger, Error) {
+  function (Behaviour, Composing, Highlighting, Keying, Representing, SketchBehaviours, AlloyEvents, AlloyTriggers, ItemEvents, MenuEvents, Fun, Merger, Error) {
     var make = function (detail, components, spec, externals) {
       return Merger.deepMerge(
         {
@@ -50,7 +51,7 @@ define(
               }),
               Keying.config(detail.movement().config()(detail, detail.movement()))
             ]),
-            detail.menuBehaviours()
+            SketchBehaviours.get(detail.menuBehaviours())
           ),
           events: AlloyEvents.derive([
             // This is dispatched from a menu to tell an item to be highlighted.

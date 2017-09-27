@@ -5,13 +5,14 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.ui.schema.TabbarSchema',
     'ephox.katamari.api.Merger',
     'ephox.sugar.api.properties.Attr'
   ],
 
-  function (Behaviour, Highlighting, Keying, Sketcher, TabbarSchema, Merger, Attr) {
+  function (Behaviour, Highlighting, Keying, SketchBehaviours, Sketcher, TabbarSchema, Merger, Attr) {
     var factory = function (detail, components, spec, externals) {
       return {
         uid: detail.uid(),
@@ -57,7 +58,7 @@ define(
             })
           ]),
           // Add the permitted fields.
-          detail.tabbarBehaviours().extra()
+          SketchBehaviours.get(detail.tabbarBehaviours())
         )
       };
     };

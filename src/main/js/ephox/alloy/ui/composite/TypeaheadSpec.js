@@ -12,6 +12,7 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
@@ -26,8 +27,8 @@ define(
   ],
 
   function (
-    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, AlloyEvents, AlloyTriggers, SystemEvents,
-    DropdownUtils, InputBase, Fun, Merger, Option, Value, console, document
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, SketchBehaviours, AlloyEvents, AlloyTriggers,
+    SystemEvents, DropdownUtils, InputBase, Fun, Merger, Option, Value, console, document
   ) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
@@ -54,7 +55,6 @@ define(
       var inputBehaviours = InputBase.behaviours(detail);
 
       var behaviours = Behaviour.derive([
-        inputBehaviours.tabstopping,
         Focusing.config({ }),
         Representing.config({
           store: {
@@ -163,29 +163,28 @@ define(
         })
       ]);
 
-      return Merger.deepMerge(
-        {
-          behaviours: InputBase.behaviours(detail)
-        },
-        {
-          uid: detail.uid(),
-          dom: InputBase.dom(detail),
-          behaviours: behaviours,
+      return {
+        uid: detail.uid(),
+        dom: InputBase.dom(detail),
+        behaviours: Merger.deepMerge(
+          inputBehaviours,
+          behaviours,
+          SketchBehaviours.get(detail.typeaheadBehaviours())
+        ),
 
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(function (comp) {
-              var anchor = { anchor: 'hotspot', hotspot: comp };
-              var onOpenSync = Fun.noop;
-              DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
-            })
-          ].concat(detail.dismissOnBlur() ? [
-            AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
-              var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-              Sandboxing.close(sandbox);
-            })
-          ] : [ ]))
-        }
-      );
+        events: AlloyEvents.derive([
+          AlloyEvents.runOnExecute(function (comp) {
+            var anchor = { anchor: 'hotspot', hotspot: comp };
+            var onOpenSync = Fun.noop;
+            DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
+          })
+        ].concat(detail.dismissOnBlur() ? [
+          AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
+            var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+            Sandboxing.close(sandbox);
+          })
+        ] : [ ]))
+      };
     };
 
     return {

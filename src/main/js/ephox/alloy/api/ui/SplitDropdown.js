@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
@@ -21,8 +22,8 @@ define(
   ],
 
   function (
-    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, AlloyTriggers, Sketcher, DropdownUtils, AlloyParts, ButtonBase, SplitDropdownSchema,
-    Fun, Merger, Option
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, SketchBehaviours, AlloyTriggers, Sketcher, DropdownUtils, AlloyParts, ButtonBase,
+    SplitDropdownSchema, Fun, Merger, Option
   ) {
     var factory = function (detail, components, spec, externals) {
 
@@ -59,38 +60,41 @@ define(
 
           events: buttonEvents,
 
-          behaviours: Behaviour.derive([
-            Coupling.config({
-              others: {
-                sandbox: function (hotspot) {
-                  var arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
-                  var extras = {
-                    onOpen: function () {
-                      Toggling.on(arrow);
-                    },
-                    onClose: function () {
-                      Toggling.off(arrow);
-                    }
-                  };
+          behaviours: Merger.deepMerge(
+            Behaviour.derive([
+              Coupling.config({
+                others: {
+                  sandbox: function (hotspot) {
+                    var arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
+                    var extras = {
+                      onOpen: function () {
+                        Toggling.on(arrow);
+                      },
+                      onClose: function () {
+                        Toggling.off(arrow);
+                      }
+                    };
 
-                  return DropdownUtils.makeSandbox(detail, {
-                    anchor: 'hotspot',
-                    hotspot: hotspot
-                  }, hotspot, extras);
+                    return DropdownUtils.makeSandbox(detail, {
+                      anchor: 'hotspot',
+                      hotspot: hotspot
+                    }, hotspot, extras);
+                  }
                 }
-              }
-            }),
-            Keying.config({
-              mode: 'special',
-              onSpace: executeOnButton,
-              onEnter: executeOnButton,
-              onDown: function (comp) {
-                action(comp);
-                return Option.some(true);
-              }
-            }),
-            Focusing.config({ })
-          ])
+              }),
+              Keying.config({
+                mode: 'special',
+                onSpace: executeOnButton,
+                onEnter: executeOnButton,
+                onDown: function (comp) {
+                  action(comp);
+                  return Option.some(true);
+                }
+              }),
+              Focusing.config({ })
+            ]),
+            SketchBehaviours.get(detail.splitDropdownBehaviours())
+          )
         },
         {
           dom: {

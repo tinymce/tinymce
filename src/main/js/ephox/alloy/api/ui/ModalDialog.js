@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.parts.AlloyParts',
@@ -14,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Keying, GuiFactory, Attachment, Sketcher, AlloyParts, ModalDialogSchema, Merger, Traverse, Error) {
+  function (Behaviour, Keying, GuiFactory, SketchBehaviours, Attachment, Sketcher, AlloyParts, ModalDialogSchema, Merger, Traverse, Error) {
     var factory = function (detail, components, spec, externals) {
       var showDialog = function (dialog) {
         var sink = detail.lazySink()().getOrDie();
@@ -67,7 +68,7 @@ define(
               useTabstopAt: detail.useTabstopAt()
             })
           ]),
-          detail.modalBehaviours().extra()
+          SketchBehaviours.get(detail.modalBehaviours())
         )
       };
     };

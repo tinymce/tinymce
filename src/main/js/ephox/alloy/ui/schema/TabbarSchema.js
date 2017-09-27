@@ -4,7 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.TabButton',
@@ -14,14 +14,14 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Highlighting, Keying, Tabstopping, AlloyTriggers, SystemEvents, TabButton, Fields, PartType, FieldSchema, Fun) {
+  function (Highlighting, Keying, SketchBehaviours, AlloyTriggers, SystemEvents, TabButton, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('tabs'),
 
       FieldSchema.strict('dom'),
 
       FieldSchema.defaulted('clickToDismiss', false),
-      Fields.sketchBehaviours('tabbarBehaviours', [ Highlighting, Keying ]),
+      SketchBehaviours.field('tabbarBehaviours', [ Highlighting, Keying ]),
       Fields.markers([ 'tabClass', 'selectedClass' ])
     ];
 

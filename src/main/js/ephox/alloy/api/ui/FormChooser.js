@@ -7,6 +7,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Sketcher',
@@ -18,7 +19,10 @@ define(
     'ephox.sugar.api.search.SelectorFilter'
   ],
 
-  function (Behaviour, Composing, Highlighting, Keying, Representing, AlloyEvents, SystemEvents, Sketcher, FormChooserSchema, Arr, Merger, Option, Attr, SelectorFilter) {
+  function (
+    Behaviour, Composing, Highlighting, Keying, Representing, SketchBehaviours, AlloyEvents, SystemEvents, Sketcher, FormChooserSchema, Arr, Merger, Option,
+    Attr, SelectorFilter
+  ) {
     var factory = function (detail, components, spec, externals) {
       var findByValue = function (chooser, value) {
         var choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers().choiceClass());
@@ -84,7 +88,7 @@ define(
               }
             })
           ]),
-          detail.chooserBehaviours()
+          SketchBehaviours.get(detail.chooserBehaviours())
         ),
 
         events: AlloyEvents.derive([

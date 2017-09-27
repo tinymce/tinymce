@@ -2,6 +2,11 @@ define(
   'ephox.alloy.ui.schema.MenuSchema',
 
   [
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.focus.FocusManagers',
     'ephox.alloy.data.Fields',
     'ephox.alloy.menu.build.ItemType',
@@ -15,7 +20,10 @@ define(
     'ephox.katamari.api.Merger'
   ],
 
-  function (FocusManagers, Fields, ItemType, SeparatorType, WidgetType, PartType, Tagger, FieldSchema, ValueSchema, Fun, Merger) {
+  function (
+    Composing, Highlighting, Keying, Representing, SketchBehaviours, FocusManagers, Fields, ItemType, SeparatorType, WidgetType, PartType, Tagger, FieldSchema,
+    ValueSchema, Fun, Merger
+  ) {
     var itemSchema = ValueSchema.choose(
       'type',
       {
@@ -83,7 +91,7 @@ define(
       FieldSchema.strict('dom'),
       FieldSchema.strict('components'),
       FieldSchema.defaulted('eventOrder', { }),
-      FieldSchema.defaulted('menuBehaviours', { }),
+      SketchBehaviours.field('menuBehaviours', [ Highlighting, Representing, Composing, Keying ]),
 
 
       FieldSchema.defaultedOf('movement', {

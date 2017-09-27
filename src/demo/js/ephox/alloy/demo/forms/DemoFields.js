@@ -58,7 +58,8 @@ define(
         inputBehaviours: Behaviour.derive([
           invalidation(function (v) {
             return v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
-          }, invalidUid)
+          }, invalidUid),
+          Tabstopping.config({ })
         ])
       });
 
@@ -91,8 +92,7 @@ define(
           classes: [ 'ephox-select-wrapper' ]
         },
         selectBehaviours: Behaviour.derive([
-          Tabstopping.config({ }),
-          Focusing.config({ })
+          Tabstopping.config({ })
         ]),
         options: spec.options
       });
@@ -227,7 +227,11 @@ define(
 
         markers: {
           openClass: 'alloy-selected-open'
-        }
+        },
+
+        typeaheadBehaviours: Behaviour.derive([
+          Tabstopping.config({ })
+        ])
       });
       
       return FormField.sketch({

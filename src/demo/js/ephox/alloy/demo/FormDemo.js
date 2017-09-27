@@ -210,9 +210,6 @@ define(
                 innerHtml: 'v'
               },
               buttonBehaviours: Behaviour.derive([
-                Keying.config({
-                  mode: 'execution'
-                }),
                 Tabstopping.config({ })
               ])
             }),

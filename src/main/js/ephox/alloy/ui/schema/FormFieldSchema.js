@@ -2,16 +2,19 @@ define(
   'ephox.alloy.ui.schema.FormFieldSchema',
 
   [
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun'
   ],
 
-  function (PartType, FieldSchema, Objects, Fun) {
+  function (Composing, Representing, SketchBehaviours, PartType, FieldSchema, Objects, Fun) {
     var schema = [
       FieldSchema.defaulted('prefix', 'form-field'),
-      FieldSchema.defaulted('fieldBehaviours', { })
+      SketchBehaviours.field('fieldBehaviours', [ Composing, Representing ])
     ];
 
     var parts = [

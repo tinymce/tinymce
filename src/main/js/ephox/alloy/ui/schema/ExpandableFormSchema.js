@@ -4,7 +4,9 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.data.Fields',
@@ -16,7 +18,7 @@ define(
     'ephox.sugar.api.properties.Class'
   ],
 
-  function (Behaviour, Keying, Sliding, Button, Form, Fields, AlloyParts, PartType, FieldSchema, Fun, Focus, Class) {
+  function (Behaviour, Keying, Representing, Sliding, SketchBehaviours, Button, Form, Fields, AlloyParts, PartType, FieldSchema, Fun, Focus, Class) {
     var schema = [
       Fields.markers([
         'closedClass',
@@ -31,7 +33,7 @@ define(
 
       Fields.onHandler('onShrunk'),
       Fields.onHandler('onGrown'),
-      FieldSchema.defaulted('expandableBehaviours', { })
+      SketchBehaviours.field('expandableBehaviours', [ Representing ])
     ];
 
     // TODO: Remove dupe with ExpandableForm

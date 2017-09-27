@@ -3,9 +3,11 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Coupling',
     'ephox.alloy.api.behaviour.Focusing',
-    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.data.Fields',
@@ -15,7 +17,7 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, Focusing, Tabstopping, Toggling, AlloyTriggers, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
+  function (Behaviour, Coupling, Focusing, Keying, Toggling, SketchBehaviours, AlloyTriggers, Button, Fields, InternalSink, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('toggleClass'),
       FieldSchema.strict('fetch'),
@@ -25,8 +27,7 @@ define(
       FieldSchema.option('lazySink'),
       FieldSchema.strict('dom'),
       Fields.onHandler('onOpen'),
-      // Fields.onHandler('onClose'),
-
+      SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
       FieldSchema.defaulted('matchWidth', false)
     ];
 
@@ -42,7 +43,7 @@ define(
             }
           },
           buttonBehaviours: Behaviour.derive([
-            Tabstopping.revoke(),
+            // TODO: Remove all traces of revoking
             Focusing.revoke()
           ])
         };
@@ -77,6 +78,7 @@ define(
             }
           },
           buttonBehaviours: Behaviour.derive([
+            // TODO: Remove all traces of revoking
             Focusing.revoke()
           ])
         };

@@ -6,6 +6,7 @@ define(
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.parts.AlloyParts',
@@ -13,7 +14,7 @@ define(
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Composing, Representing, Sliding, Form, Sketcher, AlloyParts, ExpandableFormSchema, Merger) {
+  function (Behaviour, Composing, Representing, Sliding, SketchBehaviours, Form, Sketcher, AlloyParts, ExpandableFormSchema, Merger) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
         AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
@@ -53,7 +54,7 @@ define(
               }
             })
           ]),
-          detail.expandableBehaviours()
+          SketchBehaviours.get(detail.expandableBehaviours())
         ),
 
         apis: {

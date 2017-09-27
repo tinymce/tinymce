@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.ButtonBase',
@@ -18,7 +19,10 @@ define(
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, ButtonBase, DropdownSchema, Fun, Merger, Option) {
+  function (
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, SketchBehaviours, Sketcher, DropdownUtils, ButtonBase, DropdownSchema, Fun, Merger,
+    Option
+  ) {
     var factory = function (detail, components, spec, externals) {
       var switchToMenu = function (sandbox) {
         Composing.getCurrent(sandbox).each(function (current) {
@@ -72,7 +76,7 @@ define(
               }),
               Focusing.config({ })
             ]),
-            detail.dropdownBehaviours()
+            SketchBehaviours.get(detail.dropdownBehaviours())
           ),
 
           eventOrder: {
