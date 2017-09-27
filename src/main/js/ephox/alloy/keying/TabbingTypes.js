@@ -52,9 +52,9 @@ define(
         return Option.from(visibles[tabbingConfig.firstTabstop()]);
       };
 
-      var findCurrent = function (component, cyclicConfig) {
-        return Focus.search(component.element()).bind(function (elem) {
-          return SelectorFind.closest(elem, cyclicConfig.selector());
+      var findCurrent = function (component, tabbingConfig) {
+        return tabbingConfig.focusManager().get(component).bind(function (elem) {
+          return SelectorFind.closest(elem, tabbingConfig.selector());
         });
       };
 
@@ -65,8 +65,7 @@ define(
       // Fire an alloy focus on the first visible element that matches the selector
       var focusIn = function (component, tabbingConfig, tabbingState) {
         findInitial(component, tabbingConfig).each(function (target) {
-          var originator = component.element();
-          component.getSystem().triggerFocus(target, originator);
+          tabbingConfig.focusManager().set(component, target);
         });
       };
 
@@ -76,10 +75,8 @@ define(
         }).fold(function () {
           // Even if there is only one, still capture the event if cycling
           return tabbingConfig.cyclic() ? Option.some(true) : Option.none();
-        }, function (outcome) {
-          var system = component.getSystem();
-          var originator = component.element();
-          system.triggerFocus(outcome, originator);
+        }, function (target) {
+          tabbingConfig.focusManager().set(component, target);
           // Kill the event
           return Option.some(true);
         });
