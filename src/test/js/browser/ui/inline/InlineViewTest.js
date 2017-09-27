@@ -2,6 +2,7 @@ asynctest(
   'InlineViewTest',
 
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
@@ -24,8 +25,8 @@ asynctest(
   ],
 
   function (
-    GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, TestDropdownMenu, GuiSetup, Sinks,
-    TestBroadcasts, Arr, Future, Result
+    Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, TestDropdownMenu, GuiSetup,
+    Sinks, TestBroadcasts, Arr, Future, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -52,24 +53,34 @@ asynctest(
       var sCheckOpen = function (label) {
         return Logger.t(
           label,
-          Waiter.sTryUntil(
-            'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline'),
-            100,
-            1000
-          )
+          GeneralSteps.sequence([
+            Waiter.sTryUntil(
+              'Test inline should not be DOM',
+              UiFinder.sExists(gui.element(), '.test-inline'),
+              100,
+              1000
+            ),
+            Step.sync(function () {
+              Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
+            })
+          ])
         );
       };
 
       var sCheckClosed = function (label) {
         return Logger.t(
           label,
-          Waiter.sTryUntil(
-            'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline'),
-            100,
-            1000
-          )
+          GeneralSteps.sequence([
+            Waiter.sTryUntil(
+              'Test inline should not be in DOM',
+              UiFinder.sNotExists(gui.element(), '.test-inline'),
+              100,
+              1000
+            ),
+            Step.sync(function () {
+              Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
+            })
+          ])
         );
       };
 

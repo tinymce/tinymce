@@ -52,7 +52,8 @@ define(
             hide: function (sandbox) {
               Sandboxing.close(sandbox);
               detail.onHide()(sandbox);
-            }
+            },
+            isOpen: Sandboxing.isOpen
           }
         }
       );
@@ -74,6 +75,9 @@ define(
         },
         hide: function (apis, component) {
           apis.hide(component);
+        },
+        isOpen: function (apis, component) {
+          return apis.isOpen(component);
         }
       }
     });
