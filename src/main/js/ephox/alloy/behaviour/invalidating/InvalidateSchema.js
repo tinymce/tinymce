@@ -10,7 +10,9 @@ define(
   function (Fields, FieldSchema, Option) {
     return [
       FieldSchema.strict('invalidClass'),
+      FieldSchema.defaulted('getRoot', Option.none),
 
+      // TODO: Completely rework the notify API
       FieldSchema.optionObjOf('notify', [
         FieldSchema.defaulted('aria', 'alert'),
         // Maybe we should use something else.
@@ -23,7 +25,8 @@ define(
 
       FieldSchema.optionObjOf('validator', [
         FieldSchema.strict('validate'),
-        FieldSchema.defaulted('onEvent', 'input')
+        FieldSchema.defaulted('onEvent', 'input'),
+        FieldSchema.defaulted('validateOnLoad', true)
       ])
     ];
   }
