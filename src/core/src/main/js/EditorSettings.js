@@ -28,12 +28,15 @@ define(
     var mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
 
     var normalizePlugins = function (plugins) {
-      return Type.isArray(plugins) ? plugins.join(' ') : plugins;
+      var pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
+      var trimmedPlugins = Arr.map(Type.isString(pluginNames) ? pluginNames.split(' ') : [ ], Strings.trim);
+      return Arr.filter(trimmedPlugins, function (item) {
+        return item.length > 0;
+      });
     };
 
     var filterMobilePlugins = function (plugins) {
-      var trimmedPlugins = Arr.map(normalizePlugins(plugins).split(' '), Strings.trim);
-      return Arr.filter(trimmedPlugins, Fun.curry(Arr.contains, mobilePlugins)).join(' ');
+      return Arr.filter(plugins, Fun.curry(Arr.contains, mobilePlugins));
     };
 
     var extractSections = function (keys, settings) {
@@ -104,10 +107,23 @@ define(
       }
     };
 
-    var combineSettings = function (defaultSettings, defaultOverrideSettings, settings) {
-      var sectionResult = extractSections(['mobile'], settings);
-      var plugins = sectionResult.settings().plugins;
+    var combinePlugins = function (forcedPlugins, plugins) {
+      return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
+    };
 
+    var processPlugins = function (isTouchDevice, sectionResult, defaultOverrideSettings, settings) {
+      var forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
+      var plugins = normalizePlugins(settings.plugins);
+      var platformPlugins = isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(plugins) : plugins;
+      var combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
+
+      return Tools.extend(settings, {
+        plugins: combinedPlugins.join(' ')
+      });
+    };
+
+    var combineSettings = function (isTouchDevice, defaultSettings, defaultOverrideSettings, settings) {
+      var sectionResult = extractSections(['mobile'], settings);
       var extendedSettings = Tools.extend(
         // Default settings
         defaultSettings,
@@ -119,25 +135,22 @@ define(
         sectionResult.settings(),
 
         // Sections
-        isTouch ? getSection(sectionResult, 'mobile') : { },
+        isTouchDevice ? getSection(sectionResult, 'mobile') : { },
 
         // Forced settings
         {
           validate: true,
           content_editable: sectionResult.settings().inline,
           external_plugins: getExternalPlugins(defaultOverrideSettings, sectionResult.settings())
-        },
-
-        // TODO: Remove this once we fix each plugin with a mobile version
-        isTouch && plugins && hasSection(sectionResult, 'mobile') ? { plugins: filterMobilePlugins(plugins) } : { }
+        }
       );
 
-      return extendedSettings;
+      return processPlugins(isTouchDevice, sectionResult, defaultOverrideSettings, extendedSettings);
     };
 
     var getEditorSettings = function (editor, id, documentBaseUrl, defaultOverrideSettings, settings) {
       var defaultSettings = getDefaultSettings(id, documentBaseUrl, editor);
-      return combineSettings(defaultSettings, defaultOverrideSettings, settings);
+      return combineSettings(isTouch, defaultSettings, defaultOverrideSettings, settings);
     };
 
     var get = function (editor, name) {
@@ -152,9 +165,7 @@ define(
       getEditorSettings: getEditorSettings,
       get: get,
       getString: Fun.curry(getFiltered, Type.isString),
-
-      // TODO: Remove this once we have proper mobile plugins
-      filterMobilePlugins: filterMobilePlugins
+      combineSettings: combineSettings
     };
   }
 );
