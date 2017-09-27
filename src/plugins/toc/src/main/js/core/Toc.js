@@ -29,10 +29,10 @@ define(
     };
 
     var hasHeaders = function (editor) {
-      return prepareHeaders(editor).length > 0;
+      return readHeaders(editor).length > 0;
     };
 
-    var prepareHeaders = function (editor) {
+    var readHeaders = function (editor) {
       var tocClass = Settings.getTocClass(editor);
       var headerTag = Settings.getTocHeader(editor);
       var selector = generateSelector(Settings.getTocDepth(editor));
@@ -46,13 +46,11 @@ define(
       }
 
       return Tools.map(headers, function (h) {
-        if (!h.id) {
-          h.id = tocId();
-        }
         return {
-          id: h.id,
+          id: h.id ? h.id : tocId(),
           level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
-          title: editor.$.text(h)
+          title: editor.$.text(h),
+          element: h
         };
       });
     };
@@ -86,7 +84,7 @@ define(
 
     var generateTocContentHtml = function (editor) {
       var html = '';
-      var headers = prepareHeaders(editor);
+      var headers = readHeaders(editor);
       var prevLevel = getMinLevel(headers) - 1;
       var i, ii, h, nextLevel;
 
@@ -98,6 +96,7 @@ define(
 
       for (i = 0; i < headers.length; i++) {
         h = headers[i];
+        h.element.id = h.id;
         nextLevel = headers[i + 1] && headers[i + 1].level;
 
         if (prevLevel === h.level) {
