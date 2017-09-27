@@ -26,8 +26,8 @@ asynctest(
       Pipeline.async({}, [
         tinyApis.sFocus,
         tinyApis.sSetContent('<p style="height: 5000px">a</p><p>b</p>'),
-        tinyActions.sContentKeystroke(Keys.space(), {}),
         tinyApis.sSetSelection([1], 0, [1], 1),
+        tinyActions.sContentKeystroke(Keys.space(), {}),
         Chain.asStep({}, [
           Toolbar.cWaitForToolbar,
           Toolbar.cClickButton('Insert/Edit link')

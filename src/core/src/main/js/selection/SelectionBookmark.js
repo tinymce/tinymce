@@ -2,6 +2,7 @@ define(
   'tinymce.core.selection.SelectionBookmark',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
@@ -10,11 +11,11 @@ define(
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.WindowSelection',
-    'tinymce.core.caret.CaretContainer',
-    'tinymce.core.dom.DOMUtils'
+    'global!document',
+    'tinymce.core.caret.CaretFinder'
   ],
 
-  function (Option, Compare, Element, Node, Text, Traverse, Selection, WindowSelection, CaretContainer, DOMUtils) {
+  function (Fun, Option, Compare, Element, Node, Text, Traverse, Selection, WindowSelection, document, CaretFinder) {
     var clamp = function (offset, element) {
       var max = Node.isText(element) ? Text.get(element).length : Traverse.children(element).length + 1;
 
@@ -84,8 +85,24 @@ define(
       return Option.some(rng);
     };
 
-    var hasSelection = function (root) {
-      return getBookmark(root).isSome();
+    var bookmarkSelection = function (editor) {
+      var newBookmark = getBookmark(Element.fromDom(editor.getBody()));
+      editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
+    };
+
+    var getBookmarkedRng = function (editor) {
+      return editor.bookmark
+        .bind(Fun.curry(validate, Element.fromDom(editor.getBody())))
+        .bind(bookmarkToNativeRng);
+    };
+
+    var restoreSelection = function (editor) {
+      getBookmarkedRng(editor)
+        .fold(function () {
+          return CaretFinder.firstPositionIn(editor.getBody());
+        }, function (rng) {
+          editor.selection.setRng(rng);
+        });
     };
 
     return {
@@ -93,7 +110,9 @@ define(
       setBookmark: setBookmark,
       validate: validate,
       bookmarkToNativeRng: bookmarkToNativeRng,
-      hasSelection: hasSelection
+      bookmarkSelection: bookmarkSelection,
+      getBookmarkedRng: getBookmarkedRng,
+      restoreSelection: restoreSelection
     };
   }
 );

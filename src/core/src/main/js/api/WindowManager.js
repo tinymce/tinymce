@@ -34,9 +34,10 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
+    'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.ui.WindowManagerImpl'
   ],
-  function (Arr, Option, WindowManagerImpl) {
+  function (Arr, Option, SelectionBookmark, WindowManagerImpl) {
     return function (editor) {
       var windows = [];
 
@@ -90,11 +91,7 @@ define(
 
       var open = function (args, params) {
         editor.editorManager.setActive(editor);
-
-        // Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
-        if (windows.length === 0) {
-          editor.nodeChanged();
-        }
+        SelectionBookmark.bookmarkSelection(editor);
 
         var win = getImplementation().open(args, params, closeWindow);
         addWindow(win);

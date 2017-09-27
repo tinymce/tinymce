@@ -11,17 +11,17 @@
 define(
   'tinymce.core.EditorFocus',
   [
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'global!document',
     'tinymce.core.Env',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.selection.SelectionBookmark'
   ],
-  function (Fun, Option, Compare, Element, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
+  function (Option, Compare, Element, document, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";
@@ -71,6 +71,12 @@ define(
       }
     };
 
+    var hasFocus = function (editor) {
+      var activeElement = editor.inline ? editor.getBody() : document.getElementById(editor.id + '_ifr');
+
+      return document.activeElement === activeElement;
+    };
+
     var focusEditor = function (editor) {
       var selection = editor.selection, contentEditable = editor.settings.content_editable;
       var body = editor.getBody(), contentEditableHost, rng = selection.getRng();
@@ -86,6 +92,13 @@ define(
         return;
       }
 
+      if (editor.bookmark !== undefined && hasFocus(editor) === false) {
+        SelectionBookmark.getBookmarkedRng(editor).each(function (bookmarkRng) {
+          editor.selection.setRng(bookmarkRng);
+          rng = bookmarkRng;
+        });
+      }
+
       // Focus the window iframe
       if (!contentEditable) {
         // WebKit needs this call to fire focusin event properly see #5948
@@ -97,16 +110,6 @@ define(
         editor.getWin().focus();
       }
 
-      if (editor.bookmark !== undefined && SelectionBookmark.hasSelection(Element.fromDom(editor.getBody())) === false) {
-        rng = editor.bookmark
-          .bind(Fun.curry(SelectionBookmark.validate, Element.fromDom(editor.getBody())))
-          .bind(SelectionBookmark.bookmarkToNativeRng)
-          .getOrThunk(function () {
-            return CaretFinder.firstPositionIn(editor.getBody());
-          });
-
-        editor.selection.setRng(rng);
-      }
       // Focus the body as well since it's contentEditable
       if (Env.gecko || contentEditable) {
         focusBody(body);
@@ -129,7 +132,8 @@ define(
     };
 
     return {
-      focus: focus
+      focus: focus,
+      hasFocus: hasFocus
     };
   }
 );

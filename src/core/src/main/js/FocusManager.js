@@ -61,9 +61,8 @@ define(
         var editor = e.editor;
 
         editor.on('init', function () {
-          editor.on('keyup execcommand mouseup', function (e) {
-            var newBookmark = SelectionBookmark.getBookmark(Element.fromDom(editor.getBody()));
-            editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
+          editor.on('keyup beforeexeccommand execcommand mouseup', function (e) {
+            SelectionBookmark.bookmarkSelection(editor);
           });
         });
 

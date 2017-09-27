@@ -17,15 +17,16 @@
 define(
   'tinymce.core.EditorCommands',
   [
+    'tinymce.core.Env',
+    'tinymce.core.InsertContent',
     'tinymce.core.delete.DeleteCommands',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.Env',
-    'tinymce.core.InsertContent',
+    'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.util.Tools'
   ],
-  function (DeleteCommands, NodeType, RangeUtils, TreeWalker, Env, InsertContent, Tools) {
+  function (Env, InsertContent, DeleteCommands, NodeType, RangeUtils, TreeWalker, SelectionBookmark, Tools) {
     // Added for compression purposes
     var each = Tools.each, extend = Tools.extend;
     var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
@@ -64,6 +65,8 @@ define(
 
         if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
           editor.focus();
+        } else {
+          SelectionBookmark.restoreSelection(editor);
         }
 
         args = editor.fire('BeforeExecCommand', { command: command, ui: ui, value: value });

@@ -22,6 +22,7 @@ define(
   [
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'tinymce.core.EditorFocus',
     'tinymce.core.Env',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.BookmarkManager',
@@ -32,12 +33,13 @@ define(
     'tinymce.core.selection.EventProcessRanges',
     'tinymce.core.selection.GetSelectionContent',
     'tinymce.core.selection.MultiRange',
+    'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.selection.SetSelectionContent',
     'tinymce.core.util.Tools'
   ],
   function (
-    Compare, Element, Env, CaretPosition, BookmarkManager, ControlSelection, RangeUtils, ScrollIntoView, TreeWalker, EventProcessRanges, GetSelectionContent,
-    MultiRange, SetSelectionContent, Tools
+    Compare, Element, EditorFocus, Env, CaretPosition, BookmarkManager, ControlSelection, RangeUtils, ScrollIntoView, TreeWalker, EventProcessRanges, GetSelectionContent,
+    MultiRange, SelectionBookmark, SetSelectionContent, Tools
   ) {
     var each = Tools.each, trim = Tools.trim;
 
@@ -341,9 +343,12 @@ define(
           return null;
         }
 
-        // Found tridentSel object then we need to use that one
-        if (w3c && self.tridentSel) {
-          return self.tridentSel.getRangeAt(0);
+        if (self.editor.bookmark !== undefined && EditorFocus.hasFocus(self.editor) === false) {
+          var bookmark = SelectionBookmark.getBookmarkedRng(self.editor);
+
+          if (bookmark.isSome()) {
+            return bookmark.getOr(doc.createRange());
+          }
         }
 
         try {

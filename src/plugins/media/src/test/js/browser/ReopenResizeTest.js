@@ -30,7 +30,7 @@ asynctest(
       // assertContentStructure did not work because some
       // browsers insert BRs and some do not
       return Step.sync(function () {
-        var actualCount = editor.dom.select('body > img.mce-object').length;
+        var actualCount = editor.dom.select('img.mce-object').length;
         RawAssertions.assertEq('assert raw content', 1, actualCount);
       });
     };

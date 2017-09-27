@@ -35,6 +35,7 @@ asynctest(
 
       Pipeline.async({}, [
         Logger.t('Select image by context menu clicking on it', GeneralSteps.sequence([
+          tinyApis.sFocus,
           tinyApis.sSetContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==" width="100" height="100"></p>'),
           sContextMenuClickInMiddleOf(editor, [0, 0]),
           tinyApis.sAssertSelection([0], 0, [0], 1)
