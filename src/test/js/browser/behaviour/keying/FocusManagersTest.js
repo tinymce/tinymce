@@ -165,6 +165,22 @@ asynctest(
       ])
     });
 
+    var menuManager = manager('menu');
+    var memMenu = Memento.record({
+      dom: {
+        tag: 'div',
+        classes: [ 'menu' ]
+      },
+      components: makeItems('span', 'menu', false, 1),
+      behaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'menu',
+          selector: 'span',
+          focusManager: menuManager
+        })
+      ])
+    });
+
     GuiSetup.setup(
       function (store, doc, body) {
         return GuiFactory.build({
@@ -177,7 +193,8 @@ asynctest(
             memCyclic.asSpec(),
             memFlatgrid.asSpec(),
             memFlow.asSpec(),
-            memMatrix.asSpec()
+            memMatrix.asSpec(),
+            memMenu.asSpec()
           ],
 
           behaviours: Behaviour.derive([
@@ -215,6 +232,7 @@ asynctest(
         var flatgrid = memFlatgrid.get(component);
         var flow = memFlow.get(component);
         var matrix = memMatrix.get(component);
+        var menu = memMenu.get(component);
 
         var sTestKeying = function (label, comp, manager, keyName) {
           return Logger.t(
@@ -273,6 +291,13 @@ asynctest(
             matrix,
             matrixManager,
             'right'
+          ),
+
+          sTestKeying(
+            'menu',
+            menu,
+            menuManager,
+            'down'
           )
         ];
       },
