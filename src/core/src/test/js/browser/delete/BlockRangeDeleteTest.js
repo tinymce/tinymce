@@ -50,6 +50,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         Logger.t('Backspace on collapsed range should be a noop', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([0, 0], 1),

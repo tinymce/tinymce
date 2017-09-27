@@ -56,6 +56,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         Logger.t('Backspace in same block should remain unchanged', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([0, 0], 1),

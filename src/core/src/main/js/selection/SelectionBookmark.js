@@ -91,7 +91,9 @@ define(
     };
 
     var getBookmarkedRng = function (editor) {
-      return editor.bookmark
+      var bookmark = editor.bookmark ? editor.bookmark : Option.none();
+
+      return bookmark
         .bind(Fun.curry(validate, Element.fromDom(editor.getBody())))
         .bind(bookmarkToNativeRng);
     };

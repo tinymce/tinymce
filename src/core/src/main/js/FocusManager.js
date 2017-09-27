@@ -61,7 +61,10 @@ define(
         var editor = e.editor;
 
         editor.on('init', function () {
-          editor.on('keyup beforeexeccommand execcommand mouseup', function (e) {
+          editor.on('keyup mouseup nodechange', function (e) {
+            if (e.type === 'nodechange' && e.selectionChange) {
+              return;
+            }
             SelectionBookmark.bookmarkSelection(editor);
           });
         });
