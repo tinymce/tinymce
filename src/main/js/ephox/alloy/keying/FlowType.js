@@ -25,16 +25,23 @@ define(
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
       FieldSchema.defaulted('executeOnMove', false)
     ];
+    
+    // TODO: Remove dupe.
+    var findCurrent = function (component, flowConfig) {
+      return flowConfig.focusManager().get(component).bind(function (elem) {
+        return SelectorFind.closest(elem, flowConfig.selector());
+      });
+    };
 
     var execute = function (component, simulatedEvent, flowConfig) {
-      return Focus.search(component.element()).bind(function (focused) {
+      return findCurrent(component, flowConfig).bind(function (focused) {
         return flowConfig.execute()(component, simulatedEvent, focused);
       });
     };
 
     var focusIn = function (component, flowConfig) {
       flowConfig.getInitial()(component).or(SelectorFind.descendant(component.element(), flowConfig.selector())).each(function (first) {
-        component.getSystem().triggerFocus(first, component.element());
+        flowConfig.focusManager().set(component, first);
       });
     };
 

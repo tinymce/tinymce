@@ -56,25 +56,28 @@ asynctest(
       };
     };
 
+    var makeItems = function (tag, prefix, haveTabstop) {
+      return Arr.map([ '1', '2', '3' ], function (num) {
+        return {
+          dom: {
+            tag: tag,
+            classes: [ prefix + '-' + num ],
+            innerHtml: prefix + '-' + num
+          },
+          behaviours: Behaviour.derive([
+            Focusing.config({ })
+          ].concat(haveTabstop ? [ Tabstopping.config({ }) ] : [ ]))
+        };
+      });
+    };
+
     var acyclicManager = manager('acyclic');
     var memAcyclic = Memento.record({
       dom: {
         tag: 'div',
         classes: [ 'acyclic' ]
       },
-      components: Arr.map([ '1', '2', '3' ], function (num) {
-        return {
-          dom: {
-            tag: 'span',
-            classes: [ 'acyclic-' + num ],
-            innerHtml: 'acyclic-' + num
-          },
-          behaviours: Behaviour.derive([
-            Tabstopping.config({ }),
-            Focusing.config({ })
-          ])
-        };
-      }),
+      components: makeItems('span', 'acyclic', true),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'acyclic',
@@ -89,19 +92,7 @@ asynctest(
         tag: 'div',
         classes: [ 'cyclic' ]
       },
-      components: Arr.map([ '1', '2', '3' ], function (num) {
-        return {
-          dom: {
-            tag: 'span',
-            classes: [ 'cyclic-' + num ],
-            innerHtml: 'cyclic-' + num
-          },
-          behaviours: Behaviour.derive([
-            Tabstopping.config({ }),
-            Focusing.config({ })
-          ])
-        };
-      }),
+      components: makeItems('span', 'cyclic', true),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'cyclic',
@@ -114,29 +105,9 @@ asynctest(
     var memFlatgrid = Memento.record({
       dom: {
         tag: 'div',
-        classes: [ 'flatgrid' ],
-        styles: {
-          width: '100px',
-          height: '200px',
-          background: 'black',
-          color: 'white',
-          display: 'flex',
-          'flex-wrap': 'wrap'
-        }
+        classes: [ 'flatgrid' ]
       },
-      components: Arr.map([ '1', '2', '3', '4' ], function (num) {
-        return {
-          dom: {
-            tag: 'span',
-            classes: [ 'flatgrid-' + num ],
-            innerHtml: 'flatgrid-' + num
-          },
-          behaviours: Behaviour.derive([
-            Tabstopping.config({ }),
-            Focusing.config({ })
-          ])
-        };
-      }),
+      components: makeItems('span', 'flatgrid', false),
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'flatgrid',
@@ -150,6 +121,21 @@ asynctest(
       ])
     });
 
+    var flowManager = manager('flow');
+    var memFlow = Memento.record({
+      dom: {
+        tag: 'div',
+        classes: [ 'flow' ]
+      },
+      components: makeItems('span', 'flow', false),
+      behaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'flow',
+          selector: 'span',
+          focusManager: flowManager
+        })
+      ])
+    });
 
     GuiSetup.setup(
       function (store, doc, body) {
@@ -161,7 +147,8 @@ asynctest(
           components: [
             memAcyclic.asSpec(),
             memCyclic.asSpec(),
-            memFlatgrid.asSpec()
+            memFlatgrid.asSpec(),
+            memFlow.asSpec()
           ],
 
           behaviours: Behaviour.derive([
@@ -197,7 +184,7 @@ asynctest(
         var acyclic = memAcyclic.get(component);
         var cyclic = memCyclic.get(component);
         var flatgrid = memFlatgrid.get(component);
-
+        var flow = memFlow.get(component);
 
         var sTestKeying = function (label, comp, manager, keyName) {
           return Logger.t(
@@ -241,6 +228,13 @@ asynctest(
             'flatgrid',
             flatgrid,
             flatgridManager,
+            'right'
+          ),
+
+          sTestKeying(
+            'flow',
+            flow,
+            flowManager,
             'right'
           )
         ];
