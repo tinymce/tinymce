@@ -5,8 +5,6 @@ define(
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
-    'ephox.fussy.api.SelectionRange',
-    'ephox.fussy.api.WindowSelection',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
@@ -16,11 +14,13 @@ define(
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.events.MouseEvent',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.selection.core.SelectionDirection',
     'tinymce.plugins.tablenew.queries.Direction',
     'tinymce.plugins.tablenew.selection.Ephemera'
   ],
 
-  function (InputHandlers, SelectionAnnotation, SelectionKeys, SelectionRange, WindowSelection, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Direction, Ephemera) {
+  function (InputHandlers, SelectionAnnotation, SelectionKeys, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Selection, SelectionDirection, Direction, Ephemera) {
     return function (editor, lazyResize) {
       var inputHandlers = Cell([]);
 
@@ -57,8 +57,9 @@ define(
             event.kill();
           }
           response.selection().each(function (ns) {
-            var range = SelectionRange.write(ns.start(), ns.finish());
-            WindowSelection.set(win, range);
+            var relative = Selection.relative(ns.start(), ns.finish());
+            var rng = SelectionDirection.asLtrRange(win, relative);
+            editor.selection.setRng(rng);
           });
         };
 

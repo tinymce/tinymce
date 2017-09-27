@@ -1,8 +1,6 @@
 asynctest(
   'browser.tinymce.plugins.table.DisableTableToolbarTest',
   [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
@@ -11,12 +9,12 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
+    'global!document',
     'tinymce.plugins.table.Plugin',
     'tinymce.plugins.table.test.TableTestUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, TablePlugin, TableTestUtils, ModernTheme) {
+  function (GeneralSteps, Logger, Pipeline, Step, UiFinder, TinyApis, TinyDom, TinyLoader, document, TablePlugin, TableTestUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

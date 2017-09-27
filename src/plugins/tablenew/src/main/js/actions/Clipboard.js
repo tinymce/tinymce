@@ -2,7 +2,7 @@ define(
   'tinymce.plugins.tablenew.actions.Clipboard',
 
   [
-    'ephox.compass.Arr',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.snooker.api.CopySelected',
     'ephox.snooker.api.TableFill',
@@ -12,12 +12,12 @@ define(
     'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Html',
+    'tinymce.plugins.tablenew.queries.TableTargets',
     'tinymce.plugins.tablenew.selection.Ephemera',
-    'tinymce.plugins.tablenew.selection.SelectionTypes',
-    'tinymce.plugins.tablenew.queries.TableTargets'
+    'tinymce.plugins.tablenew.selection.SelectionTypes'
   ],
 
-  function (Arr, Fun, CopySelected, TableFill, TableLookup, Replication, Element, Elements, Node, Html, Ephemera, SelectionTypes, TableTargets) {
+  function (Arr, Fun, CopySelected, TableFill, TableLookup, Replication, Element, Elements, Node, Html, TableTargets, Ephemera, SelectionTypes) {
     var extractSelected = function (cells) {
       // Assume for now that we only have one table (also handles the case where we multi select outside a table)
       return TableLookup.table(cells[0]).map(Replication.deep).map(function (replica) {

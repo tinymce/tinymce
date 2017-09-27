@@ -2,9 +2,7 @@ define(
   'tinymce.plugins.tablenew.queries.TabContext',
 
   [
-    'ephox.darwin.api.TableSelection',
     'ephox.katamari.api.Option',
-    'ephox.oath.navigation.Descend',
     'ephox.snooker.api.CellNavigation',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Compare',
@@ -12,11 +10,12 @@ define(
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
+    'ephox.sugar.api.selection.CursorPosition',
     'tinymce.core.util.VK',
     'tinymce.plugins.tablenew.queries.TableTargets'
   ],
 
-  function (TableSelection, Option, Descend, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, VK, TableTargets) {
+  function (Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, TableTargets) {
     var forward = function (editor, isRoot, cell, lazyWire) {
       return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
     };
@@ -27,7 +26,7 @@ define(
 
     var go = function (editor, isRoot, cell, actions, lazyWire) {
       return cell.fold(Option.none, Option.none, function (current, next) {
-        return Descend.firstCursor(next).bind(function (cursor) {
+        return CursorPosition.first(next).bind(function (cursor) {
           var rng = editor.dom.createRng();
           rng.setStart(cursor.dom(), 0);
           rng.setEnd(cursor.dom(), 0);
