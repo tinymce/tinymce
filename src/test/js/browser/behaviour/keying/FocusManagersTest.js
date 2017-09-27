@@ -5,6 +5,7 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
@@ -24,8 +25,8 @@ asynctest(
   ],
 
   function (
-    Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder, Behaviour, Focusing, Keying, Tabstopping, GuiFactory, Memento, GuiSetup, Arr, Focus,
-    Attr, SelectorFind
+    Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step, UiFinder, Behaviour, Focusing, Keying, Tabstopping, GuiFactory, Memento, GuiSetup,
+    Arr, Focus, Attr, SelectorFind
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -44,7 +45,7 @@ asynctest(
       // Test only method
       var sAssert = function (label, expected) {
         return Step.sync(function () {
-          Assertions.assertEq(label, expected, active);
+          Assertions.assertEq(prefix + ' ' + label, expected, active);
         });
       };
 
@@ -82,6 +83,33 @@ asynctest(
       ])
     });
 
+    var cyclicManager = manager('cyclic');
+    var memCyclic = Memento.record({
+      dom: {
+        tag: 'div',
+        classes: [ 'cyclic' ]
+      },
+      components: Arr.map([ '1', '2', '3' ], function (num) {
+        return {
+          dom: {
+            tag: 'span',
+            classes: [ 'cyclic-' + num ],
+            innerHtml: 'cyclic-' + num
+          },
+          behaviours: Behaviour.derive([
+            Tabstopping.config({ }),
+            Focusing.config({ })
+          ])
+        };
+      }),
+      behaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'cyclic',
+          focusManager: cyclicManager
+        })
+      ])
+    });
+
 
     GuiSetup.setup(
       function (store, doc, body) {
@@ -91,7 +119,8 @@ asynctest(
             classes: [ 'container' ]
           },
           components: [
-            memAcyclic.asSpec()
+            memAcyclic.asSpec(),
+            memCyclic.asSpec()
           ],
 
           behaviours: Behaviour.derive([
@@ -115,8 +144,8 @@ asynctest(
           });
         };
 
-        var sKeyInside = function (component, selector, key, modifiers) {
-          return Chain.asStep(component.element(), [
+        var sKeyInside = function (comp, selector, key, modifiers) {
+          return Chain.asStep(comp.element(), [
             UiFinder.cFindIn(selector),
             Chain.op(function (inside) {
               Keyboard.keydown(key, modifiers, inside);
@@ -125,18 +154,46 @@ asynctest(
         };
 
         var acyclic = memAcyclic.get(component);
-        return [
-          Step.sync(function () {
-            Focus.focus(component.element());
-          }),
-          sFocusIn(acyclic),
-          acyclicManager.sAssert('Focus in acyclic-1', 'acyclic-1'),
-          sFocusStillUnmoved('acyclic.focusIn'),
+        var cyclic = memCyclic.get(component);
 
-          // Pressing tab will work based on the get from focusManager, so it should move to acyclic-2
-          sKeyInside(acyclic, '.acyclic-1', Keys.tab(), { }),
-          acyclicManager.sAssert('Focus in acyclic-2', 'acyclic-2'),
-          sFocusStillUnmoved('acyclic.tab')          
+
+        var sTestKeying = function (label, comp, manager, keyName) {
+          return Logger.t(
+            label + ' Keying',
+            GeneralSteps.sequence([
+              sFocusIn(comp),
+              manager.sAssert('Focus in ' + label + '-1', label + '-1'),
+              sFocusStillUnmoved(label + '.focusIn'),
+
+              // Pressing tab will work based on the get from focusManager, so it should move to acyclic-2
+              sKeyInside(comp, '.' + label + '-1', Keys[keyName](), { }),
+              manager.sAssert('Focus in ' + label + '-2', label + '-2'),
+              sFocusStillUnmoved(label + '.' + keyName)
+            ])
+          );
+        };
+
+        return [
+          Logger.t(
+            'Initial focus on container',
+            Step.sync(function () {
+              Focus.focus(component.element());
+            })
+          ),
+
+          sTestKeying(
+            'acyclic',
+            acyclic,
+            acyclicManager,
+            'tab'
+          ),
+
+          sTestKeying(
+            'cyclic',
+            cyclic,
+            cyclicManager,
+            'tab'
+          )
         ];
       },
       success,
