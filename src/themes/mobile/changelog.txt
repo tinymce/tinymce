@@ -11,6 +11,7 @@
   <li>Added support for multiple instances of same command in toolbar (removes duplicates)</li>
   <li>Surrounded applying styles with an undo state</li>
   <li>Removed submenus from styles dropdown which are empty</li>
+  <li>Added a no-op NotificationManager to mobile theme</li>
 </ul>
 
 <h4>0.0.10</h4>
