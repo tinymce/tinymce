@@ -30,24 +30,11 @@ define(
       return built;
     };
 
-    // Handling async. Will probably get rid of. Just means that the
-    // rebuilding and showing can happen more quickly for sync.
-    var processData = function (sandbox, sConfig, sState, data, f) {
-      if (sConfig.async()) {
-        return data.map(f);
-      } else {
-        var r = f(data);
-        return Future.pure(r);
-      }
-    };
-
     // Open sandbox transfers focus to the opened menu
     var open = function (sandbox, sConfig, sState, data) {
-      return processData(sandbox, sConfig, sState, data, function (data) {
-        var state = rebuild(sandbox, sConfig, sState, data);
-        sConfig.onOpen()(sandbox, state);
-        return state;
-      });
+      var state = rebuild(sandbox, sConfig, sState, data);
+      sConfig.onOpen()(sandbox, state);
+      return state;
     };
 
     var close = function (sandbox, sConfig, sState) {

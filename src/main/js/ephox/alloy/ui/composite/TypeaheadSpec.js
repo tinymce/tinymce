@@ -41,9 +41,11 @@ define(
             });
           });
         } else {
-          DropdownUtils.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
+          var anchor = { anchor: 'hotspot', hotspot: comp };
+          var onOpenSync = function (sandbox) {
             Composing.getCurrent(sandbox).each(highlighter);
-          });
+          };
+          DropdownUtils.open(detail, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
         }
       };
 
@@ -87,11 +89,8 @@ define(
                 });
 
                 detail.previewing().set(true);
-                DropdownUtils.open(detail, {
-                  anchor: 'hotspot',
-                  hotspot: component
-                }, component, sandbox, externals).get(function () {
-                  // This is going to highlight the first one, on a delay, which will cause a flicker.
+
+                var onOpenSync = function (_sandbox) {
                   Composing.getCurrent(sandbox).each(function (menu) {
                     previousValue.fold(function () {
                       Highlighting.highlightFirst(menu);
@@ -106,7 +105,10 @@ define(
                       });
                     });
                   });
-                });
+                };
+                
+                var anchor = { anchor: 'hotspot', hotspot: component };
+                DropdownUtils.open(detail, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
               }
             }
           }
@@ -172,10 +174,9 @@ define(
 
           events: AlloyEvents.derive([
             AlloyEvents.runOnExecute(function (comp) {
-              DropdownUtils.togglePopup(detail, {
-                anchor: 'hotspot',
-                hotspot: comp
-              }, comp, externals);
+              var anchor = { anchor: 'hotspot', hotspot: comp };
+              var onOpenSync = Fun.noop;
+              DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
             }),
 
             AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {

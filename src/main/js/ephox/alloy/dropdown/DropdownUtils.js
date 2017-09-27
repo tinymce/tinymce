@@ -65,7 +65,8 @@ define(
 
               },
               onEscape: function () {
-                sandbox.getSystem().getByUid(detail.uid()).each(Focusing.focus);
+                // Focus the triggering component after escaping the menu
+                Focusing.focus(component);
                 Sandboxing.close(sandbox);
                 return Option.some(true);
               }
@@ -76,10 +77,14 @@ define(
 
     };
 
-    var open = function (detail, anchor, component, sandbox, externals) {
+    // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
+    // It can avoid things like flickering due to asynchronous bouncing
+    var open = function (detail, anchor, component, sandbox, externals, onOpenSync) {
       var processed = openF(detail, anchor, component, sandbox, externals);
-      Sandboxing.cloak(sandbox);
-      return Sandboxing.open(sandbox, processed).map(function () {
+      return processed.map(function (data) {
+        Sandboxing.cloak(sandbox);
+        Sandboxing.open(sandbox, data);
+        onOpenSync(sandbox);
         return sandbox;
       });
     };
@@ -89,12 +94,12 @@ define(
       return Future.pure(sandbox);
     };
 
-    var togglePopup = function (detail, anchor, hotspot, externals) {
+    var togglePopup = function (detail, anchor, hotspot, externals, onOpenSync) {
       var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
       var showing = Sandboxing.isOpen(sandbox);
 
       var action = showing ? close : open;
-      return action(detail, anchor, hotspot, sandbox, externals);
+      return action(detail, anchor, hotspot, sandbox, externals, onOpenSync);
     };
 
     var matchWidth = function (hotspot, container) {

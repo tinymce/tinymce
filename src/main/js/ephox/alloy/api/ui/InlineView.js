@@ -51,11 +51,10 @@ define(
             showAt: function (sandbox, anchor, thing) {
               var sink = detail.lazySink()().getOrDie();
               Sandboxing.cloak(sandbox);
-              Sandboxing.open(sandbox, Future.pure(thing)).get(function () {
-                Positioning.position(sink, anchor, sandbox);
-                Sandboxing.decloak(sandbox);
-                detail.onShow()(sandbox);
-              });
+              Sandboxing.open(sandbox, thing);
+              Positioning.position(sink, anchor, sandbox);
+              Sandboxing.decloak(sandbox);
+              detail.onShow()(sandbox);
             },
             hide: function (sandbox) {
               Sandboxing.close(sandbox);

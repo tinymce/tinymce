@@ -59,7 +59,7 @@ define(
       };
 
       var isTabstop = function (tabbingConfig, element) {
-        return isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt(element);
+        return isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt()(element);
       };
 
       // Fire an alloy focus on the first visible element that matches the selector

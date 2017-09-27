@@ -14,25 +14,32 @@ define(
     'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.SplitDropdownSchema',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, AlloyParts, ButtonBase, SplitDropdownSchema, Merger, Option) {
+  function (
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, AlloyParts, ButtonBase, SplitDropdownSchema, Fun, Merger,
+    Option
+  ) {
     var factory = function (detail, components, spec, externals) {
-      var buttonEvents = ButtonBase.events(Option.some(
-        function (component) {
-          DropdownUtils.togglePopup(detail, {
-            anchor: 'hotspot',
-            hotspot: component
-          }, component, externals).get(function (sandbox) {
-            Composing.getCurrent(sandbox).each(function (current) {
-              Highlighting.highlightFirst(current);
-              Keying.focusIn(current);
-            });
-          });
-        }
-      ));
+
+      var switchToMenu = function (sandbox) {
+        Composing.getCurrent(sandbox).each(function (current) {
+          Highlighting.highlightFirst(current);
+          Keying.focusIn(current);
+        });
+      };
+
+      var action = function (component) {
+        var anchor = { anchor: 'hotspot', hotspot: component };
+        var onOpenSync = switchToMenu;
+        DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
+      };
+
+      var buttonEvents = ButtonBase.events(Option.some(action));
+
       return Merger.deepMerge(
         {
           uid: detail.uid(),
