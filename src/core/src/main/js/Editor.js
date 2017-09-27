@@ -176,13 +176,14 @@ define(
        */
       self.contentStyles = [];
 
-      // Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
       self.shortcuts = new Shortcuts(self);
       self.loadedCSS = {};
       self.editorCommands = new EditorCommands(self);
       self.suffix = editorManager.suffix;
       self.editorManager = editorManager;
       self.inline = settings.inline;
+      self.buttons = {};
+      self.menuItems = {};
 
       if (settings.cache_suffix) {
         Env.cacheSuffix = settings.cache_suffix.replace(/^[\?\&]+/, '');
@@ -389,7 +390,7 @@ define(
           settings.icon = name;
         }
 
-        self.buttons = self.buttons || {};
+        self.buttons = self.buttons;
         settings.tooltip = settings.tooltip || settings.title;
         self.buttons[name] = settings;
       },
@@ -453,7 +454,7 @@ define(
           };
         }
 
-        self.menuItems = self.menuItems || {};
+        self.menuItems = self.menuItems;
         self.menuItems[name] = settings;
       },
 
