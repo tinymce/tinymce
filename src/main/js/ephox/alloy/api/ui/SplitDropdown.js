@@ -9,6 +9,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.parts.AlloyParts',
@@ -20,8 +21,8 @@ define(
   ],
 
   function (
-    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, AlloyParts, ButtonBase, SplitDropdownSchema, Fun, Merger,
-    Option
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, AlloyTriggers, Sketcher, DropdownUtils, AlloyParts, ButtonBase, SplitDropdownSchema,
+    Fun, Merger, Option
   ) {
     var factory = function (detail, components, spec, externals) {
 
@@ -36,6 +37,12 @@ define(
         var anchor = { anchor: 'hotspot', hotspot: component };
         var onOpenSync = switchToMenu;
         DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
+      };
+
+      var executeOnButton = function (comp) {
+        var button = AlloyParts.getPartOrDie(comp, detail, 'button');
+        AlloyTriggers.emitExecute(button);
+        return Option.some(true);
       };
 
       var buttonEvents = ButtonBase.events(Option.some(action));
@@ -74,8 +81,13 @@ define(
               }
             }),
             Keying.config({
-              mode: 'execution',
-              useSpace: true
+              mode: 'special',
+              onSpace: executeOnButton,
+              onEnter: executeOnButton,
+              onDown: function (comp) {
+                action(comp);
+                return Option.some(true);
+              }
             }),
             Focusing.config({ })
           ])

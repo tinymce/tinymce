@@ -111,6 +111,9 @@ define(
           onExecute: function () {
             console.log('split-dropdown button clicked');
           },
+          onItemExecute: function () {
+            console.log('split-dropdown button clicked');
+          },
           parts: {
             menu: {
               markers: menuMarkers,

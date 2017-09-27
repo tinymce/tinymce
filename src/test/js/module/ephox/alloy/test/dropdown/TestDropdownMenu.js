@@ -50,7 +50,8 @@ define(
         dom: {
           tag: 'li',
           attributes: {
-            'data-value': spec.data.value
+            'data-value': spec.data.value,
+            'data-test-id': 'item-' + spec.data.value
           },
           classes: [ ],
           innerHtml: spec.data.text

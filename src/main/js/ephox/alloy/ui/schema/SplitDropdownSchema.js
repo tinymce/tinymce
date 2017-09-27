@@ -21,6 +21,7 @@ define(
       FieldSchema.strict('fetch'),
 
       Fields.onStrictHandler('onExecute'),
+      Fields.onStrictHandler('onItemExecute'),
       FieldSchema.option('lazySink'),
       FieldSchema.strict('dom'),
       Fields.onHandler('onOpen'),
@@ -82,7 +83,11 @@ define(
       },
       overrides: function (detail) {
         return {
-          action: detail.onExecute()
+          action: function (btn) {
+            btn.getSystem().getByUid(detail.uid()).each(function (splitDropdown) {
+              detail.onExecute()(splitDropdown, btn);
+            });
+          }
         };
       }
     });
@@ -98,7 +103,11 @@ define(
         name: 'menu',
         defaults: function (detail) {
           return {
-            onExecute: detail.onExecute()
+            onExecute: function (tmenu, item) {
+              tmenu.getSystem().getByUid(detail.uid()).each(function (splitDropdown) {
+                detail.onItemExecute()(splitDropdown, tmenu, item);
+              });
+            }
           };
         }
       }),

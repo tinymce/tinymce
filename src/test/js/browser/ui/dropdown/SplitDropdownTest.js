@@ -5,13 +5,19 @@ asynctest(
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
+    'ephox.agar.api.Keyboard',
+    'ephox.agar.api.Keys',
     'ephox.agar.api.Mouse',
+    'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Positioning',
+    'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.component.Memento',
+    'ephox.alloy.api.events.AlloyTriggers',
+    'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.SplitDropdown',
     'ephox.alloy.api.ui.TieredMenu',
@@ -19,12 +25,14 @@ asynctest(
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Result'
+    'ephox.katamari.api.Result',
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.properties.Attr'
   ],
 
   function (
-    ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter, Behaviour, Positioning, GuiFactory, Memento, Container, SplitDropdown, TieredMenu, TestDropdownMenu,
-    GuiSetup, Arr, Future, Result
+    ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, Step, UiFinder, Waiter, Behaviour, Positioning, Representing, GuiFactory, Memento, AlloyTriggers,
+    SystemEvents, Container, SplitDropdown, TieredMenu, TestDropdownMenu, GuiSetup, Arr, Future, Result, Focus, Attr
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -43,17 +51,35 @@ asynctest(
       var c = GuiFactory.build(
         SplitDropdown.sketch({
           dom: {
-            tag: 'span'
+            tag: 'span',
+            classes: [ 'test-split-dropdown' ],
+            attributes: {
+              'data-test-id': 'split-dropdown'
+            }
           },
 
           toggleClass: '.test-selected-dropdown',
-          onExecute: store.adderH('dropdown.execute'),
+          onExecute: function (dropdown, button) {
+            var arg0Name = Attr.get(dropdown.element(), 'data-test-id');
+            var arg1Name = Attr.get(button.element(), 'data-test-id');
+            store.adderH('dropdown.execute(' + arg0Name + ', ' + arg1Name + ')')();
+          },
+          onItemExecute: function (dropdown, tieredMenu, item) {
+            var arg0Name = Attr.get(dropdown.element(), 'data-test-id');
+            var arg1Name = Attr.get(tieredMenu.element(), 'data-test-id');
+            var arg2Name = Attr.get(item.element(), 'data-test-id');
+            AlloyTriggers.emit(item, SystemEvents.sandboxClose());
+            store.adderH('dropdown.item.execute(' + [ arg0Name, arg1Name, arg2Name ].join(', ') + ')')();
+          },
 
           components: [
             SplitDropdown.parts().button({
               dom: {
                 tag: 'button',
-                classes: [ 'test-split-button-action' ]
+                classes: [ 'test-split-button-action' ],
+                attributes: {
+                  'data-test-id': 'split-dropdown-button'
+                }
               },
               components: [
                 {
@@ -68,7 +94,10 @@ asynctest(
               dom: {
                 tag: 'button',
                 innerHtml: 'v',
-                classes: [ 'test-split-button-arrow' ]
+                classes: [ 'test-split-button-arrow' ],
+                attributes: {
+                  'data-test-id': 'split-dropdown-arrow'
+                }
               }
             })
           ],
@@ -78,7 +107,15 @@ asynctest(
           },
 
           parts: {
-            menu: TestDropdownMenu.part(store)
+            menu: {
+              dom: {
+                tag: 'div',
+                attributes: {
+                  'data-test-id': 'split-tiered-menu'
+                }
+              },
+              markers: TestDropdownMenu.markers()
+            }
           },
 
           fetch: function () {
@@ -134,7 +171,7 @@ asynctest(
         store.sClear,
         store.sAssertEq('Should be empty', [ ]),
         Mouse.sClickOn(gui.element(), '.test-split-button-action'),
-        store.sAssertEq('After clicking on action', [ 'dropdown.execute' ]),
+        store.sAssertEq('After clicking on action', [ 'dropdown.execute(split-dropdown, split-dropdown-button)' ]),
         UiFinder.sNotExists(gui.element(), '[role="menu"]'),
         store.sClear,
 
@@ -146,9 +183,39 @@ asynctest(
           100,
           1000
         ),
-        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")')
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
+        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        UiFinder.sNotExists(gui.element(), '[role="menu"]'),
 
-        // TODO: Beef up tests.
+        // Now, let's do some keyboard testing. Pressing space and enter should trigger execute
+        store.sAssertEq('Before keyboard testing: should be clear', [ ]),
+        Keyboard.sKeydown(doc, Keys.space(), { }),
+        store.sAssertEq('After space on button', [ 'dropdown.execute(split-dropdown, split-dropdown-button)' ]),
+        // NOTE: this sNotExists isn't 100% fool-proof. We should probably wait first because
+        // it is async ... however, how long to wait?
+        UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+        store.sClear,
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        store.sAssertEq('After enter on button', [ 'dropdown.execute(split-dropdown, split-dropdown-button)' ]),
+        UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+        store.sClear,
+
+        Keyboard.sKeydown(doc, Keys.down(), { }),
+        store.sAssertEq('After down on button', [ ]),
+        Waiter.sTryUntil(
+          'Waiting until menu appears',
+          UiFinder.sExists(gui.element(), '[role="menu"]'),
+          100,
+          1000
+        ),
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
+
+        // Now press enter on one of the items
+        Keyboard.sKeydown(doc, Keys.enter(), { }),
+        store.sAssertEq('After enter on item', [ 'dropdown.item.execute(split-dropdown, split-tiered-menu, item-alpha)' ]),
+        // NOTE: This is due to the itemExecute handler here.
+        UiFinder.sNotExists(gui.element(), '[role="menu"]'),
+        store.sClear
       ];
     }, function () { success(); }, failure);
 
