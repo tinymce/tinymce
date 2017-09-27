@@ -21,12 +21,13 @@ asynctest(
     'ephox.alloy.test.TestBroadcasts',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Result'
   ],
 
   function (
     Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, TestDropdownMenu, GuiSetup,
-    Sinks, TestBroadcasts, Arr, Future, Result
+    Sinks, TestBroadcasts, Arr, Future, Option, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -45,10 +46,28 @@ asynctest(
 
           lazySink: function () {
             return Result.value(component);
+          },
+
+          getRelated: function () {
+            return Option.some(related);
           }
           // onEscape: store.adderH('inline.escape')
         })
       );
+
+      var related = GuiFactory.build({
+        dom: {
+          tag: 'div',
+          classes: [ 'related-to-inline' ],
+          styles: {
+            background: 'blue',
+            width: '50px',
+            height: '50px'
+          }
+        }
+      });
+
+      gui.add(related);
 
       var sCheckOpen = function (label) {
         return Logger.t(
@@ -184,6 +203,13 @@ asynctest(
             sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
           ])
         ),
+
+        TestBroadcasts.sDismiss(
+          'related element: should not close',
+          gui,
+          related.element()
+        ),
+        sCheckOpen('The inline view should not have closed when broadcasting on related'),
 
         TestBroadcasts.sDismiss(
           'outer gui element: should close',

@@ -12,11 +12,19 @@ define(
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.Merger'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Option'
   ],
 
-  function (ComponentStructure, Behaviour, Positioning, Sandboxing, Sketcher, Fields, Dismissal, FieldSchema, Fun, Future, Merger) {
+  function (ComponentStructure, Behaviour, Positioning, Sandboxing, Sketcher, Fields, Dismissal, FieldSchema, Fun, Future, Merger, Option) {
     var factory = function (detail, spec) {
+      var isPartOfRelated = function (container, queryElem) {
+        var related = detail.getRelated()(container);
+        return related.exists(function (rel) {
+          return ComponentStructure.isPartOf(rel, queryElem);
+        });
+      };
+
       return Merger.deepMerge(
         {
           uid: detail.uid(),
@@ -25,7 +33,7 @@ define(
             Behaviour.derive([
               Sandboxing.config({
                 isPartOf: function (container, data, queryElem) {
-                  return ComponentStructure.isPartOf(data, queryElem);
+                  return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
                 },
                 getAttachPoint: function () {
                   return detail.lazySink()().getOrDie();
@@ -66,6 +74,7 @@ define(
         Fields.onHandler('onShow'),
         Fields.onHandler('onHide'),
         FieldSchema.defaulted('inlineBehaviours', { }),
+        FieldSchema.defaulted('getRelated', Option.none),
         FieldSchema.defaulted('eventOrder')
       ],
       factory: factory,
