@@ -110,6 +110,46 @@ asynctest(
       ])
     });
 
+    var flatgridManager = manager('flatgrid');
+    var memFlatgrid = Memento.record({
+      dom: {
+        tag: 'div',
+        classes: [ 'flatgrid' ],
+        styles: {
+          width: '100px',
+          height: '200px',
+          background: 'black',
+          color: 'white',
+          display: 'flex',
+          'flex-wrap': 'wrap'
+        }
+      },
+      components: Arr.map([ '1', '2', '3', '4' ], function (num) {
+        return {
+          dom: {
+            tag: 'span',
+            classes: [ 'flatgrid-' + num ],
+            innerHtml: 'flatgrid-' + num
+          },
+          behaviours: Behaviour.derive([
+            Tabstopping.config({ }),
+            Focusing.config({ })
+          ])
+        };
+      }),
+      behaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'flatgrid',
+          selector: 'span',
+          initSize: {
+            numRows: 2,
+            numColumns: 2
+          },
+          focusManager: flatgridManager
+        })
+      ])
+    });
+
 
     GuiSetup.setup(
       function (store, doc, body) {
@@ -120,7 +160,8 @@ asynctest(
           },
           components: [
             memAcyclic.asSpec(),
-            memCyclic.asSpec()
+            memCyclic.asSpec(),
+            memFlatgrid.asSpec()
           ],
 
           behaviours: Behaviour.derive([
@@ -155,6 +196,7 @@ asynctest(
 
         var acyclic = memAcyclic.get(component);
         var cyclic = memCyclic.get(component);
+        var flatgrid = memFlatgrid.get(component);
 
 
         var sTestKeying = function (label, comp, manager, keyName) {
@@ -193,6 +235,13 @@ asynctest(
             cyclic,
             cyclicManager,
             'tab'
+          ),
+
+          sTestKeying(
+            'flatgrid',
+            flatgrid,
+            flatgridManager,
+            'right'
           )
         ];
       },
