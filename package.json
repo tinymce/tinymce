@@ -2,15 +2,19 @@
   "name": "@ephox/polaris",
   "description": "This project does data manipulation on arrays and strings.",
   "version": "2.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/polaris"
+  },
   "dependencies": {
     "@ephox/katamari": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "@ephox/bolt": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "scripts": {
+    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }
