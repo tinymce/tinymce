@@ -41,6 +41,20 @@ define(
       }).isSome();
     };
 
+    var isSeparator = function (namedMenuItem) {
+      return namedMenuItem && namedMenuItem.item.text === '|';
+    };
+
+    var cleanupMenu = function (namedMenuItems) {
+      return Arr.filter(namedMenuItems, function (namedMenuItem, i, namedMenuItems) {
+        if (isSeparator(namedMenuItem)) {
+          return i > 0 && i < namedMenuItems.length - 1 && !isSeparator(namedMenuItems[i - 1]);
+        } else {
+          return true;
+        }
+      });
+    };
+
     var createMenu = function (editorMenuItems, menus, removedMenuItems, context) {
       var menuButton, menu, namedMenuItems, isUserDefined;
 
@@ -86,15 +100,7 @@ define(
           });
         }
 
-        for (var i = 0; i < namedMenuItems.length; i++) {
-          if (namedMenuItems[i].item.text === '|') {
-            if (i === 0 || i === namedMenuItems.length - 1) {
-              namedMenuItems.splice(i, 1);
-            }
-          }
-        }
-
-        menuButton.menu = Arr.map(namedMenuItems, function (menuItem) {
+        menuButton.menu = Arr.map(cleanupMenu(namedMenuItems), function (menuItem) {
           return menuItem.item;
         });
 
