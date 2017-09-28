@@ -108,6 +108,24 @@ div.@{prefix}-fullscreen {
   border-color: @btn-border-hover;
 }
 
+.@{prefix}-window {
+  .@{prefix}-btn:hover {
+    border-color: @window-btn-border-hover;
+  }
+
+  .@{prefix}-btn:focus {
+    border-color: @window-btn-border-focus;
+  }
+}
+
+.@{prefix}-window-body .@{prefix}-btn, .@{prefix}-foot .@{prefix}-btn {
+  border-color: @window-btn-border;
+}
+
+.@{prefix}-foot .@{prefix}-btn.@{prefix}-primary {
+  border-color: transparent;
+}
+
 // RTL
 
 .@{prefix}-rtl .@{prefix}-window-head .@{prefix}-close {

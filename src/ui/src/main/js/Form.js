@@ -42,7 +42,7 @@ define(
         direction: 'column',
         align: 'stretch',
         flex: 1,
-        padding: 20,
+        padding: 15,
         labelGap: 30,
         spacing: 10,
         callbacks: {

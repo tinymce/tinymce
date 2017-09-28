@@ -23,7 +23,7 @@ define(
       editor.addMenuItem('Help', {
         text: 'Help',
         icon: 'help',
-        context: 'view',
+        context: 'help',
         onclick: Dialog.open(editor, pluginUrl)
       });
     };

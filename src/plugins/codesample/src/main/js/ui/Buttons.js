@@ -18,6 +18,12 @@ define(
         cmd: 'codesample',
         title: 'Insert/Edit code sample'
       });
+
+      editor.addMenuItem('codesample', {
+        cmd: 'codesample',
+        text: 'Code sample',
+        icon: 'codesample'
+      });
     };
 
     return {

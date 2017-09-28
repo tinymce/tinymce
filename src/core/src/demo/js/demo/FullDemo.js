@@ -122,6 +122,7 @@ define(
         visualblocks_content_css: '../../../../plugins/visualblocks/dist/visualblocks/css/visualblocks.css',
         images_upload_url: 'd',
         selector: "textarea",
+        //rtl_ui: true,
         link_list: [
           { title: 'My page 1', value: 'http://www.tinymce.com' },
           { title: 'My page 2', value: 'http://www.moxiecode.com' }
@@ -134,6 +135,24 @@ define(
           { title: 'None', value: '' },
           { title: 'Some class', value: 'class-name' }
         ],
+        importcss_append: true,
+        height: 400,
+        file_picker_callback: function (callback, value, meta) {
+          // Provide file and text for the link dialog
+          if (meta.filetype == 'file') {
+            callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+          }
+
+          // Provide image and alt text for the image dialog
+          if (meta.filetype == 'image') {
+            callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+          }
+
+          // Provide alternative source and posted for the media dialog
+          if (meta.filetype == 'media') {
+            callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+          }
+        },
         spellchecker_callback: function (method, text, success, failure) {
           var words = text.match(this.getWordCharPattern());
 
@@ -163,7 +182,7 @@ define(
           "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
           "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern",
-          "codesample help noneditable"
+          "codesample help noneditable print"
         ],
         add_unload_trigger: false,
         toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +

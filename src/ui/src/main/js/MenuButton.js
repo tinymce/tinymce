@@ -79,15 +79,18 @@ define(
 
         if (!self.menu) {
           menu = self.state.get('menu') || [];
+          self.classes.add('opened');
 
           // Is menu array then auto constuct menu control
           if (menu.length) {
             menu = {
               type: 'menu',
+              animate: true,
               items: menu
             };
           } else {
             menu.type = menu.type || 'menu';
+            menu.animate = true;
           }
 
           if (!menu.renderTo) {
@@ -112,8 +115,9 @@ define(
           });
 
           self.menu.on('show hide', function (e) {
-            if (e.control == self.menu) {
+            if (e.control === self.menu) {
               self.activeMenu(e.type == 'show');
+              self.classes.toggle('opened', e.type == 'show');
             }
 
             self.aria('expanded', e.type == 'show');

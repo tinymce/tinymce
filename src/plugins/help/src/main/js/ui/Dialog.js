@@ -30,7 +30,7 @@ define(
           buttons: ButtonsRow.makeRow(),
           onPostRender: function () {
             var title = this.getEl('title');
-            title.innerHTML = '<img src="' + pluginUrl + '/img/logo.png" alt="TinyMCE Logo" style="width: 200px">';
+            title.innerHTML = '<img src="' + pluginUrl + '/img/logo.png" alt="TinyMCE Logo" style="display: inline-block; width: 200px; height: 50px">';
           }
         });
       };

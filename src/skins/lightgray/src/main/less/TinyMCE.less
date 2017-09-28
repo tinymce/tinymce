@@ -21,13 +21,25 @@ div.@{prefix}-fullscreen {
 .@{prefix}-tinymce {
   display: block;
   .border-radius(2px);
+  .box-shadow(@tinymce-box-shadow);
+}
+
+.@{prefix}-statusbar > .@{prefix}-container-body {
+  display: flex;
+
+  .@{prefix}-path {
+    flex: 1;
+  }
+
+  > *:last-child {
+    padding-right: 16px;
+  }
 }
 
 .@{prefix}-wordcount {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 8px;
+  font-size: inherit;
+  text-transform: uppercase;
+  padding: 8px 0;
 }
 
 div.@{prefix}-edit-area {
@@ -41,10 +53,15 @@ div.@{prefix}-edit-area {
 
 .@{prefix}-statusbar .@{prefix}-container-body {
   position: relative;
+  font-size: 11px;
 }
 
 .@{prefix}-fullscreen .@{prefix}-resizehandle {
   display: none;
+}
+
+.@{prefix}-statusbar .@{prefix}-flow-layout-item {
+  margin: 0;
 }
 
 // Charmap
@@ -69,7 +86,7 @@ div.@{prefix}-edit-area {
 }
 
 .@{prefix}-charmap td:hover {
-  background: @btn-bg-hlight;
+  background: @btn-bg-hover;
 }
 
 .@{prefix}-grid td.@{prefix}-grid-cell div {
@@ -121,7 +138,6 @@ div.@{prefix}-edit-area {
 
 div.@{prefix}-tinymce-inline {
   width: 100%;
-  .box-shadow(none);
 }
 
 .@{prefix}-colorbtn-trans div {
@@ -139,23 +155,12 @@ div.@{prefix}-tinymce-inline {
 
 // Reduce double margins between toolbar rows
 
-.@{prefix}-toolbar-grp when (@has-button-borders = false) {
-  padding: @flow-layout-spacing 0;
-}
-
 .@{prefix}-toolbar-grp when (@has-button-borders = true) {
   padding-bottom: 2px;
 }
 
 .@{prefix}-toolbar-grp .@{prefix}-flow-layout-item {
   margin-bottom: 0;
-}
-
-// RTL
-
-.@{prefix}-rtl .@{prefix}-wordcount {
-  left: 0;
-  right: auto;
 }
 
 // Styles for inline dialog elements
@@ -200,19 +205,51 @@ div.@{prefix}-tinymce-inline {
   }
 }
 
-.@{prefix}-branding-powered-by {
-  .vertical-gradient(@panel-bg, @panel-bg-hlight);
+.@{prefix}-branding {
+  font-size: inherit;
+  text-transform: uppercase;
+  white-space: pre;
+  padding: 8px 0;
+
+  a {
+    font-size: inherit;
+    color: inherit;
+  }
+}
+
+.@{prefix}-top-part {
+  position: relative;
+}
+
+.@{prefix}-top-part::before {
+  //background-color: red;
+  content: '';
   position: absolute;
+  .box-shadow(@top-part-box-shadow);
+  top: 0;
   right: 0;
   bottom: 0;
-  width: 91px;
-  height: 9px;
-  margin-right: -1px; // Covers right border
-  margin-bottom: -1px; // Covers statusbar border
-  border: 1px solid @tab-border;
-  border-width: 1px 1px 0 1px;
-  padding: 6px 6px 0 6px;
-  background-image: url('data:image/gif;base64,R0lGODlhXwAJAIABAIiIiAAAACH5BAEKAAEALAAAAABfAAkAAAJxhBGpy+2PUnzqGNpmPNJqDIZSJY4m+KXLF3At2V6xPFfuvMF6J6fINTnhTr9XcaRC6pKvFYlZjDIszaXRSA3ijlXo9AlWindaldSJthJ55XAz6+ZWbVCOdojP77p8J8vlUSI4SHEnaEiYqOhARdhIWAAAOw');
-  background-repeat: no-repeat;
-  background-position: center center;
+  left: 0;
+  pointer-events: none;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-wordcount {
+  left: 0;
+  right: auto;
+}
+
+.@{prefix}-rtl {
+  .@{prefix}-statusbar > .@{prefix}-container-body {
+    > *:last-child {
+      padding-right: 0;
+      padding-left: 10px;
+    }
+  }
+
+  .@{prefix}-path {
+    text-align: right;
+    padding-right: 16px;
+  }
 }

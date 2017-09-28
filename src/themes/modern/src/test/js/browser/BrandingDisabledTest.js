@@ -19,7 +19,7 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, [
-        Logger.t('Branding element should not exist', UiFinder.sNotExists(Element.fromDom(editor.getContainer()), '.mce-branding-powered-by'))
+        Logger.t('Branding element should not exist', UiFinder.sNotExists(Element.fromDom(editor.getContainer()), '.mce-branding'))
       ], onSuccess, onFailure);
     }, {
       theme: 'modern',
