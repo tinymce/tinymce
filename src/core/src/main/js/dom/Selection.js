@@ -344,7 +344,7 @@ define(
         }
 
         if (self.editor.bookmark !== undefined && EditorFocus.hasFocus(self.editor) === false) {
-          var bookmark = SelectionBookmark.getBookmarkedRng(self.editor);
+          var bookmark = SelectionBookmark.getRng(self.editor);
 
           if (bookmark.isSome()) {
             return bookmark.getOr(doc.createRange());

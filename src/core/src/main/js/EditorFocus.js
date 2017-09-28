@@ -93,7 +93,7 @@ define(
       }
 
       if (editor.bookmark !== undefined && hasFocus(editor) === false) {
-        SelectionBookmark.getBookmarkedRng(editor).each(function (bookmarkRng) {
+        SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
           editor.selection.setRng(bookmarkRng);
           rng = bookmarkRng;
         });

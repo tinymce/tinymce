@@ -65,7 +65,7 @@ define(
             if (e.type === 'nodechange' && e.selectionChange) {
               return;
             }
-            SelectionBookmark.bookmarkSelection(editor);
+            SelectionBookmark.store(editor);
           });
         });
 

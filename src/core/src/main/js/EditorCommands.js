@@ -66,7 +66,7 @@ define(
         if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
           editor.focus();
         } else {
-          SelectionBookmark.restoreSelection(editor);
+          SelectionBookmark.restore(editor);
         }
 
         args = editor.fire('BeforeExecCommand', { command: command, ui: ui, value: value });

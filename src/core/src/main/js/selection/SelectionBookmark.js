@@ -62,15 +62,6 @@ define(
         .filter(isRngInRoot(root));
     };
 
-    var setBookmark = function (root, bookmark) {
-      var win = Traverse.defaultView(root);
-
-      validate(root, bookmark)
-        .each(function (rng) {
-          WindowSelection.setExact(win.dom(), rng.start(), rng.soffset(), rng.finish(), rng.foffset());
-        });
-    };
-
     var validate = function (root, bookmark) {
       return Option.from(bookmark)
           .filter(isRngInRoot(root))
@@ -85,12 +76,12 @@ define(
       return Option.some(rng);
     };
 
-    var bookmarkSelection = function (editor) {
+    var store = function (editor) {
       var newBookmark = getBookmark(Element.fromDom(editor.getBody()));
       editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
     };
 
-    var getBookmarkedRng = function (editor) {
+    var getRng = function (editor) {
       var bookmark = editor.bookmark ? editor.bookmark : Option.none();
 
       return bookmark
@@ -98,9 +89,10 @@ define(
         .bind(bookmarkToNativeRng);
     };
 
-    var restoreSelection = function (editor) {
-      getBookmarkedRng(editor)
+    var restore = function (editor) {
+      getRng(editor)
         .fold(function () {
+          debugger;
           return CaretFinder.firstPositionIn(editor.getBody());
         }, function (rng) {
           editor.selection.setRng(rng);
@@ -108,13 +100,11 @@ define(
     };
 
     return {
+      store: store,
+      restore: restore,
+      getRng: getRng,
       getBookmark: getBookmark,
-      setBookmark: setBookmark,
-      validate: validate,
-      bookmarkToNativeRng: bookmarkToNativeRng,
-      bookmarkSelection: bookmarkSelection,
-      getBookmarkedRng: getBookmarkedRng,
-      restoreSelection: restoreSelection
+      validate: validate
     };
   }
 );

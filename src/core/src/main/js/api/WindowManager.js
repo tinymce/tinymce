@@ -91,7 +91,7 @@ define(
 
       var open = function (args, params) {
         editor.editorManager.setActive(editor);
-        SelectionBookmark.bookmarkSelection(editor);
+        SelectionBookmark.store(editor);
 
         var win = getImplementation().open(args, params, closeWindow);
         addWindow(win);

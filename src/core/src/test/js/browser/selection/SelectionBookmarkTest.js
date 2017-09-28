@@ -49,20 +49,8 @@ asynctest(
       });
     };
 
-    // var setSelection = function (start, soffset, finish, foffset) {
-    //   var win = Traverse.defaultView(Element.fromDom(start));
-    //   WindowSelection.setExact(
-    //     win.dom(), Element.fromDom(start), soffset, Element.fromDom(finish), foffset
-    //   );
-    // };
-
-    // var getSelection = function (root) {
-    //   var win = Traverse.defaultView(Element.fromDom(root));
-    //   return WindowSelection.getExact(win.dom());
-    // };
-
     var cGetBookmark = function (rootPath) {
-      return Chain.mapper(function (vb) {
+      return Chain.mapper(function () {
         var root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
         return SelectionBookmark.getBookmark(root);
       });
@@ -119,7 +107,13 @@ asynctest(
 
     var cSetSelectionFromBookmark = Chain.op(function (bookmark) {
       bookmark.each(function (b) {
-        SelectionBookmark.setBookmark(Element.fromDom(viewBlock.get()), b);
+        var root = Element.fromDom(viewBlock.get());
+        var win = Traverse.defaultView(root);
+
+        SelectionBookmark.validate(root, b)
+          .each(function (rng) {
+            WindowSelection.setExact(win.dom(), rng.start(), rng.soffset(), rng.finish(), rng.foffset());
+          });
       });
     });
 
