@@ -1,0 +1,13 @@
+# Description
+`boss` is a project which provides utility functions for dealing with the DOM.
+# Installation
+`boss` is available as an `npm` package.  You can install it via the npm package `@ephox/boss`
+## Install from npm
+`npm install @ephox/boss`
+
+# Usage
+`DomUniverse`: Provides utility functions for dealing with the DOM.
+# Tests
+`boss` uses `bolt` to run atomic tests.
+## Running Tests
+`$ npm test`
