@@ -2,7 +2,6 @@ define(
   'ephox.snooker.resize.BarManager',
 
   [
-    'ephox.katamari.api.Arr',
     'ephox.dragster.api.Dragger',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
@@ -12,18 +11,18 @@ define(
     'ephox.snooker.resize.Bars',
     'ephox.snooker.style.Styles',
     'ephox.snooker.util.CellUtils',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.SelectorExists',
     'ephox.sugar.api.search.SelectorFind',
     'global!parseInt'
   ],
 
-  function (Arr, Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Attr, Class, Compare, Css, DomEvent, Node, SelectorExists, SelectorFind, parseInt) {
+  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, DomEvent, Body, Node, Attr, Class, Css, SelectorExists, SelectorFind, parseInt) {
     var resizeBar = Styles.resolve('resizer-bar');
     var resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
@@ -101,26 +100,19 @@ define(
           hoverTable.each(function (ht) {
             Bars.refresh(wire, ht, hdirection, direction);
           });
-        }
-      });
-
-      /* When the mouse moves out of the table (or a resizer div that is not dragging), remove the bars */
-      var hMouseout = function (event) {
-        if (Node.name(event.target()) === 'table' || (Node.name(event.target()) === 'div' &&
-            Class.has(event.target(), resizeBar) && !Class.has(event.target(), resizeBarDragging))) {
+        } else if (Body.inBody(event.target())) {
+          /*
+           * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
+           * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
+           * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
+           */
           Bars.destroy(wire);
         }
-      };
-
-      // mouseout of both tables and resize bars:
-      //  if 'view' is 'parent' or its ancestor then we only need a handler on 'view', otherwise both need handlers
-      var nodes = [ wire.view() ].concat( (Compare.eq(wire.view(), wire.parent()) || Compare.contains(wire.view(), wire.parent())) ? [] : [ wire.parent() ]);
-      var arrMouseout = Arr.map(nodes, function (node) { return DomEvent.bind(node, 'mouseout', hMouseout); });
+      });
 
       var destroy = function () {
         mousedown.unbind();
         mouseover.unbind();
-        Arr.map(arrMouseout, function (h) { h.unbind(); });
         firefoxDrag.unbind();
         resizing.destroy();
         Bars.destroy(wire);
