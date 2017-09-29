@@ -20,7 +20,7 @@ test(
         'branches',
         'branches',
         FieldPresence.defaulted([ ]),
-        ValueSchema.thunk('recursive', function () {
+        ValueSchema.thunkOf('recursive', function () {
           return ValueSchema.arrOf(schema);
         })
       )

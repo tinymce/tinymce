@@ -76,7 +76,7 @@ define(
       return ChoiceProcessor.choose(key, branches);
     };
 
-    var thunk = function (desc, schema) {
+    var thunkOf = function (desc, schema) {
       return ValueProcessor.thunk(desc, schema);
     };
 
@@ -104,7 +104,7 @@ define(
 
       choose: choose,
 
-      thunk: thunk
+      thunkOf: thunkOf
     };
   }
 );
