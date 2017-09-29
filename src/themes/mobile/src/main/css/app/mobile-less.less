@@ -1,0 +1,96 @@
+@import "reset.less";
+@import "variables.less";
+@import "mobile-icons.less";
+@import "mask.less";
+@import "android.less";
+@import "../toolstrip/toolstrip.less";
+@import "../menu/dropup.less";
+@import "../menu/styles-menu.less";
+
+@font-face {
+  font-family: 'tinymce-mobile';
+  src: url('fonts/tinymce-mobile.woff?8x92w3') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media (min-device-width: 700px) {
+  .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
+    font-size: 25px;
+  }
+}
+
+@media (max-device-width: 700px) {
+  .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
+    font-size: 18px;
+  }
+}
+
+
+.tinymce-mobile-icon {
+  font-family: 'tinymce-mobile';
+}
+
+.mixin-flex-and-centre {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mixin-flex-bar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+
+.tinymce-mobile-outer-container:not(.tinymce-mobile-fullscreen-maximized) {
+  .tinymce-mobile-editor-socket {
+    overflow: hidden;
+    height: 300px;
+  }
+
+  .tinymce-mobile-toolstrip {
+    display: none;
+  }
+}
+
+.tinymce-mobile-editor-socket {
+  .tinymce-mobile-mask-edit-icon {
+    position: fixed;
+
+    /* Note, on the iPod touch in landscape, this isn't visible when the navbar appears */
+    right: 2em;
+    bottom: 1em;
+    color: @mask-button-foreground-color;
+    background-color: @mask-button-background-color;
+    border-radius: 50%;
+    width: @mask-button-size;
+    height: @mask-button-size;
+    .mixin-flex-and-centre;
+
+    font-size: @mask-button-font-size-large;
+    @media @tablets {
+      font-size: @mask-button-font-size-small;
+    }
+  }
+}
+
+/*
+  Note, that if you don't include this (::-webkit-file-upload-button), the toolbar width gets
+  increased and the whole body becomes scrollable. It's important!
+ */
+input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
+
+// Media query for iphone only as the edit button cannot be placed correctly
+@media @iphone-small-landscape {
+  .tinymce-mobile-ios-container {
+    .tinymce-mobile-editor-socket {
+      .tinymce-mobile-mask-edit-icon {
+        bottom: 50%;
+      }
+    }
+  }
+}

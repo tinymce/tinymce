@@ -1,0 +1,40 @@
+.tinymce-mobile-android-container {
+  &.tinymce-mobile-android-maximized {
+    /* Android WebView only */
+    /* The min-height: 100vh is required for webview which we aren't supporting yet.
+    It breaks normal mode by making the container larger than the window height */
+    /*min-height: 100vh;*/
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: none;
+    background: @android-background-color;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &:not(.tinymce-mobile-android-maximized) {
+    position: relative;
+  }
+
+  .tinymce-mobile-editor-socket {
+    display: flex;
+    flex-grow: 1;
+
+    iframe {
+      display: flex !important;
+      height: auto !important;
+      flex-grow: 1;
+    }
+  }
+}
+
+.tinymce-mobile-android-scroll-reload {
+  overflow: hidden;
+}
+
+:not(.tinymce-mobile-readonly-mode) > .tinymce-mobile-android-selection-context-toolbar {
+  margin-top: 23px;
+}

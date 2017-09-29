@@ -18,9 +18,11 @@
     "test": "grunt bedrock-manual"
   },
   "dependencies": {
+    "@ephox/boulder": "1.1.0",
+    "@ephox/alloy": "0.8.4",
     "@ephox/katamari": "^1.1.0",
-    "@ephox/sand": "^1.1.1",
-    "@ephox/sugar": "^3.1.0"
+    "@ephox/sugar": "^3.1.0",
+    "@ephox/sand": "^1.1.1"
   },
   "devDependencies": {
     "@ephox/bedrock": "^1.5.0",
@@ -35,7 +37,9 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-eslint": "~19.0.0",
     "grunt-nuget-pack": "^0.0.6",
+    "grunt-replace": "^1.0.1",
     "jquery": "~1.11.3",
+    "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "~3.5.2",
     "moxie-zip": "~0.0.3"
   }

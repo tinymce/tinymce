@@ -1,0 +1,19 @@
+{
+  "name": "beta-mobile",
+  "version": "0.0.11",
+  "description": "Mobile theme",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@stash:7999/tinymce/tinymce-mobile.git"
+  },
+  "keywords": [
+    "mobile",
+    "theme"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
+}
