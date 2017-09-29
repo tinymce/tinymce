@@ -6,17 +6,17 @@ test(
     'ephox.boss.api.Gene',
     'ephox.boss.api.TestUniverse',
     'ephox.boss.api.TextGene',
-    'ephox.numerosity.api.JSON',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.robin.api.general.TextZone',
     'ephox.robin.test.Arbitraries',
     'ephox.robin.test.PropertyAssertions',
     'ephox.robin.test.ZoneObjects',
+    'ephox.sand.api.JSON',
     'ephox.wrap-jsverify.Jsc'
   ],
 
-  function (RawAssertions, Gene, TestUniverse, TextGene, Json, Fun, Option, TextZone, Arbitraries, PropertyAssertions, ZoneObjects, Jsc) {
+  function (RawAssertions, Gene, TestUniverse, TextGene, Fun, Option, TextZone, Arbitraries, PropertyAssertions, ZoneObjects, Json, Jsc) {
     var doc1 = TestUniverse(Gene('root', 'root', [
       Gene('div1', 'div', [
         Gene('p1', 'p', [
@@ -166,7 +166,7 @@ test(
     };
 
     PropertyAssertions.check(
-      'Check text single', 
+      'Check text single',
       [
         Arbitraries.arbIds(doc1, doc1.property().isText)
       ],
@@ -175,7 +175,7 @@ test(
     );
 
     PropertyAssertions.check(
-      'Check text range', 
+      'Check text range',
       [
         Arbitraries.arbRangeIds(doc1, doc1.property().isText)
       ],
@@ -195,7 +195,7 @@ test(
     });
 
     PropertyAssertions.check(
-      'Check empty range', 
+      'Check empty range',
       [
         Arbitraries.arbRangeIds(doc1, doc1.property().isEmptyTag)
       ],
@@ -204,7 +204,7 @@ test(
     );
 
     PropertyAssertions.check(
-      'Check boundary single', 
+      'Check boundary single',
       [
         Arbitraries.arbIds(doc1, doc1.property().isBoundary)
       ],
@@ -213,7 +213,7 @@ test(
     );
 
     PropertyAssertions.check(
-      'Check boundary range', 
+      'Check boundary range',
       [
         Arbitraries.arbRangeIds(doc1, doc1.property().isBoundary)
       ],
@@ -222,7 +222,7 @@ test(
     );
 
     PropertyAssertions.check(
-      'Check inline tag single', 
+      'Check inline tag single',
       [
         Arbitraries.arbRangeIds(doc1, function (item) {
           return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
@@ -233,7 +233,7 @@ test(
     );
 
     PropertyAssertions.check(
-      'Check inline tag range', 
+      'Check inline tag range',
       [
         Arbitraries.arbRangeIds(doc1, function (item) {
           return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
@@ -244,7 +244,7 @@ test(
     );
 
     PropertyAssertions.check(
-      'Check any tag range', 
+      'Check any tag range',
       [
         Arbitraries.arbRangeIds(doc1, Fun.constant(true))
       ],
