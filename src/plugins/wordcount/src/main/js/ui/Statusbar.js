@@ -17,12 +17,12 @@ define(
   ],
   function (Delay, I18n, WordCount) {
     var setup = function (editor) {
-      var wordsToHtml = function (editor) {
+      var wordsToText = function (editor) {
         return I18n.translate(['{0} words', WordCount.getCount(editor)]);
       };
 
       var update = function () {
-        editor.theme.panel.find('#wordcount')[0].getEl().innerHTML = wordsToHtml(editor);
+        editor.theme.panel.find('#wordcount').text(wordsToText(editor));
       };
 
       editor.on('init', function () {
@@ -34,7 +34,7 @@ define(
             statusbar.insert({
               type: 'label',
               name: 'wordcount',
-              html: wordsToHtml(editor),
+              text: wordsToText(editor),
               classes: 'wordcount',
               disabled: editor.settings.readonly
             }, 0);

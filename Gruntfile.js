@@ -550,6 +550,7 @@ module.exports = function (grunt) {
       'wordcount-plugin': { path: 'src/plugins/wordcount' },
       'inlite-theme': { path: 'src/themes/inlite' },
       'modern-theme': { path: 'src/themes/modern' },
+      'mobile-theme': { path: 'src/themes/mobile' },
       'lightgray-skin': { path: 'src/skins/lightgray' }
     },
 

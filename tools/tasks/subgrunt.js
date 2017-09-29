@@ -28,6 +28,9 @@ module.exports = function (grunt) {
 
     // Fake grunt api
     gruntFile({
+      file: grunt.file,
+      option: grunt.option,
+
       initConfig: function (config) {
         grunt.initConfig(config);
       },

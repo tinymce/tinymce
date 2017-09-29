@@ -260,5 +260,5 @@ module.exports = function (grunt) {
 
   grunt.registerTask('standalone', [ 'dist', 'copy:standalone', 'replace:mobile-changelog']);
 
-  grunt.registerTask('default', ['dist']);
+  grunt.registerTask('default', ['bolt-init', 'less', 'bolt-build', 'copy', 'uglify']);
 };

@@ -122,6 +122,7 @@ define(
         visualblocks_content_css: '../../../../plugins/visualblocks/dist/visualblocks/css/visualblocks.css',
         images_upload_url: 'd',
         selector: "textarea",
+        theme: false,
         //rtl_ui: true,
         link_list: [
           { title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -177,7 +178,7 @@ define(
         template_cdate_format: "[CDATE: %m/%d/%Y : %H:%M:%S]",
         template_mdate_format: "[MDATE: %m/%d/%Y : %H:%M:%S]",
         image_caption: true,
-        theme: "modern",
+        t12heme: "modern",
         plugins: [
           "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
