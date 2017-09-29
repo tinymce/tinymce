@@ -16,23 +16,19 @@ define(
     'tinymce.plugins.visualblocks.core.LoadCss'
   ],
   function (Events, Settings, LoadCss) {
-    var isEnabled = function (editor) {
-      return editor.dom ? editor.dom.hasClass(editor.getBody(), 'mce-visualblocks') : false;
-    };
-
-    var toggleVisualBlocks = function (editor, pluginUrl) {
+    var toggleVisualBlocks = function (editor, pluginUrl, enabledState) {
       var dom = editor.dom;
       var contentCss = Settings.getContentCss(editor);
 
       LoadCss.load(editor.getDoc(), contentCss ? contentCss : pluginUrl + '/css/visualblocks.css');
       dom.toggleClass(editor.getBody(), 'mce-visualblocks');
+      enabledState.set(!enabledState.get());
 
-      Events.fireVisualBlocks(editor, isEnabled(editor));
+      Events.fireVisualBlocks(editor, enabledState.get());
     };
 
     return {
-      toggleVisualBlocks: toggleVisualBlocks,
-      isEnabled: isEnabled
+      toggleVisualBlocks: toggleVisualBlocks
     };
   }
 );

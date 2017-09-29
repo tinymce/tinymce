@@ -14,9 +14,9 @@ define(
     'tinymce.plugins.visualblocks.core.VisualBlocks'
   ],
   function (VisualBlocks) {
-    var register = function (editor, pluginUrl) {
+    var register = function (editor, pluginUrl, enabledState) {
       editor.addCommand('mceVisualBlocks', function () {
-        VisualBlocks.toggleVisualBlocks(editor, pluginUrl);
+        VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
       });
     };
 

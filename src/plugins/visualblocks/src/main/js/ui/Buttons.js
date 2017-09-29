@@ -14,11 +14,11 @@ define(
     'tinymce.plugins.visualblocks.core.VisualBlocks'
   ],
   function (VisualBlocks) {
-    var toggleActiveState = function (editor) {
+    var toggleActiveState = function (editor, enabledState) {
       return function (e) {
         var ctrl = e.control;
 
-        ctrl.active(VisualBlocks.isEnabled(editor));
+        ctrl.active(enabledState.get());
 
         editor.on('VisualBlocks', function (e) {
           ctrl.active(e.state);
@@ -26,17 +26,17 @@ define(
       };
     };
 
-    var register = function (editor) {
+    var register = function (editor, enabledState) {
       editor.addButton('visualblocks', {
         title: 'Show blocks',
         cmd: 'mceVisualBlocks',
-        onPostRender: toggleActiveState(editor)
+        onPostRender: toggleActiveState(editor, enabledState)
       });
 
       editor.addMenuItem('visualblocks', {
         text: 'Show blocks',
         cmd: 'mceVisualBlocks',
-        onPostRender: toggleActiveState(editor),
+        onPostRender: toggleActiveState(editor, enabledState),
         selectable: true,
         context: 'view',
         prependToContext: true
