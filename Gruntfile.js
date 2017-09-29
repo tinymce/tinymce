@@ -453,7 +453,13 @@ module.exports = function (grunt) {
       phantomjs: {
         browser: 'phantomjs',
         config: 'config/bolt/browser.js',
-        testfiles: ['src/**/src/test/js/**/*Test.js'],
+        testfiles: [
+          'src/**/src/test/js/**/*Test.js',
+          '!src/themes/mobile/src/test/**/*Test.js',
+          'src/themes/mobile/src/test/js/phantom/**/*Test.js',
+          'src/themes/mobile/src/test/js/browser/ui/ButtonsTest.js',
+          'src/themes/mobile/src/test/js/browser/features/**/*Test.js'
+        ],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
