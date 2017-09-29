@@ -15,6 +15,7 @@ asynctest(
     Theme();
 
     suite.test('Find no match', function (editor) {
+      editor.focus();
       editor.setContent('a');
       LegacyUnit.equal(0, editor.plugins.searchreplace.find('x'));
     });
