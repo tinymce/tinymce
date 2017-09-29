@@ -25,15 +25,6 @@ module.exports = function(grunt) {
         options: {
           stopOnFailure: true
         }
-      },
-
-      'phantomjs-current': {
-        config: 'config/bolt/browser.js',
-        testfiles: 'src/test/js/browser/ui/form/HtmlSelectTest.js',
-        browser: driver,
-        options: {
-          stopOnFailure: true
-        }
       }
     },
 
@@ -90,17 +81,6 @@ module.exports = function(grunt) {
 
           "bolt-test:atomic",
           'bedrock-auto:phantomjs'
-        ],
-        options: {
-          spawn: false,
-          atBegin: true
-        }
-      },
-      current: {
-        files: ['src/**/*.js'],
-        tasks: [
-
-          "bedrock-auto:phantomjs-current"
         ],
         options: {
           spawn: false,
