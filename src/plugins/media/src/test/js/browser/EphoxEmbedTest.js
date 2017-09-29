@@ -1,5 +1,5 @@
 asynctest(
-  'browser.core.MediaEmbedTest',
+  'browser.core.EphoxEmbedTest',
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
@@ -55,6 +55,7 @@ asynctest(
       var apis = TinyApis(editor);
 
       Pipeline.async({}, [
+        apis.sFocus,
         apis.sSetContent('<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>'),
         sAssertDivStructure(editor, ephoxEmbedStructure),
         apis.sSelect('div', []),

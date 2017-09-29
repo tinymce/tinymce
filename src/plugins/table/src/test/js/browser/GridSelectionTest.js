@@ -17,6 +17,7 @@ asynctest(
     Theme();
 
     suite.test("Delete selected cells", function (editor) {
+      editor.focus();
       editor.getBody().innerHTML = (
         '<table><tbody>' +
         '<tr><td data-mce-selected="1">A1</td><td>A2</td></tr>' +

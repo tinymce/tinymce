@@ -6,8 +6,6 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.katamari.api.Fun',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
@@ -16,7 +14,7 @@ asynctest(
     'tinymce.plugins.table.test.TableTestUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Fun, TinyApis, TinyLoader, TinyUi, SelectorFilter, TablePlugin, TableTestUtils, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, TinyApis, TinyLoader, TinyUi, SelectorFilter, TablePlugin, TableTestUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -6,15 +6,13 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.table.Plugin',
-    'tinymce.plugins.table.test.TableTestUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TinyUi, TablePlugin, TableTestUtils, ModernTheme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, TinyApis, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -31,7 +29,7 @@ asynctest(
         Logger.t('no class input without setting', GeneralSteps.sequence([
           tinyApis.sFocus,
           tinyApis.sSetContent(tableHtml),
-          TableTestUtils.sOpenToolbarOn(editor, 'td', [0]),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
           tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
           tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table properties")'),
           Chain.asStep({}, [
@@ -52,7 +50,7 @@ asynctest(
           tinyApis.sFocus,
           tinyApis.sSetSetting('table_class_list', [{ title: 'test', value: 'test' }]),
           tinyApis.sSetContent(tableHtml),
-          TableTestUtils.sOpenToolbarOn(editor, 'td', [0]),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
           tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
           tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table properties")'),
           tinyUi.sWaitForPopup('wait for popup', 'div[aria-label="Table properties"][role="dialog"]'),

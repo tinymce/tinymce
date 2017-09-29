@@ -61,6 +61,7 @@ asynctest(
       };
 
       Pipeline.async({}, [
+        api.sFocus,
         Logger.t('simulate result of the triple click (selection beyond caption)', GeneralSteps.sequence([
           api.sSetContent(tableWith('<caption>one two three</caption>')),
           api.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 0),
