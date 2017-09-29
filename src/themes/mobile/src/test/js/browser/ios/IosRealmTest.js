@@ -11,6 +11,7 @@ asynctest(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.events.DomEvent',
@@ -25,11 +26,12 @@ asynctest(
   ],
 
   function (
-    Assertions, Pipeline, Step, Replacing, GuiFactory, Attachment, Fun, Merger, Option, Insert, Remove, DomEvent, Body, Element, Attr, Css, WindowSelection,
-    Math, TestUi, IosRealm
+    Assertions, Pipeline, Step, Replacing, GuiFactory, Attachment, Fun, Merger, Option, PlatformDetection, Insert, Remove, DomEvent, Body, Element, Attr, Css,
+    WindowSelection, Math, TestUi, IosRealm
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+    var detection = PlatformDetection.detect();
 
     var realm = IosRealm();
 
@@ -126,7 +128,7 @@ asynctest(
       });
     };
 
-    Pipeline.async({}, [
+    Pipeline.async({}, detection.browser.isChrome() ? [
       Step.wait(1000),
       TestUi.sStartEditor(realm.system()),
       Step.wait(1000),
@@ -149,7 +151,7 @@ asynctest(
         Assertions.assertEq('Checking visual position values are approximately equal after scrolling', true, Math.abs(nowCursorY - value.cursorY) < 10);
         next(value);
       })
-    ], function () { unload(); success(); }, failure);
+    ] : [], function () { unload(); success(); }, failure);
 
   }
 );

@@ -177,7 +177,7 @@ define(
         template_cdate_format: "[CDATE: %m/%d/%Y : %H:%M:%S]",
         template_mdate_format: "[MDATE: %m/%d/%Y : %H:%M:%S]",
         image_caption: true,
-        t12heme: "modern",
+        theme: "modern",
         plugins: [
           "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",

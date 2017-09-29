@@ -6,6 +6,7 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.alloy.api.system.Attachment',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.properties.Class',
     'tinymce.themes.mobile.test.ui.TestFrameEditor',
@@ -15,9 +16,10 @@ asynctest(
     'tinymce.themes.mobile.ui.IosRealm'
   ],
 
-  function (Mouse, Pipeline, Step, Attachment, Body, Class, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
+  function (Mouse, Pipeline, Step, Attachment, PlatformDetection, Body, Class, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+    var detection = PlatformDetection.detect();
 
     var realm = IosRealm();
     // Make toolbar appear
@@ -47,7 +49,7 @@ asynctest(
       }
     ]);
 
-    Pipeline.async({}, [
+    Pipeline.async({}, detection.browser.isChrome() ? [
       TestStyles.sWaitForToolstrip(realm),
       Step.sync(function () {
         tEditor.editor().focus();
@@ -56,7 +58,7 @@ asynctest(
       tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
 
       // Think about how to do the slider events
-    ], function () {
+    ] : [], function () {
       unload(); success();
     }, failure);
 

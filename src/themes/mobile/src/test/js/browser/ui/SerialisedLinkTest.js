@@ -19,6 +19,7 @@ asynctest(
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.ValueSchema',
     'ephox.katamari.api.Fun',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
@@ -35,11 +36,12 @@ asynctest(
 
   function (
     ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Attachment, GuiSetup, FieldSchema,
-    ValueSchema, Fun, Focus, Body, Element, Class, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
+    ValueSchema, Fun, PlatformDetection, Focus, Body, Element, Class, Traverse, navigator, TestEditor, TestSelectors, TestStyles, TestUi, IosRealm, LinkButton
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
-
+    var detection = PlatformDetection.detect();
+    
     var realm = IosRealm();
     // Make toolbar appear
     Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
@@ -211,7 +213,7 @@ asynctest(
       );
     };
 
-    Pipeline.async({}, [
+    Pipeline.async({}, detection.browser.isChrome() ? [
       GuiSetup.mAddStyles(doc, [
         '.tinymce-mobile-icon-link:before { content: "LINK"; background: black; color: white; }',
         // Speeds up tests.
@@ -431,7 +433,7 @@ asynctest(
           }), node);
         }
       })
-    ], function () {
+    ] : [], function () {
       unload(); success();
     }, failure);
   }
