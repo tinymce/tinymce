@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.selection.SelectionBookmarkEditorTest',
+  'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Cursors',
@@ -73,13 +73,13 @@ asynctest(
         Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
+          setSelection(editor, [0, 0], 0, [0, 0], 0);
           editor.nodeChanged();
 
           setSelection(editor, [1, 0], 1, [1, 0], 1);
           focusDiv();
 
-          assertSelection(editor, [0], 0, [0], 0);
+          assertSelection(editor, [0, 0], 0, [0, 0], 0);
         })),
         Logger.t('assert selection after nodechanged, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
