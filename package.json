@@ -2,24 +2,27 @@
   "name": "@ephox/robin",
   "description": "This project is for grouping sibling DOM nodes together by boundary points, for example the list of elements and nodes representing a word.",
   "version": "6.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/robin"
+  },
   "dependencies": {
-    "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#master",
+    "@ephox/boss": "*",
     "@ephox/katamari": "*",
-    "@ephox/phoenix": "git+ssh://git@stash:7999/tbio/phoenix.git#master",
-    "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master"
+    "@ephox/phoenix": "*",
+    "@ephox/polaris": "*"
   },
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
     "@ephox/bolt": "*",
-    "@ephox/numerosity": "git+ssh://git@stash:7999/tbio/numerosity.git#master",
+    "@ephox/sand": "*",
     "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",
     "chromedriver": "*",
     "grunt": "*",
     "grunt-npm": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }
