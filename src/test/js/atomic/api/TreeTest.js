@@ -28,6 +28,7 @@ test(
 
     var treeDsl = schema.toDsl();
 
+    // Just check that all functions are defined (i.e. does not throw an error)
     var processType = function (dsl) {
       DslType.foldType(
         dsl,
