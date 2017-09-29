@@ -2,15 +2,15 @@ test(
   'EraseOperationsTest',
 
   [
-    'ephox.fred.PlatformDetection',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.test.Assertions'
   ],
 
-  function (PlatformDetection, Option, TableOperations, Assertions) {
+  function (Option, PlatformDetection, TableOperations, Assertions) {
     var platform = PlatformDetection.detect();
-    
+
     var deleteExpectedContent1 = '<table><tbody>' +
         '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
         '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
