@@ -21,6 +21,7 @@ asynctest(
     };
 
     suite.test('Inline element on selected text', function (editor) {
+      editor.focus();
       editor.formatter.register('format', { inline: 'b' });
       editor.getBody().innerHTML = '<p><b>1234</b></p>';
       var rng = editor.dom.createRng();

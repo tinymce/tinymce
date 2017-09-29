@@ -29,14 +29,6 @@ asynctest(
       });
     };
 
-    var cAttach = Chain.op(function (vb) {
-      vb.attach();
-    });
-
-    var cDetach = Chain.op(function () {
-      viewBlock.detach();
-    });
-
     var cSetSelection = function (startPath, soffset, finishPath, foffset) {
       return Chain.op(function () {
         var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');

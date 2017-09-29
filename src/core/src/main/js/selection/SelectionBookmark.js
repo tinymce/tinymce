@@ -78,6 +78,7 @@ define(
 
     var store = function (editor) {
       var newBookmark = getBookmark(Element.fromDom(editor.getBody()));
+
       editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
     };
 
@@ -90,13 +91,9 @@ define(
     };
 
     var restore = function (editor) {
-      getRng(editor)
-        .fold(function () {
-          debugger;
-          return CaretFinder.firstPositionIn(editor.getBody());
-        }, function (rng) {
-          editor.selection.setRng(rng);
-        });
+      getRng(editor).each(function (rng) {
+        editor.selection.setRng(rng);
+      });
     };
 
     return {

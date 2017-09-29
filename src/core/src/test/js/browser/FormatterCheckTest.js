@@ -14,6 +14,7 @@ asynctest(
     Theme();
 
     suite.test('Selected style element text', function (editor) {
+      editor.focus();
       editor.formatter.register('bold', { inline: 'b' });
       editor.getBody().innerHTML = '<p><b>1234</b></p>';
       var rng = editor.dom.createRng();
