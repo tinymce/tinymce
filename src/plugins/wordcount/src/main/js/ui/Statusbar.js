@@ -12,12 +12,17 @@ define(
   'tinymce.plugins.wordcount.ui.Statusbar',
   [
     'tinymce.core.util.Delay',
+    'tinymce.core.util.I18n',
     'tinymce.plugins.wordcount.text.WordCount'
   ],
-  function (Delay, WordCount) {
+  function (Delay, I18n, WordCount) {
     var setup = function (editor) {
+      var wordsToHtml = function (editor) {
+        return I18n.translate(['{0} words', WordCount.getCount(editor)]);
+      };
+
       var update = function () {
-        editor.theme.panel.find('#wordcount').text(['Words: {0}', WordCount.getCount(editor)]);
+        editor.theme.panel.find('#wordcount')[0].getEl().innerHTML = wordsToHtml(editor);
       };
 
       editor.on('init', function () {
@@ -29,7 +34,7 @@ define(
             statusbar.insert({
               type: 'label',
               name: 'wordcount',
-              text: ['Words: {0}', WordCount.getCount(editor)],
+              html: wordsToHtml(editor),
               classes: 'wordcount',
               disabled: editor.settings.readonly
             }, 0);

@@ -30,6 +30,7 @@ define(
       editor.addMenuItem('template', {
         text: 'Template',
         onclick: Templates.createTemplateList(editor.settings, showDialog(editor)),
+        icon: 'template',
         context: 'insert'
       });
     };

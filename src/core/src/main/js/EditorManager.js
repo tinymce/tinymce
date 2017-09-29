@@ -115,6 +115,8 @@ define(
     }
 
     EditorManager = {
+      defaultSettings: {},
+
       /**
        * Dom query instance.
        *

@@ -26,7 +26,6 @@ define(
       editor.addMenuItem('code', {
         icon: 'code',
         text: 'Source code',
-        context: 'tools',
         onclick: function () {
           Dialog.open(editor);
         }

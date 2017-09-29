@@ -27,11 +27,14 @@ define(
     'tinymce.core.Env',
     'tinymce.core.util.Tools',
     'tinymce.ui.Control',
+    'tinymce.ui.editorui.Align',
+    'tinymce.ui.editorui.FormatSelect',
+    'tinymce.ui.editorui.SimpleFormats',
     'tinymce.ui.FloatPanel',
     'tinymce.ui.fmt.FontInfo',
     'tinymce.ui.Widget'
   ],
-  function (Arr, Fun, Element, SelectorFind, document, DOMUtils, EditorManager, Env, Tools, Control, FloatPanel, FontInfo, Widget) {
+  function (Arr, Fun, Element, SelectorFind, document, DOMUtils, EditorManager, Env, Tools, Control, Align, FormatSelect, SimpleFormats, FloatPanel, FontInfo, Widget) {
     var each = Tools.each;
 
     var flatten = function (ar) {
@@ -62,41 +65,6 @@ define(
 
     function registerControls(editor) {
       var formatMenu;
-
-      function createListBoxChangeHandler(items, formatName) {
-        return function () {
-          var self = this;
-
-          editor.on('nodeChange', function (e) {
-            var formatter = editor.formatter;
-            var value = null;
-
-            each(e.parents, function (node) {
-              each(items, function (item) {
-                if (formatName) {
-                  if (formatter.matchNode(node, formatName, { value: item.value })) {
-                    value = item.value;
-                  }
-                } else {
-                  if (formatter.matchNode(node, item.value)) {
-                    value = item.value;
-                  }
-                }
-
-                if (value) {
-                  return false;
-                }
-              });
-
-              if (value) {
-                return false;
-              }
-            });
-
-            self.value(value);
-          });
-        };
-      }
 
       function createFontNameListBoxChangeHandler(items) {
         return function () {
@@ -339,24 +307,6 @@ define(
         };
       }
 
-      // Simple format controls <control/format>:<UI text>
-      each({
-        bold: 'Bold',
-        italic: 'Italic',
-        underline: 'Underline',
-        strikethrough: 'Strikethrough',
-        subscript: 'Subscript',
-        superscript: 'Superscript'
-      }, function (text, name) {
-        editor.addButton(name, {
-          tooltip: text,
-          onPostRender: initOnPostRender(name),
-          onclick: function () {
-            toggleFormat(name);
-          }
-        });
-      });
-
       // Simple command controls <control>:[<UI text>,<Command>]
       each({
         outdent: ['Decrease indent', 'Outdent'],
@@ -366,7 +316,6 @@ define(
         paste: ['Paste', 'Paste'],
         help: ['Help', 'mceHelp'],
         selectall: ['Select all', 'SelectAll'],
-        removeformat: ['Clear formatting', 'RemoveFormat'],
         visualaid: ['Visual aids', 'mceToggleVisualAid'],
         newdocument: ['New document', 'mceNewDocument']
       }, function (item, name) {
@@ -380,12 +329,7 @@ define(
       each({
         blockquote: ['Blockquote', 'mceBlockQuote'],
         subscript: ['Subscript', 'Subscript'],
-        superscript: ['Superscript', 'Superscript'],
-        alignleft: ['Align left', 'JustifyLeft'],
-        aligncenter: ['Align center', 'JustifyCenter'],
-        alignright: ['Align right', 'JustifyRight'],
-        alignjustify: ['Justify', 'JustifyFull'],
-        alignnone: ['No alignment', 'JustifyNone']
+        superscript: ['Superscript', 'Superscript']
       }, function (item, name) {
         editor.addButton(name, {
           tooltip: item[0],
@@ -546,14 +490,7 @@ define(
         cut: ['Cut', 'Cut', 'Meta+X'],
         copy: ['Copy', 'Copy', 'Meta+C'],
         paste: ['Paste', 'Paste', 'Meta+V'],
-        selectall: ['Select all', 'SelectAll', 'Meta+A'],
-        bold: ['Bold', 'Bold', 'Meta+B'],
-        italic: ['Italic', 'Italic', 'Meta+I'],
-        underline: ['Underline', 'Underline', 'Meta+U'],
-        strikethrough: ['Strikethrough', 'Strikethrough'],
-        subscript: ['Subscript', 'Subscript'],
-        superscript: ['Superscript', 'Superscript'],
-        removeformat: ['Clear formatting', 'RemoveFormat']
+        selectall: ['Select all', 'SelectAll', 'Meta+A']
       }, function (item, name) {
         editor.addMenuItem(name, {
           text: item[0],
@@ -632,38 +569,6 @@ define(
             hideFormatMenuItems(this.menu);
           }
         }
-      });
-
-      editor.addButton('formatselect', function () {
-        var items = [], blocks = createFormats(editor.settings.block_formats ||
-          'Paragraph=p;' +
-          'Heading 1=h1;' +
-          'Heading 2=h2;' +
-          'Heading 3=h3;' +
-          'Heading 4=h4;' +
-          'Heading 5=h5;' +
-          'Heading 6=h6;' +
-          'Preformatted=pre'
-        );
-
-        each(blocks, function (block) {
-          items.push({
-            text: block[0],
-            value: block[1],
-            textStyle: function () {
-              return editor.formatter.getCssText(block[1]);
-            }
-          });
-        });
-
-        return {
-          type: 'listbox',
-          text: blocks[0][0],
-          values: items,
-          fixedWidth: true,
-          onselect: toggleFormat,
-          onPostRender: createListBoxChangeHandler(items)
-        };
       });
 
       editor.addButton('fontselect', function () {
@@ -751,6 +656,9 @@ define(
       setupRtlMode(editor);
       registerControls(editor);
       setupContainer(editor);
+      FormatSelect.register(editor);
+      Align.register(editor);
+      SimpleFormats.register(editor);
     };
 
     return {
