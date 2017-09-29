@@ -122,7 +122,6 @@ define(
         visualblocks_content_css: '../../../../plugins/visualblocks/dist/visualblocks/css/visualblocks.css',
         images_upload_url: 'd',
         selector: "textarea",
-        theme: false,
         //rtl_ui: true,
         link_list: [
           { title: 'My page 1', value: 'http://www.tinymce.com' },
