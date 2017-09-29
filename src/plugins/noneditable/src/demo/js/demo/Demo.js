@@ -13,12 +13,13 @@
 define(
   'tinymce.plugins.noneditable.demo.Demo',
   [
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.noneditable.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, NonEditablePlugin, ModernTheme) {
+  function (document, EditorManager, CodePlugin, NonEditablePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       NonEditablePlugin();
