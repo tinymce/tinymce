@@ -4,7 +4,7 @@
   "version": "3.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/robin"
+    "url": "https://github.com/ephox/snooker"
   },
   "dependencies": {
     "@ephox/dragster": "*",
