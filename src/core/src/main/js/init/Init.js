@@ -139,8 +139,17 @@ define(
       return info;
     };
 
-    var renderThemeFalse = function () {
-      return {};
+    var renderThemeFalse = function (editor) {
+      var iframeContainer = DOM.create('div');
+
+      DOM.insertAfter(iframeContainer, editor.getElement());
+
+      editor.editorContainer = iframeContainer;
+
+      return {
+        editorContainer: iframeContainer,
+        iframeContainer: iframeContainer
+      };
     };
 
     var renderThemeUi = function (editor) {
@@ -153,7 +162,7 @@ define(
       } else if (Type.isFunction(settings.theme)) {
         return renderFromThemeFunc(editor);
       } else {
-        return renderThemeFalse();
+        return renderThemeFalse(editor);
       }
     };
 

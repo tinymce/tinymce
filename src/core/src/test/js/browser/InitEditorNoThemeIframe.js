@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.InitEditorNoTheme',
+  'browser.tinymce.core.InitEditorNoThemeIframe',
   [
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -22,7 +22,6 @@ asynctest(
       ], onSuccess, onFailure);
     }, {
       theme: false,
-      inline: true,
       skin_url: '/project/src/skins/lightgray/dist/lightgray',
       init_instance_callback: function (editor) {
         editor.fire('SkinLoaded');
