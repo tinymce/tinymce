@@ -258,7 +258,7 @@ define(
       };
     };
 
-    var thunk = function (processor) {
+    var thunk = function (desc, processor) {
       var getP = Thunk.cached(function () {
         return processor();
       });
@@ -272,7 +272,7 @@ define(
       };
 
       var toDsl = function () {
-        return TypeTokens.typeAdt.recursive();
+        return TypeTokens.typeAdt.thunk(desc);
       };
 
       return {

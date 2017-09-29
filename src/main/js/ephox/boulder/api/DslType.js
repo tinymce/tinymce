@@ -7,8 +7,8 @@ define(
 
   function () {
     // NOTE: This provides cata functions for the ADTs in TypeTokens
-    var foldType = function (subject, onSet, onArr, onObj, onItem, onChoice, onRecursive) {
-      return subject.fold(onSet, onArr, onObj, onItem, onChoice, onRecursive);
+    var foldType = function (subject, onSet, onArr, onObj, onItem, onChoice, onThunk) {
+      return subject.fold(onSet, onArr, onObj, onItem, onChoice, onThunk);
     };
 
     var foldField = function (subject, onField, onState) {

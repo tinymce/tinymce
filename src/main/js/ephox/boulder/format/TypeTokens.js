@@ -12,7 +12,7 @@ define(
       { objOf: [ 'fields' ] },
       { itemOf: [ 'validator' ] },
       { choiceOf: [ 'key', 'branches' ] },
-      { recursive: [ ] }
+      { thunk: [ 'description' ] }
     ]);
 
     var fieldAdt = Adt.generate([

@@ -76,8 +76,8 @@ define(
       return ChoiceProcessor.choose(key, branches);
     };
 
-    var thunk = function (schema) {
-      return ValueProcessor.thunk(schema);
+    var thunk = function (desc, schema) {
+      return ValueProcessor.thunk(desc, schema);
     };
 
     return {

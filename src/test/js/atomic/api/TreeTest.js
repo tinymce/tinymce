@@ -3,12 +3,16 @@ test(
 
   [
     'ephox.agar.api.RawAssertions',
+    'ephox.boulder.api.DslType',
     'ephox.boulder.api.FieldPresence',
     'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema'
+    'ephox.boulder.api.ValueSchema',
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj'
   ],
 
-  function (RawAssertions, FieldPresence, FieldSchema, ValueSchema) {
+  function (RawAssertions, DslType, FieldPresence, FieldSchema, ValueSchema, Arr, Fun, Obj) {
     var schema = ValueSchema.objOf([
       FieldSchema.strict('value'),
       FieldSchema.defaulted('text', '?'),
@@ -16,11 +20,45 @@ test(
         'branches',
         'branches',
         FieldPresence.defaulted([ ]),
-        ValueSchema.thunk(function () {
+        ValueSchema.thunk('recursive', function () {
           return ValueSchema.arrOf(schema);
         })
       )
     ]);
+
+    var treeDsl = schema.toDsl();
+
+    var processType = function (dsl) {
+      DslType.foldType(
+        dsl,
+        function (validator, valueType) {
+          processType(valueType.toDsl());
+        },
+        function (valueType) {
+          processType(valueType.toDsl());
+        },
+        function (fields) {
+          Arr.each(fields, function (field) {
+            DslType.foldField(field, function (name, presence, type) {
+              processType(type.toDsl());
+            }, Fun.noop);
+          });
+        },
+        function (validator) { },
+        function (key, branches) {
+          var values = Obj.values(branches);
+          Arr.each(values, function (v) {
+            Arr.each(v, function (field) {
+              DslType.foldField.cata(field, function (name, presence, type) {
+                processType(type.toDsl());
+              }, Fun.noop);
+            });
+          });
+        },
+        function () { }
+      );
+    };
+    processType(treeDsl);
 
     var check = function (label, expected, input) {
       var actual = ValueSchema.asRawOrDie(label, schema, input);
