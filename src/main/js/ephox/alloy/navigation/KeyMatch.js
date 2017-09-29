@@ -31,13 +31,18 @@ define(
       return event.raw().shiftKey === true;
     };
 
+    var isControl = function (event) {
+      return event.raw().ctrlKey === true;
+    };
+
     return {
       inSet: inSet,
       and: and,
       is: is,
       isShift: isShift,
-      isNotShift: Fun.not(isShift)
-
+      isNotShift: Fun.not(isShift),
+      isControl: isControl,
+      isNotControl: Fun.not(isControl)
     };
   }
 );

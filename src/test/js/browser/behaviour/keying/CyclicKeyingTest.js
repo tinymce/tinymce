@@ -5,18 +5,19 @@ asynctest(
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Keyboard',
     'ephox.agar.api.Keys',
-    'ephox.alloy.api.component.GuiFactory',
+    'ephox.agar.api.Step',
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.test.GuiSetup',
     'ephox.boulder.api.Objects'
   ],
 
-  function (FocusTools, Keyboard, Keys, GuiFactory, Behaviour, Focusing, Keying, Tabstopping, Button, Container, GuiSetup, Objects) {
+  function (FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, Tabstopping, GuiFactory, Button, Container, GuiSetup, Objects) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -75,13 +76,11 @@ asynctest(
     }, function (doc, body, gui, component, store) {
       return [
         GuiSetup.mSetupKeyLogger(body),
-        FocusTools.sSetFocus(
-          'Setting focus on first button',
-          gui.element(),
-          'button'
-        ),
+        Step.sync(function () {
+          Keying.focusIn(component);
+        }),
         FocusTools.sTryOnSelector(
-          'Focus should be on button 1',
+          'Focus should be on button 1 after focusIn',
           doc,
           'button:contains("Button1")'
         ),

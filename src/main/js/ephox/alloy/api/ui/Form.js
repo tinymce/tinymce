@@ -5,20 +5,21 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
+    'ephox.alloy.api.ui.GuiTypes',
     'ephox.alloy.api.ui.UiSketcher',
     'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.parts.PartType',
-    'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Obj'
   ],
 
-  function (Behaviour, Composing, Representing, UiSketcher, AlloyParts, PartType, FieldSchema, Arr, Merger, Obj) {
+  function (Behaviour, Composing, Representing, SketchBehaviours, GuiTypes, UiSketcher, AlloyParts, PartType, Arr, Merger, Obj) {
     var owner = 'form';
 
     var schema = [
-      FieldSchema.defaulted('formBehaviours', { })
+      SketchBehaviours.field('formBehaviours', [ Representing ])
     ];
 
     var getPartName = function (name) {
@@ -39,7 +40,7 @@ define(
           record: function () { return record; }
         };
       })();
-      
+
       var spec = fSpec(parts);
 
       var partNames = parts.record();
@@ -86,13 +87,23 @@ define(
                 }
               })
             ]),
-            detail.formBehaviours()
-          )
+            SketchBehaviours.get(detail.formBehaviours())
+          ),
+
+          apis: {
+            getField: function (form, key) {
+              // Returns an Option (not a result);
+              return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
+            }
+          }
         }
       );
     };
 
     return {
+      getField: GuiTypes.makeApi(function (apis, component, key) {
+        return apis.getField(component, key);
+      }),
       sketch: sketch
     };
   }

@@ -7,18 +7,18 @@ define(
     'ephox.alloy.positioning.layout.Layout',
     'ephox.alloy.positioning.layout.Origins',
     'ephox.alloy.positioning.mode.Anchoring',
+    'ephox.alloy.positioning.mode.AnchorLayouts',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.properties.Direction'
+    'ephox.katamari.api.Option'
   ],
 
-  function (Fields, Bubble, Layout, Origins, Anchoring, FieldSchema, Fun, Option, Direction) {
+  function (Fields, Bubble, Layout, Origins, Anchoring, AnchorLayouts, FieldSchema, Fun, Option) {
     var placement = function (component, posInfo, anchorInfo, origin) {
       var hotspot = anchorInfo.hotspot();
       var anchorBox = Origins.toBox(origin, hotspot.element());
 
-      var layouts = Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
+      var layouts = AnchorLayouts.get(component, anchorInfo, Layout.all(), Layout.allRtl());
 
       return Option.some(
         Anchoring({
@@ -34,6 +34,7 @@ define(
 
     return [
       FieldSchema.strict('hotspot'),
+      AnchorLayouts.schema(),
       Fields.output('placement', placement)
     ];
   }

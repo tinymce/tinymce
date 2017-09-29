@@ -4,21 +4,28 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Step',
+    'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.ui.Container',
-    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.api.ui.Tabbar',
+    'ephox.alloy.api.ui.TabSection',
     'ephox.alloy.test.GuiSetup',
     'ephox.katamari.api.Fun'
   ],
 
-  function (ApproxStructure, Assertions, GuiFactory, Container, TabSection, Tabbar, GuiSetup, Fun) {
+  function (ApproxStructure, Assertions, Step, Behaviour, Highlighting, Keying, Tabstopping, GuiFactory, AlloyTriggers, Container, Tabbar, TabSection, GuiSetup, Fun) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         TabSection.sketch({
+          selectFirst: false,
           dom: {
             tag: 'div'
           },
@@ -33,7 +40,10 @@ asynctest(
               markers: {
                 tabClass: 'test-tab-button',
                 selectedClass: 'selected-test-tab-button'
-              }
+              },
+              tabbarBehaviours: Behaviour.derive([
+                Tabstopping.config({ })
+              ])
             }),
             TabSection.parts().tabview({
               dom: {
@@ -44,6 +54,7 @@ asynctest(
 
           tabs: [
             {
+              uid: 'alpha-tab',
               value: 'alpha',
               dom: { tag: 'button', innerHtml: 'A' },
               view: function () {
@@ -51,6 +62,21 @@ asynctest(
                   Container.sketch({
                     dom: {
                       innerHtml: 'This is the view for "A"'
+                    },
+                    components: [ ]
+                  })
+                ];
+              }
+            },
+            {
+              uid: 'beta-tab',
+              value: 'beta',
+              dom: { tag: 'button', innerHtml: 'B' },
+              view: function () {
+                return [
+                  Container.sketch({
+                    dom: {
+                      innerHtml: 'This is the view for "B"'
                     },
                     components: [ ]
                   })
@@ -70,9 +96,28 @@ asynctest(
           return s.element('div', {
             children: [
               s.element('div', {
+                attrs: {
+                  'data-alloy-tabstop': str.is('true'),
+                  'role': str.is('tablist')
+                },
                 children: [
                   s.element('button', {
                     html: str.is('A'),
+                    attrs: {
+                      'data-alloy-id': str.is('alpha-tab'),
+                      'aria-selected': str.is('false')
+                    },
+                    classes: [
+                      arr.has('test-tab-button')
+                    ]
+                  }),
+
+                  s.element('button', {
+                    html: str.is('B'),
+                    attrs: {
+                      'data-alloy-id': str.is('beta-tab'),
+                      'aria-selected': str.is('false')
+                    },
                     classes: [
                       arr.has('test-tab-button')
                     ]
@@ -83,6 +128,28 @@ asynctest(
             ]
           });
         }), component.element()),
+
+        Step.sync(function () {
+          var alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
+          AlloyTriggers.emitExecute(alpha);
+          var beta = component.getSystem().getByUid('beta-tab').getOrDie();
+          Assertions.assertStructure('alpha after execute(alpha)', ApproxStructure.build(function (s, str, arr) {
+            return s.element('button', {
+              attrs: {
+                'aria-selected': str.is('true')
+              },
+              classes: [ arr.has('selected-test-tab-button') ]
+            });
+          }), alpha.element());
+          Assertions.assertStructure('beta after execute(alpha)', ApproxStructure.build(function (s, str, arr) {
+            return s.element('button', {
+              attrs: {
+                'aria-selected': str.is('false')
+              },
+              classes: [ arr.not('selected-test-tab-button') ]
+            });
+          }), beta.element());
+        }),
 
         GuiSetup.mRemoveStyles
       ];

@@ -2,6 +2,10 @@ define(
   'ephox.alloy.ui.schema.TouchMenuSchema',
 
   [
+    'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.behaviour.Unselecting',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.InternalSink',
     'ephox.alloy.parts.PartType',
@@ -13,7 +17,7 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Fields, InternalSink, PartType, Layout, FieldSchema, Fun, Height, Location, Width) {
+  function (Coupling, Toggling, Unselecting, SketchBehaviours, Fields, InternalSink, PartType, Layout, FieldSchema, Fun, Height, Location, Width) {
     var anchorAtCentre = function (component) {
       var pos = Location.absolute(component.element());
       var w = Width.get(component.element());
@@ -36,7 +40,7 @@ define(
       Fields.onHandler('onHoverOn'),
       Fields.onHandler('onHoverOff'),
       Fields.onHandler('onMiss'),
-      FieldSchema.defaulted('touchmenuBehaviours', { }),
+      SketchBehaviours.field('touchmenuBehaviours', [ Toggling, Unselecting, Coupling ]),
       FieldSchema.strict('toggleClass'),
       FieldSchema.option('lazySink'),
       FieldSchema.option('role'),

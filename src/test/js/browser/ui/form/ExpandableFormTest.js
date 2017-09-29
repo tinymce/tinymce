@@ -2,6 +2,7 @@ asynctest(
   'ExpandableFormTest',
 
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Keyboard',
@@ -25,12 +26,13 @@ asynctest(
     'ephox.alloy.test.form.TestForm',
     'ephox.alloy.test.GuiSetup',
     'ephox.alloy.test.PhantomSkipper',
-    'ephox.sugar.api.dom.Focus'
+    'ephox.sugar.api.dom.Focus',
+    'ephox.sugar.api.properties.Value'
   ],
 
   function (
-    FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Keying, Tabstopping, GuiFactory, Button, Container, ExpandableForm,
-    Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, PhantomSkipper, Focus
+    Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter, Behaviour, Keying, Tabstopping, GuiFactory, Button, Container,
+    ExpandableForm, Form, FormField, HtmlSelect, Input, TestForm, GuiSetup, PhantomSkipper, Focus, Value
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -195,6 +197,26 @@ asynctest(
             'form.ant': 'first.set',
             'form.bull': 'select-b-set'
           })
+        ),
+
+        Logger.t(
+          'Retrieve the ant field directly and check its value (in minimal)',
+          GeneralSteps.sequence([
+            Step.sync(function () {
+              var field = Form.getField(component, 'form.ant').getOrDie('Could not find field for ant');
+              Assertions.assertEq('Checking value', 'first.set', Value.get(field.element()));
+            })
+          ])
+        ),
+
+        Logger.t(
+          'Retrieve the bull field directly and check its value (in extra)',
+          GeneralSteps.sequence([
+            Step.sync(function () {
+              var field = Form.getField(component, 'form.bull').getOrDie('Could not find field for bull');
+              Assertions.assertEq('Checking value', 'select-b-set', Value.get(field.element()));
+            })
+          ])
         ),
 
         Step.sync(function () {

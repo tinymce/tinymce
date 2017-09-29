@@ -2,6 +2,7 @@ define(
   'ephox.alloy.behaviour.keyboard.KeyboardBranches',
 
   [
+    'ephox.alloy.keying.AcyclicType',
     'ephox.alloy.keying.CyclicType',
     'ephox.alloy.keying.ExecutionType',
     'ephox.alloy.keying.FlatgridType',
@@ -11,8 +12,9 @@ define(
     'ephox.alloy.keying.SpecialType'
   ],
 
-  function (CyclicType, ExecutionType, FlatgridType, FlowType, MatrixType, MenuType, SpecialType) {
+  function (AcyclicType, CyclicType, ExecutionType, FlatgridType, FlowType, MatrixType, MenuType, SpecialType) {
     return {
+      acyclic: AcyclicType.schema(),
       cyclic: CyclicType.schema(),
       flow: FlowType.schema(),
       flatgrid: FlatgridType.schema(),

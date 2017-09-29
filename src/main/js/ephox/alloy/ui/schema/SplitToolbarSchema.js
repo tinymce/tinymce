@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Toolbar',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
@@ -12,9 +13,10 @@ define(
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, Sliding, Toolbar, Fields, PartType, FieldSchema, Cell, Fun) {
+  function (Behaviour, Sliding, SketchBehaviours, Toolbar, Fields, PartType, FieldSchema, Cell, Fun) {
     var schema = [
       Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
+      SketchBehaviours.field('splitToolbarBehaviours', [ ]),
       FieldSchema.state('builtGroups', function () {
         return Cell([ ]);
       })

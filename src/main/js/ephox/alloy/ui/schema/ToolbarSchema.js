@@ -4,16 +4,16 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.data.Fields',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Behaviour, Replacing, Fields, PartType, FieldSchema, Fun) {
+  function (Behaviour, Replacing, SketchBehaviours, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.defaulted('shell', true),
-      FieldSchema.defaulted('toolbarBehaviours', { })
+      SketchBehaviours.field('toolbarBehaviours', [ Replacing ])
     ];
 
     // TODO: Dupe with Toolbar

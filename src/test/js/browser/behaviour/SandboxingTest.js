@@ -53,10 +53,8 @@ asynctest(
       );
 
       var sOpenWith = function (data) {
-        return Step.async(function (next, die) {
-          Sandboxing.open(sandbox, LazyValue.pure(data)).get(function () {
-            next();
-          });
+        return Step.sync(function () {
+          Sandboxing.open(sandbox, data);
         });
       };
 

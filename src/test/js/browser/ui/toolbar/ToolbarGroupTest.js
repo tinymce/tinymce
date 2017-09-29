@@ -11,6 +11,7 @@ asynctest(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Tabstopping',
     'ephox.alloy.api.component.GuiFactory',
     'ephox.alloy.api.ui.Container',
     'ephox.alloy.api.ui.ToolbarGroup',
@@ -18,7 +19,7 @@ asynctest(
     'ephox.katamari.api.Arr'
   ],
 
-  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, GuiFactory, Container, ToolbarGroup, GuiSetup, Arr) {
+  function (ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step, Behaviour, Focusing, Keying, Tabstopping, GuiFactory, Container, ToolbarGroup, GuiSetup, Arr) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -49,6 +50,10 @@ asynctest(
               }
             })
           ],
+
+          tgroupBehaviours: Behaviour.derive([
+            Tabstopping.config({ })
+          ]),
 
           items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
           markers: {

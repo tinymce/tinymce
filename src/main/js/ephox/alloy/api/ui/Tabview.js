@@ -4,11 +4,12 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Replacing, Sketcher, Merger) {
+  function (Behaviour, Replacing, SketchBehaviours, Sketcher, Merger) {
     var factory = function (detail, spec) {
       return {
         uid: detail.uid(),
@@ -22,15 +23,20 @@ define(
           detail.dom()
         ),
 
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
+        behaviours: Merger.deepMerge(
+          Behaviour.derive([
+            Replacing.config({ })
+          ]),
+          SketchBehaviours.get(detail.tabviewBehaviours())
+        )
       };
     };
 
     return Sketcher.single({
       name: 'Tabview',
-      configFields: [ ],
+      configFields: [
+        SketchBehaviours.field('tabviewBehaviours', [ Replacing ])
+      ],
       factory: factory
     });
   }

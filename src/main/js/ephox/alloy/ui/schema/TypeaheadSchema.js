@@ -4,18 +4,26 @@ define(
   [
     'ephox.alloy.alien.Strings',
     'ephox.alloy.api.behaviour.Coupling',
+    'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sandboxing',
+    'ephox.alloy.api.behaviour.Streaming',
+    'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.InputBase',
     'ephox.boulder.api.FieldSchema',
+    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.katamari.api.Cell'
+    'ephox.katamari.api.Option'
   ],
 
-  function (Strings, Coupling, Representing, Sandboxing, Fields, PartType, InputBase, FieldSchema, Fun, Option, Cell) {
+  function (
+    Strings, Coupling, Focusing, Keying, Representing, Sandboxing, Streaming, Toggling, SketchBehaviours, Fields, PartType, InputBase, FieldSchema, Cell, Fun,
+    Option
+  ) {
     var schema = [
       FieldSchema.option('lazySink'),
       FieldSchema.strict('fetch'),
@@ -24,7 +32,12 @@ define(
 
       Fields.onKeyboardHandler('onExecute'),
       FieldSchema.defaulted('matchWidth', true),
+      FieldSchema.defaulted('dismissOnBlur', true),
       Fields.markers([ 'openClass' ]),
+
+      SketchBehaviours.field('typeaheadBehaviours', [
+        Focusing, Representing, Streaming, Keying, Toggling, Coupling
+      ]),
 
       FieldSchema.state('previewing', function () {
         return Cell(true);

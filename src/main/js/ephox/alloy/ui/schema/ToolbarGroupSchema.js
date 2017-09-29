@@ -2,18 +2,19 @@ define(
   'ephox.alloy.ui.schema.ToolbarGroupSchema',
 
   [
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.boulder.api.FieldSchema',
     'ephox.katamari.api.Fun'
   ],
 
-  function (Fields, PartType, FieldSchema, Fun) {
+  function (Keying, SketchBehaviours, Fields, PartType, FieldSchema, Fun) {
     var schema = [
       FieldSchema.strict('items'),
       Fields.markers([ 'itemClass' ]),
-      FieldSchema.defaulted('hasTabstop', true),
-      FieldSchema.defaulted('tgroupBehaviours', { })
+      SketchBehaviours.field('tgroupBehaviours', [ Keying ])
     ];
 
     var partTypes = [

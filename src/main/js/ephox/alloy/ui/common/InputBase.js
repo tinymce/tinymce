@@ -5,7 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Focusing',
     'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.api.behaviour.Tabstopping',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
@@ -14,7 +14,7 @@ define(
     'ephox.sugar.api.properties.Value'
   ],
 
-  function (Behaviour, Focusing, Representing, Tabstopping, Fields, FieldSchema, Objects, Fun, Merger, Value) {
+  function (Behaviour, Focusing, Representing, SketchBehaviours, Fields, FieldSchema, Objects, Fun, Merger, Value) {
 
     var schema = [
       FieldSchema.option('data'),
@@ -22,12 +22,12 @@ define(
       FieldSchema.defaulted('inputStyles', { }),
       FieldSchema.defaulted('type', 'input'),
       FieldSchema.defaulted('tag', 'input'),
+      FieldSchema.defaulted('inputClasses', [ ]),
       Fields.onHandler('onSetValue'),
       FieldSchema.defaulted('styles', { }),
       FieldSchema.option('placeholder'),
       FieldSchema.defaulted('eventOrder', { }),
-      FieldSchema.defaulted('hasTabstop', true),
-      FieldSchema.defaulted('inputBehaviours', { }),
+      SketchBehaviours.field('inputBehaviours', [ Representing, Focusing ]),
       FieldSchema.defaulted('selectOnFocus', true)
     ];
 
@@ -58,10 +58,9 @@ define(
               var value = Value.get(input);
               input.dom().setSelectionRange(0, value.length);
             }
-          }),
-          detail.hasTabstop() ? Tabstopping.config({ }) : Tabstopping.revoke()
+          })
         ]),
-        detail.inputBehaviours()
+        SketchBehaviours.get(detail.inputBehaviours())
       );
     };
 
@@ -82,7 +81,8 @@ define(
           }).toArray())),
           detail.inputAttributes()
         ),
-        styles: detail.inputStyles()
+        styles: detail.inputStyles(),
+        classes: detail.inputClasses()
       };
     };
 

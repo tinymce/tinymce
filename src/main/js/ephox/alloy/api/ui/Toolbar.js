@@ -4,6 +4,7 @@ define(
   [
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.schema.ToolbarSchema',
@@ -13,7 +14,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Replacing, Sketcher, AlloyParts, ToolbarSchema, Merger, Option, console, Error) {
+  function (Behaviour, Replacing, SketchBehaviours, Sketcher, AlloyParts, ToolbarSchema, Merger, Option, console, Error) {
     var factory = function (detail, components, spec, _externals) {
       var setGroups = function (toolbar, groups) {
         getGroupContainer(toolbar).fold(function () {
@@ -41,7 +42,7 @@ define(
 
         behaviours: Merger.deepMerge(
           Behaviour.derive(extra.behaviours),
-          detail.toolbarBehaviours()
+          SketchBehaviours.get(detail.toolbarBehaviours())
         ),
         apis: {
           setGroups: setGroups

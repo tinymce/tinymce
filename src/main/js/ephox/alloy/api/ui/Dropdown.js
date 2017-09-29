@@ -9,30 +9,38 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.dropdown.DropdownUtils',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.alloy.ui.schema.DropdownSchema',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, Sketcher, DropdownUtils, ButtonBase, DropdownSchema, Merger, Option) {
+  function (
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Toggling, SketchBehaviours, Sketcher, DropdownUtils, ButtonBase, DropdownSchema, Fun, Merger,
+    Option
+  ) {
     var factory = function (detail, components, spec, externals) {
+      var switchToMenu = function (sandbox) {
+        Composing.getCurrent(sandbox).each(function (current) {
+          Highlighting.highlightFirst(current);
+          Keying.focusIn(current);
+        });
+      };
+
+      var action = function (component) {
+        var anchor = { anchor: 'hotspot', hotspot: component };
+        var onOpenSync = switchToMenu;
+        DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
+      };
+
       return Merger.deepMerge(
         {
           events: ButtonBase.events(
-            Option.some(function (component) {
-              DropdownUtils.togglePopup(detail, {
-                anchor: 'hotspot',
-                hotspot: component
-              }, component, externals).get(function (sandbox) {
-                Composing.getCurrent(sandbox).each(function (current) {
-                  Highlighting.highlightFirst(current);
-                  Keying.focusIn(current);
-                });
-              });
-            })
+            Option.some(action)
           )
         },
         {
@@ -44,6 +52,7 @@ define(
               Toggling.config({
                 toggleClass: detail.toggleClass(),
                 aria: {
+                  // INVESTIGATE: Are we sure we want aria-pressed as well as aria-expanded here?
                   mode: 'pressed',
                   syncWithExpanded: true
                 }
@@ -67,7 +76,7 @@ define(
               }),
               Focusing.config({ })
             ]),
-            detail.dropdownBehaviours()
+            SketchBehaviours.get(detail.dropdownBehaviours())
           ),
 
           eventOrder: {
@@ -78,7 +87,8 @@ define(
         {
           dom: {
             attributes: {
-              role: detail.role().getOr('button')
+              role: detail.role().getOr('button'),
+              'aria-haspopup': 'true'
             }
           }
         }

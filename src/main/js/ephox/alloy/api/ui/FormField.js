@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.parts.AlloyParts',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.properties.Attr'
   ],
 
-  function (Behaviour, Composing, Representing, AlloyEvents, Sketcher, AlloyParts, FormFieldSchema, Id, Merger, Attr) {
+  function (Behaviour, Composing, Representing, SketchBehaviours, AlloyEvents, Sketcher, AlloyParts, FormFieldSchema, Id, Merger, Attr) {
     var factory = function (detail, components, spec, externals) {
       var behaviours = Merger.deepMerge(
         Behaviour.derive([
@@ -38,7 +39,7 @@ define(
             }
           })
         ]),
-        detail.fieldBehaviours()
+        SketchBehaviours.get(detail.fieldBehaviours())
       );
 
       var events = AlloyEvents.derive([
@@ -56,6 +57,7 @@ define(
           });
         })
       ]);
+
       return {
         uid: detail.uid(),
         dom: detail.dom(),

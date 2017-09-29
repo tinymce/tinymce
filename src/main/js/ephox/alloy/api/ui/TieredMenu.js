@@ -2,6 +2,11 @@ define(
   'ephox.alloy.api.ui.TieredMenu',
 
   [
+    'ephox.alloy.api.behaviour.Composing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
+    'ephox.alloy.api.behaviour.Replacing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.data.Fields',
     'ephox.alloy.ui.single.TieredMenuSpec',
@@ -10,7 +15,7 @@ define(
     'ephox.katamari.api.Id'
   ],
 
-  function (Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects, Id) {
+  function (Composing, Highlighting, Keying, Replacing, SketchBehaviours, Sketcher, Fields, TieredMenuSpec, FieldSchema, Objects, Id) {
     var tieredData = function (primary, menus, expansions) {
       return {
         primary: primary,
@@ -63,7 +68,7 @@ define(
         FieldSchema.defaulted('navigateOnHover', true),
         FieldSchema.defaulted('stayInDom', false),
 
-        FieldSchema.defaulted('tmenuBehaviours', { }),
+        SketchBehaviours.field('tmenuBehaviours', [ Keying, Highlighting, Composing, Replacing ]),
         FieldSchema.defaulted('eventOrder', { })
       ],
 

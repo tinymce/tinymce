@@ -2,6 +2,7 @@ asynctest(
   'InlineViewTest',
 
   [
+    'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
@@ -20,12 +21,13 @@ asynctest(
     'ephox.alloy.test.TestBroadcasts',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Future',
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Result'
   ],
 
   function (
-    GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, TestDropdownMenu, GuiSetup, Sinks,
-    TestBroadcasts, Arr, Future, Result
+    Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter, GuiFactory, Button, Container, Dropdown, InlineView, TieredMenu, TestDropdownMenu, GuiSetup,
+    Sinks, TestBroadcasts, Arr, Future, Option, Result
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -44,32 +46,60 @@ asynctest(
 
           lazySink: function () {
             return Result.value(component);
+          },
+
+          getRelated: function () {
+            return Option.some(related);
           }
           // onEscape: store.adderH('inline.escape')
         })
       );
 
+      var related = GuiFactory.build({
+        dom: {
+          tag: 'div',
+          classes: [ 'related-to-inline' ],
+          styles: {
+            background: 'blue',
+            width: '50px',
+            height: '50px'
+          }
+        }
+      });
+
+      gui.add(related);
+
       var sCheckOpen = function (label) {
         return Logger.t(
           label,
-          Waiter.sTryUntil(
-            'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline'),
-            100,
-            1000
-          )
+          GeneralSteps.sequence([
+            Waiter.sTryUntil(
+              'Test inline should not be DOM',
+              UiFinder.sExists(gui.element(), '.test-inline'),
+              100,
+              1000
+            ),
+            Step.sync(function () {
+              Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
+            })
+          ])
         );
       };
 
       var sCheckClosed = function (label) {
         return Logger.t(
           label,
-          Waiter.sTryUntil(
-            'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline'),
-            100,
-            1000
-          )
+          GeneralSteps.sequence([
+            Waiter.sTryUntil(
+              'Test inline should not be in DOM',
+              UiFinder.sNotExists(gui.element(), '.test-inline'),
+              100,
+              1000
+            ),
+            Step.sync(function () {
+              Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
+            })
+          ])
         );
       };
 
@@ -173,6 +203,13 @@ asynctest(
             sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
           ])
         ),
+
+        TestBroadcasts.sDismiss(
+          'related element: should not close',
+          gui,
+          related.element()
+        ),
+        sCheckOpen('The inline view should not have closed when broadcasting on related'),
 
         TestBroadcasts.sDismiss(
           'outer gui element: should close',

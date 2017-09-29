@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.system.Attachment',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.parts.AlloyParts',
@@ -14,7 +15,7 @@ define(
     'global!Error'
   ],
 
-  function (Behaviour, Keying, GuiFactory, Attachment, Sketcher, AlloyParts, ModalDialogSchema, Merger, Traverse, Error) {
+  function (Behaviour, Keying, GuiFactory, SketchBehaviours, Attachment, Sketcher, AlloyParts, ModalDialogSchema, Merger, Traverse, Error) {
     var factory = function (detail, components, spec, externals) {
       var showDialog = function (dialog) {
         var sink = detail.lazySink()().getOrDie();
@@ -58,13 +59,17 @@ define(
           getBody: getDialogBody
         },
 
-        behaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'cyclic',
-            onEnter: detail.onExecute(),
-            onEscape: detail.onEscape()
-          })
-        ])
+        behaviours: Merger.deepMerge(
+          Behaviour.derive([
+            Keying.config({
+              mode: 'cyclic',
+              onEnter: detail.onExecute(),
+              onEscape: detail.onEscape(),
+              useTabstopAt: detail.useTabstopAt()
+            })
+          ]),
+          SketchBehaviours.get(detail.modalBehaviours())
+        )
       };
     };
 

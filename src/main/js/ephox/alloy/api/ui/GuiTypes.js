@@ -4,13 +4,12 @@ define(
   [
     'ephox.alloy.debugging.FunctionAnnotator',
     'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
     'global!Array'
   ],
 
-  function (FunctionAnnotator, Objects, Arr, Fun, Id, Array) {
+  function (FunctionAnnotator, Objects, Fun, Id, Array) {
     var premadeTag = Id.generate('alloy-premade');
     var apiConfig = Id.generate('api');
 

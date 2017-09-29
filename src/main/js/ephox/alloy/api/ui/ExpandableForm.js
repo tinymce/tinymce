@@ -3,15 +3,18 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Representing',
     'ephox.alloy.api.behaviour.Sliding',
+    'ephox.alloy.api.component.SketchBehaviours',
+    'ephox.alloy.api.ui.Form',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.parts.AlloyParts',
     'ephox.alloy.ui.schema.ExpandableFormSchema',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Behaviour, Representing, Sliding, Sketcher, AlloyParts, ExpandableFormSchema, Merger) {
+  function (Behaviour, Composing, Representing, Sliding, SketchBehaviours, Form, Sketcher, AlloyParts, ExpandableFormSchema, Merger) {
     var runOnExtra = function (detail, operation) {
       return function (anyComp) {
         AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
@@ -51,14 +54,23 @@ define(
               }
             })
           ]),
-          detail.expandableBehaviours()
+          SketchBehaviours.get(detail.expandableBehaviours())
         ),
 
         apis: {
           toggleForm: runOnExtra(detail, Sliding.toggleGrow),
           collapseForm: runOnExtra(detail, Sliding.shrink),
           collapseFormImmediately: runOnExtra(detail, Sliding.immediateShrink),
-          expandForm: runOnExtra(detail, Sliding.grow)
+          expandForm: runOnExtra(detail, Sliding.grow),
+          getField: function (form, key) {
+            return AlloyParts.getPart(form, detail, 'minimal').bind(function (minimal) {
+              return Form.getField(minimal, key);
+            }).orThunk(function () {
+              return AlloyParts.getPart(form, detail, 'extra').bind(function (extra) {
+                return Form.getField(extra, key);
+              });
+            });
+          }
         }
       };
 
@@ -70,6 +82,9 @@ define(
       partFields: ExpandableFormSchema.parts(),
       factory: factory,
       apis: {
+        getField: function (apis, component, key) {
+          return apis.getField(component, key);
+        },
         toggleForm: function (apis, component) {
           apis.toggleForm(component);
         },

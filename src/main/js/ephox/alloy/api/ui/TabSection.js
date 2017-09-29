@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Highlighting',
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.SystemEvents',
     'ephox.alloy.api.ui.Sketcher',
@@ -14,7 +15,7 @@ define(
     'ephox.sugar.api.properties.Attr'
   ],
 
-  function (Highlighting, Replacing, Representing, AlloyEvents, SystemEvents, Sketcher, AlloyParts, TabSectionSchema, Arr, Attr) {
+  function (Highlighting, Replacing, Representing, SketchBehaviours, AlloyEvents, SystemEvents, Sketcher, AlloyParts, TabSectionSchema, Arr, Attr) {
     var factory = function (detail, components, spec, externals) {
       var changeTab = function (button) {
         var tabValue = Representing.getValue(button);
@@ -38,7 +39,7 @@ define(
         uid: detail.uid(),
         dom: detail.dom(),
         components: components,
-
+        behaviours: SketchBehaviours.get(detail.tabSectionBehaviours()),
 
         events: AlloyEvents.derive(
           Arr.flatten([

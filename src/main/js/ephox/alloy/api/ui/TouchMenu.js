@@ -12,6 +12,7 @@ define(
     'ephox.alloy.api.behaviour.Toggling',
     'ephox.alloy.api.behaviour.Transitioning',
     'ephox.alloy.api.behaviour.Unselecting',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.NativeEvents',
@@ -30,8 +31,8 @@ define(
   ],
 
   function (
-    ElementFromPoint, AddEventsBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, AlloyEvents, AlloyTriggers,
-    NativeEvents, SystemEvents, InlineView, Menu, Sketcher, DropdownUtils, TouchMenuSchema, Objects, Cell, Fun, Merger, Focus, document
+    ElementFromPoint, AddEventsBehaviour, Behaviour, Coupling, Highlighting, Representing, Sandboxing, Toggling, Transitioning, Unselecting, SketchBehaviours,
+    AlloyEvents, AlloyTriggers, NativeEvents, SystemEvents, InlineView, Menu, Sketcher, DropdownUtils, TouchMenuSchema, Objects, Cell, Fun, Merger, Focus, document
   ) {
     var factory = function (detail, components, spec, externals) {
 
@@ -131,7 +132,7 @@ define(
                 }
               })
             ]),
-            detail.touchmenuBehaviours()
+            SketchBehaviours.get(detail.touchmenuBehaviours())
           ),
 
           events: AlloyEvents.derive([

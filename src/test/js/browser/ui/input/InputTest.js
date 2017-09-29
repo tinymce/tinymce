@@ -26,7 +26,8 @@ asynctest(
         Input.sketch({
           placeholder: 'placeholder-text',
           data: 'initial-value',
-          uid: 'test-input-id'
+          uid: 'test-input-id',
+          inputClasses: [ 'extra-class' ]
         })
       );
 
@@ -41,6 +42,9 @@ asynctest(
                 'data-alloy-id': str.is('test-input-id'),
                 placeholder: str.is('placeholder-text')
               },
+              classes: [
+                arr.has('extra-class')
+              ],
               value: str.is('initial-value')
             });
           }),

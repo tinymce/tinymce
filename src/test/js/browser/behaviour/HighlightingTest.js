@@ -220,7 +220,15 @@ asynctest(
             NamedChain.direct('highlighted-comp', cHasClass('gamma'), '_'),
 
             cDehighlightAll,
-            NamedChain.direct('container', cGetHighlightedIsNone, '_')
+            NamedChain.direct('container', cGetHighlightedIsNone, '_'),
+
+            Chain.op(function (input) {
+              Highlighting.highlightBy(component, function (comp) {
+                return Class.has(comp.element(), 'beta');
+              });
+            }),
+
+            NamedChain.direct('container', cGetHighlightedOrDie, 'blah')
           ])
         ])
       ];

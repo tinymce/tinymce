@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Replacing',
     'ephox.alloy.api.behaviour.Sliding',
     'ephox.alloy.api.component.GuiFactory',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.ui.Button',
     'ephox.alloy.api.ui.Sketcher',
     'ephox.alloy.api.ui.Toolbar',
@@ -19,7 +20,10 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Replacing, Sliding, GuiFactory, Button, Sketcher, Toolbar, ToolbarGroup, AlloyParts, PartType, Overflows, SplitToolbarSchema, Arr, Merger, Css, Width) {
+  function (
+    Replacing, Sliding, GuiFactory, SketchBehaviours, Button, Sketcher, Toolbar, ToolbarGroup, AlloyParts, PartType, Overflows, SplitToolbarSchema, Arr, Merger,
+    Css, Width
+  ) {
     var setStoredGroups = function (bar, storedGroups) {
       var bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
       Toolbar.setGroups(bar, bGroups);
@@ -111,6 +115,7 @@ define(
           uid: detail.uid(),
           dom: detail.dom(),
           components: components,
+          behaviours: SketchBehaviours.get(detail.splitToolbarBehaviours()),
           apis: {
             setGroups: setGroups,
             refresh: function (toolbar) {

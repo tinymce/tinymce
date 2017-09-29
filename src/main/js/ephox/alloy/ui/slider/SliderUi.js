@@ -5,6 +5,7 @@ define(
     'ephox.alloy.api.behaviour.Behaviour',
     'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.NativeEvents',
     'ephox.alloy.parts.AlloyParts',
@@ -18,7 +19,10 @@ define(
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Behaviour, Keying, Representing, AlloyEvents, NativeEvents, AlloyParts, SliderActions, Arr, Fun, Merger, Option, PlatformDetection, Css, Width) {
+  function (
+    Behaviour, Keying, Representing, SketchBehaviours, AlloyEvents, NativeEvents, AlloyParts, SliderActions, Arr, Fun, Merger, Option, PlatformDetection, Css,
+    Width
+  ) {
     var isTouch = PlatformDetection.detect().deviceType.isTouch();
 
     var sketch = function (detail, components, spec, externals) {
@@ -139,7 +143,7 @@ define(
               ]
             ])
           ),
-          detail.sliderBehaviours()
+          SketchBehaviours.get(detail.sliderBehaviours())
         ),
 
         events: AlloyEvents.derive(

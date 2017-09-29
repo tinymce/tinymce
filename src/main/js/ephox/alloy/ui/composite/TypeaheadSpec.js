@@ -12,6 +12,7 @@ define(
     'ephox.alloy.api.behaviour.Sandboxing',
     'ephox.alloy.api.behaviour.Streaming',
     'ephox.alloy.api.behaviour.Toggling',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.api.events.AlloyEvents',
     'ephox.alloy.api.events.AlloyTriggers',
     'ephox.alloy.api.events.SystemEvents',
@@ -26,8 +27,8 @@ define(
   ],
 
   function (
-    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, AlloyEvents, AlloyTriggers, SystemEvents,
-    DropdownUtils, InputBase, Fun, Merger, Option, Value, console, document
+    Behaviour, Composing, Coupling, Focusing, Highlighting, Keying, Representing, Sandboxing, Streaming, Toggling, SketchBehaviours, AlloyEvents, AlloyTriggers,
+    SystemEvents, DropdownUtils, InputBase, Fun, Merger, Option, Value, console, document
   ) {
     var make = function (detail, components, spec, externals) {
       var navigateList = function (comp, simulatedEvent, highlighter) {
@@ -41,9 +42,11 @@ define(
             });
           });
         } else {
-          DropdownUtils.open(detail, { anchor: 'hotspot', hotspot: comp }, comp, sandbox, externals).get(function () {
+          var anchor = { anchor: 'hotspot', hotspot: comp };
+          var onOpenSync = function (sandbox) {
             Composing.getCurrent(sandbox).each(highlighter);
-          });
+          };
+          DropdownUtils.open(detail, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
         }
       };
 
@@ -52,7 +55,6 @@ define(
       var inputBehaviours = InputBase.behaviours(detail);
 
       var behaviours = Behaviour.derive([
-        inputBehaviours.tabstopping,
         Focusing.config({ }),
         Representing.config({
           store: {
@@ -81,13 +83,32 @@ define(
             // You don't want it to change when something else has triggered the change.
             if (focusInInput) {
               if (Value.get(component.element()).length >= detail.minChars()) {
-                detail.previewing().set(true);
-                DropdownUtils.open(detail, {
-                  anchor: 'hotspot',
-                  hotspot: component
-                }, component, sandbox, externals).get(function () {
-                  Composing.getCurrent(sandbox).each(Highlighting.highlightFirst);
+
+                var previousValue = Composing.getCurrent(sandbox).bind(function (menu) {
+                  return Highlighting.getHighlighted(menu).map(Representing.getValue);
                 });
+
+                detail.previewing().set(true);
+
+                var onOpenSync = function (_sandbox) {
+                  Composing.getCurrent(sandbox).each(function (menu) {
+                    previousValue.fold(function () {
+                      Highlighting.highlightFirst(menu);
+                    }, function (pv) {
+                      Highlighting.highlightBy(menu, function (item) {
+                        return Representing.getValue(item).value === pv.value;
+                      });
+
+                      // Highlight first if could not find it?
+                      Highlighting.getHighlighted(menu).orThunk(function () {
+                        Highlighting.highlightFirst(menu);
+                      });
+                    });
+                  });
+                };
+                
+                var anchor = { anchor: 'hotspot', hotspot: component };
+                DropdownUtils.open(detail, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
               }
             }
           }
@@ -142,30 +163,28 @@ define(
         })
       ]);
 
-      return Merger.deepMerge(
-        {
-          behaviours: InputBase.behaviours(detail)
-        },
-        {
-          uid: detail.uid(),
-          dom: InputBase.dom(detail),
-          behaviours: behaviours,
+      return {
+        uid: detail.uid(),
+        dom: InputBase.dom(detail),
+        behaviours: Merger.deepMerge(
+          inputBehaviours,
+          behaviours,
+          SketchBehaviours.get(detail.typeaheadBehaviours())
+        ),
 
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(function (comp) {
-              DropdownUtils.togglePopup(detail, {
-                anchor: 'hotspot',
-                hotspot: comp
-              }, comp, externals);
-            }),
-
-            AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
-              var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-              Sandboxing.close(sandbox);
-            })
-          ])
-        }
-      );
+        events: AlloyEvents.derive([
+          AlloyEvents.runOnExecute(function (comp) {
+            var anchor = { anchor: 'hotspot', hotspot: comp };
+            var onOpenSync = Fun.noop;
+            DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
+          })
+        ].concat(detail.dismissOnBlur() ? [
+          AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
+            var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+            Sandboxing.close(sandbox);
+          })
+        ] : [ ]))
+      };
     };
 
     return {

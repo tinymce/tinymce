@@ -24,6 +24,7 @@ define(
       },
       apis: {
         focusIn: function (component/*, keyConfig, keyState */) {
+          // TODO: Should this use the focusManager?
           component.getSystem().triggerFocus(component.element(), component.element());
         },
 

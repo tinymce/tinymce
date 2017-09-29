@@ -3,22 +3,25 @@ define(
 
   [
     'ephox.alloy.api.behaviour.Behaviour',
+    'ephox.alloy.api.behaviour.Composing',
     'ephox.alloy.api.behaviour.Focusing',
+    'ephox.alloy.api.behaviour.Highlighting',
+    'ephox.alloy.api.behaviour.Keying',
     'ephox.alloy.api.behaviour.Representing',
+    'ephox.alloy.api.component.SketchBehaviours',
     'ephox.alloy.data.Fields',
     'ephox.alloy.parts.PartType',
     'ephox.alloy.ui.common.ButtonBase',
     'ephox.boulder.api.FieldSchema',
     'ephox.boulder.api.Objects',
     'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option'
   ],
 
-  function (Behaviour, Focusing, Representing, Fields, PartType, ButtonBase, FieldSchema, Objects, Fun, Obj, Option) {
+  function (Behaviour, Composing, Focusing, Highlighting, Keying, Representing, SketchBehaviours, Fields, PartType, ButtonBase, FieldSchema, Objects, Fun, Option) {
     var schema = [
       FieldSchema.strict('choices'),
-      FieldSchema.defaulted('chooserBehaviours'),
+      SketchBehaviours.field('chooserBehaviours', [ Keying, Highlighting, Composing, Representing ]),
       Fields.markers([ 'choiceClass', 'selectedClass' ])
     ];
 

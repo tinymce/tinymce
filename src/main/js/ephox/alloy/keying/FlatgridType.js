@@ -13,17 +13,12 @@ define(
     'ephox.alloy.navigation.KeyRules',
     'ephox.alloy.navigation.WrapArrNavigation',
     'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (
-    Keys, KeyingState, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Cell, Fun, Option, Focus,
-    SelectorFind
-  ) {
+  function (Keys, KeyingState, Fields, KeyingType, KeyingTypes, DomMovement, DomPinpoint, KeyMatch, KeyRules, WrapArrNavigation, FieldSchema, Fun, Option, SelectorFind) {
     var schema = [
       FieldSchema.strict('selector'),
       FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
@@ -34,12 +29,18 @@ define(
 
     var focusIn = function (component, gridConfig, gridState) {
       SelectorFind.descendant(component.element(), gridConfig.selector()).each(function (first) {
-        component.getSystem().triggerFocus(first, component.element());
+        gridConfig.focusManager().set(component, first);
+      });
+    };
+
+    var findCurrent = function (component, gridConfig) {
+      return gridConfig.focusManager().get(component).bind(function (elem) {
+        return SelectorFind.closest(elem, gridConfig.selector());
       });
     };
 
     var execute = function (component, simulatedEvent, gridConfig, gridState) {
-      return Focus.search(component.element(), gridConfig.selector()).bind(function (focused) {
+      return findCurrent(component, gridConfig).bind(function (focused) {
         return gridConfig.execute()(component, simulatedEvent, focused);
       });
     };
