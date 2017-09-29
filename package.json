@@ -18,11 +18,11 @@
     "test": "grunt bedrock-manual"
   },
   "dependencies": {
-    "@ephox/boulder": "git+ssh://git@stash:7999/van/boulder.git",
-    "@ephox/alloy": "git+ssh://git@stash:7999/van/alloy.git",
-    "@ephox/katamari": "git+ssh://git@stash:7999/van/katamari.git",
-    "@ephox/sugar": "git+ssh://git@stash:7999/libs/sugar.git",
-    "@ephox/sand": "git+ssh://git@stash:7999/van/sand.git"
+    "@ephox/boulder": "1.1.0",
+    "@ephox/alloy": "0.8.4",
+    "@ephox/katamari": "^1.1.0",
+    "@ephox/sugar": "^3.1.0",
+    "@ephox/sand": "^1.1.1"
   },
   "devDependencies": {
     "@ephox/bedrock": "^1.5.0",
