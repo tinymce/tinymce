@@ -53,7 +53,7 @@ asynctest(
 
       var css = Element.fromTag('link');
       Attr.setAll(css, {
-        href: '/project/src/themes/mobile/src/main/css/skin.mobile.css',
+        href: '/project/src/skins/lightgray/dist/lightgray/skin.mobile.min.css',
         rel: 'Stylesheet',
         type: 'text/css'
       });
