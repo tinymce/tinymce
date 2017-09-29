@@ -1,9 +1,12 @@
-Purpose: to handle selection and cursor navigation.
 
-Progress:
-
+# Description
 Once completed, it is hoped that `darwin` will provide a framework for taking over selection entirely (like a DOM-based editor). At this stage, it is only being used for tables.
+# Installation
+`darwin` is available as an `npm` package.  You can install it via the npm package `@ephox/darwin`
+## Install from npm
+`npm install @ephox/darwin`
 
+# Usage
 1. Handling Webkit Up/Down in a Table
 
 For Webkit browsers, when the user presses Up or Down, the native behaviour is to move to the next cell horizontally, not vertically. This confuses the user. The project `darwin` seeks to remedy this by potentially overriding the Up/Down key event.
@@ -25,4 +28,3 @@ The purpose is that we are only overriding the key event if:
  1. we find an element that is horizontally aligned with the original element with a y value in the right direction.
 
 Note, if we don't override the key, then the browser's default handling is considered good enough. This will be the case for pressing up/down near br tags that are not at the edge of the cell.
-

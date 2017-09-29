@@ -2,19 +2,20 @@
   "name": "@ephox/darwin",
   "description": "This project's purpose is to handle selection and cursor navigation.",
   "version": "2.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/darwin"
+  },
   "dependencies": {
-    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
     "@ephox/sand": "*",
     "@ephox/katamari": "*",
-    "@ephox/phoenix": "git+ssh://git@stash:7999/tbio/phoenix.git#master",
-    "@ephox/robin": "git+ssh://git@stash:7999/tbio/robin.git#master",
-    "@ephox/snooker": "git+ssh://git@stash:7999/tbio/snooker.git#master",
+    "@ephox/phoenix": "*",
+    "@ephox/robin": "*",
+    "@ephox/snooker": "*",
     "@ephox/sugar": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "@ephox/bolt": "*"
   },
   "publishConfig": {
     "registry": "http://nexus:8081/repository/ephox-npm/"

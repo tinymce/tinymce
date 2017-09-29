@@ -2,11 +2,11 @@ define(
   'ephox.darwin.style.Styles',
 
   [
-    'ephox.flour.style.Resolver'
+    'ephox.katamari.api.Namespace'
   ],
 
-  function (Resolver) {
-    var styles = Resolver.create('ephox-darwin');
+  function (Namespace) {
+    var styles = Namespace.css('ephox-darwin');
 
     return {
       resolve: styles.resolve
