@@ -3,7 +3,6 @@
   "description": "This project handles ARIA attributes.",
   "version": "2.0.0",
   "dependencies": {
-    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
     "@ephox/sand": "*",
     "@ephox/katamari": "*",
     "@ephox/sugar": "*"
