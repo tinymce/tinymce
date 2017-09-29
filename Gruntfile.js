@@ -444,7 +444,7 @@ module.exports = function (grunt) {
       core: {
         config: 'config/bolt/browser.js',
         projectdir: '.',
-        testfiles: ["**/src/test/js/browser/**/*Test.js"],
+        testfiles: ["src/**/src/test/js/browser/**/*Test.js"],
         customRoutes: 'src/core/src/test/json/routes.json'
       }
     },
@@ -453,7 +453,7 @@ module.exports = function (grunt) {
       phantomjs: {
         browser: 'phantomjs',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -463,7 +463,7 @@ module.exports = function (grunt) {
       chrome: {
         browser: 'chrome',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -473,7 +473,7 @@ module.exports = function (grunt) {
       firefox: {
         browser: 'firefox',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -483,7 +483,7 @@ module.exports = function (grunt) {
       MicrosoftEdge: {
         browser: 'MicrosoftEdge',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -493,7 +493,7 @@ module.exports = function (grunt) {
       ie: {
         browser: 'ie',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
