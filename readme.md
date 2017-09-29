@@ -1,5 +1,5 @@
 # Description
-`boss` is a project which provides utility functions for dealing with the DOM.
+`boss` is a project which provides a generic wrapper for document models - DomUniverse vs TestUniverse.
 # Installation
 `boss` is available as an `npm` package.  You can install it via the npm package `@ephox/boss`
 ## Install from npm
@@ -7,6 +7,7 @@
 
 # Usage
 `DomUniverse`: Provides utility functions for dealing with the DOM.
+`TestUniverse`: Provides utility functions for dealing with atomic tests.
 # Tests
 `boss` uses `bolt` to run atomic tests.
 ## Running Tests
