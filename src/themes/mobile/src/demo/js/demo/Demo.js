@@ -28,7 +28,7 @@ define(
 
       EditorManager.init({
         selector: '.tiny-text',
-        theme: 'beta-mobile',
+        theme: 'mobile',
         toolbar: [ 'styleselect', 'undo', 'redo', 'bold', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
         plugins: [
           'lists', // Required for list functionality (commands),

@@ -79,7 +79,7 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'scratch/inline/theme.raw.js',
-            dest: 'dist/beta-mobile/theme.js'
+            dest: 'dist/mobile/theme.js'
           }
         ]
       }
@@ -111,7 +111,7 @@ module.exports = function (grunt) {
         files: [
           {
             src: 'scratch/inline/theme.js',
-            dest: 'dist/beta-mobile/theme.min.js'
+            dest: 'dist/mobile/theme.min.js'
           }
         ]
       }
