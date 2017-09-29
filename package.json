@@ -2,19 +2,22 @@
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
   "version": "3.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/dragster"
+  },
   "dependencies": {
     "@ephox/katamari": "*",
     "@ephox/sugar": "*",
-    "@ephox/porkbun": "git+ssh://git@stash:7999/libs/porkbun.git#master",
-    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master"
+    "@ephox/porkbun": "*"
   },
   "devDependencies": {
     "@ephox/bolt": "*",
-    "@ephox/photon": "git+ssh://git@stash:7999/tbio/photon.git#master",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "@ephox/photon": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "scripts": {
+    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }

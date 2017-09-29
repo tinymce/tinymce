@@ -2,12 +2,12 @@ define(
   'ephox.dragster.style.Styles',
 
   [
-    'ephox.flour.style.Resolver'
+    'ephox.katamari.api.Namespace'
   ],
 
-  function (Resolver) {
+  function (Namespace) {
 
-    var styles = Resolver.create('ephox-dragster');
+    var styles = Namespace.css('ephox-dragster');
 
     return {
       resolve: styles.resolve
