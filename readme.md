@@ -13,6 +13,6 @@
 `AriaState`: Used to set stateful ARIA attributes such as `aria-expanded` or `aria-checked`.
 `AriaVoice`: Used to set ARIA attributes related to screen readers.
 # Tests
-`echo` uses `bolt` to run atomic tests.
+`echo` uses `bedrock` to run browser tests.
 ## Running Tests
-`$ npm test`
+`$ grunt bedrock-auto`
