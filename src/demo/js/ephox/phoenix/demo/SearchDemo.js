@@ -19,25 +19,25 @@ define(
     return function () {
       var container = Element.fromTag('div');
 
-      var contentHtml = '<div>' +
-      '<p>This is the first paragraph<\/p>' +
-      '<p>This is the second paragraph<\/p>' +
-      '<p>The third paragraph is <span>significantly <span>more tricky<\/span> than the other stuff \'twas twas<\/span>.' +
-      '<table>' +
-      '<thead>' +
-      '<tr>' +
-      '<th>Column 1<\/th>' +
-      '<th>Column 2<\/th>' +
-      '<\/tr>' +
-      '<\/thead>' +
-      '<tbody>' +
-      '<tr>' +
-      '<td>Value 1<\/td>' +
-      '<td>Value 2<\/td>' +
-      '<\/tr>' +
-      '<\/tbody>' +
-      '<\/table>' +
-      '<\/div>';
+      var contentHtml = `<div>
+<p>This is the first paragraph<\/p>
+<p>This is the second paragraph<\/p>
+<p>The third paragraph is <span>significantly <span>more tricky<\/span> than the other stuff \twas twas<\/span>.
+<table>
+<thead>
+<tr>
+<th>Column 1<\/th>
+<th>Column 2<\/th>
+<\/tr>
+<\/thead>
+<tbody>
+<tr>
+<td>Value 1<\/td>
+<td>Value 2<\/td>
+<\/tr>
+<\/tbody>
+<\/table>
+<\/div>`;
 
       var content = Element.fromHtml(contentHtml);
       var input = Element.fromTag('input');
