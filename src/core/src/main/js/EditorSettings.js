@@ -26,6 +26,7 @@ define(
     var detection = PlatformDetection.detect();
     var isTouch = detection.deviceType.isTouch();
     var mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
+    var defaultMobileSettings = { theme: 'mobile' };
 
     var normalizePlugins = function (plugins) {
       var pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
@@ -47,9 +48,10 @@ define(
       return sectionResult(result.t, result.f);
     };
 
-    var getSection = function (sectionResult, name) {
+    var getSection = function (sectionResult, name, defaults) {
       var sections = sectionResult.sections();
-      return sections.hasOwnProperty(name) ? sections[name] : { };
+      var sectionSettings = sections.hasOwnProperty(name) ? sections[name] : { };
+      return Tools.extend({}, defaults, sectionSettings);
     };
 
     var hasSection = function (sectionResult, name) {
@@ -135,7 +137,7 @@ define(
         sectionResult.settings(),
 
         // Sections
-        isTouchDevice ? getSection(sectionResult, 'mobile') : { },
+        isTouchDevice && hasSection(sectionResult, 'mobile') ? getSection(sectionResult, 'mobile', defaultMobileSettings) : { },
 
         // Forced settings
         {
