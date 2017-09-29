@@ -152,7 +152,7 @@ define(
 
             self.value(value);
 
-            if (!value) {
+            if (!value && pt) {
               self.text(pt);
             }
           });
