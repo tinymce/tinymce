@@ -56,6 +56,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         Logger.t('Apply bold to caret and type bold text after the unformatted text', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sSetCursor([0, 0], 1),

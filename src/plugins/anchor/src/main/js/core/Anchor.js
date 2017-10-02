@@ -32,6 +32,7 @@ define(
         selectedNode.removeAttribute('name');
         selectedNode.id = id;
       } else {
+        editor.focus();
         editor.selection.collapse(true);
         editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
           id: id

@@ -8,19 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This module contains logic overriding the selection with keyboard/mouse
- * around contentEditable=false regions.
- *
- * @example
- * // Disable the default cE=false selection
- * tinymce.activeEditor.on('ShowCaret BeforeObjectSelected', function(e) {
- *     e.preventDefault();
- * });
- *
- * @private
- * @class tinymce.SelectionOverrides
- */
 define(
   'tinymce.core.SelectionOverrides',
   [
@@ -172,7 +159,6 @@ define(
 
         editor.on('blur NewBlock', function () {
           removeContentEditableSelection();
-          hideFakeCaret();
         });
 
         function handleTouchSelect(editor) {

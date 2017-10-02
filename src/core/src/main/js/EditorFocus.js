@@ -15,12 +15,13 @@ define(
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'global!document',
+    'tinymce.core.Env',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.RangeUtils',
-    'tinymce.core.Env'
+    'tinymce.core.selection.SelectionBookmark'
   ],
-  function (Option, Compare, Element, document, CaretFinder, ElementType, RangeUtils, Env) {
+  function (Option, Compare, Element, document, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";
@@ -70,6 +71,12 @@ define(
       }
     };
 
+    var hasFocus = function (editor) {
+      var activeElement = editor.inline ? editor.getBody() : document.getElementById(editor.id + '_ifr');
+
+      return document.activeElement === activeElement;
+    };
+
     var focusEditor = function (editor) {
       var selection = editor.selection, contentEditable = editor.settings.content_editable;
       var body = editor.getBody(), contentEditableHost, rng = selection.getRng();
@@ -85,6 +92,13 @@ define(
         return;
       }
 
+      if (editor.bookmark !== undefined && hasFocus(editor) === false) {
+        SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
+          editor.selection.setRng(bookmarkRng);
+          rng = bookmarkRng;
+        });
+      }
+
       // Focus the window iframe
       if (!contentEditable) {
         // WebKit needs this call to fire focusin event properly see #5948
@@ -98,12 +112,6 @@ define(
 
       // Focus the body as well since it's contentEditable
       if (Env.gecko || contentEditable) {
-        // Restore previous selection before focus to prevent Chrome from
-        // jumping to the top of the document in long inline editors
-        if (contentEditable && document.activeElement !== body) {
-          editor.selection.setRng(editor.lastRng);
-        }
-
         focusBody(body);
         normalizeSelection(editor, rng);
       }
@@ -124,7 +132,8 @@ define(
     };
 
     return {
-      focus: focus
+      focus: focus,
+      hasFocus: hasFocus
     };
   }
 );

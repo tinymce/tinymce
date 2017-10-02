@@ -10,10 +10,10 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.link.Plugin',
-    'tinymce.themes.inlite.test.Toolbar',
-    'tinymce.themes.inlite.Theme'
+    'tinymce.themes.inlite.Theme',
+    'tinymce.themes.inlite.test.Toolbar'
   ],
-  function (Chain, Keys, Pipeline, RawAssertions, Step, TinyActions, TinyApis, TinyLoader, LinkPlugin, Toolbar, InliteTheme) {
+  function (Chain, Keys, Pipeline, RawAssertions, Step, TinyActions, TinyApis, TinyLoader, LinkPlugin, InliteTheme, Toolbar) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -27,6 +27,7 @@ asynctest(
         tinyApis.sFocus,
         tinyApis.sSetContent('<p style="height: 5000px">a</p><p>b</p>'),
         tinyApis.sSetSelection([1], 0, [1], 1),
+        tinyActions.sContentKeystroke(Keys.space(), {}),
         Chain.asStep({}, [
           Toolbar.cWaitForToolbar,
           Toolbar.cClickButton('Insert/Edit link')

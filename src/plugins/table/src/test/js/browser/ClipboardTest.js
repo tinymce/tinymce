@@ -32,6 +32,7 @@ asynctest(
     };
 
     suite.test("mceTablePasteRowBefore command", function (editor) {
+      editor.focus();
       editor.setContent(
         '<table>' +
         '<tr><td>1</td><td>2</td></tr>' +

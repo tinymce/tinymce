@@ -9,11 +9,10 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
-    'tinymce.core.Env',
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (GeneralSteps, Logger, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, TinyUi, Env, TablePlugin, ModernTheme) {
+  function (GeneralSteps, Logger, Pipeline, RawAssertions, Step, TinyApis, TinyLoader, TinyUi, TablePlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

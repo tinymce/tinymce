@@ -16,6 +16,8 @@ asynctest(
     Theme();
 
     suite.test("Tab key navigation", function (editor) {
+      editor.focus();
+
       editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
 
       LegacyUnit.setSelection(editor, 'td', 0);

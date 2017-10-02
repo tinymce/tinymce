@@ -20,27 +20,26 @@
 define(
   'tinymce.core.dom.Selection',
   [
-    'ephox.katamari.api.Arr',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'tinymce.core.EditorFocus',
+    'tinymce.core.Env',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.ControlSelection',
-    'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.ScrollIntoView',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.Env',
     'tinymce.core.selection.EventProcessRanges',
-    'tinymce.core.selection.FragmentReader',
     'tinymce.core.selection.GetSelectionContent',
     'tinymce.core.selection.MultiRange',
+    'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.selection.SetSelectionContent',
     'tinymce.core.util.Tools'
   ],
   function (
-    Arr, Compare, Element, CaretPosition, BookmarkManager, ControlSelection, NodeType, RangeUtils, ScrollIntoView, TreeWalker, Env, EventProcessRanges,
-    FragmentReader, GetSelectionContent, MultiRange, SetSelectionContent, Tools
+    Compare, Element, EditorFocus, Env, CaretPosition, BookmarkManager, ControlSelection, RangeUtils, ScrollIntoView, TreeWalker, EventProcessRanges, GetSelectionContent,
+    MultiRange, SelectionBookmark, SetSelectionContent, Tools
   ) {
     var each = Tools.each, trim = Tools.trim;
 
@@ -242,9 +241,6 @@ define(
       select: function (node, content) {
         var self = this, dom = self.dom, rng = dom.createRng(), idx;
 
-        // Clear stored range set by FocusManager
-        self.lastFocusBookmark = null;
-
         if (node) {
           if (!content && self.controlSelection.controlSelect(node)) {
             return;
@@ -347,21 +343,12 @@ define(
           return null;
         }
 
-        // Use last rng passed from FocusManager if it's available this enables
-        // calls to editor.selection.getStart() to work when caret focus is lost on IE
-        if (!w3c && self.lastFocusBookmark) {
-          var bookmark = self.lastFocusBookmark;
+        if (self.editor.bookmark !== undefined && EditorFocus.hasFocus(self.editor) === false) {
+          var bookmark = SelectionBookmark.getRng(self.editor);
 
-          // Convert bookmark to range IE 11 fix
-          if (bookmark.startContainer) {
-            rng = doc.createRange();
-            rng.setStart(bookmark.startContainer, bookmark.startOffset);
-            rng.setEnd(bookmark.endContainer, bookmark.endOffset);
-          } else {
-            rng = bookmark;
+          if (bookmark.isSome()) {
+            return bookmark.getOr(doc.createRange());
           }
-
-          return rng;
         }
 
         try {

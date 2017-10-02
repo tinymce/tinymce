@@ -20,6 +20,7 @@ define(
 
         img.onload = function () {
           editor.setContent('<p><img src="' + url + '" /></p>');
+          editor.focus();
           done();
         };
 

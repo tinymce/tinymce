@@ -247,7 +247,7 @@ asynctest(
       );
     });
 
-    suite.test('Advanced image dialog border option on empty editor', function (editor) {
+    suite.test('Advanced image dialog border option on editor with content', function (editor) {
       editor.settings.image_advtab = true;
       editor.settings.image_dimensions = false;
 

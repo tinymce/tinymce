@@ -7,16 +7,13 @@ asynctest(
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
     'global!document',
-    'tinymce.core.caret.CaretContainer',
-    'tinymce.core.caret.CaretPosition',
     'tinymce.core.Env',
-    'tinymce.core.test.HtmlUtils',
+    'tinymce.core.caret.CaretContainer',
     'tinymce.core.test.KeyUtils',
-    'tinymce.core.text.Zwsp',
     'tinymce.core.util.VK',
     'tinymce.themes.modern.Theme'
   ],
-  function (Keyboard, Pipeline, LegacyUnit, TinyDom, TinyLoader, document, CaretContainer, CaretPosition, Env, HtmlUtils, KeyUtils, Zwsp, VK, Theme) {
+  function (Keyboard, Pipeline, LegacyUnit, TinyDom, TinyLoader, document, Env, CaretContainer, KeyUtils, VK, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -55,6 +52,7 @@ asynctest(
     var downArrow = pressKey(VK.DOWN);
 
     suite.test('left/right over cE=false inline', function (editor) {
+      editor.focus();
       editor.setContent('<span contenteditable="false">1</span>');
       editor.selection.select(editor.$('span')[0]);
 

@@ -22,6 +22,7 @@ asynctest(
     };
 
     suite.test('apply inline to a list', function (editor) {
+      editor.focus();
       editor.formatter.register('format', {
         inline: 'b',
         toggle: false
