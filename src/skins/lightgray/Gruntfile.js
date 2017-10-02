@@ -10,6 +10,7 @@ module.exports = function (grunt) {
           compress: true,
           yuicompress: true,
           sourceMap: true,
+          sourceMapRootpath: '../../',
           optimization: 2
         },
         files: {
@@ -23,6 +24,7 @@ module.exports = function (grunt) {
           compress: true,
           yuicompress: true,
           sourceMap: true,
+          sourceMapRootpath: '../../',
           optimization: 2
         },
         files: {

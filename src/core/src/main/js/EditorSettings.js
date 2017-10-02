@@ -124,6 +124,11 @@ define(
       });
     };
 
+    var isOnMobile = function (isTouchDevice, sectionResult) {
+      var isInline = sectionResult.settings().inline; // We don't support mobile inline yet
+      return isTouchDevice && hasSection(sectionResult, 'mobile') && !isInline;
+    };
+
     var combineSettings = function (isTouchDevice, defaultSettings, defaultOverrideSettings, settings) {
       var sectionResult = extractSections(['mobile'], settings);
       var extendedSettings = Tools.extend(
@@ -137,7 +142,7 @@ define(
         sectionResult.settings(),
 
         // Sections
-        isTouchDevice && hasSection(sectionResult, 'mobile') ? getSection(sectionResult, 'mobile', defaultMobileSettings) : { },
+        isOnMobile(isTouchDevice, sectionResult) ? getSection(sectionResult, 'mobile', defaultMobileSettings) : { },
 
         // Forced settings
         {

@@ -627,7 +627,10 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'src/skins',
-            src: ['*/dist/**'],
+            src: [
+              '*/dist/**',
+              '!**/*.map'
+            ],
             dest: 'js/tinymce/skins/',
             filter: function (filePath) {
               return filePath.endsWith('dist') === false;
