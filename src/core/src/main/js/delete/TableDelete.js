@@ -13,13 +13,18 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'tinymce.core.caret.CaretFinder',
+    'tinymce.core.caret.CaretPosition',
     'tinymce.core.delete.DeleteElement',
     'tinymce.core.delete.TableDeleteAction',
+    'tinymce.core.dom.ElementType',
     'tinymce.core.dom.PaddingBr',
+    'tinymce.core.dom.Parents',
     'tinymce.core.selection.TableCellSelection'
   ],
-  function (Arr, Fun, Element, DeleteElement, TableDeleteAction, PaddingBr, TableCellSelection) {
+  function (Arr, Fun, Compare, Element, CaretFinder, CaretPosition, DeleteElement, TableDeleteAction, ElementType, PaddingBr, Parents, TableCellSelection) {
     var emptyCells = function (editor, cells) {
       Arr.each(cells, PaddingBr.fillWithPaddingBr);
       editor.selection.setCursorLocation(cells[0].dom(), 0);
@@ -51,8 +56,24 @@ define(
       return selectedCells.length !== 0 ? emptyCells(editor, selectedCells) : handleCellRange(editor, rootNode, rng);
     };
 
-    var backspaceDelete = function (editor) {
-      return editor.selection.isCollapsed() ? false : deleteRange(editor);
+    var getParentCell = function (rootElm, elm) {
+      return Arr.find(Parents.parentsAndSelf(elm, rootElm), ElementType.isTableCell);
+    };
+
+    var deleteCaret = function (editor, forward) {
+      var rootElm = Element.fromDom(editor.getBody());
+      var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+      return getParentCell(rootElm, Element.fromDom(editor.selection.getStart(true))).bind(function (fromCell) {
+        return CaretFinder.navigate(forward, editor.getBody(), from).bind(function (to) {
+          return getParentCell(rootElm, Element.fromDom(to.getNode())).map(function (toCell) {
+            return Compare.eq(toCell, fromCell) === false;
+          });
+        });
+      }).getOr(false);
+    };
+
+    var backspaceDelete = function (editor, forward) {
+      return editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
     };
 
     return {

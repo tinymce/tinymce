@@ -22,7 +22,14 @@ asynctest(
 
     var sDelete = function (editor) {
       return Step.sync(function () {
-        var returnVal = TableDelete.backspaceDelete(editor);
+        var returnVal = TableDelete.backspaceDelete(editor, true);
+        Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
+      });
+    };
+
+    var sBackspace = function (editor) {
+      return Step.sync(function () {
+        var returnVal = TableDelete.backspaceDelete(editor, false);
         Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
       });
     };
@@ -30,6 +37,13 @@ asynctest(
     var sDeleteNoop = function (editor) {
       return Step.sync(function () {
         var returnVal = TableDelete.backspaceDelete(editor, true);
+        Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
+      });
+    };
+
+    var sBackspaceNoop = function (editor) {
+      return Step.sync(function () {
+        var returnVal = TableDelete.backspaceDelete(editor, false);
         Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
       });
     };
@@ -90,6 +104,34 @@ asynctest(
           tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 1),
           sDelete(editor),
           tinyApis.sAssertContent('<table><tbody><tr><th>a</th><th>&nbsp;</th><th>c</th></tr><tr><td>d</td><td>&nbsp;</td><td>f</td></tr></tbody></table>')
+        ])),
+
+        Logger.t('Delete between cells as a caret', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0], 1, [0, 0, 0, 0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+        ])),
+
+        Logger.t('Backspace between cells as a caret', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0),
+          sBackspace(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+        ])),
+
+        Logger.t('Delete between cells as a caret', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
+          sDeleteNoop(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+        ])),
+
+        Logger.t('Backspace between cells as a caret', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
+          sBackspaceNoop(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
         ]))
       ], onSuccess, onFailure);
     }, {
