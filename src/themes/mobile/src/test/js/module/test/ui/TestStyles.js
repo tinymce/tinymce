@@ -25,7 +25,7 @@ define(
       var link = Element.fromTag('link');
       Attr.setAll(link, {
         rel: 'Stylesheet',
-        href: '/project/src/themes/mobile/src/main/css/skin.mobile.css',
+        href: '/project/src/skins/lightgray/dist/lightgray/skin.mobile.min.css',
         type: 'text/css'
       });
       Class.add(link, styleClass);

@@ -59,14 +59,15 @@ define(
     'tinymce.plugins.visualblocks.Plugin',
     'tinymce.plugins.visualchars.Plugin',
     'tinymce.plugins.wordcount.Plugin',
-    'tinymce.themes.modern.Theme'
+    'tinymce.themes.modern.Theme',
+    'tinymce.themes.mobile.Theme'
   ],
   function (
     window, EditorManager, PluginManager, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin, CharMapPlugin, CodePlugin,
     CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HelpPlugin, HrPlugin, ImagePlugin,
     ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin,
     PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin,
-    TextColorPlugin, TextPatternPlugin, TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+    TextColorPlugin, TextPatternPlugin, TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme, MobileTheme
   ) {
     AdvListPlugin();
     AnchorPlugin();
@@ -111,6 +112,7 @@ define(
     VisualCharsPlugin();
     WordCountPlugin();
     ModernTheme();
+    MobileTheme();
     HelpPlugin();
 
     return function () {
@@ -178,6 +180,11 @@ define(
         template_mdate_format: "[MDATE: %m/%d/%Y : %H:%M:%S]",
         image_caption: true,
         theme: "modern",
+        mobile: {
+          plugins: [
+            "autosave lists"
+          ]
+        },
         plugins: [
           "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
           "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",

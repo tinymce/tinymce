@@ -235,7 +235,7 @@ asynctest(
           Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
             Assertions.assertEq(
               'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
-              { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists' },
+              { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile' },
               EditorSettings.combineSettings(true, {}, { forced_plugins: ['a'] }, { plugins: ['b'], mobile: { plugins: ['lists custom'] } })
             );
           })),

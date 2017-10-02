@@ -608,8 +608,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: 'src/themes',
             src: [
-              '*/dist/**',
-              '!mobile/**' // Excluded mobile theme for now
+              '*/dist/**'
             ],
             dest: 'js/tinymce/themes/',
             filter: function (filePath) {

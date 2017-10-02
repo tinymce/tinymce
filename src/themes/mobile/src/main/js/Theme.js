@@ -37,7 +37,7 @@ define(
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
     var EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
 
-    ThemeManager.add('beta-mobile', function (editor) {
+    ThemeManager.add('mobile', function (editor) {
       var renderUI = function (args) {
         var cssUrls = CssUrls.derive(editor);
 
@@ -197,14 +197,7 @@ define(
           var readOnlyGroup = {
             label: 'The read only mode group',
             scrollable: true,
-            items: [
-              {
-                dom: {
-                  tag: 'span',
-                  innerHtml: 'Mobile Theme: v' + '@@MOBILE_THEME_VERSION'
-                }
-              }
-            ]
+            items: []
           };
 
           var features = Features.setup(realm, editor);
