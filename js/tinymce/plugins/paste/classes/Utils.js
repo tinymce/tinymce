@@ -146,10 +146,15 @@ define("tinymce/pasteplugin/Utils", [
 		};
 	}
 
+	var isMsEdge = function () {
+		return navigator.userAgent.indexOf(' Edge/') !== -1;
+	};
+
 	return {
 		filter: filter,
 		innerText: innerText,
 		trimHtml: trimHtml,
-		createIdGenerator: createIdGenerator
+		createIdGenerator: createIdGenerator,
+		isMsEdge: isMsEdge
 	};
 });
