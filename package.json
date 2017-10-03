@@ -2,24 +2,26 @@
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
   "version": "3.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/snooker"
+  },
   "dependencies": {
-    "@ephox/dragster": "git+ssh://git@stash:7999/tbio/dragster.git#master",
-    "@ephox/echo": "git+ssh://git@stash:7999/tbio/echo.git#master",
-    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
+    "@ephox/dragster": "*",
+    "@ephox/echo": "*",
     "@ephox/katamari": "*",
-    "@ephox/porkbun": "git+ssh://git@stash:7999/libs/porkbun.git#master",
-    "@ephox/robin": "git+ssh://git@stash:7999/tbio/robin.git#master",
+    "@ephox/porkbun": "*",
+    "@ephox/robin": "*",
     "@ephox/sugar": "*"
   },
   "devDependencies": {
     "@ephox/bedrock": "*",
     "@ephox/bolt": "*",
-    "@ephox/fred": "git+ssh://git@stash:7999/libs/fred.git#master",
+    "@ephox/sand": "*",
     "chromedriver": "*",
     "grunt": "*",
     "grunt-npm": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }

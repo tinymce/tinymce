@@ -109,7 +109,7 @@ define(
         assert.eq(false, Traverse.parent(table).isSome(), 'The table was expected to be removed from the DOM');
 
       }, function (expectedHtml) {
-        if (platform.browser.isIE() || platform.browser.isSpartan()) {
+        if (platform.browser.isIE() || platform.browser.isEdge()) {
           assert.eq(expectedHtml.ie, Html.getOuter(table));
         } else {
           assert.eq(expectedHtml.normal, Html.getOuter(table));
