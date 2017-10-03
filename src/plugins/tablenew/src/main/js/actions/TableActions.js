@@ -23,9 +23,11 @@ define(
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableOperations',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.plugins.tablenew.queries.Direction'
   ],
-  function (Arr, Fun, TableDirection, TableFill, TableOperations, Element, Direction) {
+  function (Arr, Fun, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
     return function (editor, lazyWire) {
       var fireNewRow = function (node) {
         editor.fire('newrow', {
@@ -43,6 +45,10 @@ define(
 
       var execute = function (operation, mutate, lazyWire) {
         return function (table, target) {
+          var dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
+          Arr.each(dataStyleCells, function (cell) {
+            Attr.remove(cell, 'data-mce-style');
+          });
           var wire = lazyWire();
           var doc = Element.fromDom(editor.getDoc());
           var direction = TableDirection(Direction.directionAt);
