@@ -17,7 +17,6 @@
   "devDependencies": {
     "@ephox/bolt": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }
