@@ -75,7 +75,7 @@ define(
                   '<li>Enhanced Media Embed</li>' +
                   '<li>Link Checker</li>' +
                 '</ul><br />' +
-                '<p style="float: right;"><a href="https://www.tinymce.com/pricing/" target="_blank">' + I18n.translate('Learn more...') + '</a></p>' +
+                '<p style="float: right;"><a href="https://www.tinymce.com/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + I18n.translate('Learn more...') + '</a></p>' +
               '</div>',
         flex: 1
       };
