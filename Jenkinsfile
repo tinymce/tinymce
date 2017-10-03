@@ -16,10 +16,10 @@ node("primary") {
   def extExec = load("jenkins-plumbing/exec.groovy")
 
   stage("Building") {
-    extExec("npm install")    
+    extExec("npm install")
     extExec ("grunt")
   }
-  
+
   def permutations = [
     [ name: "win10Chrome", os: "windows-10", browser: "chrome" ],
     [ name: "win10FF", os: "windows-10", browser: "firefox" ],
@@ -39,8 +39,8 @@ node("primary") {
 
         sshagent(credentials: ['8aa93893-84cc-45fc-a029-a42f21197bb3']) {
           echo "Installing tools"
-          extExec "npm install"
-          
+          extNpmInstall()
+
           echo "Platform: browser tests for " + permutation.name
           extBedrock(permutation.name, permutation.browser, "src/test/js/browser")
         }
