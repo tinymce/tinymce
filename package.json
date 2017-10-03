@@ -2,19 +2,22 @@
   "name": "@ephox/phoenix",
   "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
   "version": "4.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/phoenix"
+  },
   "dependencies": {
-    "@ephox/boss": "git+ssh://git@stash:7999/tbio/boss.git#master",
+    "@ephox/boss": "*",
     "@ephox/katamari": "*",
-    "@ephox/polaris": "git+ssh://git@stash:7999/tbio/polaris.git#master"
+    "@ephox/polaris": "*"
   },
   "devDependencies": {
     "@ephox/bolt": "*",
-    "@ephox/modulator-text": "git+ssh://git@stash:7999/bolt/modulator-text.git#master",
-    "@ephox/sugar": "*",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "@ephox/sugar": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "scripts": {
+    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+  },
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }
