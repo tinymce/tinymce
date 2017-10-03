@@ -1,3 +1,14 @@
+Version 4.7.0 (2017-10-03)
+    Added new mobile ui that is specifically designed for mobile devices.
+    Updated the default skin to be more modern and white since white is preferred by most implementations.
+    Restructured the default menus to be more similar to common office suites like Google Docs.
+    Fixed so theme can be set to false on both inline and iframe editor modes.
+    Fixed bug where inline editor would add/remove the visualblocks css multiple times.
+    Fixed bug where selection wouldn't be properly restored when editor lost focus and commands where invoked.
+    Fixed bug where toc plugin would generate id:s for headers even though a toc wasn't inserted into the content.
+    Fixed bug where is wasn't possible to drag/drop contents within the editor if paste_data_images where set to true.
+    Fixed bug where getParam and close in WindowManager would get the first opened window instead of the last opened window.
+    Fixed bug where delete would delete between cells inside a table in Firefox.
 Version 4.6.7 (2017-09-18)
     Fixed bug where paste wasn't working in IOS.
     Fixed bug where the Word Count Plugin didn't count some mathematical operators correctly.
