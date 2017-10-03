@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "dependencies": {
     "@ephox/dragster": "git+ssh://git@stash:7999/tbio/dragster.git#master",
     "@ephox/echo": "git+ssh://git@stash:7999/tbio/echo.git#master",
