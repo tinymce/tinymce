@@ -5,11 +5,11 @@ define(
     'ephox.agar.api.Logger',
     'ephox.agar.api.RawAssertions',
     'ephox.katamari.api.Arr',
-    'ephox.numerosity.api.JSON',
-    'ephox.robin.zone.LanguageZones'
+    'ephox.robin.zone.LanguageZones',
+    'ephox.sand.api.JSON'
   ],
 
-  function (Logger, RawAssertions, Arr, Json, LanguageZones) {
+  function (Logger, RawAssertions, Arr, LanguageZones, Json) {
     var rawOne = function (universe, zone) {
       return {
         lang: zone.lang(),
@@ -33,7 +33,7 @@ define(
       Arr.each(zones, function (zone) {
         var elements = zone.elements();
         if (elements.length === 0) return;
-        
+
         var first = elements[0];
 
         Logger.sync(

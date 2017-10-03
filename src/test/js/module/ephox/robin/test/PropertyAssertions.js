@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.agar.api.Logger',
-    'ephox.numerosity.api.JSON',
+    'ephox.sand.api.JSON',
     'ephox.wrap-jsverify.Jsc',
     'global!Error'
   ],
