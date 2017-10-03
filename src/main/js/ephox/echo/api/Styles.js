@@ -2,11 +2,11 @@ define(
   'ephox.echo.api.Styles',
 
   [
-    'ephox.flour.style.Resolver'
+    'ephox.katamari.api.Namespace'
   ],
 
-  function (Resolver) {
-    var styles = Resolver.create('ephox-echo');
+  function (Namespace) {
+    var styles = Namespace.css('ephox-echo');
 
     return {
       resolve: styles.resolve

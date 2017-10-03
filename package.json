@@ -2,8 +2,11 @@
   "name": "@ephox/echo",
   "description": "This project handles ARIA attributes.",
   "version": "2.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ephox/echo"
+  },
   "dependencies": {
-    "@ephox/flour": "git+ssh://git@stash:7999/libs/flour.git#master",
     "@ephox/sand": "*",
     "@ephox/katamari": "*",
     "@ephox/sugar": "*"
@@ -15,7 +18,6 @@
     "grunt": "*",
     "grunt-npm": "*"
   },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
-  }
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0"
 }
