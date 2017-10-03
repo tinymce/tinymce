@@ -20,8 +20,8 @@
   "dependencies": {
     "@ephox/katamari": "^1.1.0",
     "@ephox/sugar": "^3.1.0",
-    "@ephox/snooker": "git+ssh://git@stash:7999/tbio/snooker.git#master",
-    "@ephox/darwin": "git+ssh://git@stash:7999/tbio/darwin.git#master",
+    "@ephox/snooker": "*",
+    "@ephox/darwin": "*",
     "@ephox/sand": "^1.1.1"
   },
   "devDependencies": {

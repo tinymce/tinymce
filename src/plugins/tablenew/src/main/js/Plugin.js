@@ -84,6 +84,7 @@ define(
             selectionRng.each(function (rng) {
               editor.selection.setRng(rng);
             });
+            editor.undoManager.add();
           });
 
           resize = Option.some(sz);

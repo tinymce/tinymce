@@ -140,14 +140,6 @@ define(
           pasteOnSelection(actions.pasteRowsAfter);
         },
 
-        // mceSplitColsBefore: function (grid) {
-        //   grid.splitCols(true);
-        // },
-
-        // mceSplitColsAfter: function (grid) {
-        //   grid.splitCols(false);
-        // },
-
         mceTableDelete: eraseTable
       }, function (func, name) {
         editor.addCommand(name, func);

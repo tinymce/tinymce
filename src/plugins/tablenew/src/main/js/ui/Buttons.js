@@ -76,25 +76,25 @@ define(
         onclick: cmd('mceTableRowProps')
       });
 
-      // editor.addButton('tablecutrow', {
-      //   title: 'Cut row',
-      //   onclick: cmd('mceTableCutRow')
-      // });
+      editor.addButton('tablecutrow', {
+        title: 'Cut row',
+        onclick: cmd('mceTableCutRow')
+      });
 
-      // editor.addButton('tablecopyrow', {
-      //   title: 'Copy row',
-      //   onclick: cmd('mceTableCopyRow')
-      // });
+      editor.addButton('tablecopyrow', {
+        title: 'Copy row',
+        onclick: cmd('mceTableCopyRow')
+      });
 
-      // editor.addButton('tablepasterowbefore', {
-      //   title: 'Paste row before',
-      //   onclick: cmd('mceTablePasteRowBefore')
-      // });
+      editor.addButton('tablepasterowbefore', {
+        title: 'Paste row before',
+        onclick: cmd('mceTablePasteRowBefore')
+      });
 
-      // editor.addButton('tablepasterowafter', {
-      //   title: 'Paste row after',
-      //   onclick: cmd('mceTablePasteRowAfter')
-      // });
+      editor.addButton('tablepasterowafter', {
+        title: 'Paste row after',
+        onclick: cmd('mceTablePasteRowAfter')
+      });
 
       editor.addButton('tableinsertcolbefore', {
         title: 'Insert column before',
