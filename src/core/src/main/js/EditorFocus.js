@@ -13,15 +13,15 @@ define(
   [
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.node.Element',
-    'global!document',
     'tinymce.core.Env',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.selection.SelectionBookmark'
   ],
-  function (Option, Compare, Element, document, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
+  function (Option, Compare, Focus, Element, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";
@@ -71,10 +71,21 @@ define(
       }
     };
 
-    var hasFocus = function (editor) {
-      var activeElement = editor.inline ? editor.getBody() : document.getElementById(editor.id + '_ifr');
+    var hasElementFocus = function (elm) {
+      return Focus.hasFocus(elm) || Focus.search(elm).isSome();
+    };
 
-      return document.activeElement === activeElement;
+    var hasIframeFocus = function (editor) {
+      return editor.iframeElement && Focus.hasFocus(Element.fromDom(editor.iframeElement));
+    };
+
+    var hasInlineFocus = function (editor) {
+      var rawBody = editor.getBody();
+      return rawBody && hasElementFocus(Element.fromDom(rawBody));
+    };
+
+    var hasFocus = function (editor) {
+      return editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
     };
 
     var focusEditor = function (editor) {
