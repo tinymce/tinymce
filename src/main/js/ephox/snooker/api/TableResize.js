@@ -19,16 +19,16 @@ define(
       var manager = BarManager(wire, vdirection, hdirection);
 
       var events = Events.create({
-        beforeResize: Event([]),
-        afterResize: Event([]),
+        beforeResize: Event(['table']),
+        afterResize: Event(['table']),
         startDrag: Event([])
       });
 
       manager.events.adjustHeight.bind(function (event) {
-        events.trigger.beforeResize();
+        events.trigger.beforeResize(event.table());
         var delta = hdirection.delta(event.delta(), event.table());
         Adjustments.adjustHeight(event.table(), delta, event.row(), hdirection);
-        events.trigger.afterResize();
+        events.trigger.afterResize(event.table());
       });
 
       manager.events.startAdjust.bind(function (event) {
@@ -36,10 +36,10 @@ define(
       });
 
       manager.events.adjustWidth.bind(function (event) {
-        events.trigger.beforeResize();
+        events.trigger.beforeResize(event.table());
         var delta = vdirection.delta(event.delta(), event.table());
         Adjustments.adjustWidth(event.table(), delta, event.column(), vdirection);
-        events.trigger.afterResize();
+        events.trigger.afterResize(event.table());
       });
 
       return {
