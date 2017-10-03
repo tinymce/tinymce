@@ -21,7 +21,7 @@ define(
 
     var makeRow = function () {
       var version = getVersion(EditorManager.majorVersion, EditorManager.minorVersion);
-      var changeLogLink = '<a href="https://www.tinymce.com/docs/changelog/" target="_blank">TinyMCE ' + version + '</a>';
+      var changeLogLink = '<a href="https://www.tinymce.com/docs/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
 
       return [
         {
