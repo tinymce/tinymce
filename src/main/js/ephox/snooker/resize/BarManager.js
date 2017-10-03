@@ -11,6 +11,7 @@ define(
     'ephox.snooker.resize.Bars',
     'ephox.snooker.style.Styles',
     'ephox.snooker.util.CellUtils',
+    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Node',
@@ -22,8 +23,10 @@ define(
     'global!parseInt'
   ],
 
-  function (Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, DomEvent, Body, Node, Attr, Class, Css, SelectorExists, SelectorFind, parseInt) {
-    var resizeBar = Styles.resolve('resizer-bar');
+  function (
+    Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Compare, DomEvent, Body, Node, Attr, Class, Css, SelectorExists, SelectorFind,
+    parseInt
+  ) {
     var resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
     return function (wire, direction, hdirection) {
@@ -93,10 +96,12 @@ define(
         if (Bars.isColBar(event.target())) handler(event.target(), 'left');
       });
 
+      var isRoot = function (e) { return Compare.eq(e, wire.view()); };
+
       /* mouseover on table: When the mouse moves within the table, refresh the bars. */
       var mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
-        if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table')) {
-          hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table');
+        if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table', isRoot)) {
+          hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table', isRoot);
           hoverTable.each(function (ht) {
             Bars.refresh(wire, ht, hdirection, direction);
           });
