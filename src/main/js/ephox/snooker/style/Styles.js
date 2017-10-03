@@ -2,11 +2,11 @@ define(
   'ephox.snooker.style.Styles',
 
   [
-    'ephox.flour.style.Resolver'
+    'ephox.katamari.api.Namespace'
   ],
 
-  function (Resolver) {
-    var styles = Resolver.create('ephox-snooker');
+  function (Namespace) {
+    var styles = Namespace.css('ephox-snooker');
 
     return {
       resolve: styles.resolve
