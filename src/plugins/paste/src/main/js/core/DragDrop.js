@@ -27,6 +27,11 @@ define(
       return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
     };
 
+    var setFocusedRange = function (editor, rng) {
+      editor.focus();
+      editor.selection.setRng(rng);
+    };
+
     var setup = function (editor, clipboard, draggingInternallyState) {
       // Block all drag/drop events
       if (Settings.shouldBlockDrop(editor)) {
@@ -46,10 +51,6 @@ define(
           }
         });
       }
-
-      editor.on('dragstart dragend', function (e) {
-        draggingInternallyState.set(e.type === 'dragstart');
-      });
 
       editor.on('drop', function (e) {
         var dropContent, rng;
@@ -80,7 +81,7 @@ define(
                   editor.execCommand('Delete');
                 }
 
-                editor.selection.setRng(rng);
+                setFocusedRange(editor, rng);
 
                 content = Utils.trimHtml(content);
 
@@ -95,9 +96,18 @@ define(
         }
       });
 
+      editor.on('dragstart', function (e) {
+        draggingInternallyState.set(true);
+      });
+
       editor.on('dragover dragend', function (e) {
-        if (Settings.shouldPasteDataImages(editor)) {
+        if (Settings.shouldPasteDataImages(editor) && draggingInternallyState.get() === false) {
           e.preventDefault();
+          setFocusedRange(editor, getCaretRangeFromEvent(editor, e));
+        }
+
+        if (e.type === 'dragend') {
+          draggingInternallyState.set(false);
         }
       });
     };
