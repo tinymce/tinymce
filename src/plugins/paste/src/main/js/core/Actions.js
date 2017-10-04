@@ -15,8 +15,8 @@ define(
     'tinymce.plugins.paste.api.Settings'
   ],
   function (Events, Settings) {
-    var isUserInformedAboutPlainText = function (editor, userIsInformedState) {
-      return userIsInformedState.get() || Settings.shouldPlainTextInform(editor);
+    var shouldInformUserAboutPlainText = function (editor, userIsInformedState) {
+      return userIsInformedState.get() === false && Settings.shouldPlainTextInform(editor);
     };
 
     var displayNotification = function (editor, message) {
@@ -34,7 +34,7 @@ define(
         clipboard.pasteFormat = "text";
         Events.firePastePlainTextToggle(editor, true);
 
-        if (!isUserInformedAboutPlainText(editor, userIsInformedState)) {
+        if (shouldInformUserAboutPlainText(editor, userIsInformedState)) {
           displayNotification(editor, 'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.');
           userIsInformedState.set(true);
         }

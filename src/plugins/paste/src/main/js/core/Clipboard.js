@@ -38,6 +38,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK',
     'tinymce.plugins.paste.api.Events',
+    'tinymce.plugins.paste.api.Settings',
     'tinymce.plugins.paste.core.InternalHtml',
     'tinymce.plugins.paste.core.Newlines',
     'tinymce.plugins.paste.core.PasteBin',
@@ -45,13 +46,15 @@ define(
     'tinymce.plugins.paste.core.SmartPaste',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (Image, navigator, window, Env, Delay, Tools, VK, Events, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
+  function (Image, navigator, window, Env, Delay, Tools, VK, Events, Settings, InternalHtml, Newlines, PasteBin, ProcessFilters, SmartPaste, Utils) {
     return function (editor) {
       var self = this, keyboardPasteTimeStamp = 0;
       var pasteBin = new PasteBin(editor);
       var keyboardPastePlainTextState;
       var mceInternalUrlPrefix = 'data:text/mce-internal,';
       var uniqueId = Utils.createIdGenerator("mceclip");
+
+      self.pasteFormat = Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html';
 
       /**
        * Pastes the specified HTML. This means that the HTML is filtered and then
