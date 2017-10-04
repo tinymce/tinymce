@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.actions.InsertTable',
+  'tinymce.plugins.table.actions.InsertTable',
 
   [
     'ephox.snooker.api.TableRender',

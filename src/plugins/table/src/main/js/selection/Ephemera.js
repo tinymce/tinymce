@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.selection.Ephemera',
+  'tinymce.plugins.table.selection.Ephemera',
 
   [
     'ephox.katamari.api.Fun'

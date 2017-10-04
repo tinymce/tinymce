@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.queries.CellOperations',
+  'tinymce.plugins.table.queries.CellOperations',
 
   [
     'ephox.darwin.api.TableSelection',
@@ -7,8 +7,8 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sugar.api.properties.Attr',
-    'tinymce.plugins.tablenew.selection.Ephemera',
-    'tinymce.plugins.tablenew.selection.SelectionTypes'
+    'tinymce.plugins.table.selection.Ephemera',
+    'tinymce.plugins.table.selection.SelectionTypes'
   ],
 
   function (TableSelection, Arr, Fun, Option, Attr, Ephemera, SelectionTypes) {

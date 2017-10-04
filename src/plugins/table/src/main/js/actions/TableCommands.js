@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.actions.TableCommands',
+  'tinymce.plugins.table.actions.TableCommands',
 
   [
     'ephox.katamari.api.Arr',
@@ -13,7 +13,7 @@ define(
     'ephox.sugar.api.dom.Replication',
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.tablenew.queries.TableTargets'
+    'tinymce.plugins.table.queries.TableTargets'
   ],
 
   function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets) {

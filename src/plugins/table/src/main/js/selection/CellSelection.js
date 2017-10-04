@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.selection.CellSelection',
+  'tinymce.plugins.table.selection.CellSelection',
 
   [
     'ephox.darwin.api.InputHandlers',
@@ -16,8 +16,8 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.selection.core.SelectionDirection',
-    'tinymce.plugins.tablenew.queries.Direction',
-    'tinymce.plugins.tablenew.selection.Ephemera'
+    'tinymce.plugins.table.queries.Direction',
+    'tinymce.plugins.table.selection.Ephemera'
   ],
 
   function (InputHandlers, SelectionAnnotation, SelectionKeys, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Selection, SelectionDirection, Direction, Ephemera) {

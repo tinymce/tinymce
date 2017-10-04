@@ -11,11 +11,11 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.plugins.tablenew.demo.Demo',
+  'tinymce.plugins.table.demo.Demo',
   [
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.tablenew.Plugin',
+    'tinymce.plugins.table.Plugin',
     'tinymce.plugins.contextmenu.Plugin',
     'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'

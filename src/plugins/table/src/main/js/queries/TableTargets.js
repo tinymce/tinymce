@@ -1,11 +1,11 @@
 define(
-  'tinymce.plugins.tablenew.queries.TableTargets',
+  'tinymce.plugins.table.queries.TableTargets',
 
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Struct',
-    'tinymce.plugins.tablenew.queries.CellOperations'
+    'tinymce.plugins.table.queries.CellOperations'
   ],
 
   function (Fun, Option, Struct, CellOperations) {

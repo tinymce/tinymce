@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.actions.Clipboard',
+  'tinymce.plugins.table.actions.Clipboard',
 
   [
     'ephox.katamari.api.Arr',
@@ -13,9 +13,9 @@ define(
     'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Html',
-    'tinymce.plugins.tablenew.queries.TableTargets',
-    'tinymce.plugins.tablenew.selection.Ephemera',
-    'tinymce.plugins.tablenew.selection.SelectionTypes'
+    'tinymce.plugins.table.queries.TableTargets',
+    'tinymce.plugins.table.selection.Ephemera',
+    'tinymce.plugins.table.selection.SelectionTypes'
   ],
 
   function (Arr, Fun, Option, CopySelected, TableFill, TableLookup, Replication, Element, Elements, Node, Html, TableTargets, Ephemera, SelectionTypes) {

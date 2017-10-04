@@ -17,11 +17,11 @@
  * @private
  */
 define(
-  'tinymce.plugins.tablenew.ui.Dialogs',
+  'tinymce.plugins.table.ui.Dialogs',
   [
     'tinymce.core.util.Tools',
     'tinymce.core.Env',
-    'tinymce.plugins.tablenew.actions.InsertTable'
+    'tinymce.plugins.table.actions.InsertTable'
   ],
   function (Tools, Env, InsertTable) {
     var each = Tools.each;

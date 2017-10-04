@@ -15,7 +15,7 @@
  * @private
  */
 define(
-  'tinymce.plugins.tablenew.actions.TableActions',
+  'tinymce.plugins.table.actions.TableActions',
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
@@ -26,7 +26,7 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter',
-    'tinymce.plugins.tablenew.queries.Direction'
+    'tinymce.plugins.table.queries.Direction'
   ],
   function (Arr, Fun, CellMutations, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
     return function (editor, lazyWire) {

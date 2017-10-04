@@ -1,11 +1,11 @@
 define(
-  'tinymce.plugins.tablenew.selection.Selections',
+  'tinymce.plugins.table.selection.Selections',
 
   [
     'ephox.darwin.api.TableSelection',
     'ephox.sugar.api.node.Element',
-    'tinymce.plugins.tablenew.selection.Ephemera',
-    'tinymce.plugins.tablenew.selection.SelectionTypes'
+    'tinymce.plugins.table.selection.Ephemera',
+    'tinymce.plugins.table.selection.SelectionTypes'
   ],
 
   function (TableSelection, Element, Ephemera, SelectionTypes) {

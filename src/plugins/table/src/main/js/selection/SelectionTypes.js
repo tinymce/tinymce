@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.selection.SelectionTypes',
+  'tinymce.plugins.table.selection.SelectionTypes',
 
   [
     'ephox.katamari.api.Adt'

@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.ui.Buttons',
+  'tinymce.plugins.table.ui.Buttons',
 
   [
     'tinymce.core.util.Tools'

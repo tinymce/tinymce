@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.queries.Direction',
+  'tinymce.plugins.table.queries.Direction',
 
   [
     'ephox.katamari.api.Fun',

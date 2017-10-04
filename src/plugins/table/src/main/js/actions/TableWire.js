@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.actions.TableWire',
+  'tinymce.plugins.table.actions.TableWire',
 
   [
     'ephox.snooker.api.ResizeWire',

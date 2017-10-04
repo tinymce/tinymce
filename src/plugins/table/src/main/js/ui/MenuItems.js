@@ -1,13 +1,13 @@
 define(
-  'tinymce.plugins.tablenew.ui.MenuItems',
+  'tinymce.plugins.table.ui.MenuItems',
 
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.node.Element',
-    'tinymce.plugins.tablenew.actions.InsertTable',
-    'tinymce.plugins.tablenew.queries.TableTargets'
+    'tinymce.plugins.table.actions.InsertTable',
+    'tinymce.plugins.table.queries.TableTargets'
   ],
 
   function (Arr, Option, TableLookup, Element, InsertTable, TableTargets) {

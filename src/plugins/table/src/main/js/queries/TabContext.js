@@ -1,5 +1,5 @@
 define(
-  'tinymce.plugins.tablenew.queries.TabContext',
+  'tinymce.plugins.table.queries.TabContext',
 
   [
     'ephox.katamari.api.Option',
@@ -12,7 +12,7 @@ define(
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.selection.CursorPosition',
     'tinymce.core.util.VK',
-    'tinymce.plugins.tablenew.queries.TableTargets'
+    'tinymce.plugins.table.queries.TableTargets'
   ],
 
   function (Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, TableTargets) {

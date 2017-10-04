@@ -15,7 +15,7 @@
  * @private
  */
 define(
-  'tinymce.plugins.tablenew.Plugin',
+  'tinymce.plugins.table.Plugin',
   [
     'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeWire',
@@ -23,18 +23,18 @@ define(
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.node.Element',
     'tinymce.core.PluginManager',
-    'tinymce.plugins.tablenew.actions.Clipboard',
-    'tinymce.plugins.tablenew.actions.TableActions',
-    'tinymce.plugins.tablenew.actions.TableCommands',
-    'tinymce.plugins.tablenew.actions.TableWire',
-    'tinymce.plugins.tablenew.queries.Direction',
-    'tinymce.plugins.tablenew.queries.TabContext',
-    'tinymce.plugins.tablenew.selection.CellSelection',
-    'tinymce.plugins.tablenew.selection.Ephemera',
-    'tinymce.plugins.tablenew.selection.Selections',
-    'tinymce.plugins.tablenew.ui.Buttons',
-    'tinymce.plugins.tablenew.ui.Dialogs',
-    'tinymce.plugins.tablenew.ui.MenuItems'
+    'tinymce.plugins.table.actions.Clipboard',
+    'tinymce.plugins.table.actions.TableActions',
+    'tinymce.plugins.table.actions.TableCommands',
+    'tinymce.plugins.table.actions.TableWire',
+    'tinymce.plugins.table.queries.Direction',
+    'tinymce.plugins.table.queries.TabContext',
+    'tinymce.plugins.table.selection.CellSelection',
+    'tinymce.plugins.table.selection.Ephemera',
+    'tinymce.plugins.table.selection.Selections',
+    'tinymce.plugins.table.ui.Buttons',
+    'tinymce.plugins.table.ui.Dialogs',
+    'tinymce.plugins.table.ui.MenuItems'
   ],
   function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, Clipboard, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
