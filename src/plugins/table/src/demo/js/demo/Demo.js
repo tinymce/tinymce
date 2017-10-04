@@ -40,8 +40,7 @@ define(
         // resolve({
         //   html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
         // },
-        height: 600,
-        inline: true
+        height: 600
       });
     };
   }
