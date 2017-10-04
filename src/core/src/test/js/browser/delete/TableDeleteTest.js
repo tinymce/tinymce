@@ -178,6 +178,32 @@ asynctest(
             tinyApis.sAssertContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>')
           ])),
 
+          Logger.t('Backspace at last character positon', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>a</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0], 1),
+            sBackspace(editor),
+            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Delete at last character positon', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>a</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0], 0),
+            sDelete(editor),
+            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Backspace at character positon in middle of caption', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>ab</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0], 1),
+            sBackspaceNoop(editor)
+          ])),
+
+          Logger.t('Delete at character positon in middle of caption', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>ab</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0], 1),
+            sDeleteNoop(editor)
+          ])),
+
           Logger.t('Caret in caption with blocks', GeneralSteps.sequence([
             tinyApis.sSetContent('<table><caption><p>abc</p></caption><tbody><tr><td>a</td></tr></tbody></table>'),
             tinyApis.sSetCursor([0, 0, 0, 0], 1),

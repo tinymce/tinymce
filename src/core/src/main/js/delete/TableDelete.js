@@ -97,11 +97,27 @@ define(
       return Option.some(true);
     };
 
+    var isDeleteOfLastCharPos = function (fromCaption, forward, from, to) {
+      return CaretFinder.firstPositionIn(fromCaption.dom()).bind(function (first) {
+        return CaretFinder.lastPositionIn(fromCaption.dom()).map(function (last) {
+          return forward ? from.isEqual(first) && to.isEqual(last) : from.isEqual(last) && to.isEqual(first);
+        });
+      }).getOr(true);
+    };
+
+    var emptyCaretCaption = function (editor, elm) {
+      return emptyElement(editor, elm);
+    };
+
+    var validateCaretCaption = function (rootElm, fromCaption, to) {
+      return getParentCaption(rootElm, Element.fromDom(to.getNode())).map(function (toCaption) {
+        return Compare.eq(toCaption, fromCaption) === false;
+      });
+    };
+
     var deleteCaretInsideCaption = function (editor, rootElm, forward, fromCaption, from) {
       return CaretFinder.navigate(forward, editor.getBody(), from).bind(function (to) {
-        return getParentCaption(rootElm, Element.fromDom(to.getNode())).map(function (toCaption) {
-          return Compare.eq(toCaption, fromCaption) === false;
-        });
+        return isDeleteOfLastCharPos(fromCaption, forward, from, to) ? emptyCaretCaption(editor, fromCaption) : validateCaretCaption(rootElm, fromCaption, to);
       }).or(Option.some(true));
     };
 
